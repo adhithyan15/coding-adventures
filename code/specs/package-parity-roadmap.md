@@ -1103,13 +1103,14 @@ Delivery order:
 14. Gate completion in CI: every supported implementation runs the same
    conformance corpus on its applicable operating systems.
 
-After PR #9363, the selected repository-owned build-tool slice is
-`build-tool-execution-status-normalization`. The duplicated execution/result
-schemas still say `dependency-skipped` while the normative contract and every
-implementation say `dep-skipped`, and they admit contradictory command exit
-codes, package return codes, dry-run states, and overall outcomes. This bounded
-schema-and-validator repair lands before execution cases, trusted execution,
-the Go oracle, OCaml's build substrate, or adapter work consumes those records.
+Ready-for-review PR #9368 is the selected repository-owned build-tool slice,
+`build-tool-execution-status-normalization`. It replaces the duplicated
+`dependency-skipped` schema term with normative `dep-skipped` and closes
+contradictory command exit codes, package return codes, dry-run states, overall
+outcomes, duplicate result identities, fail-stop ordering, and dependency
+propagation. This bounded schema-and-validator repair lands before execution
+cases, trusted execution, the Go oracle, OCaml's build substrate, or adapter
+work consumes those records.
 
 Pull-request CI may validate the policy, schemas, digests, and fake-backend
 tests, but it must not authorize execution from branch-modifiable code or

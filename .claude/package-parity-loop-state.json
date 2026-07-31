@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9368,
   "last_inventory": {
     "revision": "432e2b6380863aeaa02b83bca6120ec3c32943fe",
     "schema_version": 3,
@@ -153,11 +153,11 @@
     {
       "id": "build-tool-execution-status-normalization",
       "title": "Normalize dependency-skip terminology and result-state invariants",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": "codex/build-tool-execution-status-normalization",
-      "pr_number": null,
-      "notes": "Selected after PR #9363 merged and the e34f26fad collision-clean inventory plus parallel dependency, fixture, and security audits completed. Replace the duplicated schema term dependency-skipped with normative dep-skipped and enforce built, failed, dep-skipped, would-build, return-code, command-state, dry-run, and overall-outcome consistency before execution cases enter the corpus. This bounded repository-owned contract is on the critical path to trusted execution, the Go oracle, OCaml's build substrate, and every build-tool adapter."
+      "pr_number": 9368,
+      "notes": "Ready-for-review PR #9368. Selected after PR #9363 merged and the e34f26fad collision-clean inventory plus parallel dependency, fixture, and security audits completed, then rebased onto origin/main at 432e2b638 and refreshed to 1,199 identities, 4,341 slots, 749 singletons, zero collisions, and zero unknown buckets. The PR replaces the duplicated schema term dependency-skipped with normative dep-skipped and enforces built, failed, dep-skipped, would-build, return-code, command-state, dry-run, overall-outcome, exact-once result identity, fail-stop, and dependency-propagation invariants before execution cases enter the corpus. Validation: 166 conformance tests passed with 20 expected platform skips; focused execution suites passed 27 tests at 94% branch-aware coverage; both process-free contract validators, 10 reporter tests, Ruff, Bandit, compileall, pip check, JSON, state-graph, diff, secret, Go test/vet/build, and independent security review passed. The canonical diff dry-run found no changed package files; repository-wide BUILD validation still reports unrelated pre-existing BUILD_windows dependency drift on main. This bounded repository-owned contract is on the critical path to trusted execution, the Go oracle, OCaml's build substrate, and every build-tool adapter."
     },
     {
       "id": "build-tool-invariant-probe-authority-profile",
