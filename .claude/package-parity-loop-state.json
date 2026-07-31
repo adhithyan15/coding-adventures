@@ -8,9 +8,9 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9368,
+  "active_pr": 9371,
   "last_inventory": {
-    "revision": "432e2b6380863aeaa02b83bca6120ec3c32943fe",
+    "revision": "2e067105d718d35fbb85d39eae879479302df82e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1199,
@@ -107,11 +107,24 @@
     {
       "id": "build-tool-execution-case-snapshot",
       "title": "Bind execution to the exact approved in-memory case snapshot",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-trusted-authority-bundle"],
+      "branch": "codex/build-tool-execution-case-snapshot",
+      "pr_number": 9371,
+      "notes": "Ready-for-review PR #9371. Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, contract, and security audits. The process-free boundary defines factory-only typed immutable snapshots and selectors, exact retained bytes and digests, bounded direct corpus membership, Unicode/case alias rejection, POSIX retained no-follow traversal, and Windows fixed-volume non-reparse FileId binding without claiming execution authority, backend readiness, adapter conformance, or fixture execution. Validation: 178 build-tool tests passed with 23 expected platform skips and 81% branch-aware Windows coverage; 10 reporter tests, both process-free contract validators, Ruff, Bandit, compileall, Go test/vet, collision and state-graph checks, diff hygiene, and independent fixture, contract, and security reviews passed. The repository BUILD validator reproduced the same 73 pre-existing Windows BUILD/CI metadata errors on pristine origin/main."
+    },
+    {
+      "id": "build-tool-bootstrap-execution-fixture",
+      "title": "Land the inert bootstrap execution case and in-image adapter",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-execution-case-snapshot",
+        "build-tool-execution-status-normalization",
+        "build-tool-linux-oci-enforcement"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the Linux OCI security review. Select the requested direct corpus member from one root-handle/no-follow bounded snapshot and execute the same hashed bytes; reject outside paths, renames, symlinks, hardlinks, case/Unicode aliases, and post-digest mutation."
+      "notes": "Discovered in the post-#9368 dependency audit. Trusted authority and Linux trusted execution require one exact held case and one selected in-image adapter, but the checked-in execution corpus and adapter inventory are empty while normal adapter work is downstream of the execution-semantics corpus. After the Linux OCI enforcing boundary exists, add one minimal closed schema/semantic-valid bootstrap case and one inert digest-bindable untrusted adapter without claiming conformance, backend readiness, or execution permission; keep the full cross-platform execution corpus and adversarial probes in build-tool-execution-semantics-corpus."
     },
     {
       "id": "build-tool-immutable-runner-attester-provisioning",
@@ -153,11 +166,11 @@
     {
       "id": "build-tool-execution-status-normalization",
       "title": "Normalize dependency-skip terminology and result-state invariants",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-execution-sandbox"],
       "branch": "codex/build-tool-execution-status-normalization",
       "pr_number": 9368,
-      "notes": "Ready-for-review PR #9368. Selected after PR #9363 merged and the e34f26fad collision-clean inventory plus parallel dependency, fixture, and security audits completed, then rebased onto origin/main at 432e2b638 and refreshed to 1,199 identities, 4,341 slots, 749 singletons, zero collisions, and zero unknown buckets. The PR replaces the duplicated schema term dependency-skipped with normative dep-skipped and enforces built, failed, dep-skipped, would-build, return-code, command-state, dry-run, overall-outcome, exact-once result identity, fail-stop, and dependency-propagation invariants before execution cases enter the corpus. Validation: 166 conformance tests passed with 20 expected platform skips; focused execution suites passed 27 tests at 94% branch-aware coverage; both process-free contract validators, 10 reporter tests, Ruff, Bandit, compileall, pip check, JSON, state-graph, diff, secret, Go test/vet/build, and independent security review passed. The canonical diff dry-run found no changed package files; repository-wide BUILD validation still reports unrelated pre-existing BUILD_windows dependency drift on main. This bounded repository-owned contract is on the critical path to trusted execution, the Go oracle, OCaml's build substrate, and every build-tool adapter."
+      "notes": "Merged PR #9368 at 2e067105d718d35fbb85d39eae879479302df82e with green Ubuntu, macOS, Windows, and CodeQL checks. Selected after PR #9363 merged and the e34f26fad collision-clean inventory plus parallel dependency, fixture, and security audits completed, then rebased onto origin/main at 432e2b638 and refreshed to 1,199 identities, 4,341 slots, 749 singletons, zero collisions, and zero unknown buckets. The PR replaces the duplicated schema term dependency-skipped with normative dep-skipped and enforces built, failed, dep-skipped, would-build, return-code, command-state, dry-run, overall-outcome, exact-once result identity, fail-stop, and dependency-propagation invariants before execution cases enter the corpus. Validation: 166 conformance tests passed with 20 expected platform skips; focused execution suites passed 27 tests at 94% branch-aware coverage; both process-free contract validators, 10 reporter tests, Ruff, Bandit, compileall, pip check, JSON, state-graph, diff, secret, Go test/vet/build, and independent security review passed. The canonical diff dry-run found no changed package files; repository-wide BUILD validation still reports unrelated pre-existing BUILD_windows dependency drift on main. This bounded repository-owned contract is on the critical path to trusted execution, the Go oracle, OCaml's build substrate, and every build-tool adapter."
     },
     {
       "id": "build-tool-invariant-probe-authority-profile",
@@ -198,6 +211,7 @@
         "build-tool-invariant-probe-authority-profile",
         "build-tool-linux-oci-enforcement",
         "build-tool-execution-case-snapshot",
+        "build-tool-bootstrap-execution-fixture",
         "build-tool-execution-status-normalization"
       ],
       "branch": null,
@@ -212,6 +226,7 @@
         "build-tool-linux-oci-enforcement",
         "build-tool-trusted-execution-authority-profile",
         "build-tool-execution-case-snapshot",
+        "build-tool-bootstrap-execution-fixture",
         "build-tool-execution-status-normalization"
       ],
       "branch": null,
@@ -585,7 +600,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 553, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 554, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -594,7 +609,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, and smart-home-matter-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, and Matter adapter packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, and smart-home-home-assistant-migration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant migration packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The Home Assistant migration's deterministic export parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts are portable-core candidates, while runtime application, atomic filesystem writes, CLI behavior, three Rust-only runtime dependencies, and its missing capability manifest require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
     },
     {
       "id": "matter-portable-core-extraction-and-conformance",

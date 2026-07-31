@@ -675,10 +675,10 @@ Trusted execution is delivered in independently reviewable layers. A policy or
 schema layer MUST NOT be treated as an execution sandbox:
 
 1. The process-free policy layer closes the execution input and result records,
-   computes a framed SHA-256 digest over the execution corpus, validates
-   runner-owned adapter and backend identities, and returns stable
-   non-passing results for unavailable backends. It imports no process API and
-   never materializes a workspace.
+   captures one immutable exact-byte execution-corpus snapshot, computes its
+   framed SHA-256 digest, validates runner-owned adapter and backend identities,
+   and returns stable non-passing results for unavailable backends. It imports
+   no process API and never materializes a workspace.
 2. The Linux layer may execute only through a pinned, already-present OCI image
    identity. The runner MUST NOT pull, build, tag, or resolve a mutable image
    name during a conformance run. The container uses private mount, user, PID,
@@ -1011,12 +1011,49 @@ runner-owned filesystem, network, environment, namespace, resource, output,
 cancellation, and descendant-termination probe in a protected Linux
 workflow. Preflight success alone never marks the backend ready.
 
-The execution-corpus digest is SHA-256 over all `*.json` cases sorted by their
-portable path relative to `execution-cases/`. For each case, append the
-unsigned 64-bit big-endian path-byte length, UTF-8 path bytes, unsigned 64-bit
-big-endian raw-content length, and exact raw bytes. The empty corpus therefore
-has the standard SHA-256 empty digest. Any byte, filename, addition, or removal
-changes the internal corpus identity; it does not grant authority.
+The execution-corpus snapshot is a closed, process-free exact-byte boundary:
+
+1. Capture opens the absolute `execution-cases/` directory without following a
+   link or reparse point and retains that root while it enumerates and reads
+   members. POSIX capture traverses and opens members relative to retained
+   directory descriptors. Windows capture requires a fixed local drive whose
+   DOS target is one non-remappable hard-disk volume, retains a non-reparse
+   directory chain, enumerates the final root by handle, matches each member's
+   volume serial and file identity to that enumeration, and prevents pathname
+   mutation while each no-follow member handle is opened. An implementation
+   that cannot provide these guarantees fails closed.
+2. The corpus contains only direct, lowercase-`.json` members. Names are
+   portable relative paths in exact NFC form, contain no separator, and are
+   unique under NFC plus Unicode case folding. Non-regular, linked, reparse,
+   multiply linked, oversized, or identity-aliased members fail closed.
+   Enumeration stops after 4096 directory entries, the corpus contains at most
+   256 cases, each case is at most 2000000 raw bytes, and the complete retained
+   snapshot is at most 16777216 raw bytes.
+3. Each member is opened once, read under the runner byte ceiling, and checked
+   for a stable device/file identity, link count, size, and modification/change
+   identity before and after the read. The directory membership is checked
+   again before capture completes. The snapshot retains the sorted names and
+   immutable raw `bytes`; later validation or selection does not reopen a
+   pathname.
+4. A typed selector accepts exactly one canonical direct member name. An unsafe
+   name, a case- or normalization-alias of a retained member, and a missing
+   member are distinct stable failures. A successful selection binds the
+   requested name, the snapshot's corpus digest, and the already-retained exact
+   bytes. Renaming, replacing, linking, or mutating the pathname after capture
+   cannot change the selected bytes. Member, snapshot, and selection records
+   have factory-only constructors; the snapshot factory revalidates every
+   member and computes the digest rather than accepting one from a caller.
+5. Snapshot capture, digesting, and selection do not parse a case, import a
+   process API, confer authority, mark an adapter or backend ready, or execute
+   fixture content.
+
+The execution-corpus digest is SHA-256 over the snapshot's members sorted by
+their direct portable name relative to `execution-cases/`. For each case,
+append the unsigned 64-bit big-endian path-byte length, UTF-8 path bytes,
+unsigned 64-bit big-endian raw-content length, and exact retained bytes. The
+empty corpus therefore has the standard SHA-256 empty digest. Any byte,
+filename, addition, or removal changes the internal corpus identity; it does
+not grant authority.
 
 The process-free `validate-corpus` and `validate-result` bootstrap commands
 remain unchanged and MUST reject execution intent. A separate execution
