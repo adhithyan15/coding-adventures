@@ -941,6 +941,30 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS drain-bulk capacitance", () => {
+    for (const parameter of ["CBD", "CJD"]) {
+      for (const value of [0.0, 2.0e-10, 1.0]) {
+        const valid = normalizeModelCard("Mvalid", "nmos", {
+          [parameter]: value,
+        });
+        expect(valid.parameters.CBD).toBe(value);
+      }
+
+      for (const invalidCapacitance of [
+        Number.NEGATIVE_INFINITY,
+        -0.1,
+        Number.POSITIVE_INFINITY,
+        Number.NaN,
+      ]) {
+        expect(() =>
+          normalizeModelCard("Minvalid", "nmos", {
+            [parameter]: invalidCapacitance,
+          }),
+        ).toThrow("MOSFET CBD must be finite and non-negative");
+      }
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
