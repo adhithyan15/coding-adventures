@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.83.0 — combined INSPECT TALLYING + REPLACING CHARACTERS BY x — 2026-07-30
+
+- **`INSPECT source TALLYING … REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]`** — the
+  COMBINED `TALLYING … REPLACING` form now admits a `REPLACING CHARACTERS BY x` half.
+  The former read-time reject ("INSPECT REPLACING CHARACTERS is a later rung",
+  raised by `read_inspect_replacing_all` in the combined arm) is lifted for a LONE
+  CHARACTERS replace item. The STRUCTURAL TWIN of 0.82.0 (which lifted the TALLYING-half
+  CHARACTERS) — the CHARACTERS operand-class is now complete on BOTH halves.
+- **Semantics — tally-then-replace, unchanged ISO order.** The TALLYING half counts
+  FIRST over the ORIGINAL source bytes (any of `FOR ALL`/`FOR LEADING`/`FOR CHARACTERS`),
+  THEN the CHARACTERS REPLACING half overwrites EVERY position in its (optional
+  `{BEFORE|AFTER}`) window with the single replacement char `x` — exactly the STANDALONE
+  `REPLACING CHARACTERS BY x [region]` fill (#61/#80), inheriting the BEFORE→whole /
+  AFTER→empty not-found asymmetry. Since the count only reads the source, the fill sees
+  (and its window is computed over) the same original storage the tally counted. The two
+  halves are INDEPENDENT: either, both, or neither may be a CHARACTERS form.
+- **Threading.** `Stmt::InspectTallyReplace` gains a `replace_characters: bool` field.
+  The combined `(true, true)` reader detects a LONE `CHARACTERS` replace item FIRST
+  (mirroring the standalone `(false, true)` arm), reading its optional region via the
+  shared `read_inspect_region` and its `BY` operand, with a never-read placeholder
+  `search` and `replace_leading = false`; otherwise it falls through to
+  `read_inspect_replacing_all` (ALL/LEADING) with `replace_characters = false`.
+  `exec_inspect_tally_replace` branches on the flag: `inspect_replace_characters` (the
+  POST-`sidx` body factored out of `exec_inspect_replacing_characters`, the exact analogue
+  of how `inspect_replace` was factored out of `exec_inspect_replacing`) when `true`,
+  else `inspect_replace`. The standalone `REPLACING CHARACTERS` path stays byte-identical.
+- **Still deferred (co-total).** A MULTI-item combined REPLACING half (2+ replace items)
+  stays a later rung, rejected by `read_inspect_replacing_all`, and a multi-character
+  region delimiter remains rejected by the shared readers — identically on both engines.
+- **Byte-vs-char reconstruct chip (unchanged, pre-existing).** The CHARACTERS fill
+  rebuilds POSITIONS; a non-ASCII source is the pre-existing byte-vs-char reconstruct chip
+  (task_396ba6f6), identical to the standalone `REPLACING CHARACTERS … {BEFORE|AFTER}`
+  (#80) — the compiler's per-position reconstruction traps on a multi-byte char while the
+  oracle iterates chars. A single-char non-ASCII LITERAL replacement stays a later rung
+  (guard 2, inherited from the standalone fill). Not fixed here.
+
 ## 0.82.0 — combined INSPECT TALLYING FOR CHARACTERS + REPLACING — 2026-07-30
 
 - **`INSPECT source TALLYING c FOR CHARACTERS [{BEFORE|AFTER} x] REPLACING …`** — the
