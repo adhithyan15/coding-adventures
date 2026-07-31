@@ -513,3 +513,19 @@ func TestDiscoverSkipsRootLevelSkipDirs(t *testing.T) {
 		t.Errorf("expected python/pkg-a, got %s", packages[0].Name)
 	}
 }
+
+func TestDiscoverSkipsSpecificationFixtureTrees(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"packages/python/pkg-a/BUILD":                     "echo a",
+		"specs/fixtures/scaffold-generator/library/BUILD": "opam exec -- dune build",
+		"specs/fixtures/scaffold-generator/program/BUILD": "opam exec -- dune build",
+	})
+
+	packages := DiscoverPackages(root)
+	if len(packages) != 1 {
+		t.Fatalf("expected only the real package, got %d: %v", len(packages), packages)
+	}
+	if packages[0].Name != "python/pkg-a" {
+		t.Errorf("expected python/pkg-a, got %s", packages[0].Name)
+	}
+}
