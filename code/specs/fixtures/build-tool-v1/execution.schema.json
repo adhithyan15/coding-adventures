@@ -66,6 +66,179 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "ok"
+          },
+          "input": {
+            "properties": {
+              "options": {
+                "properties": {
+                  "dry_run": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "dry_run"
+                ]
+              }
+            },
+            "required": [
+              "options"
+            ]
+          }
+        },
+        "required": [
+          "outcome",
+          "input"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "packages": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "const": "would-build"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "packages"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "ok"
+          },
+          "input": {
+            "properties": {
+              "options": {
+                "properties": {
+                  "dry_run": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "dry_run"
+                ]
+              }
+            },
+            "required": [
+              "options"
+            ]
+          }
+        },
+        "required": [
+          "outcome",
+          "input"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "packages": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "const": "built"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "packages"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "properties": {
+              "options": {
+                "properties": {
+                  "dry_run": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "dry_run"
+                ]
+              }
+            },
+            "required": [
+              "options"
+            ]
+          },
+          "result": {
+            "properties": {
+              "packages": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "built",
+                        "failed",
+                        "dep-skipped"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "contains": {
+                  "properties": {
+                    "status": {
+                      "const": "failed"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "minContains": 1
+              }
+            },
+            "required": [
+              "packages"
+            ]
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -306,32 +479,39 @@
           ]
         }
       },
-      "allOf": [
+      "oneOf": [
         {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "not-run"
-              }
+          "properties": {
+            "status": {
+              "const": "succeeded"
             },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "exit_code": {
-                "type": "null"
+            "exit_code": {
+              "const": 0
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "failed"
+            },
+            "exit_code": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647,
+              "not": {
+                "const": 0
               }
             }
-          },
-          "else": {
-            "properties": {
-              "exit_code": {
-                "type": "integer",
-                "minimum": -2147483648,
-                "maximum": 2147483647
-              }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "not-run"
+            },
+            "exit_code": {
+              "type": "null"
             }
           }
         }
@@ -354,7 +534,7 @@
           "enum": [
             "built",
             "failed",
-            "dependency-skipped",
+            "dep-skipped",
             "would-build"
           ]
         },
@@ -377,7 +557,104 @@
             "$ref": "#/$defs/command_result"
           }
         }
-      }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": "built"
+            },
+            "return_code": {
+              "const": 0
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "succeeded"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "failed"
+            },
+            "return_code": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647,
+              "not": {
+                "const": 0
+              }
+            },
+            "commands": {
+              "contains": {
+                "properties": {
+                  "status": {
+                    "const": "failed"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "dep-skipped"
+            },
+            "return_code": {
+              "type": "null"
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "not-run"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "would-build"
+            },
+            "return_code": {
+              "type": "null"
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "not-run"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "execution_result": {
       "type": "object",

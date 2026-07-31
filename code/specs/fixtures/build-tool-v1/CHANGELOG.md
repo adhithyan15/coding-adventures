@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-07-31
+
+- Replaced the duplicated `dependency-skipped` execution status with the
+  normative `dep-skipped` vocabulary.
+- Closed command status/exit-code and package status/return-code combinations
+  in both execution result schemas.
+- Added dry-run, overall-outcome, fail-stop command ordering, failed-command
+  return-code equality, and dependency-propagation invariants before execution
+  cases may enter the corpus.
+
 ## 2026-07-30
 
 - Added the separately domain-bound thirteen-role capability-broker authority

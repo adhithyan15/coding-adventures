@@ -141,10 +141,7 @@
             "const": "execution"
           },
           "outcome": {
-            "enum": [
-              "ok",
-              "error"
-            ]
+            "const": "ok"
           }
         },
         "required": [
@@ -155,7 +152,89 @@
       "then": {
         "properties": {
           "result": {
-            "$ref": "#/$defs/execution_result"
+            "$ref": "#/$defs/execution_result",
+            "properties": {
+              "packages": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "properties": {
+                        "status": {
+                          "const": "built"
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ]
+                    }
+                  },
+                  {
+                    "items": {
+                      "properties": {
+                        "status": {
+                          "const": "would-build"
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "domain": {
+            "const": "execution"
+          },
+          "outcome": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "domain",
+          "outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "$ref": "#/$defs/execution_result",
+            "properties": {
+              "packages": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "built",
+                        "failed",
+                        "dep-skipped"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "contains": {
+                  "properties": {
+                    "status": {
+                      "const": "failed"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "minContains": 1
+              }
+            }
           }
         }
       }
@@ -391,32 +470,39 @@
           ]
         }
       },
-      "allOf": [
+      "oneOf": [
         {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "not-run"
-              }
+          "properties": {
+            "status": {
+              "const": "succeeded"
             },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "exit_code": {
-                "type": "null"
+            "exit_code": {
+              "const": 0
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "failed"
+            },
+            "exit_code": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647,
+              "not": {
+                "const": 0
               }
             }
-          },
-          "else": {
-            "properties": {
-              "exit_code": {
-                "type": "integer",
-                "minimum": -2147483648,
-                "maximum": 2147483647
-              }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "not-run"
+            },
+            "exit_code": {
+              "type": "null"
             }
           }
         }
@@ -439,7 +525,7 @@
           "enum": [
             "built",
             "failed",
-            "dependency-skipped",
+            "dep-skipped",
             "would-build"
           ]
         },
@@ -462,7 +548,104 @@
             "$ref": "#/$defs/execution_command_result"
           }
         }
-      }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "status": {
+              "const": "built"
+            },
+            "return_code": {
+              "const": 0
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "succeeded"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "failed"
+            },
+            "return_code": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647,
+              "not": {
+                "const": 0
+              }
+            },
+            "commands": {
+              "contains": {
+                "properties": {
+                  "status": {
+                    "const": "failed"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "dep-skipped"
+            },
+            "return_code": {
+              "type": "null"
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "not-run"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "status": {
+              "const": "would-build"
+            },
+            "return_code": {
+              "type": "null"
+            },
+            "commands": {
+              "items": {
+                "properties": {
+                  "status": {
+                    "const": "not-run"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "execution_result": {
       "type": "object",

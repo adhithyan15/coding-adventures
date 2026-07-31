@@ -156,9 +156,231 @@ class ExecutionSchemaTests(unittest.TestCase):
         self.assert_schema_error(case["expected"], self.result_schema)  # type: ignore[arg-type]
 
         command["exit_code"] = None  # type: ignore[index]
+        package = case["expected"]["result"]["packages"][0]  # type: ignore[index]
+        package["status"] = "would-build"  # type: ignore[index]
+        package["return_code"] = None  # type: ignore[index]
         self.assertEqual(
             bootstrap._schema_errors(case["expected"], self.result_schema),  # type: ignore[arg-type]
             [],
+        )
+
+    def test_command_result_status_exit_code_matrix_is_closed(self) -> None:
+        invalid_pairs = [
+            ("succeeded", 1),
+            ("succeeded", None),
+            ("failed", 0),
+            ("failed", None),
+            ("not-run", 0),
+        ]
+        for status, exit_code in invalid_pairs:
+            case = base_case()
+            command = case["expected"]["result"]["packages"][0]["commands"][0]  # type: ignore[index]
+            command["status"] = status  # type: ignore[index]
+            command["exit_code"] = exit_code  # type: ignore[index]
+            with self.subTest(status=status, exit_code=exit_code):
+                self.assert_schema_error(case["expected"], self.result_schema)  # type: ignore[arg-type]
+                self.assert_schema_error(
+                    self.projection(case),
+                    self.execution_schema,
+                )
+
+    def test_package_result_state_matrix_is_closed(self) -> None:
+        mutations: list[tuple[str, dict[str, object]]] = []
+
+        legacy = base_case()
+        legacy["expected"]["result"]["packages"][0]["status"] = (  # type: ignore[index]
+            "dependency-skipped"
+        )
+        mutations.append(("legacy-term", legacy))
+
+        built_nonzero = base_case()
+        built_nonzero["expected"]["result"]["packages"][0]["return_code"] = 1  # type: ignore[index]
+        mutations.append(("built-nonzero", built_nonzero))
+
+        built_not_run = base_case()
+        built_command = built_not_run["expected"]["result"]["packages"][0]["commands"][
+            0
+        ]  # type: ignore[index]
+        built_command["status"] = "not-run"  # type: ignore[index]
+        built_command["exit_code"] = None  # type: ignore[index]
+        mutations.append(("built-not-run", built_not_run))
+
+        failed_without_failure = base_case()
+        failed_package = failed_without_failure["expected"]["result"]["packages"][0]  # type: ignore[index]
+        failed_package["status"] = "failed"  # type: ignore[index]
+        failed_package["return_code"] = 7  # type: ignore[index]
+        failed_without_failure["expected"]["outcome"] = "error"  # type: ignore[index]
+        mutations.append(("failed-without-failed-command", failed_without_failure))
+
+        for status in ("dep-skipped", "would-build"):
+            executed = base_case()
+            package = executed["expected"]["result"]["packages"][0]  # type: ignore[index]
+            package["status"] = status  # type: ignore[index]
+            package["return_code"] = None  # type: ignore[index]
+            mutations.append((f"{status}-executed", executed))
+
+        for name, mutated in mutations:
+            with self.subTest(name=name):
+                self.assert_schema_error(mutated["expected"], self.result_schema)  # type: ignore[arg-type]
+                self.assert_schema_error(
+                    self.projection(mutated),
+                    self.execution_schema,
+                )
+
+    def test_valid_failure_and_dry_run_state_records(self) -> None:
+        failed = base_case()
+        package = failed["expected"]["result"]["packages"][0]  # type: ignore[index]
+        package["status"] = "failed"  # type: ignore[index]
+        package["return_code"] = 7  # type: ignore[index]
+        command = package["commands"][0]  # type: ignore[index]
+        command["status"] = "failed"  # type: ignore[index]
+        command["exit_code"] = 7  # type: ignore[index]
+        failed["expected"]["outcome"] = "error"  # type: ignore[index]
+        self.assertEqual(
+            bootstrap._schema_errors(failed["expected"], self.result_schema),  # type: ignore[arg-type]
+            [],
+        )
+        self.assertEqual(
+            bootstrap._schema_errors(self.projection(failed), self.execution_schema),
+            [],
+        )
+        execution.validate_execution_semantics(failed)
+
+        dry_run = base_case()
+        dry_run["input"]["options"]["dry_run"] = True  # type: ignore[index]
+        package = dry_run["expected"]["result"]["packages"][0]  # type: ignore[index]
+        package["status"] = "would-build"  # type: ignore[index]
+        package["return_code"] = None  # type: ignore[index]
+        command = package["commands"][0]  # type: ignore[index]
+        command["status"] = "not-run"  # type: ignore[index]
+        command["exit_code"] = None  # type: ignore[index]
+        self.assertEqual(
+            bootstrap._schema_errors(dry_run["expected"], self.result_schema),  # type: ignore[arg-type]
+            [],
+        )
+        self.assertEqual(
+            bootstrap._schema_errors(self.projection(dry_run), self.execution_schema),
+            [],
+        )
+        execution.validate_execution_semantics(dry_run)
+
+    def test_projection_rejects_outcome_and_dry_run_status_conflicts(self) -> None:
+        dry_run_built = base_case()
+        dry_run_built["input"]["options"]["dry_run"] = True  # type: ignore[index]
+        self.assert_schema_error(
+            self.projection(dry_run_built),
+            self.execution_schema,
+        )
+
+        ok_would_build = base_case()
+        package = ok_would_build["expected"]["result"]["packages"][0]  # type: ignore[index]
+        package["status"] = "would-build"  # type: ignore[index]
+        package["return_code"] = None  # type: ignore[index]
+        command = package["commands"][0]  # type: ignore[index]
+        command["status"] = "not-run"  # type: ignore[index]
+        command["exit_code"] = None  # type: ignore[index]
+        self.assert_schema_error(
+            self.projection(ok_would_build),
+            self.execution_schema,
+        )
+
+        error_without_failure = base_case()
+        error_without_failure["expected"]["outcome"] = "error"  # type: ignore[index]
+        self.assert_schema_error(
+            error_without_failure["expected"],  # type: ignore[arg-type]
+            self.result_schema,
+        )
+        self.assert_schema_error(
+            self.projection(error_without_failure),
+            self.execution_schema,
+        )
+
+    def test_semantics_reject_failed_command_order_and_return_code_drift(self) -> None:
+        out_of_order = base_case()
+        input_commands = out_of_order["input"]["options"]["packages"][0]["commands"]  # type: ignore[index]
+        input_commands.append(copy.deepcopy(input_commands[0]))  # type: ignore[attr-defined]
+        package = out_of_order["expected"]["result"]["packages"][0]  # type: ignore[index]
+        package["status"] = "failed"  # type: ignore[index]
+        package["return_code"] = 7  # type: ignore[index]
+        package["commands"] = [  # type: ignore[index]
+            {"index": 0, "status": "not-run", "exit_code": None},
+            {"index": 1, "status": "failed", "exit_code": 7},
+        ]
+        out_of_order["expected"]["outcome"] = "error"  # type: ignore[index]
+        self.assertEqual(
+            bootstrap._schema_errors(
+                self.projection(out_of_order),
+                self.execution_schema,
+            ),
+            [],
+        )
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.validate_execution_semantics(out_of_order)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_COMMAND_STATE_ORDER_INVALID",
+        )
+
+        return_code = copy.deepcopy(out_of_order)
+        commands = return_code["expected"]["result"]["packages"][0]["commands"]  # type: ignore[index]
+        commands[0] = {"index": 0, "status": "succeeded", "exit_code": 0}  # type: ignore[index]
+        return_code["expected"]["result"]["packages"][0]["return_code"] = 9  # type: ignore[index]
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.validate_execution_semantics(return_code)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_PACKAGE_RETURN_CODE_MISMATCH",
+        )
+
+    def test_semantics_enforce_dependency_failure_propagation(self) -> None:
+        case = base_case()
+        packages = case["input"]["options"]["packages"]  # type: ignore[index]
+        dependent = copy.deepcopy(packages[0])  # type: ignore[index]
+        dependent["name"] = "python/dependent"
+        dependent["rel_path"] = "code/packages/python/dependent"
+        packages.append(dependent)  # type: ignore[attr-defined]
+        case["input"]["options"]["dependency_edges"] = [  # type: ignore[index]
+            ["python/example", "python/dependent"]
+        ]
+        case["expected"]["outcome"] = "error"  # type: ignore[index]
+        failed = case["expected"]["result"]["packages"][0]  # type: ignore[index]
+        failed["status"] = "failed"  # type: ignore[index]
+        failed["return_code"] = 7  # type: ignore[index]
+        failed["commands"][0]["status"] = "failed"  # type: ignore[index]
+        failed["commands"][0]["exit_code"] = 7  # type: ignore[index]
+        skipped = copy.deepcopy(failed)
+        skipped["name"] = "python/dependent"
+        skipped["status"] = "dep-skipped"
+        skipped["return_code"] = None
+        skipped["commands"][0]["status"] = "not-run"
+        skipped["commands"][0]["exit_code"] = None
+        case["expected"]["result"]["packages"] = [skipped, failed]  # type: ignore[index]
+        self.assertEqual(
+            bootstrap._schema_errors(self.projection(case), self.execution_schema),
+            [],
+        )
+        execution.validate_execution_semantics(case)
+
+        dependent_built = copy.deepcopy(case)
+        result = dependent_built["expected"]["result"]["packages"][0]  # type: ignore[index]
+        result["status"] = "built"  # type: ignore[index]
+        result["return_code"] = 0  # type: ignore[index]
+        result["commands"][0]["status"] = "succeeded"  # type: ignore[index]
+        result["commands"][0]["exit_code"] = 0  # type: ignore[index]
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.validate_execution_semantics(dependent_built)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_DEPENDENCY_STATE_MISMATCH",
+        )
+
+        unjustified_skip = copy.deepcopy(case)
+        unjustified_skip["input"]["options"]["dependency_edges"] = []  # type: ignore[index]
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.validate_execution_semantics(unjustified_skip)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_DEPENDENCY_STATE_MISMATCH",
         )
 
     def test_semantics_reject_duplicate_identities_unknown_edges_and_cycles(
@@ -170,6 +392,22 @@ class ExecutionSchemaTests(unittest.TestCase):
         with self.assertRaises(bootstrap.ConformanceError) as raised:
             execution.validate_execution_semantics(duplicate)
         self.assertEqual(raised.exception.code, "EXECUTION_PACKAGE_DUPLICATE")
+
+        duplicate_result = base_case()
+        result_packages = duplicate_result["expected"]["result"]["packages"]  # type: ignore[index]
+        conflicting = copy.deepcopy(result_packages[0])  # type: ignore[index]
+        conflicting["status"] = "failed"
+        conflicting["return_code"] = 7
+        conflicting["commands"][0]["status"] = "failed"
+        conflicting["commands"][0]["exit_code"] = 7
+        result_packages.append(conflicting)  # type: ignore[attr-defined]
+        duplicate_result["expected"]["outcome"] = "error"  # type: ignore[index]
+        with self.assertRaises(bootstrap.ConformanceError) as raised:
+            execution.validate_execution_semantics(duplicate_result)
+        self.assertEqual(
+            raised.exception.code,
+            "EXECUTION_RESULT_PACKAGE_DUPLICATE",
+        )
 
         unknown = base_case()
         unknown["input"]["options"]["dependency_edges"] = [  # type: ignore[index]

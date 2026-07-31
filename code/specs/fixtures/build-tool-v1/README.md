@@ -64,6 +64,17 @@ records in the outer envelope. Structured commands contain only `program` and
 `args`; they have no fixture-controlled cwd, shell, redirection, or per-command
 environment. Legacy commands remain distinct line records.
 
+Execution status records use one fail-stop state machine. Succeeded commands
+return zero, failed commands return nonzero, and not-run commands return null.
+Built packages contain only succeeded commands; failed packages contain one
+failed command, preserve that exit code as the package return code, and mark
+every later command not-run. `dep-skipped` and `would-build` packages never
+execute commands and return null. The projection additionally ties dry-run to
+an all-`would-build` successful outcome, ordinary success to all-`built`, and
+errors to at least one failure plus dependency-propagated skips. The semantic
+validator enforces command order, return-code equality, and graph propagation
+that Draft 2020-12 cannot express.
+
 `execution-policy.json` is runner-owned authority rather than fixture data or
 implementation metadata. It records the exact execution-corpus digest, hard
 ceilings, backend identities, and adapter executable digests. The checked-in

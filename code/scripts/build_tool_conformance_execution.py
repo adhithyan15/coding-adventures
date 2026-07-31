@@ -217,6 +217,149 @@ def _validate_execution_graph(
         )
 
 
+def _validate_package_result_state(package_result: dict[str, Any]) -> None:
+    """Enforce the fail-stop state machine independently of JSON Schema.
+
+    Schema validation closes each local record before this function runs, but
+    the semantic validator repeats the security-relevant scalar checks and adds
+    sequence constraints that JSON Schema cannot express. In particular, a
+    failed command divides one package's command list into a succeeded prefix
+    and a not-run suffix.
+    """
+
+    package_name = package_result["name"]
+    package_status = package_result["status"]
+    return_code = package_result["return_code"]
+    commands = package_result["commands"]
+    command_statuses: list[str] = []
+
+    for command in commands:
+        command_status = command["status"]
+        exit_code = command["exit_code"]
+        command_statuses.append(command_status)
+        valid_exit = (
+            (
+                command_status == "succeeded"
+                and exit_code == 0
+                and not isinstance(exit_code, bool)
+            )
+            or (
+                command_status == "failed"
+                and isinstance(exit_code, int)
+                and not isinstance(exit_code, bool)
+                and exit_code != 0
+            )
+            or (command_status == "not-run" and exit_code is None)
+        )
+        if not valid_exit:
+            raise bootstrap.ConformanceError(
+                "EXECUTION_COMMAND_EXIT_CODE_MISMATCH",
+                f"command status and exit code disagree for {package_name}",
+            )
+
+    if package_status == "built":
+        valid_package = (
+            return_code == 0
+            and not isinstance(return_code, bool)
+            and all(status == "succeeded" for status in command_statuses)
+        )
+    elif package_status == "failed":
+        failed_indices = [
+            index for index, status in enumerate(command_statuses) if status == "failed"
+        ]
+        valid_package = (
+            isinstance(return_code, int)
+            and not isinstance(return_code, bool)
+            and return_code != 0
+            and len(failed_indices) == 1
+        )
+        if not valid_package:
+            raise bootstrap.ConformanceError(
+                "EXECUTION_PACKAGE_STATE_MISMATCH",
+                f"failed package state is incomplete for {package_name}",
+            )
+        failed_index = failed_indices[0]
+        if not (
+            all(status == "succeeded" for status in command_statuses[:failed_index])
+            and all(
+                status == "not-run" for status in command_statuses[failed_index + 1 :]
+            )
+        ):
+            raise bootstrap.ConformanceError(
+                "EXECUTION_COMMAND_STATE_ORDER_INVALID",
+                f"commands do not stop at the first failure for {package_name}",
+            )
+        if return_code != commands[failed_index]["exit_code"]:
+            raise bootstrap.ConformanceError(
+                "EXECUTION_PACKAGE_RETURN_CODE_MISMATCH",
+                f"package return code does not equal its failed command for {package_name}",
+            )
+        return
+    elif package_status in {"dep-skipped", "would-build"}:
+        valid_package = return_code is None and all(
+            status == "not-run" for status in command_statuses
+        )
+    else:
+        valid_package = False
+
+    if not valid_package:
+        raise bootstrap.ConformanceError(
+            "EXECUTION_PACKAGE_STATE_MISMATCH",
+            f"package status, return code, and commands disagree for {package_name}",
+        )
+
+
+def _validate_execution_outcome_state(
+    *,
+    dry_run: bool,
+    outcome: str,
+    result_packages: list[dict[str, Any]],
+) -> None:
+    """Tie the case mode and overall outcome to every package state."""
+
+    statuses = [package["status"] for package in result_packages]
+    if dry_run:
+        valid = outcome == "ok" and all(status == "would-build" for status in statuses)
+    elif outcome == "ok":
+        valid = all(status == "built" for status in statuses)
+    elif outcome == "error":
+        valid = "failed" in statuses and all(
+            status in {"built", "failed", "dep-skipped"} for status in statuses
+        )
+    else:
+        valid = False
+    if not valid:
+        raise bootstrap.ConformanceError(
+            "EXECUTION_OUTCOME_STATE_MISMATCH",
+            "dry-run mode, overall outcome, and package statuses disagree",
+        )
+
+
+def _validate_dependency_result_states(
+    *,
+    package_names: set[str],
+    edges: list[list[str]],
+    result_by_name: dict[str, dict[str, Any]],
+) -> None:
+    """Require dependency skips exactly where failed prerequisites demand them."""
+
+    prerequisites = {name: [] for name in package_names}
+    for prerequisite, dependent in edges:
+        prerequisites[dependent].append(prerequisite)
+
+    for package_name in sorted(package_names):
+        blocked = any(
+            result_by_name[prerequisite]["status"] in {"failed", "dep-skipped"}
+            for prerequisite in prerequisites[package_name]
+        )
+        skipped = result_by_name[package_name]["status"] == "dep-skipped"
+        if blocked != skipped:
+            raise bootstrap.ConformanceError(
+                "EXECUTION_DEPENDENCY_STATE_MISMATCH",
+                f"dependency status does not justify the result for {package_name}",
+            )
+
+
 def validate_execution_semantics(case: dict[str, Any]) -> None:
     """Validate execution case identities and deterministic result ordering."""
 
@@ -319,6 +462,11 @@ def validate_execution_semantics(case: dict[str, Any]) -> None:
     if outcome in {"ok", "error"}:
         result_packages = expected["result"]["packages"]
         result_names = [package["name"] for package in result_packages]
+        if len(result_names) != len(set(result_names)):
+            raise bootstrap.ConformanceError(
+                "EXECUTION_RESULT_PACKAGE_DUPLICATE",
+                "execution result package names must be unique",
+            )
         if result_names != sorted(result_names):
             raise bootstrap.ConformanceError(
                 "EXECUTION_RESULT_NOT_CANONICAL",
@@ -344,6 +492,21 @@ def validate_execution_semantics(case: dict[str, Any]) -> None:
                     "EXECUTION_COMMAND_COUNT_MISMATCH",
                     f"command result count differs for {package_result['name']}",
                 )
+            _validate_package_result_state(package_result)
+
+        _validate_execution_outcome_state(
+            dry_run=options["dry_run"],
+            outcome=outcome,
+            result_packages=result_packages,
+        )
+        result_by_name = {
+            package_result["name"]: package_result for package_result in result_packages
+        }
+        _validate_dependency_result_states(
+            package_names=package_names,
+            edges=edges,
+            result_by_name=result_by_name,
+        )
 
 
 def _load_contract_documents(
