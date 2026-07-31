@@ -1,0 +1,76 @@
+name: Bootstrap OCaml toolchain evidence
+
+on:
+  push:
+    branches:
+      - codex/ocaml-ci-toolchain
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    name: Generate ${{ matrix.target }} evidence
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-x64
+            runner: ubuntu-24.04
+          - target: macos-x64
+            runner: macos-14
+          - target: windows-x64
+            runner: windows-2022
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Set up the reviewed OCaml compiler and repository
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        with:
+          ocaml-compiler: '5.2.1'
+          opam-repositories: |
+            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
+          opam-pin: false
+          dune-cache: false
+          cache-prefix: ocaml03-bootstrap-${{ github.run_id }}-${{ matrix.target }}
+          windows-compiler: mingw
+          windows-environment: cygwin
+
+      - name: Require the reviewed opam bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(opam --version)"
+          test "$actual" = "2.5.2"
+
+      - name: Generate fresh solver evidence
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          fixture="$RUNNER_TEMP/ocaml03-fixture"
+          output="$RUNNER_TEMP/ocaml03-evidence/$TARGET"
+          mkdir -p "$fixture" "$output"
+          cp -R code/specs/fixtures/scaffold-generator/ocaml-library/. "$fixture/"
+          cd "$fixture"
+          opam install . --deps-only --with-test --with-dev-setup --yes --require-checksums
+          opam lock coding-adventures-my-pkg.opam
+          opam list --installed --columns=name,version --normalise --color=never \
+            | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
+                  -e 's/[[:space:]][[:space:]]*/ /g' \
+            | LC_ALL=C sort > "$output/installed-packages.txt"
+          cp coding-adventures-my-pkg.opam.locked "$output/"
+          printf 'image_os=%s\nimage_version=%s\nrunner_os=%s\nrunner_arch=%s\n' \
+            "${ImageOS:-unknown}" "${ImageVersion:-unknown}" \
+            "$RUNNER_OS" "$RUNNER_ARCH" > "$output/runner-image.txt"
+
+      - name: Upload solver evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ocaml03-${{ matrix.target }}
+          path: ${{ runner.temp }}/ocaml03-evidence/${{ matrix.target }}
+          if-no-files-found: error
+          retention-days: 7
