@@ -1,0 +1,33 @@
+// VentureChrome — dark native chrome theme. Part and state topology mirrors light.
+
+style VentureChrome {
+  part app-shell { background : "#24211d" ; color : "#f1eadf" ; font-family : "-apple-system, Segoe UI, system-ui, sans-serif" ; gap : 0 ; }
+  part title-bar { background : "#312d27" ; padding : 8 ; gap : 12 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part brand { color : "#e1a45d" ; font-size : 15 ; font-weight : bold ; }
+  part page-title { color : "#d8d0c4" ; font-size : 13 ; }
+  part toolbar { background : "#2b2823" ; padding : 8 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part back-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part forward-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part home-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; }
+  }
+  part reload-button {
+    background : "#3b3630" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ;
+    state hover { background : "#51483c" ; } state pressed { background : "#6a4a27" ; } state focused { outline-color : "#e1a45d" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part address-input { background : "#171512" ; color : "#f1eadf" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; flex-grow : 1 ; state focused { border-color : "#e1a45d" ; outline-color : "#e1a45d" ; outline-width : 1 ; } }
+  part go-button {
+    background : "#b36f26" ; color : "#ffffff" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ;
+    state hover { background : "#c27e32" ; } state pressed { background : "#8b501b" ; } state focused { outline-color : "#f0bd7a" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
+  }
+  part content-surface { background : "#11100e" ; min-height : 480 ; flex-grow : 1 ; }
+  part status-bar { background : "#312d27" ; padding : 6 ; border-top-width : 1 ; border-top-color : "#50483d" ; }
+  part status-text { color : "#bdb4a7" ; font-size : 11 ; }
+}

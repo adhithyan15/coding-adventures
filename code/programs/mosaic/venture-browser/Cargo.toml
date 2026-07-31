@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "venture-browser-mosaic-smoke"
+version = "0.1.0"
+edition = "2021"
+description = "Compile and acceptance harness for Venture browser chrome"
+publish = false
+
+[dev-dependencies]
+mosmodel-compiler = { path = "../../../packages/rust/mosmodel-compiler" }
+moslayout-compiler = { path = "../../../packages/rust/moslayout-compiler" }
+mosstyle-compiler = { path = "../../../packages/rust/mosstyle-compiler" }
+mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"

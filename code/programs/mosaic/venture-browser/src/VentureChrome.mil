@@ -1,0 +1,21 @@
+// VentureChrome — shared browser-chrome interface.
+//
+// venture-browser-core owns navigation and page rendering. Native hosts project
+// that engine state into these slots and translate emitted actions back into
+// BrowserNavigation commands.
+
+component VentureChrome {
+  slot address             : text ;
+  slot page-title          : text ;
+  slot status-text         : text ;
+  slot back-disabled       : bool ;
+  slot forward-disabled    : bool ;
+  slot navigation-disabled : bool ;
+
+  emit onBack ;
+  emit onForward ;
+  emit onHome ;
+  emit onReload ;
+  emit onAddressChange ( value : text ) ;
+  emit onNavigate ;
+}
