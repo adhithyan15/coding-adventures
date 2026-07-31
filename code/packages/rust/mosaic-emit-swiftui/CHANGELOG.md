@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Native activation for MSL focused states
+
+SwiftUI output now connects UI15's built-in `state focused` blocks on native
+focus-capable host controls to a generated local `@FocusState`. The same shared
+MSL properties and transitions activate when `TextField`, `Button`, `Toggle`,
+or `Link` receives native keyboard or pointer focus, including independent
+instances inside `ForEach`. Explicit `state-when-focused` predicates remain
+author-controlled. A Task App acceptance gate proves its Mosaic-authored
+project-composer focus ring reaches generated SwiftUI without handwritten
+AppKit UI.
+
 ### Added - Native activation for MSL hover states
 
 SwiftUI output now activates UI15's built-in `state hover` blocks without
