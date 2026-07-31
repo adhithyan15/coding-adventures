@@ -1953,6 +1953,23 @@ const PROGRAMS: &[Prog] = &[
                integer result; result := entier(scale(7.0)) end",        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- integer-to-real promotion (LANG-FULL AL1). Integer values
+    // may flow wherever a real is required: direct real assignment, a real
+    // array element, a real value parameter, and a mixed real/integer
+    // comparison. Each conversion lowers to the shared `int_to_real` IIR op,
+    // so the program traverses VM, JIT, LLVM, WASM, JVM, CLR, and native AOT
+    // without target-specific lowering. `i = 7`; `values[4] := i`; `r := i`;
+    // `scale(r) = 42.0`; and `values[4] = i` is a mixed-width comparison.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; real r; real array values[4:4]; \
+               real procedure scale(x); value x; real x; scale := x * 6; \
+               i := 7; values[4] := i; r := i; \
+               if values[4] = i then result := entier(scale(r)) else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
     // slot at type_hint `"bool"` (LLVM `i1`, JVM/CLR `int32 0/1`, VM
     // `Value::Bool`).  `b := true` lowers to `const _t0 = 1 / mov b, _t0`
@@ -5053,6 +5070,37 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but array parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_numeric_promotion_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array values[4:4]")
+                && program.src.contains("values[4] := i")
+                && program.src.contains("real procedure scale(x)")
+        })
+        .expect("the ALGOL numeric-promotion program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but numeric-promotion execution did not complete"
             );
             continue;
         };

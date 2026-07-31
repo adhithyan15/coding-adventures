@@ -668,8 +668,9 @@ backend immediately) come before the enabler-dependent items.
 ### ALGOL 60
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
   → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit the `f64` hint, `/` is real
-  division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; no implicit
-  int→real coercion (mixing is a clean error). **Verified by RUNNING on ALL 7 backends**
+  division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; integer
+  values widen with `int_to_real` whenever a real is required (mixed numeric operations, `/`,
+  real assignments/array elements/formals, and real standard functions). **Verified by RUNNING on ALL 7 backends**
   (`lang_matrix.rs` — real `*`+`=`→42, real `/`+`<`→1): VM/JIT (tagged value model), LLVM
   (`double` slots), WASM (typed locals), JVM (`CONSTANT_Double`+`dcmpl`), CLR (`float64`+`ldc.r8`),
   and native-AOT (aarch64 `fadd`/`fcmp` executed on Apple Silicon + x86_64 SSE2 on CI). **E3 done.**

@@ -1557,13 +1557,11 @@ impl Compiler {
             match expected {
                 ProcedureParamType::Scalar(expected) => {
                     let value = self.emit_expr(actual)?;
-                    if value.ty != *expected {
-                        return Err(CompileError::Type(format!(
-                            "procedure {name:?}: argument is {} but parameter is {}",
-                            value.ty.name(),
-                            expected.name()
-                        )));
-                    }
+                    let value = self.coerce_value(
+                        value,
+                        *expected,
+                        &format!("procedure {name:?}: argument"),
+                    )?;
                     arg_slots.push(value.slot);
                 }
                 ProcedureParamType::Array(expected_elem_ty) => {
@@ -1920,11 +1918,10 @@ impl Compiler {
     /// `i64.trunc_sat`, `Math.floor`+`d2l`, `Math::Floor`+`conv.ovf.i4`,
     /// `frintm`+`fcvtzs`, `roundsd`+`cvttsd2si`).
     ///
-    /// The operand must be `real`: `entier` is *specifically* the real→integer
-    /// floor, so an `integer` argument is a type error (there is nothing to
-    /// floor — the frontend would just be discarding the type).  A user
-    /// `integer procedure entier` still wins, because `proc_sigs` is consulted
-    /// before this fallback in `emit_call_common`.
+    /// Integer operands widen to real before flooring, which preserves
+    /// ALGOL's arithmetic coercion rule (`entier(7)` is 7). A user `integer
+    /// procedure entier` still wins, because `proc_sigs` is consulted before
+    /// this fallback in `emit_call_common`.
     fn emit_entier(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let actuals = self.standard_fn_actuals(node);
         if actuals.len() != 1 {
@@ -1934,15 +1931,7 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function entier requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(value, ScalarType::Real, "standard function entier")?;
 
         // result := floor(E), narrowed to an integer.  `real_to_int_floor`'s
         // `type_hint` is the *result* type (`integer`/`i64`), matching the E8
@@ -1960,11 +1949,11 @@ impl Compiler {
         })
     }
 
-    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root.  The operand must be `real`
-    /// (integer `sqrt` is a type error per the standard).  Lowers to the
-    /// portable `f64_sqrt` IIR op: every backend maps it to its native hardware
-    /// square-root instruction (aarch64 `fsqrt`, SSE2 `sqrtsd`, WASM
-    /// `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR `Math.Sqrt`).
+    /// `sqrt(E)` — ALGOL 60 §3.2.4 square root. Integer operands widen to
+    /// `real` before the portable `f64_sqrt` IIR op, which every backend maps
+    /// to its native hardware square-root instruction (aarch64 `fsqrt`, SSE2
+    /// `sqrtsd`, WASM `f64.sqrt`, LLVM `@llvm.sqrt.f64`, JVM `Math.sqrt`, CLR
+    /// `Math.Sqrt`).
     ///
     /// ```text
     ///   t := E          ; evaluate the operand once (real)
@@ -1979,15 +1968,7 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function sqrt requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(value, ScalarType::Real, "standard function sqrt")?;
 
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
@@ -2009,7 +1990,7 @@ impl Compiler {
     /// identifier; `op` is the IIR opcode (e.g. `"f64_sin"`).
     ///
     /// ```text
-    ///   t    := E         ; evaluate the argument once (must be real)
+    ///   t    := E         ; evaluate the argument once (integer inputs widen)
     ///   dest := <op> t
     /// ```
     fn emit_f64_unary(
@@ -2026,15 +2007,11 @@ impl Compiler {
             )));
         }
         let value = self.emit_expr(actuals[0])?;
-        match value.ty {
-            ScalarType::Real => {}
-            other => {
-                return Err(CompileError::Type(format!(
-                    "standard function {fn_name} requires a real argument, got {}",
-                    other.name()
-                )))
-            }
-        }
+        let value = self.coerce_value(
+            value,
+            ScalarType::Real,
+            &format!("standard function {fn_name}"),
+        )?;
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             op,
@@ -2274,20 +2251,15 @@ impl Compiler {
             // `A[i] := e` stores into an array element (E5); `x := e` is a mov.
             if array_subscripts(var_node).is_some() {
                 let (binding, zero) = self.resolve_array_index(var_node)?;
-                if binding.ty != rhs.ty {
-                    return Err(CompileError::Type(format!(
-                        "cannot assign {} expression to {} array element",
-                        rhs.ty.name(),
-                        binding.ty.name()
-                    )));
-                }
+                let value =
+                    self.coerce_value(rhs.clone(), binding.ty, "array element assignment")?;
                 self.emit(IIRInstr::new(
                     "array_set",
                     None,
                     vec![
                         Operand::Var(binding.slot),
                         Operand::Var(zero),
-                        Operand::Var(rhs.slot.clone()),
+                        Operand::Var(value.slot),
                     ],
                     binding.ty.iir(),
                 ));
@@ -2296,15 +2268,10 @@ impl Compiler {
 
             let name = self.simple_variable_name(var_node)?;
             let binding = self.require_var(&name)?;
-            if binding.ty != rhs.ty {
-                return Err(CompileError::Type(format!(
-                    "cannot assign {} expression to {} variable {name:?}",
-                    rhs.ty.name(),
-                    binding.ty.name()
-                )));
-            }
+            let value =
+                self.coerce_value(rhs.clone(), binding.ty, &format!("assignment to {name:?}"))?;
             if binding.ty == ScalarType::String {
-                if binding.is_global || binding.slot != rhs.slot {
+                if binding.is_global || binding.slot != value.slot {
                     let empty = self.fresh_temp();
                     let copy = if binding.is_global {
                         self.fresh_temp()
@@ -2320,7 +2287,7 @@ impl Compiler {
                     self.emit(IIRInstr::new(
                         "str_concat",
                         Some(copy.clone()),
-                        vec![Operand::Var(rhs.slot.clone()), Operand::Var(empty)],
+                        vec![Operand::Var(value.slot), Operand::Var(empty)],
                         "str",
                     ));
                     if binding.is_global {
@@ -2340,14 +2307,14 @@ impl Compiler {
                 self.emit(IIRInstr::new(
                     "global_store",
                     None,
-                    vec![Operand::Str(binding.slot), Operand::Var(rhs.slot.clone())],
+                    vec![Operand::Str(binding.slot), Operand::Var(value.slot)],
                     "void",
                 ));
             } else {
                 self.emit(IIRInstr::new(
                     "mov",
                     Some(binding.slot),
-                    vec![Operand::Var(rhs.slot.clone())],
+                    vec![Operand::Var(value.slot)],
                     binding.ty.iir(),
                 ));
             }
@@ -3244,12 +3211,12 @@ impl Compiler {
     /// | exponent            | lowering                          | result type |
     /// |---------------------|-----------------------------------|-------------|
     /// | nonneg integer literal `k` | `k−1` repeated `mul`s (`x*x*…`); `x↑0 = 1` | **base's type** — `integer↑k` stays `integer`, `real↑k` stays `real` |
-    /// | `real` (base also `real`) | `f64_pow` (libm `pow`, the same op BASIC's BA-pow proved on all 7 backends) | `real` |
+    /// | numeric pair containing a real | `f64_pow` after integer→real widening (libm `pow`) | `real` |
     ///
     /// The integer-literal path keeps ALGOL's typing (`2 ↑ 10` = the *integer*
-    /// 1024), unlike BASIC which always widens to `real`.  A non-literal exponent
-    /// on an `integer` base, or a negative literal, is a clean `Unsupported` —
-    /// those need int→real coercion / reciprocals not in this slice.
+    /// 1024), unlike BASIC which always widens to `real`. A non-literal integer
+    /// exponent on an integer base, or a negative literal, remains a clean
+    /// `Unsupported`; any pair containing a real takes the `f64_pow` path.
     fn emit_pow(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let seq = pieces(node);
         let has_pow = seq
@@ -3307,9 +3274,14 @@ impl Compiler {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
-        // General path: `real ↑ real` via the `f64_pow` IIR op (libm `pow`).
+        // General path: any numeric pair containing a real uses `f64_pow`.
         let exp = self.emit_expr(exp_node)?;
-        if base.ty == ScalarType::Real && exp.ty == ScalarType::Real {
+        if matches!(base.ty, ScalarType::Integer | ScalarType::Real)
+            && matches!(exp.ty, ScalarType::Integer | ScalarType::Real)
+            && (base.ty == ScalarType::Real || exp.ty == ScalarType::Real)
+        {
+            let base = self.coerce_value(base, ScalarType::Real, "exponentiation base")?;
+            let exp = self.coerce_value(exp, ScalarType::Real, "exponentiation exponent")?;
             let dest = self.fresh_temp();
             self.emit(IIRInstr::new(
                 "f64_pow",
@@ -3325,7 +3297,7 @@ impl Compiler {
 
         Err(CompileError::Unsupported(format!(
             "exponentiation with a {} base and a {} exponent — this slice supports a \
-             nonnegative integer-literal exponent (any base) or `real ↑ real` (via pow)",
+             nonnegative integer-literal exponent (any base) or a numeric pair containing a real",
             base.ty.name(),
             exp.ty.name()
         )))
@@ -3357,15 +3329,52 @@ impl Compiler {
         ExprValue { slot: acc, ty }
     }
 
-    /// Require both operands of a numeric operator to be the **same** numeric
-    /// type (`integer`+`integer` or `real`+`real`) and return it. Rejects a
-    /// boolean operand and an integer/real mix — v1 has no implicit coercion.
-    fn same_numeric_type(
-        &self,
+    /// Widen an integer value to `real` with the shared IIR conversion.
+    fn widen_integer_to_real(&mut self, value: ExprValue) -> ExprValue {
+        debug_assert_eq!(value.ty, ScalarType::Integer);
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "int_to_real",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot)],
+            ScalarType::Real.iir(),
+        ));
+        ExprValue {
+            slot: dest,
+            ty: ScalarType::Real,
+        }
+    }
+
+    /// Convert an expression only along ALGOL's numeric widening edge:
+    /// `integer` to `real`. All other source/target pairs stay errors.
+    fn coerce_value(
+        &mut self,
+        value: ExprValue,
+        target: ScalarType,
+        context: &str,
+    ) -> Result<ExprValue, CompileError> {
+        if value.ty == target {
+            return Ok(value);
+        }
+        if value.ty == ScalarType::Integer && target == ScalarType::Real {
+            return Ok(self.widen_integer_to_real(value));
+        }
+        Err(CompileError::Type(format!(
+            "{context} cannot use {} where {} is required",
+            value.ty.name(),
+            target.name()
+        )))
+    }
+
+    /// Promote a numeric pair to a common type. ALGOL's arithmetic widening is
+    /// one-way: any `real` operand widens an `integer` peer; two integers stay
+    /// integer. Boolean and string operands remain invalid for numeric ops.
+    fn promote_numeric_pair(
+        &mut self,
         op: &str,
-        lhs: &ExprValue,
-        rhs: &ExprValue,
-    ) -> Result<ScalarType, CompileError> {
+        lhs: ExprValue,
+        rhs: ExprValue,
+    ) -> Result<(ExprValue, ExprValue, ScalarType), CompileError> {
         let numeric = |t: ScalarType| matches!(t, ScalarType::Integer | ScalarType::Real);
         if !numeric(lhs.ty) || !numeric(rhs.ty) {
             return Err(CompileError::Type(format!(
@@ -3374,15 +3383,14 @@ impl Compiler {
                 rhs.ty.name()
             )));
         }
-        if lhs.ty != rhs.ty {
-            return Err(CompileError::Type(format!(
-                "operator {op:?} cannot mix {} and {} (no implicit integer→real \
-                 coercion in this slice)",
-                lhs.ty.name(),
-                rhs.ty.name()
-            )));
+        if lhs.ty == ScalarType::Real || rhs.ty == ScalarType::Real {
+            return Ok((
+                self.coerce_value(lhs, ScalarType::Real, "numeric promotion")?,
+                self.coerce_value(rhs, ScalarType::Real, "numeric promotion")?,
+                ScalarType::Real,
+            ));
         }
-        Ok(lhs.ty)
+        Ok((lhs, rhs, ScalarType::Integer))
     }
 
     fn emit_binary(
@@ -3393,14 +3401,7 @@ impl Compiler {
     ) -> Result<ExprValue, CompileError> {
         match op {
             "+" | "-" | "*" => {
-                // `+`/`-`/`*` work on **either** `integer` (i64) or `real` (f64)
-                // operands, but not a mix — ALGOL's implicit integer→real
-                // coercion needs an IIR int→f64 convert op the code-gen slice
-                // doesn't carry yet, so v1 requires both operands the same
-                // numeric type (a clean error otherwise). The IIR `type_hint`
-                // carries the operand width, so the backends pick `add`/`fadd`
-                // etc. from it.
-                let ty = self.same_numeric_type(op, &lhs, &rhs)?;
+                let (lhs, rhs, ty) = self.promote_numeric_pair(op, lhs, rhs)?;
                 let iir_op = match op {
                     "+" => "add",
                     "-" => "sub",
@@ -3437,18 +3438,11 @@ impl Compiler {
                 })
             }
             "/" => {
-                // Real division. ALGOL's `/` always yields a `real`; v1 requires
-                // real operands (no integer→real coercion yet — see the `+`/`-`
-                // note). Lowers to the IIR `div` with an `f64` hint, so the
-                // backends emit `fdiv`/`f64.div`/`ddiv`. IEEE division by zero
-                // is `±inf`, consistent across every backend (no trap).
-                if lhs.ty != ScalarType::Real || rhs.ty != ScalarType::Real {
-                    return Err(CompileError::Type(
-                        "real division '/' requires real operands (integer→real \
-                         coercion is not in this slice; use `div` for integers)"
-                            .into(),
-                    ));
-                }
+                // Real division always yields a `real`, widening integer inputs
+                // first. `div` and `mod` remain the integer-only operators.
+                let (lhs, rhs, _) = self.promote_numeric_pair(op, lhs, rhs)?;
+                let lhs = self.coerce_value(lhs, ScalarType::Real, "operator '/'")?;
+                let rhs = self.coerce_value(rhs, ScalarType::Real, "operator '/'")?;
                 let dest = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "div",
@@ -3462,13 +3456,21 @@ impl Compiler {
                 })
             }
             "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
-                if lhs.ty != rhs.ty {
+                let (lhs, rhs) = if lhs.ty != rhs.ty
+                    && matches!(lhs.ty, ScalarType::Integer | ScalarType::Real)
+                    && matches!(rhs.ty, ScalarType::Integer | ScalarType::Real)
+                {
+                    let (lhs, rhs, _) = self.promote_numeric_pair(op, lhs, rhs)?;
+                    (lhs, rhs)
+                } else if lhs.ty != rhs.ty {
                     return Err(CompileError::Type(format!(
                         "cannot compare {} and {}",
                         lhs.ty.name(),
                         rhs.ty.name()
                     )));
-                }
+                } else {
+                    (lhs, rhs)
+                };
                 if lhs.ty == ScalarType::String {
                     let dest = self.fresh_temp();
                     match op {
@@ -5009,12 +5011,11 @@ mod tests {
     }
 
     #[test]
-    fn entier_requires_a_real_argument() {
-        // An `integer` argument is a type error — entier is specifically the
-        // real→integer floor.
-        let err = compile_source("begin integer result; result := entier(7) end", "test")
-            .expect_err("entier of an integer is a type error");
-        assert!(format!("{err:?}").contains("entier requires a real argument"));
+    fn entier_widens_an_integer_argument() {
+        assert_eq!(
+            run_i64("begin integer result; result := entier(7) end"),
+            7
+        );
     }
 
     #[test]
@@ -5504,20 +5505,43 @@ mod tests {
     }
 
     #[test]
-    fn rejects_mixed_integer_and_real() {
-        // No implicit integer→real coercion in this slice.
-        let err = compile_source(
-            "begin real result; result := 1 + 2.5 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Type(_)),
-            "mixing integer and real should be a Type error, got {err:?}");
+    fn mixed_integer_and_real_widens_to_real() {
+        let src = "begin real r; integer result; r := 1 + 2.5; \
+                   if 7 = 7.0 then result := entier(r * 12) else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "mixed_numeric").expect("mixed arithmetic compiles");
+        let main = module.get_function("main").expect("main exists");
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "int_to_real"),
+            "mixed arithmetic and comparison must widen through int_to_real"
+        );
     }
 
     #[test]
-    fn rejects_real_division_on_integers() {
-        let err = compile_source(
-            "begin integer result; result := 7 / 2 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Type(_)),
-            "`/` on integers should be a Type error (use div), got {err:?}");
+    fn integer_division_widens_to_real() {
+        assert_eq!(
+            run_f64("begin real result; result := 7 / 2 end"),
+            3.5,
+            "`/` is real division even for integer operands"
+        );
+    }
+
+    #[test]
+    fn promotion_flows_through_real_arrays_and_parameters() {
+        let src = "begin integer i, result; real r; real array a[1:1]; \
+                   real procedure scale(x); value x; real x; scale := x * 6; \
+                   i := 7; a[1] := i; r := i; \
+                   if a[1] = i then result := entier(scale(r)) else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_standard_functions_widen_integer_arguments() {
+        assert_eq!(
+            run_i64("begin integer result; result := entier(sqrt(49)) + entier(sin(0)) end"),
+            7
+        );
     }
 
     // ---------------------------------------------------------------------
@@ -5801,14 +5825,13 @@ mod tests {
         assert_eq!(run_f64("begin real result; result := 2.0 ^ 3.0 end"), 8.0);
     }
 
-    /// An `integer` base with a `real` exponent is a clean `Unsupported` — it
-    /// would need int→real coercion not in this slice.
+    /// An integer base widens when a real exponent selects the `f64_pow` path.
     #[test]
-    fn rejects_integer_base_real_exponent() {
-        let err = compile_source(
-            "begin integer result; result := 2 ^ 3.0 end", "test").unwrap_err();
-        assert!(matches!(err, CompileError::Unsupported(_)),
-            "integer↑real should be Unsupported, got {err:?}");
+    fn integer_base_real_exponent_widens_to_real() {
+        assert_eq!(
+            run_f64("begin real result; result := 2 ^ 3.0 end"),
+            8.0
+        );
     }
 
     /// A 2-D **`real`** array (AL-multidim-real): the multidim flat-index path
