@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "dart/build-helper",
+  "capabilities": [
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes the generated program description to standard output."
+    }
+  ],
+  "justification": "Generated program writes its starter description to standard output and uses no other OS capabilities."
+}

@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9371,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "2e067105d718d35fbb85d39eae879479302df82e",
+    "revision": "d05262d531b180ce5bbbced4d8fbcbc8a43a43d0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1199,
-    "implementation_package_slots": 4341,
+    "implementation_identities": 1200,
+    "implementation_package_slots": 4342,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 277,
-    "singleton_packages": 749,
-    "singleton_missing_slots": 10486,
-    "rust_singletons": 554,
+    "singleton_packages": 750,
+    "singleton_missing_slots": 10500,
+    "rust_singletons": 555,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -107,11 +107,11 @@
     {
       "id": "build-tool-execution-case-snapshot",
       "title": "Bind execution to the exact approved in-memory case snapshot",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-trusted-authority-bundle"],
       "branch": "codex/build-tool-execution-case-snapshot",
       "pr_number": 9371,
-      "notes": "Ready-for-review PR #9371. Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, contract, and security audits. The process-free boundary defines factory-only typed immutable snapshots and selectors, exact retained bytes and digests, bounded direct corpus membership, Unicode/case alias rejection, POSIX retained no-follow traversal, and Windows fixed-volume non-reparse FileId binding without claiming execution authority, backend readiness, adapter conformance, or fixture execution. Validation: 178 build-tool tests passed with 23 expected platform skips and 81% branch-aware Windows coverage; 10 reporter tests, both process-free contract validators, Ruff, Bandit, compileall, Go test/vet, collision and state-graph checks, diff hygiene, and independent fixture, contract, and security reviews passed. The repository BUILD validator reproduced the same 73 pre-existing Windows BUILD/CI metadata errors on pristine origin/main."
+      "notes": "Merged PR #9371 at d05262d531b180ce5bbbced4d8fbcbc8a43a43d0 after all GitHub checks passed. Selected after merged PR #9368 and the collision-clean 2e067105d inventory plus parallel package, fixture, contract, and security audits. The process-free boundary defines factory-only typed immutable snapshots and selectors, exact retained bytes and digests, bounded direct corpus membership, Unicode/case alias rejection, POSIX retained no-follow traversal, and Windows fixed-volume non-reparse FileId binding without claiming execution authority, backend readiness, adapter conformance, or fixture execution. Validation: 178 build-tool tests passed with 23 expected platform skips and 81% branch-aware Windows coverage; 10 reporter tests, both process-free contract validators, Ruff, Bandit, compileall, Go test/vet, collision and state-graph checks, diff hygiene, and independent fixture, contract, and security reviews passed. The repository BUILD validator reproduced the same 73 pre-existing Windows BUILD/CI metadata errors on pristine origin/main."
     },
     {
       "id": "build-tool-bootstrap-execution-fixture",
@@ -461,11 +461,11 @@
     {
       "id": "dart-scaffold-capability-schema",
       "title": "Emit truthful schema-v1 capability manifests from the Dart scaffold generator",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["capability-schema-category-action-constraints"],
-      "branch": null,
+      "branch": "codex/dart-scaffold-capability-schema",
       "pr_number": null,
-      "notes": "Discovered in the e34f26fad post-merge fixture audit. The native Dart generator emits no required_capabilities.json for library or program scaffolds even though Spec 13 requires explicit schema-v1 profiles. Add language-neutral golden/schema coverage, emit empty profiles for libraries and the truthful stdout profile for generated programs, classify the generator's own runtime authority, and leave existing nonempty Dart profile interpretation to the legacy migration owner."
+      "notes": "Selected after merged PR #9371, the collision-clean d05262d inventory, and parallel dependency, fixture, contract, and security audits because it directly unlocks dart-current-14-of-15 and its 13 portable packages. Discovered in the e34f26fad post-merge fixture audit. The native Dart generator emits no required_capabilities.json for library or program scaffolds even though Spec 13 requires explicit schema-v1 profiles. Add language-neutral golden/schema coverage, emit empty profiles for libraries and the truthful stdout profile for generated programs, classify the generator's own runtime authority, and leave existing nonempty Dart profile interpretation to the legacy migration owner."
     },
     {
       "id": "haskell-http1",
@@ -600,7 +600,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 554, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 555, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -609,7 +609,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, and smart-home-home-assistant-migration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant migration packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The Home Assistant migration's deterministic export parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts are portable-core candidates, while runtime application, atomic filesystem writes, CLI behavior, three Rust-only runtime dependencies, and its missing capability manifest require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, and smart-home-home-assistant-export; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, Home Assistant migration, and Home Assistant export packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The Home Assistant migration's deterministic export parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts are portable-core candidates, while runtime application, atomic filesystem writes, CLI behavior, three Rust-only runtime dependencies, and its missing capability manifest require explicit host-boundary review. The new Home Assistant export package similarly mixes deterministic normalization and export-core logic with TLS/WebSocket transport, environment-token intake, filesystem output, wall-clock metadata, console reporting, and a missing capability manifest; keep those host effects under explicit authority review before extracting any portable core. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
     },
     {
       "id": "matter-portable-core-extraction-and-conformance",

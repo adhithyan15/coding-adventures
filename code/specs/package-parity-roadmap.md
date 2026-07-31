@@ -106,11 +106,12 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `2e067105d` after merged OCaml
-toolchain work, the Rust `smart-home-matter-integration`, and the Rust
-`smart-home-home-assistant-migration`, plus the merged Algol, Mosaic, and
-build-tool status-normalization slices. It contains 1,199 normalized
-implementation identities across 4,341 established-lane package
+inventory was regenerated on July 31, 2026 at `d05262d53` after merged OCaml
+toolchain work, the Rust `smart-home-matter-integration`, the Rust
+`smart-home-home-assistant-migration`, the Rust
+`smart-home-home-assistant-export`, and merged Algol, Mosaic, and build-tool
+contract slices through the execution case snapshot. It contains 1,200
+normalized implementation identities across 4,342 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -118,9 +119,9 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 277 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 749 | 10,486 |
+| Present in one language | 750 | 10,500 |
 
-The loop must not start by attempting 10,486 singleton ports. It should finish
+The loop must not start by attempting 10,500 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The July 31 lane audit is:
@@ -139,7 +140,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 964 | 0 | 100% |
+| Rust | 965 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -885,10 +886,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 554 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 555 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-31 inventories added fourteen Rust singleton identities that now
+The July 30-31 inventories added fifteen Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -913,6 +914,13 @@ parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts
 are portable-core candidates; runtime application, atomic filesystem writes,
 CLI behavior, three Rust-only runtime dependencies, and the missing capability
 manifest require explicit host-boundary and authority classification.
+
+The fifteenth identity, `smart-home-home-assistant-export`, is another mixed
+boundary. Its deterministic normalization and export-core logic are portable
+candidates, while TLS/WebSocket transport, environment-token intake,
+filesystem output, wall-clock metadata, console reporting, and its missing
+capability manifest remain host-owned authority that must be classified before
+any cross-language extraction.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1120,13 +1128,18 @@ propagation. This bounded schema-and-validator repair lands before execution
 cases, trusted execution, the Go oracle, OCaml's build substrate, or adapter
 work consumes those records.
 
-The selected successor is `build-tool-execution-case-snapshot`. It defines the
-typed selector and held-snapshot boundary that is currently only prose, opens
-one bounded direct-member corpus snapshot through a retained no-follow root,
-and preserves the exact hashed bytes for later execution while rejecting path,
-rename, symlink, hardlink, case/Unicode-alias, and post-digest substitution.
-This process-free slice grants no execution authority and marks no backend or
-adapter ready.
+Merged PR #9371 completed `build-tool-execution-case-snapshot`. It defines the
+typed selector and held-snapshot boundary, opens one bounded direct-member
+corpus snapshot through a retained no-follow root, and preserves the exact
+hashed bytes for later execution while rejecting path, rename, symlink,
+hardlink, case/Unicode-alias, and post-digest substitution. This process-free
+slice grants no execution authority and marks no backend or adapter ready.
+
+The serial parity loop then selected `dart-scaffold-capability-schema`, because
+its merged capability-schema dependency is satisfied and it directly unlocks
+the thirteen-package Dart-only 14-of-15 frontier. The next build-tool successor
+remains `build-tool-bootstrap-execution-fixture`; it does not become active
+while the Dart scaffold PR is open.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in
