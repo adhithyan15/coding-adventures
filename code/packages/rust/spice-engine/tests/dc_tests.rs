@@ -1091,6 +1091,22 @@ fn mos_model_card_rejects_negative_or_non_finite_gate_drain_overlap_capacitance(
 }
 
 #[test]
+fn mos_model_card_rejects_negative_or_non_finite_gate_bulk_overlap_capacitance() {
+    for value in [0.0, 2.0e-10, 1.0] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[("CGBO", value)]).unwrap();
+        assert_close(*valid.parameters.get("CGBO").unwrap(), value);
+    }
+
+    for invalid_capacitance in [f64::NEG_INFINITY, -0.1, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("CGBO", invalid_capacitance)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET CGBO must be finite and non-negative"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",
