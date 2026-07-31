@@ -1,0 +1,28 @@
+% ============================================================================
+% simple-interest.query.adj — a worked example of the simple-interest library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli simple-interest.query.adj
+%
+% "$1000 at 5% per year for 2 years" → (1000 × 5 × 2) / 100 = 100, computed on the
+% CPU by composing the cited `product` primitive twice (1000 × 5 = 5000, then
+% × 2 = 10000) and dividing by 100. The answer carries BOTH the simple-interest
+% definition (primary) and the `product` primitive it built on (corroboration) —
+% the model performs zero arithmetic.
+% ============================================================================
+import "simple-interest.adj"
+
+observe principal(1000)
+observe rate(5)
+observe time(2)
+
+? simple_interest(principal, rate, time)
+
+% ----------------------------------------------------------------------------
+% Honest edge case — a ZERO rate earns ZERO interest, and the engine computes it
+% (it does not special-case or invent): (1000 × 0 × 2) / 100 = 0. (Uncomment to
+% see it.)
+% ----------------------------------------------------------------------------
+% observe rate(0)
+% ? simple_interest(principal, rate, time)
