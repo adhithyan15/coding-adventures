@@ -608,6 +608,8 @@ def normalize_model_card(
             raise ValueError(f"{name}: MOSFET CBD must be finite and non-negative")
         elif canonical == "CGSO" and (not math.isfinite(value) or value < 0.0):
             raise ValueError(f"{name}: MOSFET CGSO must be finite and non-negative")
+        elif canonical == "CGDO" and (not math.isfinite(value) or value < 0.0):
+            raise ValueError(f"{name}: MOSFET CGDO must be finite and non-negative")
         else:
             normalized[canonical] = value
     return NormalizedModelCard(

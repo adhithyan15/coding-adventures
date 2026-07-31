@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS gate-source-overlap-capacitance validation.
+1. Cross-language Level-1 MOS gate-drain-overlap-capacitance validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `CGSO` values before gate-source
+   - Reject negative or non-finite model-card `CGDO` values before gate-drain
      overlap-capacitance stamping.
-   - Preserve zero and positive gate-source overlap capacitances across Rust,
+   - Preserve zero and positive gate-drain overlap capacitances across Rust,
      Python, and TypeScript.
 
 ## Completed Slices
@@ -3762,6 +3762,13 @@ the Rust, Python, and TypeScript surfaces together.
      drain-bulk depletion-capacitance shaping.
    - Zero and positive drain-bulk capacitances remain aligned across Rust,
      Python, and TypeScript.
+
+312. Cross-language Level-1 MOS gate-source-overlap-capacitance validation.
+   - Status: completed in PR 9360.
+   - Negative and non-finite model-card `CGSO` values are rejected before
+     gate-source overlap-capacitance stamping.
+   - Zero and positive gate-source overlap capacitances remain aligned across
+     Rust, Python, and TypeScript.
 
 ## Backlog
 
