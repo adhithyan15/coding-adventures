@@ -1,0 +1,16 @@
+[package]
+name = "smart-home-home-assistant-export"
+version = "0.1.0"
+edition = "2021"
+description = "Authenticated live Home Assistant export collection for smart-home migration"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+smart-home-home-assistant-migration = { path = "../smart-home-home-assistant-migration" }
+tungstenite = { version = "0.26", features = ["rustls-tls-webpki-roots"] }
+
+[[bin]]
+name = "smart-home-export-home-assistant"
+path = "src/main.rs"

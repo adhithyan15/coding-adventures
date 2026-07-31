@@ -901,6 +901,7 @@ members = [
     "smart-home-zigbee-integration",
     "smart-home-matter-integration",
     "smart-home-home-assistant-migration",
+    "smart-home-home-assistant-export",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",
