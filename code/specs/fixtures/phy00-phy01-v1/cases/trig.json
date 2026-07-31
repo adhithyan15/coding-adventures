@@ -1,0 +1,390 @@
+{
+  "schema_version": 1,
+  "suite": "phy00-trig",
+  "summary": "PHY00 constants, first-principles functions, binary64 boundaries, and validation.",
+  "cases": [
+    {
+      "id": "phy00/constant/pi",
+      "operation": "constant",
+      "summary": "Pi is the shared double-precision contract constant.",
+      "input": {
+        "name": "pi"
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "3.141592653589793"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/sin/zero",
+      "operation": "sin",
+      "summary": "Sine crosses zero at the origin.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/sin/half-pi",
+      "operation": "sin",
+      "summary": "Sine reaches one at pi over two.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1.5707963267948966"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/sin/large-positive",
+      "operation": "sin",
+      "summary": "Range reduction remains accurate at the positive precision boundary.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1000000"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0.34999350217129294"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/cos/zero",
+      "operation": "cos",
+      "summary": "Cosine starts at one.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/cos/pi",
+      "operation": "cos",
+      "summary": "Cosine reaches negative one at pi.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "3.141592653589793"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/cos/large-negative",
+      "operation": "cos",
+      "summary": "Range reduction remains accurate at the negative precision boundary.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-1000000"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0.9367521275331447"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/tan/quarter-pi",
+      "operation": "tan",
+      "summary": "Tangent is one at pi over four.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "0.7853981633974483"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/tan/positive-pole",
+      "operation": "tan",
+      "summary": "The positive pole maps to the exact finite sentinel.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1.5707963267948966"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1e308"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/tan/negative-pole",
+      "operation": "tan",
+      "summary": "The negative pole maps to the exact finite sentinel.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-1.5707963267948966"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-1e308"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/atan/one",
+      "operation": "atan",
+      "summary": "Arctangent of one is pi over four.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0.7853981633974483"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan/large-positive",
+      "operation": "atan",
+      "summary": "Outer range reduction approaches pi over two.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1000000"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1.5707953267948966"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/positive-y-axis",
+      "operation": "atan2",
+      "summary": "The positive y axis maps to pi over two.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "1"},
+        "x": {"kind": "finite", "decimal": "0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1.5707963267948966"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/negative-x-positive-zero",
+      "operation": "atan2",
+      "summary": "The negative x axis uses the contract's included positive pi endpoint.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "0"},
+        "x": {"kind": "finite", "decimal": "-1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "3.141592653589793"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/negative-x-negative-zero",
+      "operation": "atan2",
+      "summary": "Negative zero on the negative x axis still normalizes to positive pi.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "-0"},
+        "x": {"kind": "finite", "decimal": "-1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "3.141592653589793"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/quadrant-one",
+      "operation": "atan2",
+      "summary": "Quadrant one selects pi over four.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "1"},
+        "x": {"kind": "finite", "decimal": "1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0.7853981633974483"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/quadrant-two",
+      "operation": "atan2",
+      "summary": "Quadrant two selects three pi over four.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "1"},
+        "x": {"kind": "finite", "decimal": "-1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "2.356194490192345"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/quadrant-three",
+      "operation": "atan2",
+      "summary": "Quadrant three selects negative three pi over four.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "-1"},
+        "x": {"kind": "finite", "decimal": "-1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-2.356194490192345"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/atan2/quadrant-four",
+      "operation": "atan2",
+      "summary": "Quadrant four selects negative pi over four.",
+      "input": {
+        "y": {"kind": "finite", "decimal": "-1"},
+        "x": {"kind": "finite", "decimal": "1"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0.7853981633974483"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/radians/half-turn",
+      "operation": "radians",
+      "summary": "One hundred eighty degrees is pi radians.",
+      "input": {
+        "degrees": {"kind": "finite", "decimal": "180"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "3.141592653589793"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/degrees/half-turn",
+      "operation": "degrees",
+      "summary": "Pi radians is one hundred eighty degrees.",
+      "input": {
+        "radians": {"kind": "finite", "decimal": "3.141592653589793"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "180"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/two",
+      "operation": "sqrt",
+      "summary": "Newton iteration computes the irrational square root of two.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "2"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1.4142135623730951"},
+        "comparison": {"kind": "relative", "tolerance": "1e-12"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/tiny-normal",
+      "operation": "sqrt",
+      "summary": "Power-of-four normalization converges for a tiny normal input.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1e-100"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1e-50"},
+        "comparison": {"kind": "relative", "tolerance": "1e-12"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/minimum-subnormal",
+      "operation": "sqrt",
+      "summary": "Power-of-four normalization converges for the minimum positive subnormal.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "4.9406564584124654e-324"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "2.2227587494850775e-162"},
+        "comparison": {"kind": "relative", "tolerance": "1e-12"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/maximum-finite",
+      "operation": "sqrt",
+      "summary": "Power-of-four normalization stays finite at the binary64 maximum.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "1.7976931348623157e308"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1.3407807929942596e154"},
+        "comparison": {"kind": "relative", "tolerance": "1e-12"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/negative-zero",
+      "operation": "sqrt",
+      "summary": "Square root preserves the sign of negative zero.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/positive-infinity",
+      "operation": "sqrt",
+      "summary": "Positive infinity propagates through square root.",
+      "input": {
+        "x": {"kind": "positive-infinity"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "positive-infinity"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/nan",
+      "operation": "sqrt",
+      "summary": "NaN propagates through square root.",
+      "input": {
+        "x": {"kind": "nan"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "nan"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/sqrt/negative-input",
+      "operation": "sqrt",
+      "summary": "Negative finite square root input is rejected.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-1"}
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    }
+  ]
+}

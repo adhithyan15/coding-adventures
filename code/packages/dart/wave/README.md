@@ -39,6 +39,10 @@ the repository's first-principles `pi` and `sin` rather than `dart:math`.
 
 ## Running the tests
 
+The tests consume
+`../../../specs/fixtures/phy00-phy01-v1/cases/wave.json` through test-only
+`dart:io`, so the shared cross-language cases do not add runtime authority.
+
 ```sh
 dart pub get
 dart analyze

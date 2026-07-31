@@ -212,7 +212,26 @@ names and `atan2(y, x)` argument order.
 
 ## 5. Precision Target
 
-All implementations must agree with IEEE 754 double-precision standard-library results to within $1 \times 10^{-10}$ (10 decimal places) for any input in the range $[-10^6, 10^6]$.
+At ordinary finite points, implementations must agree with IEEE 754
+double-precision standard-library results to within $1 \times 10^{-10}$ (10
+decimal places) for inputs in the range $[-10^6, 10^6]$. The documented
+tangent pole sentinel and `atan2` branch-cut convention are explicit contract
+cases, not standard-library-agreement points.
+
+### 5.1 Language-neutral conformance corpus
+
+The versioned machine-readable oracle lives at
+`fixtures/phy00-phy01-v1/cases/trig.json` and is validated by the closed Draft
+2020-12 `fixtures/phy00-phy01-v1/schema.json`. It is normative for shared case
+identity, binary64 input values, expected outcomes, and tolerances. Package-
+native tests may add coverage but may not weaken or reinterpret a shared case.
+
+The corpus represents finite values as tagged decimal strings and represents
+NaN and infinities as tagged symbols. This preserves minimum subnormal input,
+maximum finite input, and the sign of zero across JSON implementations. Exact
+comparison of NaN means `isNaN`; exact zero comparison includes the zero sign.
+The included `atan2(-0, -1)` case returns positive $\pi$, consistent with the
+contract range $(-\pi, \pi]$.
 
 ## 6. Cross-Language Parity
 
@@ -221,7 +240,11 @@ The package is implemented across all 15 established implementation lanes:
 Rust, Swift, and TypeScript**. The emerging C and C++ lanes also carry native
 implementations but do not enter the established-lane denominator. Every
 implementation uses the same first-principles algorithm (iterative term
-computation and range reduction) and validates:
+computation and range reduction) and consumes or is being reconciled against
+the versioned shared cases. The v1 corpus carries constants, representative
+finite points, tangent poles, quadrant and signed-zero `atan2`, conversions,
+and square-root boundaries. Together with package-native extensions, the full
+parity suites validate:
 
 1. Known exact values: $\sin(0) = 0$, $\cos(0) = 1$, $\sin(\pi/2) = 1$, $\cos(\pi) = -1$
 2. Symmetry: $\sin(-x) = -\sin(x)$, $\cos(-x) = \cos(x)$

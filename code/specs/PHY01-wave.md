@@ -95,7 +95,14 @@ No standard-library math functions are used. The entire computation chain is bui
 
 Implemented across all 15 established implementation lanes: C#, Dart, Elixir,
 F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and
-TypeScript. Each implementation passes the same test cases:
+TypeScript. The normative machine-readable oracle is
+`fixtures/phy00-phy01-v1/cases/wave.json`, validated by the closed Draft
+2020-12 `fixtures/phy00-phy01-v1/schema.json`. Tagged decimal strings and
+symbols preserve signed zero, extreme finite values, NaN, and infinity across
+JSON implementations. Package-native tests may add cases but may not weaken
+or reinterpret the shared outcomes, tolerances, or bounded-output predicates.
+
+The shared cases validate:
 
 1. **Zero crossing:** A wave with phase 0 evaluates to 0 at $t = 0$
 2. **Peak:** A 1 Hz wave with phase 0 reaches amplitude $A$ at $t = 0.25$ (quarter period)
@@ -103,3 +110,11 @@ TypeScript. Each implementation passes the same test cases:
 4. **Phase shift:** A wave with phase $\pi/2$ starts at its peak
 5. **Derived properties:** Period and angular frequency computed correctly
 6. **Validation:** Negative amplitude and zero frequency are rejected
+7. **Finite construction:** Non-finite parameters and angular-frequency overflow are rejected
+8. **Finite evaluation:** Non-finite time is rejected, zero amplitude short-circuits, and extreme finite evaluation remains amplitude-bounded
+
+The Dart lane consumes the v1 corpus directly. The tracked
+`phy00-small-sqrt-cross-lane-audit` and
+`phy01-nonfinite-validation-backfill` items wire the same oracle into every
+other established lane while repairing discrepancies it exposes; corpus
+publication alone does not claim those audits complete.

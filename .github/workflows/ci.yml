@@ -2,10 +2,12 @@
 # CI — Incremental, parallel monorepo build with conditional toolchains
 # ================================================================
 #
-# Two-job pipeline:
+# Core pipeline plus always-on contract consumers:
 #   1. detect: Fast (~10s) — compiles the Go build tool and runs
 #      --detect-languages to determine which toolchains are needed.
-#   2. build: Installs only the needed toolchains, then runs the build.
+#   2. phy00-phy01-fixture-consumers: proves external corpus changes against
+#      the Dart packages without granting their tests filesystem authority.
+#   3. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -88,6 +90,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_capability_taxonomy.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'
@@ -263,7 +266,27 @@ jobs:
           path: build-plan.json
           retention-days: 1
 
-  # ── Job 2: Build and test ──────────────────────────────────────
+  # ── Job 2: Always-on external fixture consumers ─────────────────
+  phy00-phy01-fixture-consumers:
+    name: PHY00/PHY01 fixture consumers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Verify generated fixtures and Dart consumers
+        shell: bash
+        run: |
+          python3 code/scripts/generate_phy00_phy01_dart_fixtures.py --check
+          (cd code/packages/dart/trig && dart pub get && dart test test/conformance_fixture_test.dart)
+          (cd code/packages/dart/wave && dart pub get && dart test test/conformance_fixture_test.dart)
+
+  # ── Job 3: Build and test ──────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.

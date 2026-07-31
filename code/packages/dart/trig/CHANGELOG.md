@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Consume the versioned language-neutral PHY00 corpus in package tests,
+  including poles, quadrants, signed zero, subnormal, maximum finite,
+  infinity, NaN, and validation cases.
+
 ## [0.1.0] - 2026-07-31
 
 ### Added

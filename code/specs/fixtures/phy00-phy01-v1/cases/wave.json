@@ -1,0 +1,408 @@
+{
+  "schema_version": 1,
+  "suite": "phy01-wave",
+  "summary": "PHY01 construction, derived quantities, time evaluation, validation, and binary64 boundaries.",
+  "cases": [
+    {
+      "id": "phy01/construct/ordinary",
+      "operation": "construct",
+      "summary": "Finite non-negative amplitude, positive frequency, and finite phase are accepted.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "3.5"},
+          "frequency": {"kind": "finite", "decimal": "2"},
+          "phase": {"kind": "finite", "decimal": "1.25"}
+        }
+      },
+      "expected": {
+        "outcome": "accepted"
+      }
+    },
+    {
+      "id": "phy01/construct/zero-amplitude",
+      "operation": "construct",
+      "summary": "A zero-amplitude flat wave is accepted.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "0"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "accepted"
+      }
+    },
+    {
+      "id": "phy01/construct/negative-amplitude",
+      "operation": "construct",
+      "summary": "Negative amplitude is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "-1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/nan-amplitude",
+      "operation": "construct",
+      "summary": "NaN amplitude is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "nan"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/infinite-amplitude",
+      "operation": "construct",
+      "summary": "Infinite amplitude is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "positive-infinity"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/zero-frequency",
+      "operation": "construct",
+      "summary": "Zero frequency is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "0"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/negative-frequency",
+      "operation": "construct",
+      "summary": "Negative frequency is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "-5"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/nan-frequency",
+      "operation": "construct",
+      "summary": "NaN frequency is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "nan"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/infinite-frequency",
+      "operation": "construct",
+      "summary": "Infinite frequency is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "positive-infinity"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/angular-frequency-overflow",
+      "operation": "construct",
+      "summary": "A finite frequency that overflows two pi f is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1.7976931348623157e308"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/nan-phase",
+      "operation": "construct",
+      "summary": "NaN phase is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "nan"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/construct/infinite-phase",
+      "operation": "construct",
+      "summary": "Infinite phase is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "positive-infinity"}
+        }
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/period/four-hertz",
+      "operation": "period",
+      "summary": "A four hertz wave has a quarter-second period.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "4"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0.25"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/angular-frequency/ten-hertz",
+      "operation": "angular-frequency",
+      "summary": "Angular frequency is two pi times frequency.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "10"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "62.83185307179586"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/zero-crossing",
+      "operation": "evaluate",
+      "summary": "A zero-phase one hertz wave starts at zero.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        },
+        "time": {"kind": "finite", "decimal": "0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/quarter-period-peak",
+      "operation": "evaluate",
+      "summary": "A quarter period reaches the positive amplitude.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        },
+        "time": {"kind": "finite", "decimal": "0.25"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/three-quarter-period-trough",
+      "operation": "evaluate",
+      "summary": "Three quarters of a period reaches the negative amplitude.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        },
+        "time": {"kind": "finite", "decimal": "0.75"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/phase-peak",
+      "operation": "evaluate",
+      "summary": "A pi-over-two phase starts at the positive amplitude.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "1.5707963267948966"}
+        },
+        "time": {"kind": "finite", "decimal": "0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "1"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/periodic-base",
+      "operation": "evaluate",
+      "summary": "A representative phased wave value anchors periodicity.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "2.5"},
+          "frequency": {"kind": "finite", "decimal": "3"},
+          "phase": {"kind": "finite", "decimal": "0.7"}
+        },
+        "time": {"kind": "finite", "decimal": "0.137"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0.35082946230776246"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/periodic-next-cycle",
+      "operation": "evaluate",
+      "summary": "Adding one period preserves the representative phased wave value.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "2.5"},
+          "frequency": {"kind": "finite", "decimal": "3"},
+          "phase": {"kind": "finite", "decimal": "0.7"}
+        },
+        "time": {"kind": "finite", "decimal": "0.4703333333333333"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0.35082946230776246"},
+        "comparison": {"kind": "absolute", "tolerance": "1e-10"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/nan-time",
+      "operation": "evaluate",
+      "summary": "NaN time is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        },
+        "time": {"kind": "nan"}
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/evaluate/infinite-time",
+      "operation": "evaluate",
+      "summary": "Infinite time is rejected.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "1"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        },
+        "time": {"kind": "positive-infinity"}
+      },
+      "expected": {
+        "outcome": "error",
+        "error_code": "invalid-argument"
+      }
+    },
+    {
+      "id": "phy01/evaluate/zero-amplitude-extreme",
+      "operation": "evaluate",
+      "summary": "Zero amplitude short-circuits otherwise overflowing finite products.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "0"},
+          "frequency": {"kind": "finite", "decimal": "1e300"},
+          "phase": {"kind": "finite", "decimal": "1.5707963267948966"}
+        },
+        "time": {"kind": "finite", "decimal": "1.7976931348623157e308"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "0"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy01/evaluate/extreme-finite-bounded",
+      "operation": "evaluate",
+      "summary": "Extreme finite evaluation stays finite and within the amplitude bound.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1.7976931348623157e308"},
+          "frequency": {"kind": "finite", "decimal": "1e300"},
+          "phase": {"kind": "finite", "decimal": "1.5707963267948966"}
+        },
+        "time": {"kind": "finite", "decimal": "1.7976931348623157e308"}
+      },
+      "expected": {
+        "outcome": "property",
+        "predicate": "finite-absolute-not-greater-than-amplitude"
+      }
+    }
+  ]
+}
