@@ -106,11 +106,12 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `d05262d53` after merged OCaml
+inventory was regenerated on July 31, 2026 at `8c4785535` after merged OCaml
 toolchain work, the Rust `smart-home-matter-integration`, the Rust
 `smart-home-home-assistant-migration`, the Rust
 `smart-home-home-assistant-export`, and merged Algol, Mosaic, and build-tool
-contract slices through the execution case snapshot. It contains 1,200
+contract slices through the execution case snapshot and the unrelated Mosaic
+native pressed-state repair. It contains 1,200
 normalized implementation identities across 4,342 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
