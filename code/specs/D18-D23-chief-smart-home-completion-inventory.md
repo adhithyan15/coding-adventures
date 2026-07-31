@@ -565,9 +565,30 @@ migration boundary:
 - The CLI performs atomic output replacement. Protocol tests use a real local
   WebSocket server to prove authentication, command ordering, normalization,
   failed authorization, and token redaction.
-- Scene and automation definitions and historical state are not inferred from
+- Scene and automation definitions are not inferred from
   registry/current-state payloads; their live collection remains explicit
   follow-up work.
+
+## Current Home Assistant Historical State Slice
+
+This slice carries source history into D23's durable replay log instead of
+leaving it as a detached archive:
+
+- `smart-home-home-assistant-history` authenticates to Home Assistant's
+  WebSocket API and requests `history/history_during_period` in bounded entity
+  batches derived from the reviewed topology migration plan.
+- The collector validates returned entity identities and RFC3339 timestamps,
+  keeps full source state and attributes, and sorts records deterministically.
+- The planner maps historical states to topology-backed D23 capabilities,
+  preserves source payload details as event metadata, emits diagnostics for
+  lossy values, and creates stable content-derived event identifiers.
+- Apply routes chronological events through `SmartHomeRuntime`, skips
+  identical events on repeat apply, restores the topology export's newer
+  current state after replay, and emits a durable snapshot containing registry
+  and runtime event history.
+- Dry-run and applied CLI artifacts are written atomically. Real WebSocket and
+  process tests prove batched collection, durable replay, repeat idempotency,
+  current-state preservation, and token redaction.
 
 ## Smart Home Remaining Work
 
@@ -578,10 +599,10 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Extend the completed Home Assistant live topology/current-state collection
-  and topology/current-state/scene/automation importer with live scene and
-  automation definition collection, dashboard migration, and historical state
-  export where feasible.
+- Extend the completed Home Assistant live topology/current-state and
+  historical-state collection plus topology/current-state/scene/automation
+  importer with live scene and automation definition collection and dashboard
+  migration.
 - Provide a dashboard that can inspect devices, rooms, state, health,
   automations, event history, pairing, and command audit.
 
