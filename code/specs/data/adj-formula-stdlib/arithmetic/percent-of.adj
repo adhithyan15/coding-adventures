@@ -1,0 +1,72 @@
+% ============================================================================
+% percent-of.adj — the "percent OF a number" formula library
+% (ADJ-RULE-SUBSTRATE RS-1 / FL-4).
+% ============================================================================
+% The everyday inverse of `percent`. Where `percent(part, whole)` answers "what
+% PERCENTAGE is this part of the whole?" (= part/whole × 100), `percent_of`
+% answers the reverse question a shopper asks — "what is 20% OF 50?" — and returns
+% the PART:
+%
+%       percent_of(whole, rate) = whole × rate / 100
+%
+% This is the direct application of the cited percent definition: a percentage is
+% a fraction of 100, so `rate`% is the fraction `rate/100`, and taking that
+% fraction OF the whole is multiplying — `whole × rate/100`. The library performs
+% no bare multiplication of its own: it CALLS the cited `product` primitive to
+% form `whole × rate`, then divides by 100 — every arithmetic step named and cited
+% (RS-1 write-once-reuse-many).
+%
+%     import "percent-of.adj"                        % transitively imports arithmetic.adj
+%     observe whole(50)                              % the base amount
+%     observe rate(20)                               % 20 percent (a PERCENT, not 0.20)
+%     ? percent_of(whole, rate)                      % engine → 10   ((50 × 20)/100)
+%
+% Worked check: (50 × 20) / 100 = 1000 / 100 = 10 — twenty percent of fifty is ten.
+% The engine expands `percent_of` → `product` on the CPU and composes the
+% provenance chain: the answer cites the percent definition (primary) AND the
+% `product` primitive it built on (corroboration). Zero arithmetic is performed by
+% the model.
+%
+% Honesty note: `rate` is a PERCENT (20, not 0.20) — the `/100` is exactly the
+% "per hundred". A zero rate correctly yields zero (0% of anything is 0); nothing
+% is invented. This is the algebraic inverse of the shipped `percent` formula: for
+% any part and whole, `percent_of(whole, percent(part, whole)) = part`.
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitive `product`. The import is RELATIVE to this
+% file (same directory); a consumer that imports `percent-of.adj` transitively
+% gets `product` (and its siblings), so the body resolves.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The two inputs: the `whole` (the base amount) and the `rate` (the
+% percentage, as a number like 20). The result is the part that is that percent of
+% the whole. Rung-0 types each observable slot as `finding`; the `surface`
+% synonyms let a decomposer map everyday phrasing ("of", "out of the total",
+% "percent") onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary percent_of_vocab {
+    define whole      : finding  surface "whole", "total", "base", "amount", "of"
+    define rate       : finding  surface "rate", "percent", "percentage", "rate percent"
+    define percent_of : finding  surface "percent of", "part", "amount that is the percent"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. `percent_of(whole, rate) = product(whole, rate) / 100`
+% CALLS the cited `product` primitive to form `whole × rate`, then divides by 100
+% (the "per hundred" that turns the percent rate into a fraction). The engine
+% resolves the application on the CPU and carries `product`'s citation alongside
+% this one. The formula asserts its own claim about the world (the part that is
+% `rate`% of the whole) and so carries its own required source — the MathWorld
+% percent definition it directly applies.
+% ----------------------------------------------------------------------------
+formulabook percent_of_book {
+    use percent_of_vocab
+
+    formula percent_of(whole, rate) = product(whole, rate) / 100
+        source "A percentage is a number or ratio expressed as a fraction of 100; it is often denoted by the percent sign, %."
+        locator "https://mathworld.wolfram.com/Percent.html"
+        trust authoritative
+}
