@@ -4447,6 +4447,11 @@ pub fn normalize_model_card(
                     name: name.clone(),
                     reason: "MOSFET CGSO must be finite and non-negative".to_string(),
                 });
+            } else if canonical == "CGDO" && (!raw_value.is_finite() || *raw_value < 0.0) {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET CGDO must be finite and non-negative".to_string(),
+                });
             } else {
                 normalized.insert(canonical.to_string(), *raw_value);
             }

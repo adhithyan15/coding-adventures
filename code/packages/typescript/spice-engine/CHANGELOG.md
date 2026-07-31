@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `CGDO` values before
+  gate-drain overlap-capacitance stamping.
+
 - Reject negative and non-finite Level-1 MOS model-card `CGSO` values before
   gate-source overlap-capacitance stamping.
 
