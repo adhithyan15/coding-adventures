@@ -577,6 +577,21 @@ const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState<Conte
 }
 "#;
 
+const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState<Content: View>: View {
+    @FocusState private var isFocused: Bool
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        content(isFocused)
+            .focused($isFocused)
+    }
+}
+"#;
+
 // =====================================================================
 // HostTable column-widths threading — TableContext
 // =====================================================================
@@ -742,6 +757,32 @@ fn layout_uses_automatic_hover(node: &LayoutNode, part_styles: &PartStyleMap) ->
             .any(|child| layout_uses_automatic_hover(child, part_styles))
 }
 
+fn primitive_supports_automatic_focus(tag: &str) -> bool {
+    matches!(
+        tag,
+        "HostInput" | "HostNumberInput" | "HostButton" | "HostCheckbox" | "HostRadio" | "HostLink"
+    )
+}
+
+fn automatic_focus_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if !primitive_supports_automatic_focus(&node.tag) || has_explicit_state_when(node, "focused") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:focused"))
+}
+
+fn layout_uses_automatic_focus(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_focus_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_focus(child, part_styles))
+}
+
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
 ///
 /// `cond_expr` is the Swift expression for the predicate (already
@@ -826,6 +867,7 @@ fn collect_state_layers_for_emission<'a>(
     part_name: &str,
     part_styles: &'a PartStyleMap,
     uses_automatic_hover: bool,
+    uses_automatic_focus: bool,
 ) -> Vec<StateLayer<'a>> {
     let mut layers = Vec::new();
     if uses_automatic_hover {
@@ -834,6 +876,15 @@ fn collect_state_layers_for_emission<'a>(
                 cond_expr: "__mosaicHoverActive".to_string(),
                 props: hover_style.props.as_slice(),
                 transitions: hover_style.transitions.as_slice(),
+            });
+        }
+    }
+    if uses_automatic_focus {
+        if let Some(focus_style) = part_styles.get(&format!("{part_name}:focused")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicFocusActive".to_string(),
+                props: focus_style.props.as_slice(),
+                transitions: focus_style.transitions.as_slice(),
             });
         }
     }
@@ -1629,6 +1680,10 @@ pub fn from_pipeline(
         out.push_str(HOVER_STATE_HELPER_SWIFT);
         writeln!(out).unwrap();
     }
+    if layout_uses_automatic_focus(&layout.root, &part_styles) {
+        out.push_str(FOCUS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
 
     // 3. Event enum (analog of UI24 §3.1 event union).
     out.push_str(&emit_event_union(name, &interface.emits)?);
@@ -1921,13 +1976,11 @@ fn emit_view_tree(
     // width-thread path for where `Some(...)` originates.
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
-    let outer_indent = indent;
     let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
-    let indent = if uses_automatic_hover {
-        indent + 4
-    } else {
-        indent
-    };
+    let uses_automatic_focus = automatic_focus_style(node, part_styles).is_some();
+    let automatic_wrapper_count =
+        usize::from(uses_automatic_hover) + usize::from(uses_automatic_focus);
+    let indent = indent + automatic_wrapper_count * 4;
     let pad = " ".repeat(indent);
 
     let mut inner = match node.tag.as_str() {
@@ -2141,8 +2194,13 @@ fn emit_view_tree(
         let base_transitions = base_style
             .map(|style| style.transitions.as_slice())
             .unwrap_or(&[]);
-        let state_layers =
-            collect_state_layers_for_emission(node, part, part_styles, uses_automatic_hover);
+        let state_layers = collect_state_layers_for_emission(
+            node,
+            part,
+            part_styles,
+            uses_automatic_hover,
+            uses_automatic_focus,
+        );
         // When a width is injected we MUST run the chain even if the part
         // carries no styles, so the frame still emits.
         if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
@@ -2182,8 +2240,17 @@ fn emit_view_tree(
         }
     }
 
+    let mut wrapper_indent = indent;
+    if uses_automatic_focus {
+        wrapper_indent -= 4;
+        let wrapper_pad = " ".repeat(wrapper_indent);
+        inner = format!(
+            "{wrapper_pad}_MosaicFocusState {{ __mosaicFocusActive in\n{inner}{wrapper_pad}}}\n"
+        );
+    }
     if uses_automatic_hover {
-        let outer_pad = " ".repeat(outer_indent);
+        wrapper_indent -= 4;
+        let outer_pad = " ".repeat(wrapper_indent);
         inner = format!(
             "{outer_pad}_MosaicHoverState {{ __mosaicHoverActive in\n{inner}{outer_pad}}}\n"
         );
@@ -8685,6 +8752,155 @@ mod tests {
         assert!(
             out.contains(".opacity(((( forceHover )) ? 1 : 0.8))"),
             "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T30 — UI15's built-in focused state is activated by native SwiftUI
+    //       focus for focus-capable host controls.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_focused_state_emits_native_focus_wrapper_and_animation() {
+        let m = component("FocusField", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "FocusField".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![prop_string("placeholder", "Search")],
+                children: vec![],
+            },
+        };
+        let s = StyleDef {
+            component_name: "FocusField".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![sp("border-width", "1"), sp("border-color", "#d0d0d0")],
+                transitions: vec![transition("border-color", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![sp("border-color", "#e0942a")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicFocusState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("@FocusState private var isFocused: Bool"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicFocusState { __mosaicFocusActive in"),
+            "out = {out}"
+        );
+        assert!(out.contains(".focused($isFocused)"), "out = {out}");
+        assert!(
+            out.contains("__mosaicFocusActive")
+                && out.contains("Animation.easeOut(duration: 0.08)"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn built_in_focused_state_is_local_to_each_for_iteration() {
+        let m = component(
+            "FocusRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let field = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("field".to_string()),
+            props: vec![
+                prop_expr("value", "( row )"),
+                prop_string("placeholder", "Edit"),
+            ],
+            children: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "FocusRows".to_string(),
+            root: node_with_props(
+                "For",
+                vec![prop_slot_ref("each", "rows"), prop_keyword("as", "row")],
+                vec![field],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "FocusRows",
+            "field",
+            vec![sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        let for_pos = out
+            .find("ForEach(rows, id: \\.self) { row in")
+            .expect("ForEach");
+        let focus_pos = out[for_pos..]
+            .find("_MosaicFocusState { __mosaicFocusActive in")
+            .expect("row-local focus wrapper");
+        assert!(focus_pos > 0, "out = {out}");
+        assert!(out[for_pos..].contains("TextField(\"Edit\""), "out = {out}");
+    }
+
+    #[test]
+    fn explicit_focused_predicate_remains_author_controlled() {
+        let m = component("ManualFocus", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualFocus".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![
+                    prop_string("placeholder", "Search"),
+                    prop_expr("state-when-focused", "( forceFocus )"),
+                ],
+                children: vec![],
+            },
+        };
+        let s = style_with_part_and_states(
+            "ManualFocus",
+            "field",
+            vec![sp("border-width", "1"), sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicFocusState"),
+            "explicit predicate should not install native focus tracking:\n{out}"
+        );
+        assert!(out.contains("forceFocus"), "out = {out}");
+    }
+
+    #[test]
+    fn non_focusable_layout_node_does_not_install_focus_tracking() {
+        let m = component("DecorativeFocus", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "DecorativeFocus".to_string(),
+            root: box_node_with_part_and_props("panel", vec![]),
+        };
+        let s = style_with_part_and_states(
+            "DecorativeFocus",
+            "panel",
+            vec![sp("border-color", "#d0d0d0")],
+            vec![("focused", vec![sp("border-color", "#e0942a")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicFocusState"),
+            "non-focusable layout nodes must not gain native focus:\n{out}"
         );
     }
 

@@ -87,6 +87,14 @@ Wrappers are instantiated inside `ForEach`, so repeated rows retain independent
 hover state. An explicit `state-when-hover` remains available when hover-like
 styling is intentionally driven by application state instead of the pointer.
 
+UI15's built-in `state focused` is likewise native for focus-capable host
+controls (`HostInput`, `HostNumberInput`, `HostButton`, `HostCheckbox`,
+`HostRadio`, and `HostLink`). The generated wrapper owns a local SwiftUI
+`@FocusState`, applies `.focused(...)` to the native control, and drives the
+authored state properties and transitions from that binding. Repeated controls
+retain independent focus state. An explicit `state-when-focused` continues to
+override automatic focus tracking for application-controlled styling.
+
 ## Primitive lowering
 
 | Mosaic primitive | SwiftUI                                       |
