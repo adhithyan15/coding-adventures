@@ -118,6 +118,7 @@ per rotation, in parallel):
 | `geography/` | common landform → defining descriptor (mountain → projects_above_surroundings, plateau → flat_elevated, canyon → deep_narrow) | USGS Feature Type Thesaurus (authoritative) |
 | `geography/` | globe reference line → what it marks (equator → zero_degrees_latitude, prime_meridian → zero_degrees_longitude, tropic_of_cancer → northernmost_sun_overhead) | NOAA National Ocean Service / NESDIS (authoritative) |
 | `language/` | Greek letter → its 1-based position in the alphabet (alpha → 1, gamma → 3, pi → 16, omega → 24) | Wikipedia "Greek alphabet" (consensus) |
+| `language/` | Latin letter → its International Morse code pattern as dot/dash word-atoms (s → dot_dot_dot, o → dash_dash_dash, e → dot) | ITU-R M.1677-1 via Wikipedia "Morse code" (consensus) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
