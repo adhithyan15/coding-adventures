@@ -1,0 +1,31 @@
+% ============================================================================
+% proportion.query.adj — a worked example of the proportion formula library.
+% ============================================================================
+% Run against the shipped stdlib:
+%
+%   adj-lang-cli proportion.query.adj
+%
+% "2 is to 3 as 4 is to WHAT?" — the proportion 2/3 = 4/x. The rule of three
+% gives x = (3 × 4) / 2 = 6, computed on the CPU by composing the cited `product`
+% primitive (3 × 4 = 12) and then the cited `quotient` primitive (12 / 2 = 6)
+% from arithmetic.adj. The answer carries the cross-multiplication rule of three
+% (primary) AND both primitives it built on (corroboration) — the model performs
+% zero arithmetic. (Check: 2/3 = 4/6 = 0.666…, so the proportion balances.)
+% ============================================================================
+import "proportion.adj"
+
+observe first_term(2)
+observe second_term(3)
+observe third_term(4)
+
+? fourth_proportional(first_term, second_term, third_term)
+
+% ----------------------------------------------------------------------------
+% Honest edge case — a degenerate proportion 0/b = c/x has NO finite fourth
+% proportional (the rule of three would divide by zero). The formula makes no
+% special claim here; it applies the cited `quotient`, which REFUSES to divide by
+% zero. The engine returns a DivisionByZero error rather than inventing a value —
+% honest abstention, not a fabricated answer. (Uncomment to see it.)
+% ----------------------------------------------------------------------------
+% observe first_term(0)
+% ? fourth_proportional(first_term, second_term, third_term)
