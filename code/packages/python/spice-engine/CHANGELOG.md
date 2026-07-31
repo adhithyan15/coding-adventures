@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `CGSO` values before
+  gate-source overlap-capacitance stamping.
+
 - Reject negative and non-finite Level-1 MOS model-card `CBD` / `CJD` values
   before drain-bulk capacitance shaping.
 
