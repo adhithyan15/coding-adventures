@@ -116,11 +116,12 @@ runner families.
 
 `.github/workflows/build-ocaml.yml` runs a fail-fast-disabled three-target
 matrix. It has read-only repository permissions, uses no repository- or
-user-supplied secrets, passes an empty token to the setup action, and uses only
-commit-pinned actions. Checkout may use GitHub's automatic read-only token for
-the public clone but MUST NOT persist it in Git configuration. The workflow
-records `RUNNER_OS`, `RUNNER_ARCH`, `ImageOS`, and `ImageVersion` for
-diagnostics without treating those mutable labels as an attested host identity.
+user-supplied secrets, and uses only commit-pinned actions. The automatic
+read-only GitHub token may appear only as the setup action's exact
+`github-token` input because the action requires authentication; checkout MUST
+NOT persist credentials in Git configuration. The workflow records
+`RUNNER_OS`, `RUNNER_ARCH`, `ImageOS`, and `ImageVersion` for diagnostics
+without treating those mutable labels as an attested host identity.
 
 Both fixture kinds run sequentially on every target. Every nonblank line in the
 selected `BUILD` or `BUILD_windows` file is one independent command, matching
@@ -152,7 +153,8 @@ Repository tests MUST reject:
 - non-identical library/program opam inputs;
 - lock evidence that omits an exact direct dependency;
 - a missing three-platform matrix, weak permissions, mutable action reference,
-  cache substitution, secret use, or skip-success construct; and
+  cache substitution, secret use, automatic-token use outside the two reviewed
+  setup inputs, or skip-success construct; and
 - any fixture BUILD file that omits formatting, tests, coverage, or contains a
   blank-success fallback.
 

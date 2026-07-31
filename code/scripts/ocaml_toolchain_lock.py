@@ -685,7 +685,7 @@ def _validate_setup_step(
         ),
         "windows-compiler": "mingw",
         "windows-environment": "cygwin",
-        "github-token": "",
+        "github-token": "${{ github.token }}",
     }
     if inputs != expected_inputs:
         raise ContractError(
@@ -1026,13 +1026,17 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         "continue-on-error:": "continue-on-error",
         "|| true": "conditional success",
         "secrets.": "repository secret use",
-        "github.token": "automatic GitHub token use",
         "dune-cache: true": "project dependency cache",
         "opam-pin: true": "package pinning",
     }
     for text, label in forbidden.items():
         if text in workflow_text:
             raise ContractError(f"workflow contains forbidden {label}")
+    if workflow_text.count("${{ github.token }}") != 2:
+        raise ContractError(
+            "workflow automatic GitHub token use must be limited to the two "
+            "reviewed setup inputs"
+        )
 
 
 def validate_repository(

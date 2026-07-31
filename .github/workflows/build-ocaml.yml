@@ -90,7 +90,7 @@ jobs:
           cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-fresh-${{ matrix.target }}
           windows-compiler: mingw
           windows-environment: cygwin
-          github-token: ''
+          github-token: ${{ github.token }}
 
       - name: Require the reviewed runner and opam bootstrap
         shell: bash
@@ -200,7 +200,7 @@ jobs:
           cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-locked-${{ matrix.target }}
           windows-compiler: mingw
           windows-environment: cygwin
-          github-token: ''
+          github-token: ${{ github.token }}
 
       - name: Require the reviewed runner and opam bootstrap
         shell: bash

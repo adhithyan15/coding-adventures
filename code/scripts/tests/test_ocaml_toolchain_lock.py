@@ -285,7 +285,6 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
             "continue-on-error: true",
             "run: command || true",
             "${{ secrets.TOKEN }}",
-            "${{ github.token }}",
             "dune-cache: true",
             "opam-pin: true",
         ):
@@ -415,7 +414,9 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
             self.workflow.replace("actions/checkout@", "attacker/checkout@", 1),
             self.workflow.replace("persist-credentials: false", "other: false", 1),
             self.workflow.replace("ocaml/setup-ocaml@", "attacker/setup-ocaml@", 1),
-            self.workflow.replace("github-token: ''", "github-token: token", 1),
+            self.workflow.replace(
+                "github-token: ${{ github.token }}", "github-token: token", 1
+            ),
             self.workflow.replace(
                 "ocaml-compiler: ocaml-base-compiler.5.2.1",
                 "ocaml-compiler: ${{ env.OCAML_VERSION }}",
@@ -456,6 +457,16 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
         for index, workflow in enumerate(cases):
             with self.subTest(case=index), self.assertRaises(toolchain.ContractError):
                 toolchain.validate_workflow_text(self.manifest, workflow)
+
+    def test_rejects_automatic_token_outside_reviewed_setup_inputs(self) -> None:
+        workflow = (
+            f"{self.workflow}\n"
+            "# An extra token reference must fail even when hidden in a comment:\n"
+            "# ${{ github.token }}\n"
+        )
+
+        with self.assertRaisesRegex(toolchain.ContractError, "token use"):
+            toolchain.validate_workflow_text(self.manifest, workflow)
 
     def test_workflow_type_helpers_reject_wrong_shapes(self) -> None:
         for function, value in (
