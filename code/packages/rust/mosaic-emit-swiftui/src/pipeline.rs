@@ -557,6 +557,26 @@ struct PartStyleEntry {
 
 type PartStyleMap = HashMap<String, PartStyleEntry>;
 
+const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState<Content: View>: View {
+    @State private var isHovered = false
+    private let content: (Bool) -> Content
+
+    init(@ViewBuilder content: @escaping (Bool) -> Content) {
+        self.content = content
+    }
+
+    @ViewBuilder
+    var body: some View {
+#if os(macOS)
+        content(isHovered)
+            .onHover { isHovered = $0 }
+#else
+        content(false)
+#endif
+    }
+}
+"#;
+
 // =====================================================================
 // HostTable column-widths threading — TableContext
 // =====================================================================
@@ -698,6 +718,30 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     out
 }
 
+fn has_explicit_state_when(node: &LayoutNode, state_name: &str) -> bool {
+    let prop_name = format!("state-when-{state_name}");
+    node.props.iter().any(|prop| prop.name == prop_name)
+}
+
+fn automatic_hover_style<'a>(
+    node: &LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> Option<&'a PartStyleEntry> {
+    let part_name = node.part_name.as_deref()?;
+    if has_explicit_state_when(node, "hover") {
+        return None;
+    }
+    part_styles.get(&format!("{part_name}:hover"))
+}
+
+fn layout_uses_automatic_hover(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    automatic_hover_style(node, part_styles).is_some()
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_automatic_hover(child, part_styles))
+}
+
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
 ///
 /// `cond_expr` is the Swift expression for the predicate (already
@@ -774,6 +818,26 @@ fn collect_state_layers<'a>(
             transitions: state_style.transitions.as_slice(),
         });
     }
+    layers
+}
+
+fn collect_state_layers_for_emission<'a>(
+    node: &LayoutNode,
+    part_name: &str,
+    part_styles: &'a PartStyleMap,
+    uses_automatic_hover: bool,
+) -> Vec<StateLayer<'a>> {
+    let mut layers = Vec::new();
+    if uses_automatic_hover {
+        if let Some(hover_style) = part_styles.get(&format!("{part_name}:hover")) {
+            layers.push(StateLayer {
+                cond_expr: "__mosaicHoverActive".to_string(),
+                props: hover_style.props.as_slice(),
+                transitions: hover_style.transitions.as_slice(),
+            });
+        }
+    }
+    layers.extend(collect_state_layers(node, part_name, part_styles));
     layers
 }
 
@@ -1561,6 +1625,11 @@ pub fn from_pipeline(
     writeln!(out, "import SwiftUI").unwrap();
     writeln!(out).unwrap();
 
+    if layout_uses_automatic_hover(&layout.root, &part_styles) {
+        out.push_str(HOVER_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+
     // 3. Event enum (analog of UI24 §3.1 event union).
     out.push_str(&emit_event_union(name, &interface.emits)?);
     writeln!(out).unwrap();
@@ -1852,6 +1921,13 @@ fn emit_view_tree(
     // width-thread path for where `Some(...)` originates.
     injected_width: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
+    let outer_indent = indent;
+    let uses_automatic_hover = automatic_hover_style(node, part_styles).is_some();
+    let indent = if uses_automatic_hover {
+        indent + 4
+    } else {
+        indent
+    };
     let pad = " ".repeat(indent);
 
     let mut inner = match node.tag.as_str() {
@@ -2065,7 +2141,8 @@ fn emit_view_tree(
         let base_transitions = base_style
             .map(|style| style.transitions.as_slice())
             .unwrap_or(&[]);
-        let state_layers = collect_state_layers(node, part, part_styles);
+        let state_layers =
+            collect_state_layers_for_emission(node, part, part_styles, uses_automatic_hover);
         // When a width is injected we MUST run the chain even if the part
         // carries no styles, so the frame still emits.
         if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
@@ -2103,6 +2180,13 @@ fn emit_view_tree(
             spliced.push('\n');
             inner = spliced;
         }
+    }
+
+    if uses_automatic_hover {
+        let outer_pad = " ".repeat(outer_indent);
+        inner = format!(
+            "{outer_pad}_MosaicHoverState {{ __mosaicHoverActive in\n{inner}{outer_pad}}}\n"
+        );
     }
 
     Ok(inner)
@@ -8477,6 +8561,129 @@ mod tests {
             out.contains(
                 ".animation(Animation.easeOut(duration: 0.15), value: ((( disabled )) ? 0.4 : 1))"
             ),
+            "out = {out}"
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // T29 — UI15's built-in hover state is activated without requiring a
+    //       redundant state-when-hover layout predicate.
+    // ---------------------------------------------------------------------
+
+    #[test]
+    fn built_in_hover_state_emits_row_local_wrapper_and_animation() {
+        let m = component("HoverCard", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "HoverCard".to_string(),
+            root: box_node_with_part_and_props("card", vec![]),
+        };
+        let s = StyleDef {
+            component_name: "HoverCard".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![sp("background", "#ffffff")],
+                transitions: vec![transition("background", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "hover".to_string(),
+                    props: vec![sp("background", "#e8f0ff")],
+                    transitions: vec![],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            out.contains("private struct _MosaicHoverState<Content: View>: View"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains("_MosaicHoverState { __mosaicHoverActive in"),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(
+                ".background(((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
+            ),
+            "out = {out}"
+        );
+        assert!(
+            out.contains(
+                ".animation(Animation.easeOut(duration: 0.08), value: ((__mosaicHoverActive) ? Color(red: 0.91, green: 0.941, blue: 1) : Color(red: 1, green: 1, blue: 1)))"
+            ),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn built_in_hover_state_is_local_to_each_for_iteration() {
+        let m = component(
+            "HoverRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let mut row = box_node_with_part_and_props("row", vec![]);
+        row.children.push(node_with_props(
+            "Text",
+            vec![prop_keyword("value", "row")],
+            vec![],
+        ));
+        let l = LayoutDef {
+            component_name: "HoverRows".to_string(),
+            root: node_with_props(
+                "For",
+                vec![prop_slot_ref("each", "rows"), prop_keyword("as", "row")],
+                vec![row],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "HoverRows",
+            "row",
+            vec![sp("opacity", "0.8")],
+            vec![("hover", vec![sp("opacity", "1")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        let for_pos = out
+            .find("ForEach(rows, id: \\.self) { row in")
+            .expect("ForEach");
+        let hover_pos = out[for_pos..]
+            .find("_MosaicHoverState { __mosaicHoverActive in")
+            .expect("row-local hover wrapper");
+        assert!(hover_pos > 0, "out = {out}");
+        assert!(
+            out[for_pos..].contains(".opacity(((__mosaicHoverActive) ? 1 : 0.8))"),
+            "out = {out}"
+        );
+    }
+
+    #[test]
+    fn explicit_hover_predicate_remains_author_controlled() {
+        let m = component("ManualHover", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "ManualHover".to_string(),
+            root: box_node_with_part_and_props(
+                "root",
+                vec![prop_expr("state-when-hover", "( forceHover )")],
+            ),
+        };
+        let s = style_with_part_and_states(
+            "ManualHover",
+            "root",
+            vec![sp("opacity", "0.8")],
+            vec![("hover", vec![sp("opacity", "1")])],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("emit ok").output;
+        assert!(
+            !out.contains("_MosaicHoverState"),
+            "explicit predicate should not install native hover tracking:\n{out}"
+        );
+        assert!(
+            out.contains(".opacity(((( forceHover )) ? 1 : 0.8))"),
             "out = {out}"
         );
     }

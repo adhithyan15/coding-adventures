@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Native activation for MSL hover states
+
+SwiftUI output now activates UI15's built-in `state hover` blocks without
+requiring authors to repeat the interaction as a `state-when-hover` layout
+predicate. The emitter generates a small native SwiftUI hover wrapper only
+when the compiled component uses a hover state. Every wrapper owns its own
+`@State`, including wrappers inside `ForEach`, so hovering one repeated row
+does not restyle the whole list. Existing explicit `state-when-hover`
+predicates remain author-controlled and do not install pointer tracking.
+
 ### Added - Native SwiftUI lowering for MSL transitions
 
 Part-level and state-local transitions from `mosstyle-compiler` now lower to

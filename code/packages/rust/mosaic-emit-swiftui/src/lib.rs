@@ -49,6 +49,9 @@
 //!    camelCased) and ends with a single required `dispatch` closure
 //!    property. This is the SwiftUI analog of the React UI24 promise.
 //! 3. The **`body` computed property** walks the moslayout tree.
+//! 4. A part with UI15's built-in `state hover` is wrapped in a local native
+//!    hover-state view. Each wrapper instance owns its own `@State`, so
+//!    repeated `ForEach` content does not share pointer state.
 //!
 //! ## Primitive coverage in this first cut
 //!
@@ -79,11 +82,9 @@
 //! SwiftUI's data-driven `Table` view: the data-driven form needs a
 //! row-shape that the IR does not yet carry. See the per-function doc
 //! comment on `pipeline::emit_host_table` for the full rationale. The
-//! remaining UI29 kernel primitives — `If`, `For` — still lower to
-//! `UnknownPrimitive` errors; they wait on the moslayout
-//! grammar additions (U29-G3). Legacy primitives
-//! (`Icon`, `Grid` v2) also still return `UnknownPrimitive` and will land
-//! in their own follow-up PRs. `Cell` + `Column`-as-metadata + `Grid` v3
+//! Legacy primitives (`Icon`, `Grid` v2) still return `UnknownPrimitive`
+//! and will land in their own follow-up PRs. `Cell` +
+//! `Column`-as-metadata + `Grid` v3
 //! from UI28 §2 are deliberately deferred — the `Column` primitive in
 //! this PR still maps to `VStack` (i.e. UI14 `Column`, not UI28
 //! `Column`-metadata).
