@@ -316,11 +316,18 @@ struct Compiler {
     /// Procedure name → signature, registered in a pre-pass so a call can be
     /// lowered before the callee's body is (forward references / recursion).
     proc_sigs: HashMap<String, ProcSig>,
-    /// Switch name → its ordered list of target label slots.  A
-    /// `switch s := first, second` becomes `s → ["L_first", "L_second"]`, and a
-    /// `goto s[i]` (1-based) selects the i-th target.  Declared in the block's
-    /// declaration part, before the statements that use it.
-    switches: HashMap<String, Vec<String>>,
+    /// Switch name → its ordered designational expressions. A `goto s[i]`
+    /// evaluates the selected expression at run time, which permits both
+    /// conditional and nested switch-list elements.
+    switches: HashMap<String, Vec<GrammarASTNode>>,
+    /// Switches being expanded into the current linear dispatch chain. The
+    /// source grammar permits a switch to name another switch, but a cycle
+    /// cannot be finitely inlined into portable IIR control flow.
+    resolving_switches: HashSet<String>,
+    /// Number of switch-designator arms expanded in the current function.
+    /// This bounds exponential fan-out through an otherwise acyclic switch
+    /// graph before it can exhaust compiler resources.
+    switch_expansion_steps: usize,
     /// Names referenced inside a **procedure** body in the block currently being
     /// compiled (LANG-FULL **E6**).  Computed once per block before any scalar
     /// is declared; a block scalar whose name is in this set is materialised as
@@ -349,6 +356,8 @@ impl Default for Compiler {
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             switches: HashMap::new(),
+            resolving_switches: HashSet::new(),
+            switch_expansion_steps: 0,
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
         }
@@ -1269,6 +1278,7 @@ impl Compiler {
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
         let saved_switches = std::mem::take(&mut self.switches);
+        let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
@@ -1463,6 +1473,7 @@ impl Compiler {
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
         self.switches = saved_switches;
+        self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
         self.scopes = saved_scopes;
 
@@ -2534,6 +2545,7 @@ impl Compiler {
                 ));
             }
             let else_label = self.fresh_label("desig_else");
+            let end_label = self.fresh_label("desig_end");
             self.emit(IIRInstr::new(
                 "jmp_if_false",
                 None,
@@ -2541,8 +2553,16 @@ impl Compiler {
                 "void",
             ));
             self.emit_simple_desig_jump(then_node)?;
+            self.emit(IIRInstr::new(
+                "jmp",
+                None,
+                vec![Operand::Var(end_label.clone())],
+                "void",
+            ));
             self.emit_label(&else_label);
-            self.emit_desig_jump(else_node)
+            self.emit_desig_jump(else_node)?;
+            self.emit_label(&end_label);
+            Ok(())
         } else {
             let simple = first_direct_node(desig, "simple_desig").ok_or_else(|| {
                 CompileError::Malformed("designator missing simple_desig".into())
@@ -2568,7 +2588,7 @@ impl Compiler {
             let index_node = first_direct_node(simple, "arith_expr").ok_or_else(|| {
                 CompileError::Malformed("switch subscript missing index".into())
             })?;
-            let labels = self.switches.get(&name).cloned().ok_or_else(|| {
+            let targets = self.switches.get(&name).cloned().ok_or_else(|| {
                 CompileError::Type(format!("goto uses undeclared switch {name:?}"))
             })?;
             let index = self.emit_expr(index_node)?;
@@ -2577,32 +2597,56 @@ impl Compiler {
                     "switch subscript index must be an integer".into(),
                 ));
             }
-            // 1-based: `goto s[k]` jumps to the k-th target.  Emit a linear
-            // `index == k ? jmp Lk` chain; an out-of-range index matches no arm
-            // and falls through.
-            for (i, label) in labels.iter().enumerate() {
-                let k = ExprValue {
-                    slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
-                    ty: ScalarType::Integer,
-                };
-                let matched = self.emit_binary("=", index.clone(), k)?;
-                let next_label = self.fresh_label("switch_next");
-                self.emit(IIRInstr::new(
-                    "jmp_if_false",
-                    None,
-                    vec![Operand::Var(matched.slot), Operand::Var(next_label.clone())],
-                    "void",
-                ));
-                self.referenced_labels.insert(label.clone());
-                self.emit(IIRInstr::new(
-                    "jmp",
-                    None,
-                    vec![Operand::Var(label.clone())],
-                    "void",
-                ));
-                self.emit_label(&next_label);
+            self.switch_expansion_steps = self
+                .switch_expansion_steps
+                .checked_add(targets.len())
+                .ok_or_else(|| {
+                    CompileError::Unsupported("switch designator expansion is too large".into())
+                })?;
+            if self.switch_expansion_steps > MAX_SWITCH_DESIGNATOR_EXPANSIONS {
+                return Err(CompileError::Unsupported(format!(
+                    "switch designator expansion exceeds {MAX_SWITCH_DESIGNATOR_EXPANSIONS} arms"
+                )));
             }
-            Ok(())
+            if !self.resolving_switches.insert(name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "cyclic switch-list element involving {name:?}"
+                )));
+            }
+            let result = (|| {
+                // 1-based: `goto s[k]` selects the k-th designator. An
+                // out-of-range index matches no arm and falls through. Each
+                // matched arm jumps to `switch_done` after its designator so
+                // a nested switch with an out-of-range subscript cannot fall
+                // through and test this outer switch's next arm.
+                let done_label = self.fresh_label("switch_done");
+                for (i, target) in targets.iter().enumerate() {
+                    let k = ExprValue {
+                        slot: self.emit_const(ScalarType::Integer, Operand::Int((i as i64) + 1)),
+                        ty: ScalarType::Integer,
+                    };
+                    let matched = self.emit_binary("=", index.clone(), k)?;
+                    let next_label = self.fresh_label("switch_next");
+                    self.emit(IIRInstr::new(
+                        "jmp_if_false",
+                        None,
+                        vec![Operand::Var(matched.slot), Operand::Var(next_label.clone())],
+                        "void",
+                    ));
+                    self.emit_desig_jump(target)?;
+                    self.emit(IIRInstr::new(
+                        "jmp",
+                        None,
+                        vec![Operand::Var(done_label.clone())],
+                        "void",
+                    ));
+                    self.emit_label(&next_label);
+                }
+                self.emit_label(&done_label);
+                Ok(())
+            })();
+            self.resolving_switches.remove(&name);
+            result
         } else if tokens.iter().any(|t| t.effective_type_name() == "LPAREN") {
             // simple_desig = LPAREN desig_expr RPAREN
             let inner = first_direct_node(simple, "desig_expr").ok_or_else(|| {
@@ -2620,12 +2664,12 @@ impl Compiler {
         }
     }
 
-    /// Record a switch declaration's ordered target labels.
+    /// Record a switch declaration's ordered designational expressions.
     ///
     /// `switch_decl = "switch" NAME ASSIGN switch_list` and
-    /// `switch_list = desig_expr { COMMA desig_expr }`.  On the executable
-    /// slice each element must be a plain label (the overwhelmingly common
-    /// form); conditional or nested-subscript switch elements are rejected.
+    /// `switch_list = desig_expr { COMMA desig_expr }`. The expressions are
+    /// retained until a `goto switch[index]` selects one, preserving ALGOL's
+    /// run-time conditional and nested-switch semantics.
     fn register_switch(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         let name = direct_tokens(node)
@@ -2636,14 +2680,12 @@ impl Compiler {
         let switch_list = first_direct_node(node, "switch_list")
             .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
 
-        let mut labels = Vec::new();
-        for elem in direct_nodes(switch_list)
+        let targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
             .into_iter()
             .filter(|n| n.rule_name == "desig_expr")
-        {
-            labels.push(self.switch_element_label(elem)?);
-        }
-        if labels.is_empty() {
+            .cloned()
+            .collect();
+        if targets.is_empty() {
             return Err(CompileError::Malformed("switch has no targets".into()));
         }
         if self.switches.contains_key(&name) {
@@ -2651,39 +2693,8 @@ impl Compiler {
                 "duplicate declaration for switch {name:?}"
             )));
         }
-        self.switches.insert(name, labels);
+        self.switches.insert(name, targets);
         Ok(())
-    }
-
-    /// Resolve a switch-list element to a single target label slot.  Only plain
-    /// labels are supported as switch elements on the current slice.
-    fn switch_element_label(&self, desig: &GrammarASTNode) -> Result<String, CompileError> {
-        let toks = recursive_tokens(desig);
-        if toks.iter().any(|t| t.value == "if") {
-            return Err(CompileError::Unsupported(
-                "conditional switch-list elements".into(),
-            ));
-        }
-        if toks
-            .iter()
-            .any(|t| matches!(t.effective_type_name(), "LBRACKET" | "RBRACKET"))
-        {
-            return Err(CompileError::Unsupported(
-                "nested switch-list elements".into(),
-            ));
-        }
-        let names: Vec<&Token> = toks
-            .into_iter()
-            .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
-            .collect();
-        if names.len() == 1 {
-            Ok(format!("L_{}", names[0].value))
-        } else {
-            Err(CompileError::Malformed(format!(
-                "switch element should be one label, got {} tokens",
-                names.len()
-            )))
-        }
     }
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
@@ -4295,6 +4306,11 @@ fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
 /// for an integer base).  64 mirrors BASIC's BA-pow cap.
 const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 
+/// Hard cap for the number of switch-list arms emitted while lowering one IIR
+/// function. Nested switch designators form a graph; without this cap an
+/// acyclic graph with repeated fan-out can grow exponentially during inlining.
+const MAX_SWITCH_DESIGNATOR_EXPANSIONS: usize = 16_384;
+
 /// If `node` is a **bare nonnegative integer literal** (an `INTEGER_LIT` token,
 /// possibly wrapped in single-child expression nodes) no larger than
 /// [`MAX_POW_UNROLL_EXPONENT`], return its value — the exponents AL-pow unrolls.
@@ -5868,6 +5884,38 @@ mod tests {
         let src = "begin integer result; boolean b; b := false; goto if b then yes else no; \
                    yes: result := 1; goto fin; no: result := 42; fin: end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn conditional_switch_element_evaluates_at_goto_time() {
+        let src = "begin integer result, i; boolean chooseyes; \
+                   switch s := if chooseyes then yes else no, fallback; \
+                   chooseyes := true; i := 1; goto s[i]; \
+                   yes: result := 40; goto done; no: result := 1; goto done; \
+                   fallback: result := 2; done: result := result + 2 end";
+        assert_eq!(run_i64(src), 42);
+
+        let else_src = src.replace("chooseyes := true", "chooseyes := false");
+        assert_eq!(run_i64(&else_src), 3);
+    }
+
+    #[test]
+    fn nested_switch_element_resolves_selected_designator() {
+        let src = "begin integer result, i; switch inner := yes, no; \
+                   switch outer := inner[i]; i := 2; goto outer[1]; \
+                   yes: result := 1; goto done; no: result := 40; \
+                   done: result := result + 2 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn rejects_cyclic_switch_list_elements() {
+        let err = compile_source(
+            "begin integer result; switch s := s[1]; goto s[1]; result := 0 end",
+            "bad",
+        )
+        .expect_err("recursive switch expansion must be rejected");
+        assert!(err.to_string().contains("cyclic switch"));
     }
 
     #[test]

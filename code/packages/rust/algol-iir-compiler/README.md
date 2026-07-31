@@ -144,6 +144,12 @@ in statement position. They can write enclosing scalar or array globals and use
 the same literal-backed output path as typed procedures; using a proper procedure in
 value position is a clean type error because it has no return value.
 
+Switch-list elements may use every supported designational expression: a
+conditional element selects its branch when `goto s[i]` runs, and a nested
+element such as `other[j]` performs that second lookup in the same computed-goto
+chain. Cyclic switch elements are rejected explicitly because they cannot be
+finitely expanded into portable IIR control flow.
+
 Unsupported ALGOL 60 features — non-numeric/non-string arrays, dynamic string
-variables, by-name (non-`value`) parameters, and conditional/nested switch-list
-elements — return explicit compiler errors.
+variables, and by-name (non-`value`) parameters — return explicit compiler
+errors.

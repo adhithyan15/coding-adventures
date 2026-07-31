@@ -1731,6 +1731,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a switch element is itself a full designational expression.
+    // The selected outer element first tests `chooseyes`, then dispatches
+    // through `inner[i]`; the nested index selects `no`, yielding 40 + 2. This
+    // exercises conditional and nested switch-list semantics on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, i; boolean chooseyes; switch inner := yes, no; \
+               switch outer := if chooseyes then inner[i] else fallback; \
+               chooseyes := true; i := 2; goto outer[1]; \
+               yes: result := 1; goto done; no: result := 40; goto done; \
+               fallback: result := 2; done: result := result + 2 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
     // (`5.0`), then `if r = 5.0` folds a real equality to the integer exit code
@@ -5206,6 +5221,37 @@ fn algol_nested_procedure_captures_array_formal_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested array-formal capture did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch inner := yes, no")
+                && program.src.contains("switch outer := if chooseyes then inner[i] else fallback")
+                && program.src.contains("goto outer[1]")
+        })
+        .expect("the ALGOL switch-designator program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but switch designator execution did not complete"
             );
             continue;
         };
