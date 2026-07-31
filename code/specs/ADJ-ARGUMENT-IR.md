@@ -288,7 +288,11 @@ grounding payload the §3 gate checks. Final syntax fixed in ADR-2.
 - **Later:** the trained decomposer that *emits* this adj-lang from prose (reuses the F3 training
   harness, retargeted from closed-vocab findings to the open-vocab argument surface) — now
   spec'd in [`ADJ-ARGUMENT-DECOMPOSER.md`](ADJ-ARGUMENT-DECOMPOSER.md); multi-paragraph /
-  whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions).
+  whole-paper composition (a paper is a DAG of paragraph arguments sharing conclusions) — now
+  spec'd in [`ADJ-ARGUMENT-COMPOSITION.md`](ADJ-ARGUMENT-COMPOSITION.md), where the **finding** is
+  that composition needs **zero new constructs**: one `argument` block spans the paragraphs, an
+  inference references an earlier paragraph's conclusion via `from`, and each step keeps its own
+  paragraph's byte-anchored provenance (multi-snapshot verify).
 
 ---
 
