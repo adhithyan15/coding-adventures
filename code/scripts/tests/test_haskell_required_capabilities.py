@@ -1,4 +1,4 @@
-"""Validate every explicit Haskell capability manifest against the shared schema."""
+"""Validate Haskell and OCaml capability manifests against the shared schema."""
 
 from __future__ import annotations
 
@@ -13,8 +13,8 @@ SCHEMA_PATH = REPO_ROOT / "code/specs/schemas/required_capabilities.schema.json"
 FIXTURE_ROOT = REPO_ROOT / "code/specs/fixtures/scaffold-generator"
 
 
-class HaskellRequiredCapabilitiesTest(unittest.TestCase):
-    """Keep existing and generated Haskell manifests on the schema-v1 contract."""
+class RequiredCapabilitiesTest(unittest.TestCase):
+    """Keep existing and generated manifests on the schema-v1 contract."""
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -52,6 +52,16 @@ class HaskellRequiredCapabilitiesTest(unittest.TestCase):
             with self.subTest(path=path.relative_to(REPO_ROOT)):
                 document = json.loads(path.read_text(encoding="utf-8"))
                 self.assert_schema_valid(document)
+
+    def test_ocaml_scaffold_fixtures_are_schema_valid(self) -> None:
+        paths = sorted(FIXTURE_ROOT.glob("ocaml-*/required_capabilities.json"))
+        self.assertEqual(2, len(paths), "expected OCaml library and program fixtures")
+
+        for path in paths:
+            with self.subTest(path=path.relative_to(REPO_ROOT)):
+                document = json.loads(path.read_text(encoding="utf-8"))
+                self.assert_schema_valid(document)
+                self.assertEqual("ocaml/my-pkg", document["package"])
 
     def assert_schema_valid(self, document: object) -> None:
         errors = sorted(

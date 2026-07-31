@@ -1,6 +1,6 @@
 # OCAML01 — Emerging implementation lane contract
 
-Status: in progress
+Status: complete in PR #9323
 
 ## Purpose
 

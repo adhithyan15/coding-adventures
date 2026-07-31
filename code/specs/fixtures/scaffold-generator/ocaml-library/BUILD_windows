@@ -1,0 +1,4 @@
+opam install . --deps-only --with-test --with-dev-setup -y
+opam exec -- dune build @fmt
+set BISECT_FILE=%CD%\bisect&& opam exec -- dune runtest --force --instrument-with bisect_ppx
+for %f in (bisect*.coverage) do opam exec -- bisect-ppx-report summary --per-file --expect src/coding_adventures_my_pkg.ml %f
