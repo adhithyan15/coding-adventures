@@ -969,8 +969,9 @@ pub fn lower_iir_to_llvm(
     // symbol `@__twig_global_N`. Index-based (not name-based) so an arbitrary
     // source identifier can never produce an invalid or colliding LLVM symbol —
     // the same lazy-slot discipline the native `_twig_globals` backend uses.
-    // Scalars use `i64`; arrays use typed pointer globals so a captured handle
-    // remains a real LLVM pointer instead of being forced through a word slot.
+    // Numeric scalars and string handles use `i64`; arrays use typed pointer
+    // globals so a captured handle remains a real LLVM pointer instead of being
+    // forced through a word slot.
     let globals = collect_global_syms(module);
     let global_types = collect_global_types(module)?;
     if !globals.is_empty() {
@@ -1176,9 +1177,9 @@ fn collect_global_syms(module: &IIRModule) -> HashMap<String, String> {
     map
 }
 
-/// Infer the storage type for each module global. Existing scalar globals use
-/// the historical i64 word slot; array handles are pointers and must retain
-/// that type when a procedure captures an enclosing array.
+/// Infer the storage type for each module global. Numeric scalars and string
+/// handles use the historical i64 word slot; array handles are pointers and
+/// must retain that type when a procedure captures an enclosing array.
 fn collect_global_types(
     module: &IIRModule,
 ) -> Result<HashMap<String, &'static str>, IIRLlvmError> {
@@ -2767,7 +2768,15 @@ fn lower_global_store(
     }
     let sym = global_symbol(instr, state, "global_store")?.to_string();
     let ty = global_type(instr, state, "global_store")?;
-    let val = resolve_operand(instr.srcs.get(1), &state.env, ty, state.fn_name)?;
+    let mut val = resolve_operand(instr.srcs.get(1), &state.env, ty, state.fn_name)?;
+    // `str_const` records a literal as an LLVM global pointer. A string global
+    // is an i64 handle, so materialize that pointer explicitly before storing;
+    // runtime strings already arrive as i64 registers and pass through intact.
+    if ty == "i64" && val.starts_with('@') {
+        let handle = state.fresh("global_str_handle");
+        out.push_str(&format!("  {handle} = ptrtoint ptr {val} to i64\n"));
+        val = handle;
+    }
     out.push_str(&format!("  store {ty} {val}, ptr {sym}\n"));
     Ok(())
 }

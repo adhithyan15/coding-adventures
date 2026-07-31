@@ -434,8 +434,8 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // ── Module static globals (LANG-FULL E6 layer 1) ──────────────────────────
     //
     // Each distinct global name read/written by `global_load`/`global_store`
-    // becomes a typed static field. Scalar fields retain `int64`; array fields
-    // use their concrete reference type. Field names are index-based so an
+    // becomes a typed static field. Numeric fields retain `int64`; string and
+    // array fields use their concrete reference type. Field names are index-based so an
     // arbitrary source identifier can never form an invalid or colliding CIL
     // field name. CLR zero-initialises static fields, matching every backend's
     // never-written-global-reads-0 convention.
@@ -525,7 +525,7 @@ fn collect_global_fields(module: &IIRModule) -> HashMap<String, (String, &'stati
                                 _ => "i64",
                             }
                         };
-                        let field_ty = if is_array_type(type_hint) {
+                        let field_ty = if is_array_type(type_hint) || type_hint == "str" {
                             cil_local_type(type_hint)
                         } else {
                             "int64"

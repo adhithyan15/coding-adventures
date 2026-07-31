@@ -290,9 +290,8 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
             // has first-class float/double operations (`fload`, `dload`, `fadd`,
             // `dadd`, etc.) that this backend emits.
             // E4-dyn: a `str` VALUE is a `java.lang.String`, so it may also flow
-            // through a `call` (a `str` return / call result) and a `ret` (a
-            // `str`-returning method) — an ALGOL `string procedure`'s returned
-            // runtime string.
+            // through calls, returns, and static module fields — an ALGOL
+            // `string procedure` result or captured string is a Java reference.
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
@@ -306,12 +305,12 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
                     //   element is a `java.lang.String` in a `String[]` (aaload/aastore).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
                         | "call_builtin" | "mov" | "array_get" | "array_set"
+                        | "global_load" | "global_store"
                 )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const, str_concat, str_slice literals, str call/ret, \
-                     str call_builtin (input_str) and str mov are supported in this JVM backend",
+                     unsupported string operation in this JVM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")

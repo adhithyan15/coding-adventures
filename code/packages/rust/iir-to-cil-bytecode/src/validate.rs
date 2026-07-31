@@ -361,11 +361,16 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
             //
             // All other ops remain rejected for `ref<LispyPair>`.
             if instr.type_hint == "str"
-                && !matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice")
+                && !matches!(
+                    instr.op.as_str(),
+                    "str_const" | "str_concat" | "str_slice" | "call" | "ret"
+                        | "call_builtin" | "mov" | "array_get" | "array_set"
+                        | "global_load" | "global_store"
+                )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const, str_concat, and str_slice literals are supported in this CLR backend",
+                     unsupported string operation in this CLR backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {

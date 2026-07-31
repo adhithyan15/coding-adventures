@@ -161,6 +161,27 @@ fn algol_scalar_emits_and_runs_on_wasm() {
 }
 
 #[test]
+fn algol_captured_and_own_strings_emit_and_run_on_wasm() {
+    let source = "begin integer result; string shared; \
+                  procedure setshared; shared := 'C'; \
+                  integer procedure remember(n); value n; integer n; \
+                     begin own string memo; if n = 1 then memo := 'A'; \
+                       if memo = 'A' then remember := 1 else remember := 0 end; \
+                  setshared; result := 0; \
+                  if shared = 'C' then result := result + 1; \
+                  result := result + remember(1) + remember(2) end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_global_string")
+        .expect("ALGOL captured/own strings should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL captured/own strings)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL captured/own string wasm must run");
+    assert_eq!(result, vec![3], "ALGOL globals should preserve string handles");
+}
+
+#[test]
 fn algol_mod_emits_and_runs_on_wasm() {
     let source = "begin integer result; result := 17 mod 5 end";
     let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_mod")

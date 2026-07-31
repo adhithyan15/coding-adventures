@@ -289,8 +289,8 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // direct string producers (`str_const`, `str_concat`, `str_slice`). `str_len`,
             // `str_index`, `str_eq`, and `str_cmp` produce integers, not string values.
             // E4-dyn (E4d-3b): a `str` value is an i32 **handle**, so it may also
-            // flow through a `call` (a `str` return / call result) and a `ret` (a
-            // `str`-returning function) — both carry the handle as an i32.
+            // flow through calls, returns, and typed module globals — all carry
+            // the handle as an i32.
             // Richer dynamic string ops still fail explicitly below.
             //
             // `"ref<X>"` — reference types require WasmGC.  We accept
@@ -311,11 +311,12 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                     //   `array<str>` block (see `wasm_array_elem` in lower.rs).
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret"
                         | "call_builtin" | "mov" | "array_get" | "array_set"
+                        | "global_load" | "global_store"
                 )
             {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
-                     only str_const + str_concat + str_slice + str_len + str_index + str_eq + str_cmp + print_str literal output is supported in this WASM backend",
+                     unsupported string operation in this WASM backend",
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<")

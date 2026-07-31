@@ -116,9 +116,8 @@ enum ScalarType {
     /// the VM/JIT execute as doubles.
     Real,
     Boolean,
-    /// LANG-FULL E4 scalar string. Local slots can hold literal values or
-    /// runtime string-procedure results; captured string globals remain outside
-    /// the current slice.
+    /// LANG-FULL E4 scalar string. Local slots, captured block scalars, and
+    /// `own` statics all hold runtime string handles.
     String,
 }
 
@@ -528,11 +527,6 @@ impl Compiler {
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
-            if ty == ScalarType::String && (is_own || self.block_captured.contains(&name)) {
-                return Err(CompileError::Unsupported(
-                    "own/captured string variables".into(),
-                ));
-            }
             let slot = self.declare_var(&name, ty, is_own)?;
             // A global (an `own` variable, or an E6-captured block scalar) is
             // zero-initialised once at module load — exactly the `own`
@@ -545,10 +539,61 @@ impl Compiler {
             if !is_global && ty != ScalarType::String {
                 self.emit(IIRInstr::new(
                     "const",
-                    Some(slot),
+                    Some(slot.clone()),
                     vec![ty.default_operand()],
                     ty.iir(),
                 ));
+            }
+            if is_own && ty == ScalarType::String {
+                // A string handle cannot use the all-zero scalar default: the
+                // string backends dereference it for comparison and output. An
+                // `own` declaration runs in a procedure body, so initialise its
+                // empty-string value behind a persistent flag exactly once.
+                let flag = format!("{slot}.__algol_own_string_initialized");
+                let initialized = self.fresh_temp();
+                let initialize_label = self.fresh_label("own_string_initialize");
+                let ready_label = self.fresh_label("own_string_ready");
+                self.emit(IIRInstr::new(
+                    "global_load",
+                    Some(initialized.clone()),
+                    vec![Operand::Str(flag.clone())],
+                    "i64",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp_if_false",
+                    None,
+                    vec![Operand::Var(initialized), Operand::Var(initialize_label.clone())],
+                    "void",
+                ));
+                self.emit(IIRInstr::new(
+                    "jmp",
+                    None,
+                    vec![Operand::Var(ready_label.clone())],
+                    "void",
+                ));
+                self.emit_label(&initialize_label);
+                let empty = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "str_const",
+                    Some(empty.clone()),
+                    vec![Operand::Str(String::new())],
+                    "str",
+                ));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(slot.clone()), Operand::Var(empty)],
+                    "void",
+                ));
+                let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+                self.emit(IIRInstr::new(
+                    "global_store",
+                    None,
+                    vec![Operand::Str(flag), Operand::Var(one)],
+                    "void",
+                ));
+                self.emit_label(&ready_label);
+                self.initialized_string_slots.insert(slot);
             }
         }
         Ok(())
@@ -1339,7 +1384,7 @@ impl Compiler {
                         binding.ty.name()
                     )));
                 }
-                if !self.initialized_string_slots.contains(&binding.slot) {
+                if !binding.is_global && !self.initialized_string_slots.contains(&binding.slot) {
                     return Err(CompileError::Unsupported(format!(
                         "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
@@ -1971,18 +2016,26 @@ impl Compiler {
                         binding.ty.name()
                     )));
                 }
-                if binding.is_global {
-                    return Err(CompileError::Unsupported(
-                        "captured string assignments".into(),
-                    ));
-                }
                 saw_string_target = true;
+                let dest = if binding.is_global {
+                    self.fresh_temp()
+                } else {
+                    binding.slot.clone()
+                };
                 self.emit(IIRInstr::new(
                     "str_const",
-                    Some(binding.slot.clone()),
+                    Some(dest.clone()),
                     vec![Operand::Str(literal.clone())],
                     "str",
                 ));
+                if binding.is_global {
+                    self.emit(IIRInstr::new(
+                        "global_store",
+                        None,
+                        vec![Operand::Str(binding.slot.clone()), Operand::Var(dest)],
+                        "void",
+                    ));
+                }
                 self.initialized_string_slots.insert(binding.slot.clone());
             }
             if saw_string_target {
@@ -1991,12 +2044,14 @@ impl Compiler {
         } else if let Some(src_name) = expr_variable_name(expr) {
             let src_binding = self.require_var(&src_name)?;
             if src_binding.ty == ScalarType::String {
-                if !self.initialized_string_slots.contains(&src_binding.slot) {
+                if !src_binding.is_global
+                    && !self.initialized_string_slots.contains(&src_binding.slot)
+                {
                     return Err(CompileError::Unsupported(format!(
                         "string assignment requires initialized string variable {src_name:?}"
                     )));
                 }
-                let src_slot = src_binding.slot.clone();
+                let src_slot = self.read_scalar(src_binding).slot;
                 let mut saw_string_target = false;
                 for left in &left_parts {
                     let var_node = first_direct_node(left, "variable").ok_or_else(|| {
@@ -2034,14 +2089,14 @@ impl Compiler {
                             target_ty.name()
                         )));
                     }
-                    if target_is_global {
-                        return Err(CompileError::Unsupported(
-                            "captured string assignments".into(),
-                        ));
-                    }
                     saw_string_target = true;
-                    if target_slot != src_slot {
+                    if target_is_global || target_slot != src_slot {
                         let empty = self.fresh_temp();
+                        let copy = if target_is_global {
+                            self.fresh_temp()
+                        } else {
+                            target_slot.clone()
+                        };
                         self.emit(IIRInstr::new(
                             "str_const",
                             Some(empty.clone()),
@@ -2050,10 +2105,18 @@ impl Compiler {
                         ));
                         self.emit(IIRInstr::new(
                             "str_concat",
-                            Some(target_slot.clone()),
+                            Some(copy.clone()),
                             vec![Operand::Var(src_slot.clone()), Operand::Var(empty)],
                             "str",
                         ));
+                        if target_is_global {
+                            self.emit(IIRInstr::new(
+                                "global_store",
+                                None,
+                                vec![Operand::Str(target_slot.clone()), Operand::Var(copy)],
+                                "void",
+                            ));
+                        }
                     }
                     self.initialized_string_slots.insert(target_slot.clone());
                 }
@@ -2102,13 +2165,13 @@ impl Compiler {
                 )));
             }
             if binding.ty == ScalarType::String {
-                if binding.is_global {
-                    return Err(CompileError::Unsupported(
-                        "captured string assignments".into(),
-                    ));
-                }
-                if binding.slot != rhs.slot {
+                if binding.is_global || binding.slot != rhs.slot {
                     let empty = self.fresh_temp();
+                    let copy = if binding.is_global {
+                        self.fresh_temp()
+                    } else {
+                        binding.slot.clone()
+                    };
                     self.emit(IIRInstr::new(
                         "str_const",
                         Some(empty.clone()),
@@ -2117,10 +2180,18 @@ impl Compiler {
                     ));
                     self.emit(IIRInstr::new(
                         "str_concat",
-                        Some(binding.slot.clone()),
+                        Some(copy.clone()),
                         vec![Operand::Var(rhs.slot.clone()), Operand::Var(empty)],
                         "str",
                     ));
+                    if binding.is_global {
+                        self.emit(IIRInstr::new(
+                            "global_store",
+                            None,
+                            vec![Operand::Str(binding.slot.clone()), Operand::Var(copy)],
+                            "void",
+                        ));
+                    }
                 }
                 self.initialized_string_slots.insert(binding.slot.clone());
                 continue;
@@ -2702,6 +2773,7 @@ impl Compiler {
                 let name = self.simple_variable_name(node)?;
                 let binding = self.require_var(&name)?;
                 if binding.ty == ScalarType::String
+                    && !binding.is_global
                     && !self.initialized_string_slots.contains(&binding.slot)
                 {
                     return Err(CompileError::Unsupported(format!(
@@ -4023,6 +4095,50 @@ mod tests {
     fn al6_own_array_persists_across_calls_runs_on_vm() {
         // RUN it: memo[4] advances 0 → 1 → 2 → 3, so 1 + 2 + 3 = 6.
         assert_eq!(run_i64(AL6_OWN_ARRAY_PROG), 6);
+    }
+
+    /// Captured string assignments must cross a procedure boundary, and an
+    /// `own string` must retain the first call's value. The latter uses the
+    /// second invocation to prove it did not receive a fresh empty handle.
+    const AL7_GLOBAL_STRING_PROG: &str = "begin integer result; string shared; \
+         procedure setshared; shared := 'C'; \
+         integer procedure remember(n); value n; integer n; \
+            begin own string memo; if n = 1 then memo := 'A'; \
+              if memo = 'A' then remember := 1 else remember := 0 end; \
+         setshared; result := 0; \
+         if shared = 'C' then result := result + 1; \
+         result := result + remember(1) + remember(2) end";
+
+    #[test]
+    fn al7_captured_and_own_strings_lower_to_typed_globals() {
+        let module = compile_source(AL7_GLOBAL_STRING_PROG, "test")
+            .expect("captured and own strings compile");
+        let setshared = module.functions.iter().find(|f| f.name == "setshared")
+            .expect("setshared function");
+        assert!(setshared.instructions.iter().any(|i| {
+            i.op == "global_store"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some("shared")
+        }), "captured string assignment must be a global_store");
+
+        let remember = module.functions.iter().find(|f| f.name == "remember")
+            .expect("remember function");
+        let memo = "__algol_s1_memo";
+        let flag = "__algol_s1_memo.__algol_own_string_initialized";
+        assert!(remember.instructions.iter().any(|i| {
+            i.op == "global_load"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some(flag)
+        }), "own string initialization must read its persistent flag");
+        assert!(remember.instructions.iter().any(|i| {
+            i.op == "global_store"
+                && i.srcs.first().and_then(|operand| operand.as_str_lit()) == Some(memo)
+        }), "own string assignment must use a typed global_store");
+    }
+
+    #[test]
+    fn al7_captured_and_own_strings_run_on_vm() {
+        // captured `shared` supplies the first point; the two `remember` calls
+        // prove the `own string memo` survives past its declaring procedure.
+        assert_eq!(run_i64(AL7_GLOBAL_STRING_PROG), 3);
     }
 
     #[test]

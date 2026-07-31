@@ -1337,8 +1337,7 @@ const PROGRAMS: &[Prog] = &[
     },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
-    // slot; the preceding row covers a runtime procedure-result copy, while
-    // captured string globals remain outside this slice.
+    // slot; the preceding row covers a runtime procedure-result copy.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
@@ -1631,6 +1630,25 @@ const PROGRAMS: &[Prog] = &[
                   begin own integer array memo[4:5]; memo[4] := memo[4] + d; bump := memo[4] end; \
                result := bump(1) + bump(1) + bump(1) end",
         expect: Expect::Exit(6),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — captured and `own` scalar strings. `setshared` stores a
+    // string in a block global from a proper procedure, while `remember`
+    // initializes an `own string` on its first call and reads it on its
+    // second. The three equality checks prove the typed global paths end-to-
+    // end on native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; string shared; \
+               procedure setshared; shared := 'C'; \
+               integer procedure remember(n); value n; integer n; \
+                  begin own string memo; if n = 1 then memo := 'A'; \
+                    if memo = 'A' then remember := 1 else remember := 0 end; \
+               setshared; result := 0; \
+               if shared = 'C' then result := result + 1; \
+               result := result + remember(1) + remember(2) end",
+        expect: Expect::Exit(3),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
@@ -5018,6 +5036,36 @@ fn algol_own_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but own array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_captured_and_own_strings_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("procedure setshared")
+                && program.src.contains("own string memo")
+        })
+        .expect("the ALGOL captured/own string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but captured/own strings did not run"
             );
             continue;
         };
