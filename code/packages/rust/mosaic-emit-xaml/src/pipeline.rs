@@ -656,8 +656,13 @@ struct EmitContext<'a> {
     /// The groups are emitted on the generated root after the layout walk,
     /// where they can target each control's deterministic `x:Name`.
     visual_state_groups: Vec<XamlVisualStateGroup>,
+    /// Visual-state groups collected for each active `For` DataTemplate,
+    /// innermost template last. DataTemplate namescopes are isolated from the
+    /// component root and from enclosing templates, so each template needs
+    /// its own VisualStateManager attachment point.
+    template_visual_state_groups: Vec<Vec<XamlVisualStateGroup>>,
     /// Monotonic suffix used to keep generated VisualState names unique in
-    /// the root XAML namescope.
+    /// the generated XAML.
     visual_state_counter: u32,
 }
 
@@ -693,6 +698,7 @@ impl<'a> EmitContext<'a> {
             slot_aliases: std::collections::HashMap::new(),
             root_extra_attrs: None,
             visual_state_groups: Vec::new(),
+            template_visual_state_groups: Vec::new(),
             visual_state_counter: 0,
         }
     }
@@ -750,6 +756,14 @@ impl<'a> EmitContext<'a> {
     fn next_visual_state_id(&mut self) -> u32 {
         self.visual_state_counter += 1;
         self.visual_state_counter
+    }
+
+    fn add_visual_state_group(&mut self, group: XamlVisualStateGroup) {
+        if let Some(template_groups) = self.template_visual_state_groups.last_mut() {
+            template_groups.push(group);
+        } else {
+            self.visual_state_groups.push(group);
+        }
     }
 }
 
@@ -842,10 +856,6 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
 /// preserves that contract and lets a background fade and opacity change use
 /// different durations or easing curves.
 ///
-/// Template-local state predicates are left for a follow-up. A group emitted
-/// on the component root cannot target an element inside an ItemsRepeater
-/// DataTemplate namescope, so silently producing such a group would compile
-/// but never drive the row control.
 fn register_host_visual_states(
     node: &LayoutNode,
     xaml_tag: &str,
@@ -853,9 +863,6 @@ fn register_host_visual_states(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) {
-    if !ctx.for_scope.is_empty() {
-        return;
-    }
     let Some(part_name) = node.part_name.as_deref() else {
         return;
     };
@@ -918,7 +925,7 @@ fn register_host_visual_states(
                 transition: pending.transition,
             })
             .collect();
-        ctx.visual_state_groups.push(XamlVisualStateGroup {
+        ctx.add_visual_state_group(XamlVisualStateGroup {
             normal_name,
             target_name: target_name.to_string(),
             property: property.clone(),
@@ -929,6 +936,74 @@ fn register_host_visual_states(
 }
 
 fn lower_state_trigger_value(value: &LayoutPropValue, ctx: &mut EmitContext<'_>) -> Option<String> {
+    if !ctx.for_scope.is_empty() {
+        return match value {
+            LayoutPropValue::Keyword(k) if k == "true" => Some("True".to_string()),
+            LayoutPropValue::Keyword(k) if k == "false" => Some("False".to_string()),
+            LayoutPropValue::Expr(src) => {
+                let path = if let Some(path) = try_lower_for_template_predicate(src, ctx) {
+                    path
+                } else {
+                    let binding = ctx.for_scope.last()?;
+                    let element_root = kebab_to_pascal_case(&binding.as_name);
+                    let index_root = binding.index_name.as_deref().map(kebab_to_pascal_case);
+                    let tokens = tokenise_expr(src).ok()?;
+                    if tokens.iter().any(|token| {
+                        matches!(
+                            token,
+                            ExprTok::EqEq
+                                | ExprTok::NotEq
+                                | ExprTok::Lt
+                                | ExprTok::Le
+                                | ExprTok::Gt
+                                | ExprTok::Ge
+                                | ExprTok::AndAnd
+                                | ExprTok::OrOr
+                                | ExprTok::Not
+                                | ExprTok::LBracket
+                                | ExprTok::RBracket
+                        )
+                    }) {
+                        // Page-level expression helpers are not in a
+                        // DataTemplate's typed x:Bind scope. Reject shapes
+                        // that would require one instead of generating markup
+                        // that compiles against the wrong namescope.
+                        return None;
+                    }
+                    match lower_expr_for_xbind(src, ctx) {
+                        ExprLowering::Bindable(path)
+                            if path == element_root
+                                || path.starts_with(&format!("{element_root}.")) =>
+                        {
+                            path
+                        }
+                        ExprLowering::Bindable(path)
+                            if index_root.as_deref() == Some(path.as_str()) =>
+                        {
+                            "Index".to_string()
+                        }
+                        ExprLowering::Bindable(path)
+                            if matches!(path.as_str(), "True" | "False") =>
+                        {
+                            path
+                        }
+                        ExprLowering::Bindable(_)
+                        | ExprLowering::Helper(_)
+                        | ExprLowering::Unsupported(_) => return None,
+                    }
+                };
+                Some(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            // Component slots live on the generated page, not on the row VM
+            // that is the DataTemplate's x:DataType. Cross-scope slot
+            // predicates therefore stay omitted unless they are projected by
+            // `try_lower_for_template_predicate` (for example
+            // `index == selectedIndex`).
+            LayoutPropValue::SlotRef(_) | LayoutPropValue::String(_) => None,
+            _ => None,
+        };
+    }
+
     match value {
         LayoutPropValue::SlotRef(slot) => Some(format!(
             "{{x:Bind {}, Mode=OneWay}}",
@@ -3009,7 +3084,8 @@ fn emit_for(
         prop
     });
 
-    // -- 4. Push the binding into scope, walk the body, pop. --
+    // -- 4. Push the binding and a namescope-local visual-state collector,
+    //       walk the body, then pop both. --
     ctx.for_scope.push(ForBinding {
         as_name: as_name.to_string(),
         index_name: index_name.map(String::from),
@@ -3017,9 +3093,15 @@ fn emit_for(
         vm_class: vm_class.clone(),
         projection_property: projection_property.clone(),
     });
-    let mut body =
-        emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx)?;
+    ctx.template_visual_state_groups.push(Vec::new());
+    let body_result =
+        emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
+    let template_visual_state_groups = ctx
+        .template_visual_state_groups
+        .pop()
+        .expect("For template visual-state collector");
     ctx.for_scope.pop();
+    let mut body = body_result?;
 
     // GROUP C: bind the fixed per-column width onto the rendered cell.
     // The cell element is the first opening tag of this loop's body â€”
@@ -3030,6 +3112,19 @@ fn emit_for(
     // fixed pixel width regardless of cell content.
     if is_cell_loop {
         body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width}\"");
+    }
+
+    if !template_visual_state_groups.is_empty() {
+        let pad = " ".repeat(indent + 12);
+        let mut wrapped = String::new();
+        writeln!(wrapped, "{pad}<Grid>").unwrap();
+        wrapped.push_str(&emit_visual_state_groups(
+            &template_visual_state_groups,
+            indent + 16,
+        ));
+        wrapped.push_str(&indent_xaml_fragment(&body, 4));
+        writeln!(wrapped, "{pad}</Grid>").unwrap();
+        body = wrapped;
     }
 
     // -- 5. Assemble the XAML --
@@ -11588,21 +11683,114 @@ mod tests {
     }
 
     #[test]
-    fn template_local_host_state_is_not_emitted_at_root_namescope() {
-        let mut ctx = EmitContext::new("Demo", &[], &[]);
-        ctx.for_scope.push(ForBinding {
-            as_name: "row".to_string(),
-            index_name: Some("r".to_string()),
-            element_type: "string".to_string(),
-            vm_class: "Demo_RowVm".to_string(),
-            projection_property: None,
-        });
-        let node = styled_host_button(vec![LayoutProp {
-            name: "state-when-selected".to_string(),
-            value: LayoutPropValue::Expr("r == 0".to_string()),
-        }]);
+    fn template_local_host_state_lowers_into_datatemplate_namescope() {
+        let c = component(
+            "AnimatedRow",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("selected-index", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedRow",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![styled_host_button(vec![LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::Expr("r == selectedIndex".to_string()),
+                }])],
+            ),
+        );
         let style = StyleDef {
-            component_name: "Demo".to_string(),
+            component_name: "AnimatedRow".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "1".to_string(),
+                }],
+                transitions: vec![transition("opacity", "120ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "selected".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &style);
+        assert_eq!(
+            r.xaml
+                .matches("<VisualStateManager.VisualStateGroups>")
+                .count(),
+            1,
+            "template state groups must not leak onto the component root:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:AnimatedRow_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "WinUI StateTriggers must live on the DataTemplate's first visual child:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind IsSelected, Mode=OneWay}\"/>"),
+            "template predicate must bind row-local projected state:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<Setter Target=\"Button.Opacity\" Value=\"0.8\"/>"),
+            "the template-local group must target the row control:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("<VisualTransition GeneratedDuration=\"0:0:0.12\">"),
+            "template-local transitions must preserve MSL timing:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind
+                .contains("rows.Add(new AnimatedRow_RowVm(source[i], i, i == SelectedIndex));"),
+            "the selected predicate must be projected onto each row VM:\n{}",
+            r.code_behind
+        );
+    }
+
+    #[test]
+    fn template_state_never_binds_page_helper_from_row_namescope() {
+        let c = component(
+            "AnimatedRow",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "AnimatedRow",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                Some("r"),
+                vec![styled_host_button(vec![LayoutProp {
+                    name: "state-when-selected".to_string(),
+                    value: LayoutPropValue::Expr("r == 0".to_string()),
+                }])],
+            ),
+        );
+        let style = StyleDef {
+            component_name: "AnimatedRow".to_string(),
             parts: vec![PartStyle {
                 name: "button".to_string(),
                 base: Vec::new(),
@@ -11617,13 +11805,17 @@ mod tests {
                 }],
             }],
         };
-        register_host_visual_states(
-            &node,
-            "Button",
-            "Button",
-            &build_part_style_map(&style),
-            &mut ctx,
+
+        let r = compile(&c, &l, &style);
+        assert!(
+            !r.xaml.contains("<VisualStateManager.VisualStateGroups>"),
+            "unsupported template predicates must be omitted instead of targeting the root:\n{}",
+            r.xaml
         );
-        assert!(ctx.visual_state_groups.is_empty());
+        assert!(
+            !r.code_behind.contains("private bool Expr_"),
+            "DataTemplate x:Bind cannot resolve page-level helper methods:\n{}",
+            r.code_behind
+        );
     }
 }
