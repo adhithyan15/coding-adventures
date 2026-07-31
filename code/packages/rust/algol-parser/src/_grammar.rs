@@ -38,6 +38,7 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"declaration"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::RuleReference { name: r#"type_decl"#.to_string() },
+                GrammarElement::RuleReference { name: r#"own_array_decl"#.to_string() },
                 GrammarElement::RuleReference { name: r#"array_decl"#.to_string() },
                 GrammarElement::RuleReference { name: r#"switch_decl"#.to_string() },
                 GrammarElement::RuleReference { name: r#"procedure_decl"#.to_string() },
@@ -82,6 +83,24 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
             ] },
             line_number: 72,
+        },
+        GrammarRule {
+            // Kept in sync narrowly with `code/grammars/algol/algol60.grammar`.
+            // A whole-file regeneration remains deliberately out of scope: the
+            // grammar source contains other frontend shapes not yet supported
+            // by this checked-in parser artifact.
+            name: r#"own_array_decl"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Literal { value: r#"own"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"type"#.to_string() }) },
+                GrammarElement::Literal { value: r#"array"#.to_string() },
+                GrammarElement::RuleReference { name: r#"array_segment"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"array_segment"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 81,
         },
         GrammarRule {
             name: r#"array_decl"#.to_string(),

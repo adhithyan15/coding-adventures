@@ -114,6 +114,9 @@ bounds `A[lo:hi]` work); `A[i]` reads/writes become bounds-checked `array_get`/
 out-of-range subscript traps at run time. Procedures can capture an enclosing
 array: its handle and declared lower-bound/stride metadata are stored in typed
 module globals, so a captured subscript keeps the declaration's index space.
+`own integer array A[lo:hi]` has static lifetime too: its bounds and backing
+storage are initialized on the first procedure call and persist across later
+calls.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
