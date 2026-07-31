@@ -710,6 +710,17 @@ pub struct ArgInference {
     /// must resolve to an earlier `name` in the same argument (an unknown reference is a
     /// clean `LowerError`); the referenced terms become the rule's body literals.
     pub from: Vec<String>,
+    /// ADJ-ARGUMENT-REBUTTAL AR-3: an optional `unless <defeater> { , <defeater> }`
+    /// UNDERCUT guard. Each defeater lowers to a `not <term>` body literal
+    /// (negation-as-failure), so the step fires only while its warrant is not defeated.
+    /// Empty = no undercut. Unlike `from`, these are RAW terms (the defeater proposition,
+    /// derived elsewhere), not references to sibling premise/inference names.
+    pub unless: Vec<Term>,
+    /// ADJ-ARGUMENT-REBUTTAL AR-3: the optional trailing `context: <name>` — the CONTEXT
+    /// this inference is grounded in (mirroring [`Statement::Rule`]'s `context`). With a
+    /// `functional` thesis + a `context_order`, a rival inference in an outranking context
+    /// REBUTS (defeats) this one. `None` = context-free. Lowers to `Rule::with_context`.
+    pub context: Option<String>,
     /// Warrant/source provenance (`source`/`locator`/`trust`).
     pub annotations: Vec<Annotation>,
 }
