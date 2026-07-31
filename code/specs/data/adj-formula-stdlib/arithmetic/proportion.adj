@@ -1,0 +1,75 @@
+% ============================================================================
+% proportion.adj — the proportion (rule-of-three) formula library
+% (ADJ-RULE-SUBSTRATE RS-1 / FL-4).
+% ============================================================================
+% A PROPORTION states that two ratios are equal — `a/b = c/x`. The everyday
+% question a proportion answers is "a is to b as c is to WHAT?": given three of
+% the four terms, find the missing fourth. The classical recipe is the RULE OF
+% THREE — cross-multiply (`a·x = b·c`) and divide, giving the FOURTH PROPORTIONAL
+%
+%       x = (b · c) / a
+%
+% This library ships that as a single composed formula. Like `ratio` (which
+% APPLIES the cited `quotient` primitive), `fourth_proportional` performs no bare
+% arithmetic of its own: its body is `quotient(product(second, third), first)` —
+% it CALLS the cited `product` primitive to form `b·c`, then CALLS the cited
+% `quotient` primitive to divide by `a`. Two levels of composition, every step
+% named and cited (RS-1 write-once-reuse-many).
+%
+%     import "proportion.adj"                       % transitively imports arithmetic.adj
+%     observe first_term(2)                         % a  — "2 is to 3…"
+%     observe second_term(3)                        % b
+%     observe third_term(4)                         % c  — "…as 4 is to what?"
+%     ? fourth_proportional(first_term, second_term, third_term)
+%                                                   % engine → 6  (since 2/3 = 4/6)
+%
+% Worked check: with a=2, b=3, c=4 the rule of three gives x = (3·4)/2 = 6, and
+% indeed 2/3 = 4/6 = 0.666… — the proportion balances. The engine expands
+% `fourth_proportional` → `product` → `quotient` on the CPU and composes the
+% provenance chain: the answer cites the cross-multiplication rule of three
+% (primary) AND the `product` and `quotient` primitives it built on
+% (corroboration). Zero arithmetic is performed by the model.
+%
+% Honesty note: the rule of three requires the divisor term `a` (first_term) to
+% be non-zero — a proportion `0/b = c/x` has no finite fourth proportional. The
+% formula makes NO special claim there; it simply applies the cited `quotient`,
+% whose divisor-is-zero behaviour it inherits (it does not fabricate a value).
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Depends on the elementary primitives — `product` and `quotient`. The import is
+% RELATIVE to this file; a consumer that imports `proportion.adj` transitively
+% gets `product`/`quotient` (and their siblings), so the body resolves.
+% ----------------------------------------------------------------------------
+import "arithmetic.adj"
+
+% ----------------------------------------------------------------------------
+% Vocabulary. The three KNOWN terms of the proportion a/b = c/x are named by
+% position; the result is the unknown FOURTH proportional (the x). Rung-0 types
+% each observable slot as `finding`; the `surface` synonyms let a decomposer map
+% everyday "is to … as … is to" phrasing onto the canonical terms.
+% ----------------------------------------------------------------------------
+dictionary proportion_vocab {
+    define first_term          : finding  surface "first term", "antecedent", "a", "first"
+    define second_term         : finding  surface "second term", "consequent", "b", "second"
+    define third_term          : finding  surface "third term", "c", "third"
+    define fourth_proportional : finding  surface "fourth proportional", "fourth term", "missing term", "unknown term", "x"
+}
+
+% ----------------------------------------------------------------------------
+% The composed formula. For the proportion `a/b = c/x` (first/second = third/x),
+% the rule of three gives x = (b·c)/a. The body is a formula CALLING two cited
+% primitives: `product(second_term, third_term)` forms b·c, and `quotient(…,
+% first_term)` divides it by a. The engine resolves both applications on the
+% CPU and carries their citations alongside this one. `fourth_proportional`
+% asserts its own claim about the world (how a missing proportional is found)
+% and so carries its own required source.
+% ----------------------------------------------------------------------------
+formulabook proportions {
+    use proportion_vocab
+
+    formula fourth_proportional(first_term, second_term, third_term) = quotient(product(second_term, third_term), first_term)
+        source "For an equation of the form a/b = c/x, where the variable to be evaluated is in the right-hand denominator, the rule of three states that x = bc/a."
+        locator "https://en.wikipedia.org/wiki/Cross-multiplication"
+        trust consensus
+}
