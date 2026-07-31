@@ -310,13 +310,20 @@ allowed pairs, and the expected 93 invalid cross-pairs. Its schema is
 
 Every manifest schema and every ingestion or enforcement boundary MUST:
 
-1. accept all 19 declared category/action pairs;
+1. recognize all 19 declared category/action pairs, with both manifest schemas
+   accepting all 19;
 2. reject all 93 other combinations drawn from the known category and action
    vocabularies;
 3. reject unknown categories and unknown actions;
 4. reject the whole manifest before generation, analysis, or cage construction
    rather than dropping, weakening, or converting an invalid declaration; and
 5. test its local pair table exhaustively against the shared fixture.
+
+An enforcement backend that cannot safely implement one of the 19 recognized
+pairs MUST return an explicit unsupported-capability error before replacing or
+emitting output. It MUST NOT emit an empty namespace, a TODO, or an unguarded
+operation. This permits capability-aware runtimes and analyzers to accept the
+whole taxonomy while allowing narrower code generators to fail closed.
 
 The shared fixture is a conformance oracle, not a runtime dependency. Published
 packages embed the closed pair table so validation remains available without a
