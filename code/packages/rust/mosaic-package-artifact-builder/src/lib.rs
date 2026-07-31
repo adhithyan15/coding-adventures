@@ -476,6 +476,7 @@ pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
         &components_built,
         opts.backend,
         &manifest.package.name,
+        &artifacts,
     )?;
     artifacts.push(index_path);
 
@@ -1562,6 +1563,7 @@ fn compile_one_component(
         None => out_dir.join(format!("{component}.{ext}")),
     };
 
+    let mut backend_artifacts = Vec::new();
     let primary_bytes: String = match backend {
         Backend::React | Backend::Electron => mosaic_emit_react::pipeline::from_pipeline(
             &mosmodel_out.component,
@@ -1636,6 +1638,22 @@ fn compile_one_component(
             };
             write_file(&code_behind_path, result.code_behind.as_bytes())?;
             write_file(&events_path, result.events.as_bytes())?;
+            backend_artifacts.push(code_behind_path);
+            backend_artifacts.push(events_path);
+
+            // XAML can reference generated C# support files from its markup
+            // (for example a ViewModel or an IValueConverter). Package mode
+            // must preserve those emitter-owned side files just as project
+            // shell mode does; otherwise the packaged XAML cannot compile.
+            for side_file in result
+                .for_view_models
+                .iter()
+                .chain(result.if_helpers.iter())
+            {
+                let side_file_path = out_dir.join(&side_file.filename);
+                write_file(&side_file_path, side_file.source.as_bytes())?;
+                backend_artifacts.push(side_file_path);
+            }
 
             result.xaml
         }
@@ -1658,6 +1676,7 @@ fn compile_one_component(
     // ----- 4. Write the primary artifact and backend-agnostic style sidecar --
     write_file(&primary_path, primary_bytes.as_bytes())?;
     let mut artifacts = vec![primary_path];
+    artifacts.extend(backend_artifacts);
     if !lattice.trim().is_empty() {
         let lattice_path = match variant {
             Some(v) => out_dir.join(format!("{component}.{v}.lattice")),
@@ -2140,6 +2159,7 @@ fn emit_index_file(
     components: &[String],
     backend: Backend,
     package_name: &str,
+    component_artifacts: &[PathBuf],
 ) -> Result<PathBuf, BuildError> {
     match backend {
         Backend::React | Backend::Electron => {
@@ -2361,6 +2381,20 @@ fn emit_index_file(
                     "    <Compile Include=\"{c}.xaml.cs\"><DependentUpon>{c}.xaml</DependentUpon></Compile>\n"
                 ));
                 body.push_str(&format!("    <Compile Include=\"{c}.Event.cs\"/>\n"));
+            }
+            let mut support_files = component_artifacts
+                .iter()
+                .filter_map(|artifact| artifact.file_name().and_then(|name| name.to_str()))
+                .filter(|name| {
+                    name.ends_with(".cs")
+                        && !name.ends_with(".xaml.cs")
+                        && !name.ends_with(".Event.cs")
+                })
+                .collect::<Vec<_>>();
+            support_files.sort_unstable();
+            support_files.dedup();
+            for support_file in support_files {
+                body.push_str(&format!("    <Compile Include=\"{support_file}\"/>\n"));
             }
             body.push_str("  </ItemGroup>\n");
             body.push_str("</Project>\n");
@@ -3099,6 +3133,68 @@ files = [
         assert!(props.contains("<Compile Include=\"Grid.xaml.cs\""));
         assert!(props.contains("DependentUpon>Grid.xaml<"));
         assert!(props.contains("<Compile Include=\"Grid.Event.cs\""));
+    }
+
+    #[test]
+    fn xaml_package_pipeline_writes_native_focus_converter_side_file() {
+        let pkg = make_package("mosaic-pkg-focus", &["FocusField"]);
+        write_component_sources(
+            pkg.path(),
+            "FocusField",
+            "component FocusField { }\n",
+            r#"
+layout FocusField {
+  HostInput [ field ] ( placeholder : "Search" )
+}
+"#,
+            r##"
+style FocusField {
+  part field {
+    border-color : "#d0d0d0" ;
+    state focused {
+      border-color : "#e0942a" ;
+    }
+  }
+}
+"##,
+        );
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Xaml,
+            emit_project: false,
+            theme: None,
+        })
+        .expect("xaml focus package build");
+
+        let xaml_dir = out.path().join("xaml");
+        let xaml = fs::read_to_string(xaml_dir.join("FocusField.xaml")).unwrap();
+        assert!(
+            xaml.contains(
+                "Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}"
+            ),
+            "package output must preserve native focus activation:\n{xaml}"
+        );
+        let converter_path = xaml_dir.join("FocusStateToBoolConverter.cs");
+        assert!(
+            converter_path.exists(),
+            "package pipeline must write the converter referenced by XAML"
+        );
+        let converter = fs::read_to_string(&converter_path).unwrap();
+        assert!(converter.contains("state != FocusState.Unfocused"));
+        let props = fs::read_to_string(xaml_dir.join("MosaicPackage.props")).unwrap();
+        assert!(
+            props.contains("<Compile Include=\"FocusStateToBoolConverter.cs\"/>"),
+            "package import must compile the converter referenced by XAML:\n{props}"
+        );
+        assert!(
+            result
+                .artifacts
+                .iter()
+                .any(|artifact| artifact == &converter_path),
+            "generated converter must be reported as a package artifact"
+        );
     }
 
     /// Flutter backend: writes one `.dart` file per component, an
