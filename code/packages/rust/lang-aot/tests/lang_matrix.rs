@@ -1352,6 +1352,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
+    // in `fill2`. The call ABI carries the shared handle plus both lower bounds
+    // and the outer row-major stride: `array<i64>, i64, i64, i64`. `invoke`
+    // captures `values`, so it also proves that all four descriptor components
+    // are reloaded from module globals before crossing a fresh call frame. The
+    // non-zero lower bounds make an omitted or misordered descriptor component
+    // observably select the wrong cells. Exit 42 on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 4:5]; integer result; \
+                  integer procedure fill2(a); value a; integer array a; \
+                    begin a[-1,4] := 40; a[0,5] := 2; fill2 := a[-1,4] + a[0,5] end; \
+                  procedure invoke; result := fill2(values); \
+                  invoke end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -5070,6 +5088,37 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but array parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill2(a)")
+                && program.src.contains("values[-1:0, 4:5]")
+                && program.src.contains("a[-1,4]")
+        })
+        .expect("the ALGOL multidimensional array parameter program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multidimensional array-parameter execution did not complete"
             );
             continue;
         };

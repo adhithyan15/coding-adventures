@@ -215,24 +215,46 @@ fn array_dim_global_name(array_slot: &str, dim_index: usize, field: &str) -> Str
     format!("{array_slot}.__algol_array_dim_{dim_index}_{field}")
 }
 
-/// Hidden IIR parameter carrying a one-dimensional array formal's lower bound.
-/// It cannot collide with a source name because ALGOL identifiers do not admit
-/// the double-underscore spelling used by compiler-generated slots.
+/// Hidden IIR parameter carrying an array formal's first lower bound. It keeps
+/// the old 1-D spelling so existing IIR consumers and snapshots stay stable.
+/// Compiler-generated slots cannot collide with source names because ALGOL
+/// identifiers do not admit the double-underscore spelling.
 fn array_param_lower_slot(name: &str) -> String {
     format!("__algol_array_param_{name}_lower")
 }
 
+/// Hidden IIR parameter carrying an array formal's lower bound for dimensions
+/// after the first. Dimension zero deliberately uses [`array_param_lower_slot`]
+/// for backward-compatible names.
+fn array_param_dim_lower_slot(name: &str, dim_index: usize) -> String {
+    if dim_index == 0 {
+        array_param_lower_slot(name)
+    } else {
+        format!("__algol_array_param_{name}_lower_{dim_index}")
+    }
+}
+
+/// Hidden IIR parameter carrying an array formal's row-major stride for one
+/// non-final dimension. The final dimension has an implicit stride of one.
+fn array_param_stride_slot(name: &str, dim_index: usize) -> String {
+    format!("__algol_array_param_{name}_stride_{dim_index}")
+}
+
 /// A procedure formal that the supported call-by-value slice can carry.
 ///
-/// An array formal receives the caller's storage handle and its first
-/// lower-bound value. The handle is shared storage, while the descriptor itself
-/// is copied into the callee's frame. This is deliberately limited to one
-/// dimension: an IIR function has a fixed parameter list, so forwarding an
-/// arbitrary-rank ALGOL descriptor needs a separate rank/stride ABI.
+/// An array formal receives the caller's storage handle plus its complete
+/// rank-specific descriptor: each dimension's lower bound and every non-final
+/// row-major stride. The handle is shared storage, while this descriptor is
+/// copied into the callee's frame. The rank is inferred from the formal's
+/// subscripted uses in its body, so the fixed IIR function signature remains
+/// statically known before either caller or callee is lowered.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ProcedureParamType {
     Scalar(ScalarType),
-    Array(ScalarType),
+    Array {
+        elem_ty: ScalarType,
+        dimensions: usize,
+    },
 }
 
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
@@ -256,7 +278,7 @@ type ProcedureParts = (String, Vec<(String, ProcedureParamType)>, Option<ScalarT
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ProcSig {
     /// Source-level parameter types in declaration order. Array formals lower
-    /// to two IIR parameters (handle plus lower bound), but still consume one
+    /// to a handle plus rank-specific descriptor values, but still consume one
     /// ALGOL actual at a call site.
     params: Vec<ProcedureParamType>,
     /// The procedure's return type, or `None` for a proper procedure.
@@ -1050,8 +1072,8 @@ impl Compiler {
     /// The compiled parser accepts `integer array a` as a two-token specifier;
     /// its legacy `array a` spelling remains a real-array formal, matching the
     /// default element type of an untyped ALGOL array declaration. Array
-    /// formals are intentionally one-dimensional in this ABI; the actual's
-    /// rank is checked when the call is lowered.
+    /// formals infer their dimension count from their subscripted uses in the
+    /// procedure body; the actual's rank is checked when the call is lowered.
     fn procedure_param_type(
         &self,
         node: &GrammarASTNode,
@@ -1067,9 +1089,15 @@ impl Compiler {
         };
 
         match words.as_slice() {
-            ["array"] => Ok(ProcedureParamType::Array(ScalarType::Real)),
+            ["array"] => Ok(ProcedureParamType::Array {
+                elem_ty: ScalarType::Real,
+                dimensions: 1,
+            }),
             [ty, "array"] => scalar(ty)
-                .map(ProcedureParamType::Array)
+                .map(|elem_ty| ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions: 1,
+                })
                 .ok_or_else(|| CompileError::Malformed(format!(
                     "unknown array parameter element type {ty:?}"
                 ))),
@@ -1100,9 +1128,10 @@ impl Compiler {
     ///
     /// On the supported slice every parameter must be a `value` parameter
     /// (call-by-name / Jensen's device is not modelled), and every parameter
-    /// must be specified exactly once. Scalar formals and one-dimensional
-    /// integer/real/string array descriptors are supported. A missing heading
-    /// type is a proper procedure and lowers to an IIR `void` function.
+    /// must be specified exactly once. Scalar formals and integer/real/string
+    /// array descriptors are supported; an array formal's rank is inferred from
+    /// subscripted uses in its body. A missing heading type is a proper procedure
+    /// and lowers to an IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -1171,6 +1200,13 @@ impl Compiler {
             let ty = type_of.get(&p).copied().ok_or_else(|| {
                 CompileError::Malformed(format!("parameter {p:?} has no specification"))
             })?;
+            let ty = match ty {
+                ProcedureParamType::Array { elem_ty, .. } => ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions: array_formal_dimension_count(proc_decl, &p)?,
+                },
+                ProcedureParamType::Scalar(_) => ty,
+            };
             params.push((p, ty));
         }
 
@@ -1244,11 +1280,11 @@ impl Compiler {
         }
 
         // Bind value parameters and, for typed procedures, the result variable
-        // (the procedure name). An array descriptor value is two IIR arguments:
-        // its typed handle followed by its one-dimensional lower bound. The
-        // caller keeps ownership of the backing storage, so element writes in
-        // the callee are visible to the actual array.
-        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 2);
+        // (the procedure name). An array descriptor carries its typed handle,
+        // every lower bound, and every non-final row-major stride. The caller
+        // keeps ownership of the backing storage, so element writes in the
+        // callee are visible to the actual array.
+        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 4);
         for (pname, pty) in &params {
             match pty {
                 ProcedureParamType::Scalar(pty) => {
@@ -1262,26 +1298,40 @@ impl Compiler {
                     }
                     param_pairs.push((slot, pty.iir().to_string()));
                 }
-                ProcedureParamType::Array(elem_ty) => {
-                    if !matches!(elem_ty, ScalarType::Integer | ScalarType::Real | ScalarType::String) {
+                ProcedureParamType::Array {
+                    elem_ty,
+                    dimensions,
+                } => {
+                    if !matches!(*elem_ty, ScalarType::Integer | ScalarType::Real | ScalarType::String) {
                         return Err(CompileError::Unsupported(format!(
                             "{} array parameters (only integer/real/string element types so far)",
                             elem_ty.name()
                         )));
                     }
-                    let lower_slot = array_param_lower_slot(pname);
+                    let dims = (0..*dimensions)
+                        .map(|dim_index| ArrayDim {
+                            lower_slot: array_param_dim_lower_slot(pname, dim_index),
+                            stride_slot: (dim_index + 1 < *dimensions)
+                                .then(|| array_param_stride_slot(pname, dim_index)),
+                        })
+                        .collect();
                     let handle = self.declare_array(
                         pname,
                         *elem_ty,
-                        vec![ArrayDim {
-                            lower_slot: lower_slot.clone(),
-                            stride_slot: None,
-                        }],
+                        dims,
                         false,
                     )?;
-                    self.register_names.insert(lower_slot.clone());
                     param_pairs.push((handle, make_array_type(elem_ty.iir())));
-                    param_pairs.push((lower_slot, "i64".to_string()));
+                    for dim_index in 0..*dimensions {
+                        let lower_slot = array_param_dim_lower_slot(pname, dim_index);
+                        self.register_names.insert(lower_slot.clone());
+                        param_pairs.push((lower_slot, "i64".to_string()));
+                        if dim_index + 1 < *dimensions {
+                            let stride_slot = array_param_stride_slot(pname, dim_index);
+                            self.register_names.insert(stride_slot.clone());
+                            param_pairs.push((stride_slot, "i64".to_string()));
+                        }
+                    }
                 }
             }
         }
@@ -1552,7 +1602,7 @@ impl Compiler {
             )));
         }
 
-        let mut arg_slots = Vec::with_capacity(actuals.len() * 2);
+        let mut arg_slots = Vec::with_capacity(actuals.len() * 4);
         for (actual, expected) in actuals.iter().zip(sig.params.iter()) {
             match expected {
                 ProcedureParamType::Scalar(expected) => {
@@ -1564,7 +1614,10 @@ impl Compiler {
                     )?;
                     arg_slots.push(value.slot);
                 }
-                ProcedureParamType::Array(expected_elem_ty) => {
+                ProcedureParamType::Array {
+                    elem_ty: expected_elem_ty,
+                    dimensions: expected_dimensions,
+                } => {
                     let actual_name = expr_variable_name(actual).ok_or_else(|| {
                         CompileError::Type(format!(
                             "procedure {name:?}: array parameter requires a bare array variable"
@@ -1583,17 +1636,18 @@ impl Compiler {
                             expected_elem_ty.name()
                         )));
                     }
-                    if info.dims.len() != 1 {
-                        return Err(CompileError::Unsupported(format!(
-                            "procedure {name:?}: array argument {actual_name:?} is {}-dimensional; only one-dimensional array parameters are supported",
-                            info.dims.len()
+                    if info.dims.len() != *expected_dimensions {
+                        return Err(CompileError::Type(format!(
+                            "procedure {name:?}: array argument {actual_name:?} is {}-dimensional but the formal is {}-dimensional",
+                            info.dims.len(),
+                            expected_dimensions
                         )));
                     }
 
                     // Global arrays (captured or `own`) store their descriptor
-                    // metadata outside the current frame. Reload both pieces so
-                    // the callee gets the same handle/lower-bound pair as a
-                    // local-array actual.
+                    // metadata outside the current frame. Reload the complete
+                    // rank-specific descriptor so the callee gets the same
+                    // handle/lower-bound/stride values as a local-array actual.
                     if binding.is_global {
                         let handle = self.fresh_temp();
                         self.emit(IIRInstr::new(
@@ -1602,22 +1656,43 @@ impl Compiler {
                             vec![Operand::Str(binding.slot.clone())],
                             make_array_type(binding.ty.iir()),
                         ));
-                        let lower = self.fresh_temp();
-                        self.emit(IIRInstr::new(
-                            "global_load",
-                            Some(lower.clone()),
-                            vec![Operand::Str(array_dim_global_name(
-                                &binding.slot,
-                                0,
-                                "lower",
-                            ))],
-                            "i64",
-                        ));
                         arg_slots.push(handle);
-                        arg_slots.push(lower);
+                        for (dim_index, dim) in info.dims.iter().enumerate() {
+                            let lower = self.fresh_temp();
+                            self.emit(IIRInstr::new(
+                                "global_load",
+                                Some(lower.clone()),
+                                vec![Operand::Str(array_dim_global_name(
+                                    &binding.slot,
+                                    dim_index,
+                                    "lower",
+                                ))],
+                                "i64",
+                            ));
+                            arg_slots.push(lower);
+                            if dim.stride_slot.is_some() {
+                                let stride = self.fresh_temp();
+                                self.emit(IIRInstr::new(
+                                    "global_load",
+                                    Some(stride.clone()),
+                                    vec![Operand::Str(array_dim_global_name(
+                                        &binding.slot,
+                                        dim_index,
+                                        "stride",
+                                    ))],
+                                    "i64",
+                                ));
+                                arg_slots.push(stride);
+                            }
+                        }
                     } else {
                         arg_slots.push(binding.slot);
-                        arg_slots.push(info.dims[0].lower_slot.clone());
+                        for dim in &info.dims {
+                            arg_slots.push(dim.lower_slot.clone());
+                            if let Some(stride_slot) = &dim.stride_slot {
+                                arg_slots.push(stride_slot.clone());
+                            }
+                        }
                     }
                 }
             }
@@ -3916,6 +3991,62 @@ fn array_subscripts(var_node: &GrammarASTNode) -> Option<Vec<&GrammarASTNode>> {
     )
 }
 
+/// Infer an array formal's rank from subscripted references in its own procedure
+/// body. ALGOL's array parameter specifier does not carry bounds or a rank, but
+/// a compiled IIR function needs a fixed descriptor parameter list. A formal
+/// that is only forwarded or never indexed retains the established 1-D ABI;
+/// an indexed formal records the exact number of source subscripts. Nested
+/// procedures are deliberately excluded because capturing an array *formal* is
+/// a separate closure/capture ABI concern.
+fn array_formal_dimension_count(
+    proc_decl: &GrammarASTNode,
+    formal_name: &str,
+) -> Result<usize, CompileError> {
+    let mut dimensions = None;
+    if let Some(body) = first_direct_node(proc_decl, "proc_body") {
+        collect_array_formal_dimensions(body, formal_name, &mut dimensions)?;
+    }
+    Ok(dimensions.unwrap_or(1))
+}
+
+fn collect_array_formal_dimensions(
+    node: &GrammarASTNode,
+    formal_name: &str,
+    dimensions: &mut Option<usize>,
+) -> Result<(), CompileError> {
+    for child in &node.children {
+        let ASTNodeOrToken::Node(node) = child else {
+            continue;
+        };
+        if node.rule_name == "procedure_decl" {
+            continue;
+        }
+        if node.rule_name == "variable" {
+            let is_formal = direct_tokens(node)
+                .iter()
+                .filter(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.as_str())
+                .eq(std::iter::once(formal_name));
+            if is_formal {
+                if let Some(subscripts) = array_subscripts(node) {
+                    let observed = subscripts.len();
+                    match dimensions {
+                        Some(expected) if *expected != observed => {
+                            return Err(CompileError::Type(format!(
+                                "array parameter {formal_name:?} is used with both {expected} and {observed} subscripts"
+                            )));
+                        }
+                        None => *dimensions = Some(observed),
+                        _ => {}
+                    }
+                }
+            }
+        }
+        collect_array_formal_dimensions(node, formal_name, dimensions)?;
+    }
+    Ok(())
+}
+
 fn direct_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     node.children
         .iter()
@@ -5217,29 +5348,29 @@ mod tests {
 
     #[test]
     fn array_parameter_accepts_real_elements() {
-        let src = "begin real array values[4:5]; integer result; \
+        let src = "begin real array values[4:5, -2:-1]; integer result; \
                    real procedure sum(a); value a; real array a; \
-                   begin a[4] := 40.0; a[5] := 2.0; sum := a[4] + a[5] end; \
+                   begin a[4,-2] := 40.0; a[5,-1] := 2.0; sum := a[4,-2] + a[5,-1] end; \
                    result := entier(sum(values)) end";
         assert_eq!(run_i64(src), 42);
     }
 
     #[test]
     fn array_parameter_accepts_string_elements() {
-        let src = "begin string array values[4:4]; integer result; \
+        let src = "begin string array values[4:4, -2:-1]; integer result; \
                    procedure writeok(a); value a; string array a; \
-                   begin a[4] := 'OK'; if a[4] = 'OK' then result := 42 else result := 0 end; \
+                   begin a[4,-2] := 'OK'; if a[4,-2] = 'OK' then result := 42 else result := 0 end; \
                    writeok(values) end";
         assert_eq!(run_i64(src), 42);
     }
 
     #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
-        let src = "begin integer array values[4:5]; integer result; \
+        let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
-                     begin a[4] := 40; a[5] := 2 end; \
+                     begin a[4,-2] := 40; a[5,-1] := 2 end; \
                    procedure invoke; seed(values); \
-                   invoke; result := values[4] + values[5] end";
+                   invoke; result := values[4,-2] + values[5,-1] end";
         assert_eq!(run_i64(src), 42);
 
         let module = compile_source(src, "captured_array_param").expect("compiles");
@@ -5250,24 +5381,86 @@ mod tests {
             .filter(|instr| instr.op == "global_load")
             .count();
         assert!(
-            descriptor_loads >= 2,
-            "captured actual must reload array handle and lower bound, got: {:?}",
+            descriptor_loads >= 4,
+            "captured actual must reload its handle, bounds, and stride, got: {:?}",
             invoke.instructions
         );
     }
 
+    const AL8_2D_ARRAY_PARAMETER_PROG: &str = "begin integer array values[-1:0, 4:5]; integer result; \
+         integer procedure fill(a); value a; integer array a; \
+         begin a[-1,4] := 40; a[0,5] := 2; fill := a[-1,4] + a[0,5] end; \
+         result := fill(values) end";
+
     #[test]
-    fn array_parameter_rejects_multidimensional_actual() {
+    fn two_dimensional_integer_array_parameter_runs_on_vm() {
+        // The two dimensions have distinct lower bounds, so this proves the
+        // descriptor crosses both lower-bound values and the row-major stride.
+        assert_eq!(run_i64(AL8_2D_ARRAY_PARAMETER_PROG), 42);
+    }
+
+    #[test]
+    fn two_dimensional_array_parameter_lowers_complete_descriptor() {
+        let module = compile_source(AL8_2D_ARRAY_PARAMETER_PROG, "array_param_2d")
+            .expect("two-dimensional array parameter program compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "a 2-D formal must receive its handle, both lower bounds, and outer stride"
+        );
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|instr| instr.op == "call")
+            .expect("main calls fill");
+        assert_eq!(call.srcs.len(), 5, "callee + 2-D array descriptor");
+    }
+
+    #[test]
+    fn three_dimensional_array_parameter_runs_on_vm() {
+        let src = "begin integer array values[1:2, 3:4, 5:6]; integer result; \
+                   integer procedure pick(a); value a; integer array a; \
+                   begin a[1,3,5] := 40; a[2,4,6] := 2; pick := a[1,3,5] + a[2,4,6] end; \
+                   result := pick(values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn array_parameter_rejects_rank_mismatch() {
         let err = compile_source(
-            "begin integer array values[1:2, 1:2]; integer result; \
-             integer procedure first(a); value a; integer array a; first := 0; \
+            "begin integer array values[1:2]; integer result; \
+             integer procedure first(a); value a; integer array a; first := a[1,1]; \
              result := first(values) end",
             "array_param_rank",
         )
-        .expect_err("multidimensional array parameter must remain unsupported");
+        .expect_err("rank-mismatched array parameter must fail");
         assert!(
-            matches!(err, CompileError::Unsupported(ref message) if message.contains("one-dimensional")),
+            matches!(err, CompileError::Type(ref message) if message.contains("formal is 2-dimensional")),
             "expected rank diagnostic, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn array_parameter_rejects_inconsistent_formal_subscripts() {
+        let err = compile_source(
+            "begin integer array values[1:2]; integer result; \
+             integer procedure first(a); value a; integer array a; \
+             begin first := a[1]; first := a[1,1] end; \
+             result := first(values) end",
+            "array_param_inconsistent_rank",
+        )
+        .expect_err("inconsistent array formal ranks must fail");
+        assert!(
+            matches!(err, CompileError::Type(ref message) if message.contains("both 1 and 2 subscripts")),
+            "expected inconsistent-rank diagnostic, got {err:?}"
         );
     }
 
