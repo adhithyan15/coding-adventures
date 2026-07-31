@@ -1144,6 +1144,8 @@ Bootstrap order:
    verify lock and package-receipt digests against a fresh solve; and run both
    generated scaffold kinds without skips. Hosted-runner image metadata is
    diagnostic evidence only and is not an immutable host-image attestation.
+   Ready-for-review PR #9354 is open; its contract, three fresh-solve, three
+   locked-fixture, repository CI, and CodeQL detection checks are green.
 4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
    opam-switch serialization, language detection, validator support, shard
    cost, and CI workflow markers to the canonical Go build tool. This begins

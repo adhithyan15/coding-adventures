@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9354,
   "last_inventory": {
     "revision": "59155426cf0ce7f9f7af9838b91692f0583ec23d",
     "schema_version": 3,
@@ -358,11 +358,11 @@
     {
       "id": "ocaml-ci-toolchain",
       "title": "Provision and transitively lock the OCaml toolchain on Ubuntu, macOS, and Windows CI",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-infrastructure"],
       "branch": "codex/ocaml-ci-toolchain",
-      "pr_number": null,
-      "notes": "Selected after PR #9336 merged because the cross-platform toolchain is the next dependency in the OCaml bootstrap and satisfies the OCaml CI prerequisite for later build-substrate and representative-package work; build-substrate remains blocked on the separate build-tool-go-oracle item. Install OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 on all three runner families; pin the opam-repository source, preserve per-platform transitive solver locks and receipts, verify their digests, and prove generated library and program scaffolds run real formatting, tests, and coverage without skips. Mutable hosted-runner image metadata is recorded only as diagnostic evidence and is not a host-image attestation."
+      "pr_number": 9354,
+      "notes": "Ready-for-review PR #9354 provisions the exact OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 toolchain on Linux x64, macOS ARM64, and Windows x64; commit-pins the opam repository and actions; preserves and verifies per-target transitive solver locks and receipts; and proves generated library and program scaffolds run real formatting, tests, and measured coverage without skips. PR-triggered runs 30603982497, 30603982472, and 30603982499 are green, including the contract, all three fresh solves, all three locked fixtures, repository builds, and CodeQL detection. Mutable hosted-runner image metadata remains diagnostic evidence only, not a host-image attestation. The later OCaml build substrate remains blocked on the separately tracked build-tool-go-oracle item."
     },
     {
       "id": "adj-lang-cli-capability-profile",
