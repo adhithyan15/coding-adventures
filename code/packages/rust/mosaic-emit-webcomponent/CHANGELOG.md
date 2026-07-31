@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now lowers through the platform-native
+named-slot mechanism, preserving the Mosaic-styled shadow-DOM container.
+
 ### Added — UI32-K-webcomp — `--emit-project` standalone-HTML shell
 
 L4 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309). `mosaic-compile --backend webcomponent --emit-project` now produces an `index.html` shell alongside the component `.js`:

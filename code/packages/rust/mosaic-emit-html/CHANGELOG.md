@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now emits a stable DOM mount point with a
+trusted node-slot template marker for host-provided browser content.
+
 ### Added - UI35 drag-and-drop (`HostDraggable` / `HostDropTarget`)
 
 The HTML backend now lowers the kernel's two drag primitives (see

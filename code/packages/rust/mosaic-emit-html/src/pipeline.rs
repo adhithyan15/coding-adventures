@@ -1348,6 +1348,11 @@ fn emit_html_tree(
         }
     }
 
+    if node.tag == "HostSurface" {
+        out.push_str(&emit_host_surface_html(node, indent, part_styles));
+        return Ok(out);
+    }
+
     // ----------------------------------------------------------------
     // Specialised primitives — dispatched before the generic
     // `primitive_to_html_tag` lookup because each carries prop-aware or
@@ -3041,6 +3046,30 @@ fn build_style_attr(
     } else {
         format!(" style=\"{merged}\"")
     }
+}
+
+/// Preserve a typed host-owned node boundary in the static HTML template.
+/// Triple braces are intentional: a `node` slot is trusted host markup, not a
+/// text value. The data attribute gives non-Handlebars hosts a stable mount
+/// point for a canvas, webview, or other browser viewport.
+fn emit_host_surface_html(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let slot = match find_prop(node, "content") {
+        Some(LayoutPropValue::SlotRef(slot)) => slot.as_str(),
+        _ => "",
+    };
+    let mut content = String::new();
+    if !slot.is_empty() {
+        content.push_str("{{{");
+        content.push_str(&camel(slot));
+        content.push_str("}}}");
+    }
+    let style = build_style_attr(node, "", part_styles);
+    format!("{pad}<div data-mosaic-host-surface=\"{slot}\"{style}>{content}</div>\n")
 }
 
 // =====================================================================

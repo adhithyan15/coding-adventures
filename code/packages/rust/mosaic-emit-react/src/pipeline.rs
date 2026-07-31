@@ -879,6 +879,14 @@ fn emit_jsx_tree(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
+    // `HostSurface` is the cross-backend composition seam for host-owned
+    // content such as Venture's browser viewport. React/Electron hosts pass
+    // any ReactNode (canvas, webview, native bridge wrapper, ...); Mosaic
+    // continues to own the styled container around it.
+    if node.tag == "HostSurface" {
+        return Ok(emit_host_surface_jsx(node, indent, part_styles));
+    }
+
     // UI29-1 — `HostDialog` lowers to a `<dialog>` JSX element whose
     // `ref={dialogRef_<n>}` and `onClose={...}` are derived from the
     // dialog's index in `dialog_nodes` (assigned at function entry by
@@ -4245,6 +4253,28 @@ fn find_slot_ref_prop<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a s
         }
         None
     })
+}
+
+fn emit_host_surface_jsx(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> String {
+    let pad = " ".repeat(indent);
+    let slot = find_slot_ref_prop(node, "content");
+    let slot_attr = slot.unwrap_or("");
+    let content = slot
+        .map(to_camel_case_first_lower)
+        .map(|name| format!("{{{name}}}"))
+        .unwrap_or_default();
+    let style = node
+        .part_name
+        .as_deref()
+        .and_then(|name| part_styles.get(name))
+        .filter(|style| !style.is_empty())
+        .map(|style| format!(" style={{{{ {style} }}}}"))
+        .unwrap_or_default();
+    format!("{pad}<div data-mosaic-host-surface=\"{slot_attr}\"{style}>{content}</div>\n")
 }
 
 /// Find a prop on `node` whose value is an `EmitRef`. Returns the emit's

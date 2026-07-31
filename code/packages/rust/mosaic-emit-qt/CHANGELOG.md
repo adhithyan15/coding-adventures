@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - host-owned surface composition
+
+`HostSurface ( content: slot: ... )` now lowers to a styled Qt Quick
+`Rectangle` with a filling `Loader` bound to the host's QML `Component`.
+
 ### Changed - Qt project shells support host file dialogs
 
 Generated Qt project shells now use `QApplication` and link `Qt6::Widgets` in

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - exhaustive Venture backend acceptance
+
+- Added `Backend::ALL` as the MIL/MLL/MSL package pipeline's backend source of
+  truth.
+- Venture's shared browser package now builds a project shell and proves a real
+  `HostSurface` mount across every listed backend, including Qt.
+
 ## [Unreleased] - preserve XAML emitter support files
 
 XAML package builds now write emitter-owned C# support files, report them in

@@ -944,6 +944,7 @@ fn emit_html_tree(
     // generic open/close walker below.
     // -----------------------------------------------------------------
     match node.tag.as_str() {
+        "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
         "HostInput" => return Ok(emit_host_input(node, part_styles)),
         "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
@@ -1078,6 +1079,15 @@ fn emit_html_tree(
         i += 1;
     }
     Ok(format!("{open_with_attrs}{inner}{close}"))
+}
+
+/// Mount host-owned light-DOM content through the platform's native named-slot
+/// mechanism. The wrapper remains inside Mosaic's shadow tree so shared MSL
+/// layout and colour still apply around the supplied browser viewport.
+fn emit_host_surface(node: &LayoutNode, part_styles: &HashMap<String, String>) -> String {
+    let slot = find_slot_ref(node, "content").unwrap_or("");
+    let style = build_style_attr(node, "", part_styles);
+    format!("<div data-mosaic-host-surface=\"{slot}\"{style}><slot name=\"{slot}\"></slot></div>")
 }
 
 // =====================================================================

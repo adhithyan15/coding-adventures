@@ -136,6 +136,22 @@ pub enum Backend {
 }
 
 impl Backend {
+    /// Every backend driven by the MIL/MLL/MSL package pipeline. Keeping the
+    /// list here gives cross-backend acceptance tests one exhaustive source of
+    /// truth; adding a new enum variant requires extending this list and the
+    /// Venture browser gate together.
+    pub const ALL: [Self; 9] = [
+        Self::React,
+        Self::Electron,
+        Self::SwiftUI,
+        Self::Qt,
+        Self::WebComponent,
+        Self::Html,
+        Self::Xaml,
+        Self::Flutter,
+        Self::Compose,
+    ];
+
     /// The on-disk subdirectory name beneath `output_root`.
     ///
     /// Conforms to the UI29 §4.3 layout: `dist/react/`, `dist/swiftui/`,
@@ -934,6 +950,15 @@ fn emit_project_shell(
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                // Dart package imports may not escape `lib/`. Keep the
+                // top-level component artifact for Mosaic package consumers,
+                // and mirror it into the runnable Flutter shell so
+                // `lib/main.dart` can import it as a package-local library.
+                let component_source =
+                    read_to_string(&backend_dir.join(format!("{component}.dart")))?;
+                let component_copy = backend_dir.join(format!("lib/{component}.dart"));
+                write_file(&component_copy, component_source.as_bytes())?;
+                written.push(component_copy);
                 let host_stub = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host_stub.parent() {
                     create_dir_all(parent)?;
@@ -1323,7 +1348,7 @@ fn sample_kotlin_value_for_slot_type(slot_type: &SlotType, slot_name: &str) -> S
         SlotType::Bool => "false".to_string(),
         SlotType::Image => "\"sample-image\"".to_string(),
         SlotType::Color => "\"#808080\"".to_string(),
-        SlotType::Node => "Unit".to_string(),
+        SlotType::Node => "{}".to_string(),
         SlotType::List(_) => "emptyList()".to_string(),
         SlotType::Component(name) => format!("TODO(\"Sample {}\")", escape_kotlin_string(name)),
     }
@@ -4203,6 +4228,7 @@ version = "1"
                     "pubspec.yaml",
                     "README.md",
                     "lib/main.dart",
+                    "lib/Grid.dart",
                     "lib/mosaic_host.dart",
                 ],
             ),
@@ -4262,6 +4288,61 @@ version = "1"
                     "{backend:?}: expected shell file `{rel}` missing"
                 );
             }
+        }
+    }
+
+    #[test]
+    fn venture_browser_builds_and_mounts_host_surface_on_every_backend() {
+        let package_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .parent()
+            .and_then(Path::parent)
+            .and_then(Path::parent)
+            .expect("derive code root")
+            .join("programs/mosaic/venture-browser");
+
+        for backend in Backend::ALL {
+            let out = TempDir::new().expect("backend output dir");
+            build_package(&BuildOptions {
+                package_root: package_root.clone(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: true,
+                theme: Some("light".to_string()),
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} Venture build failed: {error:?}"));
+
+            let extension = backend.component_extension().expect("text backend");
+            let artifact = out
+                .path()
+                .join(backend.dir_name())
+                .join(format!("VentureChrome.{extension}"));
+            let source = fs::read_to_string(&artifact)
+                .unwrap_or_else(|error| panic!("read {}: {error}", artifact.display()));
+            let expected_mounts: &[&str] = match backend {
+                Backend::React | Backend::Electron => &[
+                    "data-mosaic-host-surface=\"content-surface\"",
+                    "{contentSurface}",
+                ],
+                Backend::SwiftUI => &["contentSurface"],
+                Backend::Qt => &["Loader {", "sourceComponent: mosaicRoot.contentSurface"],
+                Backend::WebComponent => &["<slot name=\"content-surface\"></slot>"],
+                Backend::Html => &["{{{contentSurface}}}"],
+                Backend::Xaml => {
+                    &["<ContentPresenter Content=\"{x:Bind ContentSurface, Mode=OneWay}\"/>"]
+                }
+                Backend::Flutter => &["final Widget contentSurface;", "contentSurface,"],
+                Backend::Compose => &["contentSurface: @Composable () -> Unit", "contentSurface()"],
+            };
+            for expected in expected_mounts {
+                assert!(
+                    source.contains(expected),
+                    "{backend:?} must mount the host surface with {expected:?}:\n{source}"
+                );
+            }
+            assert!(
+                !source.contains("component reference 'HostSurface'"),
+                "{backend:?} must not silently replace HostSurface with a placeholder"
+            );
         }
     }
 
