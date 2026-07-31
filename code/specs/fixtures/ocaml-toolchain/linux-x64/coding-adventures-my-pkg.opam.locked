@@ -1,0 +1,66 @@
+opam-version: "2.0"
+name: "coding-adventures-my-pkg"
+version: "0.1.0"
+synopsis: "A test package"
+description: "A test package"
+maintainer: "Adhithya Rajasekaran"
+authors: "Adhithya Rajasekaran"
+license: "MIT"
+homepage: "https://github.com/adhithyan15/coding-adventures"
+bug-reports: "https://github.com/adhithyan15/coding-adventures/issues"
+depends: [
+  "alcotest" {= "1.9.0" & with-test}
+  "astring" {= "0.8.5" & with-test}
+  "base" {= "v0.17.3" & with-dev-setup}
+  "base-bigarray" {= "base"}
+  "base-bytes" {= "base" & with-dev-setup}
+  "base-domains" {= "base"}
+  "base-nnp" {= "base"}
+  "base-threads" {= "base"}
+  "base-unix" {= "base"}
+  "bisect_ppx" {= "2.8.3" & with-test}
+  "camlp-streams" {= "5.0.1" & with-dev-setup}
+  "cmdliner" {= "1.3.0" & with-test}
+  "csexp" {= "1.5.2" & with-dev-setup}
+  "dune" {= "3.17.2"}
+  "dune-build-info" {= "3.17.2" & with-dev-setup}
+  "dune-configurator" {= "3.18.2" & with-dev-setup}
+  "either" {= "1.0.0" & with-dev-setup}
+  "fix" {= "20250919" & with-dev-setup}
+  "fmt" {= "0.11.0" & with-test}
+  "fpath" {= "0.7.3" & with-dev-setup}
+  "menhir" {= "20260209" & with-dev-setup}
+  "menhirCST" {= "20260209" & with-dev-setup}
+  "menhirGLR" {= "20260209" & with-dev-setup}
+  "menhirLib" {= "20260209" & with-dev-setup}
+  "menhirSdk" {= "20260209" & with-dev-setup}
+  "ocaml" {= "5.2.1"}
+  "ocaml-base-compiler" {= "5.2.1"}
+  "ocaml-compiler-libs" {= "v0.17.0" & with-test}
+  "ocaml-config" {= "3"}
+  "ocaml-options-vanilla" {= "1"}
+  "ocaml-syntax-shims" {= "1.0.0" & with-test}
+  "ocaml-version" {= "4.1.3" & with-dev-setup}
+  "ocaml_intrinsics_kernel" {= "v0.17.2" & with-dev-setup}
+  "ocamlbuild" {= "0.16.1" & with-test}
+  "ocamlfind" {= "1.9.8" & with-test}
+  "ocamlformat" {= "0.27.0" & with-dev-setup}
+  "ocamlformat-lib" {= "0.27.0" & with-dev-setup}
+  "ocp-indent" {= "1.8.1" & with-dev-setup}
+  "ppx_derivers" {= "1.2.1" & with-test}
+  "ppxlib" {= "0.35.0" & with-test}
+  "re" {= "1.14.0" & with-test}
+  "sexplib0" {= "v0.17.0" & with-test}
+  "stdio" {= "v0.17.0" & with-dev-setup}
+  "stdlib-shims" {= "0.3.0" & with-test}
+  "topkg" {= "1.1.1" & with-test}
+  "uucp" {= "17.0.0" & with-dev-setup}
+  "uuseg" {= "17.0.0" & with-dev-setup}
+  "uutf" {= "1.0.4" & with-test}
+]
+build: [
+  ["dune" "subst"] {dev}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+dev-repo: "git+https://github.com/adhithyan15/coding-adventures.git"

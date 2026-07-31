@@ -52,7 +52,7 @@ checked-in solver evidence. It is a closed JSON object with:
 - `opam_repository_commit`, a full commit identity;
 - `fixture_input_sha256`, the digest shared by the byte-identical library and
   program opam inputs; and
-- `targets`, exactly `linux-x64`, `macos-x64`, and `windows-x64`.
+- `targets`, exactly `linux-x64`, `macos-arm64`, and `windows-x64`.
 
 Each target is a closed object containing its GitHub runner label, expected
 `RUNNER_OS`, expected `RUNNER_ARCH`, nullable Windows compiler mode, relative
@@ -70,7 +70,7 @@ code/specs/fixtures/ocaml-toolchain/
   linux-x64/
     coding-adventures-my-pkg.opam.locked
     installed-packages.txt
-  macos-x64/
+  macos-arm64/
     coding-adventures-my-pkg.opam.locked
     installed-packages.txt
   windows-x64/
@@ -113,10 +113,11 @@ those mutable labels as an attested host identity.
 Both fixture kinds run sequentially on every target. Every nonblank line in the
 selected `BUILD` or `BUILD_windows` file is one independent command, matching
 the repository build tool's line-oriented behavior. Unix lines execute through
-the platform shell; Windows lines execute through the setup action's Cygwin
-shell. CI MUST NOT use `continue-on-error`, conditional success, `|| true`, or
-an absent-tool skip. The run fails unless formatting, Alcotest, and measured
-`bisect_ppx` coverage all execute and produce a nonempty coverage artifact.
+a fresh POSIX shell; Windows lines execute through a fresh `cmd.exe` process
+while the setup action's Cygwin/MinGW toolchain remains on `PATH`. CI MUST NOT
+use `continue-on-error`, conditional success, `|| true`, or an absent-tool
+skip. The run fails unless formatting, Alcotest, and measured `bisect_ppx`
+coverage all execute and produce a nonempty coverage artifact.
 
 Pull-request validation may verify this public toolchain and public scaffold
 code because it receives no secrets and grants no protected build-tool

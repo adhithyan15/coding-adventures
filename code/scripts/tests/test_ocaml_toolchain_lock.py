@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import io
 import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -22,7 +24,7 @@ class OcamlToolchainRepositoryTests(unittest.TestCase):
 
         self.assertEqual(1, manifest["schema_version"])
         self.assertEqual(
-            {"linux-x64", "macos-x64", "windows-x64"},
+            {"linux-x64", "macos-arm64", "windows-x64"},
             set(manifest["targets"]),
         )
 
@@ -114,6 +116,125 @@ class OcamlToolchainShapeTests(unittest.TestCase):
             "windows_compiler",
         )
 
+    def test_rejects_other_closed_shape_drift(self) -> None:
+        cases = (
+            (
+                lambda document: document.__setitem__("schema_version", 2),
+                "schema_version",
+            ),
+            (
+                lambda document: document["direct_versions"].__setitem__(
+                    "ocaml", "five"
+                ),
+                "semantic version",
+            ),
+            (
+                lambda document: document["direct_versions"].__setitem__(
+                    "ocaml", "5.2.2"
+                ),
+                "reviewed version",
+            ),
+            (
+                lambda document: document["actions"].__setitem__("checkout", "0" * 40),
+                "reviewed commit",
+            ),
+            (
+                lambda document: document.__setitem__(
+                    "opam_repository_commit", "0" * 40
+                ),
+                "reviewed commit",
+            ),
+            (
+                lambda document: document.__setitem__(
+                    "fixture_input_sha256", "not-a-digest"
+                ),
+                "SHA-256",
+            ),
+            (
+                lambda document: document["targets"]["linux-x64"].__setitem__(
+                    "runner_arch", "ARM64"
+                ),
+                "runner_arch",
+            ),
+            (
+                lambda document: document["targets"]["linux-x64"].__setitem__(
+                    "lock_file",
+                    "windows-x64/coding-adventures-my-pkg.opam.locked",
+                ),
+                "target directory",
+            ),
+            (
+                lambda document: document["targets"]["linux-x64"].__setitem__(
+                    "receipt_file", "linux-x64/packages.txt"
+                ),
+                "target directory",
+            ),
+            (
+                lambda document: document["targets"]["linux-x64"][
+                    "runner_image"
+                ].__setitem__("image_os", ""),
+                "must be nonempty",
+            ),
+        )
+        for mutate, message in cases:
+            with self.subTest(message=message):
+                self.assert_rejected(mutate, message)
+
+    def test_rejects_non_object_manifest(self) -> None:
+        with self.assertRaisesRegex(toolchain.ContractError, "must be an object"):
+            toolchain.validate_manifest_shape([])
+
+
+class OcamlToolchainWorkflowTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.manifest = toolchain.load_manifest(REPO_ROOT)
+        cls.workflow = (REPO_ROOT / ".github/workflows/build-ocaml.yml").read_text(
+            encoding="utf-8"
+        )
+
+    def test_rejects_missing_contract_fragments(self) -> None:
+        cases = (
+            ("diff -u", "required fragment"),
+            ("ubuntu-24.04", "runner label"),
+            ("1.9.0", "exact version"),
+        )
+        for removed, message in cases:
+            with (
+                self.subTest(removed=removed),
+                self.assertRaisesRegex(toolchain.ContractError, message),
+            ):
+                toolchain.validate_workflow_text(
+                    self.manifest, self.workflow.replace(removed, "REMOVED")
+                )
+
+    def test_rejects_forbidden_workflow_constructs(self) -> None:
+        for forbidden in (
+            "continue-on-error: true",
+            "run: command || true",
+            "${{ secrets.TOKEN }}",
+            "dune-cache: true",
+            "opam-pin: true",
+        ):
+            with (
+                self.subTest(forbidden=forbidden),
+                self.assertRaisesRegex(toolchain.ContractError, "forbidden"),
+            ):
+                toolchain.validate_workflow_text(
+                    self.manifest, f"{self.workflow}\n{forbidden}\n"
+                )
+
+    def test_rejects_unpinned_action_references(self) -> None:
+        for reference in ("actions/example", "actions/example@v1"):
+            with (
+                self.subTest(reference=reference),
+                self.assertRaisesRegex(toolchain.ContractError, "not commit-pinned"),
+            ):
+                toolchain.validate_workflow_text(
+                    self.manifest,
+                    f"{self.workflow}\n      uses: {reference}\n",
+                )
+
 
 class OcamlToolchainDigestTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -174,6 +295,37 @@ class OcamlToolchainDigestTests(unittest.TestCase):
         with self.assertRaisesRegex(toolchain.ContractError, "digest mismatch"):
             toolchain.validate_repository(self.root, check_workflow=False)
 
+    def test_rejects_missing_evidence(self) -> None:
+        target = self.manifest["targets"]["linux-x64"]
+        (self.fixture_root / target["receipt_file"]).unlink()
+
+        with self.assertRaisesRegex(toolchain.ContractError, "regular file"):
+            toolchain.validate_repository(self.root, check_workflow=False)
+
+    def test_rejects_different_fixture_inputs(self) -> None:
+        program = (
+            self.root
+            / "code/specs/fixtures/scaffold-generator/ocaml-program"
+            / "coding-adventures-my-pkg.opam"
+        )
+        program.write_text("different\n", encoding="utf-8")
+
+        with self.assertRaisesRegex(toolchain.ContractError, "inputs differ"):
+            toolchain.validate_repository(self.root, check_workflow=False)
+
+    def test_rejects_lock_without_direct_dependency(self) -> None:
+        target = self.manifest["targets"]["linux-x64"]
+        lock = self.fixture_root / target["lock_file"]
+        content = lock.read_text(encoding="utf-8").replace('"dune" {= "3.17.2"}', "")
+        lock.write_bytes(content.encode("utf-8"))
+        target["lock_sha256"] = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        (self.fixture_root / "toolchain-lock.json").write_text(
+            json.dumps(self.manifest), encoding="utf-8"
+        )
+
+        with self.assertRaisesRegex(toolchain.ContractError, "omits exact"):
+            toolchain.validate_repository(self.root, check_workflow=False)
+
     def test_rejects_symlinked_evidence(self) -> None:
         if sys.platform == "win32":
             self.skipTest("unprivileged Windows cannot reliably create symlinks")
@@ -216,6 +368,11 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
                 },
             )
 
+    def test_exact_tool_versions_reject_missing_probe(self) -> None:
+        manifest = toolchain.load_manifest(REPO_ROOT)
+        with self.assertRaisesRegex(toolchain.ContractError, "output keys"):
+            toolchain.validate_tool_version_outputs(manifest, {})
+
     @mock.patch("ocaml_toolchain_lock.subprocess.run")
     def test_runtime_probe_executes_closed_commands(self, run: mock.Mock) -> None:
         outputs = (
@@ -236,6 +393,53 @@ class OcamlToolchainRuntimeTests(unittest.TestCase):
         for call in run.call_args_list:
             self.assertTrue(call.kwargs["check"])
             self.assertFalse(call.kwargs["shell"])
+
+
+class OcamlToolchainLoadingAndCliTests(unittest.TestCase):
+    def test_load_manifest_rejects_missing_and_invalid_json(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with self.assertRaisesRegex(toolchain.ContractError, "missing manifest"):
+                toolchain.load_manifest(root)
+
+            path = root / toolchain.MANIFEST_RELATIVE_PATH
+            path.parent.mkdir(parents=True)
+            path.write_text("{", encoding="utf-8")
+            with self.assertRaisesRegex(toolchain.ContractError, "cannot read"):
+                toolchain.load_manifest(root)
+
+    def test_cli_validate_repository_passes(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            result = toolchain.main(
+                ["validate-repository", "--repo-root", str(REPO_ROOT)]
+            )
+
+        self.assertEqual(0, result)
+        self.assertIn("passed", output.getvalue())
+
+    @mock.patch("ocaml_toolchain_lock.validate_runtime")
+    def test_cli_validate_runtime_passes(self, validate_runtime: mock.Mock) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            result = toolchain.main(["validate-runtime", "--repo-root", str(REPO_ROOT)])
+
+        self.assertEqual(0, result)
+        validate_runtime.assert_called_once()
+
+    @mock.patch(
+        "ocaml_toolchain_lock.validate_repository",
+        side_effect=toolchain.ContractError("broken"),
+    )
+    def test_cli_reports_contract_failure(self, _validate: mock.Mock) -> None:
+        error = io.StringIO()
+        with redirect_stderr(error):
+            result = toolchain.main(
+                ["validate-repository", "--repo-root", str(REPO_ROOT)]
+            )
+
+        self.assertEqual(1, result)
+        self.assertIn("broken", error.getvalue())
 
 
 if __name__ == "__main__":

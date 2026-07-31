@@ -29,6 +29,7 @@ DIRECT_VERSIONS = {
 ACTIONS = {
     "checkout": "11d5960a326750d5838078e36cf38b85af677262",
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
+    "upload_artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02",
 }
 OPAM_REPOSITORY_COMMIT = "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff"
 TARGETS = {
@@ -38,10 +39,10 @@ TARGETS = {
         "runner_arch": "X64",
         "windows_compiler": None,
     },
-    "macos-x64": {
+    "macos-arm64": {
         "runner": "macos-14",
         "runner_os": "macOS",
-        "runner_arch": "X64",
+        "runner_arch": "ARM64",
         "windows_compiler": None,
     },
     "windows-x64": {
@@ -268,6 +269,7 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         "fail-fast: false",
         f"actions/checkout@{manifest['actions']['checkout']}",
         f"ocaml/setup-ocaml@{manifest['actions']['setup_ocaml']}",
+        f"actions/upload-artifact@{manifest['actions']['upload_artifact']}",
         f"#{manifest['opam_repository_commit']}",
         "opam-pin: false",
         "dune-cache: false",
@@ -276,6 +278,12 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         "ocaml-library",
         "ocaml-program",
         "BUILD_windows",
+        "cmd.exe /D /S /C",
+        'bash -c "$command"',
+        "opam lock .",
+        "--locked",
+        "validate-runtime",
+        "diff -u",
     ]
     for fragment in required_fragments:
         if fragment not in workflow_text:

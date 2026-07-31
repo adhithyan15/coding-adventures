@@ -1,16 +1,58 @@
-name: Bootstrap OCaml toolchain evidence
+name: OCaml toolchain
 
 on:
   push:
-    branches:
-      - codex/ocaml-ci-toolchain
+    branches: ['**']
+    paths:
+      - '.github/workflows/build-ocaml.yml'
+      - 'code/scripts/ocaml_toolchain_lock.py'
+      - 'code/scripts/tests/test_ocaml_toolchain_lock.py'
+      - 'code/specs/OCAML0*.md'
+      - 'code/specs/fixtures/ocaml-toolchain/**'
+      - 'code/specs/fixtures/scaffold-generator/ocaml-*/**'
+      - 'code/packages/ocaml/**'
+      - 'code/programs/ocaml/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-ocaml.yml'
+      - 'code/scripts/ocaml_toolchain_lock.py'
+      - 'code/scripts/tests/test_ocaml_toolchain_lock.py'
+      - 'code/specs/OCAML0*.md'
+      - 'code/specs/fixtures/ocaml-toolchain/**'
+      - 'code/specs/fixtures/scaffold-generator/ocaml-*/**'
+      - 'code/packages/ocaml/**'
+      - 'code/programs/ocaml/**'
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+env:
+  OCAML_VERSION: '5.2.1'
+  OPAM_VERSION: '2.5.2'
+  DUNE_VERSION: '3.17.2'
+  ALCOTEST_VERSION: '1.9.0'
+  BISECT_PPX_VERSION: '2.8.3'
+  OCAMLFORMAT_VERSION: '0.27.0'
+
 jobs:
-  generate:
-    name: Generate ${{ matrix.target }} evidence
+  contract:
+    name: Validate OCAML03 contract
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Validate closed manifest, evidence, and workflow
+        run: |
+          python3 code/scripts/ocaml_toolchain_lock.py validate-repository
+          python3 -m unittest discover \
+            -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
+
+  fresh-solve:
+    name: Fresh solve (${{ matrix.target }})
+    needs: contract
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
@@ -18,10 +60,16 @@ jobs:
         include:
           - target: linux-x64
             runner: ubuntu-24.04
-          - target: macos-x64
+            runner-os: Linux
+            runner-arch: X64
+          - target: macos-arm64
             runner: macos-14
+            runner-os: macOS
+            runner-arch: ARM64
           - target: windows-x64
             runner: windows-2022
+            runner-os: Windows
+            runner-arch: X64
     steps:
       - name: Checkout reviewed source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -29,21 +77,26 @@ jobs:
       - name: Set up the reviewed OCaml compiler and repository
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         with:
-          ocaml-compiler: '5.2.1'
+          ocaml-compiler: ${{ env.OCAML_VERSION }}
           opam-repositories: |
             default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
           opam-pin: false
           dune-cache: false
-          cache-prefix: ocaml03-bootstrap-${{ github.run_id }}-${{ matrix.target }}
+          cache-prefix: ocaml03-${{ matrix.target }}
           windows-compiler: mingw
           windows-environment: cygwin
 
-      - name: Require the reviewed opam bootstrap
+      - name: Require the reviewed runner and opam bootstrap
         shell: bash
+        env:
+          EXPECTED_OS: ${{ matrix.runner-os }}
+          EXPECTED_ARCH: ${{ matrix.runner-arch }}
         run: |
           set -euo pipefail
+          test "$RUNNER_OS" = "$EXPECTED_OS"
+          test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
           actual="$(opam --version)"
-          test "$actual" = "2.5.2"
+          test "$actual" = "$OPAM_VERSION"
 
       - name: Generate fresh solver evidence
         shell: bash
@@ -58,21 +111,159 @@ jobs:
           mkdir -p "$fixture" "$output"
           cp -R code/specs/fixtures/scaffold-generator/ocaml-library/. "$fixture/"
           cd "$fixture"
-          opam install . --deps-only --with-test --with-dev-setup --yes --require-checksums
+          opam install . --deps-only --with-test --with-dev-setup \
+            --yes --require-checksums
           opam lock .
           opam list --installed --columns=name,version --normalise --color=never \
             | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
                   -e 's/[[:space:]][[:space:]]*/ /g' \
+                  -e 's/[[:space:]]*$//' \
             | LC_ALL=C sort > "$output/installed-packages.txt"
           cp coding-adventures-my-pkg.opam.locked "$output/"
+          python "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-runtime
           printf 'image_os=%s\nimage_version=%s\nrunner_os=%s\nrunner_arch=%s\n' \
             "${ImageOS:-unknown}" "${ImageVersion:-unknown}" \
             "$RUNNER_OS" "$RUNNER_ARCH" > "$output/runner-image.txt"
 
-      - name: Upload solver evidence
+      - name: Upload fresh solver evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ocaml03-${{ matrix.target }}
+          name: ocaml03-fresh-${{ matrix.target }}
           path: ${{ runner.temp }}/ocaml03-evidence/${{ matrix.target }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Compare fresh solve with reviewed evidence
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          expected="code/specs/fixtures/ocaml-toolchain/$TARGET"
+          actual="$RUNNER_TEMP/ocaml03-evidence/$TARGET"
+          diff -u "$expected/coding-adventures-my-pkg.opam.locked" \
+            "$actual/coding-adventures-my-pkg.opam.locked"
+          diff -u "$expected/installed-packages.txt" \
+            "$actual/installed-packages.txt"
+
+  locked-fixtures:
+    name: Locked fixtures (${{ matrix.target }})
+    needs: fresh-solve
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: linux-x64
+            runner: ubuntu-24.04
+            runner-os: Linux
+            runner-arch: X64
+          - target: macos-arm64
+            runner: macos-14
+            runner-os: macOS
+            runner-arch: ARM64
+          - target: windows-x64
+            runner: windows-2022
+            runner-os: Windows
+            runner-arch: X64
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - name: Set up the reviewed OCaml compiler and repository
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        with:
+          ocaml-compiler: ${{ env.OCAML_VERSION }}
+          opam-repositories: |
+            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
+          opam-pin: false
+          dune-cache: false
+          cache-prefix: ocaml03-${{ matrix.target }}
+          windows-compiler: mingw
+          windows-environment: cygwin
+
+      - name: Require the reviewed runner and opam bootstrap
+        shell: bash
+        env:
+          EXPECTED_OS: ${{ matrix.runner-os }}
+          EXPECTED_ARCH: ${{ matrix.runner-arch }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_OS" = "$EXPECTED_OS"
+          test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
+          actual="$(opam --version)"
+          test "$actual" = "$OPAM_VERSION"
+
+      - name: Install the reviewed transitive lock
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          export OPAMSWITCH
+          OPAMSWITCH="$(opam switch show --safe)"
+          fixture="$RUNNER_TEMP/ocaml03-locked-deps"
+          mkdir -p "$fixture"
+          cp -R code/specs/fixtures/scaffold-generator/ocaml-library/. "$fixture/"
+          cp "code/specs/fixtures/ocaml-toolchain/$TARGET/"*.opam.locked \
+            "$fixture/"
+          cd "$fixture"
+          opam install . --deps-only --with-test --with-dev-setup \
+            --locked --yes --require-checksums
+          python "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-runtime
+
+      - name: Run both scaffold kinds line by line
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          export OPAMSWITCH
+          OPAMSWITCH="$(opam switch show --safe)"
+          run_root="$RUNNER_TEMP/ocaml03-run"
+          coverage_root="$RUNNER_TEMP/ocaml03-coverage/$TARGET"
+          expected_receipt="$GITHUB_WORKSPACE/code/specs/fixtures/ocaml-toolchain/$TARGET/installed-packages.txt"
+          mkdir -p "$run_root" "$coverage_root"
+          for kind in ocaml-library ocaml-program; do
+            fixture="$run_root/$kind"
+            mkdir -p "$fixture" "$coverage_root/$kind"
+            cp -R "code/specs/fixtures/scaffold-generator/$kind/." "$fixture/"
+            cd "$fixture"
+            build_file=BUILD
+            if [ "$RUNNER_OS" = "Windows" ]; then
+              build_file=BUILD_windows
+            fi
+            while IFS= read -r command; do
+              if [ -n "$command" ]; then
+                if [ "$RUNNER_OS" = "Windows" ]; then
+                  cmd.exe /D /S /C "$command"
+                else
+                  bash -c "$command"
+                fi
+              fi
+            done < "$build_file"
+            shopt -s nullglob
+            coverage=(bisect*.coverage)
+            test "${#coverage[@]}" -gt 0
+            for coverage_file in "${coverage[@]}"; do
+              test -s "$coverage_file"
+              cp "$coverage_file" "$coverage_root/$kind/"
+            done
+            opam list --installed --columns=name,version --normalise --color=never \
+              | sed -e '/^#/d' -e '/^[[:space:]]*$/d' \
+                    -e 's/[[:space:]][[:space:]]*/ /g' \
+                    -e 's/[[:space:]]*$//' \
+              | LC_ALL=C sort > installed-packages.txt
+            diff -u "$expected_receipt" installed-packages.txt
+            cd "$GITHUB_WORKSPACE"
+          done
+
+      - name: Upload measured coverage
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ocaml03-coverage-${{ matrix.target }}
+          path: ${{ runner.temp }}/ocaml03-coverage/${{ matrix.target }}
           if-no-files-found: error
           retention-days: 7
