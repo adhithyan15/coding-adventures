@@ -16,7 +16,27 @@ use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintScene};
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
+
+/// Mosaic `VentureChrome` slot names, in interface declaration order.
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 6] = [
+    "address",
+    "page-title",
+    "status-text",
+    "back-disabled",
+    "forward-disabled",
+    "navigation-disabled",
+];
+
+/// Mosaic `VentureChrome` event names, in interface declaration order.
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 6] = [
+    "onBack",
+    "onForward",
+    "onHome",
+    "onReload",
+    "onAddressChange",
+    "onNavigate",
+];
 
 /// In-memory browser navigation state.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -334,6 +354,135 @@ pub enum BrowserNavigation {
     Reload,
 }
 
+/// An event emitted by the shared Mosaic `VentureChrome` component.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserChromeEvent {
+    Back,
+    Forward,
+    Home,
+    Reload,
+    AddressChange(String),
+    Navigate,
+}
+
+impl BrowserChromeEvent {
+    pub const fn mosaic_name(&self) -> &'static str {
+        match self {
+            Self::Back => "onBack",
+            Self::Forward => "onForward",
+            Self::Home => "onHome",
+            Self::Reload => "onReload",
+            Self::AddressChange(_) => "onAddressChange",
+            Self::Navigate => "onNavigate",
+        }
+    }
+}
+
+/// Values projected into the shared Mosaic `VentureChrome` slots.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserChromeProps {
+    pub address: String,
+    pub page_title: String,
+    pub status_text: String,
+    pub back_disabled: bool,
+    pub forward_disabled: bool,
+    pub navigation_disabled: bool,
+}
+
+/// Host-neutral reducer for Venture's Mosaic-authored browser chrome.
+///
+/// Address edits remain a draft until the host successfully executes the
+/// returned navigation command and calls [`Self::synchronize`]. This keeps a
+/// failed load from replacing the user's input or the session's current URL.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserChromeController {
+    address_draft: String,
+}
+
+impl BrowserChromeController {
+    pub fn new(session: &BrowserSession) -> Self {
+        Self {
+            address_draft: session
+                .history()
+                .current_url()
+                .unwrap_or_else(|| session.history().home_url())
+                .to_string(),
+        }
+    }
+
+    pub fn address_draft(&self) -> &str {
+        &self.address_draft
+    }
+
+    /// Synchronize the address slot after a successful page load or redirect.
+    pub fn synchronize(&mut self, session: &BrowserSession) {
+        if let Some(current_url) = session.history().current_url() {
+            self.address_draft = current_url.to_string();
+        }
+    }
+
+    /// Reduce a Mosaic event to a Venture navigation command when appropriate.
+    pub fn handle_event(
+        &mut self,
+        event: BrowserChromeEvent,
+        session: &BrowserSession,
+        navigation_disabled: bool,
+    ) -> Option<BrowserNavigation> {
+        if navigation_disabled {
+            return None;
+        }
+
+        match event {
+            BrowserChromeEvent::AddressChange(value) => {
+                self.address_draft = value;
+                None
+            }
+            BrowserChromeEvent::Navigate => {
+                let address = self.address_draft.trim();
+                (!address.is_empty()).then(|| BrowserNavigation::Navigate(address.to_string()))
+            }
+            BrowserChromeEvent::Back if session.history().can_go_back() => {
+                Some(BrowserNavigation::Back)
+            }
+            BrowserChromeEvent::Forward if session.history().can_go_forward() => {
+                Some(BrowserNavigation::Forward)
+            }
+            BrowserChromeEvent::Home => Some(BrowserNavigation::Home),
+            BrowserChromeEvent::Reload if session.history().current_url().is_some() => {
+                Some(BrowserNavigation::Reload)
+            }
+            BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
+                None
+            }
+        }
+    }
+
+    /// Project one coherent snapshot for all six Mosaic chrome slots.
+    pub fn props(
+        &self,
+        session: &BrowserSession,
+        status_text: impl Into<String>,
+        navigation_disabled: bool,
+    ) -> BrowserChromeProps {
+        let page_title = session
+            .viewport()
+            .and_then(|viewport| viewport.page().document.title.as_deref())
+            .map(str::trim)
+            .filter(|title| !title.is_empty())
+            .unwrap_or("")
+            .to_string();
+
+        BrowserChromeProps {
+            address: self.address_draft.clone(),
+            page_title,
+            status_text: status_text.into(),
+            back_disabled: navigation_disabled || !session.history().can_go_back(),
+            forward_disabled: navigation_disabled || !session.history().can_go_forward(),
+            navigation_disabled,
+        }
+    }
+}
+
 /// Host-neutral browser state spanning navigation, loading, and the viewport.
 ///
 /// Navigation is transactional: a failed page load leaves both history and the
@@ -627,6 +776,124 @@ mod tests {
         assert_eq!(
             history.replace_current("http://home.test/index.html"),
             Some("http://home.test/index.html")
+        );
+    }
+
+    #[test]
+    fn mosaic_chrome_reduces_events_and_projects_session_state() {
+        let home_url = "http://home.test/";
+        let page_url = "http://example.test/guide";
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<title> Venture Guide </title><p>Ready</p>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(home_url, 40.0);
+        let mut chrome = BrowserChromeController::new(&session);
+
+        assert_eq!(chrome.address_draft(), home_url);
+        assert_eq!(
+            chrome.props(&session, "Ready", false),
+            BrowserChromeProps {
+                address: home_url.into(),
+                page_title: String::new(),
+                status_text: "Ready".into(),
+                back_disabled: true,
+                forward_disabled: true,
+                navigation_disabled: false,
+            }
+        );
+        assert_eq!(
+            chrome.handle_event(BrowserChromeEvent::Back, &session, false),
+            None
+        );
+        assert_eq!(
+            chrome.handle_event(BrowserChromeEvent::Reload, &session, false),
+            None
+        );
+
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .expect("home should load")
+            .expect("home should create a viewport");
+        chrome.synchronize(&session);
+
+        assert_eq!(
+            chrome.handle_event(
+                BrowserChromeEvent::AddressChange(format!("  {page_url}  ")),
+                &session,
+                false,
+            ),
+            None
+        );
+        let navigation = chrome
+            .handle_event(BrowserChromeEvent::Navigate, &session, false)
+            .expect("non-empty address should navigate");
+        assert_eq!(navigation, BrowserNavigation::Navigate(page_url.into()));
+        session
+            .execute(navigation, &pipeline, &fetcher)
+            .expect("chrome navigation should load")
+            .expect("chrome navigation should create a viewport");
+        chrome.synchronize(&session);
+
+        assert_eq!(
+            chrome.props(&session, "Status: 200", false),
+            BrowserChromeProps {
+                address: page_url.into(),
+                page_title: "Venture Guide".into(),
+                status_text: "Status: 200".into(),
+                back_disabled: false,
+                forward_disabled: true,
+                navigation_disabled: false,
+            }
+        );
+        assert_eq!(
+            chrome.handle_event(BrowserChromeEvent::Back, &session, false),
+            Some(BrowserNavigation::Back)
+        );
+
+        chrome.handle_event(
+            BrowserChromeEvent::AddressChange("http://draft.test/".into()),
+            &session,
+            false,
+        );
+        chrome.handle_event(
+            BrowserChromeEvent::AddressChange("ignored while loading".into()),
+            &session,
+            true,
+        );
+        assert_eq!(chrome.address_draft(), "http://draft.test/");
+        let disabled = chrome.props(&session, "Loading", true);
+        assert!(disabled.back_disabled);
+        assert!(disabled.forward_disabled);
+        assert!(disabled.navigation_disabled);
+    }
+
+    #[test]
+    fn mosaic_chrome_event_names_match_the_generated_bridge_contract() {
+        let events = [
+            BrowserChromeEvent::Back,
+            BrowserChromeEvent::Forward,
+            BrowserChromeEvent::Home,
+            BrowserChromeEvent::Reload,
+            BrowserChromeEvent::AddressChange(String::new()),
+            BrowserChromeEvent::Navigate,
+        ];
+        assert_eq!(
+            events.map(|event| event.mosaic_name()),
+            VENTURE_CHROME_EVENT_NAMES
         );
     }
 
