@@ -547,6 +547,28 @@ Assistant without silently changing behavior:
   runs, scene and automation mapping, blocking diagnostics, repeat apply, and
   artifact round trips.
 
+## Current Home Assistant Live Export Slice
+
+This slice connects a running Home Assistant instance to the review-first
+migration boundary:
+
+- `smart-home-home-assistant-export` opens Home Assistant's WebSocket API,
+  performs the `auth_required` / token / `auth_ok` handshake, and keeps the
+  long-lived access token out of arguments, artifacts, and error output.
+- The collector requests the area, device, and entity registries plus all
+  current states, then projects the responses into the versioned migration
+  export contract in deterministic identifier order.
+- State records absent from the entity registry receive explicit synthetic
+  entity records instead of being silently discarded. Duplicate identifiers,
+  failed commands, malformed payloads, and premature disconnects fail the
+  collection.
+- The CLI performs atomic output replacement. Protocol tests use a real local
+  WebSocket server to prove authentication, command ordering, normalization,
+  failed authorization, and token redaction.
+- Scene and automation definitions and historical state are not inferred from
+  registry/current-state payloads; their live collection remains explicit
+  follow-up work.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
@@ -556,9 +578,10 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Extend the completed Home Assistant topology, current-state, scene, and
-  automation importer with live export collection, dashboard migration, and
-  historical state export where feasible.
+- Extend the completed Home Assistant live topology/current-state collection
+  and topology/current-state/scene/automation importer with live scene and
+  automation definition collection, dashboard migration, and historical state
+  export where feasible.
 - Provide a dashboard that can inspect devices, rooms, state, health,
   automations, event history, pairing, and command audit.
 
