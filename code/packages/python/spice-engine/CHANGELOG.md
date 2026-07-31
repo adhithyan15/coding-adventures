@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `CBD` / `CJD` values
+  before drain-bulk capacitance shaping.
+
 - Reject negative and non-finite Level-1 MOS model-card `CBS` / `CJS` values
   before source-bulk capacitance shaping.
 
