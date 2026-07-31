@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9383,
   "last_inventory": {
     "revision": "bfa7af2c99a157c4f142c0f28114ff9e2f920292",
     "schema_version": 3,
@@ -461,11 +461,11 @@
     {
       "id": "dart-trig-wave",
       "title": "Port the PHY00 trig and dependent PHY01 wave packages to Dart",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-scaffold-capability-schema"],
       "branch": "codex/dart-trig-wave-parity",
-      "pr_number": null,
-      "notes": "Added as pending after PR #9375 merged, then selected as the first dependency-shaped child of dart-current-14-of-15. After rebasing the worktree, the collision-clean bfa7af2c9 inventory remained unchanged at 1,200 identities and 4,342 slots; all thirteen 14-of-15 gaps remained Dart-only. Trig is a zero-dependency first-principles numeric leaf and wave is its direct consumer, so this two-package slice closes two frontier slots and establishes the scaffold contract's first real downstream use."
+      "pr_number": 9383,
+      "notes": "Ready-for-review PR #9383. Added as pending after PR #9375 merged, then selected as the first dependency-shaped child of dart-current-14-of-15. After rebasing the worktree, the collision-clean bfa7af2c9 inventory remained unchanged at 1,200 identities and 4,342 slots; all thirteen 14-of-15 gaps remained Dart-only. Trig is a zero-dependency first-principles numeric leaf and wave is its direct consumer, so this two-package slice closes two frontier slots and establishes the scaffold contract's first real downstream use. Validation: Dart format/analyze; 12 trig plus 13 wave tests; 100% measured production line coverage in both packages; real package BUILD and dependency-ordered Go build-tool execution; Go test/vet; manifest, taxonomy, reporter, parity, state-graph, JSON, diff, and security checks; and independent contract, fixture, and security re-audits."
     },
     {
       "id": "phy00-phy01-language-neutral-fixtures",
