@@ -268,10 +268,10 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     // a call argument. The later global load has no per-function literal table,
     // so the stored value must be a length-prefixed runtime handle.
     let mut global_store_val_vars: HashSet<&str> = HashSet::new();
-    // Literal operands for string algebra are also materialised as real runtime
-    // handles. This is harmless for a fully folded operation (which ignores its
-    // locals), and essential when its peer is a global/call result at run time.
-    let mut string_operation_vars: HashSet<&str> = HashSet::new();
+    // A literal operand used with a runtime string must also have a runtime
+    // header. Keep each operation's operands together so fully folded literal
+    // algebra preserves its compact literal-data representation.
+    let mut string_operation_var_groups: Vec<Vec<&str>> = Vec::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
         let op = instr.op.as_str();
@@ -314,11 +314,13 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
             }
         }
         if matches!(op, "str_concat" | "str_eq" | "str_cmp") {
+            let mut vars = Vec::new();
             for src in &instr.srcs {
                 if let Operand::Var(v) = src {
-                    string_operation_vars.insert(v.as_str());
+                    vars.push(v.as_str());
                 }
             }
+            string_operation_var_groups.push(vars);
         }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
@@ -347,9 +349,13 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
             promoted.insert(v.to_string());
         }
     }
-    for v in &string_operation_vars {
-        if folding_str_dests.contains(v) {
-            promoted.insert(v.to_string());
+    for vars in &string_operation_var_groups {
+        if vars.iter().any(|v| !folding_str_dests.contains(v)) {
+            for v in vars {
+                if folding_str_dests.contains(v) {
+                    promoted.insert((*v).to_string());
+                }
+            }
         }
     }
     promoted
