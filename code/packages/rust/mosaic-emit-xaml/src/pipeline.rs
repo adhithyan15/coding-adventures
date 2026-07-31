@@ -92,8 +92,8 @@ pub struct XamlEmitResult {
     /// PR-2.
     pub for_view_models: Vec<EmittedFile>,
 
-    /// One entry per `If` whose expression is not `{x:Bind}`-able â€” the
-    /// computed-property helper C# source.
+    /// Generated C# helper sources used by component resources, including
+    /// visibility and native-focus value converters.
     ///
     /// PR-1 always returns an empty `Vec`; `If` lowering lands with
     /// PR-2.
@@ -456,6 +456,12 @@ pub fn from_pipeline(
             source: emit_bool_to_vis_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_focus_state_converter {
+        if_helpers.push(EmittedFile {
+            filename: "FocusStateToBoolConverter.cs".to_string(),
+            source: emit_focus_state_to_bool_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -617,6 +623,10 @@ struct EmitContext<'a> {
     /// emitter writes a `BoolToVisibilityConverter` resource into the
     /// `<UserControl.Resources>` block.
     needs_bool_to_vis: bool,
+    /// Tracks whether a focus-capable Host control consumes UI15's built-in
+    /// `state focused`. The emitter writes a `FocusStateToBoolConverter`
+    /// resource and ships its C# helper alongside the component triple.
+    needs_focus_state_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -689,6 +699,7 @@ impl<'a> EmitContext<'a> {
             for_scope: Vec::new(),
             helpers: Vec::new(),
             needs_bool_to_vis: false,
+            needs_focus_state_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -861,6 +872,13 @@ fn button_base_supports_automatic_hover(xaml_tag: &str) -> bool {
     )
 }
 
+fn control_supports_automatic_focus(xaml_tag: &str) -> bool {
+    matches!(
+        xaml_tag,
+        "TextBox" | "NumberBox" | "Button" | "CheckBox" | "RadioButton" | "HyperlinkButton"
+    )
+}
+
 /// Register MSL state overrides for one native WinUI control.
 ///
 /// Each property gets its own VisualStateGroup. This is deliberate:
@@ -898,6 +916,18 @@ fn register_host_visual_states(
             continue;
         };
         state_layers.push((state_name, trigger_value, state_style));
+    }
+    if control_supports_automatic_focus(xaml_tag) && !has_explicit_state_when(node, "focused") {
+        if let Some(focus_style) = part.states.get("focused") {
+            ctx.needs_focus_state_converter = true;
+            state_layers.push((
+                "focused",
+                format!(
+                    "{{Binding FocusState, ElementName={target_name}, Converter={{StaticResource FocusStateToBoolConverter}}}}"
+                ),
+                focus_style,
+            ));
+        }
     }
     if button_base_supports_automatic_hover(xaml_tag) && !has_explicit_state_when(node, "hover") {
         if let Some(hover_style) = part.states.get("hover") {
@@ -1859,14 +1889,19 @@ fn emit_xaml(
             .and_then(|p| s[p..].find(">\n").map(|q| p + q))
     };
 
-    // After walking, if any `If` was emitted we must declare the
-    // converter resource. We splice it in after the open root tag.
-    if ctx.needs_bool_to_vis {
+    // After walking, declare any generated converter resources exactly once.
+    // We splice them in after the open root tag.
+    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
             RootShape::ContentDialog => "ContentDialog.Resources",
         };
-        let resources = emit_bool_to_vis_resource_block(4, resources_tag);
+        let resources = emit_converter_resource_block(
+            4,
+            resources_tag,
+            ctx.needs_bool_to_vis,
+            ctx.needs_focus_state_converter,
+        );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
             .unwrap_or(out.len());
@@ -3393,19 +3428,32 @@ fn emit_if(
     Ok(out)
 }
 
-/// The `<UserControl.Resources>` block carrying the
-/// `BoolToVisibilityConverter` resource. Added exactly once per
-/// UserControl when any `If` is emitted.
-fn emit_bool_to_vis_resource_block(indent: usize, resources_tag: &str) -> String {
+/// The generated converter resources required by this component. Added
+/// exactly once beneath the root resources tag.
+fn emit_converter_resource_block(
+    indent: usize,
+    resources_tag: &str,
+    needs_bool_to_vis: bool,
+    needs_focus_state: bool,
+) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
     let mut out = String::new();
     writeln!(out, "{pad}<{resources_tag}>").unwrap();
-    writeln!(
-        out,
-        "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
-    )
-    .unwrap();
+    if needs_bool_to_vis {
+        writeln!(
+            out,
+            "{pad2}<local:BoolToVisibilityConverter x:Key=\"BoolToVisibilityConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_focus_state {
+        writeln!(
+            out,
+            "{pad2}<local:FocusStateToBoolConverter x:Key=\"FocusStateToBoolConverter\"/>"
+        )
+        .unwrap();
+    }
     writeln!(out, "{pad}</{resources_tag}>").unwrap();
     out
 }
@@ -3439,6 +3487,34 @@ fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
                  var b = value is bool x && x;\n        \
                  if (parameter is string p && p == \"invert\") b = !b;\n        \
                  return b ? Visibility.Visible : Visibility.Collapsed;\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for the converter that activates UI15's built-in `focused`
+/// state from WinUI's native `Control.FocusState` enum.
+fn emit_focus_state_to_bool_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         //\n\
+         // Native WinUI focus state → Mosaic focused-state activation.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class FocusStateToBoolConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 if (value is FocusState state) return state != FocusState.Unfocused;\n        \
+                 return DependencyProperty.UnsetValue;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -11763,6 +11839,238 @@ mod tests {
         assert!(
             !r.xaml.contains("Binding IsPointerOver"),
             "explicit hover state must not install native pointer tracking:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn native_focused_state_uses_focus_state_converter() {
+        let c = component("FocusField", vec![], vec![]);
+        let l = layout_with_root(
+            "FocusField",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "FocusField".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![StyleProp {
+                    name: "border-color".to_string(),
+                    value: "#d0d0d0".to_string(),
+                }],
+                transitions: vec![transition("border-color", "80ms", "ease-out")],
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "border-color".to_string(),
+                        value: "#e0942a".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<local:FocusStateToBoolConverter x:Key=\"FocusStateToBoolConverter\"/>"),
+            "native focus requires one generated converter resource:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}}\"/>"
+            ),
+            "focused state must bind to the control's native FocusState:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<Setter Target=\"Field.(Control.BorderBrush).(SolidColorBrush.Color)\" Value=\"#e0942a\"/>"
+            ),
+            "got:\n{}",
+            r.xaml
+        );
+        let helper = r
+            .if_helpers
+            .iter()
+            .find(|file| file.filename == "FocusStateToBoolConverter.cs")
+            .expect("focus converter helper");
+        assert!(
+            helper.source.contains("state != FocusState.Unfocused"),
+            "converter must include pointer, keyboard, and programmatic focus:\n{}",
+            helper.source
+        );
+        assert!(
+            helper.source.contains("DependencyProperty.UnsetValue"),
+            "invalid converter inputs must not throw:\n{}",
+            helper.source
+        );
+    }
+
+    #[test]
+    fn native_focused_state_is_local_to_each_for_template_instance() {
+        let c = component(
+            "FocusRows",
+            vec![slot(
+                "rows",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "FocusRows",
+            for_node(
+                LayoutPropValue::SlotRef("rows".to_string()),
+                "row",
+                None,
+                vec![LayoutNode {
+                    tag: "HostInput".to_string(),
+                    part_name: Some("field".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                }],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "FocusRows".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.8".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "1".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains(
+                "<DataTemplate x:DataType=\"local:FocusRows_RowVm\">\n                <Grid>\n                    <VisualStateManager.VisualStateGroups>"
+            ),
+            "focus groups must live in the repeated row namescope:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains(
+                "<StateTrigger IsActive=\"{Binding FocusState, ElementName=Field, Converter={StaticResource FocusStateToBoolConverter}}\"/>"
+            ),
+            "each template instance must bind to its own TextBox:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn explicit_focused_predicate_remains_author_controlled() {
+        let c = component(
+            "ManualFocus",
+            vec![slot("force-focus", SlotType::Bool, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "ManualFocus",
+            LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("field".to_string()),
+                props: vec![LayoutProp {
+                    name: "state-when-focused".to_string(),
+                    value: LayoutPropValue::SlotRef("force-focus".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "ManualFocus".to_string(),
+            parts: vec![PartStyle {
+                name: "field".to_string(),
+                base: Vec::new(),
+                transitions: Vec::new(),
+                states: vec![StateStyle {
+                    state: "focused".to_string(),
+                    props: vec![StyleProp {
+                        name: "opacity".to_string(),
+                        value: "0.8".to_string(),
+                    }],
+                    transitions: Vec::new(),
+                }],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml
+                .contains("<StateTrigger IsActive=\"{x:Bind ForceFocus, Mode=OneWay}\"/>"),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("FocusStateToBoolConverter"),
+            "explicit focus state must not install native focus tracking:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.if_helpers
+                .iter()
+                .any(|file| file.filename == "FocusStateToBoolConverter.cs"),
+            "explicit focus state must not ship an unused converter"
+        );
+    }
+
+    #[test]
+    fn native_focus_precedes_hover_when_both_are_active() {
+        let c = component("FocusHoverButton", vec![], vec![]);
+        let l = layout_with_root("FocusHoverButton", styled_host_button(vec![]));
+        let s = StyleDef {
+            component_name: "FocusHoverButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![StyleProp {
+                    name: "opacity".to_string(),
+                    value: "0.7".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: vec![
+                    StateStyle {
+                        state: "hover".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "0.9".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                    StateStyle {
+                        state: "focused".to_string(),
+                        props: vec![StyleProp {
+                            name: "opacity".to_string(),
+                            value: "1".to_string(),
+                        }],
+                        transitions: Vec::new(),
+                    },
+                ],
+            }],
+        };
+
+        let r = compile(&c, &l, &s);
+        let focus = r.xaml.find("Binding FocusState").expect("focus trigger");
+        let hover = r.xaml.find("Binding IsPointerOver").expect("hover trigger");
+        assert!(
+            focus < hover,
+            "WinUI's first-active trigger precedence must match SwiftUI's focused-over-hover layering:\n{}",
             r.xaml
         );
     }

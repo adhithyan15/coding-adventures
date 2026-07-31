@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - preserve XAML emitter support files
+
+XAML package builds now write emitter-owned C# support files, report them in
+`BuildResult.artifacts`, and include them in `MosaicPackage.props`. Generated
+ViewModels and value converters referenced by component XAML therefore travel
+through the same package pipeline as the component triple.
+
 ## [Unreleased] - theme axis for style resolution
 
 `BuildOptions` gains a `theme: Option<String>` field — the style (`.msl`)

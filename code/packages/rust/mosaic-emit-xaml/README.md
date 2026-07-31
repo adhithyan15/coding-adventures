@@ -57,6 +57,14 @@ namescope, so hovering one repeated row does not restyle its siblings. An
 explicit `state-when-hover` still wins when hover-like styling is intentionally
 driven by application state instead of the pointer.
 
+UI15's built-in `state focused` is also native for focus-capable Host controls
+(`HostInput`, `HostNumberInput`, `HostButton`, `HostCheckbox`, `HostRadio`,
+and `HostLink`). The emitter binds WinUI's `FocusState` through one generated
+converter resource, so pointer, keyboard, and programmatic focus activate the
+same shared MSL properties and transitions. Repeated controls keep their
+VisualStates in the DataTemplate namescope. An explicit
+`state-when-focused` remains application-controlled.
+
 Named CSS curves lower to native WinUI easing functions. Arbitrary
 `cubic-bezier(...)` curves currently use `CubicEase`; exact control points
 require a future Windows Composition lowering. Template-local predicates are
