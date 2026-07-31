@@ -203,14 +203,19 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"specifier"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
-                GrammarElement::Literal { value: r#"integer"#.to_string() },
-                GrammarElement::Literal { value: r#"real"#.to_string() },
-                GrammarElement::Literal { value: r#"boolean"#.to_string() },
-                GrammarElement::Literal { value: r#"string"#.to_string() },
+                // Keep this narrow hand-synchronisation with the checked-in
+                // grammar source: the frontend now lowers typed array formals,
+                // but a wholesale regeneration would still import unrelated
+                // source-grammar drift (documented above on `type_decl`).
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::RuleReference { name: r#"type"#.to_string() },
+                    GrammarElement::Literal { value: r#"array"#.to_string() },
+                ] },
                 GrammarElement::Literal { value: r#"array"#.to_string() },
                 GrammarElement::Literal { value: r#"label"#.to_string() },
                 GrammarElement::Literal { value: r#"switch"#.to_string() },
                 GrammarElement::Literal { value: r#"procedure"#.to_string() },
+                GrammarElement::RuleReference { name: r#"type"#.to_string() },
             ] },
             line_number: 113,
         },

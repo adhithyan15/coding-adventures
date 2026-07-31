@@ -1335,6 +1335,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a one-dimensional typed array formal is a descriptor-value
+    // parameter: its handle aliases the caller's elements and its declared
+    // lower bound crosses the call beside that handle. `invoke` captures
+    // `values`, so it also proves global descriptor reload before `fill` is
+    // called in a fresh frame. All seven backends receive `array<i64>, i64`
+    // parameters through the ordinary shared IIR call ABI. Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[4:5]; integer result; \
+                  integer procedure fill(a); value a; integer array a; \
+                    begin a[4] := 40; a[5] := 2; fill := a[4] + a[5] end; \
+                  procedure invoke; result := fill(values); \
+                  invoke end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
     // slot; the preceding row covers a runtime procedure-result copy.
@@ -5006,6 +5023,36 @@ fn algol_captured_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but captured array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_parameter_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure fill(a)")
+                && program.src.contains("integer array a")
+        })
+        .expect("the ALGOL array parameter program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array parameter execution did not complete"
             );
             continue;
         };

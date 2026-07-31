@@ -691,16 +691,19 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         // instruction hints. A scalar helper such as Nib's `double(x: u8)` widens
         // its parameter to `i64`; if we retype the body to `i32` but leave the
         // parameter `i64`, the emitted method's signature is the inconsistent
-        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter — which
-        // a real `java` rejects with `VerifyError: Expecting to find integer on
-        // stack`. (The in-repo `jvm-simulator` is laxer and didn't catch it, so
-        // this only surfaced once a parameterized scalar program ran on real
-        // `java` in the LANG-MATRIX JVM column.) The lisp/`any`-param functions
-        // were already skipped by the `uses_lisp` guard above, so every parameter
-        // reaching here is a concrete scalar — safe to bring down to `i32`.
+        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter. Array
+        // formals need the same lockstep: an `array<i64>` descriptor must become
+        // `array<i32>` when its element accesses become `iaload`/`iastore`.
+        // Otherwise the signature accepts a `long[]` while the body expects an
+        // `int[]`, which a real JVM rejects during verification. The lisp/`any`
+        // parameters were already skipped by the `uses_lisp` guard above.
         for (_, ty) in &mut func.params {
             if to_i32(ty) {
                 *ty = "i32".to_string();
+            } else if let Some(elem) = interpreter_ir::opcodes::array_elem_type(ty) {
+                if to_i32(&elem) {
+                    *ty = interpreter_ir::opcodes::make_array_type("i32");
+                }
             }
         }
         for instr in &mut func.instructions {
@@ -1765,6 +1768,34 @@ mod tests {
             .expect("ALGOL scalar program must compile");
         assert_eq!(iir.entry_point.as_deref(), Some("main"));
         assert!(iir.validate().is_empty());
+    }
+
+    #[test]
+    fn jvm_concretization_narrows_array_formals_with_array_operations() {
+        let src = "begin integer array values[4:5]; integer result; \
+                   integer procedure fill(a); value a; integer array a; \
+                     begin a[4] := 40; a[5] := 2; fill := a[4] + a[5] end; \
+                   result := fill(values) end";
+        let mut module = compile_source_to_iir(Language::Algol60, src, "algol_array_param")
+            .expect("ALGOL array parameter program must compile");
+        concretize_scalar_any_for_jvm(&mut module);
+
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<i32>".to_string()),
+                ("__algol_array_param_a_lower".to_string(), "i32".to_string()),
+            ],
+            "the JVM method descriptor must use int[] with i32 indices"
+        );
+        let main = module.get_function("main").expect("main function exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "alloc_array" && instr.type_hint == "array<i32>"
+            }),
+            "the allocation must narrow to the same int[] descriptor"
+        );
     }
 
     #[test]

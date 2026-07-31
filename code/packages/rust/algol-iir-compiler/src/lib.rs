@@ -215,10 +215,30 @@ fn array_dim_global_name(array_slot: &str, dim_index: usize, field: &str) -> Str
     format!("{array_slot}.__algol_array_dim_{dim_index}_{field}")
 }
 
+/// Hidden IIR parameter carrying a one-dimensional array formal's lower bound.
+/// It cannot collide with a source name because ALGOL identifiers do not admit
+/// the double-underscore spelling used by compiler-generated slots.
+fn array_param_lower_slot(name: &str) -> String {
+    format!("__algol_array_param_{name}_lower")
+}
+
+/// A procedure formal that the supported call-by-value slice can carry.
+///
+/// An array formal receives the caller's storage handle and its first
+/// lower-bound value. The handle is shared storage, while the descriptor itself
+/// is copied into the callee's frame. This is deliberately limited to one
+/// dimension: an IIR function has a fixed parameter list, so forwarding an
+/// arbitrary-rank ALGOL descriptor needs a separate rank/stride ABI.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ProcedureParamType {
+    Scalar(ScalarType),
+    Array(ScalarType),
+}
+
 /// A procedure heading read off the AST: `(name, value-params, return-type)`,
 /// where each value parameter is `(name, type)` in declaration order. A missing
 /// return type is an ALGOL proper procedure.
-type ProcedureParts = (String, Vec<(String, ScalarType)>, Option<ScalarType>);
+type ProcedureParts = (String, Vec<(String, ProcedureParamType)>, Option<ScalarType>);
 
 /// The compile-time signature of a procedure: the ordered types of its
 /// value parameters plus its return type.
@@ -235,8 +255,10 @@ type ProcedureParts = (String, Vec<(String, ScalarType)>, Option<ScalarType>);
 /// position. Parameters are still restricted to `value` parameters.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ProcSig {
-    /// Parameter types in declaration order (matches `IIRFunction::params`).
-    params: Vec<ScalarType>,
+    /// Source-level parameter types in declaration order. Array formals lower
+    /// to two IIR parameters (handle plus lower bound), but still consume one
+    /// ALGOL actual at a call site.
+    params: Vec<ProcedureParamType>,
     /// The procedure's return type, or `None` for a proper procedure.
     ret: Option<ScalarType>,
 }
@@ -1023,24 +1045,42 @@ impl Compiler {
         }
     }
 
-    /// Map a `specifier` keyword (the type a `spec_part` attaches to a formal
-    /// parameter) to a scalar type.  `specifier` is a superset of `type`: it
-    /// also admits `array`, `label`, `switch`, and `procedure`, none of which
-    /// the current executable slice carries, so those produce a clear
-    /// "unsupported" message rather than a confusing "unknown token".
-    fn specifier_scalar_type(&self, node: &GrammarASTNode) -> Result<ScalarType, CompileError> {
-        let token = single_token_recursive(node)
-            .ok_or_else(|| CompileError::Malformed("specifier has no token".into()))?;
-        match token.value.as_str() {
-            "integer" => Ok(ScalarType::Integer),
-            "real" => Ok(ScalarType::Real),
-            "boolean" => Ok(ScalarType::Boolean),
-            "string" => Ok(ScalarType::String),
-            kind @ ("array" | "label" | "switch" | "procedure") => Err(
+    /// Map a procedure `specifier` to the supported formal shape.
+    ///
+    /// The compiled parser accepts `integer array a` as a two-token specifier;
+    /// its legacy `array a` spelling remains a real-array formal, matching the
+    /// default element type of an untyped ALGOL array declaration. Array
+    /// formals are intentionally one-dimensional in this ABI; the actual's
+    /// rank is checked when the call is lowered.
+    fn procedure_param_type(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Result<ProcedureParamType, CompileError> {
+        let tokens = recursive_tokens(node);
+        let words: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+        let scalar = |word: &str| match word {
+            "integer" => Some(ScalarType::Integer),
+            "real" => Some(ScalarType::Real),
+            "boolean" => Some(ScalarType::Boolean),
+            "string" => Some(ScalarType::String),
+            _ => None,
+        };
+
+        match words.as_slice() {
+            ["array"] => Ok(ProcedureParamType::Array(ScalarType::Real)),
+            [ty, "array"] => scalar(ty)
+                .map(ProcedureParamType::Array)
+                .ok_or_else(|| CompileError::Malformed(format!(
+                    "unknown array parameter element type {ty:?}"
+                ))),
+            [ty] => scalar(ty)
+                .map(ProcedureParamType::Scalar)
+                .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
+            [_, kind] if matches!(*kind, "label" | "switch" | "procedure") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
-            other => Err(CompileError::Malformed(format!(
-                "unknown specifier token {other:?}"
+            _ => Err(CompileError::Malformed(format!(
+                "unknown procedure parameter specifier {words:?}"
             ))),
         }
     }
@@ -1060,8 +1100,9 @@ impl Compiler {
     ///
     /// On the supported slice every parameter must be a `value` parameter
     /// (call-by-name / Jensen's device is not modelled), and every parameter
-    /// must be specified exactly once. A missing heading type is a proper
-    /// procedure and lowers to an IIR `void` function.
+    /// must be specified exactly once. Scalar formals and one-dimensional
+    /// integer/real/string array descriptors are supported. A missing heading
+    /// type is a proper procedure and lowers to an IIR `void` function.
     fn procedure_parts(
         &self,
         proc_decl: &GrammarASTNode,
@@ -1110,14 +1151,14 @@ impl Compiler {
         }
 
         // Each parameter's type, gathered from the `spec_part` declarations.
-        let mut type_of: HashMap<String, ScalarType> = HashMap::new();
+        let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
         for spec in direct_nodes(proc_decl)
             .into_iter()
             .filter(|n| n.rule_name == "spec_part")
         {
             let specifier = first_direct_node(spec, "specifier")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing specifier".into()))?;
-            let ty = self.specifier_scalar_type(specifier)?;
+            let ty = self.procedure_param_type(specifier)?;
             let list = first_direct_node(spec, "ident_list")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
             for n in ident_list_names(list) {
@@ -1203,24 +1244,62 @@ impl Compiler {
         }
 
         // Bind value parameters and, for typed procedures, the result variable
-        // (the procedure name).
-        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len());
+        // (the procedure name). An array descriptor value is two IIR arguments:
+        // its typed handle followed by its one-dimensional lower bound. The
+        // caller keeps ownership of the backing storage, so element writes in
+        // the callee are visible to the actual array.
+        let mut param_pairs: Vec<(String, String)> = Vec::with_capacity(params.len() * 2);
         for (pname, pty) in &params {
-            // Parameters and the result slot are real registers, never `own`.
-            let slot = self.declare_var(pname, *pty, false)?;
-            // A string parameter is initialized by the caller, but can carry
-            // a runtime handle. It is deliberately not literal-backed: only
-            // direct `str_const` producers support ordering comparisons.
-            if *pty == ScalarType::String {
-                self.initialized_string_slots.insert(slot.clone());
+            match pty {
+                ProcedureParamType::Scalar(pty) => {
+                    // Parameters and the result slot are real registers, never `own`.
+                    let slot = self.declare_var(pname, *pty, false)?;
+                    // A string parameter is initialized by the caller, but can carry
+                    // a runtime handle. It is deliberately not literal-backed: only
+                    // direct `str_const` producers support ordering comparisons.
+                    if *pty == ScalarType::String {
+                        self.initialized_string_slots.insert(slot.clone());
+                    }
+                    param_pairs.push((slot, pty.iir().to_string()));
+                }
+                ProcedureParamType::Array(elem_ty) => {
+                    if !matches!(elem_ty, ScalarType::Integer | ScalarType::Real | ScalarType::String) {
+                        return Err(CompileError::Unsupported(format!(
+                            "{} array parameters (only integer/real/string element types so far)",
+                            elem_ty.name()
+                        )));
+                    }
+                    let lower_slot = array_param_lower_slot(pname);
+                    let handle = self.declare_array(
+                        pname,
+                        *elem_ty,
+                        vec![ArrayDim {
+                            lower_slot: lower_slot.clone(),
+                            stride_slot: None,
+                        }],
+                        false,
+                    )?;
+                    self.register_names.insert(lower_slot.clone());
+                    param_pairs.push((handle, make_array_type(elem_ty.iir())));
+                    param_pairs.push((lower_slot, "i64".to_string()));
+                }
             }
-            param_pairs.push((slot, pty.iir().to_string()));
         }
         let result_slot = if let Some(ret) = ret {
             // The procedure's name is an in-scope variable holding the return
             // value; seed it with a default so a path that never assigns it
             // still returns a defined value.
-            let result_slot = self.declare_var(&name, ret, false)?;
+            // Capture analysis is deliberately conservative and walks the
+            // whole declaration, including `name := ...` in this procedure's
+            // body. The result variable belongs to this fresh procedure frame,
+            // never to the enclosing block, even if that scan recorded its
+            // spelling as a candidate capture.
+            let result_was_captured = self.block_captured.remove(&name);
+            let declared_result = self.declare_var(&name, ret, false);
+            if result_was_captured {
+                self.block_captured.insert(name.clone());
+            }
+            let result_slot = declared_result?;
             if ret == ScalarType::String {
                 // A string result is a runtime handle, so its default must be a real
                 // (empty) string buffer, not a `const 0`. Seed it with `str_const ""`
@@ -1473,17 +1552,77 @@ impl Compiler {
             )));
         }
 
-        let mut arg_slots = Vec::with_capacity(actuals.len());
+        let mut arg_slots = Vec::with_capacity(actuals.len() * 2);
         for (actual, expected) in actuals.iter().zip(sig.params.iter()) {
-            let value = self.emit_expr(actual)?;
-            if value.ty != *expected {
-                return Err(CompileError::Type(format!(
-                    "procedure {name:?}: argument is {} but parameter is {}",
-                    value.ty.name(),
-                    expected.name()
-                )));
+            match expected {
+                ProcedureParamType::Scalar(expected) => {
+                    let value = self.emit_expr(actual)?;
+                    if value.ty != *expected {
+                        return Err(CompileError::Type(format!(
+                            "procedure {name:?}: argument is {} but parameter is {}",
+                            value.ty.name(),
+                            expected.name()
+                        )));
+                    }
+                    arg_slots.push(value.slot);
+                }
+                ProcedureParamType::Array(expected_elem_ty) => {
+                    let actual_name = expr_variable_name(actual).ok_or_else(|| {
+                        CompileError::Type(format!(
+                            "procedure {name:?}: array parameter requires a bare array variable"
+                        ))
+                    })?;
+                    let binding = self.require_var(&actual_name)?;
+                    let info = binding.array.clone().ok_or_else(|| {
+                        CompileError::Type(format!(
+                            "procedure {name:?}: argument {actual_name:?} is not an array"
+                        ))
+                    })?;
+                    if info.elem_ty != *expected_elem_ty {
+                        return Err(CompileError::Type(format!(
+                            "procedure {name:?}: array argument {actual_name:?} has {} elements but parameter expects {}",
+                            info.elem_ty.name(),
+                            expected_elem_ty.name()
+                        )));
+                    }
+                    if info.dims.len() != 1 {
+                        return Err(CompileError::Unsupported(format!(
+                            "procedure {name:?}: array argument {actual_name:?} is {}-dimensional; only one-dimensional array parameters are supported",
+                            info.dims.len()
+                        )));
+                    }
+
+                    // Global arrays (captured or `own`) store their descriptor
+                    // metadata outside the current frame. Reload both pieces so
+                    // the callee gets the same handle/lower-bound pair as a
+                    // local-array actual.
+                    if binding.is_global {
+                        let handle = self.fresh_temp();
+                        self.emit(IIRInstr::new(
+                            "global_load",
+                            Some(handle.clone()),
+                            vec![Operand::Str(binding.slot.clone())],
+                            make_array_type(binding.ty.iir()),
+                        ));
+                        let lower = self.fresh_temp();
+                        self.emit(IIRInstr::new(
+                            "global_load",
+                            Some(lower.clone()),
+                            vec![Operand::Str(array_dim_global_name(
+                                &binding.slot,
+                                0,
+                                "lower",
+                            ))],
+                            "i64",
+                        ));
+                        arg_slots.push(handle);
+                        arg_slots.push(lower);
+                    } else {
+                        arg_slots.push(binding.slot);
+                        arg_slots.push(info.dims[0].lower_slot.clone());
+                    }
+                }
             }
-            arg_slots.push(value.slot);
         }
 
         if require_value && sig.ret.is_none() {
@@ -5020,6 +5159,115 @@ mod tests {
             .find(|i| i.op == "call")
             .expect("main calls sq");
         assert!(matches!(call.srcs.first(), Some(Operand::Var(s)) if s == "sq"));
+    }
+
+    // ---- AL8: one-dimensional array descriptor value parameters ----
+
+    /// A typed array formal preserves the caller's non-unit lower bound and
+    /// aliases its element storage. The callee writes 40 and 2 through `a`, then
+    /// reads them back for the typed procedure result: `sum(values)` = 42.
+    const AL8_ARRAY_PARAMETER_PROG: &str = "begin integer array values[4:5]; integer result; \
+         integer procedure sum(a); value a; integer array a; \
+         begin a[4] := 40; a[5] := 2; sum := a[4] + a[5] end; \
+         result := sum(values) end";
+
+    #[test]
+    fn one_dimensional_integer_array_parameter_runs_on_vm() {
+        assert_eq!(run_i64(AL8_ARRAY_PARAMETER_PROG), 42);
+    }
+
+    #[test]
+    fn array_parameter_lowers_to_handle_and_lower_bound_iir_params() {
+        let module = compile_source(AL8_ARRAY_PARAMETER_PROG, "array_param")
+            .expect("array parameter program compiles");
+        let sum = module.get_function("sum").expect("sum function exists");
+        assert_eq!(
+            sum.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_lower_slot("a"), "i64".to_string()),
+            ],
+            "array formal must receive its handle plus declared lower bound"
+        );
+
+        let main = module.get_function("main").expect("main exists");
+        let call = main
+            .instructions
+            .iter()
+            .find(|instr| instr.op == "call")
+            .expect("main calls sum");
+        assert_eq!(call.srcs.len(), 3, "callee + handle + lower bound");
+        assert!(matches!(call.srcs.first(), Some(Operand::Var(name)) if name == "sum"));
+
+        assert!(
+            matches!(sum.instructions.last(), Some(instr)
+                if instr.op == "ret"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "sum")),
+            "the implicit procedure result must stay in its local return slot"
+        );
+        assert!(
+            !sum.instructions.iter().any(|instr| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("sum")
+            }),
+            "the implicit procedure result must never be treated as a captured global"
+        );
+    }
+
+    #[test]
+    fn array_parameter_accepts_real_elements() {
+        let src = "begin real array values[4:5]; integer result; \
+                   real procedure sum(a); value a; real array a; \
+                   begin a[4] := 40.0; a[5] := 2.0; sum := a[4] + a[5] end; \
+                   result := entier(sum(values)) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn array_parameter_accepts_string_elements() {
+        let src = "begin string array values[4:4]; integer result; \
+                   procedure writeok(a); value a; string array a; \
+                   begin a[4] := 'OK'; if a[4] = 'OK' then result := 42 else result := 0 end; \
+                   writeok(values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
+        let src = "begin integer array values[4:5]; integer result; \
+                   procedure seed(a); value a; integer array a; \
+                     begin a[4] := 40; a[5] := 2 end; \
+                   procedure invoke; seed(values); \
+                   invoke; result := values[4] + values[5] end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_array_param").expect("compiles");
+        let invoke = module.get_function("invoke").expect("invoke function exists");
+        let descriptor_loads = invoke
+            .instructions
+            .iter()
+            .filter(|instr| instr.op == "global_load")
+            .count();
+        assert!(
+            descriptor_loads >= 2,
+            "captured actual must reload array handle and lower bound, got: {:?}",
+            invoke.instructions
+        );
+    }
+
+    #[test]
+    fn array_parameter_rejects_multidimensional_actual() {
+        let err = compile_source(
+            "begin integer array values[1:2, 1:2]; integer result; \
+             integer procedure first(a); value a; integer array a; first := 0; \
+             result := first(values) end",
+            "array_param_rank",
+        )
+        .expect_err("multidimensional array parameter must remain unsupported");
+        assert!(
+            matches!(err, CompileError::Unsupported(ref message) if message.contains("one-dimensional")),
+            "expected rank diagnostic, got {err:?}"
+        );
     }
 
     #[test]
