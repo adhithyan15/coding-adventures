@@ -264,6 +264,14 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     // the element would store 0 and a later `array_get` + `print_str`/`str_concat`
     // would read the module header as a bogus length and trap.
     let mut array_set_val_vars: HashSet<&str> = HashSet::new();
+    // A string placed in a module global crosses a function boundary just like
+    // a call argument. The later global load has no per-function literal table,
+    // so the stored value must be a length-prefixed runtime handle.
+    let mut global_store_val_vars: HashSet<&str> = HashSet::new();
+    // Literal operands for string algebra are also materialised as real runtime
+    // handles. This is harmless for a fully folded operation (which ignores its
+    // locals), and essential when its peer is a global/call result at run time.
+    let mut string_operation_vars: HashSet<&str> = HashSet::new();
     let mut block: usize = 0;
     for instr in &fn_.instructions {
         let op = instr.op.as_str();
@@ -300,6 +308,18 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 array_set_val_vars.insert(v.as_str());
             }
         }
+        if op == "global_store" {
+            if let Some(Operand::Var(v)) = instr.srcs.get(1) {
+                global_store_val_vars.insert(v.as_str());
+            }
+        }
+        if matches!(op, "str_concat" | "str_eq" | "str_cmp") {
+            for src in &instr.srcs {
+                if let Operand::Var(v) = src {
+                    string_operation_vars.insert(v.as_str());
+                }
+            }
+        }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
@@ -318,6 +338,16 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
     // E4d-BA-arr: likewise promote a folded literal stored into an `array<str>`
     // element — `array_set` needs the runtime block handle in the val local.
     for v in &array_set_val_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    for v in &global_store_val_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    for v in &string_operation_vars {
         if folding_str_dests.contains(v) {
             promoted.insert(v.to_string());
         }
@@ -399,6 +429,12 @@ fn encode_memory_copy() -> Vec<u8> {
 
 fn encode_i64_global_init(value: i64) -> Vec<u8> {
     let mut bytes = encode_i64_const(value);
+    bytes.push(END);
+    bytes
+}
+
+fn encode_i32_global_init(value: i32) -> Vec<u8> {
+    let mut bytes = encode_i32_const(value);
     bytes.push(END);
     bytes
 }
@@ -3871,7 +3907,7 @@ fn make_lispy_pair_struct_type() -> StructType {
 ///
 /// | Field              | Trigger                                | What it injects |
 /// |--------------------|----------------------------------------|-----------------|
-/// | `global_names`     | `global_load` / `global_store`          | `Global` entries (one per name, i64, mutable) |
+/// | `global_names`     | `global_load` / `global_store`          | Mutable globals, i64 except `str` handles (i32) |
 /// | `uses_io_out`      | `io_out`                                | `env.__print_i64` import |
 /// | `uses_print_str`   | `print_str`                             | `env.__print_str` import + linear memory |
 /// | `uses_putchar`     | `call_builtin` with name `"putchar"`    | `env.putchar` import   |
@@ -3885,6 +3921,10 @@ struct ModuleFeatures {
     /// Deduplicated global names, in first-seen order.  Position in the
     /// vec = WASM global-section index.
     global_names: Vec<String>,
+    /// The subset of `global_names` which carries an IIR `str` handle. WASM
+    /// string handles are linear-memory offsets, so their global value type is
+    /// i32 rather than the historical i64 scalar default.
+    global_string_names: HashSet<String>,
     uses_io_out: bool,
     uses_print_str: bool,
     uses_putchar: bool,
@@ -4233,6 +4273,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     // quadratic for adversarially crafted modules with many globals.
     let mut global_names: Vec<String> = Vec::new();
     let mut global_names_seen: HashSet<String> = HashSet::new();
+    let mut global_string_names: HashSet<String> = HashSet::new();
     let mut uses_io_out = false;
     let mut uses_print_str = false;
     let mut uses_putchar = false;
@@ -4254,6 +4295,8 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     let mut runtime_str_vars: ModuleRuntimeStrVars = HashMap::new();
     let mut runtime_str_blocks: ModuleRuntimeStrBlocks = HashMap::new();
     for fn_ in &module.functions {
+        let reg_map = build_register_map(fn_);
+        let local_type_hints = infer_local_type_hints(fn_, &reg_map);
         let mut fn_ints: HashMap<String, i64> = HashMap::new();
         // E4-dyn (E4d-3): which of this function's string variables are chosen by
         // control flow (assigned in >1 basic block) and so must carry a runtime
@@ -4265,6 +4308,16 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let Some(Operand::Str(name)) = instr.srcs.first() {
                         if global_names_seen.insert(name.clone()) {
                             global_names.push(name.clone());
+                        }
+                        let is_string = instr.type_hint == "str" || matches!(
+                            instr.srcs.get(1),
+                            Some(Operand::Var(value)) if reg_map
+                                .get(value)
+                                .and_then(|index| local_type_hints.get(index))
+                                .is_some_and(|hint| hint == "str")
+                        );
+                        if is_string {
+                            global_string_names.insert(name.clone());
                         }
                     }
                 }
@@ -4653,6 +4706,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
     }
     ModuleFeatures {
         global_names,
+        global_string_names,
         uses_io_out,
         uses_print_str,
         uses_putchar,
@@ -4737,6 +4791,7 @@ pub fn lower_iir_to_wasm(
     // import count.
     let features = collect_module_features(module);
     let global_names = features.global_names.clone();
+    let global_string_names = features.global_string_names;
     let uses_io_out  = features.uses_io_out;
     let uses_print_str = features.uses_print_str;
     let uses_putchar = features.uses_putchar;
@@ -5099,8 +5154,8 @@ pub fn lower_iir_to_wasm(
         });
     }
 
-    // Build WASM Global entries — one mutable i64 per named global,
-    // initialised to 0.
+    // Build WASM Global entries. Numeric/array globals keep the historical
+    // mutable i64 representation; `str` globals are i32 linear-memory handles.
     //
     // Binary init_expr for `i64.const 0; end`: `[0x42, 0x00, 0x0B]`
     //   0x42 = i64.const opcode
@@ -5110,10 +5165,16 @@ pub fn lower_iir_to_wasm(
         .iter()
         .map(|name| Global {
             global_type: GlobalType {
-                value_type: ValueType::I64,
+                value_type: if global_string_names.contains(name) {
+                    ValueType::I32
+                } else {
+                    ValueType::I64
+                },
                 mutable: true,
             },
-            init_expr: if name == ARRAY_BUMP_GLOBAL {
+            init_expr: if global_string_names.contains(name) {
+                encode_i32_global_init(0)
+            } else if name == ARRAY_BUMP_GLOBAL {
                 encode_i64_global_init(string_data.len() as i64)
             } else {
                 encode_i64_global_init(0)

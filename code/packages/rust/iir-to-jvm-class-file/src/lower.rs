@@ -5203,8 +5203,8 @@ pub fn lower_iir_to_jvm(
 
 /// Collect every distinct module-global name (read or written) into
 /// `(name → "G_N", [JvmFieldInfo])`, numbered in first-seen order across all
-/// functions (LANG-FULL E6 layer 1). Scalar globals remain `long`; array
-/// globals retain their concrete reference descriptor. Field names are
+/// functions (LANG-FULL E6 layer 1). Numeric globals remain `long`; string and
+/// array globals retain their concrete reference descriptor. Field names are
 /// index-based so an arbitrary source identifier can never collide.
 fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String)>, Vec<JvmFieldInfo>) {
     let mut map: HashMap<String, (String, String)> = HashMap::new();
@@ -5233,7 +5233,7 @@ fn collect_global_fields(module: &IIRModule) -> (HashMap<String, (String, String
                                 _ => "i64",
                             }
                         };
-                        let descriptor = if is_array_type(type_hint) {
+                        let descriptor = if is_array_type(type_hint) || type_hint == "str" {
                             type_to_jvm_descriptor(type_hint).to_string()
                         } else {
                             "J".to_string()

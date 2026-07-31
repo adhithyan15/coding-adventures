@@ -118,6 +118,12 @@ module globals, so a captured subscript keeps the declaration's index space.
 storage are initialized on the first procedure call and persist across later
 calls.
 
+Scalar `string` captures use typed module globals, so a procedure can write
+and read a string declared by its enclosing block. `own string` initializes to
+the empty string on its first procedure call and retains subsequent assignments
+across calls. A captured string still requires assignment before its first
+read, just like a local string.
+
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
 the same literal-backed output path as typed procedures; using a proper procedure in
