@@ -1,0 +1,13 @@
+% ADJ-ARGUMENT-COMPOSITION AC-2 — a whole-PAPER argument: three paragraphs, each pinned to its
+% own source snapshot, composed into one argument the engine derives and adj-verify byte-anchors
+% across all three snapshots. See README.md.
+argument axle_paper {
+    premise p1 : extracted stress_amplitude(axle, 420) quote "a stress amplitude of 420 MPa" at 30 snapshot "e0300bcba3f76e0e22564382f4e6d2f3608353046ac8bb6f26c7f70ee4e1a1f4" source "p2-loading" trust authoritative
+    premise p2 : extracted endurance_limit(axle, 380) quote "its endurance limit was measured at 380 MPa" at 69 snapshot "e0300bcba3f76e0e22564382f4e6d2f3608353046ac8bb6f26c7f70ee4e1a1f4" source "p2-loading" trust authoritative
+    premise p3 : extracted shows(surface, beach_marks) quote "exhibited beach marks" at 21 snapshot "00bac1ff0adf2e7b7041810e3fd3ec2cea4e4e6bd487fb99564e37c1787f5908" source "p3-fractography" trust authoritative
+    premise p4 : extracted diagnostic_of(beach_marks, fatigue) quote "diagnostic of progressive fatigue crack growth" at 54 snapshot "00bac1ff0adf2e7b7041810e3fd3ec2cea4e4e6bd487fb99564e37c1787f5908" source "p3-fractography" trust authoritative
+    infer i1 : because conclude exceeds_endurance(axle) from p1, p2 quote "its endurance limit was measured at 380 MPa" at 69 snapshot "e0300bcba3f76e0e22564382f4e6d2f3608353046ac8bb6f26c7f70ee4e1a1f4" source "p2-loading" trust authoritative
+    infer i2 : therefore conclude fatigue_indicated(axle) from p3, p4 quote "diagnostic of progressive fatigue crack growth" at 54 snapshot "00bac1ff0adf2e7b7041810e3fd3ec2cea4e4e6bd487fb99564e37c1787f5908" source "p3-fractography" trust authoritative
+    infer i3 : therefore conclude failed_by(axle, fatigue) from i1, i2 quote "the axle failed by fatigue" at 101 snapshot "c6be8c920970dbd011e8ddefd6f4f6704da6aca8d296ca1d7ce1d261bf80f969" source "p4-discussion" trust authoritative
+}
+? failed_by(axle, $Mechanism)
