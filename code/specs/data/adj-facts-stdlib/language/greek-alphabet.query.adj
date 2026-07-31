@@ -1,0 +1,21 @@
+% ============================================================================
+% greek-alphabet.query.adj — a worked recall over the Greek-alphabet library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where does this Greek letter
+% sit in the alphabet?" — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?` against
+% the `greek_letter_position` rows and returns the position (or the letter, on a
+% reverse query) + the encyclopedia's source/locator/trust. Anything that is not
+% one of the 24 Greek letters — a Latin letter, a digit, a symbol — abstains
+% honestly: the engine never invents a position it cannot cite.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli greek-alphabet.query.adj
+% ============================================================================
+
+import "greek-alphabet.adj"
+
+? greek_letter_position(alpha, $N)     % expect 1   (which position is alpha? the first)
+? greek_letter_position(omega, $N)     % expect 24  (omega is the last letter)
+? greek_letter_position($L, 3)         % expect gamma  (reverse: which letter is third?)
+? greek_letter_position(b, $N)         % expect abstain — b is a Latin letter, not a Greek row

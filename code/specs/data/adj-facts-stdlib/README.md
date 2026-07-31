@@ -117,6 +117,7 @@ per rotation, in parallel):
 | `environment/` | **RANGE table** — AQI value → EPA level of concern, keyed by band minimum (0 → good, 51 → moderate, 101 → unhealthy_for_sensitive_groups, 301 → hazardous, open top band) | EPA AirNow "AQI Basics" (authoritative) |
 | `geography/` | common landform → defining descriptor (mountain → projects_above_surroundings, plateau → flat_elevated, canyon → deep_narrow) | USGS Feature Type Thesaurus (authoritative) |
 | `geography/` | globe reference line → what it marks (equator → zero_degrees_latitude, prime_meridian → zero_degrees_longitude, tropic_of_cancer → northernmost_sun_overhead) | NOAA National Ocean Service / NESDIS (authoritative) |
+| `language/` | Greek letter → its 1-based position in the alphabet (alpha → 1, gamma → 3, pi → 16, omega → 24) | Wikipedia "Greek alphabet" (consensus) |
 | … | *geography, physical constants, …* | *(expanding)* |
 
 Formulas and laws (Newton's `F = ma`, the ideal gas law `PV = nRT`, area/volume, …) are grown
