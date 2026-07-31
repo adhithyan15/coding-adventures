@@ -507,6 +507,15 @@
       "notes": "Selected after PR #9354 merged because this bounded, restriction-only contract closes a fail-open taxonomy gap and directly unlocks the OCaml capability analyzer, the adj-lang-cli capability profile, and the native Matter controller host. Encode the 19 valid category-action pairs from spec 13 in required_capabilities.schema.json and agent_manifest.schema.json; add one shared exhaustive conformance corpus covering all 19 valid pairs and all 93 invalid cross-pairs; and fail closed at the Go capability generator, Go capability analyzer loader, Go capability cage constructor, and Rust capability cage ingestion boundary. The repository inventory found zero invalid pairs among manifests already using the current category and action vocabularies; legacy out-of-schema vocabulary remains separately classified."
     },
     {
+      "id": "capability-manifest-legacy-shape-and-vocabulary-migration",
+      "title": "Classify and migrate legacy capability manifest shapes and vocabulary",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while enforcing the closed taxonomy. The tracked tree has 2,885 required_capabilities.json paths: 150 top-level dependency arrays, 82 metadata objects without a capabilities key, 164 object manifests with legacy string-list capabilities, and 2,489 objects whose capability list is empty or contains structured entries; 2,316 of the last group currently validate as schema-v1 manifests. The structured entries total 373: 359 use valid current-vocabulary pairs, zero use an invalid current-vocabulary cross-pair, and 14 use separately owned legacy categories or actions such as hardware, audio, ffi:export, process:spawn, network:listen, and fs:read_write. Inventory semantic owners before migration; do not reinterpret build-dependency arrays or missing-key metadata as Spec 13 security manifests, and require Layer-5 review before normalizing any nonempty authority profile."
+    },
+    {
       "id": "haskell-high-consensus-tail",
       "title": "Close Haskell event-loop and brotli",
       "status": "pending",

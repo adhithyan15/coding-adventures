@@ -59,6 +59,11 @@ if err != nil {
 | `stdin`   | read                                 | Standard input                |
 | `stdout`  | write                                | Standard output               |
 
+These are 19 valid pairs, not two independently combinable enums.
+`NewManifest` panics on an unknown or invalid cross-pair before constructing a
+manifest. The table is exhaustively checked against the language-neutral Spec
+13 fixture.
+
 ## Target Matching
 
 - `"*"` — matches any target (broad access, use sparingly)
@@ -87,5 +92,6 @@ CageBackend (future)       →  sends JSON-RPC to host (D18 Chief of Staff)
 
 - **No runtime JSON read**: capabilities are compiled in, not read from disk
 - **Immutable manifests**: `NewManifest` copies the slice; callers cannot mutate
+- **Closed taxonomy**: invalid category/action pairs fail at construction
 - **Backend injection**: `WithBackend` allows test doubles without hitting real OS
 - **Zero dependencies**: no external packages required

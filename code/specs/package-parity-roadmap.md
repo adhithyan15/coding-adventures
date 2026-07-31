@@ -811,6 +811,22 @@ current post-#9354 slice because this restriction-only contract is bounded,
 fully repository-owned, and directly unlocks the future OCaml analyzer,
 `adj-lang-cli` profile reconciliation, and native Matter controller review.
 
+The implementation audit also separated a legacy migration instead of
+silently forcing unlike files through the new schema. The tracked tree
+currently has 2,885 `required_capabilities.json` paths: 150 top-level
+dependency arrays, 82 metadata objects without a `capabilities` key, 164 object
+manifests with string-list capabilities, and 2,489 objects whose capability
+list is empty or contains structured entries. Of the last group, 2,316
+currently validate as schema-v1 manifests. The structured entries total 373:
+359 use valid current-vocabulary pairs and 14 use separately owned legacy
+vocabulary such as `hardware`, `audio`, `ffi:export`, `process:spawn`,
+`network:listen`, and `fs:read_write`; no current-vocabulary entry forms an
+invalid cross-pair. The pending
+`capability-manifest-legacy-shape-and-vocabulary-migration` item must classify
+those semantic owners before migration, must not reinterpret build-dependency
+arrays as security manifests, and must obtain Layer-5 review before changing
+any nonempty authority profile.
+
 Recommended family order:
 
 1. Leaf algorithms and data structures.

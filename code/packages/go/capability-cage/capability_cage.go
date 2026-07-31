@@ -43,8 +43,46 @@ type Manifest struct {
 	capabilities []Capability
 }
 
+// validCapabilityPair implements the closed category/action taxonomy from
+// Spec 13.
+func validCapabilityPair(category, action string) bool {
+	switch category {
+	case CategoryFS:
+		return action == ActionRead || action == ActionWrite || action == ActionCreate ||
+			action == ActionDelete || action == ActionList
+	case CategoryNet:
+		return action == ActionConnect || action == ActionListen || action == ActionDNS
+	case CategoryProc:
+		return action == ActionExec || action == ActionFork || action == ActionSignal
+	case CategoryEnv:
+		return action == ActionRead || action == ActionWrite
+	case CategoryFFI:
+		return action == ActionCall || action == ActionLoad
+	case CategoryTime:
+		return action == ActionRead || action == ActionSleep
+	case CategoryStdin:
+		return action == ActionRead
+	case CategoryStdout:
+		return action == ActionWrite
+	default:
+		return false
+	}
+}
+
 // NewManifest constructs an immutable Manifest from a slice of capabilities.
+// It panics if any capability uses a category/action pair outside Spec 13's
+// closed taxonomy, so an invalid manifest can never be observed through Has,
+// Check, or Capabilities.
 func NewManifest(caps []Capability) *Manifest {
+	for i, capability := range caps {
+		if !validCapabilityPair(capability.Category, capability.Action) {
+			panic(fmt.Sprintf(
+				"capability %d has invalid category/action pair %q:%q",
+				i, capability.Category, capability.Action,
+			))
+		}
+	}
+
 	result, _ := StartNew[*Manifest]("capability-cage.NewManifest", nil,
 		func(op *Operation[*Manifest], rf *ResultFactory[*Manifest]) *OperationResult[*Manifest] {
 			copied := make([]Capability, len(caps))

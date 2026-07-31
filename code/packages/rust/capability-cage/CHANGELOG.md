@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added exhaustive conformance between the embedded 19-pair category/action
+  table and the shared language-neutral Spec 13 taxonomy fixture.
 - Added `CapabilitySurfaceSummary` and `Manifest::capability_surface_summary()`
   for payload-free Chief-of-Staff host/catalog review of manifest category,
   action, target-count, and boundary annotation coverage.
