@@ -14,7 +14,7 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing numeric/string arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures (including `real procedure` returning f64) ✅ (AL13, all 7 backends), switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing numeric/string arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); no call-by-name |
 
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
@@ -750,9 +750,11 @@ backend immediately) come before the enabler-dependent items.
   branch subset. **Surfaced & fixed a latent ALGOL cmp bug**: comparisons emitted a
   `bool` type_hint, so LLVM compared `i64` operands at 1-bit `i1` and emitted invalid IR
   (the cell *failed to run*) — fixed to emit the i64 operand width (the BA0 fix). This was
-  the first ALGOL comparison ever exercised on a code-gen backend. **Limits:** switch-list
-  elements must be plain labels (no conditional/nested elements); switches aren't
-  block-scope-shadowable.
+  the first ALGOL comparison ever exercised on a code-gen backend. Switch-list
+  elements retain their full designator until the selected `goto`: a conditional
+  branch and a nested switch subscript execute at that time, so both see current
+  variables. A cyclic switch graph is rejected before it can recursively expand
+  the IIR dispatch chain. **Limit:** switches aren't block-scope-shadowable.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique
