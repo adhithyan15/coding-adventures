@@ -8511,6 +8511,11 @@ export function normalizeModelCard(
       (!Number.isFinite(value) || value < 0.0)
     ) {
       throw invalidElement(name, "MOSFET CGBO must be finite and non-negative");
+    } else if (
+      canonical === "IS" &&
+      (!Number.isFinite(value) || value <= 0.0)
+    ) {
+      throw invalidElement(name, "MOSFET IS must be finite and positive");
     } else {
       normalized[canonical] = value;
     }
