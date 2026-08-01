@@ -21,6 +21,12 @@ boolean array through a rank-aware value formal with two non-unit lower bounds.
 The checkerboard payload verifies both descriptor lower bounds and the outer
 row-major stride after the procedure call.
 
+**AL-multidim-string-capture:** the seven-backend matrix executes a nested
+procedure that writes a two-dimensional string-array value formal through its
+captured descriptor. Lexical ordering plus equality and inequality of separate
+cells verifies the `array<str>` handle, both lower bounds, and outer row-major
+stride survive the call and capture boundary.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that
@@ -721,7 +727,9 @@ backend immediately) come before the enabler-dependent items.
   seed; values[4] := 40; values[5] := 2; seed` returns 42 on all seven standard
   backends. Array `value` descriptors use the call ABI above, and a nested
   procedure can capture an outer formal by reloading its globalized handle and
-  every bound/stride component in the fresh nested frame.
+  every bound/stride component in the fresh nested frame. A 2-D `string array`
+  formal now exercises that captured descriptor on all seven backends, with
+  dynamic string cells checked by lexical ordering, equality, and inequality.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

@@ -1939,6 +1939,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- a nested procedure writes a captured 2-D string-array
+    // value formal. This takes the dynamic `array<str>` handle plus both
+    // non-unit lower bounds and the outer stride through descriptor globals;
+    // the caller-visible lexical and equality checks prove the right strings
+    // reached the intended cells on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
     // type_hint to decide the element width: `f64` instead of `i64`.  BASIC's BA3
@@ -5110,6 +5122,37 @@ fn algol_string_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_multidimensional_string_array_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("string array words[-1:0, 4:5]")
+                && program.src.contains("procedure fill(a); value a; string array a")
+                && program.src.contains("procedure seed; begin a[-1,4] := 'HI'")
+        })
+        .expect("the nested multidimensional ALGOL string-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested multidimensional string-array execution did not complete"
             );
             continue;
         };
