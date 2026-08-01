@@ -27,6 +27,12 @@ captured descriptor. Lexical ordering plus equality and inequality of separate
 cells verifies the `array<str>` handle, both lower bounds, and outer row-major
 stride survive the call and capture boundary.
 
+**AL-3D-string-capture:** the seven-backend matrix executes a nested procedure
+that writes a three-dimensional string-array value formal through its captured
+descriptor. Lexical ordering plus equality and inequality of separate cells
+verifies the `array<str>` handle, all three lower bounds, and both row-major
+strides survive the call and capture boundary.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that
