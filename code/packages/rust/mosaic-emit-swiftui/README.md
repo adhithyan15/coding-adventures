@@ -159,6 +159,12 @@ unknown slot, or wrong object type stays an `EmptyView`. This lets a generated
 Venture shell mount a Metal-backed content view without recreating its chrome
 in AppKit.
 
+Native host surfaces can also implement the optional
+`setPropsChangedHandler(_:)` bridge method. Calling the registered handler asks
+the generated `MosaicHostState` to fetch `applyProps()` again on the main queue,
+so host-owned interactions can reproject shared state into Mosaic slots without
+manually updating SwiftUI controls.
+
 ## Event dispatch
 
 Each component carries a single `dispatch: (NameEvent) -> Void` closure

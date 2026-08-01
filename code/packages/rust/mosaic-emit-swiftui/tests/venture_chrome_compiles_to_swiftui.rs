@@ -88,6 +88,12 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
         assert!(project
             .app_swift
             .contains("@objc optional func node(named name: NSString) -> NSObject?"));
+        assert!(project.app_swift.contains(
+            "@objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)"
+        ));
+        assert!(project
+            .app_swift
+            .contains("bridge?.setPropsChangedHandler? { [weak self] in"));
         assert!(project.app_swift.contains("MosaicHostPlatformView"));
         assert!(project.app_swift.contains("host.dispatch(event)"));
     }
@@ -151,6 +157,8 @@ import Foundation
 
 @objc(MosaicHost)
 final class MosaicHost: NSObject, MosaicHostBridgeObject {
+  private var propsChangedHandler: (() -> Void)?
+
   required override init() {}
 
   func applyProps() -> NSDictionary? {
@@ -171,6 +179,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   func node(named name: NSString) -> NSObject? {
     guard name == "content-surface" else { return nil }
     return NSView(frame: NSRect(x: 0, y: 0, width: 640, height: 480))
+  }
+
+  func setPropsChangedHandler(_ handler: @escaping () -> Void) {
+    propsChangedHandler = handler
   }
 }
 "#,

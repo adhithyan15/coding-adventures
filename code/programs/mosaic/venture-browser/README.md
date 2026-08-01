@@ -33,8 +33,9 @@ recreating the surrounding chrome in backend-specific UI code.
   dynamically loads `libventure_browser_macos.dylib`, projects the shared
   `BrowserChromeController` props, sends generated Mosaic events back through
   the shared reducer, and mounts the live Metal page renderer as the
-  `content-surface` `NSView`. Scroll and link activation remain in the same
-  Rust browser session rather than being reimplemented in Swift.
+  `content-surface` `NSView`. Native link activation asks the generated Mosaic
+  host state to reproject address, title, and history slots from that same Rust
+  browser session rather than reimplementing them in Swift.
 - The XAML project receives the matching package-owned `MosaicHost.cs`
   adapter. It loads `venture_browser_windows.dll`, projects that same shared
   reducer into generated WinUI controls, and mounts Direct2D-rendered pixels

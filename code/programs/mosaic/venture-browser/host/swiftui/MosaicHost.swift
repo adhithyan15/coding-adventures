@@ -84,6 +84,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private let native: VentureNativeLibrary?
   private var browser: UnsafeMutableRawPointer?
   private var contentView: VentureContentView?
+  private var propsChangedHandler: (() -> Void)?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -124,6 +125,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return contentView
   }
 
+  func setPropsChangedHandler(_ handler: @escaping () -> Void) {
+    propsChangedHandler = handler
+  }
+
   fileprivate func render(layer: CAMetalLayer) {
     guard let native, let browser else { return }
     let rawLayer = Unmanaged.passUnretained(layer).toOpaque()
@@ -140,6 +145,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       return
     }
     contentView?.renderPage()
+    propsChangedHandler?()
   }
 }
 
