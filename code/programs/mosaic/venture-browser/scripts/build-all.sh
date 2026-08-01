@@ -138,6 +138,16 @@ fi
 host_os="$(uname -s)"
 
 if [[ "$host_os" == Darwin ]] && has_command swift; then
+  echo "==> Building Venture macOS native bridge"
+  bridge_args=(build -p venture-browser-macos)
+  bridge_profile=debug
+  if ((release)); then
+    bridge_args+=(--release)
+    bridge_profile=release
+  fi
+  (cd "$rust_workspace" && cargo "${bridge_args[@]}")
+  cp "$rust_workspace/target/$bridge_profile/libventure_browser_macos.dylib" \
+    "$output_root/swiftui/libventure_browser_macos.dylib"
   echo "==> Building swiftui"
   (cd "$output_root/swiftui" && swift build)
 elif [[ "$host_os" != Darwin ]]; then

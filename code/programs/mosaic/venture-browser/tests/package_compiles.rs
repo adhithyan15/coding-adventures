@@ -89,6 +89,23 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
+    assert_eq!(package.host_assets.files.len(), 1);
+    assert_eq!(package.host_assets.files[0].backend, "swiftui");
+    assert_eq!(
+        package.host_assets.files[0].target,
+        "Sources/App/MosaicHost.swift"
+    );
+
+    let host = read_package_file("host/swiftui/MosaicHost.swift");
+    for symbol in [
+        "venture_browser_macos_apply_props",
+        "venture_browser_macos_handle_event",
+        "venture_browser_macos_render",
+        "venture_browser_macos_scroll",
+        "venture_browser_macos_activate_link",
+    ] {
+        assert!(host.contains(symbol), "SwiftUI host omits {symbol}");
+    }
 }
 
 #[test]
@@ -125,6 +142,8 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "npm run build",
         "node --check",
         "swift build",
+        "cargo \"${bridge_args[@]}\"",
+        "libventure_browser_macos.dylib",
         "cmake --build",
         "dotnet build",
         "flutter build",
@@ -138,6 +157,8 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "npm",
         "node",
         "swift",
+        "venture-browser-macos",
+        "libventure_browser_macos.dylib",
         "cmake",
         "dotnet",
         "flutter",

@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 description = "Runnable AppKit, CoreText, and Metal host for the Venture browser."
 
+[lib]
+crate-type = ["rlib", "cdylib"]
+
 [dependencies]
 html-to-layout = { path = "../html-to-layout" }
 html-to-paint = { path = "../html-to-paint" }

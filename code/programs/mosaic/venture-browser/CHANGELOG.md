@@ -19,3 +19,7 @@
 - POSIX and PowerShell backend-matrix entry points that emit the same Venture
   package for all nine Mosaic targets and directly invoke each available web,
   Qt, SwiftUI, XAML, Flutter, or Compose build toolchain.
+- A package-owned SwiftUI `MosaicHost` adapter that loads Venture's Rust
+  dynamic bridge, hydrates generated chrome from `BrowserChromeController`,
+  dispatches Mosaic events back to it, and mounts the live Metal viewport with
+  native scrolling and link activation.

@@ -29,6 +29,12 @@ recreating the surrounding chrome in backend-specific UI code.
   node through its optional `MosaicHost` seam rather than substituting its
   sample placeholder. On macOS, the generated SwiftPM app is compiled with a
   real host-provided `NSView`.
+- The SwiftUI project receives a package-owned `MosaicHost.swift` adapter. It
+  dynamically loads `libventure_browser_macos.dylib`, projects the shared
+  `BrowserChromeController` props, sends generated Mosaic events back through
+  the shared reducer, and mounts the live Metal page renderer as the
+  `content-surface` `NSView`. Scroll and link activation remain in the same
+  Rust browser session rather than being reimplemented in Swift.
 
 ## Build every backend
 
@@ -53,6 +59,11 @@ native host; missing host-applicable toolchains are reported as skips. Pass
 toolchains in a provisioned macOS, Windows, or Linux build job. `--emit-only` /
 `-EmitOnly` remains useful for inspecting all generated projects without
 claiming that their native builds passed.
+
+On macOS the matrix also builds the Venture Rust dynamic library and places it
+next to the generated SwiftUI project. Run the native shell from that directory
+with `swift run`; set `VENTURE_START_URL` to override the initial page or
+`VENTURE_BROWSER_LIBRARY` to load a bridge from another absolute path.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.

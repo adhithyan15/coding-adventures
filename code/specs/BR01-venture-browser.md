@@ -93,12 +93,14 @@ now use top-left viewport coordinates to activate links through transactional
 page loads, update the title, and repaint across repeated navigation. Named
 AppKit navigation keys now drive clamped viewport scrolling and Metal repaint.
 Command-Left/Right now reload Back/Forward history entries through the shared
-transactional session, update the native title, and repaint. Implementing the
-concrete `MosaicHost` adapters that join the generated chrome,
-`BrowserChromeController`, and live Venture page renderer remains before the
-shell is runnable end to end. Resize/reflow, richer pointer behavior, and direct
-macOS and Windows build/interaction acceptance also remain before the browser
-shell is complete.
+transactional session, update the native title, and repaint. The first concrete
+`MosaicHost` adapter now joins the generated SwiftUI chrome,
+`BrowserChromeController`, and live Metal Venture page renderer through a thin
+dynamic Rust bridge. It carries address and navigation events, native scrolling,
+and link activation through one browser session without handwritten AppKit
+chrome. Direct launch/interaction acceptance, resize/reflow, the equivalent
+Windows adapter, and the remaining platform hosts still remain before the
+browser shell is complete.
 
 ## Where It Fits
 
