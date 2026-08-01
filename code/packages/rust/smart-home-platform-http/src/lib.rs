@@ -19,18 +19,21 @@ use smart_home_core::{
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
     DeviceCommand, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health,
-    PrivilegeTier, Scene, SceneScope, SmartHomeTool, StateConfidence, StateDelta, StateSource,
-    Value, ValueKind,
+    IntegrationId, PrivilegeTier, Scene, SceneScope, SmartHomeTool, StateConfidence, StateDelta,
+    StateSource, Value, ValueKind,
 };
+use smart_home_dashboard_core::NativeDashboardManifest;
 use smart_home_runtime::{
-    DesiredEntityState, DesiredStateQuery, RuntimeAuthorizationDecisionQuery,
+    DesiredEntityState, DesiredStateQuery, PairingSessionStatus, RuntimeAuthorizationDecisionQuery,
     RuntimeAuthorizationDecisionSort, RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind,
     RuntimeCapabilityGrantSort, RuntimeClearDesiredStateToolOutput,
     RuntimeClearDesiredStateToolRequest, RuntimeCommandResultQuery, RuntimeCommandResultRecord,
     RuntimeCommandResultSort, RuntimeCommandToolRequest, RuntimeError, RuntimeEvent,
     RuntimeEventCheckpoint, RuntimeEventFilter, RuntimeEventLogEntry, RuntimeEventQuery,
-    RuntimeEventSort, RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
-    RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest, SmartHomeRuntime,
+    RuntimeEventSort, RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionQuery,
+    RuntimePairingSessionSort, RuntimeReadSnapshot, RuntimeRoomQuery, RuntimeRoomSort,
+    RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
+    SmartHomeRuntime,
 };
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex};
@@ -89,6 +92,29 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       background: #f9fbfa;
     }
 
+    .section-tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .section-tabs a {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      font-weight: 700;
+    }
+
+    .section-tabs a:hover,
+    .section-tabs a:focus-visible {
+      border-bottom-color: var(--teal);
+    }
+
     h1, h2, h3, p {
       margin: 0;
     }
@@ -119,13 +145,20 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       display: grid;
       gap: 12px;
       align-content: start;
+      min-width: 0;
     }
 
     .panel {
+      min-width: 0;
+      overflow-x: auto;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 14px;
+    }
+
+    .panel > * {
+      min-width: 0;
     }
 
     .toolbar, .row, .metric-grid {
@@ -133,6 +166,19 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
+    }
+
+    .row > div {
+      min-width: 0;
+    }
+
+    #checks .row > div {
+      flex: 1 1 180px;
+      min-width: 0;
+    }
+
+    h3, p, td {
+      overflow-wrap: anywhere;
     }
 
     .metric-grid {
@@ -267,6 +313,25 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       background: #fbfcfb;
     }
 
+    .manifest-dashboard + .manifest-dashboard {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .manifest-view {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(0, 3fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .manifest-view:last-child {
+      border-bottom: 0;
+    }
+
     .entity-card .actions {
       margin-top: 10px;
     }
@@ -321,6 +386,10 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       main {
         grid-template-columns: 1fr;
       }
+
+      .manifest-view {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -335,6 +404,17 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       <button id="refresh" class="primary" type="button">Refresh</button>
     </div>
   </header>
+  <nav class="section-tabs" aria-label="Dashboard sections">
+    <a href="#overview-panel">Overview</a>
+    <a href="#dashboards-panel">Dashboards</a>
+    <a href="#rooms-panel">Rooms</a>
+    <a href="#devices-panel">Devices</a>
+    <a href="#entities-panel">State</a>
+    <a href="#automations-panel">Automations</a>
+    <a href="#pairing-panel">Pairing</a>
+    <a href="#history-panel">History</a>
+    <a href="#commands-panel">Audit</a>
+  </nav>
   <main>
     <aside>
       <section class="panel">
@@ -355,11 +435,21 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       </section>
     </aside>
     <section>
-      <div class="panel">
+      <div id="overview-panel" class="panel">
         <h2>Home</h2>
         <div id="summary" class="metric-grid"></div>
       </div>
-      <div class="panel">
+      <div id="dashboards-panel" class="panel">
+        <div class="row" style="justify-content: space-between;">
+          <div>
+            <h2>Native Dashboards</h2>
+            <span id="dashboard-manifest-summary" class="muted"></span>
+          </div>
+          <button id="dashboard-view-all" type="button">All entities</button>
+        </div>
+        <div id="dashboard-manifests"></div>
+      </div>
+      <div id="filters-panel" class="panel">
         <div class="row" style="justify-content: space-between;">
           <h2>Filters</h2>
           <button id="reset-filters" type="button">Reset</button>
@@ -625,14 +715,14 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </label>
         </div>
       </div>
-      <div class="panel">
+      <div id="rooms-panel" class="panel">
         <div class="row">
           <h2>Rooms</h2>
           <span class="muted">Topology and coverage</span>
         </div>
         <div id="rooms" class="cards"></div>
       </div>
-      <div class="panel">
+      <div id="devices-panel" class="panel">
         <div class="row">
           <h2>Devices</h2>
           <span class="muted">Bridge inventory</span>
@@ -653,7 +743,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         </div>
         <div id="scenes" class="cards"></div>
       </div>
-      <div class="panel">
+      <div id="entities-panel" class="panel">
         <div class="row">
           <h2>Entities</h2>
           <span id="state-count" class="muted"></span>
@@ -685,7 +775,38 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <tbody id="gaps"></tbody>
         </table>
       </div>
-      <div class="panel">
+      <div id="automations-panel" class="panel">
+        <div class="row">
+          <h2>Automations</h2>
+          <span id="automation-count" class="muted"></span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Trigger</th><th>Actions</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="automations"></tbody>
+        </table>
+        <h3 style="margin-top: 14px;">Automation Audit</h3>
+        <table>
+          <thead>
+            <tr><th>Automation</th><th>Outcome</th><th>Occurrence</th><th>Time</th></tr>
+          </thead>
+          <tbody id="automation-audit"></tbody>
+        </table>
+      </div>
+      <div id="pairing-panel" class="panel">
+        <div class="row">
+          <h2>Pairing</h2>
+          <span id="pairing-count" class="muted"></span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Session</th><th>Bridge</th><th>Status</th><th>Expires</th><th></th></tr>
+          </thead>
+          <tbody id="pairing-sessions"></tbody>
+        </table>
+      </div>
+      <div id="history-panel" class="panel">
         <h2>History</h2>
         <table>
           <thead>
@@ -703,7 +824,7 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           <tbody id="events"></tbody>
         </table>
       </div>
-      <div class="panel">
+      <div id="commands-panel" class="panel">
         <h2>Commands</h2>
         <table>
           <thead>
@@ -749,6 +870,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
   <script>
     const els = {
       activity: document.querySelector("#activity"),
+      automationAudit: document.querySelector("#automation-audit"),
+      automationCount: document.querySelector("#automation-count"),
+      automations: document.querySelector("#automations"),
       authorizationDecisions: document.querySelector("#authorization-decisions"),
       bridges: document.querySelector("#bridges"),
       capabilities: document.querySelector("#capabilities"),
@@ -762,6 +886,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       detailTitle: document.querySelector("#detail-title"),
       desired: document.querySelector("#desired"),
       devices: document.querySelector("#devices"),
+      dashboardManifestSummary: document.querySelector("#dashboard-manifest-summary"),
+      dashboardManifests: document.querySelector("#dashboard-manifests"),
+      dashboardViewAll: document.querySelector("#dashboard-view-all"),
       entities: document.querySelector("#entities"),
       events: document.querySelector("#events"),
       filterActivityEntity: document.querySelector("#filter-activity-entity"),
@@ -816,6 +943,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       history: document.querySelector("#history"),
       location: document.querySelector("#location"),
       log: document.querySelector("#log"),
+      pairingCount: document.querySelector("#pairing-count"),
+      pairingSessions: document.querySelector("#pairing-sessions"),
       refresh: document.querySelector("#refresh"),
       resetFilters: document.querySelector("#reset-filters"),
       routes: document.querySelector("#routes"),
@@ -886,6 +1015,9 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       ["grant_scope", els.filterGrantScope],
       ["grant_principal", els.filterGrantPrincipal]
     ];
+
+    let selectedManifestView = new URLSearchParams(window.location.search).get("dashboard_view") || "";
+    let selectedManifestEntityIds = new Set();
 
     const ensureSelectOption = (control, value) => {
       if (!value || control.tagName !== "SELECT") {
@@ -992,6 +1124,12 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
     const roomMatchesFilters = (filters, room) => !filters.room || room.room_id === filters.room;
     const isCommandable = (entity) => (entity.capabilities || []).some((item) => item.commandable);
     const entityMatchesFilters = (filters, entity) => {
+      if (selectedManifestEntityIds.size > 0) {
+        const ids = [entity.entity_id, entity.home_assistant_entity_id].filter(Boolean);
+        if (!ids.some((id) => selectedManifestEntityIds.has(id))) {
+          return false;
+        }
+      }
       if (!matchesSearch(filters, entity)) {
         return false;
       }
@@ -1008,6 +1146,13 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
 
     const metric = (label, value) =>
       `<div class="metric"><strong>${value}</strong><span class="muted">${label}</span></div>`;
+
+    const escapeText = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
 
     const statusClass = (status) => `status ${String(status || "ok").toLowerCase()}`;
     const valueText = (value) => value === null || value === undefined ? "null" : JSON.stringify(value);
@@ -1278,6 +1423,102 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           </span>
         </div>
       `).join("") || `<p class="muted">No routes</p>`;
+    };
+
+    const activateManifestView = (manifestData) => {
+      selectedManifestEntityIds.clear();
+      if (!selectedManifestView || !manifestData.manifest) {
+        return;
+      }
+      for (const dashboard of manifestData.manifest.dashboards || []) {
+        for (const view of dashboard.views || []) {
+          if (`${dashboard.dashboard_id}/${view.view_id}` !== selectedManifestView) {
+            continue;
+          }
+          for (const card of view.cards || []) {
+            for (const entityId of card.entity_ids || []) {
+              selectedManifestEntityIds.add(entityId);
+            }
+          }
+        }
+      }
+    };
+
+    const renderDashboardManifests = (manifestData) => {
+      const summary = manifestData.summary || {};
+      els.dashboardManifestSummary.textContent = manifestData.configured
+        ? `${summary.dashboards || 0} dashboards, ${summary.views || 0} views, ${summary.cards || 0} cards`
+        : "No migrated manifest configured";
+      els.dashboardViewAll.disabled = !selectedManifestView;
+      const manifest = manifestData.manifest;
+      if (!manifest) {
+        els.dashboardManifests.innerHTML = `<p class="muted">The controller is using the native operational overview.</p>`;
+        return;
+      }
+      els.dashboardManifests.innerHTML = (manifest.dashboards || []).map((dashboard) => `
+        <div class="manifest-dashboard">
+          <div class="row" style="justify-content: space-between;">
+            <h3>${escapeText(dashboard.title)}</h3>
+            <span class="muted">${escapeText(dashboard.url_path)}</span>
+          </div>
+          ${(dashboard.views || []).map((view) => {
+            const viewKey = `${dashboard.dashboard_id}/${view.view_id}`;
+            const cards = view.cards || [];
+            const entityCount = new Set(cards.flatMap((card) => card.entity_ids || [])).size;
+            return `
+              <div class="manifest-view">
+                <strong>${escapeText(view.title)}</strong>
+                <span class="muted">${cards.length} cards, ${entityCount} entities</span>
+                <button type="button" data-manifest-view="${escapeText(viewKey)}"${selectedManifestView === viewKey ? " disabled" : ""}>${selectedManifestView === viewKey ? "Active" : "Open"}</button>
+              </div>
+            `;
+          }).join("") || `<p class="muted">No migrated views</p>`}
+        </div>
+      `).join("") || `<p class="muted">No migrated dashboards</p>`;
+    };
+
+    const renderAutomations = (automationData, auditData) => {
+      const definitions = automationData.definitions || [];
+      els.automationCount.textContent = `${definitions.length} definitions`;
+      els.automations.innerHTML = definitions.map((definition) => {
+        const trigger = definition.trigger || {};
+        const triggerText = trigger.kind === "schedule"
+          ? `Every ${trigger.every_ms} ms`
+          : `${trigger.event_type || "event"}${trigger.entity_id ? ` / ${trigger.entity_id}` : ""}`;
+        return `
+          <tr>
+            <td>${escapeText(definition.automation_id)}</td>
+            <td>${escapeText(triggerText)}</td>
+            <td>${(definition.actions || []).length}</td>
+            <td><span class="${statusClass(definition.enabled ? "ready" : "attention")}">${definition.enabled ? "enabled" : "disabled"}</span></td>
+            <td>${inspectButton("/api/smart_home/automations", "automation definitions")}</td>
+          </tr>
+        `;
+      }).join("") || `<tr><td colspan="5" class="muted">No automation definitions</td></tr>`;
+
+      const records = [...(auditData.records || [])].reverse().slice(0, 12);
+      els.automationAudit.innerHTML = records.map((record) => `
+        <tr>
+          <td>${escapeText(record.automation_id)}</td>
+          <td><span class="${statusClass(record.outcome)}">${escapeText(record.outcome)}</span></td>
+          <td>${escapeText(record.trigger_key)}</td>
+          <td>${escapeText(observedText(record.evaluated_at_ms))}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="4" class="muted">No automation audit records</td></tr>`;
+    };
+
+    const renderPairingSessions = (pairingData) => {
+      const sessions = pairingData.sessions || [];
+      els.pairingCount.textContent = `${pairingData.summary?.total_sessions || 0} sessions`;
+      els.pairingSessions.innerHTML = sessions.map((session) => `
+        <tr>
+          <td>${escapeText(session.session_id)}<br><span class="muted">${escapeText(session.requested_by)}</span></td>
+          <td>${escapeText(session.bridge_id)}<br><span class="muted">${escapeText(session.integration_id)}</span></td>
+          <td><span class="${statusClass(session.status === "completed" ? "ready" : session.status === "pending_user_presence" ? "attention" : session.status)}">${escapeText(session.status)}</span></td>
+          <td>${escapeText(observedText(session.expires_at_ms))}</td>
+          <td>${inspectButton(`/api/smart_home/pairing_sessions/${encodeURIComponent(session.session_id)}`, "pairing session")}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="5" class="muted">No pairing sessions</td></tr>`;
     };
 
     const renderRoomOptions = (inventory, selectedRoom) => {
@@ -1580,7 +1821,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           events,
           commandResults,
           authorizationDecisions,
-          capabilityGrants
+          capabilityGrants,
+          dashboardManifest,
+          automations,
+          automationAudit,
+          pairingSessions
         ] = await Promise.all([
           json("/api/smart_home/bootstrap"),
           json("/api/smart_home/readiness"),
@@ -1674,7 +1919,11 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
             status: filters.grantStatus,
             scope: filters.grantScope,
             sort: "principal_id"
-          }))
+          })),
+          json("/api/smart_home/dashboard_manifest"),
+          json("/api/smart_home/automations"),
+          json("/api/smart_home/automation_audit"),
+          json("/api/smart_home/pairing_sessions?limit=12&sort=status_then_expires_at")
         ]);
         const summary = bootstrap.dashboard.summary;
         els.location.textContent = bootstrap.dashboard.config.location_name;
@@ -1685,6 +1934,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("Devices", summary.device_count),
           metric("Rooms", summary.room_count),
           metric("Scenes", summary.scene_count),
+          metric("Automations", automations.summary.definition_count),
+          metric("Pairing", pairingSessions.summary.total_sessions),
           metric("Active grants", capabilityGrants.summary.active_grants)
         ].join("");
         els.activity.innerHTML = [
@@ -1695,6 +1946,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
           metric("State gaps", bootstrap.state_gaps.summary.total_entities)
         ].join("");
         renderChecks(readiness);
+        activateManifestView(dashboardManifest);
+        renderDashboardManifests(dashboardManifest);
         renderServices(services);
         renderRoutes(routes);
         renderRoomOptions(rooms, filters.room);
@@ -1711,6 +1964,8 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
         renderCommandResults(commandResults, filters);
         renderAuthorizationDecisions(authorizationDecisions, filters);
         renderCapabilityGrants(capabilityGrants, filters);
+        renderAutomations(automations, automationAudit);
+        renderPairingSessions(pairingSessions);
         log("Dashboard refreshed");
       } catch (error) {
         els.status.className = statusClass("blocked");
@@ -1748,8 +2003,23 @@ const DASHBOARD_HTML: &str = r##"<!doctype html>
       const clearDesiredButton = event.target.closest("button[data-clear-desired]");
       const desiredButton = event.target.closest("button[data-desired-action]");
       const inspectDetailButton = event.target.closest("button[data-inspect-url]");
-      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton || inspectDetailButton;
+      const manifestViewButton = event.target.closest("button[data-manifest-view]");
+      const manifestAllButton = event.target.closest("#dashboard-view-all");
+      const button = serviceButton || sceneButton || clearDesiredButton || desiredButton || inspectDetailButton || manifestViewButton || manifestAllButton;
       if (!button) {
+        return;
+      }
+      if (manifestViewButton || manifestAllButton) {
+        selectedManifestView = manifestViewButton?.dataset.manifestView || "";
+        const params = new URLSearchParams(window.location.search);
+        if (selectedManifestView) {
+          params.set("dashboard_view", selectedManifestView);
+        } else {
+          params.delete("dashboard_view");
+        }
+        const query = params.toString();
+        window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
+        await render();
         return;
       }
       button.disabled = true;
@@ -1959,6 +2229,7 @@ pub struct SmartHomePlatformService {
 pub struct SmartHomePlatformHttpRuntime {
     runtime: Arc<Mutex<SmartHomeRuntime>>,
     automation_runtime: Option<Arc<Mutex<SmartHomeAutomationRuntime>>>,
+    dashboard_manifest: Option<Arc<NativeDashboardManifest>>,
     config: SmartHomePlatformHttpConfig,
     event_types: Vec<String>,
     principal_id: AgentId,
@@ -1979,6 +2250,7 @@ impl SmartHomePlatformHttpRuntime {
         Self {
             runtime,
             automation_runtime: None,
+            dashboard_manifest: None,
             config,
             event_types: default_event_types(),
             principal_id: AgentId::trusted("agent:home-assistant-local-api"),
@@ -2029,6 +2301,11 @@ impl SmartHomePlatformHttpRuntime {
         automation_runtime: Arc<Mutex<SmartHomeAutomationRuntime>>,
     ) -> Self {
         self.automation_runtime = Some(automation_runtime);
+        self
+    }
+
+    pub fn with_dashboard_manifest(mut self, manifest: NativeDashboardManifest) -> Self {
+        self.dashboard_manifest = Some(Arc::new(manifest));
         self
     }
 
@@ -2365,6 +2642,13 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
 
     {
         let runtime = runtime.clone();
+        app.get("/api/smart_home/dashboard_manifest", move |_| {
+            dashboard_manifest_response(&runtime)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
         app.get("/api/smart_home/bootstrap", move |_| {
             runtime_bootstrap_response(&runtime)
         });
@@ -2477,6 +2761,21 @@ pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> 
         app.get("/api/smart_home/bridges/:bridge_id", move |request| {
             runtime_bridge_response(&runtime, request)
         });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get("/api/smart_home/pairing_sessions", move |request| {
+            runtime_pairing_sessions_response(&runtime, request)
+        });
+    }
+
+    {
+        let runtime = runtime.clone();
+        app.get(
+            "/api/smart_home/pairing_sessions/:session_id",
+            move |request| runtime_pairing_session_response(&runtime, request),
+        );
     }
 
     {
@@ -3242,6 +3541,15 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
     },
     ApiRouteDescriptor {
         method: "GET",
+        path: "/api/smart_home/dashboard_manifest",
+        category: "dashboard",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
         path: "/api/smart_home/bootstrap",
         category: "dashboard",
         surface: "smart_home",
@@ -3426,6 +3734,34 @@ const API_ROUTE_CATALOG: &[ApiRouteDescriptor] = &[
         method: "GET",
         path: "/api/smart_home/bridges/:bridge_id",
         category: "bridges",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/pairing_sessions",
+        category: "pairing",
+        surface: "smart_home",
+        mutates_runtime: false,
+        runtime_authorized: false,
+        query_params: &[
+            "bridge_id",
+            "expires_before_ms",
+            "expiring_at_ms",
+            "integration_id",
+            "limit",
+            "requested_by",
+            "session_id",
+            "sort",
+            "status",
+        ],
+    },
+    ApiRouteDescriptor {
+        method: "GET",
+        path: "/api/smart_home/pairing_sessions/:session_id",
+        category: "pairing",
         surface: "smart_home",
         mutates_runtime: false,
         runtime_authorized: false,
@@ -3794,6 +4130,27 @@ fn runtime_dashboard_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResp
     WebResponse::json(runtime_dashboard_json(runtime, &runtime_guard).into_bytes())
 }
 
+fn dashboard_manifest_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
+    match runtime.dashboard_manifest.as_deref() {
+        Some(manifest) => serialized_json_response(&serde_json::json!({
+            "configured": true,
+            "summary": manifest.summary(),
+            "manifest": manifest,
+        })),
+        None => serialized_json_response(&serde_json::json!({
+            "configured": false,
+            "summary": {
+                "dashboards": 0,
+                "views": 0,
+                "cards": 0,
+                "entity_references": 0,
+                "source_resources": 0,
+            },
+            "manifest": null,
+        })),
+    }
+}
+
 fn runtime_bootstrap_response(runtime: &SmartHomePlatformHttpRuntime) -> WebResponse {
     let runtime_guard = runtime
         .runtime
@@ -4082,6 +4439,72 @@ fn runtime_bridge_response(
         }
     };
     WebResponse::json(bridge_registry_json(bridge, &runtime_guard, runtime.now_ms()).into_bytes())
+}
+
+fn runtime_pairing_sessions_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let query = match runtime_pairing_session_query(request) {
+        Ok(query) => query,
+        Err(error) => return api_error_response(error),
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let sessions = runtime_guard.query_pairing_sessions(&query);
+    let summary = runtime_guard.pairing_session_inventory_summary_at(&query, runtime.now_ms());
+    serialized_json_response(&serde_json::json!({
+        "generated_at_ms": runtime.now_ms(),
+        "summary": {
+            "total_sessions": summary.total_sessions,
+            "pending_user_presence_sessions": summary.pending_user_presence_sessions,
+            "completed_sessions": summary.completed_sessions,
+            "expired_sessions": summary.expired_sessions,
+            "cancelled_sessions": summary.cancelled_sessions,
+            "expiring_sessions": summary.expiring_sessions,
+            "sessions_with_vault_ref": summary.sessions_with_vault_ref,
+        },
+        "sessions": sessions
+            .iter()
+            .map(|session| pairing_session_json(session))
+            .collect::<Vec<_>>(),
+    }))
+}
+
+fn runtime_pairing_session_response(
+    runtime: &SmartHomePlatformHttpRuntime,
+    request: &WebRequest,
+) -> WebResponse {
+    let Some(session_id) = request.route_params.get("session_id") else {
+        return api_error_response(ApiError::bad_request("missing session_id"));
+    };
+    let runtime_guard = runtime
+        .runtime
+        .lock()
+        .expect("smart-home runtime mutex should not be poisoned");
+    let session_id = RuntimePairingSessionId::trusted(session_id);
+    let Some(session) = runtime_guard.pairing_session(&session_id) else {
+        return api_error_response(ApiError::not_found(format!(
+            "pairing session `{session_id}` not found"
+        )));
+    };
+    serialized_json_response(&pairing_session_json(session))
+}
+
+fn pairing_session_json(session: &RuntimePairingSession) -> JsonValue {
+    serde_json::json!({
+        "session_id": session.session_id,
+        "bridge_id": session.bridge_id,
+        "integration_id": session.integration_id,
+        "requested_by": session.requested_by,
+        "started_at_ms": session.started_at_ms,
+        "expires_at_ms": session.expires_at_ms,
+        "status": pairing_session_status_label(session.status),
+        "vault_ref": session.vault_ref,
+        "metadata": session.metadata,
+    })
 }
 
 fn runtime_rooms_response(
@@ -7809,6 +8232,39 @@ fn runtime_command_result_query(
     Ok(query)
 }
 
+fn runtime_pairing_session_query(
+    request: &WebRequest,
+) -> Result<RuntimePairingSessionQuery, ApiError> {
+    let mut query = RuntimePairingSessionQuery::new()
+        .with_limit(query_limit(request, 50, 500)?)
+        .sorted_by(RuntimePairingSessionSort::StatusThenExpiresAt);
+    if let Some(session_id) = query_string(request, "session_id") {
+        query = query.for_session(RuntimePairingSessionId::trusted(session_id));
+    }
+    if let Some(bridge_id) = query_string(request, "bridge_id") {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(integration_id) = query_string(request, "integration_id") {
+        query = query.for_integration(IntegrationId::trusted(integration_id));
+    }
+    if let Some(requested_by) = query_string(request, "requested_by") {
+        query = query.requested_by(AgentId::trusted(requested_by));
+    }
+    if let Some(status) = query_string(request, "status") {
+        query = query.with_status(pairing_session_status_from_label(status)?);
+    }
+    if let Some(expires_before_ms) = query_u64(request, "expires_before_ms")? {
+        query = query.expires_before(expires_before_ms);
+    }
+    if let Some(expiring_at_ms) = query_u64(request, "expiring_at_ms")? {
+        query = query.expiring_at(expiring_at_ms);
+    }
+    if let Some(sort) = query_string(request, "sort") {
+        query = query.sorted_by(pairing_session_sort_from_label(sort)?);
+    }
+    Ok(query)
+}
+
 fn runtime_authorization_decision_query(
     request: &WebRequest,
 ) -> Result<RuntimeAuthorizationDecisionQuery, ApiError> {
@@ -9638,6 +10094,39 @@ fn query_limit(request: &WebRequest, default: usize, max: usize) -> Result<usize
     Ok(limit.min(max))
 }
 
+fn pairing_session_status_from_label(label: &str) -> Result<PairingSessionStatus, ApiError> {
+    match label {
+        "pending_user_presence" | "pending" => Ok(PairingSessionStatus::PendingUserPresence),
+        "completed" => Ok(PairingSessionStatus::Completed),
+        "expired" => Ok(PairingSessionStatus::Expired),
+        "cancelled" => Ok(PairingSessionStatus::Cancelled),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported pairing session status `{other}`"
+        ))),
+    }
+}
+
+fn pairing_session_status_label(status: PairingSessionStatus) -> &'static str {
+    match status {
+        PairingSessionStatus::PendingUserPresence => "pending_user_presence",
+        PairingSessionStatus::Completed => "completed",
+        PairingSessionStatus::Expired => "expired",
+        PairingSessionStatus::Cancelled => "cancelled",
+    }
+}
+
+fn pairing_session_sort_from_label(label: &str) -> Result<RuntimePairingSessionSort, ApiError> {
+    match label {
+        "session_id" => Ok(RuntimePairingSessionSort::SessionId),
+        "expires_at" => Ok(RuntimePairingSessionSort::ExpiresAt),
+        "started_at_desc" => Ok(RuntimePairingSessionSort::StartedAtDesc),
+        "status_then_expires_at" => Ok(RuntimePairingSessionSort::StatusThenExpiresAt),
+        other => Err(ApiError::bad_request(format!(
+            "unsupported pairing session sort `{other}`"
+        ))),
+    }
+}
+
 fn command_status_label(status: CommandStatus) -> &'static str {
     match status {
         CommandStatus::Accepted => "accepted",
@@ -10278,6 +10767,10 @@ mod tests {
     use http_core::{Header, HttpVersion, RequestHead};
     use smart_home_automation_runtime::{AutomationAction, AutomationTrigger};
     use smart_home_core::{BridgeId, DeviceId, EventId};
+    use smart_home_dashboard_core::{
+        NativeDashboard, NativeDashboardCard, NativeDashboardCardKind, NativeDashboardView,
+        DASHBOARD_MANIFEST_SCHEMA_VERSION,
+    };
     use smart_home_runtime_store::SmartHomeRuntimeStore;
     use smart_home_testkit::hue_lighting_runtime;
     use std::fs;
@@ -10464,6 +10957,36 @@ mod tests {
         }
     }
 
+    fn fixture_dashboard_manifest() -> NativeDashboardManifest {
+        NativeDashboardManifest {
+            schema_version: DASHBOARD_MANIFEST_SCHEMA_VERSION,
+            source_instance_id: "fixture-home-assistant".to_string(),
+            generated_at_ms: 5_000,
+            dashboards: vec![NativeDashboard {
+                dashboard_id: "overview".to_string(),
+                url_path: "lovelace".to_string(),
+                title: "Overview".to_string(),
+                icon: None,
+                require_admin: false,
+                show_in_sidebar: true,
+                views: vec![NativeDashboardView {
+                    view_id: "living-room".to_string(),
+                    title: "Living Room".to_string(),
+                    path: Some("living-room".to_string()),
+                    icon: None,
+                    cards: vec![NativeDashboardCard {
+                        card_id: "living-room-light".to_string(),
+                        kind: NativeDashboardCardKind::EntityControl,
+                        source_type: "light".to_string(),
+                        title: Some("Living Room Light".to_string()),
+                        entity_ids: vec!["entity-light-1".to_string()],
+                    }],
+                }],
+            }],
+            source_resources: Vec::new(),
+        }
+    }
+
     fn fixture_runtime_with_desired_state() -> SmartHomePlatformHttpRuntime {
         let mut runtime = hue_lighting_runtime();
         runtime
@@ -10545,6 +11068,12 @@ mod tests {
             assert!(body.contains("<title>Codex Home</title>"));
             assert!(body.contains("json(\"/api/smart_home/bootstrap\")"));
             assert!(body.contains("json(\"/api/smart_home/readiness\")"));
+            assert!(body.contains("json(\"/api/smart_home/dashboard_manifest\")"));
+            assert!(body.contains("json(\"/api/smart_home/automations\")"));
+            assert!(body.contains("/api/smart_home/pairing_sessions?limit=12"));
+            assert!(body.contains("id=\"dashboards-panel\""));
+            assert!(body.contains("id=\"automations-panel\""));
+            assert!(body.contains("id=\"pairing-panel\""));
             assert!(body.contains("data-dashboard-filter=\"search\""));
             assert!(body.contains("data-dashboard-filter=\"room\""));
             assert!(body.contains("data-dashboard-filter=\"domain\""));
@@ -10749,6 +11278,69 @@ mod tests {
             assert!(body.contains("clear desired state response"));
             assert!(body.contains("desired ${desiredButton.dataset.desiredAction} response"));
         }
+    }
+
+    #[test]
+    fn runtime_web_app_serves_native_manifest_and_pairing_inventory() {
+        let mut d23 = hue_lighting_runtime();
+        let bridge = d23.registry().bridges().next().cloned().unwrap();
+        d23.start_pairing_session(smart_home_runtime::RuntimePairingSession::pending(
+            RuntimePairingSessionId::trusted("pairing-dashboard-1"),
+            &bridge,
+            AgentId::trusted("agent:operator"),
+            4_000,
+            8_000,
+            Vec::new(),
+        ))
+        .unwrap();
+        let runtime =
+            SmartHomePlatformHttpRuntime::new(d23, SmartHomePlatformHttpConfig::new("Codex Home"))
+                .with_now_ms(5_000)
+                .with_dashboard_manifest(fixture_dashboard_manifest());
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let manifest: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request("GET", "/api/smart_home/dashboard_manifest"))
+                .into(),
+        ))
+        .unwrap();
+        assert_eq!(manifest["configured"], true);
+        assert_eq!(manifest["summary"]["dashboards"], 1);
+        assert_eq!(manifest["summary"]["entity_references"], 1);
+        assert_eq!(
+            manifest["manifest"]["dashboards"][0]["views"][0]["title"],
+            "Living Room"
+        );
+
+        let pairing: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions?status=pending&sort=expires_at",
+            ))
+            .into(),
+        ))
+        .unwrap();
+        assert_eq!(pairing["summary"]["total_sessions"], 1);
+        assert_eq!(pairing["sessions"][0]["session_id"], "pairing-dashboard-1");
+        assert_eq!(pairing["sessions"][0]["status"], "pending_user_presence");
+
+        let detail: serde_json::Value = serde_json::from_str(&response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions/pairing-dashboard-1",
+            ))
+            .into(),
+        ))
+        .unwrap();
+        assert_eq!(detail["bridge_id"], bridge.bridge_id.as_str());
+
+        let invalid: web_core::WebResponse = app
+            .handle(request(
+                "GET",
+                "/api/smart_home/pairing_sessions?status=unknown",
+            ))
+            .into();
+        assert_eq!(invalid.status, 400);
     }
 
     #[test]

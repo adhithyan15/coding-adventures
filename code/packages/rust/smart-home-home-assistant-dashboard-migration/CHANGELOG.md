@@ -2,6 +2,8 @@
 
 ## 0.1.0
 
+- Share the native manifest contract with the operational dashboard through
+  `smart-home-dashboard-core`.
 - Add authenticated collection of Lovelace dashboard metadata, configurations,
   and frontend resources through Home Assistant's WebSocket API.
 - Add deterministic compilation of standard entity, control, and history cards

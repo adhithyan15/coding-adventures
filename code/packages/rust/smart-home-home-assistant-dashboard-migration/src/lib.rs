@@ -5,6 +5,10 @@
 use coding_adventures_sha256::sha256_hex;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
+pub use smart_home_dashboard_core::{
+    HomeAssistantDashboardResource, NativeDashboard, NativeDashboardCard, NativeDashboardCardKind,
+    NativeDashboardManifest, NativeDashboardView,
+};
 use smart_home_home_assistant_migration::{HomeAssistantExport, EXPORT_SCHEMA_VERSION};
 use std::collections::BTreeSet;
 use std::fmt;
@@ -16,7 +20,8 @@ use std::time::Duration;
 use tungstenite::stream::MaybeTlsStream;
 use tungstenite::{connect, Message, WebSocket};
 
-pub const DASHBOARD_MIGRATION_SCHEMA_VERSION: u32 = 1;
+pub const DASHBOARD_MIGRATION_SCHEMA_VERSION: u32 =
+    smart_home_dashboard_core::DASHBOARD_MANIFEST_SCHEMA_VERSION;
 const MAX_UNMATCHED_MESSAGES: usize = 64;
 
 type HomeAssistantSocket = WebSocket<MaybeTlsStream<TcpStream>>;
@@ -70,63 +75,6 @@ pub struct DashboardDiagnostic {
     pub source_id: String,
     pub code: String,
     pub message: String,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum NativeDashboardCardKind {
-    EntityControl,
-    EntityList,
-    History,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct NativeDashboardCard {
-    pub card_id: String,
-    pub kind: NativeDashboardCardKind,
-    pub source_type: String,
-    #[serde(default)]
-    pub title: Option<String>,
-    pub entity_ids: Vec<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct NativeDashboardView {
-    pub view_id: String,
-    pub title: String,
-    #[serde(default)]
-    pub path: Option<String>,
-    #[serde(default)]
-    pub icon: Option<String>,
-    pub cards: Vec<NativeDashboardCard>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct NativeDashboard {
-    pub dashboard_id: String,
-    pub url_path: String,
-    pub title: String,
-    #[serde(default)]
-    pub icon: Option<String>,
-    pub require_admin: bool,
-    pub show_in_sidebar: bool,
-    pub views: Vec<NativeDashboardView>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct HomeAssistantDashboardResource {
-    pub resource_id: String,
-    pub url: String,
-    pub resource_type: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct NativeDashboardManifest {
-    pub schema_version: u32,
-    pub source_instance_id: String,
-    pub generated_at_ms: u64,
-    pub dashboards: Vec<NativeDashboard>,
-    pub source_resources: Vec<HomeAssistantDashboardResource>,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]

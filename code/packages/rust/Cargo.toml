@@ -887,6 +887,7 @@ members = [
     "md5-native-jni",
     "irc-server-capi",
     "smart-home-core",
+    "smart-home-dashboard-core",
     "smart-home-capability-cage",
     "smart-home-discovery",
     "smart-home-discovery-service",
