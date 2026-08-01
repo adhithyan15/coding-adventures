@@ -8442,6 +8442,8 @@ export function normalizeModelCard(
       throw invalidElement(name, "MOSFET U0 must be finite and non-negative");
     } else if (canonical === "RD" && (!Number.isFinite(value) || value < 0.0)) {
       throw invalidElement(name, "MOSFET RD must be finite and non-negative");
+    } else if (canonical === "RS" && (!Number.isFinite(value) || value < 0.0)) {
+      throw invalidElement(name, "MOSFET RS must be finite and non-negative");
     } else if (canonical === "KP" && (!Number.isFinite(value) || value <= 0.0)) {
       throw invalidElement(name, "MOSFET KP must be finite and positive");
     } else if (canonical === "W" && (!Number.isFinite(value) || value <= 0.0)) {

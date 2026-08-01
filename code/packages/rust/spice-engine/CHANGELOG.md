@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `RS` values before
+  external source-resistance stamping and noise calculations.
+
 - Reject negative and non-finite Level-1 MOS model-card `RD` values before
   external drain-resistance stamping and noise calculations.
 
