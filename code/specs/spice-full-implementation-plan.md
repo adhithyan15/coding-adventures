@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS flicker-noise exponent validation.
+1. Rust Berkeley SPICE MOS instance-parameter validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `AF` values before flicker-noise
-     calculations.
-   - Preserve zero and positive flicker-noise exponents across Rust, Python, and
-     TypeScript.
+   - Reject unsupported MOS instance parameter names before lowering instead of
+     silently ignoring typos.
+   - Preserve the supported `W`, `L`, `NRD`, `NRS`, `AD`, `AS`, `PD`, and `PS`
+     geometry and diffusion fields.
 
 ## Completed Slices
 
@@ -3850,6 +3850,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite model-card `KF` values are rejected before
      flicker-noise calculations.
    - Zero and positive flicker-noise coefficients remain aligned across Rust,
+     Python, and TypeScript.
+
+325. Cross-language Level-1 MOS flicker-noise exponent validation.
+   - Status: completed in PR 9422.
+   - Negative and non-finite model-card `AF` values are rejected before
+     flicker-noise calculations.
+   - Zero and positive flicker-noise exponents remain aligned across Rust,
      Python, and TypeScript.
 
 ## Backlog

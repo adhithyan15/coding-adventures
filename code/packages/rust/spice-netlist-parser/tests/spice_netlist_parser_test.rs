@@ -837,6 +837,13 @@ fn rejects_unsupported_inductor_element_params() {
 }
 
 #[test]
+fn rejects_unsupported_mosfet_element_params() {
+    let error = parse_netlist(".model nch NMOS\nM1 d g s b nch WIDTH=1u").unwrap_err();
+
+    assert!(error.to_string().contains("unsupported MOSFET parameter"));
+}
+
+#[test]
 fn parses_tf_transfer_function_analysis_cards() {
     let parsed = parse_netlist(
         r#"
