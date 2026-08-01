@@ -3430,12 +3430,12 @@ impl Compiler {
     /// | exponent            | lowering                          | result type |
     /// |---------------------|-----------------------------------|-------------|
     /// | nonneg integer literal `k` | `k−1` repeated `mul`s (`x*x*…`); `x↑0 = 1` | **base's type** — `integer↑k` stays `integer`, `real↑k` stays `real` |
-    /// | numeric pair containing a real | `f64_pow` after integer→real widening (libm `pow`) | `real` |
+    /// | non-literal numeric pair | `f64_pow` after integer→real widening (libm `pow`) | `real` |
     ///
     /// The integer-literal path keeps ALGOL's typing (`2 ↑ 10` = the *integer*
-    /// 1024), unlike BASIC which always widens to `real`. A non-literal integer
-    /// exponent on an integer base, or a negative literal, remains a clean
-    /// `Unsupported`; any pair containing a real takes the `f64_pow` path.
+    /// 1024), unlike BASIC which always widens to `real`. Every other numeric
+    /// pair takes the `f64_pow` path, so runtime and negative integer exponents
+    /// produce the real-valued result required for reciprocal powers.
     fn emit_pow(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let seq = pieces(node);
         let has_pow = seq
@@ -3493,11 +3493,10 @@ impl Compiler {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
-        // General path: any numeric pair containing a real uses `f64_pow`.
+        // General path: every remaining numeric pair uses `f64_pow`.
         let exp = self.emit_expr(exp_node)?;
         if matches!(base.ty, ScalarType::Integer | ScalarType::Real)
             && matches!(exp.ty, ScalarType::Integer | ScalarType::Real)
-            && (base.ty == ScalarType::Real || exp.ty == ScalarType::Real)
         {
             let base = self.coerce_value(base, ScalarType::Real, "exponentiation base")?;
             let exp = self.coerce_value(exp, ScalarType::Real, "exponentiation exponent")?;
@@ -3516,7 +3515,7 @@ impl Compiler {
 
         Err(CompileError::Unsupported(format!(
             "exponentiation with a {} base and a {} exponent — this slice supports a \
-             nonnegative integer-literal exponent (any base) or a numeric pair containing a real",
+             nonnegative integer-literal exponent (any base) or a numeric pair",
             base.ty.name(),
             exp.ty.name()
         )))
@@ -7012,6 +7011,35 @@ mod tests {
         assert_eq!(
             run_f64("begin real result; result := 2 ^ 3.0 end"),
             8.0
+        );
+    }
+
+    /// A runtime integer exponent widens both operands to the shared
+    /// `f64_pow` path rather than requiring a compile-time unroll.
+    #[test]
+    fn integer_base_runtime_integer_exponent_widens_to_real() {
+        let src = "begin integer exponent; real result; exponent := 3; result := 2 ^ exponent end";
+        assert_eq!(run_f64(src), 8.0);
+
+        let module = compile_source(src, "runtime_integer_exponent").expect("compiles");
+        let main = module.get_function("main").expect("main function exists");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "f64_pow"
+                    && instr.type_hint == "f64"
+                    && instr.srcs.len() == 2
+            }),
+            "a runtime integer exponent must use the f64_pow operation"
+        );
+    }
+
+    /// A negative integer exponent is not a literal-unroll shape and therefore
+    /// uses `f64_pow`, preserving the reciprocal as a real result.
+    #[test]
+    fn integer_base_negative_integer_exponent_widens_to_real() {
+        assert_eq!(
+            run_f64("begin integer exponent; real result; exponent := -1; result := 2 ^ exponent end"),
+            0.5
         );
     }
 

@@ -841,12 +841,12 @@ backend immediately) come before the enabler-dependent items.
 - ✅ **AL-pow** — the `↑` exponentiation operator (§3.3.4; spelled `^`/`**`).
   A **nonnegative integer-literal exponent** unrolls to repeated multiply
   (`k−1` `mul`s; `x↑0=1`, `x↑1=x`), **keeping the base's type** — `2↑10` is the
-  *integer* 1024, unlike BASIC's always-`real` BA-pow. A **`real↑real`** exponent
-  lowers to the `f64_pow` op (libm `pow`) BA-pow already proved on every backend.
-  No new IIR op, no backend change. An `integer` base with a `real`/runtime/negative
-  exponent is a clean `Unsupported` (needs int→real coercion / reciprocals — a later
-  slice). Verified by RUNNING `10 + 2 ^ 5` ⇒ 42 (integer unroll) on all 7 backends
-  (`algol-iir-compiler` 0.27.0 / `lang-aot` 0.170.0).
+  *integer* 1024, unlike BASIC's always-`real` BA-pow. Every other numeric pair,
+  including an integer base with a runtime or negative integer exponent, widens to the
+  `f64_pow` op (libm `pow`) that BA-pow already proved on every backend. No new IIR op
+  or backend change. Verified by RUNNING `10 + 2 ^ 5` ⇒ 42 (integer unroll) and
+  `entier(2^3 + 68 * 2^-1)` ⇒ 42 (runtime positive and reciprocal exponents) on all 7
+  backends (`algol-iir-compiler` 0.52.0 / `lang-aot` 0.220.24).
 
 ### Twig
 - ✅ **TW1** — variadic arithmetic typed lowering. An all-`i64` `(+ a b c …)` /

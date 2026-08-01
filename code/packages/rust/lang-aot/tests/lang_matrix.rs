@@ -1226,6 +1226,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- runtime integer exponents use the existing `f64_pow` IIR
+    // operation after widening both operands. The first result is 2^3 = 8;
+    // the second is 2^-1 = 0.5. `entier(8 + 68 * 0.5)` returns 42, proving
+    // both a dynamic positive exponent and a reciprocal survive every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer exponent, result; real positive, reciprocal; exponent := 3; positive := 2 ^ exponent; exponent := -1; reciprocal := 2 ^ exponent; result := entier(positive + 68 * reciprocal) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
     // calls named `print`/`output` as standard output procedures. The narrow
@@ -5480,6 +5491,37 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_real_array_on_every
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested 4-D real-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_integer_exponents_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer exponent, result; real positive, reciprocal")
+                && program.src.contains("positive := 2 ^ exponent")
+                && program.src.contains("reciprocal := 2 ^ exponent")
+        })
+        .expect("the runtime-exponent ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime integer exponent execution did not complete"
             );
             continue;
         };
