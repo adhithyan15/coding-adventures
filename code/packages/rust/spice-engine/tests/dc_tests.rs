@@ -1243,6 +1243,22 @@ fn mos_model_card_rejects_negative_or_non_finite_sheet_resistance() {
 }
 
 #[test]
+fn mos_model_card_rejects_negative_or_non_finite_flicker_noise_coefficient() {
+    for value in [0.0, 1.0e-24, 1.0] {
+        let valid = normalize_model_card("Mvalid", "pmos", &[("KF", value)]).unwrap();
+        assert_close(*valid.parameters.get("KF").unwrap(), value);
+    }
+
+    for invalid_coefficient in [f64::NEG_INFINITY, -0.1, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "pmos", &[("KF", invalid_coefficient)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET KF must be finite and non-negative"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",
