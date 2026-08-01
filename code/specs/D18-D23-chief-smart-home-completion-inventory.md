@@ -566,8 +566,8 @@ migration boundary:
   WebSocket server to prove authentication, command ordering, normalization,
   failed authorization, and token redaction.
 - Scene and automation definitions are not inferred from
-  registry/current-state payloads; their live collection remains explicit
-  follow-up work.
+  registry/current-state payloads; their live collection is delegated to the
+  reviewed definition-enrichment stage below.
 
 ## Current Home Assistant Historical State Slice
 
@@ -590,6 +590,30 @@ leaving it as a detached archive:
   process tests prove batched collection, durable replay, repeat idempotency,
   current-state preservation, and token redaction.
 
+## Current Home Assistant Definition Collection Slice
+
+This slice retrieves executable source definitions without approximating
+unsupported Home Assistant behavior:
+
+- `smart-home-home-assistant-definitions` consumes the reviewed topology
+  export, authenticates as an administrator, and requests each automation's
+  raw configuration through `automation/config` over the WebSocket API.
+- Editable Home Assistant scenes are retrieved from
+  `/api/config/scene/config/{config-id}` over bounded HTTP or HTTPS using the
+  entity registry's stable configuration identifier.
+- The collector accepts only the importer's executable subset: state and
+  simple time-pattern triggers, state conditions, and bounded scene, light,
+  switch, lock, and thermostat actions. Templates, delays, multi-trigger
+  semantics, device/area targets, unsupported services, and non-editable scene
+  platforms are skipped with durable diagnostics instead of being guessed.
+- The enriched artifact keeps definitions and a source-fingerprinted
+  collection report in deterministic order. Its extra report field is
+  backward-compatible with the existing migration reader, so the same file
+  can be planned and applied without a conversion step.
+- Real local WebSocket, HTTP, chunked-response, and CLI process tests prove
+  authenticated collection, migration compatibility, deterministic reruns,
+  partial-definition diagnostics, atomic output, and token redaction.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
@@ -599,10 +623,8 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Extend the completed Home Assistant live topology/current-state and
-  historical-state collection plus topology/current-state/scene/automation
-  importer with live scene and automation definition collection and dashboard
-  migration.
+- Extend the completed Home Assistant topology, current-state, historical-state,
+  scene, and automation migration pipeline with dashboard migration.
 - Provide a dashboard that can inspect devices, rooms, state, health,
   automations, event history, pairing, and command audit.
 

@@ -903,6 +903,7 @@ members = [
     "smart-home-home-assistant-migration",
     "smart-home-home-assistant-export",
     "smart-home-home-assistant-history",
+    "smart-home-home-assistant-definitions",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",
