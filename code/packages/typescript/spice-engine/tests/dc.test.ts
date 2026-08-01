@@ -1542,10 +1542,20 @@ describe("dcOp", () => {
     expect(JSON.parse(formatDeviceModelReferenceDeckAuditGateCoverageDigestJson(report))).toStrictEqual(digestRecords);
   });
 
-  it("rejects non-Level-1 MOS model cards explicitly", () => {
-    expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: 2.0 })).toThrowError(
-      "only MOS LEVEL=1",
-    );
+  it("rejects non-Level-1 or non-finite MOS model cards explicitly", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { LEVEL: 1.0 });
+    expect(valid.parameters.LEVEL).toBe(1.0);
+
+    for (const invalidLevel of [
+      2.0,
+      Number.NEGATIVE_INFINITY,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: invalidLevel })).toThrowError(
+        "only MOS LEVEL=1",
+      );
+    }
   });
 
   it("stamps a custom-model evaluator hook as a DC current", () => {

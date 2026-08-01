@@ -4338,7 +4338,7 @@ pub fn normalize_model_card(
         let key = parameter_key(raw_name);
         if let Some(canonical) = model_card_parameter_alias(kind, &key) {
             if canonical == "LEVEL" {
-                if (raw_value - 1.0).abs() > 1.0e-12 {
+                if !raw_value.is_finite() || (raw_value - 1.0).abs() > 1.0e-12 {
                     return Err(SpiceError::InvalidElement {
                         name: name.clone(),
                         reason: "only MOS LEVEL=1 model cards are supported".to_string(),

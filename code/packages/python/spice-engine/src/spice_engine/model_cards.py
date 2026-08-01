@@ -563,7 +563,7 @@ def normalize_model_card(
             continue
         value = float(raw_value)
         if canonical == "LEVEL":
-            if abs(value - 1.0) > 1.0e-12:
+            if not math.isfinite(value) or abs(value - 1.0) > 1.0e-12:
                 raise ValueError(f"{name}: only MOS LEVEL=1 model cards are supported")
             normalized[canonical] = 1.0
         elif canonical == "TPG" and value not in {-1.0, 0.0, 1.0}:

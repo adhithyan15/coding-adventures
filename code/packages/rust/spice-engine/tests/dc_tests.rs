@@ -1824,11 +1824,16 @@ fn device_model_reference_deck_audit_gate_reports_missing_coverage() {
 }
 
 #[test]
-fn non_level_one_mos_model_cards_are_explicitly_rejected() {
-    let error = normalize_model_card("Mbad", "nmos", &[("LEVEL", 2.0)]).unwrap_err();
-    assert!(error
-        .to_string()
-        .contains("only MOS LEVEL=1 model cards are supported"));
+fn non_level_one_or_non_finite_mos_model_cards_are_explicitly_rejected() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("LEVEL", 1.0)]).unwrap();
+    assert_close(*valid.parameters.get("LEVEL").unwrap(), 1.0);
+
+    for invalid_level in [2.0, f64::NEG_INFINITY, f64::INFINITY, f64::NAN] {
+        let error = normalize_model_card("Mbad", "nmos", &[("LEVEL", invalid_level)]).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("only MOS LEVEL=1 model cards are supported"));
+    }
 }
 
 #[test]
