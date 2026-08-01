@@ -1959,6 +1959,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- a nested procedure writes a captured 4-D integer-array
+    // value formal. Four non-unit lower bounds and all three row-major strides
+    // must survive the descriptor-global boundary for the corner sum to reach 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; procedure setvalues(a); value a; integer array a; begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; setvalues(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 -- a nested procedure writes a captured 2-D string-array
     // value formal. This takes the dynamic `array<str>` handle plus both
     // non-unit lower bounds and the outer stride through descriptor globals;
@@ -5292,6 +5302,44 @@ fn algol_nested_procedure_captures_three_dimensional_real_array_on_every_availab
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested 3-D real-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_four_dimensional_integer_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("integer array values[-1:0, 2:3, 5:6, 8:9]")
+                && program
+                    .src
+                    .contains("procedure setvalues(a); value a; integer array a")
+                && program
+                    .src
+                    .contains("procedure populate; begin a[-1,2,5,8] := 30")
+        })
+        .expect("the nested 4-D ALGOL integer-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D integer-array execution did not complete"
             );
             continue;
         };

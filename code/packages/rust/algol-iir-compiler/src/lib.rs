@@ -5827,6 +5827,69 @@ mod tests {
     }
 
     #[test]
+    fn nested_procedure_captures_four_dimensional_integer_array_parameter() {
+        let src = "begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; \
+                   procedure setvalues(a); value a; integer array a; \
+                     begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; \
+                           populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; \
+                   setvalues(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "four_dimensional_integer_array_formal_capture")
+            .expect("compiles");
+        let setvalues = module
+            .get_function("setvalues")
+            .expect("setvalues function exists");
+        assert_eq!(
+            setvalues.params,
+            vec![
+                ("a".to_string(), "array<i64>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+                (array_param_stride_slot("a", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 3), "i64".to_string()),
+            ],
+            "a 4-D integer array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setvalues", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested integer writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<i64>"
+            }),
+            "nested integer writes must reload the captured 4-D array<i64> handle"
+        );
+    }
+
+    #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
