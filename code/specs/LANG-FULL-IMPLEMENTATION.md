@@ -49,6 +49,12 @@ that writes a four-dimensional integer-array value formal through its captured
 descriptor. A caller-side corner sum verifies the `array<i64>` handle, all four
 lower bounds, and all three row-major strides survive the call and capture boundary.
 
+**AL-4D-string-capture:** the seven-backend matrix executes a nested procedure
+that writes a four-dimensional string-array value formal through its captured
+descriptor. Lexical ordering plus equality and inequality verify the `array<str>`
+handle, all four lower bounds, and all three row-major strides survive the call and
+capture boundary.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that
