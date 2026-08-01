@@ -10335,6 +10335,7 @@ fn value_kind_label(kind: ValueKind) -> &'static str {
 fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
     match transport {
         BridgeTransport::LanHttp => "lan_http",
+        BridgeTransport::LanUdp => "lan_udp",
         BridgeTransport::Mdns => "mdns",
         BridgeTransport::Serial => "serial",
         BridgeTransport::Ble => "ble",
@@ -10346,6 +10347,7 @@ fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
 fn bridge_transport_from_label(transport: &str) -> Result<BridgeTransport, ApiError> {
     match transport {
         "lan_http" | "lan-http" | "http" => Ok(BridgeTransport::LanHttp),
+        "lan_udp" | "lan-udp" | "udp" => Ok(BridgeTransport::LanUdp),
         "mdns" => Ok(BridgeTransport::Mdns),
         "serial" => Ok(BridgeTransport::Serial),
         "ble" => Ok(BridgeTransport::Ble),
@@ -13695,6 +13697,19 @@ mod tests {
         assert_eq!(
             value_json(&value),
             r#"{"name":"Kitchen \"A\"","levels":[50]}"#
+        );
+    }
+
+    #[test]
+    fn lan_udp_bridge_transport_round_trips_through_api_labels() {
+        assert_eq!(bridge_transport_label(BridgeTransport::LanUdp), "lan_udp");
+        assert_eq!(
+            bridge_transport_from_label("lan_udp").unwrap(),
+            BridgeTransport::LanUdp
+        );
+        assert_eq!(
+            bridge_transport_from_label("udp").unwrap(),
+            BridgeTransport::LanUdp
         );
     }
 }

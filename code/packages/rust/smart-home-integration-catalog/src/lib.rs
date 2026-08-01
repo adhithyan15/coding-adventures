@@ -71,6 +71,7 @@ pub enum DiscoveryMechanism {
     Mdns,
     WsDiscovery,
     Ssdp,
+    UdpMulticast,
     Bluetooth,
     Usb,
     Dhcp,
@@ -113,6 +114,7 @@ pub enum PrimitiveFamily {
     Mdns,
     WsDiscovery,
     Ssdp,
+    Udp,
     Dhcp,
     LocalHttp,
     WebSocket,
@@ -151,6 +153,7 @@ impl PrimitiveFamily {
             Self::Mdns => "mdns",
             Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
+            Self::Udp => "udp",
             Self::Dhcp => "dhcp",
             Self::LocalHttp => "local_http",
             Self::WebSocket => "websocket",
@@ -44677,6 +44680,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "SSDP",
             "UPnP-style discovery for media and legacy LAN devices.",
         ),
+        PrimitiveFamily::Udp => (
+            "UDP",
+            "Bounded UDP datagrams for vendor discovery, state, and command transports.",
+        ),
         PrimitiveFamily::Dhcp => (
             "DHCP",
             "Network-observed address hints for LAN device candidates.",
@@ -44783,6 +44790,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::Mdns,
         PrimitiveFamily::WsDiscovery,
         PrimitiveFamily::Ssdp,
+        PrimitiveFamily::Udp,
         PrimitiveFamily::Dhcp,
         PrimitiveFamily::LocalHttp,
         PrimitiveFamily::WebSocket,
@@ -45014,19 +45022,32 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::None],
             "lifx",
         ),
-        local_device_entry(
-            "govee_light_local",
-            "Govee Lights Local",
-            "Local LAN control path for Govee lights.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
-            2,
-            &["smart_home.read", "smart_home.command.light"],
-            &[EntityKind::Light],
-            &[DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
-            &[AuthMode::None],
-            "govee_light_local",
-        ),
+        {
+            let mut entry = base_entry(
+                "govee_light_local",
+                "Govee Lights Local",
+                "Local Govee LAN UDP discovery, state, and light control.",
+                IntegrationCategory::LocalDevice,
+                ConnectivityClass::LocalPolling,
+                ImplementationStatus::FirstPartyRuntime,
+                2,
+                "govee_light_local",
+            )
+            .with_capabilities(&["smart_home.read", "smart_home.command.light"])
+            .with_entities(&[EntityKind::Light])
+            .with_discovery(&[DiscoveryMechanism::UdpMulticast, DiscoveryMechanism::Manual])
+            .with_auth(&[AuthMode::None])
+            .with_protocols(vec![ProtocolFamily::Vendor("govee_lan".to_string())]);
+            entry.required_primitives = vec![
+                PrimitiveFamily::NormalizedModel,
+                PrimitiveFamily::DiscoveryIndex,
+                PrimitiveFamily::Udp,
+                PrimitiveFamily::CommandMapping,
+                PrimitiveFamily::CapabilityPolicy,
+                PrimitiveFamily::Supervision,
+            ];
+            entry
+        },
         bluetooth_entry(
             "switchbot",
             "SwitchBot Bluetooth",
@@ -55067,6 +55088,7 @@ fn local_transport_primitives(
             DiscoveryMechanism::Mdns => Some(PrimitiveFamily::Mdns),
             DiscoveryMechanism::WsDiscovery => Some(PrimitiveFamily::WsDiscovery),
             DiscoveryMechanism::Ssdp => Some(PrimitiveFamily::Ssdp),
+            DiscoveryMechanism::UdpMulticast => Some(PrimitiveFamily::Udp),
             DiscoveryMechanism::Bluetooth => Some(PrimitiveFamily::BluetoothLowEnergy),
             DiscoveryMechanism::Usb => Some(PrimitiveFamily::Usb),
             DiscoveryMechanism::Dhcp => Some(PrimitiveFamily::Dhcp),
@@ -80698,6 +80720,39 @@ mod tests {
         assert!(wled
             .required_primitives
             .contains(&PrimitiveFamily::CommandMapping));
+    }
+
+    #[test]
+    fn govee_entry_exposes_executable_udp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let govee = find_entry(
+            &catalog,
+            &IntegrationId::trusted("govee_light_local"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            govee.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(govee.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            govee.supported_protocols,
+            vec![ProtocolFamily::Vendor("govee_lan".to_string())]
+        );
+        assert!(govee
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpMulticast));
+        assert!(govee.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::WebSocket));
+        assert!(!govee
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
     }
 
     #[test]
