@@ -3,6 +3,8 @@
 // tolerance — our from-scratch series should match the real functions.
 #include "iso_test.h"
 
+#include <cmath>
+#include <limits>
 #include <stdexcept>
 
 #include "trig.hpp"
@@ -50,6 +52,20 @@ int main() {
     ISO_CHECK_EQ_DBL(t::sqrt(2.0), 1.4142135623730951, eps);
     ISO_CHECK_EQ_DBL(t::sqrt(0.0), 0.0, eps);
     ISO_CHECK_EQ_DBL(t::sqrt(1e12), 1000000.0, 1e-4);
+    ISO_CHECK_EQ_DBL((t::sqrt(1e-100) - 1e-50) / 1e-50, 0.0, 1e-12);
+    ISO_CHECK_EQ_DBL(
+        (t::sqrt(std::numeric_limits<double>::denorm_min()) -
+         2.2227587494850775e-162) /
+            2.2227587494850775e-162,
+        0.0, 1e-12);
+    ISO_CHECK_EQ_DBL(
+        (t::sqrt(std::numeric_limits<double>::max()) -
+         1.3407807929942596e154) /
+            1.3407807929942596e154,
+        0.0, 1e-12);
+    ISO_CHECK(std::signbit(t::sqrt(-0.0)));
+    ISO_CHECK(std::isinf(t::sqrt(std::numeric_limits<double>::infinity())));
+    ISO_CHECK(std::isnan(t::sqrt(std::numeric_limits<double>::quiet_NaN())));
     {
         bool threw = false;
         try {

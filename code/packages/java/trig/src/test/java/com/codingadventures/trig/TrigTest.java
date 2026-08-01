@@ -231,6 +231,16 @@ class TrigTest {
     }
 
     @Test
+    void sqrtCoversFullBinary64Range() {
+        assertEquals(1e-50, Trig.sqrt(1e-100), 1e-62);
+        assertEquals(2.2227587494850775e-162, Trig.sqrt(Double.MIN_VALUE), 2.3e-174);
+        assertEquals(1.3407807929942596e154, Trig.sqrt(Double.MAX_VALUE), 1.4e142);
+        assertEquals(Long.MIN_VALUE, Double.doubleToRawLongBits(Trig.sqrt(-0.0)));
+        assertEquals(Double.POSITIVE_INFINITY, Trig.sqrt(Double.POSITIVE_INFINITY));
+        assertTrue(Double.isNaN(Trig.sqrt(Double.NaN)));
+    }
+
+    @Test
     void sqrtRoundtrip() {
         // sqrt(2) * sqrt(2) should recover 2.0
         double s = Trig.sqrt(2.0);

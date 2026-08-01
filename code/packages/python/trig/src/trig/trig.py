@@ -288,24 +288,35 @@ def sqrt(x: float) -> float:
 
     # sqrt(0) is exactly 0.
     if x == 0.0:
-        return 0.0
+        return x
+    if x == float("inf"):
+        return x
+
+    scaled = x
+    result_scale = 1.0
+    while scaled < 0.25:
+        scaled *= 4.0
+        result_scale *= 0.5
+    while scaled >= 4.0:
+        scaled *= 0.25
+        result_scale *= 2.0
 
     # Initial guess: x itself for x >= 1 (good for large numbers),
     # 1.0 for x < 1 (avoids dividing by a tiny number in the first step).
-    guess: float = x if x >= 1.0 else 1.0
+    guess: float = max(scaled, 1.0)
 
     # Iterate until convergence or safety limit.
     for _ in range(60):
-        next_guess = (guess + x / guess) / 2.0
+        next_guess = (guess + scaled / guess) / 2.0
 
         # Stop when improvement is below the precision floor.
         # 1e-15 * guess is relative precision; 1e-300 handles subnormals.
         if abs(next_guess - guess) < 1e-15 * guess + 1e-300:
-            return next_guess
+            return next_guess * result_scale
 
         guess = next_guess
 
-    return guess
+    return guess * result_scale
 
 
 # ---------------------------------------------------------------------------

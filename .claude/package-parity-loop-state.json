@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9390,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "5b5cb01273be03cdd018eed9786f2d62c14e1225",
+    "revision": "41622fa7896a45b6001ea3cf1e7f5da5c86be161",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1201,
-    "implementation_package_slots": 4345,
+    "implementation_identities": 1202,
+    "implementation_package_slots": 4346,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 751,
-    "singleton_missing_slots": 10514,
-    "rust_singletons": 556,
+    "singleton_packages": 752,
+    "singleton_missing_slots": 10528,
+    "rust_singletons": 557,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -316,6 +316,9 @@
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
+        "build-tool-cli-parser-corpus",
+        "build-tool-starlark-metering-corpus",
+        "build-tool-validation-oracle-corpus",
         "build-tool-execution-semantics-corpus"
       ],
       "branch": null,
@@ -392,13 +395,22 @@
       "notes": "Discovered during the post-#9323 security audit after PR #9324 added argument_verify_e2e.rs. Audit the package's pre-existing filesystem, environment, process, and stdout use; isolate test-harness authority from the publishable runtime profile; add truthful manifests; and obtain Layer-5 approval for every nonempty profile."
     },
     {
+      "id": "ocaml-build-substrate-process-free-core",
+      "title": "Integrate OCaml discovery, resolution, hashing, and validation into the process-free Go substrate",
+      "status": "pending",
+      "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the 41622fa7 post-merge security and leverage audit. Deliver the repository-owned, process-free OCaml build substrate now: language detection, package discovery, opam/Dune dependency resolution, source hashing, validator support, shard cost, affected-node behavior, and CI workflow markers. Do not claim execution conformance, opam-switch serialization, or promotion; those remain gated on the canonical Go oracle and execution contract."
+    },
+    {
       "id": "ocaml-build-substrate",
       "title": "Integrate OCaml into the canonical Go build substrate",
       "status": "pending",
-      "depends_on": ["ocaml-infrastructure", "ocaml-ci-toolchain", "build-tool-go-oracle"],
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-go-oracle"],
       "branch": null,
       "pr_number": null,
-      "notes": "Add discovery, opam/Dune dependency resolution, source hashing, opam-switch serialization, language detection, validator support, shard cost, affected-node behavior, and CI workflow markers."
+      "notes": "Complete the execution-coupled OCaml build substrate after the process-free core lands: opam-switch serialization, canonical execution fixtures, and final Go-oracle conformance."
     },
     {
       "id": "ocaml-representative-core",
@@ -470,20 +482,29 @@
     {
       "id": "phy00-phy01-language-neutral-fixtures",
       "title": "Define shared language-neutral PHY00 trig and PHY01 wave fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-trig-wave"],
       "branch": "codex/phy00-phy01-conformance-fixtures",
       "pr_number": 9390,
-      "notes": "Ready-for-review PR #9390. Selected after #9383 merged because the shared corpus is a repository-owned dependency for both tracked PHY00/PHY01 cross-lane hardening items. Defines a closed 53-case Draft 2020-12 oracle, strict JSON and binary64 semantics, operation-specific outcomes, exact corpus membership, an authority-free generated Dart mirror, and an always-on consumer CI reverse edge. Validation: 14 Python oracle tests; Dart format/analyze and 41 trig plus 37 wave tests; 100% production line coverage in both packages; real incremental build-tool execution for exactly trig and wave; full build-tool conformance groups; Go test/vet/build; collision-clean 1,201-identity parity report; zero-delta BUILD validation against main; state, YAML/JSON, generated-sync, diff, dependency, and security checks; and independent contract, fixture, and security re-audits."
+      "notes": "Merged PR #9390 at 41622fa7896a45b6001ea3cf1e7f5da5c86be161 on 2026-07-31 after all fixture-consumer, Linux, macOS, Windows, detect, and CodeQL checks passed. Selected after #9383 merged because the shared corpus is a repository-owned dependency for both tracked PHY00/PHY01 cross-lane hardening items. Defines a closed 53-case Draft 2020-12 oracle, strict JSON and binary64 semantics, operation-specific outcomes, exact corpus membership, an authority-free generated Dart mirror, and an always-on consumer CI reverse edge. Validation: 14 Python oracle tests; Dart format/analyze and 41 trig plus 37 wave tests; 100% production line coverage in both packages; real incremental build-tool execution for exactly trig and wave; full build-tool conformance groups; Go test/vet/build; collision-clean 1,201-identity parity report; zero-delta BUILD validation against main; state, YAML/JSON, generated-sync, diff, dependency, and security checks; and independent contract, fixture, and security re-audits."
     },
     {
       "id": "phy00-small-sqrt-cross-lane-audit",
       "title": "Audit and backfill the full-range PHY00 square-root contract",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
+      "branch": "codex/phy00-sqrt-cross-lane-audit",
+      "pr_number": null,
+      "notes": "Selected after merged PR #9390 and the collision-clean 41622fa7 inventory because PHY00 is the foundational numeric dependency beneath PHY01 and the shared corpus now makes the known tiny/subnormal defect testable across all 15 established lanes plus emerging C/C++. Implemented the shared full-range binary64 contract in C, C++, C#, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript; Dart already conformed. The implementation uses power-of-four normalization, relative Newton convergence, infinity handling where the runtime represents infinity, signed-zero preservation, NaN propagation where representable, and lane-native negative-input errors without delegating to host square-root functions. Shared boundary tests cover sqrt(2), 1e-100, the minimum subnormal, the maximum finite value, negative zero, positive infinity, NaN, and negative inputs, with an explicit BEAM applicability exception. Local validation covers all 17 lane test suites, measured production coverage in C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, Python, Ruby, Swift, and TypeScript, plus Go coverage; Rust coverage instrumentation passed all 49 tests but Windows rejected the generated llvm-cov command because the monorepo workspace exclusion expression exceeded the command-line limit. Lint, vet, strict native compilation, package builds, build-file detection, fixture validation, parity collision checks, diff checks, and source security scans also pass, apart from the already-tracked 73 repository-wide standalone BUILD_windows integrity failures outside trig and pre-existing platform formatter/harness limitations."
+    },
+    {
+      "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
+      "title": "Audit tiny and signed-zero PHY00 arctangent behavior",
+      "status": "pending",
+      "depends_on": ["phy00-small-sqrt-cross-lane-audit"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by security review of the Dart port. Existing lanes commonly start Newton iteration at 1.0 for values below one, which can exhaust a fixed iteration budget before converging for tiny normal or subnormal inputs. Audit every lane and backfill power-of-four normalization, infinity handling, signed-zero preservation, and shared boundary vectors without delegating to opaque standard-library square root implementations."
+      "notes": "Discovered during the full-range square-root security audit. Every existing atan lane returns a literal positive zero for negative-zero input, and half-angle reduction underflows at the binary64 subnormal floor. Add shared fixture cases and a small-argument identity fast path that returns the input before half-angle reduction; retain reciprocal reduction for large and infinite inputs."
     },
     {
       "id": "phy01-nonfinite-validation-backfill",
@@ -646,7 +667,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 556, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 557, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -655,7 +676,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, and smart-home-home-assistant-history; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. Home Assistant migration, export, and history contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, and smart-home-home-assistant-definitions; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. Home Assistant migration, export, history, and definitions contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
     },
     {
       "id": "matter-portable-core-extraction-and-conformance",
@@ -680,12 +701,22 @@
     },
     {
       "id": "smart-home-mqtt-integration-security-hardening",
-      "title": "Declare MQTT host capabilities and replace ambient credentials with Vault leases",
+      "title": "Harden MQTT transport, credentials, limits, and redaction",
       "status": "pending",
-      "depends_on": ["rust-singletons-20260730-classification"],
+      "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the 3b025282e post-merge singleton audit. The Rust MQTT integration owns live network, environment, clock, console, credential, and runtime-mutation behavior but has no required_capabilities.json, and its CLI reads MQTT username/password directly from ambient environment variables despite D23's Vault-lease rule. Add truthful reviewed capability metadata, Vault-mediated credential delivery, redacted error paths, and focused integration tests before treating the native-source classification as complete."
+      "notes": "Discovered in the 3b025282e post-merge singleton audit and decoupled from broad classification during the 41622fa7 security audit. The Rust MQTT integration owns live network, environment, clock, console, credential, and runtime-mutation behavior, and its CLI reads MQTT username/password directly from ambient environment variables despite D23's Vault-lease rule. Deliver repository-local Vault-mediated credential delivery, secure transport, bounded resources, redacted error paths, and focused integration tests without claiming Layer 5 capability approval."
+    },
+    {
+      "id": "smart-home-mqtt-integration-capability-layer5-evidence",
+      "title": "Approve the MQTT integration's truthful nonempty capability profile",
+      "status": "pending",
+      "depends_on": ["smart-home-mqtt-integration-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the 41622fa7 security audit. After repository-local hardening defines the narrow runtime and test-harness authorities, a maintainer must provide hardware-key-backed Layer 5 approval evidence for the resulting nonempty capability profiles before publication or privileged deployment."
     },
     {
       "id": "home-assistant-history-portable-core-extraction-and-conformance",
@@ -698,12 +729,22 @@
     },
     {
       "id": "home-assistant-history-host-security-hardening",
-      "title": "Immediately harden Home Assistant history authority and transport",
+      "title": "Immediately harden Home Assistant history transport and host boundary",
       "status": "pending",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the c6457e908 post-merge security audit and made independent of portable-core extraction during the fixture-slice re-audit. Add separate truthful runtime and test-harness capability profiles with Layer 5 approval; replace ambient HOME_ASSISTANT_TOKEN intake with Vault-mediated leases; require wss except explicitly authorized loopback fixtures; impose connection, byte, entity, state, attribute, artifact, and time-window ceilings; centrally redact every host error; and use exclusive no-follow temporary creation plus platform-correct durable atomic replacement."
+      "notes": "Discovered in the c6457e908 post-merge security audit and made independent of portable-core extraction during the fixture-slice re-audit. Deliver the repository-local hardening: replace ambient HOME_ASSISTANT_TOKEN intake with Vault-mediated leases; require wss except explicitly authorized loopback fixtures; impose connection, byte, entity, state, attribute, artifact, and time-window ceilings; centrally redact every host error; and use exclusive no-follow temporary creation plus platform-correct durable atomic replacement. Do not claim Layer 5 approval; the separate evidence item owns that external gate."
+    },
+    {
+      "id": "home-assistant-history-capability-layer5-evidence",
+      "title": "Approve Home Assistant history runtime and test-harness capability profiles",
+      "status": "pending",
+      "depends_on": ["home-assistant-history-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the 41622fa7 security audit. Once repository-local hardening establishes the narrow runtime and test-harness authorities, a maintainer must provide hardware-key-backed Layer 5 approval evidence for every nonempty profile before publication or privileged deployment."
     },
     {
       "id": "home-assistant-history-host-refactoring",
@@ -716,6 +757,46 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the c6457e908 fixture-slice security re-audit. After the urgent authority boundary is hardened and the deterministic core is extracted, narrow the Rust host to WebSocket collection, runtime application, artifact I/O, clock/reporting effects, and CLI orchestration without delaying the security remediation on the larger refactor."
+    },
+    {
+      "id": "home-assistant-definitions-portable-core-extraction-and-conformance",
+      "title": "Extract and fixture the portable Home Assistant definitions core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the 41622fa7 inventory after PR #9386 added the Rust-only definitions collector. Separate deterministic safe-subset validation and normalization, state and time-pattern triggers, conditions, scene/action mapping, ordering, uniqueness, fingerprints, reports, and diagnostics from WebSocket/HTTP/TLS collection, credentials, artifact I/O, clock, and CLI orchestration; define language-neutral fixtures before expanding the portable core across lanes."
+    },
+    {
+      "id": "home-assistant-definitions-host-security-hardening",
+      "title": "Immediately harden Home Assistant definitions transport and host boundary",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the 41622fa7 security audit and intentionally independent of broad singleton classification. Replace ambient administrator-token intake with Vault-mediated leases; reject plaintext HTTP and WebSocket transports except explicit loopback fixtures; bound requests, definitions, diagnostics, artifacts, and timeouts; centrally redact server-provided error text; and replace predictable link-following temporary output with exclusive no-follow creation plus platform-correct durable atomic replacement. Do not claim Layer 5 capability approval."
+    },
+    {
+      "id": "home-assistant-definitions-capability-layer5-evidence",
+      "title": "Approve Home Assistant definitions runtime and test-harness capability profiles",
+      "status": "pending",
+      "depends_on": ["home-assistant-definitions-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered during the 41622fa7 security audit. The new collector currently lacks required_capabilities.json despite environment, filesystem, network, time, and stdout authority. After repository-local hardening narrows runtime and test-harness authority, a maintainer must provide hardware-key-backed Layer 5 approval evidence for every nonempty profile."
+    },
+    {
+      "id": "home-assistant-definitions-host-refactoring",
+      "title": "Refactor the hardened Home Assistant definitions host around the portable core",
+      "status": "pending",
+      "depends_on": [
+        "home-assistant-definitions-portable-core-extraction-and-conformance",
+        "home-assistant-definitions-host-security-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the urgent host boundary is hardened and the deterministic core is extracted, narrow the Rust host to WebSocket/HTTP/TLS collection, Vault leases, artifact I/O, clock/reporting effects, and CLI orchestration without delaying security remediation on the larger refactor."
     },
     {
       "id": "c-cpp-graduation",

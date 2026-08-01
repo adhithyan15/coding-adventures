@@ -24,6 +24,7 @@
 #define CA_TRIG_HPP
 
 #include <stdexcept>
+#include <limits>
 
 namespace ca {
 namespace trig {
@@ -59,14 +60,27 @@ inline double d_fmod(double x, double m) { return x - m * d_trunc(x / m); }
 
 // Square root via Newton's method, no domain check (callers guarantee x >= 0).
 inline double sqrt_unchecked(double x) {
-    if (x == 0.0) return 0.0;
-    double guess = x >= 1.0 ? x : 1.0;
+    if (x == 0.0) return x;
+    if (x > std::numeric_limits<double>::max()) return x;
+    double scaled = x;
+    double result_scale = 1.0;
+    while (scaled < 0.25) {
+        scaled *= 4.0;
+        result_scale *= 0.5;
+    }
+    while (scaled >= 4.0) {
+        scaled *= 0.25;
+        result_scale *= 2.0;
+    }
+    double guess = scaled >= 1.0 ? scaled : 1.0;
     for (int i = 0; i < 60; i++) {
-        double next = (guess + x / guess) / 2.0;
-        if (d_abs(next - guess) < 1e-15 * guess + 1e-300) return next;
+        double next = (guess + scaled / guess) / 2.0;
+        if (d_abs(next - guess) < 1e-15 * guess + 1e-300) {
+            return next * result_scale;
+        }
         guess = next;
     }
-    return guess;
+    return guess * result_scale;
 }
 
 // Reduce x into [-PI, PI], preserving any 2*PI-periodic function's value.

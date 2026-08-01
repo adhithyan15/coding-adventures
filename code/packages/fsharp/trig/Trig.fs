@@ -60,19 +60,32 @@ module Trig =
             raise (ArgumentOutOfRangeException("x", x, "sqrt: domain error -- input is negative"))
 
         elif x = 0.0 then
-            0.0
+            x
+
+        elif Double.IsPositiveInfinity x then
+            x
 
         else
-            let mutable guess = if x >= 1.0 then x else 1.0
+            let mutable scaled = x
+            let mutable resultScale = 1.0
+            while scaled < 0.25 do
+                scaled <- scaled * 4.0
+                resultScale <- resultScale * 0.5
+            while scaled >= 4.0 do
+                scaled <- scaled * 0.25
+                resultScale <- resultScale * 2.0
+
+            let mutable guess = if scaled >= 1.0 then scaled else 1.0
+            let mutable converged = false
 
             for _ in 0 .. 59 do
-                let next = (guess + x / guess) / 2.0
-                if abs (next - guess) < 1e-15 * guess + 1e-300 then
-                    guess <- next
-                else
+                if not converged then
+                    let next = (guess + scaled / guess) / 2.0
+                    if abs (next - guess) < 1e-15 * guess + 1e-300 then
+                        converged <- true
                     guess <- next
 
-            guess
+            guess * resultScale
 
     let tan (x: float) =
         let sine = sin x

@@ -288,29 +288,44 @@ public final class Trig {
 
         // sqrt(0) is exactly 0.
         if (x == 0.0) {
-            return 0.0;
+            return x;
+        }
+
+        if (x == Double.POSITIVE_INFINITY) {
+            return x;
+        }
+
+        double scaled = x;
+        double resultScale = 1.0;
+        while (scaled < 0.25) {
+            scaled *= 4.0;
+            resultScale *= 0.5;
+        }
+        while (scaled >= 4.0) {
+            scaled *= 0.25;
+            resultScale *= 2.0;
         }
 
         // Initial guess: x itself for x >= 1 (good for large numbers),
         // 1.0 for x < 1 (avoids dividing by a tiny number in the first step).
-        double guess = x >= 1.0 ? x : 1.0;
+        double guess = scaled >= 1.0 ? scaled : 1.0;
 
         // Iterate up to 60 times. Quadratic convergence means 60 is an extreme
         // safety margin; typical convergence happens in 15 or fewer iterations.
         for (int i = 0; i < 60; i++) {
-            double next = (guess + x / guess) / 2.0;
+            double next = (guess + scaled / guess) / 2.0;
 
             // Convergence criterion: stop when improvement is negligible.
             // 1e-15 * guess handles relative precision near large values.
             // 1e-300 is a floor to handle subnormal (near-zero) inputs safely.
             if (Math.abs(next - guess) < 1e-15 * guess + 1e-300) {
-                return next;
+                return next * resultScale;
             }
 
             guess = next;
         }
 
-        return guess;
+        return guess * resultScale;
     }
 
     // =========================================================================

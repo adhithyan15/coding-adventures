@@ -7,6 +7,7 @@
  * comparisons. See trig.h for the mathematical background of each function.
  */
 #include "trig.h"
+#include <float.h>
 
 /* 2*PI — a full revolution; pre-computed to save a multiply in range reduction. */
 #define TRIG_TWO_PI (2.0 * TRIG_PI)
@@ -48,22 +49,33 @@ static double d_fmod(double x, double m) { return x - m * d_trunc(x / m); }
  * See trig_sqrt for the documented public entry point. */
 static double sqrt_unchecked(double x) {
     if (x == 0.0) {
-        return 0.0;
+        return x;
     }
-    /* Start high enough to converge quickly: x for x >= 1, else 1.0 so the
-     * first step does not divide by a tiny number. */
-    double guess = x >= 1.0 ? x : 1.0;
+    if (x > DBL_MAX) {
+        return x;
+    }
+    double scaled = x;
+    double result_scale = 1.0;
+    while (scaled < 0.25) {
+        scaled *= 4.0;
+        result_scale *= 0.5;
+    }
+    while (scaled >= 4.0) {
+        scaled *= 0.25;
+        result_scale *= 2.0;
+    }
+    double guess = scaled >= 1.0 ? scaled : 1.0;
     int i;
     for (i = 0; i < 60; i++) {
-        double next = (guess + x / guess) / 2.0;
+        double next = (guess + scaled / guess) / 2.0;
         /* Stop when the improvement is negligible. The relative term handles
          * large values; the 1e-300 floor keeps subnormal inputs safe. */
         if (d_abs(next - guess) < 1e-15 * guess + 1e-300) {
-            return next;
+            return next * result_scale;
         }
         guess = next;
     }
-    return guess;
+    return guess * result_scale;
 }
 
 /* Reduce `x` into [-PI, PI], preserving the value of any 2*PI-periodic

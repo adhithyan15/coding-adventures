@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Normalize square-root inputs by powers of four before Newton iteration so the
+  complete binary64 exponent range converges without host square-root calls.
+
+### Fixed
+
+- Preserve negative zero, return positive infinity, propagate NaN, and retain
+  the lane-native negative-input error.
+- Move negative-input rejection outside the operation callback so `Sqrt`
+  propagates its documented panic instead of returning the operation fallback.
+
+### Tests
+
+- Cover the shared PHY00 square-root boundaries from
+  [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json) with
+  relative-error assertions for finite nonzero results.
+
 ## [0.3.0] - 2026-04-03
 
 ### Added

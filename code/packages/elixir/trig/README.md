@@ -1,5 +1,14 @@
 # Trig
 
+## Full-range square root
+
+`Trig.sqrt/1` normalizes finite binary64 values by powers of four into
+`[0.25, 4)` before at most 60 Newton steps, preserves negative zero, and rejects
+negative inputs with `ArithmeticError`. Erlang/OTP does not expose IEEE-754 NaN
+or infinity as ordinary BEAM floats, so those two shared fixture cases are
+explicitly not applicable in this lane. Finite boundary behavior is checked
+against [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json).
+
 Trigonometric functions implemented from first principles using Maclaurin (Taylor) series. No external dependencies, no `:math` module — just basic arithmetic building up to `sin`, `cos`, and angle conversions.
 
 ## Layer

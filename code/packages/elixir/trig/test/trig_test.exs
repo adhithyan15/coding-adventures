@@ -238,6 +238,22 @@ defmodule TrigTest do
       assert_in_delta Trig.sqrt(1.0e10), 1.0e5, 1.0e-4
     end
 
+    test "covers the finite binary64 exponent range and signed zero" do
+      tiny = Trig.sqrt(1.0e-100)
+      assert abs(tiny - 1.0e-50) / 1.0e-50 <= 1.0e-12
+
+      subnormal = Trig.sqrt(5.0e-324)
+      expected_subnormal = 2.2227587494850775e-162
+      assert abs(subnormal - expected_subnormal) / expected_subnormal <= 1.0e-12
+
+      largest = Trig.sqrt(1.7976931348623157e308)
+      expected_largest = 1.3407807929942596e154
+      assert abs(largest - expected_largest) / expected_largest <= 1.0e-12
+
+      <<sign::1, _::63>> = <<Trig.sqrt(-0.0)::float-64>>
+      assert sign == 1
+    end
+
     test "sqrt(2) * sqrt(2) ≈ 2.0 (roundtrip)" do
       s = Trig.sqrt(2)
       assert_in_delta s * s, 2.0, @tolerance

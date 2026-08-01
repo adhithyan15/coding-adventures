@@ -93,6 +93,20 @@ spec = do
             mapM_ checkSquareRoot cases
         it "rejects negative input" $
             sqrt (-1.0) `shouldSatisfy` isLeft
+        it "covers the full binary64 range and special values" $ do
+            let relative actual expected = abs (actual - expected) / abs expected <= 1e-12
+            tiny <- rightValue $ sqrt 1e-100
+            tiny `shouldSatisfy` (`relative` 1e-50)
+            subnormal <- rightValue $ sqrt (encodeFloat 1 (-1074))
+            subnormal `shouldSatisfy` (`relative` 2.2227587494850775e-162)
+            largest <- rightValue $ sqrt (encodeFloat (2 ^ (53 :: Int) - 1) (1023 - 52))
+            largest `shouldSatisfy` (`relative` 1.3407807929942596e154)
+            negativeZero <- rightValue $ sqrt (-0.0)
+            negativeZero `shouldSatisfy` isNegativeZero
+            positiveInfinity <- rightValue $ sqrt (1.0 / 0.0)
+            positiveInfinity `shouldSatisfy` isInfinite
+            notANumber <- rightValue $ sqrt (0.0 / 0.0)
+            notANumber `shouldSatisfy` isNaN
 
     describe "tan" $ do
         it "matches reference values" $ do

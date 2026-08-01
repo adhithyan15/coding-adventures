@@ -106,10 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `5b5cb0127` after merged Dart
-`trig` and `wave`, Rust `smart-home-home-assistant-history`, Mosaic browser
-host, Spice validation, and Algol closure work. It contains 1,201 normalized
-implementation identities across 4,345 established-lane package
+inventory was regenerated on July 31, 2026 at `41622fa78` after merged Dart
+`trig` and `wave`, the PHY00/PHY01 shared fixture corpus, Rust
+`smart-home-home-assistant-definitions`, Mosaic browser host, Spice validation,
+and Algol closure work. It contains 1,202 normalized implementation identities
+across 4,346 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -117,18 +118,20 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 751 | 10,514 |
+| Present in one language | 752 | 10,528 |
 
 The loop must not start by attempting 10,514 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#9383 inventory at
-`5b5cb01273be03cdd018eed9786f2d62c14e1225` is collision-clean at 1,201
-normalized implementation identities, 4,345 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 751 singletons, and
-zero unknown language buckets. The newly discovered Rust-only Home Assistant
-history package is now explicitly owned by the singleton classification,
-portable-core extraction, and native-host security backlog.
+The post-#9390 inventory at
+`41622fa7896a45b6001ea3cf1e7f5da5c86be161` is collision-clean at 1,202
+normalized implementation identities, 4,346 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 752 singletons, 557
+Rust singletons, zero canonical collisions, and zero unknown language buckets.
+The sole new identity since the previous inventory is Rust-only
+`smart-home-home-assistant-definitions`; its portable-core extraction,
+repository-local host hardening, externally approved capability profile, and
+post-extraction host refactor now have explicit owners.
 
 The July 31 lane audit is:
 
@@ -146,7 +149,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 966 | 0 | 100% |
+| Rust | 967 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -232,17 +235,22 @@ reconciliation. The pure `dart-trig-wave` child neither executes nor publishes
 the generator and introduces only empty capability profiles.
 
 The child review also exposed three separately owned follow-ups rather than
-silently widening this serial delivery slice: PHY00/PHY01 lack a machine-
-readable language-neutral fixture corpus; existing PHY00 lanes need a full-
-range tiny/subnormal square-root audit; and existing PHY01 lanes need finite-
-input and overflow-safe evaluation reconciliation. The backlog now records
-these as `phy00-phy01-language-neutral-fixtures`,
-`phy00-small-sqrt-cross-lane-audit`, and
-`phy01-nonfinite-validation-backfill`, with the shared corpus preceding the
-cross-lane remediations. After #9383 merged, dependency/leverage review selected
-the shared fixture corpus as the one active slice because it is repository-owned
-and immediately unlocks both cross-lane hardening items; the build-tool critical
-path remains blocked on external immutable-runner and attester provisioning.
+silently widening that delivery slice: a machine-readable language-neutral
+PHY00/PHY01 fixture corpus, a full-range tiny/subnormal PHY00 square-root audit,
+and finite-input and overflow-safe PHY01 evaluation reconciliation. Merged PR
+#9390 delivered the closed 53-case shared corpus and its first always-on Dart
+consumer. The collision-clean post-merge inventory and parallel dependency,
+fixture, and security audits then selected
+`phy00-small-sqrt-cross-lane-audit` as the one active slice because PHY00 is the
+foundational numeric dependency beneath PHY01 and the shared oracle now makes
+the known boundary defect testable across all 15 established lanes plus the
+emerging C and C++ implementations. `phy01-nonfinite-validation-backfill`
+follows it. The square-root numerical audit also discovered a separate
+`phy00-atan-tiny-signed-zero-cross-lane-audit`: current half-angle reduction
+underflows at the subnormal floor and loses the sign of negative zero, so that
+work is now tracked behind the square-root slice rather than expanding it.
+The build-tool execution critical path remains blocked on external
+immutable-runner and attester provisioning.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -250,7 +258,7 @@ grammar sources rather than independently handwritten.
 
 ## Priority 2: Complete The High-Consensus Core
 
-The 172 packages present in at least ten implementation languages need 277
+The 172 packages present in at least ten implementation languages need 275
 ports to reach all 15. After Priority 1, select work in this order:
 
 | Language lane | Current high-consensus gaps | Pairing rule |
@@ -917,10 +925,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 556 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 557 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-31 inventories added sixteen Rust singleton identities that now
+The July 30-August 1 inventories added seventeen Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -965,6 +973,21 @@ The urgent capability, Vault, transport, limit, redaction, and write hardening
 depends only on the merged capability-taxonomy contract; it must not wait for
 portable-core extraction. A later host refactor can depend on both the hardened
 boundary and the extracted core.
+
+The seventeenth identity, `smart-home-home-assistant-definitions`, is the same
+kind of deliberate split rather than a blind fourteen-lane port. Its safe-
+subset validation and normalization, state and time-pattern triggers,
+conditions, scene/action mapping, ordering, uniqueness, fingerprints, reports,
+and diagnostics are fixture-driven portable-core candidates. WebSocket and
+HTTP/TLS collection, administrator credentials, artifact I/O, wall clock,
+console output, and CLI orchestration stay in the Rust native host. The current
+host lacks `required_capabilities.json`, accepts plaintext transports, reads an
+ambient administrator token, persists server-provided error text, and creates
+a predictable link-following temporary output. Repository-local transport,
+Vault, limit, redaction, and durable no-follow write hardening must land without
+claiming capability approval; a separately blocked Layer 5 item owns the
+hardware-key-backed approval evidence, and the later host refactor depends on
+both the portable core and hardened boundary.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1184,18 +1207,21 @@ macOS, Windows, and CodeQL checks. The collision-checked post-merge inventory
 found thirteen Dart-only 14-of-15 gaps. The serial loop selected
 `dart-trig-wave` because PHY00 `trig` is a dependency-free numeric leaf and
 PHY01 `wave` is its direct consumer. PR #9383 merged that pair with green Linux,
-macOS, Windows, and CodeQL checks. The refreshed collision-clean inventory has
-11 remaining Dart-only frontier gaps and one newly owned Rust history singleton.
-The next build-tool successor remains `build-tool-bootstrap-execution-fixture`,
-which is still blocked on the Linux OCI enforcement chain.
+macOS, Windows, and CodeQL checks, and PR #9390 then merged the closed shared
+PHY00/PHY01 oracle plus its always-on Dart consumer. The refreshed
+collision-clean inventory has 11 remaining Dart-only frontier gaps and one
+newly owned Rust Home Assistant definitions singleton. The next build-tool
+execution successor remains `build-tool-bootstrap-execution-fixture`, which is
+still blocked on the Linux OCI enforcement chain.
 
 Final Dart review hardened the selected implementation for subnormal square
 roots, infinity and signed zero, non-finite wave parameters and time, angular-
 frequency overflow, zero-amplitude evaluation, and extreme finite products.
-The equivalent existing-lane audits and the missing shared PHY00/PHY01 fixture
-corpus remain explicit dependent backlog items rather than unowned gaps. The
-serial loop selected the shared language-neutral corpus next because it unlocks
-both existing-lane audits without claiming their remediation in advance.
+The shared PHY00/PHY01 corpus is now merged. The serial loop selected the
+existing-lane PHY00 square-root audit next because it is the foundational
+dependency and its tiny-normal, minimum-subnormal, maximum-finite, infinity,
+NaN, and signed-zero cases are now normative; the PHY01 audit remains the
+explicit successor.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in
@@ -1227,6 +1253,16 @@ land before final adapter parity:
 - model deterministic inline inputs and semantic oracles for dependency,
   standalone-prerequisite, Starlark-declaration, identity, toolchain, and path
   validation checks before admitting them to the closed v1 schema.
+
+The 41622fa7 dependency audit made those three gates direct prerequisites of
+`build-tool-go-oracle`; the merged pure-domain umbrella alone cannot make the
+oracle ready while its CLI, Starlark-metering, and validation-oracle children
+remain pending. The same audit split `ocaml-build-substrate-process-free-core`
+from the execution-coupled OCaml substrate. Repository-owned OCaml discovery,
+opam/Dune resolution, hashing, validation, shard cost, affected-node behavior,
+and workflow markers can now land before external execution infrastructure,
+while opam-switch serialization, canonical execution conformance, and OCaml
+promotion remain gated on the Go oracle and trusted-execution contract.
 
 The Linux OCI review discovered eight additional dependency gates:
 

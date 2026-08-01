@@ -274,24 +274,38 @@ module Trig
     raise ArgumentError, "sqrt: domain error — input #{x} is negative" if x < 0
 
     # sqrt(0) is exactly 0.
-    return 0.0 if x == 0.0
+    return x if x == 0.0
+    return x if x.infinite? == 1
+
+    scaled = x
+    result_scale = 1.0
+    while scaled < 0.25
+      scaled *= 4.0
+      result_scale *= 0.5
+    end
+    while scaled >= 4.0
+      scaled *= 0.25
+      result_scale *= 2.0
+    end
 
     # Initial guess: x itself works for x >= 1 (large values converge faster
     # from x than from 1). For x < 1, start at 1.0 to avoid tiny denominators.
-    guess = x >= 1.0 ? x : 1.0
+    guess = scaled >= 1.0 ? scaled : 1.0
 
     # Iterate to convergence (or up to 60 steps as a safety cap).
     60.times do
-      next_guess = (guess + x / guess) / 2.0
+      next_guess = (guess + scaled / guess) / 2.0
 
       # Stop when improvement is below the precision floor.
       # 1e-15 * guess is relative precision; 1e-300 handles subnormals.
-      return next_guess if (next_guess - guess).abs < 1e-15 * guess + 1e-300
+      if (next_guess - guess).abs < 1e-15 * guess + 1e-300
+        return next_guess * result_scale
+      end
 
       guess = next_guess
     end
 
-    guess
+    guess * result_scale
   end
 
   # ---------------------------------------------------------------------------

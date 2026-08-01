@@ -242,6 +242,19 @@ fn sqrt_large() {
 }
 
 #[test]
+fn sqrt_covers_full_binary64_range() {
+    fn relative(actual: f64, expected: f64) -> bool {
+        (actual - expected).abs() / expected.abs() <= 1e-12
+    }
+    assert!(relative(sqrt(1e-100), 1e-50));
+    assert!(relative(sqrt(f64::from_bits(1)), 2.2227587494850775e-162));
+    assert!(relative(sqrt(f64::MAX), 1.3407807929942596e154));
+    assert!(sqrt(-0.0).is_sign_negative());
+    assert_eq!(sqrt(f64::INFINITY), f64::INFINITY);
+    assert!(sqrt(f64::NAN).is_nan());
+}
+
+#[test]
 fn sqrt_roundtrip() {
     // sqrt(2) * sqrt(2) should equal 2.0
     let s = sqrt(2.0);

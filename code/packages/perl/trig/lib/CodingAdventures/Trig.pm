@@ -328,27 +328,39 @@ sub sqrt_approx {
     die "sqrt_approx: domain error — input $x is negative\n" if $x < 0;
 
     # sqrt(0) = 0 exactly.
-    return 0.0 if $x == 0.0;
+    return $x if $x == 0.0;
+    return $x if $x > 1.7976931348623157e308;
+
+    my $scaled = $x;
+    my $result_scale = 1.0;
+    while ( $scaled < 0.25 ) {
+        $scaled *= 4.0;
+        $result_scale *= 0.5;
+    }
+    while ( $scaled >= 4.0 ) {
+        $scaled *= 0.25;
+        $result_scale *= 2.0;
+    }
 
     # Initial guess: x itself for x >= 1, else 1.0.
     # For large x, starting at x converges faster than starting at 1.
     # For x in (0, 1), starting at 1.0 avoids dividing by a tiny number.
-    my $guess = ( $x >= 1.0 ) ? $x : 1.0;
+    my $guess = ( $scaled >= 1.0 ) ? $scaled : 1.0;
 
     # Iterate to convergence (up to 60 steps as a safety cap).
     for my $i ( 1 .. 60 ) {
-        my $next = ( $guess + $x / $guess ) / 2.0;
+        my $next = ( $guess + $scaled / $guess ) / 2.0;
 
         # Stop when improvement is negligibly small.
         # 1e-15 * $guess handles relative precision for large values.
         # 1e-300 is an absolute floor for subnormal inputs.
         my $improvement = abs( $next - $guess );
-        return $next if $improvement < 1e-15 * $guess + 1e-300;
+        return $next * $result_scale if $improvement < 1e-15 * $guess + 1e-300;
 
         $guess = $next;
     }
 
-    return $guess;
+    return $guess * $result_scale;
 }
 
 # ============================================================================
