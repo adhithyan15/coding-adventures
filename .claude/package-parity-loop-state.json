@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9395,
   "last_inventory": {
     "revision": "41622fa7896a45b6001ea3cf1e7f5da5c86be161",
     "schema_version": 3,
@@ -491,11 +491,11 @@
     {
       "id": "phy00-small-sqrt-cross-lane-audit",
       "title": "Audit and backfill the full-range PHY00 square-root contract",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
       "branch": "codex/phy00-sqrt-cross-lane-audit",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9390 and the collision-clean 41622fa7 inventory because PHY00 is the foundational numeric dependency beneath PHY01 and the shared corpus now makes the known tiny/subnormal defect testable across all 15 established lanes plus emerging C/C++. Implemented the shared full-range binary64 contract in C, C++, C#, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript; Dart already conformed. The implementation uses power-of-four normalization, relative Newton convergence, infinity handling where the runtime represents infinity, signed-zero preservation, NaN propagation where representable, and lane-native negative-input errors without delegating to host square-root functions. Shared boundary tests cover sqrt(2), 1e-100, the minimum subnormal, the maximum finite value, negative zero, positive infinity, NaN, and negative inputs, with an explicit BEAM applicability exception. Local validation covers all 17 lane test suites, measured production coverage in C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, Python, Ruby, Swift, and TypeScript, plus Go coverage; Rust coverage instrumentation passed all 49 tests but Windows rejected the generated llvm-cov command because the monorepo workspace exclusion expression exceeded the command-line limit. Lint, vet, strict native compilation, package builds, build-file detection, fixture validation, parity collision checks, diff checks, and source security scans also pass, apart from the already-tracked 73 repository-wide standalone BUILD_windows integrity failures outside trig and pre-existing platform formatter/harness limitations."
+      "pr_number": 9395,
+      "notes": "Ready-for-review PR #9395. Selected after merged PR #9390 and the collision-clean 41622fa7 inventory because PHY00 is the foundational numeric dependency beneath PHY01 and the shared corpus now makes the known tiny/subnormal defect testable across all 15 established lanes plus emerging C/C++. Implemented the shared full-range binary64 contract in C, C++, C#, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript; Dart already conformed. The implementation uses power-of-four normalization, relative Newton convergence, infinity handling where the runtime represents infinity, signed-zero preservation, NaN propagation where representable, and lane-native negative-input errors without delegating to host square-root functions. Shared boundary tests cover sqrt(2), 1e-100, the minimum subnormal, the maximum finite value, negative zero, positive infinity, NaN, and negative inputs, with an explicit BEAM applicability exception. Local validation covers all 17 lane test suites, measured production coverage in C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, Python, Ruby, Swift, and TypeScript, plus Go coverage; Rust coverage instrumentation passed all 49 tests but Windows rejected the generated llvm-cov command because the monorepo workspace exclusion expression exceeded the command-line limit. Lint, vet, strict native compilation, package builds, build-file detection, fixture validation, parity collision checks, diff checks, and source security scans also pass, apart from the already-tracked 73 repository-wide standalone BUILD_windows integrity failures outside trig and pre-existing platform formatter/harness limitations."
     },
     {
       "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
