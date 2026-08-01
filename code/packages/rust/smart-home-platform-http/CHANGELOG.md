@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added an operational browser dashboard for native migrated views, runtime
+  inventory and health, automation definitions and audit, pairing sessions,
+  state history, and command/authorization audit. The durable controller can
+  load validated raw or applied dashboard manifests before binding.
+- Added native dashboard-manifest and pairing-session list/detail routes.
 - Added a restart-safe automation runtime to the production controller, a local
   schedule worker, and native definition, evaluation, dry-run, and audit API
   routes with atomic persistence rollback.

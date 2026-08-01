@@ -6,6 +6,9 @@ repository-owned dashboard manifest. It uses the concrete
 `lovelace/dashboards/list`, `lovelace/config`, and
 `lovelace/resources/list` WebSocket commands.
 
+The manifest contract is owned by `smart-home-dashboard-core`, so migration
+output and the operational local dashboard share one validated schema.
+
 Standard entity, light, thermostat, sensor, tile, button, entities, glance,
 and history-graph cards are compiled to native entity-control, entity-list,
 and history widgets. Vertical stacks, horizontal stacks, grids, and section

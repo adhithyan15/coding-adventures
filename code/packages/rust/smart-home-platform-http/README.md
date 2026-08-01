@@ -25,6 +25,7 @@ stable local API responses for:
 - `/api/smart_home/readiness`
 - `/api/smart_home/controller_handoff`
 - `/api/smart_home/dashboard`
+- `/api/smart_home/dashboard_manifest`
 - `/api/smart_home/bootstrap`
 - `/api/smart_home/smoke`
 - `/api/smart_home/smoke_script`
@@ -40,6 +41,8 @@ stable local API responses for:
 - `/api/smart_home/devices/:device_id`
 - `/api/smart_home/bridges`
 - `/api/smart_home/bridges/:bridge_id`
+- `/api/smart_home/pairing_sessions`
+- `/api/smart_home/pairing_sessions/:session_id`
 - `/api/smart_home/rooms`
 - `/api/smart_home/rooms/:room_id`
 - `/api/smart_home/scenes`
@@ -61,6 +64,8 @@ stable local API responses for:
 - `DELETE /api/smart_home/desired_states/:entity_id`
 - `/api/smart_home/state_history`
 - `/api/smart_home/state_history/:event_id`
+- `/api/smart_home/automations`
+- `/api/smart_home/automation_audit`
 
 `POST /api/services/:domain/:service` accepts Home Assistant-style JSON targets
 and dispatches through `SmartHomeRuntime::execute_command_tool`, so runtime
@@ -122,10 +127,12 @@ to use for fixture-controller verification without scraping launch text.
 `sh` script using `curl`; set `SMART_HOME_BASE_URL` or `CURL` to override the
 defaults when the fixture controller runs on a custom address.
 
-The browser routes serve an embedded local dashboard shell over the same
-`web-core::WebApp`. The shell loads bootstrap, readiness, state, scene,
+The browser routes serve an embedded operational dashboard over the same
+`web-core::WebApp`. The shell loads bootstrap, readiness, native dashboard
+manifests, state, scene,
 desired-state, room, device, bridge, state-history, command-result audit,
-runtime event-log, authorization audit, capability-grant inventory, service
+runtime event-log, automation definitions and audit, pairing sessions,
+authorization audit, capability-grant inventory, service
 catalog, capability catalog, API catalog, and audit summary data from the
 native API routes and sends light on/off, light brightness, scene, and
 desired-state set/clear actions through the existing Home
@@ -178,6 +185,7 @@ reopen bounded replay slices without fetching the full audit tail.
 ## Dependencies
 
 - embeddable-http-server
+- smart-home-dashboard-core
 - smart-home-core
 - smart-home-runtime
 - smart-home-runtime-store
@@ -198,10 +206,14 @@ Run the production local controller against a durable runtime folder:
 ```bash
 cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
   --data-dir "$HOME/.coding-adventures/smart-home" \
+  --dashboard-manifest "$HOME/.coding-adventures/smart-home/dashboards.json" \
   --bind 127.0.0.1:8123
 ```
 
 `SMART_HOME_DATA_DIR` supplies the data folder when `--data-dir` is omitted.
+`SMART_HOME_DASHBOARD_MANIFEST` supplies the applied migration artifact or raw
+native manifest when `--dashboard-manifest` is omitted. Invalid and dry-run
+artifacts are rejected before the controller binds.
 The controller loads the latest `smart-home-runtime-store` snapshot before it
 binds, restores automation definitions, consumed trigger occurrences, and
 automation audit, uses wall-clock request timestamps, and saves the local API
@@ -258,6 +270,7 @@ curl http://127.0.0.1:8123/api/smart_home/health
 curl http://127.0.0.1:8123/api/smart_home/readiness
 curl http://127.0.0.1:8123/api/smart_home/controller_handoff
 curl http://127.0.0.1:8123/api/smart_home/dashboard
+curl http://127.0.0.1:8123/api/smart_home/dashboard_manifest
 curl http://127.0.0.1:8123/api/smart_home/bootstrap
 curl http://127.0.0.1:8123/api/smart_home/smoke
 curl http://127.0.0.1:8123/api/smart_home/smoke_script
@@ -276,6 +289,7 @@ curl 'http://127.0.0.1:8123/api/smart_home/entities?room_id=kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/capabilities?domain=light&commandable=true'
 curl 'http://127.0.0.1:8123/api/smart_home/devices?room_id=kitchen&health=online'
 curl 'http://127.0.0.1:8123/api/smart_home/bridges?integration_id=hue&transport=lan_http'
+curl 'http://127.0.0.1:8123/api/smart_home/pairing_sessions?status=pending_user_presence'
 curl 'http://127.0.0.1:8123/api/smart_home/rooms?sort=scene_count&state_gaps_only=true'
 curl 'http://127.0.0.1:8123/api/smart_home/rooms/kitchen'
 curl 'http://127.0.0.1:8123/api/smart_home/scenes?room_id=kitchen&scope=room'

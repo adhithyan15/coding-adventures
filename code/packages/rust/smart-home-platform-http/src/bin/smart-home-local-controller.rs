@@ -1,5 +1,6 @@
 use embeddable_http_server::HttpServerOptions;
 use smart_home_automation_runtime::{AutomationTriggerInput, SmartHomeAutomationRuntime};
+use smart_home_dashboard_core::parse_dashboard_manifest;
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
@@ -7,6 +8,7 @@ use smart_home_runtime::SmartHomeRuntime;
 use smart_home_runtime_store::SmartHomeRuntimeStore;
 use std::env;
 use std::error::Error;
+use std::fs;
 use std::io;
 use std::net::SocketAddr;
 use std::path::PathBuf;
@@ -19,21 +21,28 @@ use web_core::WebServer;
 const DEFAULT_BIND_ADDR: &str = "127.0.0.1:8123";
 const DEFAULT_DATA_DIR: &str = ".smart-home";
 const DASHBOARD_PENDING_WRITE_BYTES: usize = 256 * 1024;
-const USAGE: &str = "Usage: smart-home-local-controller [--bind ADDRESS] [--data-dir PATH]\n\
+const USAGE: &str = "Usage: smart-home-local-controller [--bind ADDRESS] [--data-dir PATH] [--dashboard-manifest PATH]\n\
                        \n\
                        Options:\n\
                          --bind ADDRESS   Local listen address (default: 127.0.0.1:8123)\n\
                          --data-dir PATH  Durable runtime folder (default: SMART_HOME_DATA_DIR or .smart-home)\n\
+                         --dashboard-manifest PATH  Applied native dashboard manifest (default: SMART_HOME_DASHBOARD_MANIFEST)\n\
                          -h, --help       Show this help";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ControllerConfig {
     bind_addr: String,
     data_dir: PathBuf,
+    dashboard_manifest: Option<PathBuf>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let Some(config) = config_from_args(env::args().skip(1), default_data_dir())? else {
+    let Some(config) = config_from_args(
+        env::args().skip(1),
+        default_data_dir(),
+        env::var_os("SMART_HOME_DASHBOARD_MANIFEST").map(PathBuf::from),
+    )?
+    else {
         println!("{USAGE}");
         return Ok(());
     };
@@ -60,7 +69,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let persistence_store = Arc::clone(&store);
     let persistence_automations = Arc::clone(&automation_runtime);
     let automation_persistence_store = Arc::clone(&store);
-    let runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
+    let mut runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
         Arc::clone(&shared_runtime),
         SmartHomePlatformHttpConfig::new("Codex Home"),
     )
@@ -94,6 +103,20 @@ fn main() -> Result<(), Box<dyn Error>> {
             .map_err(|error| error.to_string())
     })
     .grant_local_full_access("smart-home-local-controller", unix_time_ms());
+
+    if let Some(path) = config.dashboard_manifest.as_ref() {
+        let bytes = fs::read(path).map_err(|error| {
+            io::Error::new(
+                error.kind(),
+                format!(
+                    "could not read dashboard manifest {}: {error}",
+                    path.display()
+                ),
+            )
+        })?;
+        let manifest = parse_dashboard_manifest(&bytes).map_err(io::Error::other)?;
+        runtime = runtime.with_dashboard_manifest(manifest);
+    }
 
     {
         let runtime = shared_runtime.lock().map_err(|_| {
@@ -165,9 +188,11 @@ fn default_data_dir() -> PathBuf {
 fn config_from_args(
     args: impl IntoIterator<Item = String>,
     default_data_dir: PathBuf,
+    default_dashboard_manifest: Option<PathBuf>,
 ) -> Result<Option<ControllerConfig>, io::Error> {
     let mut bind_addr = DEFAULT_BIND_ADDR.to_string();
     let mut data_dir = default_data_dir;
+    let mut dashboard_manifest = default_dashboard_manifest;
     let mut args = args.into_iter();
     while let Some(arg) = args.next() {
         match arg.as_str() {
@@ -178,12 +203,24 @@ fn config_from_args(
             "--data-dir" => {
                 data_dir = PathBuf::from(required_value(&mut args, "--data-dir")?);
             }
+            "--dashboard-manifest" => {
+                dashboard_manifest = Some(PathBuf::from(required_value(
+                    &mut args,
+                    "--dashboard-manifest",
+                )?));
+            }
             _ if arg.starts_with("--bind=") => {
                 bind_addr = non_empty_value(&arg["--bind=".len()..], "--bind")?.to_string();
             }
             _ if arg.starts_with("--data-dir=") => {
                 data_dir =
                     PathBuf::from(non_empty_value(&arg["--data-dir=".len()..], "--data-dir")?);
+            }
+            _ if arg.starts_with("--dashboard-manifest=") => {
+                dashboard_manifest = Some(PathBuf::from(non_empty_value(
+                    &arg["--dashboard-manifest=".len()..],
+                    "--dashboard-manifest",
+                )?));
             }
             _ => return Err(invalid_input(format!("unknown argument `{arg}`"))),
         }
@@ -194,6 +231,7 @@ fn config_from_args(
     Ok(Some(ControllerConfig {
         bind_addr,
         data_dir,
+        dashboard_manifest,
     }))
 }
 
@@ -263,10 +301,12 @@ mod tests {
     #[test]
     fn config_defaults_to_loopback_and_supplied_data_dir() {
         assert_eq!(
-            config_from_args(Vec::<String>::new(), test_default_dir()).expect("default config"),
+            config_from_args(Vec::<String>::new(), test_default_dir(), None)
+                .expect("default config"),
             Some(ControllerConfig {
                 bind_addr: DEFAULT_BIND_ADDR.to_string(),
                 data_dir: test_default_dir(),
+                dashboard_manifest: None,
             })
         );
     }
@@ -281,24 +321,58 @@ mod tests {
                     "/tmp/codex-home".to_string(),
                 ],
                 test_default_dir(),
+                None,
             )
             .expect("explicit config"),
             Some(ControllerConfig {
                 bind_addr: "127.0.0.1:9123".to_string(),
                 data_dir: PathBuf::from("/tmp/codex-home"),
+                dashboard_manifest: None,
             })
+        );
+    }
+
+    #[test]
+    fn config_accepts_dashboard_manifest_argument_and_default() {
+        assert_eq!(
+            config_from_args(
+                ["--dashboard-manifest=/tmp/dashboard.json".to_string()],
+                test_default_dir(),
+                None,
+            )
+            .expect("manifest config")
+            .unwrap()
+            .dashboard_manifest,
+            Some(PathBuf::from("/tmp/dashboard.json"))
+        );
+        assert_eq!(
+            config_from_args(
+                Vec::<String>::new(),
+                test_default_dir(),
+                Some(PathBuf::from("/tmp/default-dashboard.json")),
+            )
+            .expect("default manifest config")
+            .unwrap()
+            .dashboard_manifest,
+            Some(PathBuf::from("/tmp/default-dashboard.json"))
         );
     }
 
     #[test]
     fn config_handles_help_and_rejects_invalid_options() {
         assert_eq!(
-            config_from_args(["--help".to_string()], test_default_dir()).expect("help"),
+            config_from_args(["--help".to_string()], test_default_dir(), None).expect("help"),
             None
         );
-        assert!(config_from_args(["--bind".to_string()], test_default_dir()).is_err());
-        assert!(config_from_args(["--data-dir=".to_string()], test_default_dir()).is_err());
-        assert!(config_from_args(["--unknown".to_string()], test_default_dir()).is_err());
+        assert!(config_from_args(["--bind".to_string()], test_default_dir(), None).is_err());
+        assert!(config_from_args(["--data-dir=".to_string()], test_default_dir(), None).is_err());
+        assert!(config_from_args(
+            ["--dashboard-manifest=".to_string()],
+            test_default_dir(),
+            None,
+        )
+        .is_err());
+        assert!(config_from_args(["--unknown".to_string()], test_default_dir(), None).is_err());
     }
 
     #[test]

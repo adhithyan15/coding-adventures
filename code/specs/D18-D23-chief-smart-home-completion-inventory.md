@@ -636,6 +636,25 @@ frontend code or guessing at unsupported behavior:
   collection, resource capture, deterministic source fingerprints, blocked
   apply behavior, atomic output, and token redaction.
 
+## Current Operational Dashboard Slice
+
+This slice turns the durable local API and migrated dashboard artifacts into a
+complete browser-operated control surface:
+
+- `smart-home-dashboard-core` owns and validates the native dashboard manifest
+  shared by Home Assistant migration and the local controller.
+- The durable controller loads a raw manifest or applied migration artifact
+  before binding and exposes it through
+  `/api/smart_home/dashboard_manifest`.
+- The embedded dashboard consumes native manifest views to scope entities and
+  provides direct sections for health, rooms, devices, current state,
+  automations and audit, pairing sessions, state history, runtime events,
+  command results, authorization decisions, and capability grants.
+- Pairing list/detail routes expose session state and opaque vault references
+  without disclosing credential material.
+- Rust route tests plus desktop and mobile browser verification prove the
+  manifest, automation, pairing, and audit workflows over the fixture runtime.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
@@ -645,8 +664,6 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Provide a dashboard that can inspect devices, rooms, state, health,
-  automations, event history, pairing, and command audit.
 
 ## End-To-End Definition
 
