@@ -6205,6 +6205,81 @@ mod tests {
     }
 
     #[test]
+    fn nested_procedure_forwards_captured_four_dimensional_real_array_parameter() {
+        let src = "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; \
+                   procedure fill(a); value a; real array a; \
+                     begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
+                           procedure invoke; seed(a); \
+                           invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; \
+                   fill(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "captured_four_dimensional_real_array_forwarding")
+            .expect("compiles");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert_eq!(
+            seed.params,
+            vec![
+                ("b".to_string(), "array<f64>".to_string()),
+                (array_param_dim_lower_slot("b", 0), "i64".to_string()),
+                (array_param_stride_slot("b", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 1), "i64".to_string()),
+                (array_param_stride_slot("b", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 2), "i64".to_string()),
+                (array_param_stride_slot("b", 2), "i64".to_string()),
+                (array_param_dim_lower_slot("b", 3), "i64".to_string()),
+            ],
+            "the 4-D real callee must receive the complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let invoke = module
+            .get_function("invoke")
+            .expect("invoke function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+            (2, "stride"),
+            (3, "lower"),
+        ] {
+            assert!(
+                invoke.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested forwarding must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            invoke.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<f64>"
+            }),
+            "nested forwarding must reload the captured 4-D array<f64> handle"
+        );
+        let forward = invoke
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+            })
+            .expect("invoke forwards the captured array to seed");
+        assert_eq!(
+            forward.srcs.len(),
+            9,
+            "the forwarded 4-D descriptor needs a callee, handle, four lowers, and three strides"
+        );
+    }
+
+    #[test]
     fn nested_array_capture_infers_rank_from_nested_use() {
         let src = "begin integer array values[-1:0, 4:5]; integer result; \
                    integer procedure fill(a); value a; integer array a; \

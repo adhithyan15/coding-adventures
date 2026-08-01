@@ -61,6 +61,11 @@ array formal. The caller's lexical ordering, equality, and inequality checks ver
 the `array<str>` handle, all four lower bounds, and all three row-major strides survive
 both procedure boundaries.
 
+**AL-4D-real-forwarding:** the seven-backend matrix executes a nested procedure
+that forwards a captured four-dimensional real-array value formal to a sibling array
+formal. A caller-side floating-point sum verifies the `array<f64>` handle, all four
+lower bounds, and all three row-major strides survive both procedure boundaries.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that
