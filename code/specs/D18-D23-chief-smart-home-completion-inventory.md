@@ -669,9 +669,10 @@ privacy-sensitive media endpoints in durable D23 state:
 - ONVIF cameras project to first-class normalized `Camera` entities and the
   `Onvif` protocol family. Runtime state contains profile metadata but no media
   URI, password, nonce, or credential material.
-- `smart-home-camera-media` keeps endpoints process-local and reveals them only
-  through short-lived, principal-bound, single-use leases backed by active
-  Human Approval capability grants for `camera.snapshot` or `camera.stream`.
+- `smart-home-camera-media` keeps endpoints process-local. Short-lived,
+  principal-bound, single-use leases backed by active Human Approval grants for
+  `camera.snapshot` or `camera.stream` authorize one trusted-host delivery; the
+  lease holder never receives the snapshot or stream endpoint URI.
 - Real loopback UDP and TCP tests prove discovery, five authenticated SOAP
   exchanges, runtime installation, capability authorization, media redemption,
   and redaction boundaries over actual host transports.
@@ -711,6 +712,29 @@ controllers:
 - Real loopback TCP tests prove inspection, runtime installation, authorization,
   and command transfer over the production transport. This first host uses
   polling and does not claim WebSocket push support.
+
+## Current Camera Media Security Hardening Slice
+
+The camera-media broker is a portable policy boundary, not a transport host:
+
+- An access request carries target, media kind, purpose, and bounded TTL only.
+  The trusted host supplies the authenticated principal, monotonic current time,
+  and collision-resistant nonce source; callers cannot backdate or impersonate
+  those fields through the request DTO.
+- A lease records the endpoint generation it authorized. Registering or rotating
+  an endpoint advances that generation, invalidating every older lease before
+  transport execution.
+- Redemption rechecks the current D23 Human Approval grant at trusted current
+  time, atomically consumes the lease, and lends the endpoint only to a trusted
+  media executor. The public result is snapshot bytes/metadata or an opaque
+  host-owned stream-session handle, never a URI or embedded credential.
+- Endpoint and active-lease tables are bounded by policy. Credential-bearing
+  URLs and plaintext non-loopback snapshot/stream schemes fail closed. Audit,
+  debug, and transport errors remain typed and endpoint-free.
+- Clock, authenticated identity, nonce generation, and media I/O are injected
+  authority owned by the native host. The deterministic broker therefore declares
+  an explicit empty package capability profile; the later native ONVIF host owns
+  and must obtain approval for its nonempty authority.
 
 ## Smart Home Remaining Work
 

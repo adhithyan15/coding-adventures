@@ -266,6 +266,9 @@ Their first security audit found that camera-media redemption returns a durable,
 replayable endpoint URI and that ONVIF can relay fresh credential digests to a
 device- or discovery-controlled origin. Those P0 boundaries outrank the ordinary
 Dart frontier while remaining split into serial, reviewable hardening tranches.
+The serial loop selected `smart-home-camera-media-security-boundary-hardening`
+first because it is dependency-ready and closes the endpoint-disclosure boundary
+without coupling that focused repair to ONVIF origin/Vault work.
 The remaining Dart ML dependency child is now explicit rather than hidden in an
 umbrella: `matrix`, then `loss-functions` and `feature-normalization`.
 The build-tool execution critical path remains blocked on external
