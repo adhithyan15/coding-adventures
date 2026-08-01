@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Camera entity and ONVIF protocol-family counts in topology and protocol-source
+  summaries.
 - `RegistrySupervisionSummary` plus read-view and registry helpers for compact
   health, pairing, and refresh-work status loops.
 - `RegistryAuthorizationSummary` plus read-view and registry helpers for compact

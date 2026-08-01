@@ -69,6 +69,7 @@ impl ConnectivityClass {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum DiscoveryMechanism {
     Mdns,
+    WsDiscovery,
     Ssdp,
     Bluetooth,
     Usb,
@@ -110,6 +111,7 @@ pub enum PrimitiveFamily {
     NormalizedModel,
     DiscoveryIndex,
     Mdns,
+    WsDiscovery,
     Ssdp,
     Dhcp,
     LocalHttp,
@@ -147,6 +149,7 @@ impl PrimitiveFamily {
             Self::NormalizedModel => "normalized_model",
             Self::DiscoveryIndex => "discovery_index",
             Self::Mdns => "mdns",
+            Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
             Self::Dhcp => "dhcp",
             Self::LocalHttp => "local_http",
@@ -44666,6 +44669,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "mDNS",
             "Local DNS-SD discovery for LAN devices and bridges.",
         ),
+        PrimitiveFamily::WsDiscovery => (
+            "WS-Discovery",
+            "SOAP-over-UDP discovery for ONVIF cameras and other LAN devices.",
+        ),
         PrimitiveFamily::Ssdp => (
             "SSDP",
             "UPnP-style discovery for media and legacy LAN devices.",
@@ -44774,6 +44781,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::NormalizedModel,
         PrimitiveFamily::DiscoveryIndex,
         PrimitiveFamily::Mdns,
+        PrimitiveFamily::WsDiscovery,
         PrimitiveFamily::Ssdp,
         PrimitiveFamily::Dhcp,
         PrimitiveFamily::LocalHttp,
@@ -45057,12 +45065,26 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         camera_entry(
             "onvif",
             "ONVIF",
-            "Local ONVIF camera integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local ONVIF camera discovery, authenticated inspection, and privacy-gated media access.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             3,
             "onvif",
-        ),
+        )
+        .with_capabilities(&["smart_home.read", "camera.snapshot", "camera.stream"])
+        .with_entities(&[EntityKind::Camera, EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::WsDiscovery, DiscoveryMechanism::Manual])
+        .with_protocols(vec![ProtocolFamily::Onvif])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::WsDiscovery,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CameraMedia,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ]),
         camera_entry(
             "reolink",
             "Reolink",
@@ -49064,6 +49086,14 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
             PrimitiveFamily::LocalHttp,
             PrimitiveFamily::ServerSentEvents,
             PrimitiveFamily::LocalPairing,
+        ],
+        ProtocolFamily::Onvif => &[
+            PrimitiveFamily::WsDiscovery,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CameraMedia,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Zigbee => &[
             PrimitiveFamily::Usb,
@@ -55029,6 +55059,7 @@ fn local_transport_primitives(
     for mechanism in discovery {
         let primitive = match mechanism {
             DiscoveryMechanism::Mdns => Some(PrimitiveFamily::Mdns),
+            DiscoveryMechanism::WsDiscovery => Some(PrimitiveFamily::WsDiscovery),
             DiscoveryMechanism::Ssdp => Some(PrimitiveFamily::Ssdp),
             DiscoveryMechanism::Bluetooth => Some(PrimitiveFamily::BluetoothLowEnergy),
             DiscoveryMechanism::Usb => Some(PrimitiveFamily::Usb),
@@ -80596,6 +80627,22 @@ mod tests {
         assert!(camera_entries.iter().all(|entry| entry
             .required_primitives
             .contains(&PrimitiveFamily::CapabilityPolicy)));
+    }
+
+    #[test]
+    fn onvif_entry_exposes_executable_camera_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let onvif = find_entry(&catalog, &IntegrationId::trusted("onvif")).unwrap();
+
+        assert_eq!(onvif.implementation_status, ImplementationStatus::FirstPartyRuntime);
+        assert_eq!(onvif.supported_protocols, vec![ProtocolFamily::Onvif]);
+        assert!(onvif.target_entity_kinds.contains(&EntityKind::Camera));
+        assert!(onvif
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::WsDiscovery));
+        assert!(onvif
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
     }
 
     #[test]

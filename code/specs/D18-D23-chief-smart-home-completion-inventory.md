@@ -655,15 +655,37 @@ complete browser-operated control surface:
 - Rust route tests plus desktop and mobile browser verification prove the
   manifest, automation, pairing, and audit workflows over the fixture runtime.
 
+## Current ONVIF Camera Integration Slice
+
+This slice adds the first executable production camera path without placing
+privacy-sensitive media endpoints in durable D23 state:
+
+- `smart-home-onvif-integration` sends bounded ONVIF WS-Discovery probes over
+  UDP, parses namespace-aware ProbeMatch responses, and emits normalized D23
+  discovery records.
+- Authenticated ONVIF SOAP calls use WS-Security UsernameToken password digests
+  over bounded HTTP/1.1 or certificate-verifying HTTPS to collect device
+  information, media profiles, snapshot endpoints, and RTSP stream endpoints.
+- ONVIF cameras project to first-class normalized `Camera` entities and the
+  `Onvif` protocol family. Runtime state contains profile metadata but no media
+  URI, password, nonce, or credential material.
+- `smart-home-camera-media` keeps endpoints process-local and reveals them only
+  through short-lived, principal-bound, single-use leases backed by active
+  Human Approval capability grants for `camera.snapshot` or `camera.stream`.
+- Real loopback UDP and TCP tests prove discovery, five authenticated SOAP
+  exchanges, runtime installation, capability authorization, media redemption,
+  and redaction boundaries over actual host transports.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Continue platform integrations beyond Hue, MQTT, and the Z-Wave, Zigbee, and
-  Matter runtime adapters: cameras, broader device families, a production
-  Matter commissioning/secure-session/network host, a Thread border-router
-  host, a production Zigbee coordinator/join/security host, and production
-  Z-Wave inclusion and S2.
+- Continue platform integrations beyond Hue, MQTT, ONVIF, and the Z-Wave,
+  Zigbee, and Matter runtime adapters: ONVIF PullPoint camera events, RTSP media
+  transfer and recording, vendor-specific camera/NVR integrations, broader
+  device families, a production Matter commissioning/secure-session/network
+  host, a Thread border-router host, a production Zigbee
+  coordinator/join/security host, and production Z-Wave inclusion and S2.
 
 ## End-To-End Definition
 

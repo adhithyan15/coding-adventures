@@ -144,6 +144,7 @@ impl Health {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EntityKind {
+    Camera,
     Light,
     LightGroup,
     Switch,
@@ -449,6 +450,7 @@ impl CapabilitySurfaceSummary {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ProtocolFamily {
     Hue,
+    Onvif,
     Zigbee,
     ZWave,
     Thread,
@@ -461,6 +463,7 @@ impl ProtocolFamily {
     pub fn as_str(&self) -> &str {
         match self {
             Self::Hue => "hue",
+            Self::Onvif => "onvif",
             Self::Zigbee => "zigbee",
             Self::ZWave => "zwave",
             Self::Thread => "thread",

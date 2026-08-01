@@ -90414,6 +90414,7 @@ fn parse_privilege_tier(label: &str) -> Result<PrivilegeTier, ToolCallError> {
 fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCallError> {
     match label {
         "mdns" => Ok(DiscoveryMechanism::Mdns),
+        "ws_discovery" => Ok(DiscoveryMechanism::WsDiscovery),
         "ssdp" => Ok(DiscoveryMechanism::Ssdp),
         "bluetooth" => Ok(DiscoveryMechanism::Bluetooth),
         "usb" => Ok(DiscoveryMechanism::Usb),
@@ -90447,6 +90448,7 @@ fn parse_auth_mode(label: &str) -> Result<AuthMode, ToolCallError> {
 fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
     match label {
         "hue" => Ok(ProtocolFamily::Hue),
+        "onvif" => Ok(ProtocolFamily::Onvif),
         "zigbee" => Ok(ProtocolFamily::Zigbee),
         "zwave" | "z_wave" | "z-wave" => Ok(ProtocolFamily::ZWave),
         "thread" => Ok(ProtocolFamily::Thread),
@@ -90464,6 +90466,7 @@ fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
 fn protocol_family_label(family: &ProtocolFamily) -> String {
     match family {
         ProtocolFamily::Hue => "hue".to_string(),
+        ProtocolFamily::Onvif => "onvif".to_string(),
         ProtocolFamily::Zigbee => "zigbee".to_string(),
         ProtocolFamily::ZWave => "zwave".to_string(),
         ProtocolFamily::Thread => "thread".to_string(),
@@ -91941,6 +91944,7 @@ fn implementation_status_label(status: ImplementationStatus) -> &'static str {
 fn discovery_mechanism_label(mechanism: DiscoveryMechanism) -> &'static str {
     match mechanism {
         DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",
@@ -91986,6 +91990,7 @@ fn scene_scope_label(scope: SceneScope) -> &'static str {
 
 fn entity_kind_label(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light_group",
         EntityKind::Switch => "switch",

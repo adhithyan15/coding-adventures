@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added camera entity labels and Home Assistant-compatible `camera` domains to
+  the local API projection.
 - Added an operational browser dashboard for native migrated views, runtime
   inventory and health, automation definitions and audit, pairing sessions,
   state history, and command/authorization audit. The durable controller can

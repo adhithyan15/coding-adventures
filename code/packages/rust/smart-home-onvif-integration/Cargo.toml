@@ -1,0 +1,24 @@
+[package]
+name = "smart-home-onvif-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Production ONVIF discovery and camera integration for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+base64 = "0.22"
+chrono = "0.4"
+coding_adventures_sha1 = { path = "../sha1" }
+coding-adventures-xml-parser = { path = "../xml-parser" }
+coding_adventures_zeroize = { path = "../zeroize" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+rand = "0.8"
+serde_json = "1"
+smart-home-camera-media = { path = "../smart-home-camera-media" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tls-platform = { path = "../tls-platform" }
+udp-client = { path = "../udp-client" }
+url-parser = { path = "../url-parser" }
