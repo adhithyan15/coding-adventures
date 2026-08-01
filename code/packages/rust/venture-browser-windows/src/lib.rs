@@ -1,0 +1,426 @@
+//! Native page-content bridge for Venture's Mosaic-generated WinUI shell.
+//!
+//! Mosaic remains the sole owner of browser chrome. This crate joins the
+//! host-neutral Venture session and chrome reducer to a Direct2D pixel surface
+//! that the package-owned XAML adapter mounts in the generated `HostSurface`.
+
+use html_to_layout::mosaic_html_theme;
+use html_to_paint::HtmlPaintViewport;
+use layout_text_measure_native::NativeMeasurer;
+use text_native::{NativeMetrics, NativeResolver, NativeShaper};
+use venture_browser_core::{
+    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse,
+    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
+    BrowserSession, HttpBrowserFetcher,
+};
+
+pub const VERSION: &str = "0.1.0";
+pub const DEFAULT_START_URL: &str = "http://info.cern.ch/";
+pub const DEFAULT_VIEWPORT_WIDTH: f64 = 1024.0;
+pub const DEFAULT_VIEWPORT_HEIGHT: f64 = 640.0;
+
+fn execute_navigation<F>(
+    session: &mut BrowserSession,
+    navigation: BrowserNavigation,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
+}
+
+fn activate_link<F>(
+    session: &mut BrowserSession,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    fetcher: &F,
+) -> Result<bool, BrowserLoadError>
+where
+    F: BrowserResourceFetcher,
+{
+    let theme = mosaic_html_theme();
+    let measurer = NativeMeasurer::new();
+    let shaper = NativeShaper::new();
+    let metrics = NativeMetrics::new();
+    let resolver = NativeResolver::new();
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(width, height, 1.0),
+        &measurer,
+        &shaper,
+        &metrics,
+        &resolver,
+    );
+    Ok(session.activate_link(x, y, &pipeline, fetcher)?.is_some())
+}
+
+struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
+
+impl BrowserResourceFetcher for OwnedFetcher {
+    fn fetch(&self, url: &str) -> Result<BrowserFetchResponse, String> {
+        self.0.fetch(url)
+    }
+}
+
+/// One browser session shared by generated chrome and the Direct2D surface.
+pub struct WindowsBrowserHost {
+    session: BrowserSession,
+    chrome: BrowserChromeController,
+    fetcher: OwnedFetcher,
+    width: f64,
+    height: f64,
+    status_text: String,
+}
+
+impl WindowsBrowserHost {
+    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserLoadError> {
+        Self::new_with_fetcher(
+            start_url,
+            width,
+            height,
+            Box::new(HttpBrowserFetcher::default()),
+        )
+    }
+
+    pub fn new_with_fetcher(
+        start_url: &str,
+        width: f64,
+        height: f64,
+        fetcher: Box<dyn BrowserResourceFetcher>,
+    ) -> Result<Self, BrowserLoadError> {
+        let fetcher = OwnedFetcher(fetcher);
+        let mut session = BrowserSession::new(start_url, height);
+        execute_navigation(
+            &mut session,
+            BrowserNavigation::Navigate(start_url.to_string()),
+            width,
+            height,
+            &fetcher,
+        )?;
+        let chrome = BrowserChromeController::new(&session);
+        Ok(Self {
+            session,
+            chrome,
+            fetcher,
+            width,
+            height,
+            status_text: "Ready".to_string(),
+        })
+    }
+
+    pub fn props(&self) -> BrowserChromeProps {
+        self.chrome
+            .props(&self.session, self.status_text.clone(), false)
+    }
+
+    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+        let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
+            return Ok(false);
+        };
+        self.status_text = "Loading".to_string();
+        match execute_navigation(
+            &mut self.session,
+            navigation,
+            self.width,
+            self.height,
+            &self.fetcher,
+        ) {
+            Ok(changed) => {
+                if changed {
+                    self.chrome.synchronize(&self.session);
+                }
+                self.status_text = "Ready".to_string();
+                Ok(changed)
+            }
+            Err(error) => {
+                self.status_text = format!("Load failed: {error}");
+                Err(error)
+            }
+        }
+    }
+
+    pub fn scroll_by(&mut self, delta_y: f64) -> bool {
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_by(delta_y);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
+        let changed = activate_link(
+            &mut self.session,
+            x,
+            y,
+            self.width,
+            self.height,
+            &self.fetcher,
+        )?;
+        if changed {
+            self.chrome.synchronize(&self.session);
+            self.status_text = "Ready".to_string();
+        }
+        Ok(changed)
+    }
+
+    #[cfg(target_os = "windows")]
+    fn render_bgra(&self) -> Option<(u32, u32, Vec<u8>)> {
+        let scene = self.session.viewport()?.viewport_scene();
+        let mut pixels = paint_vm_direct2d::render(&scene);
+        for pixel in pixels.data.chunks_exact_mut(4) {
+            pixel.swap(0, 2);
+        }
+        Some((pixels.width, pixels.height, pixels.data))
+    }
+}
+
+#[cfg(target_os = "windows")]
+mod ffi {
+    use super::*;
+    use std::ffi::{c_char, CStr, CString};
+    use std::panic::{catch_unwind, AssertUnwindSafe};
+
+    fn string_arg(value: *const c_char) -> Option<String> {
+        if value.is_null() {
+            return None;
+        }
+        unsafe { CStr::from_ptr(value) }
+            .to_str()
+            .ok()
+            .map(str::to_string)
+    }
+
+    fn json_string(value: &str) -> String {
+        let mut out = String::with_capacity(value.len() + 2);
+        out.push('"');
+        for ch in value.chars() {
+            match ch {
+                '"' => out.push_str("\\\""),
+                '\\' => out.push_str("\\\\"),
+                '\n' => out.push_str("\\n"),
+                '\r' => out.push_str("\\r"),
+                '\t' => out.push_str("\\t"),
+                ch if ch.is_control() => {
+                    use std::fmt::Write;
+                    let _ = write!(out, "\\u{:04x}", ch as u32);
+                }
+                ch => out.push(ch),
+            }
+        }
+        out.push('"');
+        out
+    }
+
+    fn response(host: &WindowsBrowserHost, error: Option<&str>) -> *mut c_char {
+        let props = host.props();
+        let error = error
+            .map(|message| format!(",\"error\":{}", json_string(message)))
+            .unwrap_or_default();
+        let value = format!(
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            json_string(&props.address),
+            json_string(&props.page_title),
+            json_string(&props.status_text),
+            props.back_disabled,
+            props.forward_disabled,
+        );
+        CString::new(value)
+            .expect("JSON response contains no NUL")
+            .into_raw()
+    }
+
+    #[no_mangle]
+    pub extern "C" fn venture_browser_windows_new(
+        start_url: *const c_char,
+        width: f64,
+        height: f64,
+    ) -> *mut WindowsBrowserHost {
+        let Some(start_url) = string_arg(start_url) else {
+            return std::ptr::null_mut();
+        };
+        catch_unwind(|| WindowsBrowserHost::new(&start_url, width, height))
+            .ok()
+            .and_then(Result::ok)
+            .map(Box::new)
+            .map(Box::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_free(host: *mut WindowsBrowserHost) {
+        if !host.is_null() {
+            drop(Box::from_raw(host));
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_apply_props(
+        host: *mut WindowsBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .map(|host| response(host, None))
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_handle_event(
+        host: *mut WindowsBrowserHost,
+        name: *const c_char,
+        value: *const c_char,
+    ) -> *mut c_char {
+        let Some(host) = host.as_mut() else {
+            return std::ptr::null_mut();
+        };
+        let Some(name) = string_arg(name) else {
+            return response(host, Some("missing Mosaic event name"));
+        };
+        let event = match name.as_str() {
+            "onBack" => Some(BrowserChromeEvent::Back),
+            "onForward" => Some(BrowserChromeEvent::Forward),
+            "onHome" => Some(BrowserChromeEvent::Home),
+            "onReload" => Some(BrowserChromeEvent::Reload),
+            "onNavigate" => Some(BrowserChromeEvent::Navigate),
+            "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
+            _ => None,
+        };
+        let Some(event) = event else {
+            return response(host, Some("unknown or malformed Mosaic event"));
+        };
+        match catch_unwind(AssertUnwindSafe(|| host.handle_event(event))) {
+            Ok(Ok(_)) => response(host, None),
+            Ok(Err(error)) => response(host, Some(&error.to_string())),
+            Err(_) => response(host, Some("Venture event handler panicked")),
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_scroll(
+        host: *mut WindowsBrowserHost,
+        delta_y: f64,
+    ) -> u8 {
+        host.as_mut()
+            .map(|host| host.scroll_by(delta_y) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_activate_link(
+        host: *mut WindowsBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.activate_link(x, y).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    /// Render BGRA8 pixels for WinUI's `WriteableBitmap`.
+    ///
+    /// The required byte count is returned for both probe and copy calls. A
+    /// null or undersized output buffer is never written.
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_render_bgra(
+        host: *mut WindowsBrowserHost,
+        output: *mut u8,
+        capacity: usize,
+        width: *mut u32,
+        height: *mut u32,
+    ) -> usize {
+        catch_unwind(AssertUnwindSafe(|| {
+            let Some(host) = host.as_ref() else {
+                return 0;
+            };
+            let Some((pixel_width, pixel_height, pixels)) = host.render_bgra() else {
+                return 0;
+            };
+            if !width.is_null() {
+                *width = pixel_width;
+            }
+            if !height.is_null() {
+                *height = pixel_height;
+            }
+            if !output.is_null() && capacity >= pixels.len() {
+                std::ptr::copy_nonoverlapping(pixels.as_ptr(), output, pixels.len());
+            }
+            pixels.len()
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_string_free(value: *mut c_char) {
+        if !value.is_null() {
+            drop(CString::from_raw(value));
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn page(url: &str, title: &str, body: &str) -> BrowserFetchResponse {
+        BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".to_string()),
+            format!("<html><head><title>{title}</title></head><body>{body}</body></html>")
+                .into_bytes(),
+        )
+    }
+
+    #[test]
+    fn generated_chrome_and_content_share_one_browser_session() {
+        let fetcher = |url: &str| match url {
+            "http://example.test/" => Ok(page(
+                url,
+                "Home",
+                "<a href='http://example.test/next'>Next</a>",
+            )),
+            "http://example.test/next" => Ok(page(url, "Next", "done")),
+            _ => Err(format!("unexpected URL {url}")),
+        };
+        let mut host = WindowsBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("initial page loads");
+
+        assert_eq!(host.props().page_title, "Home");
+        host.handle_event(BrowserChromeEvent::AddressChange(
+            "http://example.test/next".to_string(),
+        ))
+        .expect("address draft updates");
+        assert!(host
+            .handle_event(BrowserChromeEvent::Navigate)
+            .expect("navigation succeeds"));
+        let props = host.props();
+        assert_eq!(props.address, "http://example.test/next");
+        assert_eq!(props.page_title, "Next");
+        assert!(!props.back_disabled);
+    }
+}

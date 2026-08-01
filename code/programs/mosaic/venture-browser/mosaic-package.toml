@@ -10,6 +10,7 @@ exports = ["VentureChrome"]
 [host_assets]
 files = [
   { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
+  { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
 ]
 
 [kernel]

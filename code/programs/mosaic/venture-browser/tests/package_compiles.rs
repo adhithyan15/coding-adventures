@@ -89,12 +89,15 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 1);
+    assert_eq!(package.host_assets.files.len(), 2);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
         "Sources/App/MosaicHost.swift"
     );
+    assert_eq!(package.host_assets.files[1].backend, "xaml");
+    assert_eq!(package.host_assets.files[1].source, "host/xaml/MosaicHost.cs");
+    assert_eq!(package.host_assets.files[1].target, "MosaicHost.cs");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -105,6 +108,19 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_activate_link",
     ] {
         assert!(host.contains(symbol), "SwiftUI host omits {symbol}");
+    }
+
+    let host = read_package_file("host/xaml/MosaicHost.cs");
+    for symbol in [
+        "venture_browser_windows_apply_props",
+        "venture_browser_windows_handle_event",
+        "venture_browser_windows_render_bgra",
+        "venture_browser_windows_scroll",
+        "venture_browser_windows_activate_link",
+        "WriteableBitmap",
+        "component.ContentSurface",
+    ] {
+        assert!(host.contains(symbol), "XAML host omits {symbol}");
     }
 }
 
@@ -159,6 +175,9 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "swift",
         "venture-browser-macos",
         "libventure_browser_macos.dylib",
+        "venture-browser-windows",
+        "venture_browser_windows.dll",
+        "-p:Platform=x64",
         "cmake",
         "dotnet",
         "flutter",

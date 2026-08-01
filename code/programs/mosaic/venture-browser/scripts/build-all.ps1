@@ -179,10 +179,26 @@ if (Test-Command "cmake") {
 }
 
 if ($isWindows -and (Test-Command "dotnet")) {
+    Write-Host "==> Building Venture Windows native bridge"
+    $bridgeArgs = @("build", "-p", "venture-browser-windows")
+    $bridgeProfile = "debug"
+    if ($Release) {
+        $bridgeArgs += "--release"
+        $bridgeProfile = "release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $bridgeArgs
+    } finally {
+        Pop-Location
+    }
+    Copy-Item -Force `
+        (Join-Path $rustWorkspace "target/$bridgeProfile/venture_browser_windows.dll") `
+        (Join-Path $outputRoot "xaml/venture_browser_windows.dll")
     Write-Host "==> Building xaml"
     Push-Location (Join-Path $outputRoot "xaml")
     try {
-        Invoke-Checked -Command "dotnet" -Arguments @("build", "VentureChrome.csproj")
+        Invoke-Checked -Command "dotnet" -Arguments @("build", "VentureChrome.csproj", "-p:Platform=x64")
     } finally {
         Pop-Location
     }
