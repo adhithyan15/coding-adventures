@@ -64,6 +64,7 @@ jobs:
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
+      needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
@@ -99,6 +100,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_backend_loader.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_capability_broker.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_venture_windows_ci_acceptance.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
@@ -168,6 +170,15 @@ jobs:
             -detect-languages \
             -emit-plan build-plan.json \
             "${shard_flags[@]}"
+
+      - name: Detect Venture Windows acceptance
+        id: venture-windows
+        shell: bash
+        run: |
+          python3 code/scripts/venture_windows_ci_acceptance.py \
+            build-plan.json \
+            --repo-root . \
+            --diff-base "${{ steps.diff-base.outputs.base }}" >> "$GITHUB_OUTPUT"
 
       - name: Normalize toolchain requirements
         id: toolchains
@@ -344,8 +355,8 @@ jobs:
       # the C/C++ lane (needs `cl.exe` for the MSVC arm of the pure-ISO check).
       # A single msvc-dev-cmd invocation covers both — invoking the action twice
       # would double-prepend the MSVC environment.
-      - name: Set up MSVC (Lua linker + C/C++ cl.exe)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true') && runner.os == 'Windows'
+      - name: Set up MSVC (Lua linker + C/C++ cl.exe + Venture browser)
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Set up Lua
@@ -429,7 +440,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || (needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Windows')
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -606,7 +617,7 @@ jobs:
           cabal-version: '3.10'
 
       - name: Set up .NET
-        if: needs.detect.outputs.needs_dotnet == 'true'
+        if: needs.detect.outputs.needs_dotnet == 'true' || (needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Windows')
         uses: actions/setup-dotnet@v4
         with:
           # .NET 9 is the current LTS release. No platform exclusions needed —
@@ -675,7 +686,7 @@ jobs:
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || { [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] && [ "$RUNNER_OS" = "Windows" ]; }; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
@@ -767,6 +778,13 @@ jobs:
             $shardFlag = @('-shard-index', '${{ matrix.shard_index }}')
           }
           & ./build-tool.exe -root . @planFlag @shardFlag -validate-build-files -language swift
+
+      - name: Build and test Venture Windows acceptance
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
+        shell: pwsh
+        run: |
+          Set-Location code/packages/rust
+          cargo test -p venture-browser-windows
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
