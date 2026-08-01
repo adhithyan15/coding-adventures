@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9413,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3",
+    "revision": "1e4956369cb3aeabedf5027c351d1e20a7b8dfac",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1205,
-    "implementation_package_slots": 4349,
+    "implementation_identities": 1207,
+    "implementation_package_slots": 4351,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 755,
-    "singleton_missing_slots": 10570,
-    "rust_singletons": 560,
+    "singleton_packages": 757,
+    "singleton_missing_slots": 10598,
+    "rust_singletons": 562,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -500,11 +500,11 @@
     {
       "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
       "title": "Audit tiny and signed-zero PHY00 arctangent behavior",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["phy00-small-sqrt-cross-lane-audit"],
       "branch": "codex/phy00-atan-tiny-signed-zero-audit",
       "pr_number": 9413,
-      "notes": "Ready-for-review PR #9413 opened after rebasing onto c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3. Selected after PR #9400 merged because its only dependency is merged, the shared PHY00 fixture machinery is established, and every existing atan lane had the same signed-zero and subnormal-floor defect. The PR specifies exact binary64 identity for |x| <= 2^-27, binds shared fixtures for negative zero, 2^-30, and signed minimum subnormals, and repairs all 15 established trig lanes plus emerging C/C++. Local validation covered all 17 native trig suites, 15 downstream wave suites, measured production coverage where supported, 14 fixture tests, generated-fixture sync, six real dependency-ordered build-tool lanes, collision-clean 1,205-identity parity inventory, state graph, diff, credential, JSON, Go build-tool test/vet/build, and independent fixture, numerical, security, and inventory audits. Repository-wide BUILD validation has zero delta from the 73 known origin/main failures; the local C build runner also reproduces origin/main's PowerShell 5 UTF-8 parse defect in iso-harness, while direct GCC and Clang trig suites pass."
+      "notes": "Merged PR #9413 at 458405a6e520914edb112f45406e75c1a19899f6 on 2026-08-01 after all 15 checks passed. Selected after PR #9400 merged because its only dependency was merged, the shared PHY00 fixture machinery was established, and every existing atan lane had the same signed-zero and subnormal-floor defect. The PR specifies exact binary64 identity for |x| <= 2^-27, binds shared fixtures for negative zero, 2^-30, and signed minimum subnormals, and repairs all 15 established trig lanes plus emerging C/C++. Local validation covered all 17 native trig suites, 15 downstream wave suites, measured production coverage where supported, 14 fixture tests, generated-fixture sync, six real dependency-ordered build-tool lanes, collision-clean parity inventory, state graph, diff, credential, JSON, Go build-tool test/vet/build, and independent fixture, numerical, security, and inventory audits. Repository-wide BUILD validation had zero delta from the 73 known origin/main failures; the local C build runner also reproduced origin/main's PowerShell 5 UTF-8 parse defect in iso-harness, while direct GCC and Clang trig suites passed."
     },
     {
       "id": "phy01-nonfinite-validation-backfill",
@@ -667,7 +667,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 560, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 562, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -676,7 +676,77 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, and venture-browser-windows; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, venture-browser-windows, smart-home-camera-media, and smart-home-onvif-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, camera-media broker, ONVIF integration, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary. Camera-media policy, generation-bound lease state, quotas, and redacted audit are portable candidates, but endpoint use belongs behind an injected trusted host. ONVIF discovery/SOAP/profile parsing, deterministic UsernameToken construction, origin policy, projection, and hostile fixtures are portable candidates, while UDP/DNS/TCP/TLS, trusted time/randomness, Vault leases, process I/O, and endpoint allowlists remain host-owned."
+    },
+    {
+      "id": "smart-home-camera-media-security-boundary-hardening",
+      "title": "Replace camera endpoint redemption with a mediated single-use security boundary",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9413 audit after PR #9407 added smart-home-camera-media. The current broker returns a replayable secret-bearing snapshot or stream URI, accepts caller-asserted principal and time, does not bind leases to endpoint generations, uses unbounded endpoint and lease maps, and owns OS entropy without capability metadata. Replace raw URI redemption with trusted-host mediation, inject authenticated principal, trusted time, and nonce generation, revalidate active grants at use time, bind leases to endpoint generations, enforce quotas, keep failures redacted, reject credential-bearing or insecure non-loopback endpoints, and add an explicit authority-free manifest for the resulting policy core."
+    },
+    {
+      "id": "smart-home-onvif-origin-credential-transport-hardening",
+      "title": "Bind ONVIF credentials and media endpoints to reviewed secure origins",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9413 security audit. WS-Discovery and device-supplied XAddr values can currently redirect fresh WS-Security digests to attacker-selected origins, plaintext downgrade is accepted, and discovery is overclassified as verified. Add explicit origin correlation and allowlist policy, secure transport requirements with loopback-only fixture exceptions, redirect and DNS rebinding defenses, bounded SOAP/media parsing, redacted failures, and hostile integration fixtures."
+    },
+    {
+      "id": "smart-home-camera-onvif-capability-profile-and-vault-wiring",
+      "title": "Declare and approve camera/ONVIF host authority with Vault-mediated credentials",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-camera-media-security-boundary-hardening",
+        "smart-home-onvif-origin-credential-transport-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9413 governance audit. The ONVIF program owns network, time, entropy, environment, and stdout authority, reads username/password from ambient environment variables, and lacks required_capabilities.json. Narrow the native host after both security boundaries land, replace ambient credentials with one-shot Vault leases, and define truthful runtime and test-harness profiles without claiming Layer 5 approval."
+    },
+    {
+      "id": "smart-home-camera-onvif-capability-layer5-evidence",
+      "title": "Approve the camera and ONVIF native-host capability profiles",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-onvif-capability-profile-and-vault-wiring"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the post-#9413 governance audit. After repository-local hardening and Vault wiring establish the minimum nonempty authority profiles, a maintainer must provide hardware-key-backed Layer 5 approval evidence before publication or privileged deployment."
+    },
+    {
+      "id": "smart-home-camera-media-portable-core-conformance",
+      "title": "Define fixtures and expand the portable camera-media policy core",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-security-boundary-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator."
+    },
+    {
+      "id": "smart-home-onvif-portable-core-conformance",
+      "title": "Define fixtures and expand the portable ONVIF protocol core",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-onvif-origin-credential-transport-hardening",
+        "smart-home-camera-onvif-capability-profile-and-vault-wiring"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture correlated discovery and SOAP parsing, deterministic UsernameToken construction with injected nonce/time, origin policy, normalized camera projection, bounds, and hostile inputs. Expand the authority-free core through established lanes while UDP/DNS/TCP/TLS, Vault access, trusted time/randomness, process I/O, and allowlists remain in the native Rust host."
+    },
+    {
+      "id": "dart-current-14-of-15-matrix-family",
+      "title": "Port the matrix dependency and its immediate ML consumers to Dart",
+      "status": "pending",
+      "depends_on": ["dart-trig-wave", "dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 umbrella during the post-#9413 dependency pass. Deliver matrix first, then loss-functions and feature-normalization in a coherent dependency-shaped slice with shared fixtures, empty capability profiles, package-native tests, coverage, and real downstream builds. Security-critical camera work currently outranks this otherwise highest-leverage portable frontier child."
     },
     {
       "id": "venture-browser-windows-portable-bridge-and-native-host",

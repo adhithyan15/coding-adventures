@@ -106,10 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 1, 2026 at `c2b5a3d81` after the merged
-cross-lane PHY01 wave repair, Rust `smart-home-dashboard-core`, and the
-Windows-native `venture-browser-windows` host. It contains 1,205 normalized
-implementation identities across 4,349 established-lane package
+inventory was regenerated on August 1, 2026 at `1e4956369` after merged PR
+#9413 and the addition of the Rust camera-media and ONVIF integration packages.
+It contains 1,207 normalized implementation identities across 4,351 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -117,24 +116,26 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 755 | 10,570 |
+| Present in one language | 757 | 10,598 |
 
-The loop must not start by attempting 10,570 singleton ports. It should finish
+The loop must not start by attempting 10,598 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current inventory at
-`c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3` is collision-clean at 1,205
-normalized implementation identities, 4,349 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 755 singletons, 560
+`1e4956369cb3aeabedf5027c351d1e20a7b8dfac` is collision-clean at 1,207
+normalized implementation identities, 4,351 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 757 singletons, 562
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The two recent identities are Rust-only `smart-home-dashboard-core` and
-`venture-browser-windows`. Dashboard core is a zero-capability, protocol-neutral
-deterministic manifest parser, validator, and summarizer, so its shared fixture
-contract and cross-lane expansion have an explicit owner. The Windows package is
-a mixed split: deterministic session/chrome/status and event-bridge logic belongs
-in `venture-browser-core` or a shared portable bridge, while WinUI, Direct2D, the
-C ABI, and native text shaping remain `native-source`. Its focused owner covers
-that extraction, missing capability metadata, and native host validation.
+The two newest identities are Rust-only `smart-home-camera-media` and
+`smart-home-onvif-integration`. Both are mixed splits rather than blind parity
+ports: camera grant policy, generation-bound lease state, quotas, and redacted
+audit are portable, while authenticated host context and media delivery remain
+native mediation; ONVIF discovery/SOAP parsing, deterministic UsernameToken
+construction, origin policy, and projection are portable, while sockets, TLS,
+trusted time/randomness, Vault access, process I/O, and allowlists remain native.
+The security review found urgent repository-local hardening owners for raw media
+URI redemption and attacker-controlled ONVIF origins before either portable core
+is expanded.
 
 The August 1 lane audit is:
 
@@ -152,7 +153,7 @@ The August 1 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 970 | 0 | 100% |
+| Rust | 972 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -259,6 +260,14 @@ square-root numerical audit had discovered that separate
 underflows at the subnormal floor and loses the sign of negative zero, so that
 work remained tracked behind the merged square-root and wave slices rather
 than expanding either delivery.
+PR #9413 merged that repair at `458405a6e` after all 15 checks passed. The
+collision-clean `1e4956369` refresh added the two Rust-only camera identities.
+Their first security audit found that camera-media redemption returns a durable,
+replayable endpoint URI and that ONVIF can relay fresh credential digests to a
+device- or discovery-controlled origin. Those P0 boundaries outrank the ordinary
+Dart frontier while remaining split into serial, reviewable hardening tranches.
+The remaining Dart ML dependency child is now explicit rather than hidden in an
+umbrella: `matrix`, then `loss-functions` and `feature-normalization`.
 The build-tool execution critical path remains blocked on external
 immutable-runner and attester provisioning.
 
@@ -935,10 +944,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 560 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 562 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added twenty Rust singleton identities that now
+The July 30-August 1 inventories added twenty-two Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -966,6 +975,26 @@ DLL, WinUI adapter, Direct2D BGRA rendering, native text shaping, and C ABI rema
 native-source. The same owner adds the missing capability profile and Windows
 ABI, generated-project, pointer-lifetime, panic-containment, and pixel-buffer
 validation; other lanes must not duplicate the native shell.
+
+The twenty-first identity, `smart-home-camera-media`, currently mixes a portable
+authorization and lease-policy core with host authority. Its first implementation
+returns the secret snapshot/stream URI to the lease holder, accepts caller-asserted
+identity and time, does not bind a lease to an endpoint generation, owns OS entropy,
+and leaves endpoint/lease maps unbounded. The hardening owner replaces redemption
+with trusted-host delivery of snapshot bytes or an opaque stream-session handle,
+injects identity/time/nonce, revalidates current grants, rejects credential-bearing
+and insecure non-loopback endpoints, binds leases to generations, and imposes
+quotas. A later fixture owner expands only the resulting authority-free policy core.
+
+The twenty-second identity, `smart-home-onvif-integration`, is also a mixed split.
+Correlated discovery and SOAP parsing, deterministic UsernameToken construction,
+origin policy, profile projection, and hostile input handling form a portable core.
+UDP/DNS/TCP/TLS, trusted time and randomness, Vault credential leases, process I/O,
+and reviewed endpoint allowlists remain native. Before extraction, the host must
+stop following discovery- or device-controlled XAddr values across origins with a
+fresh credential digest, fail closed on insecure non-loopback transport, and replace
+ambient username/password environment variables with Vault-mediated credentials.
+The nonempty native profiles then require separately tracked Layer 5 evidence.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export
