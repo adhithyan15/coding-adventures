@@ -5709,6 +5709,65 @@ mod tests {
     }
 
     #[test]
+    fn nested_procedure_captures_three_dimensional_boolean_array_parameter() {
+        let src = "begin boolean array flags[-1:0, 2:3, 5:6]; integer result; \
+                   procedure setflags(a); value a; boolean array a; \
+                     begin procedure populate; begin a[-1,2,5] := true; a[-1,3,6] := false; a[0,2,5] := false; a[0,3,6] := true end; \
+                           populate(); if a[-1,2,5] and not a[-1,3,6] and not a[0,2,5] and a[0,3,6] then result := 42 else result := 0 end; \
+                   setflags(flags) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "three_dimensional_boolean_array_formal_capture")
+            .expect("compiles");
+        let setflags = module
+            .get_function("setflags")
+            .expect("setflags function exists");
+        assert_eq!(
+            setflags.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+            ],
+            "a 3-D boolean array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setflags", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested boolean writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<bool>"
+            }),
+            "nested boolean writes must reload the captured 3-D array<bool> handle"
+        );
+    }
+
+    #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
