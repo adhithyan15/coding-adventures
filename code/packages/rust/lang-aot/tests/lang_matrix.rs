@@ -2002,6 +2002,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- a nested procedure forwards a captured 4-D string-array
+    // value formal to a sibling array formal. The forwarding call must reload
+    // the handle, four lower bounds, and all three row-major strides.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
     // type_hint to decide the element width: `f64` instead of `i64`.  BASIC's BA3
@@ -5388,6 +5398,42 @@ fn algol_nested_procedure_captures_four_dimensional_string_array_on_every_availa
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested 4-D string-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_forwards_captured_four_dimensional_string_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("string array words[-1:0, 4:5, 7:8, 10:11]")
+                && program
+                    .src
+                    .contains("procedure seed(b); value b; string array b")
+                && program.src.contains("procedure invoke; seed(a)")
+        })
+        .expect("the nested 4-D ALGOL string-array forwarding program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 4-D string-array forwarding did not complete"
             );
             continue;
         };

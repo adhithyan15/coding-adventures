@@ -55,6 +55,12 @@ descriptor. Lexical ordering plus equality and inequality verify the `array<str>
 handle, all four lower bounds, and all three row-major strides survive the call and
 capture boundary.
 
+**AL-4D-string-forwarding:** the seven-backend matrix executes a nested procedure
+that forwards a captured four-dimensional string-array value formal to a sibling
+array formal. The caller's lexical ordering, equality, and inequality checks verify
+the `array<str>` handle, all four lower bounds, and all three row-major strides survive
+both procedure boundaries.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that
