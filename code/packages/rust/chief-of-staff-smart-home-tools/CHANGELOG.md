@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `camera`, `onvif`, and `ws_discovery` labels to Chief catalog filters
+  and serialized integration reports.
 - Added `smart_home.get_command_resolution_brief`, a read-only Chief adapter
   that joins command audit, remediation plan, operator action, and closeout
   retention signals into one resolution packet without dispatching commands,

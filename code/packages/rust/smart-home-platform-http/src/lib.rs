@@ -10514,6 +10514,7 @@ fn capability_allows_command(capability: &Capability) -> bool {
 
 fn entity_domain(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light",
         EntityKind::Switch => "switch",
@@ -10574,6 +10575,7 @@ fn object_id(value: &str) -> String {
 
 fn entity_kind_label(kind: EntityKind) -> &'static str {
     match kind {
+        EntityKind::Camera => "camera",
         EntityKind::Light => "light",
         EntityKind::LightGroup => "light_group",
         EntityKind::Switch => "switch",
@@ -10590,6 +10592,7 @@ fn entity_kind_label(kind: EntityKind) -> &'static str {
 
 fn entity_kind_from_label(kind: &str) -> Result<EntityKind, ApiError> {
     match kind {
+        "camera" => Ok(EntityKind::Camera),
         "light" => Ok(EntityKind::Light),
         "light_group" => Ok(EntityKind::LightGroup),
         "switch" => Ok(EntityKind::Switch),

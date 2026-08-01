@@ -70,6 +70,7 @@ impl std::error::Error for DiscoveryError {}
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DiscoverySource {
     Mdns,
+    WsDiscovery,
     Ssdp,
     Bluetooth,
     Usb,
@@ -85,6 +86,7 @@ impl DiscoverySource {
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Mdns => "mdns",
+            Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
             Self::Bluetooth => "bluetooth",
             Self::Usb => "usb",
@@ -100,6 +102,7 @@ impl DiscoverySource {
     pub fn preference_rank(self) -> u8 {
         match self {
             Self::Manual => 100,
+            Self::WsDiscovery => 85,
             Self::Mdns => 80,
             Self::Ssdp => 70,
             Self::Usb => 65,
@@ -2352,6 +2355,7 @@ fn primary_protocol_for_entry(entry: &IntegrationCatalogEntry) -> ProtocolFamily
 fn source_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> DiscoverySource {
     match mechanism {
         DiscoveryMechanism::Mdns => DiscoverySource::Mdns,
+        DiscoveryMechanism::WsDiscovery => DiscoverySource::WsDiscovery,
         DiscoveryMechanism::Ssdp => DiscoverySource::Ssdp,
         DiscoveryMechanism::Bluetooth => DiscoverySource::Bluetooth,
         DiscoveryMechanism::Usb => DiscoverySource::Usb,
@@ -2366,6 +2370,7 @@ fn source_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> DiscoverySou
 fn transport_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> BridgeTransport {
     match mechanism {
         DiscoveryMechanism::Mdns => BridgeTransport::Mdns,
+        DiscoveryMechanism::WsDiscovery => BridgeTransport::LanHttp,
         DiscoveryMechanism::Bluetooth => BridgeTransport::Ble,
         DiscoveryMechanism::Usb => BridgeTransport::Serial,
         DiscoveryMechanism::Mqtt | DiscoveryMechanism::FileConfig => BridgeTransport::LocalProcess,
@@ -2404,6 +2409,7 @@ fn pairing_requirement_for_auth_modes(auth_modes: &[AuthMode]) -> PairingRequire
 fn discovery_mechanism_name(mechanism: DiscoveryMechanism) -> &'static str {
     match mechanism {
         DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",

@@ -194,6 +194,7 @@ pub struct RegistryProtocolSourceSummary {
     pub scenes_without_native_refs: usize,
     pub protocol_identifiers: usize,
     pub hue_identifiers: usize,
+    pub onvif_identifiers: usize,
     pub zigbee_identifiers: usize,
     pub zwave_identifiers: usize,
     pub thread_identifiers: usize,
@@ -220,6 +221,7 @@ impl RegistryProtocolSourceSummary {
     pub fn has_multi_family_sources(&self) -> bool {
         [
             self.hue_identifiers,
+            self.onvif_identifiers,
             self.zigbee_identifiers,
             self.zwave_identifiers,
             self.thread_identifiers,
@@ -237,6 +239,7 @@ impl RegistryProtocolSourceSummary {
         self.protocol_identifiers += 1;
         match family {
             ProtocolFamily::Hue => self.hue_identifiers += 1,
+            ProtocolFamily::Onvif => self.onvif_identifiers += 1,
             ProtocolFamily::Zigbee => self.zigbee_identifiers += 1,
             ProtocolFamily::ZWave => self.zwave_identifiers += 1,
             ProtocolFamily::Thread => self.thread_identifiers += 1,
@@ -270,6 +273,7 @@ pub struct RegistryTopologySummary {
     pub devices_with_room: usize,
     pub devices_without_room: usize,
     pub unique_rooms: usize,
+    pub camera_entities: usize,
     pub light_entities: usize,
     pub light_group_entities: usize,
     pub switch_entities: usize,
@@ -383,6 +387,7 @@ impl RegistryTopologySummary {
     fn add_entity(&mut self, entity: &Entity, state: Option<&StateSnapshot>) {
         self.entities += 1;
         match entity.kind {
+            EntityKind::Camera => self.camera_entities += 1,
             EntityKind::Light => self.light_entities += 1,
             EntityKind::LightGroup => self.light_group_entities += 1,
             EntityKind::Switch => self.switch_entities += 1,
@@ -2003,6 +2008,7 @@ impl From<&ProtocolIdentifier> for ProtocolIndexKey {
 fn protocol_family_key(family: &ProtocolFamily) -> String {
     match family {
         ProtocolFamily::Hue => "hue".to_string(),
+        ProtocolFamily::Onvif => "onvif".to_string(),
         ProtocolFamily::Zigbee => "zigbee".to_string(),
         ProtocolFamily::ZWave => "zwave".to_string(),
         ProtocolFamily::Thread => "thread".to_string(),
@@ -2528,6 +2534,7 @@ mod tests {
                 scenes_without_native_refs: 1,
                 protocol_identifiers: 4,
                 hue_identifiers: 2,
+                onvif_identifiers: 0,
                 zigbee_identifiers: 1,
                 zwave_identifiers: 0,
                 thread_identifiers: 0,
@@ -2657,6 +2664,7 @@ mod tests {
                 devices_with_room: 3,
                 devices_without_room: 1,
                 unique_rooms: 2,
+                camera_entities: 0,
                 light_entities: 1,
                 light_group_entities: 0,
                 switch_entities: 0,

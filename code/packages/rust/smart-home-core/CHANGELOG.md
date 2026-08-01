@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- First-class `Camera` entities and the `Onvif` protocol family for normalized
+  camera integrations.
 - Serde support for the normalized smart-home model so versioned durable stores
   can persist protocol-neutral topology, state, events, and command records.
 - `smart_home.get_recovery_readiness_brief` tool descriptor for read-only Chief

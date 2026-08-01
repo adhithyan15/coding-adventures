@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- First-party ONVIF runtime catalog coverage with WS-Discovery, normalized
+  camera entities, local HTTP, and privacy-gated media primitives.
 - Integration catalog enums for category, connectivity class, discovery,
   authentication, and implementation status.
 - Primitive-family metadata for discovery, transport, auth/pairing, command
