@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9413,
   "last_inventory": {
     "revision": "c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3",
     "schema_version": 3,
@@ -500,11 +500,11 @@
     {
       "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
       "title": "Audit tiny and signed-zero PHY00 arctangent behavior",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["phy00-small-sqrt-cross-lane-audit"],
       "branch": "codex/phy00-atan-tiny-signed-zero-audit",
-      "pr_number": null,
-      "notes": "Selected after PR #9400 merged and the collision-clean 20afefa7 inventory because its only dependency is merged, the shared PHY00 fixture machinery is established, and every existing atan lane has the same signed-zero and subnormal-floor defect. Add shared fixture cases and a small-argument identity fast path that returns the input before half-angle reduction; retain reciprocal reduction for large and infinite inputs."
+      "pr_number": 9413,
+      "notes": "Ready-for-review PR #9413 opened after rebasing onto c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3. Selected after PR #9400 merged because its only dependency is merged, the shared PHY00 fixture machinery is established, and every existing atan lane had the same signed-zero and subnormal-floor defect. The PR specifies exact binary64 identity for |x| <= 2^-27, binds shared fixtures for negative zero, 2^-30, and signed minimum subnormals, and repairs all 15 established trig lanes plus emerging C/C++. Local validation covered all 17 native trig suites, 15 downstream wave suites, measured production coverage where supported, 14 fixture tests, generated-fixture sync, six real dependency-ordered build-tool lanes, collision-clean 1,205-identity parity inventory, state graph, diff, credential, JSON, Go build-tool test/vet/build, and independent fixture, numerical, security, and inventory audits. Repository-wide BUILD validation has zero delta from the 73 known origin/main failures; the local C build runner also reproduces origin/main's PowerShell 5 UTF-8 parse defect in iso-harness, while direct GCC and Clang trig suites pass."
     },
     {
       "id": "phy01-nonfinite-validation-backfill",
