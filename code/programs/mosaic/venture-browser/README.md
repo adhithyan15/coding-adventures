@@ -35,6 +35,11 @@ recreating the surrounding chrome in backend-specific UI code.
   the shared reducer, and mounts the live Metal page renderer as the
   `content-surface` `NSView`. Scroll and link activation remain in the same
   Rust browser session rather than being reimplemented in Swift.
+- The XAML project receives the matching package-owned `MosaicHost.cs`
+  adapter. It loads `venture_browser_windows.dll`, projects that same shared
+  reducer into generated WinUI controls, and mounts Direct2D-rendered pixels
+  in the generated `content-surface` `UIElement`. Pointer-wheel scrolling and
+  link activation call back into the same Rust browser session.
 
 ## Build every backend
 
@@ -64,6 +69,12 @@ On macOS the matrix also builds the Venture Rust dynamic library and places it
 next to the generated SwiftUI project. Run the native shell from that directory
 with `swift run`; set `VENTURE_START_URL` to override the initial page or
 `VENTURE_BROWSER_LIBRARY` to load a bridge from another absolute path.
+
+On Windows the PowerShell matrix builds `venture-browser-windows`, copies its
+DLL beside the generated WinUI project, and runs the x64 `dotnet build`. The
+generated project copies that native bridge next to the executable so its
+package-owned `MosaicHost.cs` can load it without a handwritten Win32 chrome
+layer.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.

@@ -1,0 +1,21 @@
+[package]
+name = "venture-browser-windows"
+version = "0.1.0"
+edition = "2021"
+description = "Direct2D content bridge for Venture's Mosaic-generated WinUI host."
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+html-to-layout = { path = "../html-to-layout" }
+html-to-paint = { path = "../html-to-paint" }
+layout-text-measure-native = { path = "../layout-text-measure-native" }
+text-native = { path = "../text-native" }
+venture-browser-core = { path = "../venture-browser-core" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../paint-vm-direct2d" }
+
+[target.'cfg(target_os = "windows")'.dev-dependencies]
+mosaic-package-artifact-builder = { path = "../mosaic-package-artifact-builder" }

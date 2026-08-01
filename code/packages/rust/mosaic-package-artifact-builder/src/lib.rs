@@ -4435,6 +4435,19 @@ version = "1"
                     "{backend:?} project shell must accept the host surface through its MosaicHost contract with {expected:?}:\n{shell}"
                 );
             }
+            match backend {
+                Backend::SwiftUI => assert!(
+                    out.path()
+                        .join("swiftui/Sources/App/MosaicHost.swift")
+                        .exists(),
+                    "Venture must install its package-owned SwiftUI host adapter"
+                ),
+                Backend::Xaml => assert!(
+                    out.path().join("xaml/MosaicHost.cs").exists(),
+                    "Venture must install its package-owned XAML host adapter"
+                ),
+                _ => {}
+            }
         }
     }
 
