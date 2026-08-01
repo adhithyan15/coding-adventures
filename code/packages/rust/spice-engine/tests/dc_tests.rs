@@ -1139,6 +1139,22 @@ fn mos_model_card_rejects_negative_or_non_finite_saturation_current_density() {
 }
 
 #[test]
+fn mos_model_card_rejects_non_positive_or_non_finite_width() {
+    for value in [1.0e-9, 2.0e-6, 1.0] {
+        let valid = normalize_model_card("Mvalid", "nmos", &[("W", value)]).unwrap();
+        assert_close(*valid.parameters.get("W").unwrap(), value);
+    }
+
+    for invalid_width in [f64::NEG_INFINITY, -0.1, 0.0, f64::INFINITY, f64::NAN] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &[("W", invalid_width)]),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET W must be finite and positive"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

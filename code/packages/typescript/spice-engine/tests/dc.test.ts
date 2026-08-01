@@ -1056,6 +1056,25 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects non-positive or non-finite MOS width", () => {
+    for (const value of [1.0e-9, 2.0e-6, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { W: value });
+      expect(valid.parameters.W).toBe(value);
+    }
+
+    for (const invalidWidth of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      0.0,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { W: invalidWidth }),
+      ).toThrow("MOSFET W must be finite and positive");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
