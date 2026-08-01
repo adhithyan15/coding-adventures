@@ -1321,6 +1321,16 @@ def test_mos_model_card_rejects_negative_or_non_finite_source_resistance() -> No
             normalize_model_card("Minvalid", "pmos", {"RS": invalid_resistance})
 
 
+def test_mos_model_card_rejects_negative_or_non_finite_sheet_resistance() -> None:
+    for value in (0.0, 10.0, 1.0e6):
+        valid = normalize_model_card("Mvalid", "nmos", {"RSH": value})
+        assert valid.parameters["RSH"] == pytest.approx(value)
+
+    for invalid_resistance in (-math.inf, -0.1, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET RSH must be finite and non-negative"):
+            normalize_model_card("Minvalid", "nmos", {"RSH": invalid_resistance})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
