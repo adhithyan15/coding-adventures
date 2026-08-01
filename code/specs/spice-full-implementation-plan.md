@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS width validation.
+1. Cross-language Level-1 MOS length validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `W` values before
+   - Reject non-positive or non-finite model-card `L` values before
      channel-current, capacitance, and noise calculations.
-   - Preserve positive model widths across Rust, Python, and TypeScript.
+   - Preserve positive model lengths across Rust, Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3796,6 +3796,12 @@ the Rust, Python, and TypeScript surfaces together.
      bulk-junction leakage-density and temperature preprocessing.
    - Zero and positive saturation-current densities remain aligned across
      Rust, Python, and TypeScript.
+
+317. Cross-language Level-1 MOS width validation.
+   - Status: completed in PR 9392.
+   - Non-positive and non-finite model-card `W` values are rejected before
+     channel-current, capacitance, and noise calculations.
+   - Positive model widths remain aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 

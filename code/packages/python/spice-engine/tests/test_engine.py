@@ -1268,6 +1268,16 @@ def test_mos_model_card_rejects_non_positive_or_non_finite_width() -> None:
             normalize_model_card("Minvalid", "nmos", {"W": invalid_width})
 
 
+def test_mos_model_card_rejects_non_positive_or_non_finite_length() -> None:
+    for value in (1.0e-9, 2.0e-6, 1.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"L": value})
+        assert valid.parameters["L"] == pytest.approx(value)
+
+    for invalid_length in (-math.inf, -0.1, 0.0, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET L must be finite and positive"):
+            normalize_model_card("Minvalid", "nmos", {"L": invalid_length})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
