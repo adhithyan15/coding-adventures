@@ -147,6 +147,58 @@
       }
     },
     {
+      "id": "phy00/atan/negative-zero",
+      "operation": "atan",
+      "summary": "Arctangent preserves the sign of negative zero.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-0"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-0"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/atan/tiny-positive",
+      "operation": "atan",
+      "summary": "A tiny finite argument rounds exactly to itself.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "9.3132257461547852e-10"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "9.3132257461547852e-10"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/atan/minimum-positive-subnormal",
+      "operation": "atan",
+      "summary": "The minimum positive subnormal survives half-angle avoidance exactly.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "4.9406564584124654e-324"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "4.9406564584124654e-324"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
+      "id": "phy00/atan/minimum-negative-subnormal",
+      "operation": "atan",
+      "summary": "The minimum negative subnormal survives half-angle avoidance exactly.",
+      "input": {
+        "x": {"kind": "finite", "decimal": "-4.9406564584124654e-324"}
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "finite", "decimal": "-4.9406564584124654e-324"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
       "id": "phy00/atan/large-positive",
       "operation": "atan",
       "summary": "Outer range reduction approaches pi over two.",

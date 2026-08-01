@@ -295,6 +295,13 @@ defmodule TrigTest do
       assert Trig.atan(0) == 0.0
     end
 
+    test "preserves tiny inputs and negative zero exactly" do
+      assert <<Trig.atan(-0.0)::float-64>> == <<0x8000000000000000::unsigned-64>>
+      assert Trig.atan(:math.pow(2.0, -30.0)) == :math.pow(2.0, -30.0)
+      assert Trig.atan(5.0e-324) == 5.0e-324
+      assert Trig.atan(-5.0e-324) == -5.0e-324
+    end
+
     test "atan(1) is pi/4" do
       assert_in_delta Trig.atan(1), @pi / 4, @tolerance
     end

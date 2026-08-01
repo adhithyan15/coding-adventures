@@ -450,7 +450,8 @@ defmodule Trig do
     x = x / 1.0
 
     cond do
-      x == 0.0  -> 0.0
+      # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+      abs(x) <= 7.450580596923828e-9 -> x
       x >  1.0  -> @half_pi - atan_core(1.0 / x)
       x < -1.0  -> -@half_pi - atan_core(1.0 / x)
       true      -> atan_core(x)

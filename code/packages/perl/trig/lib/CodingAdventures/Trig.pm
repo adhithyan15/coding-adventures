@@ -437,7 +437,8 @@ our $HALF_PI = $PI / 2.0;
 sub atan_approx {
     my $x = ( @_ == 2 ) ? $_[1] : $_[0];
 
-    return 0.0 if $x == 0.0;
+    # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    return $x if abs($x) <= 7.450580596923828e-9;
 
     if    ( $x >  1.0 ) { return $HALF_PI  - _atan_core( 1.0 / $x ); }
     elsif ( $x < -1.0 ) { return -$HALF_PI - _atan_core( 1.0 / $x ); }

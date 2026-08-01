@@ -199,6 +199,14 @@ final class TrigTests: XCTestCase {
         XCTAssertEqual(Trig.atan(0.0), 0.0)
     }
 
+    func testAtanPreservesTinyInputsAndNegativeZero() {
+        XCTAssertEqual(Trig.atan(-0.0).sign, .minus)
+        XCTAssertEqual(Trig.atan(Double(sign: .plus, exponent: -30, significand: 1.0)),
+                       Double(sign: .plus, exponent: -30, significand: 1.0))
+        XCTAssertEqual(Trig.atan(Double.leastNonzeroMagnitude), Double.leastNonzeroMagnitude)
+        XCTAssertEqual(Trig.atan(-Double.leastNonzeroMagnitude), -Double.leastNonzeroMagnitude)
+    }
+
     func testAtanOne() {
         // atan(1) = π/4 (45°)
         XCTAssertEqual(Trig.atan(1.0), PI / 4, accuracy: eps)

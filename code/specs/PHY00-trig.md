@@ -146,6 +146,13 @@ $$\text{atan}(x) = 2 \cdot \text{atan}\!\left(\frac{x}{1 + \sqrt{1 + x^2}}\right
 
 After one application, $|x| \leq 1$ shrinks to $|y| \leq \tan(\pi/8) \approx 0.414$, where the Taylor series converges in ~15 terms. We use our own `sqrt` here.
 
+**Binary64 small-argument identity** (before either reduction): for
+$|x| \leq 2^{-27}$, return `x` unchanged. The first omitted correction is
+$|x|^3/3$, which is smaller than half a binary64 ulp throughout this interval,
+so the correctly rounded result is exactly the input. Performing this check
+before the half-angle division also preserves negative zero and prevents the
+minimum positive or negative subnormal from underflowing to zero.
+
 **Iterative term computation:**
 
 $$\text{term}_0 = t, \quad \text{term}_n = \text{term}_{n-1} \times (-t^2) \times \frac{2n-1}{2n+1}$$
@@ -231,7 +238,9 @@ NaN and infinities as tagged symbols. This preserves minimum subnormal input,
 maximum finite input, and the sign of zero across JSON implementations. Exact
 comparison of NaN means `isNaN`; exact zero comparison includes the zero sign.
 The included `atan2(-0, -1)` case returns positive $\pi$, consistent with the
-contract range $(-\pi, \pi]$.
+contract range $(-\pi, \pi]$. The `atan` boundary cases require exact identity
+for negative zero, a representative tiny finite value, and both signed minimum
+subnormals.
 
 ## 6. Cross-Language Parity
 
@@ -253,7 +262,7 @@ parity suites validate:
 5. Degree conversion round-trips: `degrees(radians(45.0)) == 45.0`
 6. `sqrt(4) == 2`, `sqrt(2) * sqrt(2) ≈ 2.0`
 7. `tan(π/4) ≈ 1.0`, `tan(-π/4) ≈ -1.0`
-8. `atan(1) ≈ π/4`, `atan(-1) ≈ -π/4`, `atan(√3) ≈ π/3`
+8. `atan(1) ≈ π/4`, `atan(-1) ≈ -π/4`, `atan(√3) ≈ π/3`, and tiny inputs preserve their exact binary64 value and zero sign
 9. `atan2(0, 1) == 0`, `atan2(1, 0) == π/2`, `atan2(0, -1) == π`, `atan2(-1, 0) == -π/2`
 10. All four atan2 quadrant cases (Q1–Q4)
 

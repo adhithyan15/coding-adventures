@@ -443,8 +443,12 @@ def atan(x: float) -> float:
     Proof: atan(x) + atan(1/x) = pi/2 for x > 0. If theta = atan(x),
     then tan(pi/2 - theta) = cot(theta) = 1/x, so atan(1/x) = pi/2 - theta.
     """
-    if x == 0.0:
-        return 0.0
+    # The public contract is binary64 even when a Python caller supplies an int.
+    x = float(x)
+
+    # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    if abs(x) <= 7.450580596923828e-9:
+        return x
 
     if x > 1.0:
         return HALF_PI - _atan_core(1.0 / x)

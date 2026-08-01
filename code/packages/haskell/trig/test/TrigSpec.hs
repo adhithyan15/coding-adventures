@@ -120,6 +120,13 @@ spec = do
             tan (negate halfPi) `shouldBe` (-1e308)
 
     describe "atan" $ do
+        it "preserves tiny inputs and negative zero exactly" $ do
+            let subnormal = encodeFloat 1 (-1074)
+            isNegativeZero (atan (-0.0)) `shouldBe` True
+            atan (encodeFloat 1 (-30)) `shouldBe` encodeFloat 1 (-30)
+            atan subnormal `shouldBe` subnormal
+            atan (negate subnormal) `shouldBe` negate subnormal
+
         it "matches reference values and all range branches" $ do
             rootThree <- rightValue $ sqrt 3.0
             atan 0.0 `shouldBeCloseTo` 0.0

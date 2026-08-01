@@ -395,7 +395,8 @@ module Trig
 
   def self.atan(x)
     x = x.to_f
-    return 0.0 if x == 0.0
+    # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    return x if x.abs <= 7.450580596923828e-9
 
     if x > 1.0
       return HALF_PI - atan_core(1.0 / x)

@@ -329,7 +329,8 @@ public struct Trig {
     /// - Parameter x: any real number
     /// - Returns: atan(x), accurate to ~1e-15
     public static func atan(_ x: Double) -> Double {
-        if x == 0.0 { return 0.0 }
+        // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+        if Swift.abs(x) <= 7.450580596923828e-9 { return x }
 
         if x > 1.0  { return HALF_PI - atanCore(1.0 / x) }
         if x < -1.0 { return -HALF_PI - atanCore(1.0 / x) }

@@ -176,9 +176,10 @@ public static class Trig
     /// </summary>
     public static double Atan(double x)
     {
-        if (x == 0.0)
+        // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+        if (Math.Abs(x) <= 7.450580596923828e-9)
         {
-            return 0.0;
+            return x;
         }
 
         if (x > 1.0)

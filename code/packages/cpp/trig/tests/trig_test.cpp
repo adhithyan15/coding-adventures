@@ -78,6 +78,12 @@ int main() {
 
     // ── atan ─────────────────────────────────────────────────────────────
     ISO_CHECK_EQ_DBL(t::atan(0.0), 0.0, eps);
+    ISO_CHECK(std::signbit(t::atan(-0.0)));
+    ISO_CHECK(t::atan(0x1p-30) == 0x1p-30);
+    ISO_CHECK(t::atan(std::numeric_limits<double>::denorm_min()) ==
+              std::numeric_limits<double>::denorm_min());
+    ISO_CHECK(t::atan(-std::numeric_limits<double>::denorm_min()) ==
+              -std::numeric_limits<double>::denorm_min());
     ISO_CHECK_EQ_DBL(t::atan(1.0), t::PI / 4.0, eps);
     ISO_CHECK_EQ_DBL(t::atan(-1.0), -t::PI / 4.0, eps);
     ISO_CHECK_EQ_DBL(t::atan(1000.0), t::PI / 2.0, 1e-3);

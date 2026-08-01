@@ -443,8 +443,9 @@ fn atan_core(x: f64) -> f64 {
 /// assert!((trig::atan(0.0)).abs() < 1e-10);
 /// ```
 pub fn atan(x: f64) -> f64 {
-    if x == 0.0 {
-        return 0.0;
+    // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    if x.abs() <= 7.450580596923828e-9 {
+        return x;
     }
 
     if x > 1.0 {

@@ -359,6 +359,16 @@ func TestAtanZero(t *testing.T) {
 	}
 }
 
+func TestAtanPreservesTinyInputsAndNegativeZero(t *testing.T) {
+	if !math.Signbit(Atan(math.Copysign(0.0, -1.0))) {
+		t.Fatal("Atan(-0) lost the zero sign")
+	}
+	tiny := math.Ldexp(1.0, -30)
+	if Atan(tiny) != tiny || Atan(math.SmallestNonzeroFloat64) != math.SmallestNonzeroFloat64 || Atan(-math.SmallestNonzeroFloat64) != -math.SmallestNonzeroFloat64 {
+		t.Fatal("Atan did not preserve a tiny binary64 input exactly")
+	}
+}
+
 func TestAtanOne(t *testing.T) {
 	if !approxEqual(Atan(1.0), PI/4) {
 		t.Errorf("Atan(1) = %v, want PI/4 = %v", Atan(1.0), PI/4)

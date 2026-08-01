@@ -322,6 +322,15 @@ class TestAtan:
     def test_atan_zero(self) -> None:
         """atan(0) = 0."""
         assert atan(0) == 0.0
+        assert isinstance(atan(0), float)
+
+    def test_atan_preserves_tiny_inputs_and_negative_zero(self) -> None:
+        """The exact binary64 identity path runs before half-angle reduction."""
+        minimum = float.fromhex("0x0.0000000000001p-1022")
+        assert math.copysign(1.0, atan(-0.0)) == -1.0
+        assert atan(float.fromhex("0x1p-30")) == float.fromhex("0x1p-30")
+        assert atan(minimum) == minimum
+        assert atan(-minimum) == -minimum
 
     def test_atan_one(self) -> None:
         """atan(1) = pi/4."""

@@ -303,6 +303,14 @@ class TrigTest {
     fun atanZero() = assertEquals(0.0, Trig.atan(0.0), TOL)
 
     @Test
+    fun atanPreservesTinyInputsAndNegativeZero() {
+        assertEquals(Long.MIN_VALUE, Trig.atan(-0.0).toRawBits())
+        assertEquals(Math.scalb(1.0, -30), Trig.atan(Math.scalb(1.0, -30)))
+        assertEquals(Double.MIN_VALUE, Trig.atan(Double.MIN_VALUE))
+        assertEquals(-Double.MIN_VALUE, Trig.atan(-Double.MIN_VALUE))
+    }
+
+    @Test
     fun atanOne() = assertEquals(Trig.PI / 4, Trig.atan(1.0), TOL)
 
     @Test

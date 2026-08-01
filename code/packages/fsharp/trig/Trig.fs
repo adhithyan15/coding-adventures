@@ -112,8 +112,9 @@ module Trig =
         2.0 * result
 
     let atan (x: float) =
-        if x = 0.0 then
-            0.0
+        // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+        if abs x <= 7.450580596923828e-9 then
+            x
         elif x > 1.0 then
             halfPi - atanCore (1.0 / x)
         elif x < -1.0 then

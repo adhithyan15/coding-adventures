@@ -536,8 +536,13 @@ func Atan(x float64) float64 {
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("x", x)
 
-			if x == 0.0 {
-				return rf.Generate(true, false, 0.0)
+			absX := x
+			if absX < 0.0 {
+				absX = -absX
+			}
+			// Atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+			if absX <= 7.450580596923828e-9 {
+				return rf.Generate(true, false, x)
 			}
 			if x > 1.0 {
 				return rf.Generate(true, false, halfPI-atanCore(1.0/x))

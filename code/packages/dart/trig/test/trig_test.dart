@@ -91,10 +91,7 @@ void main() {
       expect(trig.degrees(trig.halfPi), closeToExpected(90.0));
 
       for (final degrees in [0.0, 30.0, 45.0, 90.0, 180.0, 360.0]) {
-        expect(
-          trig.degrees(trig.radians(degrees)),
-          closeToExpected(degrees),
-        );
+        expect(trig.degrees(trig.radians(degrees)), closeToExpected(degrees));
       }
     });
   });
@@ -152,9 +149,18 @@ void main() {
       expect(trig.atan(rootThree), closeToExpected(trig.pi / 3.0));
       expect(trig.atan(1.0 / rootThree), closeToExpected(trig.pi / 6.0));
       expect(
-          trig.atan(trig.tan(trig.pi / 4.0)), closeToExpected(trig.pi / 4.0));
+        trig.atan(trig.tan(trig.pi / 4.0)),
+        closeToExpected(trig.pi / 4.0),
+      );
       expect(trig.atan(1e10), closeTo(trig.halfPi, 1e-5));
       expect(trig.atan(-1e10), closeTo(-trig.halfPi, 1e-5));
+    });
+
+    test('preserves tiny inputs and negative zero exactly', () {
+      expect(trig.atan(-0.0).isNegative, isTrue);
+      expect(trig.atan(1.0 / 1073741824.0), 1.0 / 1073741824.0);
+      expect(trig.atan(double.minPositive), double.minPositive);
+      expect(trig.atan(-double.minPositive), -double.minPositive);
     });
 
     test('selects both axes, the origin, and every quadrant', () {

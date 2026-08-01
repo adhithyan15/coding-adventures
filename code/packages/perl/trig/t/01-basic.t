@@ -195,6 +195,11 @@ ok( !eval { sqrt_approx(-1); 1 }, 'sqrt(-1) dies' );
 # ===========================================================================
 
 ok( near( atan_approx(0),  0.0 ),         'atan(0) = 0' );
+is( unpack( 'H*', pack( 'd>', atan_approx(-0.0) ) ), '8000000000000000',
+    'atan(-0) preserves the zero sign' );
+is( atan_approx(2**-30), 2**-30, 'atan(tiny) is exact' );
+is( atan_approx(5e-324), 5e-324, 'atan(minimum positive subnormal) is exact' );
+is( atan_approx(-5e-324), -5e-324, 'atan(minimum negative subnormal) is exact' );
 ok( near( atan_approx(1),  $PI / 4 ),     'atan(1) = pi/4' );
 ok( near( atan_approx(-1), -$PI / 4 ),    'atan(-1) = -pi/4' );
 ok( near( atan_approx( sqrt_approx(3) ),  $PI / 3 ), 'atan(sqrt(3)) = pi/3' );
