@@ -904,6 +904,7 @@ members = [
     "smart-home-home-assistant-export",
     "smart-home-home-assistant-history",
     "smart-home-home-assistant-definitions",
+    "smart-home-home-assistant-dashboard-migration",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",

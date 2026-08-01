@@ -614,6 +614,28 @@ unsupported Home Assistant behavior:
   authenticated collection, migration compatibility, deterministic reruns,
   partial-definition diagnostics, atomic output, and token redaction.
 
+## Current Home Assistant Dashboard Migration Slice
+
+This slice migrates concrete Lovelace definitions without executing custom
+frontend code or guessing at unsupported behavior:
+
+- `smart-home-home-assistant-dashboard-migration` authenticates to Home
+  Assistant and uses `lovelace/dashboards/list`, `lovelace/config`, and
+  `lovelace/resources/list` over the WebSocket API.
+- Standard entity, light, thermostat, sensor, tile, button, entities, glance,
+  and history cards become a deterministic native dashboard manifest. Layout
+  stacks, grids, and section views are flattened in source order.
+- Entity references are accepted only when they are enabled in the reviewed
+  topology export and use the same `ha:<entity-id>` identifiers as the
+  executable runtime migration.
+- Custom cards and resources, unsupported actions, malformed rows, and unknown
+  entities produce durable review diagnostics instead of approximations. A
+  listed dashboard whose configuration cannot be fetched blocks applied
+  migration while remaining inspectable in dry-run output.
+- Real local WebSocket and CLI process tests prove authenticated multi-dashboard
+  collection, resource capture, deterministic source fingerprints, blocked
+  apply behavior, atomic output, and token redaction.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
@@ -623,8 +645,6 @@ These items move toward retiring an existing Home Assistant install:
   Matter commissioning/secure-session/network host, a Thread border-router
   host, a production Zigbee coordinator/join/security host, and production
   Z-Wave inclusion and S2.
-- Extend the completed Home Assistant topology, current-state, historical-state,
-  scene, and automation migration pipeline with dashboard migration.
 - Provide a dashboard that can inspect devices, rooms, state, health,
   automations, event history, pairing, and command audit.
 
