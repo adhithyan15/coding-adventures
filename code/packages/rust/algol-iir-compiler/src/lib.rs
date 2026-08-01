@@ -5687,6 +5687,28 @@ mod tests {
     }
 
     #[test]
+    fn multidimensional_boolean_array_parameter_preserves_full_descriptor() {
+        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module =
+            compile_source(src, "multidimensional_boolean_array_param").expect("compiles");
+        let proc_ = module
+            .get_function("setflags")
+            .expect("boolean array procedure exists");
+        assert_eq!(
+            proc_.params,
+            vec![
+                ("a".to_string(), "array<bool>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "2-D boolean array formals must preserve every lower bound and row-major stride"
+        );
+    }
+
+    #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
