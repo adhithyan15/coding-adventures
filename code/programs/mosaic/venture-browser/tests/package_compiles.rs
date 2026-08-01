@@ -106,6 +106,8 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_render",
         "venture_browser_macos_scroll",
         "venture_browser_macos_activate_link",
+        "setPropsChangedHandler",
+        "propsChangedHandler?()",
     ] {
         assert!(host.contains(symbol), "SwiftUI host omits {symbol}");
     }

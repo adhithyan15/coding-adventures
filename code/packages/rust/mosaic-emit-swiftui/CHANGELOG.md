@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - host-driven prop refresh
+
+Generated SwiftUI project shells now let optional native `MosaicHost` adapters
+register a props-changed handler. Host-surface interactions can request a fresh
+slot projection on the main queue without duplicating Mosaic component behavior
+in AppKit or UIKit.
+
 ### Added - project-shell native node-slot bridge
 
 Generated SwiftUI project shells now resolve `node` and component slots through
