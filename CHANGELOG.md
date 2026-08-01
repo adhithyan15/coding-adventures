@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed — Venture Windows CI Acceptance
+- The pull-request Windows runner now derives a dedicated Venture acceptance
+  flag from the shared build plan, installs MSVC and .NET only when that slice
+  is affected, and executes the package-owned Rust/WinUI integration test
+  instead of reporting a green job whose general build step was skipped. A
+  focused detector test ratchets force, package, unrelated, and malformed plans.
+
 ### Added — OCaml CI Toolchain Evidence
 - Added OCAML03, a closed evidence manifest, and digest-checked transitive opam
   solver locks plus installed-package receipts for Ubuntu x64, macOS arm64, and
