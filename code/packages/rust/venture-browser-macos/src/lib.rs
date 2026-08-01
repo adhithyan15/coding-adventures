@@ -13,13 +13,15 @@ use std::fmt;
 use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserLoadError,
-    BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher, BrowserSession,
+    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
+    BrowserSession,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
-use venture_browser_core::HttpBrowserFetcher;
+use venture_browser_core::{
+    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, HttpBrowserFetcher,
+};
 
 pub const VERSION: &str = "0.1.0";
 pub const DEFAULT_START_URL: &str = "http://info.cern.ch/";
