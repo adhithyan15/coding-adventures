@@ -12,6 +12,9 @@ private final class VentureNativeLibrary {
     UnsafeMutableRawPointer?, UnsafePointer<CChar>?, UnsafePointer<CChar>?
   ) -> UnsafeMutablePointer<CChar>?
   typealias Scroll = @convention(c) (UnsafeMutableRawPointer?, Double) -> UInt8
+  typealias ScrollCommand = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafePointer<CChar>?
+  ) -> UInt8
   typealias ActivateLink = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias Render = @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> UInt8
   typealias StringFree = @convention(c) (UnsafeMutablePointer<CChar>?) -> Void
@@ -22,6 +25,7 @@ private final class VentureNativeLibrary {
   let applyProps: ApplyProps
   let handleEvent: HandleEvent
   let scroll: Scroll
+  let scrollCommand: ScrollCommand
   let activateLink: ActivateLink
   let render: Render
   let stringFree: StringFree
@@ -48,6 +52,9 @@ private final class VentureNativeLibrary {
       let applyProps = symbol("venture_browser_macos_apply_props", as: ApplyProps.self),
       let handleEvent = symbol("venture_browser_macos_handle_event", as: HandleEvent.self),
       let scroll = symbol("venture_browser_macos_scroll", as: Scroll.self),
+      let scrollCommand = symbol(
+        "venture_browser_macos_scroll_command", as: ScrollCommand.self
+      ),
       let activateLink = symbol("venture_browser_macos_activate_link", as: ActivateLink.self),
       let render = symbol("venture_browser_macos_render", as: Render.self),
       let stringFree = symbol("venture_browser_string_free", as: StringFree.self)
@@ -62,6 +69,7 @@ private final class VentureNativeLibrary {
     self.applyProps = applyProps
     self.handleEvent = handleEvent
     self.scroll = scroll
+    self.scrollCommand = scrollCommand
     self.activateLink = activateLink
     self.render = render
     self.stringFree = stringFree
@@ -140,6 +148,18 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     contentView?.renderPage()
   }
 
+  fileprivate func scroll(command: String) {
+    guard let native, let browser else { return }
+    let changed = command.withCString { native.scrollCommand(browser, $0) }
+    guard changed != 0 else { return }
+    contentView?.renderPage()
+  }
+
+  fileprivate func navigateHistory(eventName: String) {
+    _ = handleEvent([:], name: eventName as NSString)
+    propsChangedHandler?()
+  }
+
   fileprivate func activateLink(at point: NSPoint) {
     guard let native, let browser, native.activateLink(browser, point.x, point.y) != 0 else {
       return
@@ -163,6 +183,7 @@ private final class VentureContentView: NSView {
   }
 
   override var isFlipped: Bool { true }
+  override var acceptsFirstResponder: Bool { true }
 
   override func makeBackingLayer() -> CALayer {
     let layer = CAMetalLayer()
@@ -193,8 +214,59 @@ private final class VentureContentView: NSView {
     host?.scroll(by: -event.scrollingDeltaY * scale)
   }
 
+  override func mouseDown(with event: NSEvent) {
+    window?.makeFirstResponder(self)
+    super.mouseDown(with: event)
+  }
+
   override func mouseUp(with event: NSEvent) {
     host?.activateLink(at: convert(event.locationInWindow, from: nil))
+  }
+
+  override func keyDown(with event: NSEvent) {
+    let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+    if modifiers.contains(.command)
+      && modifiers.intersection([.control, .option, .shift]).isEmpty
+    {
+      switch event.keyCode {
+      case 123:
+        host?.navigateHistory(eventName: "onBack")
+        return
+      case 124:
+        host?.navigateHistory(eventName: "onForward")
+        return
+      default:
+        break
+      }
+    }
+    guard modifiers.intersection([.command, .control, .option]).isEmpty else {
+      super.keyDown(with: event)
+      return
+    }
+    let command: String?
+    switch event.keyCode {
+    case 126:
+      command = "line-up"
+    case 125:
+      command = "line-down"
+    case 116:
+      command = "page-up"
+    case 121:
+      command = "page-down"
+    case 49:
+      command = modifiers.contains(.shift) ? "page-up" : "page-down"
+    case 115:
+      command = "document-start"
+    case 119:
+      command = "document-end"
+    default:
+      command = nil
+    }
+    guard let command else {
+      super.keyDown(with: event)
+      return
+    }
+    host?.scroll(command: command)
   }
 
   fileprivate func renderPage() {

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add host-neutral keyboard-scroll commands so native SwiftUI and WinUI page
+  surfaces share exact line, page, start, and end scrolling behavior.
+
 ## 0.6.0
 
 - Pin the host-owned `content-surface` node slot used to mount native page

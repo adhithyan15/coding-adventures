@@ -1,3 +1,4 @@
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -6,6 +7,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using Windows.System;
+using Windows.UI.Core;
 
 namespace Mosaic.Generated;
 
@@ -108,7 +111,7 @@ public static class MosaicHost
         }
     }
 
-    private sealed class VentureContentSurface : Grid
+    private sealed class VentureContentSurface : ContentControl
     {
         private readonly VentureChrome component;
         private readonly Image image;
@@ -121,7 +124,12 @@ public static class MosaicHost
             this.component = component;
             Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
             image = new Image { Stretch = Stretch.Fill };
-            Children.Add(image);
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Stretch;
+            Content = image;
+            IsTabStop = true;
+            KeyDown += OnKeyDown;
+            PointerPressed += OnPointerPressed;
             PointerWheelChanged += OnPointerWheelChanged;
             PointerReleased += OnPointerReleased;
         }
@@ -164,6 +172,54 @@ public static class MosaicHost
             var delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
             if (Native.Scroll(browser, -delta) != 0)
             {
+                Refresh();
+                e.Handled = true;
+            }
+        }
+
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            Focus(FocusState.Pointer);
+        }
+
+        private void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.KeyStatus.IsMenuKeyDown)
+            {
+                var historyEvent = e.Key switch
+                {
+                    VirtualKey.Left => "onBack",
+                    VirtualKey.Right => "onForward",
+                    _ => null,
+                };
+                if (historyEvent is not null)
+                {
+                    _ = ApplyResponse(
+                        component,
+                        Native.Decode(Native.HandleEvent(browser, historyEvent, null)));
+                    Refresh();
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            var shift = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift)
+                & CoreVirtualKeyStates.Down) != 0;
+            var command = e.Key switch
+            {
+                VirtualKey.Up => "line-up",
+                VirtualKey.Down => "line-down",
+                VirtualKey.PageUp => "page-up",
+                VirtualKey.PageDown => "page-down",
+                VirtualKey.Space when shift => "page-up",
+                VirtualKey.Space => "page-down",
+                VirtualKey.Home => "document-start",
+                VirtualKey.End => "document-end",
+                _ => null,
+            };
+            if (command is not null)
+            {
+                _ = Native.ScrollCommand(browser, command);
                 Refresh();
                 e.Handled = true;
             }
@@ -219,6 +275,12 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_scroll",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte Scroll(IntPtr browser, double deltaY);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_scroll_command",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ScrollCommand(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string command);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]

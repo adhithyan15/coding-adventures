@@ -11,7 +11,7 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse,
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserSession, HttpBrowserFetcher,
+    BrowserScrollCommand, BrowserSession, HttpBrowserFetcher,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -163,6 +163,15 @@ impl WindowsBrowserHost {
         };
         let before = viewport.scroll_state().offset_y();
         viewport.scroll_by(delta_y);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_command(command);
         viewport.scroll_state().offset_y() != before
     }
 
@@ -323,6 +332,22 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_scroll_command(
+        host: *mut WindowsBrowserHost,
+        name: *const c_char,
+    ) -> u8 {
+        let Some(command) = string_arg(name)
+            .as_deref()
+            .and_then(BrowserScrollCommand::from_name)
+        else {
+            return 0;
+        };
+        host.as_mut()
+            .map(|host| host.scroll_command(command) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_windows_activate_link(
         host: *mut WindowsBrowserHost,
         x: f64,
@@ -422,5 +447,28 @@ mod tests {
         assert_eq!(props.address, "http://example.test/next");
         assert_eq!(props.page_title, "Next");
         assert!(!props.back_disabled);
+    }
+
+    #[test]
+    fn semantic_keyboard_scroll_commands_drive_the_windows_session() {
+        let body = (0..80)
+            .map(|index| format!("<p>Keyboard Venture paragraph {index}</p>"))
+            .collect::<String>();
+        let fetcher = move |url: &str| match url {
+            "http://example.test/" => Ok(page(url, "Keyboard", &body)),
+            _ => Err(format!("unexpected URL {url}")),
+        };
+        let mut host = WindowsBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("initial page loads");
+
+        assert!(host.scroll_command(BrowserScrollCommand::LineDown));
+        assert!(host.scroll_command(BrowserScrollCommand::DocumentEnd));
+        assert!(host.scroll_command(BrowserScrollCommand::DocumentStart));
+        assert!(!host.scroll_command(BrowserScrollCommand::DocumentStart));
     }
 }

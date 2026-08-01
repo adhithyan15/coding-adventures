@@ -96,7 +96,10 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "Sources/App/MosaicHost.swift"
     );
     assert_eq!(package.host_assets.files[1].backend, "xaml");
-    assert_eq!(package.host_assets.files[1].source, "host/xaml/MosaicHost.cs");
+    assert_eq!(
+        package.host_assets.files[1].source,
+        "host/xaml/MosaicHost.cs"
+    );
     assert_eq!(package.host_assets.files[1].target, "MosaicHost.cs");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
@@ -105,9 +108,12 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_handle_event",
         "venture_browser_macos_render",
         "venture_browser_macos_scroll",
+        "venture_browser_macos_scroll_command",
         "venture_browser_macos_activate_link",
         "setPropsChangedHandler",
         "propsChangedHandler?()",
+        "override func keyDown",
+        "navigateHistory(eventName:",
     ] {
         assert!(host.contains(symbol), "SwiftUI host omits {symbol}");
     }
@@ -118,11 +124,27 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_windows_handle_event",
         "venture_browser_windows_render_bgra",
         "venture_browser_windows_scroll",
+        "venture_browser_windows_scroll_command",
         "venture_browser_windows_activate_link",
         "WriteableBitmap",
         "component.ContentSurface",
+        "private void OnKeyDown",
+        "Focus(FocusState.Pointer)",
+        "VentureContentSurface : ContentControl",
     ] {
         assert!(host.contains(symbol), "XAML host omits {symbol}");
+    }
+    let swift_host = read_package_file("host/swiftui/MosaicHost.swift");
+    let xaml_host = read_package_file("host/xaml/MosaicHost.cs");
+    for command in venture_browser_core::VENTURE_SCROLL_COMMAND_NAMES {
+        assert!(
+            swift_host.contains(command),
+            "SwiftUI host omits shared scroll command {command}"
+        );
+        assert!(
+            xaml_host.contains(command),
+            "XAML host omits shared scroll command {command}"
+        );
     }
 }
 
