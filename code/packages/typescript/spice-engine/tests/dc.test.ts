@@ -1115,6 +1115,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS drain resistance", () => {
+    for (const value of [0.0, 10.0, 1.0e6]) {
+      const valid = normalizeModelCard("Mvalid", "nmos", { RD: value });
+      expect(valid.parameters.RD).toBe(value);
+    }
+
+    for (const invalidResistance of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "nmos", { RD: invalidResistance }),
+      ).toThrow("MOSFET RD must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

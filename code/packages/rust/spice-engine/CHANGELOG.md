@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject negative and non-finite Level-1 MOS model-card `RD` values before
+  external drain-resistance stamping and noise calculations.
+
 - Reject Level-1 MOS model-card `LD` values that are non-finite, negative, or
   leave a non-positive effective channel length.
 
