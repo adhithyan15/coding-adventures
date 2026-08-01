@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS flicker-noise coefficient validation.
+1. Cross-language Level-1 MOS flicker-noise exponent validation.
    - Status: current PR completion candidate.
-   - Reject negative or non-finite model-card `KF` values before flicker-noise
+   - Reject negative or non-finite model-card `AF` values before flicker-noise
      calculations.
-   - Preserve zero and positive flicker-noise coefficients across Rust, Python, and
+   - Preserve zero and positive flicker-noise exponents across Rust, Python, and
      TypeScript.
 
 ## Completed Slices
@@ -3844,6 +3844,13 @@ the Rust, Python, and TypeScript surfaces together.
      drain/source geometry converts sheet resistance into external resistance.
    - Zero and positive sheet resistances remain aligned across Rust, Python,
      and TypeScript.
+
+324. Cross-language Level-1 MOS flicker-noise coefficient validation.
+   - Status: completed in PR 9417.
+   - Negative and non-finite model-card `KF` values are rejected before
+     flicker-noise calculations.
+   - Zero and positive flicker-noise coefficients remain aligned across Rust,
+     Python, and TypeScript.
 
 ## Backlog
 
