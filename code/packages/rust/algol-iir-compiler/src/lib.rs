@@ -5800,6 +5800,41 @@ mod tests {
     }
 
     #[test]
+    fn nested_procedure_captures_multidimensional_string_array_parameter() {
+        let src = "begin string array words[-1:0, 4:5]; integer result; \
+                   procedure fill(a); value a; string array a; \
+                     begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; \
+                           seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; \
+                   fill(words) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "string_array_formal_capture").expect("compiles");
+        let fill = module.get_function("fill").expect("fill function exists");
+        assert_eq!(
+            fill.params,
+            vec![
+                ("a".to_string(), "array<str>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+            ],
+            "a 2-D string array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("fill", "a");
+        let seed = module.get_function("seed").expect("seed function exists");
+        assert!(
+            seed.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<str>"
+            }),
+            "nested string writes must reload the captured array<str> handle"
+        );
+    }
+
+    #[test]
     fn nested_array_capture_infers_rank_from_nested_use() {
         let src = "begin integer array values[-1:0, 4:5]; integer result; \
                    integer procedure fill(a); value a; integer array a; \
