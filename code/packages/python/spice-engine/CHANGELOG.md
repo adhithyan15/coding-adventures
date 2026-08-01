@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject Level-1 MOS model-card `LD` values that are non-finite, negative, or
+  leave a non-positive effective channel length.
+
 - Reject non-finite Level-1 MOS model-card `LEVEL` selectors instead of
   silently canonicalizing them to `LEVEL=1`.
 

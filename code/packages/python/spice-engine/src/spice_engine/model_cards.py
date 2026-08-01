@@ -622,6 +622,18 @@ def normalize_model_card(
             raise ValueError(f"{name}: MOSFET JS must be finite and non-negative")
         else:
             normalized[canonical] = value
+    if kind in {"NMOS", "PMOS"}:
+        defaults = Level1Params()
+        length = normalized.get("L", defaults.L)
+        lateral_diffusion_length = normalized.get("LD", defaults.LD)
+        if (
+            not math.isfinite(lateral_diffusion_length)
+            or lateral_diffusion_length < 0.0
+            or length - 2.0 * lateral_diffusion_length <= 0.0
+        ):
+            raise ValueError(
+                f"{name}: MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+            )
     return NormalizedModelCard(
         name=name,
         kind=kind,

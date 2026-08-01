@@ -8529,6 +8529,21 @@ export function normalizeModelCard(
       normalized[canonical] = value;
     }
   }
+  if (kind === "NMOS" || kind === "PMOS") {
+    const defaults = defaultMosfetLevel1Params();
+    const length = normalized.L ?? defaults.L;
+    const lateralDiffusionLength = normalized.LD ?? defaults.LD;
+    if (
+      !Number.isFinite(lateralDiffusionLength) ||
+      lateralDiffusionLength < 0.0 ||
+      length - 2.0 * lateralDiffusionLength <= 0.0
+    ) {
+      throw invalidElement(
+        name,
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
+    }
+  }
   return { name, kind, parameters: normalized, unsupportedParameters: unsupported };
 }
 
