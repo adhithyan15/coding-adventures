@@ -1258,6 +1258,16 @@ def test_mos_model_card_rejects_negative_or_non_finite_saturation_current_densit
             normalize_model_card("Minvalid", "nmos", {"JS": invalid_density})
 
 
+def test_mos_model_card_rejects_non_positive_or_non_finite_width() -> None:
+    for value in (1.0e-9, 2.0e-6, 1.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"W": value})
+        assert valid.parameters["W"] == pytest.approx(value)
+
+    for invalid_width in (-math.inf, -0.1, 0.0, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET W must be finite and positive"):
+            normalize_model_card("Minvalid", "nmos", {"W": invalid_width})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
