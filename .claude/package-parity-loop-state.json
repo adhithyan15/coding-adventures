@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9383,
+  "active_pr": 9390,
   "last_inventory": {
-    "revision": "bfa7af2c99a157c4f142c0f28114ff9e2f920292",
+    "revision": "5b5cb01273be03cdd018eed9786f2d62c14e1225",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1200,
-    "implementation_package_slots": 4342,
+    "implementation_identities": 1201,
+    "implementation_package_slots": 4345,
     "high_consensus_packages": 172,
-    "high_consensus_missing_slots": 277,
-    "singleton_packages": 750,
-    "singleton_missing_slots": 10500,
-    "rust_singletons": 555,
+    "high_consensus_missing_slots": 275,
+    "singleton_packages": 751,
+    "singleton_missing_slots": 10514,
+    "rust_singletons": 556,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -451,7 +451,7 @@
     },
     {
       "id": "dart-current-14-of-15",
-      "title": "Close the 13-package Dart-only 14-of-15 frontier",
+      "title": "Close the 11-package Dart-only 14-of-15 frontier",
       "status": "pending",
       "depends_on": ["haskell-http-core", "dart-scaffold-capability-schema", "dart-trig-wave"],
       "branch": null,
@@ -461,20 +461,20 @@
     {
       "id": "dart-trig-wave",
       "title": "Port the PHY00 trig and dependent PHY01 wave packages to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-scaffold-capability-schema"],
       "branch": "codex/dart-trig-wave-parity",
       "pr_number": 9383,
-      "notes": "Ready-for-review PR #9383. Added as pending after PR #9375 merged, then selected as the first dependency-shaped child of dart-current-14-of-15. After rebasing the worktree, the collision-clean bfa7af2c9 inventory remained unchanged at 1,200 identities and 4,342 slots; all thirteen 14-of-15 gaps remained Dart-only. Trig is a zero-dependency first-principles numeric leaf and wave is its direct consumer, so this two-package slice closes two frontier slots and establishes the scaffold contract's first real downstream use. Validation: Dart format/analyze; 12 trig plus 13 wave tests; 100% measured production line coverage in both packages; real package BUILD and dependency-ordered Go build-tool execution; Go test/vet; manifest, taxonomy, reporter, parity, state-graph, JSON, diff, and security checks; and independent contract, fixture, and security re-audits."
+      "notes": "Merged PR #9383 at c6457e9089a969aab28217fd306b82cd9b1d27e0 on 2026-07-31 after every Linux, macOS, Windows, detect, and CodeQL check completed successfully. Added as pending after PR #9375 merged, then selected as the first dependency-shaped child of dart-current-14-of-15. Trig is a zero-dependency first-principles numeric leaf and wave is its direct consumer, so this two-package slice closed two Dart-only 14-of-15 gaps and established the scaffold contract's first real downstream use. Validation: Dart format/analyze; 12 trig plus 13 wave tests; 100% measured production line coverage in both packages; real package BUILD and dependency-ordered Go build-tool execution; Go test/vet; manifest, taxonomy, reporter, parity, state-graph, JSON, diff, and security checks; and independent contract, fixture, and security re-audits."
     },
     {
       "id": "phy00-phy01-language-neutral-fixtures",
       "title": "Define shared language-neutral PHY00 trig and PHY01 wave fixtures",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered during the dart-trig-wave fixture audit. All established lanes carry package-native cases, but no shared machine-readable corpus mechanically enforces the specs' same-case claim. Define finite, pole, tiny/subnormal sqrt, signed-zero, quadrant, periodicity, validation, zero-amplitude, and extreme-finite vectors before using the family as a cross-language conformance oracle."
+      "branch": "codex/phy00-phy01-conformance-fixtures",
+      "pr_number": 9390,
+      "notes": "Ready-for-review PR #9390. Selected after #9383 merged because the shared corpus is a repository-owned dependency for both tracked PHY00/PHY01 cross-lane hardening items. Defines a closed 53-case Draft 2020-12 oracle, strict JSON and binary64 semantics, operation-specific outcomes, exact corpus membership, an authority-free generated Dart mirror, and an always-on consumer CI reverse edge. Validation: 14 Python oracle tests; Dart format/analyze and 41 trig plus 37 wave tests; 100% production line coverage in both packages; real incremental build-tool execution for exactly trig and wave; full build-tool conformance groups; Go test/vet/build; collision-clean 1,201-identity parity report; zero-delta BUILD validation against main; state, YAML/JSON, generated-sync, diff, dependency, and security checks; and independent contract, fixture, and security re-audits."
     },
     {
       "id": "phy00-small-sqrt-cross-lane-audit",
@@ -646,7 +646,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 555, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 556, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -655,7 +655,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, and smart-home-home-assistant-export; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, Home Assistant migration, and Home Assistant export packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. The Home Assistant migration's deterministic export parsing, normalization, planning, diagnostics, IDs, fingerprints, and receipts are portable-core candidates, while runtime application, atomic filesystem writes, CLI behavior, three Rust-only runtime dependencies, and its missing capability manifest require explicit host-boundary review. The new Home Assistant export package similarly mixes deterministic normalization and export-core logic with TLS/WebSocket transport, environment-token intake, filesystem output, wall-clock metadata, console reporting, and a missing capability manifest; keep those host effects under explicit authority review before extracting any portable core. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-31 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, and smart-home-home-assistant-history; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. Home Assistant migration, export, and history contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
     },
     {
       "id": "matter-portable-core-extraction-and-conformance",
@@ -686,6 +686,36 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the 3b025282e post-merge singleton audit. The Rust MQTT integration owns live network, environment, clock, console, credential, and runtime-mutation behavior but has no required_capabilities.json, and its CLI reads MQTT username/password directly from ambient environment variables despite D23's Vault-lease rule. Add truthful reviewed capability metadata, Vault-mediated credential delivery, redacted error paths, and focused integration tests before treating the native-source classification as complete."
+    },
+    {
+      "id": "home-assistant-history-portable-core-extraction-and-conformance",
+      "title": "Extract and fixture the portable Home Assistant history core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the c6457e908 post-merge inventory. Coordinate with the migration/export ownership and separate deterministic history DTO validation, ordering, fingerprints, state projection, event planning, diagnostics, and receipts from WebSocket collection, runtime application, artifact I/O, and CLI orchestration; define language-neutral fixtures before expanding the portable core across lanes."
+    },
+    {
+      "id": "home-assistant-history-host-security-hardening",
+      "title": "Immediately harden Home Assistant history authority and transport",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the c6457e908 post-merge security audit and made independent of portable-core extraction during the fixture-slice re-audit. Add separate truthful runtime and test-harness capability profiles with Layer 5 approval; replace ambient HOME_ASSISTANT_TOKEN intake with Vault-mediated leases; require wss except explicitly authorized loopback fixtures; impose connection, byte, entity, state, attribute, artifact, and time-window ceilings; centrally redact every host error; and use exclusive no-follow temporary creation plus platform-correct durable atomic replacement."
+    },
+    {
+      "id": "home-assistant-history-host-refactoring",
+      "title": "Refactor the hardened Home Assistant history host around the portable core",
+      "status": "pending",
+      "depends_on": [
+        "home-assistant-history-portable-core-extraction-and-conformance",
+        "home-assistant-history-host-security-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the c6457e908 fixture-slice security re-audit. After the urgent authority boundary is hardened and the deterministic core is extracted, narrow the Rust host to WebSocket collection, runtime application, artifact I/O, clock/reporting effects, and CLI orchestration without delaying the security remediation on the larger refactor."
     },
     {
       "id": "c-cpp-graduation",

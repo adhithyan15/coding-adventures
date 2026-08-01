@@ -106,38 +106,36 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `8c4785535` after merged OCaml
-toolchain work, the Rust `smart-home-matter-integration`, the Rust
-`smart-home-home-assistant-migration`, the Rust
-`smart-home-home-assistant-export`, and merged Algol, Mosaic, and build-tool
-contract slices through the execution case snapshot and the unrelated Mosaic
-native pressed-state repair. It contains 1,200
-normalized implementation identities across 4,342 established-lane package
+inventory was regenerated on July 31, 2026 at `5b5cb0127` after merged Dart
+`trig` and `wave`, Rust `smart-home-home-assistant-history`, Mosaic browser
+host, Spice validation, and Algol closure work. It contains 1,201 normalized
+implementation identities across 4,345 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 277 |
+| Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 750 | 10,500 |
+| Present in one language | 751 | 10,514 |
 
-The loop must not start by attempting 10,500 singleton ports. It should finish
+The loop must not start by attempting 10,514 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#9375 inventory, refreshed after rebasing at
-`bfa7af2c99a157c4f142c0f28114ff9e2f920292`,
-remains collision-clean and unchanged at 1,200 normalized implementation
-identities, 4,342 implementation slots, 172 high-consensus packages, 277
-high-consensus missing slots, 750 singletons, and zero unknown language
-buckets. No new unowned parity identity was discovered on current `main`.
+The post-#9383 inventory at
+`5b5cb01273be03cdd018eed9786f2d62c14e1225` is collision-clean at 1,201
+normalized implementation identities, 4,345 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 751 singletons, and
+zero unknown language buckets. The newly discovered Rust-only Home Assistant
+history package is now explicitly owned by the singleton classification,
+portable-core extraction, and native-host security backlog.
 
 The July 31 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
 | C# | 196 | 0 | 47.5% |
-| Dart | 73 | 107 | 17.1% |
+| Dart | 75 | 105 | 17.6% |
 | Elixir | 276 | 0 | 69.3% |
 | F# | 195 | 0 | 47.5% |
 | Go | 292 | 0 | 72.4% |
@@ -148,7 +146,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 965 | 0 | 100% |
+| Rust | 966 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -201,11 +199,11 @@ Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
 ### Current 14-of-15 frontier: reopened
 
 The historical Priority 1 cohort is complete, but later Haskell work promoted
-13 packages into a new 14-of-15 frontier. Every current gap is Dart-only:
+13 packages into a new 14-of-15 frontier. Merged PR #9383 closed `trig` and
+`wave`, so the remaining 11 current gaps are Dart-only:
 
 - dependency-shaped ML: `matrix`, then `loss-functions` and
   `feature-normalization`;
-- numeric family: `trig`, then `wave`;
 - deterministic data structures: `binary-search-tree`, `fenwick-tree`, and
   `trie`;
 - leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
@@ -216,12 +214,13 @@ fixture audit. Dart's native scaffold generator now emits byte-stable,
 schema-v1 empty library profiles and truthful generated-program stdout
 profiles, while declaring its own reviewed runtime authority. Existing
 nonempty Dart profiles remain owned by the legacy migration review. Close the
-13-package frontier as small coherent PRs on top of that scaffold contract.
+remaining 11-package frontier as small coherent PRs on top of that scaffold
+contract.
 
-The first child item is `dart-trig-wave`: implement the zero-dependency PHY00
-`trig` leaf, then its direct PHY01 `wave` consumer. This closes two Dart-only
-14-of-15 gaps while exercising the newly merged scaffold and capability
-contract on a real dependency chain.
+Merged PR #9383 completed the first child item: the zero-dependency PHY00
+`trig` leaf and its direct PHY01 `wave` consumer. This closed two Dart-only
+14-of-15 gaps while exercising the scaffold and capability contract on a real
+dependency chain.
 
 The post-merge governance audit found no repository-verifiable Layer 5 approval
 for #9375's nonempty generator profile: GitHub reports no review decision, and
@@ -240,7 +239,10 @@ input and overflow-safe evaluation reconciliation. The backlog now records
 these as `phy00-phy01-language-neutral-fixtures`,
 `phy00-small-sqrt-cross-lane-audit`, and
 `phy01-nonfinite-validation-backfill`, with the shared corpus preceding the
-cross-lane remediations.
+cross-lane remediations. After #9383 merged, dependency/leverage review selected
+the shared fixture corpus as the one active slice because it is repository-owned
+and immediately unlocks both cross-lane hardening items; the build-tool critical
+path remains blocked on external immutable-runner and attester provisioning.
 
 Port dependency families together when doing so avoids temporary broken package
 graphs. Grammar-generated lexer/parser pairs should be generated from the shared
@@ -915,10 +917,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 555 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 556 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-31 inventories added fifteen Rust singleton identities that now
+The July 30-31 inventories added sixteen Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -950,6 +952,19 @@ candidates, while TLS/WebSocket transport, environment-token intake,
 filesystem output, wall-clock metadata, console reporting, and its missing
 capability manifest remain host-owned authority that must be classified before
 any cross-language extraction.
+
+The sixteenth identity, `smart-home-home-assistant-history`, is also a mixed
+split candidate. Deterministic history DTO validation, ordering, fingerprints,
+state projection, event planning, diagnostics, and receipts belong in a
+fixture-driven portable core. WebSocket/TLS collection, runtime application,
+artifact I/O, clock and console effects, and CLI orchestration stay in a Rust
+native host. That host must declare reviewed capabilities, use Vault-mediated
+token delivery and secure transport, enforce closed resource ceilings, redact
+all error paths, and replace artifacts through no-follow durable atomic writes.
+The urgent capability, Vault, transport, limit, redaction, and write hardening
+depends only on the merged capability-taxonomy contract; it must not wait for
+portable-core extraction. A later host refactor can depend on both the hardened
+boundary and the extracted core.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1166,17 +1181,21 @@ slice grants no execution authority and marks no backend or adapter ready.
 
 Merged PR #9375 completed `dart-scaffold-capability-schema` with green Linux,
 macOS, Windows, and CodeQL checks. The collision-checked post-merge inventory
-found the same thirteen Dart-only 14-of-15 gaps and no new unowned identity.
-The serial loop selected `dart-trig-wave` because PHY00 `trig` is a dependency-
-free numeric leaf and PHY01 `wave` is its direct consumer. The next build-tool
-successor remains `build-tool-bootstrap-execution-fixture`, which is still
-blocked on the Linux OCI enforcement chain.
+found thirteen Dart-only 14-of-15 gaps. The serial loop selected
+`dart-trig-wave` because PHY00 `trig` is a dependency-free numeric leaf and
+PHY01 `wave` is its direct consumer. PR #9383 merged that pair with green Linux,
+macOS, Windows, and CodeQL checks. The refreshed collision-clean inventory has
+11 remaining Dart-only frontier gaps and one newly owned Rust history singleton.
+The next build-tool successor remains `build-tool-bootstrap-execution-fixture`,
+which is still blocked on the Linux OCI enforcement chain.
 
 Final Dart review hardened the selected implementation for subnormal square
 roots, infinity and signed zero, non-finite wave parameters and time, angular-
 frequency overflow, zero-amplitude evaluation, and extreme finite products.
 The equivalent existing-lane audits and the missing shared PHY00/PHY01 fixture
-corpus remain explicit dependent backlog items rather than unowned gaps.
+corpus remain explicit dependent backlog items rather than unowned gaps. The
+serial loop selected the shared language-neutral corpus next because it unlocks
+both existing-lane audits without claiming their remediation in advance.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in
