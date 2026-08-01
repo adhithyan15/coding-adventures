@@ -1257,7 +1257,7 @@ fn emit_instr(
         let i_src = instr.srcs.get(1).ok_or_else(|| {
             BackendError::MalformedInstr("array_get: needs srcs[1]=idx".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        native_array_elem_size(&instr.ty)?; // validate a supported fixed-width element
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1288,7 +1288,7 @@ fn emit_instr(
         let v_src = instr.srcs.get(2).ok_or_else(|| {
             BackendError::MalformedInstr("array_set: needs srcs[2]=val".into())
         })?;
-        native_array_elem_size(&instr.ty)?; // validate 8-byte element (i64/u64/f64)
+        native_array_elem_size(&instr.ty)?; // validate a supported fixed-width element
         load_operand(asm, alloc, Reg::Rax, h_src);
         load_operand(asm, alloc, Reg::Rcx, i_src);
         asm.mov_r64_mem(Reg::Rdx, Reg::Rax, 0); // length
@@ -1870,18 +1870,18 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
 /// The byte size of an E5 array element type on the native backend. 64-bit
 /// integer and `f64` elements share the same 8-byte memory representation here:
 /// the backend copies raw bits between stack slots and array storage, while f64
-/// arithmetic/comparisons load those bits through SSE when needed. Smaller
-/// element widths still produce a clear error rather than a silently wrong
-/// stride.
+/// arithmetic/comparisons load those bits through SSE when needed. Boolean
+/// elements use the same word cells, matching the backend's scalar boolean
+/// representation and keeping the fixed allocation stride sound.
 fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
     match elem {
         // E4d-BA-arr: a `str` element (BASIC `DIM A$(n)`) is an 8-byte runtime
         // string handle — the address of a `[i64 len][bytes]` block — stored and
         // loaded as a plain word exactly like an i64, so no separate str load/store
         // path is needed (twig-aot already materialises the handle into the slot).
-        "i64" | "u64" | "f64" | "str" => Ok(8),
+        "i64" | "u64" | "f64" | "bool" | "str" => Ok(8),
         other => Err(BackendError::MalformedInstr(format!(
-            "array element {other:?} not supported on the native backend (8-byte elements only so far)"
+            "array element {other:?} not supported on the native backend (i64/u64/f64/bool/str only)"
         ))),
     }
 }
@@ -1984,6 +1984,23 @@ mod tests {
         ];
         assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_ok(),
             "f64 array element should lower as an 8-byte native load");
+    }
+
+    #[test]
+    fn array_get_accepts_boolean_element() {
+        let ctx = fn_ctx("arr", &[], "u64");
+        let mut get = instr("array_get", Some("r"),
+            vec![Op::Var("a".into()), Op::Var("i".into())]);
+        get.ty = "bool".to_string();
+        let ir = vec![
+            instr("const_u64", Some("n"), vec![Op::Int(1)]),
+            instr("alloc_array", Some("a"), vec![Op::Var("n".into())]),
+            instr("const_u64", Some("i"), vec![Op::Int(0)]),
+            get,
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_ok(),
+            "boolean array element should lower as an 8-byte native load");
     }
 
     // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----

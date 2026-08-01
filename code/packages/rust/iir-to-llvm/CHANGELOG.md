@@ -1,5 +1,11 @@
 # Changelog — iir-to-llvm
 
+## 0.46.0 - 2026-07-31 - boolean array elements
+
+`array<bool>` now loads and stores LLVM `i1` elements. Boolean array reads
+also retain their `i1` companion value so ALGOL `not` and boolean branches do
+not widen the loaded bit to an invalid `i64` comparison.
+
 ## 0.45.0 - 2026-07-30 - ALGOL captured-array globals
 
 `global_load` and `global_store` now infer a module-global storage type instead

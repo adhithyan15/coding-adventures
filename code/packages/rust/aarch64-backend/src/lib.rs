@@ -1962,17 +1962,17 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
 /// integer and `f64` elements share the same 8-byte memory representation here:
 /// the backend copies raw bits between stack slots and array storage, while f64
 /// arithmetic/comparisons load those bits through FP registers when needed.
-/// Smaller element widths still produce a clear error rather than a silently
-/// wrong stride.
+/// Boolean elements use the same word cells, matching the backend's scalar
+/// boolean representation and keeping the fixed allocation stride sound.
 fn native_array_elem_size(elem: &str) -> Result<i32, BackendError> {
     match elem {
         // E4d-BA-arr: a `str` element (BASIC `DIM A$(n)`) is an 8-byte runtime
         // string handle — the address of a `[i64 len][bytes]` block — stored and
         // loaded as a plain word exactly like an i64, so no separate str load/store
         // path is needed (twig-aot already materialises the handle into the slot).
-        "i64" | "u64" | "f64" | "str" => Ok(8),
+        "i64" | "u64" | "f64" | "bool" | "str" => Ok(8),
         other => Err(BackendError::MalformedInstr(format!(
-            "array element {other:?} not supported on the native backend (8-byte elements only so far)"
+            "array element {other:?} not supported on the native backend (i64/u64/f64/bool/str only)"
         ))),
     }
 }
@@ -2308,6 +2308,20 @@ mod tests {
         ];
         assert!(compile(&ctx("arr", &[], "u64"), &cir).is_ok(),
             "f64 array element should lower as an 8-byte native load");
+    }
+
+    #[test]
+    fn array_get_accepts_boolean_element() {
+        let cir = vec![
+            const_u64("n", 1),
+            heap("alloc_array", Some("a"), vec![CIROperand::Var("n".into())], "any"),
+            const_u64("i", 0),
+            heap("array_get", Some("r"),
+                 vec![CIROperand::Var("a".into()), CIROperand::Var("i".into())], "bool"),
+            ret_u64("r"),
+        ];
+        assert!(compile(&ctx("arr", &[], "u64"), &cir).is_ok(),
+            "boolean array element should lower as an 8-byte native load");
     }
 
     #[test]
