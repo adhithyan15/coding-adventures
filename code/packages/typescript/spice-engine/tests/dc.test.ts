@@ -1169,6 +1169,24 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects negative or non-finite MOS flicker-noise coefficient", () => {
+    for (const value of [0.0, 1.0e-24, 1.0]) {
+      const valid = normalizeModelCard("Mvalid", "pmos", { KF: value });
+      expect(valid.parameters.KF).toBe(value);
+    }
+
+    for (const invalidCoefficient of [
+      Number.NEGATIVE_INFINITY,
+      -0.1,
+      Number.POSITIVE_INFINITY,
+      Number.NaN,
+    ]) {
+      expect(() =>
+        normalizeModelCard("Minvalid", "pmos", { KF: invalidCoefficient }),
+      ).toThrow("MOSFET KF must be finite and non-negative");
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,
