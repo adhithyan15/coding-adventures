@@ -726,15 +726,19 @@ The camera-media broker is a portable policy boundary, not a transport host:
   transport execution.
 - Redemption rechecks the current D23 Human Approval grant at trusted current
   time, atomically consumes the lease, and lends the endpoint only to a trusted
-  media executor. The public result is snapshot bytes/metadata or an opaque
-  host-owned stream-session handle, never a URI or embedded credential.
-- Endpoint and active-lease tables are bounded by policy. Credential-bearing
-  URLs and plaintext non-loopback snapshot/stream schemes fail closed. Audit,
-  debug, and transport errors remain typed and endpoint-free.
-- Clock, authenticated identity, nonce generation, and media I/O are injected
-  authority owned by the native host. The deterministic broker therefore declares
-  an explicit empty package capability profile; the later native ONVIF host owns
-  and must obtain approval for its nonempty authority.
+  media executor. Snapshot bytes are bounded before release. The executor yields
+  an owned stream resource; the service mints the public session ID and retains
+  the resource through explicit close or trusted-time expiry. Failed teardown
+  remains owned, reported, and retryable rather than disappearing from state.
+- Endpoint, active-lease, per-principal lease, stream, and audit tables are bounded
+  by policy. URL userinfo and fragments fail closed. Plaintext schemes are denied
+  by default and require an explicit loopback-fixture opt-in; secure query tokens
+  remain confined to the trusted executor. Audit rows contain no bearer ID.
+- Clock, authenticated identity, nonce generation, and media I/O are installed
+  once in the host-owned service and cannot be substituted per request. The
+  deterministic policy core therefore declares an explicit empty package
+  capability profile; the later native ONVIF host owns and must obtain approval
+  for its nonempty authority.
 
 ## Smart Home Remaining Work
 

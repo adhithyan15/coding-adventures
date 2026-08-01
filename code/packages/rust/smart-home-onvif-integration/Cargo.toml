@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-onvif-integration"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Production ONVIF discovery and camera integration for the smart-home runtime"
 license = "MIT"

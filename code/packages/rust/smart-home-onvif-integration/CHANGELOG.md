@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Adapted camera registration and the real loopback integration path to the
+  host-owned camera-media service and its narrow endpoint registry; the loopback
+  transport exception is now an explicit fixture policy rather than a default.
+
 ## 0.1.0
 
 - Added bounded ONVIF WS-Discovery scanning and ProbeMatch normalization.

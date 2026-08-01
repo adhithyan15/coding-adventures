@@ -11,7 +11,7 @@ use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use rand::{rngs::OsRng, RngCore};
 use smart_home_camera_media::{
-    CameraMediaBroker, CameraMediaKind, SNAPSHOT_CAPABILITY_ID, STREAM_CAPABILITY_ID,
+    CameraMediaEndpointRegistry, CameraMediaKind, SNAPSHOT_CAPABILITY_ID, STREAM_CAPABILITY_ID,
 };
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device, DeviceId,
@@ -31,7 +31,7 @@ use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use udp_client::{send_to_and_collect, UdpError, UdpOptions};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.1.1";
 pub const INTEGRATION_ID: &str = "onvif";
 pub const WS_DISCOVERY_PORT: u16 = 3702;
 pub const WS_DISCOVERY_IPV4: Ipv4Addr = Ipv4Addr::new(239, 255, 255, 250);
@@ -706,7 +706,7 @@ pub struct InstalledOnvifCamera {
 
 pub fn install_camera_snapshot(
     runtime: &mut SmartHomeRuntime,
-    media_broker: &mut CameraMediaBroker,
+    media_registry: &mut impl CameraMediaEndpointRegistry,
     config: &OnvifCameraConfig,
     snapshot: &OnvifCameraSnapshot,
     observed_at_ms: u64,
@@ -805,24 +805,14 @@ pub fn install_camera_snapshot(
             metadata,
         });
         if let Some(uri) = profile.snapshot_uri() {
-            media_broker
-                .register_endpoint(
-                    entity_id.clone(),
-                    CameraMediaKind::Snapshot,
-                    uri,
-                    observed_at_ms,
-                )
+            media_registry
+                .register_camera_endpoint(entity_id.clone(), CameraMediaKind::Snapshot, uri)
                 .map_err(|error| OnvifError::CameraMedia(error.to_string()))?;
             snapshot_endpoint_count += 1;
         }
         if let Some(uri) = profile.stream_uri() {
-            media_broker
-                .register_endpoint(
-                    entity_id.clone(),
-                    CameraMediaKind::Stream,
-                    uri,
-                    observed_at_ms,
-                )
+            media_registry
+                .register_camera_endpoint(entity_id.clone(), CameraMediaKind::Stream, uri)
                 .map_err(|error| OnvifError::CameraMedia(error.to_string()))?;
             stream_endpoint_count += 1;
         }
@@ -1167,15 +1157,72 @@ fn has_unsafe_http_text(value: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use smart_home_camera_media::{CameraMediaAccessRequest, CameraMediaError};
+    use smart_home_camera_media::{
+        CameraMediaAccessRequest, CameraMediaClock, CameraMediaError, CameraMediaExecution,
+        CameraMediaExecutionError, CameraMediaExecutionResult, CameraMediaExecutor,
+        CameraMediaNonceError, CameraMediaNonceSource, CameraMediaPolicy,
+        CameraMediaPrincipalSource, CameraMediaService,
+    };
     use smart_home_core::{AgentId, CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::cell::Cell;
     use std::io::{BufRead, BufReader};
     use std::net::{TcpListener, UdpSocket};
+    use std::rc::Rc;
     use std::sync::{Arc, Mutex};
     use std::thread;
 
     const USERNAME: &str = "operator";
     const PASSWORD: &str = "fixture-password";
+
+    struct FixedNonce([u8; 16]);
+
+    impl CameraMediaNonceSource for FixedNonce {
+        fn fill_nonce(&mut self, output: &mut [u8; 16]) -> Result<(), CameraMediaNonceError> {
+            output.copy_from_slice(&self.0);
+            Ok(())
+        }
+    }
+
+    #[derive(Clone)]
+    struct TestClock(Rc<Cell<u64>>);
+
+    impl CameraMediaClock for TestClock {
+        fn now_ms(&self) -> u64 {
+            self.0.get()
+        }
+    }
+
+    struct FixedPrincipal(AgentId);
+
+    impl CameraMediaPrincipalSource for FixedPrincipal {
+        fn current_principal(&self) -> Option<AgentId> {
+            Some(self.0.clone())
+        }
+    }
+
+    struct SnapshotDeliveryHost {
+        saw_snapshot_endpoint: Rc<Cell<bool>>,
+    }
+
+    impl CameraMediaExecutor for SnapshotDeliveryHost {
+        type Stream = ();
+
+        fn deliver(
+            &mut self,
+            execution: CameraMediaExecution<'_>,
+        ) -> Result<CameraMediaExecutionResult<Self::Stream>, CameraMediaExecutionError> {
+            self.saw_snapshot_endpoint
+                .set(execution.endpoint_uri().contains("snapshot.jpg"));
+            Ok(CameraMediaExecutionResult::snapshot(vec![0x5a; 128]))
+        }
+
+        fn close_stream(
+            &mut self,
+            _stream: &mut Self::Stream,
+        ) -> Result<(), CameraMediaExecutionError> {
+            Ok(())
+        }
+    }
 
     fn soap(body: &str) -> String {
         format!(
@@ -1281,7 +1328,7 @@ mod tests {
                 } else if body.contains("GetProfiles") {
                     soap("<trt:GetProfilesResponse><trt:Profiles token=\"profile-main\"><tt:Name>Main Stream</tt:Name><tt:VideoEncoderConfiguration><tt:Encoding>H264</tt:Encoding><tt:Resolution><tt:Width>1920</tt:Width><tt:Height>1080</tt:Height></tt:Resolution><tt:RateControl><tt:FrameRateLimit>30</tt:FrameRateLimit></tt:RateControl></tt:VideoEncoderConfiguration></trt:Profiles></trt:GetProfilesResponse>")
                 } else if body.contains("GetSnapshotUri") {
-                    soap(&format!("<trt:GetSnapshotUriResponse><trt:MediaUri><tt:Uri>{server_base}/snapshot.jpg?token=private</tt:Uri></trt:MediaUri></trt:GetSnapshotUriResponse>"))
+                    soap(&format!("<trt:GetSnapshotUriResponse><trt:MediaUri><tt:Uri>{server_base}/snapshot.jpg</tt:Uri></trt:MediaUri></trt:GetSnapshotUriResponse>"))
                 } else {
                     soap("<trt:GetStreamUriResponse><trt:MediaUri><tt:Uri>rtsp://127.0.0.1/private-stream</tt:Uri></trt:MediaUri></trt:GetStreamUriResponse>")
                 };
@@ -1315,10 +1362,24 @@ mod tests {
         drop(captured);
 
         let mut runtime = SmartHomeRuntime::default();
-        let mut broker = CameraMediaBroker::default();
+        let principal = AgentId::trusted("dashboard-user");
+        let clock_value = Rc::new(Cell::new(1_000));
+        let saw_snapshot_endpoint = Rc::new(Cell::new(false));
+        let mut media = CameraMediaService::new(
+            CameraMediaPolicy {
+                allow_plaintext_loopback: true,
+                ..CameraMediaPolicy::default()
+            },
+            TestClock(Rc::clone(&clock_value)),
+            FixedNonce([0x44; 16]),
+            FixedPrincipal(principal.clone()),
+            SnapshotDeliveryHost {
+                saw_snapshot_endpoint: Rc::clone(&saw_snapshot_endpoint),
+            },
+        );
         let installed = install_camera_snapshot(
             &mut runtime,
-            &mut broker,
+            &mut media,
             &OnvifCameraConfig {
                 bridge_id: BridgeId::trusted("onvif-loopback"),
                 endpoint_reference: "urn:uuid:loopback-camera".to_string(),
@@ -1342,7 +1403,6 @@ mod tests {
             EntityKind::Camera
         );
 
-        let principal = AgentId::trusted("dashboard-user");
         runtime
             .registry_mut()
             .upsert_capability_grant(CapabilityGrant::for_entity_capability(
@@ -1354,28 +1414,30 @@ mod tests {
                 "operator",
                 1_000,
             ));
-        let lease = broker
+        clock_value.set(1_001);
+        let lease = media
             .issue_lease(
                 &runtime,
                 CameraMediaAccessRequest::new(
-                    principal.clone(),
                     installed.entity_ids[0].clone(),
                     CameraMediaKind::Snapshot,
                     "door preview",
-                    1_001,
                     5_000,
                 ),
             )
             .unwrap();
-        let uri = broker
-            .redeem_lease(&lease.lease_id, &principal, 1_002)
-            .unwrap();
-        assert!(uri.contains("snapshot.jpg"));
+        clock_value.set(1_002);
+        let delivery = media.deliver_lease(&runtime, &lease.lease_id).unwrap();
+        assert_eq!(delivery.snapshot_bytes().unwrap().len(), 128);
+        assert!(saw_snapshot_endpoint.get());
         assert!(!format!("{:?}", runtime.durable_snapshot()).contains("snapshot.jpg"));
-        assert!(!format!("{broker:?}").contains("private-stream"));
+        assert!(
+            !format!("{:?}", media.audit_records().collect::<Vec<_>>()).contains("private-stream")
+        );
+        clock_value.set(1_003);
         assert!(matches!(
-            broker.redeem_lease(&lease.lease_id, &principal, 1_003),
-            Err(CameraMediaError::UnknownLease(_))
+            media.deliver_lease(&runtime, &lease.lease_id),
+            Err(CameraMediaError::UnknownLease)
         ));
     }
 }

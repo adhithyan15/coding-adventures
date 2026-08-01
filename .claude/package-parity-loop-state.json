@@ -685,7 +685,7 @@
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": "codex/camera-media-security-boundary",
       "pr_number": null,
-      "notes": "Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The current broker also accepts caller-asserted principal and time, does not bind leases to endpoint generations, uses unbounded endpoint and lease maps, and owns OS entropy without capability metadata. Replace raw URI redemption with trusted-host mediation, inject authenticated principal, trusted time, and nonce generation, revalidate active grants at use time, bind leases to endpoint generations, enforce quotas, keep failures redacted, reject credential-bearing or insecure non-loopback endpoints, and add an explicit authority-free manifest for the resulting policy core."
+      "notes": "Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The hardening installs authenticated principal, clock, nonce, and executor authority once in a host-owned service; removes bearer IDs from audits; revalidates grants; binds leases to endpoint generations; bounds global/per-principal leases, streams, pending cleanup, endpoints, snapshots, and audit; mints stream IDs outside the executor; owns stream close/expiry; retains and surfaces failed teardown for retry; rejects URL userinfo, fragments, default plaintext, and plaintext query strings; confines secure query tokens to the executor; and schema-validates an explicit authority-free manifest for the policy core. The separately tracked ONVIF origin/credential item remains the owner for discovery correlation, device-origin allowlists, credential transport, and downgrade defenses."
     },
     {
       "id": "smart-home-onvif-origin-credential-transport-hardening",
@@ -695,6 +695,18 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the post-#9413 security audit. WS-Discovery and device-supplied XAddr values can currently redirect fresh WS-Security digests to attacker-selected origins, plaintext downgrade is accepted, and discovery is overclassified as verified. Add explicit origin correlation and allowlist policy, secure transport requirements with loopback-only fixture exceptions, redirect and DNS rebinding defenses, bounded SOAP/media parsing, redacted failures, and hostile integration fixtures."
+    },
+    {
+      "id": "smart-home-onvif-transactional-install",
+      "title": "Make ONVIF runtime and media registration transactional",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-camera-media-security-boundary-hardening",
+        "smart-home-onvif-origin-credential-transport-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the camera-media hardening security review. install_camera_snapshot mutates bridge and endpoint state before every profile, device, and entity has been validated, so a later URI, quota, or registry failure can leave partial runtime state and rotate existing endpoint generations. Add a validate-and-plan phase, preflight camera-media capacity/origin policy, commit runtime plus endpoint changes atomically or roll them back, and prove failure leaves both stores unchanged."
     },
     {
       "id": "smart-home-camera-onvif-capability-profile-and-vault-wiring",

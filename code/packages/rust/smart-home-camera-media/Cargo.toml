@@ -1,13 +1,12 @@
 [package]
 name = "smart-home-camera-media"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Privacy-preserving camera snapshot and stream leases for the smart-home runtime"
 license = "MIT"
 
 [dependencies]
 coding_adventures_zeroize = { path = "../zeroize" }
-rand = "0.8"
 smart-home-core = { path = "../smart-home-core" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 url-parser = { path = "../url-parser" }

@@ -984,10 +984,13 @@ authorization and lease-policy core with host authority. Its first implementatio
 returns the secret snapshot/stream URI to the lease holder, accepts caller-asserted
 identity and time, does not bind a lease to an endpoint generation, owns OS entropy,
 and leaves endpoint/lease maps unbounded. The hardening owner replaces redemption
-with trusted-host delivery of snapshot bytes or an opaque stream-session handle,
-injects identity/time/nonce, revalidates current grants, rejects credential-bearing
-and insecure non-loopback endpoints, binds leases to generations, and imposes
-quotas. A later fixture owner expands only the resulting authority-free policy core.
+with a host-owned service that installs identity/time/nonce/executor authority once,
+revalidates current grants, bounds snapshot bytes, owns broker-minted stream sessions,
+retains failed teardown for reported retry, rejects URL userinfo and default plaintext,
+binds leases to generations, and imposes global and per-principal quotas. An explicit
+policy opt-in exists only for loopback fixtures, where query strings remain forbidden;
+secure query tokens remain confined to the executor. A later fixture owner expands
+only the resulting authority-free policy core.
 
 The twenty-second identity, `smart-home-onvif-integration`, is also a mixed split.
 Correlated discovery and SOAP parsing, deterministic UsernameToken construction,
@@ -998,6 +1001,11 @@ stop following discovery- or device-controlled XAddr values across origins with 
 fresh credential digest, fail closed on insecure non-loopback transport, and replace
 ambient username/password environment variables with Vault-mediated credentials.
 The nonempty native profiles then require separately tracked Layer 5 evidence.
+Its current installation path also mutates bridge and camera endpoint state before
+every profile, device, and entity has passed validation. A separate dependency-
+ordered item adds validate-and-plan preflight plus atomic commit or rollback so a
+late URI, quota, or registry failure cannot leave partial runtime state or rotate
+previously valid endpoint generations.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export
