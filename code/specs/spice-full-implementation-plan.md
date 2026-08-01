@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS lateral-diffusion validation.
+1. Cross-language Level-1 MOS drain-resistance validation.
    - Status: current PR completion candidate.
-   - Reject non-finite or negative model-card `LD` values and values that leave
-     `L - 2*LD <= 0` before device construction.
-   - Preserve valid lateral-diffusion lengths against explicit or default `L`
-     across Rust, Python, and TypeScript.
+   - Reject negative or non-finite model-card `RD` values before external
+     drain-resistance stamping and noise calculations.
+   - Preserve zero and positive drain resistances across Rust, Python, and
+     TypeScript.
 
 ## Completed Slices
 
@@ -3816,6 +3816,13 @@ the Rust, Python, and TypeScript surfaces together.
      comparison and normalization.
    - Finite `LEVEL=1` selectors and the stable unsupported-level diagnostic
      remain aligned across Rust, Python, and TypeScript.
+
+320. Cross-language Level-1 MOS lateral-diffusion validation.
+   - Status: completed in PR 9404.
+   - Non-finite and negative model-card `LD` values and values that leave
+     `L - 2*LD <= 0` are rejected before device construction.
+   - Valid lateral-diffusion lengths against explicit or default `L` remain
+     aligned across Rust, Python, and TypeScript.
 
 ## Backlog
 
