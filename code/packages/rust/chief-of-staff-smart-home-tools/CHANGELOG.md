@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `udp_multicast` discovery, `lan_udp` transport, and LAN UDP topology
+  labels to Chief catalog filters and serialized runtime reports.
 - Added `camera`, `onvif`, and `ws_discovery` labels to Chief catalog filters
   and serialized integration reports.
 - Added `smart_home.get_command_resolution_brief`, a read-only Chief adapter
