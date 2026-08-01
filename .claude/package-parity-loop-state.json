@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9421,
   "last_inventory": {
     "revision": "d5f57bfdbc64ebf44d677f195380714f949b0db6",
     "schema_version": 3,
@@ -681,11 +681,11 @@
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
       "title": "Replace camera endpoint redemption with a mediated single-use security boundary",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": "codex/camera-media-security-boundary",
-      "pr_number": null,
-      "notes": "Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The hardening installs authenticated principal, clock, nonce, and executor authority once in a host-owned service; removes bearer IDs from audits; revalidates grants; binds leases to endpoint generations; bounds global/per-principal leases, streams, pending cleanup, endpoints, snapshots, and audit; mints stream IDs outside the executor; owns stream close/expiry; retains and surfaces failed teardown for retry; rejects URL userinfo, fragments, default plaintext, and plaintext query strings; confines secure query tokens to the executor; and schema-validates an explicit authority-free manifest for the policy core. The separately tracked ONVIF origin/credential item remains the owner for discovery correlation, device-origin allowlists, credential transport, and downgrade defenses."
+      "pr_number": 9421,
+      "notes": "Ready-for-review PR #9421. Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The hardening installs authenticated principal, clock, nonce, and executor authority once in a host-owned service; removes bearer IDs from audits; revalidates grants; binds leases to endpoint generations; bounds global/per-principal leases, streams, pending cleanup, endpoints, snapshots, and audit; mints stream IDs outside the executor; owns stream close/expiry; retains and surfaces failed teardown for retry; rejects URL userinfo, fragments, default plaintext, and plaintext query strings; confines secure query tokens to the executor; and schema-validates an explicit authority-free manifest for the policy core. Final validation after rebasing onto d5f57bfdb covered 15 camera tests, 4 ONVIF tests, warning-free Clippy/format, 85.87% camera line coverage, 6 capability schema tests, 67 capability-cage tests, a real 21-package build-tool run plus identical post-rebase dry-run closure, zero parity collisions/unknown buckets at 1,209 identities and 4,353 slots, zero dependency vulnerabilities, diff/secret hygiene, and independent contract/fixture/security reviews with no blockers. The separately tracked ONVIF origin/credential item remains the owner for discovery correlation, device-origin allowlists, credential transport, and downgrade defenses."
     },
     {
       "id": "smart-home-onvif-origin-credential-transport-hardening",
