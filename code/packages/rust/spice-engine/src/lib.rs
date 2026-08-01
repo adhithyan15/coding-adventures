@@ -4385,6 +4385,11 @@ pub fn normalize_model_card(
                     name: name.clone(),
                     reason: "MOSFET RS must be finite and non-negative".to_string(),
                 });
+            } else if canonical == "RSH" && (!raw_value.is_finite() || *raw_value < 0.0) {
+                return Err(SpiceError::InvalidElement {
+                    name: name.clone(),
+                    reason: "MOSFET RSH must be finite and non-negative".to_string(),
+                });
             } else if canonical == "KP" && (!raw_value.is_finite() || *raw_value <= 0.0) {
                 return Err(SpiceError::InvalidElement {
                     name: name.clone(),
