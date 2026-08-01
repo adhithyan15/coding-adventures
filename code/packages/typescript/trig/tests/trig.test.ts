@@ -275,6 +275,13 @@ describe("Trigonometric Functions", () => {
       expect(atan(0)).toBeCloseTo(0.0, 10);
     });
 
+    it("preserves tiny inputs and negative zero exactly", () => {
+      expect(Object.is(atan(-0.0), -0.0)).toBe(true);
+      expect(atan(2 ** -30)).toBe(2 ** -30);
+      expect(atan(Number.MIN_VALUE)).toBe(Number.MIN_VALUE);
+      expect(atan(-Number.MIN_VALUE)).toBe(-Number.MIN_VALUE);
+    });
+
     it("atan(1) ≈ PI/4", () => {
       expect(atan(1)).toBeCloseTo(PI / 4, 10);
     });

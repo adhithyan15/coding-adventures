@@ -115,7 +115,18 @@ fn cos_is_even() {
 
 #[test]
 fn pythagorean_identity() {
-    let values = [0.0, 0.5, 1.0, PI / 6.0, PI / 4.0, PI / 3.0, PI / 2.0, PI, 2.5, 5.0];
+    let values = [
+        0.0,
+        0.5,
+        1.0,
+        PI / 6.0,
+        PI / 4.0,
+        PI / 3.0,
+        PI / 2.0,
+        PI,
+        2.5,
+        5.0,
+    ];
     for &x in &values {
         let s = sin(x);
         let c = cos(x);
@@ -299,6 +310,15 @@ fn tan_negative_pi_over_4() {
 #[test]
 fn atan_zero() {
     assert_eq!(atan(0.0), 0.0);
+}
+
+#[test]
+fn atan_preserves_tiny_inputs_and_negative_zero() {
+    let minimum = f64::from_bits(1);
+    assert_eq!(atan(-0.0).to_bits(), (-0.0f64).to_bits());
+    assert_eq!(atan(2.0f64.powi(-30)), 2.0f64.powi(-30));
+    assert_eq!(atan(minimum), minimum);
+    assert_eq!(atan(-minimum), -minimum);
 }
 
 #[test]

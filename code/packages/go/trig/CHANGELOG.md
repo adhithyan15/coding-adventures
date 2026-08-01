@@ -4,11 +4,14 @@
 
 ### Changed
 
+- Return `Atan(x)` unchanged for `|x| <= 2^-27` before half-angle reduction,
+  preserving the exact binary64 small-argument identity.
 - Normalize square-root inputs by powers of four before Newton iteration so the
   complete binary64 exponent range converges without host square-root calls.
 
 ### Fixed
 
+- Preserve negative zero and both signs of the minimum subnormal in `Atan`.
 - Preserve negative zero, return positive infinity, propagate NaN, and retain
   the lane-native negative-input error.
 - Move negative-input rejection outside the operation callback so `Sqrt`
@@ -16,6 +19,7 @@
 
 ### Tests
 
+- Cover the shared PHY00 `atan` signed-zero and tiny/subnormal boundaries.
 - Cover the shared PHY00 square-root boundaries from
   [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json) with
   relative-error assertions for finite nonzero results.

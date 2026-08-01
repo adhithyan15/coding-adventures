@@ -67,8 +67,9 @@ double tan(double angle) {
 
 /// Computes arctangent in the range `(-pi / 2, pi / 2)`.
 double atan(double value) {
-  if (value == 0.0) {
-    return 0.0;
+  // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+  if (value.abs() <= 7.450580596923828e-9) {
+    return value;
   }
   if (value > 1.0) {
     return halfPi - _atanCore(1.0 / value);

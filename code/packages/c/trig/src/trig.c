@@ -188,8 +188,9 @@ static double atan_core(double x) {
 }
 
 double trig_atan(double x) {
-    if (x == 0.0) {
-        return 0.0;
+    /* atan(x) rounds exactly to x here; avoid halving subnormals and retain -0. */
+    if (d_abs(x) <= 0x1p-27) {
+        return x;
     }
     /* Layer-1 reduction for |x| > 1: atan(x) = ±PI/2 - atan(1/x). */
     if (x > 1.0) {

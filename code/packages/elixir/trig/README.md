@@ -1,5 +1,11 @@
 # Trig
 
+## Exact small arctangent
+
+`Trig.atan/1` returns `x` unchanged when `|x| <= 2^-27`, before any half-angle
+reduction. This exact binary64 identity preserves negative zero and both signs
+of the minimum subnormal; the shared PHY00 fixture locks those boundaries.
+
 ## Full-range square root
 
 `Trig.sqrt/1` normalizes finite binary64 values by powers of four into

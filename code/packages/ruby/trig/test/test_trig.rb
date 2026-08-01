@@ -329,6 +329,14 @@ class TestTrig < Minitest::Test
     assert_in_delta 0.0, Trig.atan(0), DELTA
   end
 
+  def test_atan_preserves_tiny_inputs_and_negative_zero
+    minimum = Float::MIN * Float::EPSILON
+    assert_equal(-Float::INFINITY, 1.0 / Trig.atan(-0.0))
+    assert_equal 2.0**-30, Trig.atan(2.0**-30)
+    assert_equal minimum, Trig.atan(minimum)
+    assert_equal(-minimum, Trig.atan(-minimum))
+  end
+
   def test_atan_one
     assert_in_delta Trig::PI / 4, Trig.atan(1), DELTA
   end

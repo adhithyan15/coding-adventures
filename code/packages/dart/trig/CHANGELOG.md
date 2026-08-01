@@ -4,9 +4,12 @@
 
 ### Changed
 
+- Return `atan(x)` unchanged for `|x| <= 2^-27` before half-angle reduction,
+  preserving negative zero and both signs of the minimum subnormal exactly.
 - Consume the versioned language-neutral PHY00 corpus in package tests,
   including poles, quadrants, signed zero, subnormal, maximum finite,
   infinity, NaN, and validation cases.
+- Cover the shared PHY00 `atan` signed-zero and tiny/subnormal boundaries.
 
 ## [0.1.0] - 2026-07-31
 

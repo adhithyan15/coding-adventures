@@ -617,7 +617,15 @@ end)
 
 describe("atan", function()
     it("atan(0) is 0", function()
-        assert.are.equal(trig.atan(0.0), 0.0)
+        assert.are.equal(trig.atan(0), 0.0)
+        assert.are.equal(math.type(trig.atan(0)), "float")
+    end)
+
+    it("preserves tiny inputs and negative zero exactly", function()
+        assert.are.equal(1.0 / trig.atan(-0.0), -math.huge)
+        assert.are.equal(trig.atan(2.0 ^ -30), 2.0 ^ -30)
+        assert.are.equal(trig.atan(5e-324), 5e-324)
+        assert.are.equal(trig.atan(-5e-324), -5e-324)
     end)
 
     it("atan(1) ≈ pi/4", function()

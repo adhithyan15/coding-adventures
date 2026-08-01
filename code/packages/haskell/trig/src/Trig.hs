@@ -78,7 +78,8 @@ tan angle
 -- | Arctangent in the range @(-pi/2, pi/2)@.
 atan :: Double -> Double
 atan value
-    | value == 0.0 = 0.0
+    -- atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    | abs value <= 7.450580596923828e-9 = value
     | value > 1.0 = halfPi - atanCore (1.0 / value)
     | value < -1.0 = negate halfPi - atanCore (1.0 / value)
     | otherwise = atanCore value

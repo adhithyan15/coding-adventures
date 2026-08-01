@@ -106,10 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 1, 2026 at `761c60fc3` after the merged
-cross-lane PHY00 square-root repair and Rust
-`smart-home-home-assistant-dashboard-migration`. It contains 1,203 normalized
-implementation identities across 4,347 established-lane package
+inventory was regenerated on August 1, 2026 at `c2b5a3d81` after the merged
+cross-lane PHY01 wave repair, Rust `smart-home-dashboard-core`, and the
+Windows-native `venture-browser-windows` host. It contains 1,205 normalized
+implementation identities across 4,349 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -117,20 +117,24 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 753 | 10,542 |
+| Present in one language | 755 | 10,570 |
 
-The loop must not start by attempting 10,514 singleton ports. It should finish
+The loop must not start by attempting 10,570 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#9395 inventory at
-`761c60fc39010d60d64d7b05e6cfab627b7911d3` is collision-clean at 1,203
-normalized implementation identities, 4,347 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 753 singletons, 558
+The current inventory at
+`c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3` is collision-clean at 1,205
+normalized implementation identities, 4,349 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 755 singletons, 560
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The sole new identity since the previous inventory is Rust-only
-`smart-home-home-assistant-dashboard-migration`; its portable-core extraction,
-repository-local host hardening, externally approved capability profile, and
-post-extraction host refactor now have explicit owners.
+The two recent identities are Rust-only `smart-home-dashboard-core` and
+`venture-browser-windows`. Dashboard core is a zero-capability, protocol-neutral
+deterministic manifest parser, validator, and summarizer, so its shared fixture
+contract and cross-lane expansion have an explicit owner. The Windows package is
+a mixed split: deterministic session/chrome/status and event-bridge logic belongs
+in `venture-browser-core` or a shared portable bridge, while WinUI, Direct2D, the
+C ABI, and native text shaping remain `native-source`. Its focused owner covers
+that extraction, missing capability metadata, and native host validation.
 
 The August 1 lane audit is:
 
@@ -148,7 +152,7 @@ The August 1 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 968 | 0 | 100% |
+| Rust | 970 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -245,12 +249,16 @@ foundational numeric dependency beneath PHY01 and the shared oracle now makes
 the known boundary defect testable across all 15 established lanes plus the
 emerging C and C++ implementations. PR #9395 merged that repair with all checks
 green. The collision-clean `761c60fc3` inventory and dependency audit then
-selected `phy01-nonfinite-validation-backfill` as the active consumer-side
-successor. The square-root numerical audit also discovered a separate
+selected `phy01-nonfinite-validation-backfill` as the consumer-side successor;
+PR #9400 merged that repair with all 15 checks green. The collision-clean
+`20afefa7a` inventory found one newly owned Rust dashboard-core singleton and
+selected `phy00-atan-tiny-signed-zero-cross-lane-audit` next because its sole
+dependency is merged and every existing trig lane shares the same defect. The
+square-root numerical audit had discovered that separate
 `phy00-atan-tiny-signed-zero-cross-lane-audit`: current half-angle reduction
 underflows at the subnormal floor and loses the sign of negative zero, so that
-work remains tracked behind the merged square-root slice rather than expanding
-the wave delivery.
+work remained tracked behind the merged square-root and wave slices rather
+than expanding either delivery.
 The build-tool execution critical path remains blocked on external
 immutable-runner and attester provisioning.
 
@@ -266,7 +274,7 @@ ports to reach all 15. After Priority 1, select work in this order:
 | Language lane | Current high-consensus gaps | Pairing rule |
 |---|---:|---|
 | C# | 0 | Complete; paired native package wave |
-| Dart | 107 | Close the reopened 14-of-15 set, then dependencies before consumers |
+| Dart | 105 | Close the reopened 14-of-15 set, then dependencies before consumers |
 | Elixir | 0 | Complete; retain as a reference lane and run conformance fixtures |
 | F# | 0 | Complete; paired native package wave |
 | Go | 0 | Complete; primary build-tool and portable-core reference lane |
@@ -927,10 +935,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 557 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 560 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added eighteen Rust singleton identities that now
+The July 30-August 1 inventories added twenty Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -948,6 +956,16 @@ discovery/topic/entity/value/payload transforms are candidates for a separately
 fixture-driven portable core. `venture-browser-macos` is an Apple-native
 AppKit/CoreText/Metal host whose expected classification is `native-source`,
 not a blind 14-lane port.
+
+The twentieth identity, `venture-browser-windows`, is a mixed split rather than
+a complete `native-source` exception. It duplicates deterministic session,
+chrome, status, navigation, link, JSON projection, and Mosaic event-bridge logic
+from the macOS host; an explicit follow-up moves that behavior into
+`venture-browser-core` or a shared fixture-driven bridge. The residual Windows
+DLL, WinUI adapter, Direct2D BGRA rendering, native text shaping, and C ABI remain
+native-source. The same owner adds the missing capability profile and Windows
+ABI, generated-project, pointer-lifetime, panic-containment, and pixel-buffer
+validation; other lanes must not duplicate the native shell.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export
@@ -1004,6 +1022,17 @@ has no closed input or nesting limits, and uses predictable link-following
 temporary output. Repository-local hardening is therefore independent of broad
 classification; a separate blocked item owns Layer 5 approval, and a later host
 refactor depends on both hardening and core extraction.
+
+The nineteenth identity, `smart-home-dashboard-core`, is not a host-boundary
+exception. It contains deterministic versioned dashboard, view, card, and
+resource DTO parsing; identifier and duplicate validation; dry-run rejection;
+applied-migration projection; and summaries without runtime capabilities. A
+dedicated item owns its explicit empty capability profile, closed language-
+neutral fixtures, and dependency-shaped cross-lane expansion. The Home
+Assistant dashboard portable-core extraction depends on this native dashboard
+contract so it does not duplicate the target representation. Controller
+transport, dashboard serving, filesystem I/O, and other host effects remain
+outside that portable contract.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1238,8 +1267,11 @@ existing-lane PHY00 square-root audit next because it is the foundational
 dependency and its tiny-normal, minimum-subnormal, maximum-finite, infinity,
 NaN, and signed-zero cases are now normative. PR #9395 merged that foundational
 repair with all 15 checks green. The collision-clean post-merge inventory then
-selected `phy01-nonfinite-validation-backfill` as the active explicit successor
-because all 15 established wave lanes and the closed 26-case oracle are ready.
+selected `phy01-nonfinite-validation-backfill`; PR #9400 merged that explicit
+consumer repair with all 15 checks green. The refreshed `20afefa7a` inventory
+then selected `phy00-atan-tiny-signed-zero-cross-lane-audit` because its only
+dependency is merged and the shared corpus can now express the cross-lane
+negative-zero and subnormal-floor failures exactly.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in
@@ -1352,11 +1384,13 @@ Bootstrap order:
    Complete in merged PR #9354. Final runs 30605415709, 30605415708,
    30605413650, and 30605415829 prove the contract, three fresh solves, three
    locked fixtures, repository builds, and CodeQL detection are green.
-4. Add OCaml discovery, opam/Dune dependency resolution, source hashing,
-   opam-switch serialization, language detection, validator support, shard
-   cost, and CI workflow markers to the canonical Go build tool. This begins
-   only after both the cross-platform toolchain evidence in step 3 and the
-   separately tracked `build-tool-go-oracle` are complete.
+4. Add the process-free OCaml build substrate now that the cross-platform
+   toolchain evidence and pure-domain corpus are complete: discovery,
+   opam/Dune dependency resolution, source hashing, language detection,
+   validator support, shard cost, affected-node behavior, and CI workflow
+   markers. Keep opam-switch serialization and canonical execution
+   conformance in the separately tracked execution-coupled tranche, which
+   remains gated on `build-tool-go-oracle`.
 5. Exercise the full path with a real dependency chain:
    `logic-gates`, then `graph -> directed-graph -> state-machine`. Every package
    needs native tests, formatting, measured coverage, README, changelog,

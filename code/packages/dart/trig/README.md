@@ -13,6 +13,10 @@ computes its numeric results from first principles and does not delegate to
   negative-input rejection, signed-zero preservation, and infinity handling;
 - `tan`, `atan`, and four-quadrant `atan2` built on the local primitives.
 
+For `|x| <= 2^-27`, `atan` returns `x` unchanged before any half-angle
+reduction. That exact binary64 identity preserves negative zero and both signs
+of the minimum subnormal, as required by the shared PHY00 fixtures.
+
 The precision target is an absolute error no greater than `1e-10` for the
 PHY00 conformance cases, including tiny normal and subnormal square roots.
 Tangent returns the exact signed finite sentinel `1e308` within `1e-15` of a

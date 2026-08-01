@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 - 2026-08-01
+
+- Add exact PHY00 `atan` cases for negative zero, `2^-30`, and both signs of
+  the minimum binary64 subnormal.
+- Require the cross-language `atan` small-input identity before half-angle
+  reduction so underflow cannot erase sign or magnitude.
+
 ## 1.1.0 - 2026-08-01
 
 - Add the minimum-positive-subnormal frequency boundary, including its

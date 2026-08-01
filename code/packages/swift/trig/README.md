@@ -1,5 +1,11 @@
 # trig — Trigonometric Functions from First Principles (Swift)
 
+## Exact small arctangent
+
+`Trig.atan` returns `x` unchanged when `|x| <= 2^-27`, before any half-angle
+reduction. This exact binary64 identity preserves negative zero and both signs
+of the minimum subnormal; the shared PHY00 fixture locks those boundaries.
+
 ## Full-range square root
 
 The square-root API follows PHY00 across the full binary64 range. It preserves

@@ -86,6 +86,12 @@ int main(void) {
 
     /* ── atan ────────────────────────────────────────────────────────────── */
     ISO_CHECK_EQ_DBL(trig_atan(0.0), 0.0, eps);
+    ISO_CHECK(signbit(trig_atan(-0.0)));
+    ISO_CHECK(trig_atan(0x1p-30) == 0x1p-30);
+    ISO_CHECK(trig_atan(0x0.0000000000001p-1022) ==
+              0x0.0000000000001p-1022);
+    ISO_CHECK(trig_atan(-0x0.0000000000001p-1022) ==
+              -0x0.0000000000001p-1022);
     ISO_CHECK_EQ_DBL(trig_atan(1.0), TRIG_PI / 4.0, eps);
     ISO_CHECK_EQ_DBL(trig_atan(-1.0), -TRIG_PI / 4.0, eps);
     /* |x| > 1 exercises the layer-1 reduction. */

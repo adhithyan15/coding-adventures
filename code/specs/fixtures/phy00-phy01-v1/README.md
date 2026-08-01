@@ -65,9 +65,10 @@ After editing either JSON document, regenerate the authority-free Dart input:
 python code/scripts/generate_phy00_phy01_dart_fixtures.py
 ```
 
-The dependent backlog items wire the corpus into the other established lanes
-while repairing any full-range square-root or non-finite wave behavior the
-shared cases expose.
+The corpus now also carries exact cross-language `atan` identities for negative
+zero and tiny/subnormal inputs. Package implementations reconcile those cases
+before half-angle reduction, alongside the full-range square-root and
+non-finite wave boundaries already represented here.
 
 These fixtures carry data only. They grant no filesystem, process, network,
 clock, environment, or publishing authority.

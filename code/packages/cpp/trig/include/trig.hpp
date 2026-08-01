@@ -163,7 +163,8 @@ inline double tan(double x) {
 // ── atan / atan2 ─────────────────────────────────────────────────────────────
 
 inline double atan(double x) {
-    if (x == 0.0) return 0.0;
+    // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    if (detail::d_abs(x) <= 0x1p-27) return x;
     if (x > 1.0) return HALF_PI - detail::atan_core(1.0 / x);
     if (x < -1.0) return -HALF_PI - detail::atan_core(1.0 / x);
     return detail::atan_core(x);

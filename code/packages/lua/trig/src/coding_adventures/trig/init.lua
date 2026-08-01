@@ -491,7 +491,11 @@ end
 -- @param x   any real number
 -- @return    arctangent of x, in (-pi/2, pi/2)
 function trig.atan(x)
-    if x == 0.0 then return 0.0 end
+    -- Keep the public result floating-point for integer arguments without
+    -- adding to an existing -0.0, which would clear its sign bit.
+    if math.type(x) == "integer" then x = x + 0.0 end
+    -- atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+    if math.abs(x) <= 7.450580596923828e-9 then return x end
 
     if x > 1.0 then
         return trig.HALF_PI - atan_core(1.0 / x)

@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9400,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "761c60fc39010d60d64d7b05e6cfab627b7911d3",
+    "revision": "c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1203,
-    "implementation_package_slots": 4347,
+    "implementation_identities": 1205,
+    "implementation_package_slots": 4349,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 753,
-    "singleton_missing_slots": 10542,
-    "rust_singletons": 558,
+    "singleton_packages": 755,
+    "singleton_missing_slots": 10570,
+    "rust_singletons": 560,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -383,7 +383,7 @@
       "depends_on": ["ocaml-infrastructure"],
       "branch": "codex/ocaml-ci-toolchain",
       "pr_number": 9354,
-      "notes": "Merged PR #9354 at d35079bbbea7da791e1b3e033613f34f0e61825f provisions the exact OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 toolchain on Linux x64, macOS ARM64, and Windows x64; commit-pins the opam repository and actions; preserves and verifies per-target transitive solver locks and receipts; and proves generated library and program scaffolds run real formatting, tests, and measured coverage without skips. Final PR-triggered runs 30605415709, 30605415708, 30605413650, and 30605415829 are green, including the contract, all three fresh solves, all three locked fixtures, repository builds, and CodeQL detection. Mutable hosted-runner image metadata remains diagnostic evidence only, not a host-image attestation. The later OCaml build substrate remains blocked on the separately tracked build-tool-go-oracle item."
+      "notes": "Merged PR #9354 at d35079bbbea7da791e1b3e033613f34f0e61825f provisions the exact OCaml 5.2.1, opam 2.5.2, Dune 3.17.2 with language 3.16, Alcotest 1.9.0, bisect_ppx 2.8.3, and ocamlformat 0.27.0 toolchain on Linux x64, macOS ARM64, and Windows x64; commit-pins the opam repository and actions; preserves and verifies per-target transitive solver locks and receipts; and proves generated library and program scaffolds run real formatting, tests, and measured coverage without skips. Final PR-triggered runs 30605415709, 30605415708, 30605413650, and 30605415829 are green, including the contract, all three fresh solves, all three locked fixtures, repository builds, and CodeQL detection. Mutable hosted-runner image metadata remains diagnostic evidence only, not a host-image attestation. The process-free OCaml build substrate can proceed independently; only execution-coupled serialization and conformance remain blocked on the separately tracked build-tool-go-oracle item."
     },
     {
       "id": "adj-lang-cli-capability-profile",
@@ -500,20 +500,20 @@
     {
       "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
       "title": "Audit tiny and signed-zero PHY00 arctangent behavior",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["phy00-small-sqrt-cross-lane-audit"],
-      "branch": null,
+      "branch": "codex/phy00-atan-tiny-signed-zero-audit",
       "pr_number": null,
-      "notes": "Discovered during the full-range square-root security audit. Every existing atan lane returns a literal positive zero for negative-zero input, and half-angle reduction underflows at the binary64 subnormal floor. Add shared fixture cases and a small-argument identity fast path that returns the input before half-angle reduction; retain reciprocal reduction for large and infinite inputs."
+      "notes": "Selected after PR #9400 merged and the collision-clean 20afefa7 inventory because its only dependency is merged, the shared PHY00 fixture machinery is established, and every existing atan lane has the same signed-zero and subnormal-floor defect. Add shared fixture cases and a small-argument identity fast path that returns the input before half-angle reduction; retain reciprocal reduction for large and infinite inputs."
     },
     {
       "id": "phy01-nonfinite-validation-backfill",
       "title": "Backfill finite and overflow-safe PHY01 wave evaluation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
       "branch": "codex/phy01-nonfinite-validation-backfill",
       "pr_number": 9400,
-      "notes": "Ready-for-review PR #9400 hardens PHY01 wave evaluation across all 15 established language lanes after merged PR #9395 and the collision-clean 761c60fc inventory. It validates finite amplitude, frequency, phase, and time; rejects angular-frequency overflow; preserves exact positive zero for zero amplitude; reduces period and phase before multiplication; clamps local PHY00 trig output; supports minimum-subnormal frequencies; expands the shared corpus from 24 to 26 wave cases; and updates specs, native tests, docs, changelogs, and build metadata. Local validation covered 14 executable language lanes plus fixture, build-tool, parity, diff, and credential gates; the unavailable local BEAM runtime is delegated transparently to CI, and Rust coverage report generation alone hit Windows command-line error 206 after its instrumented tests passed."
+      "notes": "Merged PR #9400 at 20afefa7a39a80e09002b7e1026162e4e6fd6a17 on 2026-08-01 after all 15 checks passed. It hardens PHY01 wave evaluation across all 15 established language lanes: finite parameter/time validation, angular-frequency overflow rejection, exact positive zero, overflow-safe period and phase reduction, bounded local PHY00 trig output, minimum-subnormal frequencies, 26 shared wave cases, native tests, docs, changelogs, and build metadata. Local validation covered 14 executable lanes plus fixture, build-tool, parity, diff, and credential gates; CI supplied the unavailable BEAM validation."
     },
     {
       "id": "dart-scaffold-capability-schema",
@@ -667,16 +667,37 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 558, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 560, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
-      "title": "Classify the July 30-31 Rust singleton additions",
+      "title": "Classify the July 30-August 1 Rust singleton additions",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, and smart-home-home-assistant-dashboard-migration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; and venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability rather than a blind 14-lane port. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic into the Matter contract, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, and venture-browser-windows; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+    },
+    {
+      "id": "venture-browser-windows-portable-bridge-and-native-host",
+      "title": "Extract the Venture portable host bridge and classify the Windows shell",
+      "status": "pending",
+      "depends_on": [
+        "rust-singletons-20260730-classification",
+        "capability-schema-category-action-constraints"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after origin/main advanced to c2b5a3d8 with Rust-only venture-browser-windows. Its session/chrome/status orchestration, navigation and link activation, JSON projection, and Mosaic event decoding are deterministic and substantially duplicate venture-browser-macos, so move them into venture-browser-core or a fixture-driven shared bridge core before assessing any cross-lane gaps. Keep the Direct2D renderer, WinUI XAML adapter, C ABI, native text shaping, Windows DLL, and platform acceptance build as the native-source shell. Add and review the currently missing capability metadata for default HTTP fetching and native-library authority, then enforce Windows ABI, generated-project, panic-containment, pointer-lifetime, and pixel-buffer tests."
+    },
+    {
+      "id": "smart-home-dashboard-core-portable-conformance",
+      "title": "Classify and fixture the portable smart-home dashboard manifest core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 20afefa7 post-#9400 inventory after PR #9399 added Rust-only smart-home-dashboard-core. The package is protocol-neutral, deterministic, and zero-capability: versioned dashboard/view/card/resource DTO parsing, identifier validation, duplicate rejection, dry-run rejection, applied-migration projection, and summaries. Add an explicit empty required_capabilities.json, define a closed language-neutral fixture contract for raw manifests, applied artifacts, dry-run rejection, invalid and duplicate identifiers, and summaries, then expand the pure core through established lanes in dependency-shaped waves while keeping controller transport, serving, filesystem, and host effects out of scope."
     },
     {
       "id": "matter-portable-core-extraction-and-conformance",
@@ -802,7 +823,10 @@
       "id": "home-assistant-dashboard-portable-core-extraction-and-conformance",
       "title": "Extract and fixture the portable Home Assistant dashboard migration core",
       "status": "pending",
-      "depends_on": ["rust-singletons-20260730-classification"],
+      "depends_on": [
+        "rust-singletons-20260730-classification",
+        "smart-home-dashboard-core-portable-conformance"
+      ],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the 761c60fc post-merge inventory after PR #9391 added the Rust-only dashboard migration host. Separate deterministic Lovelace DTO validation and normalization, reviewed-topology projection, standard-card compilation, ordered stack/grid/section flattening, entity mapping and deduplication, diagnostics, summaries, blocking decisions, canonical fingerprints, receipts, and artifacts from transport and host effects; define language-neutral fixtures and decouple the core from the Rust-only HomeAssistantExport DTO before expanding lanes."

@@ -375,6 +375,14 @@ class TrigTest {
     }
 
     @Test
+    void atanPreservesTinyInputsAndNegativeZero() {
+        assertEquals(Long.MIN_VALUE, Double.doubleToRawLongBits(Trig.atan(-0.0)));
+        assertEquals(Math.scalb(1.0, -30), Trig.atan(Math.scalb(1.0, -30)));
+        assertEquals(Double.MIN_VALUE, Trig.atan(Double.MIN_VALUE));
+        assertEquals(-Double.MIN_VALUE, Trig.atan(-Double.MIN_VALUE));
+    }
+
+    @Test
     void atanOne() {
         // atan(1) = π/4
         assertEquals(Trig.PI / 4, Trig.atan(1.0), TOL);

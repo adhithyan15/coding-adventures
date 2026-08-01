@@ -115,6 +115,15 @@ public sealed class TrigTests
     }
 
     [Fact]
+    public void AtanPreservesTinyInputsAndNegativeZero()
+    {
+        Assert.Equal(long.MinValue, BitConverter.DoubleToInt64Bits(Trig.Atan(-0.0)));
+        Assert.Equal(Math.ScaleB(1.0, -30), Trig.Atan(Math.ScaleB(1.0, -30)));
+        Assert.Equal(double.Epsilon, Trig.Atan(double.Epsilon));
+        Assert.Equal(-double.Epsilon, Trig.Atan(-double.Epsilon));
+    }
+
+    [Fact]
     public void Atan2HandlesAxesAndQuadrants()
     {
         Assert.True(ApproxEqual(Trig.Atan2(0.0, 1.0), 0.0));

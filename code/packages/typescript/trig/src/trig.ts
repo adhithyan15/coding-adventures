@@ -358,8 +358,8 @@ function atanCore(x: number): number {
 // (because tan and cot are complementary), meaning atan(1/x) = π/2 - θ.
 
 export function atan(x: number): number {
-  // Special case: atan(0) = 0 exactly.
-  if (x === 0.0) return 0.0;
+  // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+  if (Math.abs(x) <= 7.450580596923828e-9) return x;
 
   // Reduce |x| > 1 using the complementary identity.
   if (x > 1.0) {

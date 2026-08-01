@@ -72,6 +72,10 @@ type TrigTests() =
         Assert.True(approxEqual (Trig.tan (-Trig.PI / 4.0)) -1.0)
 
         Assert.Equal(0.0, Trig.atan 0.0)
+        Assert.Equal(System.Int64.MinValue, System.BitConverter.DoubleToInt64Bits(Trig.atan -0.0))
+        Assert.Equal(System.Math.ScaleB(1.0, -30), Trig.atan (System.Math.ScaleB(1.0, -30)))
+        Assert.Equal(System.Double.Epsilon, Trig.atan System.Double.Epsilon)
+        Assert.Equal(-System.Double.Epsilon, Trig.atan (-System.Double.Epsilon))
         Assert.True(approxEqual (Trig.atan 1.0) (Trig.PI / 4.0))
         Assert.True(approxEqual (Trig.atan -1.0) (-Trig.PI / 4.0))
         Assert.True(approxEqual (Trig.atan (Trig.sqrt 3.0)) (Trig.PI / 3.0))

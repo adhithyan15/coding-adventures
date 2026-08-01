@@ -336,7 +336,8 @@ object Trig {
      * @return angle whose tangent is x, in radians
      */
     fun atan(x: Double): Double {
-        if (x == 0.0) return 0.0
+        // atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
+        if (kotlin.math.abs(x) <= 7.450580596923828e-9) return x
         if (x >  1.0) return  HALF_PI - atanCore(1.0 / x)
         if (x < -1.0) return -HALF_PI - atanCore(1.0 / x)
         return atanCore(x)

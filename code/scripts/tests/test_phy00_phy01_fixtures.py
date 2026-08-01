@@ -327,6 +327,10 @@ class Phy00Phy01FixtureTests(unittest.TestCase):
     def test_required_boundary_cases_are_present(self) -> None:
         required = {
             "phy00/tan/positive-pole",
+            "phy00/atan/negative-zero",
+            "phy00/atan/tiny-positive",
+            "phy00/atan/minimum-positive-subnormal",
+            "phy00/atan/minimum-negative-subnormal",
             "phy00/atan2/negative-x-negative-zero",
             "phy00/sqrt/tiny-normal",
             "phy00/sqrt/minimum-subnormal",
@@ -343,6 +347,27 @@ class Phy00Phy01FixtureTests(unittest.TestCase):
             "phy01/evaluate/subnormal-period-overflow",
         }
         self.assertTrue(required.issubset({case["id"] for case in self.cases}))
+
+        exact_atan_cases = {
+            "phy00/atan/negative-zero": "-0",
+            "phy00/atan/tiny-positive": "9.3132257461547852e-10",
+            "phy00/atan/minimum-positive-subnormal": "4.9406564584124654e-324",
+            "phy00/atan/minimum-negative-subnormal": "-4.9406564584124654e-324",
+        }
+        cases_by_id = {case["id"]: case for case in self.cases}
+        for case_id, decimal in exact_atan_cases.items():
+            case = cases_by_id[case_id]
+            expected_scalar = {"kind": "finite", "decimal": decimal}
+            self.assertEqual(case["operation"], "atan")
+            self.assertEqual(case["input"], {"x": expected_scalar})
+            self.assertEqual(
+                case["expected"],
+                {
+                    "outcome": "value",
+                    "value": expected_scalar,
+                    "comparison": {"kind": "exact"},
+                },
+            )
 
     def test_tagged_scalars_decode_to_the_claimed_binary64_class(self) -> None:
         scalars = [
