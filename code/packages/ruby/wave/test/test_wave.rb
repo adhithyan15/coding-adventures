@@ -146,6 +146,22 @@ class TestWave < Minitest::Test
     assert_raises(ArgumentError) { Wave.new(1.0, -1.0) }
   end
 
+  def test_nonfinite_parameters_and_angular_overflow_raise
+    invalid = [
+      [Float::NAN, 1.0, 0.0],
+      [Float::INFINITY, 1.0, 0.0],
+      [1.0, Float::NAN, 0.0],
+      [1.0, Float::INFINITY, 0.0],
+      [1.0, Float::MAX, 0.0],
+      [1.0, 1.0, Float::NAN],
+      [1.0, 1.0, Float::INFINITY]
+    ]
+
+    invalid.each do |amplitude, frequency, phase|
+      assert_raises(ArgumentError) { Wave.new(amplitude, frequency, phase) }
+    end
+  end
+
   # ---------------------------------------------------------------------------
   # Zero amplitude produces a flat wave
   # ---------------------------------------------------------------------------
@@ -158,6 +174,25 @@ class TestWave < Minitest::Test
     [0.0, 0.25, 0.5, 1.0].each do |t|
       assert_in_delta 0.0, wave.evaluate(t), DELTA
     end
+  end
+
+  def test_nonfinite_time_raises_even_for_zero_amplitude
+    wave = Wave.new(0.0, 1.0)
+    [Float::NAN, Float::INFINITY, -Float::INFINITY].each do |time|
+      assert_raises(ArgumentError) { wave.evaluate(time) }
+    end
+  end
+
+  def test_extreme_inputs_stay_finite_and_bounded
+    min_subnormal = Float::MIN * Float::EPSILON
+    zero = Wave.new(0.0, min_subnormal, Float::MAX)
+    assert zero.period.infinite?
+    assert_equal 0, [zero.evaluate(Float::MAX)].pack("G").unpack1("Q>")
+
+    wave = Wave.new(Float::MAX, min_subnormal, Float::MAX)
+    result = wave.evaluate(Float::MAX)
+    assert result.finite?
+    assert_operator result.abs, :<=, Float::MAX
   end
 
   # ---------------------------------------------------------------------------

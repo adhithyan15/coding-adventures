@@ -57,8 +57,11 @@ final class Wave {
     // Reduce time to one period before multiplying. This keeps the phase
     // finite even when two individually finite inputs would overflow if they
     // were multiplied directly.
-    final reducedTime = time % period();
-    final angle = trig.twoPi * (frequency * reducedTime) + phase;
+    final representedPeriod = period();
+    final reducedTime =
+        representedPeriod.isInfinite ? time : time % representedPeriod;
+    final reducedPhase = phase % trig.twoPi;
+    final angle = trig.twoPi * (frequency * reducedTime) + reducedPhase;
     final unitValue = trig.sin(angle);
     if (unitValue >= 1.0) {
       return amplitude;

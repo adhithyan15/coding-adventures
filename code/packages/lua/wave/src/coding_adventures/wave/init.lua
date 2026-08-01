@@ -462,4 +462,81 @@ function wave.mix_waves(waves)
     return result
 end
 
+-- ============================================================================
+-- PHY01 Wave object — validated continuous simple-harmonic model
+-- ============================================================================
+
+local Wave = {}
+Wave.__index = Wave
+
+local MAX_FLOAT = 1.7976931348623157e308
+
+local function is_finite(value)
+    return type(value) == "number"
+        and value == value
+        and value ~= math.huge
+        and value ~= -math.huge
+end
+
+local function validate_model(model)
+    if not is_finite(model.amplitude) or model.amplitude < 0.0 then
+        error("amplitude must be finite and non-negative", 3)
+    end
+    if not is_finite(model.frequency) or model.frequency <= 0.0 then
+        error("frequency must be finite and positive", 3)
+    end
+    if model.frequency > MAX_FLOAT / trig.TWO_PI then
+        error("angular frequency must be finite", 3)
+    end
+    if not is_finite(model.phase) then
+        error("phase must be finite", 3)
+    end
+end
+
+function Wave.new(amplitude, frequency, phase)
+    if phase == nil then
+        phase = 0.0
+    end
+    local model = setmetatable({
+        amplitude = amplitude,
+        frequency = frequency,
+        phase = phase,
+    }, Wave)
+    validate_model(model)
+    return model
+end
+
+function Wave:period()
+    validate_model(self)
+    return 1.0 / self.frequency
+end
+
+function Wave:angular_frequency()
+    validate_model(self)
+    return trig.TWO_PI * self.frequency
+end
+
+function Wave:evaluate(time)
+    validate_model(self)
+    if not is_finite(time) then
+        error("time must be finite", 2)
+    end
+    if self.amplitude == 0.0 then
+        return 0.0
+    end
+
+    local model_period = self:period()
+    local reduced_time = time
+    if model_period ~= math.huge then
+        reduced_time = math.fmod(time, model_period)
+    end
+    local reduced_phase = math.fmod(self.phase, trig.TWO_PI)
+    local angle = trig.TWO_PI * (self.frequency * reduced_time) + reduced_phase
+    local unit = trig.sin(angle)
+    unit = math.max(-1.0, math.min(1.0, unit))
+    return self.amplitude * unit
+end
+
+wave.Wave = Wave
+
 return wave

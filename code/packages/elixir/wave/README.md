@@ -8,6 +8,17 @@ Models a sinusoidal wave defined by three parameters --- amplitude, frequency,
 and phase --- and evaluates the wave equation `y(t) = A * sin(2*pi*f*t + phi)`
 at any point in time.
 
+PHY01 construction validates every representable numeric input, rejects
+angular-frequency overflow, and returns `{:error, :invalid_argument}` for
+invalid values. Evaluation rejects invalid time, reduces time and phase before
+calling the local `Trig` implementation, and remains amplitude-bounded at
+binary64 extremes. The BEAM runtime cannot construct NaN or infinity values,
+so those symbolic shared-fixture cases are enforced by representability-aware
+validation and mirrored tests for every constructible boundary.
+Because BEAM does not represent IEEE 754 infinity as a float term,
+`period/1` returns `:positive_infinity` when the mathematical reciprocal of a
+valid subnormal frequency exceeds the largest representable float.
+
 ## How It Fits
 
 This is a **PHY01** (physics layer 1) package in the coding-adventures stack:

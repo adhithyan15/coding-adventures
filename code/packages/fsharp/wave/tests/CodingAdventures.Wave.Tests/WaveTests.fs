@@ -53,12 +53,34 @@ type WaveTests() =
     [<Fact>]
     member _.``zero amplitude always evaluates to zero``() =
         Assert.Equal(0.0, Wave(0.0, 1.0).Evaluate 0.5, epsilon)
+        Assert.Equal(0.0, Wave(0.0, 1e300, Math.PI / 2.0).Evaluate Double.MaxValue)
 
     [<Fact>]
     member _.``invalid parameters throw``() =
         Assert.Throws<ArgumentException>(fun () -> Wave(-1.0, 1.0) |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> Wave(1.0, 0.0) |> ignore) |> ignore
         Assert.Throws<ArgumentException>(fun () -> Wave(1.0, -1.0) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(Double.NaN, 1.0) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(Double.PositiveInfinity, 1.0) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(1.0, Double.NaN) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(1.0, Double.PositiveInfinity) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(1.0, Double.MaxValue) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(1.0, 1.0, Double.NaN) |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> Wave(1.0, 1.0, Double.PositiveInfinity) |> ignore) |> ignore
+
+    [<Fact>]
+    member _.``evaluate rejects non-finite time``() =
+        let wave = Wave(1.0, 1.0)
+        Assert.Throws<ArgumentException>(fun () -> wave.Evaluate Double.NaN |> ignore) |> ignore
+        Assert.Throws<ArgumentException>(fun () -> wave.Evaluate Double.PositiveInfinity |> ignore) |> ignore
+
+    [<Fact>]
+    member _.``extreme finite evaluation stays amplitude bounded``() =
+        let wave = Wave(Double.MaxValue, 1e300, Math.PI / 2.0)
+        let value = wave.Evaluate Double.MaxValue
+
+        Assert.True(Double.IsFinite value)
+        Assert.True(abs value <= wave.Amplitude)
 
     [<Fact>]
     member _.``high frequency has expected period and quarter cycle peak``() =

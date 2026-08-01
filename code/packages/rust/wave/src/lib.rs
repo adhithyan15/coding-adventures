@@ -50,7 +50,6 @@
 //
 // ============================================================================
 
-
 // ============================================================================
 // The Wave struct
 // ============================================================================
@@ -133,6 +132,10 @@ impl Wave {
     /// assert_eq!(w.phase, 0.0);
     /// ```
     pub fn new(amplitude: f64, frequency: f64, phase: f64) -> Result<Self, &'static str> {
+        if !amplitude.is_finite() || !frequency.is_finite() || !phase.is_finite() {
+            return Err("wave parameters must be finite");
+        }
+
         // Amplitude check: the wave's peak value cannot be negative.
         if amplitude < 0.0 {
             return Err("amplitude must be non-negative");
@@ -141,6 +144,10 @@ impl Wave {
         // Frequency check: the wave must oscillate at least once per second.
         if frequency <= 0.0 {
             return Err("frequency must be positive");
+        }
+
+        if frequency > f64::MAX / (2.0 * trig::PI) {
+            return Err("angular frequency must be finite");
         }
 
         Ok(Wave {
@@ -180,6 +187,7 @@ impl Wave {
     /// assert!((w.period() - 0.25).abs() < 1e-10);
     /// ```
     pub fn period(&self) -> f64 {
+        self.validate().expect("invalid wave state");
         1.0 / self.frequency
     }
 
@@ -212,6 +220,7 @@ impl Wave {
     /// assert!((w.angular_frequency() - 2.0 * PI).abs() < 1e-10);
     /// ```
     pub fn angular_frequency(&self) -> f64 {
+        self.validate().expect("invalid wave state");
         2.0 * trig::PI * self.frequency
     }
 
@@ -255,15 +264,31 @@ impl Wave {
     /// assert!((w.evaluate(0.25) - 1.0).abs() < 1e-10);
     /// ```
     pub fn evaluate(&self, t: f64) -> f64 {
-        // Compute the argument to sine:
-        //   theta = 2 * pi * f * t + phase
-        //
-        // This maps time into radians.  At t=0, theta = phase.
-        // After one full period (t = 1/f), theta = 2*pi + phase,
-        // which is equivalent to phase (since sin is 2*pi-periodic).
-        let theta = 2.0 * trig::PI * self.frequency * t + self.phase;
+        self.validate().expect("invalid wave state");
+        assert!(t.is_finite(), "time must be finite");
+        if self.amplitude == 0.0 {
+            return 0.0;
+        }
 
-        // Scale the sine value by amplitude.
-        self.amplitude * trig::sin(theta)
+        let two_pi = 2.0 * trig::PI;
+        let period = 1.0 / self.frequency;
+        let reduced_time = if period.is_infinite() { t } else { t % period };
+        let reduced_phase = self.phase % two_pi;
+        let theta = two_pi * (self.frequency * reduced_time) + reduced_phase;
+        let unit = trig::sin(theta).clamp(-1.0, 1.0);
+        self.amplitude * unit
+    }
+
+    fn validate(&self) -> Result<(), &'static str> {
+        if !self.amplitude.is_finite()
+            || self.amplitude < 0.0
+            || !self.frequency.is_finite()
+            || self.frequency <= 0.0
+            || self.frequency > f64::MAX / (2.0 * trig::PI)
+            || !self.phase.is_finite()
+        {
+            return Err("invalid wave state");
+        }
+        Ok(())
     }
 }

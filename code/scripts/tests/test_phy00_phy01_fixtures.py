@@ -247,8 +247,10 @@ def reference_wave(case: dict[str, Any]) -> float | None:
         raise ValueError("invalid-argument")
     if amplitude == 0.0:
         return 0.0
-    reduced_time = math.fmod(time, 1.0 / frequency)
-    angle = 2.0 * math.pi * (frequency * reduced_time) + phase
+    period = 1.0 / frequency
+    reduced_time = time if math.isinf(period) else math.fmod(time, period)
+    reduced_phase = math.fmod(phase, 2.0 * math.pi)
+    angle = 2.0 * math.pi * (frequency * reduced_time) + reduced_phase
     unit_value = math.sin(angle)
     if unit_value >= 1.0:
         return amplitude
@@ -333,10 +335,12 @@ class Phy00Phy01FixtureTests(unittest.TestCase):
             "phy00/sqrt/positive-infinity",
             "phy00/sqrt/nan",
             "phy01/construct/angular-frequency-overflow",
+            "phy01/period/minimum-subnormal-frequency",
             "phy01/evaluate/periodic-next-cycle",
             "phy01/evaluate/nan-time",
             "phy01/evaluate/zero-amplitude-extreme",
             "phy01/evaluate/extreme-finite-bounded",
+            "phy01/evaluate/subnormal-period-overflow",
         }
         self.assertTrue(required.issubset({case["id"] for case in self.cases}))
 
@@ -373,7 +377,13 @@ class Phy00Phy01FixtureTests(unittest.TestCase):
                 self.assertEqual(case["operation"], "construct")
             if outcome == "property":
                 self.assertEqual(case["operation"], "evaluate")
-                self.assertEqual(case["id"], "phy01/evaluate/extreme-finite-bounded")
+                self.assertIn(
+                    case["id"],
+                    {
+                        "phy01/evaluate/extreme-finite-bounded",
+                        "phy01/evaluate/subnormal-period-overflow",
+                    },
+                )
 
     def test_reference_calculation_agrees_with_every_case(self) -> None:
         for case in self.cases:

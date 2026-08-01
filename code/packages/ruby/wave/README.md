@@ -2,6 +2,12 @@
 
 Sinusoidal wave modeling from first principles. This package provides a `Wave` class that represents a single sinusoidal wave, parameterized by amplitude, frequency, and phase.
 
+The full PHY01 contract rejects non-finite parameters, angular-frequency
+overflow, and non-finite time. Evaluation preserves exact zero amplitude,
+reduces time and phase before calling local `Trig.sin`, and keeps all accepted
+binary64 results finite and amplitude-bounded, including subnormal frequencies
+whose represented period is infinite.
+
 ## How It Fits
 
 This package builds on the [trig](../trig/) package, using its `Trig.sin` function (implemented via Maclaurin series) to evaluate wave values. No standard library math functions are used.

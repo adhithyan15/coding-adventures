@@ -2,6 +2,11 @@
 
 Pure F# immutable sinusoidal wave model for signal-processing foundations.
 
+The PHY01 contract rejects non-finite parameters, angular-frequency overflow,
+and non-finite evaluation time. Evaluation reduces time and phase before using
+the local first-principles `trig` package, preserves exact zero amplitude, and
+stays finite and amplitude-bounded for every accepted binary64 input.
+
 ## What It Includes
 
 - Amplitude, frequency, and phase validation

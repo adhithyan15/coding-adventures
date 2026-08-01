@@ -51,6 +51,7 @@ class WaveTest {
 
     @Test void zeroAmplitude() {
         assertEquals(0.0, new Wave(0.0, 1.0).evaluate(0.5), EPS);
+        assertEquals(0.0, new Wave(0.0, 1e300, Math.PI / 2).evaluate(Double.MAX_VALUE));
     }
 
     @Test void oppositePhase() {
@@ -65,6 +66,29 @@ class WaveTest {
 
     @Test void zeroFrequencyThrows() {
         assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, 0.0));
+    }
+
+    @Test void nonFiniteAndOverflowingParametersThrow() {
+        assertThrows(IllegalArgumentException.class, () -> new Wave(Double.NaN, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(Double.POSITIVE_INFINITY, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, Double.POSITIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, Double.MAX_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, 1.0, Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> new Wave(1.0, 1.0, Double.POSITIVE_INFINITY));
+    }
+
+    @Test void nonFiniteTimeThrows() {
+        Wave wave = new Wave(1.0, 1.0);
+        assertThrows(IllegalArgumentException.class, () -> wave.evaluate(Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> wave.evaluate(Double.POSITIVE_INFINITY));
+    }
+
+    @Test void extremeFiniteEvaluationStaysAmplitudeBounded() {
+        Wave wave = new Wave(Double.MAX_VALUE, 1e300, Math.PI / 2);
+        double value = wave.evaluate(Double.MAX_VALUE);
+        assertTrue(Double.isFinite(value));
+        assertTrue(Math.abs(value) <= wave.getAmplitude());
     }
 
     @Test void highFrequency() {

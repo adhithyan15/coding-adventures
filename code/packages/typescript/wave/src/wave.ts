@@ -93,6 +93,9 @@ export class Wave {
   //     the model unambiguous.
 
   constructor(amplitude: number, frequency: number, phase: number = 0.0) {
+    if (!Number.isFinite(amplitude)) {
+      throw new Error("Amplitude must be finite");
+    }
     if (amplitude < 0) {
       throw new Error(
         `Amplitude must be non-negative, got ${amplitude}. ` +
@@ -101,12 +104,20 @@ export class Wave {
       );
     }
 
-    if (frequency <= 0) {
+    if (!Number.isFinite(frequency) || frequency <= 0) {
       throw new Error(
         `Frequency must be positive, got ${frequency}. ` +
           `A wave must oscillate — zero or negative frequency ` +
           `doesn't define a wave.`
       );
+    }
+
+    if (!Number.isFinite(2.0 * PI * frequency)) {
+      throw new Error("Angular frequency must be finite");
+    }
+
+    if (!Number.isFinite(phase)) {
+      throw new Error("Phase must be finite");
     }
 
     this.amplitude = amplitude;
@@ -172,6 +183,19 @@ export class Wave {
   //   At t=0:    y = 1.0 · sin(π/2) = 1.0        (starts at peak!)
 
   evaluate(t: number): number {
-    return this.amplitude * sin(2.0 * PI * this.frequency * t + this.phase);
+    if (!Number.isFinite(t)) {
+      throw new Error("Time must be finite");
+    }
+    if (this.amplitude === 0.0) {
+      return 0.0;
+    }
+
+    const twoPI = 2.0 * PI;
+    const period = this.period();
+    const reducedTime = Number.isFinite(period) ? t % period : t;
+    const reducedPhase = this.phase % twoPI;
+    const angle = twoPI * (this.frequency * reducedTime) + reducedPhase;
+    const unit = Math.max(-1.0, Math.min(1.0, sin(angle)));
+    return this.amplitude * unit;
   }
 }

@@ -211,6 +211,23 @@
       }
     },
     {
+      "id": "phy01/period/minimum-subnormal-frequency",
+      "operation": "period",
+      "summary": "The reciprocal of the minimum positive subnormal frequency rounds to positive infinity.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "4.9406564584124654e-324"},
+          "phase": {"kind": "finite", "decimal": "0"}
+        }
+      },
+      "expected": {
+        "outcome": "value",
+        "value": {"kind": "positive-infinity"},
+        "comparison": {"kind": "exact"}
+      }
+    },
+    {
       "id": "phy01/angular-frequency/ten-hertz",
       "operation": "angular-frequency",
       "summary": "Angular frequency is two pi times frequency.",
@@ -396,6 +413,23 @@
           "amplitude": {"kind": "finite", "decimal": "1.7976931348623157e308"},
           "frequency": {"kind": "finite", "decimal": "1e300"},
           "phase": {"kind": "finite", "decimal": "1.5707963267948966"}
+        },
+        "time": {"kind": "finite", "decimal": "1.7976931348623157e308"}
+      },
+      "expected": {
+        "outcome": "property",
+        "predicate": "finite-absolute-not-greater-than-amplitude"
+      }
+    },
+    {
+      "id": "phy01/evaluate/subnormal-period-overflow",
+      "operation": "evaluate",
+      "summary": "Evaluation stays finite when a positive subnormal frequency has an infinite represented period.",
+      "input": {
+        "wave": {
+          "amplitude": {"kind": "finite", "decimal": "1"},
+          "frequency": {"kind": "finite", "decimal": "4.9406564584124654e-324"},
+          "phase": {"kind": "finite", "decimal": "1.7976931348623157e308"}
         },
         "time": {"kind": "finite", "decimal": "1.7976931348623157e308"}
       },

@@ -34,7 +34,8 @@ and positive in binary64 and may not exceed `1e-10`.
 - `accepted` applies only to a successful PHY01 construction case.
 - `property` checks a bounded invariant when an exact cross-language decimal
   would be less stable than the contract. The v1 corpus uses it only for
-  finite, amplitude-bounded extreme wave evaluation.
+  finite, amplitude-bounded extreme wave evaluation, including a valid
+  subnormal frequency whose reciprocal rounds to positive infinity.
 
 Case IDs are globally unique, stable, and namespaced by `phy00/` or `phy01/`.
 The authoring validator rejects duplicate JSON keys, a UTF-8 BOM, non-finite

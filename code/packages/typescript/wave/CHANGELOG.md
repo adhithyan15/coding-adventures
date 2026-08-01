@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Enforce finite parameters, angular-frequency overflow, and finite-time
+  validation required by PHY01.
+- Reduce time and phase before local trig evaluation and cover exact-zero,
+  maximum-finite, and minimum-subnormal boundaries.
+- Make both build entrypoints run the TypeScript compiler before Jest.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

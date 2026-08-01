@@ -113,5 +113,13 @@ void main() {
       final extreme = Wave(double.maxFinite, 1e300, trig.halfPi);
       expect(extreme.evaluate(double.maxFinite).isFinite, isTrue);
     });
+
+    test('supports a positive subnormal frequency with an infinite period', () {
+      final wave = Wave(1.0, double.minPositive, double.maxFinite);
+      expect(wave.period(), double.infinity);
+      final value = wave.evaluate(double.maxFinite);
+      expect(value.isFinite, isTrue);
+      expect(value.abs(), lessThanOrEqualTo(1.0));
+    });
   });
 }

@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\trig\CodingAdventures.Trig.fsproj" />
     <Compile Include="Wave.fs" />
   </ItemGroup>
 </Project>

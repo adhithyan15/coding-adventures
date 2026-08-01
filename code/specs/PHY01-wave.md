@@ -79,9 +79,46 @@ frequency, and clamps the first-principles sine approximation to the unit
 interval before amplitude scaling. These rules prevent otherwise finite inputs
 from producing an overflow or a `NaN` through avoidable intermediate values.
 
+The required evaluation order is:
+
+```text
+if time is not finite: reject invalid argument
+if amplitude == 0: return 0
+reduced_time = time modulo period()
+reduced_phase = phase modulo (2 * PI)
+angle = 2 * PI * (frequency * reduced_time) + reduced_phase
+unit_value = sin(angle)
+if unit_value >= 1: return amplitude
+if unit_value <= -1: return -amplitude
+return amplitude * unit_value
+```
+
+Implementations must perform the angular-frequency finiteness check during
+construction and must not form `frequency * time` before period reduction.
+Clamping the unit value before the final product is part of the contract, not a
+test-only tolerance: it keeps every accepted finite wave amplitude-bounded.
+Positive subnormal frequencies remain valid even when `period()` rounds to
+positive infinity. In that case the time remainder is defined as the original
+finite time, so evaluation still forms only the bounded product
+`frequency * time`. `reject` means a lane-native exception, result/error value,
+or error tuple; returning NaN or a sentinel is not rejection.
+
 The Dart implementation uses lower-camel `angularFrequency()` for the
 language-neutral `angular_frequency()` operation. The remaining constructor,
 properties, `period()`, and `evaluate(t)` names are unchanged.
+
+Swift preserves its original precondition-based initializer and
+`evaluate(at:)` surface for source compatibility, and exposes catchable PHY01
+rejections through `init(validatingAmplitude:frequency:phase:)` and
+`evaluateChecked(at:)`. Lua and Perl preserve their older sampled-wave helper
+APIs and add the continuous model as `wave.Wave` and
+`CodingAdventures::Wave->new(...)`, respectively. These lane-native spellings
+must implement the same construction, derived-value, evaluation, and rejection
+semantics. Runtimes that cannot construct NaN or infinity still validate all
+representable inputs and document that fixture limitation; they may not weaken
+the finite-input contract for values the runtime can represent. Elixir maps the
+positive-infinite period of a valid subnormal frequency to the explicit atom
+`:positive_infinity` because BEAM has no infinite float term.
 
 ## 4. Dependency
 
@@ -89,7 +126,10 @@ The `wave` package depends on the `trig` package (PHY00) for:
 - `PI` constant (used in $2\pi f$)
 - `sin()` function (the core of the wave equation)
 
-No standard-library math functions are used. The entire computation chain is built from first principles.
+No host trigonometric or square-root functions are used. Implementations may
+use the language's scalar finiteness predicate and signed floating-point
+remainder operation for validation and period reduction; sine and PI still come
+from the local first-principles PHY00 package.
 
 ## 5. Cross-Language Parity
 
@@ -112,9 +152,12 @@ The shared cases validate:
 6. **Validation:** Negative amplitude and zero frequency are rejected
 7. **Finite construction:** Non-finite parameters and angular-frequency overflow are rejected
 8. **Finite evaluation:** Non-finite time is rejected, zero amplitude short-circuits, and extreme finite evaluation remains amplitude-bounded
+9. **Subnormal frequency:** The minimum positive binary64 frequency is valid,
+   its represented period is positive infinity, and evaluation remains finite
+   and amplitude-bounded
 
-The Dart lane consumes the v1 corpus directly. The tracked
-`phy00-small-sqrt-cross-lane-audit` and
-`phy01-nonfinite-validation-backfill` items wire the same oracle into every
-other established lane while repairing discrepancies it exposes; corpus
-publication alone does not claim those audits complete.
+The Dart lane consumes the v1 corpus directly. The merged
+`phy00-small-sqrt-cross-lane-audit` repaired the foundational trig dependency;
+`phy01-nonfinite-validation-backfill` wires the same oracle semantics into every
+established wave lane while repairing discrepancies it exposes. Corpus
+publication alone does not claim that implementation audit complete.

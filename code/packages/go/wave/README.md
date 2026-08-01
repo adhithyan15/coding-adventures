@@ -20,6 +20,12 @@ y(t) = A * sin(2 * pi * f * t + phase)
 
 This package uses the `trig` package for sine computation, maintaining a full chain of understanding from Taylor series to wave physics.
 
+The full PHY01 binary64 contract rejects non-finite parameters,
+angular-frequency overflow, and non-finite time. `Evaluate` revalidates the
+public fields, short-circuits exact zero amplitude, reduces time and phase, and
+keeps every accepted result finite and amplitude-bounded. A positive subnormal
+frequency remains valid even if `Period` returns positive infinity.
+
 ## API
 
 ### Creating a Wave

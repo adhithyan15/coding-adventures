@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Enforce PHY01 finite representability and angular-frequency overflow checks.
+- Reject invalid evaluation time, preserve exact zero amplitude, reduce time
+  and phase, and bound extreme finite results through the local `Trig` layer.
+- Cover maximum-finite and minimum-subnormal frequency boundaries.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

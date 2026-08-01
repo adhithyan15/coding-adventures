@@ -3,6 +3,16 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Added
+- Add throwing checked construction and evaluation APIs for the PHY01 error
+  contract while preserving existing source-compatible wrappers.
+
+### Changed
+- Use the local `Trig` package, reduce time and phase, and cover non-finite,
+  maximum-finite, exact-zero, and minimum-subnormal boundaries.
+
 ## [0.1.0] — 2026-04-04
 
 ### Added

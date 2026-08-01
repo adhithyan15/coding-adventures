@@ -53,7 +53,8 @@ defmodule Wave do
   ## Dependencies
 
   This package depends on `Trig` (a from-scratch trigonometry library)
-  for `sin`, `cos`, and `pi`. No Erlang `:math` module is used.
+  for `sin`, `cos`, and `pi`. No host trigonometric or square-root routine is used;
+  `:math.fmod/2` provides only scalar signed-remainder reduction.
 
   ## Layer
 
@@ -72,6 +73,11 @@ defmodule Wave do
   #   3. Clear documentation of what a "wave" is
 
   defstruct [:amplitude, :frequency, :phase]
+
+  @max_float Float.max_finite()
+  @two_pi 2.0 * Trig.pi()
+  @max_frequency @max_float / @two_pi
+  @period_overflow_frequency 1.0 / @max_float
 
   # ---------------------------------------------------------------------------
   # Constructor
@@ -110,8 +116,14 @@ defmodule Wave do
       amplitude < 0 ->
         {:error, "amplitude must be non-negative"}
 
+      amplitude > @max_float or abs(phi) > @max_float ->
+        {:error, "wave parameters must be finite"}
+
       freq <= 0 ->
         {:error, "frequency must be positive"}
+
+      freq > @max_frequency ->
+        {:error, "angular frequency must be finite"}
 
       true ->
         {:ok, %Wave{amplitude: amplitude / 1.0, frequency: freq / 1.0, phase: phi / 1.0}}
@@ -138,7 +150,15 @@ defmodule Wave do
       iex> Wave.period(w)
       0.25
   """
-  def period(%Wave{frequency: freq}), do: 1.0 / freq
+  def period(%Wave{} = wave) do
+    validate_wave!(wave)
+
+    if wave.frequency < @period_overflow_frequency do
+      :positive_infinity
+    else
+      1.0 / wave.frequency
+    end
+  end
 
   @doc """
   Returns the angular frequency (omega) in radians per second.
@@ -158,7 +178,10 @@ defmodule Wave do
       iex> Wave.angular_frequency(w)
       6.283185307179586
   """
-  def angular_frequency(%Wave{frequency: freq}), do: 2.0 * Trig.pi() * freq
+  def angular_frequency(%Wave{} = wave) do
+    validate_wave!(wave)
+    @two_pi * wave.frequency
+  end
 
   # ---------------------------------------------------------------------------
   # Evaluation
@@ -189,16 +212,35 @@ defmodule Wave do
       true
   """
   def evaluate(%Wave{} = wave, t) when is_number(t) do
-    # Calculate the angle at time t.
-    #
-    # The term (2 * pi * f * t) converts the time into an angle:
-    #   - At t=0, the angle is just the phase offset
-    #   - At t=T (one period), the angle advances by exactly 2*pi (one full cycle)
-    #   - At t=0.25/f, the angle is pi/2 (quarter cycle, peak of sine)
-    theta = 2.0 * Trig.pi() * wave.frequency * t + wave.phase
+    validate_wave!(wave)
 
-    # Evaluate sin(theta) using our from-scratch Trig library,
-    # then scale by amplitude.
-    wave.amplitude * Trig.sin(theta)
+    if abs(t) > @max_float do
+      raise ArgumentError, "time must be finite"
+    end
+
+    time = t / 1.0
+
+    if wave.amplitude == 0.0 do
+      0.0
+    else
+      reduced_time =
+        if wave.frequency < @period_overflow_frequency do
+          time
+        else
+          :math.fmod(time, period(wave))
+        end
+
+      reduced_phase = :math.fmod(wave.phase, @two_pi)
+      theta = @two_pi * (wave.frequency * reduced_time) + reduced_phase
+      unit = Trig.sin(theta) |> max(-1.0) |> min(1.0)
+      wave.amplitude * unit
+    end
+  end
+
+  defp validate_wave!(%Wave{} = wave) do
+    case new(wave.amplitude, wave.frequency, wave.phase) do
+      {:ok, _validated} -> :ok
+      {:error, reason} -> raise ArgumentError, reason
+    end
   end
 end

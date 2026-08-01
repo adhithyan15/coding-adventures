@@ -1,5 +1,14 @@
 # Changelog — CodingAdventures::Wave (Perl)
 
+## Unreleased
+
+### Added
+
+- Add a source-compatible continuous PHY01 object API alongside all existing
+  exported sampled-wave helpers.
+- Validate finite parameters, angular-frequency overflow, and time; reduce time
+  and phase; and test maximum-finite and minimum-subnormal boundaries.
+
 ## [0.01] — 2026-03-29
 
 ### Added

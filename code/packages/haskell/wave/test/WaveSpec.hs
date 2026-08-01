@@ -1,12 +1,16 @@
 module WaveSpec (spec) where
 
 import Data.Either (isLeft)
+import qualified Control.Exception as Exception
 import Test.Hspec
 import qualified Trig
 import Wave
 
 tolerance :: Double
 tolerance = 1e-10
+
+maxFinite :: Double
+maxFinite = 1.7976931348623157e308
 
 shouldBeCloseTo :: Double -> Double -> Expectation
 actual `shouldBeCloseTo` expected =
@@ -47,6 +51,19 @@ spec = do
             newWave 1.0 0.0 `shouldSatisfy` isLeft
         it "rejects negative frequency" $
             newWave 1.0 (-5.0) `shouldSatisfy` isLeft
+        it "rejects nonfinite parameters and angular overflow" $ do
+            let infinity = 1.0 / 0.0
+                nan = 0.0 / 0.0
+                invalid =
+                    [ newWave nan 1.0
+                    , newWave infinity 1.0
+                    , newWave 1.0 nan
+                    , newWave 1.0 infinity
+                    , newWave 1.0 maxFinite
+                    , newWaveWithPhase 1.0 1.0 nan
+                    , newWaveWithPhase 1.0 1.0 infinity
+                    ]
+            invalid `shouldSatisfy` all isLeft
 
     describe "derived quantities" $ do
         it "computes period" $ do
@@ -73,6 +90,30 @@ spec = do
             wave <- rightValue $ newWaveWithPhase 2.5 3.0 0.7
             let time = 0.137
             evaluate wave time `shouldBeCloseTo` evaluate wave (time + period wave)
+        it "rejects nonfinite time before the zero-amplitude shortcut" $ do
+            wave <- rightValue $ newWave 0.0 1.0
+            Exception.evaluate (Wave.evaluate wave (0.0 / 0.0))
+                `shouldThrow` anyErrorCall
+            Exception.evaluate (Wave.evaluate wave (1.0 / 0.0))
+                `shouldThrow` anyErrorCall
+        it "keeps canonical extreme inputs finite and bounded" $ do
+            zero <- rightValue $ newWaveWithPhase 0.0 1e300 Trig.halfPi
+            let zeroResult = evaluate zero maxFinite
+            zeroResult `shouldBe` 0.0
+            isNegativeZero zeroResult `shouldBe` False
+
+            extreme <- rightValue $ newWaveWithPhase maxFinite 1e300 Trig.halfPi
+            let result = evaluate extreme maxFinite
+            isNaN result `shouldBe` False
+            isInfinite result `shouldBe` False
+            abs result `shouldSatisfy` (<= maxFinite)
+        it "supports a minimum-subnormal frequency with an infinite period" $ do
+            wave <- rightValue $ newWaveWithPhase 1.0 (encodeFloat 1 (-1074)) maxFinite
+            isInfinite (period wave) `shouldBe` True
+            let result = evaluate wave maxFinite
+            isNaN result `shouldBe` False
+            isInfinite result `shouldBe` False
+            abs result `shouldSatisfy` (<= 1.0)
 
     describe "phase offsets" $ do
         it "starts at the peak with phase pi over two" $ do
