@@ -693,12 +693,31 @@ inputs, sensors, and energy monitors:
 - Real loopback TCP tests prove inspection, runtime installation, authorization,
   and command transfer over the production transport.
 
+## Current WLED Integration Slice
+
+This slice adds a production broader-device path for local addressable-light
+controllers:
+
+- `_wled._tcp.local` mDNS advertisements become verified, no-pairing D23
+  discovery records using WLED's advertised MAC when present.
+- Bounded HTTP/1.1 requests inspect the documented `/json/si` state and device
+  information endpoint, then project a master light plus capability-aware
+  segment lights into normalized devices, entities, and confirmed state.
+- WLED color capability bits determine whether each segment exposes RGB and
+  color-temperature commands; effect identifiers remain observed state rather
+  than an unsupported generic command.
+- D23 authorization gates power, brightness, RGB, and mirek-to-Kelvin color
+  temperature mutations before the host posts to `/json/state`.
+- Real loopback TCP tests prove inspection, runtime installation, authorization,
+  and command transfer over the production transport. This first host uses
+  polling and does not claim WebSocket push support.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
+  WLED, and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
   events, RTSP media transfer and recording, vendor-specific camera/NVR
   integrations, broader device families, a production Matter
   commissioning/secure-session/network host, a Thread border-router host, a
