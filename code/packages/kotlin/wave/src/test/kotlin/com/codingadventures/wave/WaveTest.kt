@@ -3,7 +3,9 @@ package com.codingadventures.wave
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class WaveTest {
 
@@ -30,7 +32,10 @@ class WaveTest {
 
     @Test fun `phase shift`() = assertEquals(1.0, Wave(1.0, 1.0, PI / 2).evaluate(0.0), 1e-9)
     @Test fun `trough`() = assertEquals(-2.0, Wave(2.0, 1.0).evaluate(0.75), 1e-9)
-    @Test fun `zero amplitude`() = assertEquals(0.0, Wave(0.0, 1.0).evaluate(0.5), eps)
+    @Test fun `zero amplitude`() {
+        assertEquals(0.0, Wave(0.0, 1.0).evaluate(0.5), eps)
+        assertEquals(0.0, Wave(0.0, 1e300, PI / 2).evaluate(Double.MAX_VALUE))
+    }
 
     @Test fun `opposite phase`() {
         val w1 = Wave(1.0, 1.0, 0.0)
@@ -40,6 +45,29 @@ class WaveTest {
 
     @Test fun `negative amplitude throws`() { assertThrows<IllegalArgumentException> { Wave(-1.0, 1.0) } }
     @Test fun `zero frequency throws`() { assertThrows<IllegalArgumentException> { Wave(1.0, 0.0) } }
+
+    @Test fun `non-finite and overflowing parameters throw`() {
+        assertThrows<IllegalArgumentException> { Wave(Double.NaN, 1.0) }
+        assertThrows<IllegalArgumentException> { Wave(Double.POSITIVE_INFINITY, 1.0) }
+        assertThrows<IllegalArgumentException> { Wave(1.0, Double.NaN) }
+        assertThrows<IllegalArgumentException> { Wave(1.0, Double.POSITIVE_INFINITY) }
+        assertThrows<IllegalArgumentException> { Wave(1.0, Double.MAX_VALUE) }
+        assertThrows<IllegalArgumentException> { Wave(1.0, 1.0, Double.NaN) }
+        assertThrows<IllegalArgumentException> { Wave(1.0, 1.0, Double.POSITIVE_INFINITY) }
+    }
+
+    @Test fun `non-finite time throws`() {
+        val wave = Wave(1.0, 1.0)
+        assertThrows<IllegalArgumentException> { wave.evaluate(Double.NaN) }
+        assertThrows<IllegalArgumentException> { wave.evaluate(Double.POSITIVE_INFINITY) }
+    }
+
+    @Test fun `extreme finite evaluation stays amplitude bounded`() {
+        val wave = Wave(Double.MAX_VALUE, 1e300, PI / 2)
+        val value = wave.evaluate(Double.MAX_VALUE)
+        assertTrue(value.isFinite())
+        assertTrue(abs(value) <= wave.amplitude)
+    }
 
     @Test fun `high frequency`() {
         val w = Wave(1.0, 1000.0)

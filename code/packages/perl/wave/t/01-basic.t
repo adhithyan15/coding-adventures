@@ -26,6 +26,45 @@ ok(defined $CodingAdventures::Wave::TWO_PI, 'TWO_PI is defined');
 ok(approx_eq($CodingAdventures::Wave::TWO_PI, 6.283185307179586, 1e-12),
    'TWO_PI ≈ 6.283185…');
 
+subtest 'PHY01 Wave object' => sub {
+    my $model = CodingAdventures::Wave->new(3.5, 4.0, 1.25);
+    is($model->amplitude, 3.5, 'stores amplitude');
+    ok(approx_eq($model->period, 0.25), 'derives period');
+    ok(approx_eq($model->angular_frequency, 4.0 * $CodingAdventures::Wave::TWO_PI),
+       'derives angular frequency');
+    $model->{frequency} = 2.0;
+    ok(approx_eq($model->angular_frequency, 2.0 * $CodingAdventures::Wave::TWO_PI),
+       'revalidates mutable state and recomputes derived values');
+    $model->{frequency} = 4.0;
+
+    my $nan = unpack('d<', pack('H*', '000000000000f87f'));
+    my $inf = unpack('d<', pack('H*', '000000000000f07f'));
+    my $max = 1.7976931348623157e308;
+    my @invalid = (
+        [$nan, 1.0, 0.0], [$inf, 1.0, 0.0],
+        [1.0, $nan, 0.0], [1.0, $inf, 0.0], [1.0, $max, 0.0],
+        [1.0, 1.0, $nan], [1.0, 1.0, $inf],
+    );
+    ok(dies { CodingAdventures::Wave->new(@$_) }, 'invalid parameters die')
+        for @invalid;
+
+    my $zero = CodingAdventures::Wave->new(0.0, 1e300, $CodingAdventures::Wave::TWO_PI / 4.0);
+    ok(dies { $zero->evaluate($nan) }, 'NaN time dies');
+    ok(dies { $zero->evaluate($inf) }, 'infinite time dies');
+    is(unpack('Q<', pack('d<', $zero->evaluate($max))), 0, 'extreme zero is exact +0');
+
+    my $extreme = CodingAdventures::Wave->new($max, 1e300, $CodingAdventures::Wave::TWO_PI / 4.0);
+    my $result = $extreme->evaluate($max);
+    ok(POSIX::isfinite($result), 'extreme result is finite');
+    ok(abs($result) <= $max, 'extreme result is amplitude-bounded');
+
+    my $subnormal = CodingAdventures::Wave->new(1.0, 4.9406564584124654e-324, $max);
+    ok(!POSIX::isfinite($subnormal->period), 'minimum-subnormal period is infinite');
+    my $subnormal_result = $subnormal->evaluate($max);
+    ok(POSIX::isfinite($subnormal_result), 'subnormal-period result is finite');
+    ok(abs($subnormal_result) <= 1.0, 'subnormal-period result is bounded');
+};
+
 # ===========================================================================
 # sine_wave
 # ===========================================================================

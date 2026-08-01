@@ -1,6 +1,7 @@
 package wave
 
 import (
+	"math"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/trig"
@@ -94,6 +95,29 @@ func TestNewNegativeFrequency(t *testing.T) {
 	}
 	if err != ErrZeroFrequency {
 		t.Errorf("expected ErrZeroFrequency, got %v", err)
+	}
+}
+
+func TestNewRejectsNonFiniteParametersAndAngularOverflow(t *testing.T) {
+	cases := []struct {
+		name                        string
+		amplitude, frequency, phase float64
+	}{
+		{"nan amplitude", math.NaN(), 1.0, 0.0},
+		{"infinite amplitude", math.Inf(1), 1.0, 0.0},
+		{"nan frequency", 1.0, math.NaN(), 0.0},
+		{"infinite frequency", 1.0, math.Inf(1), 0.0},
+		{"overflowing angular frequency", 1.0, math.MaxFloat64, 0.0},
+		{"nan phase", 1.0, 1.0, math.NaN()},
+		{"infinite phase", 1.0, 1.0, math.Inf(1)},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if _, err := New(tc.amplitude, tc.frequency, tc.phase); err == nil {
+				t.Fatal("expected invalid parameters to be rejected")
+			}
+		})
 	}
 }
 
@@ -212,6 +236,43 @@ func TestZeroAmplitudeAlwaysZero(t *testing.T) {
 		if !approxEqual(result, 0.0, tol) {
 			t.Errorf("expected 0.0 for zero-amplitude wave at t=%f, got %f", tm, result)
 		}
+	}
+}
+
+func TestEvaluateRejectsNonFiniteTime(t *testing.T) {
+	w, _ := New(0.0, 1.0, 0.0)
+	for _, tm := range []float64{math.NaN(), math.Inf(1), math.Inf(-1)} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("expected non-finite time %v to panic", tm)
+				}
+			}()
+			_ = w.Evaluate(tm)
+		}()
+	}
+}
+
+func TestEvaluateExtremeInputsStayFiniteAndBounded(t *testing.T) {
+	zero, _ := New(0.0, 1e300, trig.PI/2)
+	zeroResult := zero.Evaluate(math.MaxFloat64)
+	if zeroResult != 0.0 || math.Signbit(zeroResult) {
+		t.Fatalf("expected exact positive zero, got %v", zeroResult)
+	}
+
+	w, _ := New(math.MaxFloat64, 1e300, trig.PI/2)
+	result := w.Evaluate(math.MaxFloat64)
+	if math.IsNaN(result) || math.IsInf(result, 0) || math.Abs(result) > math.MaxFloat64 {
+		t.Fatalf("expected finite bounded output, got %v", result)
+	}
+
+	subnormal, _ := New(1.0, math.SmallestNonzeroFloat64, math.MaxFloat64)
+	if !math.IsInf(subnormal.Period(), 1) {
+		t.Fatal("expected minimum-subnormal frequency to have an infinite period")
+	}
+	subnormalResult := subnormal.Evaluate(math.MaxFloat64)
+	if !isFinite(subnormalResult) || math.Abs(subnormalResult) > 1.0 {
+		t.Fatalf("expected subnormal-period evaluation to stay bounded, got %v", subnormalResult)
 	}
 }
 

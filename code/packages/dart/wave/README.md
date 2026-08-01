@@ -18,8 +18,10 @@ and a finite optional phase offset. It exposes:
 Construction rejects non-finite parameters, negative amplitudes, non-positive
 frequencies, and frequencies whose angular frequency would overflow.
 Evaluation rejects non-finite time, reduces finite time to one period before
-multiplication, and bounds amplitude scaling. A zero amplitude is valid and
-short-circuits to an exactly flat wave even for extreme finite inputs.
+multiplication, reduces phase, and bounds amplitude scaling. A zero amplitude
+is valid and short-circuits to an exactly flat wave even for extreme finite
+inputs. Positive subnormal frequencies remain valid when their represented
+period rounds to infinity.
 
 ## Usage
 

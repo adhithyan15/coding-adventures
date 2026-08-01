@@ -10,6 +10,12 @@ waveforms used in audio synthesis and digital signal processing. It depends on
 `CodingAdventures::Trig` for sin/cos computed from first principles via
 Maclaurin series.
 
+The additive `CodingAdventures::Wave->new($amplitude, $frequency, $phase)`
+object API implements continuous PHY01 waves without changing the exported
+sampled-wave functions. Accessors plus `period`, `angular_frequency`, and
+`evaluate` enforce finite binary64 inputs, angular-frequency overflow, reduced
+time and phase, exact zero amplitude, and amplitude-bounded extreme results.
+
 ## How It Fits in the Stack
 
 ```

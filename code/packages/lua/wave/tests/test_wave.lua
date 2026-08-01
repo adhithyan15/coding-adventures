@@ -459,3 +459,57 @@ describe("wave", function()
     end)
 
 end)
+
+describe("PHY01 Wave object", function()
+    it("constructs and derives period and angular frequency", function()
+        local model = wave.Wave.new(3.5, 4.0, 1.25)
+        assert.equals(3.5, model.amplitude)
+        assert.equals(0.25, model:period())
+        assert.is_true(approx_eq(model:angular_frequency(), 4.0 * wave.TWO_PI, 1e-10))
+    end)
+
+    it("rejects non-finite parameters and angular overflow", function()
+        local nan = 0.0 / 0.0
+        local invalid = {
+            {nan, 1.0, 0.0},
+            {math.huge, 1.0, 0.0},
+            {1.0, nan, 0.0},
+            {1.0, math.huge, 0.0},
+            {1.0, 1.7976931348623157e308, 0.0},
+            {1.0, 1.0, nan},
+            {1.0, 1.0, math.huge},
+        }
+        for _, args in ipairs(invalid) do
+            assert.has_error(function()
+                wave.Wave.new(args[1], args[2], args[3])
+            end)
+        end
+    end)
+
+    it("rejects non-finite time before the zero shortcut", function()
+        local model = wave.Wave.new(0.0, 1.0, 0.0)
+        for _, time in ipairs({0.0 / 0.0, math.huge, -math.huge}) do
+            assert.has_error(function() model:evaluate(time) end)
+        end
+    end)
+
+    it("keeps canonical extremes finite and bounded", function()
+        local max = 1.7976931348623157e308
+        local zero = wave.Wave.new(0.0, 1e300, wave.TWO_PI / 4.0)
+        local zero_result = zero:evaluate(max)
+        assert.equals(math.huge, 1.0 / zero_result)
+
+        local extreme = wave.Wave.new(max, 1e300, wave.TWO_PI / 4.0)
+        local result = extreme:evaluate(max)
+        assert.is_true(result == result and result ~= math.huge and result ~= -math.huge)
+        assert.is_true(math.abs(result) <= max)
+    end)
+
+    it("supports the minimum-subnormal infinite-period case", function()
+        local model = wave.Wave.new(1.0, 4.9406564584124654e-324, 1.7976931348623157e308)
+        assert.equals(math.huge, model:period())
+        local result = model:evaluate(1.7976931348623157e308)
+        assert.is_true(result == result and result ~= math.huge and result ~= -math.huge)
+        assert.is_true(math.abs(result) <= 1.0)
+    end)
+end)

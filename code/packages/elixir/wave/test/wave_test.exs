@@ -38,6 +38,14 @@ defmodule WaveTest do
     test "rejects negative frequency" do
       assert {:error, "frequency must be positive"} = Wave.new(1.0, -5.0)
     end
+
+    test "rejects finite values whose angular frequency would overflow" do
+      assert {:error, "angular frequency must be finite"} =
+               Wave.new(1.0, Float.max_finite())
+    end
+
+    # BEAM does not expose NaN or infinity as ordinary float terms, so the
+    # shared corpus's non-finite rows are not runtime-representable here.
   end
 
   # ---------------------------------------------------------------------------
@@ -58,6 +66,12 @@ defmodule WaveTest do
     test "period of 1000 Hz wave is 0.001 seconds" do
       {:ok, wave} = Wave.new(1.0, 1000.0)
       assert_in_delta Wave.period(wave), 0.001, 1.0e-10
+    end
+
+    test "minimum subnormal frequency has a symbolic positive-infinite period" do
+      {frequency, ""} = Float.parse("4.9406564584124654e-324")
+      {:ok, wave} = Wave.new(1.0, frequency)
+      assert Wave.period(wave) == :positive_infinity
     end
   end
 
@@ -199,6 +213,34 @@ defmodule WaveTest do
 
       # sin(-pi/2) = -1.0 at t=-0.25
       assert_in_delta Wave.evaluate(wave, -0.25), -1.0, 1.0e-10
+    end
+  end
+
+  describe "Wave.evaluate/2 — finite extremes" do
+    test "zero amplitude returns exact positive zero before extreme arithmetic" do
+      {:ok, wave} = Wave.new(0.0, 1.0e300, Float.max_finite())
+      assert <<0::64>> = <<Wave.evaluate(wave, Float.max_finite())::float-64>>
+    end
+
+    test "maximum amplitude remains finite and bounded" do
+      {:ok, wave} = Wave.new(Float.max_finite(), 1.0e300, Float.max_finite())
+      result = Wave.evaluate(wave, Float.max_finite())
+      assert is_float(result)
+      assert abs(result) <= Float.max_finite()
+    end
+
+    test "minimum subnormal frequency is accepted and evaluable" do
+      {frequency, ""} = Float.parse("4.9406564584124654e-324")
+      {:ok, wave} = Wave.new(1.0, frequency, Float.max_finite())
+      result = Wave.evaluate(wave, Float.max_finite())
+      assert is_float(result)
+      assert abs(result) <= 1.0
+    end
+
+    test "public struct fields are revalidated before derived operations" do
+      invalid = %Wave{amplitude: 1.0, frequency: Float.max_finite(), phase: 0.0}
+      assert_raise ArgumentError, fn -> Wave.angular_frequency(invalid) end
+      assert_raise ArgumentError, fn -> Wave.evaluate(invalid, 0.0) end
     end
   end
 end

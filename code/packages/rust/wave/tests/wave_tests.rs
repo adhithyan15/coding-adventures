@@ -10,8 +10,8 @@
 // series) is accurate to about 15 significant digits for inputs in [-pi, pi].
 // ============================================================================
 
-use wave::Wave;
 use trig::PI;
+use wave::Wave;
 
 // ============================================================================
 // Helper: approximate floating-point equality
@@ -180,6 +180,26 @@ fn negative_frequency_returns_err() {
     assert_eq!(result.unwrap_err(), "frequency must be positive");
 }
 
+#[test]
+fn nonfinite_parameters_and_angular_overflow_return_err() {
+    let invalid = [
+        (f64::NAN, 1.0, 0.0),
+        (f64::INFINITY, 1.0, 0.0),
+        (1.0, f64::NAN, 0.0),
+        (1.0, f64::INFINITY, 0.0),
+        (1.0, f64::MAX, 0.0),
+        (1.0, 1.0, f64::NAN),
+        (1.0, 1.0, f64::INFINITY),
+    ];
+
+    for (amplitude, frequency, phase) in invalid {
+        assert!(
+            Wave::new(amplitude, frequency, phase).is_err(),
+            "invalid parameters should be rejected"
+        );
+    }
+}
+
 // ============================================================================
 // Edge cases
 // ============================================================================
@@ -200,6 +220,35 @@ fn zero_amplitude_produces_flat_line() {
         approx_equal(w.evaluate(1.0), 0.0, TOL),
         "Zero-amplitude wave should be 0 everywhere"
     );
+}
+
+#[test]
+fn nonfinite_time_panics_even_for_zero_amplitude() {
+    let w = Wave::new(0.0, 1.0, 0.0).unwrap();
+    for time in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+        assert!(
+            std::panic::catch_unwind(|| w.evaluate(time)).is_err(),
+            "non-finite time should panic"
+        );
+    }
+}
+
+#[test]
+fn extreme_inputs_stay_finite_and_bounded() {
+    let zero = Wave::new(0.0, 1e300, PI / 2.0).unwrap();
+    let zero_result = zero.evaluate(f64::MAX);
+    assert_eq!(zero_result.to_bits(), 0, "expected exact positive zero");
+
+    let w = Wave::new(f64::MAX, 1e300, PI / 2.0).unwrap();
+    let result = w.evaluate(f64::MAX);
+    assert!(result.is_finite());
+    assert!(result.abs() <= f64::MAX);
+
+    let subnormal = Wave::new(1.0, f64::from_bits(1), f64::MAX).unwrap();
+    assert!(subnormal.period().is_infinite());
+    let subnormal_result = subnormal.evaluate(f64::MAX);
+    assert!(subnormal_result.is_finite());
+    assert!(subnormal_result.abs() <= 1.0);
 }
 
 #[test]

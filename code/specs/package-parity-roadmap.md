@@ -106,11 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on July 31, 2026 at `41622fa78` after merged Dart
-`trig` and `wave`, the PHY00/PHY01 shared fixture corpus, Rust
-`smart-home-home-assistant-definitions`, Mosaic browser host, Spice validation,
-and Algol closure work. It contains 1,202 normalized implementation identities
-across 4,346 established-lane package
+inventory was regenerated on August 1, 2026 at `761c60fc3` after the merged
+cross-lane PHY00 square-root repair and Rust
+`smart-home-home-assistant-dashboard-migration`. It contains 1,203 normalized
+implementation identities across 4,347 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -118,22 +117,22 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 752 | 10,528 |
+| Present in one language | 753 | 10,542 |
 
 The loop must not start by attempting 10,514 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The post-#9390 inventory at
-`41622fa7896a45b6001ea3cf1e7f5da5c86be161` is collision-clean at 1,202
-normalized implementation identities, 4,346 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 752 singletons, 557
+The post-#9395 inventory at
+`761c60fc39010d60d64d7b05e6cfab627b7911d3` is collision-clean at 1,203
+normalized implementation identities, 4,347 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 753 singletons, 558
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The sole new identity since the previous inventory is Rust-only
-`smart-home-home-assistant-definitions`; its portable-core extraction,
+`smart-home-home-assistant-dashboard-migration`; its portable-core extraction,
 repository-local host hardening, externally approved capability profile, and
 post-extraction host refactor now have explicit owners.
 
-The July 31 lane audit is:
+The August 1 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -149,7 +148,7 @@ The July 31 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 967 | 0 | 100% |
+| Rust | 968 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -241,14 +240,17 @@ and finite-input and overflow-safe PHY01 evaluation reconciliation. Merged PR
 #9390 delivered the closed 53-case shared corpus and its first always-on Dart
 consumer. The collision-clean post-merge inventory and parallel dependency,
 fixture, and security audits then selected
-`phy00-small-sqrt-cross-lane-audit` as the one active slice because PHY00 is the
+`phy00-small-sqrt-cross-lane-audit` because PHY00 is the
 foundational numeric dependency beneath PHY01 and the shared oracle now makes
 the known boundary defect testable across all 15 established lanes plus the
-emerging C and C++ implementations. `phy01-nonfinite-validation-backfill`
-follows it. The square-root numerical audit also discovered a separate
+emerging C and C++ implementations. PR #9395 merged that repair with all checks
+green. The collision-clean `761c60fc3` inventory and dependency audit then
+selected `phy01-nonfinite-validation-backfill` as the active consumer-side
+successor. The square-root numerical audit also discovered a separate
 `phy00-atan-tiny-signed-zero-cross-lane-audit`: current half-angle reduction
 underflows at the subnormal floor and loses the sign of negative zero, so that
-work is now tracked behind the square-root slice rather than expanding it.
+work remains tracked behind the merged square-root slice rather than expanding
+the wave delivery.
 The build-tool execution critical path remains blocked on external
 immutable-runner and attester provisioning.
 
@@ -928,7 +930,7 @@ language ports stay eligible for later dependency-shaped waves.
 The singleton inventory is led by 557 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added seventeen Rust singleton identities that now
+The July 30-August 1 inventories added eighteen Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -988,6 +990,20 @@ Vault, limit, redaction, and durable no-follow write hardening must land without
 claiming capability approval; a separately blocked Layer 5 item owns the
 hardware-key-backed approval evidence, and the later host refactor depends on
 both the portable core and hardened boundary.
+
+The eighteenth identity, `smart-home-home-assistant-dashboard-migration`, is
+another mixed split. Lovelace DTO validation and normalization,
+reviewed-topology projection, standard-card compilation, ordered layout
+flattening, entity mapping, diagnostics, summaries, fingerprints, blocking
+decisions, receipts, and artifacts are fixture-driven portable-core candidates.
+WebSocket/TLS collection, administrator credentials, filesystem and wall-clock
+effects, console output, and CLI orchestration stay in the Rust host. That host
+currently lacks capability metadata, accepts arbitrary plaintext endpoints,
+reads an ambient token, persists server-controlled error text and resource URLs,
+has no closed input or nesting limits, and uses predictable link-following
+temporary output. Repository-local hardening is therefore independent of broad
+classification; a separate blocked item owns Layer 5 approval, and a later host
+refactor depends on both hardening and core extraction.
 
 The new `smart-home-matter-integration` is also a mixed split candidate rather
 than a native-source exception: endpoint projection, report normalization, and
@@ -1220,8 +1236,10 @@ frequency overflow, zero-amplitude evaluation, and extreme finite products.
 The shared PHY00/PHY01 corpus is now merged. The serial loop selected the
 existing-lane PHY00 square-root audit next because it is the foundational
 dependency and its tiny-normal, minimum-subnormal, maximum-finite, infinity,
-NaN, and signed-zero cases are now normative; the PHY01 audit remains the
-explicit successor.
+NaN, and signed-zero cases are now normative. PR #9395 merged that foundational
+repair with all 15 checks green. The collision-clean post-merge inventory then
+selected `phy01-nonfinite-validation-backfill` as the active explicit successor
+because all 15 established wave lanes and the closed 26-case oracle are ready.
 
 The post-#9368 dependency audit also found that trusted authority requires one
 held case and one selected in-image adapter even though both checked-in

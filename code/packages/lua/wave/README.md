@@ -19,6 +19,12 @@ logic_gates → arithmetic → trig → wave
 The `trig` package provides `sin_approx` and `cos_approx` computed via
 Maclaurin series. The `wave` package uses these to generate sampled waveforms.
 
+The additive `wave.Wave` object implements the continuous PHY01 contract while
+preserving every existing sampled-wave function. `wave.Wave.new(amplitude,
+frequency, phase)` validates finite binary64 inputs and angular-frequency
+overflow; its `period`, `angular_frequency`, and `evaluate` methods reduce time
+and phase through the local trig layer and keep accepted outputs bounded.
+
 ## Waveforms
 
 | Function        | Description                                        |

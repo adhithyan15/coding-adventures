@@ -65,6 +65,7 @@ public sealed class WaveTests
     public void ZeroAmplitude_AlwaysEvaluatesToZero()
     {
         Assert.Equal(0.0, new Wave(0.0, 1.0).Evaluate(0.5), Epsilon);
+        Assert.Equal(0.0, new Wave(0.0, 1e300, Math.PI / 2.0).Evaluate(double.MaxValue));
     }
 
     [Fact]
@@ -73,6 +74,31 @@ public sealed class WaveTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(-1.0, 1.0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, 0.0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, -1.0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(double.NaN, 1.0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(double.PositiveInfinity, 1.0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, double.PositiveInfinity));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, double.MaxValue));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, 1.0, double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Wave(1.0, 1.0, double.PositiveInfinity));
+    }
+
+    [Fact]
+    public void Evaluate_RejectsNonFiniteTime()
+    {
+        var wave = new Wave(1.0, 1.0);
+        Assert.Throws<ArgumentOutOfRangeException>(() => wave.Evaluate(double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => wave.Evaluate(double.PositiveInfinity));
+    }
+
+    [Fact]
+    public void Evaluate_ExtremeFiniteInputsRemainAmplitudeBounded()
+    {
+        var wave = new Wave(double.MaxValue, 1e300, Math.PI / 2.0);
+        var value = wave.Evaluate(double.MaxValue);
+
+        Assert.True(double.IsFinite(value));
+        Assert.True(Math.Abs(value) <= wave.Amplitude);
     }
 
     [Fact]

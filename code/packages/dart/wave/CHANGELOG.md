@@ -7,6 +7,8 @@
 - Consume the versioned language-neutral PHY01 corpus in package tests,
   including construction, periodicity, non-finite validation, zero-amplitude,
   and extreme finite evaluation cases.
+- Reduce phase explicitly and support the shared minimum-subnormal-frequency
+  case when its represented period is positive infinity.
 
 ## [0.1.0] - 2026-07-31
 

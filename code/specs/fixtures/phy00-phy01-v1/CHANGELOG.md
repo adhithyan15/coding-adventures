@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 - 2026-08-01
+
+- Add the minimum-positive-subnormal frequency boundary, including its
+  positive-infinite represented period and finite amplitude-bounded
+  evaluation contract.
+- Make phase reduction and infinite-period handling explicit in the shared
+  reference calculation.
+
 ## 1.0.0 - 2026-07-31
 
 - Define the closed Draft 2020-12 schema and tagged binary64 scalar encoding.

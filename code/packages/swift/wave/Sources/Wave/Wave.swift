@@ -23,7 +23,15 @@
 // Spec:  code/specs/PHY01-wave.md
 // ============================================================================
 
-import Foundation
+import Trig
+
+public enum WaveError: Error, Equatable {
+    case invalidAmplitude
+    case invalidFrequency
+    case angularFrequencyOverflow
+    case invalidPhase
+    case invalidTime
+}
 
 /// An immutable sinusoidal wave: y(t) = A · sin(2π·f·t + φ)
 public struct Wave {
@@ -52,8 +60,23 @@ public struct Wave {
     ///   - frequency: Cycles per second in Hz (must be > 0).
     ///   - phase: Starting offset in radians (default 0).
     public init(amplitude: Double, frequency: Double, phase: Double = 0.0) {
-        precondition(amplitude >= 0, "Amplitude must be non-negative (got \(amplitude))")
-        precondition(frequency > 0, "Frequency must be positive (got \(frequency))")
+        do {
+            try Self.validate(amplitude: amplitude, frequency: frequency, phase: phase)
+        } catch {
+            preconditionFailure("Invalid wave parameters: \(error)")
+        }
+        self.amplitude = amplitude
+        self.frequency = frequency
+        self.phase = phase
+    }
+
+    /// Create a wave with catchable validation failures.
+    public init(
+        validatingAmplitude amplitude: Double,
+        frequency: Double,
+        phase: Double = 0.0
+    ) throws {
+        try Self.validate(amplitude: amplitude, frequency: frequency, phase: phase)
         self.amplitude = amplitude
         self.frequency = frequency
         self.phase = phase
@@ -79,7 +102,7 @@ public struct Wave {
     /// While frequency counts cycles per second, angular frequency counts
     /// radians per second.  One full cycle = 2π radians.
     public var angularFrequency: Double {
-        return 2.0 * Double.pi * frequency
+        return 2.0 * PI * frequency
     }
 
     // ========================================================================
@@ -100,6 +123,42 @@ public struct Wave {
     /// - Parameter t: time in seconds
     /// - Returns: displacement at time t
     public func evaluate(at t: Double) -> Double {
-        return amplitude * sin(2.0 * Double.pi * frequency * t + phase)
+        do {
+            return try evaluateChecked(at: t)
+        } catch {
+            preconditionFailure("Invalid wave evaluation: \(error)")
+        }
+    }
+
+    /// Evaluate with a catchable invalid-time error surface.
+    public func evaluateChecked(at time: Double) throws -> Double {
+        guard time.isFinite else { throw WaveError.invalidTime }
+        if amplitude == 0.0 { return 0.0 }
+
+        let twoPI = 2.0 * PI
+        let reducedTime = period.isInfinite
+            ? time
+            : time.truncatingRemainder(dividingBy: period)
+        let reducedPhase = phase.truncatingRemainder(dividingBy: twoPI)
+        let angle = twoPI * (frequency * reducedTime) + reducedPhase
+        let unit = max(-1.0, min(1.0, Trig.sin(angle)))
+        return amplitude * unit
+    }
+
+    private static func validate(
+        amplitude: Double,
+        frequency: Double,
+        phase: Double
+    ) throws {
+        guard amplitude.isFinite, amplitude >= 0.0 else {
+            throw WaveError.invalidAmplitude
+        }
+        guard frequency.isFinite, frequency > 0.0 else {
+            throw WaveError.invalidFrequency
+        }
+        guard (2.0 * PI * frequency).isFinite else {
+            throw WaveError.angularFrequencyOverflow
+        }
+        guard phase.isFinite else { throw WaveError.invalidPhase }
     }
 }

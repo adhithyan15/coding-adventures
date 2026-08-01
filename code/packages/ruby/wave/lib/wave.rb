@@ -84,6 +84,14 @@ class Wave
   #   to positive frequency with a phase shift, so we require strictly positive.
 
   def initialize(amplitude, frequency, phase = 0.0)
+    amplitude = Float(amplitude)
+    frequency = Float(frequency)
+    phase = Float(phase)
+
+    unless amplitude.finite? && frequency.finite? && phase.finite?
+      raise ArgumentError, "Wave parameters must be finite"
+    end
+
     if amplitude < 0
       raise ArgumentError, "Amplitude must be non-negative, got #{amplitude}"
     end
@@ -92,9 +100,13 @@ class Wave
       raise ArgumentError, "Frequency must be positive, got #{frequency}"
     end
 
-    @amplitude = amplitude.to_f
-    @frequency = frequency.to_f
-    @phase = phase.to_f
+    unless (2.0 * Trig::PI * frequency).finite?
+      raise ArgumentError, "Angular frequency must be finite"
+    end
+
+    @amplitude = amplitude
+    @frequency = frequency
+    @phase = phase
   end
 
   # ---------------------------------------------------------------------------
@@ -160,6 +172,16 @@ class Wave
   # @return [Float] the wave's value at time t
 
   def evaluate(t)
-    @amplitude * Trig.sin(2.0 * Trig::PI * @frequency * t + @phase)
+    time = Float(t)
+    raise ArgumentError, "Time must be finite" unless time.finite?
+    return 0.0 if @amplitude.zero?
+
+    two_pi = 2.0 * Trig::PI
+    wave_period = period
+    reduced_time = wave_period.infinite? ? time : time.remainder(wave_period)
+    reduced_phase = @phase.remainder(two_pi)
+    angle = two_pi * (@frequency * reduced_time) + reduced_phase
+    unit = [[Trig.sin(angle), -1.0].max, 1.0].min
+    @amplitude * unit
   end
 end
