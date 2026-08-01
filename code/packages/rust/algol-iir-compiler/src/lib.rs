@@ -5768,6 +5768,65 @@ mod tests {
     }
 
     #[test]
+    fn nested_procedure_captures_three_dimensional_real_array_parameter() {
+        let src = "begin real array values[-1:0, 2:3, 5:6]; integer result, total; \
+                   procedure setvalues(a); value a; real array a; \
+                     begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; \
+                           populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; \
+                   setvalues(values) end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "three_dimensional_real_array_formal_capture")
+            .expect("compiles");
+        let setvalues = module
+            .get_function("setvalues")
+            .expect("setvalues function exists");
+        assert_eq!(
+            setvalues.params,
+            vec![
+                ("a".to_string(), "array<f64>".to_string()),
+                (array_param_dim_lower_slot("a", 0), "i64".to_string()),
+                (array_param_stride_slot("a", 0), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 1), "i64".to_string()),
+                (array_param_stride_slot("a", 1), "i64".to_string()),
+                (array_param_dim_lower_slot("a", 2), "i64".to_string()),
+            ],
+            "a 3-D real array formal must retain its typed handle and complete descriptor"
+        );
+
+        let capture_slot = array_param_capture_slot("setvalues", "a");
+        let populate = module
+            .get_function("populate")
+            .expect("populate function exists");
+        for (dim_index, field) in [
+            (0, "lower"),
+            (0, "stride"),
+            (1, "lower"),
+            (1, "stride"),
+            (2, "lower"),
+        ] {
+            assert!(
+                populate.instructions.iter().any(|instr| {
+                    instr.op == "global_load"
+                        && instr.srcs.first().and_then(Operand::as_str_lit)
+                            == Some(array_dim_global_name(&capture_slot, dim_index, field).as_str())
+                        && instr.type_hint == "i64"
+                }),
+                "nested real writes must reload captured dimension {dim_index} {field}"
+            );
+        }
+        assert!(
+            populate.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.srcs.first().and_then(Operand::as_str_lit)
+                        == Some(capture_slot.as_str())
+                    && instr.type_hint == "array<f64>"
+            }),
+            "nested real writes must reload the captured 3-D array<f64> handle"
+        );
+    }
+
+    #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
                    procedure seed(a); value a; integer array a; \
