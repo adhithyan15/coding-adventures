@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - project-shell native node-slot bridge
+
+Generated SwiftUI project shells now resolve `node` and component slots through
+an optional `MosaicHostBridgeObject.node(named:)` hook. macOS `NSView` and iOS
+`UIView` objects are wrapped with `NSViewRepresentable` / `UIViewRepresentable`
+and passed to the generated component as `AnyView`; absent or mistyped nodes
+retain the empty-view fallback. A Venture acceptance test builds the generated
+SwiftPM app with a real host-provided `NSView` content surface.
+
 ### Added - HostSurface native composition
 
 SwiftUI output now lowers Mosaic `HostSurface ( content: slot: ... )` to the

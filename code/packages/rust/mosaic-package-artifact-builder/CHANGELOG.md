@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - runnable host-surface shell acceptance
+
+- Compose Desktop project shells now resolve `node` slots from an optional
+  in-process `MosaicHost` props map as composable lambdas.
+- Venture's exhaustive `Backend::ALL` gate now verifies both the generated
+  component mount and the runnable project-shell host-injection path for all
+  nine backends.
+
 ## [Unreleased] - exhaustive Venture backend acceptance
 
 - Added `Backend::ALL` as the MIL/MLL/MSL package pipeline's backend source of

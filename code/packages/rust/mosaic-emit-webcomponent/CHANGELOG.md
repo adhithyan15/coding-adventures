@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - project-shell named node-slot mounting
+
+Generated Web Component shells now recognize `node` and component props from
+`window.mosaicHost`, attach host-provided `Element` values to the component's
+light DOM with the declared `slot` name, and replace only the prior host-owned
+element on refresh. `HostSurface` named slots can now receive real content in a
+runnable shell instead of a stringified attribute.
+
 ### Added - host-owned surface composition
 
 `HostSurface ( content: slot: ... )` now lowers through the platform-native

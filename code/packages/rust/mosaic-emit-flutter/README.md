@@ -110,6 +110,11 @@ Generated events expose a target-neutral `mosaicEnvelope` map. Flutter shells
 can forward that map to the same Mosaic host bridge used by HTML, Electron,
 SwiftUI, XAML, and Qt instead of reverse-engineering Dart class names.
 
+Generated shells also accept `Widget` values for typed `node` slots through the
+optional `MosaicHost` props map. This is the composition seam used by Venture's
+browser content surface; scalar props remain normalized by the existing typed
+helpers.
+
 ## What works in v0.1 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:

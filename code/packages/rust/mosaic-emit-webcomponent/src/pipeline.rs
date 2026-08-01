@@ -217,15 +217,13 @@ impl std::error::Error for PipelineEmitError {}
 ///
 /// Default: emits only the component `.js`; no project shell.
 /// `from_pipeline(...)` is unchanged.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct EmitOptions {
     /// Also emit `index.html` (loads the `.js` module + instantiates
     /// the custom element) and `README.md` alongside the component
     /// `.js` file. Default `false`.
     pub emit_project: bool,
 }
-
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
 /// is on. Two files only — WebComponent has no build step.
@@ -395,6 +393,7 @@ const root = document.querySelector(customTag);
 if (root === null) {
   throw new Error(`Mosaic WebComponent root not found for ${customTag}`);
 }
+const mountedHostNodes = new Map();
 
 let props = {};
 for (const slot of slots) {
@@ -470,11 +469,29 @@ function applyProps(nextProps) {
     const fallback = cloneSlotFallback(slot.fallback);
     const value = readSlotValue(nextProps, slot, fallback);
     root[slot.prop] = value;
+    if (slot.type === "node" || slot.type === "component") {
+      applyNodeSlot(slot, value);
+      continue;
+    }
     root.setAttribute(slot.name, serializeSlotValue(value, slot.type));
   }
   if (typeof root._render === "function") {
     root._render();
   }
+}
+
+function applyNodeSlot(slot, value) {
+  const previous = mountedHostNodes.get(slot.name);
+  if (previous?.parentNode === root) {
+    previous.remove();
+  }
+  mountedHostNodes.delete(slot.name);
+  if (!(value instanceof Element)) {
+    return;
+  }
+  value.setAttribute("slot", slot.name);
+  root.appendChild(value);
+  mountedHostNodes.set(slot.name, value);
 }
 
 function readSlotValue(source, slot, fallback) {

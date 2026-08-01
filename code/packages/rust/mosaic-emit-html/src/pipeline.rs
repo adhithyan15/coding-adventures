@@ -216,15 +216,13 @@ impl std::error::Error for PipelineEmitError {}
 ///
 /// Default: emits only the component fragment; no project shell.
 /// `from_pipeline(...)` is unchanged.
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct EmitOptions {
     /// Also emit `index.html` (complete `<!DOCTYPE html>` document
     /// inlining the component fragment), `main.js`, and `README.md`
     /// alongside the component `.html` file. Default `false`.
     pub emit_project: bool,
 }
-
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
 /// is on. Two files only — HTML has no build step, so there is no
@@ -861,7 +859,24 @@ function normalizeHostProps(response) {
 
 function render() {
   root.innerHTML = renderTemplate(template, props);
+  applyHostNodes(root, props);
   normalizeHostAttributes(root);
+}
+
+function applyHostNodes(scope, context) {
+  for (const surface of scope.querySelectorAll("[data-mosaic-host-surface]")) {
+    const slot = surface.dataset.mosaicHostSurface;
+    const value = readPath(context, camelSlotName(slot));
+    if (value instanceof Node) {
+      surface.replaceChildren(value);
+    }
+  }
+}
+
+function camelSlotName(name) {
+  return String(name ?? "").replace(/-([a-z0-9])/g, (_match, letter) =>
+    letter.toUpperCase(),
+  );
 }
 
 function renderTemplate(source, context) {
@@ -903,9 +918,23 @@ function renderIfs(source, context) {
 }
 
 function renderMustaches(source, context) {
-  return source.replace(/\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}/g, (_match, key) =>
-    escapeHtml(formatValue(readPath(context, key))),
-  );
+  return source
+    .replace(/\{\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}\}/g, (_match, key) =>
+      trustedHostHtml(readPath(context, key)),
+    )
+    .replace(/\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}/g, (_match, key) =>
+      escapeHtml(formatValue(readPath(context, key))),
+    );
+}
+
+// Triple mustaches are emitted only for typed node slots such as HostSurface.
+// Their value is host-owned markup, so unlike ordinary text slots it must stay
+// unescaped to become the mounted native/web content surface.
+function trustedHostHtml(value) {
+  if (value === undefined || value === null || value instanceof Node) {
+    return "";
+  }
+  return String(value);
 }
 
 function stampLoopMetadata(html, index, item) {
@@ -2925,7 +2954,12 @@ fn emit_host_draggable(
     append_drag_value(&mut attrs, node, "drag-key", "data-mosaic-drag-key");
     append_drag_value(&mut attrs, node, "drag-kind", "data-mosaic-drag-kind");
     append_drag_value(&mut attrs, node, "drag-label", "data-mosaic-drag-label");
-    append_drag_flag(&mut attrs, node, "drag-disabled", "data-mosaic-drag-disabled");
+    append_drag_flag(
+        &mut attrs,
+        node,
+        "drag-disabled",
+        "data-mosaic-drag-disabled",
+    );
 
     attrs.push_str(" tabindex=\"0\" role=\"button\" aria-roledescription=\"draggable\"");
     // A disabled card must not be *announced* as an actionable draggable button:
@@ -2975,7 +3009,12 @@ fn emit_host_drop_target(
     let mut attrs = String::new();
 
     append_drag_value(&mut attrs, node, "drop-key", "data-mosaic-drop-key");
-    append_drag_flag(&mut attrs, node, "drop-disabled", "data-mosaic-drop-disabled");
+    append_drag_flag(
+        &mut attrs,
+        node,
+        "drop-disabled",
+        "data-mosaic-drop-disabled",
+    );
     append_emit_marker(&mut attrs, node, "onDrop", "data-on-drop");
 
     let style_attr = build_style_attr(node, "", part_styles);
@@ -4862,7 +4901,6 @@ mod tests {
         }
     }
 
-
     // ===================================================================
     // UI35 — the drag-and-drop family
     // ===================================================================
@@ -4874,7 +4912,10 @@ mod tests {
             "Board",
             node_with_props_and_children(
                 "HostDropTarget",
-                vec![prop_string("drop-key", "todo"), prop_emit("onDrop", "onCardDropped")],
+                vec![
+                    prop_string("drop-key", "todo"),
+                    prop_emit("onDrop", "onCardDropped"),
+                ],
                 vec![node_with_props(
                     "HostDraggable",
                     vec![
@@ -4951,10 +4992,7 @@ mod tests {
     fn ui35_slot_bound_keys_become_template_markers() {
         let l = layout(
             "B",
-            node_with_props(
-                "HostDropTarget",
-                vec![prop_slot("drop-key", "column-id")],
-            ),
+            node_with_props("HostDropTarget", vec![prop_slot("drop-key", "column-id")]),
         );
         let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
             .unwrap()
@@ -5053,7 +5091,9 @@ mod tests {
         // The pointer path must be symmetric — releasing over a disabled target
         // has to cancel too, not silently strand the gesture in flight.
         assert!(
-            js.contains("void mosaicCommitDrop(target, mosaicPosition(event.clientY, target)).then(ok => {"),
+            js.contains(
+                "void mosaicCommitDrop(target, mosaicPosition(event.clientY, target)).then(ok => {"
+            ),
             "a refused pointer drop must cancel:\n{js}"
         );
         // A disabled target is refused *and* excluded from the cursor's walk, so
@@ -5108,7 +5148,6 @@ mod tests {
             "position must be computed from the pointer within the target:\n{js}"
         );
     }
-
 
     /// Contract 3 — touch, properly. "Use pointer events" is not sufficient on
     /// its own: a direct-manipulation pointer gets *implicit pointer capture* on

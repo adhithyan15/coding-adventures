@@ -84,7 +84,11 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
         assert!(project.app_swift.contains("VentureChromeView("));
         assert!(project
             .app_swift
-            .contains("contentSurface: AnyView(EmptyView())"));
+            .contains("contentSurface: host.node(named: \"content-surface\")"));
+        assert!(project
+            .app_swift
+            .contains("@objc optional func node(named name: NSString) -> NSObject?"));
+        assert!(project.app_swift.contains("MosaicHostPlatformView"));
         assert!(project.app_swift.contains("host.dispatch(event)"));
     }
 }
@@ -110,5 +114,79 @@ fn venture_chrome_generated_swift_typechecks() {
         result.status.success(),
         "generated Venture SwiftUI must typecheck:\n{}",
         String::from_utf8_lossy(&result.stderr)
+    );
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn venture_chrome_project_builds_with_native_host_surface_bridge() {
+    let (interface, layout, style) = compile_sources("VentureChrome.light.msl");
+    let options = mosaic_emit_swiftui::pipeline::EmitOptions {
+        emit_project: true,
+        ..Default::default()
+    };
+    let result = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
+        &interface.component,
+        &layout.def,
+        &style.def,
+        &options,
+    )
+    .expect("emit Venture SwiftUI project");
+    let project = result.project.expect("SwiftUI project shell");
+    let root = std::env::temp_dir().join(format!(
+        "venture-swiftui-host-surface-{}",
+        std::process::id()
+    ));
+    let sources = root.join("Sources/App");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(&sources).expect("create SwiftUI project sources");
+    fs::write(root.join("Package.swift"), project.package_swift).expect("write Package.swift");
+    fs::write(sources.join("App.swift"), project.app_swift).expect("write App.swift");
+    fs::write(sources.join("VentureChrome.swift"), result.output)
+        .expect("write VentureChrome.swift");
+    fs::write(
+        sources.join("MosaicHost.swift"),
+        r#"import AppKit
+import Foundation
+
+@objc(MosaicHost)
+final class MosaicHost: NSObject, MosaicHostBridgeObject {
+  required override init() {}
+
+  func applyProps() -> NSDictionary? {
+    ["props": [
+      "address": "http://info.cern.ch/",
+      "page-title": "World Wide Web",
+      "status-text": "Ready",
+      "back-disabled": true,
+      "forward-disabled": true,
+      "navigation-disabled": false,
+    ]]
+  }
+
+  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary? {
+    applyProps()
+  }
+
+  func node(named name: NSString) -> NSObject? {
+    guard name == "content-surface" else { return nil }
+    return NSView(frame: NSRect(x: 0, y: 0, width: 640, height: 480))
+  }
+}
+"#,
+    )
+    .expect("write MosaicHost.swift");
+
+    let build = Command::new("swift")
+        .arg("build")
+        .current_dir(&root)
+        .output()
+        .expect("run swift build");
+    let _ = fs::remove_dir_all(&root);
+    assert!(
+        build.status.success(),
+        "generated Venture SwiftUI project must accept a native NSView host surface:\n{}\n{}",
+        String::from_utf8_lossy(&build.stdout),
+        String::from_utf8_lossy(&build.stderr)
     );
 }

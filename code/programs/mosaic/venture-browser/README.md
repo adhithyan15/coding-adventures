@@ -25,6 +25,10 @@ recreating the surrounding chrome in backend-specific UI code.
   builder compiles these exact sources, emits project shells, and verifies a
   real host-surface mount for every backend in its exhaustive `Backend::ALL`
   list.
+- The project-shell gate also verifies that every backend obtains the native
+  node through its optional `MosaicHost` seam rather than substituting its
+  sample placeholder. On macOS, the generated SwiftPM app is compiled with a
+  real host-provided `NSView`.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.
