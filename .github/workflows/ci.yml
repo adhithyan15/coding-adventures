@@ -440,7 +440,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true'
+        if: needs.detect.outputs.needs_rust == 'true' || (needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Windows')
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -686,7 +686,7 @@ jobs:
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ]; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || { [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] && [ "$RUNNER_OS" = "Windows" ]; }; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi

@@ -91,6 +91,12 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             "&& runner.os == 'Windows')",
             workflow,
         )
+        self.assertIn(
+            "needs.detect.outputs.needs_rust == 'true' || "
+            "(needs.detect.outputs.needs_venture_windows == 'true' "
+            "&& runner.os == 'Windows')",
+            workflow,
+        )
         self.assertIn("cargo test -p venture-browser-windows", workflow)
 
 
