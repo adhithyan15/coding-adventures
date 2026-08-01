@@ -33,11 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Cross-language Level-1 MOS saturation-current validation.
+1. Cross-language Level-1 MOS saturation-current-density validation.
    - Status: current PR completion candidate.
-   - Reject non-positive or non-finite model-card `IS` values before
-     bulk-junction leakage and temperature preprocessing.
-   - Preserve positive saturation currents across Rust, Python, and TypeScript.
+   - Reject negative or non-finite model-card `JS` values before bulk-junction
+     leakage-density and temperature preprocessing.
+   - Preserve zero and positive saturation-current densities across Rust,
+     Python, and TypeScript.
 
 ## Completed Slices
 
@@ -3782,6 +3783,13 @@ the Rust, Python, and TypeScript surfaces together.
      gate-bulk overlap-capacitance stamping.
    - Zero and positive gate-bulk overlap capacitances remain aligned across
      Rust, Python, and TypeScript.
+
+315. Cross-language Level-1 MOS saturation-current validation.
+   - Status: completed in PR 9384.
+   - Non-positive and non-finite model-card `IS` values are rejected before
+     bulk-junction leakage and temperature preprocessing.
+   - Positive saturation currents remain aligned across Rust, Python, and
+     TypeScript.
 
 ## Backlog
 
