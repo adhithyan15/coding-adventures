@@ -8,7 +8,7 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": null,
+  "active_pr": 9400,
   "last_inventory": {
     "revision": "761c60fc39010d60d64d7b05e6cfab627b7911d3",
     "schema_version": 3,
@@ -509,11 +509,11 @@
     {
       "id": "phy01-nonfinite-validation-backfill",
       "title": "Backfill finite and overflow-safe PHY01 wave evaluation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave", "phy00-phy01-language-neutral-fixtures"],
       "branch": "codex/phy01-nonfinite-validation-backfill",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9395 and the collision-clean 761c60fc inventory because the roadmap names PHY01 as the explicit consumer-side successor to the foundational PHY00 repair. Audit every established wave lane for finite amplitude, frequency, phase, and time validation; finite angular-frequency construction; zero-amplitude short-circuiting; period reduction before multiplication; and bounded amplitude scaling. Preserve the pedagogical first-principles dependency while preventing avoidable NaN and infinity results from finite inputs."
+      "pr_number": 9400,
+      "notes": "Ready-for-review PR #9400 hardens PHY01 wave evaluation across all 15 established language lanes after merged PR #9395 and the collision-clean 761c60fc inventory. It validates finite amplitude, frequency, phase, and time; rejects angular-frequency overflow; preserves exact positive zero for zero amplitude; reduces period and phase before multiplication; clamps local PHY00 trig output; supports minimum-subnormal frequencies; expands the shared corpus from 24 to 26 wave cases; and updates specs, native tests, docs, changelogs, and build metadata. Local validation covered 14 executable language lanes plus fixture, build-tool, parity, diff, and credential gates; the unavailable local BEAM runtime is delegated transparently to CI, and Rust coverage report generation alone hit Windows command-line error 206 after its instrumented tests passed."
     },
     {
       "id": "dart-scaffold-capability-schema",
