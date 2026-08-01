@@ -44951,16 +44951,21 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         local_device_entry(
             "shelly",
             "Shelly",
-            "Local Shelly relay, switch, cover, sensor, and energy integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local Shelly Gen2 and Gen3 relay, light, input, sensor, and energy integration.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
-            &["smart_home.read", "smart_home.command.switch"],
-            &[EntityKind::Switch, EntityKind::Sensor],
+            &[
+                "smart_home.read",
+                "smart_home.command.light",
+                "smart_home.command.switch",
+            ],
+            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor, EntityKind::Input],
             &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
             &[AuthMode::None, AuthMode::UsernamePassword],
             "shelly",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("shelly".to_string())]),
         local_device_entry(
             "tplink",
             "TP-Link Smart Home",
@@ -80643,6 +80648,30 @@ mod tests {
         assert!(onvif
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn shelly_entry_exposes_executable_local_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let shelly = find_entry(&catalog, &IntegrationId::trusted("shelly")).unwrap();
+
+        assert_eq!(
+            shelly.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            shelly.supported_protocols,
+            vec![ProtocolFamily::Vendor("shelly".to_string())]
+        );
+        assert!(shelly
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(shelly
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(shelly
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
     }
 
     #[test]

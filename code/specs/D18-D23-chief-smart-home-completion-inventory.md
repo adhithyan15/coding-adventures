@@ -676,16 +676,34 @@ privacy-sensitive media endpoints in durable D23 state:
   exchanges, runtime installation, capability authorization, media redemption,
   and redaction boundaries over actual host transports.
 
+## Current Shelly Gen2/Gen3 Integration Slice
+
+This slice adds a production broader-device path for local relays, lights,
+inputs, sensors, and energy monitors:
+
+- `_shelly._tcp.local` mDNS advertisements become verified D23 discovery
+  records using the official generation TXT marker.
+- Bounded HTTP/1.1 requests inspect `/shelly` and `Shelly.GetStatus`, then
+  project supported components into normalized devices, entities,
+  capabilities, and confirmed state.
+- D23 authorization gates `Switch.Set` and `Light.Set` RPC mutations, including
+  brightness control, before the host sends a device request.
+- Authentication-enabled devices fail closed with an explicit pairing boundary;
+  credentials are not accepted or persisted by this first host slice.
+- Real loopback TCP tests prove inspection, runtime installation, authorization,
+  and command transfer over the production transport.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
-- Continue platform integrations beyond Hue, MQTT, ONVIF, and the Z-Wave,
-  Zigbee, and Matter runtime adapters: ONVIF PullPoint camera events, RTSP media
-  transfer and recording, vendor-specific camera/NVR integrations, broader
-  device families, a production Matter commissioning/secure-session/network
-  host, a Thread border-router host, a production Zigbee
-  coordinator/join/security host, and production Z-Wave inclusion and S2.
+- Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
+  and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
+  events, RTSP media transfer and recording, vendor-specific camera/NVR
+  integrations, broader device families, a production Matter
+  commissioning/secure-session/network host, a Thread border-router host, a
+  production Zigbee coordinator/join/security host, and production Z-Wave
+  inclusion and S2.
 
 ## End-To-End Definition
 

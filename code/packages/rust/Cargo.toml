@@ -904,6 +904,7 @@ members = [
     "smart-home-zigbee-integration",
     "smart-home-matter-integration",
     "smart-home-onvif-integration",
+    "smart-home-shelly-integration",
     "smart-home-home-assistant-migration",
     "smart-home-home-assistant-export",
     "smart-home-home-assistant-history",
