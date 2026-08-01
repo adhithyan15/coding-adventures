@@ -7,5 +7,10 @@ license = "MIT OR Apache-2.0"
 [components]
 exports = ["VentureChrome"]
 
+[host_assets]
+files = [
+  { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
+]
+
 [kernel]
 version = "1"

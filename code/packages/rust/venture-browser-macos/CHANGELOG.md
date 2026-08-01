@@ -9,6 +9,9 @@
 - Drive the clamped viewport and Metal repaint path from named navigation keys.
 - Reload Back/Forward history entries from Command-Left/Right shortcuts, then
   update the native title and Metal viewport.
+- Export the concrete dynamic bridge used by Venture's generated SwiftUI
+  `MosaicHost`: shared chrome props and events, Metal content rendering, scroll,
+  and link activation all stay backed by one Rust browser session.
 
 ## 0.1.0
 

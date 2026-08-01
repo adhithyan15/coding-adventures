@@ -13,8 +13,8 @@ use std::fmt;
 use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserSession,
+    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserLoadError,
+    BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher, BrowserSession,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
@@ -394,6 +394,298 @@ where
         &resolver,
     );
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
+}
+
+/// The concrete adapter behind Venture's generated Mosaic SwiftUI shell.
+///
+/// Chrome is still authored by MIL/MLL/MSL and navigation is still reduced by
+/// `venture-browser-core`; this type only joins that shared state to the native
+/// Metal content surface required by the generated `MosaicHost` seam.
+#[cfg(target_vendor = "apple")]
+struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
+
+#[cfg(target_vendor = "apple")]
+impl BrowserResourceFetcher for OwnedFetcher {
+    fn fetch(&self, url: &str) -> Result<venture_browser_core::BrowserFetchResponse, String> {
+        self.0.fetch(url)
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+pub struct MacBrowserHost {
+    session: BrowserSession,
+    chrome: BrowserChromeController,
+    fetcher: OwnedFetcher,
+    width: f64,
+    height: f64,
+    status_text: String,
+}
+
+#[cfg(target_vendor = "apple")]
+impl MacBrowserHost {
+    pub fn new(start_url: &str, width: f64, height: f64) -> Result<Self, BrowserLoadError> {
+        Self::new_with_fetcher(
+            start_url,
+            width,
+            height,
+            Box::new(HttpBrowserFetcher::default()),
+        )
+    }
+
+    pub fn new_with_fetcher(
+        start_url: &str,
+        width: f64,
+        height: f64,
+        fetcher: Box<dyn BrowserResourceFetcher>,
+    ) -> Result<Self, BrowserLoadError> {
+        let fetcher = OwnedFetcher(fetcher);
+        let session = load_initial_session(start_url, width, height, &fetcher)?;
+        let chrome = BrowserChromeController::new(&session);
+        Ok(Self {
+            session,
+            chrome,
+            fetcher,
+            width,
+            height,
+            status_text: "Ready".to_string(),
+        })
+    }
+
+    pub fn props(&self) -> BrowserChromeProps {
+        self.chrome
+            .props(&self.session, self.status_text.clone(), false)
+    }
+
+    pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+        let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
+            return Ok(false);
+        };
+        self.status_text = "Loading".to_string();
+        match navigate_session(
+            &mut self.session,
+            navigation,
+            self.width,
+            self.height,
+            &self.fetcher,
+        ) {
+            Ok(changed) => {
+                if changed {
+                    self.chrome.synchronize(&self.session);
+                }
+                self.status_text = "Ready".to_string();
+                Ok(changed)
+            }
+            Err(error) => {
+                self.status_text = format!("Load failed: {error}");
+                Err(error)
+            }
+        }
+    }
+
+    pub fn scroll_by(&mut self, delta_y: f64) -> bool {
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_by(delta_y);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
+        let changed = activate_link_at(
+            &mut self.session,
+            x,
+            y,
+            self.width,
+            self.height,
+            &self.fetcher,
+        )?;
+        if changed {
+            self.chrome.synchronize(&self.session);
+            self.status_text = "Ready".to_string();
+        }
+        Ok(changed)
+    }
+
+    pub fn render_to_layer(&self, layer: objc_bridge::Id) -> Result<(), MacBrowserError> {
+        let viewport = self
+            .session
+            .viewport()
+            .ok_or(MacBrowserError::MissingViewport)?;
+        paint_metal::render_to_metal_layer(&viewport.viewport_scene(), layer)
+            .map_err(|error| MacBrowserError::Paint(error.to_string()))
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+mod mosaic_ffi {
+    use super::*;
+    use std::ffi::{c_char, c_void, CStr, CString};
+    use std::panic::{catch_unwind, AssertUnwindSafe};
+
+    fn string_arg(value: *const c_char) -> Option<String> {
+        if value.is_null() {
+            return None;
+        }
+        unsafe { CStr::from_ptr(value) }
+            .to_str()
+            .ok()
+            .map(str::to_string)
+    }
+
+    fn json_string(value: &str) -> String {
+        let mut out = String::with_capacity(value.len() + 2);
+        out.push('"');
+        for ch in value.chars() {
+            match ch {
+                '"' => out.push_str("\\\""),
+                '\\' => out.push_str("\\\\"),
+                '\n' => out.push_str("\\n"),
+                '\r' => out.push_str("\\r"),
+                '\t' => out.push_str("\\t"),
+                ch if ch.is_control() => {
+                    use std::fmt::Write;
+                    let _ = write!(out, "\\u{:04x}", ch as u32);
+                }
+                ch => out.push(ch),
+            }
+        }
+        out.push('"');
+        out
+    }
+
+    fn response(host: &MacBrowserHost, error: Option<&str>) -> *mut c_char {
+        let props = host.props();
+        let error = error
+            .map(|message| format!(",\"error\":{}", json_string(message)))
+            .unwrap_or_default();
+        let value = format!(
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"navigation-disabled\":false}}{error}}}",
+            json_string(&props.address),
+            json_string(&props.page_title),
+            json_string(&props.status_text),
+            props.back_disabled,
+            props.forward_disabled,
+        );
+        CString::new(value)
+            .expect("JSON response contains no NUL")
+            .into_raw()
+    }
+
+    #[no_mangle]
+    pub extern "C" fn venture_browser_macos_new(
+        start_url: *const c_char,
+        width: f64,
+        height: f64,
+    ) -> *mut MacBrowserHost {
+        let Some(start_url) = string_arg(start_url) else {
+            return std::ptr::null_mut();
+        };
+        catch_unwind(|| MacBrowserHost::new(&start_url, width, height))
+            .ok()
+            .and_then(Result::ok)
+            .map(Box::new)
+            .map(Box::into_raw)
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_free(host: *mut MacBrowserHost) {
+        if !host.is_null() {
+            drop(Box::from_raw(host));
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_apply_props(
+        host: *mut MacBrowserHost,
+    ) -> *mut c_char {
+        host.as_ref()
+            .map(|host| response(host, None))
+            .unwrap_or(std::ptr::null_mut())
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_handle_event(
+        host: *mut MacBrowserHost,
+        name: *const c_char,
+        value: *const c_char,
+    ) -> *mut c_char {
+        let Some(host) = host.as_mut() else {
+            return std::ptr::null_mut();
+        };
+        let Some(name) = string_arg(name) else {
+            return response(host, Some("missing Mosaic event name"));
+        };
+        let event = match name.as_str() {
+            "onBack" => Some(BrowserChromeEvent::Back),
+            "onForward" => Some(BrowserChromeEvent::Forward),
+            "onHome" => Some(BrowserChromeEvent::Home),
+            "onReload" => Some(BrowserChromeEvent::Reload),
+            "onNavigate" => Some(BrowserChromeEvent::Navigate),
+            "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
+            _ => None,
+        };
+        let Some(event) = event else {
+            return response(host, Some("unknown or malformed Mosaic event"));
+        };
+        let result = catch_unwind(AssertUnwindSafe(|| host.handle_event(event)));
+        match result {
+            Ok(Ok(_)) => response(host, None),
+            Ok(Err(error)) => response(host, Some(&error.to_string())),
+            Err(_) => response(host, Some("Venture event handler panicked")),
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_scroll(
+        host: *mut MacBrowserHost,
+        delta_y: f64,
+    ) -> u8 {
+        host.as_mut()
+            .map(|host| host.scroll_by(delta_y) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_activate_link(
+        host: *mut MacBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .and_then(|host| host.activate_link(x, y).ok())
+                .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_render(
+        host: *mut MacBrowserHost,
+        metal_layer: *mut c_void,
+    ) -> u8 {
+        if metal_layer.is_null() {
+            return 0;
+        }
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_ref()
+                .map(|host| {
+                    host.render_to_layer(metal_layer.cast::<objc_bridge::Object>())
+                        .is_ok() as u8
+                })
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_string_free(value: *mut c_char) {
+        if !value.is_null() {
+            drop(CString::from_raw(value));
+        }
+    }
 }
 
 /// Track pointer movement and identify a primary-button link activation.
@@ -789,6 +1081,58 @@ mod tests {
                 .and_then(|viewport| viewport.page().document.title.as_deref()),
             Some("Next")
         );
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn mosaic_host_adapter_drives_shared_chrome_and_metal_page_state() {
+        let fetcher = |url: &str| {
+            let html = match url {
+                "http://example.test/" => "<title>Start</title><p><a href='next.html'>Next</a></p>",
+                "http://example.test/next.html" => {
+                    "<title>Next</title><p>Generated chrome reached Rust</p>"
+                }
+                other => return Err(format!("unexpected URL: {other}")),
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                html.as_bytes().to_vec(),
+            ))
+        };
+        let mut host = MacBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("Mosaic host should load the initial page");
+
+        assert_eq!(host.props().page_title, "Start");
+        host.handle_event(BrowserChromeEvent::AddressChange(
+            "http://example.test/next.html".into(),
+        ))
+        .expect("address edit should update the shared draft");
+        assert_eq!(host.props().address, "http://example.test/next.html");
+        assert!(host
+            .handle_event(BrowserChromeEvent::Navigate)
+            .expect("generated Navigate event should load"));
+
+        let props = host.props();
+        assert_eq!(props.page_title, "Next");
+        assert_eq!(props.status_text, "Ready");
+        assert!(!props.back_disabled);
+        let scene = host
+            .session
+            .viewport()
+            .expect("host should retain a live native viewport")
+            .viewport_scene();
+        let pixels = paint_metal::render(&scene);
+        assert!(pixels
+            .data
+            .chunks_exact(4)
+            .any(|pixel| pixel != [192, 192, 192, 255]));
     }
 
     #[cfg(not(target_vendor = "apple"))]

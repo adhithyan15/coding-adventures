@@ -45,9 +45,9 @@ Mosaic `VentureChrome` package. It preserves address edits as a draft, maps the
 six MIL events to `BrowserNavigation`, synchronizes redirects only after a
 successful load, and projects one coherent `BrowserChromeProps` snapshot for
 the six MIL slots. Generated Mosaic shells now expose the native node seam on
-all registered backends, but the concrete adapters that connect this reducer
-and the live Venture page renderer to those shells remain a separate acceptance
-gate.
+all registered backends. The first concrete adapter connects this reducer and
+the live Metal page renderer to the generated SwiftUI shell; Windows and the
+remaining native hosts still require equivalent direct acceptance.
 
 ## Development
 

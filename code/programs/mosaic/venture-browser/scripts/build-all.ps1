@@ -132,6 +132,22 @@ $isMacOS = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([Sy
 $isLinux = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Linux)
 
 if ($isMacOS -and (Test-Command "swift")) {
+    Write-Host "==> Building Venture macOS native bridge"
+    $bridgeArgs = @("build", "-p", "venture-browser-macos")
+    $bridgeProfile = "debug"
+    if ($Release) {
+        $bridgeArgs += "--release"
+        $bridgeProfile = "release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $bridgeArgs
+    } finally {
+        Pop-Location
+    }
+    Copy-Item -Force `
+        (Join-Path $rustWorkspace "target/$bridgeProfile/libventure_browser_macos.dylib") `
+        (Join-Path $outputRoot "swiftui/libventure_browser_macos.dylib")
     Write-Host "==> Building swiftui"
     Push-Location (Join-Path $outputRoot "swiftui")
     try {

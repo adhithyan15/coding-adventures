@@ -8,6 +8,11 @@ browser. It composes:
 - AppKit for the native window and `CAMetalLayer`;
 - `paint-metal` for presenting the viewport scene.
 
+The crate also builds as `libventure_browser_macos.dylib`. Venture's generated
+SwiftUI shell loads that library through its package-owned `MosaicHost` adapter,
+so the MIL/MLL/MSL chrome and this Rust navigation/rendering pipeline form one
+native app without handwritten AppKit toolbar controls.
+
 Run the first CERN web page:
 
 ```bash
