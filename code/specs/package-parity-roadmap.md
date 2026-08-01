@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 1, 2026 at `6dbe24e28` after merged PR
-#9415 and the addition of the Rust Shelly Gen2/Gen3 integration package.
-It contains 1,208 normalized implementation identities across 4,352 established-lane package
+inventory was regenerated on August 1, 2026 at `d5f57bfdb` after merged PR
+#9419 and the addition of the Rust WLED integration package.
+It contains 1,209 normalized implementation identities across 4,353 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,18 +116,19 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 758 | 10,612 |
+| Present in one language | 759 | 10,626 |
 
-The loop must not start by attempting 10,612 singleton ports. It should finish
+The loop must not start by attempting 10,626 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current inventory at
-`6dbe24e287faac5857f15fd85f398f0e2fb40387` is collision-clean at 1,208
-normalized implementation identities, 4,352 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 758 singletons, 563
+`d5f57bfdbc64ebf44d677f195380714f949b0db6` is collision-clean at 1,209
+normalized implementation identities, 4,353 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 759 singletons, 564
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The three newest identities are Rust-only `smart-home-camera-media`,
-`smart-home-onvif-integration`, and `smart-home-shelly-integration`. All are
+The four newest identities are Rust-only `smart-home-camera-media`,
+`smart-home-onvif-integration`, `smart-home-shelly-integration`, and
+`smart-home-wled-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -137,6 +138,10 @@ access, process I/O, and allowlists remain native; Shelly JSON/RPC normalization
 projection, stable identities, and command planning are portable, while mDNS,
 DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, endpoint policy, effect
 ordering, future credentials, and capability profiles remain native.
+WLED DTO validation, master/segment projection, capability-bit interpretation,
+state normalization, and command planning are portable, while mDNS, DNS/TCP,
+plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
+effects, and capability profiles remain native.
 The security review found urgent repository-local hardening owners for raw media
 URI redemption and attacker-controlled ONVIF origins before either portable core
 is expanded.
@@ -157,7 +162,7 @@ The August 1 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 973 | 0 | 100% |
+| Rust | 974 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -951,10 +956,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 563 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 564 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added twenty-three Rust singleton identities that now
+The July 30-August 1 inventories added twenty-four Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -1029,6 +1034,21 @@ the shared Rust network substrates: `tcp-client` and `http1-client` claim empty
 profiles despite concrete network calls, while `udp-client` and
 `smart-home-discovery` lack manifests. A separate high-leverage owner corrects
 those native boundaries before downstream approval.
+
+The twenty-fourth identity, `smart-home-wled-integration`, follows the same
+mixed pattern. `/json/si` DTO validation, master and segment projection, stable
+identifiers, capability-bit interpretation, state normalization, brightness,
+RGB and mirek conversion, and JSON command planning form the portable candidate.
+mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, pairing/origin
+policy, and runtime effects remain native. Before extraction, the host must stop
+accepting caller-asserted identity/time and arbitrary public state updates, bind
+discovery to reviewed private origins, defend DNS rebinding, bound/redact device
+data, reject identity/segment collisions, reconcile returned device state, and
+make runtime/device effects transactional or compensating. Truthful nonempty
+host profiles and external Layer 5 evidence remain separate owners. A shared
+follow-up consolidates the duplicated Shelly/WLED DNS, TCP, request encoding,
+bounded response, chunked decoding, and error projection behind a native LAN-
+HTTP executor while keeping `smart-home-local-http` a pure request planner.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export
