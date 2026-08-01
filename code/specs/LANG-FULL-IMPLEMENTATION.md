@@ -38,6 +38,12 @@ that writes a three-dimensional boolean-array value formal through its captured
 descriptor. Checkerboard reads verify the `array<bool>` handle, all three lower
 bounds, and both row-major strides survive the call and capture boundary.
 
+**AL-3D-real-capture:** the seven-backend matrix executes a nested procedure
+that writes a three-dimensional real-array value formal through its captured
+descriptor. A caller-side floating-point sum verifies the `array<f64>` handle,
+all three lower bounds, and both row-major strides survive the call and capture
+boundary.
+
 **Goal of this campaign:** make every language a *full* implementation —
 every construct in its grammar lowered to the shared IIR, running correctly on
 **every backend except BEAM**, and **verified by RUNNING a real program that

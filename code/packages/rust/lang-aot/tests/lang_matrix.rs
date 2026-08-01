@@ -1949,6 +1949,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- a nested procedure writes a captured 3-D real-array value
+    // formal. The four corners span both row-major strides, and the caller's
+    // floating-point sum must survive the descriptor-global boundary.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real array values[-1:0, 2:3, 5:6]; integer result, total; procedure setvalues(a); value a; real array a; begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; setvalues(values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 -- a nested procedure writes a captured 2-D string-array
     // value formal. This takes the dynamic `array<str>` handle plus both
     // non-unit lower bounds and the outer stride through descriptor globals;
@@ -5246,6 +5256,42 @@ fn algol_nested_procedure_captures_three_dimensional_boolean_array_on_every_avai
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested 3-D boolean-array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_procedure_captures_three_dimensional_real_array_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real array values[-1:0, 2:3, 5:6]")
+                && program
+                    .src
+                    .contains("procedure setvalues(a); value a; real array a")
+                && program
+                    .src
+                    .contains("procedure populate; begin a[-1,2,5] := 30.0")
+        })
+        .expect("the nested 3-D ALGOL real-array program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested 3-D real-array execution did not complete"
             );
             continue;
         };
