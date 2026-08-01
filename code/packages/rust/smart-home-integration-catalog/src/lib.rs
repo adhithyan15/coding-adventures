@@ -44990,16 +44990,17 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         local_device_entry(
             "wled",
             "WLED",
-            "Local WLED light and effect integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local WLED JSON API integration for master and segment lights.",
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light"],
             &[EntityKind::Light],
             &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual],
             &[AuthMode::None],
             "wled",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("wled".to_string())]),
         local_device_entry(
             "lifx",
             "LIFX",
@@ -80670,6 +80671,31 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
         assert!(shelly
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
+    }
+
+    #[test]
+    fn wled_entry_exposes_executable_local_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let wled = find_entry(&catalog, &IntegrationId::trusted("wled")).unwrap();
+
+        assert_eq!(
+            wled.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            wled.supported_protocols,
+            vec![ProtocolFamily::Vendor("wled".to_string())]
+        );
+        assert_eq!(wled.connectivity, ConnectivityClass::LocalPolling);
+        assert!(wled
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(wled
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(wled
             .required_primitives
             .contains(&PrimitiveFamily::CommandMapping));
     }
