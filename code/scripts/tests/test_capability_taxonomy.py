@@ -134,6 +134,20 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                 ):
                     self.assertIn(pair, allowed)
 
+    def test_camera_media_authority_free_manifest_is_schema_valid(self) -> None:
+        manifest_path = (
+            REPO_ROOT
+            / "code/packages/rust/smart-home-camera-media/required_capabilities.json"
+        )
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        validator = jsonschema.Draft202012Validator(
+            self.manifest_schemas["required"]
+        )
+        validator.validate(manifest)
+        self.assertEqual("rust/smart-home-camera-media", manifest["package"])
+        self.assertEqual([], manifest["capabilities"])
+        self.assertTrue(manifest["justification"].strip())
+
     @staticmethod
     def manifest(schema_name: str, category: str, action: str) -> dict[str, Any]:
         capability = {

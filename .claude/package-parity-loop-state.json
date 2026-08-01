@@ -8,18 +8,18 @@
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
   },
-  "active_pr": 9413,
+  "active_pr": 9421,
   "last_inventory": {
-    "revision": "c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3",
+    "revision": "d5f57bfdbc64ebf44d677f195380714f949b0db6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1205,
-    "implementation_package_slots": 4349,
+    "implementation_identities": 1209,
+    "implementation_package_slots": 4353,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 755,
-    "singleton_missing_slots": 10570,
-    "rust_singletons": 560,
+    "singleton_packages": 759,
+    "singleton_missing_slots": 10626,
+    "rust_singletons": 564,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -500,11 +500,11 @@
     {
       "id": "phy00-atan-tiny-signed-zero-cross-lane-audit",
       "title": "Audit tiny and signed-zero PHY00 arctangent behavior",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["phy00-small-sqrt-cross-lane-audit"],
       "branch": "codex/phy00-atan-tiny-signed-zero-audit",
       "pr_number": 9413,
-      "notes": "Ready-for-review PR #9413 opened after rebasing onto c2b5a3d8156e4916fa622a7dcd0df6fc0c206ac3. Selected after PR #9400 merged because its only dependency is merged, the shared PHY00 fixture machinery is established, and every existing atan lane had the same signed-zero and subnormal-floor defect. The PR specifies exact binary64 identity for |x| <= 2^-27, binds shared fixtures for negative zero, 2^-30, and signed minimum subnormals, and repairs all 15 established trig lanes plus emerging C/C++. Local validation covered all 17 native trig suites, 15 downstream wave suites, measured production coverage where supported, 14 fixture tests, generated-fixture sync, six real dependency-ordered build-tool lanes, collision-clean 1,205-identity parity inventory, state graph, diff, credential, JSON, Go build-tool test/vet/build, and independent fixture, numerical, security, and inventory audits. Repository-wide BUILD validation has zero delta from the 73 known origin/main failures; the local C build runner also reproduces origin/main's PowerShell 5 UTF-8 parse defect in iso-harness, while direct GCC and Clang trig suites pass."
+      "notes": "Merged PR #9413 at 458405a6e520914edb112f45406e75c1a19899f6 on 2026-08-01 after all 15 checks passed. Selected after PR #9400 merged because its only dependency was merged, the shared PHY00 fixture machinery was established, and every existing atan lane had the same signed-zero and subnormal-floor defect. The PR specifies exact binary64 identity for |x| <= 2^-27, binds shared fixtures for negative zero, 2^-30, and signed minimum subnormals, and repairs all 15 established trig lanes plus emerging C/C++. Local validation covered all 17 native trig suites, 15 downstream wave suites, measured production coverage where supported, 14 fixture tests, generated-fixture sync, six real dependency-ordered build-tool lanes, collision-clean parity inventory, state graph, diff, credential, JSON, Go build-tool test/vet/build, and independent fixture, numerical, security, and inventory audits. Repository-wide BUILD validation had zero delta from the 73 known origin/main failures; the local C build runner also reproduced origin/main's PowerShell 5 UTF-8 parse defect in iso-harness, while direct GCC and Clang trig suites passed."
     },
     {
       "id": "phy01-nonfinite-validation-backfill",
@@ -667,7 +667,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 560, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 564, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -676,7 +676,166 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, and venture-browser-windows; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary."
+      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, venture-browser-windows, smart-home-camera-media, smart-home-onvif-integration, and smart-home-shelly-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, camera-media broker, ONVIF integration, Shelly integration, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary. Camera-media policy, generation-bound lease state, quotas, and redacted audit are portable candidates, but endpoint use belongs behind an injected trusted host. ONVIF discovery/SOAP/profile parsing, deterministic UsernameToken construction, origin policy, projection, and hostile fixtures are portable candidates, while UDP/DNS/TCP/TLS, trusted time/randomness, Vault leases, process I/O, and endpoint allowlists remain host-owned. Shelly JSON-RPC validation, component projection, stable identities, command planning, and normalized error classes are portable candidates; mDNS, DNS/TCP, plaintext LAN HTTP, trusted clock, console I/O, runtime-effect ordering, future credentials, endpoint policy, and truthful capability profiles remain host-owned."
+    },
+    {
+      "id": "smart-home-camera-media-security-boundary-hardening",
+      "title": "Replace camera endpoint redemption with a mediated single-use security boundary",
+      "status": "pr-open",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": "codex/camera-media-security-boundary",
+      "pr_number": 9421,
+      "notes": "Ready-for-review PR #9421. Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The hardening installs authenticated principal, clock, nonce, and executor authority once in a host-owned service; removes bearer IDs from audits; revalidates grants; binds leases to endpoint generations; bounds global/per-principal leases, streams, pending cleanup, endpoints, snapshots, and audit; mints stream IDs outside the executor; owns stream close/expiry; retains and surfaces failed teardown for retry; rejects URL userinfo, fragments, default plaintext, and plaintext query strings; confines secure query tokens to the executor; and schema-validates an explicit authority-free manifest for the policy core. Final validation after rebasing onto d5f57bfdb covered 15 camera tests, 4 ONVIF tests, warning-free Clippy/format, 85.87% camera line coverage, 6 capability schema tests, 67 capability-cage tests, a real 21-package build-tool run plus identical post-rebase dry-run closure, zero parity collisions/unknown buckets at 1,209 identities and 4,353 slots, zero dependency vulnerabilities, diff/secret hygiene, and independent contract/fixture/security reviews with no blockers. The separately tracked ONVIF origin/credential item remains the owner for discovery correlation, device-origin allowlists, credential transport, and downgrade defenses."
+    },
+    {
+      "id": "smart-home-onvif-origin-credential-transport-hardening",
+      "title": "Bind ONVIF credentials and media endpoints to reviewed secure origins",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9413 security audit. WS-Discovery and device-supplied XAddr values can currently redirect fresh WS-Security digests to attacker-selected origins, plaintext downgrade is accepted, and discovery is overclassified as verified. Add explicit origin correlation and allowlist policy, secure transport requirements with loopback-only fixture exceptions, redirect and DNS rebinding defenses, bounded SOAP/media parsing, redacted failures, and hostile integration fixtures."
+    },
+    {
+      "id": "smart-home-onvif-transactional-install",
+      "title": "Make ONVIF runtime and media registration transactional",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-camera-media-security-boundary-hardening",
+        "smart-home-onvif-origin-credential-transport-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the camera-media hardening security review. install_camera_snapshot mutates bridge and endpoint state before every profile, device, and entity has been validated, so a later URI, quota, or registry failure can leave partial runtime state and rotate existing endpoint generations. Add a validate-and-plan phase, preflight camera-media capacity/origin policy, commit runtime plus endpoint changes atomically or roll them back, and prove failure leaves both stores unchanged."
+    },
+    {
+      "id": "smart-home-camera-onvif-capability-profile-and-vault-wiring",
+      "title": "Declare and approve camera/ONVIF host authority with Vault-mediated credentials",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-camera-media-security-boundary-hardening",
+        "smart-home-onvif-origin-credential-transport-hardening"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9413 governance audit. The ONVIF program owns network, time, entropy, environment, and stdout authority, reads username/password from ambient environment variables, and lacks required_capabilities.json. Narrow the native host after both security boundaries land, replace ambient credentials with one-shot Vault leases, and define truthful runtime and test-harness profiles without claiming Layer 5 approval."
+    },
+    {
+      "id": "smart-home-camera-onvif-capability-layer5-evidence",
+      "title": "Approve the camera and ONVIF native-host capability profiles",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-onvif-capability-profile-and-vault-wiring"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the post-#9413 governance audit. After repository-local hardening and Vault wiring establish the minimum nonempty authority profiles, a maintainer must provide hardware-key-backed Layer 5 approval evidence before publication or privileged deployment."
+    },
+    {
+      "id": "smart-home-camera-media-portable-core-conformance",
+      "title": "Define fixtures and expand the portable camera-media policy core",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-security-boundary-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator."
+    },
+    {
+      "id": "smart-home-onvif-portable-core-conformance",
+      "title": "Define fixtures and expand the portable ONVIF protocol core",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-onvif-origin-credential-transport-hardening",
+        "smart-home-camera-onvif-capability-profile-and-vault-wiring"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture correlated discovery and SOAP parsing, deterministic UsernameToken construction with injected nonce/time, origin policy, normalized camera projection, bounds, and hostile inputs. Expand the authority-free core through established lanes while UDP/DNS/TCP/TLS, Vault access, trusted time/randomness, process I/O, and allowlists remain in the native Rust host."
+    },
+    {
+      "id": "smart-home-shelly-host-security-hardening",
+      "title": "Harden Shelly LAN origins, runtime effects, and native-host authority",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 6dbe24e2 inventory after PR #9415 added the Rust-only Shelly Gen2/Gen3 integration. The native host currently accepts caller-supplied principal/time, exposes public arbitrary RPC through ShellyClient::call and client_mut, accepts any DNS host/port for plaintext HTTP, classifies mDNS-derived addresses as verified without retaining an origin binding, publishes optimistic accepted runtime state before the device RPC succeeds, exposes device-controlled RPC error text, bounds total bytes but not component/entity/string counts, and lacks required_capabilities.json despite mDNS, DNS/TCP, clock, environment/arguments, and console authority. Install authenticated session/clock authority once, narrow authorized RPC, add explicit private-origin and DNS-rebinding policy, retain discovery-to-endpoint binding, bound/redact host-controlled data, add validate-and-plan plus commit/compensation semantics for installation and commands, and define truthful runtime/test capability profiles. Keep authentication-enabled devices fail-closed until a separately reviewed Vault-mediated credential flow exists; do not claim Layer 5 approval."
+    },
+    {
+      "id": "smart-home-shelly-capability-layer5-evidence",
+      "title": "Approve the Shelly native-host capability profiles",
+      "status": "pending",
+      "depends_on": ["smart-home-shelly-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "After repository-local Shelly hardening establishes the minimum nonempty runtime and test-harness authority profiles, a maintainer must provide hardware-key-backed Layer 5 approval evidence before publication or privileged deployment."
+    },
+    {
+      "id": "smart-home-shelly-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable Shelly Gen2/Gen3 core",
+      "status": "pending",
+      "depends_on": ["smart-home-shelly-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture deterministic Gen2/Gen3 device-info and status parsing, authentication-required classification, component projection, stable identifiers, capability/state normalization, RPC envelope validation, command planning, bounds, and hostile inputs. Expand only this authority-free core through established lanes while mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, Vault access, origin allowlists, and SmartHomeRuntime effect application remain in the native Rust host."
+    },
+    {
+      "id": "rust-network-substrate-capability-truthfulness",
+      "title": "Correct Rust network-substrate capability metadata",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Shelly dependency audit and reconfirmed by the WLED integration. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly, WLED, and other local-network integrations."
+    },
+    {
+      "id": "smart-home-wled-host-security-hardening",
+      "title": "Harden WLED LAN origins, runtime effects, and native-host authority",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean d5f57bfd inventory after PR #9419 added the Rust-only WLED integration. The native host accepts caller-supplied principal/time, exposes public update_state and mutable transport access, accepts any DNS host/port for plaintext HTTP, marks mDNS-derived addresses verified without a retained origin binding or pairing policy, publishes optimistic runtime acceptance before the device update succeeds, discards the returned device state instead of reconciling it, installs bridge/device/entities incrementally, does not reject duplicate segment IDs or malformed/colliding normalized MAC identities, bounds total bytes but not segments/strings/color arrays/request bodies/entity counts, and lacks required_capabilities.json despite mDNS, DNS/TCP, clock, environment/arguments, and console authority. Install authenticated session/clock authority once, narrow authorized mutations, require reviewed private-origin and discovery binding with DNS-rebinding defenses, bound/redact device data, add validate-and-plan plus commit/compensation/reconciliation semantics, and define truthful runtime/test capability profiles. Coordinate shared network-manifest corrections with rust-network-substrate-capability-truthfulness; do not claim Layer 5 approval."
+    },
+    {
+      "id": "smart-home-wled-capability-layer5-evidence",
+      "title": "Approve the WLED native-host capability profiles",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-wled-host-security-hardening",
+        "rust-network-substrate-capability-truthfulness"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "After repository-local WLED hardening and shared network-substrate correction establish the minimum nonempty runtime and test-harness authority profiles, a maintainer must provide hardware-key-backed Layer 5 approval evidence before publication or privileged deployment."
+    },
+    {
+      "id": "smart-home-wled-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable WLED JSON core",
+      "status": "pending",
+      "depends_on": ["smart-home-wled-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture deterministic /json/si DTO validation, master and segment projection, stable identifiers, capability-bit interpretation, state normalization, brightness/RGB/mirek conversion, command planning, bounds, and hostile inputs. Expand only this authority-free core through established lanes while mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, origin/pairing policy, and SmartHomeRuntime effect application remain in the native Rust host."
+    },
+    {
+      "id": "smart-home-lan-http-native-executor-consolidation",
+      "title": "Consolidate a bounded native LAN-HTTP executor for smart-home hosts",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the joint Shelly/WLED dependency audit. Both integrations duplicate DNS resolution, connect timeouts, TCP read/write, HTTP/1.1 request encoding, bounded response reads, chunked decoding, and error projection while smart-home-local-http is correctly a pure request planner and http1-client is GET-only. Add a separate native executor with retained origin/address policy, shared byte/time/output ceilings, redacted typed failures, truthful capability profiles, and POST support; migrate Shelly and WLED only after their security owners define pairing, authorization, and transactional semantics."
+    },
+    {
+      "id": "dart-current-14-of-15-matrix-family",
+      "title": "Port the matrix dependency and its immediate ML consumers to Dart",
+      "status": "pending",
+      "depends_on": ["dart-trig-wave", "dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 umbrella during the post-#9413 dependency pass. Deliver matrix first, then loss-functions and feature-normalization in a coherent dependency-shaped slice with shared fixtures, empty capability profiles, package-native tests, coverage, and real downstream builds. Security-critical camera work currently outranks this otherwise highest-leverage portable frontier child."
     },
     {
       "id": "venture-browser-windows-portable-bridge-and-native-host",
