@@ -12,6 +12,7 @@ mosmodel-compiler = { path = "../../../packages/rust/mosmodel-compiler" }
 moslayout-compiler = { path = "../../../packages/rust/moslayout-compiler" }
 mosstyle-compiler = { path = "../../../packages/rust/mosstyle-compiler" }
 mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
+mosaic-package-artifact-builder = { path = "../../../packages/rust/mosaic-package-artifact-builder" }
 venture-browser-core = { path = "../../../packages/rust/venture-browser-core" }
 
 [[test]]

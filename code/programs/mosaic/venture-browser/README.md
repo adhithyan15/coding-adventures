@@ -30,5 +30,29 @@ recreating the surrounding chrome in backend-specific UI code.
   sample placeholder. On macOS, the generated SwiftPM app is compiled with a
   real host-provided `NSView`.
 
+## Build every backend
+
+Venture owns a cross-platform acceptance entry point for the complete Mosaic
+backend matrix. Both scripts compile this exact MIL/MLL/MSL package, emit all
+nine project shells, and then invoke the native build available for each
+backend on the current machine:
+
+```sh
+./scripts/build-all.sh
+```
+
+```powershell
+.\scripts\build-all.ps1
+```
+
+React and Electron run their production builds; HTML and Web Components run
+JavaScript syntax checks; SwiftUI, Qt, XAML, Flutter, and Compose invoke their
+native toolchains. Platform-exclusive builds are explicitly deferred to their
+native host; missing host-applicable toolchains are reported as skips. Pass
+`--strict` on POSIX or `-Strict` on PowerShell to reject those missing
+toolchains in a provisioned macOS, Windows, or Linux build job. `--emit-only` /
+`-EmitOnly` remains useful for inspecting all generated projects without
+claiming that their native builds passed.
+
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.
