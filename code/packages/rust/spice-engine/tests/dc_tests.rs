@@ -1171,6 +1171,30 @@ fn mos_model_card_rejects_non_positive_or_non_finite_length() {
 }
 
 #[test]
+fn mos_model_card_rejects_invalid_lateral_diffusion_length() {
+    let valid = normalize_model_card("Mvalid", "nmos", &[("LD", 0.1e-6), ("L", 1.0e-6)]).unwrap();
+    assert_close(*valid.parameters.get("LD").unwrap(), 0.1e-6);
+
+    let default_length = normalize_model_card("Mdefault", "pmos", &[("LD", 50.0e-9)]).unwrap();
+    assert_close(*default_length.parameters.get("LD").unwrap(), 50.0e-9);
+
+    for parameters in [
+        vec![("L", 1.0e-6), ("LD", f64::NEG_INFINITY)],
+        vec![("L", 1.0e-6), ("LD", -0.1e-6)],
+        vec![("L", 1.0e-6), ("LD", 0.5e-6)],
+        vec![("L", 1.0e-6), ("LD", f64::INFINITY)],
+        vec![("L", 1.0e-6), ("LD", f64::NAN)],
+        vec![("LD", 65.0e-9)],
+    ] {
+        assert!(matches!(
+            normalize_model_card("Minvalid", "nmos", &parameters),
+            Err(SpiceError::InvalidElement { reason, .. })
+                if reason == "MOSFET LD must be finite and non-negative with L - 2*LD > 0"
+        ));
+    }
+}
+
+#[test]
 fn bjt_legacy_leakage_ratios_derive_currents_with_explicit_precedence() {
     let legacy_card = normalize_model_card(
         "Qlegacy",

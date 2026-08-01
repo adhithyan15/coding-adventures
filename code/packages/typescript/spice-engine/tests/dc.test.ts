@@ -1094,6 +1094,27 @@ describe("dcOp", () => {
     }
   });
 
+  it("rejects invalid MOS lateral diffusion length", () => {
+    const valid = normalizeModelCard("Mvalid", "nmos", { LD: 0.1e-6, L: 1.0e-6 });
+    expect(valid.parameters.LD).toBe(0.1e-6);
+
+    const defaultLength = normalizeModelCard("Mdefault", "pmos", { LD: 50.0e-9 });
+    expect(defaultLength.parameters.LD).toBe(50.0e-9);
+
+    for (const parameters of [
+      { L: 1.0e-6, LD: Number.NEGATIVE_INFINITY },
+      { L: 1.0e-6, LD: -0.1e-6 },
+      { L: 1.0e-6, LD: 0.5e-6 },
+      { L: 1.0e-6, LD: Number.POSITIVE_INFINITY },
+      { L: 1.0e-6, LD: Number.NaN },
+      { LD: 65.0e-9 },
+    ]) {
+      expect(() => normalizeModelCard("Minvalid", "nmos", parameters)).toThrow(
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
+    }
+  });
+
   it("derives BJT legacy leakage ratios with explicit-current precedence", () => {
     const legacyCard = normalizeModelCard("Qlegacy", "npn", {
       IS: 2.0e-14,

@@ -1278,6 +1278,29 @@ def test_mos_model_card_rejects_non_positive_or_non_finite_length() -> None:
             normalize_model_card("Minvalid", "nmos", {"L": invalid_length})
 
 
+def test_mos_model_card_rejects_invalid_lateral_diffusion_length() -> None:
+    valid = normalize_model_card("Mvalid", "nmos", {"LD": 0.1e-6, "L": 1.0e-6})
+    assert valid.parameters["LD"] == pytest.approx(0.1e-6)
+
+    default_length = normalize_model_card("Mdefault", "pmos", {"LD": 50.0e-9})
+    assert default_length.parameters["LD"] == pytest.approx(50.0e-9)
+
+    invalid_cards = (
+        {"L": 1.0e-6, "LD": -math.inf},
+        {"L": 1.0e-6, "LD": -0.1e-6},
+        {"L": 1.0e-6, "LD": 0.5e-6},
+        {"L": 1.0e-6, "LD": math.inf},
+        {"L": 1.0e-6, "LD": math.nan},
+        {"LD": 65.0e-9},
+    )
+    for parameters in invalid_cards:
+        with pytest.raises(
+            ValueError,
+            match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+        ):
+            normalize_model_card("Minvalid", "nmos", parameters)
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))

@@ -4484,6 +4484,23 @@ pub fn normalize_model_card(
             unsupported.push(key);
         }
     }
+    if matches!(kind, ModelCardKind::Nmos | ModelCardKind::Pmos) {
+        let defaults = MosfetLevel1Params::default();
+        let length = normalized.get("L").copied().unwrap_or(defaults.l);
+        let lateral_diffusion_length = normalized
+            .get("LD")
+            .copied()
+            .unwrap_or(defaults.lateral_diffusion_length);
+        if !lateral_diffusion_length.is_finite()
+            || lateral_diffusion_length < 0.0
+            || length - 2.0 * lateral_diffusion_length <= 0.0
+        {
+            return Err(SpiceError::InvalidElement {
+                name,
+                reason: "MOSFET LD must be finite and non-negative with L - 2*LD > 0".to_string(),
+            });
+        }
+    }
     Ok(NormalizedModelCard {
         name,
         kind,
