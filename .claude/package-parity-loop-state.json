@@ -10,16 +10,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "1e4956369cb3aeabedf5027c351d1e20a7b8dfac",
+    "revision": "6dbe24e287faac5857f15fd85f398f0e2fb40387",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1207,
-    "implementation_package_slots": 4351,
+    "implementation_identities": 1208,
+    "implementation_package_slots": 4352,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 757,
-    "singleton_missing_slots": 10598,
-    "rust_singletons": 562,
+    "singleton_packages": 758,
+    "singleton_missing_slots": 10612,
+    "rust_singletons": 563,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -667,7 +667,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 562, Python 86, and TypeScript 84; do not port blindly."
+      "notes": "Current singleton leaders are Rust 563, Python 86, and TypeScript 84; do not port blindly."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -676,7 +676,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, venture-browser-windows, smart-home-camera-media, and smart-home-onvif-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, camera-media broker, ONVIF integration, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary. Camera-media policy, generation-bound lease state, quotas, and redacted audit are portable candidates, but endpoint use belongs behind an injected trusted host. ONVIF discovery/SOAP/profile parsing, deterministic UsernameToken construction, origin policy, projection, and hostile fixtures are portable candidates, while UDP/DNS/TCP/TLS, trusted time/randomness, Vault leases, process I/O, and endpoint allowlists remain host-owned."
+      "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, venture-browser-windows, smart-home-camera-media, smart-home-onvif-integration, and smart-home-shelly-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, camera-media broker, ONVIF integration, Shelly integration, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary. Camera-media policy, generation-bound lease state, quotas, and redacted audit are portable candidates, but endpoint use belongs behind an injected trusted host. ONVIF discovery/SOAP/profile parsing, deterministic UsernameToken construction, origin policy, projection, and hostile fixtures are portable candidates, while UDP/DNS/TCP/TLS, trusted time/randomness, Vault leases, process I/O, and endpoint allowlists remain host-owned. Shelly JSON-RPC validation, component projection, stable identities, command planning, and normalized error classes are portable candidates; mDNS, DNS/TCP, plaintext LAN HTTP, trusted clock, console I/O, runtime-effect ordering, future credentials, endpoint policy, and truthful capability profiles remain host-owned."
     },
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
@@ -750,6 +750,43 @@
       "branch": null,
       "pr_number": null,
       "notes": "Extract and fixture correlated discovery and SOAP parsing, deterministic UsernameToken construction with injected nonce/time, origin policy, normalized camera projection, bounds, and hostile inputs. Expand the authority-free core through established lanes while UDP/DNS/TCP/TLS, Vault access, trusted time/randomness, process I/O, and allowlists remain in the native Rust host."
+    },
+    {
+      "id": "smart-home-shelly-host-security-hardening",
+      "title": "Harden Shelly LAN origins, runtime effects, and native-host authority",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 6dbe24e2 inventory after PR #9415 added the Rust-only Shelly Gen2/Gen3 integration. The native host currently accepts caller-supplied principal/time, exposes public arbitrary RPC through ShellyClient::call and client_mut, accepts any DNS host/port for plaintext HTTP, classifies mDNS-derived addresses as verified without retaining an origin binding, publishes optimistic accepted runtime state before the device RPC succeeds, exposes device-controlled RPC error text, bounds total bytes but not component/entity/string counts, and lacks required_capabilities.json despite mDNS, DNS/TCP, clock, environment/arguments, and console authority. Install authenticated session/clock authority once, narrow authorized RPC, add explicit private-origin and DNS-rebinding policy, retain discovery-to-endpoint binding, bound/redact host-controlled data, add validate-and-plan plus commit/compensation semantics for installation and commands, and define truthful runtime/test capability profiles. Keep authentication-enabled devices fail-closed until a separately reviewed Vault-mediated credential flow exists; do not claim Layer 5 approval."
+    },
+    {
+      "id": "smart-home-shelly-capability-layer5-evidence",
+      "title": "Approve the Shelly native-host capability profiles",
+      "status": "pending",
+      "depends_on": ["smart-home-shelly-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "After repository-local Shelly hardening establishes the minimum nonempty runtime and test-harness authority profiles, a maintainer must provide hardware-key-backed Layer 5 approval evidence before publication or privileged deployment."
+    },
+    {
+      "id": "smart-home-shelly-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable Shelly Gen2/Gen3 core",
+      "status": "pending",
+      "depends_on": ["smart-home-shelly-host-security-hardening"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Extract and fixture deterministic Gen2/Gen3 device-info and status parsing, authentication-required classification, component projection, stable identifiers, capability/state normalization, RPC envelope validation, command planning, bounds, and hostile inputs. Expand only this authority-free core through established lanes while mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, Vault access, origin allowlists, and SmartHomeRuntime effect application remain in the native Rust host."
+    },
+    {
+      "id": "rust-network-substrate-capability-truthfulness",
+      "title": "Correct Rust network-substrate capability metadata",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Shelly dependency audit. tcp-client and http1-client declare empty capability profiles despite concrete DNS/TCP calls, while udp-client and smart-home-discovery lack manifests despite socket and discovery authority. Inventory the executable library and harness boundaries, split pure parsers/planners from native I/O where necessary, and add truthful minimum runtime/test profiles without claiming Layer 5 approval. This shared substrate item has leverage across Shelly and other local-network integrations."
     },
     {
       "id": "dart-current-14-of-15-matrix-family",

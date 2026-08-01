@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 1, 2026 at `1e4956369` after merged PR
-#9413 and the addition of the Rust camera-media and ONVIF integration packages.
-It contains 1,207 normalized implementation identities across 4,351 established-lane package
+inventory was regenerated on August 1, 2026 at `6dbe24e28` after merged PR
+#9415 and the addition of the Rust Shelly Gen2/Gen3 integration package.
+It contains 1,208 normalized implementation identities across 4,352 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,23 +116,27 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 757 | 10,598 |
+| Present in one language | 758 | 10,612 |
 
-The loop must not start by attempting 10,598 singleton ports. It should finish
+The loop must not start by attempting 10,612 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current inventory at
-`1e4956369cb3aeabedf5027c351d1e20a7b8dfac` is collision-clean at 1,207
-normalized implementation identities, 4,351 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 757 singletons, 562
+`6dbe24e287faac5857f15fd85f398f0e2fb40387` is collision-clean at 1,208
+normalized implementation identities, 4,352 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 758 singletons, 563
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The two newest identities are Rust-only `smart-home-camera-media` and
-`smart-home-onvif-integration`. Both are mixed splits rather than blind parity
-ports: camera grant policy, generation-bound lease state, quotas, and redacted
-audit are portable, while authenticated host context and media delivery remain
-native mediation; ONVIF discovery/SOAP parsing, deterministic UsernameToken
-construction, origin policy, and projection are portable, while sockets, TLS,
-trusted time/randomness, Vault access, process I/O, and allowlists remain native.
+The three newest identities are Rust-only `smart-home-camera-media`,
+`smart-home-onvif-integration`, and `smart-home-shelly-integration`. All are
+mixed splits rather than blind parity ports: camera grant policy,
+generation-bound lease state, quotas, and redacted audit are portable, while
+authenticated host context and media delivery remain native mediation; ONVIF
+discovery/SOAP parsing, deterministic UsernameToken construction, origin policy,
+and projection are portable, while sockets, TLS, trusted time/randomness, Vault
+access, process I/O, and allowlists remain native; Shelly JSON/RPC normalization,
+projection, stable identities, and command planning are portable, while mDNS,
+DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, endpoint policy, effect
+ordering, future credentials, and capability profiles remain native.
 The security review found urgent repository-local hardening owners for raw media
 URI redemption and attacker-controlled ONVIF origins before either portable core
 is expanded.
@@ -153,7 +157,7 @@ The August 1 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 972 | 0 | 100% |
+| Rust | 973 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -947,10 +951,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 562 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 563 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added twenty-two Rust singleton identities that now
+The July 30-August 1 inventories added twenty-three Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -1006,6 +1010,25 @@ every profile, device, and entity has passed validation. A separate dependency-
 ordered item adds validate-and-plan preflight plus atomic commit or rollback so a
 late URI, quota, or registry failure cannot leave partial runtime state or rotate
 previously valid endpoint generations.
+
+The twenty-third identity, `smart-home-shelly-integration`, is another mixed
+split. Gen2/Gen3 device-info and status parsing, authentication-required
+classification, component projection, stable identifiers, capability/state
+normalization, RPC envelope validation, and command planning are deterministic
+portable-core candidates. mDNS, DNS/TCP, plaintext LAN HTTP, trusted time,
+console I/O, origin allowlists, runtime effect application, and future Vault
+credential delivery remain in the native Rust host. Before cross-lane expansion,
+the host must install authenticated session/clock authority once, narrow public
+arbitrary RPC access, bind discovery to reviewed private origins, defend DNS
+rebinding, redact and bound device-controlled data, make installation and
+command effects transactional or compensating, and declare truthful nonempty
+runtime/test capability profiles. Authentication-enabled devices remain
+fail-closed until a reviewed Vault-mediated flow exists; Layer 5 approval stays
+a separate external gate. The same dependency audit found capability drift in
+the shared Rust network substrates: `tcp-client` and `http1-client` claim empty
+profiles despite concrete network calls, while `udp-client` and
+`smart-home-discovery` lack manifests. A separate high-leverage owner corrects
+those native boundaries before downstream approval.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export
