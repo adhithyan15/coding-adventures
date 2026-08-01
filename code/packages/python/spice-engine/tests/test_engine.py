@@ -1341,6 +1341,16 @@ def test_mos_model_card_rejects_negative_or_non_finite_flicker_noise_coefficient
             normalize_model_card("Minvalid", "pmos", {"KF": invalid_coefficient})
 
 
+def test_mos_model_card_rejects_negative_or_non_finite_flicker_noise_exponent() -> None:
+    for value in (0.0, 1.0, 2.0):
+        valid = normalize_model_card("Mvalid", "nmos", {"AF": value})
+        assert valid.parameters["AF"] == pytest.approx(value)
+
+    for invalid_exponent in (-math.inf, -0.1, math.inf, math.nan):
+        with pytest.raises(ValueError, match="MOSFET AF must be finite and non-negative"):
+            normalize_model_card("Minvalid", "nmos", {"AF": invalid_exponent})
+
+
 def test_dc_rejects_invalid_jfet_flicker_noise_coefficient() -> None:
     circuit = Circuit()
     circuit.add(JFET("J1", "drain", "gate", "0", Kf=-1.0))
