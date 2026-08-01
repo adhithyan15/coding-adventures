@@ -8444,6 +8444,8 @@ export function normalizeModelCard(
       throw invalidElement(name, "MOSFET KP must be finite and positive");
     } else if (canonical === "W" && (!Number.isFinite(value) || value <= 0.0)) {
       throw invalidElement(name, "MOSFET W must be finite and positive");
+    } else if (canonical === "L" && (!Number.isFinite(value) || value <= 0.0)) {
+      throw invalidElement(name, "MOSFET L must be finite and positive");
     } else if (canonical === "VT0" && !Number.isFinite(value)) {
       throw invalidElement(name, "MOSFET VT0 must be finite");
     } else if (canonical === "LAMBDA" && !Number.isFinite(value)) {

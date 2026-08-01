@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject non-positive and non-finite Level-1 MOS model-card `L` values before
+  channel-current, capacitance, and noise calculations.
+
 - Reject non-positive and non-finite Level-1 MOS model-card `W` values before
   channel-current, capacitance, and noise calculations.
 
