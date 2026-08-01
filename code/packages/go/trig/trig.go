@@ -346,31 +346,43 @@ const halfPI = PI / 2.0
 //
 // Typically converges in 10–15 iterations for any normal float64 input.
 func Sqrt(x float64) float64 {
+	if x < 0 {
+		panic("trig.Sqrt: domain error — input is negative")
+	}
 	result, _ := StartNew[float64]("trig.Sqrt", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("x", x)
 
-			// Negative inputs are outside the domain of real square roots.
-			if x < 0 {
-				panic("trig.Sqrt: domain error — input is negative")
-			}
-
 			// sqrt(0) = 0 exactly.
 			if x == 0.0 {
-				return rf.Generate(true, false, 0.0)
+				return rf.Generate(true, false, x)
+			}
+			if x > 1.7976931348623157e308 {
+				return rf.Generate(true, false, x)
+			}
+
+			scaled := x
+			resultScale := 1.0
+			for scaled < 0.25 {
+				scaled *= 4.0
+				resultScale *= 0.5
+			}
+			for scaled >= 4.0 {
+				scaled *= 0.25
+				resultScale *= 2.0
 			}
 
 			// Initial guess: x itself for large values (saves a few iterations),
 			// 1.0 for values in (0, 1) (avoids an expensive first step).
-			guess := x
-			if x < 1.0 {
+			guess := scaled
+			if scaled < 1.0 {
 				guess = 1.0
 			}
 
 			// Iterate until convergence. The safety cap of 60 is extreme;
 			// quadratic convergence means real-world termination in ~15 steps.
 			for i := 0; i < 60; i++ {
-				next := (guess + x/guess) / 2.0
+				next := (guess + scaled/guess) / 2.0
 
 				// Stop when improvement is below the precision floor.
 				// 1e-15*guess handles relative precision for large values.
@@ -380,13 +392,13 @@ func Sqrt(x float64) float64 {
 					improvement = -improvement
 				}
 				if improvement < 1e-15*guess+1e-300 {
-					return rf.Generate(true, false, next)
+					return rf.Generate(true, false, next*resultScale)
 				}
 
 				guess = next
 			}
 
-			return rf.Generate(true, false, guess)
+			return rf.Generate(true, false, guess*resultScale)
 		}).GetResult()
 	return result
 }

@@ -323,19 +323,28 @@ defmodule Trig do
   end
 
   def sqrt(x) when is_number(x) do
-    x = x / 1.0  # ensure float
+    # ensure float
+    x = x / 1.0
 
     # sqrt(0) is exactly 0.
     if x == 0.0 do
-      0.0
+      x
     else
-      # Initial guess: x itself for x >= 1, else 1.0.
-      guess = if x >= 1.0, do: x, else: 1.0
+      {scaled, result_scale} = normalize_sqrt(x, 1.0)
+      guess = if scaled >= 1.0, do: scaled, else: 1.0
 
       # Iterate up to 60 times — quadratic convergence means ~15 in practice.
-      sqrt_iterate(x, guess, 0)
+      sqrt_iterate(scaled, guess, 0) * result_scale
     end
   end
+
+  defp normalize_sqrt(x, scale) when x < 0.25,
+    do: normalize_sqrt(x * 4.0, scale * 0.5)
+
+  defp normalize_sqrt(x, scale) when x >= 4.0,
+    do: normalize_sqrt(x * 0.25, scale * 2.0)
+
+  defp normalize_sqrt(x, scale), do: {x, scale}
 
   # Private recursive helper for sqrt Newton iterations.
   defp sqrt_iterate(_x, guess, 60), do: guess

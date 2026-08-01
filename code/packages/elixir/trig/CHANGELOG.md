@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Normalize finite square-root inputs by powers of four before Newton iteration
+  so the complete BEAM binary64 exponent range converges.
+- Record IEEE-754 NaN and infinity fixture cases as not applicable because
+  Erlang/OTP does not expose them as ordinary BEAM floats.
+
+### Tests
+
+- Cover tiny, minimum-subnormal, maximum-finite, signed-zero, and negative-input
+  behavior from
+  [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json).
+
 ## [0.2.0] - 2026-04-03
 
 ### Added

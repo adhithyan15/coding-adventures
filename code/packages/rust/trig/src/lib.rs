@@ -292,29 +292,43 @@ pub fn sqrt(x: f64) -> f64 {
 
     // sqrt(0) is exactly 0.
     if x == 0.0 {
-        return 0.0;
+        return x;
+    }
+    if x.is_infinite() {
+        return x;
+    }
+
+    let mut scaled = x;
+    let mut result_scale = 1.0;
+    while scaled < 0.25 {
+        scaled *= 4.0;
+        result_scale *= 0.5;
+    }
+    while scaled >= 4.0 {
+        scaled *= 0.25;
+        result_scale *= 2.0;
     }
 
     // Initial guess: x itself for x >= 1 (avoids a slow start for large values),
     // 1.0 for x < 1 (avoids the first step dividing by a tiny number).
-    let mut guess = if x >= 1.0 { x } else { 1.0 };
+    let mut guess = if scaled >= 1.0 { scaled } else { 1.0 };
 
     // Iterate up to 60 times. Quadratic convergence means 60 is an extreme
     // safety margin; typical convergence happens in 15 or fewer iterations.
     for _ in 0..60 {
-        let next = (guess + x / guess) / 2.0;
+        let next = (guess + scaled / guess) / 2.0;
 
         // Convergence criterion: stop when improvement is negligible.
         // 1e-15 * guess handles relative precision near large values.
         // 1e-300 is a floor to handle subnormal (near-zero) inputs safely.
         if (next - guess).abs() < 1e-15 * guess + 1e-300 {
-            return next;
+            return next * result_scale;
         }
 
         guess = next;
     }
 
-    guess
+    guess * result_scale
 }
 
 // ============================================================================

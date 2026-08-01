@@ -239,21 +239,33 @@ object Trig {
         if (x < 0.0) throw ArithmeticException(
             "sqrt: domain error — input $x is negative")
 
-        if (x == 0.0) return 0.0
+        if (x == 0.0) return x
+        if (x == Double.POSITIVE_INFINITY) return x
+
+        var scaled = x
+        var resultScale = 1.0
+        while (scaled < 0.25) {
+            scaled *= 4.0
+            resultScale *= 0.5
+        }
+        while (scaled >= 4.0) {
+            scaled *= 0.25
+            resultScale *= 2.0
+        }
 
         // Initial guess: x itself for x >= 1, 1.0 for x < 1.
-        var guess = if (x >= 1.0) x else 1.0
+        var guess = if (scaled >= 1.0) scaled else 1.0
 
         repeat(60) {
-            val next = (guess + x / guess) / 2.0
+            val next = (guess + scaled / guess) / 2.0
             if (Math.abs(next - guess) < 1e-15 * guess + 1e-300) {
                 guess = next
-                return guess
+                return guess * resultScale
             }
             guess = next
         }
 
-        return guess
+        return guess * resultScale
     }
 
     // =========================================================================

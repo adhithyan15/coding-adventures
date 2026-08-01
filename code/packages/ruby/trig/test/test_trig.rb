@@ -278,6 +278,19 @@ class TestTrig < Minitest::Test
     assert_in_delta 1e5, Trig.sqrt(1e10), 1e-4
   end
 
+  def test_sqrt_full_binary64_range
+    assert_operator((Trig.sqrt(1e-100) - 1e-50).abs / 1e-50, :<=, 1e-12)
+    expected_subnormal = 2.2227587494850775e-162
+    assert_operator((Trig.sqrt(2.0**-1074) - expected_subnormal).abs / expected_subnormal,
+                    :<=, 1e-12)
+    expected_largest = 1.3407807929942596e154
+    assert_operator((Trig.sqrt(Float::MAX) - expected_largest).abs / expected_largest,
+                    :<=, 1e-12)
+    assert_equal(-Float::INFINITY, 1.0 / Trig.sqrt(-0.0))
+    assert_equal Float::INFINITY, Trig.sqrt(Float::INFINITY)
+    assert_predicate Trig.sqrt(Float::NAN), :nan?
+  end
+
   def test_sqrt_roundtrip
     s = Trig.sqrt(2)
     assert_in_delta 2.0, s * s, DELTA

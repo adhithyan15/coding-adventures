@@ -588,6 +588,19 @@ describe("sqrt", function()
         assert.is_true(approx_equal(trig.sqrt(1e10), 1e5, 1e-4))
     end)
 
+    it("covers the full binary64 range and special values", function()
+        local function relative(actual, expected)
+            return math.abs(actual - expected) / math.abs(expected) <= 1e-12
+        end
+        assert.is_true(relative(trig.sqrt(1e-100), 1e-50))
+        assert.is_true(relative(trig.sqrt(5e-324), 2.2227587494850775e-162))
+        assert.is_true(relative(trig.sqrt(1.7976931348623157e308), 1.3407807929942596e154))
+        assert.are.equal(1 / trig.sqrt(-0.0), -math.huge)
+        assert.are.equal(trig.sqrt(math.huge), math.huge)
+        local nan = trig.sqrt(0 / 0)
+        assert.is_true(nan ~= nan)
+    end)
+
     it("sqrt(2)^2 ≈ 2.0 (roundtrip)", function()
         local s = trig.sqrt(2)
         assert.is_true(approx_equal(s * s, 2.0))

@@ -196,30 +196,44 @@ public struct Trig {
     /// - Returns: √x to full Double precision
     /// - Precondition: x ≥ 0. A negative input triggers a `fatalError`.
     public static func sqrt(_ x: Double) -> Double {
-        precondition(x >= 0, "Trig.sqrt: domain error — input \(x) is negative")
+        if x < 0 {
+            preconditionFailure("Trig.sqrt: domain error — input \(x) is negative")
+        }
 
         // sqrt(0) = 0 exactly.
-        if x == 0.0 { return 0.0 }
+        if x == 0.0 { return x }
+        if x.isInfinite { return x }
+
+        var scaled = x
+        var resultScale = 1.0
+        while scaled < 0.25 {
+            scaled *= 4.0
+            resultScale *= 0.5
+        }
+        while scaled >= 4.0 {
+            scaled *= 0.25
+            resultScale *= 2.0
+        }
 
         // Initial guess: x itself for x ≥ 1 (saves iterations for large values),
         // 1.0 for x in (0, 1) (avoids dividing by a tiny number on the first step).
-        var guess = x >= 1.0 ? x : 1.0
+        var guess = scaled >= 1.0 ? scaled : 1.0
 
         // Iterate up to 60 times. Quadratic convergence means ~15 in practice.
         for _ in 0..<60 {
-            let next = (guess + x / guess) / 2.0
+            let next = (guess + scaled / guess) / 2.0
 
             // Convergence criterion: stop when improvement is negligibly small.
             // 1e-15 * guess handles relative precision for large values.
             // 1e-300 is an absolute floor for subnormal (near-zero) inputs.
             if Swift.abs(next - guess) < 1e-15 * guess + 1e-300 {
-                return next
+                return next * resultScale
             }
 
             guess = next
         }
 
-        return guess
+        return guess * resultScale
     }
 
     // =========================================================================

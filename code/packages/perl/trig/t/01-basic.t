@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test2::V0;
+use POSIX qw(HUGE_VAL);
 
 # ---------------------------------------------------------------------------
 # Load the module under test.
@@ -168,13 +169,26 @@ ok( near( sqrt_approx(9),    3.0 ),          'sqrt(9) = 3' );
 ok( near( sqrt_approx(2),    1.41421356237, 1e-9 ), 'sqrt(2) ≈ 1.41421356237' );
 ok( near( sqrt_approx(0.25), 0.5 ),          'sqrt(0.25) = 0.5' );
 ok( near( sqrt_approx(1e10), 1e5,  1e-4 ),  'sqrt(1e10) ≈ 1e5' );
+ok( abs( sqrt_approx(1e-100) - 1e-50 ) / 1e-50 <= 1e-12,
+    'sqrt(1e-100) uses relative precision' );
+ok( abs( sqrt_approx(5e-324) - 2.2227587494850775e-162 ) /
+        2.2227587494850775e-162 <= 1e-12,
+    'sqrt(min subnormal) covers the binary64 floor' );
+ok( abs( sqrt_approx(1.7976931348623157e308) - 1.3407807929942596e154 ) /
+        1.3407807929942596e154 <= 1e-12,
+    'sqrt(max finite) covers the binary64 ceiling' );
+is( unpack('Q>', pack('d>', sqrt_approx(-0.0))) >> 63, 1,
+    'sqrt(-0.0) preserves the sign bit' );
+is( sqrt_approx(HUGE_VAL), HUGE_VAL, 'sqrt(+Inf) is +Inf' );
+my $nan = sqrt_approx(HUGE_VAL - HUGE_VAL);
+ok( $nan != $nan, 'sqrt(NaN) is NaN' );
 
 # Roundtrip: sqrt(2)^2 ≈ 2
 my $sq2 = sqrt_approx(2);
 ok( near( $sq2 * $sq2, 2.0 ), 'sqrt(2)^2 ≈ 2.0' );
 
 # Negative input should die
-ok( eval { sqrt_approx(-1); 0 } || 1, 'sqrt(-1) dies' );
+ok( !eval { sqrt_approx(-1); 1 }, 'sqrt(-1) dies' );
 
 # ===========================================================================
 # 12. atan_approx

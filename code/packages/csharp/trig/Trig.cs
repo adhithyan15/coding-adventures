@@ -97,22 +97,40 @@ public static class Trig
 
         if (x == 0.0)
         {
-            return 0.0;
+            return x;
         }
 
-        var guess = x >= 1.0 ? x : 1.0;
+        if (double.IsPositiveInfinity(x))
+        {
+            return x;
+        }
+
+        var scaled = x;
+        var resultScale = 1.0;
+        while (scaled < 0.25)
+        {
+            scaled *= 4.0;
+            resultScale *= 0.5;
+        }
+        while (scaled >= 4.0)
+        {
+            scaled *= 0.25;
+            resultScale *= 2.0;
+        }
+
+        var guess = scaled >= 1.0 ? scaled : 1.0;
         for (var i = 0; i < 60; i++)
         {
-            var next = (guess + x / guess) / 2.0;
+            var next = (guess + scaled / guess) / 2.0;
             if (Math.Abs(next - guess) < 1e-15 * guess + 1e-300)
             {
-                return next;
+                return next * resultScale;
             }
 
             guess = next;
         }
 
-        return guess;
+        return guess * resultScale;
     }
 
     /// <summary>

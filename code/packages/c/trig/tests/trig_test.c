@@ -5,6 +5,9 @@
  */
 #include "iso_test.h"
 
+#include <float.h>
+#include <math.h>
+
 #include "trig.h"
 
 int main(void) {
@@ -59,6 +62,22 @@ int main(void) {
         ISO_CHECK_EQ_DBL(r, 0.0, eps);
         ISO_CHECK(trig_sqrt(1e12, &r) == TRIG_OK);
         ISO_CHECK_EQ_DBL(r, 1000000.0, 1e-4);
+        ISO_CHECK(trig_sqrt(1e-100, &r) == TRIG_OK);
+        ISO_CHECK_EQ_DBL((r - 1e-50) / 1e-50, 0.0, 1e-12);
+        ISO_CHECK(trig_sqrt(0x0.0000000000001p-1022, &r) == TRIG_OK);
+        ISO_CHECK_EQ_DBL((r - 2.2227587494850775e-162) /
+                             2.2227587494850775e-162,
+                         0.0, 1e-12);
+        ISO_CHECK(trig_sqrt(DBL_MAX, &r) == TRIG_OK);
+        ISO_CHECK_EQ_DBL((r - 1.3407807929942596e154) /
+                             1.3407807929942596e154,
+                         0.0, 1e-12);
+        ISO_CHECK(trig_sqrt(-0.0, &r) == TRIG_OK);
+        ISO_CHECK(r == 0.0 && signbit(r));
+        ISO_CHECK(trig_sqrt(INFINITY, &r) == TRIG_OK);
+        ISO_CHECK(isinf(r) && r > 0.0);
+        ISO_CHECK(trig_sqrt(NAN, &r) == TRIG_OK);
+        ISO_CHECK(isnan(r));
         /* Negative input is a domain error and leaves *out untouched. */
         r = -999.0;
         ISO_CHECK(trig_sqrt(-1.0, &r) == TRIG_ERR_DOMAIN);

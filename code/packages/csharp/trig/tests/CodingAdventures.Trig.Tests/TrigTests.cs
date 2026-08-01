@@ -69,6 +69,9 @@ public sealed class TrigTests
     [Fact]
     public void SqrtMatchesKnownValues()
     {
+        static bool Relative(double actual, double expected) =>
+            Math.Abs(actual - expected) / Math.Abs(expected) <= 1e-12;
+
         Assert.Equal(0.0, Trig.Sqrt(0.0));
         Assert.True(ApproxEqual(Trig.Sqrt(1.0), 1.0));
         Assert.True(ApproxEqual(Trig.Sqrt(4.0), 2.0));
@@ -76,6 +79,12 @@ public sealed class TrigTests
         Assert.True(ApproxEqual(Trig.Sqrt(2.0), 1.41421356237));
         Assert.True(ApproxEqual(Trig.Sqrt(0.25), 0.5));
         Assert.True(Math.Abs(Trig.Sqrt(1e10) - 1e5) < 1e-4);
+        Assert.True(Relative(Trig.Sqrt(1e-100), 1e-50));
+        Assert.True(Relative(Trig.Sqrt(double.Epsilon), 2.2227587494850775e-162));
+        Assert.True(Relative(Trig.Sqrt(double.MaxValue), 1.3407807929942596e154));
+        Assert.True(BitConverter.DoubleToInt64Bits(Trig.Sqrt(-0.0)) < 0);
+        Assert.True(double.IsPositiveInfinity(Trig.Sqrt(double.PositiveInfinity)));
+        Assert.True(double.IsNaN(Trig.Sqrt(double.NaN)));
     }
 
     [Fact]

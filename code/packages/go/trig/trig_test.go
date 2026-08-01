@@ -273,6 +273,35 @@ func TestSqrtLarge(t *testing.T) {
 	}
 }
 
+func TestSqrtFullBinary64Range(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    float64
+		expected float64
+	}{
+		{"tiny normal", 1e-100, 1e-50},
+		{"minimum subnormal", math.SmallestNonzeroFloat64, 2.2227587494850775e-162},
+		{"maximum finite", math.MaxFloat64, 1.3407807929942596e154},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			actual := Sqrt(test.input)
+			if math.Abs(actual-test.expected)/math.Abs(test.expected) > 1e-12 {
+				t.Fatalf("Sqrt(%v) = %v, want %v", test.input, actual, test.expected)
+			}
+		})
+	}
+	if !math.Signbit(Sqrt(math.Copysign(0.0, -1.0))) {
+		t.Fatal("Sqrt(-0.0) did not preserve the sign bit")
+	}
+	if !math.IsInf(Sqrt(math.Inf(1)), 1) {
+		t.Fatal("Sqrt(+Inf) did not return +Inf")
+	}
+	if !math.IsNaN(Sqrt(math.NaN())) {
+		t.Fatal("Sqrt(NaN) did not return NaN")
+	}
+}
+
 func TestSqrtRoundtrip(t *testing.T) {
 	// sqrt(2) * sqrt(2) ≈ 2.0
 	s := Sqrt(2.0)
@@ -281,16 +310,13 @@ func TestSqrtRoundtrip(t *testing.T) {
 	}
 }
 
-// TestSqrtNegativeHandled verifies that Sqrt(-1) does not produce a meaningful
-// result. The Go Operation framework catches panics from the callback and returns
-// the fallback value (0.0) rather than propagating. This is acceptable — callers
-// should never pass negative inputs to Sqrt. We simply verify the call completes
-// without crashing the test binary and returns the zero fallback.
-func TestSqrtNegativeHandled(t *testing.T) {
-	result := Sqrt(-1.0)
-	// The operation catches the panic and returns 0.0 (fallback).
-	// Any value is acceptable here since the input is invalid.
-	_ = result // no assertion needed — the test just verifies no crash
+func TestSqrtNegativePanics(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("Sqrt(-1) did not panic")
+		}
+	}()
+	Sqrt(-1.0)
 }
 
 // ============================================================================

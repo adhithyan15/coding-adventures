@@ -391,26 +391,38 @@ function trig.sqrt(x)
     end
 
     -- sqrt(0) is exactly 0.
-    if x == 0.0 then return 0.0 end
+    if x == 0.0 then return x end
+    if x == math.huge then return x end
+
+    local scaled = x
+    local result_scale = 1.0
+    while scaled < 0.25 do
+        scaled = scaled * 4.0
+        result_scale = result_scale * 0.5
+    end
+    while scaled >= 4.0 do
+        scaled = scaled * 0.25
+        result_scale = result_scale * 2.0
+    end
 
     -- Initial guess: x itself for x >= 1 (better for large values),
     -- 1.0 for x in (0, 1) (avoids dividing by a tiny number).
-    local guess = (x >= 1.0) and x or 1.0
+    local guess = (scaled >= 1.0) and scaled or 1.0
 
     -- Iterate up to 60 times. Quadratic convergence means ~15 in practice.
     for _ = 1, 60 do
-        local next_guess = (guess + x / guess) / 2.0
+        local next_guess = (guess + scaled / guess) / 2.0
 
         -- Stop when improvement is below the precision floor.
         -- 1e-15 * guess is relative precision; 1e-300 is a subnormal floor.
         if math.abs(next_guess - guess) < 1e-15 * guess + 1e-300 then
-            return next_guess
+            return next_guess * result_scale
         end
 
         guess = next_guess
     end
 
-    return guess
+    return guess * result_scale
 end
 
 -- ============================================================================

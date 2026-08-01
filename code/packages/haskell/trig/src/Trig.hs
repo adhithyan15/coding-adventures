@@ -102,16 +102,22 @@ rangeReduce angle
 
 sqrtNonnegative :: Double -> Double
 sqrtNonnegative value
-    | value == 0.0 = 0.0
-    | otherwise = iterateNewton 60 initial
+    | value == 0.0 = value
+    | isInfinite value = value
+    | otherwise = resultScale * iterateNewton 60 initial
   where
-    initial = if value >= 1.0 then value else 1.0
+    (scaled, resultScale) = normalize value 1.0
+    normalize current scale
+        | current < 0.25 = normalize (current * 4.0) (scale * 0.5)
+        | current >= 4.0 = normalize (current * 0.25) (scale * 2.0)
+        | otherwise = (current, scale)
+    initial = if scaled >= 1.0 then scaled else 1.0
     iterateNewton remaining guess
         | remaining == (0 :: Int) = guess
         | abs (next - guess) < 1e-15 * guess + 1e-300 = next
         | otherwise = iterateNewton (remaining - 1) next
       where
-        next = (guess + value / guess) / 2.0
+        next = (guess + scaled / guess) / 2.0
 
 atanCore :: Double -> Double
 atanCore value = 2.0 * snd (foldl' step (reduced, reduced) [1 .. 30])
