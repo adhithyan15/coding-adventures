@@ -9,25 +9,26 @@ fn read(name: &str) -> String {
     fs::read_to_string(&path).unwrap_or_else(|error| panic!("read {}: {error}", path.display()))
 }
 
+fn read_package_file(name: &str) -> String {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(name);
+    fs::read_to_string(&path).unwrap_or_else(|error| panic!("read {}: {error}", path.display()))
+}
+
 #[test]
 fn venture_chrome_sources_compile_with_matching_theme_topology() {
     let interface =
         mosmodel_compiler::compile(&read("VentureChrome.mil")).expect("compile interface");
-    let layout = moslayout_compiler::compile(
-        &read("VentureChrome.mll"),
-        Some(&interface.descriptor_json),
-    )
-    .expect("compile layout");
+    let layout =
+        moslayout_compiler::compile(&read("VentureChrome.mll"), Some(&interface.descriptor_json))
+            .expect("compile layout");
     let light = mosstyle_compiler::compile(
         &read("VentureChrome.light.msl"),
         Some(&layout.part_map_json),
     )
     .expect("compile light theme");
-    let dark = mosstyle_compiler::compile(
-        &read("VentureChrome.dark.msl"),
-        Some(&layout.part_map_json),
-    )
-    .expect("compile dark theme");
+    let dark =
+        mosstyle_compiler::compile(&read("VentureChrome.dark.msl"), Some(&layout.part_map_json))
+            .expect("compile dark theme");
 
     assert_eq!(interface.component.component, "VentureChrome");
     assert_eq!(layout.def.component_name, "VentureChrome");
@@ -80,16 +81,72 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         .iter()
         .map(|event| event.name.as_str())
         .collect();
-    assert_eq!(
-        events,
-        venture_browser_core::VENTURE_CHROME_EVENT_NAMES
-    );
+    assert_eq!(events, venture_browser_core::VENTURE_CHROME_EVENT_NAMES);
 
-    let manifest = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"),
-    )
-    .expect("read manifest");
+    let manifest =
+        fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
+            .expect("read manifest");
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
+}
+
+#[test]
+fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
+    let shell = read_package_file("scripts/build-all.sh");
+    let powershell = read_package_file("scripts/build-all.ps1");
+    let backends = [
+        "react",
+        "electron",
+        "swiftui",
+        "qt",
+        "webcomponent",
+        "html",
+        "xaml",
+        "flutter",
+        "compose",
+    ];
+    assert_eq!(
+        backends.len(),
+        mosaic_package_artifact_builder::Backend::ALL.len(),
+        "the Venture build matrix must track Mosaic's exhaustive backend list"
+    );
+
+    for backend in backends {
+        assert!(shell.contains(backend), "POSIX build omits {backend}");
+        assert!(
+            powershell.contains(backend),
+            "PowerShell build omits {backend}"
+        );
+    }
+
+    for required in [
+        "--emit-project",
+        "npm run build",
+        "node --check",
+        "swift build",
+        "cmake --build",
+        "dotnet build",
+        "flutter build",
+        "gradle --no-daemon build",
+        "--strict",
+    ] {
+        assert!(shell.contains(required), "POSIX build omits {required}");
+    }
+    for required in [
+        "--emit-project",
+        "npm",
+        "node",
+        "swift",
+        "cmake",
+        "dotnet",
+        "flutter",
+        "gradle",
+        "$Strict",
+    ] {
+        assert!(
+            powershell.contains(required),
+            "PowerShell build omits {required}"
+        );
+    }
 }

@@ -16,3 +16,6 @@
 - Runnable project-shell acceptance proving each backend can obtain and mount
   that content surface through its optional `MosaicHost` contract; the macOS
   SwiftUI gate builds with a real host-provided `NSView`.
+- POSIX and PowerShell backend-matrix entry points that emit the same Venture
+  package for all nine Mosaic targets and directly invoke each available web,
+  Qt, SwiftUI, XAML, Flutter, or Compose build toolchain.
