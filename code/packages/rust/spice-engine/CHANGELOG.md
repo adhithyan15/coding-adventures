@@ -1,5 +1,8 @@
 # Changelog
 
+- Reject non-finite Level-1 MOS model-card `LEVEL` selectors instead of
+  silently canonicalizing them to `LEVEL=1`.
+
 - Reject non-positive and non-finite Level-1 MOS model-card `L` values before
   channel-current, capacitance, and noise calculations.
 

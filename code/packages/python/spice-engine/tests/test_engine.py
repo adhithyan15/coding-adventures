@@ -3154,9 +3154,13 @@ def test_transient_bjt_forward_transit_time_holds_base_charge_on_turnoff() -> No
     )
 
 
-def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
-    with pytest.raises(ValueError, match="only MOS LEVEL=1"):
-        normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})
+def test_non_level_one_or_non_finite_mos_model_cards_are_explicitly_rejected() -> None:
+    valid = normalize_model_card("Mvalid", "nmos", {"LEVEL": 1.0})
+    assert valid.parameters["LEVEL"] == pytest.approx(1.0)
+
+    for invalid_level in (2.0, -math.inf, math.inf, math.nan):
+        with pytest.raises(ValueError, match="only MOS LEVEL=1"):
+            normalize_model_card("Mbad", "nmos", {"LEVEL": invalid_level})
 
 
 def test_custom_model_evaluator_hook_stamps_dc_current() -> None:

@@ -8424,7 +8424,7 @@ export function normalizeModelCard(
     }
     const value = Number(rawValue);
     if (canonical === "LEVEL") {
-      if (Math.abs(value - 1.0) > 1.0e-12) {
+      if (!Number.isFinite(value) || Math.abs(value - 1.0) > 1.0e-12) {
         throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
       }
       normalized[canonical] = 1.0;
