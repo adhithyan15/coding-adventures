@@ -1,6 +1,7 @@
 //! End-to-end CAS projection and verification for the arithmetic stdlib root.
 
 use std::collections::BTreeSet;
+use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -29,7 +30,20 @@ fn read_cas_object(root: &Path, digest: &str) -> Vec<u8> {
     bytes
 }
 
+fn lock_cas(root: &Path) -> File {
+    let lock_path = root.join("code/specs/data/adj-stdlib-provenance/cas/lock");
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(&lock_path)
+        .unwrap_or_else(|error| panic!("open CAS lock {}: {error}", lock_path.display()));
+    file.lock()
+        .unwrap_or_else(|error| panic!("acquire CAS lock {}: {error}", lock_path.display()));
+    file
+}
+
 fn project_manifest_snapshots(root: &Path, snapshots: &Path) -> usize {
+    let _cas_lock = lock_cas(root);
     std::fs::create_dir_all(snapshots).expect("create snapshot directory");
     let manifest_path = root.join("code/specs/data/adj-stdlib-provenance/manifest.json");
     let manifest: serde_json::Value =
@@ -57,6 +71,22 @@ fn project_manifest_snapshots(root: &Path, snapshots: &Path) -> usize {
             .expect("project CAS snapshot");
     }
     snapshot_hashes.len()
+}
+
+#[test]
+fn rust_reader_uses_the_repository_cas_lock() {
+    let root = repo_root();
+    let _guard = lock_cas(&root);
+    let lock_path = root.join("code/specs/data/adj-stdlib-provenance/cas/lock");
+    let contender = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(&lock_path)
+        .expect("open competing CAS lock handle");
+    let error = contender
+        .try_lock()
+        .expect_err("a second reader must not bypass the CAS lock");
+    assert!(matches!(error, std::fs::TryLockError::WouldBlock));
 }
 
 #[test]

@@ -578,6 +578,288 @@ def _json_object(cas: Cas, digest: str, expected_kind: str) -> dict[str, Any]:
     return value
 
 
+def _registered_manifest(
+    cas: Cas,
+    manifest_bytes: bytes,
+    registrations: dict[str, str],
+    expected_manifest_id: str,
+) -> tuple[dict[str, Any], list[str]]:
+    if not isinstance(registrations, dict) or not registrations:
+        raise ProvenanceError("bundle registrations must be a non-empty object")
+    try:
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ProvenanceError("provenance manifest must be UTF-8 JSON") from error
+    if not isinstance(manifest, dict) or set(manifest) != {
+        "algorithm",
+        "bundle_hashes",
+        "manifest_id",
+        "schema_version",
+    }:
+        raise ProvenanceError("provenance manifest has unknown or missing fields")
+    if manifest_bytes != canonical_json_bytes(manifest):
+        raise ProvenanceError("provenance manifest is not canonical JSON")
+    if (
+        not _is_integer(manifest["schema_version"])
+        or manifest["schema_version"] != 1
+        or manifest["algorithm"] != "sha256"
+    ):
+        raise ProvenanceError("provenance manifest uses an unsupported contract")
+    manifest_id = _require_nonempty(manifest["manifest_id"], "manifest_id")
+    if manifest_id != _require_nonempty(expected_manifest_id, "expected_manifest_id"):
+        raise ProvenanceError(
+            f"provenance manifest_id {manifest_id} does not match {expected_manifest_id}"
+        )
+    roots = manifest["bundle_hashes"]
+    if not isinstance(roots, list):
+        raise ProvenanceError("bundle_hashes must be sorted and unique")
+    normalized_roots = [
+        _require_hash(value, f"bundle_hashes[{index}]")
+        for index, value in enumerate(roots)
+    ]
+    if normalized_roots != sorted(set(normalized_roots)):
+        raise ProvenanceError("bundle_hashes must be sorted and unique")
+
+    by_id: dict[str, str] = {}
+    for digest in normalized_roots:
+        bundle = _json_object(cas, digest, "provenance_bundle")
+        bundle_id = _require_nonempty(bundle.get("bundle_id"), "bundle.bundle_id")
+        previous = by_id.get(bundle_id)
+        if previous is not None and previous != digest:
+            raise ProvenanceError(
+                f"manifest registers bundle_id {bundle_id} more than once"
+            )
+        by_id[bundle_id] = digest
+
+    for expected_id, digest_value in registrations.items():
+        bundle_id = _require_nonempty(expected_id, "registration bundle_id")
+        digest = _require_hash(digest_value, f"registration {bundle_id}")
+        bundle = _json_object(cas, digest, "provenance_bundle")
+        actual_id = _require_nonempty(bundle.get("bundle_id"), "bundle.bundle_id")
+        if actual_id != bundle_id:
+            raise ProvenanceError(
+                f"registration {bundle_id} points to bundle_id {actual_id}"
+            )
+        previous = by_id.get(bundle_id)
+        if previous is not None and previous != digest:
+            raise ProvenanceError(
+                f"refusing to replace registered bundle_id {bundle_id}; "
+                "use an explicit root-replacement migration"
+            )
+        by_id[bundle_id] = digest
+
+    registered = sorted(by_id.values())
+    manifest["bundle_hashes"] = registered
+    return manifest, registered
+
+
+class CasRootLock:
+    """Cross-platform OS lock released automatically when the process exits."""
+
+    def __init__(self, cas_root: Path, *, blocking: bool = True) -> None:
+        self.path = cas_root.resolve() / "lock"
+        self.blocking = blocking
+        self.descriptor: int | None = None
+
+    def __enter__(self):
+        _ensure_real_directory(self.path.parent)
+        _reject_link_components(self.path, allow_missing_leaf=True)
+        flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_BINARY", 0)
+        descriptor = os.open(self.path, flags, 0o600)
+        try:
+            if os.fstat(descriptor).st_size == 0:
+                if os.write(descriptor, b"\0") != 1:
+                    raise ProvenanceError("CAS lock initialization was incomplete")
+                os.fsync(descriptor)
+            os.lseek(descriptor, 0, os.SEEK_SET)
+        except Exception:
+            os.close(descriptor)
+            raise
+        try:
+            if os.name == "nt":
+                import msvcrt
+
+                mode = msvcrt.LK_LOCK if self.blocking else msvcrt.LK_NBLCK
+                msvcrt.locking(descriptor, mode, 1)
+            else:
+                import fcntl
+
+                mode = fcntl.LOCK_EX
+                if not self.blocking:
+                    mode |= fcntl.LOCK_NB
+                fcntl.flock(descriptor, mode)
+        except (BlockingIOError, OSError) as error:
+            os.close(descriptor)
+            raise ProvenanceError(
+                f"another provenance operation holds the CAS lock for {self.path}"
+            ) from error
+        self.descriptor = descriptor
+        return self
+
+    def __exit__(self, exc_type: object, exc: object, traceback: object) -> bool:
+        descriptor = self.descriptor
+        self.descriptor = None
+        if descriptor is None:
+            return False
+        try:
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            if os.name == "nt":
+                import msvcrt
+
+                msvcrt.locking(descriptor, msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+        finally:
+            os.close(descriptor)
+        return False
+
+
+class CasMutationTransaction:
+    """Serialize one CAS mutation and remove newly materialized bytes on failure."""
+
+    def __init__(self, cas_root: Path, *, blocking: bool = True) -> None:
+        self.cas = Cas(cas_root)
+        self._lock = CasRootLock(cas_root, blocking=blocking)
+        self._baseline_index: bytes | None = None
+        self._baseline_objects: set[Path] = set()
+        self._entered = False
+        self._committed = False
+
+    def __enter__(self):
+        self._lock.__enter__()
+        try:
+            self.cas.load()
+            if self.cas.index_path.exists():
+                _validate_index(self.cas)
+                self._baseline_index = _read_regular_file(self.cas.index_path)
+            elif self.cas.index:
+                raise ProvenanceError("CAS index loaded without an index file")
+            self._baseline_objects = {
+                path.resolve() for path in self.cas.objects.rglob("*") if path.is_file()
+            }
+            self._entered = True
+            return self
+        except Exception:
+            self._lock.__exit__(None, None, None)
+            raise
+
+    def commit(self) -> None:
+        if not self._entered or self._committed:
+            raise ProvenanceError("CAS mutation transaction is not open")
+        self.cas.write_index()
+        self._committed = True
+
+    def _rollback(self) -> None:
+        if not self._entered:
+            return
+        if self._baseline_index is None:
+            if self.cas.index_path.exists():
+                _reject_link_components(self.cas.index_path)
+                self.cas.index_path.unlink()
+        else:
+            _write_atomic(self.cas.index_path, self._baseline_index)
+        if self.cas.objects.exists():
+            for path in sorted(self.cas.objects.rglob("*"), reverse=True):
+                if not path.is_file() or path.resolve() in self._baseline_objects:
+                    continue
+                data = _read_regular_file(path)
+                relative = path.relative_to(self.cas.objects)
+                if len(relative.parts) != 2:
+                    raise ProvenanceError(
+                        f"refusing rollback of non-canonical CAS path {path}"
+                    )
+                digest = relative.parts[0] + relative.parts[1]
+                if sha256_bytes(data) != digest:
+                    raise ProvenanceError(
+                        f"refusing rollback of mismatched CAS object {path}"
+                    )
+                path.unlink()
+                try:
+                    path.parent.rmdir()
+                except OSError:
+                    pass
+        self.cas.load()
+
+    def __exit__(self, exc_type: object, exc: object, traceback: object) -> bool:
+        try:
+            if exc_type is not None or not self._committed:
+                self._rollback()
+            if exc_type is None and not self._committed:
+                raise ProvenanceError("CAS mutation transaction exited without commit")
+        finally:
+            self._lock.__exit__(exc_type, exc, traceback)
+            self._entered = False
+        return False
+
+
+class BundleRegistrationTransaction(CasMutationTransaction):
+    """Validate and publish a generator's CAS index and manifest root update."""
+
+    def __init__(
+        self,
+        cas_root: Path,
+        manifest_path: Path,
+        *,
+        expected_manifest_id: str,
+        schema_path: Path | None = None,
+        workspace_root: Path | None = None,
+    ) -> None:
+        super().__init__(cas_root, blocking=False)
+        self.manifest_path = manifest_path
+        self.expected_manifest_id = expected_manifest_id
+        self.schema_path = schema_path
+        self.workspace_root = workspace_root
+        self._baseline_manifest = b""
+
+    def __enter__(self):
+        try:
+            super().__enter__()
+            _validate_repository_unlocked(
+                self.cas.root,
+                self.manifest_path,
+                self.schema_path,
+                workspace_root=self.workspace_root,
+            )
+            self._baseline_manifest = _read_regular_file(self.manifest_path)
+            return self
+        except Exception:
+            super().__exit__(Exception, None, None)
+            raise
+
+    def commit(self, registrations: dict[str, str]) -> list[str]:
+        if not self._entered or self._committed:
+            raise ProvenanceError("registration transaction is not open")
+        manifest, registered = _registered_manifest(
+            self.cas,
+            self._baseline_manifest,
+            registrations,
+            self.expected_manifest_id,
+        )
+        try:
+            self.cas.write_index()
+            _write_atomic(self.manifest_path, canonical_json_bytes(manifest))
+            _validate_repository_unlocked(
+                self.cas.root,
+                self.manifest_path,
+                self.schema_path,
+                workspace_root=self.workspace_root,
+            )
+        except Exception:
+            self._rollback()
+            raise
+        self._committed = True
+        return registered
+
+    def _rollback(self) -> None:
+        if not self._entered:
+            return
+        if self._baseline_manifest:
+            _write_atomic(self.manifest_path, self._baseline_manifest)
+        super()._rollback()
+
+
 def _validate_index(cas: Cas) -> None:
     if not cas.index_path.exists():
         raise ProvenanceError("missing CAS index")
@@ -1163,7 +1445,7 @@ def _validate_bundle(
     validated.add(digest)
 
 
-def validate_repository(
+def _validate_repository_unlocked(
     cas_root: Path,
     manifest_path: Path,
     schema_path: Path | None = None,
@@ -1174,7 +1456,11 @@ def validate_repository(
     _validate_index(cas)
     manifest_bytes = _read_regular_file(manifest_path)
     manifest = json.loads(manifest_bytes.decode("utf-8"))
-    if not isinstance(manifest, dict) or manifest.get("schema_version") != 1:
+    if (
+        not isinstance(manifest, dict)
+        or not _is_integer(manifest.get("schema_version"))
+        or manifest.get("schema_version") != 1
+    ):
         raise ProvenanceError("provenance manifest schema_version must equal 1")
     if manifest_bytes != canonical_json_bytes(manifest):
         raise ProvenanceError("provenance manifest is not canonical JSON")
@@ -1187,13 +1473,19 @@ def validate_repository(
     if manifest["algorithm"] != "sha256":
         raise ProvenanceError("provenance manifest algorithm must equal sha256")
     bundles = manifest["bundle_hashes"]
-    if not isinstance(bundles, list) or bundles != sorted(set(bundles)):
+    if not isinstance(bundles, list):
+        raise ProvenanceError("bundle_hashes must be sorted and unique")
+    normalized_bundles = [
+        _require_hash(value, f"bundle_hashes[{index}]")
+        for index, value in enumerate(bundles)
+    ]
+    if normalized_bundles != sorted(set(normalized_bundles)):
         raise ProvenanceError("bundle_hashes must be sorted and unique")
     snapshots: set[str] = set()
     validated: set[str] = set()
     bundle_claims: dict[str, set[str]] = {}
     bundle_inputs: dict[str, str] = {}
-    for bundle in bundles:
+    for bundle in normalized_bundles:
         _validate_bundle(
             cas,
             _require_hash(bundle, "bundle hash"),
@@ -1212,7 +1504,7 @@ def validate_repository(
             raise ProvenanceError(
                 f"workspace input bytes disagree with bundle for {repo_path}"
             )
-    reachable = _reachable(cas, bundles)
+    reachable = _reachable(cas, normalized_bundles)
     unreferenced = sorted(set(cas.index) - reachable)
     if unreferenced:
         raise ProvenanceError(f"unreferenced CAS objects: {', '.join(unreferenced)}")
@@ -1225,6 +1517,21 @@ def validate_repository(
     }
 
 
+def validate_repository(
+    cas_root: Path,
+    manifest_path: Path,
+    schema_path: Path | None = None,
+    workspace_root: Path | None = None,
+) -> dict[str, Any]:
+    with CasRootLock(cas_root):
+        return _validate_repository_unlocked(
+            cas_root,
+            manifest_path,
+            schema_path,
+            workspace_root=workspace_root,
+        )
+
+
 def project_snapshots(
     cas_root: Path,
     manifest_path: Path,
@@ -1232,29 +1539,30 @@ def project_snapshots(
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
 ) -> dict[str, Any]:
-    result = validate_repository(
-        cas_root, manifest_path, schema_path, workspace_root=workspace_root
-    )
-    cas = Cas(cas_root)
-    cas.load()
-    _ensure_real_directory(output)
-    for child in output.iterdir():
-        if child.name not in result["snapshot_hashes"]:
-            raise ProvenanceError(
-                f"projection directory contains unexpected entry: {child.name}"
-            )
-    for digest in result["snapshot_hashes"]:
-        destination = output / digest
-        source = cas.object_path(digest)
-        source_bytes = _read_regular_file(source)
-        _write_exclusive(destination, source_bytes)
-        if sha256_bytes(_read_regular_file(destination)) != digest:
-            raise ProvenanceError(f"projection does not rehash to {digest}")
-    return {
-        **result,
-        "output": str(output),
-        "projected": len(result["snapshot_hashes"]),
-    }
+    with CasRootLock(cas_root):
+        result = _validate_repository_unlocked(
+            cas_root, manifest_path, schema_path, workspace_root=workspace_root
+        )
+        cas = Cas(cas_root)
+        cas.load()
+        _ensure_real_directory(output)
+        for child in output.iterdir():
+            if child.name not in result["snapshot_hashes"]:
+                raise ProvenanceError(
+                    f"projection directory contains unexpected entry: {child.name}"
+                )
+        for digest in result["snapshot_hashes"]:
+            destination = output / digest
+            source = cas.object_path(digest)
+            source_bytes = _read_regular_file(source)
+            _write_exclusive(destination, source_bytes)
+            if sha256_bytes(_read_regular_file(destination)) != digest:
+                raise ProvenanceError(f"projection does not rehash to {digest}")
+        return {
+            **result,
+            "output": str(output),
+            "projected": len(result["snapshot_hashes"]),
+        }
 
 
 def _load_headers(path: Path | None) -> dict[str, str]:
@@ -1376,144 +1684,150 @@ def main() -> int:
                 workspace_root=repo_root,
             )
         elif args.command == "capture":
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            body = _read_regular_file(_resolve(repo_root, args.body))
-            raw_hash = cas.put(body, kind="raw_source", label=args.label)
-            receipt = build_fetch_receipt(
-                locator=args.locator,
-                final_locator=args.final_locator or args.locator,
-                retrieved_at=args.retrieved_at,
-                status=args.status,
-                media_type=args.media_type,
-                body_sha256=raw_hash,
-                body_size=len(body),
-                headers=_load_headers(
-                    _resolve(repo_root, args.headers)
-                    if args.headers is not None
-                    else None
-                ),
-            )
-            receipt_hash = cas.put_json(
-                receipt,
-                kind="fetch_receipt",
-                label=f"fetch receipt: {args.label}",
-                links=[raw_hash],
-            )
-            cas.write_index()
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                body = _read_regular_file(_resolve(repo_root, args.body))
+                raw_hash = cas.put(body, kind="raw_source", label=args.label)
+                receipt = build_fetch_receipt(
+                    locator=args.locator,
+                    final_locator=args.final_locator or args.locator,
+                    retrieved_at=args.retrieved_at,
+                    status=args.status,
+                    media_type=args.media_type,
+                    body_sha256=raw_hash,
+                    body_size=len(body),
+                    headers=_load_headers(
+                        _resolve(repo_root, args.headers)
+                        if args.headers is not None
+                        else None
+                    ),
+                )
+                receipt_hash = cas.put_json(
+                    receipt,
+                    kind="fetch_receipt",
+                    label=f"fetch receipt: {args.label}",
+                    links=[raw_hash],
+                )
+                transaction.commit()
             result = {"raw_source_sha256": raw_hash, "receipt_sha256": receipt_hash}
         elif args.command == "capture-input":
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            repo_path = _require_repo_path(args.repo_path, "receipt.repo_path")
-            body_path = _resolve(repo_root, args.body)
-            expected_path = repo_root / PurePosixPath(repo_path)
-            if os.path.abspath(body_path) != os.path.abspath(expected_path):
-                raise ProvenanceError(
-                    "capture-input body must be the file named by --repo-path"
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                repo_path = _require_repo_path(args.repo_path, "receipt.repo_path")
+                body_path = _resolve(repo_root, args.body)
+                expected_path = repo_root / PurePosixPath(repo_path)
+                if os.path.abspath(body_path) != os.path.abspath(expected_path):
+                    raise ProvenanceError(
+                        "capture-input body must be the file named by --repo-path"
+                    )
+                body = _read_regular_file(body_path)
+                raw_hash = cas.put(body, kind="raw_source", label=args.label)
+                receipt = build_input_receipt(
+                    repo_path=repo_path,
+                    captured_at=args.captured_at,
+                    body_sha256=raw_hash,
+                    body_size=len(body),
+                    body_git_sha1=git_blob_sha1(body),
                 )
-            body = _read_regular_file(body_path)
-            raw_hash = cas.put(body, kind="raw_source", label=args.label)
-            receipt = build_input_receipt(
-                repo_path=repo_path,
-                captured_at=args.captured_at,
-                body_sha256=raw_hash,
-                body_size=len(body),
-                body_git_sha1=git_blob_sha1(body),
-            )
-            receipt_hash = cas.put_json(
-                receipt,
-                kind="input_receipt",
-                label=f"input receipt: {args.label}",
-                links=[raw_hash],
-            )
-            cas.write_index()
+                receipt_hash = cas.put_json(
+                    receipt,
+                    kind="input_receipt",
+                    label=f"input receipt: {args.label}",
+                    links=[raw_hash],
+                )
+                transaction.commit()
             result = {"raw_source_sha256": raw_hash, "receipt_sha256": receipt_hash}
         elif args.command == "put-rendered":
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            source_hash = _require_hash(args.source, "source hash")
-            if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
-                raise ProvenanceError("source hash is not a raw_source CAS object")
-            rendered = _read_regular_file(_resolve(repo_root, args.body))
-            rendered_hash = cas.put(
-                rendered,
-                kind="rendered_text",
-                label=args.label,
-                links=[source_hash],
-            )
-            cas.write_index()
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                source_hash = _require_hash(args.source, "source hash")
+                if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
+                    raise ProvenanceError("source hash is not a raw_source CAS object")
+                rendered = _read_regular_file(_resolve(repo_root, args.body))
+                rendered_hash = cas.put(
+                    rendered,
+                    kind="rendered_text",
+                    label=args.label,
+                    links=[source_hash],
+                )
+                transaction.commit()
             result = {"rendered_text_sha256": rendered_hash}
         elif args.command == "put-ir":
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            source_hash = _require_hash(args.source, "source hash")
-            if not {
-                "raw_source",
-                "rendered_text",
-            }.intersection(cas.index.get(source_hash, {}).get("kinds", [])):
-                raise ProvenanceError("source hash is not source bytes in the CAS")
-            segments = json.loads(
-                _read_regular_file(_resolve(repo_root, args.segments)).decode("utf-8")
-            )
-            source_bytes = _read_regular_file(cas.object_path(source_hash))
-            ir = build_source_ir(
-                source_sha256=source_hash,
-                source=source_bytes,
-                segments=segments,
-            )
-            ir_hash = cas.put_json(
-                ir, kind="source_ir", label=args.label, links=[source_hash]
-            )
-            cas.write_index()
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                source_hash = _require_hash(args.source, "source hash")
+                if not {
+                    "raw_source",
+                    "rendered_text",
+                }.intersection(cas.index.get(source_hash, {}).get("kinds", [])):
+                    raise ProvenanceError("source hash is not source bytes in the CAS")
+                segments = json.loads(
+                    _read_regular_file(_resolve(repo_root, args.segments)).decode(
+                        "utf-8"
+                    )
+                )
+                source_bytes = _read_regular_file(cas.object_path(source_hash))
+                ir = build_source_ir(
+                    source_sha256=source_hash,
+                    source=source_bytes,
+                    segments=segments,
+                )
+                ir_hash = cas.put_json(
+                    ir, kind="source_ir", label=args.label, links=[source_hash]
+                )
+                transaction.commit()
             result = {"source_ir_sha256": ir_hash}
         elif args.command == "put-transform":
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            source_hash = _require_hash(args.source, "source hash")
-            result_hash = _require_hash(args.result, "result hash")
-            if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
-                raise ProvenanceError("transform source is not raw_source bytes")
-            if "rendered_text" not in cas.index.get(result_hash, {}).get("kinds", []):
-                raise ProvenanceError("transform result is not rendered_text bytes")
-            operations = json.loads(
-                _read_regular_file(_resolve(repo_root, args.operations)).decode("utf-8")
-            )
-            transform = build_text_transform(
-                source_sha256=source_hash,
-                source=_read_regular_file(cas.object_path(source_hash)),
-                result_sha256=result_hash,
-                result=_read_regular_file(cas.object_path(result_hash)),
-                operations=operations,
-            )
-            transform_hash = cas.put_json(
-                transform,
-                kind="text_transform",
-                label=args.label,
-                links=[source_hash, result_hash],
-            )
-            cas.write_index()
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                source_hash = _require_hash(args.source, "source hash")
+                result_hash = _require_hash(args.result, "result hash")
+                if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
+                    raise ProvenanceError("transform source is not raw_source bytes")
+                if "rendered_text" not in cas.index.get(result_hash, {}).get(
+                    "kinds", []
+                ):
+                    raise ProvenanceError("transform result is not rendered_text bytes")
+                operations = json.loads(
+                    _read_regular_file(_resolve(repo_root, args.operations)).decode(
+                        "utf-8"
+                    )
+                )
+                transform = build_text_transform(
+                    source_sha256=source_hash,
+                    source=_read_regular_file(cas.object_path(source_hash)),
+                    result_sha256=result_hash,
+                    result=_read_regular_file(cas.object_path(result_hash)),
+                    operations=operations,
+                )
+                transform_hash = cas.put_json(
+                    transform,
+                    kind="text_transform",
+                    label=args.label,
+                    links=[source_hash, result_hash],
+                )
+                transaction.commit()
             result = {"transform_sha256": transform_hash}
         else:
-            cas = Cas(_resolve(repo_root, args.cas))
-            cas.load()
-            bundle = json.loads(
-                _read_regular_file(_resolve(repo_root, args.bundle)).decode("utf-8")
-            )
-            if (
-                not isinstance(bundle, dict)
-                or bundle.get("kind") != "provenance_bundle"
-            ):
-                raise ProvenanceError(
-                    "bundle file must contain a provenance_bundle object"
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                bundle = json.loads(
+                    _read_regular_file(_resolve(repo_root, args.bundle)).decode("utf-8")
                 )
-            bundle_hash = cas.put_json(
-                bundle,
-                kind="provenance_bundle",
-                label=args.label,
-                links=_bundle_declared_links(bundle),
-            )
-            cas.write_index()
+                if (
+                    not isinstance(bundle, dict)
+                    or bundle.get("kind") != "provenance_bundle"
+                ):
+                    raise ProvenanceError(
+                        "bundle file must contain a provenance_bundle object"
+                    )
+                bundle_hash = cas.put_json(
+                    bundle,
+                    kind="provenance_bundle",
+                    label=args.label,
+                    links=_bundle_declared_links(bundle),
+                )
+                transaction.commit()
             result = {"bundle_sha256": bundle_hash}
     except (
         OSError,

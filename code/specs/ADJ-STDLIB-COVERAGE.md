@@ -264,6 +264,15 @@ option mapping, or judge/evaluation failure.
 7a. **Complete:** add first-class repository-input receipts and require every
     provenance bundle clause to bind its decomposed ADJ source bytes as well as
     its external grounding bytes. Code is evidence and must not bypass IR.
+7b. **Complete:** make per-root generators register owned bundle IDs in a
+    validating transaction under an OS-released CAS-root lock shared by
+    authoritative readers and every CLI writer. Registration is additive and
+    idempotent, preserves unrelated roots, and rolls back newly materialized
+    objects and index changes on failure.
+7c. Add an explicit transactional root-replacement migration that validates the
+    replacement graph and prunes only objects unreachable from every new root.
+7d. Add a write-ahead recovery journal for process termination between the
+    atomic CAS-index and manifest publications.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 

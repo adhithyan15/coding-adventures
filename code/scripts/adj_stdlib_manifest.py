@@ -71,26 +71,29 @@ def load_provenance_bundles(
     manifest_path = root / adj_stdlib_provenance.DEFAULT_MANIFEST
     schema_path = root / adj_stdlib_provenance.DEFAULT_SCHEMA
     try:
-        adj_stdlib_provenance.validate_repository(
-            cas_root, manifest_path, schema_path, workspace_root=root
-        )
-        manifest = _load_json(manifest_path)
-        cas = adj_stdlib_provenance.Cas(cas_root)
-        cas.load()
-        bundles = {
-            digest: adj_stdlib_provenance._json_object(cas, digest, "provenance_bundle")
-            for digest in manifest["bundle_hashes"]
-        }
-        for digest, bundle in bundles.items():
-            library_path = root / bundle["library"]
-            library_bytes = adj_stdlib_provenance._read_regular_file(library_path)
-            if (
-                adj_stdlib_provenance.sha256_bytes(library_bytes)
-                != bundle["input"]["raw_source_sha256"]
-            ):
-                raise adj_stdlib_provenance.ProvenanceError(
-                    f"bundle {digest} input bytes disagree with {bundle['library']}"
+        with adj_stdlib_provenance.CasRootLock(cas_root):
+            adj_stdlib_provenance._validate_repository_unlocked(
+                cas_root, manifest_path, schema_path, workspace_root=root
+            )
+            manifest = _load_json(manifest_path)
+            cas = adj_stdlib_provenance.Cas(cas_root)
+            cas.load()
+            bundles = {
+                digest: adj_stdlib_provenance._json_object(
+                    cas, digest, "provenance_bundle"
                 )
+                for digest in manifest["bundle_hashes"]
+            }
+            for digest, bundle in bundles.items():
+                library_path = root / bundle["library"]
+                library_bytes = adj_stdlib_provenance._read_regular_file(library_path)
+                if (
+                    adj_stdlib_provenance.sha256_bytes(library_bytes)
+                    != bundle["input"]["raw_source_sha256"]
+                ):
+                    raise adj_stdlib_provenance.ProvenanceError(
+                        f"bundle {digest} input bytes disagree with {bundle['library']}"
+                    )
     except (
         OSError,
         UnicodeDecodeError,
