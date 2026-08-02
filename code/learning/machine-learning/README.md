@@ -30,13 +30,14 @@ larger network:
 10. [GRU and LSTM Gates, by Hand](./gru-and-lstm-gates-by-hand.md)
 11. [Query, Key, and Value Scores by Hand](./attention-qkv-by-hand.md)
 12. [Softmax Attention and Causal Masking, by Hand](./softmax-attention-and-causal-masking-by-hand.md)
-13. [Matrix Math](../matrix-math.md)
-14. [Loss Functions](../loss-functions.md)
-15. [Gradient Descent](../gradient-descent.md)
-16. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-17. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-18. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-19. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+13. [Multi-Head Attention, Add, and Norm, by Hand](./multi-head-attention-add-and-norm-by-hand.md)
+14. [Matrix Math](../matrix-math.md)
+15. [Loss Functions](../loss-functions.md)
+16. [Gradient Descent](../gradient-descent.md)
+17. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+18. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+19. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+20. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -80,7 +81,9 @@ has nine complementary views:
   without pretending that softmax or value mixing has happened yet. Then open
   the causal-softmax view to select a whole query row, expose stable
   normalization, block future keys, and follow every weight into its value
-  contribution and output context.
+  contribution and output context. Finally, compare two independently
+  projected causal heads and trace their concatenation, output projection,
+  residual addition, and per-token layer normalization.
 
 ## Language-Neutral Corpus
 
@@ -127,6 +130,11 @@ NN13 adds `code/specs/fixtures/attention-softmax-v1`, including masked and
 unmasked stable-softmax traces, row maxima, exponentials, denominators,
 attention weights, weighted value contributions, and output contexts.
 
+NN14 adds `code/specs/fixtures/multi-head-attention-v1`, including two scalar
+heads with different projections, complete per-head causal-softmax traces,
+context concatenation, output-projection products, residual coordinates, and
+layer-normalization statistics.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -141,6 +149,7 @@ python code/scripts/validate_recurrent_bptt_labs.py
 python code/scripts/validate_gated_recurrent_labs.py
 python code/scripts/validate_attention_qkv_labs.py
 python code/scripts/validate_attention_softmax_labs.py
+python code/scripts/validate_multi_head_attention_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -165,6 +174,9 @@ The first NN12 lab gives three tokens separate asking, matching, and payload
 roles, then expands all nine query-key scores before softmax or value mixing.
 The first NN13 lab masks the future before normalization, proves that every
 allowed row sums to one, and carries those weights into an explicit value mix.
+The first NN14 lab gives two heads different coordinate views, rejoins their
+contexts at model width, adds the original token, and exposes every population-
+variance layer-normalization term.
 
 ## How to Study a Model
 

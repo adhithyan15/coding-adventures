@@ -82,6 +82,10 @@ import {
   attentionSoftmaxRow,
   traceAttentionSoftmax,
 } from "./attention-softmax-lab.js";
+import {
+  multiHeadAttentionRow,
+  traceMultiHeadAttention,
+} from "./multi-head-attention-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -774,5 +778,67 @@ describe("attention softmax and causal mask lab", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Return to Q/K/V scores" }));
     expect(screen.getByRole("heading", { name: "Query-key score microscope" })).toBeTruthy();
+  });
+});
+
+describe("multi-head attention add-and-norm lab", () => {
+  it("runs two independent causal heads for the blue query", () => {
+    const blue = multiHeadAttentionRow(traceMultiHeadAttention(), "blue");
+
+    expect(blue.heads[0]!.weights).toEqual([0.5, 0.5, 0]);
+    expect(blue.heads[0]!.context).toBe(1);
+    expect(blue.heads[1]!.weights[0]).toBeCloseTo(0.2689414213699951);
+    expect(blue.heads[1]!.weights[1]).toBeCloseTo(0.7310585786300049);
+    expect(blue.heads[1]!.context).toBeCloseTo(0.7310585786300049);
+  });
+
+  it("concatenates, projects, adds the residual, and normalizes", () => {
+    const blue = multiHeadAttentionRow(traceMultiHeadAttention(), "blue");
+
+    expect(blue.concatenated).toEqual([1, 0.7310585786300049]);
+    expect(blue.projectedAttention).toEqual(blue.concatenated);
+    expect(blue.residualSum).toEqual([1, 1.7310585786300048]);
+    expect(blue.layerNorm.mean).toBeCloseTo(1.3655292893150024);
+    expect(blue.layerNorm.variance).toBeCloseTo(0.13361166134713073);
+    expect(blue.output[0]).toBeCloseTo(-0.9999625802171532);
+    expect(blue.output[1]).toBeCloseTo(0.9999625802171532);
+  });
+
+  it("keeps residual and normalization ablations numerically honest", () => {
+    const noResidual = multiHeadAttentionRow(
+      traceMultiHeadAttention(false, true),
+      "blue",
+    );
+    const rawAttention = multiHeadAttentionRow(
+      traceMultiHeadAttention(false, false),
+      "blue",
+    );
+
+    expect(noResidual.residualSum).toEqual(noResidual.projectedAttention);
+    expect(rawAttention.output).toEqual([1, 0.7310585786300049]);
+  });
+
+  it("walks from single-head weights through both heads and block ablations", () => {
+    render(React.createElement(AttentionWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Apply softmax and causal mask" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open multi-head add and norm" }));
+
+    expect(screen.getByRole("heading", { name: "Multi-head add-and-norm block" })).toBeTruthy();
+    expect(screen.getByLabelText("Two attention heads for blue").textContent)
+      .toMatch(/Head A - horizontal.*context 1.*scores\[0, 0, 0\].*red0\.5.*blue0\.5.*purpleblocked.*Head B - vertical.*context 0\.731059.*scores\[0, 1, 1\].*red0\.268941.*blue0\.731059.*purpleblocked/s);
+    expect(screen.getByLabelText("Concatenate project and add residual trace").textContent)
+      .toMatch(/\[1, 0\.731059\].*\[0, 1\].*\[1, 1\.731059\]/s);
+    expect(screen.getByLabelText("Layer normalization arithmetic").textContent)
+      .toContain("[-0.999963, 0.999963]");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Add residual token/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /Apply layer normalization/ }));
+    expect(screen.getByText("residual removed")).toBeTruthy();
+    expect(screen.getByText("Layer normalization bypassed")).toBeTruthy();
+    expect(screen.getByLabelText("Layer normalization arithmetic").textContent)
+      .toContain("block output[1, 0.731059]");
+
+    fireEvent.click(screen.getByRole("button", { name: "Return to single-head weights" }));
+    expect(screen.getByRole("heading", { name: "Causal-softmax mixer" })).toBeTruthy();
   });
 });

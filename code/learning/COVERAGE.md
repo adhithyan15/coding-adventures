@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1247 | 1150 | 98 | 60 | 7 | 1082 |
+| 1247 | 1151 | 98 | 60 | 7 | 1082 |
 
 ## Method
 

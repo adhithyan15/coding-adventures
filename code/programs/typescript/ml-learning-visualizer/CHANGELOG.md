@@ -26,6 +26,8 @@ All notable changes to this package will be documented in this file.
   before softmax and value mixing.
 - Extend the attention workbench with the NN13 causal-softmax mixer, including
   stable row normalization, future-key masking, and weighted value traces.
+- Extend the attention workbench with the NN14 two-head comparator and the full
+  concatenate, output-project, residual-add, and layer-normalize path.
 
 ### Changed
 

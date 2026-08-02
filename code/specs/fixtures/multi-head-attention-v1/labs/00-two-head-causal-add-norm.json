@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "id": "two-head-causal-add-norm",
+  "title": "Join two causal attention heads, add a residual, and normalize",
+  "question": "How do independent attention heads rejoin the model stream without losing the original token?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "multi-head attention",
+    "head concatenation",
+    "output projection",
+    "residual connection",
+    "layer normalization"
+  ],
+  "operation": {
+    "kind": "two-head-causal-attention-add-norm",
+    "head_count": 2,
+    "model_width": 2,
+    "head_width": 1,
+    "softmax": "stable-row-wise",
+    "causal_rule": "key-index-less-than-or-equal-query-index",
+    "masked_score_encoding": "null",
+    "block_order": "attention-output-projection-add-residual-layer-norm",
+    "layer_norm_variance": "population"
+  },
+  "token_ids": ["red", "blue", "purple"],
+  "embeddings": [[2, 0], [0, 1], [2, 1]],
+  "heads": [
+    {
+      "id": "horizontal",
+      "query_projection": [0.5, 0],
+      "key_projection": [0.5, 0],
+      "value_projection": [1, 0]
+    },
+    {
+      "id": "vertical",
+      "query_projection": [0, 1],
+      "key_projection": [0, 1],
+      "value_projection": [0, 1]
+    }
+  ],
+  "output_projection": [[1, 0], [0, 1]],
+  "normalization": {
+    "epsilon": 0.00001,
+    "gamma": [1, 1],
+    "beta": [0, 0]
+  },
+  "expected": {
+    "rows": [
+      {
+        "token": "red",
+        "input": [2, 0],
+        "heads": [
+          {
+            "id": "horizontal",
+            "query_products": [1, 0],
+            "query": 1,
+            "key_products": [[1, 0], [0, 0], [1, 0]],
+            "keys": [1, 0, 1],
+            "value_products": [[2, 0], [0, 0], [2, 0]],
+            "values": [2, 0, 2],
+            "scale_divisor": 1,
+            "scaled_scores": [1, 0, 1],
+            "allowed": [true, false, false],
+            "masked_scores": [1, null, null],
+            "row_max": 1,
+            "shifted_scores": [0, null, null],
+            "exponentials": [1, 0, 0],
+            "denominator": 1,
+            "weights": [1, 0, 0],
+            "value_contributions": [2, 0, 0],
+            "context": 2
+          },
+          {
+            "id": "vertical",
+            "query_products": [0, 0],
+            "query": 0,
+            "key_products": [[0, 0], [0, 1], [0, 1]],
+            "keys": [0, 1, 1],
+            "value_products": [[0, 0], [0, 1], [0, 1]],
+            "values": [0, 1, 1],
+            "scale_divisor": 1,
+            "scaled_scores": [0, 0, 0],
+            "allowed": [true, false, false],
+            "masked_scores": [0, null, null],
+            "row_max": 0,
+            "shifted_scores": [0, null, null],
+            "exponentials": [1, 0, 0],
+            "denominator": 1,
+            "weights": [1, 0, 0],
+            "value_contributions": [0, 0, 0],
+            "context": 0
+          }
+        ],
+        "concatenated": [2, 0],
+        "output_projection_products": [[2, 0], [0, 0]],
+        "projected_attention": [2, 0],
+        "residual_sum": [4, 0],
+        "layer_norm": {
+          "mean": 2,
+          "centered": [2, -2],
+          "squared_deviations": [4, 4],
+          "variance": 4,
+          "denominator": 2.0000024999984376,
+          "normalized": [0.9999987500023437, -0.9999987500023437],
+          "affine_products": [0.9999987500023437, -0.9999987500023437],
+          "output": [0.9999987500023437, -0.9999987500023437]
+        }
+      },
+      {
+        "token": "blue",
+        "input": [0, 1],
+        "heads": [
+          {
+            "id": "horizontal",
+            "query_products": [0, 0],
+            "query": 0,
+            "key_products": [[1, 0], [0, 0], [1, 0]],
+            "keys": [1, 0, 1],
+            "value_products": [[2, 0], [0, 0], [2, 0]],
+            "values": [2, 0, 2],
+            "scale_divisor": 1,
+            "scaled_scores": [0, 0, 0],
+            "allowed": [true, true, false],
+            "masked_scores": [0, 0, null],
+            "row_max": 0,
+            "shifted_scores": [0, 0, null],
+            "exponentials": [1, 1, 0],
+            "denominator": 2,
+            "weights": [0.5, 0.5, 0],
+            "value_contributions": [1, 0, 0],
+            "context": 1
+          },
+          {
+            "id": "vertical",
+            "query_products": [0, 1],
+            "query": 1,
+            "key_products": [[0, 0], [0, 1], [0, 1]],
+            "keys": [0, 1, 1],
+            "value_products": [[0, 0], [0, 1], [0, 1]],
+            "values": [0, 1, 1],
+            "scale_divisor": 1,
+            "scaled_scores": [0, 1, 1],
+            "allowed": [true, true, false],
+            "masked_scores": [0, 1, null],
+            "row_max": 1,
+            "shifted_scores": [-1, 0, null],
+            "exponentials": [0.36787944117144233, 1, 0],
+            "denominator": 1.3678794411714423,
+            "weights": [0.2689414213699951, 0.7310585786300049, 0],
+            "value_contributions": [0, 0.7310585786300049, 0],
+            "context": 0.7310585786300049
+          }
+        ],
+        "concatenated": [1, 0.7310585786300049],
+        "output_projection_products": [[1, 0], [0, 0.7310585786300049]],
+        "projected_attention": [1, 0.7310585786300049],
+        "residual_sum": [1, 1.7310585786300048],
+        "layer_norm": {
+          "mean": 1.3655292893150024,
+          "centered": [-0.3655292893150024, 0.3655292893150024],
+          "squared_deviations": [0.13361166134713073, 0.13361166134713073],
+          "variance": 0.13361166134713073,
+          "denominator": 0.3655429678534806,
+          "normalized": [-0.9999625802171532, 0.9999625802171532],
+          "affine_products": [-0.9999625802171532, 0.9999625802171532],
+          "output": [-0.9999625802171532, 0.9999625802171532]
+        }
+      },
+      {
+        "token": "purple",
+        "input": [2, 1],
+        "heads": [
+          {
+            "id": "horizontal",
+            "query_products": [1, 0],
+            "query": 1,
+            "key_products": [[1, 0], [0, 0], [1, 0]],
+            "keys": [1, 0, 1],
+            "value_products": [[2, 0], [0, 0], [2, 0]],
+            "values": [2, 0, 2],
+            "scale_divisor": 1,
+            "scaled_scores": [1, 0, 1],
+            "allowed": [true, true, true],
+            "masked_scores": [1, 0, 1],
+            "row_max": 1,
+            "shifted_scores": [0, -1, 0],
+            "exponentials": [1, 0.36787944117144233, 1],
+            "denominator": 2.3678794411714423,
+            "weights": [0.4223187982515182, 0.15536240349696362, 0.4223187982515182],
+            "value_contributions": [0.8446375965030364, 0, 0.8446375965030364],
+            "context": 1.6892751930060728
+          },
+          {
+            "id": "vertical",
+            "query_products": [0, 1],
+            "query": 1,
+            "key_products": [[0, 0], [0, 1], [0, 1]],
+            "keys": [0, 1, 1],
+            "value_products": [[0, 0], [0, 1], [0, 1]],
+            "values": [0, 1, 1],
+            "scale_divisor": 1,
+            "scaled_scores": [0, 1, 1],
+            "allowed": [true, true, true],
+            "masked_scores": [0, 1, 1],
+            "row_max": 1,
+            "shifted_scores": [-1, 0, 0],
+            "exponentials": [0.36787944117144233, 1, 1],
+            "denominator": 2.3678794411714423,
+            "weights": [0.15536240349696362, 0.4223187982515182, 0.4223187982515182],
+            "value_contributions": [0, 0.4223187982515182, 0.4223187982515182],
+            "context": 0.8446375965030364
+          }
+        ],
+        "concatenated": [1.6892751930060728, 0.8446375965030364],
+        "output_projection_products": [[1.6892751930060728, 0], [0, 0.8446375965030364]],
+        "projected_attention": [1.6892751930060728, 0.8446375965030364],
+        "residual_sum": [3.6892751930060728, 1.8446375965030364],
+        "layer_norm": {
+          "mean": 2.766956394754555,
+          "centered": [0.922318798251518, -0.9223187982515184],
+          "squared_deviations": [0.8506719656081243, 0.8506719656081251],
+          "variance": 0.8506719656081247,
+          "denominator": 0.9223242193546284,
+          "normalized": [0.9999941223454869, -0.9999941223454873],
+          "affine_products": [0.9999941223454869, -0.9999941223454873],
+          "output": [0.9999941223454869, -0.9999941223454873]
+        }
+      }
+    ]
+  }
+}

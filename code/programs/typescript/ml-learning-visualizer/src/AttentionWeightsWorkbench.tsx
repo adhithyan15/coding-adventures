@@ -6,6 +6,7 @@ import {
 import type { AttentionTokenId } from "./attention-qkv-lab.js";
 
 interface AttentionWeightsWorkbenchProps {
+  onShowMultiHead: () => void;
   onShowScores: () => void;
 }
 
@@ -24,7 +25,10 @@ function formatNullableVector(values: ReadonlyArray<number | null>): string {
   return `[${values.map((value) => value === null ? "blocked" : formatNumber(value)).join(", ")}]`;
 }
 
-export function AttentionWeightsWorkbench({ onShowScores }: AttentionWeightsWorkbenchProps) {
+export function AttentionWeightsWorkbench({
+  onShowMultiHead,
+  onShowScores,
+}: AttentionWeightsWorkbenchProps) {
   const [causal, setCausal] = useState(true);
   const [queryId, setQueryId] = useState<AttentionTokenId>("blue");
   const trace = useMemo(() => traceAttentionSoftmax(causal), [causal]);
@@ -171,6 +175,10 @@ export function AttentionWeightsWorkbench({ onShowScores }: AttentionWeightsWork
 
         <button className="attention-back-button" type="button" onClick={onShowScores}>
           Return to Q/K/V scores
+        </button>
+
+        <button className="attention-back-button" type="button" onClick={onShowMultiHead}>
+          Open multi-head add and norm
         </button>
 
         <label className="attention-scale-control">

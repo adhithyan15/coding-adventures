@@ -111,6 +111,13 @@ and normalized weights as one connected flow. The triangular weight matrix and
 three value-contribution lanes update together, while a mask toggle provides an
 unmasked comparison without changing scores or values.
 
+Continue once more into the two-head add-and-norm block. The horizontal and
+vertical scalar heads stay aligned so their different score rows, weights,
+value contributions, and contexts can be compared. Their contexts then move
+through concatenation, an explicit output projection, residual addition, and
+per-token layer normalization. Residual and normalization toggles act as
+controlled ablations without changing either head.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -167,6 +174,11 @@ all nine query-key dot products, and the raw and scaled score matrices.
 NN13 under `code/specs/fixtures/attention-softmax-v1` pins both masked and
 unmasked stable-softmax rows, including allowed positions, shifts,
 exponentials, denominators, weights, value contributions, and contexts.
+
+NN14 under `code/specs/fixtures/multi-head-attention-v1` pins two independently
+projected scalar heads, every causal-softmax intermediate, head concatenation,
+output projection, residual addition, and population-variance layer
+normalization.
 
 ## Development
 

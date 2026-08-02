@@ -35,7 +35,7 @@ trace, and tests.
 - [ ] Attention and transformers
   - [x] Query/key/value dot products for three tokens.
   - [x] Softmax attention weights and causal masking.
-  - [ ] Multi-head attention, residual paths, and normalization.
+  - [x] Multi-head attention, residual paths, and normalization.
   - [ ] Tiny decoder-only language model training trace.
 - [ ] Representation and generation
   - [ ] Two-number autoencoder bottleneck.

@@ -5,6 +5,7 @@ import {
   type AttentionTokenId,
 } from "./attention-qkv-lab.js";
 import { AttentionWeightsWorkbench } from "./AttentionWeightsWorkbench.js";
+import { MultiHeadAttentionWorkbench } from "./MultiHeadAttentionWorkbench.js";
 
 function formatNumber(value: number): string {
   if (Math.abs(value) < 1e-12) {
@@ -187,10 +188,18 @@ function AttentionScoreWorkbench({ onShowWeights }: AttentionScoreWorkbenchProps
 }
 
 export function AttentionWorkbench() {
-  const [view, setView] = useState<"scores" | "weights">("scores");
+  const [view, setView] = useState<"scores" | "weights" | "multi-head">("scores");
 
   if (view === "weights") {
-    return <AttentionWeightsWorkbench onShowScores={() => setView("scores")} />;
+    return (
+      <AttentionWeightsWorkbench
+        onShowMultiHead={() => setView("multi-head")}
+        onShowScores={() => setView("scores")}
+      />
+    );
+  }
+  if (view === "multi-head") {
+    return <MultiHeadAttentionWorkbench onShowWeights={() => setView("weights")} />;
   }
   return <AttentionScoreWorkbench onShowWeights={() => setView("weights")} />;
 }

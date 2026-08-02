@@ -377,7 +377,7 @@ export function App() {
             ) : workbench === "recurrent" ? (
               <>input + <strong>previous state</strong> {"->"} next state</>
             ) : workbench === "attention" ? (
-              <>QK^T {"->"} mask {"->"} <strong>softmax</strong> {"->"} values</>
+              <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
