@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { forwardLayered } from "./layered-network.js";
@@ -49,6 +50,11 @@ import {
   traceConvolutionTraining,
   traceValidCorrelation,
 } from "./convolution-lab.js";
+import {
+  DEFAULT_IMAGE_CHANNELS,
+  DEFAULT_IMAGE_FILTERS,
+  traceTinyImageCnn,
+} from "./image-cnn-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -281,6 +287,62 @@ describe("training helpers", () => {
     expect((screen.getByLabelText("Kernel weights") as HTMLInputElement).value)
       .toBe("0.95, -1.01, 1.93");
     expect(screen.getByText("step 1")).toBeTruthy();
+  });
+
+  it("reduces two image channels into two convolution maps", () => {
+    const trace = traceTinyImageCnn(DEFAULT_IMAGE_CHANNELS, DEFAULT_IMAGE_FILTERS);
+
+    expect(trace.channelContributions[0]).toEqual([
+      [[0, 0], [4, 4]],
+      [[0, 2], [0, 2]],
+    ]);
+    expect(trace.convolution).toEqual([
+      [[0, 2], [4, 6]],
+      [[6, 4], [2, 0]],
+    ]);
+    expect(trace.positions[0]![1]![1]!.channelSums).toEqual([4, 2]);
+  });
+
+  it("normalizes each CNN output channel over its spatial map", () => {
+    const trace = traceTinyImageCnn();
+
+    expect(trace.normalization.means).toEqual([3, 3]);
+    expect(trace.normalization.variances).toEqual([5, 5]);
+    expect(trace.normalization.denominators).toEqual([3, 3]);
+    expect(trace.normalization.maps[0]![0]![1]).toBeCloseTo(-1 / 3);
+    expect(trace.normalization.maps[1]![1]![0]).toBeCloseTo(-1 / 3);
+  });
+
+  it("tracks ReLU and max-pool winners for each feature channel", () => {
+    const trace = traceTinyImageCnn();
+
+    expect(trace.activation).toEqual([
+      [[0, 0], [1 / 3, 1]],
+      [[1, 1 / 3], [0, 0]],
+    ]);
+    expect(trace.pooling).toEqual({ values: [1, 1], argmax: [[1, 1], [0, 0]] });
+  });
+
+  it("steps through an inspectable tiny image CNN pipeline", () => {
+    render(React.createElement(ImageCnnWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Open the image pipeline" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "One image can have several number grids" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Show Convolve stage" }));
+    expect(screen.getByRole("heading", { name: "Correlate each channel, then add" })).toBeTruthy();
+    expect(screen.getByLabelText("Channel reduction equation").textContent)
+      .toMatch(/channel 0.*4.*channel 1.*2.*bias.*0.*output.*6/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Show Normalize stage" }));
+    expect(screen.getByText("mean μ").parentElement?.textContent).toContain("3");
+    expect(screen.getByText("denominator").parentElement?.textContent).toContain("3");
+
+    fireEvent.click(screen.getByRole("button", { name: "Show Pool stage" }));
+    expect(screen.getAllByText(/from \[/).map((item) => item.textContent)).toEqual([
+      "from [1,1]",
+      "from [0,0]",
+    ]);
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

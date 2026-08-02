@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -170,7 +171,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -279,6 +280,8 @@ export function App() {
                 ? "Trust, then independently verify"
               : workbench === "convolution"
                 ? "One detector, every position"
+              : workbench === "image-cnn"
+                ? "Channels become features"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -322,6 +325,13 @@ export function App() {
             >
               Spatial
             </button>
+            <button
+              className={workbench === "image-cnn" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("image-cnn")}
+            >
+              Image CNN
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -330,6 +340,8 @@ export function App() {
               <>loss surface {"->"} <strong>gradient check</strong> {"->"} batch strategy</>
             ) : workbench === "convolution" ? (
               <>window × <strong>shared kernel</strong> {"->"} feature</>
+            ) : workbench === "image-cnn" ? (
+              <>channels {"->"} <strong>normalize + ReLU</strong> {"->"} pool</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -345,6 +357,8 @@ export function App() {
         <OptimizationWorkbench />
       ) : workbench === "convolution" ? (
         <ConvolutionWorkbench />
+      ) : workbench === "image-cnn" ? (
+        <ImageCnnWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

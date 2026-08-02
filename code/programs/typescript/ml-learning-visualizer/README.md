@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has five workbenches that move from one arithmetic update to small
+The app has six workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -59,6 +59,14 @@ its loss derivative and contribution to each shared kernel weight. A reduction
 table checks the analytical gradient against central finite differences and
 previews or applies one loss-reducing update.
 
+### Image CNN lab
+
+The image workbench opens a complete two-channel image pipeline. Select either
+filter and any `2 x 2` output position to inspect its two input windows,
+channel-specific kernels, products, partial sums, bias, and final feature-map
+value. Step forward to see which four values share normalization statistics,
+how ReLU changes them, and which row-major location wins `2 x 2` max pooling.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -87,6 +95,10 @@ sliding-kernel trace, including every window, product, accumulator, and output.
 NN06 under `code/specs/fixtures/convolution-training-v1` pins every shared-
 weight gradient contribution, the finite-difference oracle, and one optimizer
 step.
+
+NN07 under `code/specs/fixtures/tiny-image-cnn-v1` pins two-channel 2D
+cross-correlation, output-channel normalization statistics, ReLU maps, and
+max-pool values and winner coordinates.
 
 ## Development
 

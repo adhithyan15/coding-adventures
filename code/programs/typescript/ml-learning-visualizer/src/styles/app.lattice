@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -1513,6 +1513,410 @@ code {
   font-weight: 750;
 }
 
+.workspace--image-cnn {
+  display: grid;
+  grid-template-columns: minmax(660px, 1fr) 320px;
+  gap: 14px;
+  align-items: start;
+}
+
+.image-cnn-stage,
+.image-cnn-controls,
+.image-stage-panel {
+  @include surface;
+}
+
+.image-cnn-stage {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.image-cnn-intro,
+.image-stage-heading,
+.channel-math-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.image-cnn-intro p:not(.eyebrow),
+.image-cnn-controls > p,
+.image-cnn-note p {
+  margin: 5px 0 0;
+  color: $muted;
+}
+
+.image-shape-chip {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.1);
+  color: #173f8a;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.image-pipeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(92px, 1fr));
+  gap: 6px;
+}
+
+.image-stage-button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+  padding: 6px 9px;
+  color: $muted;
+  text-align: left;
+}
+
+.image-stage-button small {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(23, 32, 28, 0.07);
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.image-stage-button--visited {
+  border-color: rgba(35, 122, 87, 0.34);
+  color: $green;
+}
+
+.image-stage-button--active {
+  border-color: rgba(37, 99, 235, 0.52);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.image-stage-button--active small {
+  background: #173f8a;
+  color: #ffffff;
+}
+
+.image-stage-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.image-stage-heading > code {
+  min-height: 0;
+  padding: 6px 9px;
+  white-space: nowrap;
+}
+
+.image-channel-grid,
+.channel-math-grid,
+.image-map-pair,
+.pooling-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.image-channel-card,
+.channel-math-card,
+.pooling-card {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.image-channel-card > div:first-child,
+.channel-math-title > div {
+  display: grid;
+}
+
+.image-channel-card small,
+.channel-math-card small,
+.image-matrix-block > span,
+.normalization-stats small,
+.pooled-value small,
+.image-control-group > span {
+  color: $muted;
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.image-matrix-block {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.image-matrix {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.image-matrix-cell {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 58px;
+  padding: 5px;
+  border: 1px solid $line;
+  border-radius: 7px;
+  background: #f9faf7;
+}
+
+.image-matrix-cell small {
+  color: $muted;
+  font-size: 0.62rem;
+}
+
+.image-matrix-cell strong,
+.channel-math-title > strong,
+.normalization-stats strong,
+.pooled-value strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.image-matrix-cell--selected {
+  border-color: rgba(37, 99, 235, 0.62);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.image-matrix-cell--winner {
+  border-color: rgba(35, 122, 87, 0.62);
+  background: #eaf7ef;
+  color: #17603f;
+}
+
+.image-stage-note {
+  margin: 0;
+  padding: 10px;
+  border-left: 3px solid rgba(35, 122, 87, 0.42);
+  background: #f6fbf8;
+  color: $muted;
+}
+
+.image-output-value {
+  min-width: 68px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.13);
+  color: $green;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.window-kernel-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+
+.window-kernel-pair > span,
+.activation-flow > span,
+.pooling-card > span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 850;
+}
+
+.channel-math-card .image-matrix-cell {
+  min-height: 48px;
+}
+
+.image-product-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.image-product-list code {
+  min-height: 0;
+  padding: 4px;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.channel-reduction {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px;
+  border-block: 1px solid $line;
+}
+
+.channel-reduction > div {
+  display: grid;
+  min-width: 72px;
+  text-align: center;
+}
+
+.channel-reduction small {
+  color: $muted;
+  font-size: 0.66rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.channel-reduction strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.channel-reduction__result {
+  padding: 6px;
+  border-radius: 7px;
+  background: #eaf7ef;
+  color: $green;
+}
+
+.normalization-flow {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(170px, 0.8fr) minmax(160px, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.normalization-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.normalization-stats > div {
+  display: grid;
+  padding: 8px;
+  border: 1px solid $line;
+  border-radius: 7px;
+  background: #ffffff;
+}
+
+.normalization-equation {
+  min-height: 0;
+  padding: 10px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.activation-flow {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.pooling-card {
+  grid-template-columns: minmax(160px, 1fr) auto minmax(92px, 0.45fr);
+  align-items: center;
+}
+
+.pooled-value {
+  display: grid;
+  place-items: center;
+  min-height: 100px;
+  padding: 8px;
+  border: 1px solid rgba(35, 122, 87, 0.32);
+  border-radius: 8px;
+  background: #eaf7ef;
+  color: $green;
+  text-align: center;
+}
+
+.pooled-value strong {
+  font-size: 1.35rem;
+}
+
+.pooled-value code {
+  min-height: 0;
+  padding: 2px 4px;
+  font-size: 0.68rem;
+}
+
+.image-cnn-controls {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.image-control-group {
+  display: grid;
+  gap: 7px;
+  padding-block: 11px;
+  border-top: 1px solid $line;
+}
+
+.image-filter-buttons,
+.image-position-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.image-position-buttons {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.image-choice {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  min-height: 54px;
+  padding: 7px;
+  text-align: left;
+}
+
+.image-choice small {
+  color: $muted;
+  font-size: 0.68rem;
+}
+
+.image-choice strong {
+  overflow-wrap: anywhere;
+}
+
+.image-choice--active {
+  border-color: rgba(37, 99, 235, 0.52);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.image-stage-controls button:last-child {
+  grid-column: 1 / -1;
+}
+
+.image-stage-controls button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.image-cnn-note {
+  padding-top: 12px;
+  border-top: 1px solid $line;
+}
+
+.image-cnn-note span {
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
 @media (max-width: 1180px) {
   .workspace--lab,
   .workspace--hidden {
@@ -1526,9 +1930,14 @@ code {
     grid-column: 1 / -1;
   }
 
+  .image-cnn-controls {
+    grid-column: 1 / -1;
+  }
+
   .workspace--microscope,
   .workspace--optimization,
-  .workspace--convolution {
+  .workspace--convolution,
+  .workspace--image-cnn {
     grid-template-columns: 1fr;
   }
 }
@@ -1554,13 +1963,16 @@ code {
   .workspace--hidden,
   .workspace--microscope,
   .workspace--optimization,
-  .workspace--convolution {
+    .workspace--convolution,
+    .workspace--image-cnn {
     grid-template-columns: 1fr;
   }
 
   .convolution-intro,
   .mac-heading,
-  .training-heading {
+  .training-heading,
+  .image-cnn-intro,
+  .image-stage-heading {
     display: grid;
     align-items: start;
   }
@@ -1598,7 +2010,43 @@ code {
   }
 
   .mode-button:last-child {
+    grid-column: auto;
+  }
+
+  .image-pipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .image-stage-button:last-child {
     grid-column: 1 / -1;
+  }
+
+  .image-channel-grid,
+  .channel-math-grid,
+  .image-map-pair,
+  .pooling-grid,
+  .normalization-flow,
+  .activation-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .activation-flow > span,
+  .pooling-card > span {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .pooling-card {
+    grid-template-columns: 1fr;
+  }
+
+  .channel-reduction {
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .channel-reduction > span:nth-of-type(3),
+  .channel-reduction__result {
+    grid-column: auto;
   }
 
   .phase-strip {

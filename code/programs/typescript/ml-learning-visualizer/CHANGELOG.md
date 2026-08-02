@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   complete multiply-accumulate traces.
 - Extend the spatial workbench with NN06 shared-kernel gradient accumulation,
   finite-difference verification, and an apply-one-step interaction.
+- Add the NN07 tiny-image CNN workbench with channel-specific correlation,
+  spatial normalization, ReLU, max pooling, and synchronized path selection.
 
 ### Changed
 

@@ -26,7 +26,7 @@ trace, and tests.
 - [ ] Spatial networks
   - [x] Sliding one-dimensional kernel with every multiply-accumulate exposed.
   - [x] Trainable one-dimensional convolution and gradient trace.
-  - [ ] Tiny image CNN, channels, pooling, and normalization.
+  - [x] Tiny image CNN, channels, pooling, and normalization.
   - [ ] Residual path and receptive-field explorer.
 - [ ] Sequence networks
   - [ ] One recurrent state unrolled for three steps.
