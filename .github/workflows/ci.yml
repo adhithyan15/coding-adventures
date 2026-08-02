@@ -171,7 +171,7 @@ jobs:
             -emit-plan build-plan.json \
             "${shard_flags[@]}"
 
-      - name: Detect Venture Windows acceptance
+      - name: Detect Venture native-shell acceptance
         id: venture-windows
         shell: bash
         run: |
@@ -440,7 +440,7 @@ jobs:
           clang --version | head -1
 
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || (needs.detect.outputs.needs_venture_windows == 'true' && runner.os == 'Windows')
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         # Uses the `stable` channel (matching the rest of this repo's Rust CI).
         # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
         # release, so a new Rust release can surface new lints on `main` — treat
@@ -686,7 +686,7 @@ jobs:
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
           fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || { [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] && [ "$RUNNER_OS" = "Windows" ]; }; then
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ]; then
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
@@ -783,8 +783,24 @@ jobs:
         if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
         shell: pwsh
         run: |
+          $installer = Join-Path $env:RUNNER_TEMP 'WindowsAppRuntimeInstall-x64.exe'
+          Invoke-WebRequest `
+            'https://aka.ms/windowsappsdk/1.7/1.7.250606001/windowsappruntimeinstall-x64.exe' `
+            -OutFile $installer
+          & $installer --quiet
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
+          }
           Set-Location code/packages/rust
           cargo test -p venture-browser-windows
+
+      - name: Build and test Venture macOS acceptance
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_venture_windows == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd code/packages/rust
+          cargo test -p venture-browser-macos
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages

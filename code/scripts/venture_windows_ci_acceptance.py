@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Derive the Venture native-Windows acceptance flag from a build plan."""
+"""Derive the Venture native-shell acceptance flag from a build plan."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from typing import Any
 
 ACCEPTANCE_PACKAGES = frozenset(
     {
+        "rust/venture-browser-macos",
         "rust/venture-browser-windows",
         "unknown/programs/venture-browser",
     }

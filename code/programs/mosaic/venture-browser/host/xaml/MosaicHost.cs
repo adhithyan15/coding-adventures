@@ -5,7 +5,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using Windows.System;
 using Windows.UI.Core;
@@ -24,18 +26,23 @@ public static class MosaicHost
     private const double ViewportHeight = 640;
     private static IntPtr browser;
     private static VentureContentSurface? contentSurface;
+    private static int acceptanceReported;
 
     public static string ApplyProps(VentureChrome component)
     {
+        ReportAcceptancePhase("apply-props-entered");
         EnsureBrowser();
         if (browser == IntPtr.Zero)
         {
             return "Status: Venture native bridge is unavailable";
         }
+        ReportAcceptancePhase("browser-created");
 
         contentSurface ??= new VentureContentSurface(component);
         component.ContentSurface = contentSurface;
+        ReportAcceptancePhase("content-surface-mounted");
         var status = ApplyResponse(component, Native.Decode(Native.ApplyProps(browser)));
+        ReportAcceptancePhase("props-applied");
         contentSurface.Refresh();
         return status;
     }
@@ -143,6 +150,7 @@ public static class MosaicHost
             }
 
             var required = Native.RenderBgra(browser, null, 0, out var width, out var height);
+            ReportAcceptancePhase("render-size-read");
             if (required == 0 || width == 0 || height == 0 || required > int.MaxValue)
             {
                 return;
@@ -150,6 +158,7 @@ public static class MosaicHost
 
             var pixels = new byte[(int)required];
             var written = Native.RenderBgra(browser, pixels, pixels.Length, out width, out height);
+            ReportAcceptancePhase("render-pixels-written");
             if (written != required)
             {
                 return;
@@ -162,10 +171,17 @@ public static class MosaicHost
                 pixelWidth = width;
                 pixelHeight = height;
             }
+            ReportAcceptancePhase("bitmap-allocated");
 
-            ((IBufferByteAccess)bitmap.PixelBuffer).Buffer(out var destination);
-            Marshal.Copy(pixels, 0, destination, pixels.Length);
+            using (var stream = bitmap.PixelBuffer.AsStream())
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Write(pixels, 0, pixels.Length);
+            }
+            ReportAcceptancePhase("bitmap-copied");
             bitmap.Invalidate();
+            ReportAcceptancePhase("bitmap-invalidated");
+            ReportAcceptanceIfRequested();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -255,12 +271,30 @@ public static class MosaicHost
         }
     }
 
-    [ComImport]
-    [Guid("905a0fe0-bc53-11df-8c49-001e4fc686da")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    private interface IBufferByteAccess
+    private static void ReportAcceptanceIfRequested()
     {
-        void Buffer(out IntPtr value);
+        var path = Environment.GetEnvironmentVariable("VENTURE_BROWSER_ACCEPTANCE_PATH");
+        if (string.IsNullOrWhiteSpace(path)
+            || System.Threading.Interlocked.Exchange(ref acceptanceReported, 1) != 0)
+        {
+            return;
+        }
+
+        System.IO.File.WriteAllText(path, "{\"backend\":\"xaml\",\"status\":\"ready\"}\n");
+    }
+
+    private static void ReportAcceptancePhase(string phase)
+    {
+        var path = Environment.GetEnvironmentVariable(
+            "VENTURE_BROWSER_ACCEPTANCE_DIAGNOSTIC_PATH");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        System.IO.File.WriteAllText(
+            path,
+            JsonSerializer.Serialize(new { backend = "xaml", phase }) + "\n");
     }
 
     private static class Native

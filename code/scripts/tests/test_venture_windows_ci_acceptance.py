@@ -27,6 +27,13 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             )
         )
 
+    def test_macos_bridge_requires_acceptance(self) -> None:
+        self.assertTrue(
+            MODULE.requires_venture_windows(
+                {"affected_packages": ["rust/venture-browser-macos"]}
+            )
+        )
+
     def test_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_venture_windows(
@@ -93,11 +100,11 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn(
             "needs.detect.outputs.needs_rust == 'true' || "
-            "(needs.detect.outputs.needs_venture_windows == 'true' "
-            "&& runner.os == 'Windows')",
+            "needs.detect.outputs.needs_venture_windows == 'true'",
             workflow,
         )
         self.assertIn("cargo test -p venture-browser-windows", workflow)
+        self.assertIn("cargo test -p venture-browser-macos", workflow)
 
 
 if __name__ == "__main__":

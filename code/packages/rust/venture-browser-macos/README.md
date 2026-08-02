@@ -31,6 +31,15 @@ Exercise the real AppKit + Metal presentation path and close automatically:
 cargo run -p venture-browser-macos -- --smoke-seconds 1 http://info.cern.ch/
 ```
 
+The generated Mosaic SwiftUI shell has a separate direct-launch gate. It emits
+the package, builds the Rust dynamic bridge and SwiftPM app, serves a local
+deterministic page, launches the app, and requires a successful Metal
+content-surface render:
+
+```bash
+cargo test -p venture-browser-macos --test swiftui_project_launch
+```
+
 Mouse-wheel and trackpad input drive the shared clamped viewport and repaint the
 translated scene through Metal. Primary-button input now hit-tests links in
 viewport coordinates, loads the resolved destination through the transactional

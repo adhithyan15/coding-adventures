@@ -23,6 +23,12 @@ code\programs\mosaic\venture-browser\scripts\build-all.ps1
 ```
 
 The Windows-only integration test compiles the package-owned C# adapter inside
-the generated WinUI project. Cross-platform unit tests exercise the shared
-session and chrome event path without claiming complete browser or HTML
-conformance.
+the generated WinUI project, launches its executable against a local
+deterministic page, and requires a successful Direct2D content-surface render:
+
+```powershell
+cargo test -p venture-browser-windows --test xaml_project_build
+```
+
+Cross-platform unit tests exercise the shared session and chrome event path
+without claiming complete browser or HTML conformance.

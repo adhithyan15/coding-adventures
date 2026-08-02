@@ -97,6 +97,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var browser: UnsafeMutableRawPointer?
   private var contentView: VentureContentView?
   private var propsChangedHandler: (() -> Void)?
+  private var acceptanceReported = false
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -144,7 +145,18 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   fileprivate func render(layer: CAMetalLayer) {
     guard let native, let browser else { return }
     let rawLayer = Unmanaged.passUnretained(layer).toOpaque()
-    _ = native.render(browser, rawLayer)
+    guard native.render(browser, rawLayer) != 0 else { return }
+    reportAcceptanceIfRequested()
+  }
+
+  private func reportAcceptanceIfRequested() {
+    guard !acceptanceReported else { return }
+    guard let path = ProcessInfo.processInfo.environment["VENTURE_BROWSER_ACCEPTANCE_PATH"]
+    else { return }
+    acceptanceReported = true
+    let result = ["backend": "swiftui", "status": "ready"]
+    guard let data = try? JSONSerialization.data(withJSONObject: result) else { return }
+    try? data.write(to: URL(fileURLWithPath: path), options: .atomic)
   }
 
   fileprivate func scroll(by deltaY: Double) {
@@ -283,6 +295,8 @@ private final class VentureContentView: NSView {
 
   fileprivate func renderPage() {
     guard let layer = layer as? CAMetalLayer else { return }
+    guard bounds.width > 0, bounds.height > 0 else { return }
+    host?.resize(width: bounds.width, height: bounds.height)
     let scale = layer.contentsScale > 0 ? layer.contentsScale : 1
     layer.drawableSize = CGSize(
       width: max(1, bounds.width * scale),

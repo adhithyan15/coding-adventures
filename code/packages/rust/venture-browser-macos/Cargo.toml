@@ -19,3 +19,6 @@ window-core = { path = "../window-core" }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 objc-bridge = { path = "../objc-bridge" }
+
+[target.'cfg(target_os = "macos")'.dev-dependencies]
+mosaic-package-artifact-builder = { path = "../mosaic-package-artifact-builder" }

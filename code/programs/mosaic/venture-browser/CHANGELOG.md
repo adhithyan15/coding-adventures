@@ -37,3 +37,9 @@
 - Package-owned SwiftUI and WinUI content surfaces report native logical size
   changes through matching Rust resize ABIs, reflowing the retained document
   and repainting without refetching the page or duplicating chrome.
+- Direct-launch acceptance for the emitted SwiftUI and WinUI applications,
+  requiring each generated shell to load its package-owned Rust bridge and
+  render the native content surface against a deterministic local page.
+- The XAML host writes rendered BGRA pixels through WinRT's supported
+  `IBuffer.AsStream()` projection, avoiding a native COM projection crash in
+  the emitted WinUI application.
