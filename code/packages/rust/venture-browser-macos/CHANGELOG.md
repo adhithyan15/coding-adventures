@@ -12,6 +12,8 @@
 - Export the concrete dynamic bridge used by Venture's generated SwiftUI
   `MosaicHost`: shared chrome props and events, Metal content rendering, scroll,
   and link activation all stay backed by one Rust browser session.
+- Accept shared semantic keyboard-scroll commands through that dynamic bridge
+  so the package-owned SwiftUI content surface can drive the same Rust model.
 
 ## 0.1.0
 

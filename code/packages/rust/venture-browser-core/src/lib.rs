@@ -41,6 +41,53 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 6] = [
     "onNavigate",
 ];
 
+/// Host-neutral keyboard-scroll commands accepted by Venture's native page
+/// surfaces. Platform adapters translate native key codes to these names; the
+/// shared session owns their exact scrolling behavior.
+pub const VENTURE_SCROLL_COMMAND_NAMES: [&str; 6] = [
+    "line-up",
+    "line-down",
+    "page-up",
+    "page-down",
+    "document-start",
+    "document-end",
+];
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BrowserScrollCommand {
+    LineUp,
+    LineDown,
+    PageUp,
+    PageDown,
+    DocumentStart,
+    DocumentEnd,
+}
+
+impl BrowserScrollCommand {
+    pub fn from_name(name: &str) -> Option<Self> {
+        match name {
+            "line-up" => Some(Self::LineUp),
+            "line-down" => Some(Self::LineDown),
+            "page-up" => Some(Self::PageUp),
+            "page-down" => Some(Self::PageDown),
+            "document-start" => Some(Self::DocumentStart),
+            "document-end" => Some(Self::DocumentEnd),
+            _ => None,
+        }
+    }
+
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::LineUp => "line-up",
+            Self::LineDown => "line-down",
+            Self::PageUp => "page-up",
+            Self::PageDown => "page-down",
+            Self::DocumentStart => "document-start",
+            Self::DocumentEnd => "document-end",
+        }
+    }
+}
+
 /// In-memory browser navigation state.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NavigationHistory {
@@ -174,6 +221,18 @@ impl ScrollState {
     pub fn scroll_by(&mut self, delta_y: f64) -> f64 {
         let delta_y = if delta_y.is_finite() { delta_y } else { 0.0 };
         self.set_offset_y(self.offset_y + delta_y)
+    }
+
+    /// Apply one semantic keyboard-scroll command.
+    pub fn apply_command(&mut self, command: BrowserScrollCommand) -> f64 {
+        match command {
+            BrowserScrollCommand::LineUp => self.scroll_by(-40.0),
+            BrowserScrollCommand::LineDown => self.scroll_by(40.0),
+            BrowserScrollCommand::PageUp => self.scroll_by(-self.viewport_height * 0.9),
+            BrowserScrollCommand::PageDown => self.scroll_by(self.viewport_height * 0.9),
+            BrowserScrollCommand::DocumentStart => self.set_offset_y(0.0),
+            BrowserScrollCommand::DocumentEnd => self.set_offset_y(self.max_offset_y()),
+        }
     }
 
     /// Update page or viewport geometry and re-clamp the current offset.
@@ -321,6 +380,10 @@ impl BrowserViewport {
 
     pub fn scroll_by(&mut self, delta_y: f64) -> f64 {
         self.scroll.scroll_by(delta_y)
+    }
+
+    pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> f64 {
+        self.scroll.apply_command(command)
     }
 
     pub fn resize(&mut self, viewport_height: f64) -> f64 {
@@ -1064,6 +1127,44 @@ mod tests {
         assert_eq!(scroll.set_dimensions(f64::NAN, f64::INFINITY), 0.0);
         assert_eq!(scroll.viewport_height(), 0.0);
         assert_eq!(scroll.content_height(), 0.0);
+    }
+
+    #[test]
+    fn semantic_scroll_commands_share_exact_names_and_clamped_behavior() {
+        let commands = [
+            BrowserScrollCommand::LineUp,
+            BrowserScrollCommand::LineDown,
+            BrowserScrollCommand::PageUp,
+            BrowserScrollCommand::PageDown,
+            BrowserScrollCommand::DocumentStart,
+            BrowserScrollCommand::DocumentEnd,
+        ];
+        assert_eq!(
+            commands.map(BrowserScrollCommand::name),
+            VENTURE_SCROLL_COMMAND_NAMES
+        );
+        for command in commands {
+            assert_eq!(
+                BrowserScrollCommand::from_name(command.name()),
+                Some(command)
+            );
+        }
+        assert_eq!(BrowserScrollCommand::from_name("page-sideways"), None);
+
+        let mut scroll = ScrollState::new(100.0, 260.0);
+        assert_eq!(scroll.apply_command(BrowserScrollCommand::LineDown), 40.0);
+        assert_eq!(scroll.apply_command(BrowserScrollCommand::PageDown), 130.0);
+        assert_eq!(
+            scroll.apply_command(BrowserScrollCommand::DocumentEnd),
+            160.0
+        );
+        assert_eq!(scroll.apply_command(BrowserScrollCommand::LineDown), 160.0);
+        assert_eq!(scroll.apply_command(BrowserScrollCommand::PageUp), 70.0);
+        assert_eq!(scroll.apply_command(BrowserScrollCommand::LineUp), 30.0);
+        assert_eq!(
+            scroll.apply_command(BrowserScrollCommand::DocumentStart),
+            0.0
+        );
     }
 
     #[test]

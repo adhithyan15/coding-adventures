@@ -30,3 +30,7 @@
 - SwiftUI host-driven prop refresh after native Metal link activation, keeping
   the Mosaic-authored address, title, and history controls synchronized with
   the shared Rust browser session just like the generated WinUI host.
+- Package-owned SwiftUI and WinUI content surfaces now accept native line,
+  page, start/end, and platform history shortcuts. Both adapters translate key
+  input into shared Rust scroll commands and existing Mosaic Back/Forward
+  events instead of owning navigation or scrolling semantics themselves.

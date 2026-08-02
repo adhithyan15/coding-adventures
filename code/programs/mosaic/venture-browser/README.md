@@ -41,6 +41,11 @@ recreating the surrounding chrome in backend-specific UI code.
   reducer into generated WinUI controls, and mounts Direct2D-rendered pixels
   in the generated `content-surface` `UIElement`. Pointer-wheel scrolling and
   link activation call back into the same Rust browser session.
+- The native content surfaces are keyboard focus targets. Arrow, Page,
+  Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
+  contract owned by `venture-browser-core`; Command-Left/Right on macOS and
+  Alt-Left/Right on Windows reuse the Mosaic `onBack`/`onForward` reducer
+  events and reproject chrome props after navigation.
 
 ## Build every backend
 

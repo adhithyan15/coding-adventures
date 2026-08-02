@@ -14,7 +14,7 @@ use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserSession,
+    BrowserScrollCommand, BrowserSession,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
@@ -312,39 +312,22 @@ pub fn keyboard_scroll_session(session: &mut BrowserSession, event: &WindowEvent
     if modifiers.control || modifiers.alt || modifiers.meta {
         return false;
     }
+    let command = match key {
+        NamedKey::ArrowUp => BrowserScrollCommand::LineUp,
+        NamedKey::ArrowDown => BrowserScrollCommand::LineDown,
+        NamedKey::PageUp => BrowserScrollCommand::PageUp,
+        NamedKey::PageDown => BrowserScrollCommand::PageDown,
+        NamedKey::Space if modifiers.shift => BrowserScrollCommand::PageUp,
+        NamedKey::Space => BrowserScrollCommand::PageDown,
+        NamedKey::Home => BrowserScrollCommand::DocumentStart,
+        NamedKey::End => BrowserScrollCommand::DocumentEnd,
+        _ => return false,
+    };
     let Some(viewport) = session.viewport_mut() else {
         return false;
     };
     let previous_offset = viewport.scroll_state().offset_y();
-    let viewport_height = viewport.scroll_state().viewport_height();
-    match key {
-        NamedKey::ArrowUp => {
-            viewport.scroll_by(-40.0);
-        }
-        NamedKey::ArrowDown => {
-            viewport.scroll_by(40.0);
-        }
-        NamedKey::PageUp => {
-            viewport.scroll_by(-viewport_height * 0.9);
-        }
-        NamedKey::PageDown => {
-            viewport.scroll_by(viewport_height * 0.9);
-        }
-        NamedKey::Space if modifiers.shift => {
-            viewport.scroll_by(-viewport_height * 0.9);
-        }
-        NamedKey::Space => {
-            viewport.scroll_by(viewport_height * 0.9);
-        }
-        NamedKey::Home => {
-            viewport.set_scroll_offset_y(0.0);
-        }
-        NamedKey::End => {
-            let max_offset = viewport.scroll_state().max_offset_y();
-            viewport.set_scroll_offset_y(max_offset);
-        }
-        _ => return false,
-    }
+    viewport.scroll_command(command);
     viewport.scroll_state().offset_y() != previous_offset
 }
 
@@ -490,6 +473,15 @@ impl MacBrowserHost {
         };
         let before = viewport.scroll_state().offset_y();
         viewport.scroll_by(delta_y);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_command(command);
         viewport.scroll_state().offset_y() != before
     }
 
@@ -646,6 +638,22 @@ mod mosaic_ffi {
     ) -> u8 {
         host.as_mut()
             .map(|host| host.scroll_by(delta_y) as u8)
+            .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_scroll_command(
+        host: *mut MacBrowserHost,
+        name: *const c_char,
+    ) -> u8 {
+        let Some(command) = string_arg(name)
+            .as_deref()
+            .and_then(BrowserScrollCommand::from_name)
+        else {
+            return 0;
+        };
+        host.as_mut()
+            .map(|host| host.scroll_command(command) as u8)
             .unwrap_or(0)
     }
 
