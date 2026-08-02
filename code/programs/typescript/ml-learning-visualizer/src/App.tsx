@@ -10,6 +10,7 @@ import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
+import { StructuredWorkbench } from "./StructuredWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
@@ -175,7 +176,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -294,6 +295,8 @@ export function App() {
                 ? "Every token asks and matches"
               : workbench === "representation"
                 ? "Compress, then reconstruct"
+              : workbench === "structured"
+                ? "A pattern becomes an attractor"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -372,6 +375,13 @@ export function App() {
             >
               Representation
             </button>
+            <button
+              className={workbench === "structured" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("structured")}
+            >
+              Structured
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -390,6 +400,8 @@ export function App() {
               <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
             ) : workbench === "representation" ? (
               <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
+            ) : workbench === "structured" ? (
+              <>damaged cue {"->"} <strong>energy descent</strong> {"->"} recalled memory</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -415,6 +427,8 @@ export function App() {
         <AttentionWorkbench />
       ) : workbench === "representation" ? (
         <RepresentationWorkbench />
+      ) : workbench === "structured" ? (
+        <StructuredWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

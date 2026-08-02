@@ -36,13 +36,14 @@ larger network:
 16. [Variational Sampling and the KL Tradeoff, by Hand](./variational-sampling-and-kl-tradeoff-by-hand.md)
 17. [A One-Dimensional GAN Game, by Hand](./one-dimensional-gan-game-by-hand.md)
 18. [One-Dimensional Diffusion, by Hand](./one-dimensional-diffusion-by-hand.md)
-19. [Matrix Math](../matrix-math.md)
-20. [Loss Functions](../loss-functions.md)
-21. [Gradient Descent](../gradient-descent.md)
-22. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-23. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-24. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-25. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+19. [Hopfield Associative Memory, by Hand](./hopfield-associative-memory-by-hand.md)
+20. [Matrix Math](../matrix-math.md)
+21. [Loss Functions](../loss-functions.md)
+22. [Gradient Descent](../gradient-descent.md)
+23. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+24. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+25. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+26. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -52,7 +53,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has ten complementary views:
+has eleven complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -102,6 +103,10 @@ has ten complementary views:
   visible number line. Then follow one clean scalar through two diffusion noise
   levels, train a timestep-aware noise predictor, and replay two deterministic
   reverse means.
+- **Structured and memory lab:** store one four-neuron bipolar pattern in a
+  symmetric zero-diagonal weight matrix, damage one bit, expose every incoming
+  vote in an asynchronous sweep, and watch energy descend as overlap reaches a
+  recovered fixed point.
 
 ## Language-Neutral Corpus
 
@@ -180,6 +185,11 @@ conditioned predictions, per-level and reduced gradients, a three-parameter
 central finite-difference audit, one loss-reducing update, and a deterministic
 two-step reverse mean.
 
+NN20 adds `code/specs/fixtures/hopfield-associative-memory-v1`, including a
+normalized Hebbian outer product, symmetric zero-diagonal weights, one damaged
+bipolar cue, every asynchronous incoming vote and state transition, Hopfield
+energy, normalized overlap, and the recovered fixed point.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -200,6 +210,7 @@ python code/scripts/validate_two_number_autoencoder_labs.py
 python code/scripts/validate_variational_autoencoder_labs.py
 python code/scripts/validate_one_dimensional_gan_labs.py
 python code/scripts/validate_one_dimensional_diffusion_labs.py
+python code/scripts/validate_hopfield_associative_memory_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a

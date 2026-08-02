@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has ten workbenches that move from one arithmetic update to small
+The app has eleven workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -154,6 +154,14 @@ timestep-aware noise predictor, audits all three parameter gradients, and feeds
 two deterministic reverse means into each other. The final reconstruction keeps
 its small residual error visible rather than implying a perfect toy denoiser.
 
+### Structured and memory lab
+
+The structured workbench begins with a four-neuron Hopfield memory. It turns one
+bipolar pattern into a symmetric zero-diagonal Hebbian weight matrix, presents a
+cue with one flipped bit, and advances a saved asynchronous update order. Every
+incoming weighted vote, local field, state change, energy value, and normalized
+overlap stays visible through the recovered fixed point.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -240,6 +248,11 @@ NN19 under `code/specs/fixtures/one-dimensional-diffusion-v1` pins two scalar
 forward noise levels, cumulative schedule coefficients, saved-noise targets, a
 shared timestep-conditioned denoiser update, a three-parameter numerical audit,
 and the complete deterministic reverse-mean path.
+
+NN20 under `code/specs/fixtures/hopfield-associative-memory-v1` pins one
+four-neuron bipolar memory, normalized Hebbian weights, a one-bit-damaged cue,
+all in-place asynchronous updates, energy descent, overlap improvement, and the
+recovered fixed point.
 
 ## Development
 

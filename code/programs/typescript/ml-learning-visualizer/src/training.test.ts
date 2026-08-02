@@ -14,6 +14,8 @@ import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { HopfieldWorkbench } from "./HopfieldWorkbench.js";
+import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
@@ -1277,5 +1279,93 @@ describe("one-dimensional diffusion round trip", () => {
     fireEvent.click(screen.getByRole("button", { name: /Denoise step 1/ }));
     expect(screen.getByLabelText("Diffusion deterministic reverse mean path").textContent)
       .toMatch(/reverse t = 2.*mean1 = 0\.5984375.*reverse t = 1.*mean0 = 1\.04513184.*absolute error 0\.04513184/s);
+  });
+});
+
+describe("Hopfield associative memory", () => {
+  it("keeps the Hopfield workbench in the generated production stylesheet", () => {
+    const css = productionCss;
+
+    expect(css).toContain(".workspace--hopfield");
+    expect(css).toContain(".hopfield-recall-lane");
+  });
+
+  it("stores one bipolar pattern in symmetric zero-diagonal weights", () => {
+    const trace = traceHopfieldRecall();
+
+    expect(trace.weights).toEqual([
+      [0, -0.25, 0.25, -0.25],
+      [-0.25, 0, -0.25, 0.25],
+      [0.25, -0.25, 0, -0.25],
+      [-0.25, 0.25, -0.25, 0],
+    ]);
+    expect(trace.normalization).toBe(4);
+  });
+
+  it("starts one bit away at half overlap and zero energy", () => {
+    const trace = traceHopfieldRecall();
+
+    expect(trace.initialHammingDistance).toBe(1);
+    expect(trace.initialOverlap).toBeCloseTo(0.5);
+    expect(trace.initialEnergy).toBeCloseTo(0);
+  });
+
+  it("repairs the flipped bit with three positive incoming votes", () => {
+    const first = traceHopfieldRecall().updates[0]!;
+
+    expect(first.incoming.map((row) => row.contribution)).toEqual([0, 0.25, 0.25, 0.25]);
+    expect(first.localField).toBeCloseTo(0.75);
+    expect(first.previousState).toBe(-1);
+    expect(first.nextState).toBe(1);
+    expect(first.stateAfter).toEqual([1, -1, 1, -1]);
+  });
+
+  it("descends in energy and finishes at the saved fixed point", () => {
+    const trace = traceHopfieldRecall();
+
+    expect(trace.updates.map((row) => [row.energyBefore, row.energyAfter])).toEqual([
+      [0, -1.5],
+      [-1.5, -1.5],
+      [-1.5, -1.5],
+      [-1.5, -1.5],
+    ]);
+    expect(trace.updates.map((row) => row.changed)).toEqual([true, false, false, false]);
+    expect(trace.finalState).toEqual([1, -1, 1, -1]);
+    expect(trace.finalOverlap).toBeCloseTo(1);
+    expect(trace.finalHammingDistance).toBe(0);
+    expect(trace.converged).toBe(true);
+  });
+
+  it("rejects non-bipolar states and malformed update orders", () => {
+    expect(() => traceHopfieldRecall([1, 0, 1, -1])).toThrow(/bipolar/);
+    expect(() => traceHopfieldRecall(
+      [1, -1, 1, -1],
+      [-1, -1, 1, -1],
+      [0, 1, 1, 3],
+    )).toThrow(/permutation/);
+  });
+
+  it("walks through storage, cue repair, and the stable sweep", () => {
+    render(React.createElement(HopfieldWorkbench));
+
+    expect(screen.getByRole("heading", {
+      name: "Restore one flipped bit with four connected neurons",
+    })).toBeTruthy();
+    expect(screen.getByLabelText("Hopfield Hebbian storage rule").textContent)
+      .toMatch(/\[\+1, -1, \+1, -1\].*divide by 4.*from 0.*-0\.25.*0\.25/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /One flipped bit/ }));
+    expect(screen.getByLabelText("Hopfield asynchronous recall trace").textContent)
+      .toMatch(/damaged cue\[-1, -1, \+1, -1\].*distance 1.*normalized overlap0\.5.*Hopfield energy0/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Update neuron 0/ }));
+    expect(screen.getByLabelText("Hopfield active neuron calculation").textContent)
+      .toMatch(/active neuron0.*-0\.25 x -1 = 0\.25.*local field -> next state0\.75 -> \+1.*energy before -> after0 -> -1\.5.*overlap before -> after0\.5 -> 1/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Update neuron 3/ }));
+    expect(screen.getByLabelText("Hopfield asynchronous recall trace").textContent)
+      .toMatch(/update 0\[\+1, -1, \+1, -1\].*update 3\[\+1, -1, \+1, -1\].*Hopfield energy-1\.5/s);
+    expect(screen.getByLabelText("Hopfield phase controls").textContent)
+      .toMatch(/fixed point recovered/);
   });
 });

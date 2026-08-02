@@ -43,7 +43,7 @@ trace, and tests.
   - [x] One-dimensional GAN game.
   - [x] One-dimensional diffusion forward and denoising steps.
 - [ ] Structured and memory networks
-  - [ ] Hopfield associative memory.
+  - [x] Hopfield associative memory.
   - [ ] Message passing on a tiny graph.
   - [ ] Graph convolution and graph attention.
 
