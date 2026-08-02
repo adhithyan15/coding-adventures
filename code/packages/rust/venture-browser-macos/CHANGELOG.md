@@ -24,6 +24,9 @@
 - Extend direct generated-app interaction acceptance through the native Back
   and Forward buttons, requiring both history entries to reload through the
   shared Rust session before the gate succeeds.
+- Extend that direct acceptance through the Mosaic-authored Reload and Home
+  controls, requiring Reload to fetch changed content at the current URL and
+  Home to return through the shared Rust navigation session.
 
 ## 0.1.0
 

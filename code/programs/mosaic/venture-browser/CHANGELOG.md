@@ -46,6 +46,9 @@
 - Direct native history acceptance for both emitted applications: the package
   hosts activate the generated Back and Forward controls, then require the
   shared Rust session to reload and retitle both deterministic local pages.
+- Direct native Reload and Home acceptance for both emitted applications: the
+  generated controls must fetch a changed response at the current URL and then
+  return to the shared session's home URL before the gate succeeds.
 - The XAML host writes rendered BGRA pixels through WinRT's supported
   `IBuffer.AsStream()` projection, avoiding a native COM projection crash in
   the emitted WinUI application.

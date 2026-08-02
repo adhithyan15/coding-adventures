@@ -47,11 +47,11 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     target.join("debug/venture_browser_windows.dll")
 }
 
-fn serve_html_twice(title: &'static str) -> String {
+fn serve_html_sequence(titles: Vec<&'static str>) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind acceptance server");
     let address = listener.local_addr().expect("read acceptance address");
     thread::spawn(move || {
-        for _ in 0..2 {
+        for title in titles {
             let (mut stream, _) = listener.accept().expect("accept Venture request");
             let mut request = [0_u8; 1024];
             let _ = stream.read(&mut request);
@@ -191,8 +191,16 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     let marker = output.join("xaml-ready.json");
     let interaction_marker = output.join("xaml-interaction.json");
     let phase_log = output.join("xaml-phase.json");
-    let start_url = serve_html_twice("Venture launch acceptance");
-    let target_url = serve_html_twice("Venture interaction acceptance");
+    let start_url = serve_html_sequence(vec![
+        "Venture launch acceptance",
+        "Venture launch acceptance",
+        "Venture launch acceptance",
+    ]);
+    let target_url = serve_html_sequence(vec![
+        "Venture interaction acceptance",
+        "Venture interaction acceptance",
+        "Venture reload acceptance",
+    ]);
     let app_log = output.join("xaml-app.log");
     let log = File::create(&app_log).expect("create WinUI app log");
     let mut child = Command::new(&executable)
@@ -239,14 +247,15 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
         interaction.contains("\"status\":\"interacted\""),
         "WinUI interaction failed: {interaction}"
     );
-    assert!(interaction.contains("\"history\":\"back-forward\""));
+    assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));
     assert!(
         interaction.contains(&start_url) || interaction.contains(&start_url.replace('/', "\\/"))
     );
     assert!(
         interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
     );
-    assert!(interaction.contains("Venture interaction acceptance"));
+    assert!(interaction.contains("Venture launch acceptance"));
     let diagnostics = fs::read_to_string(&app_log).expect("read WinUI app log");
     assert!(
         !diagnostics.contains("assertion failed") && !diagnostics.contains("Assertion failed"),

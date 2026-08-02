@@ -91,10 +91,15 @@ public static class MosaicHost
                 var backButton = await FindAutomationElementAsync<Button>(component, "back-button");
                 var forwardButton = await FindAutomationElementAsync<Button>(
                     component, "forward-button");
+                var homeButton = await FindAutomationElementAsync<Button>(component, "home-button");
+                var reloadButton = await FindAutomationElementAsync<Button>(
+                    component, "reload-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
                 if (addressInput is null
                     || backButton is null
                     || forwardButton is null
+                    || homeButton is null
+                    || reloadButton is null
                     || goButton is null)
                 {
                     WriteInteractionResult(markerPath, new
@@ -225,13 +230,84 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!await WaitForEnabledAsync(reloadButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Reload button did not become enabled",
+                    });
+                    return;
+                }
+                var reloadProvider = new ButtonAutomationPeer(reloadButton) as IInvokeProvider;
+                if (reloadProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Reload automation provider unavailable",
+                    });
+                    return;
+                }
+                reloadProvider.Invoke();
+                if (!await WaitForPageAsync(component, targetUrl, "Venture reload acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "reload state did not update",
+                    });
+                    return;
+                }
+
+                if (!await WaitForEnabledAsync(homeButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Home button did not become enabled",
+                    });
+                    return;
+                }
+                var homeProvider = new ButtonAutomationPeer(homeButton) as IInvokeProvider;
+                if (homeProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Home automation provider unavailable",
+                    });
+                    return;
+                }
+                homeProvider.Invoke();
+                if (!await WaitForPageAsync(component, startUrl, "Venture launch acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "home navigation state did not update",
+                    });
+                    return;
+                }
+
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
                     status = "interacted",
-                    history = "back-forward",
-                    backAddress = startUrl,
-                    address = component.Address,
+                    controls = "back-forward-reload-home",
+                    reloadTitle = "Venture reload acceptance",
+                    homeAddress = component.Address,
+                    targetAddress = targetUrl,
                     pageTitle = component.PageTitle,
                 });
             }

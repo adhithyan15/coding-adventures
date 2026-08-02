@@ -19,3 +19,6 @@
 - Extend direct generated-app interaction acceptance through the native WinUI
   Back and Forward invoke providers, requiring both history entries to reload
   through the shared Rust session before the gate succeeds.
+- Extend that direct acceptance through the native WinUI Reload and Home
+  invoke providers, requiring changed reload content and shared-session home
+  navigation before the generated shell reports success.
