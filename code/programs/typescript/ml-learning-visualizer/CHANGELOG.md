@@ -31,6 +31,9 @@ All notable changes to this package will be documented in this file.
 - Extend the attention workbench with the NN15 two-position decoder training
   trace, including causal next-token shift, cross-entropy gradients, shared-head
   SGD, and a before/after loss comparison.
+- Add the NN16 representation workbench with a `2 -> 1 -> 2` autoencoder,
+  selectable decoder branches, bottleneck-gradient accumulation, seven central
+  finite differences, and one full-model SGD update.
 
 ### Changed
 

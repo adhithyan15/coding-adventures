@@ -32,13 +32,14 @@ larger network:
 12. [Softmax Attention and Causal Masking, by Hand](./softmax-attention-and-causal-masking-by-hand.md)
 13. [Multi-Head Attention, Add, and Norm, by Hand](./multi-head-attention-add-and-norm-by-hand.md)
 14. [A Tiny Decoder-Only Language Model Training Step, by Hand](./tiny-decoder-language-model-training-by-hand.md)
-15. [Matrix Math](../matrix-math.md)
-16. [Loss Functions](../loss-functions.md)
-17. [Gradient Descent](../gradient-descent.md)
-18. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-19. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-20. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-21. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+15. [A Two-Number Autoencoder Bottleneck, by Hand](./two-number-autoencoder-bottleneck-by-hand.md)
+16. [Matrix Math](../matrix-math.md)
+17. [Loss Functions](../loss-functions.md)
+18. [Gradient Descent](../gradient-descent.md)
+19. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+20. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+21. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+22. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -48,7 +49,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has nine complementary views:
+has ten complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -88,6 +89,10 @@ has nine complementary views:
   decoder trace to shift a sequence into next-token targets, inspect logits,
   stable softmax, cross-entropy, shared-head gradients, and one loss-reducing
   SGD update.
+- **Representation lab:** compress two coordinates through one scalar, inspect
+  each decoder branch and reconstruction error, add both routes into the
+  bottleneck gradient, audit all seven parameters, and compare the full model
+  before and after one loss-reducing update.
 
 ## Language-Neutral Corpus
 
@@ -144,6 +149,11 @@ next-token shift, saved decoder states, every unembedding product, stable
 softmax and cross-entropy trace, state and shared-head gradients, a central
 finite-difference audit, one SGD update, and the resulting lower mean loss.
 
+NN16 adds `code/specs/fixtures/two-number-autoencoder-v1`, including both
+encoder products, a one-scalar bottleneck, two decoder branches,
+reconstruction errors, complete backward gradients, a seven-parameter central
+finite-difference audit, and one loss-reducing update.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -160,6 +170,7 @@ python code/scripts/validate_attention_qkv_labs.py
 python code/scripts/validate_attention_softmax_labs.py
 python code/scripts/validate_multi_head_attention_labs.py
 python code/scripts/validate_tiny_decoder_training_labs.py
+python code/scripts/validate_two_number_autoencoder_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -191,6 +202,9 @@ The first NN15 lab shifts `red blue purple` into two causal next-token
 predictions, updates their shared vocabulary head, preserves the gradient
 entering the frozen decoder states, and verifies that one SGD step lowers mean
 cross-entropy.
+The first NN16 lab forces `[2,-1]` through one scalar, adds both reconstruction
+errors at that bottleneck, audits all seven trainable gradients, and reruns the
+entire encoder and decoder after one loss-reducing step.
 
 ## How to Study a Model
 

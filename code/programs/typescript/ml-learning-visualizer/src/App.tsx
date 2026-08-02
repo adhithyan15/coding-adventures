@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
+import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -174,7 +175,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -291,6 +292,8 @@ export function App() {
                 ? "Memory becomes an input"
               : workbench === "attention"
                 ? "Every token asks and matches"
+              : workbench === "representation"
+                ? "Compress, then reconstruct"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -362,6 +365,13 @@ export function App() {
             >
               Attention
             </button>
+            <button
+              className={workbench === "representation" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("representation")}
+            >
+              Representation
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -378,6 +388,8 @@ export function App() {
               <>input + <strong>previous state</strong> {"->"} next state</>
             ) : workbench === "attention" ? (
               <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
+            ) : workbench === "representation" ? (
+              <>2 values {"->"} <strong>1 bottleneck</strong> {"->"} reconstruct 2</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -401,6 +413,8 @@ export function App() {
         <RecurrentWorkbench />
       ) : workbench === "attention" ? (
         <AttentionWorkbench />
+      ) : workbench === "representation" ? (
+        <AutoencoderWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

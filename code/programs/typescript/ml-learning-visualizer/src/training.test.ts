@@ -4,6 +4,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { transpileLatticeInBrowser } from "@coding-adventures/lattice-transpiler/src/browser.js";
 import { activate } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
+import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
+import { traceTwoNumberAutoencoder } from "./autoencoder-lab.js";
 import {
   decoderTrainingRow,
   traceTinyDecoderTraining,
@@ -925,5 +927,74 @@ describe("tiny decoder-only language model training lab", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Return to multi-head block" }));
     expect(screen.getByRole("heading", { name: "Multi-head add-and-norm block" })).toBeTruthy();
+  });
+});
+
+describe("two-number autoencoder bottleneck lab", () => {
+  it("keeps the autoencoder workbench in the generated production stylesheet", () => {
+    const css = transpileLatticeInBrowser(latticeSource);
+
+    expect(css).toContain(".workspace--autoencoder");
+    expect(css).toContain(".autoencoder-bottleneck");
+  });
+
+  it("compresses two values and reconstructs both from one scalar", () => {
+    const trace = traceTwoNumberAutoencoder();
+
+    expect(trace.forward.encoderProducts).toEqual([1, 0.25]);
+    expect(trace.forward.bottleneck).toBe(1.25);
+    expect(trace.forward.decoderProducts).toEqual([1.5, -1]);
+    expect(trace.forward.reconstruction).toEqual([1.6, -1.2]);
+    expect(trace.forward.loss).toBeCloseTo(0.1);
+  });
+
+  it("adds both decoder routes into the bottleneck gradient", () => {
+    const trace = traceTwoNumberAutoencoder();
+
+    expect(trace.backward.bottleneckGradientContributions).toEqual([
+      -0.47999999999999987,
+      0.15999999999999998,
+    ]);
+    expect(trace.backward.bottleneckGradient).toBeCloseTo(-0.32);
+    expect(trace.backward.encoderWeightGradients).toEqual([
+      -0.6399999999999998,
+      0.3199999999999999,
+    ]);
+  });
+
+  it("audits every parameter and lowers reconstruction loss", () => {
+    const trace = traceTwoNumberAutoencoder();
+
+    expect(trace.gradientCheck.parameterOrder).toHaveLength(7);
+    expect(trace.gradientCheck.maxAbsoluteError).toBeLessThan(1e-8);
+    expect(trace.updatedParameters.encoder.weights).toEqual([0.564, -0.282]);
+    expect(trace.postUpdate.bottleneck).toBeCloseTo(1.442);
+    expect(trace.postUpdate.reconstruction).toEqual([1.9425, -1.29755]);
+    expect(trace.postUpdate.loss).toBeCloseTo(0.04592112625);
+    expect(trace.postUpdate.loss).toBeLessThan(trace.forward.loss);
+  });
+
+  it("selects either decoder branch and reruns the updated model", () => {
+    render(React.createElement(AutoencoderWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Two numbers through one bottleneck" })).toBeTruthy();
+    expect(screen.getByLabelText("Autoencoder encode and decode path").textContent)
+      .toMatch(/x02.*x1-1.*-1 x -0\.25 = 0\.25.*bottleneck z1\.25.*x_hat01\.6.*x_hat1-1\.2/s);
+    expect(screen.getByLabelText("Selected autoencoder reconstruction 0").textContent)
+      .toMatch(/1\.25.*1\.2.*0\.1.*1\.6.*2.*-0\.4.*squared 0\.16/s);
+    expect(screen.getByLabelText("Autoencoder bottleneck gradient trace").textContent)
+      .toMatch(/-0\.4 x 1\.2.*-0\.48.*-0\.2 x -0\.8.*0\.16.*bottleneck gradient-0\.32/s);
+    expect(screen.getByLabelText("Autoencoder SGD update and gradient audit").textContent)
+      .toMatch(/7 parameters.*max error 2\.032e-11.*loss before0\.1.*loss after0\.04592113/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "output 1" }));
+    expect(screen.getByLabelText("Selected autoencoder reconstruction 1").textContent)
+      .toContain("error / loss gradient-0.2");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Use updated parameters/ }));
+    expect(screen.getByLabelText("Autoencoder encode and decode path").textContent)
+      .toMatch(/after one SGD step.*bottleneck z1\.442.*x_hat01\.9425.*x_hat1-1\.29755/s);
+    expect(screen.getByLabelText("Selected autoencoder reconstruction 1").textContent)
+      .toContain("error / loss gradient-0.29755");
   });
 });

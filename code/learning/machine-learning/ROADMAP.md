@@ -38,7 +38,7 @@ trace, and tests.
   - [x] Multi-head attention, residual paths, and normalization.
   - [x] Tiny decoder-only language model training trace.
 - [ ] Representation and generation
-  - [ ] Two-number autoencoder bottleneck.
+  - [x] Two-number autoencoder bottleneck.
   - [ ] Variational sampling and KL tradeoff.
   - [ ] One-dimensional GAN game.
   - [ ] One-dimensional diffusion forward and denoising steps.

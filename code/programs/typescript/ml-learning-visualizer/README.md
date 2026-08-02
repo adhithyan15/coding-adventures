@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has nine workbenches that move from one arithmetic update to small
+The app has ten workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -126,6 +126,15 @@ An independent finite-difference audit checks the shared-head gradients. The
 before/after toggle reruns both positions with one SGD update and checks the
 resulting lower mean loss.
 
+### Representation lab
+
+The representation workbench compresses `[2,-1]` through a one-scalar linear
+bottleneck and reconstructs both coordinates from that shared value. Select
+either output to isolate its decoder formula, coordinate error, and route into
+the accumulated bottleneck gradient. The same view exposes all encoder and
+decoder gradients, a seven-parameter central finite-difference audit, and the
+full-model loss before and after one SGD step.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -192,6 +201,11 @@ NN15 under `code/specs/fixtures/tiny-decoder-training-v1` pins a causal
 next-token sequence shift, saved decoder states, unembedding logits, stable
 softmax, mean cross-entropy, state and shared-head gradients, central finite
 differences, one SGD update, and its post-update probabilities and loss.
+
+NN16 under `code/specs/fixtures/two-number-autoencoder-v1` pins a two-number
+input, one-scalar encoding, two reconstructed outputs, mean squared error,
+complete decoder and encoder gradients, all seven central finite differences,
+updated parameters, and the lower post-update reconstruction loss.
 
 ## Development
 
