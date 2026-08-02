@@ -693,7 +693,7 @@ public static class MosaicHost
         internal bool RunFocusAcceptance()
         {
             return Focus(Microsoft.UI.Xaml.FocusState.Programmatic)
-                && FocusState == Microsoft.UI.Xaml.FocusState.Programmatic;
+                && FocusState != Microsoft.UI.Xaml.FocusState.Unfocused;
         }
 
         internal bool RunWheelAcceptance()

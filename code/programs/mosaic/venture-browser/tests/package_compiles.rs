@@ -148,6 +148,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "Native.Resize(browser, e.NewSize.Width, e.NewSize.Height)",
         "private void OnKeyDown",
         "RunFocusAcceptance",
+        "FocusState != Microsoft.UI.Xaml.FocusState.Unfocused",
         "surfaceFocus = \"native\"",
         "RunWheelAcceptance",
         "ScrollByWheelDelta",
