@@ -1853,6 +1853,14 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 return Err(NetlistParseError::new("MOSFET VT0 must be finite"));
             }
         }
+        for channel_length_modulation in [params.get("LAMBDA"), params.get("LAM")]
+            .into_iter()
+            .flatten()
+        {
+            if !channel_length_modulation.is_finite() {
+                return Err(NetlistParseError::new("MOSFET LAMBDA must be finite"));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

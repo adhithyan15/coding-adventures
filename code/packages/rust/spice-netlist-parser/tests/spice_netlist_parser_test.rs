@@ -1658,6 +1658,36 @@ fn preserves_finite_mosfet_model_threshold_aliases() {
 }
 
 #[test]
+fn rejects_non_finite_mosfet_model_channel_length_modulation_aliases() {
+    for alias in ["LAMBDA", "LAM"] {
+        let error = parse_netlist(&format!(
+            ".model channel NMOS({alias}=1e999)\nM1 d g s b channel"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("MOSFET LAMBDA must be finite"));
+    }
+}
+
+#[test]
+fn preserves_finite_mosfet_model_channel_length_modulation_aliases() {
+    for (alias, channel_length_modulation) in [("LAMBDA", "-0.01"), ("LAM", "0.02")] {
+        let parsed = parse_netlist(&format!(
+            ".model channel NMOS({alias}={channel_length_modulation})\nM1 d g s b channel"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.lambda,
+            channel_length_modulation.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
