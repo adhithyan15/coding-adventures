@@ -5,8 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline: 20 registered tracks, 973
-Markdown lessons, and 17 downloadable LaTeX books before the items below.
+Last prioritized: 2026-08-02. Current baseline after PR #9472: 20 registered
+tracks, 973 Markdown lessons, and 18 downloadable LaTeX books. The Urdu item
+below adds the nineteenth book without adding a parallel publication workflow.
 
 ## Priority rules
 
@@ -19,9 +20,9 @@ Markdown lessons, and 17 downloadable LaTeX books before the items below.
 
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
-| HL-B01 | Complete in the Persian starter-book PR | Publish the five authored Persian lessons as a two-chapter LaTeX starter book. | XeLaTeX builds the book; CI discovers an 18th PDF; chapters map to lessons 1 and 2. |
-| HL-B02 | Next | Publish the five authored Urdu lessons as a two-chapter starter book. | XeLaTeX builds with correct RTL shaping; Urdu appears in the public catalog. |
-| HL-B03 | Queued | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
+| HL-B01 | Complete (#9472) | Publish the five authored Persian lessons as a two-chapter LaTeX starter book. | XeLaTeX builds the book; CI discovers an 18th PDF; chapters map to lessons 1 and 2. |
+| HL-B02 | Complete in the Urdu starter-book PR | Publish the five authored Urdu lessons as a two-chapter starter book. | XeLaTeX builds with correct RTL shaping; Urdu appears in the public catalog. |
+| HL-B03 | Next | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
 | HL-V01 | Queued | Add a machine-readable curriculum gap report and computed duration budget. | CI reports lessons at or above 300 seconds, missing prerequisites, book coverage, and track-schema status. |
 
 ## P1 — one-source migration
@@ -32,7 +33,7 @@ Markdown lessons, and 17 downloadable LaTeX books before the items below.
 | HL-G01 | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy only after the AST contract is proven. |
 | HL-D01 | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The audit must exist first so the debt remains measurable throughout migration. |
 | HL-M01 | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
-| HL-T01 | Complete standard track scaffolding for Persian and Urdu: session maps, pronunciation references, and changelogs. | Keeps new tracks consistent with the established book-first repository shape. |
+| HL-T01 | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
 ## P2 — corpus growth
