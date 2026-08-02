@@ -85,4 +85,6 @@ trace, and tests.
 - [x] **P0:** Restore clean-install deployment of the ML Learning Visualizer by
   closing its local TypeScript package dependency graph. Discovered after NN30
   when main run `30771651855` followed source-linked packages into directories
-  without installed transitive dependencies.
+  without installed transitive dependencies. Run `30772313949` then proved npm
+  10 could not recursively pack that graph, so the workflow installs every
+  source package in dependency order before installing the app.

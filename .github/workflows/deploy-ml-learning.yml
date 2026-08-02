@@ -43,22 +43,33 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install renderer dependencies
+      - name: Install local source dependencies
         run: |
-          cd code/packages/typescript/directed-graph && npm install
-          cd ../state-machine && npm install
-          cd ../grammar-tools && npm install
-          cd ../lexer && npm install
-          cd ../parser && npm install
-          cd ../lattice-lexer && npm install
-          cd ../lattice-parser && npm install
-          cd ../lattice-ast-to-css && npm install
-          cd ../lattice-transpiler && npm install
+          cd code/packages/typescript/directed-graph && npm install --omit=dev --ignore-scripts
+          cd ../state-machine && npm install --omit=dev --ignore-scripts
+          cd ../cli-builder && npm install --omit=dev --ignore-scripts
+          cd ../grammar-tools && npm install --omit=dev --ignore-scripts
+          cd ../lexer && npm install --omit=dev --ignore-scripts
+          cd ../parser && npm install --omit=dev --ignore-scripts
+          cd ../lattice-lexer && npm install --omit=dev --ignore-scripts
+          cd ../lattice-parser && npm install --omit=dev --ignore-scripts
+          cd ../lattice-ast-to-css && npm install --omit=dev --ignore-scripts
+          cd ../lattice-transpiler && npm install --omit=dev --ignore-scripts
+          cd ../matrix-rust-napi && npm install --omit=dev --ignore-scripts
+          cd ../matrix && npm install --omit=dev --ignore-scripts
+          cd ../multi-directed-graph && npm install --omit=dev --ignore-scripts
+          cd ../neural-network && npm install --omit=dev --ignore-scripts
+          cd ../neural-graph-vm && npm install --omit=dev --ignore-scripts
+          cd ../pixel-container && npm install --omit=dev --ignore-scripts
+          cd ../paint-instructions && npm install --omit=dev --ignore-scripts
+          cd ../paint-vm && npm install --omit=dev --ignore-scripts
+          cd ../paint-vm-svg && npm install --omit=dev --ignore-scripts
+          cd ../two-layer-network && npm install --omit=dev --ignore-scripts
 
       - name: Install app dependencies
         run: |
           cd code/programs/typescript/ml-learning-visualizer
-          npm install --install-links
+          npm install
 
       - name: Build
         run: |
