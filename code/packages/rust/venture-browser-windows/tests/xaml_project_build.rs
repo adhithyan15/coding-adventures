@@ -198,9 +198,13 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     let marker = output.join("xaml-ready.json");
     let interaction_marker = output.join("xaml-interaction.json");
     let phase_log = output.join("xaml-phase.json");
-    let link_url = serve_html_sequence(vec!["Venture link acceptance"], None);
+    let link_url = serve_html_sequence(
+        vec!["Venture link acceptance", "Venture link acceptance"],
+        None,
+    );
     let start_url = serve_html_sequence(
         vec![
+            "Venture launch acceptance",
             "Venture launch acceptance",
             "Venture launch acceptance",
             "Venture launch acceptance",
@@ -265,6 +269,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
+    assert!(interaction.contains("\"surfaceHistory\":\"back-forward\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
     assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));
