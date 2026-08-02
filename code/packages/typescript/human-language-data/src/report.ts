@@ -144,13 +144,82 @@ function stripHtmlComments(markdown: string): string {
   return parts.join("");
 }
 
+function stripMarkdownLinks(markdown: string): string {
+  type State = "text" | "label" | "destination-start" | "destination";
+  const output: string[] = [];
+  const label: string[] = [];
+  const destination: string[] = [];
+  let state: State = "text";
+  let image = false;
+
+  const reset = (): void => {
+    label.length = 0;
+    destination.length = 0;
+    image = false;
+    state = "text";
+  };
+  const flushUnclosed = (suffix = ""): void => {
+    output.push(image ? "![" : "[", ...label);
+    if (state === "destination-start" || state === "destination") output.push("]");
+    if (state === "destination") output.push("(", ...destination);
+    if (suffix !== "") output.push(suffix);
+    reset();
+  };
+
+  for (let index = 0; index < markdown.length; index += 1) {
+    const character = markdown[index];
+    if (state === "text") {
+      if (character === "!" && markdown[index + 1] === "[") {
+        image = true;
+        state = "label";
+        index += 1;
+      } else if (character === "[") {
+        state = "label";
+      } else {
+        output.push(character);
+      }
+    } else if (state === "label") {
+      if (character === "]") state = "destination-start";
+      else label.push(character);
+    } else if (state === "destination-start") {
+      if (character === "(") state = "destination";
+      else flushUnclosed(character);
+    } else if (character === ")") {
+      output.push(image ? " " : label.join(""));
+      reset();
+    } else {
+      destination.push(character);
+    }
+  }
+  if (state !== "text") flushUnclosed();
+  return output.join("");
+}
+
+function stripAngleTags(text: string): string {
+  const parts: string[] = [];
+  let cursor = 0;
+  while (cursor < text.length) {
+    const start = text.indexOf("<", cursor);
+    if (start === -1) {
+      parts.push(text.slice(cursor));
+      break;
+    }
+    const end = text.indexOf(">", start + 1);
+    if (end === -1) {
+      parts.push(text.slice(cursor));
+      break;
+    }
+    parts.push(text.slice(cursor, start), " ");
+    cursor = end + 1;
+  }
+  return parts.join("");
+}
+
 function instructionalText(markdown: string): string {
-  return stripHtmlComments(markdown)
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/[`*_>#|~]/g, " ")
-    .replace(/^-{3,}\s*$/gm, " ");
+  return stripAngleTags(stripMarkdownLinks(stripHtmlComments(markdown))).replace(
+    /[`*_>#|~]/g,
+    " ",
+  );
 }
 
 function countWords(text: string): number {

@@ -88,6 +88,30 @@ describe("curriculum gap report", () => {
     expect(unclosed.wordCount).toBe(1);
   });
 
+  it("scans Markdown links, images, and tags in linear state transitions", () => {
+    const closed = estimateLessonDuration(
+      lesson({
+        id: "AL-LINKS",
+        language: "alpha",
+        chapter: 1,
+        minutes: 1,
+        body: "visible [label](https://example.test) ![alt words](image.png) <b>shown</b>",
+      }),
+    );
+    expect(closed.wordCount).toBe(3);
+
+    const unclosed = estimateLessonDuration(
+      lesson({
+        id: "AL-UNCLOSED-LINKS",
+        language: "alpha",
+        chapter: 1,
+        minutes: 1,
+        body: `${"![".repeat(10_000)}tail`,
+      }),
+    );
+    expect(unclosed.wordCount).toBe(1);
+  });
+
   it("reports duration, prerequisite, book, and schema migration gaps", () => {
     const lessons = [
       lesson({ id: "AL-C01", language: "alpha", chapter: 1, minutes: 4 }),
