@@ -1,0 +1,11 @@
+{
+  "body_sha256": "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f",
+  "body_size": 49966,
+  "final_locator": "https://mathworld.wolfram.com/Difference.html",
+  "headers": {},
+  "kind": "fetch_receipt",
+  "locator": "https://mathworld.wolfram.com/Difference.html",
+  "media_type": "text/html; charset=UTF-8",
+  "retrieved_at": "2026-08-02T21:45:54Z",
+  "status": 200
+}

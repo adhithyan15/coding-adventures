@@ -69,9 +69,10 @@
       "prerequisites": [],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": [],
+      "source_cas_hashes": ["08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0", "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86", "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac", "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f", "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e"],
+      "provenance_bundle_hashes": ["1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"],
       "benchmark_paths": [],
-      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+      "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
       "id": "adj.math.arithmetic.average",

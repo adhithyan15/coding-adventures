@@ -1,0 +1,149 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 91,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.addend_one",
+          "end": 375,
+          "quote": "observe addend_one(7)\n    quote \"addend_one is 7.\" at 0 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "760c5360bc4a8663fd79ff27887c3e9dbc3d8814ae662115678cccf47db7d473",
+          "start": 91
+        }
+      ],
+      "disposition": "represented",
+      "end": 375,
+      "start": 91
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.addend_two",
+          "end": 660,
+          "quote": "observe addend_two(5)\n    quote \"addend_two is 5.\" at 17 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "c2488a4fec7b8e2965efa4edf08f7acc4a55222519bc366be9b439a3ea7885a5",
+          "start": 375
+        }
+      ],
+      "disposition": "represented",
+      "end": 660,
+      "start": 375
+    },
+    {
+      "disposition": "discarded",
+      "end": 704,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 660
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.minuend",
+          "end": 983,
+          "quote": "observe minuend(7)\n    quote \"minuend is 7.\" at 34 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "9ca6868c13e3360b6b5d4fac8fde0cfa16377c71aa414c6b53926ccc20da722d",
+          "start": 704
+        }
+      ],
+      "disposition": "represented",
+      "end": 983,
+      "start": 704
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.subtrahend",
+          "end": 1268,
+          "quote": "observe subtrahend(5)\n    quote \"subtrahend is 5.\" at 48 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "5bf01cf6ba954cdb73e76d50a3a2b409b433dcc1a489c0caef5a23753eaeb6cd",
+          "start": 983
+        }
+      ],
+      "disposition": "represented",
+      "end": 1268,
+      "start": 983
+    },
+    {
+      "disposition": "discarded",
+      "end": 1315,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 1268
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.factor_one",
+          "end": 1600,
+          "quote": "observe factor_one(6)\n    quote \"factor_one is 6.\" at 65 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "c3c881e4e5482e0d0c47bb70e5aafd767f592b131601c1d828d57629a1c3ea5e",
+          "start": 1315
+        }
+      ],
+      "disposition": "represented",
+      "end": 1600,
+      "start": 1315
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.factor_two",
+          "end": 1885,
+          "quote": "observe factor_two(7)\n    quote \"factor_two is 7.\" at 82 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "ca62e45c003f5afb6452fa1e4f48e9cbb6a0e5c71c631c6d559e12c6cf1979a9",
+          "start": 1600
+        }
+      ],
+      "disposition": "represented",
+      "end": 1885,
+      "start": 1600
+    },
+    {
+      "disposition": "discarded",
+      "end": 1933,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 1885
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.dividend",
+          "end": 2216,
+          "quote": "observe dividend(20)\n    quote \"dividend is 20.\" at 99 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "2a35457279dc473bdbf9f58cb113e350fd292db2f3f082522eb2eeeffc07b54a",
+          "start": 1933
+        }
+      ],
+      "disposition": "represented",
+      "end": 2216,
+      "start": 1933
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.divisor",
+          "end": 2496,
+          "quote": "observe divisor(5)\n    quote \"divisor is 5.\" at 115 snapshot \"594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba\"\n    source \"arithmetic input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "b74565d2a0733f188ec30f359ebfac0103751e005f04619b0cde91a11dd9ac46",
+          "start": 2216
+        }
+      ],
+      "disposition": "represented",
+      "end": 2496,
+      "start": 2216
+    },
+    {
+      "disposition": "discarded",
+      "end": 2538,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 2496
+    }
+  ],
+  "source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde",
+  "source_size": 2538
+}

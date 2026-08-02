@@ -1,0 +1,161 @@
+{
+  "bundle_id": "adj.math.arithmetic.primitives.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.math.arithmetic.sum",
+      "end": 35,
+      "input_claim": {
+        "end": 4155,
+        "quote": "    formula sum(addend_one, addend_two) = addend_one + addend_two\n        quote \"A sum is the result of an addition.\" at 0 snapshot \"a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86\"\n        source \"A sum is the result of an addition.\"\n        locator \"https://mathworld.wolfram.com/Sum.html\"\n        trust authoritative\n",
+        "quote_sha256": "76b16f36be393b5927e722e53d7ae767a7857e853a02818e678e6a3633267326",
+        "start": 3818
+      },
+      "locator": "https://mathworld.wolfram.com/Sum.html",
+      "quote": "A sum is the result of an addition.",
+      "quote_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+      "resolution": {
+        "authority_receipt_sha256": "2cde961be3ff71fd329ab06295ef45267c85efbc8e1e370f1e97b9ceaa6dbcfe",
+        "authority_source_sha256": "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e",
+        "classification": "primary_definition",
+        "kind": "accepted_root",
+        "reason": "MathWorld definition retained as the explicit definitional root"
+      },
+      "snapshot_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+      "source_ir_sha256": "f1dc23e30dfcd7138102c63f3073e1237e3cc200867b0f8d38e0488a99392058",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.math.arithmetic.difference",
+      "end": 95,
+      "input_claim": {
+        "end": 4705,
+        "quote": "    formula difference(minuend, subtrahend) = minuend - subtrahend\n        quote \"The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction.\" at 0 snapshot \"f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a\"\n        source \"The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction.\"\n        locator \"https://mathworld.wolfram.com/Difference.html\"\n        trust authoritative\n",
+        "quote_sha256": "52085ca3dedf2323e3a43001663550d227e182b5c5339d36908b17704ffb1601",
+        "start": 4240
+      },
+      "locator": "https://mathworld.wolfram.com/Difference.html",
+      "quote": "The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction.",
+      "quote_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+      "resolution": {
+        "authority_receipt_sha256": "1deaf136094490011152ec17932535e042623985c501dd1a0f0a7d9c5e8f6564",
+        "authority_source_sha256": "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f",
+        "classification": "primary_definition",
+        "kind": "accepted_root",
+        "reason": "MathWorld definition retained as the explicit definitional root"
+      },
+      "snapshot_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+      "source_ir_sha256": "66bd27d6819e4435b0fca3a10f52c8cfcdbdfc05c9f30a46eab1b87c4b498f0b",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.math.arithmetic.product",
+      "end": 71,
+      "input_claim": {
+        "end": 5195,
+        "quote": "    formula product(factor_one, factor_two) = factor_one * factor_two\n        quote \"The term \\\"product\\\" refers to the result of one or more multiplications.\" at 0 snapshot \"d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b\"\n        source \"The term \\\"product\\\" refers to the result of one or more multiplications.\"\n        locator \"https://mathworld.wolfram.com/Product.html\"\n        trust authoritative\n",
+        "quote_sha256": "f4b9cec8b209017ed4de9a4bf122cd8334a8eb75b13ce44e700ef8c4282e6b72",
+        "start": 4774
+      },
+      "locator": "https://mathworld.wolfram.com/Product.html",
+      "quote": "The term \"product\" refers to the result of one or more multiplications.",
+      "quote_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+      "resolution": {
+        "authority_receipt_sha256": "46f3cd40fcf5770885aa3e1fa2d59acd7f983c438db11d96eebe2eef63ebc312",
+        "authority_source_sha256": "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac",
+        "classification": "primary_definition",
+        "kind": "accepted_root",
+        "reason": "MathWorld definition retained as the explicit definitional root"
+      },
+      "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+      "source_ir_sha256": "c05489589b234faa1597e5be1c936d88195f2c4705b0db63e995340b61810520",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.math.arithmetic.quotient",
+      "end": 108,
+      "input_claim": {
+        "end": 5754,
+        "quote": "    formula quotient(dividend, divisor) = dividend / divisor\n        quote \"The term \\\"quotient\\\" is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.\" at 0 snapshot \"b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29\"\n        source \"The term \\\"quotient\\\" is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.\"\n        locator \"https://mathworld.wolfram.com/Quotient.html\"\n        trust authoritative\n",
+        "quote_sha256": "7617b5bf77918d0e33495daac487fa90de4c8ae042147e709f0cfa0a4fe4676c",
+        "start": 5267
+      },
+      "locator": "https://mathworld.wolfram.com/Quotient.html",
+      "quote": "The term \"quotient\" is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.",
+      "quote_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "resolution": {
+        "authority_receipt_sha256": "6cf0944c082b5e1e9f103348a7b657fe560f6f74878e370e133c00bdf22aa19e",
+        "authority_source_sha256": "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86",
+        "classification": "primary_definition",
+        "kind": "accepted_root",
+        "reason": "MathWorld definition retained as the explicit definitional root"
+      },
+      "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "source_ir_sha256": "3a837c2d7bc3f87e0b817a20ea351456b1cbf7ecbd83daf3235a6dc14342784d",
+      "start": 0
+    }
+  ],
+  "dependencies": [],
+  "input": {
+    "raw_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
+    "receipt_sha256": "2c8535d22198eb06e2f1d7986f1b48d40dcd2907472d631fbbb7fc3a83605346",
+    "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
+      "receipt_sha256": "2c8535d22198eb06e2f1d7986f1b48d40dcd2907472d631fbbb7fc3a83605346",
+      "representations": [],
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf"
+    },
+    {
+      "raw_source_sha256": "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e",
+      "receipt_sha256": "2cde961be3ff71fd329ab06295ef45267c85efbc8e1e370f1e97b9ceaa6dbcfe",
+      "representations": [
+        {
+          "rendered_text_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+          "source_ir_sha256": "f1dc23e30dfcd7138102c63f3073e1237e3cc200867b0f8d38e0488a99392058",
+          "transform_sha256": "f476716da204b4428d592ad0daaffd071cb6210b340fc616588510ff255ad6cd"
+        }
+      ],
+      "source_ir_sha256": "a235a92bf87a19c9b0d8bbe3fbeafb33979d68c339bf658c09fc187247fff71b"
+    },
+    {
+      "raw_source_sha256": "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f",
+      "receipt_sha256": "1deaf136094490011152ec17932535e042623985c501dd1a0f0a7d9c5e8f6564",
+      "representations": [
+        {
+          "rendered_text_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+          "source_ir_sha256": "66bd27d6819e4435b0fca3a10f52c8cfcdbdfc05c9f30a46eab1b87c4b498f0b",
+          "transform_sha256": "987782bc7e0746c730e20d8faff7bc47bd778189ad49edac74ad7ed92759274e"
+        }
+      ],
+      "source_ir_sha256": "b5b4dae28d7a0a4f762758561a04be787ee296063e8cba6ba09ad8f741d9d295"
+    },
+    {
+      "raw_source_sha256": "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac",
+      "receipt_sha256": "46f3cd40fcf5770885aa3e1fa2d59acd7f983c438db11d96eebe2eef63ebc312",
+      "representations": [
+        {
+          "rendered_text_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+          "source_ir_sha256": "c05489589b234faa1597e5be1c936d88195f2c4705b0db63e995340b61810520",
+          "transform_sha256": "6add2f89bce509f0d528a33b1375cdb0f8d883ba5abade32d0b127ad09e6aa5f"
+        }
+      ],
+      "source_ir_sha256": "aff4c262386b99d9c49e6358a03290faaca6434db526de995fae655c1b0f6256"
+    },
+    {
+      "raw_source_sha256": "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86",
+      "receipt_sha256": "6cf0944c082b5e1e9f103348a7b657fe560f6f74878e370e133c00bdf22aa19e",
+      "representations": [
+        {
+          "rendered_text_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+          "source_ir_sha256": "3a837c2d7bc3f87e0b817a20ea351456b1cbf7ecbd83daf3235a6dc14342784d",
+          "transform_sha256": "46240b12a09af3e2496b9cf585992245d6eb6a4770e3d73f02c777f478cbcf85"
+        }
+      ],
+      "source_ir_sha256": "b10e107a827a17790bd280bbee04870115ef7c5ccb1d618d4d0f6df18066be87"
+    }
+  ]
+}

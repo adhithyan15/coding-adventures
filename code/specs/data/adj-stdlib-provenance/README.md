@@ -44,6 +44,19 @@ python code/scripts/adj_stdlib_provenance.py verify
 python code/scripts/adj_stdlib_provenance.py project --output <directory>
 ```
 
+## Reviewed roots
+
+The arithmetic primitive root and its four-query fixture are rebuilt entirely
+offline from the retained CAS source bodies:
+
+```text
+python code/scripts/build_adj_arithmetic_provenance.py
+```
+
+The generator checks the retained source hashes and expected source spans before
+rebuilding both provenance bundles, their IR and transform objects, the CAS
+index, and the curriculum-manifest linkage.
+
 This separation prevents an untrusted source locator from turning the verifier
 into a network or SSRF primitive. Reads are bounded and reject links and Windows
 reparse points; object writes are exclusive; index writes are atomic. Existing

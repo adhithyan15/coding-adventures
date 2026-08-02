@@ -1,0 +1,11 @@
+{
+  "body_sha256": "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e",
+  "body_size": 68913,
+  "final_locator": "https://mathworld.wolfram.com/Sum.html",
+  "headers": {},
+  "kind": "fetch_receipt",
+  "locator": "https://mathworld.wolfram.com/Sum.html",
+  "media_type": "text/html; charset=UTF-8",
+  "retrieved_at": "2026-08-02T21:45:54Z",
+  "status": 200
+}

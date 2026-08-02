@@ -246,8 +246,9 @@ option mapping, or judge/evaluation failure.
    can carry byte pins, and `adj-verify` re-evaluates a separately stored compiler
    plan in its original fact/binding scope plus every formula/input quote before
    a formula-only query can become `fully_verified`.
-1. Migrate the ten arithmetic libraries first because every later layer imports
-   them.
+1. **In progress:** migrate the ten arithmetic libraries first because every
+   later layer imports them. The four-clause `arithmetic.adj` primitive root and
+   its worked query are now fully byte-verified end to end.
 2. Store source bytes and fetch receipts in the CAS.
 3. Add byte offsets and snapshot hashes to every grounded clause.
 4. Recursively decompose source dependencies with discarded-byte accounting.

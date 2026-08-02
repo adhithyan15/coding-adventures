@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "70b33356acc3d90a9cf69affdb351eee7ac7b786",
+  "body_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde",
+  "body_size": 2538,
+  "captured_at": "2026-08-02T21:45:54Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.query.adj"
+}

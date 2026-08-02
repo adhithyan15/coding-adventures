@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.difference",
+          "end": 95,
+          "quote": "The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction.",
+          "quote_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 95,
+      "start": 0
+    }
+  ],
+  "source_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+  "source_size": 95
+}
