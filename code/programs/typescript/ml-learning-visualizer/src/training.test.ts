@@ -17,6 +17,8 @@ import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { HopfieldWorkbench } from "./HopfieldWorkbench.js";
 import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
+import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
+import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
@@ -1367,5 +1369,47 @@ describe("Hopfield associative memory", () => {
       .toMatch(/update 0\[\+1, -1, \+1, -1\].*update 3\[\+1, -1, \+1, -1\].*Hopfield energy-1\.5/s);
     expect(screen.getByLabelText("Hopfield phase controls").textContent)
       .toMatch(/fixed point recovered/);
+  });
+});
+
+describe("tiny graph message passing", () => {
+  it("keeps the message-passing workbench in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--message-passing");
+    expect(productionCss).toContain(".message-ledger");
+  });
+
+  it("expands two undirected edges into four sorted directed messages", () => {
+    const trace = traceTinyMessagePassing();
+    expect(trace.directedMessages.map((row) => [row.source, row.target])).toEqual([[1, 0], [0, 1], [2, 1], [1, 2]]);
+    expect(trace.directedMessages.map((row) => row.message)).toEqual([1, 0.5, -0.5, 1]);
+  });
+
+  it("sums each inbox and applies one shared update", () => {
+    const trace = traceTinyMessagePassing();
+    expect(trace.nodeUpdates.map((row) => row.aggregate)).toEqual([1, 0, 1]);
+    expect(trace.nodeUpdates.map((row) => row.selfContribution)).toEqual([0.25, 0.5, -0.25]);
+    expect(trace.nodeUpdates.map((row) => row.preactivation)).toEqual([0.75, 0, 0.25]);
+    expect(trace.outputFeatures).toEqual([0.75, 0, 0.25]);
+  });
+
+  it("rejects invalid and duplicate undirected edges", () => {
+    expect(() => traceTinyMessagePassing([1, 2], [{ source: 0, target: 0 }])).toThrow(/non-self/);
+    expect(() => traceTinyMessagePassing([1, 2], [{ source: 0, target: 1 }, { source: 1, target: 0 }])).toThrow(/unique/);
+  });
+
+  it("reveals messages, the selected inbox, and final outputs", () => {
+    render(React.createElement(MessagePassingWorkbench));
+    expect(screen.getByRole("heading", { name: "Pass scalar messages across a three-node path" })).toBeTruthy();
+    expect(screen.getByLabelText("Tiny graph and directed messages").textContent).toMatch(/old feature.*1 -> 0.*0 -> 1.*2 -> 1.*1 -> 2/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Messages/ }));
+    expect(screen.getByLabelText("Tiny graph and directed messages").textContent).toMatch(/1 -> 0.*0\.5 x 2.*1.*0 -> 1.*0\.5/s);
+    fireEvent.click(screen.getByRole("button", { name: /Aggregate/ }));
+    expect(screen.getByLabelText("Selected graph node update").textContent).toMatch(/Selected node 1.*0\.5 \+ -0\.5.*sum aggregate0.*self route0\.25 x 2.*0\.5.*preactivation.*0/s);
+    fireEvent.click(screen.getByRole("button", { name: /Update/ }));
+    expect(screen.getByLabelText("Selected graph node update").textContent).toMatch(/new feature.*0.*original features.*\[1, 2, -1\]/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /node 2 0\.25 new feature/ }));
+    expect(screen.getByLabelText("Selected graph node update").textContent).toMatch(/Selected node 2.*incoming messages1.*sum aggregate1.*self route0\.25 x -1.*-0\.25.*preactivation.*0\.25.*new feature.*0\.25/s);
   });
 });

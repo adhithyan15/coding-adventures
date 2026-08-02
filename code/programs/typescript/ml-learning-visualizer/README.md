@@ -162,6 +162,11 @@ cue with one flipped bit, and advances a saved asynchronous update order. Every
 incoming weighted vote, local field, state change, energy value, and normalized
 overlap stays visible through the recovered fixed point.
 
+Switch to message passing to open a three-node path. The view expands two
+undirected edges into four directed messages, highlights the selected node's
+inbox, sums its messages, and combines that aggregate with a shared self route,
+bias, and ReLU. All nodes read the same original feature snapshot.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -253,6 +258,10 @@ NN20 under `code/specs/fixtures/hopfield-associative-memory-v1` pins one
 four-neuron bipolar memory, normalized Hebbian weights, a one-bit-damaged cue,
 all in-place asynchronous updates, energy descent, overlap improvement, and the
 recovered fixed point.
+
+NN21 under `code/specs/fixtures/tiny-message-passing-v1` pins one synchronous
+three-node graph round, including every directed message, target inbox,
+aggregate, self contribution, affine preactivation, ReLU, and output feature.
 
 ## Development
 

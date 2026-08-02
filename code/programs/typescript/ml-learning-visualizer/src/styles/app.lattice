@@ -380,6 +380,335 @@ $violet: #6d5bd0;
   }
 }
 
+.workspace--message-passing {
+  grid-template-columns: minmax(0, 1fr) 286px;
+  align-items: start;
+  gap: 18px;
+}
+
+.message-stage {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.message-intro,
+.message-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.message-intro h2,
+.message-heading h2,
+.message-controls h2 {
+  margin: 0;
+}
+
+.message-intro > div:first-child > p:last-child,
+.message-heading p,
+.message-controls > p,
+.message-sync-note {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.message-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #234c9f;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.message-graph-panel,
+.message-update-panel,
+.message-controls {
+  border: 1px solid $line;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 50px rgba(29, 45, 39, 0.08);
+}
+
+.message-graph-panel,
+.message-update-panel {
+  padding: 18px;
+}
+
+.message-heading > code {
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #234c9f;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+}
+
+.message-graph {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.message-node {
+  display: grid;
+  gap: 4px;
+  min-height: 104px;
+  border-radius: 50%;
+  background: rgba(35, 122, 87, 0.07);
+}
+
+.message-node small,
+.message-card small,
+.message-inbox small,
+.message-equation small,
+.message-selected-summary small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.message-node strong,
+.message-card strong,
+.message-inbox strong,
+.message-equation strong,
+.message-selected-summary strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.05rem;
+}
+
+.message-node span {
+  color: $muted;
+  font-size: 0.68rem;
+}
+
+.message-node--selected {
+  border-color: rgba(109, 91, 208, 0.55);
+  background: rgba(109, 91, 208, 0.11);
+  color: #4b3e9d;
+}
+
+.message-node:nth-child(1) {
+  grid-column: 1;
+}
+
+.message-node:nth-child(2) {
+  grid-column: 3;
+}
+
+.message-node:nth-child(3) {
+  grid-column: 5;
+}
+
+.message-edge {
+  color: #2563eb;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.message-edge--left {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.message-edge--right {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.message-ledger {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.message-card,
+.message-inbox > div,
+.message-equation > div {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(45, 55, 72, 0.12);
+  border-radius: 10px;
+  background: rgba(248, 249, 246, 0.86);
+  padding: 11px;
+}
+
+.message-card {
+  opacity: 0.55;
+}
+
+.message-card--active {
+  border-color: rgba(37, 99, 235, 0.34);
+  background: rgba(37, 99, 235, 0.08);
+  opacity: 1;
+}
+
+.message-card code,
+.message-equation code {
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.message-inbox {
+  display: grid;
+  grid-template-columns: 2fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 10px;
+}
+
+.message-equation {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr) auto) minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 7px;
+}
+
+.message-equation > span,
+.message-inbox > span {
+  align-self: center;
+  color: $muted;
+  font-weight: 800;
+}
+
+.message-output {
+  border-color: rgba(35, 122, 87, 0.28) !important;
+  background: rgba(35, 122, 87, 0.08) !important;
+}
+
+.message-sync-note {
+  margin: 12px 0 0;
+  border-radius: 9px;
+  background: rgba(183, 121, 31, 0.08);
+  padding: 10px;
+  font-size: 0.8rem;
+}
+
+.message-controls {
+  position: sticky;
+  top: 18px;
+  padding: 16px;
+}
+
+.message-controls > p:first-child {
+  margin: 0 0 4px;
+  color: #237a57;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.message-phase-buttons {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.message-phase-buttons button {
+  display: grid;
+  gap: 2px;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.8);
+  color: $ink;
+  padding: 9px 10px;
+  text-align: left;
+}
+
+.message-phase-buttons button span {
+  color: $muted;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.message-phase-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.42);
+  background: rgba(109, 91, 208, 0.11);
+  color: #4b3e9d;
+}
+
+.message-selected-summary {
+  display: grid;
+  gap: 5px;
+  margin-top: 12px;
+  border-radius: 10px;
+  background: rgba(35, 122, 87, 0.08);
+  padding: 12px;
+}
+
+.message-selected-summary span,
+.message-selected-summary b {
+  color: $muted;
+  font-size: 0.75rem;
+}
+
+.message-selected-summary b {
+  color: #1d6849;
+}
+
+@media (max-width: 1180px) {
+  .workspace--message-passing {
+    grid-template-columns: 1fr;
+  }
+
+  .message-controls {
+    position: static;
+  }
+
+  .message-phase-buttons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .message-intro,
+  .message-heading {
+    display: grid;
+  }
+
+  .message-chip,
+  .message-heading > code {
+    justify-self: start;
+  }
+
+  .message-graph,
+  .message-ledger,
+  .message-inbox,
+  .message-equation,
+  .message-phase-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .message-node {
+    grid-column: 1 !important;
+    min-height: 76px;
+    border-radius: 12px;
+  }
+
+  .message-edge,
+  .message-equation > span,
+  .message-inbox > span {
+    justify-self: center;
+  }
+
+  .message-edge {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
 :root {
   color-scheme: light;
 }

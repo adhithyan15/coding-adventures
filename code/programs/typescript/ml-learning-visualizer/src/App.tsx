@@ -296,7 +296,7 @@ export function App() {
               : workbench === "representation"
                 ? "Compress, then reconstruct"
               : workbench === "structured"
-                ? "A pattern becomes an attractor"
+                ? "Structure shapes computation"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -401,7 +401,7 @@ export function App() {
             ) : workbench === "representation" ? (
               <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
             ) : workbench === "structured" ? (
-              <>damaged cue {"->"} <strong>energy descent</strong> {"->"} recalled memory</>
+              <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
