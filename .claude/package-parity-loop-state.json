@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "670445d092015e82e87d7ba1df03583413c8a6bf",
+    "revision": "9302e73668017a31e38f432c31bbba4f091a56bf",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1218,
@@ -365,7 +365,7 @@
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-rust-self-edge-diagnostic",
       "pr_number": null,
-      "notes": "Selected from collision-clean ca91ca25 after merged PR #9510 satisfied the sole dependency and rebased cleanly onto collision-clean 670445d0. The implementation defines exact language-neutral Elixir package/program and genuine self-edge fixtures, preserves the programs identity segment, makes library aliases outrank same-basename programs, and returns DEPENDENCY_SELF_EDGE with package, dependency, and repository-relative manifest identity through CLI exit 2 without host paths. Validation passed 138 unit tests plus both real CLI integrations, strict Clippy, release build, 79.33% region and 79.51% line coverage, 17 schema tests, 40 runner tests, the valid 34-case/42-file conformance corpus, a zero-advisory RustSec audit, collision-clean 1,218-identity parity inventory, and a real 4,766-entry full plan that now exits zero and preserves both grammar_tools identities. The known 10-item Lua BUILD_windows debt remains byte-for-byte identical to untouched ca91ca25 after root normalization. A separate pending Rust language-identity-registry item owns the 212 duplicate unknown identities found by the successful full-plan audit."
+      "notes": "Selected from collision-clean ca91ca25 after merged PR #9510 satisfied the sole dependency and rebased cleanly onto collision-clean 9302e736. The implementation defines exact language-neutral Elixir package/program and genuine self-edge fixtures, preserves the programs identity segment, makes library aliases outrank same-basename programs, and returns DEPENDENCY_SELF_EDGE with package, dependency, and repository-relative manifest identity through CLI exit 2 without host paths. Validation passed 138 unit tests plus both real CLI integrations, strict Clippy, release build, 79.33% region and 79.51% line coverage, 17 schema tests, 40 runner tests, the valid 34-case/42-file conformance corpus, a zero-advisory RustSec audit, collision-clean 1,218-identity parity inventory, and a real 4,766-entry full plan that now exits zero and preserves both grammar_tools identities. The known 10-item Lua BUILD_windows debt remains byte-for-byte identical to untouched ca91ca25 after root normalization. A separate pending Rust language-identity-registry item owns the 212 duplicate unknown identities found by the successful full-plan audit."
     },
     {
       "id": "build-tool-rust-language-identity-registry",

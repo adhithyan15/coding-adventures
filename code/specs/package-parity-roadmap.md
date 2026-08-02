@@ -106,10 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `670445d0` after
+working inventory was regenerated on August 2, 2026 from `9302e736` after
 merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PRs
-#9502, #9505, #9506, #9510, #9512, #9514, and #9515 changed existing packages
-or learning assets without creating another implementation package directory.
+#9502, #9505, #9506, #9510, #9512, #9514, #9515, and #9516 changed existing
+packages or learning assets without creating another implementation package
+directory.
 The inventory contains
 1,218 normalized implementation identities across 4,366 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
@@ -125,7 +126,7 @@ The loop must not start by attempting 10,752 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`670445d092015e82e87d7ba1df03583413c8a6bf` is collision-clean at 1,218
+`9302e73668017a31e38f432c31bbba4f091a56bf` is collision-clean at 1,218
 normalized implementation identities, 4,366 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 768 singletons, 573
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
