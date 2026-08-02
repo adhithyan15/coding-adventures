@@ -208,6 +208,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
             "Venture launch acceptance",
             "Venture launch acceptance",
             "Venture launch acceptance",
+            "Venture launch acceptance",
         ],
         Some(link_url.clone()),
     );
@@ -216,6 +217,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
             "Venture interaction acceptance",
             "Venture interaction acceptance",
             "Venture reload acceptance",
+            "Venture commit acceptance",
         ],
         None,
     );
@@ -267,6 +269,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
         "WinUI interaction failed: {interaction}"
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"addressCommit\":\"native-return\""));
     assert!(interaction.contains("\"surfaceFocus\":\"native\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));

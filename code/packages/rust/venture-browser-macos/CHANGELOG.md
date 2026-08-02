@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the generated SwiftUI interaction gate through a native Return event
+  in the Mosaic-authored address field after the existing Go-button path.
 - Require the generated SwiftUI interaction gate to verify that the hosted
   Metal content surface became the AppKit first responder before surface input.
 - Require the generated SwiftUI resize gate to observe a successfully rendered

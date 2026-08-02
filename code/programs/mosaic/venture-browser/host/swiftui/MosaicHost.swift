@@ -379,6 +379,81 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == startURL, pageTitle == "Venture launch acceptance" {
+      guard performNativeAddressCommit(value: targetURL) else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "address-input native Return event unavailable",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        self?.verifyAddressCommit(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "home navigation state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyHome(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyAddressCommit(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == targetURL, pageTitle == "Venture commit acceptance" {
+      guard performNativeButtonClick(identifier: "home-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "home-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyCommittedHome(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "native address commit did not navigate",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyAddressCommit(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyCommittedHome(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == startURL, pageTitle == "Venture launch acceptance" {
       guard performNativeSurfaceWheel() else {
         writeInteractionResult(
           ["backend": "swiftui", "status": "error", "error": "content surface unavailable"],
@@ -395,13 +470,13 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error", "address": address,
-          "pageTitle": pageTitle, "error": "home navigation state did not update",
+          "pageTitle": pageTitle, "error": "home after address commit did not update",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyHome(
+      self?.verifyCommittedHome(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         remaining: remaining - 1)
     }
@@ -633,7 +708,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "surfaceWheel": "scroll",
+          "controls": "back-forward-reload-home", "addressCommit": "native-return",
+          "surfaceWheel": "scroll",
           "surfaceFocus": "native",
           "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
           "surfacePointer": "link",
@@ -700,6 +776,37 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         y: addressFrame.midY),
       to: nil)
     sendPrimaryClick(at: windowPoint, to: window)
+    return true
+  }
+
+  private func performNativeAddressCommit(value: String) -> Bool {
+    var visited = Set<ObjectIdentifier>()
+    guard let address = findEditableTextField(in: NSApp, visited: &visited) else {
+      return false
+    }
+    address.selectText(nil)
+    guard let editor = address.currentEditor() as? NSTextView,
+      let window = address.window
+    else { return false }
+    editor.selectAll(nil)
+    editor.insertText(value, replacementRange: editor.selectedRange())
+    NSApp.activate(ignoringOtherApps: true)
+    guard window.makeFirstResponder(editor) else { return false }
+    guard let event = NSEvent.keyEvent(
+      with: .keyDown,
+      location: .zero,
+      modifierFlags: [],
+      timestamp: ProcessInfo.processInfo.systemUptime,
+      windowNumber: window.windowNumber,
+      context: nil,
+      characters: "\r",
+      charactersIgnoringModifiers: "\r",
+      isARepeat: false,
+      keyCode: 36)
+    else { return false }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      editor.interpretKeyEvents([event])
+    }
     return true
   }
 

@@ -31,6 +31,18 @@ public static class MosaicHost
     private static VentureContentSurface? contentSurface;
     private static int acceptanceReported;
     private static int interactionAcceptanceStarted;
+    private const uint WmKeyDown = 0x0100;
+    private const uint WmKeyUp = 0x0101;
+    private const int EnterKeyDownLParam = 0x001C0001;
+    private const int EnterKeyUpLParam = unchecked((int)0xC01C0001);
+
+    [DllImport("user32.dll", EntryPoint = "PostMessageW", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool PostMessage(
+        IntPtr windowHandle,
+        uint message,
+        IntPtr wordParameter,
+        IntPtr longParameter);
 
     public static string ApplyProps(VentureChrome component)
     {
@@ -303,6 +315,54 @@ public static class MosaicHost
                     return;
                 }
 
+                _ = addressInput.Focus(FocusState.Programmatic);
+                addressInput.Text = targetUrl;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    if (string.Equals(component.Address, targetUrl, StringComparison.Ordinal))
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (!string.Equals(component.Address, targetUrl, StringComparison.Ordinal)
+                    || !CommitAddressWithEnter(window, addressInput))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        error = "native address Enter event unavailable",
+                    });
+                    return;
+                }
+                if (!await WaitForPageAsync(component, targetUrl, "Venture commit acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "native address commit did not navigate",
+                    });
+                    return;
+                }
+                homeProvider.Invoke();
+                if (!await WaitForPageAsync(component, startUrl, "Venture launch acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "home after address commit did not update",
+                    });
+                    return;
+                }
+
                 if (contentSurface is null || !contentSurface.RunFocusAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
@@ -421,6 +481,7 @@ public static class MosaicHost
                     backend = "xaml",
                     status = "interacted",
                     controls = "back-forward-reload-home",
+                    addressCommit = "native-return",
                     surfaceFocus = "native",
                     surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
@@ -445,6 +506,26 @@ public static class MosaicHost
                 });
             }
         };
+    }
+
+    private static bool CommitAddressWithEnter(Window window, TextBox addressInput)
+    {
+        if (addressInput.FocusState == FocusState.Unfocused)
+        {
+            return false;
+        }
+        var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        return windowHandle != IntPtr.Zero
+            && PostMessage(
+                windowHandle,
+                WmKeyDown,
+                (IntPtr)(int)VirtualKey.Enter,
+                (IntPtr)EnterKeyDownLParam)
+            && PostMessage(
+                windowHandle,
+                WmKeyUp,
+                (IntPtr)(int)VirtualKey.Enter,
+                (IntPtr)EnterKeyUpLParam);
     }
 
     private static async System.Threading.Tasks.Task<bool> WaitForPageAsync(

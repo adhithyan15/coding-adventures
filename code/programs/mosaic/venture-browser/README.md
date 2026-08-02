@@ -108,7 +108,10 @@ cargo test -p venture-browser-windows
 These gates launch the generated window, render the host surface, edit and
 navigate the native address control, and invoke the Mosaic-authored Back,
 Forward, Reload, and Home controls. They then focus the emitted native content
-surface and require a wheel delta followed by an End-key command to scroll the
+surface. After the Go-button path returns Home, the gates edit the address
+again and send native Return/Enter input, requiring Mosaic's shared
+`HostInput onCommit` lowering to dispatch `onNavigate` before they return Home
+again. They then require a wheel delta followed by an End-key command to scroll the
 shared Rust viewport. Before surface input begins, each host must prove that
 focus moved from generated chrome into the real native content surface. From
 that scrolled state, each host must return to
