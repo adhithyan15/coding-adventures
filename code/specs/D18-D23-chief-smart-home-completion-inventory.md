@@ -776,17 +776,37 @@ This slice adds a production local-UDP path for LIFX lights:
   verification over the production transport. This path does not accept LIFX
   cloud credentials.
 
+## Current TP-Link Kasa Legacy LAN Integration Slice
+
+This slice adds a production local-UDP path for credential-free legacy Kasa
+plugs, switches, and lights:
+
+- XOR-obfuscated `get_sysinfo` probes use bounded IPv4 UDP broadcast on port
+  9999, validate response JSON and stable device identity, and emit verified,
+  no-pairing D23 discovery records.
+- Direct device inspection distinguishes relay devices from bulbs and projects
+  model-aware power, brightness, RGB, and color-temperature state and
+  capabilities into normalized entities.
+- D23 authorization gates native relay and bulb transition mutations before
+  wire transfer. Every accepted command is followed by a fresh `get_sysinfo`
+  query that verifies and records confirmed state.
+- Real loopback UDP tests prove obfuscation, discovery, inspection, runtime
+  installation, authorization, command transfer, and post-command verification
+  over the production transport. This path accepts no cloud credentials and
+  does not claim newer authenticated KLAP/Tapo devices.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  WLED, Govee LAN, LIFX LAN, and the Z-Wave, Zigbee, and Matter runtime
-  adapters: ONVIF PullPoint camera events, RTSP media transfer and recording,
-  vendor-specific camera/NVR integrations, broader device families, a
-  production Matter commissioning/secure-session/network host, a Thread
-  border-router host, a production Zigbee coordinator/join/security host, and
-  production Z-Wave inclusion and S2.
+  WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, and the Z-Wave, Zigbee, and Matter
+  runtime adapters: ONVIF PullPoint camera events, RTSP media transfer and
+  recording, vendor-specific camera/NVR integrations, authenticated KLAP/Tapo
+  devices and other broader device families, a production Matter
+  commissioning/secure-session/network host, a Thread border-router host, a
+  production Zigbee coordinator/join/security host, and production Z-Wave
+  inclusion and S2.
 
 ## End-To-End Definition
 

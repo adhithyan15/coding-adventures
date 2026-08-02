@@ -44978,16 +44978,23 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         local_device_entry(
             "tplink",
             "TP-Link Smart Home",
-            "Local TP-Link and Kasa device integration for plugs, lights, switches, and cameras.",
+            "Credential-free legacy Kasa LAN integration for plugs, switches, and lights.",
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light", "smart_home.command.switch"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
-            &[DiscoveryMechanism::Manual, DiscoveryMechanism::Dhcp],
-            &[AuthMode::None, AuthMode::UsernamePassword],
+            &[EntityKind::Light, EntityKind::Switch],
+            &[
+                DiscoveryMechanism::UdpBroadcast,
+                DiscoveryMechanism::Manual,
+                DiscoveryMechanism::Dhcp,
+            ],
+            &[AuthMode::None],
             "tplink",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "kasa_legacy_lan".to_string(),
+        )]),
         virtual_alias(
             "tplink_tapo",
             "Tapo",
@@ -80780,6 +80787,28 @@ mod tests {
         assert!(!lifx
             .required_primitives
             .contains(&PrimitiveFamily::LocalToken));
+    }
+
+    #[test]
+    fn tplink_entry_exposes_executable_kasa_legacy_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let tplink = find_entry(&catalog, &IntegrationId::trusted("tplink")).unwrap();
+
+        assert_eq!(
+            tplink.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(tplink.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            tplink.supported_protocols,
+            vec![ProtocolFamily::Vendor("kasa_legacy_lan".to_string())]
+        );
+        assert!(tplink
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpBroadcast));
+        assert!(tplink.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert_eq!(tplink.auth_modes, vec![AuthMode::None]);
+        assert!(!tplink.target_entity_kinds.contains(&EntityKind::Camera));
     }
 
     #[test]

@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- First-party TP-Link Kasa legacy LAN runtime coverage with UDP broadcast
+  discovery, local polling, and verified plug, switch, and light commands.
 - First-party Govee LAN runtime coverage with UDP multicast discovery,
   normalized local polling, and bounded UDP command primitives.
 - First-party ONVIF runtime catalog coverage with WS-Discovery, normalized
