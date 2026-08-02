@@ -106,9 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 1, 2026 at `d5f57bfdb` after merged PR
-#9419 and the addition of the Rust WLED integration package.
-It contains 1,209 normalized implementation identities across 4,353 established-lane package
+inventory was regenerated on August 2, 2026 at `e552707d5` after the serial
+Rust smart-home additions through Wemo (#9455) and the Rust SPICE model
+validation chain through #9473. It contains 1,215 normalized implementation
+identities across 4,359 established-lane package
 slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,19 +117,22 @@ slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 275 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 759 | 10,626 |
+| Present in one language | 765 | 10,710 |
 
-The loop must not start by attempting 10,626 singleton ports. It should finish
+The loop must not start by attempting 10,710 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current inventory at
-`d5f57bfdbc64ebf44d677f195380714f949b0db6` is collision-clean at 1,209
-normalized implementation identities, 4,353 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 759 singletons, 564
+`e552707d59c62c0c0749c6173a2cf82478629b48` is collision-clean at 1,215
+normalized implementation identities, 4,359 implementation slots, 172
+high-consensus packages, 275 high-consensus missing slots, 765 singletons, 570
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The four newest identities are Rust-only `smart-home-camera-media`,
-`smart-home-onvif-integration`, `smart-home-shelly-integration`, and
-`smart-home-wled-integration`. All are
+The ten newest mixed Rust identities are `smart-home-camera-media`,
+`smart-home-onvif-integration`, `smart-home-shelly-integration`,
+`smart-home-wled-integration`, `smart-home-govee-lan-integration`,
+`smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
+`smart-home-reolink-integration`, `smart-home-roku-ecp-integration`, and
+`smart-home-wemo-upnp-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -141,12 +145,21 @@ ordering, future credentials, and capability profiles remain native.
 WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
-effects, and capability profiles remain native.
-The security review found urgent repository-local hardening owners for raw media
-URI redemption and attacker-controlled ONVIF origins before either portable core
-is expanded.
+effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
+Roku, and Wemo contribute deterministic codecs, bounded parsers and DTO
+validation, normalization, projection, stable identities/errors, command
+planning, and language-neutral fixtures to the parity backlog. Wemo specifically
+contributes SSDP header parsing, bounded setup/SOAP XML, service/device
+normalization, and switch/light command planning.
 
-The August 1 lane audit is:
+This loop delivers only deterministic, authority-free package contracts and
+implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
+capability approval, runtime mutation, native executors, and host hardening are
+reviewed native-host exceptions and are not selectable parity work. ONVIF is
+excluded from this parity tranche. Mixed smart-home packages enter the backlog
+only through their portable cores and shared language-neutral fixtures.
+
+The August 2 lane audit is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -162,7 +175,7 @@ The August 1 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 974 | 0 | 100% |
+| Rust | 980 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -271,15 +284,15 @@ work remained tracked behind the merged square-root and wave slices rather
 than expanding either delivery.
 PR #9413 merged that repair at `458405a6e` after all 15 checks passed. The
 collision-clean `1e4956369` refresh added the two Rust-only camera identities.
-Their first security audit found that camera-media redemption returns a durable,
-replayable endpoint URI and that ONVIF can relay fresh credential digests to a
-device- or discovery-controlled origin. Those P0 boundaries outrank the ordinary
-Dart frontier while remaining split into serial, reviewable hardening tranches.
-The serial loop selected `smart-home-camera-media-security-boundary-hardening`
-first because it is dependency-ready and closes the endpoint-disclosure boundary
-without coupling that focused repair to ONVIF origin/Vault work.
-The remaining Dart ML dependency child is now explicit rather than hidden in an
-umbrella: `matrix`, then `loss-functions` and `feature-normalization`.
+PR #9421 merged the camera-media boundary repair. With no active in-scope parity
+PR at `e552707d5`, the leverage pass selected
+`dart-current-14-of-15-matrix-family`: the independent `matrix`,
+`loss-functions`, and `feature-normalization` leaf packages. The branch is
+`codex/dart-matrix-ml-parity` and the item is in progress. Open ONVIF and other
+host PRs do not occupy the scoped parity slot.
+The audit also found private matrix/MSE helpers in Dart `single-layer-network`
+and `two-layer-network`; their migration to the shared packages is a separate
+downstream backlog item rather than hidden scope in this port.
 The build-tool execution critical path remains blocked on external
 immutable-runner and attester provisioning.
 
@@ -956,10 +969,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 564 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 570 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 1 inventories added twenty-four Rust singleton identities that now
+The July 30-August 2 inventories added thirty Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and

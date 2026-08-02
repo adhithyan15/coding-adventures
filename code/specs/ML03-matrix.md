@@ -5,7 +5,9 @@ The `matrix` package is the foundational computational architecture replacing na
 Inspired heavily by MATLAB, it establishes a singular, robust `Matrix` Object (Class/Struct) that seamlessly handles mathematical operations across multiple dimensions. Every node in the network—from a single variable weight to an entire dataset of 10,000 houses—is strictly treated as a Matrix.
 
 ## 2. The Abstract Object Architecture
-To provide a universally elegant API across all 6 host languages (Python, Go, Ruby, TypeScript, Rust, Elixir), the Matrix logic encapsulates a standard private 2D Array mapping while exposing a dynamic initializer.
+To provide a universally elegant API across every established implementation
+lane, the Matrix logic encapsulates a standard private 2D array while exposing
+the closest idiomatic constructors and operators each host language supports.
 
 ### 2.1 Dynamic Instantiation
 The library dynamically standardizes memory inputs.
@@ -37,3 +39,13 @@ Where the native language allows (Python `__add__`, Ruby `+`), matrix operations
 
 ## 4. Cross-Language Parity & Safety
 By binding everything to an Object format, we ensure universal crash-safety across all environments. All environments have a standardized unit test file strictly validating dimensional collision logic (matrix dot product bounds) before the training loops are artificially spawned.
+
+### 4.1 Dart surface
+
+The Dart package is named `coding_adventures_matrix`. `Matrix(Object data)`
+accepts a scalar, a non-empty one-dimensional `List<num>`, or a non-empty
+rectangular `List<List<num>>`. It deep-copies inputs, exposes immutable `data`,
+`rows`, and `cols`, and implements `+`, `-`, and `*` for the matrix/scalar cases
+defined above. Invalid or ragged inputs and every dimension mismatch throw
+`ArgumentError`. The package also implements the complete ML03 extensions
+contract, with `(row, column)` positions represented by `MatrixIndex`.

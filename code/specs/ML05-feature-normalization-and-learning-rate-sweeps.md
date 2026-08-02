@@ -53,6 +53,14 @@ scaled[i][j] = (x[i][j] - min[j]) / (max[j] - min[j])
 
 If `max[j] == min[j]`, every transformed value in that column must be `0.0`.
 
+## Dart API
+
+The Dart package is named `coding_adventures_feature_normalization`. It exposes
+immutable `StandardScaler` and `MinMaxScaler` value objects plus
+`fitStandardScaler`, `transformStandard`, `fitMinMaxScaler`, and
+`transformMinMax`. Matrix and scaler-width validation throw `ArgumentError`;
+all returned lists are newly allocated and do not mutate caller input.
+
 ## Learning-Rate Sweep
 
 Example programs may run a short sweep before the full training run:
