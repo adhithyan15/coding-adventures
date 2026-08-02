@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite Level-1 MOS model-card `GAMMA` values before
+  lowering netlist elements into the engine.
 - Reject zero, negative, and non-finite Level-1 MOS model-card `PHI` values
   before lowering netlist elements into the engine.
 - Reject non-finite Level-1 MOS model-card `LAMBDA` / `LAM` values before
