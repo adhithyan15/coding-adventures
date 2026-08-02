@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9495,
   "last_inventory": {
     "revision": "6a59699f5ff6ee6453bfc0dd11efe210aaad7c54",
     "schema_version": 3,
@@ -325,11 +325,11 @@
     {
       "id": "build-tool-lua-rockspec-encoding",
       "title": "Make Python build-tool Lua metadata decoding deterministic",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-lua-rockspec-encoding",
-      "pr_number": null,
-      "notes": "Discovered while validating the Dart document-ast slice. The Python build tool discovers 4,763 packages, then its Lua resolver aborts before diff selection because _parse_lua_deps exposes a raw UnicodeDecodeError. This slice defines positive and adversarial language-neutral rockspec UTF-8 fixtures, normalizes the only three invalid repository rockspecs, and makes Python fail closed with METADATA_INVALID_UTF8, package/manifest identity, and CLI exit 2 without host paths or silent replacement."
+      "pr_number": 9495,
+      "notes": "Discovered while validating the Dart document-ast slice. The Python build tool discovers 4,763 packages, then its Lua resolver aborts before diff selection because _parse_lua_deps exposes a raw UnicodeDecodeError. This slice defines positive and adversarial language-neutral rockspec UTF-8 fixtures, normalizes the only three invalid repository rockspecs, and makes Python fail closed with METADATA_INVALID_UTF8, package/manifest identity, and CLI exit 2 without host paths or silent replacement. Ready-for-review PR #9495 is open from the dedicated parity branch; final-base local validation includes 50 focused resolver/CLI tests, 57 conformance tests plus 52 subtests, the 32-case corpus, a 4,765-package/7,100-edge full plan, strict UTF-8 across all 246 rockspecs, and a collision-clean 1,217-identity inventory."
     },
     {
       "id": "build-tool-rockspec-utf8-remaining-engines",
