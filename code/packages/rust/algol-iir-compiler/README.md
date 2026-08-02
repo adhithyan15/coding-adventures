@@ -96,12 +96,12 @@ calls and writes `OK`. Literal-backed scalar string predicates now lower through
 the shared E4 comparison ops too: `s = 'OK'` / `s != 'NO'` use `str_eq` plus a
 typed zero comparison, while `s < 'BETA'` / `'BETA' > s` use `str_cmp` plus the
 corresponding typed zero comparison before the normal ALGOL conditional branch.
-Initialized scalar locals now also carry runtime string procedure results:
+Initialized scalar locals and `string array` elements now also carry runtime string procedure results:
 `string s; s := pick(1); if s < 'LO' then ...; print(s)` uses the shared
 runtime `str_concat`/`str_cmp`/`print_str` path. Reads before assignment still
 fail closed. `string array A[1:2]` uses the same `array<str>` substrate as
-other LANG frontends; its elements can be written from literals or initialized
-scalar strings, then read for lexical comparison or output. Procedures can
+other LANG frontends; its elements can be written from literals, initialized
+scalar strings, or runtime string procedure results, then read for lexical comparison or output. Procedures can
 also capture an enclosing scalar `string` through typed module globals; an
 `own string` initializes to the empty string once and retains later assignments
 across calls.
