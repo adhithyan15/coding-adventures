@@ -8,7 +8,7 @@ concept_tag: GU-VERB-KARVU
 prerequisites: [GU-C05-bolvun]
 sounds: [long-aa, u-nasal]
 roots: [kr-do, karya-work]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C05-bolvun, GU-C05-rahevun]
 ---
 

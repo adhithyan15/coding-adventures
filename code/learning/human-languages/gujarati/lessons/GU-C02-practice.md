@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GU-C02-maarun-naam-chhe, GU-C02-tamarun-naam-shun-chhe, GU-C02-anand]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C02-naam, GU-C02-maarun, GU-C02-chhe, GU-C02-maarun-naam-chhe, GU-C02-tu-tame, GU-C02-shun, GU-C02-tamarun-naam-shun-chhe, GU-C02-anand]
 ---
 

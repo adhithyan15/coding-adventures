@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun, GU-C05-rahevun, GU-C05-kaam-karvun]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun, GU-C05-rahevun, GU-C05-kaam-karvun, GU-C03-hun]
 ---
 

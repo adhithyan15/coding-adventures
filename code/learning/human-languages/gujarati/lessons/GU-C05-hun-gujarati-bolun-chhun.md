@@ -8,7 +8,7 @@ concept_tag: GU-WORD-GUJARATI
 prerequisites: [GU-C05-bolvun, GU-C03-hun]
 sounds: [long-aa, u-nasal]
 roots: [gurjar]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C05-bolvun, GU-C03-hun]
 ---
 

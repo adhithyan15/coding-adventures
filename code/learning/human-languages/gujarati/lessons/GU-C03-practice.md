@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GU-C03-tame-kem-chho, GU-C03-majaa, GU-C03-vandho-nahi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C03-kem, GU-C03-tame-kem-chho, GU-C03-hun, GU-C03-majaa, GU-C03-vandho-nahi]
 ---
 

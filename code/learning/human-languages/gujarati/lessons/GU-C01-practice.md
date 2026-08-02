@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GU-C01-namaste, GU-C01-aabhaar, GU-C01-haa-naa, GU-C01-saarun, GU-C01-aavjo]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C01-namaste, GU-C01-aabhaar, GU-C01-haa-naa, GU-C01-saarun, GU-C01-aavjo]
 ---
 

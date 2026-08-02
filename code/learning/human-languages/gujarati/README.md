@@ -36,8 +36,13 @@ root, script taught inline, a publishable LaTeX book.
   "pāchhā maḷīshũ", kāle.
 - **Chapter 5 — The First Verbs** ([`lessons/GU-C05-*`](./lessons/)): bolvũ,
   "hũ gujarātī bolũ chhũ", rahevũ, kām karvũ.
+- **Chapter 6 — Numbers 1–5** ([`lessons/GU-C06-*`](./lessons/)): a short
+  counting lesson followed by a prerequisite-ordered history of why *be*
+  continues Sanskrit *dvé* and why *traṇ* regained an *r* after Prakrit lost it.
 
-All five chapters are in the book.
+Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
+its one-source book publication remains explicitly tracked in the shared
+backlog.
 
 ## Book / fonts
 

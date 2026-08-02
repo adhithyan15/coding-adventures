@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Marathi duration
-tranche: 20 registered tracks, 981 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the Gujarati duration
+tranche: 20 registered tracks, 982 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -49,11 +49,14 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-G02 | Complete in the Chapters 2–3 generation PR | Generate Spanish Chapters 2–3 from their canonical schema-v2 lesson AST. | Extends the proven one-source path across the rest of the migrated pilot before broad corpus work. |
 | HL-D01A | Complete in the Russian duration PR | Remove all nine sub-five-minute violations from the complete Russian starter track. | The report measures zero Russian violations; every changed or added lesson is below 300 effective seconds. |
 | HL-D01B | Complete in the Marathi duration PR | Remove all eight sub-five-minute violations from the Marathi track. | The report measures zero Marathi violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
-| HL-D01C | Next | Remove all nine sub-five-minute violations from the Gujarati track. | Gujarati is now the smallest remaining track-sized tranche; the gap report supplies the exact bounded lesson set. |
+| HL-D01C | Complete in the Gujarati duration PR | Remove all nine sub-five-minute violations from the Gujarati track. | The report measures zero Gujarati violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
+| HL-D01D | Next | Remove all ten sub-five-minute violations from the Punjabi track. | Punjabi and Sanskrit tie at ten; Punjabi has the smaller genuine split at 405 computed seconds versus Sanskrit's 513, so it is the safer next tranche. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B05 | Queued | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | A forced build succeeds but reports four repeated `lesson:practice` labels, 32 Hyperref PDF-string warnings, and two underfull boxes; the clean-build signal is zero of each. |
+| HL-B06 | Queued | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
+| HL-B07 | Queued | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -155,6 +158,30 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Gujarati's nine violations are now the smallest remaining track-sized set,
   ahead of Punjabi's and Sanskrit's ten each. HL-D01C is therefore next after
   this PR merges.
+
+## Findings from HL-D01C
+
+- Gujarati now has zero duration violations. The repository snapshot contains
+  982 lessons and 455 violations overall, down from 464 before this tranche;
+  unknown prerequisites remain at zero.
+- Eight lessons already computed between 110 and 184 seconds and only needed
+  honest four-minute declared budgets. The one genuinely long lesson computed
+  at 370 seconds.
+- That counting lesson is now a 174-second core followed by a 253-second
+  etymology lesson. The *dvé → be* inheritance, cross-Indic comparison, and
+  restored *r* in *traṇ* remain complete and prerequisite-ordered in the
+  canonical corpus consumed by Language Ladder.
+- Gujarati Chapter 6 has canonical lessons but is not in the current
+  five-chapter PDF. HL-B06 records its one-source migration and generation work
+  instead of adding another manual copy.
+- A forced build of the unchanged five-chapter book succeeds, but exposes four
+  missing punctuation glyphs, one overfull box, four underfull boxes, four
+  duplicate practice labels, and 28 Unicode bookmark warnings. HL-B07 records
+  that pre-existing publication hygiene debt separately.
+- Punjabi and Sanskrit tie for the smallest remaining set at ten violations,
+  each with nine declaration-only lessons and one genuine split. Punjabi's long
+  lesson computes at 405 seconds versus Sanskrit's 513, so HL-D01D takes Punjabi
+  first as the safer bounded tranche.
 
 ## Completed foundations
 

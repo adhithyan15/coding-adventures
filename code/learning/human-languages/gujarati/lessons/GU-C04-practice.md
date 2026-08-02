@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GU-C04-pachha-malishun, GU-C04-kaale]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GU-C01-aavjo, GU-C04-pachha, GU-C04-malishun, GU-C04-pachha-malishun, GU-C04-kaale]
 ---
 
