@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- A first-class `LanUdp` bridge transport for local UDP discovery, polling,
+  and command integrations.
 - First-class `Camera` entities and the `Onvif` protocol family for normalized
   camera integrations.
 - Serde support for the normalized smart-home model so versioned durable stores

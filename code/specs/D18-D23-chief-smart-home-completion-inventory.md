@@ -740,14 +740,32 @@ The camera-media broker is a portable policy boundary, not a transport host:
   capability profile; the later native ONVIF host owns and must obtain approval
   for its nonempty authority.
 
+## Current Govee LAN Integration Slice
+
+This slice adds a production local-UDP path for LAN-enabled Govee lights:
+
+- Govee multicast scans on `239.255.255.250:4001` collect bounded replies on
+  UDP 4002, validate each response against its source address, and emit
+  verified, no-pairing D23 discovery records.
+- Bounded `devStatus` requests inspect fixed device endpoints on UDP 4003 and
+  project power, brightness, RGB, and color-temperature state into normalized
+  light entities.
+- D23 authorization gates `turn`, `brightness`, and `colorwc` mutations before
+  native transfer, and a post-command status query verifies and records the
+  confirmed device state.
+- Real loopback UDP tests prove discovery, inspection, runtime installation,
+  authorization, command transfer, and post-command verification over the
+  production transport. LAN Control must be enabled on the device; this path
+  does not accept Govee cloud credentials.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  WLED, and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
-  events, RTSP media transfer and recording, vendor-specific camera/NVR
-  integrations, broader device families, a production Matter
+  WLED, Govee LAN, and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF
+  PullPoint camera events, RTSP media transfer and recording, vendor-specific
+  camera/NVR integrations, broader device families, a production Matter
   commissioning/secure-session/network host, a Thread border-router host, a
   production Zigbee coordinator/join/security host, and production Z-Wave
   inclusion and S2.

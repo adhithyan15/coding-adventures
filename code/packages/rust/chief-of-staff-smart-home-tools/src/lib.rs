@@ -51767,6 +51767,7 @@ fn topology_summary_json(summary: &RegistryTopologySummary) -> JsonValue {
         ("entities", integer(summary.entities as i64)),
         ("scenes", integer(summary.scenes as i64)),
         ("lan_http_bridges", integer(summary.lan_http_bridges as i64)),
+        ("lan_udp_bridges", integer(summary.lan_udp_bridges as i64)),
         ("mdns_bridges", integer(summary.mdns_bridges as i64)),
         ("serial_bridges", integer(summary.serial_bridges as i64)),
         ("ble_bridges", integer(summary.ble_bridges as i64)),
@@ -90416,6 +90417,7 @@ fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCall
         "mdns" => Ok(DiscoveryMechanism::Mdns),
         "ws_discovery" => Ok(DiscoveryMechanism::WsDiscovery),
         "ssdp" => Ok(DiscoveryMechanism::Ssdp),
+        "udp_multicast" => Ok(DiscoveryMechanism::UdpMulticast),
         "bluetooth" => Ok(DiscoveryMechanism::Bluetooth),
         "usb" => Ok(DiscoveryMechanism::Usb),
         "dhcp" => Ok(DiscoveryMechanism::Dhcp),
@@ -91946,6 +91948,7 @@ fn discovery_mechanism_label(mechanism: DiscoveryMechanism) -> &'static str {
         DiscoveryMechanism::Mdns => "mdns",
         DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
+        DiscoveryMechanism::UdpMulticast => "udp_multicast",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",
         DiscoveryMechanism::Dhcp => "dhcp",
@@ -92555,6 +92558,7 @@ impl BridgeTransportLabel for smart_home_core::BridgeTransport {
     fn as_str(self) -> &'static str {
         match self {
             smart_home_core::BridgeTransport::LanHttp => "lan_http",
+            smart_home_core::BridgeTransport::LanUdp => "lan_udp",
             smart_home_core::BridgeTransport::Mdns => "mdns",
             smart_home_core::BridgeTransport::Serial => "serial",
             smart_home_core::BridgeTransport::Ble => "ble",
@@ -96296,6 +96300,31 @@ mod tests {
     use smart_home_testkit::{confirmed_state, hue_bridge_discovery_record, hue_lighting_runtime};
 
     const AGENT_ID: &str = "agent:chief-smart-home";
+
+    #[test]
+    fn udp_discovery_and_transport_labels_round_trip() {
+        assert_eq!(
+            parse_discovery_mechanism("udp_multicast").unwrap(),
+            DiscoveryMechanism::UdpMulticast
+        );
+        assert_eq!(
+            discovery_mechanism_label(DiscoveryMechanism::UdpMulticast),
+            "udp_multicast"
+        );
+        assert_eq!(
+            smart_home_core::BridgeTransport::LanUdp.as_str(),
+            "lan_udp"
+        );
+
+        let summary = RegistryTopologySummary {
+            lan_udp_bridges: 2,
+            ..RegistryTopologySummary::default()
+        };
+        assert_eq!(
+            field(&topology_summary_json(&summary), "lan_udp_bridges"),
+            Some(&integer(2))
+        );
+    }
 
     #[test]
     fn smart_home_tool_definitions_are_valid() {

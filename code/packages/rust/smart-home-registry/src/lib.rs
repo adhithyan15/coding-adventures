@@ -257,6 +257,7 @@ pub struct RegistryTopologySummary {
     pub entities: usize,
     pub scenes: usize,
     pub lan_http_bridges: usize,
+    pub lan_udp_bridges: usize,
     pub mdns_bridges: usize,
     pub serial_bridges: usize,
     pub ble_bridges: usize,
@@ -328,6 +329,7 @@ impl RegistryTopologySummary {
     pub fn has_multi_transport_bridges(&self) -> bool {
         [
             self.lan_http_bridges,
+            self.lan_udp_bridges,
             self.mdns_bridges,
             self.serial_bridges,
             self.ble_bridges,
@@ -344,6 +346,7 @@ impl RegistryTopologySummary {
         self.bridges += 1;
         match bridge.transport {
             BridgeTransport::LanHttp => self.lan_http_bridges += 1,
+            BridgeTransport::LanUdp => self.lan_udp_bridges += 1,
             BridgeTransport::Mdns => self.mdns_bridges += 1,
             BridgeTransport::Serial => self.serial_bridges += 1,
             BridgeTransport::Ble => self.ble_bridges += 1,
@@ -2648,6 +2651,7 @@ mod tests {
                 entities: 3,
                 scenes: 2,
                 lan_http_bridges: 1,
+                lan_udp_bridges: 0,
                 mdns_bridges: 1,
                 serial_bridges: 0,
                 ble_bridges: 0,

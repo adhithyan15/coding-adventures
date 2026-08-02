@@ -4,6 +4,7 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `lan_udp` bridge transport projection and request parsing.
 - Added camera entity labels and Home Assistant-compatible `camera` domains to
   the local API projection.
 - Added an operational browser dashboard for native migrated views, runtime
