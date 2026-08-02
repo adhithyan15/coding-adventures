@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance source-squares validation.
+1. Rust Berkeley SPICE MOS instance drain-area validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite instance `NRS` values before lowering MOS
+   - Reject negative and non-finite instance `AD` values before lowering MOS
      elements into engine parameters.
-   - Preserve zero and positive source-square counts for `RSH * NRS` resistance.
+   - Preserve zero and positive drain areas for bulk-junction behavior.
 
 ## Completed Slices
 
@@ -3884,6 +3884,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite instance `NRD` values are rejected before lowering
      MOS elements into engine parameters.
    - Zero and positive drain-square counts remain accepted for `RSH * NRD`
+     resistance.
+
+330. Rust Berkeley SPICE MOS instance source-squares validation.
+   - Status: completed in PR 9437.
+   - Negative and non-finite instance `NRS` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive source-square counts remain accepted for `RSH * NRS`
      resistance.
 
 ## Backlog
