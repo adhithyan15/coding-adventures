@@ -1891,6 +1891,16 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(depletion_coefficient) = params.get("FC") {
+            if !depletion_coefficient.is_finite()
+                || *depletion_coefficient < 0.0
+                || *depletion_coefficient >= 1.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET FC must be finite and in [0, 1)",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
