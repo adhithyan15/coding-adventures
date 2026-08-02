@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [MR-C03-kaahi-harkat-nahi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [MR-C03-kasa, MR-C03-tumhi-kase-aahat, MR-C03-mi, MR-C03-mi-bara-aahe, MR-C03-kaahi-harkat-nahi]
 ---
 

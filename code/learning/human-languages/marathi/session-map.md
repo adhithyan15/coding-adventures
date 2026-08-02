@@ -1,4 +1,4 @@
-# Session Map — Marathi Chapters 1–5
+# Session Map — Marathi Chapters 1–6
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -66,7 +66,14 @@ word needs.
 | 32 | kaam-karne | काम करणे | "to work"; *karṇe* ← √*kṛ* (root of *namaskār*, *karma*) |
 | 33 | practice | (recap) | three verbs, one engine — sentences about yourself |
 
+## Chapter 6 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 34 | numbers-1-5 | एक, दोन, तीन, चार, पाच | retrieve the five forms; notice two written differences and one sound difference |
+| 35 | number-differences | दोन · तीन · पाच · चार | *don* copied *tīn* by analogy; Hindi retained *pāṁch*'s nasal; Marathi *chār* shifts toward *tsār* |
+
 ## Next
 
-Chapter 6 — numbers 1–10 (words + Devanagari digits १२३), then family and food,
-then the case-endings and the tenses where gender returns on the verb.
+Finish Chapter 6 with numbers 6–10 and Devanagari digits १२३, then family and
+food, then the case-endings and the tenses where gender returns on the verb.

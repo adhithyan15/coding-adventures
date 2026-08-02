@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [MR-C05-kaam-karne]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [MR-C05-bolne, MR-C05-mi-marathi-bolto, MR-C05-rahne, MR-C05-kaam-karne]
 ---
 

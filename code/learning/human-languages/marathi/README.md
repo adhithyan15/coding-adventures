@@ -30,8 +30,14 @@ book.
   "punhā bheṭū", "udyā bheṭū", kāḷjī ghyā.
 - **Chapter 5 — The First Verbs** ([`lessons/MR-C05-*`](./lessons/)): bolṇe, "mī
   marāṭhī bolto", rāhṇe, kām karṇe.
+- **Chapter 6 — Numbers 1–5** ([`lessons/MR-C06-*`](./lessons/)): a short
+  counting lesson followed by a prerequisite-ordered etymology lesson on why
+  *don* copied *tīn*, why Hindi retains *pāṁch*'s nasal, and why written *chār*
+  sounds nearer *tsār* in Marathi.
 
-All five chapters are in the book.
+Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
+its one-source book publication remains explicitly tracked in the shared
+backlog.
 
 ## Book / fonts
 

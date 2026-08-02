@@ -26,9 +26,11 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
 - **Ch. 5 — The First Verbs**: bolṇe → "mī marāṭhī bolto" → rāhṇe → kām karṇe →
   practice. The *-ṇe* infinitive; the gendered present (*-to/-te*); postposition
   *-āt*.
-- **Ch. 6 — Numbers 1–5** (`MR-C06-numbers-1-5`): *ek, don, tīn, chār, pāch* —
-  nearly Hindi's, and the differences are the lesson, because they are **two
-  different kinds of thing**. **दोन** *don*'s *-n* is an **innovation**: Prakrit
+- **Ch. 6 — Numbers 1–5** (`MR-C06-numbers-1-5` →
+  `MR-C06-number-differences`): first make *ek, don, tīn, chār, pāch* automatic,
+  then earn the deeper comparison in a separate sub-five-minute etymology
+  lesson. The differences are **two different kinds of thing**. **दोन** *don*'s
+  *-n* is an **innovation**: Prakrit
   *doṇṇi* took its ending **by analogy** from *tiṇṇi* "three" (where the **ṇ**
   genuinely belongs, ← neuter *trī́ṇi*, the doubling being a Prakrit trade for
   the lost *r*), so *two* was reshaped to rhyme with
@@ -43,7 +45,7 @@ extra letter ळ, and a Dravidian-flavoured everyday grammar. The script is taug
 
 | Chapter | Theme |
 |---|---|
-| 6 | Numbers 1–10 (native words + Devanagari digits १२३), counting, age |
+| 6 continuation | Numbers 6–10 (native words + Devanagari digits १२३), counting, age |
 | 7 | Family (*āī*, *bābā*, *bhāū*, *bahīṇ*) and the honorific *-jī* / *-rāv* |
 | 8 | Food and the market — where the Perso-Arabic and Portuguese loans cluster |
 | 9+ | The case-endings deepened, past and future tenses (where gender returns on the verb), everyday sentences — always with the Hindi/Dravidian contrast thread |
