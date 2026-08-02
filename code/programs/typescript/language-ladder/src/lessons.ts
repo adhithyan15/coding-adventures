@@ -99,6 +99,14 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
   const r = parsed.realization;
   const arr = (v: unknown): string[] =>
     Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+  const maxSeconds =
+    typeof fm["duration.max_seconds"] === "string"
+      ? Number(fm["duration.max_seconds"])
+      : undefined;
+  const estMinutes =
+    maxSeconds !== undefined && Number.isFinite(maxSeconds)
+      ? Math.ceil(maxSeconds / 60)
+      : Number(typeof fm.est_minutes === "string" ? fm.est_minutes : 0);
 
   return {
     id,
@@ -115,7 +123,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     script: r.script,
     etymologyHook: r.etymologyHook,
     body: parsed.body,
-    estMinutes: Number(typeof fm.est_minutes === "string" ? fm.est_minutes : 0),
+    estMinutes,
   };
 }
 

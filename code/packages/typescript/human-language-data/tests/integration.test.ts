@@ -70,6 +70,28 @@ describe("real curriculum", () => {
     expect(report.books.tracks).toHaveLength(20);
   });
 
+  it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const pilot = lessons.filter(
+      (lesson) =>
+        lesson.language === "spanish" &&
+        lesson.realization.chapter >= 1 &&
+        lesson.realization.chapter <= 3,
+    );
+    expect(pilot).toHaveLength(24);
+    expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(
+      report.duration.violations.filter(
+        (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
+      ),
+    ).toEqual([]);
+    expect(
+      report.prerequisites.laterChapterWithoutPrerequisites.filter(
+        (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
+      ),
+    ).toEqual([]);
+  });
+
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {
     // Every track realizes 'hello', so the join size tracks the track count.
     const langs = languagesForConcept(dataset, "GREETING-HELLO").map((r) => r.language);

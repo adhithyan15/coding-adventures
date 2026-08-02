@@ -117,8 +117,8 @@ function nonNegativeNumber(value: string): number | undefined {
 }
 
 function declaredDurationSeconds(lesson: ParsedLesson): number {
-  // The legacy parser flattens the indented `max_seconds` member from the HL04
-  // duration block, so both spellings keep the report useful during migration.
+  // The frontmatter parser flattens the indented `max_seconds` member from the
+  // HL04 duration block. The old spelling keeps reports useful during migration.
   const maxSeconds =
     nonNegativeNumber(stringValue(lesson.frontmatter["duration.max_seconds"])) ??
     nonNegativeNumber(stringValue(lesson.frontmatter.max_seconds));

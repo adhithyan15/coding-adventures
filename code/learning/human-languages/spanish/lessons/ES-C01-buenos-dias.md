@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C01-buenos-dias
+spine_node: SPINE-TIME-OF-DAY
+sequence: 60
 chapter: 1
 type: word
 headword: buenos días
@@ -8,7 +11,19 @@ concept_tag: GREETING-MORNING
 prerequisites: [ES-C01-bien, ES-C01-dia]
 sounds: [diphthong-ue, accent-i]
 roots: [bonus, dies]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-BIEN, ES-MORPH-BUENO-BUENA, ES-LEX-DIA, ES-GRAMMAR-NOUN-NUMBER]
+introduces:
+  knowledge: [ES-LEX-BUENOS-DIAS, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]
+practises:
+  knowledge: [ES-LEX-BUENOS-DIAS, ES-LEX-BIEN, ES-LEX-DIA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-bien, ES-C01-dia]
 ---
 

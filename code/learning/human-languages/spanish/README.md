@@ -33,6 +33,10 @@ README is "how to actually use this."
 6. **Grammar from zero, contrasted with English.** Grammar concepts are
    introduced in context on the first word that needs them, explained with no
    assumed terminology.
+7. **An executable five-minute progression.** Chapters 1–3 use HL04 schema v2:
+   each lesson has a stable local sequence, a shared-spine node, declared
+   knowledge inputs and outputs, typed body blocks, and an independently checked
+   duration below 300 seconds.
 
 ## How to use this in the car
 
@@ -81,14 +85,15 @@ All built **atom-first** (word first, then assembled) with grammar introduced
 exactly where a word needs it:
 
 - **Chapter 1 — Hola and Buenos Días**: hola → bien (+ bueno/buena) → el / la
-  (**grammatical gender**, traced to Latin *ille/illa*) → día (first noun,
+  → grammatical gender (a separate short support lesson) → día (first noun,
   applies gender; + the plural rule) → buenos días (assembled, introduces
   **agreement**) → practice.
 - **Chapter 2 — The Rest of the Greetings**: tarde → buenas tardes
   (**feminine** agreement) → noche → buenas noches → practice.
 - **Chapter 3 — Introducing Yourself**: me → llamar → me llamo (**reflexive
-  verbs**) → **tú / usted** (informal vs formal "you," both roots traced) →
-  cómo → se llama → ¿cómo se llama usted? → mucho → mucho gusto → practice.
+  verbs**) → **tú / usted** (informal vs formal "you") → the *vuestra merced*
+  origin of *usted* → cómo → the Latin *qu-* question family → se llama →
+  ¿cómo se llama usted? → mucho → mucho gusto → practice.
 - **Chapter 4 — How Are You**: gracias → de nada → estar → ¿cómo está usted? →
   regular → practice.
 - **Chapter 5 — Farewells**: adiós → hasta → hasta luego / mañana / pronto.

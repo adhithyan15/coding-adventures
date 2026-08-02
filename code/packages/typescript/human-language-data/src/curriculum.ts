@@ -1,6 +1,7 @@
 // Pure validation for the structured HL04 language registry and shared spine.
 
 import { CONTENT_TYPES, hasOwn } from "./constants.js";
+import { DURATION_THRESHOLD_SECONDS, estimateLessonDuration } from "./report.js";
 import type {
   BookCorpus,
   CurriculumSpine,
@@ -9,6 +10,20 @@ import type {
   Taxonomy,
 } from "./types.js";
 import type { ParsedLesson } from "./parse.js";
+
+const SCHEMA_V2_SKILLS = new Set(["listening", "speaking", "reading", "writing"]);
+const SCHEMA_V2_MODES = new Set(["interpretive", "interpersonal", "presentational", "mediation"]);
+const SCHEMA_V2_STRANDS = new Set(["meaning-input", "meaning-output", "language-focus", "fluency"]);
+const KNOWLEDGE_ATOM = /^[A-Z]{2,}(?:-[A-Z0-9]+)+$/;
+
+function stringValue(value: ParsedLesson["frontmatter"][string] | undefined): string {
+  return typeof value === "string" ? value : "";
+}
+
+function stringList(value: ParsedLesson["frontmatter"][string] | undefined): string[] {
+  if (Array.isArray(value)) return value;
+  return typeof value === "string" && value.trim() !== "" ? [value] : [];
+}
 
 export interface CurriculumValidationInput {
   registry: LanguageRegistry;
@@ -84,6 +99,10 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       warning("long-micro-lesson", `${id}: estimated at ${estimate} minutes; new spine lessons should be at most 5`, id);
     }
     if (lesson.body.trim() === "") warning("empty-lesson-body", `${id}: lesson has no authored body`, id);
+    const schemaVersion = stringValue(lesson.frontmatter.schema_version);
+    if (schemaVersion !== "" && schemaVersion !== "1" && schemaVersion !== "2") {
+      error("unknown-lesson-schema-version", `${id}: schema_version '${schemaVersion}' is not supported`);
+    }
   }
 
   const prerequisites = (lesson: ParsedLesson): string[] => {
@@ -161,6 +180,197 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     visited.add(id);
   };
   for (const id of nodeIds) visit(id);
+
+  // Schema v1 remains readable during migration. Version 2 is the strict HL04
+  // contract used by both books and apps, so every declared field is executable.
+  const schema2Lessons = lessons.filter(
+    (lesson) => stringValue(lesson.frontmatter.schema_version) === "2",
+  );
+  const sequences = new Map<string, Map<number, string>>();
+  const introducedByLesson = new Map<string, string[]>();
+  const atomOwner = new Map<string, Map<string, string>>();
+  for (const lesson of schema2Lessons) {
+    const id = lesson.realization.lessonId;
+    const fm = lesson.frontmatter;
+    const spineNode = stringValue(fm.spine_node);
+    if (!nodeIds.has(spineNode)) {
+      error("schema-v2-unknown-spine-node", `${id}: spine_node '${spineNode}' is not canonical`);
+    }
+
+    const sequence = Number(stringValue(fm.sequence));
+    if (!Number.isInteger(sequence) || sequence <= 0) {
+      error("schema-v2-invalid-sequence", `${id}: sequence must be a positive integer`);
+    } else {
+      const languageSequences = sequences.get(lesson.language) ?? new Map<number, string>();
+      const previous = languageSequences.get(sequence);
+      if (previous) {
+        error(
+          "schema-v2-duplicate-sequence",
+          `${id}: sequence ${sequence} is already used by ${previous} in ${lesson.language}`,
+        );
+      } else {
+        languageSequences.set(sequence, id);
+      }
+      sequences.set(lesson.language, languageSequences);
+    }
+
+    const declaredSeconds = Number(stringValue(fm["duration.max_seconds"]));
+    if (!Number.isInteger(declaredSeconds) || declaredSeconds < 1 || declaredSeconds >= DURATION_THRESHOLD_SECONDS) {
+      error(
+        "schema-v2-invalid-duration",
+        `${id}: duration.max_seconds must be an integer from 1 through 299`,
+      );
+    }
+    const estimate = estimateLessonDuration(lesson);
+    if (estimate.effectiveSeconds >= DURATION_THRESHOLD_SECONDS) {
+      error(
+        "schema-v2-duration-budget",
+        `${id}: effective duration is ${estimate.effectiveSeconds}s ` +
+          `(declared ${estimate.declaredSeconds}s, computed ${estimate.computedSeconds}s)`,
+      );
+    }
+
+    const requiredListFields = [
+      "requires.knowledge",
+      "introduces.knowledge",
+      "practises.knowledge",
+      "skills",
+      "modes",
+      "strands",
+    ];
+    for (const field of requiredListFields) {
+      if (!hasOwn(fm, field) || !Array.isArray(fm[field])) {
+        error("schema-v2-missing-list", `${id}: ${field} must be an authored list`);
+      }
+    }
+    for (const field of ["register", "variety"]) {
+      if (stringValue(fm[field]).trim() === "") {
+        error("schema-v2-missing-metadata", `${id}: ${field} must be explicit`);
+      }
+    }
+    for (const [field, allowed] of [
+      ["skills", SCHEMA_V2_SKILLS],
+      ["modes", SCHEMA_V2_MODES],
+      ["strands", SCHEMA_V2_STRANDS],
+    ] as const) {
+      const values = stringList(fm[field]);
+      if (values.length === 0) {
+        error("schema-v2-empty-coverage", `${id}: ${field} must contain at least one value`);
+      }
+      for (const value of values) {
+        if (!allowed.has(value)) {
+          error("schema-v2-unknown-coverage", `${id}: ${field} contains unknown value '${value}'`);
+        }
+      }
+    }
+
+    if (lesson.blocks.length === 0) {
+      error("schema-v2-empty-blocks", `${id}: body contains no typed level-two blocks`);
+    } else {
+      if (lesson.blocks[0]?.type !== "warmup") {
+        error("schema-v2-first-block", `${id}: first body block must be warmup`);
+      }
+      if (lesson.blocks.at(-1)?.type !== "recall") {
+        error("schema-v2-last-block", `${id}: last body block must be recall`);
+      }
+    }
+    for (const block of lesson.blocks) {
+      if (block.type === "unknown") {
+        error("schema-v2-unknown-block", `${id}: heading '${block.title}' has no stable block type`);
+      }
+      if (block.markdown.trim() === "") {
+        error("schema-v2-empty-block", `${id}: block '${block.title}' is empty`);
+      }
+    }
+
+    for (const prerequisite of prerequisites(lesson)) {
+      const resolved = lessonById.get(prerequisite);
+      if (resolved && resolved.language !== lesson.language) {
+        error(
+          "schema-v2-cross-language-prerequisite",
+          `${id}: prerequisite '${prerequisite}' belongs to ${resolved.language}`,
+        );
+      }
+    }
+
+    const introduced = stringList(fm["introduces.knowledge"]);
+    introducedByLesson.set(id, introduced);
+    const languageOwners = atomOwner.get(lesson.language) ?? new Map<string, string>();
+    for (const field of ["requires.knowledge", "introduces.knowledge", "practises.knowledge"]) {
+      for (const atom of stringList(fm[field])) {
+        if (!KNOWLEDGE_ATOM.test(atom)) {
+          error("schema-v2-invalid-knowledge-atom", `${id}: '${atom}' is not a stable knowledge atom id`);
+        }
+      }
+    }
+    for (const atom of introduced) {
+      const previous = languageOwners.get(atom);
+      if (previous) {
+        error(
+          "schema-v2-duplicate-knowledge-introduction",
+          `${id}: '${atom}' was already introduced by ${previous}`,
+        );
+      } else {
+        languageOwners.set(atom, id);
+      }
+    }
+    atomOwner.set(lesson.language, languageOwners);
+  }
+
+  for (const lesson of schema2Lessons) {
+    const sequence = Number(stringValue(lesson.frontmatter.sequence));
+    for (const prerequisite of prerequisites(lesson)) {
+      const resolved = lessonById.get(prerequisite);
+      if (!resolved || stringValue(resolved.frontmatter.schema_version) !== "2") continue;
+      const prerequisiteSequence = Number(stringValue(resolved.frontmatter.sequence));
+      if (Number.isFinite(sequence) && Number.isFinite(prerequisiteSequence) && prerequisiteSequence >= sequence) {
+        error(
+          "schema-v2-prerequisite-order",
+          `${lesson.realization.lessonId}: prerequisite '${prerequisite}' must have an earlier sequence`,
+        );
+      }
+    }
+  }
+
+  const prerequisiteKnowledge = (lesson: ParsedLesson): Set<string> => {
+    const known = new Set<string>();
+    const walked = new Set<string>();
+    const walk = (id: string): void => {
+      if (walked.has(id)) return;
+      walked.add(id);
+      for (const atom of introducedByLesson.get(id) ?? []) known.add(atom);
+      const resolved = lessonById.get(id);
+      if (resolved && resolved.language === lesson.language) {
+        for (const prerequisite of prerequisites(resolved)) walk(prerequisite);
+      }
+    };
+    for (const prerequisite of prerequisites(lesson)) walk(prerequisite);
+    return known;
+  };
+  for (const lesson of schema2Lessons) {
+    const id = lesson.realization.lessonId;
+    const known = prerequisiteKnowledge(lesson);
+    for (const atom of stringList(lesson.frontmatter["requires.knowledge"])) {
+      if (!known.has(atom)) {
+        error(
+          "schema-v2-knowledge-not-closed",
+          `${id}: required atom '${atom}' is not introduced by a transitive prerequisite`,
+        );
+      }
+    }
+    const available = new Set([
+      ...known,
+      ...stringList(lesson.frontmatter["introduces.knowledge"]),
+    ]);
+    for (const atom of stringList(lesson.frontmatter["practises.knowledge"])) {
+      if (!available.has(atom)) {
+        error(
+          "schema-v2-practice-before-introduction",
+          `${id}: practised atom '${atom}' is not yet available`,
+        );
+      }
+    }
+  }
 
   const spineConcepts = new Set(conceptOwner.keys());
   for (const language of registry.languages) {

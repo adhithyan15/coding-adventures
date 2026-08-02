@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C02-practice
+spine_node: SPINE-TIME-OF-DAY
+sequence: 120
 chapter: 2
 type: practice-mix
 headword: (practice)
@@ -8,7 +11,19 @@ concept_tag: CH2-PRACTICE
 prerequisites: [ES-C01-hola, ES-C01-buenos-dias, ES-C02-buenas-tardes, ES-C02-buenas-noches]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C01-hola, ES-C01-buenos-dias, ES-C02-buenas-tardes, ES-C02-buenas-noches]
 ---
 

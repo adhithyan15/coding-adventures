@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C03-como
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 180
 chapter: 3
 type: word
 headword: cómo
 gloss: how
 concept_tag: QUESTION-HOW
-prerequisites: []
+prerequisites: [ES-C02-practice]
 sounds: [accent-mark, soft-c, inverted-marks]
 roots: [quomodo]
-est_minutes: 3
-reviews_of: [ES-C03-tu-usted]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-SOUND-WRITTEN-ACCENT]
+introduces:
+  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT, ES-ETYMON-QUOMODO]
+practises:
+  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
+reviews_of: [ES-C01-dia]
 ---
 
 # cómo — "how," your first question word
@@ -51,23 +66,6 @@ river. The same erosion gave Italian *come*, Portuguese *como*, French
 *comme*. The accent in *cómo* is the one late addition: Spanish stamps it on
 to mark the question (vs. accent-less *como*, "like / as").
 
-**The whole question family is worn-down Latin *qu-*.** Once you see *cómo ←
-quomodo*, the rest fall into place — nearly every Spanish question word is an
-eroded Latin *qu-* interrogative:
-
-| Spanish | ← Latin | meaning |
-|---|---|---|
-| qué | *quid* | what |
-| quién | *quem* | who |
-| cuál | *qualis* | which |
-| cuándo | *quando* | when |
-| cuánto | *quantus* | how much |
-| **cómo** | *quomodo* | how |
-
-Learn one derivation and you've cracked the pattern behind all of them.
-(*dónde*, "where," is the odd one out — from *de unde*, "from where," not the
-*qu-* stem.)
-
 ## Grammar Lens: the accent that marks a question
 
 Watch the accent mark do real work. **cómo** (with the accent) = "how?", the
@@ -90,5 +88,5 @@ puts a visible flag on the question word. Every question word you'll learn
 ## Wrap-up Recall
 
 [PAUSE 3s] Walk the erosion: *quomodo* → ? → *cómo* (*quomo* → *como*, then
-the question-accent). And what single Latin stem gives *qué, quién, cuándo,
-cómo*? (The question-stem *qu-*.)
+the question-accent). What changes when the accent disappears? (*como* is no
+longer the question word "how.")

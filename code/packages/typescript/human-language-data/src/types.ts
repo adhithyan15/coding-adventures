@@ -133,6 +133,31 @@ export interface BookCorpus {
   books: LanguageBook[];
 }
 
+// ---- Typed lesson body (HL04 schema v2) ----------------------------------
+
+export type LessonBlockType =
+  | "warmup"
+  | "input"
+  | "notice"
+  | "pronunciation"
+  | "script"
+  | "etymology"
+  | "grammar"
+  | "culture-pragmatics"
+  | "guided-production"
+  | "comprehension"
+  | "fluency"
+  | "recall"
+  | "unknown";
+
+export interface LessonBodyBlock {
+  type: LessonBlockType;
+  /** Original level-two heading, kept for book/app presentation. */
+  title: string;
+  /** Lossless Markdown between this heading and the next typed block. */
+  markdown: string;
+}
+
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----
 //
 // Deliberately GENERAL, so one schema can teach any writing system. It has to

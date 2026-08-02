@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C02-buenas-tardes
+spine_node: SPINE-TIME-OF-DAY
+sequence: 90
 chapter: 2
 type: word
 headword: buenas tardes
@@ -8,7 +11,19 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [ES-C01-bien, ES-C02-tarde]
 sounds: [diphthong-ue, stress-default-vowel-ns]
 roots: [bonus, tardus]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-MORPH-BUENO-BUENA, ES-LEX-TARDE, ES-GRAMMAR-NOUN-GENDER]
+introduces:
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
+practises:
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-BUENOS-DIAS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-bien, ES-C01-buenos-dias, ES-C02-tarde]
 ---
 

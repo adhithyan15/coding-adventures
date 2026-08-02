@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C03-gusto
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 230
 chapter: 3
 type: word
 headword: mucho gusto
 gloss: pleased to meet you (literally "much pleasure")
 concept_tag: INTRO-NICE-TO-MEET-YOU
-prerequisites: [ES-C03-mucho]
+prerequisites: [ES-C03-mucho, ES-C03-como-se-llama]
 sounds: [vowel-o, stress-default-vowel-ns]
 roots: [gustus, multus]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-MUCHO, ES-LEX-COMO-SE-LLAMA]
+introduces:
+  knowledge: [ES-LEX-MUCHO-GUSTO]
+practises:
+  knowledge: [ES-LEX-MUCHO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-como-se-llama, ES-C03-mucho]
 ---
 

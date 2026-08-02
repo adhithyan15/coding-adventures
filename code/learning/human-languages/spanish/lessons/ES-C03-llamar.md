@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C03-llamar
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 140
 chapter: 3
 type: word
 headword: llamo
@@ -8,7 +11,19 @@ concept_tag: ES-VERB-LLAMAR
 prerequisites: [ES-C03-me]
 sounds: [ll-y, vowel-o]
 roots: [clamare]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-ME, ES-GRAMMAR-OBJECT-PRONOUN]
+introduces:
+  knowledge: [ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB]
+practises:
+  knowledge: [ES-LEX-ME, ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-me]
 ---
 

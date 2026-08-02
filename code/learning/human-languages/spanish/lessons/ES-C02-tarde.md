@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C02-tarde
+spine_node: SPINE-TIME-OF-DAY
+sequence: 80
 chapter: 2
 type: word
 headword: la tarde
@@ -8,7 +11,19 @@ concept_tag: TIME-AFTERNOON
 prerequisites: [ES-C01-dia, ES-C01-buenos-dias]
 sounds: [vowel-a, stress-default-vowel-ns]
 roots: [tardus]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS]
+introduces:
+  knowledge: [ES-LEX-TARDE]
+practises:
+  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-LEX-TARDE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-buenos-dias]
 ---
 

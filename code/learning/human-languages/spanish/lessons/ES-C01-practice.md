@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C01-practice
+spine_node: SPINE-MEET-GREET
+sequence: 70
 chapter: 1
 type: practice-mix
 headword: (practice)
@@ -8,7 +11,19 @@ concept_tag: CH1-PRACTICE
 prerequisites: [ES-C01-hola, ES-C01-bien, ES-C01-dia, ES-C01-buenos-dias]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C01-hola, ES-C01-bien, ES-C01-dia, ES-C01-buenos-dias]
 ---
 

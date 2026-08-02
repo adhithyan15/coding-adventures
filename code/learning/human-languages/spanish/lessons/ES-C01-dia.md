@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C01-dia
+spine_node: SPINE-TIME-OF-DAY
+sequence: 50
 chapter: 1
 type: word
 headword: día
 gloss: day (el día — masculine)
 concept_tag: TIME-DAY
-prerequisites: [ES-C01-el-la]
+prerequisites: [ES-C01-genero-gramatical]
 sounds: [accent-i, vowel-a, d-soft]
 roots: [dies]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER]
+introduces:
+  knowledge: [ES-LEX-DIA, ES-GRAMMAR-NOUN-NUMBER, ES-SOUND-WRITTEN-ACCENT]
+practises:
+  knowledge: [ES-LEX-DIA, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-el-la]
 ---
 

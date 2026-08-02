@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C02-noche
+spine_node: SPINE-TIME-OF-DAY
+sequence: 100
 chapter: 2
 type: word
 headword: la noche
@@ -8,7 +11,19 @@ concept_tag: TIME-NIGHT
 prerequisites: [ES-C02-tarde]
 sounds: [soft-c, stress-default-vowel-ns]
 roots: [nox]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-TARDE, ES-GRAMMAR-NOUN-GENDER]
+introduces:
+  knowledge: [ES-LEX-NOCHE, ES-SOUND-LATIN-CLUSTER-TO-CH]
+practises:
+  knowledge: [ES-LEX-TARDE, ES-LEX-NOCHE, ES-GRAMMAR-NOUN-GENDER]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C02-tarde, ES-C02-buenas-tardes]
 ---
 

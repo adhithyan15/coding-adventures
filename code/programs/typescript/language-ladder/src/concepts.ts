@@ -106,6 +106,8 @@ export function datasetFromLessons(
     // an empty object is honest about that rather than reconstructing a fake.
     frontmatter: {},
     body: l.body,
+    preamble: "",
+    blocks: [],
     realization: {
       concept: l.concept,
       language: l.language,

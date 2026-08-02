@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C01-hola
+spine_node: SPINE-MEET-GREET
+sequence: 10
 chapter: 1
 type: word
 headword: hola
@@ -8,7 +11,19 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [silent-h, vowel-o, vowel-a, inverted-marks]
 roots: []
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]
+practises:
+  knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: []
 ---
 

@@ -7,7 +7,7 @@
 export * from "./types.js";
 export * from "./constants.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
-export { parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
+export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
   allConcepts,
   conceptsByLanguage,

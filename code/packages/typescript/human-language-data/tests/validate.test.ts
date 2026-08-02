@@ -98,6 +98,18 @@ describe("validate", () => {
     expect(issues.some((i) => i.code === "unresolved-concept")).toBe(false);
   });
 
+  it("accepts grammar and etymology support lessons without concept tags", () => {
+    const support = ["grammar", "etymology"].map((type) =>
+      parseLesson(
+        lesson({ id: `ES-${type}`, chapter: "1", type, headword: type, gloss: `${type} support`, concept_tag: "" }),
+        "spanish",
+      ),
+    );
+    const issues = validate({ taxonomy, lessons: support });
+    expect(issues.some((i) => i.code === "unknown-type")).toBe(false);
+    expect(issues.some((i) => i.code === "missing-concept")).toBe(false);
+  });
+
   it("treats missing core coverage as info, but as error for parity-complete tracks", () => {
     const lessons = [good("spanish", "ES1", "GREETING-HELLO")]; // missing COURTESY-THANKS
     const infoIssues = validate({ taxonomy, lessons });

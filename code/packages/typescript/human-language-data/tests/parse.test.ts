@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseLesson, buildDataset } from "../src/parse.js";
+import { parseBodyBlocks, parseLesson, buildDataset } from "../src/parse.js";
 import type { Taxonomy } from "../src/types.js";
 
 const lesson = (fields: Record<string, string>) =>
@@ -70,6 +70,34 @@ describe("parseLesson", () => {
     );
     expect(p.script).toBe("hebrew");
     expect(p.realization.romanization).toBe("shalom");
+  });
+
+  it("preserves the preamble and parses stable typed body blocks", () => {
+    const body = [
+      "# hola — hello",
+      "",
+      "## Warm-up",
+      "Remember yesterday.",
+      "",
+      "## The word, taken apart",
+      "A root note.",
+      "",
+      "## Wrap-up Recall",
+      "Say it once.",
+    ].join("\n");
+    const parsed = parseBodyBlocks(body);
+    expect(parsed.preamble).toBe("# hola — hello");
+    expect(parsed.blocks).toEqual([
+      { type: "warmup", title: "Warm-up", markdown: "Remember yesterday." },
+      { type: "etymology", title: "The word, taken apart", markdown: "A root note." },
+      { type: "recall", title: "Wrap-up Recall", markdown: "Say it once." },
+    ]);
+  });
+
+  it("marks unregistered headings as unknown instead of discarding them", () => {
+    expect(parseBodyBlocks("## A surprising section\nKeep me.").blocks).toEqual([
+      { type: "unknown", title: "A surprising section", markdown: "Keep me." },
+    ]);
   });
 });
 
