@@ -102,6 +102,9 @@ runtime `str_concat`/`str_cmp`/`print_str` path. Reads before assignment still
 fail closed. `string array A[1:2]` uses the same `array<str>` substrate as
 other LANG frontends; its elements can be written from literals, initialized
 scalar strings, or runtime string procedure results, then read for lexical comparison or output. Procedures can
+also pass a runtime string procedure result directly through another `string`
+value formal: `matches(pick(1))` preserves the dynamic `str` across both call
+boundaries before the callee compares it. Procedures can
 also capture an enclosing scalar `string` through typed module globals; an
 `own string` initializes to the empty string once and retains later assignments
 across calls.

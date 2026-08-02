@@ -800,7 +800,9 @@ backend immediately) come before the enabler-dependent items.
   Runtime string procedure results can now be copied into initialized scalar
   locals, compared for equality or lexical ordering, and printed across the
   standard seven backends; the same program is executed on BEAM using
-  printable-ASCII character lists. `string array A[1:2]` now reuses the E5
+  printable-ASCII character lists. Those dynamic results also compose as
+  `string` value actuals (`matches(pick(1))`) before the callee's equality test
+  selects an integer result on all seven standard backends. `string array A[1:2]` now reuses the E5
   `array<str>` substrate on all seven standard backends: literal, initialized-scalar,
   and runtime string-procedure elements can be read for lexical ordering and output.
   Captured strings use typed globals,
