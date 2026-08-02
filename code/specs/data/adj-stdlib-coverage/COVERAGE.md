@@ -11,8 +11,8 @@ exists. Semantic coverage is tracked in `code/specs/ADJ-STDLIB-COVERAGE.md`.
 | Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-pinned |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | facts | 141 | 142 | 141 (100.0%) | 141 (100.0%) | 141 (100.0%) | 0 (0.0%) |
-| formulas | 155 | 387 | 150 (96.8%) | 155 (100.0%) | 155 (100.0%) | 0 (0.0%) |
-| medical-recall | 63 | 634 | 58 (92.1%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
+| formulas | 155 | 387 | 155 (100.0%) | 155 (100.0%) | 155 (100.0%) | 0 (0.0%) |
+| medical-recall | 63 | 634 | 63 (100.0%) | 63 (100.0%) | 60 (95.2%) | 0 (0.0%) |
 
 A complete source envelope means every grounded clause has `source`,
 `locator`, and `trust`. Byte-pinned additionally requires every clause to
@@ -45,29 +45,20 @@ lets `adj-verify --snapshots` check the exact bytes rather than trust a label.
 | `facts/optics` | 1 | 1 | 1 | 1 | 1 | 0 |
 | `facts/physics` | 19 | 19 | 19 | 19 | 19 | 0 |
 | `facts/transportation` | 1 | 1 | 1 | 1 | 1 | 0 |
-| `formulas/arithmetic` | 10 | 20 | 8 | 10 | 10 | 0 |
+| `formulas/arithmetic` | 10 | 20 | 10 | 10 | 10 | 0 |
 | `formulas/chemistry` | 7 | 26 | 7 | 7 | 7 | 0 |
-| `formulas/clinical` | 84 | 263 | 81 | 84 | 84 | 0 |
+| `formulas/clinical` | 84 | 263 | 84 | 84 | 84 | 0 |
 | `formulas/mathematics` | 1 | 4 | 1 | 1 | 1 | 0 |
 | `formulas/metrology` | 1 | 3 | 1 | 1 | 1 | 0 |
 | `formulas/physics` | 13 | 32 | 13 | 13 | 13 | 0 |
 | `formulas/reference` | 39 | 39 | 39 | 39 | 39 | 0 |
-| `medical-recall/recall` | 63 | 634 | 58 | 63 | 60 | 0 |
+| `medical-recall/recall` | 63 | 634 | 63 | 63 | 60 | 0 |
 
 ## Structural Gaps
 
-### Missing worked-query import (10)
+### Missing worked-query import (0)
 
-- `code/specs/data/adj-formula-stdlib/arithmetic/average.adj`
-- `code/specs/data/adj-formula-stdlib/arithmetic/percent.adj`
-- `code/specs/data/adj-formula-stdlib/clinical/bmi.adj`
-- `code/specs/data/adj-formula-stdlib/clinical/bmi_category.adj`
-- `code/specs/data/adj-formula-stdlib/clinical/cockcroft_gault.adj`
-- `code/specs/data/mycin-2026/recall/anemia-edges.adj`
-- `code/specs/data/mycin-2026/recall/coag-edges.adj`
-- `code/specs/data/mycin-2026/recall/endocrine-edges.adj`
-- `code/specs/data/mycin-2026/recall/iem-edges.adj`
-- `code/specs/data/mycin-2026/recall/vitamin-edges.adj`
+None.
 
 ### Not named by a repository test (0)
 
