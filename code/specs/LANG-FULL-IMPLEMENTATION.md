@@ -798,8 +798,9 @@ backend immediately) come before the enabler-dependent items.
   locals, compared for equality or lexical ordering, and printed across the
   standard seven backends; the same program is executed on BEAM using
   printable-ASCII character lists. `string array A[1:2]` now reuses the E5
-  `array<str>` substrate on all seven standard backends: literal elements can
-  be read for lexical ordering and output. Captured strings use typed globals,
+  `array<str>` substrate on all seven standard backends: literal, initialized-scalar,
+  and runtime string-procedure elements can be read for lexical ordering and output.
+  Captured strings use typed globals,
   and `own string` initializes once to the empty string before retaining later
   assignments across calls. Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.

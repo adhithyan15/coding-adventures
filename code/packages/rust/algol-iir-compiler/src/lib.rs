@@ -7049,6 +7049,45 @@ mod tests {
         assert_eq!(run_i64(src), 42);
     }
 
+    /// A runtime `string procedure` result is a normal `str` value, so it can
+    /// cross an `array_set`/`array_get` round trip before lexical comparison.
+    #[test]
+    fn string_array_accepts_runtime_procedure_results() {
+        let src = concat!(
+            "begin string array words[1:2]; integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "words[1] := pick(1); words[2] := pick(0); ",
+            "if words[1] < words[2] then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string array program compiles");
+        let main = module.get_function("main").expect("has main");
+        let first_call = main
+            .instructions
+            .iter()
+            .position(|instr| instr.op == "call" && instr.type_hint == "str")
+            .expect("runtime string procedure call");
+        let first_store = main
+            .instructions
+            .iter()
+            .position(|instr| instr.op == "array_set" && instr.type_hint == "str")
+            .expect("runtime string array store");
+        assert!(
+            first_call < first_store,
+            "the procedure result must be evaluated before array storage: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions
+                .iter()
+                .any(|instr| instr.op == "array_get" && instr.type_hint == "str"),
+            "runtime string array reads must remain typed str values: {:?}",
+            main.instructions
+        );
+    }
+
     // ── AL-pow: ALGOL 60 `↑` exponentiation (spelled `^`) ───────────────────
 
     /// `integer ↑ integer-literal` unrolls to repeated integer multiply and

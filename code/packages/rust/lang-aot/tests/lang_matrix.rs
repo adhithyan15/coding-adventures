@@ -1346,6 +1346,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — runtime string procedure results remain valid `array<str>`
+    // elements. The array store/read boundary must preserve the runtime handle
+    // for lexical ordering and output, rather than relying on literal slots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: concat!(
+            "begin string array words[1:2]; integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "words[1] := pick(1); words[2] := pick(0); ",
+            "if words[1] < words[2] then result := 42 else result := 0; ",
+            "print(words[1]) end",
+        ),
+        expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — explicit empty argument lists for a zero-argument typed
     // procedure in value position and a proper procedure in statement
     // position. Both lower through the shared zero-argument IIR call ABI.
@@ -5225,6 +5242,37 @@ fn algol_string_array_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but string array execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_runtime_string_procedure_results_survive_string_array_storage_on_every_available_standard_backend(
+) {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("words[1] := pick(1)")
+                && program.src.contains("string procedure pick")
+        })
+        .expect("the runtime string-to-array ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but runtime string array execution did not complete"
             );
             continue;
         };
