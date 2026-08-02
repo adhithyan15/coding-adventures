@@ -33,6 +33,12 @@ concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```
 
+The unified publication job also emits `curriculum-gaps.json` and
+`curriculum-gaps.txt` beside the books. They record the effective duration budget
+for every over-limit lesson, prerequisite omissions, lesson-to-book chapter
+coverage, and each track's schema-migration status. Existing migration debt is
+reported rather than hidden or treated as a new regression.
+
 The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
 losslessly and checks that each authored book chapter maps to its short Markdown
 lessons. This preserves the well-received book narrative while the pipeline moves

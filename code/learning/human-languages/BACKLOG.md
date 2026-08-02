@@ -5,9 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after PR #9474: 20 registered
-tracks, 973 Markdown lessons, and 19 downloadable LaTeX books. The Russian item
-below adds the twentieth book without adding a parallel publication workflow.
+Last prioritized: 2026-08-02. Current baseline after PR #9478: 20 registered
+tracks, 973 Markdown lessons, and 20 downloadable LaTeX books. HL-V01 makes the
+remaining migration debt reproducible in both JSON and human-readable reports.
 
 ## Priority rules
 
@@ -22,8 +22,8 @@ below adds the twentieth book without adding a parallel publication workflow.
 |---|---|---|---|
 | HL-B01 | Complete (#9472) | Publish the five authored Persian lessons as a two-chapter LaTeX starter book. | XeLaTeX builds the book; CI discovers an 18th PDF; chapters map to lessons 1 and 2. |
 | HL-B02 | Complete (#9474) | Publish the five authored Urdu lessons as a two-chapter starter book. | XeLaTeX builds with correct RTL shaping; Urdu appears in the public catalog. |
-| HL-B03 | Complete in the Russian starter-book PR | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
-| HL-V01 | Next | Add a machine-readable curriculum gap report and computed duration budget. | CI reports lessons at or above 300 seconds, missing prerequisites, book coverage, and track-schema status. |
+| HL-B03 | Complete (#9478) | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
+| HL-V01 | Complete in the gap-report PR | Add a machine-readable curriculum gap report and computed duration budget. | CI reports lessons at or above 300 seconds, missing prerequisites, book coverage, and track-schema status. |
 
 The Russian publication audit found eight of its thirteen Chapter 1--2
 curriculum lessons currently declare five minutes or more, including one at six
@@ -31,16 +31,22 @@ minutes. This is concrete input to HL-V01 and HL-D01, not silently treated as
 fixed by the book: the starter edition presents shorter dependency-ordered
 micro-sections while the canonical duration split remains measurable debt.
 
+The first deterministic HL-V01 snapshot measures 485 lessons at or above 300
+effective seconds, zero unknown prerequisite ids, 42 later-chapter lessons with
+no declared prerequisite, 257 lesson chapters without a matching book chapter,
+and all 20 tracks still on the legacy lesson schema. The report is evidence for
+the next migrations; it deliberately does not fail CI on already-recorded debt.
+
 ## P1 — one-source migration
 
-| ID | Work item | Why it follows P0 |
-|---|---|---|
-| HL-S01 | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | Spanish is the specified vertical slice and proves the strict contract on mature content. |
-| HL-G01 | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy only after the AST contract is proven. |
-| HL-D01 | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The audit must exist first so the debt remains measurable throughout migration. |
-| HL-M01 | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
-| HL-T01 | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
-| HL-U01 | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
+| ID | Status | Work item | Why it follows P0 |
+|---|---|---|---|
+| HL-S01 | Next | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | Spanish is the specified vertical slice and proves the strict contract on mature content. |
+| HL-G01 | Queued | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy only after the AST contract is proven. |
+| HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The audit must exist first so the debt remains measurable throughout migration. |
+| HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
+| HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
+| HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
 ## P2 — corpus growth
 

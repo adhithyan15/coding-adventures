@@ -12,6 +12,8 @@ The curriculum is a pile of per-language Markdown lessons. This package parses
 their frontmatter, joins them through the canonical **concept taxonomy**
 (`concepts/taxonomy.json`), and exposes the result as a queryable dataset —
 plus a **validator** that keeps the lessons and the taxonomy from drifting apart.
+It also produces the versioned migration-gap report published with every book
+bundle.
 
 ```
 lessons/*.md frontmatter  ─┐
@@ -39,6 +41,20 @@ languagesForConcept(dataset, "GREETING-HELLO");
 const issues = validate({ taxonomy, lessons, scripts });
 ```
 
+Build the JSON and readable gap reports locally with:
+
+```bash
+npm run build
+npm run --silent report -- --format json > curriculum-gaps.json
+npm run --silent report -- --format text > curriculum-gaps.txt
+```
+
+The duration estimator uses instructional word count, explicit pauses, repeat
+cues, learner-response prompts, and a safety margin. Its effective duration is
+the greater of that estimate and the lesson's declared budget. A value of 300
+seconds or more is reported as migration debt; the report remains non-blocking
+until the existing corpus has been split.
+
 ### Architecture — a pure core with a thin fs shell
 
 | Module | Role | Pure? |
@@ -47,10 +63,12 @@ const issues = validate({ taxonomy, lessons, scripts });
 | `parse.ts` | frontmatter → `Realization`; realizations → `Dataset` | ✅ |
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
+| `report.ts` | deterministic duration, prerequisite, book, and schema gap report | ✅ |
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
+| `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 
-Only `loader.ts`/`cli.ts` touch the filesystem (declared in
+Only `loader.ts`, `cli.ts`, and `report-cli.ts` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
 

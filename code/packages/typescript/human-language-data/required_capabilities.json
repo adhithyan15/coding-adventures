@@ -16,5 +16,5 @@
       "justification": "The loader enumerates each track's lessons/ directory and data/scripts/ to discover files to parse."
     }
   ],
-  "justification": "Read-only filesystem access to the Human Languages curriculum directory. The parse/build/validate/query core is pure; only loader.ts and cli.ts touch the filesystem. No write, network, or process access needed."
+  "justification": "Read-only filesystem access to the Human Languages curriculum directory. The parse/build/validate/query/report core is pure; only loader-backed CLI entry points touch the filesystem. No write, network, or process access needed."
 }

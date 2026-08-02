@@ -6,6 +6,7 @@ import { describe, it, expect } from "vitest";
 import { loadEverything } from "../src/loader.js";
 import { validate, hasErrors } from "../src/validate.js";
 import { validateCurriculum } from "../src/curriculum.js";
+import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
 
 const { taxonomy, registry, spine, books, lessons, scripts, dataset } = loadEverything();
@@ -55,6 +56,18 @@ describe("real curriculum", () => {
         ?.chapters.map((chapter) => chapter.chapter),
     ).toEqual([1, 2]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
+  });
+
+  it("produces a machine-readable migration gap baseline", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    expect(report.schemaVersion).toBe(1);
+    expect(report.summary.registeredTracks).toBe(20);
+    expect(report.summary.totalLessons).toBe(lessons.length);
+    expect(report.summary.authoredBooks).toBe(20);
+    expect(report.summary.durationViolations).toBeGreaterThan(0);
+    expect(report.summary.unknownPrerequisites).toBe(0);
+    expect(report.schemas.tracks).toHaveLength(20);
+    expect(report.books.tracks).toHaveLength(20);
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {
