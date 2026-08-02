@@ -82,14 +82,49 @@ fn find_executable(root: &Path) -> Option<PathBuf> {
     None
 }
 
-fn wait_for_ready(child: &mut Child, marker: &Path) {
+fn application_failure_diagnostics(executable: &Path) -> String {
+    let executable_name = executable
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("VentureChrome.exe");
+    let script = r#"
+$events = Get-WinEvent -FilterHashtable @{
+    LogName = 'Application'
+    StartTime = (Get-Date).AddMinutes(-5)
+} -ErrorAction SilentlyContinue |
+    Where-Object { $_.Message -like "*$env:VENTURE_ACCEPTANCE_EXE_NAME*" } |
+    Select-Object -First 5 TimeCreated, ProviderName, Id, LevelDisplayName, Message
+if ($events) {
+    $events | Format-List | Out-String -Width 4096
+} else {
+    'No matching Windows Application event was recorded.'
+}
+"#;
+    let output = Command::new("powershell.exe")
+        .args(["-NoProfile", "-NonInteractive", "-Command", script])
+        .env("VENTURE_ACCEPTANCE_EXE_NAME", executable_name)
+        .output();
+    match output {
+        Ok(output) => {
+            let mut diagnostics = String::from_utf8_lossy(&output.stdout).into_owned();
+            diagnostics.push_str(&String::from_utf8_lossy(&output.stderr));
+            diagnostics
+        }
+        Err(error) => format!("failed to query Windows Application events: {error}"),
+    }
+}
+
+fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
         if marker.exists() {
             return;
         }
         if let Some(status) = child.try_wait().expect("poll generated WinUI app") {
-            panic!("generated WinUI app exited before rendering: {status}");
+            panic!(
+                "generated WinUI app exited before rendering: {status}\n{}",
+                application_failure_diagnostics(executable)
+            );
         }
         thread::sleep(Duration::from_millis(100));
     }
@@ -154,7 +189,7 @@ fn package_owned_xaml_host_compiles_in_generated_winui_project() {
         .stderr(Stdio::from(log))
         .spawn()
         .expect("launch generated Venture WinUI app");
-    wait_for_ready(&mut child, &marker);
+    wait_for_ready(&mut child, &executable, &marker);
     let _ = child.kill();
     let _ = child.wait();
 
