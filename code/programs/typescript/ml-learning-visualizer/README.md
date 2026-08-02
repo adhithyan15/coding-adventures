@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has sixteen workbenches that move from one arithmetic update to small
+The app has seventeen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -235,6 +235,18 @@ its first-row reads and write, or open any matrix operation to reveal its exact
 source instructions, graph nodes, and edge provenance. Switch from one row to a
 two-row batch while direct graph, NeuralIR, and MatrixIR outputs remain aligned.
 
+### Backward and optimizer lowering lab
+
+The Train Lowering workbench keeps a one-parameter multiplication fixed. Its
+saved predictions come from the production neural graph compiler and VM. Open
+any of six backward instructions, four separate SGD instructions, or ten
+matrix-training operations to see reads, writes, values, attributes, and source
+provenance. Switch from one row to two, then enter with a nonzero buffer to see
+the current batch reduce separately before it accumulates into persistent
+state. The optimizer applies an explicit divisor, updates `w`, and leaves the
+buffer populated. A fresh finite-difference route audits only the current batch
+contribution.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -368,6 +380,11 @@ NN29 under `code/specs/fixtures/forward-graph-lowering-v1` pins one stable
 topological schedule, exact NeuralIR value IDs, seven-to-one weighted-sum
 fusion, complete source provenance, and direct/NeuralIR/MatrixIR parity for one
 row and a two-row batch.
+
+NN30 under `code/specs/fixtures/backward-optimizer-lowering-v1` pins saved
+forward values, six backward instructions, four optimizer instructions, ten
+matrix-training operations, stable row reduction, explicit mean divisors,
+non-clearing optimizer steps, and numerical gradient audits.
 
 ## Development
 

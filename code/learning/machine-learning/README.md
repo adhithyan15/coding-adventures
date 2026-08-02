@@ -46,13 +46,14 @@ larger network:
 26. [Dynamic Autograd and Saved Values, by Hand](./dynamic-autograd-and-saved-values-by-hand.md)
 27. [Gradient Accumulation and Zeroing, by Hand](./gradient-accumulation-and-zeroing-by-hand.md)
 28. [Forward Graph Lowering, by Hand](./forward-graph-lowering-by-hand.md)
-29. [Matrix Math](../matrix-math.md)
-30. [Loss Functions](../loss-functions.md)
-31. [Gradient Descent](../gradient-descent.md)
-32. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-33. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-34. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-35. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+29. [Backward and Optimizer Lowering, by Hand](./backward-and-optimizer-lowering-by-hand.md)
+30. [Matrix Math](../matrix-math.md)
+31. [Loss Functions](../loss-functions.md)
+32. [Gradient Descent](../gradient-descent.md)
+33. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+34. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+35. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+36. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -62,7 +63,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has sixteen complementary views:
+has seventeen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -146,7 +147,11 @@ has sixteen complementary views:
   deterministic NN00 NeuralIR instructions, then open the six-operation NN01
   MatrixIR plan and inspect exactly which weight loads, products, and addition
   fuse together. Run one row or two while direct graph, scalar NeuralIR, and
-  matrix-plan outputs remain in parity.
+  matrix-plan outputs remain in parity. Continue into backward and optimizer
+  lowering: keep the production forward compiler for saved values, inspect six
+  reverse instructions and four separate SGD instructions, then follow ten
+  matrix-training operations as one or two row gradients reduce into shared
+  parameter state.
 
 ## Language-Neutral Corpus
 
@@ -272,6 +277,12 @@ topological scheduling, exact NeuralIR value allocation, matrix fusion with
 source-instruction and graph-edge provenance, one hand-calculable row, one
 two-row batch, and direct/NeuralIR/MatrixIR parity.
 
+NN30 adds `code/specs/fixtures/backward-optimizer-lowering-v1`, including saved
+forward values, exact backward and optimizer streams, stable row-order gradient
+reduction, one-row and two-row mean-SGD cases, explicit nonzero-buffer carry,
+matrix-training provenance, and independent finite-difference audits of each
+current batch contribution.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -302,6 +313,7 @@ python code/scripts/validate_tensor_broadcasting_labs.py
 python code/scripts/validate_dynamic_autograd_labs.py
 python code/scripts/validate_gradient_accumulation_labs.py
 python code/scripts/validate_forward_graph_lowering_labs.py
+python code/scripts/validate_backward_optimizer_lowering_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -357,6 +369,10 @@ next batch.
 The first NN29 lab turns a six-node weighted-ReLU graph into twelve scalar
 instructions and six fused matrix operations, retaining every source ID while
 all three execution paths reproduce `6` and `[6, 13]`.
+The first NN30 lab saves `prediction` and `residual`, lowers six reverse-mode
+instructions and four non-clearing SGD instructions, then proves that a
+  ten-operation matrix plan reduces row gradients `[2, 2]` to `4`, applies the
+explicit mean `2`, and updates `w` to `0.8`.
 
 ## How to Study a Model
 

@@ -6,6 +6,15 @@ import { activate } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
 import { traceTwoNumberAutoencoder } from "./autoencoder-lab.js";
+import { BackwardOptimizerLoweringWorkbench } from "./BackwardOptimizerLoweringWorkbench.js";
+import {
+  compileBackwardTrainingIr,
+  compileMatrixTrainingIr,
+  compileOptimizerTrainingIr,
+  traceBackwardOptimizerLowering,
+  traceBackwardOptimizerLoweringProgram,
+  type BackwardOptimizerLoweringScenario,
+} from "./backward-optimizer-lowering-lab.js";
 import {
   decoderTrainingRow,
   traceTinyDecoderTraining,
@@ -2202,5 +2211,168 @@ describe("forward graph lowering", () => {
     expect(screen.getAllByRole("cell")).toHaveLength(12);
     expect(screen.getByLabelText("Forward lowering execution parity").textContent)
       .toMatch(/1.*8.*16.*13.*13.*13/s);
+  });
+});
+
+describe("backward and optimizer lowering", () => {
+  it("pins separate backward optimizer and matrix training streams", () => {
+    expect(compileBackwardTrainingIr().instructions.map((item) => item.op)).toEqual([
+      "SEED_LOSS_GRAD",
+      "HALF_SQUARED_ERROR_GRAD",
+      "PROPAGATE_GRAD",
+      "PARAMETER_LOCAL_GRAD",
+      "ACCUMULATE_GRAD",
+      "INPUT_GRAD",
+    ]);
+    expect(compileOptimizerTrainingIr().instructions.map((item) => item.op)).toEqual([
+      "READ_GRAD_BUFFER",
+      "DIVIDE_GRAD",
+      "SGD_UPDATE",
+      "KEEP_GRAD_BUFFER",
+    ]);
+    expect(compileMatrixTrainingIr().instructions.map((item) => item.op)).toEqual([
+      "LOAD_SAVED_COLUMN",
+      "LOAD_SAVED_COLUMN",
+      "LOSS_GRAD_COLUMN",
+      "PARAMETER_LOCAL_GRAD_COLUMN",
+      "INPUT_GRAD_COLUMN",
+      "REDUCE_SUM_GRAD",
+      "ACCUMULATE_GRAD_BUFFER",
+      "DIVIDE_GRAD",
+      "SGD_UPDATE_SCALAR",
+      "KEEP_GRAD_BUFFER",
+    ]);
+  });
+
+  it("uses the production forward compiler before lowering training", () => {
+    const trace = traceBackwardOptimizerLowering("one_row_by_hand");
+    expect(trace.forward.neuralOps).toEqual([
+      "LOAD_INPUT",
+      "LOAD_EDGE_WEIGHT",
+      "MUL",
+      "ADD",
+      "ACTIVATE",
+      "STORE_OUTPUT",
+    ]);
+    expect(trace.forward.matrixOps).toEqual([
+      "LOAD_INPUT_MATRIX",
+      "WEIGHTED_SUM_MATRIX",
+      "ACTIVATE_MATRIX",
+      "STORE_OUTPUT_MATRIX",
+    ]);
+    expect(trace.forward.directOutputs).toEqual([1]);
+    expect(trace.forward.neuralIrOutputs).toEqual([1]);
+    expect(trace.forward.matrixIrOutputs).toEqual([1]);
+    expect(trace.forward.maxError).toBe(0);
+  });
+
+  it("replays the one-row backward and SGD calculation", () => {
+    const trace = traceBackwardOptimizerLowering("one_row_by_hand");
+    expect(trace.savedValues).toEqual({
+      x: [2], target: [0], prediction: [1], residual: [1], loss: [0.5],
+    });
+    expect(trace.backward).toEqual({
+      dLoss: [1], dResidual: [1], dPrediction: [1], localDW: [2], dX: [0.5],
+      gradientBufferBefore: 0, batchGradient: 2, gradW: 2,
+    });
+    expect(trace.optimizer.appliedGradient).toBe(2);
+    expect(trace.optimizer.parameterAfter).toBeCloseTo(0.3);
+    expect(trace.optimizer.gradientBufferAfterStep).toBe(2);
+    expect(trace.maxPathError).toBe(0);
+    expect(trace.gradientAudit.numerical).toBeCloseTo(2, 8);
+  });
+
+  it("keeps IDs fixed while two row gradients reduce and average", () => {
+    const one = traceBackwardOptimizerLowering("one_row_by_hand");
+    const two = traceBackwardOptimizerLowering("two_row_mean");
+    expect(two.backwardIr.instructions.map((item) => item.id))
+      .toEqual(one.backwardIr.instructions.map((item) => item.id));
+    expect(two.optimizerIr.instructions.map((item) => item.id))
+      .toEqual(one.optimizerIr.instructions.map((item) => item.id));
+    expect(two.matrixTrainingIr.instructions.map((item) => item.id))
+      .toEqual(one.matrixTrainingIr.instructions.map((item) => item.id));
+    expect(two.backward.localDW).toEqual([2, 2]);
+    expect(two.backward.gradW).toBe(4);
+    expect(two.optimizer.appliedGradient).toBe(2);
+    expect(two.optimizer.parameterAfter).toBeCloseTo(0.8);
+    expect(two.matrixTraining.columns.dX).toEqual([1, -2]);
+    expect(two.gradientAudit.numerical).toBeCloseTo(4, 8);
+  });
+
+  it("adds a new batch contribution to a persistent gradient buffer", () => {
+    const trace = traceBackwardOptimizerLowering("persistent_buffer");
+    expect(trace.backward.gradientBufferBefore).toBe(3);
+    expect(trace.backward.batchGradient).toBe(2);
+    expect(trace.backward.gradW).toBe(5);
+    expect(trace.matrixTraining.batchGradient).toBe(2);
+    expect(trace.matrixTraining.gradW).toBe(5);
+    expect(trace.optimizer.parameterAfter).toBe(0);
+    expect(trace.optimizer.gradientBufferAfterStep).toBe(5);
+    expect(trace.gradientAudit.analytical).toBe(2);
+    expect(trace.gradientAudit.numerical).toBeCloseTo(2, 8);
+    expect(trace.maxPathError).toBe(0);
+  });
+
+  it("fails closed on hostile scenarios and snapshots caller arrays", () => {
+    const inputs = [2];
+    const scenario: BackwardOptimizerLoweringScenario = {
+      id: "custom",
+      title: "custom",
+      summary: "custom",
+      initialParameter: 0.5,
+      learningRate: 0.1,
+      inputs,
+      targets: [0],
+      gradientBufferBefore: 0,
+      divisor: 1,
+    };
+    const trace = traceBackwardOptimizerLoweringProgram(scenario);
+    inputs[0] = 999;
+    expect(trace.scenario.inputs).toEqual([2]);
+    expect(Object.isFrozen(trace.backwardIr.instructions[0])).toBe(true);
+
+    expect(() => traceBackwardOptimizerLoweringProgram({ ...scenario, targets: [0, 1] }))
+      .toThrow(/same bounded length/);
+    expect(() => traceBackwardOptimizerLoweringProgram({ ...scenario, inputs: [Number.NaN] }))
+      .toThrow(/finite and bounded/);
+    expect(() => traceBackwardOptimizerLoweringProgram({ ...scenario, divisor: 2 }))
+      .toThrow(/batch length/);
+    expect(() => traceBackwardOptimizerLoweringProgram({
+      ...scenario,
+      constructor: "hostile",
+    } as unknown as BackwardOptimizerLoweringScenario)).toThrow(/contain exactly/);
+    const hostileId = { toString: () => { throw new Error("coerced"); } } as unknown as string;
+    expect(() => traceBackwardOptimizerLoweringProgram({ ...scenario, id: hostileId }))
+      .toThrow(/bounded string/);
+  });
+
+  it("opens every training lane and the responsive parity tables", () => {
+    render(React.createElement(BackwardOptimizerLoweringWorkbench));
+    expect(screen.getByRole("heading", { name: "Backward and optimizer lowering map" })).toBeTruthy();
+    const savedTable = screen.getByRole("table", { name: "Saved forward row values" });
+    const gradientTable = screen.getByRole("table", { name: "Backward row gradient values" });
+    expect(within(savedTable).getAllByRole("columnheader")).toHaveLength(6);
+    expect(within(savedTable).getAllByRole("cell")).toHaveLength(6);
+    expect(within(gradientTable).getAllByRole("cell")).toHaveLength(6);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open Backward IR b3, PARAMETER_LOCAL_GRAD" }));
+    expect(screen.getByLabelText("Selected training lowering detail").textContent)
+      .toMatch(/PARAMETER_LOCAL_GRAD.*x, d_prediction.*local_d_w.*\[2\].*parameter_id=w/s);
+    fireEvent.click(screen.getByRole("button", { name: "Open Optimizer IR o2, SGD_UPDATE" }));
+    expect(screen.getByLabelText("Selected training lowering detail").textContent)
+      .toMatch(/SGD_UPDATE.*w, applied_d_w.*w_next.*0\.3/s);
+    fireEvent.click(screen.getByRole("button", { name: "Open Matrix training IR t5, REDUCE_SUM_GRAD" }));
+    expect(screen.getByLabelText("Selected training lowering detail").textContent)
+      .toMatch(/REDUCE_SUM_GRAD.*local_d_w_col.*batch_d_w.*2.*row_ascending/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "The same plan, two-row mean" }));
+    expect(within(savedTable).getAllByRole("cell")).toHaveLength(12);
+    expect(within(gradientTable).getAllByRole("cell")).toHaveLength(12);
+    expect(screen.getByLabelText("Backward optimizer execution parity").textContent)
+      .toMatch(/0 before \+ 2 \+ 2.*grad_w = 4.*4 \/ 2.*applied = 2.*w_next = 0\.8/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Continue a persistent buffer" }));
+    expect(screen.getByLabelText("Backward optimizer execution parity").textContent)
+      .toMatch(/3 before \+ 2.*grad_w = 5.*5 \/ 1.*applied = 5.*w_next = 0/s);
   });
 });

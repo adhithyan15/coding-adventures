@@ -59,7 +59,7 @@ trace, and tests.
   - [x] Gradient accumulation and zeroing behavior.
 - [ ] Compilation and performance bridge
   - [x] Forward graph lowering to NeuralIR and MatrixIR.
-  - [ ] Backward and optimizer graph lowering.
+  - [x] Backward and optimizer graph lowering.
   - [ ] CPU, Rust core, and accelerated-backend parity.
   - [ ] Precision, quantization, and buffer-residency experiments.
 - [ ] Cross-language consumers

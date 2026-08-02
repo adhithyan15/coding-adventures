@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Add the NN30 backward/optimizer lowering workbench with production forward
+  saved values, executable reverse and SGD streams, matrix gradient reduction,
+  persistent-buffer carry, provenance, one/two-row parity, and finite-difference
+  audits of current batch contributions.
 - Add the NN29 forward-lowering workbench with graph topology, exact NeuralIR
   instructions, MatrixIR fusion provenance, scalar reads and writes, batch
   columns, and three-path execution parity.
