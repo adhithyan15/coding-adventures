@@ -44,8 +44,10 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 |---|---|---|---|
 | HL-S01 | Complete (#9497) | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | The 24-lesson slice has unique order, transitive knowledge closure, typed blocks, and no effective-duration violation. |
 | HL-G01 | Complete in the canonical-generation PR | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy now that the AST contract is executable. |
-| HL-G02 | Next | Generate Spanish Chapters 2–3 from their canonical schema-v2 lesson AST. | Extends the proven one-source path across the rest of the migrated pilot before broad corpus work. |
-| HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The audit must exist first so the debt remains measurable throughout migration. |
+| HL-G02 | Complete in the Chapters 2–3 generation PR | Generate Spanish Chapters 2–3 from their canonical schema-v2 lesson AST. | Extends the proven one-source path across the rest of the migrated pilot before broad corpus work. |
+| HL-D01A | Next | Remove all nine sub-five-minute violations from the complete Russian starter track. | A bounded first duration tranche covers both declaration-only and genuinely overlong lessons without skipping an existing language. |
+| HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
+| HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -86,10 +88,27 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The unified book job now fails when generated TeX or the hash manifest is
   missing or stale. The fingerprint is a deterministic drift signal, not a
   cryptographic integrity claim.
-- Chapter 1 is the first one-source slice. Spanish Chapters 2–18 remain
-  handwritten LaTeX until their lessons are migrated and configured; HL-G02
-  deliberately limits the next expansion to the already-schema-v2 Chapters
-  2–3.
+- At the end of HL-G01, Chapter 1 was the first one-source slice and Chapters
+  2–18 remained handwritten. That finding deliberately scoped HL-G02 to the
+  already-schema-v2 Chapters 2–3 rather than skipping validation to generate
+  later chapters.
+
+## Findings from HL-G02
+
+- All 24 schema-v2 Spanish lessons in Chapters 1–3 now generate their three
+  LaTeX chapters and independently match Language Ladder's loaded AST. Chapter
+  2 combines five lesson hashes; Chapter 3 combines twelve.
+- The expanded canonical content produces a 138-page book. Rendered checks of
+  both chapter openers, grammar and etymology boxes, nested emphasis, practice
+  lists, and wrap-up recall found no generated-chapter overfull box or Hyperref
+  warning.
+- The renderer now handles nested bold-within-italic Markdown, wraps practice
+  lists ragged-right, and keeps math arrows out of bookmark/running-header
+  strings. Those fixes apply to every later generated chapter.
+- The next learner-visible promise is the sub-five-minute cap. Russian is the
+  smallest complete existing track with measurable debt: nine violations, of
+  which five are computed at 312–405 seconds and four only need honest declared
+  budgets below the cap. HL-D01A is therefore the next bounded tranche.
 
 ## Completed foundations
 

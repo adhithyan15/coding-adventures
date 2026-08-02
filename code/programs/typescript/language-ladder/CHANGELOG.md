@@ -7,7 +7,8 @@
 - Derive the lesson-card minute label from schema-v2 `duration.max_seconds`,
   while retaining `est_minutes` for unmigrated tracks.
 - Independently combine loaded lesson fingerprints and show `book synced` for a
-  generated chapter only when the app AST matches the committed book manifest.
+  generated chapter only when the app AST matches the committed book manifest;
+  Spanish Chapters 1–3 now verify all 24 migrated lessons this way.
 
 ## 0.25.0 — the same syllable in its sister scripts (syllabary, PR 9)
 

@@ -3,12 +3,16 @@ import { actualChapterHash, bookHashStatus, expectedBookHash } from "../src/book
 import { loadLessons } from "../src/lessons.ts";
 
 describe("generated book source hashes", () => {
-  it("matches the browser-loaded Spanish Chapter 1 AST to the generated book", () => {
+  it.each([
+    [1, 7],
+    [2, 5],
+    [3, 12],
+  ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
-    const expected = expectedBookHash("spanish", 1);
-    expect(expected?.lessonIds).toHaveLength(7);
-    expect(actualChapterHash(lessons, "spanish", 1)).toBe(expected?.sourceHash);
-    expect(bookHashStatus(lessons, "spanish", 1)).toBe("synced");
+    const expected = expectedBookHash("spanish", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "spanish", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "spanish", chapter)).toBe("synced");
   });
 
   it("reports a generated chapter stale when one canonical lesson changes", () => {
@@ -17,6 +21,6 @@ describe("generated book source hashes", () => {
       lesson.id === "ES-C01-hola" ? { ...lesson, sourceHash: "fnv1a64:changed" } : lesson,
     );
     expect(bookHashStatus(changed, "spanish", 1)).toBe("stale");
-    expect(bookHashStatus(lessons, "spanish", 2)).toBe("not-generated");
+    expect(bookHashStatus(lessons, "spanish", 4)).toBe("not-generated");
   });
 });
