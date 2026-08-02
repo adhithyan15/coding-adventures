@@ -106,10 +106,10 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `de44349bd` after
+working inventory was regenerated on August 2, 2026 from `ca91ca25` after
 merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PRs
-#9502, #9505, and #9506 changed existing packages or learning assets without
-creating another implementation package directory. The inventory contains
+#9502, #9505, #9506, and #9510 changed existing packages or learning assets
+without creating another implementation package directory. The inventory contains
 1,218 normalized implementation identities across 4,366 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
@@ -124,7 +124,7 @@ The loop must not start by attempting 10,752 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`de44349bd147c9ce46ce27d2ac741f2f01fcc2de` is collision-clean at 1,218
+`ca91ca25cc63e785038de4ca1b7b707e17b3fefe` is collision-clean at 1,218
 normalized implementation identities, 4,366 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 768 singletons, 573
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -190,7 +190,7 @@ The August 2 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 981 | 0 | 100% |
+| Rust | 983 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -226,6 +226,12 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
 - make the Rust build tool reject resolver self-edges with a stable diagnostic.
   A real 4,766-package plan reproduced the untouched-main exit-101 panic on
   `elixir/grammar_tools`; this is tracked separately from UTF-8 decoding;
+- bring Rust build-tool discovery to the complete canonical language and
+  identity registry. The self-edge repair makes the full plan exit zero and
+  distinguishes package/program basenames, but a follow-up audit found 212
+  remaining duplicate `unknown/*` identities (382 extra discovered entries)
+  because several established and emerging language directories are not yet
+  classified by the Rust front door;
 - expose Haskell through the Python build tool's `--language` filter. Haskell
   is already in its resolver and canonical language registry but is missing
   from the native CLI choices;

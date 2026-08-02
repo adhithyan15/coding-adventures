@@ -258,8 +258,13 @@ MUST:
 - recognize repository-supported legacy and current package-name aliases;
 - keep dependency scope within the implementation ecosystem unless metadata
   explicitly names another qualified package;
-- reject self-edges, ambiguous manifests, ambiguous aliases, and duplicate
-  package identities;
+- preserve the `programs` identity segment when a package and program share a
+  language and basename, so a program dependency resolves to the package
+  instead of collapsing into a self-edge;
+- reject a resolved self-edge as `DEPENDENCY_SELF_EDGE`, including the
+  repository-relative manifest path, package identity, and dependency identity;
+- reject ambiguous manifests, ambiguous aliases, and duplicate package
+  identities;
 - decode `.rockspec` text metadata as strict UTF-8 without replacement or
   locale fallback;
 - report invalid rockspec encoding as `METADATA_INVALID_UTF8`, including the

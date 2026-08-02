@@ -2,6 +2,9 @@
 
 ## 2026-08-02
 
+- Added Elixir resolution cases that preserve distinct package/program
+  identities and reject genuine dependency self-edges with the stable
+  `DEPENDENCY_SELF_EDGE` diagnostic.
 - Declared strict UTF-8 as the portable metadata text contract for dependency
   resolution and reserved `METADATA_INVALID_UTF8` for deterministic failures.
 - Added positive Unicode and adversarial invalid-byte Lua rockspec cases so

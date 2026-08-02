@@ -40,6 +40,7 @@ use std::fs;
 use std::path::Path;
 
 const METADATA_INVALID_UTF8: &str = "METADATA_INVALID_UTF8";
+const DEPENDENCY_SELF_EDGE: &str = "DEPENDENCY_SELF_EDGE";
 
 /// Text metadata that violates the repository's strict UTF-8 contract.
 ///
@@ -65,6 +66,51 @@ impl fmt::Display for MetadataEncodingError {
 
 impl std::error::Error for MetadataEncodingError {}
 
+/// A package manifest that resolves the package itself as a dependency.
+#[derive(Debug, Eq, PartialEq)]
+pub struct DependencySelfEdgeError {
+    pub code: String,
+    pub package: String,
+    pub manifest: String,
+    pub dependency: String,
+}
+
+impl fmt::Display for DependencySelfEdgeError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "{}: package={} manifest={} dependency={}",
+            self.code, self.package, self.manifest, self.dependency
+        )
+    }
+}
+
+impl std::error::Error for DependencySelfEdgeError {}
+
+/// Stable dependency-resolution failures returned to the CLI.
+#[derive(Debug, Eq, PartialEq)]
+pub enum ResolutionError {
+    MetadataEncoding(MetadataEncodingError),
+    DependencySelfEdge(DependencySelfEdgeError),
+}
+
+impl fmt::Display for ResolutionError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ResolutionError::MetadataEncoding(error) => error.fmt(formatter),
+            ResolutionError::DependencySelfEdge(error) => error.fmt(formatter),
+        }
+    }
+}
+
+impl std::error::Error for ResolutionError {}
+
+impl From<MetadataEncodingError> for ResolutionError {
+    fn from(error: MetadataEncodingError) -> Self {
+        ResolutionError::MetadataEncoding(error)
+    }
+}
+
 fn repository_manifest_path(path: &Path) -> String {
     let parts: Vec<String> = path
         .components()
@@ -85,6 +131,46 @@ fn repository_manifest_path(path: &Path) -> String {
             .map(|name| name.to_string_lossy().into_owned())
             .unwrap_or_default(),
     }
+}
+
+fn first_manifest_with_suffix(pkg: &Package, suffixes: &[&str]) -> Option<std::path::PathBuf> {
+    let mut matches: Vec<std::path::PathBuf> = fs::read_dir(&pkg.path)
+        .ok()?
+        .flatten()
+        .map(|entry| entry.path())
+        .filter(|path| {
+            path.file_name()
+                .map(|name| {
+                    let name = name.to_string_lossy();
+                    suffixes.iter().any(|suffix| name.ends_with(suffix))
+                })
+                .unwrap_or(false)
+        })
+        .collect();
+    matches.sort();
+    matches.into_iter().next()
+}
+
+fn dependency_manifest_path(pkg: &Package) -> String {
+    let manifest = match pkg.language.as_str() {
+        "python" => pkg.path.join("pyproject.toml"),
+        "go" => pkg.path.join("go.mod"),
+        "rust" | "wasm" => pkg.path.join("Cargo.toml"),
+        "elixir" => pkg.path.join("mix.exs"),
+        "perl" => pkg.path.join("Makefile.PL"),
+        "ruby" => {
+            first_manifest_with_suffix(pkg, &[".gemspec"]).unwrap_or_else(|| pkg.path.join("BUILD"))
+        }
+        "lua" => first_manifest_with_suffix(pkg, &[".rockspec"])
+            .unwrap_or_else(|| pkg.path.join("BUILD")),
+        "haskell" => {
+            first_manifest_with_suffix(pkg, &[".cabal"]).unwrap_or_else(|| pkg.path.join("BUILD"))
+        }
+        "csharp" | "fsharp" | "dotnet" => first_manifest_with_suffix(pkg, &[".csproj", ".fsproj"])
+            .unwrap_or_else(|| pkg.path.join("BUILD")),
+        _ => pkg.path.join("BUILD"),
+    };
+    repository_manifest_path(&manifest)
 }
 
 // ---------------------------------------------------------------------------
@@ -140,6 +226,17 @@ fn read_cargo_package_name(pkg: &Package) -> Option<String> {
 fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<String, String> {
     let mut known = HashMap::new();
 
+    let set_known = |known: &mut HashMap<String, String>, key: String, pkg: &Package| {
+        let current_is_program = pkg.name.split('/').nth(1) == Some("programs");
+        if let Some(existing) = known.get(&key) {
+            let existing_is_program = existing.split('/').nth(1) == Some("programs");
+            if !existing_is_program && current_is_program {
+                return;
+            }
+        }
+        known.insert(key, pkg.name.clone());
+    };
+
     for pkg in packages {
         if !scope.is_empty() && !in_dependency_scope(&pkg.language, scope) {
             continue;
@@ -154,12 +251,12 @@ fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<Str
             "python" => {
                 // Convert dir name to PyPI name: "logic-gates" -> "coding-adventures-logic-gates"
                 let pypi_name = format!("coding-adventures-{}", dir_name);
-                known.insert(pypi_name, pkg.name.clone());
+                set_known(&mut known, pypi_name, pkg);
             }
             "ruby" => {
                 // Convert dir name to gem name: "logic_gates" -> "coding_adventures_logic_gates"
                 let gem_name = format!("coding_adventures_{}", dir_name);
-                known.insert(gem_name, pkg.name.clone());
+                set_known(&mut known, gem_name, pkg);
             }
             "go" => {
                 // For Go, read the module path from go.mod.
@@ -167,11 +264,9 @@ fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<Str
                 if let Ok(data) = fs::read_to_string(&go_mod) {
                     for line in data.lines() {
                         if line.starts_with("module ") {
-                            let module_path = line
-                                .trim_start_matches("module ")
-                                .trim()
-                                .to_lowercase();
-                            known.insert(module_path, pkg.name.clone());
+                            let module_path =
+                                line.trim_start_matches("module ").trim().to_lowercase();
+                            set_known(&mut known, module_path, pkg);
                             break;
                         }
                     }
@@ -186,39 +281,39 @@ fn build_known_names_for_scope(packages: &[Package], scope: &str) -> HashMap<Str
                         if let Some(package) = parsed.get("package") {
                             if let Some(name) = package.get("name") {
                                 if let Some(name_str) = name.as_str() {
-                                    known.insert(name_str.to_lowercase(), pkg.name.clone());
+                                    set_known(&mut known, name_str.to_lowercase(), pkg);
                                 }
                             }
                         }
                     }
                 }
                 if let Some(cargo_name) = read_cargo_package_name(pkg) {
-                    known.insert(cargo_name, pkg.name.clone());
+                    set_known(&mut known, cargo_name, pkg);
                 }
             }
             "elixir" => {
                 let app_name = format!("coding_adventures_{}", dir_name.replace('-', "_"));
-                known.insert(app_name, pkg.name.clone());
+                set_known(&mut known, app_name, pkg);
             }
             "lua" => {
                 // Convert dir name to rockspec name: "logic_gates" -> "coding-adventures-logic-gates"
                 // Lua rockspecs use hyphens with a "coding-adventures-" prefix.
                 let rock_name = format!("coding-adventures-{}", dir_name.replace('_', "-"));
-                known.insert(rock_name, pkg.name.clone());
+                set_known(&mut known, rock_name, pkg);
             }
             "perl" => {
                 // Perl CPAN dist names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
                 // This matches the Python convention exactly.
                 let cpan_name = format!("coding-adventures-{}", dir_name);
-                known.insert(cpan_name, pkg.name.clone());
+                set_known(&mut known, cpan_name, pkg);
             }
             "haskell" => {
                 // Haskell Cabal package names use hyphens.
                 let cabal_name = format!("coding-adventures-{}", dir_name);
-                known.insert(cabal_name, pkg.name.clone());
+                set_known(&mut known, cabal_name, pkg);
             }
             "csharp" | "fsharp" | "dotnet" => {
-                known.insert(dir_name, pkg.name.clone());
+                set_known(&mut known, dir_name, pkg);
             }
             _ => {}
         }
@@ -806,7 +901,7 @@ fn parse_haskell_deps(pkg: &Package, known_names: &HashMap<String, String>) -> V
 /// among the discovered packages — are silently skipped.
 ///
 /// This function is the main entry point for dependency resolution.
-pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, MetadataEncodingError> {
+pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, ResolutionError> {
     let mut graph = Graph::new();
 
     // First, add all packages as nodes. Even packages with no dependencies
@@ -835,7 +930,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, MetadataEncod
             "go" => parse_go_deps(pkg, known_names),
             "rust" | "wasm" => parse_rust_deps(pkg, known_names),
             "elixir" => parse_elixir_deps(pkg, known_names),
-            "lua" => parse_lua_deps(pkg, known_names)?,
+            "lua" => parse_lua_deps(pkg, known_names).map_err(ResolutionError::from)?,
             "perl" => parse_perl_deps(pkg, known_names),
             "haskell" => parse_haskell_deps(pkg, known_names),
             "csharp" | "fsharp" | "dotnet" => parse_dotnet_deps(pkg, known_names),
@@ -846,6 +941,16 @@ pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, MetadataEncod
             // Edge direction: dep -> pkg means "dep must be built before pkg".
             // This convention makes independent_groups() produce the correct
             // build order: nodes with zero in-degree (no deps) come first.
+            if dep_name == pkg.name {
+                return Err(ResolutionError::DependencySelfEdge(
+                    DependencySelfEdgeError {
+                        code: DEPENDENCY_SELF_EDGE.to_string(),
+                        package: pkg.name.clone(),
+                        manifest: dependency_manifest_path(pkg),
+                        dependency: dep_name,
+                    },
+                ));
+            }
             graph.add_edge(&dep_name, &pkg.name);
         }
     }
@@ -861,7 +966,6 @@ pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, MetadataEncod
 mod tests {
     use super::*;
     use serde::Deserialize;
-    use std::collections::HashSet;
     use std::path::{Path, PathBuf};
 
     #[derive(Debug, Deserialize)]
@@ -909,7 +1013,10 @@ mod tests {
 
     #[derive(Debug, Deserialize)]
     struct FixtureDiagnosticDetails {
-        encoding: String,
+        #[serde(default)]
+        encoding: Option<String>,
+        #[serde(default)]
+        dependency: Option<String>,
     }
 
     fn decode_base64(input: &str) -> Vec<u8> {
@@ -959,9 +1066,6 @@ mod tests {
             std::process::id()
         ));
         let _ = fs::remove_dir_all(&root);
-        let mut packages = Vec::new();
-        let mut seen_packages = HashSet::new();
-
         for file in &fixture.workspace.files {
             let path = root.join(Path::new(&file.path));
             fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -971,21 +1075,9 @@ mod tests {
                 decode_base64(&file.content_base64)
             };
             fs::write(&path, data).unwrap();
-
-            let segments: Vec<&str> = file.path.split('/').collect();
-            if segments.len() == 5 && segments[4] == "BUILD" {
-                let name = format!("{}/{}", segments[2], segments[3]);
-                if seen_packages.insert(name.clone()) {
-                    packages.push(Package {
-                        name,
-                        path: root.join(segments[..4].iter().collect::<PathBuf>()),
-                        build_commands: Vec::new(),
-                        language: segments[2].to_string(),
-                    });
-                }
-            }
         }
 
+        let packages = crate::discovery::discover_packages(&root.join("code"));
         (root, packages)
     }
 
@@ -1016,11 +1108,63 @@ mod tests {
                     Ok(_) => panic!("invalid UTF-8 fixture must fail closed"),
                     Err(error) => error,
                 };
+                let encoding_error = match error {
+                    ResolutionError::MetadataEncoding(error) => error,
+                    other => panic!("expected metadata encoding error, got {other}"),
+                };
                 let diagnostic = &fixture.expected.diagnostics[0];
-                assert_eq!(error.code, diagnostic.code);
-                assert_eq!(error.package, diagnostic.package);
-                assert_eq!(error.manifest, diagnostic.path);
-                assert_eq!(error.encoding, diagnostic.details.encoding);
+                assert_eq!(encoding_error.code, diagnostic.code);
+                assert_eq!(encoding_error.package, diagnostic.package);
+                assert_eq!(encoding_error.manifest, diagnostic.path);
+                assert_eq!(
+                    Some(encoding_error.encoding.as_str()),
+                    diagnostic.details.encoding.as_deref()
+                );
+                assert!(!encoding_error
+                    .to_string()
+                    .contains(&root.to_string_lossy().to_string()));
+            }
+
+            let _ = fs::remove_dir_all(root);
+        }
+    }
+
+    #[test]
+    fn test_elixir_resolution_conformance_fixtures() {
+        for name in [
+            "resolution-elixir-program-package.json",
+            "resolution-elixir-self-edge.json",
+        ] {
+            let fixture = load_resolution_fixture(name);
+            let (root, packages) = materialize_resolution_fixture(&fixture, name);
+            let result = resolve_dependencies(&packages);
+
+            if fixture.expected.outcome == "ok" {
+                let graph = result.expect("distinct package and program identities must resolve");
+                let mut actual_edges = Vec::new();
+                for package in &packages {
+                    for dependency in graph.predecessors(&package.name).unwrap() {
+                        actual_edges.push(vec![dependency, package.name.clone()]);
+                    }
+                }
+                actual_edges.sort();
+                let mut expected_edges = fixture.expected.result.edges.clone();
+                expected_edges.sort();
+                assert_eq!(actual_edges, expected_edges);
+            } else {
+                let error = match result {
+                    Ok(_) => panic!("dependency self-edge fixture must fail closed"),
+                    Err(error) => error,
+                };
+                let diagnostic = &fixture.expected.diagnostics[0];
+                let expected = format!(
+                    "{}: package={} manifest={} dependency={}",
+                    diagnostic.code,
+                    diagnostic.package,
+                    diagnostic.path,
+                    diagnostic.details.dependency.as_deref().unwrap()
+                );
+                assert_eq!(error.to_string(), expected);
                 assert!(!error
                     .to_string()
                     .contains(&root.to_string_lossy().to_string()));
