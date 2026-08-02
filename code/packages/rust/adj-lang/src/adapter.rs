@@ -348,9 +348,10 @@ fn adapt_uncertain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_observe(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // observe_decl = "observe" term
+    // observe_decl = "observe" term { annotation }
     let term = expect_term_child(node, "observe_decl")?;
-    Ok(Statement::Observe { term })
+    let annotations = collect_annotations(node)?;
+    Ok(Statement::Observe { term, annotations })
 }
 
 fn adapt_relate(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -3584,7 +3585,7 @@ mod tests {
     fn round_trips_valued_observation() {
         // observe <slot>(<number>) — a valued fact the predicate reads.
         match parse_one("observe gross_income(18000)") {
-            Statement::Observe { term } => match term {
+            Statement::Observe { term, .. } => match term {
                 Term::Compound { functor, args } => {
                     assert_eq!(functor, "gross_income");
                     assert_eq!(args.len(), 1);
@@ -3599,12 +3600,31 @@ mod tests {
     }
 
     #[test]
+    fn observation_accepts_a_byte_provenance_envelope() {
+        let digest = "a".repeat(64);
+        let source = format!(
+            "observe gross_income(18000)\n  quote \"income is 18000\" at 4 snapshot \"{digest}\"\n  source \"case bytes\"\n  locator \"cas://input\"\n  trust authoritative"
+        );
+        match parse_one(&source) {
+            Statement::Observe { annotations, .. } => {
+                assert_eq!(annotations.len(), 4);
+                assert!(matches!(
+                    &annotations[0],
+                    Annotation::Quote { text, byte_offset: 4, snapshot_hex }
+                        if text == "income is 18000" && snapshot_hex == &digest
+                ));
+            }
+            other => panic!("expected annotated Observe, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn exact_high_precision_literal_parses_to_numlit_exact() {
         // A >17-digit fractional literal (π to 39 places) is preserved exactly as a NumLit::Exact
         // — the NX-2 win — while staying comfortably within the size budgets.
         let pi = "3.141592653589793238462643383279502884197";
         match parse_one(&format!("observe c({pi})")) {
-            Statement::Observe { term } => match term {
+            Statement::Observe { term, .. } => match term {
                 Term::Compound { args, .. } => match &args[0] {
                     Term::Num(NumLit::Exact(d)) => assert_eq!(d.to_string(), pi),
                     other => panic!("expected NumLit::Exact, got {other:?}"),

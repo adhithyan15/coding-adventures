@@ -49,14 +49,14 @@ use std::collections::{HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
-pub use compute::{
-    compute, recheck_narrowing, recheck_narrowings, ComputeError, ComputeExpr, ComputeOp,
-    DerivationNode, Derived, NarrowingCheck, RoundSpec,
-};
 /// Re-exported so consumers can name the rounding mode of a
 /// [`ComputeExpr::Round`]/[`DerivationNode::Round`] without depending on
 /// `bignum-core` directly (NUM-6a).
 pub use bignum_core::RoundingMode;
+pub use compute::{
+    compute, recheck_narrowing, recheck_narrowings, ComputationId, ComputationScope, ComputeError,
+    ComputeExpr, ComputeOp, DerivationNode, Derived, NarrowingCheck, RoundSpec,
+};
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
     after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
@@ -76,7 +76,8 @@ pub use lr_aggregate::{
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use provenance::{Citation, ContentHash, Provenance, Quote, TrustTier, VerbatimSpan};
 pub use verify::{
-    verify_proof, verify_quote, verify_step, LogicFailure, LogicStatus, MemorySnapshots,
+    verify_derived, verify_proof, verify_quote, verify_step, ComputationFailure, ComputationStatus,
+    DerivedVerification, InputQuoteVerification, LogicFailure, LogicStatus, MemorySnapshots,
     NoSnapshots, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification, TraceVerification,
     UnverifiedReason,
 };
@@ -425,6 +426,9 @@ pub struct KnowledgeBase {
     /// [`observed_value`](Self::observed_value) falls back to this table so a
     /// predicate fires over a computed value exactly as over an observed one.
     derived: Vec<crate::compute::Derived>,
+    /// Trusted compiler plans, stored separately from result artifacts so the
+    /// verifier never takes an artifact's own expression as authority.
+    computation_plans: Vec<crate::compute::ComputationPlan>,
     /// LP19e + ADJ47-D: uncertainty markers attached to conclusions.
     /// Each marker carries a domain of candidate evidence terms; if
     /// none of them is observed, the aggregator emits an
@@ -952,7 +956,15 @@ impl KnowledgeBase {
     /// Bind a `let`-computed [`Derived`](crate::compute::Derived) value into the
     /// KB. A later [`observed_value`](Self::observed_value) of its name returns
     /// the computed value, and a formula can reference it by name.
-    pub fn add_derived(&mut self, derived: crate::compute::Derived) {
+    pub fn add_derived(&mut self, mut derived: crate::compute::Derived) {
+        let id = crate::compute::ComputationId(self.computation_plans.len());
+        derived.computation_id = Some(id);
+        self.computation_plans.push(crate::compute::ComputationPlan {
+            expr: derived.expr.clone(),
+            scope: derived.scope,
+            formula_sources: derived.formula_sources.clone(),
+            is_query_answer: derived.is_query_answer,
+        });
         self.derived.push(derived);
     }
 
@@ -971,6 +983,39 @@ impl KnowledgeBase {
     /// the renderer keeps the most-recent per name to mirror that rule.
     pub fn derived_bindings(&self) -> &[crate::compute::Derived] {
         &self.derived
+    }
+
+    pub(crate) fn computation_scope(&self) -> crate::compute::ComputationScope {
+        crate::compute::ComputationScope {
+            fact_limit: self.next_fact_id,
+            derived_limit: self.derived.len(),
+        }
+    }
+
+    /// Reconstruct the fact and derived prefix visible to an earlier compute.
+    pub(crate) fn at_computation_scope(
+        &self,
+        scope: crate::compute::ComputationScope,
+    ) -> Option<Self> {
+        if scope.fact_limit > self.next_fact_id || scope.derived_limit > self.derived.len() {
+            return None;
+        }
+        let mut view = self.clone();
+        for facts in view.facts.values_mut() {
+            facts.retain(|fact| fact.id.0 < scope.fact_limit);
+        }
+        view.facts.retain(|_, facts| !facts.is_empty());
+        view.derived.truncate(scope.derived_limit);
+        view.computation_plans.truncate(scope.derived_limit);
+        view.next_fact_id = scope.fact_limit;
+        Some(view)
+    }
+
+    pub(crate) fn computation_plan(
+        &self,
+        id: crate::compute::ComputationId,
+    ) -> Option<&crate::compute::ComputationPlan> {
+        self.computation_plans.get(id.0)
     }
 
     /// True iff at least one contribution (single or joint) names

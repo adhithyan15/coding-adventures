@@ -359,8 +359,11 @@ pub enum Statement {
         conclusion: Term,
         annotations: Vec<Annotation>,
     },
-    /// `observe <term>` — assert a Certain Fact.
-    Observe { term: Term },
+    /// `observe <term>` (+ annotations) — assert a Certain, byte-groundable Fact.
+    Observe {
+        term: Term,
+        annotations: Vec<Annotation>,
+    },
     /// `relate <rel>(<args>)` — assert a ground RELATIONAL EDGE (MYCIN-2026
     /// REL-2). The `edge` term's functor is the relation and its arguments are
     /// the entities (e.g. `deficient_in(tay_sachs, hexosaminidase_a)`). Lowers

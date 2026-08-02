@@ -610,14 +610,44 @@ impl DerivationNode {
 /// [`Dimension`] the engine inferred for it (so a predicate firing over a
 /// derived value — `csf_ratio <= 0.4` — knows `csf_ratio` is a dimensionless
 /// `Scalar`, and the faithfulness gate has rejected any unit-mismatched op).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ComputationScope {
+    /// Fact ids below this exclusive limit were visible when evaluation ran.
+    pub fact_limit: u64,
+    /// Derived bindings below this exclusive index were visible.
+    pub derived_limit: usize,
+}
+
+/// Stable identity assigned when a computed artifact enters a knowledge base.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ComputationId(pub usize);
+
+/// Compiler-owned plan kept separately from the result artifact under audit.
+#[derive(Debug, Clone)]
+pub(crate) struct ComputationPlan {
+    pub expr: ComputeExpr,
+    pub scope: ComputationScope,
+    pub formula_sources: Vec<crate::Provenance>,
+    pub is_query_answer: bool,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Derived {
+    /// Assigned by [`KnowledgeBase::add_derived`](crate::KnowledgeBase::add_derived).
+    pub(crate) computation_id: Option<ComputationId>,
     pub name: String,
     pub value: f64,
     /// Exact value when the expression stayed inside integer/rational arithmetic.
     pub exact: Option<ExactRational>,
     pub dim: Dimension,
     pub tree: DerivationNode,
+    /// The compiler-produced expression that the verifier independently
+    /// evaluates. Replaying only `tree` would trust the very operator and
+    /// operand structure under audit.
+    pub expr: ComputeExpr,
+    /// The exact fact/derived prefix visible at the original evaluation point.
+    /// This makes latest-observation and rebinding resolution reproducible.
+    pub scope: ComputationScope,
     /// Provenance for the *formula* that produced this value, when it came from
     /// APPLYING a provenanced `formula` (ADJ-FORMULA-LIBRARIES rung-0): the
     /// formula's cited `source` / `locator` / `trust`. A plain `let` leaves this
@@ -626,6 +656,11 @@ pub struct Derived {
     /// answer carries **why** its formula is trustworthy, so an independent
     /// checker can re-verify the citation without the model.
     pub provenance: Option<crate::Provenance>,
+    /// Every formula applied to produce this value, outermost first. Unlike
+    /// display corroborations, these retain their exact quote and snapshot pins.
+    pub formula_sources: Vec<crate::Provenance>,
+    /// True only when this binding is the answer to an explicit formula query.
+    pub is_query_answer: bool,
 }
 
 impl Derived {
@@ -633,7 +668,25 @@ impl Derived {
     /// `trust`). Consumes and returns `self` so it composes with [`compute`]:
     /// `compute(name, expr, kb)?.with_provenance(prov)`.
     pub fn with_provenance(mut self, provenance: crate::Provenance) -> Self {
+        self.formula_sources = vec![provenance.clone()];
         self.provenance = Some(provenance);
+        self
+    }
+
+    /// Attach display provenance and the lossless applied-formula source chain.
+    pub fn with_formula_sources(
+        mut self,
+        provenance: crate::Provenance,
+        formula_sources: Vec<crate::Provenance>,
+    ) -> Self {
+        self.provenance = Some(provenance);
+        self.formula_sources = formula_sources;
+        self
+    }
+
+    /// Mark this derived binding as the answer to an explicit formula query.
+    pub fn as_query_answer(mut self) -> Self {
+        self.is_query_answer = true;
         self
     }
 }
@@ -702,14 +755,19 @@ pub fn compute(
     let (tree, dim, exact) = eval(expr, kb, 0)?;
     let value = tree.value();
     Ok(Derived {
+        computation_id: None,
         name: name.into(),
         value,
         exact,
         dim,
         tree,
+        expr: expr.clone(),
+        scope: kb.computation_scope(),
         // A plain `let` carries no library-formula provenance; a formula
         // application attaches it afterward via [`Derived::with_provenance`].
         provenance: None,
+        formula_sources: Vec::new(),
+        is_query_answer: false,
     })
 }
 

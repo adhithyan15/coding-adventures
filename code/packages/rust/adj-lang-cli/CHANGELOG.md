@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.32.0] - 2026-08-02 - formula-only `adj-verify`
+
+- `adj-verify` now reports every computed binding, re-evaluates its separately stored compiler
+  plan, and verifies every nested formula quote plus all observed-input quotes.
+- The summary includes computation totals and allows formula-only programs to reach
+  `fully_verified: true` only when an explicit question exists, CPU replay succeeds, and every
+  byte anchor passes.
+- Drifted formula or input bytes fail closed and identify the exact `formula_quote` or
+  `input_quote` verification pass.
+
 ## [0.31.0] — 2026-07-31 — AR-3: `--explain` narrates the WITHDRAWAL of a rebutted conclusion
 
 Completes the argument surface (`ADJ-ARGUMENT-REBUTTAL.md` §4): when a paper's rebuttal DEFEATS a

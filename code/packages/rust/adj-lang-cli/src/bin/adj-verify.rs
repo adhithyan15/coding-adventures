@@ -53,9 +53,10 @@ use adj_lang_cli::{esc, payload, query_echo, FsProvider};
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 use logic_engine::{
-    enumerate_all, recheck_narrowings, verify_proof, ContentHash, LogicFailure, LogicStatus,
-    NarrowingCheck, Proof, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification,
-    TraceVerification, UnverifiedReason,
+    enumerate_all, recheck_narrowings, verify_derived, verify_proof, ComputationFailure,
+    ComputationStatus, ContentHash, DerivedVerification, LogicFailure, LogicStatus, NarrowingCheck,
+    Proof, QuoteMiss, QuoteStatus, SnapshotStore, StepVerification, TraceVerification,
+    UnverifiedReason,
 };
 
 const SPEC: &str = r#"{
@@ -197,6 +198,45 @@ fn logic_json(status: &LogicStatus) -> String {
     format!("\"{tag}\"")
 }
 
+fn computation_json(status: &ComputationStatus) -> String {
+    match status {
+        ComputationStatus::ReChecked => "{\"status\":\"rechecked\"}".to_string(),
+        ComputationStatus::Unverifiable(why) => {
+            format!("{{\"status\":\"unverifiable\",\"why\":\"{}\"}}", esc(why))
+        }
+        ComputationStatus::Failed(failure) => {
+            let detail = match failure {
+                ComputationFailure::PlanUnavailable => "\"why\":\"plan_unavailable\"".to_string(),
+                ComputationFailure::ArtifactDoesNotMatchPlan => {
+                    "\"why\":\"artifact_does_not_match_plan\"".to_string()
+                }
+                ComputationFailure::ScopeUnavailable => "\"why\":\"scope_unavailable\"".to_string(),
+                ComputationFailure::EvaluationFailed(error) => format!(
+                    "\"why\":\"evaluation_failed\",\"detail\":\"{}\"",
+                    esc(&format!("{error:?}"))
+                ),
+                ComputationFailure::ValueDiffers {
+                    recorded,
+                    recomputed,
+                } => format!(
+                    "\"why\":\"value_differs\",\"recorded\":{},\"recomputed\":{}",
+                    recorded, recomputed
+                ),
+                ComputationFailure::ExactValueDiffers => {
+                    "\"why\":\"exact_value_differs\"".to_string()
+                }
+                ComputationFailure::DimensionDiffers => "\"why\":\"dimension_differs\"".to_string(),
+                ComputationFailure::TreeDiffers => "\"why\":\"tree_differs\"".to_string(),
+                ComputationFailure::ReferencedDerivedDiffers(name) => format!(
+                    "\"why\":\"referenced_derived_differs\",\"derived\":\"{}\"",
+                    esc(name)
+                ),
+            };
+            format!("{{\"status\":\"failed\",{detail}}}")
+        }
+    }
+}
+
 /// Render a quote verdict.
 ///
 /// `byte_len` is always reported alongside a verified span. §E.3 declines to
@@ -274,6 +314,37 @@ fn step_json(s: &StepVerification) -> String {
     )
 }
 
+fn derived_json(report: &DerivedVerification) -> String {
+    let formulas = report
+        .formula_quotes
+        .iter()
+        .map(quote_json)
+        .collect::<Vec<_>>()
+        .join(",");
+    let inputs = report
+        .input_quotes
+        .iter()
+        .map(|input| {
+            format!(
+                "{{\"fact_id\":{},\"quote\":{}}}",
+                input.fact_id.0,
+                quote_json(&input.quote)
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!(
+        "{{\"name\":\"{}\",\"query_answer\":{},\"passed\":{},\"fully_verified\":{},\"computation\":{},\"formula_quotes\":[{}],\"input_quotes\":[{}]}}",
+        esc(&report.name),
+        report.is_query_answer,
+        report.passed(),
+        report.fully_verified(),
+        computation_json(&report.computation),
+        formulas,
+        inputs
+    )
+}
+
 #[derive(Default)]
 struct Totals {
     steps: usize,
@@ -281,6 +352,11 @@ struct Totals {
     quotes_verified: usize,
     proofs: usize,
     proofs_fully_verified: usize,
+    computations: usize,
+    computations_rechecked: usize,
+    computations_fully_verified: usize,
+    query_computations: usize,
+    query_computations_fully_verified: usize,
 }
 
 impl Totals {
@@ -298,6 +374,32 @@ impl Totals {
                 self.quotes_verified += 1;
             }
         }
+    }
+
+    fn absorb_derived(&mut self, report: &DerivedVerification) {
+        self.computations += 1;
+        if matches!(report.computation, ComputationStatus::ReChecked) {
+            self.computations_rechecked += 1;
+        }
+        if report.fully_verified() {
+            self.computations_fully_verified += 1;
+        }
+        if report.is_query_answer {
+            self.query_computations += 1;
+            if report.fully_verified() {
+                self.query_computations_fully_verified += 1;
+            }
+        }
+        self.quotes_verified += report
+            .formula_quotes
+            .iter()
+            .filter(|quote| matches!(quote, QuoteStatus::Verified { .. }))
+            .count();
+        self.quotes_verified += report
+            .input_quotes
+            .iter()
+            .filter(|input| matches!(input.quote, QuoteStatus::Verified { .. }))
+            .count();
     }
 }
 
@@ -428,6 +530,56 @@ fn main() -> ExitCode {
         record("lr", &text, &r.result.dag.proofs, &mut totals);
     }
 
+    // Formula queries do not produce SLD proofs: their evidence is a CPU
+    // derivation tree plus the formula and input provenance carried by the
+    // resulting binding. Re-check that independent channel explicitly so a
+    // formula-only program can become fully verified without inventing a fake
+    // logic proof, and so tampered arithmetic localizes to the computed value.
+    let mut computation_blobs: Vec<String> = Vec::new();
+    for derived in lowered.kb.derived_bindings() {
+        let report = verify_derived(derived, &lowered.kb, store.as_ref());
+        totals.absorb_derived(&report);
+        if first_failure.is_none() && !report.passed() {
+            first_failure = Some(match &report.computation {
+                status if !matches!(status, ComputationStatus::ReChecked) => format!(
+                    "{{\"pass\":\"computation\",\"name\":\"{}\",\"computation\":{}}}",
+                    esc(&report.name),
+                    computation_json(&report.computation)
+                ),
+                _ if report
+                    .formula_quotes
+                    .iter()
+                    .any(|quote| matches!(quote, QuoteStatus::QuoteMissing(_))) =>
+                {
+                    let quote = report
+                        .formula_quotes
+                        .iter()
+                        .find(|quote| matches!(quote, QuoteStatus::QuoteMissing(_)))
+                        .expect("a failed formula quote is present");
+                    format!(
+                        "{{\"pass\":\"formula_quote\",\"name\":\"{}\",\"quote\":{}}}",
+                        esc(&report.name),
+                        quote_json(quote)
+                    )
+                }
+                _ => {
+                    let input = report
+                        .input_quotes
+                        .iter()
+                        .find(|input| matches!(input.quote, QuoteStatus::QuoteMissing(_)))
+                        .expect("a failed derived report has a localized failure");
+                    format!(
+                        "{{\"pass\":\"input_quote\",\"name\":\"{}\",\"fact_id\":{},\"quote\":{}}}",
+                        esc(&report.name),
+                        input.fact_id.0,
+                        quote_json(&input.quote)
+                    )
+                }
+            });
+        }
+        computation_blobs.push(derived_json(&report));
+    }
+
     // NUM-6 audit-exactness re-check (ADJ-NUMERIC-SUBSTRATE §4.3, §6, §7). The SLD
     // and LR passes above re-derive the *logic*; the compute derivation trees carry
     // the *arithmetic*, and every `round_to`/`round_sig`/`to_scientific`/`to_percent`/
@@ -506,11 +658,14 @@ fn main() -> ExitCode {
     // been checked. That is the fail-open shape this tool exists to catch, and
     // it is no less wrong for appearing in the tool itself.
     let fully = verified
-        && totals.proofs > 0
-        && totals.proofs_fully_verified == totals.proofs
+        && totals.proofs + totals.query_computations > 0
+        && (totals.proofs == 0 || totals.proofs_fully_verified == totals.proofs)
+        && (totals.computations == 0 || totals.computations_fully_verified == totals.computations)
+        && (totals.query_computations == 0
+            || totals.query_computations_fully_verified == totals.query_computations)
         && totals.quotes_verified > 0;
     println!(
-        "{{\"verified\":{},\"fully_verified\":{},\"totals\":{{\"proofs\":{},\"proofs_fully_verified\":{},\"steps\":{},\"rechecked\":{},\"quotes_verified\":{},\"narrowings_rechecked\":{},\"narrowings_unverifiable\":{},\"narrowings_mismatched\":{}}},\"truncated_queries\":[{}],\"narrowings\":[{}],\"first_failure\":{},\"queries\":[{}]}}",
+        "{{\"verified\":{},\"fully_verified\":{},\"totals\":{{\"proofs\":{},\"proofs_fully_verified\":{},\"steps\":{},\"rechecked\":{},\"quotes_verified\":{},\"computations\":{},\"computations_rechecked\":{},\"computations_fully_verified\":{},\"query_computations\":{},\"query_computations_fully_verified\":{},\"narrowings_rechecked\":{},\"narrowings_unverifiable\":{},\"narrowings_mismatched\":{}}},\"truncated_queries\":[{}],\"computations\":[{}],\"narrowings\":[{}],\"first_failure\":{},\"queries\":[{}]}}",
         verified,
         fully,
         totals.proofs,
@@ -518,10 +673,16 @@ fn main() -> ExitCode {
         totals.steps,
         totals.rechecked,
         totals.quotes_verified,
+        totals.computations,
+        totals.computations_rechecked,
+        totals.computations_fully_verified,
+        totals.query_computations,
+        totals.query_computations_fully_verified,
         narrowings_rechecked,
         narrowings_unverifiable,
         narrowings_mismatched,
         truncated_queries.join(","),
+        computation_blobs.join(","),
         narrowing_blobs.join(","),
         first_failure.as_deref().unwrap_or("null"),
         per_query.join(",")
