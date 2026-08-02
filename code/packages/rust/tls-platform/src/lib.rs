@@ -24,7 +24,7 @@ use rustls::{
 };
 use std::fmt;
 use std::io::{self, Read, Write};
-use std::net::{TcpStream, ToSocketAddrs};
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -36,6 +36,15 @@ pub trait TlsConnector: Send + Sync {
         &self,
         host: &str,
         port: u16,
+        config: &TlsConfig,
+    ) -> Result<Box<dyn TlsStream>, TlsError>;
+
+    /// Connect to a previously reviewed socket address while retaining
+    /// `server_name` for SNI and certificate verification.
+    fn connect_addr(
+        &self,
+        server_name: &str,
+        address: SocketAddr,
         config: &TlsConfig,
     ) -> Result<Box<dyn TlsStream>, TlsError>;
 }
@@ -278,6 +287,24 @@ impl TlsConnector for RustlsConnector {
     ) -> Result<Box<dyn TlsStream>, TlsError> {
         let endpoint = TlsEndpoint::new(host, port)?;
         Ok(Box::new(self.connect_endpoint(endpoint, config)?))
+    }
+
+    fn connect_addr(
+        &self,
+        server_name: &str,
+        address: SocketAddr,
+        config: &TlsConfig,
+    ) -> Result<Box<dyn TlsStream>, TlsError> {
+        let endpoint = TlsEndpoint::new(server_name, address.port())?;
+        let stream =
+            TcpStream::connect_timeout(&address, config.connect_timeout).map_err(|source| {
+                TlsError::TcpConnect {
+                    host: server_name.to_string(),
+                    port: address.port(),
+                    source,
+                }
+            })?;
+        Ok(Box::new(self.connect_tcp_stream(endpoint, stream, config)?))
     }
 }
 

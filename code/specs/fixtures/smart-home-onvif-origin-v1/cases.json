@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "contract": "smart-home-onvif-origin-v1",
+  "cases": [
+    {
+      "id": "discovery-correlated-loopback",
+      "operation": "discovery",
+      "input": {
+        "probe_message_id": "urn:uuid:probe-1",
+        "relates_to": "urn:uuid:probe-1",
+        "sender_ip": "127.0.0.1",
+        "url": "http://127.0.0.1:8080/onvif/device_service",
+        "resolved_addresses": ["127.0.0.1"],
+        "allow_loopback_http": true
+      },
+      "expected": {
+        "accepted": true,
+        "code": "ok",
+        "confidence": "candidate",
+        "pinned_address": "127.0.0.1:8080"
+      }
+    },
+    {
+      "id": "discovery-relates-to-mismatch",
+      "operation": "discovery",
+      "input": {
+        "probe_message_id": "urn:uuid:probe-1",
+        "relates_to": "urn:uuid:other",
+        "sender_ip": "127.0.0.1",
+        "url": "http://127.0.0.1:8080/onvif/device_service",
+        "resolved_addresses": ["127.0.0.1"],
+        "allow_loopback_http": true
+      },
+      "expected": { "accepted": false, "code": "relates_to_mismatch" }
+    },
+    {
+      "id": "discovery-source-mismatch",
+      "operation": "discovery",
+      "input": {
+        "probe_message_id": "urn:uuid:probe-1",
+        "relates_to": "urn:uuid:probe-1",
+        "sender_ip": "127.0.0.1",
+        "url": "http://127.0.0.2:8080/onvif/device_service",
+        "resolved_addresses": ["127.0.0.2"],
+        "allow_loopback_http": true
+      },
+      "expected": { "accepted": false, "code": "source_mismatch" }
+    },
+    {
+      "id": "soap-https-private-ip",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://10.0.0.10/onvif/device_service",
+        "resolved_addresses": ["10.0.0.10"],
+        "allow_loopback_http": false
+      },
+      "expected": {
+        "accepted": true,
+        "code": "ok",
+        "pinned_address": "10.0.0.10:443"
+      }
+    },
+    {
+      "id": "soap-plaintext-default-deny",
+      "operation": "soap_origin",
+      "input": {
+        "url": "http://10.0.0.10/onvif/device_service",
+        "resolved_addresses": ["10.0.0.10"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "insecure_transport" }
+    },
+    {
+      "id": "soap-userinfo-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://admin:secret@10.0.0.10/onvif/device_service",
+        "resolved_addresses": ["10.0.0.10"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "userinfo_forbidden" }
+    },
+    {
+      "id": "soap-fragment-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://10.0.0.10/onvif/device_service#fragment",
+        "resolved_addresses": ["10.0.0.10"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "fragment_forbidden" }
+    },
+    {
+      "id": "soap-public-address-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://camera.example/onvif/device_service",
+        "resolved_addresses": ["203.0.113.5"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "unsafe_address" }
+    },
+    {
+      "id": "soap-multicast-address-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://239.255.255.250/onvif/device_service",
+        "resolved_addresses": ["239.255.255.250"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "unsafe_address" }
+    },
+    {
+      "id": "soap-dns-rebinding-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://camera.lan/onvif/device_service",
+        "approved_url": "https://camera.lan/onvif/device_service",
+        "resolved_addresses": ["10.0.0.8", "10.0.0.9"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "dns_rebinding" }
+    },
+    {
+      "id": "derived-media-cross-origin",
+      "operation": "derived_origin",
+      "input": {
+        "approved_url": "https://10.0.0.8/onvif/device_service",
+        "url": "https://10.0.0.9/onvif/media_service",
+        "resolved_addresses": ["10.0.0.9"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "unreviewed_origin" }
+    },
+    {
+      "id": "derived-media-downgrade",
+      "operation": "derived_origin",
+      "input": {
+        "approved_url": "https://10.0.0.8/onvif/device_service",
+        "url": "http://10.0.0.8/onvif/media_service",
+        "resolved_addresses": ["10.0.0.8"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "insecure_transport" }
+    },
+    {
+      "id": "derived-stream-loopback-fixture",
+      "operation": "derived_origin",
+      "input": {
+        "approved_url": "http://127.0.0.1:8080/onvif/device_service",
+        "url": "rtsp://127.0.0.1:8080/live/profile-1",
+        "resolved_addresses": ["127.0.0.1"],
+        "allow_loopback_http": true
+      },
+      "expected": {
+        "accepted": true,
+        "code": "ok",
+        "pinned_address": "127.0.0.1:8080"
+      }
+    },
+    {
+      "id": "http-redirect-forbidden",
+      "operation": "http_status",
+      "input": { "status": 302 },
+      "expected": { "accepted": false, "code": "redirect_forbidden" }
+    },
+    {
+      "id": "url-size-limit",
+      "operation": "size_policy",
+      "input": { "field": "url", "observed_bytes": 2049 },
+      "expected": { "accepted": false, "code": "size_limit" }
+    },
+    {
+      "id": "credential-size-limit",
+      "operation": "size_policy",
+      "input": { "field": "credential", "observed_bytes": 4097 },
+      "expected": { "accepted": false, "code": "size_limit" }
+    },
+    {
+      "id": "request-size-limit",
+      "operation": "size_policy",
+      "input": { "field": "request", "observed_bytes": 65537 },
+      "expected": { "accepted": false, "code": "size_limit" }
+    }
+  ]
+}
