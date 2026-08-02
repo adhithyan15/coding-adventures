@@ -50,14 +50,14 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     target.join("debug/libventure_browser_macos.dylib")
 }
 
-fn serve_html_once() -> String {
+fn serve_html_once(title: &'static str) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind acceptance server");
     let address = listener.local_addr().expect("read acceptance address");
     thread::spawn(move || {
         let (mut stream, _) = listener.accept().expect("accept Venture request");
         let mut request = [0_u8; 1024];
         let _ = stream.read(&mut request);
-        let body = b"<!doctype html><title>Venture launch acceptance</title><main>Ready</main>";
+        let body = format!("<!doctype html><title>{title}</title><main>Ready</main>");
         write!(
             stream,
             "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
@@ -65,30 +65,30 @@ fn serve_html_once() -> String {
         )
         .expect("write acceptance response headers");
         stream
-            .write_all(body)
+            .write_all(body.as_bytes())
             .expect("write acceptance response body");
     });
     format!("http://{address}/")
 }
 
-fn wait_for_ready(child: &mut Child, marker: &Path) {
+fn wait_for_marker(child: &mut Child, marker: &Path, description: &str) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
         if marker.exists() {
             return;
         }
         if let Some(status) = child.try_wait().expect("poll generated SwiftUI app") {
-            panic!("generated SwiftUI app exited before rendering: {status}");
+            panic!("generated SwiftUI app exited before {description}: {status}");
         }
         thread::sleep(Duration::from_millis(100));
     }
     let _ = child.kill();
     let _ = child.wait();
-    panic!("generated SwiftUI app did not report a rendered Mosaic host surface within 30 seconds");
+    panic!("generated SwiftUI app did not report {description} within 30 seconds");
 }
 
 #[test]
-fn package_owned_swiftui_project_launches_and_renders() {
+fn package_owned_swiftui_project_launches_renders_and_interacts() {
     let output = temporary_output();
     let result = build_package(&BuildOptions {
         package_root: venture_package_root(),
@@ -131,25 +131,45 @@ fn package_owned_swiftui_project_launches_and_renders() {
     );
 
     let marker = output.join("swiftui-ready.json");
+    let interaction_marker = output.join("swiftui-interaction.json");
+    let start_url = serve_html_once("Venture launch acceptance");
+    let target_url = serve_html_once("Venture interaction acceptance");
     let app_log = output.join("swiftui-app.log");
     let log = File::create(&app_log).expect("create SwiftUI app log");
     let mut child = Command::new(project.join(".build/debug/App"))
         .current_dir(&project)
-        .env("VENTURE_START_URL", serve_html_once())
+        .env("VENTURE_START_URL", start_url)
         .env("VENTURE_BROWSER_LIBRARY", &library)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
+        .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
+        .env(
+            "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH",
+            &interaction_marker,
+        )
         .stdout(Stdio::from(log.try_clone().expect("clone SwiftUI app log")))
         .stderr(Stdio::from(log))
         .spawn()
         .expect("launch generated Venture SwiftUI app");
-    wait_for_ready(&mut child, &marker);
-    thread::sleep(Duration::from_millis(500));
+    wait_for_marker(&mut child, &marker, "a rendered Mosaic host surface");
+    wait_for_marker(
+        &mut child,
+        &interaction_marker,
+        "native chrome interaction acceptance",
+    );
     let _ = child.kill();
     let _ = child.wait();
 
     let readiness = fs::read_to_string(&marker).expect("read SwiftUI readiness marker");
     assert!(readiness.contains("\"backend\":\"swiftui\""));
     assert!(readiness.contains("\"status\":\"ready\""));
+    let interaction =
+        fs::read_to_string(&interaction_marker).expect("read SwiftUI interaction marker");
+    assert!(interaction.contains("\"backend\":\"swiftui\""));
+    assert!(interaction.contains("\"status\":\"interacted\""));
+    assert!(
+        interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
+    );
+    assert!(interaction.contains("Venture interaction acceptance"));
     let diagnostics = fs::read_to_string(&app_log).expect("read SwiftUI app log");
     assert!(
         !diagnostics.contains("assertion failed") && !diagnostics.contains("Assertion failed"),

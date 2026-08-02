@@ -13,3 +13,6 @@
   integration gate, requiring a successful Direct2D host-surface render.
 - Copy rendered BGRA pixels through WinRT's supported `IBuffer.AsStream()`
   projection and retain opt-in launch-phase diagnostics for hosted acceptance.
+- Extend the generated-app launch gate through the native WinUI address
+  control and button invoke provider, requiring the shared Rust session to
+  load and title a second deterministic page.

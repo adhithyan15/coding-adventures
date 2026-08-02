@@ -47,14 +47,14 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     target.join("debug/venture_browser_windows.dll")
 }
 
-fn serve_html_once() -> String {
+fn serve_html_once(title: &'static str) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind acceptance server");
     let address = listener.local_addr().expect("read acceptance address");
     thread::spawn(move || {
         let (mut stream, _) = listener.accept().expect("accept Venture request");
         let mut request = [0_u8; 1024];
         let _ = stream.read(&mut request);
-        let body = b"<!doctype html><title>Venture launch acceptance</title><main>Ready</main>";
+        let body = format!("<!doctype html><title>{title}</title><main>Ready</main>");
         write!(
             stream,
             "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
@@ -62,7 +62,7 @@ fn serve_html_once() -> String {
         )
         .expect("write acceptance response headers");
         stream
-            .write_all(body)
+            .write_all(body.as_bytes())
             .expect("write acceptance response body");
     });
     format!("http://{address}/")
@@ -114,7 +114,13 @@ if ($events) {
     }
 }
 
-fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path, phase_log: &Path) {
+fn wait_for_marker(
+    child: &mut Child,
+    executable: &Path,
+    marker: &Path,
+    phase_log: &Path,
+    description: &str,
+) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
         if marker.exists() {
@@ -124,7 +130,7 @@ fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path, phase_log
             let phase = fs::read_to_string(phase_log)
                 .unwrap_or_else(|_| "no package-host phase was reported".to_string());
             panic!(
-                "generated WinUI app exited before rendering: {status}\nlast host phase: {phase}\n{}",
+                "generated WinUI app exited before {description}: {status}\nlast host phase: {phase}\n{}",
                 application_failure_diagnostics(executable)
             );
         }
@@ -132,11 +138,11 @@ fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path, phase_log
     }
     let _ = child.kill();
     let _ = child.wait();
-    panic!("generated WinUI app did not report a rendered Mosaic host surface within 30 seconds");
+    panic!("generated WinUI app did not report {description} within 30 seconds");
 }
 
 #[test]
-fn package_owned_xaml_host_compiles_in_generated_winui_project() {
+fn package_owned_xaml_project_builds_launches_and_interacts() {
     let output = temporary_output();
     let result = build_package(&BuildOptions {
         package_root: venture_package_root(),
@@ -181,25 +187,60 @@ fn package_owned_xaml_host_compiles_in_generated_winui_project() {
     let executable = find_executable(&project.join("bin"))
         .expect("generated WinUI build must produce VentureChrome.exe");
     let marker = output.join("xaml-ready.json");
+    let interaction_marker = output.join("xaml-interaction.json");
     let phase_log = output.join("xaml-phase.json");
+    let start_url = serve_html_once("Venture launch acceptance");
+    let target_url = serve_html_once("Venture interaction acceptance");
     let app_log = output.join("xaml-app.log");
     let log = File::create(&app_log).expect("create WinUI app log");
     let mut child = Command::new(&executable)
         .current_dir(executable.parent().expect("WinUI executable directory"))
-        .env("VENTURE_START_URL", serve_html_once())
+        .env("VENTURE_START_URL", start_url)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_ACCEPTANCE_DIAGNOSTIC_PATH", &phase_log)
+        .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
+        .env(
+            "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH",
+            &interaction_marker,
+        )
         .stdout(Stdio::from(log.try_clone().expect("clone WinUI app log")))
         .stderr(Stdio::from(log))
         .spawn()
         .expect("launch generated Venture WinUI app");
-    wait_for_ready(&mut child, &executable, &marker, &phase_log);
+    wait_for_marker(
+        &mut child,
+        &executable,
+        &marker,
+        &phase_log,
+        "a rendered Mosaic host surface",
+    );
+    wait_for_marker(
+        &mut child,
+        &executable,
+        &interaction_marker,
+        &phase_log,
+        "native chrome interaction acceptance",
+    );
     let _ = child.kill();
     let _ = child.wait();
 
     let readiness = fs::read_to_string(&marker).expect("read WinUI readiness marker");
     assert!(readiness.contains("\"backend\":\"xaml\""));
     assert!(readiness.contains("\"status\":\"ready\""));
+    let interaction =
+        fs::read_to_string(&interaction_marker).expect("read WinUI interaction marker");
+    assert!(
+        interaction.contains("\"backend\":\"xaml\""),
+        "unexpected WinUI interaction marker: {interaction}"
+    );
+    assert!(
+        interaction.contains("\"status\":\"interacted\""),
+        "WinUI interaction failed: {interaction}"
+    );
+    assert!(
+        interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
+    );
+    assert!(interaction.contains("Venture interaction acceptance"));
     let diagnostics = fs::read_to_string(&app_log).expect("read WinUI app log");
     assert!(
         !diagnostics.contains("assertion failed") && !diagnostics.contains("Assertion failed"),

@@ -98,6 +98,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var contentView: VentureContentView?
   private var propsChangedHandler: (() -> Void)?
   private var acceptanceReported = false
+  private var interactionAcceptanceStarted = false
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -140,6 +141,142 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   func setPropsChangedHandler(_ handler: @escaping () -> Void) {
     propsChangedHandler = handler
+  }
+
+  func runInteractionAcceptance() {
+    let environment = ProcessInfo.processInfo.environment
+    guard !interactionAcceptanceStarted,
+      let markerPath = environment["VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH"],
+      let targetURL = environment["VENTURE_BROWSER_INTERACTION_URL"]
+    else { return }
+    interactionAcceptanceStarted = true
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+      self?.attemptInteraction(targetURL: targetURL, markerPath: markerPath, remaining: 50)
+    }
+  }
+
+  private func attemptInteraction(targetURL: String, markerPath: String, remaining: Int) {
+    guard !NSApp.windows.isEmpty else {
+      retryInteraction(targetURL: targetURL, markerPath: markerPath, remaining: remaining)
+      return
+    }
+    var visited = Set<ObjectIdentifier>()
+    guard let address = findEditableTextField(in: NSApp, visited: &visited) else {
+      retryInteraction(targetURL: targetURL, markerPath: markerPath, remaining: remaining)
+      return
+    }
+
+    address.selectText(nil)
+    guard let editor = address.currentEditor() as? NSTextView else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "address-input native editor unavailable",
+        ],
+        to: markerPath)
+      return
+    }
+    editor.selectAll(nil)
+    editor.insertText(targetURL, replacementRange: editor.selectedRange())
+    if let window = address.window {
+      let addressFrame = address.convert(address.bounds, to: nil)
+      sendPrimaryClick(
+        at: NSPoint(x: addressFrame.maxX + 24, y: addressFrame.midY),
+        to: window)
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+      self?.verifyInteraction(targetURL: targetURL, markerPath: markerPath, remaining: 50)
+    }
+  }
+
+  private func retryInteraction(targetURL: String, markerPath: String, remaining: Int) {
+    guard remaining > 0 else {
+      writeInteractionResult(
+        ["backend": "swiftui", "status": "error", "error": "native controls not found"],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.attemptInteraction(
+        targetURL: targetURL, markerPath: markerPath, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyInteraction(targetURL: String, markerPath: String, remaining: Int) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == targetURL, pageTitle == "Venture interaction acceptance" {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted", "address": address,
+          "pageTitle": pageTitle,
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "navigation state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyInteraction(
+        targetURL: targetURL, markerPath: markerPath, remaining: remaining - 1)
+    }
+  }
+
+  private func findEditableTextField(
+    in object: NSObject, visited: inout Set<ObjectIdentifier>
+  ) -> NSTextField? {
+    let objectIdentifier = ObjectIdentifier(object)
+    guard visited.insert(objectIdentifier).inserted else { return nil }
+    if let textField = object as? NSTextField, textField.isEditable { return textField }
+    for child in nativeChildren(of: object) {
+      if let found = findEditableTextField(in: child, visited: &visited) {
+        return found
+      }
+    }
+    return nil
+  }
+
+  private func sendPrimaryClick(at location: NSPoint, to window: NSWindow) {
+    for eventType in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+      guard let event = NSEvent.mouseEvent(
+        with: eventType,
+        location: location,
+        modifierFlags: [],
+        timestamp: ProcessInfo.processInfo.systemUptime,
+        windowNumber: window.windowNumber,
+        context: nil,
+        eventNumber: 0,
+        clickCount: 1,
+        pressure: eventType == .leftMouseDown ? 1 : 0)
+      else { continue }
+      NSApp.sendEvent(event)
+    }
+  }
+
+  private func nativeChildren(of object: NSObject) -> [NSObject] {
+    var children: [NSObject] = []
+    if let application = object as? NSApplication {
+      children.append(contentsOf: application.windows)
+    } else if let window = object as? NSWindow, let contentView = window.contentView {
+      children.append(contentView)
+    } else if let view = object as? NSView {
+      children.append(contentsOf: view.subviews)
+    }
+    return children
+  }
+
+  private func writeInteractionResult(_ result: [String: String], to path: String) {
+    guard let data = try? JSONSerialization.data(withJSONObject: result) else { return }
+    try? data.write(to: URL(fileURLWithPath: path), options: .atomic)
   }
 
   fileprivate func render(layer: CAMetalLayer) {

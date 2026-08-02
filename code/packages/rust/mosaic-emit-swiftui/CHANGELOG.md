@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - optional generated-shell interaction acceptance
+
+Generated SwiftUI applications now call an optional package-host interaction
+hook after their Mosaic root appears. Package owners can exercise the emitted
+native controls and shared dispatch path in direct launch acceptance without
+adding application-specific behavior to the generated shell.
+
 ### Added - Native automation identifiers for authored controls
 
 `HostInput` and `HostButton` now preserve their MLL part names as SwiftUI
