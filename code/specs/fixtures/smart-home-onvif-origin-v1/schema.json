@@ -15,69 +15,171 @@
     }
   },
   "$defs": {
-    "case": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
+    "ipAddress": {
+      "oneOf": [
+        { "type": "string", "format": "ipv4" },
+        { "type": "string", "format": "ipv6" }
+      ]
+    },
+    "ipAddresses": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ipAddress" }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "code"],
+      "properties": {
+        "accepted": { "type": "boolean" },
+        "code": {
+          "enum": [
+            "ok",
+            "relates_to_mismatch",
+            "source_mismatch",
+            "insecure_transport",
+            "userinfo_forbidden",
+            "fragment_forbidden",
+            "query_forbidden",
+            "unreviewed_origin",
+            "unsafe_address",
+            "dns_rebinding",
+            "redirect_forbidden",
+            "size_limit"
+          ]
+        },
+        "confidence": { "const": "candidate" },
+        "pinned_address": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 64,
+          "pattern": "^\\S+:[1-9][0-9]{0,4}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "accepted": { "const": true } }, "required": ["accepted"] },
+          "then": { "properties": { "code": { "const": "ok" } } },
+          "else": { "properties": { "code": { "not": { "const": "ok" } } } }
+        }
+      ]
+    },
+    "discoveryCase": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "operation", "input", "expected"],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,63}$" },
-        "operation": {
-          "enum": [
-            "discovery",
-            "soap_origin",
-            "derived_origin",
-            "http_status",
-            "size_policy"
-          ]
-        },
+        "id": { "$ref": "#/$defs/id" },
+        "operation": { "const": "discovery" },
         "input": {
           "type": "object",
           "additionalProperties": false,
+          "required": ["probe_message_id", "relates_to", "sender_ip", "xaddrs", "allow_loopback_http"],
           "properties": {
-            "probe_message_id": { "type": "string", "maxLength": 256 },
-            "relates_to": { "type": "string", "maxLength": 256 },
-            "sender_ip": { "type": "string", "maxLength": 64 },
-            "url": { "type": "string", "maxLength": 2048 },
-            "approved_url": { "type": "string", "maxLength": 2048 },
-            "resolved_addresses": {
+            "probe_message_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+            "relates_to": { "type": "string", "minLength": 1, "maxLength": 256 },
+            "sender_ip": { "$ref": "#/$defs/ipAddress" },
+            "xaddrs": {
               "type": "array",
-              "maxItems": 16,
+              "minItems": 1,
+              "maxItems": 64,
               "uniqueItems": true,
-              "items": { "type": "string", "maxLength": 64 }
+              "items": { "type": "string", "minLength": 1, "maxLength": 2048, "format": "uri" }
             },
-            "allow_loopback_http": { "type": "boolean" },
-            "status": { "type": "integer", "minimum": 100, "maximum": 599 }
-            ,
+            "allow_loopback_http": { "type": "boolean" }
+          }
+        },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "soapCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "operation": { "const": "soap_origin" },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "approved_resolved_addresses", "allow_loopback_http"],
+          "properties": {
+            "url": { "type": "string", "minLength": 1, "maxLength": 2048, "format": "uri" },
+            "approved_resolved_addresses": { "$ref": "#/$defs/ipAddresses" },
+            "allow_loopback_http": { "type": "boolean" }
+          }
+        },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "derivedCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "operation": { "const": "derived_origin" },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["approved_url", "approved_resolved_addresses", "url", "observed_resolved_addresses", "allow_loopback_http"],
+          "properties": {
+            "approved_url": { "type": "string", "minLength": 1, "maxLength": 2048, "format": "uri" },
+            "approved_resolved_addresses": { "$ref": "#/$defs/ipAddresses" },
+            "url": { "type": "string", "minLength": 1, "maxLength": 2048, "format": "uri" },
+            "observed_resolved_addresses": { "$ref": "#/$defs/ipAddresses" },
+            "allow_loopback_http": { "type": "boolean" }
+          }
+        },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "httpStatusCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "operation": { "const": "http_status" },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": { "status": { "type": "integer", "minimum": 100, "maximum": 599 } }
+        },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "sizeCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "operation": { "const": "size_policy" },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["field", "observed_bytes"],
+          "properties": {
             "field": { "enum": ["url", "credential", "request"] },
             "observed_bytes": { "type": "integer", "minimum": 0, "maximum": 1000000 }
           }
         },
-        "expected": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["accepted", "code"],
-          "properties": {
-            "accepted": { "type": "boolean" },
-            "code": {
-              "enum": [
-                "ok",
-                "relates_to_mismatch",
-                "source_mismatch",
-                "insecure_transport",
-                "userinfo_forbidden",
-                "fragment_forbidden",
-                "unreviewed_origin",
-                "unsafe_address",
-                "dns_rebinding",
-                "redirect_forbidden",
-                "size_limit"
-              ]
-            },
-            "confidence": { "enum": ["candidate"] },
-            "pinned_address": { "type": "string", "maxLength": 64 }
-          }
-        }
+        "expected": { "$ref": "#/$defs/expected" }
       }
+    },
+    "case": {
+      "oneOf": [
+        { "$ref": "#/$defs/discoveryCase" },
+        { "$ref": "#/$defs/soapCase" },
+        { "$ref": "#/$defs/derivedCase" },
+        { "$ref": "#/$defs/httpStatusCase" },
+        { "$ref": "#/$defs/sizeCase" }
+      ]
     }
   }
 }

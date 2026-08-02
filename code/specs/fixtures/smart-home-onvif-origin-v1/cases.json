@@ -9,8 +9,7 @@
         "probe_message_id": "urn:uuid:probe-1",
         "relates_to": "urn:uuid:probe-1",
         "sender_ip": "127.0.0.1",
-        "url": "http://127.0.0.1:8080/onvif/device_service",
-        "resolved_addresses": ["127.0.0.1"],
+        "xaddrs": ["http://127.0.0.1:8080/onvif/device_service"],
         "allow_loopback_http": true
       },
       "expected": {
@@ -27,8 +26,7 @@
         "probe_message_id": "urn:uuid:probe-1",
         "relates_to": "urn:uuid:other",
         "sender_ip": "127.0.0.1",
-        "url": "http://127.0.0.1:8080/onvif/device_service",
-        "resolved_addresses": ["127.0.0.1"],
+        "xaddrs": ["http://127.0.0.1:8080/onvif/device_service"],
         "allow_loopback_http": true
       },
       "expected": { "accepted": false, "code": "relates_to_mismatch" }
@@ -40,8 +38,7 @@
         "probe_message_id": "urn:uuid:probe-1",
         "relates_to": "urn:uuid:probe-1",
         "sender_ip": "127.0.0.1",
-        "url": "http://127.0.0.2:8080/onvif/device_service",
-        "resolved_addresses": ["127.0.0.2"],
+        "xaddrs": ["http://127.0.0.2:8080/onvif/device_service"],
         "allow_loopback_http": true
       },
       "expected": { "accepted": false, "code": "source_mismatch" }
@@ -51,7 +48,7 @@
       "operation": "soap_origin",
       "input": {
         "url": "https://10.0.0.10/onvif/device_service",
-        "resolved_addresses": ["10.0.0.10"],
+        "approved_resolved_addresses": ["10.0.0.10"],
         "allow_loopback_http": false
       },
       "expected": {
@@ -65,7 +62,7 @@
       "operation": "soap_origin",
       "input": {
         "url": "http://10.0.0.10/onvif/device_service",
-        "resolved_addresses": ["10.0.0.10"],
+        "approved_resolved_addresses": ["10.0.0.10"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "insecure_transport" }
@@ -75,7 +72,7 @@
       "operation": "soap_origin",
       "input": {
         "url": "https://admin:secret@10.0.0.10/onvif/device_service",
-        "resolved_addresses": ["10.0.0.10"],
+        "approved_resolved_addresses": ["10.0.0.10"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "userinfo_forbidden" }
@@ -85,17 +82,27 @@
       "operation": "soap_origin",
       "input": {
         "url": "https://10.0.0.10/onvif/device_service#fragment",
-        "resolved_addresses": ["10.0.0.10"],
+        "approved_resolved_addresses": ["10.0.0.10"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "fragment_forbidden" }
+    },
+    {
+      "id": "soap-query-forbidden",
+      "operation": "soap_origin",
+      "input": {
+        "url": "https://10.0.0.10/onvif/device_service?token=secret",
+        "approved_resolved_addresses": ["10.0.0.10"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "query_forbidden" }
     },
     {
       "id": "soap-public-address-forbidden",
       "operation": "soap_origin",
       "input": {
         "url": "https://camera.example/onvif/device_service",
-        "resolved_addresses": ["203.0.113.5"],
+        "approved_resolved_addresses": ["203.0.113.5"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "unsafe_address" }
@@ -105,7 +112,7 @@
       "operation": "soap_origin",
       "input": {
         "url": "https://239.255.255.250/onvif/device_service",
-        "resolved_addresses": ["239.255.255.250"],
+        "approved_resolved_addresses": ["239.255.255.250"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "unsafe_address" }
@@ -115,8 +122,7 @@
       "operation": "soap_origin",
       "input": {
         "url": "https://camera.lan/onvif/device_service",
-        "approved_url": "https://camera.lan/onvif/device_service",
-        "resolved_addresses": ["10.0.0.8", "10.0.0.9"],
+        "approved_resolved_addresses": ["10.0.0.8", "10.0.0.9"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "dns_rebinding" }
@@ -126,8 +132,9 @@
       "operation": "derived_origin",
       "input": {
         "approved_url": "https://10.0.0.8/onvif/device_service",
+        "approved_resolved_addresses": ["10.0.0.8"],
         "url": "https://10.0.0.9/onvif/media_service",
-        "resolved_addresses": ["10.0.0.9"],
+        "observed_resolved_addresses": ["10.0.0.9"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "unreviewed_origin" }
@@ -137,8 +144,9 @@
       "operation": "derived_origin",
       "input": {
         "approved_url": "https://10.0.0.8/onvif/device_service",
+        "approved_resolved_addresses": ["10.0.0.8"],
         "url": "http://10.0.0.8/onvif/media_service",
-        "resolved_addresses": ["10.0.0.8"],
+        "observed_resolved_addresses": ["10.0.0.8"],
         "allow_loopback_http": false
       },
       "expected": { "accepted": false, "code": "insecure_transport" }
@@ -148,8 +156,9 @@
       "operation": "derived_origin",
       "input": {
         "approved_url": "http://127.0.0.1:8080/onvif/device_service",
+        "approved_resolved_addresses": ["127.0.0.1"],
         "url": "rtsp://127.0.0.1:8080/live/profile-1",
-        "resolved_addresses": ["127.0.0.1"],
+        "observed_resolved_addresses": ["127.0.0.1"],
         "allow_loopback_http": true
       },
       "expected": {
@@ -159,10 +168,28 @@
       }
     },
     {
+      "id": "derived-resource-dns-rebinding",
+      "operation": "derived_origin",
+      "input": {
+        "approved_url": "https://camera.lan/onvif/device_service",
+        "approved_resolved_addresses": ["10.0.0.8"],
+        "url": "https://camera.lan/onvif/snapshot",
+        "observed_resolved_addresses": ["10.0.0.9"],
+        "allow_loopback_http": false
+      },
+      "expected": { "accepted": false, "code": "dns_rebinding" }
+    },
+    {
       "id": "http-redirect-forbidden",
       "operation": "http_status",
       "input": { "status": 302 },
       "expected": { "accepted": false, "code": "redirect_forbidden" }
+    },
+    {
+      "id": "url-size-boundary",
+      "operation": "size_policy",
+      "input": { "field": "url", "observed_bytes": 2048 },
+      "expected": { "accepted": true, "code": "ok" }
     },
     {
       "id": "url-size-limit",
@@ -171,10 +198,22 @@
       "expected": { "accepted": false, "code": "size_limit" }
     },
     {
+      "id": "credential-size-boundary",
+      "operation": "size_policy",
+      "input": { "field": "credential", "observed_bytes": 4096 },
+      "expected": { "accepted": true, "code": "ok" }
+    },
+    {
       "id": "credential-size-limit",
       "operation": "size_policy",
       "input": { "field": "credential", "observed_bytes": 4097 },
       "expected": { "accepted": false, "code": "size_limit" }
+    },
+    {
+      "id": "request-size-boundary",
+      "operation": "size_policy",
+      "input": { "field": "request", "observed_bytes": 65536 },
+      "expected": { "accepted": true, "code": "ok" }
     },
     {
       "id": "request-size-limit",

@@ -17,6 +17,11 @@ The broker uses D23 capability grants directly:
 
 Snapshot and stream URIs are wrapped in the repository's zeroizing secret type
 and are lent only to a trusted `CameraMediaExecutor` during one atomic delivery.
+Origin-reviewed integrations can register an optional canonical host and pinned
+socket; the broker validates that binding against the secret URI and lends it
+only with the same trusted executor dispatch. Literal-IP URIs must equal the
+pinned socket address rather than merely matching host text. This prevents DNS-rebinding
+defenses from disappearing at the integration/media boundary.
 Snapshot bytes are bounded before release. For streams, the executor returns an
 owned resource, the service mints the public session ID, and the service retains
 the resource until explicit close or trusted-time expiry. The executor cannot

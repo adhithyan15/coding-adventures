@@ -16,9 +16,10 @@ use smart_home_runtime::SmartHomeRuntime;
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
 use std::hash::{Hash, Hasher};
+use std::net::SocketAddr;
 use url_parser::Url;
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const SNAPSHOT_CAPABILITY_ID: &str = "camera.snapshot";
 pub const STREAM_CAPABILITY_ID: &str = "camera.stream";
 pub const DEFAULT_MAX_AUDIT_RECORDS: usize = 256;
@@ -48,6 +49,40 @@ impl CameraMediaKind {
             Self::Snapshot => "snapshot",
             Self::Stream => "stream",
         }
+    }
+}
+
+/// Reviewed connection identity retained with a secret camera endpoint.
+#[derive(Clone, PartialEq, Eq)]
+pub struct CameraMediaConnectionTarget {
+    canonical_host: String,
+    pinned_address: SocketAddr,
+}
+
+impl CameraMediaConnectionTarget {
+    pub fn new(canonical_host: impl Into<String>, pinned_address: SocketAddr) -> Self {
+        Self {
+            canonical_host: canonical_host.into(),
+            pinned_address,
+        }
+    }
+
+    pub fn canonical_host(&self) -> &str {
+        &self.canonical_host
+    }
+
+    pub fn pinned_address(&self) -> SocketAddr {
+        self.pinned_address
+    }
+}
+
+impl fmt::Debug for CameraMediaConnectionTarget {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("CameraMediaConnectionTarget")
+            .field("canonical_host", &"[REDACTED]")
+            .field("pinned_address", &"[REDACTED]")
+            .finish()
     }
 }
 
@@ -344,6 +379,7 @@ pub struct CameraMediaExecution<'a> {
     entity_id: &'a EntityId,
     kind: CameraMediaKind,
     endpoint_uri: &'a str,
+    connection_target: Option<&'a CameraMediaConnectionTarget>,
     expires_at_ms: u64,
     max_snapshot_bytes: usize,
 }
@@ -355,6 +391,10 @@ impl fmt::Debug for CameraMediaExecution<'_> {
             .field("entity_id", self.entity_id)
             .field("kind", &self.kind)
             .field("endpoint_uri", &"[REDACTED]")
+            .field(
+                "connection_target",
+                &self.connection_target.map(|_| "[REDACTED]"),
+            )
             .field("expires_at_ms", &self.expires_at_ms)
             .field("max_snapshot_bytes", &self.max_snapshot_bytes)
             .finish()
@@ -373,6 +413,11 @@ impl<'a> CameraMediaExecution<'a> {
     /// Borrow the endpoint inside the trusted host adapter only.
     pub fn endpoint_uri(&self) -> &str {
         self.endpoint_uri
+    }
+
+    /// Reviewed connection identity for origin-bound endpoints.
+    pub fn connection_target(&self) -> Option<&CameraMediaConnectionTarget> {
+        self.connection_target
     }
 
     pub fn expires_at_ms(&self) -> u64 {
@@ -613,6 +658,7 @@ impl std::error::Error for CameraMediaError {}
 
 struct CameraMediaEndpoint {
     uri: Zeroizing<String>,
+    connection_target: Option<CameraMediaConnectionTarget>,
     generation: u64,
 }
 
@@ -621,6 +667,10 @@ impl fmt::Debug for CameraMediaEndpoint {
         formatter
             .debug_struct("CameraMediaEndpoint")
             .field("uri", &"[REDACTED]")
+            .field(
+                "connection_target",
+                &self.connection_target.as_ref().map(|_| "[REDACTED]"),
+            )
             .field("generation", &self.generation)
             .finish()
     }
@@ -643,6 +693,7 @@ struct CameraMediaBroker {
 struct PendingCameraMediaExecution {
     lease: CameraMediaLease,
     endpoint_uri: Zeroizing<String>,
+    connection_target: Option<CameraMediaConnectionTarget>,
 }
 
 struct ActiveCameraMediaStream<Stream> {
@@ -703,7 +754,23 @@ where
         uri: impl Into<String>,
     ) -> Result<(), CameraMediaError> {
         self.broker
-            .register_endpoint_at(self.clock.now_ms(), entity_id, kind, uri)
+            .register_endpoint_at(self.clock.now_ms(), entity_id, kind, uri, None)
+    }
+
+    pub fn register_pinned_endpoint(
+        &mut self,
+        entity_id: EntityId,
+        kind: CameraMediaKind,
+        uri: impl Into<String>,
+        connection_target: CameraMediaConnectionTarget,
+    ) -> Result<(), CameraMediaError> {
+        self.broker.register_endpoint_at(
+            self.clock.now_ms(),
+            entity_id,
+            kind,
+            uri,
+            Some(connection_target),
+        )
     }
 
     pub fn unregister_endpoint(&mut self, entity_id: &EntityId, kind: CameraMediaKind) -> bool {
@@ -760,6 +827,7 @@ where
             entity_id: &pending.lease.entity_id,
             kind: pending.lease.kind,
             endpoint_uri: pending.endpoint_uri.as_str(),
+            connection_target: pending.connection_target.as_ref(),
             expires_at_ms: pending.lease.expires_at_ms,
             max_snapshot_bytes: self.broker.policy.max_snapshot_bytes,
         };
@@ -954,6 +1022,14 @@ pub trait CameraMediaEndpointRegistry {
         kind: CameraMediaKind,
         uri: &str,
     ) -> Result<(), CameraMediaError>;
+
+    fn register_pinned_camera_endpoint(
+        &mut self,
+        entity_id: EntityId,
+        kind: CameraMediaKind,
+        uri: &str,
+        connection_target: CameraMediaConnectionTarget,
+    ) -> Result<(), CameraMediaError>;
 }
 
 impl<Clock, Nonce, Principals, Executor> CameraMediaEndpointRegistry
@@ -971,6 +1047,16 @@ where
         uri: &str,
     ) -> Result<(), CameraMediaError> {
         self.register_endpoint(entity_id, kind, uri)
+    }
+
+    fn register_pinned_camera_endpoint(
+        &mut self,
+        entity_id: EntityId,
+        kind: CameraMediaKind,
+        uri: &str,
+        connection_target: CameraMediaConnectionTarget,
+    ) -> Result<(), CameraMediaError> {
+        self.register_pinned_endpoint(entity_id, kind, uri, connection_target)
     }
 }
 
@@ -1003,9 +1089,13 @@ impl CameraMediaBroker {
         entity_id: EntityId,
         kind: CameraMediaKind,
         uri: impl Into<String>,
+        connection_target: Option<CameraMediaConnectionTarget>,
     ) -> Result<(), CameraMediaError> {
         let uri = Zeroizing::new(uri.into());
         validate_endpoint(uri.as_str(), kind, self.policy.allow_plaintext_loopback)?;
+        if let Some(target) = &connection_target {
+            validate_connection_target(uri.as_str(), target)?;
+        }
         let key = (entity_id.clone(), kind);
         if !self.endpoints.contains_key(&key) && self.endpoints.len() >= self.policy.max_endpoints {
             return Err(CameraMediaError::EndpointQuotaExceeded {
@@ -1016,8 +1106,14 @@ impl CameraMediaBroker {
         self.next_endpoint_generation = generation
             .checked_add(1)
             .ok_or(CameraMediaError::EndpointGenerationOverflow)?;
-        self.endpoints
-            .insert(key, CameraMediaEndpoint { uri, generation });
+        self.endpoints.insert(
+            key,
+            CameraMediaEndpoint {
+                uri,
+                connection_target,
+                generation,
+            },
+        );
         self.push_audit(CameraMediaAuditRecord {
             sequence: 0,
             principal_id: None,
@@ -1230,12 +1326,14 @@ impl CameraMediaBroker {
         }
 
         let endpoint_uri = Zeroizing::new(endpoint.uri.as_str().to_owned());
+        let connection_target = endpoint.connection_target.clone();
         // Consume before the external effect. A failing host cannot replay the
         // same bearer lease and accidentally duplicate media delivery.
         self.leases.remove(lease_id);
         Ok(PendingCameraMediaExecution {
             lease,
             endpoint_uri,
+            connection_target,
         })
     }
 
@@ -1442,6 +1540,39 @@ fn validate_endpoint(
     Ok(())
 }
 
+fn validate_connection_target(
+    uri: &str,
+    target: &CameraMediaConnectionTarget,
+) -> Result<(), CameraMediaError> {
+    let url = Url::parse(uri)
+        .map_err(|_| CameraMediaError::InvalidEndpoint("invalid pinned endpoint".to_string()))?;
+    let host = url
+        .host
+        .as_deref()
+        .ok_or_else(|| CameraMediaError::InvalidEndpoint("missing pinned host".to_string()))?;
+    let port = url.effective_port().or(url.port).ok_or_else(|| {
+        CameraMediaError::InvalidEndpoint("missing pinned endpoint port".to_string())
+    })?;
+    let literal_matches_pin = host
+        .trim_matches(['[', ']'])
+        .parse::<std::net::IpAddr>()
+        .is_ok_and(|literal| literal == target.pinned_address().ip());
+    let host_is_literal = host
+        .trim_matches(['[', ']'])
+        .parse::<std::net::IpAddr>()
+        .is_ok();
+    if target.canonical_host.trim().is_empty()
+        || !host.eq_ignore_ascii_case(target.canonical_host())
+        || port != target.pinned_address().port()
+        || (host_is_literal && !literal_matches_pin)
+    {
+        return Err(CameraMediaError::InvalidEndpoint(
+            "pinned connection identity mismatch".to_string(),
+        ));
+    }
+    Ok(())
+}
+
 fn is_loopback_host(host: &str) -> bool {
     host == "localhost"
         || host == "[::1]"
@@ -1487,6 +1618,7 @@ mod unit_tests {
                 EntityId::trusted("camera"),
                 CameraMediaKind::Snapshot,
                 "https://camera.local/snapshot.jpg",
+                None,
             ),
             Err(CameraMediaError::EndpointGenerationOverflow)
         );
@@ -1498,5 +1630,41 @@ mod unit_tests {
         assert!(is_loopback_host("127.1.2.3"));
         assert!(!is_loopback_host("127.evil.local.com"));
         assert!(!is_loopback_host("127.999.0.1"));
+    }
+
+    #[test]
+    fn pinned_connection_identity_must_match_the_registered_endpoint() {
+        let target =
+            CameraMediaConnectionTarget::new("camera.lan", "10.0.0.8:443".parse().unwrap());
+        assert!(validate_connection_target(
+            "https://camera.lan/snapshot.jpg?token=secret",
+            &target
+        )
+        .is_ok());
+        for uri in [
+            "https://attacker.lan/snapshot.jpg?token=secret",
+            "https://camera.lan:8443/snapshot.jpg?token=secret",
+        ] {
+            let error = validate_connection_target(uri, &target).unwrap_err();
+            assert!(matches!(error, CameraMediaError::InvalidEndpoint(_)));
+            assert!(!error.to_string().contains("attacker.lan"));
+            assert!(!error.to_string().contains("secret"));
+        }
+        let literal_mismatch =
+            CameraMediaConnectionTarget::new("[::1]", "[fd00::8]:443".parse().unwrap());
+        assert!(validate_connection_target(
+            "https://[::1]/snapshot.jpg?token=secret",
+            &literal_mismatch
+        )
+        .is_err());
+        let literal_match = CameraMediaConnectionTarget::new("[::1]", "[::1]:443".parse().unwrap());
+        assert!(validate_connection_target(
+            "https://[::1]/snapshot.jpg?token=secret",
+            &literal_match
+        )
+        .is_ok());
+        let debug = format!("{target:?}");
+        assert!(!debug.contains("camera.lan"));
+        assert!(!debug.contains("10.0.0.8"));
     }
 }

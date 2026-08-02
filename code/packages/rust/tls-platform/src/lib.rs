@@ -144,7 +144,7 @@ impl TlsEndpoint {
     /// Construct an endpoint and validate that the server name is usable for
     /// SNI and certificate verification.
     pub fn new(server_name: impl Into<String>, port: u16) -> Result<Self, TlsError> {
-        let server_name = server_name.into();
+        let server_name = normalize_server_name(server_name.into());
         validate_server_name(&server_name)?;
 
         if port == 0 {
@@ -233,8 +233,18 @@ impl RustlsConnector {
     pub fn connect_tcp_stream(
         &self,
         endpoint: TlsEndpoint,
+        stream: TcpStream,
+        config: &TlsConfig,
+    ) -> Result<RustlsTlsStream, TlsError> {
+        self.connect_tcp_stream_with_server_name(endpoint, stream, config, None)
+    }
+
+    fn connect_tcp_stream_with_server_name(
+        &self,
+        endpoint: TlsEndpoint,
         mut stream: TcpStream,
         config: &TlsConfig,
+        reviewed_server_name: Option<&str>,
     ) -> Result<RustlsTlsStream, TlsError> {
         apply_timeouts(
             &stream,
@@ -243,10 +253,7 @@ impl RustlsConnector {
         )?;
 
         let rustls_config = rustls_config(config)?;
-        let sni = config
-            .server_name
-            .as_deref()
-            .unwrap_or(&endpoint.server_name);
+        let sni = selected_server_name(&endpoint, config, reviewed_server_name);
         let server_name = server_name_for_rustls(sni)?;
         let mut connection =
             ClientConnection::new(Arc::new(rustls_config), server_name).map_err(|source| {
@@ -278,6 +285,16 @@ impl RustlsConnector {
     }
 }
 
+fn selected_server_name<'a>(
+    endpoint: &'a TlsEndpoint,
+    config: &'a TlsConfig,
+    reviewed_server_name: Option<&'a str>,
+) -> &'a str {
+    reviewed_server_name
+        .or(config.server_name.as_deref())
+        .unwrap_or(&endpoint.server_name)
+}
+
 impl TlsConnector for RustlsConnector {
     fn connect(
         &self,
@@ -296,6 +313,7 @@ impl TlsConnector for RustlsConnector {
         config: &TlsConfig,
     ) -> Result<Box<dyn TlsStream>, TlsError> {
         let endpoint = TlsEndpoint::new(server_name, address.port())?;
+        let reviewed_server_name = endpoint.server_name().to_string();
         let stream =
             TcpStream::connect_timeout(&address, config.connect_timeout).map_err(|source| {
                 TlsError::TcpConnect {
@@ -304,7 +322,12 @@ impl TlsConnector for RustlsConnector {
                     source,
                 }
             })?;
-        Ok(Box::new(self.connect_tcp_stream(endpoint, stream, config)?))
+        Ok(Box::new(self.connect_tcp_stream_with_server_name(
+            endpoint,
+            stream,
+            config,
+            Some(&reviewed_server_name),
+        )?))
     }
 }
 
@@ -641,6 +664,15 @@ fn validate_server_name(server_name: &str) -> Result<(), TlsError> {
     server_name_for_rustls(server_name).map(|_| ())
 }
 
+fn normalize_server_name(server_name: String) -> String {
+    server_name
+        .strip_prefix('[')
+        .and_then(|value| value.strip_suffix(']'))
+        .filter(|value| value.parse::<std::net::Ipv6Addr>().is_ok())
+        .unwrap_or(&server_name)
+        .to_string()
+}
+
 fn server_name_for_rustls(server_name: &str) -> Result<ServerName<'static>, TlsError> {
     ServerName::try_from(server_name.to_string()).map_err(|_| TlsError::InvalidServerName {
         server_name: server_name.to_string(),
@@ -658,7 +690,11 @@ fn tls_version_from_rustls(version: Option<ProtocolVersion>) -> TlsVersion {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rcgen::generate_simple_self_signed;
     use std::io::{Read, Write};
+    use std::net::TcpListener;
+    use std::sync::Arc;
+    use std::thread;
 
     #[test]
     fn default_config_uses_bundled_roots_and_strict_verification() {
@@ -735,6 +771,55 @@ mod tests {
 
         let error = rustls_config(&config).unwrap_err();
         assert!(matches!(error, TlsError::InvalidRootCertificate { .. }));
+    }
+
+    #[test]
+    fn address_pinned_connection_uses_reviewed_server_name() {
+        let certified = generate_simple_self_signed(vec!["camera.lan".to_string()]).unwrap();
+        let certificate = certified.cert.der().clone();
+        let private_key =
+            rustls::pki_types::PrivateKeyDer::Pkcs8(certified.key_pair.serialize_der().into());
+        let server_config = rustls::ServerConfig::builder()
+            .with_no_client_auth()
+            .with_single_cert(vec![certificate.clone()], private_key)
+            .unwrap();
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut connection = rustls::ServerConnection::new(Arc::new(server_config)).unwrap();
+            while connection.is_handshaking() {
+                connection.complete_io(&mut stream).unwrap();
+            }
+        });
+
+        let connector = RustlsConnector;
+        let config = TlsConfig {
+            root_store: RootStore::Custom(vec![certificate.as_ref().to_vec()]),
+            server_name: Some("attacker.invalid".to_string()),
+            ..TlsConfig::https_default()
+        };
+        let connection = connector.connect_addr("camera.lan", address, &config);
+
+        assert!(connection.is_ok());
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn reviewed_ipv6_literal_overrides_configured_server_name() {
+        let endpoint = TlsEndpoint::new("[::1]", 443).unwrap();
+        let config = TlsConfig {
+            server_name: Some("attacker.invalid".to_string()),
+            ..TlsConfig::https_default()
+        };
+        let selected = selected_server_name(&endpoint, &config, Some(endpoint.server_name()));
+
+        assert_eq!(endpoint.server_name(), "::1");
+        assert_eq!(selected, "::1");
+        assert!(matches!(
+            server_name_for_rustls(selected).unwrap(),
+            ServerName::IpAddress(_)
+        ));
     }
 
     #[test]

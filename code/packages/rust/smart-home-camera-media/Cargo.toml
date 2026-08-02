@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-camera-media"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Privacy-preserving camera snapshot and stream leases for the smart-home runtime"
 license = "MIT"

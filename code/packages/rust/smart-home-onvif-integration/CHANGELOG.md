@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+- Preserved canonical host and pinned socket review across snapshot/stream
+  registration and the trusted camera-media executor boundary.
+- Made explicit reviewed TLS names authoritative, redacted TLS/device debug
+  details, normalized bracketed IPv6 identities, bounded custom SOAP transports,
+  rejected credential-bearing SOAP query strings, and poisoned conflicting
+  duplicate WS-Discovery endpoint references fail-closed.
+- Strengthened the language-neutral origin contract with operation-specific
+  schemas, every-XAddr checks, approved-versus-observed resolver evidence,
+  exact production-shared size boundaries, semantic URI/IP validation, and
+  always-on CI schema validation.
+
 ## 0.2.0
 
 - Correlated WS-Discovery responses with the emitted probe ID and responder,

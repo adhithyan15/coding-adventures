@@ -11,7 +11,8 @@ use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use rand::{rngs::OsRng, RngCore};
 use smart_home_camera_media::{
-    CameraMediaEndpointRegistry, CameraMediaKind, SNAPSHOT_CAPABILITY_ID, STREAM_CAPABILITY_ID,
+    CameraMediaConnectionTarget, CameraMediaEndpointRegistry, CameraMediaKind,
+    SNAPSHOT_CAPABILITY_ID, STREAM_CAPABILITY_ID,
 };
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device, DeviceId,
@@ -22,16 +23,16 @@ use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
 };
 use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::io::{Read, Write};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpStream, ToSocketAddrs};
 use std::time::Duration;
-use tls_platform::{default_connector, TlsConfig, TlsConnector};
+use tls_platform::{default_connector, TlsConfig, TlsConnector, TlsError};
 use udp_client::{send_to_and_collect, UdpError, UdpOptions};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "onvif";
 pub const WS_DISCOVERY_PORT: u16 = 3702;
 pub const WS_DISCOVERY_IPV4: Ipv4Addr = Ipv4Addr::new(239, 255, 255, 250);
@@ -74,6 +75,7 @@ pub enum OnvifOriginViolation {
     InsecureTransport,
     UserinfoForbidden,
     FragmentForbidden,
+    QueryForbidden,
     UnreviewedOrigin,
     UnsafeAddress,
     DnsRebinding,
@@ -89,6 +91,7 @@ impl OnvifOriginViolation {
             Self::InsecureTransport => "insecure_transport",
             Self::UserinfoForbidden => "userinfo_forbidden",
             Self::FragmentForbidden => "fragment_forbidden",
+            Self::QueryForbidden => "query_forbidden",
             Self::UnreviewedOrigin => "unreviewed_origin",
             Self::UnsafeAddress => "unsafe_address",
             Self::DnsRebinding => "dns_rebinding",
@@ -316,7 +319,8 @@ pub fn scan_ws_discovery_with_policy(
     };
     let datagrams = send_to_and_collect(destination, probe.as_bytes(), options, max_responses)?;
     let mut report = OnvifDiscoveryReport::default();
-    let mut seen = BTreeSet::new();
+    let mut seen = BTreeMap::new();
+    let mut conflicted = BTreeSet::new();
     for datagram in datagrams {
         let text = match std::str::from_utf8(&datagram.payload) {
             Ok(text) => text,
@@ -331,9 +335,7 @@ pub fn scan_ws_discovery_with_policy(
         match parse_probe_matches(text, datagram.source, &message_id, allow_loopback_http) {
             Ok(matches) => {
                 for matched in matches {
-                    if seen.insert(matched.endpoint_reference.clone()) {
-                        report.matches.push(matched);
-                    }
+                    merge_discovery_match(&mut report, &mut seen, &mut conflicted, matched);
                 }
             }
             Err(error) => report.failures.push(OnvifDiscoveryFailure {
@@ -349,6 +351,36 @@ pub fn scan_ws_discovery_with_policy(
         .matches
         .sort_by(|left, right| left.endpoint_reference.cmp(&right.endpoint_reference));
     Ok(report)
+}
+
+fn merge_discovery_match(
+    report: &mut OnvifDiscoveryReport,
+    seen: &mut BTreeMap<String, OnvifDiscoveryMatch>,
+    conflicted: &mut BTreeSet<String>,
+    matched: OnvifDiscoveryMatch,
+) {
+    if conflicted.contains(&matched.endpoint_reference) {
+        return;
+    }
+    match seen.get(&matched.endpoint_reference) {
+        None => {
+            seen.insert(matched.endpoint_reference.clone(), matched.clone());
+            report.matches.push(matched);
+        }
+        Some(existing) if existing == &matched => {}
+        Some(_) => {
+            let endpoint_reference = matched.endpoint_reference.clone();
+            seen.remove(&endpoint_reference);
+            report
+                .matches
+                .retain(|candidate| candidate.endpoint_reference != endpoint_reference);
+            conflicted.insert(endpoint_reference);
+            report.failures.push(OnvifDiscoveryFailure {
+                source: matched.source,
+                message: "endpoint_reference_conflict".to_string(),
+            });
+        }
+    }
 }
 
 pub fn parse_probe_matches(
@@ -474,9 +506,10 @@ impl OnvifCredentials {
                 "ONVIF username and password must not be empty".to_string(),
             ));
         }
-        if username.len() > MAX_ONVIF_VALUE_BYTES || password.len() > MAX_ONVIF_CREDENTIAL_BYTES {
+        if username.len() > MAX_ONVIF_VALUE_BYTES {
             return Err(OnvifOriginViolation::SizeLimit.into());
         }
+        validate_onvif_size("credential", password.len())?;
         Ok(Self {
             username: Zeroizing::new(username),
             password: Zeroizing::new(password),
@@ -490,7 +523,7 @@ impl fmt::Debug for OnvifCredentials {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct ApprovedOnvifEndpoint {
     url: Url,
     pinned_address: SocketAddr,
@@ -510,10 +543,30 @@ impl ApprovedOnvifEndpoint {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+impl fmt::Debug for ApprovedOnvifEndpoint {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ApprovedOnvifEndpoint")
+            .field("url", &"[REDACTED]")
+            .field("pinned_address", &"[REDACTED]")
+            .finish()
+    }
+}
+
+#[derive(Clone, PartialEq)]
 pub struct OnvifOriginPolicy {
     approved: ApprovedOnvifEndpoint,
     allow_loopback_http: bool,
+}
+
+impl fmt::Debug for OnvifOriginPolicy {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OnvifOriginPolicy")
+            .field("approved", &"[REDACTED]")
+            .field("allow_loopback_http", &self.allow_loopback_http)
+            .finish()
+    }
 }
 
 impl OnvifOriginPolicy {
@@ -610,6 +663,19 @@ impl OnvifOriginPolicy {
         self.approve_same_origin(url)
     }
 
+    pub fn approve_resource_with_observed_addresses(
+        &self,
+        endpoint: &str,
+        observed_addresses: &[IpAddr],
+    ) -> Result<ApprovedOnvifEndpoint, OnvifError> {
+        let endpoint = self.approve_resource(endpoint)?;
+        let observed = observed_addresses.iter().copied().collect::<BTreeSet<_>>();
+        if observed.len() != 1 || !observed.contains(&self.approved.pinned_address.ip()) {
+            return Err(OnvifOriginViolation::DnsRebinding.into());
+        }
+        Ok(endpoint)
+    }
+
     fn approve_same_origin(&self, url: Url) -> Result<ApprovedOnvifEndpoint, OnvifError> {
         let host = url
             .host
@@ -653,10 +719,25 @@ pub fn validate_onvif_http_status(status: u16) -> Result<(), OnvifError> {
     Ok(())
 }
 
-fn parse_policy_url(endpoint: &str) -> Result<Url, OnvifError> {
-    if endpoint.len() > MAX_ONVIF_URL_BYTES {
+pub fn validate_onvif_size(field: &str, observed_bytes: usize) -> Result<(), OnvifError> {
+    let maximum = match field {
+        "url" => MAX_ONVIF_URL_BYTES,
+        "credential" => MAX_ONVIF_CREDENTIAL_BYTES,
+        "request" => MAX_ONVIF_REQUEST_BYTES,
+        _ => {
+            return Err(OnvifError::Validation(
+                "unknown ONVIF size-policy field".to_string(),
+            ))
+        }
+    };
+    if observed_bytes > maximum {
         return Err(OnvifOriginViolation::SizeLimit.into());
     }
+    Ok(())
+}
+
+fn parse_policy_url(endpoint: &str) -> Result<Url, OnvifError> {
+    validate_onvif_size("url", endpoint.len())?;
     let url = Url::parse(endpoint)?;
     if url.userinfo.is_some() {
         return Err(OnvifOriginViolation::UserinfoForbidden.into());
@@ -682,6 +763,9 @@ fn validate_soap_scheme(
     address: IpAddr,
     allow_loopback_http: bool,
 ) -> Result<(), OnvifError> {
+    if url.query.is_some() {
+        return Err(OnvifOriginViolation::QueryForbidden.into());
+    }
     match url.scheme.as_str() {
         "https" => Ok(()),
         "http" if allow_loopback_http && address.is_loopback() => Ok(()),
@@ -750,25 +834,51 @@ pub struct OnvifMediaProfile {
     pub width: Option<u32>,
     pub height: Option<u32>,
     pub frame_rate_limit: Option<u32>,
-    snapshot_uri: Option<Zeroizing<String>>,
-    stream_uri: Option<Zeroizing<String>>,
+    snapshot_endpoint: Option<OnvifMediaEndpoint>,
+    stream_endpoint: Option<OnvifMediaEndpoint>,
+}
+
+struct OnvifMediaEndpoint {
+    uri: Zeroizing<String>,
+    canonical_host: Zeroizing<String>,
+    pinned_address: SocketAddr,
+}
+
+impl OnvifMediaEndpoint {
+    fn from_approved(endpoint: ApprovedOnvifEndpoint) -> Self {
+        Self {
+            uri: Zeroizing::new(endpoint.url().to_url_string()),
+            canonical_host: Zeroizing::new(endpoint.canonical_host().to_string()),
+            pinned_address: endpoint.pinned_address(),
+        }
+    }
+
+    fn connection_target(&self) -> CameraMediaConnectionTarget {
+        CameraMediaConnectionTarget::new(self.canonical_host.as_str(), self.pinned_address)
+    }
+}
+
+impl fmt::Debug for OnvifMediaEndpoint {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OnvifMediaEndpoint([REDACTED])")
+    }
 }
 
 impl OnvifMediaProfile {
     pub fn has_snapshot_uri(&self) -> bool {
-        self.snapshot_uri.is_some()
+        self.snapshot_endpoint.is_some()
     }
 
     pub fn has_stream_uri(&self) -> bool {
-        self.stream_uri.is_some()
+        self.stream_endpoint.is_some()
     }
 
-    fn snapshot_uri(&self) -> Option<&str> {
-        self.snapshot_uri.as_deref().map(String::as_str)
+    fn snapshot_endpoint(&self) -> Option<&OnvifMediaEndpoint> {
+        self.snapshot_endpoint.as_ref()
     }
 
-    fn stream_uri(&self) -> Option<&str> {
-        self.stream_uri.as_deref().map(String::as_str)
+    fn stream_endpoint(&self) -> Option<&OnvifMediaEndpoint> {
+        self.stream_endpoint.as_ref()
     }
 }
 
@@ -783,12 +893,12 @@ impl fmt::Debug for OnvifMediaProfile {
             .field("height", &self.height)
             .field("frame_rate_limit", &self.frame_rate_limit)
             .field(
-                "snapshot_uri",
-                &self.snapshot_uri.as_ref().map(|_| "[REDACTED]"),
+                "snapshot_endpoint",
+                &self.snapshot_endpoint.as_ref().map(|_| "[REDACTED]"),
             )
             .field(
-                "stream_uri",
-                &self.stream_uri.as_ref().map(|_| "[REDACTED]"),
+                "stream_endpoint",
+                &self.stream_endpoint.as_ref().map(|_| "[REDACTED]"),
             )
             .finish()
     }
@@ -806,8 +916,8 @@ impl fmt::Debug for OnvifCameraSnapshot {
         formatter
             .debug_struct("OnvifCameraSnapshot")
             .field("device_information", &self.device_information)
-            .field("device_service_url", &self.device_service_url)
-            .field("media_service_url", &self.media_service_url)
+            .field("device_service_url", &"[REDACTED]")
+            .field("media_service_url", &"[REDACTED]")
             .field("profiles", &self.profiles)
             .finish()
     }
@@ -885,7 +995,7 @@ impl OnvifSoapTransport for OnvifLanTransport {
                 let mut stream = self
                     .connector
                     .connect_addr(host, endpoint.pinned_address(), &config)
-                    .map_err(|error| OnvifError::Tls(error.to_string()))?;
+                    .map_err(map_tls_error)?;
                 stream
                     .write_all(&request)
                     .map_err(|error| OnvifError::Io(error.to_string()))?;
@@ -893,9 +1003,7 @@ impl OnvifSoapTransport for OnvifLanTransport {
                     .flush()
                     .map_err(|error| OnvifError::Io(error.to_string()))?;
                 let bytes = read_bounded(&mut stream, self.max_response_bytes)?;
-                stream
-                    .close_notify()
-                    .map_err(|error| OnvifError::Tls(error.to_string()))?;
+                stream.close_notify().map_err(map_tls_error)?;
                 bytes
             }
             scheme => {
@@ -908,9 +1016,31 @@ impl OnvifSoapTransport for OnvifLanTransport {
     }
 }
 
+fn map_tls_error(error: TlsError) -> OnvifError {
+    let category = match error {
+        TlsError::InvalidServerName { .. } => "invalid_server_name",
+        TlsError::InvalidPort { .. } => "invalid_port",
+        TlsError::UnsupportedConfig { .. } => "unsupported_config",
+        TlsError::InvalidRootCertificate { .. } => "invalid_root_certificate",
+        TlsError::DnsResolutionFailed { .. } => "dns_resolution_failed",
+        TlsError::TcpConnect { .. } => "tcp_connect_failed",
+        TlsError::HandshakeFailed { .. } => "handshake_failed",
+        TlsError::CertVerifyFailed { .. } => "certificate_verification_failed",
+        TlsError::HostnameMismatch { .. } => "hostname_mismatch",
+        TlsError::Timeout { .. } => "timeout",
+        TlsError::ClosedUnexpectedly => "closed_unexpectedly",
+        TlsError::CapabilityDenied { .. } => "capability_denied",
+        TlsError::Backend { .. } => "backend_failed",
+        TlsError::Io { .. } => "transport_io_failed",
+        TlsError::PeerCertificatesUnavailable => "peer_certificates_unavailable",
+    };
+    OnvifError::Tls(category.to_string())
+}
+
 pub struct OnvifClient<T> {
     transport: T,
     origin_policy: OnvifOriginPolicy,
+    max_response_bytes: usize,
 }
 
 impl<T: OnvifSoapTransport> OnvifClient<T> {
@@ -918,7 +1048,13 @@ impl<T: OnvifSoapTransport> OnvifClient<T> {
         Self {
             transport,
             origin_policy,
+            max_response_bytes: DEFAULT_MAX_RESPONSE_BYTES,
         }
+    }
+
+    pub fn with_max_response_bytes(mut self, maximum: usize) -> Self {
+        self.max_response_bytes = maximum.max(1);
+        self
     }
 
     pub fn inspect_camera(
@@ -962,12 +1098,10 @@ impl<T: OnvifSoapTransport> OnvifClient<T> {
                 ),
                 credentials,
             )?;
-            profile.snapshot_uri = descendant_text(&snapshot, "Uri")
-                .map(|uri| {
-                    self.origin_policy.approve_resource(&uri)?;
-                    Ok::<Zeroizing<String>, OnvifError>(Zeroizing::new(uri))
-                })
-                .transpose()?;
+            profile.snapshot_endpoint = descendant_text(&snapshot, "Uri")
+                .map(|uri| self.origin_policy.approve_resource(&uri))
+                .transpose()?
+                .map(OnvifMediaEndpoint::from_approved);
             let stream = self.call(
                 &media_service_endpoint,
                 GET_STREAM_URI_ACTION,
@@ -976,12 +1110,10 @@ impl<T: OnvifSoapTransport> OnvifClient<T> {
                 ),
                 credentials,
             )?;
-            profile.stream_uri = descendant_text(&stream, "Uri")
-                .map(|uri| {
-                    self.origin_policy.approve_resource(&uri)?;
-                    Ok::<Zeroizing<String>, OnvifError>(Zeroizing::new(uri))
-                })
-                .transpose()?;
+            profile.stream_endpoint = descendant_text(&stream, "Uri")
+                .map(|uri| self.origin_policy.approve_resource(&uri))
+                .transpose()?
+                .map(OnvifMediaEndpoint::from_approved);
         }
         Ok(OnvifCameraSnapshot {
             device_information,
@@ -1017,6 +1149,11 @@ impl<T: OnvifSoapTransport> OnvifClient<T> {
             .into_bytes(),
         );
         let response = self.transport.post_soap(endpoint, action, &envelope)?;
+        if response.len() > self.max_response_bytes {
+            return Err(OnvifError::ResponseTooLarge {
+                limit: self.max_response_bytes,
+            });
+        }
         let source = std::str::from_utf8(&response)
             .map_err(|_| OnvifError::Xml("SOAP body is not UTF-8".to_string()))?;
         let document = parse_xml(source)
@@ -1039,11 +1176,9 @@ pub fn build_authenticated_envelope(
             "WS-Security nonce and created timestamp must not be empty".to_string(),
         ));
     }
-    if endpoint.len() > MAX_ONVIF_URL_BYTES
-        || action.len() > MAX_ONVIF_VALUE_BYTES
-        || body.len() > MAX_ONVIF_REQUEST_BYTES
-        || created.len() > MAX_ONVIF_VALUE_BYTES
-    {
+    validate_onvif_size("url", endpoint.len())?;
+    validate_onvif_size("request", body.len())?;
+    if action.len() > MAX_ONVIF_VALUE_BYTES || created.len() > MAX_ONVIF_VALUE_BYTES {
         return Err(OnvifOriginViolation::SizeLimit.into());
     }
     let mut digest_input =
@@ -1196,15 +1331,25 @@ pub fn install_camera_snapshot(
             }),
             metadata,
         });
-        if let Some(uri) = profile.snapshot_uri() {
+        if let Some(endpoint) = profile.snapshot_endpoint() {
             media_registry
-                .register_camera_endpoint(entity_id.clone(), CameraMediaKind::Snapshot, uri)
+                .register_pinned_camera_endpoint(
+                    entity_id.clone(),
+                    CameraMediaKind::Snapshot,
+                    endpoint.uri.as_str(),
+                    endpoint.connection_target(),
+                )
                 .map_err(|error| OnvifError::CameraMedia(error.to_string()))?;
             snapshot_endpoint_count += 1;
         }
-        if let Some(uri) = profile.stream_uri() {
+        if let Some(endpoint) = profile.stream_endpoint() {
             media_registry
-                .register_camera_endpoint(entity_id.clone(), CameraMediaKind::Stream, uri)
+                .register_pinned_camera_endpoint(
+                    entity_id.clone(),
+                    CameraMediaKind::Stream,
+                    endpoint.uri.as_str(),
+                    endpoint.connection_target(),
+                )
                 .map_err(|error| OnvifError::CameraMedia(error.to_string()))?;
             stream_endpoint_count += 1;
         }
@@ -1306,8 +1451,8 @@ fn parse_profiles(root: &XmlElement) -> Result<Vec<OnvifMediaProfile>, OnvifErro
             frame_rate_limit: rate_control
                 .and_then(|node| descendant_text(node, "FrameRateLimit"))
                 .and_then(|value| value.parse().ok()),
-            snapshot_uri: None,
-            stream_uri: None,
+            snapshot_endpoint: None,
+            stream_endpoint: None,
         });
     }
     Ok(profiles)
@@ -1609,6 +1754,8 @@ mod tests {
 
     struct SnapshotDeliveryHost {
         saw_snapshot_endpoint: Rc<Cell<bool>>,
+        saw_pinned_target: Rc<Cell<bool>>,
+        expected_address: SocketAddr,
     }
 
     impl CameraMediaExecutor for SnapshotDeliveryHost {
@@ -1620,6 +1767,11 @@ mod tests {
         ) -> Result<CameraMediaExecutionResult<Self::Stream>, CameraMediaExecutionError> {
             self.saw_snapshot_endpoint
                 .set(execution.endpoint_uri().contains("snapshot.jpg"));
+            self.saw_pinned_target
+                .set(execution.connection_target().is_some_and(|target| {
+                    target.canonical_host() == "127.0.0.1"
+                        && target.pinned_address() == self.expected_address
+                }));
             Ok(CameraMediaExecutionResult::snapshot(vec![0x5a; 128]))
         }
 
@@ -1658,6 +1810,33 @@ mod tests {
             records[0].pairing_requirement,
             PairingRequirement::Credentials
         );
+    }
+
+    #[test]
+    fn conflicting_duplicate_endpoint_references_fail_closed() {
+        let source: SocketAddr = "10.0.0.8:3702".parse().unwrap();
+        let mut report = OnvifDiscoveryReport::default();
+        let mut seen = BTreeMap::new();
+        let mut conflicted = BTreeSet::new();
+        let first = OnvifDiscoveryMatch {
+            endpoint_reference: "urn:uuid:camera".to_string(),
+            types: vec!["dn:NetworkVideoTransmitter".to_string()],
+            scopes: vec!["onvif://www.onvif.org/name/Front".to_string()],
+            xaddrs: vec!["https://10.0.0.8/onvif/device_service".to_string()],
+            metadata_version: Some(1),
+            source,
+        };
+        merge_discovery_match(&mut report, &mut seen, &mut conflicted, first.clone());
+        merge_discovery_match(&mut report, &mut seen, &mut conflicted, first.clone());
+        let mut conflicting = first.clone();
+        conflicting.xaddrs = vec!["https://10.0.0.9/onvif/device_service".to_string()];
+        merge_discovery_match(&mut report, &mut seen, &mut conflicted, conflicting);
+        merge_discovery_match(&mut report, &mut seen, &mut conflicted, first);
+        assert!(report.matches.is_empty());
+        assert!(seen.is_empty());
+        assert!(conflicted.contains("urn:uuid:camera"));
+        assert_eq!(report.failures.len(), 1);
+        assert_eq!(report.failures[0].message, "endpoint_reference_conflict");
     }
 
     #[test]
@@ -1760,6 +1939,92 @@ mod tests {
             .unwrap_err()
             .origin_policy_code(),
             Some("unsafe_address")
+        );
+    }
+
+    #[test]
+    fn bracketed_ipv6_origin_normalizes_at_the_tls_boundary() {
+        let loopback = IpAddr::V6(std::net::Ipv6Addr::LOCALHOST);
+        let policy =
+            OnvifOriginPolicy::review("https://[::1]/onvif/device_service", &[loopback], false)
+                .unwrap();
+        let approved = policy.approved_endpoint();
+        assert_eq!(approved.canonical_host(), "[::1]");
+        assert_eq!(approved.pinned_address(), SocketAddr::new(loopback, 443));
+
+        let tls_endpoint = tls_platform::TlsEndpoint::new(
+            approved.canonical_host(),
+            approved.pinned_address().port(),
+        )
+        .unwrap();
+        assert_eq!(tls_endpoint.server_name(), "::1");
+    }
+
+    #[test]
+    fn origin_and_tls_debug_text_redact_device_controlled_details() {
+        let policy = OnvifOriginPolicy::review(
+            "https://camera.lan/onvif/device_service",
+            &["10.0.0.8".parse().unwrap()],
+            false,
+        )
+        .unwrap();
+        let endpoint = policy.approved_endpoint().clone();
+        for debug in [format!("{policy:?}"), format!("{endpoint:?}")] {
+            assert!(!debug.contains("super-secret"));
+            assert!(!debug.contains("camera.lan"));
+            assert!(!debug.contains("10.0.0.8"));
+        }
+        let error = OnvifOriginPolicy::review(
+            "https://camera.lan/onvif/device_service?token=super-secret",
+            &["10.0.0.8".parse().unwrap()],
+            false,
+        )
+        .unwrap_err();
+        assert_eq!(error.origin_policy_code(), Some("query_forbidden"));
+        assert!(!error.to_string().contains("super-secret"));
+        let media_endpoint = OnvifMediaEndpoint::from_approved(
+            policy
+                .approve_resource("rtsps://camera.lan:443/live?token=media-secret")
+                .unwrap(),
+        );
+        assert!(!format!("{media_endpoint:?}").contains("media-secret"));
+        let error = map_tls_error(TlsError::Backend {
+            code: 99,
+            message: "certificate for super-secret.camera.lan".to_string(),
+        });
+        assert_eq!(error, OnvifError::Tls("backend_failed".to_string()));
+        assert!(!error.to_string().contains("super-secret"));
+    }
+
+    struct OversizeTransport;
+
+    impl OnvifSoapTransport for OversizeTransport {
+        fn post_soap(
+            &mut self,
+            _endpoint: &ApprovedOnvifEndpoint,
+            _action: &str,
+            _envelope: &[u8],
+        ) -> Result<Vec<u8>, OnvifError> {
+            Ok(vec![b'x'; 9])
+        }
+    }
+
+    #[test]
+    fn client_enforces_response_ceiling_for_custom_transports() {
+        let policy = OnvifOriginPolicy::review(
+            "https://10.0.0.8/onvif/device_service",
+            &["10.0.0.8".parse().unwrap()],
+            false,
+        )
+        .unwrap();
+        let endpoint = policy.approved_endpoint().clone();
+        let credentials = OnvifCredentials::new(USERNAME, PASSWORD).unwrap();
+        let mut client = OnvifClient::new(OversizeTransport, policy).with_max_response_bytes(8);
+        assert_eq!(
+            client
+                .call(&endpoint, "fixture-action", "<fixture/>", &credentials)
+                .unwrap_err(),
+            OnvifError::ResponseTooLarge { limit: 8 }
         );
     }
 
@@ -1878,6 +2143,7 @@ mod tests {
         let principal = AgentId::trusted("dashboard-user");
         let clock_value = Rc::new(Cell::new(1_000));
         let saw_snapshot_endpoint = Rc::new(Cell::new(false));
+        let saw_pinned_target = Rc::new(Cell::new(false));
         let mut media = CameraMediaService::new(
             CameraMediaPolicy {
                 allow_plaintext_loopback: true,
@@ -1888,6 +2154,8 @@ mod tests {
             FixedPrincipal(principal.clone()),
             SnapshotDeliveryHost {
                 saw_snapshot_endpoint: Rc::clone(&saw_snapshot_endpoint),
+                saw_pinned_target: Rc::clone(&saw_pinned_target),
+                expected_address: address,
             },
         );
         let installed = install_camera_snapshot(
@@ -1943,6 +2211,7 @@ mod tests {
         let delivery = media.deliver_lease(&runtime, &lease.lease_id).unwrap();
         assert_eq!(delivery.snapshot_bytes().unwrap().len(), 128);
         assert!(saw_snapshot_endpoint.get());
+        assert!(saw_pinned_target.get());
         assert!(!format!("{:?}", runtime.durable_snapshot()).contains("snapshot.jpg"));
         assert!(
             !format!("{:?}", media.audit_records().collect::<Vec<_>>()).contains("private-stream")
