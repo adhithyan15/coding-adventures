@@ -4,6 +4,16 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.2] - 2026-08-02
+
+### Fixed
+
+- Decode Lua `.rockspec` metadata as strict UTF-8 before parsing dependencies.
+  Invalid bytes now fail closed with `METADATA_INVALID_UTF8`, stable package and
+  repository-relative manifest identity, CLI exit code 2, and no checkout-path
+  disclosure. Resolver and CLI coverage consume the shared positive and
+  invalid-byte conformance fixtures and require the exact expected edge set.
+
 ## [0.2.1] - 2026-07-12
 
 ### Fixed

@@ -32,10 +32,60 @@
 // A -> B. This convention means "A must be built before B", and
 // independent_groups() naturally produces the correct build order.
 
-use std::collections::HashMap;
-use std::fs;
 use crate::discovery::Package;
 use crate::graph::Graph;
+use std::collections::HashMap;
+use std::fmt;
+use std::fs;
+use std::path::Path;
+
+const METADATA_INVALID_UTF8: &str = "METADATA_INVALID_UTF8";
+
+/// Text metadata that violates the repository's strict UTF-8 contract.
+///
+/// `manifest` is always repository-relative so diagnostics cannot disclose a
+/// checkout root or temporary-directory path.
+#[derive(Debug, Eq, PartialEq)]
+pub struct MetadataEncodingError {
+    pub code: String,
+    pub package: String,
+    pub manifest: String,
+    pub encoding: String,
+}
+
+impl fmt::Display for MetadataEncodingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "{}: package={} manifest={} encoding={}",
+            self.code, self.package, self.manifest, self.encoding
+        )
+    }
+}
+
+impl std::error::Error for MetadataEncodingError {}
+
+fn repository_manifest_path(path: &Path) -> String {
+    let parts: Vec<String> = path
+        .components()
+        .map(|component| component.as_os_str().to_string_lossy().into_owned())
+        .collect();
+    let mut canonical_start = None;
+    for index in 0..parts.len().saturating_sub(1) {
+        if parts[index] == "code"
+            && (parts[index + 1] == "packages" || parts[index + 1] == "programs")
+        {
+            canonical_start = Some(index);
+        }
+    }
+    match canonical_start {
+        Some(index) => parts[index..].join("/"),
+        None => path
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or_default(),
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Known-name mapping
@@ -519,11 +569,14 @@ fn parse_elixir_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Ve
 /// We scan for quoted strings inside the `dependencies = { ... }` block,
 /// strip version specifiers (>=, <=, ==, etc.), and look them up in
 /// known_names. Only internal monorepo dependencies are returned.
-fn parse_lua_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<String> {
+fn parse_lua_deps(
+    pkg: &Package,
+    known_names: &HashMap<String, String>,
+) -> Result<Vec<String>, MetadataEncodingError> {
     // Find .rockspec files in the package directory.
     let entries = match fs::read_dir(&pkg.path) {
         Ok(e) => e,
-        Err(_) => return Vec::new(),
+        Err(_) => return Ok(Vec::new()),
     };
 
     let mut rockspec_path = None;
@@ -537,12 +590,23 @@ fn parse_lua_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<S
 
     let rockspec_path = match rockspec_path {
         Some(p) => p,
-        None => return Vec::new(),
+        None => return Ok(Vec::new()),
     };
 
-    let data = match fs::read_to_string(&rockspec_path) {
-        Ok(s) => s,
-        Err(_) => return Vec::new(),
+    let raw = match fs::read(&rockspec_path) {
+        Ok(data) => data,
+        Err(_) => return Ok(Vec::new()),
+    };
+    let data = match String::from_utf8(raw) {
+        Ok(text) => text,
+        Err(_) => {
+            return Err(MetadataEncodingError {
+                code: METADATA_INVALID_UTF8.to_string(),
+                package: pkg.name.clone(),
+                manifest: repository_manifest_path(&rockspec_path),
+                encoding: "UTF-8".to_string(),
+            });
+        }
     };
 
     let mut internal_deps = Vec::new();
@@ -573,7 +637,7 @@ fn parse_lua_deps(pkg: &Package, known_names: &HashMap<String, String>) -> Vec<S
         extract_lua_dep(trimmed, known_names, &mut internal_deps);
     }
 
-    internal_deps
+    Ok(internal_deps)
 }
 
 /// Extracts a single dependency name from a quoted string in a Lua
@@ -742,7 +806,7 @@ fn parse_haskell_deps(pkg: &Package, known_names: &HashMap<String, String>) -> V
 /// among the discovered packages — are silently skipped.
 ///
 /// This function is the main entry point for dependency resolution.
-pub fn resolve_dependencies(packages: &[Package]) -> Graph {
+pub fn resolve_dependencies(packages: &[Package]) -> Result<Graph, MetadataEncodingError> {
     let mut graph = Graph::new();
 
     // First, add all packages as nodes. Even packages with no dependencies
@@ -771,7 +835,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
             "go" => parse_go_deps(pkg, known_names),
             "rust" | "wasm" => parse_rust_deps(pkg, known_names),
             "elixir" => parse_elixir_deps(pkg, known_names),
-            "lua" => parse_lua_deps(pkg, known_names),
+            "lua" => parse_lua_deps(pkg, known_names)?,
             "perl" => parse_perl_deps(pkg, known_names),
             "haskell" => parse_haskell_deps(pkg, known_names),
             "csharp" | "fsharp" | "dotnet" => parse_dotnet_deps(pkg, known_names),
@@ -786,7 +850,7 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
         }
     }
 
-    graph
+    Ok(graph)
 }
 
 // ---------------------------------------------------------------------------
@@ -796,7 +860,191 @@ pub fn resolve_dependencies(packages: &[Package]) -> Graph {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
+    use serde::Deserialize;
+    use std::collections::HashSet;
+    use std::path::{Path, PathBuf};
+
+    #[derive(Debug, Deserialize)]
+    struct ResolutionFixture {
+        workspace: FixtureWorkspace,
+        expected: FixtureExpected,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct FixtureWorkspace {
+        files: Vec<FixtureFile>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct FixtureFile {
+        path: String,
+        #[serde(default)]
+        content_utf8: String,
+        #[serde(default)]
+        content_base64: String,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct FixtureExpected {
+        outcome: String,
+        #[serde(default)]
+        result: FixtureResult,
+        #[serde(default)]
+        diagnostics: Vec<FixtureDiagnostic>,
+    }
+
+    #[derive(Debug, Default, Deserialize)]
+    struct FixtureResult {
+        #[serde(default)]
+        edges: Vec<Vec<String>>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct FixtureDiagnostic {
+        code: String,
+        path: String,
+        package: String,
+        details: FixtureDiagnosticDetails,
+    }
+
+    #[derive(Debug, Deserialize)]
+    struct FixtureDiagnosticDetails {
+        encoding: String,
+    }
+
+    fn decode_base64(input: &str) -> Vec<u8> {
+        let mut output = Vec::new();
+        let mut accumulator = 0u32;
+        let mut bits = 0u8;
+
+        for byte in input.bytes() {
+            let value = match byte {
+                b'A'..=b'Z' => byte - b'A',
+                b'a'..=b'z' => byte - b'a' + 26,
+                b'0'..=b'9' => byte - b'0' + 52,
+                b'+' => 62,
+                b'/' => 63,
+                b'=' => break,
+                b'\r' | b'\n' | b'\t' | b' ' => continue,
+                _ => panic!("invalid base64 fixture byte: {byte}"),
+            };
+            accumulator = (accumulator << 6) | u32::from(value);
+            bits += 6;
+            if bits >= 8 {
+                bits -= 8;
+                output.push((accumulator >> bits) as u8);
+                accumulator &= (1 << bits) - 1;
+            }
+        }
+
+        output
+    }
+
+    fn load_resolution_fixture(name: &str) -> ResolutionFixture {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/fixtures/build-tool-v1/cases")
+            .join(name);
+        let data = fs::read(&path)
+            .unwrap_or_else(|error| panic!("read shared fixture {}: {error}", path.display()));
+        serde_json::from_slice(&data)
+            .unwrap_or_else(|error| panic!("decode shared fixture {}: {error}", path.display()))
+    }
+
+    fn materialize_resolution_fixture(
+        fixture: &ResolutionFixture,
+        case_name: &str,
+    ) -> (PathBuf, Vec<Package>) {
+        let root = std::env::temp_dir().join(format!(
+            "build_tool_rust_resolution_{case_name}_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        let mut packages = Vec::new();
+        let mut seen_packages = HashSet::new();
+
+        for file in &fixture.workspace.files {
+            let path = root.join(Path::new(&file.path));
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            let data = if file.content_base64.is_empty() {
+                file.content_utf8.as_bytes().to_vec()
+            } else {
+                decode_base64(&file.content_base64)
+            };
+            fs::write(&path, data).unwrap();
+
+            let segments: Vec<&str> = file.path.split('/').collect();
+            if segments.len() == 5 && segments[4] == "BUILD" {
+                let name = format!("{}/{}", segments[2], segments[3]);
+                if seen_packages.insert(name.clone()) {
+                    packages.push(Package {
+                        name,
+                        path: root.join(segments[..4].iter().collect::<PathBuf>()),
+                        build_commands: Vec::new(),
+                        language: segments[2].to_string(),
+                    });
+                }
+            }
+        }
+
+        (root, packages)
+    }
+
+    #[test]
+    fn test_lua_resolution_conformance_fixtures() {
+        for name in [
+            "resolution-lua-utf8.json",
+            "resolution-lua-invalid-utf8.json",
+        ] {
+            let fixture = load_resolution_fixture(name);
+            let (root, packages) = materialize_resolution_fixture(&fixture, name);
+            let result = resolve_dependencies(&packages);
+
+            if fixture.expected.outcome == "ok" {
+                let graph = result.expect("valid UTF-8 fixture must resolve");
+                let mut actual_edges = Vec::new();
+                for package in &packages {
+                    for dependency in graph.predecessors(&package.name).unwrap() {
+                        actual_edges.push(vec![dependency, package.name.clone()]);
+                    }
+                }
+                actual_edges.sort();
+                let mut expected_edges = fixture.expected.result.edges.clone();
+                expected_edges.sort();
+                assert_eq!(actual_edges, expected_edges);
+            } else {
+                let error = match result {
+                    Ok(_) => panic!("invalid UTF-8 fixture must fail closed"),
+                    Err(error) => error,
+                };
+                let diagnostic = &fixture.expected.diagnostics[0];
+                assert_eq!(error.code, diagnostic.code);
+                assert_eq!(error.package, diagnostic.package);
+                assert_eq!(error.manifest, diagnostic.path);
+                assert_eq!(error.encoding, diagnostic.details.encoding);
+                assert!(!error
+                    .to_string()
+                    .contains(&root.to_string_lossy().to_string()));
+            }
+
+            let _ = fs::remove_dir_all(root);
+        }
+    }
+
+    #[test]
+    fn test_repository_manifest_path_uses_final_canonical_boundary() {
+        let host_path = PathBuf::from("private")
+            .join("code")
+            .join("checkout")
+            .join("code")
+            .join("packages")
+            .join("lua")
+            .join("pkg")
+            .join("pkg.rockspec");
+        assert_eq!(
+            repository_manifest_path(&host_path),
+            "code/packages/lua/pkg/pkg.rockspec"
+        );
+    }
 
     #[test]
     fn test_build_known_names_python() {
@@ -961,7 +1209,7 @@ dependencies = [
             },
         ];
 
-        let graph = resolve_dependencies(&packages);
+        let graph = resolve_dependencies(&packages).unwrap();
 
         // Verify the graph has both nodes and the correct edge.
         assert!(graph.has_node("python/logic-gates"));

@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "a6845a83c8e2667d8cf35a9e80a0c51a1d74698e",
+    "revision": "de44349bd147c9ce46ce27d2ac741f2f01fcc2de",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1217,
-    "implementation_package_slots": 4365,
+    "implementation_identities": 1218,
+    "implementation_package_slots": 4366,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 767,
-    "singleton_missing_slots": 10738,
-    "rust_singletons": 572,
+    "singleton_packages": 768,
+    "singleton_missing_slots": 10752,
+    "rust_singletons": 573,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -356,7 +356,16 @@
       "depends_on": ["build-tool-go-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-rust-rockspec-utf8",
       "pr_number": null,
-      "notes": "Selected after the a6845a83c dependency/leverage pass because Rust currently converts fs::read_to_string failure into an empty dependency list, silently erasing edges, while merged Go provides the operational-oracle behavior. Bind the Rust resolver and CLI to the exact shared success and invalid-byte fixtures, preserve METADATA_INVALID_UTF8 with package and repository-relative manifest identity, return exit 2 without host paths, and leave the seven non-Rust engine remediations outside this slice."
+      "notes": "Selected after the a6845a83c dependency/leverage pass because Rust silently erased dependency edges on fs::read_to_string failure while merged Go provides the operational-oracle behavior. The implementation now consumes the exact shared success and invalid-byte fixtures, requires exact edge equality, returns a typed METADATA_INVALID_UTF8 diagnostic with package and repository-relative manifest identity, exits 2 through the real CLI, and does not disclose host paths. Validation passed 136 unit plus one CLI integration test, strict Clippy, release build, 79.33% line coverage, 57 language-neutral conformance tests plus 52 subtests, the 32-case/36-file corpus, a real 258-package Lua dry-run plan across all 246 strict-UTF-8 rockspecs, collision-free parity inventory, and a zero-advisory RustSec audit. After rebasing onto de44349bd, full-repository plan validation separately reproduced untouched main's 4,766-package exit-101 panic on an elixir/grammar_tools self-edge, and BUILD validation output matched untouched main exactly; the dedicated pending self-edge and Lua BUILD_windows items own those baselines. The seven non-Rust encoding remediations remain outside this slice."
+    },
+    {
+      "id": "build-tool-rust-self-edge-diagnostic",
+      "title": "Make the Rust build tool reject self-edges without panicking",
+      "status": "pending",
+      "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Rust UTF-8 slice's real full-repository plan. On rebased de44349bd, both untouched main and the current branch discover 4,766 packages, then exit 101 because graph.add_edge panics on elixir/grammar_tools. Define a language-neutral self-edge resolution fixture, identify the exact Elixir resolver alias collision or self-reference, and return a stable resolver diagnostic instead of aborting the process. Keep this independent of strict rockspec decoding."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
@@ -1142,6 +1151,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Share the XOR codec, bounded JSON/status validation, device and identity normalization, state/capability projection, stable errors, command planning, and verification fixtures. Network, time, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-tasmota-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable Tasmota local HTTP core",
+      "status": "pending",
+      "depends_on": ["smart-home-switch-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #9498 added the Rust-only Tasmota local HTTP host. Share bounded Status 0 JSON validation, relay/light/sensor normalization, stable identities and errors, state/capability projection, command planning, color conversion, and verification fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, credentials and Vault, trusted time, console I/O, authorization, and runtime mutation are excluded native-host responsibilities."
     },
     {
       "id": "smart-home-reolink-portable-core-extraction-and-conformance",
