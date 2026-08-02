@@ -12,6 +12,12 @@ import {
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
+import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
+import {
+  traceDynamicAutograd,
+  traceDynamicAutogradProgram,
+  type DynamicAutogradScenario,
+} from "./dynamic-autograd-lab.js";
 import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
@@ -1769,5 +1775,147 @@ describe("tensor shapes and broadcasting", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Mismatch/ }));
     expect(screen.getByLabelText("Broadcast shape mismatch").textContent)
       .toMatch(/Axis 1 cannot broadcast.*3 is not 2.*neither dimension is 1/s);
+  });
+});
+
+describe("dynamic autograd and saved values", () => {
+  it("keeps the dynamic autograd microscope in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--dynamic-autograd");
+    expect(productionCss).toContain(".autograd-backward-equations");
+  });
+
+  it("builds and reverses the complete scalar graph", () => {
+    const trace = traceDynamicAutograd("multiply_add_square");
+    expect(Object.fromEntries(trace.nodes.map((node) => [node.id, node.forwardValue]))).toEqual({
+      x: 2, w: 3, b: 1, m: 6, z: 7, loss: 49,
+    });
+    expect(trace.topologicalOrder).toEqual(["x", "w", "m", "b", "z", "loss"]);
+    expect(trace.backwardOrder).toEqual(["loss", "z", "b", "m", "w", "x"]);
+    expect(trace.gradients).toMatchObject({ x: 42, w: 28, b: 14, m: 14, z: 14, loss: 1 });
+    expect(trace.nodes.find((node) => node.id === "m")!.savedValues).toEqual([
+      { name: "left", sourceId: "x", value: 2 },
+      { name: "right", sourceId: "w", value: 3 },
+    ]);
+  });
+
+  it("records only the operation chosen by runtime control flow", () => {
+    const trace = traceDynamicAutograd("negative_branch");
+    expect(trace.branchChoices).toEqual({ abs_x: "negative" });
+    expect(trace.nodes.find((node) => node.id === "abs_x")!.operation).toBe("negate");
+    expect(trace.nodes.some((node) => node.operation === "identity")).toBe(false);
+    expect(trace.gradients.x).toBe(-4);
+  });
+
+  it("keeps a saved snapshot isolated from later live mutation", () => {
+    const mutated = traceDynamicAutograd("saved_snapshot", true);
+    const restored = traceDynamicAutograd("saved_snapshot", false);
+    expect(mutated.liveInputValues).toMatchObject({ x: 2, w: 100 });
+    expect(restored.liveInputValues).toMatchObject({ x: 2, w: 3 });
+    expect(mutated.nodes.find((node) => node.id === "product")!.savedValues[1]).toEqual({
+      name: "right", sourceId: "w", value: 3,
+    });
+    expect(mutated.gradients.x).toBe(3);
+    expect(restored.gradients).toEqual(mutated.gradients);
+  });
+
+  it("checks every leaf gradient with fresh forward executions", () => {
+    (["multiply_add_square", "negative_branch", "saved_snapshot"] as const).forEach((id) => {
+      const trace = traceDynamicAutograd(id);
+      expect(trace.maxGradientAbsoluteError).toBeLessThan(1e-8);
+      expect(Object.values(trace.finiteDifferenceGradients).every(Number.isFinite)).toBe(true);
+    });
+  });
+
+  it("handles prototype-like ids and the inclusive input boundary", () => {
+    const trace = traceDynamicAutogradProgram({
+      id: "saved_snapshot",
+      title: "boundary",
+      summary: "boundary",
+      expression: "negative = -constructor",
+      inputs: [{ id: "constructor", value: 1e6, requiresGradient: true }],
+      steps: [{ id: "negative", operation: "negate", inputs: ["constructor"] }],
+      output: "negative",
+      mutationsAfterForward: {},
+    });
+    expect(trace.nodes[0]!.forwardValue).toBe(1e6);
+    expect(trace.gradients.constructor).toBe(-1);
+    expect(trace.finiteDifferenceGradients.constructor).toBeCloseTo(-1, 5);
+  });
+
+  it("snapshots and freezes caller-owned scenario data", () => {
+    const input = { id: "x", value: 2, requiresGradient: true as const };
+    const scenario: DynamicAutogradScenario = {
+      id: "saved_snapshot",
+      title: "snapshot",
+      summary: "snapshot",
+      expression: "negative = -x",
+      inputs: [input],
+      steps: [{ id: "negative", operation: "negate", inputs: ["x"] }],
+      output: "negative",
+      mutationsAfterForward: {},
+    };
+    const trace = traceDynamicAutogradProgram(scenario);
+    input.value = 99;
+    expect(trace.scenario.inputs[0]!.value).toBe(2);
+    expect(Object.isFrozen(trace.scenario)).toBe(true);
+    expect(Object.isFrozen(trace.scenario.inputs[0])).toBe(true);
+  });
+
+  it("fails closed on malformed graphs values epsilon and derived overflow", () => {
+    const valid = traceDynamicAutograd("saved_snapshot").scenario;
+    expect(() => traceDynamicAutogradProgram({
+      ...valid,
+      inputs: { length: 2 } as unknown as DynamicAutogradScenario["inputs"],
+    })).toThrow(/bounded arrays/);
+    expect(() => traceDynamicAutogradProgram({
+      ...valid,
+      inputs: [{ id: "x", value: Number.NaN, requiresGradient: true }],
+    })).toThrow(/finite and bounded/);
+    expect(() => traceDynamicAutogradProgram({
+      ...valid,
+      steps: [{ id: "product", operation: "multiply", inputs: ["x", "ghost"] }],
+    })).toThrow(/must already exist/);
+    expect(() => traceDynamicAutogradProgram(valid, 0)).toThrow(/epsilon/);
+
+    const squareSteps = Array.from({ length: 12 }, (_, index) => ({
+      id: `s${index}`,
+      operation: "square" as const,
+      inputs: [index === 0 ? "x" : `s${index - 1}`],
+    }));
+    expect(() => traceDynamicAutogradProgram({
+      id: "saved_snapshot",
+      title: "overflow",
+      summary: "overflow",
+      expression: "overflow",
+      inputs: [{ id: "x", value: 1e6, requiresGradient: true }],
+      steps: squareSteps,
+      output: "s11",
+      mutationsAfterForward: {},
+    })).toThrow(/remain finite/);
+  });
+
+  it("opens nodes reverse steps branches and the mutation comparison", () => {
+    render(React.createElement(DynamicAutogradWorkbench));
+    expect(screen.getByRole("heading", { name: "Dynamic graph and saved-value microscope" })).toBeTruthy();
+    expect(screen.getByLabelText("Executed dynamic computation graph").textContent)
+      .toMatch(/x → w → m → b → z → loss.*m = 6.*loss = 49/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Open node loss, square, value 49/ }));
+    expect(screen.getByLabelText("Selected node forward and saved value trace").textContent)
+      .toMatch(/loss = z².*value 49.*input ← z = 7/s);
+    fireEvent.click(screen.getByRole("button", { name: /Open backward node m, upstream 14/ }));
+    expect(screen.getByLabelText("Selected backward calculation").textContent)
+      .toMatch(/toward x.*14 × 3 = 42.*saved:right.*toward w.*14 × 2 = 28.*saved:left/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Runtime branch/ }));
+    expect(screen.getByLabelText("Executed dynamic computation graph").textContent)
+      .toMatch(/abs_x.*negate.*negative branch.*other operation is absent/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Mutation snapshot/ }));
+    expect(screen.getByLabelText("Selected node forward and saved value trace").textContent)
+      .toMatch(/forward 3.*live 100.*saved forward snapshots/s);
+    fireEvent.click(screen.getByRole("button", { name: "Restore forward-time live values" }));
+    expect(screen.getByLabelText("Selected node forward and saved value trace").textContent)
+      .toMatch(/forward 3.*live 3/s);
   });
 });

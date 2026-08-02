@@ -3,6 +3,7 @@ import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
+import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
@@ -178,7 +179,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -402,6 +403,13 @@ export function App() {
             >
               Tensor + Autograd
             </button>
+            <button
+              className={workbench === "autograd" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("autograd")}
+            >
+              Autograd Graph
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -426,6 +434,8 @@ export function App() {
               <>initialize {"->"} <strong>gradient flow</strong> {"->"} stabilize</>
             ) : workbench === "tensor" ? (
               <>align shapes {"->"} <strong>reuse coordinates</strong> {"->"} reduce gradients</>
+            ) : workbench === "autograd" ? (
+              <>record operations {"->"} <strong>save values</strong> {"->"} reverse graph</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -457,6 +467,8 @@ export function App() {
         <DeepTrainingWorkbench />
       ) : workbench === "tensor" ? (
         <TensorBroadcastingWorkbench />
+      ) : workbench === "autograd" ? (
+        <DynamicAutogradWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

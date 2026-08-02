@@ -367,6 +367,382 @@ button.distribution-card[aria-pressed="true"] {
   }
 }
 
+.workspace--dynamic-autograd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.autograd-stage {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.autograd-intro,
+.autograd-graph-panel,
+.autograd-saved-panel,
+.autograd-backward-panel,
+.autograd-audit-panel,
+.autograd-controls {
+  border: 1px solid $line;
+  border-radius: 12px;
+  background: $paper;
+  box-shadow: 0 14px 35px rgba(23, 32, 28, 0.08);
+}
+
+.autograd-intro,
+.autograd-graph-panel,
+.autograd-saved-panel,
+.autograd-backward-panel,
+.autograd-audit-panel {
+  padding: 16px;
+}
+
+.autograd-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(109, 91, 208, 0.14), transparent 34%),
+    $paper;
+}
+
+.autograd-intro h2,
+.autograd-intro p,
+.autograd-graph-panel h2,
+.autograd-saved-panel h2,
+.autograd-backward-panel h2,
+.autograd-audit-panel h2,
+.autograd-controls h2,
+.autograd-mental-model h2,
+.autograd-mental-model p {
+  margin: 0;
+}
+
+.autograd-intro p:not(.eyebrow),
+.autograd-controls > p,
+.autograd-mental-model p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.autograd-chip {
+  align-self: flex-start;
+  flex: 0 0 auto;
+  border: 1px solid rgba(109, 91, 208, 0.36);
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.09);
+  color: #4b3e9d;
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.autograd-graph-panel,
+.autograd-saved-panel,
+.autograd-backward-panel,
+.autograd-audit-panel {
+  display: grid;
+  gap: 13px;
+}
+
+.autograd-order-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.06);
+  padding: 10px 12px;
+}
+
+.autograd-order-strip small,
+.autograd-selected-grid small,
+.autograd-mutation-strip small,
+.autograd-backward-equations small,
+.autograd-audit-grid small {
+  color: $muted;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.autograd-order-strip code,
+.autograd-selected-grid code,
+.autograd-mutation-strip code,
+.autograd-backward-buttons code,
+.autograd-backward-equations code,
+.autograd-audit-grid code,
+.autograd-branch-note code,
+.autograd-scenario-buttons code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.autograd-order-strip code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #234c9f;
+}
+
+.autograd-node-lane {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(105px, 1fr));
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.autograd-node-lane button,
+.autograd-backward-buttons button,
+.autograd-scenario-buttons button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.82);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.autograd-node-lane button[aria-pressed="true"],
+.autograd-backward-buttons button[aria-pressed="true"],
+.autograd-scenario-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.09);
+  box-shadow: inset 0 -3px rgba(109, 91, 208, 0.11);
+}
+
+.autograd-node-lane small,
+.autograd-node-lane span,
+.autograd-backward-buttons small,
+.autograd-scenario-buttons span {
+  color: $muted;
+  font-size: 0.67rem;
+}
+
+.autograd-node-lane strong,
+.autograd-backward-buttons strong,
+.autograd-audit-grid strong,
+.autograd-mutation-strip strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.autograd-branch-note {
+  border-left: 3px solid rgba(183, 121, 31, 0.55);
+  border-radius: 0 8px 8px 0;
+  background: rgba(183, 121, 31, 0.07);
+  color: #70501d;
+  padding: 9px 11px;
+  font-size: 0.78rem;
+}
+
+.autograd-selected-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.autograd-selected-grid > div {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.045);
+  padding: 12px;
+}
+
+.autograd-selected-grid code {
+  color: #234c9f;
+  overflow-wrap: anywhere;
+}
+
+.autograd-selected-grid strong {
+  color: #1d6849;
+}
+
+.autograd-mutation-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 0.35fr)) minmax(180px, 1fr);
+  gap: 8px;
+}
+
+.autograd-mutation-strip > div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  padding: 9px;
+}
+
+.autograd-mutation-strip > div.is-mutated {
+  border-color: rgba(194, 65, 59, 0.4);
+  background: rgba(194, 65, 59, 0.06);
+}
+
+.autograd-mutation-strip p {
+  align-self: center;
+  margin: 0;
+  color: $muted;
+  line-height: 1.45;
+}
+
+.autograd-backward-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.autograd-backward-buttons code {
+  color: #9b3131;
+  font-size: 0.7rem;
+}
+
+.autograd-backward-equations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.autograd-backward-equations > div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid rgba(194, 65, 59, 0.18);
+  border-radius: 9px;
+  background: rgba(194, 65, 59, 0.045);
+  padding: 11px;
+}
+
+.autograd-backward-equations code {
+  color: #9b3131;
+  overflow-wrap: anywhere;
+}
+
+.autograd-backward-equations span {
+  color: $muted;
+  font-size: 0.7rem;
+}
+
+.autograd-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.autograd-audit-grid > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.autograd-audit-grid span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: $muted;
+  font-size: 0.71rem;
+}
+
+.autograd-audit-grid code {
+  color: #1d6849;
+}
+
+.autograd-audit-grid .autograd-audit-max {
+  border-color: rgba(35, 122, 87, 0.28);
+  background: rgba(35, 122, 87, 0.055);
+}
+
+.autograd-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.autograd-scenario-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.autograd-scenario-buttons code {
+  color: #4b3e9d;
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+
+.autograd-mutation-toggle {
+  border: 1px solid rgba(194, 65, 59, 0.35);
+  border-radius: 9px;
+  background: rgba(194, 65, 59, 0.06);
+  color: #9b3131;
+  padding: 10px;
+  font: inherit;
+  font-weight: 750;
+}
+
+.autograd-mental-model {
+  display: grid;
+  gap: 7px;
+  margin-top: 4px;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.065);
+  padding: 11px;
+}
+
+@media (max-width: 1180px) {
+  .workspace--dynamic-autograd {
+    grid-template-columns: 1fr;
+  }
+
+  .autograd-controls {
+    position: static;
+  }
+
+  .autograd-scenario-buttons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .autograd-intro,
+  .autograd-graph-panel .panel-heading,
+  .autograd-saved-panel .panel-heading,
+  .autograd-backward-panel .panel-heading,
+  .autograd-audit-panel .panel-heading {
+    display: grid;
+  }
+
+  .autograd-chip {
+    justify-self: start;
+  }
+
+  .autograd-order-strip,
+  .autograd-selected-grid,
+  .autograd-mutation-strip,
+  .autograd-backward-buttons,
+  .autograd-backward-equations,
+  .autograd-audit-grid,
+  .autograd-scenario-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .autograd-node-lane {
+    grid-template-columns: repeat(6, minmax(118px, 1fr));
+  }
+}
+
 .workspace--tensor-broadcasting {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
