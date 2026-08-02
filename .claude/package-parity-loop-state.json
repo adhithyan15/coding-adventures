@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9510,
   "last_inventory": {
     "revision": "de44349bd147c9ce46ce27d2ac741f2f01fcc2de",
     "schema_version": 3,
@@ -352,11 +352,11 @@
     {
       "id": "build-tool-rust-rockspec-utf8-conformance",
       "title": "Make the Rust build tool enforce strict UTF-8 rockspec metadata",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-go-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-rust-rockspec-utf8",
-      "pr_number": null,
-      "notes": "Selected after the a6845a83c dependency/leverage pass because Rust silently erased dependency edges on fs::read_to_string failure while merged Go provides the operational-oracle behavior. The implementation now consumes the exact shared success and invalid-byte fixtures, requires exact edge equality, returns a typed METADATA_INVALID_UTF8 diagnostic with package and repository-relative manifest identity, exits 2 through the real CLI, and does not disclose host paths. Validation passed 136 unit plus one CLI integration test, strict Clippy, release build, 79.33% line coverage, 57 language-neutral conformance tests plus 52 subtests, the 32-case/36-file corpus, a real 258-package Lua dry-run plan across all 246 strict-UTF-8 rockspecs, collision-free parity inventory, and a zero-advisory RustSec audit. After rebasing onto de44349bd, full-repository plan validation separately reproduced untouched main's 4,766-package exit-101 panic on an elixir/grammar_tools self-edge, and BUILD validation output matched untouched main exactly; the dedicated pending self-edge and Lua BUILD_windows items own those baselines. The seven non-Rust encoding remediations remain outside this slice."
+      "pr_number": 9510,
+      "notes": "Ready PR #9510 follows the a6845a83c dependency/leverage selection and is rebased on de44349bd. The implementation consumes the exact shared success and invalid-byte fixtures, requires exact edge equality, returns a typed METADATA_INVALID_UTF8 diagnostic with package and repository-relative manifest identity, exits 2 through the real CLI, and does not disclose host paths. Validation passed 136 unit plus one CLI integration test, strict Clippy, release build, 79.33% line coverage, 57 language-neutral conformance tests plus 52 subtests, the 32-case/36-file corpus, a real 258-package Lua dry-run plan across all 246 strict-UTF-8 rockspecs, collision-free parity inventory, and a zero-advisory RustSec audit. Full-repository plan validation separately reproduced untouched main's 4,766-package exit-101 panic on an elixir/grammar_tools self-edge, and BUILD validation output matched untouched main exactly; the dedicated pending self-edge and Lua BUILD_windows items own those baselines. The seven non-Rust encoding remediations remain outside this slice."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
