@@ -106,7 +106,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `6a59699f5` after
+working inventory was regenerated on August 2, 2026 from `cd7bc5962` after
 merged PRs #9477 and #9485 added the three Dart ML leaves and Dart
 `document-ast`, following the serial Rust smart-home additions through Sonos
 (#9461), Nanoleaf (#9486), and the Rust SPICE model validation chain. It contains
@@ -124,7 +124,7 @@ The loop must not start by attempting 10,738 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`6a59699f5ff6ee6453bfc0dd11efe210aaad7c54` is collision-clean at 1,217
+`cd7bc596221d1ecc47683f955d333176559b794e` is collision-clean at 1,217
 normalized implementation identities, 4,365 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 767 singletons, 572
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -209,14 +209,15 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   related packages in dependency-shaped waves. The Python validator now also
   materializes a 10-file Lua wave covering the compiler, serializer, language
   server, QR, and compression dependency chains;
-- keep the Python build tool's Lua rockspec decoding deterministic. The
-  encoding-blocker slice normalizes the three CP1252 metadata bytes, adds
-  positive and invalid-UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`;
-  its refreshed full scan succeeds across 4,764 packages and 7,093 edges;
+- keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
+  #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
+  UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
+  succeeds across 4,765 packages and 7,100 edges;
 - bring the remaining Go, Rust, Swift, TypeScript, Lua, Perl, Ruby, Elixir, and
   Haskell build-tool resolvers to the shared strict-UTF-8 rockspec contract.
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
-  is tracked separately from the Python full-scan blocker;
+  is tracked separately from the Python full-scan blocker. The Go resolver is
+  the first prioritized child because it is the intended operational oracle;
 - expose Haskell through the Python build tool's `--language` filter. Haskell
   is already in its resolver and canonical language registry but is missing
   from the native CLI choices;
