@@ -1861,6 +1861,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 return Err(NetlistParseError::new("MOSFET LAMBDA must be finite"));
             }
         }
+        if let Some(bulk_potential) = params.get("PHI") {
+            if !bulk_potential.is_finite() || *bulk_potential <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET PHI must be finite and positive",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
