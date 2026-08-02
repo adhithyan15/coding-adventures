@@ -55,7 +55,10 @@ fn serve_html_sequence(titles: Vec<&'static str>) -> String {
             let (mut stream, _) = listener.accept().expect("accept Venture request");
             let mut request = [0_u8; 1024];
             let _ = stream.read(&mut request);
-            let body = format!("<!doctype html><title>{title}</title><main>Ready</main>");
+            let body = format!(
+                "<!doctype html><title>{title}</title><main>{}</main>",
+                "<p>Scrollable Venture acceptance content</p>".repeat(120)
+            );
             write!(
                 stream,
                 "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
@@ -248,6 +251,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
         "WinUI interaction failed: {interaction}"
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));
     assert!(
         interaction.contains(&start_url) || interaction.contains(&start_url.replace('/', "\\/"))

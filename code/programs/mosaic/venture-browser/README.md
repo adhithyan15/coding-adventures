@@ -104,8 +104,10 @@ cargo test -p venture-browser-windows
 
 These gates launch the generated window, render the host surface, edit and
 navigate the native address control, and invoke the Mosaic-authored Back,
-Forward, Reload, and Home controls. They require every transition to update the
-shared Rust browser session before the generated shell reports success.
+Forward, Reload, and Home controls. They then focus the emitted native content
+surface and require an End-key command to scroll the shared Rust viewport.
+Every transition must update the shared browser session before the generated
+shell reports success.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.

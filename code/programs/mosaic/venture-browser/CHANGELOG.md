@@ -4,6 +4,9 @@
 
 ### Added
 
+- Extend generated SwiftUI and WinUI launch acceptance through the native
+  content surface's End-key mapping and require the shared Rust viewport to
+  report a real scroll-state change.
 - Mosaic-authored Venture browser chrome with light and dark themes.
 - Typed slots for the address, page title, status, and disabled controls.
 - Typed dispatch events for Back, Forward, Home, Reload, address edits, and

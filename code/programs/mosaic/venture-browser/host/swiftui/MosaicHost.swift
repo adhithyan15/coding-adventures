@@ -99,6 +99,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var propsChangedHandler: (() -> Void)?
   private var acceptanceReported = false
   private var interactionAcceptanceStarted = false
+  private var lastSurfaceKeyboardCommand: String?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -369,13 +370,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == startURL, pageTitle == "Venture launch acceptance" {
-      writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "reloadTitle": "Venture reload acceptance",
-          "homeAddress": address, "targetAddress": targetURL, "pageTitle": pageTitle,
-        ],
-        to: markerPath)
+      guard performNativeSurfaceKey(keyCode: 119) else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "content surface unavailable"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifySurfaceKeyboard(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath)
+      }
       return
     }
     guard remaining > 0 else {
@@ -392,6 +396,30 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         remaining: remaining - 1)
     }
+  }
+
+  private func verifySurfaceKeyboard(
+    startURL: String, targetURL: String, markerPath: String
+  ) {
+    guard lastSurfaceKeyboardCommand == "document-end" else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native End key did not scroll the shared viewport",
+        ],
+        to: markerPath)
+      return
+    }
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    writeInteractionResult(
+      [
+        "backend": "swiftui", "status": "interacted",
+        "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
+        "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
+        "targetAddress": targetURL, "pageTitle": props?["page-title"] as? String ?? "",
+      ],
+      to: markerPath)
   }
 
   private func findEditableTextField(
@@ -432,6 +460,26 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         y: addressFrame.midY),
       to: nil)
     sendPrimaryClick(at: windowPoint, to: window)
+    return true
+  }
+
+  private func performNativeSurfaceKey(keyCode: UInt16) -> Bool {
+    guard let contentView, let window = contentView.window else { return false }
+    NSApp.activate(ignoringOtherApps: true)
+    guard window.makeFirstResponder(contentView),
+      let event = NSEvent.keyEvent(
+        with: .keyDown,
+        location: .zero,
+        modifierFlags: [],
+        timestamp: ProcessInfo.processInfo.systemUptime,
+        windowNumber: window.windowNumber,
+        context: nil,
+        characters: "",
+        charactersIgnoringModifiers: "",
+        isARepeat: false,
+        keyCode: keyCode)
+    else { return false }
+    NSApp.sendEvent(event)
     return true
   }
 
@@ -495,6 +543,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard let native, let browser else { return }
     let changed = command.withCString { native.scrollCommand(browser, $0) }
     guard changed != 0 else { return }
+    lastSurfaceKeyboardCommand = command
     contentView?.renderPage()
   }
 

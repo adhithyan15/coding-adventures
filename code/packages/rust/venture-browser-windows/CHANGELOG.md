@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exercise the generated WinUI content surface's End-key mapping against a
+  scrollable live page and require the shared Rust viewport to change.
+
 - Add the native Venture session bridge used by the Mosaic-generated WinUI
   shell, including shared chrome props/events, Direct2D pixel rendering,
   scrolling, and link activation.
