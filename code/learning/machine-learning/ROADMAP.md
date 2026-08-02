@@ -30,7 +30,7 @@ trace, and tests.
   - [x] Residual path and receptive-field explorer.
 - [ ] Sequence networks
   - [x] One recurrent state unrolled for three steps.
-  - [ ] Backpropagation through time and gradient accumulation.
+  - [x] Backpropagation through time and gradient accumulation.
   - [ ] GRU and LSTM gate comparison.
 - [ ] Attention and transformers
   - [ ] Query/key/value dot products for three tokens.

@@ -26,13 +26,14 @@ larger network:
 6. [A Tiny Image CNN, Completely by Hand](./tiny-image-cnn-by-hand.md)
 7. [Residual Paths and Receptive Fields by Hand](./residual-paths-and-receptive-fields-by-hand.md)
 8. [One Recurrent State, Unrolled by Hand](./recurrent-state-unrolled-by-hand.md)
-9. [Matrix Math](../matrix-math.md)
-10. [Loss Functions](../loss-functions.md)
-11. [Gradient Descent](../gradient-descent.md)
-12. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-13. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-14. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-15. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+9. [Backpropagation Through Time, by Hand](./backpropagation-through-time-by-hand.md)
+10. [Matrix Math](../matrix-math.md)
+11. [Loss Functions](../loss-functions.md)
+12. [Gradient Descent](../gradient-descent.md)
+13. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+14. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+15. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+16. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -66,7 +67,9 @@ has eight complementary views:
   boundary-clipped receptive fields.
 - **Recurrent lab:** unroll one shared scalar cell for three time steps, inspect
   every input and carried-state term, and cut the recurrent link to isolate
-  what memory contributes.
+  what memory contributes. Then reverse the unroll, select any BPTT step, add
+  shared-parameter gradient contributions, audit them with finite differences,
+  and preview one loss-reducing update.
 
 ## Language-Neutral Corpus
 
@@ -96,6 +99,11 @@ NN09 adds a three-step scalar recurrent chain in
 `code/specs/fixtures/recurrent-unroll-v1`, including its explicit initial
 state, shared parameters, every forward term, and a no-memory ablation.
 
+NN10 adds the reverse pass in `code/specs/fixtures/recurrent-bptt-v1`, including
+direct and future state gradients, every time-step contribution to shared
+parameters, their accumulated totals, a central finite-difference audit, the
+initial-state gradient, and one complete update.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -106,6 +114,7 @@ python code/scripts/validate_convolution_training_labs.py
 python code/scripts/validate_tiny_image_cnn_labs.py
 python code/scripts/validate_residual_receptive_labs.py
 python code/scripts/validate_recurrent_unroll_labs.py
+python code/scripts/validate_recurrent_bptt_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -121,6 +130,9 @@ max pooling. The first NN08 lab expands a two-layer residual block into its
 deep and identity routes, then counts every path from one output back to the
 original input. The first NN09 lab passes one hidden-state value through three
 executions of the same cell and compares it with the recurrent link removed.
+The first NN10 lab reverses that chain, proves how later loss reaches earlier
+states, accumulates all three executions into one shared gradient set, and
+checks the result independently before applying an update.
 
 ## How to Study a Model
 

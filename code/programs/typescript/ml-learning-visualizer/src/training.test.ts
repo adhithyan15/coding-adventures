@@ -66,6 +66,7 @@ import {
   DEFAULT_RECURRENT_INITIAL_STATE,
   DEFAULT_RECURRENT_INPUTS,
   DEFAULT_RECURRENT_PARAMETERS,
+  traceRecurrentBptt,
   traceRecurrentUnroll,
 } from "./recurrent-unroll-lab.js";
 
@@ -440,6 +441,58 @@ describe("training helpers", () => {
     expect(screen.getByText("final state").parentElement?.textContent).toContain("0");
     expect(screen.getByLabelText("Selected recurrent arithmetic").textContent)
       .toMatch(/carried state.*0\.5.*3.*0.*preactivation.*-1.*ReLU state.*0/s);
+  });
+
+  it("reverses the recurrent chain and accumulates shared gradients", () => {
+    const trace = traceRecurrentBptt();
+
+    expect(trace.loss).toBeCloseTo(0.28125);
+    expect(trace.backwardSteps.map((step) => step.time)).toEqual([2, 1, 0]);
+    expect(trace.backwardSteps.map((step) => step.stateGradient)).toEqual([
+      0.75,
+      0.375,
+      0.1875,
+    ]);
+    expect(trace.gradientTotals).toEqual({
+      inputWeight: 0.9375,
+      recurrentWeight: 3,
+      bias: 1.3125,
+      initialState: 0.09375,
+    });
+  });
+
+  it("checks BPTT independently and takes one loss-reducing step", () => {
+    const trace = traceRecurrentBptt();
+
+    expect(trace.maxGradientError).toBeLessThan(1e-9);
+    expect(trace.update.parameters.inputWeight).toBeCloseTo(1.90625);
+    expect(trace.update.parameters.recurrentWeight).toBeCloseTo(0.2);
+    expect(trace.update.parameters.bias).toBeCloseTo(-1.13125);
+    for (const [index, value] of [0.775, 2.83625, -0.564].entries()) {
+      expect(trace.update.preactivations[index]).toBeCloseTo(value);
+    }
+    for (const [index, value] of [0.775, 2.83625, 0].entries()) {
+      expect(trace.update.states[index]).toBeCloseTo(value);
+    }
+    expect(trace.update.loss).toBe(0);
+  });
+
+  it("switches the recurrent workbench into the backward microscope", () => {
+    render(React.createElement(RecurrentWorkbench));
+
+    fireEvent.click(screen.getByRole("button", { name: "Trace backward gradients" }));
+    expect(screen.getByRole("heading", { name: "Backpropagation-through-time microscope" })).toBeTruthy();
+    expect(screen.getByLabelText("Reverse-time gradient steps").textContent)
+      .toMatch(/reverse t = 2.*reverse t = 1.*reverse t = 0/s);
+    expect(screen.getByLabelText("Shared gradient reduction").textContent)
+      .toMatch(/dL\/dW_x.*0\.9375.*dL\/dW_h.*3.*dL\/db.*1\.3125/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Select backward step 1" }));
+    expect(screen.getByLabelText("Selected backward arithmetic").textContent)
+      .toMatch(/direct loss.*0.*from future.*0\.375.*dL\/dh\[1\].*0\.375/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Show forward unroll" }));
+    expect(screen.getByRole("heading", { name: "Recurrent-state unroller" })).toBeTruthy();
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

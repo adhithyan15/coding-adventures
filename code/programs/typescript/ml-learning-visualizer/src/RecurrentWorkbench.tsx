@@ -1,4 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
+import { BpttWorkbench } from "./BpttWorkbench.js";
 import {
   DEFAULT_RECURRENT_INITIAL_STATE,
   DEFAULT_RECURRENT_INPUTS,
@@ -13,7 +14,11 @@ function formatNumber(value: number): string {
   return Number(value.toFixed(4)).toString();
 }
 
-export function RecurrentWorkbench() {
+interface RecurrentForwardWorkbenchProps {
+  onShowBackward: () => void;
+}
+
+function RecurrentForwardWorkbench({ onShowBackward }: RecurrentForwardWorkbenchProps) {
   const [selectedTime, setSelectedTime] = useState(0);
   const [memoryEnabled, setMemoryEnabled] = useState(true);
   const withMemory = useMemo(() => traceRecurrentUnroll(), []);
@@ -183,6 +188,10 @@ export function RecurrentWorkbench() {
           its inputs, weights, or bias.
         </p>
 
+        <button className="bptt-view-button" type="button" onClick={onShowBackward}>
+          Trace backward gradients
+        </button>
+
         <label className="recurrent-memory-control">
           <input
             type="checkbox"
@@ -216,4 +225,13 @@ export function RecurrentWorkbench() {
       </aside>
     </main>
   );
+}
+
+export function RecurrentWorkbench() {
+  const [view, setView] = useState<"forward" | "backward">("forward");
+
+  if (view === "backward") {
+    return <BpttWorkbench onShowForward={() => setView("forward")} />;
+  }
+  return <RecurrentForwardWorkbench onShowBackward={() => setView("backward")} />;
 }

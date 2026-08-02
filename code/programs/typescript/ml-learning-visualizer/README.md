@@ -85,6 +85,12 @@ three cells to make sharing explicit. A memory toggle removes only the
 recurrent contribution and exposes why the final zero input still produces a
 positive state when earlier context is carried forward.
 
+Switch to the backward microscope to reverse the same saved states. Select a
+time step to combine direct and future state gradients, inspect its local
+parameter contributions, and see all three executions reduce into one shared
+gradient set. A central finite-difference table audits BPTT independently, and
+an update preview reruns the forward pass with the proposed parameters.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -125,6 +131,10 @@ path counts, and boundary-clipped receptive fields.
 NN09 under `code/specs/fixtures/recurrent-unroll-v1` pins an explicit initial
 state, three shared-parameter recurrent steps, all scalar arithmetic, and the
 counterfactual trace with its recurrent contribution removed.
+
+NN10 under `code/specs/fixtures/recurrent-bptt-v1` pins the reverse-time state
+gradients, local and accumulated shared-parameter gradients, initial-state
+gradient, central finite-difference oracle, and one loss-reducing update.
 
 ## Development
 

@@ -16,6 +16,9 @@ All notable changes to this package will be documented in this file.
   toggle, exact dependency expansion, and boundary-field exploration.
 - Add the NN09 three-step recurrent-state unroller with shared parameters,
   selectable cell arithmetic, and a no-memory ablation.
+- Extend the recurrent workbench with the NN10 BPTT microscope, including
+  selectable reverse steps, shared-gradient accumulation, finite-difference
+  verification, and one update preview.
 
 ### Changed
 
