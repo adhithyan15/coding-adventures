@@ -45174,6 +45174,34 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "This runtime slice is read-only until D23 has a protocol-neutral media command contract.",
         ]),
+        base_entry(
+            "wemo",
+            "Wemo UPnP",
+            "Local Wemo discovery, binary-state inspection, and light-switch control.",
+            IntegrationCategory::LocalDevice,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "wemo",
+        )
+        .with_capabilities(&["smart_home.read", "smart_home.command.light"])
+        .with_entities(&[EntityKind::Light, EntityKind::Switch])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("wemo_upnp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Wemo light switches use the D23 light command contract; generic outlets remain read-only until D23 has a switch command contract.",
+        ]),
         camera_entry(
             "ring",
             "Ring",
@@ -80781,6 +80809,33 @@ mod tests {
         assert!(!roku
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.media")));
+    }
+
+    #[test]
+    fn wemo_entry_exposes_ssdp_upnp_and_bounded_light_control() {
+        let catalog = first_party_catalog();
+        let wemo = find_entry(&catalog, &IntegrationId::trusted("wemo")).unwrap();
+
+        assert_eq!(
+            wemo.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(wemo.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            wemo.supported_protocols,
+            vec![ProtocolFamily::Vendor("wemo_upnp".to_string())]
+        );
+        assert_eq!(wemo.auth_modes, vec![AuthMode::None]);
+        assert!(wemo
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(wemo.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(wemo
+            .required_primitives
+            .contains(&PrimitiveFamily::CommandMapping));
+        assert!(wemo
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.light")));
     }
 
     #[test]
