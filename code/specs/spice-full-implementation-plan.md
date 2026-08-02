@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card gate-source-overlap-capacitance validation.
+1. Rust Berkeley SPICE MOS model-card gate-drain-overlap-capacitance validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `CGSO` values before
+   - Reject negative and non-finite model-card `CGDO` values before
      lowering MOS elements into engine parameters.
-   - Preserve zero and positive gate-source overlap capacitances.
+   - Preserve zero and positive gate-drain overlap capacitances.
 
 ## Completed Slices
 
@@ -4016,6 +4016,12 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Zero and positive drain-bulk capacitances remain accepted across both
      aliases.
+
+350. Rust Berkeley SPICE MOS model-card gate-source-overlap-capacitance validation.
+   - Status: completed in PR 9512.
+   - Negative and non-finite model-card `CGSO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive gate-source overlap capacitances remain accepted.
 
 ## Backlog
 
