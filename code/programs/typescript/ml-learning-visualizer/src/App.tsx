@@ -4,6 +4,7 @@ import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
+import { GradientAccumulationWorkbench } from "./GradientAccumulationWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
@@ -179,7 +180,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -304,6 +305,10 @@ export function App() {
                 ? "Scale shapes forward and backward signals"
               : workbench === "tensor"
                 ? "Forward reuses, backward sums"
+              : workbench === "autograd"
+                ? "Record what ran, then reverse it"
+              : workbench === "gradient-buffer"
+                ? "Backward adds, zero clears"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -410,6 +415,13 @@ export function App() {
             >
               Autograd Graph
             </button>
+            <button
+              className={workbench === "gradient-buffer" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("gradient-buffer")}
+            >
+              Grad Buffers
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -436,6 +448,8 @@ export function App() {
               <>align shapes {"->"} <strong>reuse coordinates</strong> {"->"} reduce gradients</>
             ) : workbench === "autograd" ? (
               <>record operations {"->"} <strong>save values</strong> {"->"} reverse graph</>
+            ) : workbench === "gradient-buffer" ? (
+              <>backward adds {"->"} <strong>step reads</strong> {"->"} zero clears</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -469,6 +483,8 @@ export function App() {
         <TensorBroadcastingWorkbench />
       ) : workbench === "autograd" ? (
         <DynamicAutogradWorkbench />
+      ) : workbench === "gradient-buffer" ? (
+        <GradientAccumulationWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

@@ -9134,3 +9134,373 @@ code {
     transform: rotate(90deg);
   }
 }
+
+.workspace--gradient-buffer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.gradient-buffer-stage {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.gradient-buffer-intro,
+.gradient-buffer-state,
+.gradient-buffer-timeline,
+.gradient-buffer-equation,
+.gradient-buffer-audit,
+.gradient-buffer-controls {
+  @include surface;
+}
+
+.gradient-buffer-intro,
+.gradient-buffer-state,
+.gradient-buffer-timeline,
+.gradient-buffer-equation,
+.gradient-buffer-audit {
+  padding: 18px;
+}
+
+.gradient-buffer-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gradient-buffer-intro h2,
+.gradient-buffer-controls h2 {
+  margin: 0;
+}
+
+.gradient-buffer-intro p:not(.eyebrow),
+.gradient-buffer-controls > p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.gradient-buffer-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(109, 91, 208, 0.38);
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.08);
+  color: #4b3e9d;
+  padding: 8px 12px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.gradient-buffer-state,
+.gradient-buffer-timeline,
+.gradient-buffer-equation,
+.gradient-buffer-audit {
+  display: grid;
+  gap: 14px;
+}
+
+.gradient-buffer-vessels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gradient-buffer-vessels > div {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.055);
+  padding: 13px;
+}
+
+.gradient-buffer-vessels > div.is-filled {
+  border-color: rgba(194, 65, 59, 0.35);
+  background: linear-gradient(0deg, rgba(194, 65, 59, 0.11), rgba(255, 255, 255, 0.75));
+}
+
+.gradient-buffer-vessels > div.is-empty {
+  border-color: rgba(35, 122, 87, 0.3);
+  background: rgba(35, 122, 87, 0.055);
+}
+
+.gradient-buffer-vessels small,
+.gradient-buffer-backward-grid small,
+.gradient-buffer-step-rule small,
+.gradient-buffer-audit-grid small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gradient-buffer-vessels code,
+.gradient-buffer-vessels strong,
+.gradient-buffer-event-lane code,
+.gradient-buffer-backward-grid code,
+.gradient-buffer-backward-grid strong,
+.gradient-buffer-zero-rule code,
+.gradient-buffer-step-rule code,
+.gradient-buffer-step-rule strong,
+.gradient-buffer-audit-grid code,
+.gradient-buffer-summary code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.gradient-buffer-vessels span {
+  color: $muted;
+  font-weight: 900;
+}
+
+.gradient-buffer-vessels strong {
+  color: #1d6849;
+  font-size: 1.12rem;
+}
+
+.gradient-buffer-event-lane {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.gradient-buffer-event-lane button {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.82);
+  color: $ink;
+  padding: 11px;
+  text-align: left;
+}
+
+.gradient-buffer-event-lane button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.52);
+  background: rgba(109, 91, 208, 0.09);
+  box-shadow: inset 0 -3px rgba(109, 91, 208, 0.14);
+}
+
+.gradient-buffer-event-lane small,
+.gradient-buffer-event-lane code {
+  color: $muted;
+  font-size: 0.67rem;
+}
+
+.gradient-buffer-event-lane strong {
+  overflow-wrap: anywhere;
+}
+
+.gradient-buffer-backward-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.gradient-buffer-backward-grid > div,
+.gradient-buffer-step-rule > div,
+.gradient-buffer-audit-grid > div {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.045);
+  padding: 11px;
+}
+
+.gradient-buffer-backward-grid code,
+.gradient-buffer-step-rule code {
+  color: #234c9f;
+  overflow-wrap: anywhere;
+}
+
+.gradient-buffer-backward-grid strong,
+.gradient-buffer-step-rule strong {
+  color: #1d6849;
+}
+
+.gradient-buffer-backward-grid > div.gradient-buffer-addition {
+  border-color: rgba(194, 65, 59, 0.25);
+  background: rgba(194, 65, 59, 0.055);
+}
+
+.gradient-buffer-zero-rule {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.06);
+  padding: 14px;
+}
+
+.gradient-buffer-zero-rule code {
+  color: #1d6849;
+  font-size: 1.05rem;
+}
+
+.gradient-buffer-zero-rule p,
+.gradient-buffer-step-rule p {
+  margin: 0;
+  color: $muted;
+  line-height: 1.5;
+}
+
+.gradient-buffer-step-rule {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.gradient-buffer-step-rule p {
+  grid-column: 1 / -1;
+  border-radius: 8px;
+  background: rgba(183, 121, 31, 0.08);
+  color: #7a5318;
+  padding: 10px;
+}
+
+.gradient-buffer-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gradient-buffer-audit-grid span {
+  color: $muted;
+  font-size: 0.74rem;
+}
+
+.gradient-buffer-audit-grid code {
+  color: #1d6849;
+}
+
+.gradient-buffer-audit-grid > div.gradient-buffer-audit-max {
+  border-color: rgba(35, 122, 87, 0.3);
+  background: rgba(35, 122, 87, 0.065);
+}
+
+.gradient-buffer-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 11px;
+  padding: 16px;
+}
+
+.gradient-buffer-scenario-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.gradient-buffer-scenario-buttons button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.gradient-buffer-scenario-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.09);
+}
+
+.gradient-buffer-scenario-buttons span {
+  color: $muted;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.gradient-buffer-summary,
+.gradient-buffer-mental-model {
+  display: grid;
+  gap: 7px;
+  margin-top: 5px;
+  border-radius: 9px;
+  padding: 11px;
+}
+
+.gradient-buffer-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: rgba(37, 99, 235, 0.055);
+}
+
+.gradient-buffer-summary .eyebrow {
+  grid-column: 1 / -1;
+}
+
+.gradient-buffer-summary code {
+  color: #234c9f;
+}
+
+.gradient-buffer-mental-model {
+  background: rgba(35, 122, 87, 0.065);
+}
+
+.gradient-buffer-mental-model h2,
+.gradient-buffer-mental-model p {
+  margin: 0;
+}
+
+.gradient-buffer-mental-model p:not(.eyebrow) {
+  color: $muted;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .workspace--gradient-buffer {
+    grid-template-columns: 1fr;
+  }
+
+  .gradient-buffer-controls {
+    position: static;
+  }
+
+  .gradient-buffer-scenario-buttons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .gradient-buffer-intro,
+  .gradient-buffer-state .panel-heading,
+  .gradient-buffer-timeline .panel-heading,
+  .gradient-buffer-equation .panel-heading,
+  .gradient-buffer-audit .panel-heading {
+    display: grid;
+  }
+
+  .gradient-buffer-chip {
+    justify-self: start;
+  }
+
+  .gradient-buffer-vessels,
+  .gradient-buffer-backward-grid,
+  .gradient-buffer-zero-rule,
+  .gradient-buffer-step-rule,
+  .gradient-buffer-audit-grid,
+  .gradient-buffer-scenario-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .gradient-buffer-step-rule p,
+  .gradient-buffer-summary .eyebrow {
+    grid-column: auto;
+  }
+}

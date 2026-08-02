@@ -53,10 +53,10 @@ trace, and tests.
   - [x] Initialization and activation-distribution explorer.
   - [x] Vanishing and exploding gradient trace.
   - [x] Normalization, dropout, and residual comparisons.
-- [ ] Tensor and autograd bridge
+- [x] Tensor and autograd bridge
   - [x] Shape and broadcasting visualizer.
   - [x] Dynamic computation graph and saved-value trace.
-  - [ ] Gradient accumulation and zeroing behavior.
+  - [x] Gradient accumulation and zeroing behavior.
 - [ ] Compilation and performance bridge
   - [ ] Forward graph lowering to NeuralIR and MatrixIR.
   - [ ] Backward and optimizer graph lowering.

@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has fourteen workbenches that move from one arithmetic update to small
+The app has fifteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -216,6 +216,16 @@ out of the graph, or mutate a live input after forward and compare it with the
 saved value that backward correctly preserves. Fresh forward executions audit
 every leaf gradient with central finite differences.
 
+### Gradient accumulation and zeroing lab
+
+The Grad Buffers workbench treats `w` and persistent `w.grad` as separate
+mutable state. Open every scheduled backward, optimizer, and zero call to see
+the buffer before and after. Compare two accumulating backward calls with a
+reset between them, average two micro-batches before one SGD step, and omit the
+reset to watch a new `0.8` gradient contaminate a stale buffer of `4`. The
+optimizer panel makes its non-clearing behavior explicit, while fresh forward
+passes audit every local gradient numerically.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -340,6 +350,10 @@ and all input finite-difference checks.
 NN27 under `code/specs/fixtures/dynamic-autograd-v1` pins executed dynamic graph
 topology, actual branch operations, immutable saved snapshots, reverse steps,
 live post-forward mutations, and analytical-versus-numerical leaf gradients.
+
+NN28 under `code/specs/fixtures/gradient-accumulation-v1` pins persistent
+gradient-buffer transitions across backward, optimizer, and explicit-zero
+events, including mean scaling and one intentionally stale next batch.
 
 ## Development
 
