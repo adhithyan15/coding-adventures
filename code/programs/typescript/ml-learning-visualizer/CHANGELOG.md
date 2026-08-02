@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Add the NN27 dynamic-autograd workbench with executed graph topology,
+  branch-dependent nodes, immutable saved snapshots, selectable reverse steps,
+  mutation isolation, and central finite differences.
+
 - Add the NN05 spatial workbench with editable 1D valid cross-correlation and
   complete multiply-accumulate traces.
 - Extend the spatial workbench with NN06 shared-kernel gradient accumulation,

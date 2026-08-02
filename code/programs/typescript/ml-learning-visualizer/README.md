@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has thirteen workbenches that move from one arithmetic update to small
+The app has fourteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -205,6 +205,17 @@ left and right coordinates it reuses. The reverse panel sums upstream values
 over expanded axes to recover both original input shapes and checks every
 gradient with central finite differences.
 
+### Dynamic autograd and saved-value lab
+
+The autograd graph workbench builds three scalar graphs as the operations run.
+Open any node to see its executed operation, parents, forward value, and the
+minimal immutable snapshots its local backward rule needs. Reverse-order
+buttons expand every upstream-gradient times local-derivative calculation.
+Switch to a negative runtime branch to see the unused identity operation stay
+out of the graph, or mutate a live input after forward and compare it with the
+saved value that backward correctly preserves. Fresh forward executions audit
+every leaf gradient with central finite differences.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -325,6 +336,10 @@ NN26 under `code/specs/fixtures/tensor-broadcasting-v1` pins right-aligned
 shape inference, every output-to-input coordinate mapping, reduction over
 expanded axes, scalar and rank-padding cases, deterministic mismatch details,
 and all input finite-difference checks.
+
+NN27 under `code/specs/fixtures/dynamic-autograd-v1` pins executed dynamic graph
+topology, actual branch operations, immutable saved snapshots, reverse steps,
+live post-forward mutations, and analytical-versus-numerical leaf gradients.
 
 ## Development
 

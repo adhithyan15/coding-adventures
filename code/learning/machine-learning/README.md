@@ -43,13 +43,14 @@ larger network:
 23. [Vanishing and Exploding Gradients, by Hand](./vanishing-and-exploding-gradients-by-hand.md)
 24. [Normalization, Dropout, and Residual Paths, by Hand](./normalization-dropout-and-residual-paths-by-hand.md)
 25. [Tensor Shapes and Broadcasting, by Hand](./tensor-shapes-and-broadcasting-by-hand.md)
-26. [Matrix Math](../matrix-math.md)
-27. [Loss Functions](../loss-functions.md)
-28. [Gradient Descent](../gradient-descent.md)
-29. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-30. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-31. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-32. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+26. [Dynamic Autograd and Saved Values, by Hand](./dynamic-autograd-and-saved-values-by-hand.md)
+27. [Matrix Math](../matrix-math.md)
+28. [Loss Functions](../loss-functions.md)
+29. [Gradient Descent](../gradient-descent.md)
+30. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+31. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+32. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+33. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -59,7 +60,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has thirteen complementary views:
+has fourteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -132,7 +133,10 @@ has thirteen complementary views:
   right; compare every dimension; open any broadcast output to reveal its exact
   reused input coordinates; reverse the operation by summing expanded axes;
   audit every input gradient numerically; and inspect an incompatible shape
-  before any buffer is touched.
+  before any buffer is touched. Then open the dynamic graph microscope to see
+  executed operation nodes, topological and reverse-topological orders,
+  immutable saved snapshots, runtime branch selection, post-forward live
+  mutation, and a central finite-difference audit of every leaf.
 
 ## Language-Neutral Corpus
 
@@ -243,6 +247,11 @@ shape padding, two-sided coordinate reuse, rank-one and scalar expansion,
 deterministic mismatch rejection, reverse reduction to both input shapes, and
 central finite differences for every compatible input value.
 
+NN27 adds `code/specs/fixtures/dynamic-autograd-v1`, including executed node and
+operation rosters, topological and reverse-topological orders, runtime branch
+selection, immutable saved forward snapshots, local derivatives, parent
+contributions, post-forward live values, and central finite differences.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -270,6 +279,7 @@ python code/scripts/validate_initialization_activation_distribution_labs.py
 python code/scripts/validate_gradient_flow_labs.py
 python code/scripts/validate_training_stabilizer_labs.py
 python code/scripts/validate_tensor_broadcasting_labs.py
+python code/scripts/validate_dynamic_autograd_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -316,6 +326,9 @@ gradients, and iterates the learned reverse mean back near the clean sample.
 The first NN26 lab lines up shapes from the right, turns expanded axes into
 explicit source-coordinate reuse, sums returning gradients back to original
 input shapes, and rejects an incompatible trailing dimension.
+The first NN27 lab records only executed operations, reverses one paper-sized
+graph, shows which values each local derivative saves, and proves a later live
+mutation cannot rewrite the computation being differentiated.
 
 ## How to Study a Model
 

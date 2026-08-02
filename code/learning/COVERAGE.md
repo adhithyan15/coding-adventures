@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1248 | 1175 | 98 | 60 | 8 | 1082 |
+| 1248 | 1181 | 98 | 60 | 8 | 1082 |
 
 ## Method
 
@@ -111,11 +111,11 @@ mention provides a complete lesson.
 | --- | ---: | --- |
 | `cli-builder` | 15 | missing |
 | `conduit` | 15 | missing |
+| `feature-normalization` | 15 | index-only |
 | `note-frequency` | 15 | missing |
 | `pixel-container` | 15 | missing |
 | `rng` | 15 | missing |
 | `trig` | 15 | missing |
-| `feature-normalization` | 14 | index-only |
 | `uuid` | 14 | missing |
 | `in-memory-data-store` | 13 | missing |
 | `in-memory-data-store-engine` | 13 | missing |
