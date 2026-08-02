@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "resolution/lua-utf8",
+  "domain": "resolution",
+  "summary": "Lua rockspec metadata is decoded as UTF-8 while internal dependencies are resolved.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/pkg/BUILD",
+        "content_utf8": "echo \"building pkg\"\n"
+      },
+      {
+        "path": "code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-pkg\"\nversion = \"0.1.0-1\"\ndescription = { summary = \"Portable metadata — UTF-8\" }\ndependencies = {\n    \"lua >= 5.4\",\n    \"coding-adventures-other >= 0.1.0\",\n}\n"
+      },
+      {
+        "path": "code/packages/lua/other/BUILD",
+        "content_utf8": "echo \"building other\"\n"
+      },
+      {
+        "path": "code/packages/lua/other/coding-adventures-other-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-other\"\nversion = \"0.1.0-1\"\ndependencies = { \"lua >= 5.4\" }\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/lua-utf8",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "lua/other",
+          "lua/pkg"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

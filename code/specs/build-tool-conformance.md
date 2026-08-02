@@ -260,6 +260,10 @@ MUST:
   explicitly names another qualified package;
 - reject self-edges, ambiguous manifests, ambiguous aliases, and duplicate
   package identities;
+- decode `.rockspec` text metadata as strict UTF-8 without replacement or
+  locale fallback;
+- report invalid rockspec encoding as `METADATA_INVALID_UTF8`, including the
+  repository-relative manifest path and package identity;
 - emit sorted, unique internal edges; and
 - report malformed metadata with stable diagnostics instead of silently
   inventing a partial graph.

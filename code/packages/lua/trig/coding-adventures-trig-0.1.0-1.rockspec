@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Trigonometric functions computed from first principles — sine, cosine, tangent via Taylor series",
+    summary = "Trigonometric functions computed from first principles â€” sine, cosine, tangent via Taylor series",
     license = "MIT",
 }
 dependencies = {

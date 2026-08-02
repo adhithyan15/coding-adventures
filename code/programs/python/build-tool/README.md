@@ -6,7 +6,7 @@ An incremental, parallel monorepo build tool with hash-based caching.
 
 This CLI program:
 1. Discovers all packages via recursive `BUILD` file walking
-2. Resolves dependencies by parsing pyproject.toml and .gemspec files
+2. Resolves dependencies from each supported ecosystem's package metadata
 3. Builds a directed graph of dependencies
 4. Hashes all source files in each package
 5. Compares hashes against a committed cache file (.build-cache.json)
@@ -39,8 +39,12 @@ build-tool --language python
 
 This is a standalone program (not a library) that orchestrates builds across
 the entire coding-adventures monorepo. It understands the recursive `BUILD`
-discovery convention used throughout the repository and can build Python, Ruby, and Go
-packages.
+discovery convention used throughout the repository and orchestrates every
+language listed by `build-tool --help`.
+
+Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
+the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or
+silently replacing bytes.
 
 ## Installation
 
