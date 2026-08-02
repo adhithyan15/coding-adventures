@@ -231,8 +231,9 @@ option mapping, or judge/evaluation failure.
 2. **Complete:** define the curriculum-manifest schema, arithmetic seed, and validator.
 3. Import versioned Common Core, NGSS, and USMLE objective indexes into the CAS.
 4. Backfill reviewed objective mappings for the remaining 349 libraries.
-5. Add CI gates for source envelopes, test references, manifest integrity, and
-   optional `--require-byte-pins` migration progress.
+5. **Partial:** CI now gates manifest integrity, JSON Schema validity, validator
+   tests, and test references. Complete the source-envelope and
+   `--require-byte-pins` gates as those migrations reach zero debt.
 6. Close the ten current worked-query gaps.
 
 ### Wave 1: prove the full provenance path

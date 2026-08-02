@@ -129,6 +129,18 @@ class AdjStdlibManifestTests(unittest.TestCase):
         self.assertTrue(any("names no standards" in error for error in errors))
         self.assertTrue(any("names no benchmark_paths" in error for error in errors))
 
+    def test_json_schema_validation_reports_instance_errors(self) -> None:
+        schema = {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "required": ["schema_version"],
+            "properties": {"schema_version": {"const": 1}},
+        }
+
+        errors = manifest_module.validate_json_schema(schema, {"schema_version": 2})
+
+        self.assertTrue(any("1 was expected" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
