@@ -106,33 +106,35 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-inventory was regenerated on August 2, 2026 at `e552707d5` after the serial
-Rust smart-home additions through Wemo (#9455) and the Rust SPICE model
-validation chain through #9473. It contains 1,215 normalized implementation
-identities across 4,359 established-lane package
-slots and found zero canonical collisions or unknown language buckets:
+working inventory was regenerated on August 2, 2026 from `f42c8218a` after
+merged PR #9477 added the three Dart ML leaves and this branch added Dart
+`document-ast`, following the serial Rust smart-home additions through Sonos
+(#9461) and the Rust SPICE model validation chain through #9481. It contains
+1,216 normalized implementation identities across 4,364 established-lane
+package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 275 |
+| Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 765 | 10,710 |
+| Present in one language | 766 | 10,724 |
 
-The loop must not start by attempting 10,710 singleton ports. It should finish
+The loop must not start by attempting 10,724 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-The current inventory at
-`e552707d59c62c0c0749c6173a2cf82478629b48` is collision-clean at 1,215
-normalized implementation identities, 4,359 implementation slots, 172
-high-consensus packages, 275 high-consensus missing slots, 765 singletons, 570
+The current working inventory on
+`f42c8218afee1c63551ff987bdf1d76e007ae12e` is collision-clean at 1,216
+normalized implementation identities, 4,364 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 766 singletons, 571
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The ten newest mixed Rust identities are `smart-home-camera-media`,
+The eleven newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
-`smart-home-reolink-integration`, `smart-home-roku-ecp-integration`, and
-`smart-home-wemo-upnp-integration`. All are
+`smart-home-reolink-integration`, `smart-home-roku-ecp-integration`,
+`smart-home-wemo-upnp-integration`, and
+`smart-home-sonos-upnp-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -146,11 +148,16 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, and Wemo contribute deterministic codecs, bounded parsers and DTO
+Roku, Wemo, and Sonos contribute deterministic codecs, bounded parsers and DTO
 validation, normalization, projection, stable identities/errors, command
 planning, and language-neutral fixtures to the parity backlog. Wemo specifically
 contributes SSDP header parsing, bounded setup/SOAP XML, service/device
-normalization, and switch/light command planning.
+normalization, and switch/light command planning. Sonos additionally contributes
+credential-free URL/control-path validation, AVTransport, RenderingControl,
+DIDL metadata normalization, deterministic inspection planning, and
+protocol-neutral media-player projection. UDP multicast, DNS/TCP, LAN HTTP
+execution, timeouts, endpoint approval, CLI I/O, authorization, and runtime
+mutation remain native-host responsibilities.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
@@ -164,7 +171,7 @@ The August 2 lane audit is:
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
 | C# | 196 | 0 | 47.5% |
-| Dart | 75 | 105 | 17.6% |
+| Dart | 79 | 101 | 18.6% |
 | Elixir | 276 | 0 | 69.3% |
 | F# | 195 | 0 | 47.5% |
 | Go | 292 | 0 | 72.4% |
@@ -175,7 +182,7 @@ The August 2 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 980 | 0 | 100% |
+| Rust | 981 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -197,6 +204,12 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
 - reconcile stale `BUILD_windows` prerequisite declarations reported by the
   build-tool validator across Python, Perl, TypeScript, Swift, Dart, Kotlin, and
   related packages in dependency-shaped waves;
+- make the Python build tool's Lua rockspec decoding deterministic. A full
+  4,763-package dry-run currently aborts before diff selection when
+  `_parse_lua_deps` reads byte `0x97` from `lua/block_ram` and `lua/tree` at
+  offset 208 or `lua/trig` at offset 218; classify and normalize the three
+  metadata files or add a deterministic fail-closed encoding diagnostic with
+  fixtures rather than silently replacing bytes;
 - remove environment-specific Starlark grammar lookup so build discovery works
   from arbitrary clean worktrees;
 - add explicit applicability and maturity data before either C/C++ or OCaml
@@ -229,27 +242,37 @@ Completed in the Swift lane: `wasm-simulator`, `cli-builder`,
 
 The historical Priority 1 cohort is complete, but later Haskell work promoted
 13 packages into a new 14-of-15 frontier. Merged PR #9383 closed `trig` and
-`wave`, so the remaining 11 current gaps are Dart-only:
+`wave`, merged PR #9477 closed `matrix`, `loss-functions`, and
+`feature-normalization`, and this branch closes `document-ast`, so the remaining
+seven current gaps are Dart-only:
 
-- dependency-shaped ML: `matrix`, then `loss-functions` and
-  `feature-normalization`;
 - deterministic data structures: `binary-search-tree`, `fenwick-tree`, and
   `trie`;
 - leaf ciphers: `atbash-cipher`, `scytale-cipher`, and `vigenere-cipher`;
-- shared model and utility leaves: `document-ast` and `uuid`.
+- utility leaf: `uuid`.
 
 Merged PR #9375 closed the generator-level prerequisite found by the post-#9363
 fixture audit. Dart's native scaffold generator now emits byte-stable,
 schema-v1 empty library profiles and truthful generated-program stdout
 profiles, while declaring its own reviewed runtime authority. Existing
 nonempty Dart profiles remain owned by the legacy migration review. Close the
-remaining 11-package frontier as small coherent PRs on top of that scaffold
+remaining seven-package frontier as small coherent PRs on top of that scaffold
 contract.
 
 Merged PR #9383 completed the first child item: the zero-dependency PHY00
 `trig` leaf and its direct PHY01 `wave` consumer. This closed two Dart-only
 14-of-15 gaps while exercising the scaffold and capability contract on a real
 dependency chain.
+
+Merged PR #9477 completed the ML child item with the independent `matrix`,
+`loss-functions`, and `feature-normalization` leaves. The post-merge leverage
+pass selected `document-ast` next: its types-only TE00 model has 68 exact
+cross-repository consumers and unlocks substantially more follow-on parity work
+than the remaining cipher and data-structure leaves. This branch delivers that
+sealed, immutable 24-node model with exhaustive discriminator, containment,
+value-semantics, and coverage checks. The cipher trio, trie,
+binary-search-tree, fenwick-tree, and UUID are explicit remaining child items;
+the existing Dart LZ78 private-trie migration is tracked separately.
 
 The post-merge governance audit found no repository-verifiable Layer 5 approval
 for #9375's nonempty generator profile: GitHub reports no review decision, and
@@ -287,9 +310,13 @@ collision-clean `1e4956369` refresh added the two Rust-only camera identities.
 PR #9421 merged the camera-media boundary repair. With no active in-scope parity
 PR at `e552707d5`, the leverage pass selected
 `dart-current-14-of-15-matrix-family`: the independent `matrix`,
-`loss-functions`, and `feature-normalization` leaf packages. The branch is
-`codex/dart-matrix-ml-parity` and the item is in progress. Open ONVIF and other
-host PRs do not occupy the scoped parity slot.
+`loss-functions`, and `feature-normalization` leaf packages. PR #9477 merged
+that slice at `1233e31db` with successful final-head push CI, PR CI, and
+CodeQL. The refreshed leverage pass selected the zero-dependency TE00
+`document-ast` model next because its 68 exact consumers make it the strongest
+remaining dependency foundation. The branch is
+`codex/dart-document-ast-parity`; open ONVIF and other host PRs do not occupy
+the scoped parity slot.
 The audit also found private matrix/MSE helpers in Dart `single-layer-network`
 and `two-layer-network`; their migration to the shared packages is a separate
 downstream backlog item rather than hidden scope in this port.
@@ -973,7 +1000,7 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 570 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 571 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
 The July 30-August 2 inventories added thirty Rust singleton identities that now

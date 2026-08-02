@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9477,
+  "active_pr": 9485,
   "last_inventory": {
-    "revision": "e552707d59c62c0c0749c6173a2cf82478629b48",
+    "revision": "f42c8218afee1c63551ff987bdf1d76e007ae12e",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1215,
-    "implementation_package_slots": 4359,
+    "implementation_identities": 1216,
+    "implementation_package_slots": 4363,
     "high_consensus_packages": 172,
-    "high_consensus_missing_slots": 275,
-    "singleton_packages": 765,
-    "singleton_missing_slots": 10710,
-    "rust_singletons": 570,
+    "high_consensus_missing_slots": 272,
+    "singleton_packages": 766,
+    "singleton_missing_slots": 10724,
+    "rust_singletons": 571,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -312,6 +312,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "The rebased Go oracle full dry-run currently reports 73 pre-existing validation gaps: 12 Python, 3 Swift, and 58 TypeScript. Deliver dependency-shaped waves and preserve the broader July 29 audit queue for Perl, Dart, Kotlin, and related packages."
+    },
+    {
+      "id": "build-tool-lua-rockspec-encoding",
+      "title": "Make Python build-tool Lua metadata decoding deterministic",
+      "status": "pending",
+      "depends_on": ["build-tool-pure-domain-corpus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while validating the Dart document-ast slice. The Python build tool discovers 4,763 packages, then its Lua resolver aborts before diff selection because _parse_lua_deps unconditionally decodes repository rockspecs as UTF-8. Exactly three files contain byte 0x97: lua/block_ram and lua/tree at offset 208, and lua/trig at offset 218. Classify and normalize those metadata bytes or define a fail-closed diagnostic contract with fixtures, then repair the Python resolver without silent replacement. Targeted plan-mode validation and the package BUILD files remain green."
     },
     {
       "id": "build-tool-go-oracle",
@@ -836,11 +845,11 @@
     {
       "id": "dart-current-14-of-15-matrix-family",
       "title": "Port matrix, loss-functions, and feature-normalization to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["dart-trig-wave", "dart-scaffold-capability-schema"],
       "branch": "codex/dart-matrix-ml-parity",
       "pr_number": 9477,
-      "notes": "Ready-for-review PR #9477. Selected from the remaining Dart-only 14-of-15 frontier after correcting the loop to portable-package/build-tool scope. Delivers the independent matrix, loss-functions, and feature-normalization leaf packages with shared reference vectors, immutable ownership, validation, empty capability profiles, BUILD/BUILD_windows, docs, and metadata. Local validation passed formatter/analyzer/randomized tests, 93.65%-100% line coverage, both package build scripts, the exact three-package diff build, nearby neural-network regressions, 21 reporter/capability tests, collision-clean parity at 1,215 identities and 4,362 slots, dependency/diff hygiene, and independent security review. The repository-wide build validator still reports the separately tracked 73 pre-existing BUILD_windows prerequisite declarations outside this slice."
+      "notes": "Merged PR #9477 at 1233e31dbe4a9c665f3de7b5c4e43a0edf08b2cb on 2026-08-02. Selected from the remaining Dart-only 14-of-15 frontier after correcting the loop to portable-package/build-tool scope. Delivers the independent matrix, loss-functions, and feature-normalization leaf packages with shared reference vectors, immutable ownership, validation, empty capability profiles, BUILD/BUILD_windows, docs, and metadata. Local validation passed formatter/analyzer/randomized tests, 93.65%-100% line coverage, both package build scripts, the exact three-package diff build, nearby neural-network regressions, 21 reporter/capability tests, collision-clean parity at 1,215 identities and 4,362 slots, dependency/diff hygiene, and independent security review. Final-head push CI, PR CI, and CodeQL runs 30765719887, 30765721855, and 30765721857 all passed after GitHub auto-merged the ready PR. The repository-wide build validator still reports the separately tracked 73 pre-existing BUILD_windows prerequisite declarations outside this slice."
     },
     {
       "id": "venture-browser-windows-portable-bridge-and-native-host",
@@ -1117,6 +1126,15 @@
       "notes": "Share SSDP header parsing, bounded setup/SOAP XML validation, service/device normalization, stable identities/errors, and switch/light command planning. UDP/DNS/TCP and runtime authority are excluded."
     },
     {
+      "id": "smart-home-sonos-upnp-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable Sonos UPnP core",
+      "status": "pending",
+      "depends_on": ["smart-home-media-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share SSDP request/response parsing, bounded UPnP setup and SOAP validation, AVTransport/RenderingControl/DIDL normalization, deterministic inspection planning, stable identities/errors, and protocol-neutral media-player projection through language-neutral fixtures. UDP multicast, DNS/TCP, LAN HTTP execution, timeouts, endpoint approval, CLI I/O, authorization, and SmartHomeRuntime mutation remain in the native Rust host. Discovered after rebasing the Dart document-ast slice onto merged Sonos PR #9461."
+    },
+    {
       "id": "dart-neural-consumer-matrix-loss-migration",
       "title": "Migrate Dart neural consumers to the shared matrix and loss packages",
       "status": "pending",
@@ -1133,6 +1151,69 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the Dart loss-functions security review. ML01 does not define whether NaN and infinity are rejected or propagated; Dart num.clamp and the Python reference can map NaN predictions to a finite cross-entropy boundary. Define language-neutral fixtures and update every established loss-functions lane together rather than adding a Dart-only divergence."
+    },
+    {
+      "id": "dart-current-14-of-15-document-ast",
+      "title": "Port the shared Document AST model to Dart",
+      "status": "pr-open",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": "codex/dart-document-ast-parity",
+      "pr_number": 9485,
+      "notes": "Ready-for-review PR #9485. Selected after merged PR #9477 because TE00 is a zero-dependency, types-only, empty-capability foundation with 68 exact cross-repository consumers. Delivers Dart's sealed 24-node Document AST, stable discriminators, typed containment, immutable collections, structural value semantics, exhaustive tests, docs, metadata, and both build files without expanding into downstream parsers. Rebased onto f42c8218a after Sonos #9461 and SPICE #9481; refreshed inventory is collision-clean at 1,216 identities, 4,364 working slots, 271 high-consensus missing slots, 766 singletons, and 571 Rust singletons. Local validation passed format/analyze, 14 randomized tests, 100% production line coverage, no outdated dependencies, both package build files, targeted metadata-validating build-tool dry-run and real build, 21 capability/reporter tests, state/diff hygiene, and an independent no-blocker API/security audit. The separately logged Lua rockspec encoding defect blocks only the unrelated full 4,763-package Python build-tool scan."
+    },
+    {
+      "id": "dart-current-14-of-15-atbash-scytale-vigenere",
+      "title": "Port the CR01-CR03 classical cipher leaves to Dart",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver atbash-cipher, scytale-cipher, and vigenere-cipher as one adjacent, dependency-free, empty-capability curriculum slice using the shared CR01-CR03 behavior and edge cases."
+    },
+    {
+      "id": "dart-current-14-of-15-trie",
+      "title": "Port the DT13 trie package to Dart",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver the standalone generic trie contract first; migrate existing Dart LZ78 duplication separately so the foundational port remains reviewable."
+    },
+    {
+      "id": "dart-lz78-shared-trie-migration",
+      "title": "Migrate Dart LZ78 to the shared trie package",
+      "status": "pending",
+      "depends_on": ["dart-current-14-of-15-trie"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#9477 dependency audit. Preserve LZ78's public API and compression fixtures while replacing its private trie logic with the shared Dart DT13 package in a separate downstream slice."
+    },
+    {
+      "id": "dart-current-14-of-15-binary-search-tree",
+      "title": "Port the DT07 binary search tree package to Dart",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Reconcile the cross-lane empty min/max, invalid-rank, comparator, and conceptual tree/binary-tree prerequisite differences before implementation."
+    },
+    {
+      "id": "dart-current-14-of-15-fenwick-tree",
+      "title": "Port the DT06 Fenwick tree package to Dart",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Deliver the dependency-free prefix-sum structure with shared indexing, numeric, bounds, and error fixtures."
+    },
+    {
+      "id": "dart-current-14-of-15-uuid",
+      "title": "Port the UUID package to Dart with reviewed authority boundaries",
+      "status": "pending",
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Schedule last: reuse existing Dart MD5/SHA-1 where the shared contract requires them, separate deterministic parsing/formatting from time and randomness authority, and review the truthful capability profile before delivery."
     },
     {
       "id": "c-cpp-graduation",
