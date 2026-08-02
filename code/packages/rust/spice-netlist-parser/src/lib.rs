@@ -1875,6 +1875,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(bulk_junction_potential) = params.get("PB") {
+            if !bulk_junction_potential.is_finite() || *bulk_junction_potential <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET PB must be finite and positive",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

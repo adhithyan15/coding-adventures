@@ -1744,6 +1744,30 @@ fn preserves_non_negative_mosfet_model_body_effect_coefficient() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_bulk_junction_potential() {
+    for bulk_junction_potential in ["0", "-0.9", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model junction NMOS(PB={bulk_junction_potential})\nM1 d g s b junction"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PB must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_bulk_junction_potential() {
+    let parsed = parse_netlist(".model junction NMOS(PB=0.9)\nM1 d g s b junction").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.bulk_junction_potential, 0.9);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
