@@ -1800,6 +1800,38 @@ fn preserves_non_negative_mosfet_model_bulk_junction_grading_coefficient() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_depletion_coefficient() {
+    for depletion_coefficient in ["-0.1", "1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model depletion NMOS(FC={depletion_coefficient})\nM1 d g s b depletion"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET FC must be finite and in [0, 1)"));
+    }
+}
+
+#[test]
+fn preserves_mosfet_model_depletion_coefficient_in_range() {
+    for depletion_coefficient in ["0", "0.4", "0.999"] {
+        let parsed = parse_netlist(&format!(
+            ".model depletion NMOS(FC={depletion_coefficient})\nM1 d g s b depletion"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.forward_bias_depletion_coefficient,
+            depletion_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
