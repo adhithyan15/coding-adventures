@@ -802,7 +802,8 @@ These items move toward retiring an existing Home Assistant install:
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
   WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, authenticated Reolink CGI
   device/channel/motion inspection, Roku ECP discovery and read-only device/app
-  inspection, Wemo UPnP discovery/state inspection/light-switch control, and
+  inspection, Wemo UPnP discovery/state inspection/light-switch control,
+  Sonos UPnP discovery and read-only player-state inspection, and
   the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
   events, RTSP media transfer and recording,
   Reolink and other vendor-specific camera/NVR media, recording, control, and
