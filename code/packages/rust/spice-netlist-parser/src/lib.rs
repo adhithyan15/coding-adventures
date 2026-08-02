@@ -2255,6 +2255,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(drain_perimeter) = instance_params.get("PD") {
+                if !drain_perimeter.is_finite() || *drain_perimeter < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET PD must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
