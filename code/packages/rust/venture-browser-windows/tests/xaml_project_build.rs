@@ -114,15 +114,17 @@ if ($events) {
     }
 }
 
-fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path) {
+fn wait_for_ready(child: &mut Child, executable: &Path, marker: &Path, phase_log: &Path) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
         if marker.exists() {
             return;
         }
         if let Some(status) = child.try_wait().expect("poll generated WinUI app") {
+            let phase = fs::read_to_string(phase_log)
+                .unwrap_or_else(|_| "no package-host phase was reported".to_string());
             panic!(
-                "generated WinUI app exited before rendering: {status}\n{}",
+                "generated WinUI app exited before rendering: {status}\nlast host phase: {phase}\n{}",
                 application_failure_diagnostics(executable)
             );
         }
@@ -179,17 +181,19 @@ fn package_owned_xaml_host_compiles_in_generated_winui_project() {
     let executable = find_executable(&project.join("bin"))
         .expect("generated WinUI build must produce VentureChrome.exe");
     let marker = output.join("xaml-ready.json");
+    let phase_log = output.join("xaml-phase.json");
     let app_log = output.join("xaml-app.log");
     let log = File::create(&app_log).expect("create WinUI app log");
     let mut child = Command::new(&executable)
         .current_dir(executable.parent().expect("WinUI executable directory"))
         .env("VENTURE_START_URL", serve_html_once())
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
+        .env("VENTURE_BROWSER_ACCEPTANCE_DIAGNOSTIC_PATH", &phase_log)
         .stdout(Stdio::from(log.try_clone().expect("clone WinUI app log")))
         .stderr(Stdio::from(log))
         .spawn()
         .expect("launch generated Venture WinUI app");
-    wait_for_ready(&mut child, &executable, &marker);
+    wait_for_ready(&mut child, &executable, &marker, &phase_log);
     let _ = child.kill();
     let _ = child.wait();
 

@@ -28,15 +28,19 @@ public static class MosaicHost
 
     public static string ApplyProps(VentureChrome component)
     {
+        ReportAcceptancePhase("apply-props-entered");
         EnsureBrowser();
         if (browser == IntPtr.Zero)
         {
             return "Status: Venture native bridge is unavailable";
         }
+        ReportAcceptancePhase("browser-created");
 
         contentSurface ??= new VentureContentSurface(component);
         component.ContentSurface = contentSurface;
+        ReportAcceptancePhase("content-surface-mounted");
         var status = ApplyResponse(component, Native.Decode(Native.ApplyProps(browser)));
+        ReportAcceptancePhase("props-applied");
         contentSurface.Refresh();
         return status;
     }
@@ -144,6 +148,7 @@ public static class MosaicHost
             }
 
             var required = Native.RenderBgra(browser, null, 0, out var width, out var height);
+            ReportAcceptancePhase("render-size-read");
             if (required == 0 || width == 0 || height == 0 || required > int.MaxValue)
             {
                 return;
@@ -151,6 +156,7 @@ public static class MosaicHost
 
             var pixels = new byte[(int)required];
             var written = Native.RenderBgra(browser, pixels, pixels.Length, out width, out height);
+            ReportAcceptancePhase("render-pixels-written");
             if (written != required)
             {
                 return;
@@ -163,10 +169,13 @@ public static class MosaicHost
                 pixelWidth = width;
                 pixelHeight = height;
             }
+            ReportAcceptancePhase("bitmap-allocated");
 
             ((IBufferByteAccess)bitmap.PixelBuffer).Buffer(out var destination);
             Marshal.Copy(pixels, 0, destination, pixels.Length);
+            ReportAcceptancePhase("bitmap-copied");
             bitmap.Invalidate();
+            ReportAcceptancePhase("bitmap-invalidated");
             ReportAcceptanceIfRequested();
         }
 
@@ -267,6 +276,20 @@ public static class MosaicHost
         }
 
         System.IO.File.WriteAllText(path, "{\"backend\":\"xaml\",\"status\":\"ready\"}\n");
+    }
+
+    private static void ReportAcceptancePhase(string phase)
+    {
+        var path = Environment.GetEnvironmentVariable(
+            "VENTURE_BROWSER_ACCEPTANCE_DIAGNOSTIC_PATH");
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        System.IO.File.WriteAllText(
+            path,
+            JsonSerializer.Serialize(new { backend = "xaml", phase }) + "\n");
     }
 
     [ComImport]
