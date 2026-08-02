@@ -1,0 +1,1 @@
+export 'src/matrix.dart';

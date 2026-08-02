@@ -4,22 +4,25 @@
   "started": "2026-07-29",
   "policy": {
     "maximum_active_parity_prs": 1,
-    "merge_authority": "user",
+    "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
-    "ocaml_denominator_status": "emerging-until-promotion-gates-pass"
+    "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
+    "delivery_scope": "portable-packages-and-build-tools-only",
+    "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
+    "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9421,
+  "active_pr": 9477,
   "last_inventory": {
-    "revision": "d5f57bfdbc64ebf44d677f195380714f949b0db6",
+    "revision": "e552707d59c62c0c0749c6173a2cf82478629b48",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1209,
-    "implementation_package_slots": 4353,
+    "implementation_identities": 1215,
+    "implementation_package_slots": 4359,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 275,
-    "singleton_packages": 759,
-    "singleton_missing_slots": 10626,
-    "rust_singletons": 564,
+    "singleton_packages": 765,
+    "singleton_missing_slots": 10710,
+    "rust_singletons": 570,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -681,11 +684,11 @@
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
       "title": "Replace camera endpoint redemption with a mediated single-use security boundary",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": "codex/camera-media-security-boundary",
       "pr_number": 9421,
-      "notes": "Ready-for-review PR #9421. Selected after the post-#9413 collision-clean inventory and dependency, fixture, and security audits because its only dependency is merged and the current broker's replayable raw-URI redemption is a P0 privacy-boundary defect. The hardening installs authenticated principal, clock, nonce, and executor authority once in a host-owned service; removes bearer IDs from audits; revalidates grants; binds leases to endpoint generations; bounds global/per-principal leases, streams, pending cleanup, endpoints, snapshots, and audit; mints stream IDs outside the executor; owns stream close/expiry; retains and surfaces failed teardown for retry; rejects URL userinfo, fragments, default plaintext, and plaintext query strings; confines secure query tokens to the executor; and schema-validates an explicit authority-free manifest for the policy core. Final validation after rebasing onto d5f57bfdb covered 15 camera tests, 4 ONVIF tests, warning-free Clippy/format, 85.87% camera line coverage, 6 capability schema tests, 67 capability-cage tests, a real 21-package build-tool run plus identical post-rebase dry-run closure, zero parity collisions/unknown buckets at 1,209 identities and 4,353 slots, zero dependency vulnerabilities, diff/secret hygiene, and independent contract/fixture/security reviews with no blockers. The separately tracked ONVIF origin/credential item remains the owner for discovery correlation, device-origin allowlists, credential transport, and downgrade defenses."
+      "notes": "Merged PR #9421 at d0cd8ba4c8ddc83f5312eaca16e7c5fdbfb7c6ea. Retained as historical state only; host-security delivery is outside the portable-package/build-tool parity selection scope."
     },
     {
       "id": "smart-home-onvif-origin-credential-transport-hardening",
@@ -694,7 +697,9 @@
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the post-#9413 security audit. WS-Discovery and device-supplied XAddr values can currently redirect fresh WS-Security digests to attacker-selected origins, plaintext downgrade is accepted, and discovery is overclassified as verified. Add explicit origin correlation and allowlist policy, secure transport requirements with loopback-only fixture exceptions, redirect and DNS rebinding defenses, bounded SOAP/media parsing, redacted failures, and hostile integration fixtures."
+      "selection_blocked": true,
+      "parity_scope": "excluded-host-hardening",
+      "notes": "Discovered in the post-#9413 security audit. This host-security item is explicitly excluded from parity-loop delivery; PR #9457 is not a package-parity PR. Only separately owned authority-free portable cores and language-neutral fixtures are eligible for parity work."
     },
     {
       "id": "smart-home-onvif-transactional-install",
@@ -774,7 +779,7 @@
       "id": "smart-home-shelly-portable-core-extraction-and-conformance",
       "title": "Extract, fixture, and expand the portable Shelly Gen2/Gen3 core",
       "status": "pending",
-      "depends_on": ["smart-home-shelly-host-security-hardening"],
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
       "branch": null,
       "pr_number": null,
       "notes": "Extract and fixture deterministic Gen2/Gen3 device-info and status parsing, authentication-required classification, component projection, stable identifiers, capability/state normalization, RPC envelope validation, command planning, bounds, and hostile inputs. Expand only this authority-free core through established lanes while mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, Vault access, origin allowlists, and SmartHomeRuntime effect application remain in the native Rust host."
@@ -814,7 +819,7 @@
       "id": "smart-home-wled-portable-core-extraction-and-conformance",
       "title": "Extract, fixture, and expand the portable WLED JSON core",
       "status": "pending",
-      "depends_on": ["smart-home-wled-host-security-hardening"],
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
       "branch": null,
       "pr_number": null,
       "notes": "Extract and fixture deterministic /json/si DTO validation, master and segment projection, stable identifiers, capability-bit interpretation, state normalization, brightness/RGB/mirek conversion, command planning, bounds, and hostile inputs. Expand only this authority-free core through established lanes while mDNS, DNS/TCP, plaintext LAN HTTP, trusted time, console I/O, origin/pairing policy, and SmartHomeRuntime effect application remain in the native Rust host."
@@ -830,12 +835,12 @@
     },
     {
       "id": "dart-current-14-of-15-matrix-family",
-      "title": "Port the matrix dependency and its immediate ML consumers to Dart",
-      "status": "pending",
+      "title": "Port matrix, loss-functions, and feature-normalization to Dart",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave", "dart-scaffold-capability-schema"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Materialized from the remaining Dart-only 14-of-15 umbrella during the post-#9413 dependency pass. Deliver matrix first, then loss-functions and feature-normalization in a coherent dependency-shaped slice with shared fixtures, empty capability profiles, package-native tests, coverage, and real downstream builds. Security-critical camera work currently outranks this otherwise highest-leverage portable frontier child."
+      "branch": "codex/dart-matrix-ml-parity",
+      "pr_number": 9477,
+      "notes": "Ready-for-review PR #9477. Selected from the remaining Dart-only 14-of-15 frontier after correcting the loop to portable-package/build-tool scope. Delivers the independent matrix, loss-functions, and feature-normalization leaf packages with shared reference vectors, immutable ownership, validation, empty capability profiles, BUILD/BUILD_windows, docs, and metadata. Local validation passed formatter/analyzer/randomized tests, 93.65%-100% line coverage, both package build scripts, the exact three-package diff build, nearby neural-network regressions, 21 reporter/capability tests, collision-clean parity at 1,215 identities and 4,362 slots, dependency/diff hygiene, and independent security review. The repository-wide build validator still reports the separately tracked 73 pre-existing BUILD_windows prerequisite declarations outside this slice."
     },
     {
       "id": "venture-browser-windows-portable-bridge-and-native-host",
@@ -1020,6 +1025,114 @@
       "branch": null,
       "pr_number": null,
       "notes": "After the urgent host boundary is hardened and the deterministic core is extracted, narrow the Rust host to WebSocket/TLS collection, Vault leases, bounded DTO conversion, artifact I/O, clock/reporting effects, and CLI orchestration without delaying security remediation on the larger refactor."
+    },
+    {
+      "id": "smart-home-runtime-command-effect-lifecycle",
+      "title": "Define a shared confirmed command-effect lifecycle for smart-home ports",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Define language-neutral prepare/authorize, confirmed-or-failed effect, retry, idempotency, audit, and result fixtures. Native device I/O and runtime mutation are reviewed host exceptions."
+    },
+    {
+      "id": "smart-home-media-entity-command-contract",
+      "title": "Define protocol-neutral media entities, state, and command effects",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Define portable media-player and TV entity kinds, playback, input, app, power, and volume state plus command/result fixtures shared by Roku, Sonos, and Cast. Host I/O is excluded."
+    },
+    {
+      "id": "smart-home-govee-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable Govee LAN core",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share scan/status parsing, bounds and stable errors, discovery/entity projection, identities, normalization, command planning, and verification fixtures. UDP, clock, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-lifx-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable LIFX LAN protocol core",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share packet codec and correlation, discovery normalization, HSBK/state/capability projection, bounds and errors, command planning, and verification fixtures. UDP, trusted identity/time, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-kasa-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable Kasa protocol core",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share the XOR codec, bounded JSON/status validation, device and identity normalization, state/capability projection, stable errors, command planning, and verification fixtures. Network, time, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-reolink-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable Reolink protocol core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share CGI DTO validation, bounded response parsing, device/channel/motion projection, stable identities, and stable errors. DNS/TCP/TLS, Vault, trusted time, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-roku-ecp-portable-core-extraction-and-conformance",
+      "title": "Extract, fixture, and expand the portable Roku ECP core",
+      "status": "pending",
+      "depends_on": ["smart-home-media-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share SSDP/ECP request and response plus bounded XML fixtures, device/app normalization, identities, stable errors, and media projection. Multicast, DNS/TCP, and runtime authority are excluded."
+    },
+    {
+      "id": "spice-device-parameter-validation-shared-conformance",
+      "title": "Share SPICE device and model parameter validation fixtures across lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473."
+    },
+    {
+      "id": "smart-home-switch-entity-command-contract",
+      "title": "Define protocol-neutral switch entities and command effects",
+      "status": "pending",
+      "depends_on": ["smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Define portable switch/outlet state, on/off authorization, confirmed results, retry/idempotency, and fixtures. Discovered from Wemo's read-only generic-outlet exception."
+    },
+    {
+      "id": "smart-home-wemo-upnp-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable Wemo UPnP core",
+      "status": "pending",
+      "depends_on": ["smart-home-switch-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Share SSDP header parsing, bounded setup/SOAP XML validation, service/device normalization, stable identities/errors, and switch/light command planning. UDP/DNS/TCP and runtime authority are excluded."
+    },
+    {
+      "id": "dart-neural-consumer-matrix-loss-migration",
+      "title": "Migrate Dart neural consumers to the shared matrix and loss packages",
+      "status": "pending",
+      "depends_on": ["dart-current-14-of-15-matrix-family"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Dart ML parity audit. single-layer-network and two-layer-network duplicate private matrix and MSE helpers. Migrate them in a separate downstream slice after the shared packages land, preserving their public APIs and training fixtures."
+    },
+    {
+      "id": "ml01-non-finite-input-contract-conformance",
+      "title": "Define and enforce the ML01 non-finite input policy across lanes",
+      "status": "pending",
+      "depends_on": ["dart-current-14-of-15-matrix-family"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Dart loss-functions security review. ML01 does not define whether NaN and infinity are rejected or propagated; Dart num.clamp and the Python reference can map NaN predictions to a finite cross-entropy boundary. Define language-neutral fixtures and update every established loss-functions lane together rather than adding a Dart-only divergence."
     },
     {
       "id": "c-cpp-graduation",
