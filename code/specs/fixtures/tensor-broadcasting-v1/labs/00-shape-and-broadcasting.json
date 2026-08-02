@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "id": "nn26-shape-and-broadcasting",
+  "title": "Right-aligned tensor addition and reverse reduction",
+  "question": "Which input coordinate supplies each broadcast output, and where do its gradients return?",
+  "absolute_tolerance": 1e-8,
+  "operation": {
+    "kind": "elementwise-add-with-broadcasting",
+    "dimension_alignment": "right",
+    "mismatch_policy": "reject",
+    "gradient_reduction": "sum-expanded-axes",
+    "storage_order": "row-major",
+    "finite_difference_epsilon": 1e-5
+  },
+  "cases": [
+    {
+      "id": "outer-grid",
+      "title": "A column plus a row",
+      "left": { "shape": [2, 1], "values": [1, 2] },
+      "right": { "shape": [1, 3], "values": [10, 20, 30] },
+      "upstream": { "shape": [2, 3], "values": [1, 2, 3, 4, 5, 6] },
+      "expected": {
+        "compatible": true,
+        "padded_left_shape": [2, 1],
+        "padded_right_shape": [1, 3],
+        "output_shape": [2, 3],
+        "left_expanded_axes": [1],
+        "right_expanded_axes": [0],
+        "output_values": [11, 21, 31, 12, 22, 32],
+        "mappings": [
+          { "output_index": [0, 0], "output_flat_index": 0, "left_index": [0, 0], "left_flat_index": 0, "right_index": [0, 0], "right_flat_index": 0, "left_value": 1, "right_value": 10, "output_value": 11, "upstream": 1 },
+          { "output_index": [0, 1], "output_flat_index": 1, "left_index": [0, 0], "left_flat_index": 0, "right_index": [0, 1], "right_flat_index": 1, "left_value": 1, "right_value": 20, "output_value": 21, "upstream": 2 },
+          { "output_index": [0, 2], "output_flat_index": 2, "left_index": [0, 0], "left_flat_index": 0, "right_index": [0, 2], "right_flat_index": 2, "left_value": 1, "right_value": 30, "output_value": 31, "upstream": 3 },
+          { "output_index": [1, 0], "output_flat_index": 3, "left_index": [1, 0], "left_flat_index": 1, "right_index": [0, 0], "right_flat_index": 0, "left_value": 2, "right_value": 10, "output_value": 12, "upstream": 4 },
+          { "output_index": [1, 1], "output_flat_index": 4, "left_index": [1, 0], "left_flat_index": 1, "right_index": [0, 1], "right_flat_index": 1, "left_value": 2, "right_value": 20, "output_value": 22, "upstream": 5 },
+          { "output_index": [1, 2], "output_flat_index": 5, "left_index": [1, 0], "left_flat_index": 1, "right_index": [0, 2], "right_flat_index": 2, "left_value": 2, "right_value": 30, "output_value": 32, "upstream": 6 }
+        ],
+        "left_gradient": [6, 15],
+        "right_gradient": [5, 7, 9],
+        "finite_difference_left_gradient": [5.999999996220139, 14.999999999076861],
+        "finite_difference_right_gradient": [4.999999998744897, 6.999999999379724, 9.000000000014552],
+        "max_gradient_absolute_error": 3.7798617569249076e-9
+      }
+    },
+    {
+      "id": "row-over-batch",
+      "title": "A rank-one row across a batch",
+      "left": { "shape": [2, 3], "values": [1, 2, 3, 4, 5, 6] },
+      "right": { "shape": [3], "values": [10, 20, 30] },
+      "upstream": { "shape": [2, 3], "values": [1, 1, 1, 1, 1, 1] },
+      "expected": {
+        "compatible": true,
+        "padded_left_shape": [2, 3],
+        "padded_right_shape": [1, 3],
+        "output_shape": [2, 3],
+        "left_expanded_axes": [],
+        "right_expanded_axes": [0],
+        "output_values": [11, 22, 33, 14, 25, 36],
+        "mappings": [
+          { "output_index": [0, 0], "output_flat_index": 0, "left_index": [0, 0], "left_flat_index": 0, "right_index": [0], "right_flat_index": 0, "left_value": 1, "right_value": 10, "output_value": 11, "upstream": 1 },
+          { "output_index": [0, 1], "output_flat_index": 1, "left_index": [0, 1], "left_flat_index": 1, "right_index": [1], "right_flat_index": 1, "left_value": 2, "right_value": 20, "output_value": 22, "upstream": 1 },
+          { "output_index": [0, 2], "output_flat_index": 2, "left_index": [0, 2], "left_flat_index": 2, "right_index": [2], "right_flat_index": 2, "left_value": 3, "right_value": 30, "output_value": 33, "upstream": 1 },
+          { "output_index": [1, 0], "output_flat_index": 3, "left_index": [1, 0], "left_flat_index": 3, "right_index": [0], "right_flat_index": 0, "left_value": 4, "right_value": 10, "output_value": 14, "upstream": 1 },
+          { "output_index": [1, 1], "output_flat_index": 4, "left_index": [1, 1], "left_flat_index": 4, "right_index": [1], "right_flat_index": 1, "left_value": 5, "right_value": 20, "output_value": 25, "upstream": 1 },
+          { "output_index": [1, 2], "output_flat_index": 5, "left_index": [1, 2], "left_flat_index": 5, "right_index": [2], "right_flat_index": 2, "left_value": 6, "right_value": 30, "output_value": 36, "upstream": 1 }
+        ],
+        "left_gradient": [1, 1, 1, 1, 1, 1],
+        "right_gradient": [2, 2, 2],
+        "finite_difference_left_gradient": [1.0000000003174137, 1.0000000003174137, 1.0000000003174137, 1.0000000003174137, 1.0000000003174137, 1.0000000003174137],
+        "finite_difference_right_gradient": [2.0000000006348273, 2.0000000006348273, 2.0000000006348273],
+        "max_gradient_absolute_error": 6.348273018819794e-10
+      }
+    },
+    {
+      "id": "scalar-over-matrix",
+      "title": "A scalar across a matrix",
+      "left": { "shape": [], "values": [2] },
+      "right": { "shape": [2, 2], "values": [1, 2, 3, 4] },
+      "upstream": { "shape": [2, 2], "values": [1, -1, 2, -2] },
+      "expected": {
+        "compatible": true,
+        "padded_left_shape": [1, 1],
+        "padded_right_shape": [2, 2],
+        "output_shape": [2, 2],
+        "left_expanded_axes": [0, 1],
+        "right_expanded_axes": [],
+        "output_values": [3, 4, 5, 6],
+        "mappings": [
+          { "output_index": [0, 0], "output_flat_index": 0, "left_index": [], "left_flat_index": 0, "right_index": [0, 0], "right_flat_index": 0, "left_value": 2, "right_value": 1, "output_value": 3, "upstream": 1 },
+          { "output_index": [0, 1], "output_flat_index": 1, "left_index": [], "left_flat_index": 0, "right_index": [0, 1], "right_flat_index": 1, "left_value": 2, "right_value": 2, "output_value": 4, "upstream": -1 },
+          { "output_index": [1, 0], "output_flat_index": 2, "left_index": [], "left_flat_index": 0, "right_index": [1, 0], "right_flat_index": 2, "left_value": 2, "right_value": 3, "output_value": 5, "upstream": 2 },
+          { "output_index": [1, 1], "output_flat_index": 3, "left_index": [], "left_flat_index": 0, "right_index": [1, 1], "right_flat_index": 3, "left_value": 2, "right_value": 4, "output_value": 6, "upstream": -2 }
+        ],
+        "left_gradient": [0],
+        "right_gradient": [1, -1, 2, -2],
+        "finite_difference_left_gradient": [0],
+        "finite_difference_right_gradient": [0.9999999999621422, -0.9999999999621422, 1.9999999999242843, -1.9999999999242843],
+        "max_gradient_absolute_error": 7.571565596720786e-11
+      }
+    },
+    {
+      "id": "incompatible-tail",
+      "title": "An incompatible trailing dimension",
+      "left": { "shape": [2, 3], "values": [1, 2, 3, 4, 5, 6] },
+      "right": { "shape": [2], "values": [10, 20] },
+      "upstream": null,
+      "expected": {
+        "compatible": false,
+        "padded_left_shape": [2, 3],
+        "padded_right_shape": [1, 2],
+        "mismatch_axis": 1,
+        "left_dimension": 3,
+        "right_dimension": 2,
+        "error": "axis 1: dimensions 3 and 2 are incompatible"
+      }
+    }
+  ]
+}

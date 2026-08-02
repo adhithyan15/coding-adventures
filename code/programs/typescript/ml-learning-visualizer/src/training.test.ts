@@ -33,6 +33,8 @@ import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { TrainingStabilizersWorkbench } from "./TrainingStabilizersWorkbench.js";
 import { traceTrainingStabilizers } from "./training-stabilizers-lab.js";
+import { TensorBroadcastingWorkbench } from "./TensorBroadcastingWorkbench.js";
+import { traceBroadcastAdd, traceTensorBroadcasting } from "./tensor-broadcasting-lab.js";
 import latticeSource from "./styles/app.lattice?raw";
 import { forwardLayered } from "./layered-network.js";
 import {
@@ -1643,5 +1645,129 @@ describe("normalization dropout and residual comparisons", () => {
   it("renders the stabilizer workbench directly", () => {
     render(React.createElement(TrainingStabilizersWorkbench));
     expect(screen.getByLabelText("Training stabilizer finite difference audit").textContent).toMatch(/0\.5.*0\.5.*6\.989e-11.*-2.*-2.*5\.351e-11/s);
+  });
+});
+
+describe("tensor shapes and broadcasting", () => {
+  it("keeps the tensor broadcasting microscope in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--tensor-broadcasting");
+    expect(productionCss).toContain(".tensor-mapping-equation");
+  });
+
+  it("maps a column and row into one outer addition grid", () => {
+    const trace = traceTensorBroadcasting("outer-grid");
+    expect(trace.compatible).toBe(true);
+    if (!trace.compatible) throw new Error("expected compatible trace");
+
+    expect(trace.paddedLeftShape).toEqual([2, 1]);
+    expect(trace.paddedRightShape).toEqual([1, 3]);
+    expect(trace.outputShape).toEqual([2, 3]);
+    expect(trace.outputValues).toEqual([11, 21, 31, 12, 22, 32]);
+    expect(trace.leftExpandedAxes).toEqual([1]);
+    expect(trace.rightExpandedAxes).toEqual([0]);
+    expect(trace.mappings[4]).toMatchObject({
+      outputIndex: [1, 1],
+      leftIndex: [1, 0],
+      rightIndex: [0, 1],
+      leftValue: 2,
+      rightValue: 20,
+      outputValue: 22,
+      upstream: 5,
+    });
+  });
+
+  it("sums returning gradients over every expanded axis", () => {
+    const outer = traceTensorBroadcasting("outer-grid");
+    const row = traceTensorBroadcasting("row-over-batch");
+    const scalar = traceTensorBroadcasting("scalar-over-matrix");
+    if (!outer.compatible || !row.compatible || !scalar.compatible) {
+      throw new Error("expected compatible traces");
+    }
+
+    expect(outer.leftGradient).toEqual([6, 15]);
+    expect(outer.rightGradient).toEqual([5, 7, 9]);
+    expect(row.paddedRightShape).toEqual([1, 3]);
+    expect(row.rightGradient).toEqual([2, 2, 2]);
+    expect(scalar.paddedLeftShape).toEqual([1, 1]);
+    expect(scalar.leftGradient).toEqual([0]);
+    expect(Math.max(
+      outer.maxGradientAbsoluteError,
+      row.maxGradientAbsoluteError,
+      scalar.maxGradientAbsoluteError,
+    )).toBeLessThan(1e-8);
+  });
+
+  it("rejects incompatible trailing dimensions before execution", () => {
+    const trace = traceTensorBroadcasting("incompatible-tail");
+    expect(trace).toMatchObject({
+      compatible: false,
+      paddedLeftShape: [2, 3],
+      paddedRightShape: [1, 2],
+      mismatchAxis: 1,
+      leftDimension: 3,
+      rightDimension: 2,
+      error: "axis 1: dimensions 3 and 2 are incompatible",
+    });
+  });
+
+  it("fails closed on malformed tensors upstream shapes and epsilon", () => {
+    expect(() => traceBroadcastAdd(
+      { shape: [2, 0], values: [] },
+      { shape: [1], values: [1] },
+      null,
+    )).toThrow(/positive integers/);
+    expect(() => traceBroadcastAdd(
+      { shape: [2], values: [1, Number.NaN] },
+      { shape: [2], values: [1, 2] },
+      { shape: [2], values: [1, 1] },
+    )).toThrow(/finite/);
+    expect(() => traceBroadcastAdd(
+      { shape: [2, 1], values: [1, 2] },
+      { shape: [1, 3], values: [10, 20, 30] },
+      { shape: [3, 2], values: [1, 2, 3, 4, 5, 6] },
+    )).toThrow(/upstream shape/);
+    expect(() => traceBroadcastAdd(
+      { shape: [], values: [1] },
+      { shape: [], values: [2] },
+      { shape: [], values: [1] },
+      0,
+    )).toThrow(/epsilon/);
+    expect(() => traceBroadcastAdd(
+      { shape: [], values: { length: 1 } as unknown as number[] },
+      { shape: [], values: [2] },
+      { shape: [], values: [1] },
+    )).toThrow(/shape and values arrays/);
+    expect(() => traceBroadcastAdd(
+      { shape: [], values: [1e308] },
+      { shape: [], values: [1e308] },
+      { shape: [], values: [1] },
+    )).toThrow(/bounded/);
+  });
+
+  it("opens cells and switches through rank padding scalar and mismatch cases", () => {
+    render(React.createElement(TensorBroadcastingWorkbench));
+    expect(screen.getByRole("heading", { name: "Shape and broadcasting microscope" })).toBeTruthy();
+    expect(screen.getByLabelText("Right aligned tensor shapes").textContent)
+      .toMatch(/\[2, 1\].*\[1, 3\].*\[2, 3\].*2 ↔ 1.*1 ↔ 3/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Open output \[1, 1\] value 22/ }));
+    expect(screen.getByLabelText("Selected broadcast index calculation").textContent)
+      .toMatch(/Output \[1, 1\].*left source.*\[1, 0\].*2.*right source.*\[0, 1\].*20.*output.*22.*upstream gradient 5/s);
+    expect(screen.getByLabelText("Broadcast gradient reduction").textContent)
+      .toMatch(/left gradient.*\[6, 15\].*right gradient.*\[5, 7, 9\].*maximum absolute error/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Matrix \+ rank-one row/ }));
+    expect(screen.getByLabelText("Right aligned tensor shapes").textContent)
+      .toMatch(/\[2, 3\].*\[3\].*\[2, 3\]/s);
+    expect(screen.getByLabelText("Broadcast gradient reduction").textContent)
+      .toMatch(/right gradient.*\[2, 2, 2\]/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Scalar \+ matrix/ }));
+    expect(screen.getByLabelText("Right aligned tensor shapes").textContent)
+      .toMatch(/\[\] scalar.*\[2, 2\].*\[2, 2\]/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /^Mismatch/ }));
+    expect(screen.getByLabelText("Broadcast shape mismatch").textContent)
+      .toMatch(/Axis 1 cannot broadcast.*3 is not 2.*neither dimension is 1/s);
   });
 });

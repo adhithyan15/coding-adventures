@@ -42,13 +42,14 @@ larger network:
 22. [Initialization and Activation Distributions, by Hand](./initialization-and-activation-distributions-by-hand.md)
 23. [Vanishing and Exploding Gradients, by Hand](./vanishing-and-exploding-gradients-by-hand.md)
 24. [Normalization, Dropout, and Residual Paths, by Hand](./normalization-dropout-and-residual-paths-by-hand.md)
-25. [Matrix Math](../matrix-math.md)
-26. [Loss Functions](../loss-functions.md)
-27. [Gradient Descent](../gradient-descent.md)
-28. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-29. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-30. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-31. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+25. [Tensor Shapes and Broadcasting, by Hand](./tensor-shapes-and-broadcasting-by-hand.md)
+26. [Matrix Math](../matrix-math.md)
+27. [Loss Functions](../loss-functions.md)
+28. [Gradient Descent](../gradient-descent.md)
+29. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+30. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+31. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+32. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -58,7 +59,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has twelve complementary views:
+has thirteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -127,6 +128,11 @@ has twelve complementary views:
   inverted-dropout, and identity-residual paths. Compare their outputs,
   vector-Jacobian products, input and weight gradients, dropout expectation,
   and twenty independent finite differences.
+- **Tensor and autograd lab:** align scalar, vector, and matrix shapes from the
+  right; compare every dimension; open any broadcast output to reveal its exact
+  reused input coordinates; reverse the operation by summing expanded axes;
+  audit every input gradient numerically; and inspect an incompatible shape
+  before any buffer is touched.
 
 ## Language-Neutral Corpus
 
@@ -232,6 +238,11 @@ four-coordinate branch, population layer-normalization statistics, a pinned
 inverted-dropout mask and expectation, an identity residual, every input and
 branch-weight gradient, and central finite differences.
 
+NN26 adds `code/specs/fixtures/tensor-broadcasting-v1`, including right-aligned
+shape padding, two-sided coordinate reuse, rank-one and scalar expansion,
+deterministic mismatch rejection, reverse reduction to both input shapes, and
+central finite differences for every compatible input value.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -258,6 +269,7 @@ python code/scripts/validate_graph_convolution_attention_labs.py
 python code/scripts/validate_initialization_activation_distribution_labs.py
 python code/scripts/validate_gradient_flow_labs.py
 python code/scripts/validate_training_stabilizer_labs.py
+python code/scripts/validate_tensor_broadcasting_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -301,6 +313,9 @@ objective, and makes the resulting pushback between losses explicit.
 The first NN19 lab trades clean signal for saved noise at two cumulative levels,
 teaches one timestep-aware denoiser from both rows, audits its three shared
 gradients, and iterates the learned reverse mean back near the clean sample.
+The first NN26 lab lines up shapes from the right, turns expanded axes into
+explicit source-coordinate reuse, sums returning gradients back to original
+input shapes, and rejects an incompatible trailing dimension.
 
 ## How to Study a Model
 
