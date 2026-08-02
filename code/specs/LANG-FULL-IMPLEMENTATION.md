@@ -787,7 +787,9 @@ backend immediately) come before the enabler-dependent items.
   compose as typed actuals across all seven standard backends
   (`both(neg(false), not neg(true))` → a real branch). `real procedure` values
   likewise compose as `f64` actuals before `entier` consumes the final result
-  (`combine(scale(3.0), scale(4.0))` → 42 on all seven backends).
+  (`combine(scale(3.0), scale(4.0))` → 42 on all seven backends), and integer
+  procedure values likewise compose as `i64` actuals
+  (`combine(scale(3), scale(4))` → 42 on all seven backends).
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables

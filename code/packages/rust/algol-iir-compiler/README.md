@@ -120,7 +120,9 @@ Typed procedures retain their result type at the call boundary. In particular,
 `boolean procedure neg(p); value p; boolean p; neg := not p` can return directly
 into `if neg(false) and not neg(true) then ...`, preserving the shared `bool`
 value through negation, conjunction, and the conditional branch on all seven
-standard backends. Boolean procedure values also compose as value actuals, so
+standard backends. Integer procedure values compose as value actuals too:
+`combine(scale(3), scale(4))` preserves two `i64` returns as the arguments to
+another typed call. Boolean procedure values likewise compose, so
 `both(neg(false), not neg(true))` preserves each typed argument and the final
 boolean return across both procedure-call boundaries.
 Real procedure values compose through the same typed call path:

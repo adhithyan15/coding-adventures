@@ -1682,6 +1682,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — integer procedure values compose across two typed calls. Two
+    // `scale` results become i64 actuals for `combine`, whose return becomes
+    // the enclosing block's result. This completes the scalar procedure-call
+    // composition coverage for the baseline integer ABI.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure scale(x); value x; integer x; scale := x * 6; \
+               integer procedure combine(a,b); value a,b; integer a,b; combine := a + b; \
+               result := combine(scale(3), scale(4)) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a boolean procedure returns directly into a compound
     // condition. The two `call` results must keep their `bool` IIR type through
     // `not` and `and` before the normal `jmp_if_false` branch. This covers the
@@ -5921,6 +5935,36 @@ fn algol_real_procedure_values_compose_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but real procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure combine(a,b)")
+                && program.src.contains("combine(scale(3), scale(4))")
+        })
+        .expect("the ALGOL integer procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but integer procedure composition did not complete"
             );
             continue;
         };
