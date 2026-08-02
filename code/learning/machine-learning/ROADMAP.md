@@ -50,7 +50,7 @@ trace, and tests.
 ## Depth and Scaling Tranches
 
 - [ ] Deep-training mechanics
-  - [ ] Initialization and activation-distribution explorer.
+  - [x] Initialization and activation-distribution explorer.
   - [ ] Vanishing and exploding gradient trace.
   - [ ] Normalization, dropout, and residual comparisons.
 - [ ] Tensor and autograd bridge

@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has eleven workbenches that move from one arithmetic update to small
+The app has twelve workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -172,6 +172,15 @@ self-looped neighborhood, inspect every square-root degree coefficient, then
 switch to stable neighborhood softmax and audit scores, exponentials, attention
 weights, contributions, and both output vectors.
 
+### Deep-training lab
+
+The deep-training workbench sends four fixed two-value samples through three
+layers with one shared sign template. Switch between tiny, Xavier, He, and
+deliberately large scales, then compare `tanh` and ReLU. Every layer exposes its
+eight activation values, population variance and standard deviation, exact-zero
+or saturation fraction, and one selected neuron's full arithmetic. A comparison
+panel keeps all four initializer trajectories visible at once.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -272,6 +281,11 @@ NN22 under `code/specs/fixtures/graph-convolution-attention-v1` pins the same
 three self-looped neighborhoods under symmetric-normalized GCN and stable-
 softmax GAT, including every coefficient, score, weight, contribution, and
 output.
+
+NN23 under `code/specs/fixtures/initialization-activation-distribution-v1`
+pins three bias-free layers under four scales and two activations, including a
+canonical Xavier-plus-tanh trace and cross-mode standard-deviation, zero, and
+saturation summaries.
 
 ## Development
 

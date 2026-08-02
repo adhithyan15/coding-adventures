@@ -4,6 +4,7 @@ import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
+import { InitializationWorkbench } from "./InitializationWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -176,7 +177,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -297,6 +298,8 @@ export function App() {
                 ? "Compress, then reconstruct"
               : workbench === "structured"
                 ? "Structure shapes computation"
+              : workbench === "deep"
+                ? "Scale shapes every layer"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -382,6 +385,13 @@ export function App() {
             >
               Structured
             </button>
+            <button
+              className={workbench === "deep" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("deep")}
+            >
+              Deep Training
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -402,6 +412,8 @@ export function App() {
               <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
             ) : workbench === "structured" ? (
               <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
+            ) : workbench === "deep" ? (
+              <>initializer {"->"} <strong>activation spread</strong> {"->"} deeper signal</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -429,6 +441,8 @@ export function App() {
         <RepresentationWorkbench />
       ) : workbench === "structured" ? (
         <StructuredWorkbench />
+      ) : workbench === "deep" ? (
+        <InitializationWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

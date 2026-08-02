@@ -16,6 +16,357 @@ $violet: #6d5bd0;
   box-shadow: 0 18px 50px rgba(29, 45, 39, 0.08);
 }
 
+.workspace--initialization {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.initialization-stage {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.initialization-intro,
+.distribution-summary-panel,
+.initialization-arithmetic,
+.initializer-comparison,
+.initialization-controls {
+  @include surface;
+}
+
+.initialization-intro,
+.distribution-summary-panel,
+.initialization-arithmetic,
+.initializer-comparison {
+  padding: 18px;
+}
+
+.initialization-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.initialization-intro h2,
+.initialization-controls h2 {
+  margin: 0;
+}
+
+.initialization-intro p:not(.eyebrow),
+.initialization-controls p,
+.initializer-comparison .panel-heading > span {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.initialization-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(109, 91, 208, 0.3);
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+  padding: 8px 12px;
+  font-weight: 850;
+  text-transform: capitalize;
+}
+
+.initialization-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.distribution-card {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  min-height: 132px;
+  border: 1px solid $line;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.86);
+  color: $ink;
+  padding: 12px;
+  text-align: left;
+}
+
+button.distribution-card:hover,
+button.distribution-card[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.09);
+}
+
+.distribution-card--input {
+  align-content: start;
+  border-color: rgba(35, 122, 87, 0.25);
+  background: rgba(35, 122, 87, 0.055);
+}
+
+.distribution-card strong,
+.distribution-card code,
+.distribution-stat-grid strong,
+.spread-row code,
+.initialization-equation {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.distribution-card > span:last-child {
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.distribution-dot-plot {
+  position: relative;
+  display: block;
+  height: 30px;
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, transparent 49.5%, rgba(23, 32, 28, 0.14) 49.5%, rgba(23, 32, 28, 0.14) 50.5%, transparent 50.5%),
+    rgba(37, 99, 235, 0.055);
+  overflow: hidden;
+}
+
+.distribution-dot-plot i {
+  position: absolute;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4px;
+  border: 2px solid white;
+  border-radius: 50%;
+  background: $blue;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.28);
+}
+
+.distribution-summary-panel,
+.initialization-arithmetic,
+.initializer-comparison {
+  display: grid;
+  gap: 14px;
+}
+
+.distribution-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.distribution-stat-grid > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.065);
+  padding: 10px;
+}
+
+.distribution-stat-grid span {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.activation-value-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.activation-value-grid code {
+  min-width: 0;
+  overflow: hidden;
+  padding: 7px 3px;
+  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.07);
+  color: #234c9f;
+  font-size: 0.7rem;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+
+.initialization-equation {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.initialization-equation code,
+.initialization-equation strong {
+  min-width: 0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.initialization-equation code {
+  background: rgba(37, 99, 235, 0.065);
+  color: #234c9f;
+}
+
+.initialization-equation strong {
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+}
+
+.initializer-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.initializer-comparison-grid article {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  padding: 11px;
+}
+
+.initializer-comparison-grid article.is-selected {
+  border-color: rgba(109, 91, 208, 0.45);
+  background: rgba(109, 91, 208, 0.055);
+}
+
+.spread-row {
+  display: grid;
+  grid-template-columns: 20px minmax(30px, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+}
+
+.spread-row span,
+.spread-row code {
+  color: $muted;
+  font-size: 0.68rem;
+}
+
+.spread-row i {
+  display: block;
+  min-width: 2px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, $green, $blue);
+}
+
+.initialization-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.initialization-controls section {
+  display: grid;
+  gap: 9px;
+}
+
+.initialization-controls section + section {
+  padding-top: 14px;
+  border-top: 1px solid $line;
+}
+
+.initializer-buttons,
+.activation-choice-grid {
+  display: grid;
+  gap: 7px;
+}
+
+.initializer-buttons button,
+.activation-choice-grid button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.initializer-buttons button[aria-pressed="true"],
+.activation-choice-grid button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.48);
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+}
+
+.initializer-buttons small {
+  color: $muted;
+}
+
+.activation-choice-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.activation-choice-grid button {
+  text-align: center;
+}
+
+.initialization-reading {
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.065);
+  padding: 11px;
+}
+
+@media (max-width: 1180px) {
+  .workspace--initialization {
+    grid-template-columns: 1fr;
+  }
+
+  .initialization-controls {
+    position: static;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .initialization-controls section + section {
+    padding-top: 0;
+    padding-left: 14px;
+    border-top: 0;
+    border-left: 1px solid $line;
+  }
+}
+
+@media (max-width: 820px) {
+  .initialization-intro,
+  .distribution-summary-panel .panel-heading,
+  .initialization-arithmetic .panel-heading,
+  .initializer-comparison .panel-heading {
+    display: grid;
+  }
+
+  .initialization-chip {
+    justify-self: start;
+  }
+
+  .initialization-flow,
+  .distribution-stat-grid,
+  .initializer-comparison-grid,
+  .initialization-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .activation-value-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .initialization-equation {
+    grid-template-columns: 1fr;
+  }
+
+  .initialization-controls section + section {
+    padding-top: 14px;
+    padding-left: 0;
+    border-top: 1px solid $line;
+    border-left: 0;
+  }
+}
+
 .structured-workbench {
   display: grid;
   gap: 14px;

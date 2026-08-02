@@ -19,6 +19,8 @@ import { traceGraphNeighborhoodComparison } from "./graph-neighborhood-lab.js";
 import { HopfieldWorkbench } from "./HopfieldWorkbench.js";
 import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
+import { InitializationWorkbench } from "./InitializationWorkbench.js";
+import { initializerScale, traceInitializationDistributions } from "./initialization-distribution-lab.js";
 import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
 import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -1451,5 +1453,67 @@ describe("graph convolution and attention", () => {
     expect(screen.getByLabelText("Graph attention calculation").textContent).toMatch(/row max = 2.*denominator = 1\.417667.*weights sum = 1.*score 1 - max 2 = -1.*alpha = 0\.259496.*score -1 - max 2 = -3.*alpha = 0\.035119.*ReLU -> 1\.635146/s);
     fireEvent.click(screen.getByRole("button", { name: /node 2.*degree 2/ }));
     expect(screen.getByLabelText("Graph attention calculation").textContent).toMatch(/denominator = 1\.049787.*alpha = 0\.952574.*alpha = 0\.047426.*ReLU -> 1\.857722/s);
+  });
+});
+
+describe("initialization and activation distributions", () => {
+  it("keeps the deep-training explorer in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--initialization");
+    expect(productionCss).toContain(".distribution-dot-plot");
+  });
+
+  it("derives Xavier and He scales from fan-in", () => {
+    expect(initializerScale("xavier", 2)).toBeCloseTo(1 / Math.sqrt(2));
+    expect(initializerScale("he", 2)).toBe(1);
+  });
+
+  it("traces the canonical Xavier tanh distribution", () => {
+    const trace = traceInitializationDistributions("xavier", "tanh");
+    expect(trace.layers[0]!.activations[0]).toEqual([Math.tanh(1 / Math.sqrt(2)), Math.tanh(-1 / Math.sqrt(2))]);
+    const expectedStandardDeviations = [
+      0.6088593650139138,
+      0.49271338636057294,
+      0.4563673571184874,
+    ];
+    trace.layers.forEach((layer, index) => {
+      expect(layer.summary.standardDeviation).toBeCloseTo(expectedStandardDeviations[index]!, 14);
+    });
+  });
+
+  it("makes shrinking and exploding ReLU signals visible", () => {
+    const tiny = traceInitializationDistributions("tiny", "relu");
+    const large = traceInitializationDistributions("large", "relu");
+    const expectedTiny = [
+      0.05,
+      0.006959705453537528,
+      0.0008569568250501307,
+    ];
+    const expectedLarge = [
+      1,
+      2.7838821814150108,
+      6.855654600401044,
+    ];
+    tiny.layers.forEach((layer, index) => {
+      expect(layer.summary.standardDeviation).toBeCloseTo(expectedTiny[index]!, 14);
+    });
+    large.layers.forEach((layer, index) => {
+      expect(layer.summary.standardDeviation).toBeCloseTo(expectedLarge[index]!, 14);
+    });
+  });
+
+  it("rejects malformed matrices", () => {
+    expect(() => traceInitializationDistributions("xavier", "tanh", [[1], [1, 2]])).toThrow(/rectangular/);
+    expect(() => traceInitializationDistributions("xavier", "tanh", [[1], [-1]], [[[1, 2]], [[1]]])).toThrow(/fan-in/);
+  });
+
+  it("switches initializer, activation, and layer in the explorer", () => {
+    render(React.createElement(InitializationWorkbench));
+    expect(screen.getByRole("heading", { name: "Initialization and activation distributions" })).toBeTruthy();
+    expect(screen.getByLabelText("Selected layer hand calculation").textContent).toMatch(/0\.707107.*tanh = 0\.608859/s);
+    fireEvent.click(screen.getByRole("button", { name: /Large.*fixed scale 2/ }));
+    expect(screen.getByLabelText("Layer activation distributions").textContent).toMatch(/std 0\.964028.*std 0\.706474.*std 0\.963901/s);
+    fireEvent.click(screen.getByRole("button", { name: "ReLU" }));
+    fireEvent.click(screen.getByRole("button", { name: /Layer 3.*std 6\.855655/ }));
+    expect(screen.getByLabelText("Selected activation distribution").textContent).toMatch(/standard deviation6\.855655.*exact zeros62\.5%/s);
   });
 });
