@@ -71,9 +71,12 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-The book and `units/` are two views of the same content, not independently
-maintained — the book is the continuous read, the units are the same
-material sliced into car-sized practice pieces.
+Chapter 1 is generated from the same seven canonical lesson ASTs consumed by
+Language Ladder. Run `npm run build && npm run generate:books` from
+`code/packages/typescript/human-language-data` after editing those lessons; CI
+rejects stale generated TeX or source-hash metadata. Chapters 2–18 are still
+handwritten LaTeX during the staged one-source migration. `units/` is legacy
+source material, not a second canonical copy.
 
 ## Progress
 
@@ -118,7 +121,8 @@ exactly where a word needs it:
   not-yet-real).
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 18 chapters are authored and in the book (114 pages).**
+to its root. **All 18 chapters are authored and in the book (122 pages); Chapter
+1 is generated from canonical lessons.**
 Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
 in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a
 lesson never renumbers anything.

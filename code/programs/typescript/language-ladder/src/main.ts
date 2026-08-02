@@ -72,6 +72,7 @@ import {
 import { LANGUAGE_REGISTRY, SPINE_CONCEPTS, languageName, spineNodeForConcept } from "./curriculum.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
+import { bookHashStatus } from "./bookhashes.ts";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
 import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
 import {
@@ -1505,7 +1506,9 @@ function renderLessons(): HTMLElement {
 
   const lesson = LESSONS[lessonIndex]!;
   const meta = el("p", "muted");
-  meta.textContent = `${languageName(lesson.language)} · chapter ${lesson.chapter} · ${lesson.id}`;
+  const hashStatus = bookHashStatus(LESSONS, lesson.language, lesson.chapter);
+  const bookStatus = hashStatus === "not-generated" ? "" : ` · book ${hashStatus}`;
+  meta.textContent = `${languageName(lesson.language)} · chapter ${lesson.chapter} · ${lesson.id}${bookStatus}`;
   wrap.appendChild(meta);
 
   // Prompt: the headword, in its own script. Answer hidden until asked for —

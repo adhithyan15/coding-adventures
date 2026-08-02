@@ -6,6 +6,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "generate:books": "node dist/book-cli.js --write",
+    "check:books": "node dist/book-cli.js --check",
     "report": "node dist/report-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",

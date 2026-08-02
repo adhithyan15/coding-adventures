@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "spanish",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:746d660c5f9ec3cd",
+      "lessonIds": [
+        "ES-C01-hola",
+        "ES-C01-bien",
+        "ES-C01-el-la",
+        "ES-C01-genero-gramatical",
+        "ES-C01-dia",
+        "ES-C01-buenos-dias",
+        "ES-C01-practice"
+      ],
+      "tex": "spanish/book/chapters/ch01-first-words.tex"
+    }
+  ]
+}

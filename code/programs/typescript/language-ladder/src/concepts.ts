@@ -108,6 +108,7 @@ export function datasetFromLessons(
     body: l.body,
     preamble: "",
     blocks: [],
+    sourceHash: l.sourceHash ?? "",
     realization: {
       concept: l.concept,
       language: l.language,
