@@ -33,13 +33,14 @@ larger network:
 13. [Multi-Head Attention, Add, and Norm, by Hand](./multi-head-attention-add-and-norm-by-hand.md)
 14. [A Tiny Decoder-Only Language Model Training Step, by Hand](./tiny-decoder-language-model-training-by-hand.md)
 15. [A Two-Number Autoencoder Bottleneck, by Hand](./two-number-autoencoder-bottleneck-by-hand.md)
-16. [Matrix Math](../matrix-math.md)
-17. [Loss Functions](../loss-functions.md)
-18. [Gradient Descent](../gradient-descent.md)
-19. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-20. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-21. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-22. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+16. [Variational Sampling and the KL Tradeoff, by Hand](./variational-sampling-and-kl-tradeoff-by-hand.md)
+17. [Matrix Math](../matrix-math.md)
+18. [Loss Functions](../loss-functions.md)
+19. [Gradient Descent](../gradient-descent.md)
+20. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+21. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+22. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+23. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -91,8 +92,9 @@ has ten complementary views:
   SGD update.
 - **Representation lab:** compress two coordinates through one scalar, inspect
   each decoder branch and reconstruction error, add both routes into the
-  bottleneck gradient, audit all seven parameters, and compare the full model
-  before and after one loss-reducing update.
+  bottleneck gradient, then switch to a scalar variational autoencoder to expose
+  Gaussian parameters, saved-noise reparameterization, reconstruction versus
+  beta-weighted KL gradients, six finite differences, and a full-model update.
 
 ## Language-Neutral Corpus
 
@@ -154,6 +156,11 @@ encoder products, a one-scalar bottleneck, two decoder branches,
 reconstruction errors, complete backward gradients, a seven-parameter central
 finite-difference audit, and one loss-reducing update.
 
+NN17 adds `code/specs/fixtures/variational-autoencoder-v1`, including a scalar
+Gaussian mean and log-variance, saved epsilon, reparameterized latent sample,
+half-squared reconstruction loss, beta-weighted KL divergence, separate
+gradient routes, six central finite differences, and one lower-total-loss step.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -171,6 +178,7 @@ python code/scripts/validate_attention_softmax_labs.py
 python code/scripts/validate_multi_head_attention_labs.py
 python code/scripts/validate_tiny_decoder_training_labs.py
 python code/scripts/validate_two_number_autoencoder_labs.py
+python code/scripts/validate_variational_autoencoder_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -205,6 +213,9 @@ cross-entropy.
 The first NN16 lab forces `[2,-1]` through one scalar, adds both reconstruction
 errors at that bottleneck, audits all seven trainable gradients, and reruns the
 entire encoder and decoder after one loss-reducing step.
+The first NN17 lab holds one Gaussian noise sample fixed, exposes how
+reconstruction and beta-weighted KL signals meet at the mean and log-variance,
+audits all six trainable gradients, and reruns the complete stochastic path.
 
 ## How to Study a Model
 

@@ -15,6 +15,7 @@ import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
+import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import latticeSource from "./styles/app.lattice?raw";
@@ -28,6 +29,7 @@ import {
   type ModelState,
 } from "./training.js";
 import { LABS } from "./labs.js";
+import { traceScalarVariationalAutoencoder } from "./variational-lab.js";
 import {
   HIDDEN_LAYER_EXAMPLES,
   createInitialHiddenState,
@@ -996,5 +998,85 @@ describe("two-number autoencoder bottleneck lab", () => {
       .toMatch(/after one SGD step.*bottleneck z1\.442.*x_hat01\.9425.*x_hat1-1\.29755/s);
     expect(screen.getByLabelText("Selected autoencoder reconstruction 1").textContent)
       .toContain("error / loss gradient-0.29755");
+  });
+});
+
+describe("scalar variational autoencoder lab", () => {
+  it("keeps the variational workbench in the generated production stylesheet", () => {
+    const css = transpileLatticeInBrowser(latticeSource);
+
+    expect(css).toContain(".workspace--variational");
+    expect(css).toContain(".variational-sample-node");
+  });
+
+  it("turns saved noise into a reproducible latent sample", () => {
+    const trace = traceScalarVariationalAutoencoder();
+
+    expect(trace.forward.mean).toBeCloseTo(0.4);
+    expect(trace.forward.logVariance).toBe(0);
+    expect(trace.forward.standardDeviation).toBe(1);
+    expect(trace.forward.noiseContribution).toBe(0.5);
+    expect(trace.forward.latent).toBe(0.9);
+    expect(trace.forward.reconstruction).toBe(0.9);
+  });
+
+  it("keeps reconstruction and beta-weighted KL routes separate", () => {
+    const trace = traceScalarVariationalAutoencoder();
+
+    expect(trace.forward.reconstructionLoss).toBeCloseTo(0.005);
+    expect(trace.forward.kl).toBeCloseTo(0.08);
+    expect(trace.forward.weightedKl).toBeCloseTo(0.008);
+    expect(trace.forward.totalLoss).toBeCloseTo(0.013);
+    expect(trace.backward.reconstructionMeanGradient).toBeCloseTo(-0.1);
+    expect(trace.backward.weightedKlMeanGradient).toBeCloseTo(0.04);
+    expect(trace.backward.meanGradient).toBeCloseTo(-0.06);
+  });
+
+  it("shows beta cancelling and reversing the mean direction", () => {
+    const balanced = traceScalarVariationalAutoencoder(0.25);
+    const priorLed = traceScalarVariationalAutoencoder(1);
+
+    expect(balanced.backward.meanGradient).toBe(0);
+    expect(priorLed.backward.meanGradient).toBeCloseTo(0.3);
+    expect(balanced.samplingEpsilon).toBe(priorLed.samplingEpsilon);
+  });
+
+  it("audits all parameters and lowers the selected objective", () => {
+    const trace = traceScalarVariationalAutoencoder();
+
+    expect(trace.gradientCheck.parameterOrder).toHaveLength(6);
+    expect(trace.gradientCheck.maxAbsoluteError).toBeLessThan(1e-8);
+    expect(trace.updatedParameters.encoder.mean.weight).toBeCloseTo(0.406);
+    expect(trace.updatedParameters.encoder.mean.bias).toBeCloseTo(0.006);
+    expect(trace.postUpdate.mean).toBeCloseTo(0.412);
+    expect(trace.postUpdate.latent).toBeCloseTo(0.9132515638028976);
+    expect(trace.postUpdate.reconstruction).toBeCloseTo(0.9314708278771237);
+    expect(trace.postUpdate.totalLoss).toBeCloseTo(0.01083594975889346);
+    expect(trace.postUpdate.totalLoss).toBeLessThan(trace.forward.totalLoss);
+  });
+
+  it("switches representation labs, beta, gradient target, and updated model", () => {
+    render(React.createElement(RepresentationWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Two numbers through one bottleneck" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Variational sample" }));
+
+    expect(screen.getByRole("heading", { name: "One Gaussian latent sample, fully unpacked" })).toBeTruthy();
+    expect(screen.getByLabelText("Variational encode sample and decode path").textContent)
+      .toMatch(/saved epsilon = 0\.5.*mean = 0\.4.*log var = 0.*sigma = 1.*z = 0\.9.*x_hat = 0\.9/s);
+    expect(screen.getByLabelText("Variational reconstruction and KL objective").textContent)
+      .toMatch(/reconstruction.*0\.005.*KL to Normal\(0, 1\).*0\.08.*beta0\.1.*weighted total.*0\.013/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "beta 0.25" }));
+    expect(screen.getByLabelText("Variational mean gradient tradeoff").textContent)
+      .toMatch(/reconstruction route-0\.1.*beta x KL route0\.25 x 0\.4.*0\.1.*combined mean gradient0.*routes cancel exactly/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "log-variance output" }));
+    expect(screen.getByLabelText("Variational log-variance gradient tradeoff").textContent)
+      .toContain("combined log-variance gradient-0.025");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Use updated parameters/ }));
+    expect(screen.getByLabelText("Variational encode sample and decode path").textContent)
+      .toMatch(/after one SGD step.*mean = 0\.4 \+ 0 = 0\.4.*log var = 0\.0025 \+ 0\.0025 = 0\.005.*z = 0\.90125156.*x_hat = 0\.91936283/s);
   });
 });

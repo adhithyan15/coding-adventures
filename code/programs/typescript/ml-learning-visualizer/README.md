@@ -135,6 +135,12 @@ the accumulated bottleneck gradient. The same view exposes all encoder and
 decoder gradients, a seven-parameter central finite-difference audit, and the
 full-model loss before and after one SGD step.
 
+Switch to the variational view to encode one input as a Gaussian mean and
+log-variance, transform a saved standard-normal noise value into a latent
+sample, and decode it. Beta controls how reconstruction and KL-to-prior gradient
+routes combine. The balance point at beta `0.25`, a six-parameter numerical
+audit, and the complete post-update distribution remain directly inspectable.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -206,6 +212,11 @@ NN16 under `code/specs/fixtures/two-number-autoencoder-v1` pins a two-number
 input, one-scalar encoding, two reconstructed outputs, mean squared error,
 complete decoder and encoder gradients, all seven central finite differences,
 updated parameters, and the lower post-update reconstruction loss.
+
+NN17 under `code/specs/fixtures/variational-autoencoder-v1` pins a scalar
+Gaussian encoder, saved epsilon, reparameterized sample, half-squared
+reconstruction error, beta-weighted KL divergence, both encoder gradient routes,
+six central finite differences, updated parameters, and lower total objective.
 
 ## Development
 

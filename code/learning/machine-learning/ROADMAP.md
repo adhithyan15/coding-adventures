@@ -39,7 +39,7 @@ trace, and tests.
   - [x] Tiny decoder-only language model training trace.
 - [ ] Representation and generation
   - [x] Two-number autoencoder bottleneck.
-  - [ ] Variational sampling and KL tradeoff.
+  - [x] Variational sampling and KL tradeoff.
   - [ ] One-dimensional GAN game.
   - [ ] One-dimensional diffusion forward and denoising steps.
 - [ ] Structured and memory networks

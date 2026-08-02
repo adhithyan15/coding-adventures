@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
 - Add the NN16 representation workbench with a `2 -> 1 -> 2` autoencoder,
   selectable decoder branches, bottleneck-gradient accumulation, seven central
   finite differences, and one full-model SGD update.
+- Extend the representation workbench with the NN17 scalar variational
+  autoencoder, saved-noise reparameterization, interactive beta/KL tradeoff,
+  six central finite differences, and one complete stochastic-path update.
 
 ### Changed
 

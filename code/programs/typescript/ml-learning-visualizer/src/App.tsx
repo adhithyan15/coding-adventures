@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
-import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -9,6 +8,7 @@ import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
+import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
@@ -389,7 +389,7 @@ export function App() {
             ) : workbench === "attention" ? (
               <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
             ) : workbench === "representation" ? (
-              <>2 values {"->"} <strong>1 bottleneck</strong> {"->"} reconstruct 2</>
+              <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -414,7 +414,7 @@ export function App() {
       ) : workbench === "attention" ? (
         <AttentionWorkbench />
       ) : workbench === "representation" ? (
-        <AutoencoderWorkbench />
+        <RepresentationWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

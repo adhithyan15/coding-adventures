@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/variational-autoencoder-v1.json",
+  "title": "Scalar variational autoencoder learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "input", "encoder", "decoder", "sample", "objective", "optimizer", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "input_width", "latent_width", "output_width", "posterior", "sampling", "decoder_activation", "reconstruction_loss", "kl_prior", "objective", "trainable_parameters", "update"],
+      "properties": {
+        "kind": { "const": "scalar-variational-autoencoder-step" },
+        "input_width": { "const": 1 },
+        "latent_width": { "const": 1 },
+        "output_width": { "const": 1 },
+        "posterior": { "const": "diagonal-gaussian" },
+        "sampling": { "const": "reparameterization-with-saved-epsilon" },
+        "decoder_activation": { "const": "identity" },
+        "reconstruction_loss": { "const": "half-squared-error" },
+        "kl_prior": { "const": "standard-normal" },
+        "objective": { "const": "beta-vae" },
+        "trainable_parameters": { "const": ["encoder.mean", "encoder.log_variance", "decoder"] },
+        "update": { "const": "sgd" }
+      }
+    },
+    "input": { "type": "number" },
+    "encoder": { "$ref": "#/$defs/encoderParameters" },
+    "decoder": { "$ref": "#/$defs/affineParameters" },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon"],
+      "properties": { "epsilon": { "type": "number" } }
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beta"],
+      "properties": { "beta": { "type": "number", "minimum": 0 } }
+    },
+    "optimizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning_rate"],
+      "properties": { "learning_rate": { "type": "number", "exclusiveMinimum": 0 } }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["forward", "backward", "gradient_check", "updated_parameters", "post_update"],
+      "properties": {
+        "forward": { "$ref": "#/$defs/forwardTrace" },
+        "backward": { "$ref": "#/$defs/backwardTrace" },
+        "gradient_check": { "$ref": "#/$defs/gradientCheck" },
+        "updated_parameters": { "$ref": "#/$defs/updatedParameters" },
+        "post_update": { "$ref": "#/$defs/forwardTrace" }
+      }
+    }
+  },
+  "$defs": {
+    "affineParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weight", "bias"],
+      "properties": {
+        "weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "encoderParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean", "log_variance"],
+      "properties": {
+        "mean": { "$ref": "#/$defs/affineParameters" },
+        "log_variance": { "$ref": "#/$defs/affineParameters" }
+      }
+    },
+    "forwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean_product", "mean", "log_variance_product", "log_variance", "variance", "standard_deviation", "epsilon", "noise_contribution", "latent", "decoder_product", "reconstruction", "error", "reconstruction_loss", "mean_squared", "kl", "weighted_kl", "total_loss"],
+      "properties": {
+        "mean_product": { "type": "number" },
+        "mean": { "type": "number" },
+        "log_variance_product": { "type": "number" },
+        "log_variance": { "type": "number" },
+        "variance": { "type": "number", "exclusiveMinimum": 0 },
+        "standard_deviation": { "type": "number", "exclusiveMinimum": 0 },
+        "epsilon": { "type": "number" },
+        "noise_contribution": { "type": "number" },
+        "latent": { "type": "number" },
+        "decoder_product": { "type": "number" },
+        "reconstruction": { "type": "number" },
+        "error": { "type": "number" },
+        "reconstruction_loss": { "type": "number", "minimum": 0 },
+        "mean_squared": { "type": "number", "minimum": 0 },
+        "kl": { "type": "number", "minimum": 0 },
+        "weighted_kl": { "type": "number", "minimum": 0 },
+        "total_loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "backwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reconstruction_gradient", "decoder_weight_gradient", "decoder_bias_gradient", "latent_gradient", "reconstruction_mean_gradient", "reconstruction_log_variance_gradient", "kl_mean_gradient", "kl_log_variance_gradient", "weighted_kl_mean_gradient", "weighted_kl_log_variance_gradient", "mean_gradient", "log_variance_gradient", "mean_weight_gradient", "mean_bias_gradient", "log_variance_weight_gradient", "log_variance_bias_gradient"],
+      "properties": {
+        "reconstruction_gradient": { "type": "number" },
+        "decoder_weight_gradient": { "type": "number" },
+        "decoder_bias_gradient": { "type": "number" },
+        "latent_gradient": { "type": "number" },
+        "reconstruction_mean_gradient": { "type": "number" },
+        "reconstruction_log_variance_gradient": { "type": "number" },
+        "kl_mean_gradient": { "type": "number" },
+        "kl_log_variance_gradient": { "type": "number" },
+        "weighted_kl_mean_gradient": { "type": "number" },
+        "weighted_kl_log_variance_gradient": { "type": "number" },
+        "mean_gradient": { "type": "number" },
+        "log_variance_gradient": { "type": "number" },
+        "mean_weight_gradient": { "type": "number" },
+        "mean_bias_gradient": { "type": "number" },
+        "log_variance_weight_gradient": { "type": "number" },
+        "log_variance_bias_gradient": { "type": "number" }
+      }
+    },
+    "gradientCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "parameter_order", "analytical", "numerical", "max_absolute_error"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "parameter_order": { "const": ["encoder.mean.weight", "encoder.mean.bias", "encoder.log_variance.weight", "encoder.log_variance.bias", "decoder.weight", "decoder.bias"] },
+        "analytical": { "$ref": "#/$defs/vector6" },
+        "numerical": { "$ref": "#/$defs/vector6" },
+        "max_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "vector6": { "type": "array", "minItems": 6, "maxItems": 6, "items": { "type": "number" } },
+    "updatedParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["encoder", "decoder"],
+      "properties": {
+        "encoder": { "$ref": "#/$defs/encoderParameters" },
+        "decoder": { "$ref": "#/$defs/affineParameters" }
+      }
+    }
+  }
+}
