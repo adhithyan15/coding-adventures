@@ -1954,6 +1954,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(gate_bulk_overlap_capacitance) = params.get("CGBO") {
+            if !gate_bulk_overlap_capacitance.is_finite() || *gate_bulk_overlap_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CGBO must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
