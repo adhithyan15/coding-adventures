@@ -1882,6 +1882,15 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(bulk_junction_grading_coefficient) = params.get("MJ") {
+            if !bulk_junction_grading_coefficient.is_finite()
+                || *bulk_junction_grading_coefficient < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET MJ must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

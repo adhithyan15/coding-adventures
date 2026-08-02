@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card bulk-junction-potential validation.
+1. Rust Berkeley SPICE MOS model-card bulk-junction-grading validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite model-card `PB` values before
+   - Reject negative and non-finite model-card `MJ` values before
      lowering MOS elements into engine parameters.
-   - Preserve positive explicit bulk-junction potentials.
+   - Preserve zero and positive bulk-junction grading coefficients.
 
 ## Completed Slices
 
@@ -3965,6 +3965,12 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite model-card `GAMMA` values are rejected before
      lowering MOS elements into engine parameters.
    - Zero and positive explicit body-effect coefficients remain accepted.
+
+342. Rust Berkeley SPICE MOS model-card bulk-junction-potential validation.
+   - Status: completed in PR 9484.
+   - Zero, negative, and non-finite model-card `PB` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive explicit bulk-junction potentials remain accepted.
 
 ## Backlog
 
