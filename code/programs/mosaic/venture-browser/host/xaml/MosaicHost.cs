@@ -303,7 +303,18 @@ public static class MosaicHost
                     return;
                 }
 
-                if (contentSurface is null || !contentSurface.RunKeyboardAcceptance())
+                if (contentSurface is null || !contentSurface.RunWheelAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native wheel did not scroll the shared viewport",
+                    });
+                    return;
+                }
+
+                if (!contentSurface.RunKeyboardAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -353,6 +364,7 @@ public static class MosaicHost
                     backend = "xaml",
                     status = "interacted",
                     controls = "back-forward-reload-home",
+                    surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
                     surfacePointer = "link",
                     surfaceResize = "native-reflow",
@@ -589,9 +601,8 @@ public static class MosaicHost
         private void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             var delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
-            if (Native.Scroll(browser, -delta) != 0)
+            if (ScrollByWheelDelta(delta))
             {
-                Refresh();
                 e.Handled = true;
             }
         }
@@ -615,6 +626,22 @@ public static class MosaicHost
         {
             _ = Focus(FocusState.Programmatic);
             return HandleKey(VirtualKey.End, false, false, out var changed) && changed;
+        }
+
+        internal bool RunWheelAcceptance()
+        {
+            _ = Focus(FocusState.Programmatic);
+            return ScrollByWheelDelta(-120);
+        }
+
+        private bool ScrollByWheelDelta(int delta)
+        {
+            if (Native.Scroll(browser, -delta) == 0)
+            {
+                return false;
+            }
+            Refresh();
+            return true;
         }
 
         internal bool RunPointerAcceptance()

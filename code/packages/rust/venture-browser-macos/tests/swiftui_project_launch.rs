@@ -226,6 +226,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         "SwiftUI interaction failed: {interaction}"
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
     assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));

@@ -99,6 +99,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var propsChangedHandler: (() -> Void)?
   private var acceptanceReported = false
   private var interactionAcceptanceStarted = false
+  private var lastSurfaceWheelDelta: Double?
   private var lastSurfaceKeyboardCommand: String?
   private var lastSurfacePointerPoint: NSPoint?
   private var surfaceResizeBaseline: NSSize?
@@ -374,14 +375,14 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == startURL, pageTitle == "Venture launch acceptance" {
-      guard performNativeSurfaceKey(keyCode: 119) else {
+      guard performNativeSurfaceWheel() else {
         writeInteractionResult(
           ["backend": "swiftui", "status": "error", "error": "content surface unavailable"],
           to: markerPath)
         return
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-        self?.verifySurfaceKeyboard(
+        self?.verifySurfaceWheel(
           startURL: startURL, targetURL: targetURL, markerPath: markerPath)
       }
       return
@@ -399,6 +400,33 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifyHome(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         remaining: remaining - 1)
+    }
+  }
+
+  private func verifySurfaceWheel(
+    startURL: String, targetURL: String, markerPath: String
+  ) {
+    guard let delta = lastSurfaceWheelDelta, delta > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native wheel did not scroll the shared viewport",
+        ],
+        to: markerPath)
+      return
+    }
+    guard performNativeSurfaceKey(keyCode: 119) else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "content surface unavailable for native End key",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+      self?.verifySurfaceKeyboard(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath)
     }
   }
 
@@ -508,8 +536,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
-          "surfacePointer": "link", "surfaceResize": "native-reflow",
+          "controls": "back-forward-reload-home", "surfaceWheel": "scroll",
+          "surfaceKeyboard": "document-end", "surfacePointer": "link",
+          "surfaceResize": "native-reflow",
           "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
           "targetAddress": targetURL, "linkAddress": linkURL,
           "pageTitle": "Venture link acceptance",
@@ -591,6 +620,20 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         keyCode: keyCode)
     else { return false }
     NSApp.sendEvent(event)
+    return true
+  }
+
+  private func performNativeSurfaceWheel() -> Bool {
+    guard let contentView, let window = contentView.window,
+      let cgEvent = CGEvent(
+        scrollWheelEvent2Source: nil, units: .line, wheelCount: 1,
+        wheel1: -3, wheel2: 0, wheel3: 0),
+      let event = NSEvent(cgEvent: cgEvent)
+    else { return false }
+    NSApp.activate(ignoringOtherApps: true)
+    window.makeFirstResponder(contentView)
+    lastSurfaceWheelDelta = nil
+    contentView.scrollWheel(with: event)
     return true
   }
 
@@ -680,6 +723,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   fileprivate func scroll(by deltaY: Double) {
     guard let native, let browser, native.scroll(browser, deltaY) != 0 else { return }
+    lastSurfaceWheelDelta = deltaY
     contentView?.renderPage()
   }
 
