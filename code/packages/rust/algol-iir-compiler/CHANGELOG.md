@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.61.0 — 2026-08-02 — dynamic captured-string reassignment
+
+Fixes bare-variable detection so a one-argument procedure call is not mistaken
+for its actual. Regression coverage now proves that a captured string can be
+overwritten by branch-selected string procedure results and passed onward as a
+typed string formal.
+
 ## 0.60.0 — 2026-08-02 — composed integer procedure calls
 
 Regression coverage now proves that two integer procedure results remain typed
