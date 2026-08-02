@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "books": [
+    {
+      "id": "spanish",
+      "name": "Spanish",
+      "family": "Romance",
+      "script": "latin",
+      "file": "spanish.pdf"
+    },
+    {
+      "id": "latin",
+      "name": "Latin",
+      "family": "Italic",
+      "script": "latin",
+      "file": "latin.pdf"
+    },
+    {
+      "id": "french",
+      "name": "French",
+      "family": "Romance",
+      "script": "latin",
+      "file": "french.pdf"
+    },
+    {
+      "id": "german",
+      "name": "German",
+      "family": "Germanic",
+      "script": "latin",
+      "file": "german.pdf"
+    },
+    {
+      "id": "arabic",
+      "name": "Arabic",
+      "family": "Semitic",
+      "script": "arabic",
+      "file": "arabic.pdf"
+    },
+    {
+      "id": "hindi",
+      "name": "Hindi",
+      "family": "Indo-Aryan",
+      "script": "devanagari",
+      "file": "hindi.pdf"
+    },
+    {
+      "id": "tamil",
+      "name": "Tamil",
+      "family": "Dravidian",
+      "script": "tamil",
+      "file": "tamil.pdf"
+    },
+    {
+      "id": "kannada",
+      "name": "Kannada",
+      "family": "Dravidian",
+      "script": "kannada",
+      "file": "kannada.pdf"
+    },
+    {
+      "id": "telugu",
+      "name": "Telugu",
+      "family": "Dravidian",
+      "script": "telugu",
+      "file": "telugu.pdf"
+    },
+    {
+      "id": "malayalam",
+      "name": "Malayalam",
+      "family": "Dravidian",
+      "script": "malayalam",
+      "file": "malayalam.pdf"
+    },
+    {
+      "id": "italian",
+      "name": "Italian",
+      "family": "Romance",
+      "script": "latin",
+      "file": "italian.pdf"
+    },
+    {
+      "id": "portuguese",
+      "name": "Portuguese",
+      "family": "Romance",
+      "script": "latin",
+      "file": "portuguese.pdf"
+    },
+    {
+      "id": "marathi",
+      "name": "Marathi",
+      "family": "Indo-Aryan",
+      "script": "devanagari",
+      "file": "marathi.pdf"
+    },
+    {
+      "id": "punjabi",
+      "name": "Punjabi",
+      "family": "Indo-Aryan",
+      "script": "gurmukhi",
+      "file": "punjabi.pdf"
+    },
+    {
+      "id": "bengali",
+      "name": "Bengali",
+      "family": "Indo-Aryan",
+      "script": "bengali",
+      "file": "bengali.pdf"
+    },
+    {
+      "id": "gujarati",
+      "name": "Gujarati",
+      "family": "Indo-Aryan",
+      "script": "gujarati",
+      "file": "gujarati.pdf"
+    },
+    {
+      "id": "sanskrit",
+      "name": "Sanskrit",
+      "family": "Indo-Aryan",
+      "script": "devanagari",
+      "file": "sanskrit.pdf"
+    }
+  ]
+}
