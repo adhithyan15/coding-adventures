@@ -297,12 +297,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == targetURL, pageTitle == "Venture interaction acceptance" {
-      writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "interacted", "history": "back-forward",
-          "backAddress": startURL, "address": address, "pageTitle": pageTitle,
-        ],
-        to: markerPath)
+      guard performNativeButtonClick(identifier: "reload-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "reload-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyReload(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
       return
     }
     guard remaining > 0 else {
@@ -316,6 +320,75 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
       self?.verifyForwardNavigation(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyReload(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == targetURL, pageTitle == "Venture reload acceptance" {
+      guard performNativeButtonClick(identifier: "home-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "home-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyHome(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "reload state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyReload(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyHome(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == startURL, pageTitle == "Venture launch acceptance" {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted",
+          "controls": "back-forward-reload-home", "reloadTitle": "Venture reload acceptance",
+          "homeAddress": address, "targetAddress": targetURL, "pageTitle": pageTitle,
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "home navigation state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyHome(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         remaining: remaining - 1)
     }
@@ -341,6 +414,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     switch identifier {
     case "back-button": position = 0.12
     case "forward-button": position = 0.34
+    case "home-button": position = 0.56
+    case "reload-button": position = 0.78
     default: return false
     }
     var visited = Set<ObjectIdentifier>()
