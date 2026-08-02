@@ -1838,6 +1838,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(transconductance) = params.get("KP") {
+            if !transconductance.is_finite() || *transconductance <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET KP must be finite and positive",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
