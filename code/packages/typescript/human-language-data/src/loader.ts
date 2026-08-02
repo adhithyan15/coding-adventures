@@ -6,7 +6,16 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
-import type { Dataset, Script, ScriptData, Taxonomy } from "./types.js";
+import type {
+  BookChapter,
+  BookCorpus,
+  CurriculumSpine,
+  Dataset,
+  LanguageRegistry,
+  Script,
+  ScriptData,
+  Taxonomy,
+} from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
 export function defaultCurriculumRoot(): string {
@@ -18,6 +27,57 @@ export function defaultCurriculumRoot(): string {
 export function loadTaxonomy(root = defaultCurriculumRoot()): Taxonomy {
   const raw = JSON.parse(readFileSync(join(root, "concepts", "taxonomy.json"), "utf8"));
   return { version: raw.version ?? 1, concepts: raw.concepts ?? {} };
+}
+
+export function loadLanguageRegistry(root = defaultCurriculumRoot()): LanguageRegistry {
+  return JSON.parse(
+    readFileSync(join(root, "core", "languages.json"), "utf8"),
+  ) as LanguageRegistry;
+}
+
+export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
+  return JSON.parse(
+    readFileSync(join(root, "core", "spine.json"), "utf8"),
+  ) as CurriculumSpine;
+}
+
+/**
+ * Load the existing authored LaTeX books losslessly. The short Markdown lessons
+ * remain the smallest teaching units; chapters are the narrative and sequencing
+ * layer around them. Keeping both in the data package prevents an app or future
+ * book generator from silently forgetting either source.
+ */
+export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
+  const books: BookCorpus["books"] = [];
+  for (const track of readdirSync(root, { withFileTypes: true })) {
+    if (!track.isDirectory()) continue;
+    const bookDir = join(root, track.name, "book");
+    const entrypoint = join(bookDir, "book.tex");
+    const chaptersDir = join(bookDir, "chapters");
+    if (!existsSync(entrypoint) || !existsSync(chaptersDir)) continue;
+
+    const chapters: BookChapter[] = [];
+    for (const file of readdirSync(chaptersDir).sort()) {
+      const match = /^ch(\d+)-(.+)\.tex$/.exec(file);
+      if (!match) continue;
+      const tex = readFileSync(join(chaptersDir, file), "utf8");
+      const title = /\\chapter(?:\[[^\]]*\])?\{([^}]*)\}/.exec(tex)?.[1] ?? match[2];
+      chapters.push({
+        language: track.name,
+        chapter: Number(match[1]),
+        slug: match[2],
+        title,
+        source: `${track.name}/book/chapters/${file}`,
+        tex,
+      });
+    }
+    books.push({
+      language: track.name,
+      entrypoint: `${track.name}/book/book.tex`,
+      chapters,
+    });
+  }
+  return { books: books.sort((a, b) => a.language.localeCompare(b.language)) };
 }
 
 /**
@@ -69,12 +129,26 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
 /** Load and build everything from disk in one call. */
 export function loadEverything(root = defaultCurriculumRoot()): {
   taxonomy: Taxonomy;
+  registry: LanguageRegistry;
+  spine: CurriculumSpine;
+  books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
   dataset: Dataset;
 } {
   const taxonomy = loadTaxonomy(root);
+  const registry = loadLanguageRegistry(root);
+  const spine = loadCurriculumSpine(root);
+  const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
-  return { taxonomy, lessons, scripts, dataset: buildDataset(taxonomy, lessons) };
+  return {
+    taxonomy,
+    registry,
+    spine,
+    books,
+    lessons,
+    scripts,
+    dataset: buildDataset(taxonomy, lessons),
+  };
 }

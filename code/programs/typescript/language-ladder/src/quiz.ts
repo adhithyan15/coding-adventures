@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 
 import type { Lesson } from "./lessons";
-import { activeChain, teachingSweep, type ChainLanguage } from "./sequence";
+import { resolveActiveLanguages, teachingSweep, type ChainLanguage, type LanguageSelection } from "./sequence";
 
 /**
  * One quizzable item: a concept, the language it is asked in, and the lesson
@@ -48,9 +48,9 @@ export interface GridCell {
 export function coveredGrid(
   covered: Iterable<string>,
   lessons: Lesson[],
-  activeCount: number,
+  activeSelection: LanguageSelection,
 ): GridCell[] {
-  const active = activeChain(activeCount);
+  const active = resolveActiveLanguages(activeSelection);
   const concepts = [...new Set(covered)].filter((c) => c !== "").sort();
 
   const grid: GridCell[] = [];

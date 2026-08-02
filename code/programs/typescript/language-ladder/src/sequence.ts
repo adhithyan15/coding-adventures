@@ -2,12 +2,9 @@
 // sequence.ts — the language CHAIN and the per-concept TEACHING SWEEP (HL03)
 // ---------------------------------------------------------------------------
 //
-// The unified app (HL03) teaches along a fixed CHAIN of languages, each hop
-// chosen because a bridge already exists to a language learned earlier:
-//
-//   Spanish → Latin (the roots beneath Spanish) → French → German (the English
-//   twins) → Arabic → Hindi (where Arabic, Persian and Sanskrit meet) → Tamil
-//   (first Dravidian) → Kannada (Tamil's cousin, + Sanskrit) → Telugu → Malayalam
+// The unified app (HL03/HL04) teaches along a registry-authored order containing
+// every active track. A learner may select any subset; registry order keeps
+// sweeps and comparisons stable while the subset changes.
 //
 // Learning moves CONCEPT BY CONCEPT. To learn a concept is to walk it across
 // every language the learner has added so far — the "active" prefix of the
@@ -23,26 +20,15 @@
 // ---------------------------------------------------------------------------
 
 import type { Lesson } from "./lessons";
+import { LANGUAGE_ORDER } from "./curriculum";
 
 /**
- * The chain, in the order languages are added. These are track directory names
- * under `code/learning/human-languages/`. The order is not arbitrary — it is a
- * connected path where each language reaches back to one already known.
+ * Every active language, in the default order authored in core/languages.json.
  */
-export const LANGUAGE_CHAIN = [
-  "spanish",
-  "latin",
-  "french",
-  "german",
-  "arabic",
-  "hindi",
-  "tamil",
-  "kannada",
-  "telugu",
-  "malayalam",
-] as const;
+export const LANGUAGE_CHAIN: readonly string[] = LANGUAGE_ORDER;
 
-export type ChainLanguage = (typeof LANGUAGE_CHAIN)[number];
+export type ChainLanguage = string;
+export type LanguageSelection = number | readonly string[];
 
 /** Position of a language in the chain, or -1 if it is not on the chain. */
 export function chainIndex(language: string): number {
@@ -62,6 +48,13 @@ export function isChainLanguage(language: string): language is ChainLanguage {
 export function activeChain(count: number): ChainLanguage[] {
   const n = Math.max(0, Math.min(Math.floor(count), LANGUAGE_CHAIN.length));
   return LANGUAGE_CHAIN.slice(0, n);
+}
+
+/** Resolve either the legacy prefix count or an explicit learner-selected mix. */
+export function resolveActiveLanguages(active: LanguageSelection): ChainLanguage[] {
+  if (typeof active === "number") return activeChain(active);
+  const selected = new Set(active);
+  return LANGUAGE_CHAIN.filter((language) => selected.has(language));
 }
 
 /** One stop on a sweep: a language, and the lesson(s) there that teach the concept. */

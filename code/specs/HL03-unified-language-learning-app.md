@@ -23,6 +23,12 @@ remains the substrate. What is new here is the **unification** around the
 curriculum, the **language-chain / spiral** sequencing, the **as-needed**
 introduction of scripts and grammar, and a **mistakes** layer.
 
+[`HL04`](./HL04-shared-spine-and-content-pipeline.md) tightens this design after
+the first shipped corpus audit: the chain becomes learner-selected, each language
+gets its own authored spine realization and knowledge closure, new material receives
+focused acquisition before mixed review, and the full lesson body becomes the one
+source for book and app delivery.
+
 ## The learner's model — a spiral with cumulative concept-sweeps
 
 HL02 stated the pattern in miniature (Spanish → French → German). The real model

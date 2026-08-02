@@ -27,6 +27,8 @@ describe("scriptOf / LANGUAGE_SCRIPT", () => {
     expect(scriptOf("tamil")).toBe("tamil");
     expect(scriptOf("spanish")).toBe("latin");
     expect(scriptOf("german")).toBe("latin");
+    expect(scriptOf("persian")).toBe("perso-arabic");
+    expect(scriptOf("urdu")).toBe("urdu-nastaliq");
   });
 
   it("an unknown / off-chain language is treated as Latin (no intro)", () => {
@@ -34,8 +36,7 @@ describe("scriptOf / LANGUAGE_SCRIPT", () => {
   });
 
   it("every chain language has a mapping", () => {
-    // all ten chain entries present
-    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(10);
+    expect(Object.keys(LANGUAGE_SCRIPT).length).toBe(20);
   });
 });
 

@@ -36,6 +36,8 @@ function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     romanization: "",
     script: "latin",
     etymologyHook: "",
+    body: "",
+    estMinutes: 5,
     ...over,
   };
 }
@@ -58,10 +60,9 @@ describe("prerequisite gating", () => {
     expect(isUnlocked(l, new Set(["A", "B"]), known(["A", "B", "C"]))).toBe(true);
   });
 
-  // The important one: a curriculum typo must not make a lesson unreachable.
-  it("treats an UNKNOWN prerequisite as satisfied, not as a permanent lock", () => {
+  it("fails closed for an unknown prerequisite", () => {
     const l = lesson({ id: "D", prerequisites: ["ES-C99-typo"] });
-    expect(isUnlocked(l, new Set(), known(["D"]))).toBe(true);
+    expect(isUnlocked(l, new Set(), known(["D"]))).toBe(false);
   });
 
   it("returns the indices of teachable lessons only", () => {
@@ -83,14 +84,13 @@ describe("prerequisite gating", () => {
     expect(unlockedIndices(lessons, new Set())).toEqual([0]);
   });
 
-  it("fails OPEN rather than stalling when everything is locked", () => {
-    // A cycle locks both lessons; practice must not simply stop.
+  it("fails closed when a cycle locks everything", () => {
     const lessons = [
       lesson({ id: "A", prerequisites: ["B"] }),
       lesson({ id: "B", prerequisites: ["A"] }),
     ];
     expect(unlockedIndices(lessons, new Set())).toEqual([]);
-    expect(unlockedOrAll(lessons, new Set())).toEqual([0, 1]);
+    expect(unlockedOrAll(lessons, new Set())).toEqual([]);
   });
 
   it("prefers the gated pool when one exists", () => {

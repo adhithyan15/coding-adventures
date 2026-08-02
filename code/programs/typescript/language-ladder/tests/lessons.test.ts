@@ -73,6 +73,7 @@ describe("toLesson", () => {
     expect(lesson!.chapter).toBe(17);
     expect(lesson!.prerequisites).toEqual(["ES-C16-practice"]);
     expect(lesson!.reviewsOf).toEqual(["ES-C16-practice", "ES-C06-hablar"]);
+    expect(lesson!.body).toContain("# body");
   });
 
   it("skips a lesson with no id rather than inventing one", () => {
@@ -136,6 +137,8 @@ export function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     romanization: "",
     script: "latin",
     etymologyHook: "",
+    body: "",
+    estMinutes: 5,
     ...over,
   };
 }

@@ -1,5 +1,6 @@
-# Build the Human Languages curriculum's LaTeX books to PDF and upload
-# them as build artifacts.
+# Build the Human Languages curriculum's LaTeX books to PDF. Pull requests
+# retain the PDFs as build artifacts; main-branch builds also publish a stable
+# download catalog to GitHub Pages.
 #
 # Each language track under code/learning/human-languages/<lang>/book/
 # contains a self-contained XeLaTeX book (see HL00 spec). This workflow
@@ -10,13 +11,17 @@ name: Human Languages Books
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
     paths:
-      - "code/learning/human-languages/**/book/**"
+      - "code/learning/human-languages/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - ".github/workflows/human-languages-books.yml"
   pull_request:
     branches: [main]
     paths:
-      - "code/learning/human-languages/**/book/**"
+      - "code/learning/human-languages/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - ".github/workflows/human-languages-books.yml"
   workflow_dispatch:
 
 permissions:
@@ -82,9 +87,53 @@ jobs:
         working-directory: ${{ matrix.book_dir }}
         run: latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
 
+      - name: Stage PDF with a stable filename
+        run: |
+          mkdir -p dist
+          cp "${{ matrix.book_dir }}/book.pdf" "dist/${{ steps.lang.outputs.name }}.pdf"
+
       - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.lang.outputs.name }}-book
-          path: ${{ matrix.book_dir }}/book.pdf
+          name: human-language-book-${{ steps.lang.outputs.name }}
+          path: dist/${{ steps.lang.outputs.name }}.pdf
           if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    needs: [discover, build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download every compiled book
+        uses: actions/download-artifact@v4
+        with:
+          pattern: human-language-book-*
+          path: dist/human-languages/books
+          merge-multiple: true
+
+      - name: Build public download catalog
+        run: |
+          python code/scripts/build_human_language_book_catalog.py \
+            --pdf-dir dist/human-languages/books \
+            --registry code/learning/human-languages/core/languages.json \
+            --output-dir dist/human-languages/books
+
+      - name: Verify publication bundle
+        run: |
+          test -s dist/human-languages/books/index.html
+          test -s dist/human-languages/books/catalog.json
+          test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
+
+      - name: Publish books to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/human-languages/books
+          destination_dir: human-languages/books
+          keep_files: true

@@ -8,7 +8,7 @@ function L(language: string, concept: string, id: string, roots: string[] = []):
   return {
     id, language, headword: `${language}:${concept}`, gloss: concept, type: "word",
     chapter: 1, concept, prerequisites: [], reviewsOf: [], roots,
-    romanization: "x", script: language, etymologyHook: "",
+    romanization: "x", script: language, etymologyHook: "", body: "", estMinutes: 5,
   };
 }
 
@@ -37,6 +37,12 @@ describe("planSession — assembling the two passes", () => {
   it("an un-covered concept never enters the review grid", () => {
     const plan = planSession("THANKS", ["THANKS"], lessons, 10); // HELLO not covered
     expect(new Set(plan.reviewGrid.map((c) => c.concept))).toEqual(new Set(["THANKS"]));
+  });
+
+  it("teaches and reviews only an explicit selected-language mix", () => {
+    const plan = planSession("THANKS", ["THANKS", "HELLO"], lessons, ["french"]);
+    expect(plan.teaching.map((step) => step.language)).toEqual(["french"]);
+    expect(new Set(plan.reviewGrid.map((cell) => cell.language))).toEqual(new Set(["french"]));
   });
 });
 

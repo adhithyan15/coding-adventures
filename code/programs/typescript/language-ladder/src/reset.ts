@@ -17,6 +17,7 @@
 import { STORAGE_KEY as LESSON_SCHEDULE_KEY } from "./progress.ts";
 import { REVIEW_STORAGE_KEY } from "./reviewstore.ts";
 import { CURSOR_STORAGE_KEY } from "./cursorstore.ts";
+import { LANGUAGE_STORAGE_KEY } from "./languagestore.ts";
 
 /**
  * Every localStorage key this app owns. Sourced from the owning modules'
@@ -27,6 +28,7 @@ export const OWNED_STORAGE_KEYS: readonly string[] = [
   REVIEW_STORAGE_KEY,
   CURSOR_STORAGE_KEY,
   LESSON_SCHEDULE_KEY,
+  LANGUAGE_STORAGE_KEY,
 ];
 
 /** The slice of the Storage API a reset needs — just removal. Easy to fake. */

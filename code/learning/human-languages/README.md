@@ -5,11 +5,15 @@ delivered two ways from the same content: a LaTeX **book** per language
 (meant for free publication, CC BY-SA 4.0) and ~5-minute **units** meant to
 be consumed by ear during a daily car commute. Framework and rationale live
 in [`HL00`](../../specs/HL00-human-language-curriculum-framework.md) — read
-that first; this page is just an index.
+that first. The migration to an ordered shared spine, strict sub-five-minute
+lessons, Persian and Urdu extensions, and a single book/app/practice content
+pipeline is specified in
+[`HL04`](../../specs/HL04-shared-spine-and-content-pipeline.md). This page is
+just an index.
 
 Every track shares the same shape:
 
-```
+```text
 <language>/
   README.md                  what this track is, how to use it, current progress
   CHANGELOG.md                per-chapter content additions
@@ -19,6 +23,29 @@ Every track shares the same shape:
   lessons/*.md                 deep one-word practice lessons (slug-named)
   book/                        the LaTeX book (book.tex, chapters/*.tex)
 ```
+
+The machine-readable layer alongside the tracks is:
+
+```text
+core/languages.json             complete active-language registry and default mix order
+core/spine.json                 ordered, language-independent can-do spine
+concepts/taxonomy.json          cross-language semantic join keys
+data/scripts/*.json             writing-system inventories and teaching metadata
+```
+
+The data package also loads every existing `book/book.tex` and `book/chapters/ch*.tex`
+losslessly and checks that each authored book chapter maps to its short Markdown
+lessons. This preserves the well-received book narrative while the pipeline moves
+toward generating book and app views from one lesson AST.
+
+## Download the books
+
+The [public book catalog](https://adhithyan15.github.io/coding-adventures/human-languages/books/)
+offers every currently authored LaTeX book as a free PDF download. Pull requests
+compile all books and retain their PDFs as workflow artifacts for review. After a
+change reaches `main`, the same validated PDFs and a machine-readable `catalog.json`
+are published to GitHub Pages automatically. Tracks without a `book/` directory are
+omitted until their long-form edition is authored.
 
 ## Tracks
 
@@ -41,6 +68,9 @@ Every track shares the same shape:
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
+| [Russian](./russian/README.md) | Slavic / Cyrillic | Starter curriculum authored |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Shared-spine pilot: greetings, responses, and self-introduction |
+| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Shared-spine pilot: greetings, responses, and self-introduction |
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already

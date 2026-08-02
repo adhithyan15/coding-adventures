@@ -20,6 +20,8 @@ function L(language: string, concept: string, roots: string[], chapter = 1): Les
     romanization: "x",
     script: language,
     etymologyHook: "",
+    body: "",
+    estMinutes: 5,
   };
 }
 
@@ -48,17 +50,17 @@ describe("buildSession", () => {
     const lessons = [
       L("spanish", "C", ["r1"]),
       L("french", "C", ["r1"]),
-      L("italian" /* not on chain — dropped by the sweep */, "C", ["r1"]),
+      L("italian", "C", ["r1"]),
       L("hindi", "C", ["r1", "r2"]),
     ];
-    const steps = buildSession("C", lessons, 10);
-    // italian is not a chain language, so it never appears.
-    expect(langs(steps)).toEqual(["spanish", "french", "hindi"]);
+    const steps = buildSession("C", lessons, 20);
+    expect(langs(steps)).toEqual(["spanish", "french", "hindi", "italian"]);
     // hindi shares r1 with both spanish and french (in chain order).
     expect(steps[2].connections).toEqual([
       { to: "spanish", sharedRoots: ["r1"] },
       { to: "french", sharedRoots: ["r1"] },
     ]);
+    expect(steps[3].connections.length).toBe(3);
   });
 
   it("reports multiple shared roots between a pair, sorted", () => {

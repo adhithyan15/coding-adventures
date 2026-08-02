@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "stages": ["pre-A1", "A1", "A2", "B1"],
+  "nodes": [
+    {
+      "id": "SPINE-MEET-GREET",
+      "stage": "pre-A1",
+      "canDo": "I can recognize and use an appropriate greeting when I meet someone.",
+      "prerequisites": [],
+      "core": true,
+      "concepts": ["GREETING-HELLO", "GREETING-FORMAL", "GREETING-PEACE", "GREETING-WELCOME"]
+    },
+    {
+      "id": "SPINE-COURTESY-THANK",
+      "stage": "pre-A1",
+      "canDo": "I can thank someone and respond appropriately to thanks.",
+      "prerequisites": ["SPINE-MEET-GREET"],
+      "core": true,
+      "concepts": ["COURTESY-THANKS", "COURTESY-THANKS-CASUAL", "COURTESY-YOUREWELCOME"]
+    },
+    {
+      "id": "SPINE-RESPOND-BASIC",
+      "stage": "pre-A1",
+      "canDo": "I can give a basic yes, no, or okay response.",
+      "prerequisites": ["SPINE-MEET-GREET"],
+      "core": true,
+      "concepts": ["RESPONSE-YES", "RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"]
+    },
+    {
+      "id": "SPINE-EXCHANGE-NAMES",
+      "stage": "pre-A1",
+      "canDo": "I can ask someone's name, give my own, and acknowledge the introduction.",
+      "prerequisites": ["SPINE-MEET-GREET", "SPINE-RESPOND-BASIC"],
+      "core": true,
+      "concepts": ["QUESTION-WHAT", "PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "PRONOUN-MY", "WORD-NAME", "WORD-IS", "INTRO-MY-NAME-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"]
+    },
+    {
+      "id": "SPINE-CHECK-WELLBEING",
+      "stage": "pre-A1",
+      "canDo": "I can ask how someone is and give a simple answer.",
+      "prerequisites": ["SPINE-EXCHANGE-NAMES"],
+      "core": true,
+      "concepts": ["QUESTION-HOW", "STATE-HOW-ARE-YOU", "WORD-GOOD", "WORD-WELL", "WORD-SOSO"]
+    },
+    {
+      "id": "SPINE-POLITE-REQUEST-REPAIR",
+      "stage": "pre-A1",
+      "canDo": "I can make a request politely and repair a small social mistake.",
+      "prerequisites": ["SPINE-COURTESY-THANK"],
+      "core": true,
+      "concepts": ["COURTESY-PLEASE", "COURTESY-SORRY"]
+    },
+    {
+      "id": "SPINE-TAKE-LEAVE",
+      "stage": "pre-A1",
+      "canDo": "I can end a short interaction and choose a suitable parting expression.",
+      "prerequisites": ["SPINE-CHECK-WELLBEING"],
+      "core": true,
+      "concepts": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"]
+    },
+    {
+      "id": "SPINE-TIME-OF-DAY",
+      "stage": "A1",
+      "canDo": "I can recognize basic times of day and choose a time-appropriate greeting.",
+      "prerequisites": ["SPINE-MEET-GREET"],
+      "core": true,
+      "concepts": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"]
+    },
+    {
+      "id": "SPINE-ASK-LOCATION",
+      "stage": "A1",
+      "canDo": "I can ask where a familiar person, place, or object is.",
+      "prerequisites": ["SPINE-EXCHANGE-NAMES"],
+      "core": true,
+      "concepts": ["QUESTION-WHERE"]
+    },
+    {
+      "id": "SPINE-DEFINITE-REFERENCE",
+      "stage": "A1",
+      "canDo": "I can recognize how this language marks a specific known person or thing when it does so.",
+      "prerequisites": ["SPINE-EXCHANGE-NAMES"],
+      "core": false,
+      "concepts": ["GRAMMAR-THE"]
+    }
+  ]
+}

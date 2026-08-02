@@ -26,7 +26,7 @@
 // ---------------------------------------------------------------------------
 
 import type { Lesson } from "./lessons";
-import { activeChain, teachingSweep, type ChainLanguage, type SweepStop } from "./sequence";
+import { resolveActiveLanguages, teachingSweep, type ChainLanguage, type LanguageSelection, type SweepStop } from "./sequence";
 
 /**
  * A link from one stop in the sweep back to an EARLIER one, justified by the
@@ -68,9 +68,9 @@ function rootsOfStop(stop: SweepStop): Set<string> {
 export function buildSession(
   concept: string,
   lessons: Lesson[],
-  activeCount: number,
+  active: LanguageSelection,
 ): SessionStep[] {
-  const sweep = teachingSweep(concept, lessons, activeChain(activeCount));
+  const sweep = teachingSweep(concept, lessons, resolveActiveLanguages(active));
 
   const steps: SessionStep[] = [];
   const seen: Array<{ language: ChainLanguage; roots: Set<string> }> = [];

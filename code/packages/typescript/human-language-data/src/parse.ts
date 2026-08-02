@@ -19,6 +19,8 @@ export interface ParsedLesson {
   language: string;
   script: Script;
   frontmatter: Frontmatter;
+  /** Lossless Markdown after the frontmatter, used by both books and apps. */
+  body: string;
   realization: Realization;
 }
 
@@ -56,7 +58,7 @@ export function parseLesson(
   language: string,
   script?: Script,
 ): ParsedLesson {
-  const { frontmatter } = splitFrontmatter(source);
+  const { frontmatter, body } = splitFrontmatter(source);
   const fm = frontmatter ?? {};
   const resolvedScript: Script =
     script ?? (hasOwn(LANGUAGE_SCRIPT, language) ? LANGUAGE_SCRIPT[language] : "latin");
@@ -81,7 +83,7 @@ export function parseLesson(
     roots: arrayify(fm.roots),
     etymologyHook: str(fm.etymology_hook),
   };
-  return { language, script: resolvedScript, frontmatter: fm, realization };
+  return { language, script: resolvedScript, frontmatter: fm, body, realization };
 }
 
 /**

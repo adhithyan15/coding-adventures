@@ -12,6 +12,8 @@ import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
+import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
+import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import tamil from "../../../../learning/human-languages/data/scripts/tamil.json";
@@ -28,6 +30,8 @@ export const SCRIPTS: ScriptData[] = [
   hebrew as ScriptData,
   chinese as ScriptData,
   arabic as ScriptData,
+  persoArabic as ScriptData,
+  urduNastaliq as ScriptData,
   devanagari as ScriptData,
   gujarati as ScriptData,
   tamil as ScriptData,

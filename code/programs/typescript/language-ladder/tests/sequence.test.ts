@@ -9,6 +9,7 @@ import {
   teachingSweep,
   sweepableConcepts,
   spineProgress,
+  resolveActiveLanguages,
   type ChainLanguage,
 } from "../src/sequence";
 
@@ -29,23 +30,27 @@ function L(language: string, concept: string, chapter: number, id?: string): Les
     romanization: "x",
     script: language,
     etymologyHook: "",
+    body: "",
+    estMinutes: 5,
   };
 }
 
 const langsOf = (stops: { language: ChainLanguage }[]) => stops.map((s) => s.language);
 
 describe("the language chain", () => {
-  it("is ten distinct languages in the fixed order", () => {
+  it("contains every registered language in the authored default order", () => {
     expect(LANGUAGE_CHAIN).toEqual([
       "spanish", "latin", "french", "german", "arabic",
       "hindi", "tamil", "kannada", "telugu", "malayalam",
+      "italian", "portuguese", "marathi", "punjabi", "bengali",
+      "gujarati", "russian", "sanskrit", "persian", "urdu",
     ]);
-    expect(new Set(LANGUAGE_CHAIN).size).toBe(10);
+    expect(new Set(LANGUAGE_CHAIN).size).toBe(20);
   });
 
   it("chainIndex and isChainLanguage locate a language, or reject a non-chain one", () => {
     expect(chainIndex("spanish")).toBe(0);
-    expect(chainIndex("malayalam")).toBe(9);
+    expect(chainIndex("urdu")).toBe(19);
     expect(chainIndex("klingon")).toBe(-1);
     expect(isChainLanguage("hindi")).toBe(true);
     expect(isChainLanguage("klingon")).toBe(false);
@@ -56,6 +61,11 @@ describe("the language chain", () => {
     expect(activeChain(3)).toEqual(["spanish", "latin", "french"]);
     expect(activeChain(99)).toEqual([...LANGUAGE_CHAIN]);
     expect(activeChain(-5)).toEqual([]);
+  });
+
+  it("normalizes an explicit language mix into registry order", () => {
+    expect(resolveActiveLanguages(["urdu", "unknown", "spanish", "urdu"]))
+      .toEqual(["spanish", "urdu"]);
   });
 });
 
@@ -108,9 +118,9 @@ describe("teachingSweep", () => {
 describe("teachingSweep against the real curriculum", () => {
   const lessons = loadLessons();
 
-  it("GREETING-HELLO sweeps all ten languages in exact chain order when all are active", () => {
-    const sweep = teachingSweep("GREETING-HELLO", lessons, activeChain(10));
-    expect(langsOf(sweep)).toEqual([...LANGUAGE_CHAIN]); // all ten, chain-ordered
+  it("GREETING-HELLO sweeps all registered languages in exact chain order", () => {
+    const sweep = teachingSweep("GREETING-HELLO", lessons, activeChain(99));
+    expect(langsOf(sweep)).toEqual([...LANGUAGE_CHAIN]);
     for (const stop of sweep) expect(stop.lessons.length).toBeGreaterThan(0);
   });
 
