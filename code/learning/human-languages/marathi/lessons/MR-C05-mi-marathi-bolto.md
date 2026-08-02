@@ -8,7 +8,7 @@ concept_tag: MR-WORD-MARATHI
 prerequisites: [MR-C05-bolne, MR-C03-mi]
 sounds: [retroflex-tha]
 roots: [maharashtra]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [MR-C05-bolne, MR-C03-mi]
 ---
 

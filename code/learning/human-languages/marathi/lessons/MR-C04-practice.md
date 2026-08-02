@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [MR-C04-kalji-ghya]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [MR-C04-punha, MR-C04-bhetu, MR-C04-punha-bhetu, MR-C04-udya-bhetu, MR-C04-kalji-ghya, MR-C01-yeto]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [MR-C01-namaskar, MR-C01-dhanyavad, MR-C01-ho, MR-C01-nahi, MR-C01-baram, MR-C01-yeto]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [MR-C01-namaskar, MR-C01-dhanyavad, MR-C01-ho, MR-C01-nahi, MR-C01-baram, MR-C01-yeto]
 ---
 
