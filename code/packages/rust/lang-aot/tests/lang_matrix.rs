@@ -1226,6 +1226,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 -- exponentiation is right-associative. `2 ^ 3 ^ 2` means
+    // `2 ^ (3 ^ 2)` = 512; dividing by 12 yields 42 (left association would
+    // instead produce 64 / 12 = 5). The literal-only exponent chain remains
+    // in the typed integer multiplication path on all seven backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := (2 ^ 3 ^ 2) div 12 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 -- runtime integer exponents use the existing `f64_pow` IIR
     // operation after widening both operands. The first result is 2^3 = 8;
     // the second is 2^-1 = 0.5. `entier(8 + 68 * 0.5)` returns 42, proving
@@ -5537,6 +5548,35 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_boolean_array_on_ev
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested 4-D boolean-array forwarding did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_power_chain_associates_right_to_left_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := (2 ^ 3 ^ 2) div 12")
+        })
+        .expect("the right-associative ALGOL power-chain program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but right-associative ALGOL exponentiation did not complete"
             );
             continue;
         };

@@ -3420,9 +3420,9 @@ impl Compiler {
     /// Lower ALGOL 60's exponentiation operator `↑` (§3.3.4; spelled `^` or `**`
     /// in our grammar) — LANG-FULL **AL-pow**.
     ///
-    /// The `factor` / `expr_pow` node is `base [ ^ exp [ ^ exp … ] ]`.  With no
-    /// `^` operator it is a plain pass-through to the single child.  Otherwise we
-    /// fold left-to-right, raising the accumulator to each successive exponent.
+    /// The grammar keeps a `factor` / `expr_pow` chain flat as
+    /// `base [ ^ exp [ ^ exp … ] ]`, but ALGOL exponentiation associates from
+    /// the right: `2 ^ 3 ^ 2` is `2 ^ (3 ^ 2)`, not `(2 ^ 3) ^ 2`.
     ///
     /// Two exponent shapes are in this slice, both reusing IIR the code-gen
     /// backends already run (no new op):
@@ -3438,63 +3438,61 @@ impl Compiler {
     /// produce the real-valued result required for reciprocal powers.
     fn emit_pow(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         let seq = pieces(node);
-        let has_pow = seq
+        if !seq
             .iter()
-            .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"));
-        if !has_pow {
+            .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"))
+        {
             return self.emit_single_child_expr(node);
         }
-
-        let mut idx = 0;
-        let first = match seq.first() {
-            Some(Piece::Node(n)) => *n,
-            _ => {
-                return Err(CompileError::Malformed(
-                    "exponentiation missing a base expression".into(),
-                ))
-            }
-        };
-        idx += 1;
-        let mut acc = self.emit_expr(first)?;
-
-        while idx < seq.len() {
-            match seq.get(idx) {
-                Some(Piece::Op(op)) if op == "^" || op == "**" => {}
-                _ => {
-                    return Err(CompileError::Malformed(
-                        "exponentiation expected `^` between operands".into(),
-                    ))
-                }
-            }
-            idx += 1;
-            let exp_node = match seq.get(idx) {
-                Some(Piece::Node(n)) => *n,
-                _ => {
-                    return Err(CompileError::Malformed(
-                        "exponentiation missing an exponent expression".into(),
-                    ))
-                }
-            };
-            idx += 1;
-            acc = self.emit_power_step(acc, exp_node)?;
+        if seq.len().is_multiple_of(2) {
+            return Err(CompileError::Malformed(
+                "exponentiation missing an exponent expression".into(),
+            ));
         }
-        Ok(acc)
+
+        let mut operands = Vec::new();
+        for (idx, piece) in seq.iter().enumerate() {
+            if idx % 2 == 0 {
+                match piece {
+                    Piece::Node(operand) => operands.push(*operand),
+                    _ => {
+                        return Err(CompileError::Malformed(
+                            "exponentiation missing an operand expression".into(),
+                        ))
+                    }
+                }
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return Err(CompileError::Malformed(
+                    "exponentiation expected `^` between operands".into(),
+                ));
+            }
+        }
+
+        self.emit_power_chain(&operands)
     }
 
-    /// Raise `base` to a single exponent expression (see [`emit_pow`]).
-    fn emit_power_step(
+    /// Lower a flat exponentiation chain using ALGOL's right associativity.
+    fn emit_power_chain(
         &mut self,
-        base: ExprValue,
-        exp_node: &GrammarASTNode,
+        operands: &[&GrammarASTNode],
     ) -> Result<ExprValue, CompileError> {
-        // Fast path: a bare nonnegative integer literal exponent unrolls to
-        // repeated multiplication, preserving the base's numeric type.
-        if let Some(k) = literal_nonneg_integer_exponent(exp_node) {
+        let Some((base_node, exponent_nodes)) = operands.split_first() else {
+            return Err(CompileError::Malformed(
+                "exponentiation missing a base expression".into(),
+            ));
+        };
+        let base = self.emit_expr(base_node)?;
+        if exponent_nodes.is_empty() {
+            return Ok(base);
+        }
+
+        // When the complete right-hand exponent chain is a small nonnegative
+        // integer constant, preserve the integer/real literal fast path.
+        if let Some(k) = literal_nonneg_integer_power_chain(exponent_nodes) {
             return Ok(self.emit_pow_unroll(base, k));
         }
 
-        // General path: every remaining numeric pair uses `f64_pow`.
-        let exp = self.emit_expr(exp_node)?;
+        let exp = self.emit_power_chain(exponent_nodes)?;
         if matches!(base.ty, ScalarType::Integer | ScalarType::Real)
             && matches!(exp.ty, ScalarType::Integer | ScalarType::Real)
         {
@@ -4397,6 +4395,23 @@ fn literal_nonneg_integer_exponent(node: &GrammarASTNode) -> Option<u32> {
     } else {
         None
     }
+}
+
+/// Evaluate a literal-only right-associative exponent chain when its result
+/// remains small enough for AL-pow's fixed-size multiplication expansion.
+fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let mut value = literal_nonneg_integer_exponent(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = literal_nonneg_integer_exponent(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
 }
 
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
@@ -7065,6 +7080,13 @@ mod tests {
     #[test]
     fn power_binds_tighter_than_multiply() {
         assert_eq!(run_i64("begin integer result; result := 3 * 2 ^ 3 end"), 24);
+    }
+
+    /// ALGOL exponentiation is right-associative: `2 ^ 3 ^ 2` is
+    /// `2 ^ (3 ^ 2)` = 512, not `(2 ^ 3) ^ 2` = 64.
+    #[test]
+    fn power_chain_associates_right_to_left() {
+        assert_eq!(run_i64("begin integer result; result := 2 ^ 3 ^ 2 end"), 512);
     }
 
     /// A `real` base with an integer-literal exponent unrolls with f64 multiply
