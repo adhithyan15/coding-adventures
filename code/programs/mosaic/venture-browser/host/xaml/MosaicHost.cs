@@ -5,7 +5,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using Windows.System;
 using Windows.UI.Core;
@@ -171,8 +173,11 @@ public static class MosaicHost
             }
             ReportAcceptancePhase("bitmap-allocated");
 
-            ((IBufferByteAccess)bitmap.PixelBuffer).Buffer(out var destination);
-            Marshal.Copy(pixels, 0, destination, pixels.Length);
+            using (var stream = bitmap.PixelBuffer.AsStream())
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Write(pixels, 0, pixels.Length);
+            }
             ReportAcceptancePhase("bitmap-copied");
             bitmap.Invalidate();
             ReportAcceptancePhase("bitmap-invalidated");
@@ -290,14 +295,6 @@ public static class MosaicHost
         System.IO.File.WriteAllText(
             path,
             JsonSerializer.Serialize(new { backend = "xaml", phase }) + "\n");
-    }
-
-    [ComImport]
-    [Guid("905a0fe0-bc53-11df-8c49-001e4fc686da")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    private interface IBufferByteAccess
-    {
-        void Buffer(out IntPtr value);
     }
 
     private static class Native

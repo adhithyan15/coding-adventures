@@ -11,3 +11,5 @@
   WinUI content surface changes logical size.
 - Build and directly launch the Mosaic-emitted WinUI app in a platform-native
   integration gate, requiring a successful Direct2D host-surface render.
+- Copy rendered BGRA pixels through WinRT's supported `IBuffer.AsStream()`
+  projection and retain opt-in launch-phase diagnostics for hosted acceptance.
