@@ -114,6 +114,13 @@
       "file": "gujarati.pdf"
     },
     {
+      "id": "russian",
+      "name": "Russian",
+      "family": "Slavic",
+      "script": "cyrillic",
+      "file": "russian.pdf"
+    },
+    {
       "id": "sanskrit",
       "name": "Sanskrit",
       "family": "Indo-Aryan",
