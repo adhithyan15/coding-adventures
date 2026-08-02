@@ -2248,6 +2248,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(source_area) = instance_params.get("AS") {
+                if !source_area.is_finite() || *source_area < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET AS must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
