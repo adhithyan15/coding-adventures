@@ -4,6 +4,9 @@
 
 ### Added
 
+- Extend generated SwiftUI and WinUI acceptance through native content-surface
+  link activation after the End-key scroll gate, requiring the shared Rust
+  session to navigate and reproject the linked address and title.
 - Extend generated SwiftUI and WinUI launch acceptance through the native
   content surface's End-key mapping and require the shared Rust viewport to
   report a real scroll-state change.

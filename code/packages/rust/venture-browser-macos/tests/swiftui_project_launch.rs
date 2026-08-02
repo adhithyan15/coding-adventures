@@ -8,6 +8,8 @@ use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use venture_browser_core::BrowserFetchResponse;
+use venture_browser_macos::load_initial_session;
 
 fn venture_package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -50,7 +52,7 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     target.join("debug/libventure_browser_macos.dylib")
 }
 
-fn serve_html_sequence(titles: Vec<&'static str>) -> String {
+fn serve_html_sequence(titles: Vec<&'static str>, link_url: Option<String>) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind acceptance server");
     let address = listener.local_addr().expect("read acceptance address");
     thread::spawn(move || {
@@ -58,8 +60,12 @@ fn serve_html_sequence(titles: Vec<&'static str>) -> String {
             let (mut stream, _) = listener.accept().expect("accept Venture request");
             let mut request = [0_u8; 1024];
             let _ = stream.read(&mut request);
+            let link = link_url
+                .as_deref()
+                .map(|url| format!("<a href='{url}'>Open Venture link acceptance</a>"))
+                .unwrap_or_default();
             let body = format!(
-                "<!doctype html><title>{title}</title><main>{}</main>",
+                "<!doctype html><title>{title}</title><main>{link}{}</main>",
                 "<p>Scrollable Venture acceptance content</p>".repeat(120)
             );
             write!(
@@ -90,6 +96,32 @@ fn wait_for_marker(child: &mut Child, marker: &Path, description: &str) {
     let _ = child.kill();
     let _ = child.wait();
     panic!("generated SwiftUI app did not report {description} within 30 seconds");
+}
+
+#[test]
+fn surface_link_acceptance_coordinate_matches_native_layout() {
+    let fetcher = |url: &str| {
+        Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".to_string()),
+            b"<!doctype html><title>Start</title><main><a href='next'>Open Venture link acceptance</a></main>"
+                .to_vec(),
+        ))
+    };
+    let session = load_initial_session("http://example.test/", 1024.0, 640.0, &fetcher)
+        .expect("load native acceptance layout");
+    let link = session
+        .viewport()
+        .and_then(|viewport| viewport.page().paint.links.first())
+        .expect("acceptance page must expose its link");
+    assert!(
+        32.0 >= link.x
+            && 32.0 < link.x + link.width
+            && 26.0 >= link.y
+            && 26.0 < link.y + link.height,
+        "acceptance coordinate misses native link region {link:?}"
+    );
 }
 
 #[test]
@@ -137,16 +169,23 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
 
     let marker = output.join("swiftui-ready.json");
     let interaction_marker = output.join("swiftui-interaction.json");
-    let start_url = serve_html_sequence(vec![
-        "Venture launch acceptance",
-        "Venture launch acceptance",
-        "Venture launch acceptance",
-    ]);
-    let target_url = serve_html_sequence(vec![
-        "Venture interaction acceptance",
-        "Venture interaction acceptance",
-        "Venture reload acceptance",
-    ]);
+    let link_url = serve_html_sequence(vec!["Venture link acceptance"], None);
+    let start_url = serve_html_sequence(
+        vec![
+            "Venture launch acceptance",
+            "Venture launch acceptance",
+            "Venture launch acceptance",
+        ],
+        Some(link_url.clone()),
+    );
+    let target_url = serve_html_sequence(
+        vec![
+            "Venture interaction acceptance",
+            "Venture interaction acceptance",
+            "Venture reload acceptance",
+        ],
+        None,
+    );
     let app_log = output.join("swiftui-app.log");
     let log = File::create(&app_log).expect("create SwiftUI app log");
     let mut child = Command::new(project.join(".build/debug/App"))
@@ -155,6 +194,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         .env("VENTURE_BROWSER_LIBRARY", &library)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
+        .env("VENTURE_BROWSER_INTERACTION_LINK_URL", &link_url)
         .env(
             "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH",
             &interaction_marker,
@@ -187,6 +227,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
+    assert!(interaction.contains("\"surfacePointer\":\"link\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));
     assert!(
         interaction.contains(&start_url) || interaction.contains(&start_url.replace('/', "\\/"))
@@ -194,7 +235,8 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(
         interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
     );
-    assert!(interaction.contains("Venture launch acceptance"));
+    assert!(interaction.contains(&link_url) || interaction.contains(&link_url.replace('/', "\\/")));
+    assert!(interaction.contains("Venture link acceptance"));
     let diagnostics = fs::read_to_string(&app_log).expect("read SwiftUI app log");
     assert!(
         !diagnostics.contains("assertion failed") && !diagnostics.contains("Assertion failed"),

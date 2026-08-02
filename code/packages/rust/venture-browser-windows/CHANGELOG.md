@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the generated WinUI direct-launch gate through the content surface's
+  pointer-coordinate activation path after restoring the scrolled viewport to
+  document start.
 - Exercise the generated WinUI content surface's End-key mapping against a
   scrollable live page and require the shared Rust viewport to change.
 
