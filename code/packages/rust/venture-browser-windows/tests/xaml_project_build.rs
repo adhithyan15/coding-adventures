@@ -265,6 +265,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
+    assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));
     assert!(
         interaction.contains(&start_url) || interaction.contains(&start_url.replace('/', "\\/"))

@@ -337,6 +337,17 @@ public static class MosaicHost
                     return;
                 }
 
+                if (contentSurface is null || !await contentSurface.RunResizeAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native surface resize did not reflow the shared viewport",
+                    });
+                    return;
+                }
+
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
@@ -344,6 +355,7 @@ public static class MosaicHost
                     controls = "back-forward-reload-home",
                     surfaceKeyboard = "document-end",
                     surfacePointer = "link",
+                    surfaceResize = "native-reflow",
                     reloadTitle = "Venture reload acceptance",
                     homeAddress = startUrl,
                     targetAddress = targetUrl,
@@ -499,6 +511,8 @@ public static class MosaicHost
         private WriteableBitmap? bitmap;
         private uint pixelWidth;
         private uint pixelHeight;
+        private double acceptedResizeWidth;
+        private double acceptedResizeHeight;
 
         internal VentureContentSurface(VentureChrome component)
         {
@@ -566,6 +580,8 @@ public static class MosaicHost
             }
             if (Native.Resize(browser, e.NewSize.Width, e.NewSize.Height) != 0)
             {
+                acceptedResizeWidth = e.NewSize.Width;
+                acceptedResizeHeight = e.NewSize.Height;
                 Refresh();
             }
         }
@@ -607,6 +623,33 @@ public static class MosaicHost
             return HandleKey(VirtualKey.Home, false, false, out var changed)
                 && changed
                 && ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
+        }
+
+        internal async System.Threading.Tasks.Task<bool> RunResizeAcceptance()
+        {
+            var baselineWidth = ActualWidth;
+            var baselineHeight = ActualHeight;
+            if (baselineWidth <= 0 || baselineHeight <= 0)
+            {
+                return false;
+            }
+            acceptedResizeWidth = 0;
+            acceptedResizeHeight = 0;
+            Width = Math.Max(1, baselineWidth - 80);
+            Height = Math.Max(1, baselineHeight - 60);
+            UpdateLayout();
+            for (var remaining = 20; remaining >= 0; remaining--)
+            {
+                if ((Math.Abs(acceptedResizeWidth - baselineWidth) > 0.5
+                        || Math.Abs(acceptedResizeHeight - baselineHeight) > 0.5)
+                    && pixelWidth > 0
+                    && pixelHeight > 0)
+                {
+                    return true;
+                }
+                await System.Threading.Tasks.Task.Delay(50);
+            }
+            return false;
         }
 
         private bool HandleKey(
