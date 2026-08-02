@@ -1832,6 +1832,38 @@ fn preserves_mosfet_model_depletion_coefficient_in_range() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_sidewall_grading_coefficient() {
+    for grading_coefficient in ["-0.3", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model sidewall NMOS(MJSW={grading_coefficient})\nM1 d g s b sidewall"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET MJSW must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_sidewall_grading_coefficient() {
+    for grading_coefficient in ["0", "0.3"] {
+        let parsed = parse_netlist(&format!(
+            ".model sidewall NMOS(MJSW={grading_coefficient})\nM1 d g s b sidewall"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(
+            mosfet.params.sidewall_junction_grading_coefficient,
+            grading_coefficient.parse().unwrap(),
+        );
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
