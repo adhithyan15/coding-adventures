@@ -32,11 +32,11 @@ trace, and tests.
   - [x] One recurrent state unrolled for three steps.
   - [x] Backpropagation through time and gradient accumulation.
   - [x] GRU and LSTM gate comparison.
-- [ ] Attention and transformers
+- [x] Attention and transformers
   - [x] Query/key/value dot products for three tokens.
   - [x] Softmax attention weights and causal masking.
   - [x] Multi-head attention, residual paths, and normalization.
-  - [ ] Tiny decoder-only language model training trace.
+  - [x] Tiny decoder-only language model training trace.
 - [ ] Representation and generation
   - [ ] Two-number autoencoder bottleneck.
   - [ ] Variational sampling and KL tradeoff.

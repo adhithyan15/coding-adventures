@@ -5,6 +5,7 @@ import {
   type AttentionTokenId,
 } from "./attention-qkv-lab.js";
 import { AttentionWeightsWorkbench } from "./AttentionWeightsWorkbench.js";
+import { DecoderTrainingWorkbench } from "./DecoderTrainingWorkbench.js";
 import { MultiHeadAttentionWorkbench } from "./MultiHeadAttentionWorkbench.js";
 
 function formatNumber(value: number): string {
@@ -188,7 +189,7 @@ function AttentionScoreWorkbench({ onShowWeights }: AttentionScoreWorkbenchProps
 }
 
 export function AttentionWorkbench() {
-  const [view, setView] = useState<"scores" | "weights" | "multi-head">("scores");
+  const [view, setView] = useState<"scores" | "weights" | "multi-head" | "decoder">("scores");
 
   if (view === "weights") {
     return (
@@ -199,7 +200,15 @@ export function AttentionWorkbench() {
     );
   }
   if (view === "multi-head") {
-    return <MultiHeadAttentionWorkbench onShowWeights={() => setView("weights")} />;
+    return (
+      <MultiHeadAttentionWorkbench
+        onShowDecoder={() => setView("decoder")}
+        onShowWeights={() => setView("weights")}
+      />
+    );
+  }
+  if (view === "decoder") {
+    return <DecoderTrainingWorkbench onShowMultiHead={() => setView("multi-head")} />;
   }
   return <AttentionScoreWorkbench onShowWeights={() => setView("weights")} />;
 }

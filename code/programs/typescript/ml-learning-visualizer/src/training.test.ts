@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { transpileLatticeInBrowser } from "@coding-adventures/lattice-transpiler/src/browser.js";
 import { activate } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
+import {
+  decoderTrainingRow,
+  traceTinyDecoderTraining,
+} from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -10,6 +15,7 @@ import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
+import latticeSource from "./styles/app.lattice?raw";
 import { forwardLayered } from "./layered-network.js";
 import {
   CELSIUS_DATASET,
@@ -840,5 +846,84 @@ describe("multi-head attention add-and-norm lab", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Return to single-head weights" }));
     expect(screen.getByRole("heading", { name: "Causal-softmax mixer" })).toBeTruthy();
+  });
+});
+
+describe("tiny decoder-only language model training lab", () => {
+  it("keeps the decoder workbench in the generated production stylesheet", () => {
+    const css = transpileLatticeInBrowser(latticeSource);
+
+    expect(css).toContain(".workspace--decoder");
+    expect(css).toContain(".decoder-forward-flow");
+  });
+
+  it("shifts one sequence into two causal next-token examples", () => {
+    const trace = traceTinyDecoderTraining();
+
+    expect(trace.sequence).toEqual(["red", "blue", "purple"]);
+    expect(trace.rows.map((row) => ({
+      prefix: row.causalPrefix,
+      input: row.inputToken,
+      target: row.targetToken,
+    }))).toEqual([
+      { prefix: ["red"], input: "red", target: "blue" },
+      { prefix: ["red", "blue"], input: "blue", target: "purple" },
+    ]);
+  });
+
+  it("reproduces the hand-calculable logits, probabilities, and losses", () => {
+    const trace = traceTinyDecoderTraining();
+    const first = decoderTrainingRow(trace, 0);
+    const second = decoderTrainingRow(trace, 1);
+
+    expect(first.logitProducts).toEqual([[1, 0], [0, 0], [-1, 0]]);
+    expect(first.logits).toEqual([1, 0, -1]);
+    expect(first.probabilities.reduce((sum, value) => sum + value, 0)).toBeCloseTo(1);
+    expect(first.targetProbability).toBeCloseTo(0.24472847105479764);
+    expect(second.targetProbability).toBeCloseTo(0.09003057317038046);
+    expect(trace.meanLoss).toBeCloseTo(1.9076059644443801);
+  });
+
+  it("reduces shared gradients and lowers loss after one SGD step", () => {
+    const trace = traceTinyDecoderTraining();
+
+    expect(trace.unembeddingGradient[0]).toEqual([
+      0.3326204778874109,
+      -0.37763576447260117,
+      0.04501528658519023,
+    ]);
+    expect(trace.unembeddingGradient[1]).toEqual([
+      0.12236423552739882,
+      0.3326204778874109,
+      -0.4549847134148098,
+    ]);
+    expect(trace.updatedBias[2]).toBeCloseTo(0.20498471341480978);
+    expect(trace.gradientCheck.maxAbsoluteError).toBeLessThan(1e-8);
+    expect(trace.postUpdateMeanLoss).toBeCloseTo(1.456094285138867);
+    expect(trace.postUpdateMeanLoss).toBeLessThan(trace.meanLoss);
+  });
+
+  it("opens the decoder trace and compares the same position before and after update", () => {
+    render(React.createElement(AttentionWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Apply softmax and causal mask" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open multi-head add and norm" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open tiny decoder training" }));
+
+    expect(screen.getByRole("heading", { name: "Tiny decoder training trace" })).toBeTruthy();
+    expect(screen.getByLabelText("Causal next-token sequence shift").textContent)
+      .toMatch(/position 0.*red.*blue.*position 1.*red blue.*purple/s);
+    expect(screen.getByLabelText("Selected decoder prediction at position 1").textContent)
+      .toMatch(/\[0, 1\].*\[0, 1, -1\].*P\(purple\) = 0\.090031.*2\.407606/s);
+    expect(screen.getByLabelText("Decoder loss gradient trace").textContent)
+      .toContain("[0.122364, 0.33262, -0.454985]");
+    expect(screen.getByLabelText("Shared decoder head SGD update").textContent)
+      .toMatch(/Central finite-difference audit.*max error 1\.979e-10.*mean loss before1\.907606.*mean loss after one step1\.456094/s);
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Use updated vocabulary head/ }));
+    expect(screen.getByLabelText("Selected decoder prediction at position 1").textContent)
+      .toMatch(/updated logits.*P\(purple\) = 0\.15446.*1\.867817/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Return to multi-head block" }));
+    expect(screen.getByRole("heading", { name: "Multi-head add-and-norm block" })).toBeTruthy();
   });
 });

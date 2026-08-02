@@ -118,6 +118,14 @@ through concatenation, an explicit output projection, residual addition, and
 per-token layer normalization. Residual and normalization toggles act as
 controlled ablations without changing either head.
 
+Continue into the tiny decoder training trace to shift `red blue purple` into
+two causal next-token examples. Select either position to follow its saved
+decoder state through shared unembedding logits, stable softmax, target
+cross-entropy, logit gradients, and the gradient entering the decoder body.
+An independent finite-difference audit checks the shared-head gradients. The
+before/after toggle reruns both positions with one SGD update and checks the
+resulting lower mean loss.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -179,6 +187,11 @@ NN14 under `code/specs/fixtures/multi-head-attention-v1` pins two independently
 projected scalar heads, every causal-softmax intermediate, head concatenation,
 output projection, residual addition, and population-variance layer
 normalization.
+
+NN15 under `code/specs/fixtures/tiny-decoder-training-v1` pins a causal
+next-token sequence shift, saved decoder states, unembedding logits, stable
+softmax, mean cross-entropy, state and shared-head gradients, central finite
+differences, one SGD update, and its post-update probabilities and loss.
 
 ## Development
 

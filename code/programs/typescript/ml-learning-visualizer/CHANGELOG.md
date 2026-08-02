@@ -28,6 +28,9 @@ All notable changes to this package will be documented in this file.
   stable row normalization, future-key masking, and weighted value traces.
 - Extend the attention workbench with the NN14 two-head comparator and the full
   concatenate, output-project, residual-add, and layer-normalize path.
+- Extend the attention workbench with the NN15 two-position decoder training
+  trace, including causal next-token shift, cross-entropy gradients, shared-head
+  SGD, and a before/after loss comparison.
 
 ### Changed
 

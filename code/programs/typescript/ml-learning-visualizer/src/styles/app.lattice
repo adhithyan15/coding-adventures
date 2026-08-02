@@ -4055,6 +4055,300 @@ code {
   top: 14px;
 }
 
+.workspace--decoder {
+  display: grid;
+  grid-template-columns: minmax(700px, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+
+.decoder-stage,
+.decoder-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.decoder-intro,
+.decoder-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.decoder-intro,
+.decoder-shift-panel,
+.decoder-prediction-panel,
+.decoder-gradient-panel,
+.decoder-update-panel,
+.decoder-controls {
+  @include surface;
+  padding: 16px;
+}
+
+.decoder-intro p:last-child,
+.decoder-heading p,
+.decoder-controls > p {
+  margin: 7px 0 0;
+  color: $muted;
+}
+
+.decoder-chip {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(35, 122, 87, 0.28);
+  border-radius: 999px;
+  background: rgba(35, 122, 87, 0.08);
+  color: #185a40;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 750;
+}
+
+.decoder-shift-panel,
+.decoder-prediction-panel,
+.decoder-gradient-panel,
+.decoder-update-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.decoder-heading > code {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #e9f7f0;
+  color: #185a40;
+}
+
+.decoder-position-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.decoder-position-button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 6px 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid rgba(35, 122, 87, 0.2);
+  border-radius: 7px;
+  background: rgba(35, 122, 87, 0.035);
+  text-align: left;
+}
+
+.decoder-position-button:hover,
+.decoder-position-button[aria-pressed="true"] {
+  border-color: rgba(35, 122, 87, 0.55);
+  background: rgba(35, 122, 87, 0.09);
+}
+
+.decoder-position-button span,
+.decoder-position-button small {
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.decoder-position-button span,
+.decoder-position-button small {
+  grid-column: 1 / -1;
+}
+
+.decoder-position-button strong {
+  overflow-wrap: anywhere;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.decoder-loss-badge {
+  display: grid;
+  gap: 2px;
+  min-width: 150px;
+  padding: 8px 10px;
+  border-left: 3px solid rgba(194, 65, 59, 0.5);
+  background: rgba(194, 65, 59, 0.05);
+}
+
+.decoder-loss-badge small,
+.decoder-forward-flow small,
+.decoder-softmax-trace small,
+.decoder-gradient-flow small,
+.decoder-update-grid small,
+.decoder-loss-drop small {
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.decoder-loss-badge strong {
+  color: #9f342f;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.18rem;
+}
+
+.decoder-forward-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1.2fr);
+  align-items: stretch;
+  gap: 7px;
+}
+
+.decoder-forward-flow > div,
+.decoder-gradient-flow > div,
+.decoder-softmax-trace > div,
+.decoder-update-grid > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: $paper;
+}
+
+.decoder-forward-flow > span,
+.decoder-gradient-flow > span {
+  align-self: center;
+  color: $muted;
+  font-weight: 850;
+}
+
+.decoder-forward-flow code,
+.decoder-gradient-flow code,
+.decoder-softmax-trace code,
+.decoder-update-grid code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.decoder-target-node {
+  border-color: rgba(35, 122, 87, 0.3) !important;
+  background: rgba(35, 122, 87, 0.055) !important;
+}
+
+.decoder-vocabulary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.decoder-vocabulary-row {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.decoder-vocabulary-row > div {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.decoder-vocabulary-row > i {
+  height: 6px;
+  background: rgba(37, 99, 235, 0.35);
+}
+
+.decoder-vocabulary-row--target {
+  border-color: rgba(35, 122, 87, 0.42);
+  background: rgba(35, 122, 87, 0.045);
+}
+
+.decoder-vocabulary-row--target > i {
+  background: rgba(35, 122, 87, 0.48);
+}
+
+.decoder-vocabulary-row code {
+  overflow-wrap: anywhere;
+  color: $muted;
+  font-size: 0.72rem;
+  white-space: normal;
+}
+
+.decoder-softmax-trace {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.decoder-gradient-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.3fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 7px;
+}
+
+.decoder-state-gradient {
+  border-color: rgba(109, 91, 208, 0.28) !important;
+  background: rgba(109, 91, 208, 0.05) !important;
+}
+
+.decoder-update-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.decoder-loss-drop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  border-left: 4px solid rgba(35, 122, 87, 0.52);
+  background: rgba(35, 122, 87, 0.055);
+}
+
+.decoder-gradient-audit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  border: 1px solid rgba(109, 91, 208, 0.24);
+  border-radius: 6px;
+  background: rgba(109, 91, 208, 0.045);
+}
+
+.decoder-gradient-audit code {
+  color: $muted;
+}
+
+.decoder-gradient-audit strong {
+  margin-left: auto;
+  color: #4f3da9;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.decoder-loss-drop > div {
+  display: grid;
+  gap: 2px;
+}
+
+.decoder-loss-drop strong {
+  color: #185a40;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.12rem;
+}
+
+.decoder-loss-drop p {
+  margin: 0 0 0 auto;
+  color: $muted;
+}
+
+.decoder-controls {
+  position: sticky;
+  top: 14px;
+}
+
 @media (max-width: 1360px) {
   .app-header,
   .header-actions {
@@ -4103,7 +4397,8 @@ code {
     .workspace--gates,
     .workspace--attention,
     .workspace--attention-softmax,
-    .workspace--multi-head {
+    .workspace--multi-head,
+    .workspace--decoder {
     grid-template-columns: 1fr;
   }
 
@@ -4118,6 +4413,11 @@ code {
   }
 
   .multi-head-controls {
+    position: static;
+    grid-column: 1 / -1;
+  }
+
+  .decoder-controls {
     position: static;
     grid-column: 1 / -1;
   }
@@ -4156,7 +4456,8 @@ code {
     .workspace--gates,
     .workspace--attention,
     .workspace--attention-softmax,
-    .workspace--multi-head {
+    .workspace--multi-head,
+    .workspace--decoder {
     grid-template-columns: 1fr;
   }
 
@@ -4180,7 +4481,9 @@ code {
     .attention-softmax-intro,
     .attention-softmax-heading,
     .multi-head-intro,
-    .multi-head-heading {
+    .multi-head-heading,
+    .decoder-intro,
+    .decoder-heading {
     display: grid;
     align-items: start;
   }
@@ -4390,6 +4693,52 @@ code {
 
   .multi-head-value-row {
     grid-template-columns: 1fr;
+  }
+
+  .decoder-position-lanes,
+  .decoder-vocabulary-grid,
+  .decoder-softmax-trace,
+  .decoder-forward-flow,
+  .decoder-gradient-flow,
+  .decoder-update-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .decoder-position-button {
+    grid-template-columns: 1fr;
+  }
+
+  .decoder-position-button > i {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .decoder-chip {
+    justify-self: start;
+  }
+
+  .decoder-forward-flow > span,
+  .decoder-gradient-flow > span {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .decoder-loss-drop {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .decoder-gradient-audit {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .decoder-gradient-audit strong {
+    margin-left: 0;
+  }
+
+  .decoder-loss-drop p {
+    margin-left: 0;
   }
 
   .gate-model-label {

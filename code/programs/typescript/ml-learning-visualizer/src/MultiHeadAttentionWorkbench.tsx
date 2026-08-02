@@ -6,6 +6,7 @@ import {
 } from "./multi-head-attention-lab.js";
 
 interface MultiHeadAttentionWorkbenchProps {
+  onShowDecoder: () => void;
   onShowWeights: () => void;
 }
 
@@ -25,6 +26,7 @@ function headLabel(id: string): string {
 }
 
 export function MultiHeadAttentionWorkbench({
+  onShowDecoder,
   onShowWeights,
 }: MultiHeadAttentionWorkbenchProps) {
   const [tokenId, setTokenId] = useState<AttentionTokenId>("blue");
@@ -193,6 +195,10 @@ export function MultiHeadAttentionWorkbench({
 
         <button className="attention-back-button" type="button" onClick={onShowWeights}>
           Return to single-head weights
+        </button>
+
+        <button className="attention-back-button" type="button" onClick={onShowDecoder}>
+          Open tiny decoder training
         </button>
 
         <div className="attention-query-buttons" aria-label="Multi-head token selection">

@@ -31,13 +31,14 @@ larger network:
 11. [Query, Key, and Value Scores by Hand](./attention-qkv-by-hand.md)
 12. [Softmax Attention and Causal Masking, by Hand](./softmax-attention-and-causal-masking-by-hand.md)
 13. [Multi-Head Attention, Add, and Norm, by Hand](./multi-head-attention-add-and-norm-by-hand.md)
-14. [Matrix Math](../matrix-math.md)
-15. [Loss Functions](../loss-functions.md)
-16. [Gradient Descent](../gradient-descent.md)
-17. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-18. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-19. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-20. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+14. [A Tiny Decoder-Only Language Model Training Step, by Hand](./tiny-decoder-language-model-training-by-hand.md)
+15. [Matrix Math](../matrix-math.md)
+16. [Loss Functions](../loss-functions.md)
+17. [Gradient Descent](../gradient-descent.md)
+18. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+19. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+20. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+21. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -83,7 +84,10 @@ has nine complementary views:
   normalization, block future keys, and follow every weight into its value
   contribution and output context. Finally, compare two independently
   projected causal heads and trace their concatenation, output projection,
-  residual addition, and per-token layer normalization.
+  residual addition, and per-token layer normalization. Continue into the tiny
+  decoder trace to shift a sequence into next-token targets, inspect logits,
+  stable softmax, cross-entropy, shared-head gradients, and one loss-reducing
+  SGD update.
 
 ## Language-Neutral Corpus
 
@@ -135,6 +139,11 @@ heads with different projections, complete per-head causal-softmax traces,
 context concatenation, output-projection products, residual coordinates, and
 layer-normalization statistics.
 
+NN15 adds `code/specs/fixtures/tiny-decoder-training-v1`, including the causal
+next-token shift, saved decoder states, every unembedding product, stable
+softmax and cross-entropy trace, state and shared-head gradients, a central
+finite-difference audit, one SGD update, and the resulting lower mean loss.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -150,6 +159,7 @@ python code/scripts/validate_gated_recurrent_labs.py
 python code/scripts/validate_attention_qkv_labs.py
 python code/scripts/validate_attention_softmax_labs.py
 python code/scripts/validate_multi_head_attention_labs.py
+python code/scripts/validate_tiny_decoder_training_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -177,6 +187,10 @@ allowed row sums to one, and carries those weights into an explicit value mix.
 The first NN14 lab gives two heads different coordinate views, rejoins their
 contexts at model width, adds the original token, and exposes every population-
 variance layer-normalization term.
+The first NN15 lab shifts `red blue purple` into two causal next-token
+predictions, updates their shared vocabulary head, preserves the gradient
+entering the frozen decoder states, and verifies that one SGD step lowers mean
+cross-entropy.
 
 ## How to Study a Model
 
