@@ -14,6 +14,8 @@ import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { GraphNeighborhoodWorkbench } from "./GraphNeighborhoodWorkbench.js";
+import { traceGraphNeighborhoodComparison } from "./graph-neighborhood-lab.js";
 import { HopfieldWorkbench } from "./HopfieldWorkbench.js";
 import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -1411,5 +1413,43 @@ describe("tiny graph message passing", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /node 2 0\.25 new feature/ }));
     expect(screen.getByLabelText("Selected graph node update").textContent).toMatch(/Selected node 2.*incoming messages1.*sum aggregate1.*self route0\.25 x -1.*-0\.25.*preactivation.*0\.25.*new feature.*0\.25/s);
+  });
+});
+
+describe("graph convolution and attention", () => {
+  it("keeps the graph comparison in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--graph-neighborhood");
+    expect(productionCss).toContain(".graph-softmax-summary");
+  });
+
+  it("computes degree-normalized GCN contributions", () => {
+    const trace = traceGraphNeighborhoodComparison();
+    expect(trace.degrees).toEqual([2, 3, 2]);
+    expect(trace.gcn[1]!.rows.map((row) => row.coefficient)).toEqual([1 / Math.sqrt(6), 1 / 3, 1 / Math.sqrt(6)]);
+    expect(trace.gcnOutputs[0]).toBeCloseTo(1.3164965809277263);
+    expect(trace.gcnOutputs[1]).toBeCloseTo(2 / 3);
+    expect(trace.gcnOutputs[2]).toBeCloseTo(0.31649658092772615);
+  });
+
+  it("computes stable normalized graph attention", () => {
+    const trace = traceGraphNeighborhoodComparison();
+    expect(trace.gat[1]!.rows.map((row) => row.shiftedScore)).toEqual([-1, 0, -3]);
+    expect(trace.gat[1]!.rows.reduce((sum, row) => sum + row.attentionWeight, 0)).toBeCloseTo(1);
+    expect(trace.gatOutputs).toEqual([1.7310585786300048, 1.6351464587795619, 1.8577223804673]);
+  });
+
+  it("rejects neighborhoods without self-loops or symmetry", () => {
+    expect(() => traceGraphNeighborhoodComparison([1, 2], [[1], [0, 1]])).toThrow(/self-loops/);
+    expect(() => traceGraphNeighborhoodComparison([1, 2], [[0], [0, 1]])).toThrow(/symmetric/);
+  });
+
+  it("switches targets and weighting rules without changing the graph", () => {
+    render(React.createElement(GraphNeighborhoodWorkbench));
+    expect(screen.getByRole("heading", { name: "Compare graph convolution with graph attention" })).toBeTruthy();
+    expect(screen.getByLabelText("Graph convolution calculation").textContent).toMatch(/source 0.*1 \/ sqrt\(3 x 2\).*0\.408248.*source 1.*0\.333333.*source 2.*-0\.408248.*ReLU -> 0\.666667/s);
+    fireEvent.click(screen.getByRole("button", { name: /Graph attention/ }));
+    expect(screen.getByLabelText("Graph attention calculation").textContent).toMatch(/row max = 2.*denominator = 1\.417667.*weights sum = 1.*score 1 - max 2 = -1.*alpha = 0\.259496.*score -1 - max 2 = -3.*alpha = 0\.035119.*ReLU -> 1\.635146/s);
+    fireEvent.click(screen.getByRole("button", { name: /node 2.*degree 2/ }));
+    expect(screen.getByLabelText("Graph attention calculation").textContent).toMatch(/denominator = 1\.049787.*alpha = 0\.952574.*alpha = 0\.047426.*ReLU -> 1\.857722/s);
   });
 });

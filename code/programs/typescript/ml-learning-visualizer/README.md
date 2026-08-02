@@ -167,6 +167,11 @@ undirected edges into four directed messages, highlights the selected node's
 inbox, sums its messages, and combines that aggregate with a shared self route,
 bias, and ReLU. All nodes read the same original feature snapshot.
 
+Finish the structured sequence with the GCN-versus-GAT comparison. Select any
+self-looped neighborhood, inspect every square-root degree coefficient, then
+switch to stable neighborhood softmax and audit scores, exponentials, attention
+weights, contributions, and both output vectors.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -262,6 +267,11 @@ recovered fixed point.
 NN21 under `code/specs/fixtures/tiny-message-passing-v1` pins one synchronous
 three-node graph round, including every directed message, target inbox,
 aggregate, self contribution, affine preactivation, ReLU, and output feature.
+
+NN22 under `code/specs/fixtures/graph-convolution-attention-v1` pins the same
+three self-looped neighborhoods under symmetric-normalized GCN and stable-
+softmax GAT, including every coefficient, score, weight, contribution, and
+output.
 
 ## Development
 

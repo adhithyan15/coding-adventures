@@ -42,10 +42,10 @@ trace, and tests.
   - [x] Variational sampling and KL tradeoff.
   - [x] One-dimensional GAN game.
   - [x] One-dimensional diffusion forward and denoising steps.
-- [ ] Structured and memory networks
+- [x] Structured and memory networks
   - [x] Hopfield associative memory.
   - [x] Message passing on a tiny graph.
-  - [ ] Graph convolution and graph attention.
+  - [x] Graph convolution and graph attention.
 
 ## Depth and Scaling Tranches
 
