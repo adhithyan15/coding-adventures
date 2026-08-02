@@ -3,6 +3,7 @@ import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
+import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
@@ -167,7 +168,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 }
 
 export function App() {
-  const [workbench, setWorkbench] = useState<"microscope" | "linear" | "hidden">("microscope");
+  const [workbench, setWorkbench] = useState<"microscope" | "optimization" | "linear" | "hidden">("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
   const [activationKind, setActivationKind] = useState<ActivationKind>("linear");
@@ -271,6 +272,8 @@ export function App() {
           <p className="eyebrow">
             {workbench === "microscope"
               ? "No hidden magic"
+              : workbench === "optimization"
+                ? "Trust, then independently verify"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -285,6 +288,13 @@ export function App() {
               onClick={() => setWorkbench("microscope")}
             >
               Microscope
+            </button>
+            <button
+              className={workbench === "optimization" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("optimization")}
+            >
+              Optimization
             </button>
             <button
               className={workbench === "linear" ? "mode-button mode-button--active" : "mode-button"}
@@ -304,6 +314,8 @@ export function App() {
           <div className="formula">
             {workbench === "microscope" ? (
               <>forward {"->"} <strong>loss</strong> {"->"} gradients {"->"} update</>
+            ) : workbench === "optimization" ? (
+              <>loss surface {"->"} <strong>gradient check</strong> {"->"} batch strategy</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -315,6 +327,8 @@ export function App() {
 
       {workbench === "microscope" ? (
         <TrainingStepMicroscope />
+      ) : workbench === "optimization" ? (
+        <OptimizationWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

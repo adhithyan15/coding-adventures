@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -174,6 +174,13 @@ h2 {
 .workspace--microscope {
   display: grid;
   grid-template-columns: minmax(560px, 1fr) 320px;
+  gap: 14px;
+  align-items: start;
+}
+
+.workspace--optimization {
+  display: grid;
+  grid-template-columns: minmax(620px, 1fr) 320px;
   gap: 14px;
   align-items: start;
 }
@@ -387,6 +394,217 @@ h2 {
 .microscope-actions button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.optimization-stage {
+  display: grid;
+  gap: 12px;
+}
+
+.landscape-panel,
+.gradient-check-panel,
+.batch-comparison-panel,
+.optimization-controls {
+  @include surface;
+}
+
+.landscape-panel,
+.gradient-check-panel,
+.batch-comparison-panel {
+  padding: 14px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.panel-heading > span {
+  color: $muted;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.landscape-chart {
+  display: block;
+  width: 100%;
+  aspect-ratio: 720 / 430;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.landscape-cell {
+  fill: $blue;
+}
+
+.gradient-arrow {
+  stroke: $red;
+  stroke-width: 4;
+}
+
+.gradient-arrow-head {
+  fill: $red;
+}
+
+.current-parameter-point {
+  fill: $red;
+  stroke: #ffffff;
+  stroke-width: 3;
+}
+
+.optimum-point {
+  fill: $green;
+  stroke: #ffffff;
+  stroke-width: 3;
+}
+
+.landscape-label {
+  fill: $ink;
+  font-size: 13px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.86);
+  stroke-width: 4px;
+}
+
+.axis-title--optimization-y {
+  transform: rotate(-90deg);
+  transform-origin: 18px 215px;
+}
+
+.landscape-equation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.gradient-check-panel > p {
+  margin: 10px 0 0;
+  color: $muted;
+}
+
+.check-status {
+  padding: 5px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+}
+
+.check-status--pass {
+  background: rgba(35, 122, 87, 0.12);
+  color: $green !important;
+}
+
+.check-status--fail {
+  background: rgba(194, 65, 59, 0.12);
+  color: $red !important;
+}
+
+.gradient-check-grid {
+  display: grid;
+  grid-template-columns: minmax(92px, 0.7fr) repeat(3, minmax(130px, 1fr));
+  align-items: center;
+  gap: 1px;
+  overflow-x: auto;
+}
+
+.gradient-check-grid > * {
+  min-width: 0;
+  min-height: 38px;
+  padding: 8px;
+  border-bottom: 1px solid $line;
+}
+
+.gradient-check-grid > span {
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gradient-check-grid code {
+  border-radius: 0;
+  background: transparent;
+}
+
+.batch-chart {
+  display: block;
+  width: 100%;
+  max-height: 210px;
+  background: #ffffff;
+}
+
+.batch-grid {
+  stroke: rgba(23, 32, 28, 0.16);
+  stroke-width: 1;
+}
+
+.batch-line {
+  fill: none;
+  stroke-width: 3;
+}
+
+.batch-line--stochastic {
+  stroke: $red;
+}
+
+.batch-line--mini-batch {
+  stroke: $gold;
+}
+
+.batch-line--full-batch {
+  stroke: $green;
+}
+
+.batch-axis-label {
+  fill: $muted;
+  font-size: 12px;
+  font-weight: 800;
+  text-anchor: middle;
+}
+
+.batch-axis-label--y {
+  transform: rotate(-90deg);
+  transform-origin: 12px 82px;
+}
+
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-top: 8px;
+}
+
+.strategy-summary {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-left: 4px solid;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.strategy-summary--stochastic {
+  border-color: $red;
+}
+
+.strategy-summary--mini-batch {
+  border-color: $gold;
+}
+
+.strategy-summary--full-batch {
+  border-color: $green;
+}
+
+.strategy-summary span,
+.strategy-summary small {
+  color: $muted;
+}
+
+.strategy-summary code {
+  margin-top: 4px;
 }
 
 .primary-action {
@@ -910,11 +1128,13 @@ code {
   }
 
   .metrics,
-  .microscope-controls {
+  .microscope-controls,
+  .optimization-controls {
     grid-column: 1 / -1;
   }
 
-  .workspace--microscope {
+  .workspace--microscope,
+  .workspace--optimization {
     grid-template-columns: 1fr;
   }
 }
@@ -938,7 +1158,8 @@ code {
 
   .workspace--lab,
   .workspace--hidden,
-  .workspace--microscope {
+  .workspace--microscope,
+  .workspace--optimization {
     grid-template-columns: 1fr;
   }
 
@@ -986,6 +1207,21 @@ code {
 
   .before-after {
     grid-template-columns: 1fr;
+  }
+
+  .landscape-equation,
+  .strategy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gradient-check-grid {
+    grid-template-columns: 72px repeat(3, minmax(0, 1fr));
+    min-width: 0;
+  }
+
+  .gradient-check-grid > * {
+    padding: 6px 3px;
+    font-size: 0.68rem;
   }
 
   .update-arrow {

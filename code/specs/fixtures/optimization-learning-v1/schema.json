@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/optimization-learning-v1.json",
+  "title": "Optimization learning lab v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "concepts",
+    "model",
+    "dataset",
+    "loss",
+    "gradient_check",
+    "optimizer_comparison"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "model": { "$ref": "#/$defs/model" },
+    "dataset": { "$ref": "#/$defs/dataset" },
+    "loss": { "$ref": "#/$defs/loss" },
+    "gradient_check": { "$ref": "#/$defs/gradient_check" },
+    "optimizer_comparison": { "$ref": "#/$defs/optimizer_comparison" }
+  },
+  "$defs": {
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weight", "bias"],
+      "properties": {
+        "weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "parameters"],
+      "properties": {
+        "kind": { "const": "linear-neuron" },
+        "parameters": { "$ref": "#/$defs/parameters" }
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "x", "target"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "x": { "type": "number" },
+        "target": { "type": "number" }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows"],
+      "properties": {
+        "rows": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/row" }
+        }
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reduction"],
+      "properties": {
+        "kind": { "const": "mean-squared-error" },
+        "reduction": { "const": "mean" }
+      }
+    },
+    "gradient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weight", "bias"],
+      "properties": {
+        "weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "gradient_expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["absolute_tolerance", "loss", "analytical", "numerical"],
+      "properties": {
+        "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+        "loss": { "type": "number", "minimum": 0 },
+        "analytical": { "$ref": "#/$defs/gradient" },
+        "numerical": { "$ref": "#/$defs/gradient" }
+      }
+    },
+    "gradient_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "expected"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "expected": { "$ref": "#/$defs/gradient_expected" }
+      }
+    },
+    "strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "batch_size", "expected_parameters", "expected_loss"],
+      "properties": {
+        "kind": { "enum": ["stochastic", "mini-batch", "full-batch"] },
+        "batch_size": { "type": "integer", "minimum": 1 },
+        "expected_parameters": { "$ref": "#/$defs/parameters" },
+        "expected_loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "optimizer_comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning_rate", "steps", "absolute_tolerance", "strategies"],
+      "properties": {
+        "learning_rate": { "type": "number", "exclusiveMinimum": 0 },
+        "steps": { "type": "integer", "minimum": 1 },
+        "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+        "strategies": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/strategy" }
+        }
+      }
+    }
+  }
+}

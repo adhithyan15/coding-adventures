@@ -3,6 +3,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { forwardLayered } from "./layered-network.js";
 import {
@@ -23,6 +24,15 @@ import {
 } from "./hidden-layer-examples.js";
 import { predictLayeredWithVm, predictLinearWithVm } from "./neural-vm.js";
 import { renderHiddenNetworkSvg, renderLinearNetworkSvg } from "./NetworkDiagram.js";
+import {
+  DEFAULT_OPTIMIZATION_STATE,
+  OPTIMIZATION_DATASET,
+  analyticalGradient,
+  batchIndices,
+  checkGradient,
+  meanSquaredError,
+  runOptimization,
+} from "./optimization-lab.js";
 import {
   DEFAULT_MICROSCOPE_STATE,
   traceTrainingStep,
@@ -129,6 +139,45 @@ describe("training helpers", () => {
     expect(screen.getByText("update 1")).toBeTruthy();
   });
 
+  it("matches backpropagation with a central finite-difference gradient", () => {
+    const check = checkGradient(OPTIMIZATION_DATASET, DEFAULT_OPTIMIZATION_STATE, 1e-5);
+
+    expect(check.analytical.weight).toBeCloseTo(-8.5);
+    expect(check.analytical.bias).toBeCloseTo(-4.5);
+    expect(check.numerical.weight).toBeCloseTo(check.analytical.weight, 8);
+    expect(check.numerical.bias).toBeCloseTo(check.analytical.bias, 8);
+    expect(check.passes).toBe(true);
+  });
+
+  it("selects deterministic rows for stochastic, mini-batch, and full-batch training", () => {
+    expect(batchIndices("stochastic", 5, 4)).toEqual([1]);
+    expect(batchIndices("mini-batch", 0, 4)).toEqual([0, 1]);
+    expect(batchIndices("mini-batch", 1, 4)).toEqual([2, 3]);
+    expect(batchIndices("full-batch", 99, 4)).toEqual([0, 1, 2, 3]);
+  });
+
+  it("reduces full-dataset loss with every deterministic batch strategy", () => {
+    const before = meanSquaredError(OPTIMIZATION_DATASET, DEFAULT_OPTIMIZATION_STATE);
+
+    for (const strategy of ["stochastic", "mini-batch", "full-batch"] as const) {
+      const trace = runOptimization(strategy, 20, 0.05);
+      expect(trace[trace.length - 1]!.loss).toBeLessThan(before);
+    }
+  });
+
+  it("renders the optimization microscope and its independent gradient audit", () => {
+    render(React.createElement(OptimizationWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Optimization microscope" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Loss landscape" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Finite-difference gradient check" })).toBeTruthy();
+    expect(screen.getByText("PASS")).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("Optimization weight"), { target: { value: "1" } });
+    const gradient = analyticalGradient(OPTIMIZATION_DATASET, { weight: 1, bias: 0, step: 0 });
+    expect(screen.getAllByText(formatTestNumber(gradient.weight)).length).toBeGreaterThan(0);
+  });
+
   it("registers the hidden-layer teaching examples without sine yet", () => {
     expect(HIDDEN_LAYER_EXAMPLES.map((example) => example.id)).toEqual([
       "xnor",
@@ -231,3 +280,7 @@ describe("training helpers", () => {
     }
   });
 });
+
+function formatTestNumber(value: number): string {
+  return Number(value.toFixed(5)).toString();
+}

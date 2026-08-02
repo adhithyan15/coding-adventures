@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has three workbenches that move from one arithmetic update to small
+The app has four workbenches that move from one arithmetic update to small
 hidden-layer networks.
 
 ### Training-step microscope
@@ -19,6 +19,14 @@ example -> multiply -> add bias -> activate -> loss -> backprop -> update
 Future values stay hidden until their phase is selected. The learner can change
 the input, target, weight, bias, activation, and learning rate, inspect the
 chain-rule factors, and apply exactly one proposed update.
+
+### Optimization microscope
+
+The optimization workbench plots the mean-squared-error surface for a
+four-point linear problem. It shows the current parameters, the known minimum,
+and one full-batch gradient step on the same surface. An independent central
+finite-difference estimate checks the analytical gradient, while synchronized
+loss curves compare stochastic, mini-batch, and full-batch row selection.
 
 ### Linear lab
 
@@ -57,10 +65,11 @@ datasets. Small teaching datasets can be checked in as local JSON or CSV only
 when their license and source are clear. Dataset notes live in
 `src/data/SOURCES.md`.
 
-The smallest canonical examples also live in the language-neutral NN03 corpus
-under `code/specs/fixtures/neural-learning-v1`. That corpus pins forward values
-and first-step gradients so other language implementations can reproduce the
-same visualized arithmetic.
+The smallest canonical examples also live in language-neutral corpora. NN03
+under `code/specs/fixtures/neural-learning-v1` pins forward values and first-step
+gradients. NN04 under `code/specs/fixtures/optimization-learning-v1` pins
+finite-difference checks and batch-strategy trajectories so other language
+implementations can reproduce the same visualized arithmetic.
 
 ## Development
 

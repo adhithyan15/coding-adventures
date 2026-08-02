@@ -20,6 +20,9 @@ structure helps.
 | F5 | Tensor/autograd engine | broadcasting, batches, saved values, gradient accumulation |
 | F6 | Compiled training step | NeuralIR, MatrixIR, Rust CPU/GPU execution |
 
+Implementation progress and the commit-sized delivery queue live in the
+[neural learning delivery roadmap](./ROADMAP.md).
+
 Every model family below starts with the smallest example that needs its new
 idea.
 
