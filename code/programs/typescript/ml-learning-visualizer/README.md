@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has six workbenches that move from one arithmetic update to small
+The app has seven workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -67,6 +67,15 @@ channel-specific kernels, products, partial sums, bias, and final feature-map
 value. Step forward to see which four values share normalization statistics,
 how ReLU changes them, and which row-major location wins `2 x 2` max pooling.
 
+### Residual and receptive-field lab
+
+The residual workbench sends a five-value signal through two same-padded local
+layers and an identity shortcut. Select any output to expose both routes at the
+addition, expand the local route through its hidden values, and count every
+path back to the original inputs. Boundary selections make receptive-field
+clipping visible, while the shortcut toggle separates what depth changes from
+what the identity path preserves.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -99,6 +108,10 @@ step.
 NN07 under `code/specs/fixtures/tiny-image-cnn-v1` pins two-channel 2D
 cross-correlation, output-channel normalization statistics, ReLU maps, and
 max-pool values and winner coordinates.
+
+NN08 under `code/specs/fixtures/residual-receptive-v1` pins two same-padded
+local layers, the identity addition, all hidden-to-input expansions, input
+path counts, and boundary-clipped receptive fields.
 
 ## Development
 

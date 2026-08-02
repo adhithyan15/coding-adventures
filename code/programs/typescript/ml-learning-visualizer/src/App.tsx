@@ -6,6 +6,7 @@ import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
@@ -171,7 +172,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -282,6 +283,8 @@ export function App() {
                 ? "One detector, every position"
               : workbench === "image-cnn"
                 ? "Channels become features"
+              : workbench === "residual"
+                ? "Deep route, short route"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -332,6 +335,13 @@ export function App() {
             >
               Image CNN
             </button>
+            <button
+              className={workbench === "residual" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("residual")}
+            >
+              Residual
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -342,6 +352,8 @@ export function App() {
               <>window × <strong>shared kernel</strong> {"->"} feature</>
             ) : workbench === "image-cnn" ? (
               <>channels {"->"} <strong>normalize + ReLU</strong> {"->"} pool</>
+            ) : workbench === "residual" ? (
+              <>local layers + <strong>identity skip</strong> {"->"} wider field</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -359,6 +371,8 @@ export function App() {
         <ConvolutionWorkbench />
       ) : workbench === "image-cnn" ? (
         <ImageCnnWorkbench />
+      ) : workbench === "residual" ? (
+        <ResidualWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

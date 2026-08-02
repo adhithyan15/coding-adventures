@@ -6,6 +6,7 @@ import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { forwardLayered } from "./layered-network.js";
 import {
@@ -55,6 +56,11 @@ import {
   DEFAULT_IMAGE_FILTERS,
   traceTinyImageCnn,
 } from "./image-cnn-lab.js";
+import {
+  DEFAULT_RESIDUAL_INPUT,
+  sameCorrelation,
+  traceResidualBlock,
+} from "./residual-field-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -343,6 +349,45 @@ describe("training helpers", () => {
       "from [1,1]",
       "from [0,0]",
     ]);
+  });
+
+  it("runs the two local layers and identity path by hand", () => {
+    const block = traceResidualBlock();
+
+    expect(sameCorrelation(DEFAULT_RESIDUAL_INPUT, [1, 1, 1])).toEqual([1, 3, 2, 3, 1]);
+    expect(block.main).toEqual([4, 6, 8, 6, 4]);
+    expect(block.skip).toEqual([1, 0, 2, 0, 1]);
+    expect(block.output).toEqual([5, 6, 10, 6, 5]);
+  });
+
+  it("expands center and boundary receptive fields into exact input paths", () => {
+    const block = traceResidualBlock();
+    const center = block.traces[2]!;
+
+    expect(center.hiddenIndices).toEqual([1, 2, 3]);
+    expect(center.inputPathCounts).toEqual([1, 2, 3, 2, 1]);
+    expect(center.inputContributions).toEqual([1, 0, 6, 0, 1]);
+    expect(center.receptiveFieldIndices).toEqual([0, 1, 2, 3, 4]);
+    expect(block.traces[0]!.receptiveFieldIndices).toEqual([0, 1, 2]);
+    expect(block.traces[4]!.receptiveFieldIndices).toEqual([2, 3, 4]);
+  });
+
+  it("opens residual and receptive-field paths interactively", () => {
+    render(React.createElement(ResidualWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Residual-path microscope" })).toBeTruthy();
+    expect(screen.getByLabelText("Selected residual addition").textContent)
+      .toMatch(/8.*\+.*2.*=.*10.*10/s);
+    expect(screen.getByLabelText("Receptive field explorer").textContent)
+      .toContain("receptive input indices = [0, 1, 2, 3, 4]");
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Include identity skip/ }));
+    expect(screen.getByLabelText("Selected residual addition").textContent)
+      .toMatch(/8.*\+.*0.*=.*8.*8/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Select residual output 0" }));
+    expect(screen.getByLabelText("Receptive field explorer").textContent)
+      .toContain("receptive input indices = [0, 1, 2]");
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

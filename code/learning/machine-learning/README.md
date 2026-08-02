@@ -24,13 +24,14 @@ larger network:
 4. [Convolution, Window by Window](./convolution-window-by-window.md)
 5. [Training a Convolution Kernel by Hand](./training-a-convolution-kernel-by-hand.md)
 6. [A Tiny Image CNN, Completely by Hand](./tiny-image-cnn-by-hand.md)
-7. [Matrix Math](../matrix-math.md)
-8. [Loss Functions](../loss-functions.md)
-9. [Gradient Descent](../gradient-descent.md)
-10. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-11. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-12. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-13. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+7. [Residual Paths and Receptive Fields by Hand](./residual-paths-and-receptive-fields-by-hand.md)
+8. [Matrix Math](../matrix-math.md)
+9. [Loss Functions](../loss-functions.md)
+10. [Gradient Descent](../gradient-descent.md)
+11. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+12. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+13. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+14. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -40,7 +41,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has six complementary views:
+has seven complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -59,6 +60,9 @@ has six complementary views:
 - **Image CNN lab:** follow two `3 x 3` input channels through per-channel
   kernels, channel reduction, spatial normalization, ReLU, and max pooling,
   with every selected window and winner exposed.
+- **Residual lab:** compare a two-layer local path with an identity shortcut,
+  toggle the shortcut, and expand any output into exact input-path counts and
+  boundary-clipped receptive fields.
 
 ## Language-Neutral Corpus
 
@@ -79,6 +83,11 @@ NN07 adds a two-channel tiny image pipeline in
 `code/specs/fixtures/tiny-image-cnn-v1`, including every channel contribution,
 normalization statistic, ReLU output, pooled value, and argmax coordinate.
 
+NN08 adds a two-layer residual block in
+`code/specs/fixtures/residual-receptive-v1`, including the deep and identity
+paths, every expanded input dependency, path multiplicities, and clipped
+boundary receptive fields.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -87,6 +96,7 @@ python code/scripts/validate_optimization_learning_labs.py
 python code/scripts/validate_convolution_learning_labs.py
 python code/scripts/validate_convolution_training_labs.py
 python code/scripts/validate_tiny_image_cnn_labs.py
+python code/scripts/validate_residual_receptive_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -98,7 +108,9 @@ slides over a signal. The first NN06 lab shows how every output contributes to
 the shared kernel gradient and verifies one loss-reducing update. The first
 NN07 lab shows how input channels accumulate into output feature maps, which
 spatial values share normalization statistics, and which locations survive
-max pooling.
+max pooling. The first NN08 lab expands a two-layer residual block into its
+deep and identity routes, then counts every path from one output back to the
+original input.
 
 ## How to Study a Model
 

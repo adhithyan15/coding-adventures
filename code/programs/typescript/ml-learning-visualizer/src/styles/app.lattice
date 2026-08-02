@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -1917,6 +1917,397 @@ code {
   text-transform: uppercase;
 }
 
+.workspace--residual {
+  display: grid;
+  grid-template-columns: minmax(660px, 1fr) 320px;
+  gap: 14px;
+  align-items: start;
+}
+
+.residual-stage,
+.residual-controls,
+.residual-block-panel,
+.receptive-panel {
+  @include surface;
+}
+
+.residual-stage {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.residual-intro,
+.residual-panel-heading,
+.residual-row-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.residual-intro p:not(.eyebrow),
+.residual-controls > p,
+.residual-note p {
+  margin: 5px 0 0;
+  color: $muted;
+}
+
+.residual-shape-chip {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.11);
+  color: #4f3da9;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.residual-block-panel,
+.receptive-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.residual-result {
+  min-width: 70px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.13);
+  color: $green;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.residual-main-path {
+  display: grid;
+  gap: 8px;
+  padding: 11px;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.035);
+}
+
+.residual-lane-label,
+.residual-row-label > span {
+  color: $muted;
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.residual-signal-block {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.residual-row-label code {
+  min-height: 0;
+  padding: 3px 6px;
+  font-size: 0.7rem;
+}
+
+.residual-signal-row {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.residual-cell {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 58px;
+  padding: 5px;
+  border: 1px solid $line;
+  border-radius: 7px;
+  background: #ffffff;
+}
+
+.residual-cell small {
+  color: $muted;
+  font-size: 0.64rem;
+}
+
+.residual-cell strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.residual-cell--active {
+  border-color: rgba(109, 91, 208, 0.46);
+  background: rgba(109, 91, 208, 0.08);
+  color: #4f3da9;
+}
+
+.residual-cell--selected {
+  border-color: rgba(37, 99, 235, 0.62);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.residual-down-arrow {
+  justify-self: center;
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+.residual-skip-lane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px;
+  border: 1px solid rgba(109, 91, 208, 0.3);
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.07);
+  color: #4f3da9;
+}
+
+.residual-skip-lane > div {
+  display: grid;
+}
+
+.residual-skip-lane small,
+.residual-addition small,
+.field-width-badge small,
+.hidden-path-card small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.residual-skip-lane code {
+  min-height: 0;
+  padding: 3px 7px;
+}
+
+.residual-skip-lane--disabled {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.residual-addition {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px;
+  border-block: 1px solid $line;
+}
+
+.residual-addition > div {
+  display: grid;
+  min-width: 80px;
+  text-align: center;
+}
+
+.residual-addition strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.residual-addition__output {
+  padding: 6px;
+  border-radius: 7px;
+  background: #eaf7ef;
+  color: $green;
+}
+
+.field-width-badge {
+  display: grid;
+  min-width: 100px;
+  padding: 7px;
+  border: 1px solid rgba(35, 122, 87, 0.3);
+  border-radius: 8px;
+  background: #eaf7ef;
+  color: $green;
+  text-align: center;
+}
+
+.field-width-badge strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.2rem;
+}
+
+.hidden-path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.hidden-path-card {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.hidden-path-card > div {
+  display: grid;
+}
+
+.hidden-path-card code {
+  min-height: 0;
+  padding: 4px 6px;
+}
+
+.hidden-path-card > span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.path-count-table-wrap {
+  overflow-x: auto;
+  border-block: 1px solid $line;
+}
+
+.path-count-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.path-count-table caption {
+  padding: 9px 0 5px;
+  color: $muted;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  text-align: left;
+}
+
+.path-count-table th,
+.path-count-table td {
+  padding: 8px;
+  border-bottom: 1px solid $line;
+}
+
+.path-count-table th:first-child {
+  color: $muted;
+  text-align: left;
+}
+
+.path-count-total {
+  background: #eaf7ef;
+  color: $green;
+  font-weight: 850;
+}
+
+.receptive-summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.receptive-summary code {
+  min-height: 0;
+  padding: 7px;
+  white-space: nowrap;
+}
+
+.receptive-summary span {
+  color: $muted;
+}
+
+.residual-controls {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.residual-output-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  padding-block: 11px;
+  border-block: 1px solid $line;
+}
+
+.residual-output-button {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  min-height: 58px;
+  padding: 6px;
+}
+
+.residual-output-button small {
+  color: $muted;
+  font-size: 0.66rem;
+}
+
+.residual-output-button strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.residual-output-button--active {
+  border-color: rgba(37, 99, 235, 0.52);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.residual-skip-control {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(109, 91, 208, 0.3);
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.07);
+  cursor: pointer;
+}
+
+.residual-skip-control input {
+  width: 20px;
+  min-height: 20px;
+  accent-color: $violet;
+}
+
+.residual-skip-control span {
+  display: grid;
+}
+
+.residual-skip-control small {
+  color: $muted;
+}
+
+.residual-controls .button-grid button:last-child {
+  grid-column: 1 / -1;
+}
+
+.residual-controls button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.residual-note {
+  padding-top: 12px;
+  border-top: 1px solid $line;
+}
+
+.residual-note span {
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
 @media (max-width: 1180px) {
   .workspace--lab,
   .workspace--hidden {
@@ -1934,10 +2325,15 @@ code {
     grid-column: 1 / -1;
   }
 
+  .residual-controls {
+    grid-column: 1 / -1;
+  }
+
   .workspace--microscope,
   .workspace--optimization,
   .workspace--convolution,
-  .workspace--image-cnn {
+  .workspace--image-cnn,
+  .workspace--residual {
     grid-template-columns: 1fr;
   }
 }
@@ -1964,7 +2360,8 @@ code {
   .workspace--microscope,
   .workspace--optimization,
     .workspace--convolution,
-    .workspace--image-cnn {
+    .workspace--image-cnn,
+    .workspace--residual {
     grid-template-columns: 1fr;
   }
 
@@ -1972,7 +2369,9 @@ code {
   .mac-heading,
   .training-heading,
   .image-cnn-intro,
-  .image-stage-heading {
+  .image-stage-heading,
+  .residual-intro,
+  .residual-panel-heading {
     display: grid;
     align-items: start;
   }
@@ -2010,7 +2409,7 @@ code {
   }
 
   .mode-button:last-child {
-    grid-column: auto;
+    grid-column: 1 / -1;
   }
 
   .image-pipeline {
@@ -2047,6 +2446,25 @@ code {
   .channel-reduction > span:nth-of-type(3),
   .channel-reduction__result {
     grid-column: auto;
+  }
+
+  .residual-skip-lane {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .residual-addition {
+    grid-template-columns: repeat(3, auto);
+  }
+
+  .receptive-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .receptive-summary code {
+    overflow-x: auto;
+    white-space: nowrap;
   }
 
   .phase-strip {

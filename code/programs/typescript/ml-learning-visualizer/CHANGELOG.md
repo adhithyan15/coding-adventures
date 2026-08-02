@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   finite-difference verification, and an apply-one-step interaction.
 - Add the NN07 tiny-image CNN workbench with channel-specific correlation,
   spatial normalization, ReLU, max pooling, and synchronized path selection.
+- Add the NN08 residual-path and receptive-field workbench with an identity
+  toggle, exact dependency expansion, and boundary-field exploration.
 
 ### Changed
 

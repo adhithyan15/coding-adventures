@@ -23,11 +23,11 @@ trace, and tests.
 
 ## Architecture Tranches
 
-- [ ] Spatial networks
+- [x] Spatial networks
   - [x] Sliding one-dimensional kernel with every multiply-accumulate exposed.
   - [x] Trainable one-dimensional convolution and gradient trace.
   - [x] Tiny image CNN, channels, pooling, and normalization.
-  - [ ] Residual path and receptive-field explorer.
+  - [x] Residual path and receptive-field explorer.
 - [ ] Sequence networks
   - [ ] One recurrent state unrolled for three steps.
   - [ ] Backpropagation through time and gradient accumulation.
