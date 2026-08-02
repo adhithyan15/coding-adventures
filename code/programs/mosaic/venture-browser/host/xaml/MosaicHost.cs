@@ -98,22 +98,39 @@ public static class MosaicHost
                     return;
                 }
 
-                var valueProvider = new TextBoxAutomationPeer(addressInput)
-                    .GetPattern(PatternInterface.Value) as IValueProvider;
-                var invokeProvider = new ButtonAutomationPeer(goButton)
-                    .GetPattern(PatternInterface.Invoke) as IInvokeProvider;
-                if (valueProvider is null || invokeProvider is null)
+                var invokeProvider = new ButtonAutomationPeer(goButton) as IInvokeProvider;
+                if (invokeProvider is null)
                 {
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
-                        error = "native automation patterns unavailable",
+                        error = "native button automation provider unavailable",
                     });
                     return;
                 }
 
-                valueProvider.SetValue(targetUrl);
+                _ = addressInput.Focus(FocusState.Programmatic);
+                addressInput.Text = targetUrl;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    if (string.Equals(component.Address, targetUrl, StringComparison.Ordinal))
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (!string.Equals(component.Address, targetUrl, StringComparison.Ordinal))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        error = "native address edit did not dispatch",
+                    });
+                    return;
+                }
                 invokeProvider.Invoke();
                 for (var remaining = 50; remaining >= 0; remaining--)
                 {
