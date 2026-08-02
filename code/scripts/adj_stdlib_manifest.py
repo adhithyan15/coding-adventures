@@ -279,11 +279,34 @@ def validate_manifest(
     return sorted(set(errors))
 
 
+def validate_json_schema(schema: Any, manifest: Any) -> list[str]:
+    """Validate the schema and instance when the optional jsonschema tool is present."""
+
+    try:
+        from jsonschema import Draft202012Validator
+        from jsonschema.exceptions import SchemaError
+    except ImportError:
+        return ["jsonschema is required for --validate-json-schema"]
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as error:
+        return [f"invalid manifest JSON Schema: {error.message}"]
+    validator = Draft202012Validator(schema)
+    return sorted(
+        "JSON Schema: "
+        + ".".join(str(part) for part in error.absolute_path)
+        + (": " if error.absolute_path else "")
+        + error.message
+        for error in validator.iter_errors(manifest)
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
+    parser.add_argument("--validate-json-schema", action="store_true")
     args = parser.parse_args()
 
     root = args.root.resolve()
@@ -294,6 +317,8 @@ def main() -> int:
     errors = validate_manifest(root, manifest)
     if schema.get("$id") != "https://coding-adventures.dev/schemas/adj-stdlib-manifest-v1.json":
         errors.append("manifest schema has an unexpected $id")
+    if args.validate_json_schema:
+        errors.extend(validate_json_schema(schema, manifest))
     result = {
         "valid": not errors,
         "manifest": manifest_path.relative_to(root).as_posix(),

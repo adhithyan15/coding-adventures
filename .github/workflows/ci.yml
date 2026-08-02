@@ -92,6 +92,8 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_capability_taxonomy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_manifest.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'
@@ -104,6 +106,8 @@ jobs:
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
+          python3 code/scripts/adj_stdlib_report.py --format json --fail-on-unreferenced-tests > /tmp/adj-stdlib-report.json
+          python3 code/scripts/adj_stdlib_manifest.py --validate-json-schema > /tmp/adj-stdlib-manifest.json
           (cd code/programs/go/capability-cage-generator && go test ./...)
           (cd code/packages/go/ca-capability-analyzer && go test ./...)
           (cd code/packages/go/capability-cage && go test ./...)
