@@ -21,6 +21,7 @@ There are four kinds of material in this directory:
 - [Cryptography](./cryptography/README.md)
 - [Language Tooling](./language-tooling/README.md)
 - [Documents and Media](./documents-media/README.md)
+- [Machine Learning](./machine-learning/README.md)
 - [SQL and Storage](./sql-storage/README.md)
 - [Python Ecosystem](./programming-languages/python-ecosystem.md)
 - [Human Languages](./human-languages/README.md) — personal curriculum, not a package companion
@@ -54,6 +55,7 @@ This table is the current answer to "what learning entry explains this package f
 | Intermediate representations | semantic IR, compiler IR, interpreter IR, lowering, source identity | [Intermediate representations](./language-tooling/intermediate-representations.md) |
 | WebAssembly | binary modules, LEB128, validation, instantiation, stack execution | [WebAssembly from bytes to execution](./language-tooling/webassembly-from-bytes-to-execution.md) |
 | Structured text | JSON, CSV, TOML, XML, lexing, parsing, values, serialization | [Structured text from bytes to values](./language-tooling/structured-text-from-bytes-to-values.md) |
+| Machine learning | `activation-functions`, `loss-functions`, `gradient-descent`, dense networks, autograd, neural graph execution | [Machine learning track](./machine-learning/README.md) |
 | SQL execution | lexing, parsing, logical query order, backends, SQLite | [From SQL text to stored rows](./sql-storage/from-sql-text-to-stored-rows.md) |
 | Barcodes | 1D/2D symbols, finite fields, Reed-Solomon correction, layout | [Barcodes and error correction](./documents-media/barcodes-and-error-correction.md) |
 | Python project conventions | packaging, linting, types, `uv`, `ruff`, `pyproject.toml` | [Modern Python ecosystem](./programming-languages/python-ecosystem.md) |

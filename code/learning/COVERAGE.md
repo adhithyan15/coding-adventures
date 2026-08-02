@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1227 | 1080 | 98 | 58 | 6 | 1065 |
+| 1245 | 1139 | 98 | 59 | 7 | 1081 |
 
 ## Method
 
@@ -24,10 +24,10 @@ mention provides a complete lesson.
 
 | Priority | Dedicated | Related | Index only | Missing |
 | --- | ---: | ---: | ---: | ---: |
-| P0 | 86 | 25 | 5 | 56 |
+| P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 8 | 0 | 767 |
+| P3 | 2 | 9 | 0 | 784 |
 
 ## P0 Backlog
 
@@ -101,8 +101,8 @@ mention provides a complete lesson.
 | `in-memory-data-store-protocol` | 13 | missing |
 | `resp-protocol` | 13 | missing |
 | `http-core` | 12 | missing |
+| `http1` | 12 | missing |
 | `url-parser` | 12 | missing |
-| `http1` | 11 | missing |
 | `type-checker-protocol` | 11 | missing |
 
 ### other
@@ -114,8 +114,8 @@ mention provides a complete lesson.
 | `note-frequency` | 15 | missing |
 | `pixel-container` | 15 | missing |
 | `rng` | 15 | missing |
-| `feature-normalization` | 14 | missing |
-| `trig` | 14 | missing |
+| `trig` | 15 | missing |
+| `feature-normalization` | 14 | index-only |
 | `uuid` | 14 | missing |
 | `in-memory-data-store` | 13 | missing |
 | `in-memory-data-store-engine` | 13 | missing |
@@ -491,6 +491,7 @@ mention provides a complete lesson.
 | `browser-extension-toolkit` | 1 | missing |
 | `forme-doc-page-shell` | 1 | missing |
 | `forme-style-to-terminal` | 1 | missing |
+| `smart-home-shelly-integration` | 1 | missing |
 | `venture-browser-core` | 1 | missing |
 | `venture-browser-macos` | 1 | missing |
 | `mosaic-pkg-card-browser` | 0 | missing |
@@ -606,6 +607,7 @@ mention provides a complete lesson.
 | `paint-vm-vulkan` | 1 | missing |
 | `paint-vm-wgpu` | 1 | missing |
 | `ui-components` | 1 | missing |
+| `venture-browser-windows` | 1 | missing |
 | `window-appkit` | 1 | missing |
 | `window-c` | 1 | missing |
 | `window-canvas` | 1 | missing |
@@ -810,7 +812,6 @@ mention provides a complete lesson.
 | `logic-stdlib` | 1 | missing |
 | `logic-vm` | 1 | missing |
 | `matrix-cuda` | 1 | missing |
-| `matrix-ir` | 1 | missing |
 | `matrix-ir-json` | 1 | missing |
 | `matrix-metal` | 1 | missing |
 | `matrix-profile` | 1 | missing |
@@ -1176,17 +1177,33 @@ mention provides a complete lesson.
 | `sixlowpan` | 1 | missing |
 | `skill-store` | 1 | missing |
 | `smart-home-automation-runtime` | 1 | missing |
+| `smart-home-camera-media` | 1 | missing |
 | `smart-home-capability-cage` | 1 | missing |
 | `smart-home-core` | 1 | missing |
+| `smart-home-dashboard-core` | 1 | missing |
 | `smart-home-discovery` | 1 | missing |
 | `smart-home-discovery-service` | 1 | missing |
 | `smart-home-event-streams` | 1 | missing |
+| `smart-home-govee-lan-integration` | 1 | missing |
+| `smart-home-home-assistant-dashboard-migration` | 1 | missing |
+| `smart-home-home-assistant-definitions` | 1 | missing |
+| `smart-home-home-assistant-export` | 1 | missing |
+| `smart-home-home-assistant-history` | 1 | missing |
+| `smart-home-home-assistant-migration` | 1 | missing |
 | `smart-home-hue-pairing-service` | 1 | missing |
 | `smart-home-integration-catalog` | 1 | missing |
+| `smart-home-kasa-lan-integration` | 1 | missing |
+| `smart-home-lifx-lan-integration` | 1 | missing |
+| `smart-home-matter-integration` | 1 | missing |
+| `smart-home-mqtt-integration` | 1 | missing |
+| `smart-home-onvif-integration` | 1 | missing |
 | `smart-home-registry` | 1 | missing |
 | `smart-home-runtime` | 1 | missing |
 | `smart-home-runtime-store` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |
+| `smart-home-wled-integration` | 1 | missing |
+| `smart-home-zigbee-integration` | 1 | missing |
+| `smart-home-zwave-host` | 1 | missing |
 | `smart-home-zwave-integration` | 1 | missing |
 | `smt-lib-format` | 1 | missing |
 | `sparc-v8-gatelevel` | 1 | missing |

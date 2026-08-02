@@ -3,6 +3,7 @@ import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
+import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
   meanAbsoluteError,
@@ -166,7 +167,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 }
 
 export function App() {
-  const [workbench, setWorkbench] = useState<"linear" | "hidden">("linear");
+  const [workbench, setWorkbench] = useState<"microscope" | "linear" | "hidden">("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
   const [activationKind, setActivationKind] = useState<ActivationKind>("linear");
@@ -267,11 +268,24 @@ export function App() {
     <div className="app">
       <header className="app-header">
         <div>
-          <p className="eyebrow">{workbench === "linear" ? "100-lab foundation" : "Hidden-layer playground"}</p>
+          <p className="eyebrow">
+            {workbench === "microscope"
+              ? "No hidden magic"
+              : workbench === "linear"
+                ? "100-lab foundation"
+                : "Hidden-layer playground"}
+          </p>
           <h1>ML Learning Lab</h1>
         </div>
         <div className="header-actions">
           <div className="mode-toggle" aria-label="Workbench mode">
+            <button
+              className={workbench === "microscope" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("microscope")}
+            >
+              Microscope
+            </button>
             <button
               className={workbench === "linear" ? "mode-button mode-button--active" : "mode-button"}
               type="button"
@@ -288,7 +302,9 @@ export function App() {
             </button>
           </div>
           <div className="formula">
-            {workbench === "linear" ? (
+            {workbench === "microscope" ? (
+              <>forward {"->"} <strong>loss</strong> {"->"} gradients {"->"} update</>
+            ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
               <>inputs {"->"} <strong>hidden</strong> {"->"} prediction</>
@@ -297,7 +313,9 @@ export function App() {
         </div>
       </header>
 
-      {workbench === "hidden" ? <HiddenLayerWorkbench /> : (
+      {workbench === "microscope" ? (
+        <TrainingStepMicroscope />
+      ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">
           <div className="rail-summary">
