@@ -914,6 +914,20 @@ fn rejects_invalid_mosfet_instance_drain_areas() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_instance_source_areas() {
+    for source_area in ["-1p", "1e999"] {
+        let error = parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch AS={source_area}"))
+            .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET AS must be finite and non-negative"));
+    }
+
+    assert!(parse_netlist(".model nch NMOS\nM1 d g s b nch AS=0").is_ok());
+}
+
+#[test]
 fn parses_tf_transfer_function_analysis_cards() {
     let parsed = parse_netlist(
         r#"
