@@ -1930,6 +1930,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        for drain_bulk_capacitance in [params.get("CBD"), params.get("CJD")].into_iter().flatten() {
+            if !drain_bulk_capacitance.is_finite() || *drain_bulk_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CBD must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

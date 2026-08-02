@@ -1955,6 +1955,39 @@ fn preserves_non_negative_mosfet_model_source_bulk_capacitance_aliases() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_drain_bulk_capacitance_aliases() {
+    for alias in ["CBD", "CJD"] {
+        for capacitance in ["-5p", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model drain NMOS({alias}={capacitance})\nM1 d g s b drain"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET CBD must be finite and non-negative"));
+        }
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_drain_bulk_capacitance_aliases() {
+    for alias in ["CBD", "CJD"] {
+        for (capacitance, expected) in [("0", 0.0), ("5p", 5.0e-12)] {
+            let parsed = parse_netlist(&format!(
+                ".model drain NMOS({alias}={capacitance})\nM1 d g s b drain"
+            ))
+            .unwrap();
+
+            let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+                panic!("expected MOSFET");
+            };
+            assert_close(mosfet.params.drain_bulk_capacitance, expected);
+        }
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"

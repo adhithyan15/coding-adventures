@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite Level-1 MOS model-card `CBD` / `CJD` values
+  before lowering netlist elements into the engine.
 - Reject negative and non-finite Level-1 MOS model-card `CBS` / `CJS` values
   before lowering netlist elements into the engine.
 - Reject negative and non-finite Level-1 MOS model-card `CJSW` values before
