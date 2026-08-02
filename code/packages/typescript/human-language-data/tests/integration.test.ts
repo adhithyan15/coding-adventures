@@ -36,7 +36,7 @@ describe("real curriculum", () => {
   });
 
   it("preserves every existing LaTeX book and maps each chapter to short lessons", () => {
-    expect(books.books.length).toBeGreaterThanOrEqual(19);
+    expect(books.books.length).toBeGreaterThanOrEqual(20);
     expect(books.books.reduce((sum, book) => sum + book.chapters.length, 0)).toBeGreaterThanOrEqual(100);
     expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(18);
     expect(
@@ -47,6 +47,11 @@ describe("real curriculum", () => {
     expect(
       books.books
         .find((book) => book.language === "urdu")
+        ?.chapters.map((chapter) => chapter.chapter),
+    ).toEqual([1, 2]);
+    expect(
+      books.books
+        .find((book) => book.language === "russian")
         ?.chapters.map((chapter) => chapter.chapter),
     ).toEqual([1, 2]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);

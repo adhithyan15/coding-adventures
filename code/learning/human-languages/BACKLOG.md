@@ -5,9 +5,9 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after PR #9472: 20 registered
-tracks, 973 Markdown lessons, and 18 downloadable LaTeX books. The Urdu item
-below adds the nineteenth book without adding a parallel publication workflow.
+Last prioritized: 2026-08-02. Current baseline after PR #9474: 20 registered
+tracks, 973 Markdown lessons, and 19 downloadable LaTeX books. The Russian item
+below adds the twentieth book without adding a parallel publication workflow.
 
 ## Priority rules
 
@@ -21,9 +21,15 @@ below adds the nineteenth book without adding a parallel publication workflow.
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
 | HL-B01 | Complete (#9472) | Publish the five authored Persian lessons as a two-chapter LaTeX starter book. | XeLaTeX builds the book; CI discovers an 18th PDF; chapters map to lessons 1 and 2. |
-| HL-B02 | Complete in the Urdu starter-book PR | Publish the five authored Urdu lessons as a two-chapter starter book. | XeLaTeX builds with correct RTL shaping; Urdu appears in the public catalog. |
-| HL-B03 | Next | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
-| HL-V01 | Queued | Add a machine-readable curriculum gap report and computed duration budget. | CI reports lessons at or above 300 seconds, missing prerequisites, book coverage, and track-schema status. |
+| HL-B02 | Complete (#9474) | Publish the five authored Urdu lessons as a two-chapter starter book. | XeLaTeX builds with correct RTL shaping; Urdu appears in the public catalog. |
+| HL-B03 | Complete in the Russian starter-book PR | Publish Russian's two authored chapters as a starter book. | The existing Cyrillic lessons and roadmap produce a downloadable PDF. |
+| HL-V01 | Next | Add a machine-readable curriculum gap report and computed duration budget. | CI reports lessons at or above 300 seconds, missing prerequisites, book coverage, and track-schema status. |
+
+The Russian publication audit found eight of its thirteen Chapter 1--2
+curriculum lessons currently declare five minutes or more, including one at six
+minutes. This is concrete input to HL-V01 and HL-D01, not silently treated as
+fixed by the book: the starter edition presents shorter dependency-ordered
+micro-sections while the canonical duration split remains measurable debt.
 
 ## P1 — one-source migration
 

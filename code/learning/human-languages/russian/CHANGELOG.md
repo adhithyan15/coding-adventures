@@ -1,5 +1,13 @@
 # Changelog — Russian track
 
+## 0.3.0 — 2026-08-02
+
+- Added the first downloadable LaTeX edition.
+- Published the two authored chapters as dependency-ordered micro-sections with
+  inline Cyrillic, grammar, usage, etymology, and retrieval prompts.
+- Kept the existing canonical duration debt explicit for the shared gap-report
+  and lesson-splitting backlog items.
+
 ## Chapter 2 — Introducing yourself
 
 Russian was one of **two tracks still at Chapter 1** (with Latin); every other
