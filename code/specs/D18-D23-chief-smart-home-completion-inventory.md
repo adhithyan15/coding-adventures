@@ -803,7 +803,9 @@ These items move toward retiring an existing Home Assistant install:
   WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, authenticated Reolink CGI
   device/channel/motion inspection, Roku ECP discovery and read-only device/app
   inspection, Wemo UPnP discovery/state inspection/light-switch control,
-  Sonos UPnP discovery and read-only player-state inspection, and
+  Sonos UPnP discovery and read-only player-state inspection, Nanoleaf local
+  mDNS discovery, physical-presence token pairing, state inspection, and
+  verified light control, and
   the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
   events, RTSP media transfer and recording,
   Reolink and other vendor-specific camera/NVR media, recording, control, and

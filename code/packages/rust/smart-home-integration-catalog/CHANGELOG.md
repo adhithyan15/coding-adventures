@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added first-party Nanoleaf local runtime coverage for mDNS discovery,
+  physical-presence token pairing, authenticated polling, and verified light
+  commands.
 - Marked Sonos as a first-party polling runtime for SSDP discovery and
   read-only UPnP player-state inspection.
 

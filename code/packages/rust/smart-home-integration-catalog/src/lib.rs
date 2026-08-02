@@ -45003,6 +45003,26 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             2,
             "tplink_tapo",
         ),
+        {
+            let mut entry = local_device_entry(
+                "nanoleaf",
+                "Nanoleaf",
+                "Authenticated Nanoleaf local API integration for lights and panels.",
+                ConnectivityClass::LocalPolling,
+                ImplementationStatus::FirstPartyRuntime,
+                2,
+                &["smart_home.read", "smart_home.command.light"],
+                &[EntityKind::Light],
+                &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual],
+                &[AuthMode::LocalPairing, AuthMode::LocalToken],
+                "nanoleaf",
+            )
+            .with_protocols(vec![ProtocolFamily::Vendor(
+                "nanoleaf_local".to_string(),
+            )]);
+            entry.required_primitives.push(PrimitiveFamily::VaultLease);
+            entry
+        },
         local_device_entry(
             "wled",
             "WLED",
@@ -80928,6 +80948,38 @@ mod tests {
         assert!(wled
             .required_primitives
             .contains(&PrimitiveFamily::CommandMapping));
+    }
+
+    #[test]
+    fn nanoleaf_entry_exposes_pairing_token_and_verified_command_primitives() {
+        let catalog = first_party_catalog();
+        let nanoleaf = find_entry(&catalog, &IntegrationId::trusted("nanoleaf")).unwrap();
+
+        assert_eq!(
+            nanoleaf.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(
+            nanoleaf.supported_protocols,
+            vec![ProtocolFamily::Vendor("nanoleaf_local".to_string())]
+        );
+        assert_eq!(nanoleaf.connectivity, ConnectivityClass::LocalPolling);
+        assert!(nanoleaf
+            .auth_modes
+            .contains(&AuthMode::LocalPairing));
+        assert!(nanoleaf
+            .auth_modes
+            .contains(&AuthMode::LocalToken));
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::LocalPairing,
+            PrimitiveFamily::LocalToken,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::CommandMapping,
+        ] {
+            assert!(nanoleaf.required_primitives.contains(&primitive));
+        }
     }
 
     #[test]
