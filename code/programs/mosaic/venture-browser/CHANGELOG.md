@@ -4,6 +4,9 @@
 
 ### Added
 
+- Extend generated SwiftUI and WinUI interaction acceptance through the native
+  content surface's history shortcuts in both directions, requiring the shared
+  Mosaic reducer to reproject each retained page.
 - Extend generated SwiftUI and WinUI interaction acceptance through native
   wheel scrolling, requiring the production adapters to update and repaint the
   shared Rust viewport before the keyboard, link, and resize gates continue.

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the generated WinUI direct-launch gate through Alt-Left/Right history
+  traversal after native link activation.
 - Extend the generated WinUI direct-launch gate through the same wheel-delta
   reducer used by `PointerWheelChanged`, requiring shared viewport scroll.
 - Extend the generated WinUI direct-launch gate through a real content-surface

@@ -169,9 +169,13 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
 
     let marker = output.join("swiftui-ready.json");
     let interaction_marker = output.join("swiftui-interaction.json");
-    let link_url = serve_html_sequence(vec!["Venture link acceptance"], None);
+    let link_url = serve_html_sequence(
+        vec!["Venture link acceptance", "Venture link acceptance"],
+        None,
+    );
     let start_url = serve_html_sequence(
         vec![
+            "Venture launch acceptance",
             "Venture launch acceptance",
             "Venture launch acceptance",
             "Venture launch acceptance",
@@ -228,6 +232,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
+    assert!(interaction.contains("\"surfaceHistory\":\"back-forward\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
     assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));

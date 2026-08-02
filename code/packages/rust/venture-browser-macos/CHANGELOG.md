@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the generated SwiftUI direct-launch gate through Command-Left/Right
+  history traversal after native link activation.
 - Extend the generated SwiftUI direct-launch gate through a synthesized AppKit
   wheel event and require shared viewport scroll before keyboard acceptance.
 - Extend the generated SwiftUI direct-launch gate through a real AppKit surface

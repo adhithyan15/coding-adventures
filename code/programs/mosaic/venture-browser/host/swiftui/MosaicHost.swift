@@ -101,6 +101,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var interactionAcceptanceStarted = false
   private var lastSurfaceWheelDelta: Double?
   private var lastSurfaceKeyboardCommand: String?
+  private var lastSurfaceHistoryEvent: String?
   private var lastSurfacePointerPoint: NSPoint?
   private var surfaceResizeBaseline: NSSize?
   private var lastSurfaceResizeSize: NSSize?
@@ -493,17 +494,18 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == linkURL, pageTitle == "Venture link acceptance" {
-      guard performNativeSurfaceResize() else {
+      lastSurfaceHistoryEvent = nil
+      guard performNativeSurfaceKey(keyCode: 123, modifiers: [.command]) else {
         writeInteractionResult(
           [
             "backend": "swiftui", "status": "error",
-            "error": "content surface unavailable for native resize",
+            "error": "content surface unavailable for Command-Left history",
           ],
           to: markerPath)
         return
       }
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-        self?.verifySurfaceResize(
+        self?.verifySurfaceHistoryBack(
           startURL: startURL, targetURL: targetURL, linkURL: linkURL,
           markerPath: markerPath, remaining: 50)
       }
@@ -527,6 +529,93 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
   }
 
+  private func verifySurfaceHistoryBack(
+    startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if lastSurfaceHistoryEvent == "onBack", address == startURL,
+      pageTitle == "Venture launch acceptance"
+    {
+      lastSurfaceHistoryEvent = nil
+      guard performNativeSurfaceKey(keyCode: 124, modifiers: [.command]) else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "content surface unavailable for Command-Right history",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifySurfaceHistoryForward(
+          startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+          markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle,
+          "error": "Command-Left did not navigate shared history",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifySurfaceHistoryBack(
+        startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+        markerPath: markerPath, remaining: remaining - 1)
+    }
+  }
+
+  private func verifySurfaceHistoryForward(
+    startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if lastSurfaceHistoryEvent == "onForward", address == linkURL,
+      pageTitle == "Venture link acceptance"
+    {
+      guard performNativeSurfaceResize() else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "content surface unavailable for native resize",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifySurfaceResize(
+          startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+          markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle,
+          "error": "Command-Right did not navigate shared history",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifySurfaceHistoryForward(
+        startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+        markerPath: markerPath, remaining: remaining - 1)
+    }
+  }
+
   private func verifySurfaceResize(
     startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
   ) {
@@ -537,7 +626,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         [
           "backend": "swiftui", "status": "interacted",
           "controls": "back-forward-reload-home", "surfaceWheel": "scroll",
-          "surfaceKeyboard": "document-end", "surfacePointer": "link",
+          "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
+          "surfacePointer": "link",
           "surfaceResize": "native-reflow",
           "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
           "targetAddress": targetURL, "linkAddress": linkURL,
@@ -603,14 +693,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return true
   }
 
-  private func performNativeSurfaceKey(keyCode: UInt16) -> Bool {
+  private func performNativeSurfaceKey(
+    keyCode: UInt16, modifiers: NSEvent.ModifierFlags = []
+  ) -> Bool {
     guard let contentView, let window = contentView.window else { return false }
     NSApp.activate(ignoringOtherApps: true)
     guard window.makeFirstResponder(contentView),
       let event = NSEvent.keyEvent(
         with: .keyDown,
         location: .zero,
-        modifierFlags: [],
+        modifierFlags: modifiers,
         timestamp: ProcessInfo.processInfo.systemUptime,
         windowNumber: window.windowNumber,
         context: nil,
@@ -619,7 +711,14 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         isARepeat: false,
         keyCode: keyCode)
     else { return false }
-    NSApp.sendEvent(event)
+    if modifiers.isEmpty {
+      NSApp.sendEvent(event)
+    } else {
+      // Command-key events are consumed by AppKit's key-equivalent pass before the
+      // first responder sees them. Deliver the real NSEvent to the production
+      // content-surface override so this gate exercises its shortcut reducer.
+      contentView.keyDown(with: event)
+    }
     return true
   }
 
@@ -736,6 +835,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   }
 
   fileprivate func navigateHistory(eventName: String) {
+    lastSurfaceHistoryEvent = eventName
     _ = handleEvent([:], name: eventName as NSString)
     propsChangedHandler?()
   }

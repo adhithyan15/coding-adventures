@@ -348,6 +348,52 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!contentSurface.RunHistoryKeyboardAcceptance(VirtualKey.Left))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "Alt-Left did not dispatch shared history",
+                    });
+                    return;
+                }
+                if (!await WaitForPageAsync(component, startUrl, "Venture launch acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "Alt-Left did not navigate shared history",
+                    });
+                    return;
+                }
+
+                if (!contentSurface.RunHistoryKeyboardAcceptance(VirtualKey.Right))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "Alt-Right did not dispatch shared history",
+                    });
+                    return;
+                }
+                if (!await WaitForPageAsync(component, linkUrl, "Venture link acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "Alt-Right did not navigate shared history",
+                    });
+                    return;
+                }
+
                 if (contentSurface is null || !await contentSurface.RunResizeAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
@@ -366,6 +412,7 @@ public static class MosaicHost
                     controls = "back-forward-reload-home",
                     surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
+                    surfaceHistory = "back-forward",
                     surfacePointer = "link",
                     surfaceResize = "native-reflow",
                     reloadTitle = "Venture reload acceptance",
@@ -632,6 +679,12 @@ public static class MosaicHost
         {
             _ = Focus(FocusState.Programmatic);
             return ScrollByWheelDelta(-120);
+        }
+
+        internal bool RunHistoryKeyboardAcceptance(VirtualKey key)
+        {
+            _ = Focus(FocusState.Programmatic);
+            return HandleKey(key, true, false, out var changed) && changed;
         }
 
         private bool ScrollByWheelDelta(int delta)
