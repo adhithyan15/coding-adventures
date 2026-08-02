@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9477,
   "last_inventory": {
     "revision": "e552707d59c62c0c0749c6173a2cf82478629b48",
     "schema_version": 3,
@@ -836,11 +836,11 @@
     {
       "id": "dart-current-14-of-15-matrix-family",
       "title": "Port matrix, loss-functions, and feature-normalization to Dart",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-trig-wave", "dart-scaffold-capability-schema"],
       "branch": "codex/dart-matrix-ml-parity",
-      "pr_number": null,
-      "notes": "Selected from the remaining Dart-only 14-of-15 frontier after correcting the loop to portable-package/build-tool scope. Deliver the three independent leaf packages in one coherent ML slice with shared reference vectors, empty capability profiles, package-native tests, coverage, and real build-tool validation."
+      "pr_number": 9477,
+      "notes": "Ready-for-review PR #9477. Selected from the remaining Dart-only 14-of-15 frontier after correcting the loop to portable-package/build-tool scope. Delivers the independent matrix, loss-functions, and feature-normalization leaf packages with shared reference vectors, immutable ownership, validation, empty capability profiles, BUILD/BUILD_windows, docs, and metadata. Local validation passed formatter/analyzer/randomized tests, 93.65%-100% line coverage, both package build scripts, the exact three-package diff build, nearby neural-network regressions, 21 reporter/capability tests, collision-clean parity at 1,215 identities and 4,362 slots, dependency/diff hygiene, and independent security review. The repository-wide build validator still reports the separately tracked 73 pre-existing BUILD_windows prerequisite declarations outside this slice."
     },
     {
       "id": "venture-browser-windows-portable-bridge-and-native-host",
