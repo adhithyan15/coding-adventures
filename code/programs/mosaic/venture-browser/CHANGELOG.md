@@ -4,6 +4,9 @@
 
 ### Added
 
+- Extend generated SwiftUI and WinUI interaction acceptance through a real
+  native content-surface resize, requiring the production adapters to reflow
+  and repaint the retained shared Rust browser session.
 - Extend generated SwiftUI and WinUI acceptance through native content-surface
   link activation after the End-key scroll gate, requiring the shared Rust
   session to navigate and reproject the linked address and title.

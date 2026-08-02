@@ -101,6 +101,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var interactionAcceptanceStarted = false
   private var lastSurfaceKeyboardCommand: String?
   private var lastSurfacePointerPoint: NSPoint?
+  private var surfaceResizeBaseline: NSSize?
+  private var lastSurfaceResizeSize: NSSize?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -463,15 +465,20 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == linkURL, pageTitle == "Venture link acceptance" {
-      writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
-          "surfacePointer": "link", "reloadTitle": "Venture reload acceptance",
-          "homeAddress": startURL, "targetAddress": targetURL,
-          "linkAddress": linkURL, "pageTitle": pageTitle,
-        ],
-        to: markerPath)
+      guard performNativeSurfaceResize() else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "content surface unavailable for native resize",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifySurfaceResize(
+          startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+          markerPath: markerPath, remaining: 50)
+      }
       return
     }
     guard remaining > 0 else {
@@ -489,6 +496,40 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifySurfaceLink(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         remaining: remaining - 1)
+    }
+  }
+
+  private func verifySurfaceResize(
+    startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
+  ) {
+    if let baseline = surfaceResizeBaseline, let resized = lastSurfaceResizeSize,
+      abs(resized.width - baseline.width) > 0.5 || abs(resized.height - baseline.height) > 0.5
+    {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted",
+          "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
+          "surfacePointer": "link", "surfaceResize": "native-reflow",
+          "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
+          "targetAddress": targetURL, "linkAddress": linkURL,
+          "pageTitle": "Venture link acceptance",
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native surface resize did not reflow the shared viewport",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifySurfaceResize(
+        startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+        markerPath: markerPath, remaining: remaining - 1)
     }
   }
 
@@ -563,6 +604,20 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     else { return false }
     contentView.mouseDown(with: mouseDown)
     contentView.mouseUp(with: mouseUp)
+    return true
+  }
+
+  private func performNativeSurfaceResize() -> Bool {
+    guard let contentView, let window = contentView.window else { return false }
+    let baseline = contentView.bounds.size
+    guard baseline.width > 0, baseline.height > 0 else { return false }
+    surfaceResizeBaseline = baseline
+    lastSurfaceResizeSize = nil
+    let contentSize = window.contentView?.bounds.size ?? window.frame.size
+    window.setContentSize(
+      NSSize(width: contentSize.width + 80, height: contentSize.height + 60))
+    window.contentView?.needsLayout = true
+    window.contentView?.layoutSubtreeIfNeeded()
     return true
   }
 
@@ -652,7 +707,9 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   fileprivate func resize(width: Double, height: Double) {
     guard let native, let browser else { return }
-    _ = native.resize(browser, width, height)
+    if native.resize(browser, width, height) != 0 {
+      lastSurfaceResizeSize = NSSize(width: width, height: height)
+    }
   }
 }
 

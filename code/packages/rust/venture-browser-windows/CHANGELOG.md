@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the generated WinUI direct-launch gate through a real content-surface
+  size change and require the package-owned adapter to report shared-session
+  reflow.
 - Extend the generated WinUI direct-launch gate through the content surface's
   pointer-coordinate activation path after restoring the scrolled viewport to
   document start.
