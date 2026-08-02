@@ -7555,3 +7555,408 @@ code {
     transform: rotate(90deg);
   }
 }
+
+.deep-training-workbench {
+  display: grid;
+  gap: 14px;
+}
+
+.deep-training-switch {
+  display: flex;
+  gap: 8px;
+  padding: 0 24px;
+}
+
+.deep-training-switch button {
+  border: 1px solid $line;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  color: $ink;
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 750;
+}
+
+.deep-training-switch button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.42);
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+}
+
+.workspace--gradient-flow {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.gradient-flow-stage {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.gradient-flow-intro,
+.gradient-forward-panel,
+.gradient-backward-panel,
+.gradient-arithmetic-panel,
+.gradient-chain-panel,
+.gradient-comparison-panel,
+.gradient-flow-controls {
+  @include surface;
+}
+
+.gradient-flow-intro,
+.gradient-forward-panel,
+.gradient-backward-panel,
+.gradient-arithmetic-panel,
+.gradient-chain-panel,
+.gradient-comparison-panel {
+  padding: 18px;
+}
+
+.gradient-flow-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gradient-flow-intro h2,
+.gradient-flow-controls h2 {
+  margin: 0;
+}
+
+.gradient-flow-intro p:not(.eyebrow),
+.gradient-flow-controls > p,
+.gradient-chain-panel > p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.gradient-flow-chip {
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gradient-flow-chip--vanishing {
+  background: rgba(37, 99, 235, 0.08);
+  color: #234c9f;
+}
+
+.gradient-flow-chip--stable {
+  background: rgba(35, 122, 87, 0.08);
+  color: #1d6849;
+}
+
+.gradient-flow-chip--exploding {
+  background: rgba(194, 65, 59, 0.08);
+  color: #9b3131;
+}
+
+.gradient-forward-panel,
+.gradient-backward-panel,
+.gradient-arithmetic-panel,
+.gradient-chain-panel,
+.gradient-comparison-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.gradient-forward-lane {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gradient-forward-lane > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 92px;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.055);
+  padding: 10px;
+  text-align: center;
+}
+
+.gradient-forward-lane span,
+.gradient-backward-lane span,
+.gradient-backward-lane small,
+.gradient-input-node span {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.gradient-forward-lane code,
+.gradient-forward-lane strong,
+.gradient-backward-lane strong,
+.gradient-backward-lane code,
+.gradient-input-node strong,
+.gradient-chain-panel strong,
+.gradient-chain-panel code,
+.gradient-audit code,
+.gradient-comparison-grid code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.gradient-forward-lane code {
+  color: #234c9f;
+  font-size: 0.7rem;
+}
+
+.gradient-forward-lane .gradient-loss-node {
+  border-color: rgba(194, 65, 59, 0.22);
+  background: rgba(194, 65, 59, 0.07);
+}
+
+.gradient-backward-lane {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gradient-backward-lane button,
+.gradient-input-node {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid rgba(109, 91, 208, 0.22);
+  border-radius: 9px;
+  background: rgba(109, 91, 208, 0.055);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.gradient-backward-lane button:hover,
+.gradient-backward-lane button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.55);
+  background: rgba(109, 91, 208, 0.13);
+}
+
+.gradient-backward-lane code {
+  color: #4b3e9d;
+  font-size: 0.72rem;
+}
+
+.gradient-input-node {
+  align-content: center;
+  border-color: rgba(35, 122, 87, 0.28);
+  background: rgba(35, 122, 87, 0.075);
+}
+
+.gradient-equation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 0.65fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.gradient-equation-grid code,
+.gradient-equation-grid span {
+  min-width: 0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.gradient-equation-grid code {
+  background: rgba(37, 99, 235, 0.07);
+  color: #234c9f;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.gradient-equation-grid span {
+  color: $muted;
+  font-size: 0.75rem;
+}
+
+.gradient-chain-equation {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto minmax(90px, 1fr);
+  align-items: center;
+  gap: 7px;
+}
+
+.gradient-chain-equation code,
+.gradient-chain-equation strong {
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.gradient-chain-equation code {
+  background: rgba(109, 91, 208, 0.08);
+  color: #4b3e9d;
+}
+
+.gradient-chain-equation span {
+  color: $muted;
+  font-weight: 850;
+}
+
+.gradient-chain-equation strong {
+  background: rgba(35, 122, 87, 0.08);
+  color: #1d6849;
+}
+
+.gradient-audit {
+  display: grid;
+  grid-template-columns: auto minmax(90px, 1fr) auto minmax(90px, 1fr);
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid $line;
+  padding-top: 12px;
+}
+
+.gradient-audit span {
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gradient-audit code {
+  border-radius: 7px;
+  background: rgba(35, 122, 87, 0.075);
+  padding: 8px;
+}
+
+.gradient-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.gradient-comparison-grid article {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  padding: 11px;
+}
+
+.gradient-comparison-grid article.is-selected {
+  border-color: rgba(109, 91, 208, 0.45);
+  background: rgba(109, 91, 208, 0.055);
+}
+
+.gradient-comparison-grid article > span,
+.gradient-comparison-grid small {
+  color: $muted;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.gradient-comparison-grid i {
+  display: block;
+  min-width: 2px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, $blue, $red);
+}
+
+.gradient-flow-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.gradient-scenario-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.gradient-scenario-buttons button {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.gradient-scenario-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.48);
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+}
+
+.gradient-scenario-buttons span,
+.gradient-scenario-buttons code {
+  color: $muted;
+  font-size: 0.7rem;
+}
+
+.gradient-flow-reading {
+  display: grid;
+  gap: 7px;
+  margin-top: 6px;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.065);
+  padding: 11px;
+}
+
+.gradient-flow-reading h2,
+.gradient-flow-reading p {
+  margin: 0;
+}
+
+@media (max-width: 1180px) {
+  .workspace--gradient-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .gradient-flow-controls {
+    position: static;
+  }
+
+  .gradient-scenario-buttons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .deep-training-switch,
+  .gradient-flow-intro,
+  .gradient-forward-panel .panel-heading,
+  .gradient-backward-panel .panel-heading,
+  .gradient-arithmetic-panel .panel-heading,
+  .gradient-chain-panel .panel-heading,
+  .gradient-comparison-panel .panel-heading {
+    display: grid;
+  }
+
+  .gradient-flow-chip {
+    justify-self: start;
+  }
+
+  .deep-training-switch,
+  .gradient-forward-lane,
+  .gradient-backward-lane,
+  .gradient-equation-grid,
+  .gradient-chain-equation,
+  .gradient-audit,
+  .gradient-comparison-grid,
+  .gradient-scenario-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .gradient-chain-equation span {
+    justify-self: center;
+  }
+}

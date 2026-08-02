@@ -11,11 +11,14 @@ import {
   traceTinyDecoderTraining,
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { GraphNeighborhoodWorkbench } from "./GraphNeighborhoodWorkbench.js";
 import { traceGraphNeighborhoodComparison } from "./graph-neighborhood-lab.js";
+import { GradientFlowWorkbench } from "./GradientFlowWorkbench.js";
+import { traceGradientFlow } from "./gradient-flow-lab.js";
 import { HopfieldWorkbench } from "./HopfieldWorkbench.js";
 import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -1515,5 +1518,57 @@ describe("initialization and activation distributions", () => {
     fireEvent.click(screen.getByRole("button", { name: "ReLU" }));
     fireEvent.click(screen.getByRole("button", { name: /Layer 3.*std 6\.855655/ }));
     expect(screen.getByLabelText("Selected activation distribution").textContent).toMatch(/standard deviation6\.855655.*exact zeros62\.5%/s);
+  });
+});
+
+describe("vanishing and exploding gradients", () => {
+  it("keeps the gradient-flow explorer in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--gradient-flow");
+    expect(productionCss).toContain(".gradient-chain-equation");
+  });
+
+  it("traces a small tanh chain from loss to input", () => {
+    const trace = traceGradientFlow("small-tanh");
+    expect(trace.classification).toBe("vanishing");
+    expect(trace.chainJacobian).toBeCloseTo(0.045877150455727246, 14);
+    expect(trace.inputGradient).toBeCloseTo(0.0025900181205328957, 14);
+    expect(trace.finiteDifferenceError).toBeLessThan(1e-10);
+  });
+
+  it("shows saturation can overwhelm large tanh weights", () => {
+    const trace = traceGradientFlow("saturated-tanh");
+    expect(trace.layers.map((layer) => layer.weight)).toEqual([3, 3, 3, 3]);
+    expect(trace.layers[0]!.activationDerivative).toBeCloseTo(0.009866037165440211, 14);
+    expect(trace.chainJacobian).toBeCloseTo(8.400447769691746e-7, 14);
+  });
+
+  it("keeps unit ReLU stable and makes large ReLU explode", () => {
+    const stable = traceGradientFlow("unit-relu");
+    const exploding = traceGradientFlow("large-relu");
+    expect(stable.chainJacobian).toBe(1);
+    expect(stable.inputGradient).toBe(1);
+    expect(exploding.layers.map((layer) => layer.activation)).toEqual([2, 4, 8, 16]);
+    expect(exploding.layers.map((layer) => layer.weightGradient)).toEqual([128, 128, 128, 128]);
+    expect(exploding.chainJacobian).toBe(16);
+    expect(exploding.inputGradient).toBe(256);
+  });
+
+  it("rejects invalid scenarios and finite-difference steps", () => {
+    expect(() => traceGradientFlow("missing")).toThrow(/unknown/);
+    expect(() => traceGradientFlow("small-tanh", 0)).toThrow(/positive/);
+  });
+
+  it("switches deep-training labs and gradient scenarios", () => {
+    render(React.createElement(DeepTrainingWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Gradient flow" }));
+    expect(screen.getByRole("heading", { name: "Vanishing and exploding gradients" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: /Large ReLU.*Every layer doubles/ }));
+    expect(screen.getByLabelText("Gradient chain product").textContent).toMatch(/2.*2.*2.*2.*=.*16.*16 output error.*256.*input gradient/s);
+  });
+
+  it("opens any reverse-mode layer calculation", () => {
+    render(React.createElement(GradientFlowWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: /layer 1.*upstream 0\.006587/ }));
+    expect(screen.getByLabelText("Selected gradient calculation").textContent).toMatch(/0\.006587 x 0\.786448 = 0\.00518.*0\.00518 x 0\.5 = 0\.00259/s);
   });
 });

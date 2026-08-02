@@ -51,7 +51,7 @@ trace, and tests.
 
 - [ ] Deep-training mechanics
   - [x] Initialization and activation-distribution explorer.
-  - [ ] Vanishing and exploding gradient trace.
+  - [x] Vanishing and exploding gradient trace.
   - [ ] Normalization, dropout, and residual comparisons.
 - [ ] Tensor and autograd bridge
   - [ ] Shape and broadcasting visualizer.

@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
-import { InitializationWorkbench } from "./InitializationWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -299,7 +299,7 @@ export function App() {
               : workbench === "structured"
                 ? "Structure shapes computation"
               : workbench === "deep"
-                ? "Scale shapes every layer"
+                ? "Scale shapes forward and backward signals"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -413,7 +413,7 @@ export function App() {
             ) : workbench === "structured" ? (
               <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
             ) : workbench === "deep" ? (
-              <>initializer {"->"} <strong>activation spread</strong> {"->"} deeper signal</>
+              <>initialize {"->"} <strong>activation spread</strong> {"->"} gradient flow</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -442,7 +442,7 @@ export function App() {
       ) : workbench === "structured" ? (
         <StructuredWorkbench />
       ) : workbench === "deep" ? (
-        <InitializationWorkbench />
+        <DeepTrainingWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

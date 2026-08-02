@@ -181,6 +181,13 @@ eight activation values, population variance and standard deviation, exact-zero
 or saturation fraction, and one selected neuron's full arithmetic. A comparison
 panel keeps all four initializer trajectories visible at once.
 
+Switch to gradient flow to reverse four scalar layers. Small-weight and
+saturated `tanh` chains show two ways a gradient can vanish, unit ReLU provides
+a stable control, and large ReLU doubles every local Jacobian. Select any layer
+to expand `dL/da`, `da/dz`, `dL/dz`, the input gradient, and the weight gradient.
+The complete chain product and an independent input finite difference remain
+visible beside all four scenarios.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -286,6 +293,11 @@ NN23 under `code/specs/fixtures/initialization-activation-distribution-v1`
 pins three bias-free layers under four scales and two activations, including a
 canonical Xavier-plus-tanh trace and cross-mode standard-deviation, zero, and
 saturation summaries.
+
+NN24 under `code/specs/fixtures/gradient-flow-v1` pins four scalar chains,
+every activation derivative and local Jacobian, all reverse-mode input and
+weight gradients, vanishing/stable/exploding classifications, and input finite-
+difference checks.
 
 ## Development
 

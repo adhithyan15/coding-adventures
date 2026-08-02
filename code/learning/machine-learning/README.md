@@ -40,13 +40,14 @@ larger network:
 20. [Tiny Graph Message Passing, by Hand](./tiny-graph-message-passing-by-hand.md)
 21. [Graph Convolution and Attention, by Hand](./graph-convolution-and-attention-by-hand.md)
 22. [Initialization and Activation Distributions, by Hand](./initialization-and-activation-distributions-by-hand.md)
-23. [Matrix Math](../matrix-math.md)
-24. [Loss Functions](../loss-functions.md)
-25. [Gradient Descent](../gradient-descent.md)
-26. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-27. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-28. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-29. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+23. [Vanishing and Exploding Gradients, by Hand](./vanishing-and-exploding-gradients-by-hand.md)
+24. [Matrix Math](../matrix-math.md)
+25. [Loss Functions](../loss-functions.md)
+26. [Gradient Descent](../gradient-descent.md)
+27. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+28. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+29. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+30. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -117,7 +118,10 @@ has twelve complementary views:
 - **Deep-training lab:** hold a three-layer sign template fixed while switching
   between tiny, Xavier, He, and deliberately large weight scales. Compare tanh
   saturation with ReLU zeros, open one multiply-sum-activation calculation,
-  and watch population standard deviation change across layers.
+  and watch population standard deviation change across layers. Then reverse a
+  four-layer scalar chain, select any chain-rule step, compare small-weight and
+  saturated vanishing paths with stable and exploding ReLU controls, and audit
+  the input gradient with finite differences.
 
 ## Language-Neutral Corpus
 
@@ -214,6 +218,10 @@ including fixed input and sign matrices, tiny/Xavier/He/large scales, canonical
 preactivations and activations, population standard deviations, exact-zero
 fractions, and tanh saturation fractions.
 
+NN24 adds `code/specs/fixtures/gradient-flow-v1`, including four scalar forward
+chains, activation derivatives, local Jacobians, every reverse-mode gradient,
+the total chain product, flow classification, and input finite differences.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -238,6 +246,7 @@ python code/scripts/validate_hopfield_associative_memory_labs.py
 python code/scripts/validate_tiny_message_passing_labs.py
 python code/scripts/validate_graph_convolution_attention_labs.py
 python code/scripts/validate_initialization_activation_distribution_labs.py
+python code/scripts/validate_gradient_flow_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
