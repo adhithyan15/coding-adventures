@@ -106,7 +106,7 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `cd7bc5962` after
+working inventory was regenerated on August 2, 2026 from `2140f0e5d` after
 merged PRs #9477 and #9485 added the three Dart ML leaves and Dart
 `document-ast`, following the serial Rust smart-home additions through Sonos
 (#9461), Nanoleaf (#9486), and the Rust SPICE model validation chain. It contains
@@ -124,7 +124,7 @@ The loop must not start by attempting 10,738 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`cd7bc596221d1ecc47683f955d333176559b794e` is collision-clean at 1,217
+`2140f0e5d9faba711d9bfe903804503ab9a5297d` is collision-clean at 1,217
 normalized implementation identities, 4,365 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 767 singletons, 572
 Rust singletons, zero canonical collisions, and zero unknown language buckets.

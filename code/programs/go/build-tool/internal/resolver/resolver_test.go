@@ -1,10 +1,16 @@
 package resolver
 
 import (
+	"encoding/base64"
+	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
 
@@ -22,6 +28,163 @@ func makeFixture(t *testing.T, tree map[string]string) string {
 		}
 	}
 	return root
+}
+
+func mustResolveDependencies(t *testing.T, packages []discovery.Package) *directedgraph.Graph {
+	t.Helper()
+	graph, err := ResolveDependencies(packages)
+	if err != nil {
+		t.Fatalf("ResolveDependencies returned an unexpected error: %v", err)
+	}
+	return graph
+}
+
+type resolutionFixture struct {
+	Workspace struct {
+		Files []struct {
+			Path          string `json:"path"`
+			ContentUTF8   string `json:"content_utf8"`
+			ContentBase64 string `json:"content_base64"`
+		} `json:"files"`
+	} `json:"workspace"`
+	Expected struct {
+		Outcome string `json:"outcome"`
+		Result  struct {
+			Edges [][]string `json:"edges"`
+		} `json:"result"`
+		Diagnostics []struct {
+			Code    string `json:"code"`
+			Path    string `json:"path"`
+			Package string `json:"package"`
+			Details struct {
+				Encoding string `json:"encoding"`
+			} `json:"details"`
+		} `json:"diagnostics"`
+	} `json:"expected"`
+}
+
+func loadResolutionFixture(t *testing.T, name string) resolutionFixture {
+	t.Helper()
+	_, sourceFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatal("could not locate resolver test source")
+	}
+	fixturePath := filepath.Join(
+		filepath.Dir(sourceFile),
+		"..", "..", "..", "..", "..",
+		"specs", "fixtures", "build-tool-v1", "cases", name,
+	)
+	data, err := os.ReadFile(fixturePath)
+	if err != nil {
+		t.Fatalf("read shared fixture %s: %v", name, err)
+	}
+	var fixture resolutionFixture
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatalf("decode shared fixture %s: %v", name, err)
+	}
+	return fixture
+}
+
+func materializeResolutionFixture(
+	t *testing.T,
+	fixture resolutionFixture,
+) (string, []discovery.Package) {
+	t.Helper()
+	root := t.TempDir()
+	packages := make([]discovery.Package, 0)
+	seenPackages := make(map[string]bool)
+	for _, file := range fixture.Workspace.Files {
+		var data []byte
+		var err error
+		if file.ContentBase64 != "" {
+			data, err = base64.StdEncoding.DecodeString(file.ContentBase64)
+			if err != nil {
+				t.Fatalf("decode %s: %v", file.Path, err)
+			}
+		} else {
+			data = []byte(file.ContentUTF8)
+		}
+		absolutePath := filepath.Join(root, filepath.FromSlash(file.Path))
+		if err := os.MkdirAll(filepath.Dir(absolutePath), 0755); err != nil {
+			t.Fatalf("create fixture directory for %s: %v", file.Path, err)
+		}
+		if err := os.WriteFile(absolutePath, data, 0644); err != nil {
+			t.Fatalf("write fixture file %s: %v", file.Path, err)
+		}
+
+		segments := strings.Split(filepath.ToSlash(file.Path), "/")
+		if filepath.Base(absolutePath) != "BUILD" || len(segments) != 5 {
+			continue
+		}
+		packageName := segments[2] + "/" + segments[3]
+		if seenPackages[packageName] {
+			continue
+		}
+		seenPackages[packageName] = true
+		packages = append(packages, discovery.Package{
+			Name:     packageName,
+			Path:     filepath.Join(root, filepath.FromSlash(strings.Join(segments[:4], "/"))),
+			Language: segments[2],
+		})
+	}
+	return root, packages
+}
+
+func TestLuaResolutionConformanceFixtures(t *testing.T) {
+	for _, name := range []string{
+		"resolution-lua-utf8.json",
+		"resolution-lua-invalid-utf8.json",
+	} {
+		t.Run(name, func(t *testing.T) {
+			fixture := loadResolutionFixture(t, name)
+			root, packages := materializeResolutionFixture(t, fixture)
+			graph, err := ResolveDependencies(packages)
+
+			if fixture.Expected.Outcome == "ok" {
+				if err != nil {
+					t.Fatalf("ResolveDependencies returned an unexpected error: %v", err)
+				}
+				edges := graph.Edges()
+				if len(edges) != len(fixture.Expected.Result.Edges) {
+					t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+				}
+				for _, edge := range fixture.Expected.Result.Edges {
+					if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+						t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+					}
+				}
+				return
+			}
+
+			if err == nil {
+				t.Fatal("expected invalid UTF-8 metadata to fail closed")
+			}
+			var encodingError *MetadataEncodingError
+			if !errors.As(err, &encodingError) {
+				t.Fatalf("expected MetadataEncodingError, got %T: %v", err, err)
+			}
+			diagnostic := fixture.Expected.Diagnostics[0]
+			if encodingError.Code != diagnostic.Code ||
+				encodingError.Package != diagnostic.Package ||
+				encodingError.Manifest != diagnostic.Path ||
+				encodingError.Encoding != diagnostic.Details.Encoding {
+				t.Fatalf("metadata diagnostic mismatch: got %#v, want %#v", encodingError, diagnostic)
+			}
+			if strings.Contains(encodingError.Error(), root) {
+				t.Fatalf("metadata diagnostic leaked fixture host path: %s", encodingError)
+			}
+		})
+	}
+}
+
+func TestRepositoryManifestPathUsesFinalCanonicalBoundary(t *testing.T) {
+	hostPath := filepath.Join(
+		"C:", "private", "code", "checkout", "code", "packages", "lua", "pkg", "pkg.rockspec",
+	)
+	want := "code/packages/lua/pkg/pkg.rockspec"
+	if got := repositoryManifestPath(hostPath); got != want {
+		t.Fatalf("repositoryManifestPath(%q) = %q, want %q", hostPath, got, want)
+	}
 }
 
 // ---------------------------------------------------------------------------
@@ -254,7 +417,7 @@ name = "graph"
 		{Name: "rust/graph", Path: filepath.Join(root, "rust-graph"), Language: "rust"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 	if !graph.HasEdge("rust/graph", "wasm/graph") {
 		t.Fatalf("expected rust/graph -> wasm/graph edge, got %v", graph.Edges())
 	}
@@ -275,7 +438,7 @@ func TestResolveDependenciesUsesBuildToolDepsComments(t *testing.T) {
 		},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 	if !graph.HasEdge("rust/paint-vm-direct2d-c", "swift/PaintVmDirect2DNative") {
 		t.Fatalf("expected build-tool deps comment to add Rust prerequisite, got %v", graph.Edges())
 	}
@@ -299,7 +462,7 @@ name = "avl-tree"
 		{Name: "rust/avl-tree", Path: filepath.Join(root, "rust-avl-tree"), Language: "rust"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 	if graph.HasEdge("wasm/avl-tree", "wasm/avl-tree") {
 		t.Fatalf("did not expect wasm self-loop, got %v", graph.Edges())
 	}
@@ -346,7 +509,7 @@ func TestResolveDependenciesDotnetScopeSupportsCrossLanguageProjectReferences(t 
 		{Name: "fsharp/helpers", Path: filepath.Join(root, "fsharp-helpers"), Language: "fsharp"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 	if !graph.HasEdge("fsharp/helpers", "csharp/graph") {
 		t.Fatalf("expected fsharp/helpers -> csharp/graph edge, got %v", graph.Edges())
 	}
@@ -374,7 +537,7 @@ func TestResolveDependenciesDotnetPrefersSameLanguageOnSharedBasename(t *testing
 		{Name: "fsharp/bitset", Path: filepath.Join(root, "fsharp", "bitset"), Language: "fsharp"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 	if !graph.HasEdge("csharp/bitset", "csharp/graph") {
 		t.Fatalf("expected csharp/bitset -> csharp/graph edge, got %v", graph.Edges())
 	}
@@ -470,7 +633,7 @@ dependencies = []
 		{Name: "python/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "python"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 
 	// Both nodes should exist.
 	if !graph.HasNode("python/pkg-a") || !graph.HasNode("python/pkg-b") {
@@ -501,7 +664,7 @@ dependencies = []
 		{Name: "python/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "python"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 
 	// Edge: pkg-b → pkg-a (pkg-a depends on pkg-b).
 	if !graph.HasEdge("python/pkg-b", "python/pkg-a") {
@@ -532,7 +695,7 @@ end
 		{Name: "ruby/document_ast", Path: filepath.Join(root, "ruby/document_ast"), Language: "ruby"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 
 	if !graph.HasEdge("elixir/document_ast", "elixir/document_ast_sanitizer") {
 		t.Fatal("expected Elixir dependency to resolve to the Elixir package")
@@ -560,7 +723,7 @@ end
 		{Name: "elixir/csv_parser", Path: filepath.Join(root, "elixir/csv_parser"), Language: "elixir"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 
 	if !graph.HasEdge("elixir/csv_parser", "elixir/sql_csv_source") {
 		t.Fatal("expected Elixir dependency with plain app atom to resolve")
@@ -594,7 +757,7 @@ dependencies = []
 		{Name: "python/pkg-d", Path: filepath.Join(root, "pkg-d"), Language: "python"},
 	}
 
-	graph := ResolveDependencies(packages)
+	graph := mustResolveDependencies(t, packages)
 
 	// Verify edge count: d→b, d→c, b→a, c→a = 4 edges.
 	edges := graph.Edges()

@@ -40,15 +40,54 @@
 package resolver
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
+
+const metadataInvalidUTF8 = "METADATA_INVALID_UTF8"
+
+// MetadataEncodingError reports text metadata that cannot be decoded under the
+// repository's strict UTF-8 contract. Manifest is always repository-relative so
+// diagnostics do not disclose checkout or temporary-directory paths.
+type MetadataEncodingError struct {
+	Code     string
+	Package  string
+	Manifest string
+	Encoding string
+}
+
+func (err *MetadataEncodingError) Error() string {
+	return fmt.Sprintf(
+		"%s: package=%s manifest=%s encoding=%s",
+		err.Code,
+		err.Package,
+		err.Manifest,
+		err.Encoding,
+	)
+}
+
+func repositoryManifestPath(path string) string {
+	parts := strings.Split(filepath.ToSlash(filepath.Clean(path)), "/")
+	canonicalStart := -1
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "code" &&
+			(parts[index+1] == "packages" || parts[index+1] == "programs") {
+			canonicalStart = index
+		}
+	}
+	if canonicalStart >= 0 {
+		return strings.Join(parts[canonicalStart:], "/")
+	}
+	return filepath.ToSlash(filepath.Base(path))
+}
 
 // parsePythonDeps extracts internal dependencies from a Python pyproject.toml.
 //
@@ -482,11 +521,14 @@ func parseElixirDeps(pkg discovery.Package, knownNames map[string]string) []stri
 // "coding-adventures-" and map them to internal package names. Version
 // specifiers are stripped. The rockspec format uses hyphens in package names,
 // matching the Python/PyPI convention.
-func parseLuaDeps(pkg discovery.Package, knownNames map[string]string) []string {
+func parseLuaDeps(
+	pkg discovery.Package,
+	knownNames map[string]string,
+) ([]string, error) {
 	// Find .rockspec files in the package directory.
 	entries, err := os.ReadDir(pkg.Path)
 	if err != nil {
-		return nil
+		return nil, nil
 	}
 
 	var rockspecPath string
@@ -497,12 +539,20 @@ func parseLuaDeps(pkg discovery.Package, knownNames map[string]string) []string 
 		}
 	}
 	if rockspecPath == "" {
-		return nil
+		return nil, nil
 	}
 
 	data, err := os.ReadFile(rockspecPath)
 	if err != nil {
-		return nil
+		return nil, nil
+	}
+	if !utf8.Valid(data) {
+		return nil, &MetadataEncodingError{
+			Code:     metadataInvalidUTF8,
+			Package:  pkg.Name,
+			Manifest: repositoryManifestPath(rockspecPath),
+			Encoding: "UTF-8",
+		}
 	}
 
 	text := string(data)
@@ -550,7 +600,7 @@ func parseLuaDeps(pkg discovery.Package, knownNames map[string]string) []string 
 		}
 	}
 
-	return internalDeps
+	return internalDeps, nil
 }
 
 // mapLuaDep strips version specifiers from a Lua dependency string and maps it
@@ -1166,7 +1216,7 @@ func readCabalPackageName(pkgPath string) string {
 // among the discovered packages — are silently skipped.
 //
 // This function is the main entry point for dependency resolution.
-func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
+func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, error) {
 	graph := directedgraph.New()
 
 	// First, add all packages as nodes. Even packages with no dependencies
@@ -1207,7 +1257,11 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
 		case "lua":
-			deps = parseLuaDeps(pkg, knownNames)
+			var err error
+			deps, err = parseLuaDeps(pkg, knownNames)
+			if err != nil {
+				return nil, err
+			}
 		case "perl":
 			deps = parsePerlDeps(pkg, knownNames)
 		case "swift":
@@ -1229,7 +1283,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 		}
 	}
 
-	return graph
+	return graph, nil
 }
 
 // BuildKnownNames is exported for testing. It delegates to buildKnownNames.

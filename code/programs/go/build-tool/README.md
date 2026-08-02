@@ -70,12 +70,22 @@ On Windows, use the compiled `.exe`:
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
+## Metadata safety
+
+Text package metadata is decoded according to the language-neutral build-tool
+contract. In particular, Lua `.rockspec` files must be strict UTF-8. Invalid
+bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
+repository-relative manifest, and return CLI exit code 2 without exposing the
+checkout path or silently replacing input.
+
 ## Architecture
 
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
 
 1. **discovery** -- Recursively walks for `BUILD` files to find packages
-2. **resolver** -- Parses `pyproject.toml`, `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, and `pubspec.yaml`
+2. **resolver** -- Parses ecosystem metadata including `pyproject.toml`,
+   `.gemspec`, `go.mod`, `Cargo.toml`, `package.json`, `mix.exs`, `.rockspec`,
+   `pubspec.yaml`, Cabal files, Gradle files, and .NET project references
 3. **hasher** -- SHA256 hashing for change detection
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore

@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "cd7bc596221d1ecc47683f955d333176559b794e",
+    "revision": "2140f0e5d9faba711d9bfe903804503ab9a5297d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1217,
@@ -347,7 +347,7 @@
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": "codex/build-tool-go-rockspec-utf8",
       "pr_number": null,
-      "notes": "First dependency-shaped child of build-tool-rockspec-utf8-remaining-engines. Go is prioritized because it is the intended operational oracle and currently treats arbitrary rockspec bytes as text. Bind its resolver and front door to resolution/lua-utf8 and resolution/lua-invalid-utf8, returning METADATA_INVALID_UTF8 with package and repository-relative manifest identity before dependency parsing; do not mix the other eight engine remediations into this slice."
+      "notes": "First dependency-shaped child of build-tool-rockspec-utf8-remaining-engines. Go is prioritized because it is the intended operational oracle. The implementation binds its resolver to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, requires the exact expected edge set, rejects invalid bytes before parsing with a typed MetadataEncodingError, emits METADATA_INVALID_UTF8 with package and repository-relative manifest identity, and returns CLI exit 2 without host paths. Validation on rebased main 2140f0e5d passed go test and race test across every package, 73.2% total coverage, go vet, trimpath build, the 57-test/52-subtest language-neutral conformance suite, a 32-case/36-file corpus check, a real 4,763-package/8,348-edge plan, collision-free parity inventory, and an exact BUILD-validator baseline comparison of 73 issues before and after. The other eight engine remediations remain outside this slice."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
