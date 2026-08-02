@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Require the generated WinUI interaction gate to verify programmatic focus on
+  the hosted content surface before surface input.
 - Require the generated WinUI resize gate to observe a successfully rendered
   bitmap whose pixel size changed after shared-session reflow.
 - Extend the generated WinUI direct-launch gate through Alt-Left/Right history

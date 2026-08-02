@@ -102,6 +102,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var lastSurfaceWheelDelta: Double?
   private var lastSurfaceKeyboardCommand: String?
   private var lastSurfaceHistoryEvent: String?
+  private var lastSurfaceFocusState: String?
   private var lastSurfacePointerPoint: NSPoint?
   private var surfaceResizeBaseline: NSSize?
   private var lastSurfaceResizeSize: NSSize?
@@ -621,7 +622,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func verifySurfaceResize(
     startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
   ) {
-    if let baseline = surfaceResizeBaseline, let resized = lastSurfaceResizeSize,
+    if lastSurfaceFocusState == "first-responder",
+      let baseline = surfaceResizeBaseline, let resized = lastSurfaceResizeSize,
       let renderBaseline = surfaceRenderBaseline, let rendered = lastSurfaceRenderSize,
       (abs(resized.width - baseline.width) > 0.5
         || abs(resized.height - baseline.height) > 0.5),
@@ -632,6 +634,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         [
           "backend": "swiftui", "status": "interacted",
           "controls": "back-forward-reload-home", "surfaceWheel": "scroll",
+          "surfaceFocus": "native",
           "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
           "surfacePointer": "link",
           "surfaceResize": "native-reflow",
@@ -705,7 +708,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   ) -> Bool {
     guard let contentView, let window = contentView.window else { return false }
     NSApp.activate(ignoringOtherApps: true)
-    guard window.makeFirstResponder(contentView),
+    guard focusNativeSurface(),
       let event = NSEvent.keyEvent(
         with: .keyDown,
         location: .zero,
@@ -731,15 +734,23 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func performNativeSurfaceWheel() -> Bool {
     guard let contentView, let window = contentView.window,
+      focusNativeSurface(),
       let cgEvent = CGEvent(
         scrollWheelEvent2Source: nil, units: .line, wheelCount: 1,
         wheel1: -3, wheel2: 0, wheel3: 0),
       let event = NSEvent(cgEvent: cgEvent)
     else { return false }
     NSApp.activate(ignoringOtherApps: true)
-    window.makeFirstResponder(contentView)
     lastSurfaceWheelDelta = nil
     contentView.scrollWheel(with: event)
+    return true
+  }
+
+  private func focusNativeSurface() -> Bool {
+    guard let contentView, let window = contentView.window,
+      window.makeFirstResponder(contentView), window.firstResponder === contentView
+    else { return false }
+    lastSurfaceFocusState = "first-responder"
     return true
   }
 

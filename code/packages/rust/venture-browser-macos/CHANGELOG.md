@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Require the generated SwiftUI interaction gate to verify that the hosted
+  Metal content surface became the AppKit first responder before surface input.
 - Require the generated SwiftUI resize gate to observe a successfully rendered
   Metal frame whose drawable size changed after shared-session reflow.
 - Extend the generated SwiftUI direct-launch gate through Command-Left/Right

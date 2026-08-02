@@ -303,7 +303,18 @@ public static class MosaicHost
                     return;
                 }
 
-                if (contentSurface is null || !contentSurface.RunWheelAcceptance())
+                if (contentSurface is null || !contentSurface.RunFocusAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native content surface did not receive focus",
+                    });
+                    return;
+                }
+
+                if (!contentSurface.RunWheelAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -410,6 +421,7 @@ public static class MosaicHost
                     backend = "xaml",
                     status = "interacted",
                     controls = "back-forward-reload-home",
+                    surfaceFocus = "native",
                     surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
                     surfaceHistory = "back-forward",
@@ -676,6 +688,12 @@ public static class MosaicHost
         {
             _ = Focus(FocusState.Programmatic);
             return HandleKey(VirtualKey.End, false, false, out var changed) && changed;
+        }
+
+        internal bool RunFocusAcceptance()
+        {
+            return Focus(Microsoft.UI.Xaml.FocusState.Programmatic)
+                && FocusState != Microsoft.UI.Xaml.FocusState.Unfocused;
         }
 
         internal bool RunWheelAcceptance()
