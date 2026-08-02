@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/gated-recurrent-v1.json",
+  "title": "Gated recurrent learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "concepts",
+    "operation",
+    "shared_inputs",
+    "gru",
+    "lstm",
+    "counterfactuals"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "gru_update_convention", "gate_activation", "candidate_activation"],
+      "properties": {
+        "kind": { "const": "scalar-gru-lstm-gate-comparison" },
+        "gru_update_convention": { "const": "candidate-share" },
+        "gate_activation": { "const": "sigmoid" },
+        "candidate_activation": { "const": "tanh" }
+      }
+    },
+    "shared_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "previous_hidden", "previous_cell"],
+      "properties": {
+        "input": { "type": "number" },
+        "previous_hidden": { "type": "number" },
+        "previous_cell": { "type": "number" }
+      }
+    },
+    "gru": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reset_gate", "update_gate", "candidate", "output"],
+      "properties": {
+        "reset_gate": { "$ref": "#/$defs/gate" },
+        "update_gate": { "$ref": "#/$defs/gate" },
+        "candidate": { "$ref": "#/$defs/gruCandidate" },
+        "output": { "$ref": "#/$defs/gruOutput" }
+      }
+    },
+    "lstm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["forget_gate", "input_gate", "output_gate", "candidate", "output"],
+      "properties": {
+        "forget_gate": { "$ref": "#/$defs/gate" },
+        "input_gate": { "$ref": "#/$defs/gate" },
+        "output_gate": { "$ref": "#/$defs/gate" },
+        "candidate": { "$ref": "#/$defs/gate" },
+        "output": { "$ref": "#/$defs/lstmOutput" }
+      }
+    },
+    "counterfactuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gru", "lstm"],
+      "properties": {
+        "gru": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/counterfactual" }
+        },
+        "lstm": {
+          "type": "array",
+          "minItems": 4,
+          "items": { "$ref": "#/$defs/counterfactual" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preactivation", "value"],
+      "properties": {
+        "preactivation": { "type": "number" },
+        "value": { "type": "number" }
+      }
+    },
+    "gruCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_weight",
+        "input_product",
+        "reset_state",
+        "recurrent_weight",
+        "recurrent_product",
+        "bias",
+        "preactivation",
+        "value"
+      ],
+      "properties": {
+        "input_weight": { "type": "number" },
+        "input_product": { "type": "number" },
+        "reset_state": { "type": "number" },
+        "recurrent_weight": { "type": "number" },
+        "recurrent_product": { "type": "number" },
+        "bias": { "type": "number" },
+        "preactivation": { "type": "number" },
+        "value": { "type": "number" }
+      }
+    },
+    "gruOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retained_state", "candidate_write", "hidden_state"],
+      "properties": {
+        "retained_state": { "type": "number" },
+        "candidate_write": { "type": "number" },
+        "hidden_state": { "type": "number" }
+      }
+    },
+    "lstmOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retained_cell",
+        "candidate_write",
+        "cell_state",
+        "exposed_cell",
+        "hidden_state"
+      ],
+      "properties": {
+        "retained_cell": { "type": "number" },
+        "candidate_write": { "type": "number" },
+        "cell_state": { "type": "number" },
+        "exposed_cell": { "type": "number" },
+        "hidden_state": { "type": "number" }
+      }
+    },
+    "counterfactual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "gate_value", "candidate", "cell_state", "hidden_state"],
+      "properties": {
+        "gate": {
+          "enum": ["reset", "update", "forget", "input", "output"]
+        },
+        "gate_value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "candidate": { "type": "number" },
+        "cell_state": { "type": ["number", "null"] },
+        "hidden_state": { "type": "number" }
+      }
+    }
+  }
+}

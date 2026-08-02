@@ -27,13 +27,14 @@ larger network:
 7. [Residual Paths and Receptive Fields by Hand](./residual-paths-and-receptive-fields-by-hand.md)
 8. [One Recurrent State, Unrolled by Hand](./recurrent-state-unrolled-by-hand.md)
 9. [Backpropagation Through Time, by Hand](./backpropagation-through-time-by-hand.md)
-10. [Matrix Math](../matrix-math.md)
-11. [Loss Functions](../loss-functions.md)
-12. [Gradient Descent](../gradient-descent.md)
-13. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-14. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-15. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-16. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+10. [GRU and LSTM Gates, by Hand](./gru-and-lstm-gates-by-hand.md)
+11. [Matrix Math](../matrix-math.md)
+12. [Loss Functions](../loss-functions.md)
+13. [Gradient Descent](../gradient-descent.md)
+14. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+15. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+16. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+17. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -69,7 +70,8 @@ has eight complementary views:
   every input and carried-state term, and cut the recurrent link to isolate
   what memory contributes. Then reverse the unroll, select any BPTT step, add
   shared-parameter gradient contributions, audit them with finite differences,
-  and preview one loss-reducing update.
+  and preview one loss-reducing update. Finally, compare aligned GRU and LSTM
+  memory lanes and intervene on one gate without changing the other signals.
 
 ## Language-Neutral Corpus
 
@@ -104,6 +106,10 @@ direct and future state gradients, every time-step contribution to shared
 parameters, their accumulated totals, a central finite-difference audit, the
 initial-state gradient, and one complete update.
 
+NN11 adds `code/specs/fixtures/gated-recurrent-v1`, including scalar GRU and
+LSTM gate preactivations, every state contribution, explicit LSTM cell/hidden
+outputs, and seven one-gate counterfactuals.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -115,6 +121,7 @@ python code/scripts/validate_tiny_image_cnn_labs.py
 python code/scripts/validate_residual_receptive_labs.py
 python code/scripts/validate_recurrent_unroll_labs.py
 python code/scripts/validate_recurrent_bptt_labs.py
+python code/scripts/validate_gated_recurrent_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -133,6 +140,8 @@ executions of the same cell and compares it with the recurrent link removed.
 The first NN10 lab reverses that chain, proves how later loss reaches earlier
 states, accumulates all three executions into one shared gradient set, and
 checks the result independently before applying an update.
+The first NN11 lab routes the same old memory and candidate through a GRU and
+an LSTM, then closes or opens one gate at a time to isolate its responsibility.
 
 ## How to Study a Model
 

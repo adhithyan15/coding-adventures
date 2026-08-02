@@ -6,6 +6,7 @@ import {
 
 interface BpttWorkbenchProps {
   onShowForward: () => void;
+  onShowGates: () => void;
 }
 
 function formatNumber(value: number): string {
@@ -18,7 +19,7 @@ function formatNumber(value: number): string {
   return Number(value.toFixed(6)).toString();
 }
 
-export function BpttWorkbench({ onShowForward }: BpttWorkbenchProps) {
+export function BpttWorkbench({ onShowForward, onShowGates }: BpttWorkbenchProps) {
   const trace = useMemo(() => traceRecurrentBptt(), []);
   const [selectedTime, setSelectedTime] = useState(2);
   const selected = trace.backwardSteps.find((step) => step.time === selectedTime)!;
@@ -191,6 +192,9 @@ export function BpttWorkbench({ onShowForward }: BpttWorkbenchProps) {
         </p>
         <button className="bptt-view-button" type="button" onClick={onShowForward}>
           Show forward unroll
+        </button>
+        <button className="bptt-view-button" type="button" onClick={onShowGates}>
+          Compare GRU and LSTM gates
         </button>
         <div className="recurrent-selected-summary">
           <small>selected reverse step</small>

@@ -1,5 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
 import { BpttWorkbench } from "./BpttWorkbench.js";
+import { GateComparisonWorkbench } from "./GateComparisonWorkbench.js";
 import {
   DEFAULT_RECURRENT_INITIAL_STATE,
   DEFAULT_RECURRENT_INPUTS,
@@ -228,10 +229,18 @@ function RecurrentForwardWorkbench({ onShowBackward }: RecurrentForwardWorkbench
 }
 
 export function RecurrentWorkbench() {
-  const [view, setView] = useState<"forward" | "backward">("forward");
+  const [view, setView] = useState<"forward" | "backward" | "gates">("forward");
 
   if (view === "backward") {
-    return <BpttWorkbench onShowForward={() => setView("forward")} />;
+    return (
+      <BpttWorkbench
+        onShowForward={() => setView("forward")}
+        onShowGates={() => setView("gates")}
+      />
+    );
+  }
+  if (view === "gates") {
+    return <GateComparisonWorkbench onShowBackward={() => setView("backward")} />;
   }
   return <RecurrentForwardWorkbench onShowBackward={() => setView("backward")} />;
 }

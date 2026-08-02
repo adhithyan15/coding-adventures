@@ -91,6 +91,11 @@ parameter contributions, and see all three executions reduce into one shared
 gradient set. A central finite-difference table audits BPTT independently, and
 an update preview reruns the forward pass with the proposed parameters.
 
+Continue to the gate comparator to align a scalar GRU and LSTM on the same
+inputs. Select reset, update, forget, input, or output; then use its canonical
+value or force it to zero or one. The two lanes remain visible together, and
+the LSTM keeps its private cell state separate from its exposed hidden state.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -135,6 +140,10 @@ counterfactual trace with its recurrent contribution removed.
 NN10 under `code/specs/fixtures/recurrent-bptt-v1` pins the reverse-time state
 gradients, local and accumulated shared-parameter gradients, initial-state
 gradient, central finite-difference oracle, and one loss-reducing update.
+
+NN11 under `code/specs/fixtures/gated-recurrent-v1` pins scalar GRU and LSTM
+gate activations, candidate and memory contributions, explicit recurrent
+states, and reset/update/forget/input/output counterfactuals.
 
 ## Development
 

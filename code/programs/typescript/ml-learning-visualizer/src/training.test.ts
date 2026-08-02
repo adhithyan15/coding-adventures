@@ -69,6 +69,10 @@ import {
   traceRecurrentBptt,
   traceRecurrentUnroll,
 } from "./recurrent-unroll-lab.js";
+import {
+  traceGateCounterfactual,
+  traceGatedRecurrent,
+} from "./gated-recurrent-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -493,6 +497,52 @@ describe("training helpers", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Show forward unroll" }));
     expect(screen.getByRole("heading", { name: "Recurrent-state unroller" })).toBeTruthy();
+  });
+
+  it("routes the same memory through scalar GRU and LSTM gates", () => {
+    const trace = traceGatedRecurrent();
+
+    expect(trace.gru.resetGate.value).toBeCloseTo(0.5);
+    expect(trace.gru.updateGate.value).toBeCloseTo(0.25);
+    expect(trace.gru.candidate.value).toBeCloseTo(0.6);
+    expect(trace.gru.hiddenState).toBeCloseTo(0.75);
+    expect(trace.lstm.cellState).toBeCloseTo(0.55);
+    expect(trace.lstm.exposedCell).toBeCloseTo(0.5005202111902353);
+    expect(trace.lstm.hiddenState).toBeCloseTo(0.3753901583926764);
+  });
+
+  it("changes exactly one recurrent gate in a counterfactual", () => {
+    const trace = traceGatedRecurrent();
+    const resetOff = traceGateCounterfactual("gru", "reset", 0, trace);
+    const outputOff = traceGateCounterfactual("lstm", "output", 0, trace);
+    const outputOn = traceGateCounterfactual("lstm", "output", 1, trace);
+
+    expect(resetOff.candidate).toBeCloseTo(0.2850288981936261);
+    expect(resetOff.hiddenState).toBeCloseTo(0.6712572245484066);
+    expect(outputOff.cellState).toBeCloseTo(0.55);
+    expect(outputOff.hiddenState).toBe(0);
+    expect(outputOn.cellState).toBeCloseTo(outputOff.cellState!);
+    expect(outputOn.hiddenState).toBeCloseTo(0.5005202111902353);
+  });
+
+  it("compares GRU and LSTM gates interactively", () => {
+    render(React.createElement(RecurrentWorkbench));
+
+    fireEvent.click(screen.getByRole("button", { name: "Trace backward gradients" }));
+    fireEvent.click(screen.getByRole("button", { name: "Compare GRU and LSTM gates" }));
+    expect(screen.getByRole("heading", { name: "GRU and LSTM gate comparator" })).toBeTruthy();
+    expect(screen.getByLabelText("GRU memory lane").textContent)
+      .toMatch(/reset r.*0\.5.*candidate n.*0\.6.*update z.*0\.25.*next hidden.*0\.75/s);
+    expect(screen.getByLabelText("LSTM memory lane").textContent)
+      .toMatch(/forget f.*0\.5.*input i.*0\.25.*private cell.*0\.55.*output o.*0\.75.*next hidden.*0\.37539/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Select LSTM output gate" }));
+    fireEvent.click(screen.getByRole("button", { name: "Force 0" }));
+    expect(screen.getByLabelText("Selected gate effect").textContent)
+      .toMatch(/selected value.*0.*next c 0\.55.*visible h 0/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Return to BPTT gradients" }));
+    expect(screen.getByRole("heading", { name: "Backpropagation-through-time microscope" })).toBeTruthy();
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

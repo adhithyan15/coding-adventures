@@ -19,6 +19,8 @@ All notable changes to this package will be documented in this file.
 - Extend the recurrent workbench with the NN10 BPTT microscope, including
   selectable reverse steps, shared-gradient accumulation, finite-difference
   verification, and one update preview.
+- Extend the recurrent workbench with the NN11 aligned GRU/LSTM gate comparator
+  and zero/canonical/one interventions for every gate family.
 
 ### Changed
 

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "gru-lstm-gates",
+  "title": "Compare one scalar GRU and LSTM gate trace",
+  "question": "How do GRU and LSTM gates route the same previous memory and candidate?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "gated recurrent unit",
+    "long short-term memory",
+    "reset gate",
+    "update gate",
+    "forget gate",
+    "input gate",
+    "output gate"
+  ],
+  "operation": {
+    "kind": "scalar-gru-lstm-gate-comparison",
+    "gru_update_convention": "candidate-share",
+    "gate_activation": "sigmoid",
+    "candidate_activation": "tanh"
+  },
+  "shared_inputs": {
+    "input": 1,
+    "previous_hidden": 0.8,
+    "previous_cell": 0.8
+  },
+  "gru": {
+    "reset_gate": {
+      "preactivation": 0,
+      "value": 0.5
+    },
+    "update_gate": {
+      "preactivation": -1.0986122886681098,
+      "value": 0.25
+    },
+    "candidate": {
+      "input_weight": 0,
+      "input_product": 0,
+      "reset_state": 0.4,
+      "recurrent_weight": 1,
+      "recurrent_product": 0.4,
+      "bias": 0.29314718055994526,
+      "preactivation": 0.6931471805599453,
+      "value": 0.6
+    },
+    "output": {
+      "retained_state": 0.6000000000000001,
+      "candidate_write": 0.15,
+      "hidden_state": 0.7500000000000001
+    }
+  },
+  "lstm": {
+    "forget_gate": {
+      "preactivation": 0,
+      "value": 0.5
+    },
+    "input_gate": {
+      "preactivation": -1.0986122886681098,
+      "value": 0.25
+    },
+    "output_gate": {
+      "preactivation": 1.0986122886681098,
+      "value": 0.75
+    },
+    "candidate": {
+      "preactivation": 0.6931471805599453,
+      "value": 0.6
+    },
+    "output": {
+      "retained_cell": 0.4,
+      "candidate_write": 0.15,
+      "cell_state": 0.55,
+      "exposed_cell": 0.5005202111902353,
+      "hidden_state": 0.3753901583926764
+    }
+  },
+  "counterfactuals": {
+    "gru": [
+      {
+        "gate": "update",
+        "gate_value": 0,
+        "candidate": 0.6,
+        "cell_state": null,
+        "hidden_state": 0.8
+      },
+      {
+        "gate": "update",
+        "gate_value": 1,
+        "candidate": 0.6,
+        "cell_state": null,
+        "hidden_state": 0.6
+      },
+      {
+        "gate": "reset",
+        "gate_value": 0,
+        "candidate": 0.2850288981936261,
+        "cell_state": null,
+        "hidden_state": 0.6712572245484066
+      }
+    ],
+    "lstm": [
+      {
+        "gate": "forget",
+        "gate_value": 0,
+        "candidate": 0.6,
+        "cell_state": 0.15,
+        "hidden_state": 0.11166377521748849
+      },
+      {
+        "gate": "input",
+        "gate_value": 0,
+        "candidate": 0.6,
+        "cell_state": 0.4,
+        "hidden_state": 0.28496172169141865
+      },
+      {
+        "gate": "output",
+        "gate_value": 0,
+        "candidate": 0.6,
+        "cell_state": 0.55,
+        "hidden_state": 0
+      },
+      {
+        "gate": "output",
+        "gate_value": 1,
+        "candidate": 0.6,
+        "cell_state": 0.55,
+        "hidden_state": 0.5005202111902353
+      }
+    ]
+  }
+}

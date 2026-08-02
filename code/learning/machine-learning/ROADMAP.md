@@ -28,10 +28,10 @@ trace, and tests.
   - [x] Trainable one-dimensional convolution and gradient trace.
   - [x] Tiny image CNN, channels, pooling, and normalization.
   - [x] Residual path and receptive-field explorer.
-- [ ] Sequence networks
+- [x] Sequence networks
   - [x] One recurrent state unrolled for three steps.
   - [x] Backpropagation through time and gradient accumulation.
-  - [ ] GRU and LSTM gate comparison.
+  - [x] GRU and LSTM gate comparison.
 - [ ] Attention and transformers
   - [ ] Query/key/value dot products for three tokens.
   - [ ] Softmax attention weights and causal masking.
