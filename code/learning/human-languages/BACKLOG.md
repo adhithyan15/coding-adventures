@@ -5,10 +5,12 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after PR #9497: 20 registered
-tracks, 976 Markdown lessons, and 20 downloadable LaTeX books. HL-V01 makes the
-remaining migration debt reproducible in both JSON and human-readable reports;
-HL-S01 proves the strict schema on the first 24 Spanish lessons.
+Last prioritized: 2026-08-02. Current baseline after the Russian duration
+tranche: 20 registered tracks, 980 Markdown lessons, and 20 downloadable LaTeX
+books. HL-V01 makes the remaining migration debt reproducible in both JSON and
+human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
+lessons, and HL-D01A proves track-sized duration remediation without discarding
+deep content.
 
 ## Priority rules
 
@@ -45,7 +47,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-S01 | Complete (#9497) | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | The 24-lesson slice has unique order, transitive knowledge closure, typed blocks, and no effective-duration violation. |
 | HL-G01 | Complete in the canonical-generation PR | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy now that the AST contract is executable. |
 | HL-G02 | Complete in the Chapters 2–3 generation PR | Generate Spanish Chapters 2–3 from their canonical schema-v2 lesson AST. | Extends the proven one-source path across the rest of the migrated pilot before broad corpus work. |
-| HL-D01A | Next | Remove all nine sub-five-minute violations from the complete Russian starter track. | A bounded first duration tranche covers both declaration-only and genuinely overlong lessons without skipping an existing language. |
+| HL-D01A | Complete in the Russian duration PR | Remove all nine sub-five-minute violations from the complete Russian starter track. | The report measures zero Russian violations; every changed or added lesson is below 300 effective seconds. |
+| HL-D01B | Next | Remove all eight sub-five-minute violations from the Marathi track. | Marathi is now the smallest remaining track-sized tranche; the gap report supplies the exact bounded lesson set. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
@@ -109,6 +112,23 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   smallest complete existing track with measurable debt: nine violations, of
   which five are computed at 312–405 seconds and four only need honest declared
   budgets below the cap. HL-D01A is therefore the next bounded tranche.
+
+## Findings from HL-D01A
+
+- Russian now has zero duration violations. The repository snapshot contains
+  980 lessons and 472 violations overall, down from 481 before this tranche;
+  unknown prerequisites remain at zero.
+- Four lessons already computed below five minutes and only needed their
+  declared estimates corrected. The five genuinely long lessons were shortened
+  through de-duplication or split into four prerequisite-ordered support and
+  practice lessons.
+- The cross-language formality comparison, naming-as-action comparison, person
+  shapes, and precise zero-copula explanation remain in the canonical corpus.
+  The tightest changed lesson is `RU-C01-privet` at 293 computed seconds; every
+  other changed or new lesson has a larger buffer.
+- Marathi's eight violations are the smallest remaining track-sized set, ahead
+  of Gujarati's nine and Punjabi's and Sanskrit's ten each. HL-D01B is therefore
+  the next bounded duration tranche after this PR merges.
 
 ## Completed foundations
 

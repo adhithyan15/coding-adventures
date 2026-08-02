@@ -32,15 +32,18 @@ Chapter 1's *N+7* and *N+15* resurfacings land here, as promised above.
 | Session | New | Resurfaced | Note |
 |---|---|---|---|
 | **S6** | я | пожалуйста *(N+1)*, спасибо *(N+3)*, да *(N+3)* | **я** is a new letter — read only |
-| **S7** | ты, вы | привет *(N+15)*, я *(N+1)* | **ы**, the hardest vowel; ты/вы against Ch. 1's formality split |
-| **S8** | меня зовут… | здравствуйте *(N+15)*, я *(N+3)*, ты·вы *(N+1)* | the first **case form** (я → меня) |
-| **S9** | как вас зовут? | спасибо *(N+7)*, меня зовут *(N+1)*, ты·вы *(N+3)* | the matched pair; **ч** read only |
+| **S7** | ты, вы; why вы is polite | привет *(N+15)*, я *(N+1)* | two sub-five-minute lessons: **ы**, then the cross-language formality pattern |
+| **S8** | меня зовут… | здравствуйте *(N+15)*, я *(N+3)*, ты·вы and polite вы *(N+1)* | the first **case form** (я → меня) |
+| **S9** | как вас зовут?; why Russian asks “how” | спасибо *(N+7)*, меня зовут *(N+1)*, ты·вы *(N+3)* | two sub-five-minute lessons: the matched pair, then the cross-language comparison; **ч** read only |
 | **S10** | очень приятно | нет *(N+7)*, как вас зовут *(N+1)*, я *(N+7)* | приятно ↔ **friend** |
-| **S11** | — | all five atoms *(N+1 … N+7)* | **RU-C02-practice** (full recap) |
+| **S11** | — | all five atoms *(N+1 … N+7)* | three short practices: the exchange, person shapes, then the zero copula |
 
 ### Schedule check
 
 Chapter 2's own words follow the same *N+1 / N+3* rhythm inside the chapter;
 their *N+7 / N+15* resurfacings will land in Chapter 3. The letters **read but
 not yet written** — я, ы, ч, ь — recur in every session from their introduction
-onward, the same over-learning the four false friends get.
+onward, the same over-learning the four false friends get. The deeper formality
+and question-pattern comparisons are separate prerequisite-ordered lessons, and
+the old long recap is three focused lessons. Every individual lesson stays below
+five minutes even though each commute session deliberately combines several.

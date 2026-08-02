@@ -10,7 +10,7 @@ prerequisites: [RU-C01-privet]
 sounds: [cyrillic-false-friends, b-vs-v, o-reduction]
 roots: [spasti, bog]
 etymology_hook: "спасибо ← спаси Бог 'God save [you]' — like adiós (a Dios), goodbye (God be with ye)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [RU-C01-privet, RU-C01-zdravstvuyte]
 ---
 

@@ -33,9 +33,11 @@ grammar introduced only when a word needs it.
   нет (no) → пожалуйста (please / you're welcome), plus a practice recap. Six
   words, and enough Cyrillic to read them all cold.
 - **Chapter 2 — Introducing yourself** ([`lessons/RU-C02-*`](./lessons/)):
-  я → ты / вы → меня зовут… → как вас зовут? → очень приятно, plus cumulative
-  formal and informal practice. Case appears only through the forms the exchange
-  needs.
+  я → ты / вы → why вы is polite → меня зовут… → как вас зовут? → why Russian
+  asks “how” → очень приятно, followed by three focused practices for the
+  exchange, person shapes, and zero copula. Case appears only through the forms
+  the exchange needs. Every lesson is prerequisite-ordered and below five
+  minutes, while the cross-language and etymological depth remains intact.
 
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute

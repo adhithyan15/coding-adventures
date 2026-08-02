@@ -10,7 +10,7 @@ prerequisites: [RU-C01-spasibo]
 sounds: [zh-sound, syllable-drop, o-reduction]
 roots: [zhalovat]
 etymology_hook: "пожалуйста ← пожалуй 'grant / do favour' + -ста; also the reply to spasibo ('you're welcome')"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [RU-C01-spasibo, RU-C01-net]
 ---
 

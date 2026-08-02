@@ -6,11 +6,11 @@ headword: меня зовут…
 gloss: "my name is… — literally 'they call me', with no word for 'my' and no word for 'name'"
 concept_tag: INTRO-MY-NAME-IS
 romanization: menyá zovút
-prerequisites: [RU-C02-ty-vy]
+prerequisites: [RU-C02-vy-formality]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [slavic-zvati]
 etymology_hook: "меня зовут is literally '[they] CALL me' — an unnamed 'they' doing the naming, so the sentence contains no word for 'my' and none for 'name'; and меня is not я plus an ending but a SUPPLETIVE form from a different PIE stem, the first case FORM in the course"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [RU-C02-ty-vy, RU-C01-privet]
 ---
 

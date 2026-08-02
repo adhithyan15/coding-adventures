@@ -8,7 +8,7 @@ concept_tag: CH1-PRACTICE
 prerequisites: [RU-C01-privet, RU-C01-zdravstvuyte, RU-C01-spasibo, RU-C01-da, RU-C01-net, RU-C01-pozhaluysta]
 sounds: [cyrillic-false-friends]
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [RU-C01-privet, RU-C01-zdravstvuyte, RU-C01-spasibo, RU-C01-da, RU-C01-net, RU-C01-pozhaluysta]
 ---
 
