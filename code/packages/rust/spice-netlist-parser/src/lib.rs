@@ -2203,6 +2203,16 @@ fn parse_element(
                 }
             };
             let instance_params = parse_element_params(&fields[6..], "MOSFET")?;
+            if let Some(param_name) = instance_params.keys().find(|name| {
+                !matches!(
+                    name.as_str(),
+                    "W" | "L" | "NRD" | "NRS" | "AD" | "AS" | "PD" | "PS"
+                )
+            }) {
+                return Err(NetlistParseError::new(format!(
+                    "unsupported MOSFET parameter {param_name:?}"
+                )));
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],

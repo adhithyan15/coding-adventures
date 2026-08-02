@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject unsupported Level-1 MOS instance parameters instead of silently
+  ignoring misspelled geometry or diffusion fields.
 - Preserve Level-1 MOS model-card `U0` / `UO` and derive `KP` from surface
   mobility and explicit `TOX` when the card omits `KP`.
 - Preserve Level-1 MOS model-card `JS` independently from scalar `IS` so
