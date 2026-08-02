@@ -300,11 +300,23 @@ public static class MosaicHost
                     return;
                 }
 
+                if (contentSurface is null || !contentSurface.RunKeyboardAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native End key did not scroll the shared viewport",
+                    });
+                    return;
+                }
+
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
                     status = "interacted",
                     controls = "back-forward-reload-home",
+                    surfaceKeyboard = "document-end",
                     reloadTitle = "Venture reload acceptance",
                     homeAddress = component.Address,
                     targetAddress = targetUrl,
@@ -547,9 +559,30 @@ public static class MosaicHost
 
         private void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.KeyStatus.IsMenuKeyDown)
+            var shift = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift)
+                & CoreVirtualKeyStates.Down) != 0;
+            if (HandleKey(e.Key, e.KeyStatus.IsMenuKeyDown, shift, out _))
             {
-                var historyEvent = e.Key switch
+                e.Handled = true;
+            }
+        }
+
+        internal bool RunKeyboardAcceptance()
+        {
+            _ = Focus(FocusState.Programmatic);
+            return HandleKey(VirtualKey.End, false, false, out var changed) && changed;
+        }
+
+        private bool HandleKey(
+            VirtualKey key,
+            bool menuKeyDown,
+            bool shift,
+            out bool changed)
+        {
+            changed = false;
+            if (menuKeyDown)
+            {
+                var historyEvent = key switch
                 {
                     VirtualKey.Left => "onBack",
                     VirtualKey.Right => "onForward",
@@ -561,14 +594,12 @@ public static class MosaicHost
                         component,
                         Native.Decode(Native.HandleEvent(browser, historyEvent, null)));
                     Refresh();
-                    e.Handled = true;
-                    return;
+                    changed = true;
+                    return true;
                 }
             }
 
-            var shift = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift)
-                & CoreVirtualKeyStates.Down) != 0;
-            var command = e.Key switch
+            var command = key switch
             {
                 VirtualKey.Up => "line-up",
                 VirtualKey.Down => "line-down",
@@ -582,10 +613,11 @@ public static class MosaicHost
             };
             if (command is not null)
             {
-                _ = Native.ScrollCommand(browser, command);
+                changed = Native.ScrollCommand(browser, command) != 0;
                 Refresh();
-                e.Handled = true;
+                return true;
             }
+            return false;
         }
 
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exercise the generated SwiftUI content surface's End-key path against a
+  scrollable live page and require the shared Rust viewport to change.
+
 - Wire normalized AppKit wheel events into the shared `BrowserSession` scroll
   model and repaint the translated viewport through Metal.
 - Activate viewport links from primary-button input, update the native title,
