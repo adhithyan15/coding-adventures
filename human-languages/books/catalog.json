@@ -119,6 +119,13 @@
       "family": "Indo-Aryan",
       "script": "devanagari",
       "file": "sanskrit.pdf"
+    },
+    {
+      "id": "persian",
+      "name": "Persian",
+      "family": "Iranian",
+      "script": "perso-arabic",
+      "file": "persian.pdf"
     }
   ]
 }
