@@ -12,9 +12,9 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 976,
+    "totalLessons": 980,
     "authoredBooks": 20,
-    "durationViolations": 481,
+    "durationViolations": 472,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
@@ -5326,154 +5326,6 @@
         ]
       },
       {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 290,
-        "effectiveSeconds": 300,
-        "wordCount": 448,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 4,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 190,
-        "effectiveSeconds": 300,
-        "wordCount": 250,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 7,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "RU-C01-privet",
-        "language": "russian",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 314,
-        "effectiveSeconds": 314,
-        "wordCount": 500,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "RU-C01-spasibo",
-        "language": "russian",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 288,
-        "effectiveSeconds": 300,
-        "wordCount": 444,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 4,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "chapter": 1,
-        "declaredSeconds": 360,
-        "computedSeconds": 312,
-        "effectiveSeconds": 360,
-        "wordCount": 486,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 4,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "RU-C02-kak-vas-zovut",
-        "language": "russian",
-        "chapter": 2,
-        "declaredSeconds": 240,
-        "computedSeconds": 337,
-        "effectiveSeconds": 337,
-        "wordCount": 325,
-        "promptCount": 15,
-        "repeatCueCount": 1,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "RU-C02-menya-zovut",
-        "language": "russian",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 281,
-        "effectiveSeconds": 300,
-        "wordCount": 412,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "RU-C02-practice",
-        "language": "russian",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 405,
-        "effectiveSeconds": 405,
-        "wordCount": 469,
-        "promptCount": 14,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 5,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "RU-C02-ty-vy",
-        "language": "russian",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 378,
-        "effectiveSeconds": 378,
-        "wordCount": 563,
-        "promptCount": 4,
-        "repeatCueCount": 2,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
         "lessonId": "SA-C01-namaste",
         "language": "sanskrit",
         "chapter": 1,
@@ -9412,9 +9264,9 @@
       {
         "language": "russian",
         "status": "legacy",
-        "lessonCount": 18,
+        "lessonCount": 22,
         "versions": {
-          "1": 18
+          "1": 22
         }
       },
       {
