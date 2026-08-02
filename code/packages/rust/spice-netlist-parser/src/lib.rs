@@ -2234,6 +2234,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(source_squares) = instance_params.get("NRS") {
+                if !source_squares.is_finite() || *source_squares < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET NRS must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
