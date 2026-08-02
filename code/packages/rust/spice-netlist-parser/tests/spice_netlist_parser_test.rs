@@ -856,6 +856,18 @@ fn rejects_invalid_mosfet_instance_widths() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_instance_lengths() {
+    for length in ["0", "-1u", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch L={length}")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET L must be finite and positive"));
+    }
+}
+
+#[test]
 fn parses_tf_transfer_function_analysis_cards() {
     let parsed = parse_netlist(
         r#"

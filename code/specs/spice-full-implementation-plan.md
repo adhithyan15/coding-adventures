@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance-width validation.
+1. Rust Berkeley SPICE MOS instance-length validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite instance `W` values before lowering
+   - Reject zero, negative, and non-finite instance `L` values before lowering
      MOS elements into engine parameters.
-   - Preserve positive instance widths and model-card/default width fallback.
+   - Preserve positive instance lengths and model-card/default length fallback.
 
 ## Completed Slices
 
@@ -3864,6 +3864,13 @@ the Rust, Python, and TypeScript surfaces together.
      instead of silently ignoring typos.
    - Supported `W`, `L`, `NRD`, `NRS`, `AD`, `AS`, `PD`, and `PS` geometry and
      diffusion fields remain accepted.
+
+327. Rust Berkeley SPICE MOS instance-width validation.
+   - Status: completed in PR 9429.
+   - Zero, negative, and non-finite instance `W` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive instance widths and model-card/default width fallback remain
+     accepted.
 
 ## Backlog
 

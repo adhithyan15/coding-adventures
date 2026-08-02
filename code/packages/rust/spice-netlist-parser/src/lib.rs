@@ -2220,6 +2220,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(length) = instance_params.get("L") {
+                if !length.is_finite() || *length <= 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET L must be finite and positive",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
