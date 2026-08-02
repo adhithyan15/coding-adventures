@@ -1822,6 +1822,23 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(3),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a captured string can be reassigned from a branch-selected
+    // string procedure result. `store(0)` writes LO, `store(1)` overwrites it
+    // with HI through the shared `str` global, and `matches(shared)` proves the
+    // final dynamic handle crosses the following string-parameter boundary.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; string shared; \
+               string procedure pick(n); value n; integer n; \
+                  if n > 0 then pick := 'HI' else pick := 'LO'; \
+               integer procedure matches(s); value s; string s; \
+                  if s = 'HI' then matches := 42 else matches := 0; \
+               procedure store(n); value n; integer n; shared := pick(n); \
+               store(0); store(1); result := matches(shared) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
@@ -5965,6 +5982,37 @@ fn algol_integer_procedure_values_compose_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but integer procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dynamic_captured_strings_reassign_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure matches(s); value s; string s")
+                && program.src.contains("procedure store(n); value n; integer n; shared := pick(n)")
+                && program.src.contains("store(0); store(1); result := matches(shared)")
+        })
+        .expect("the ALGOL dynamic captured-string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but dynamic captured-string execution did not complete"
             );
             continue;
         };

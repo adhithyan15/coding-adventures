@@ -809,7 +809,8 @@ backend immediately) come before the enabler-dependent items.
   selects an integer result on all seven standard backends. `string array A[1:2]` now reuses the E5
   `array<str>` substrate on all seven standard backends: literal, initialized-scalar,
   and runtime string-procedure elements can be read for lexical ordering and output.
-  Captured strings use typed globals,
+  Captured strings use typed globals and can be reassigned from branch-selected
+  procedure results before being forwarded through another string formal,
   and `own string` initializes once to the empty string before retaining later
   assignments across calls. Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.

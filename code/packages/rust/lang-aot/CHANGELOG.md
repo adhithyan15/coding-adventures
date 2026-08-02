@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.220.33 - 2026-08-02 (ALGOL dynamic captured strings — seven-backend matrix)
+
+The matrix now overwrites a captured string from a branch-selected procedure
+result before forwarding the final dynamic value through a string formal.
+
 ## 0.220.32 - 2026-08-02 (ALGOL composed integer procedures — seven-backend matrix)
 
 The matrix now feeds two integer procedure results to a second integer procedure

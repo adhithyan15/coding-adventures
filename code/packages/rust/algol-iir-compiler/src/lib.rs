@@ -4425,6 +4425,12 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
 }
 
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
+    // A call with one bare-variable actual has a single `actual_params` child.
+    // Do not mistake that actual for the call expression itself.
+    if node.rule_name == "proc_call" {
+        return None;
+    }
+
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "NAME" {
         return Some(tokens[0].value.clone());
@@ -4703,6 +4709,61 @@ mod tests {
         // captured `shared` supplies the first point; the two `remember` calls
         // prove the `own string memo` survives past its declaring procedure.
         assert_eq!(run_i64(AL7_GLOBAL_STRING_PROG), 3);
+    }
+
+    /// A procedure can reassign a captured string from a dynamic string
+    /// procedure result; the later caller observes the newest handle through a
+    /// string value formal.
+    const DYNAMIC_CAPTURED_STRING_PROG: &str = "begin integer result; string shared; \
+         string procedure pick(n); value n; integer n; \
+            if n > 0 then pick := 'HI' else pick := 'LO'; \
+         integer procedure matches(s); value s; string s; \
+            if s = 'HI' then matches := 42 else matches := 0; \
+         procedure store(n); value n; integer n; shared := pick(n); \
+         store(0); store(1); result := matches(shared) end";
+
+    #[test]
+    fn dynamic_captured_strings_reassign_through_typed_globals() {
+        assert_eq!(run_i64(DYNAMIC_CAPTURED_STRING_PROG), 42);
+
+        let module = compile_source(DYNAMIC_CAPTURED_STRING_PROG, "dynamic_captured_string")
+            .expect("dynamic captured string program compiles");
+        let store = module.get_function("store").expect("store procedure exists");
+        assert!(
+            store.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("pick")
+            }),
+            "store must receive a dynamic str from pick: {:?}",
+            store.instructions
+        );
+        assert!(
+            store.instructions.iter().enumerate().any(|(index, instr)| {
+                instr.op == "global_store"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("shared")
+                    && instr.srcs.get(1).and_then(Operand::as_var).is_some_and(|value| {
+                        store.instructions[..index].iter().any(|producer| {
+                            producer.op == "str_concat"
+                                && producer.dest.as_deref() == Some(value)
+                                && producer.type_hint == "str"
+                        })
+                    })
+            }),
+            "the captured dynamic string must store the dynamic str value: {:?}",
+            store.instructions
+        );
+
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_str_lit) == Some("shared")
+            }),
+            "main must reload the dynamic captured str: {:?}",
+            main.instructions
+        );
     }
 
     #[test]

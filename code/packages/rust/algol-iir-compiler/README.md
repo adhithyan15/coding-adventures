@@ -105,7 +105,9 @@ scalar strings, or runtime string procedure results, then read for lexical compa
 also pass a runtime string procedure result directly through another `string`
 value formal: `matches(pick(1))` preserves the dynamic `str` across both call
 boundaries before the callee compares it. Procedures can
-also capture an enclosing scalar `string` through typed module globals; an
+also capture an enclosing scalar `string` through typed module globals, and
+those captured strings can be reassigned from dynamic procedure results:
+`store(0); store(1); matches(shared)` observes the final runtime handle. An
 `own string` initializes to the empty string once and retains later assignments
 across calls.
 
