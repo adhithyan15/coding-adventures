@@ -1666,6 +1666,18 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a boolean procedure returns directly into a compound
+    // condition. The two `call` results must keep their `bool` IIR type through
+    // `not` and `and` before the normal `jmp_if_false` branch. This covers the
+    // i1/i32/bool return ABI rather than merely assigning a result to a scalar.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean procedure neg(p); value p; boolean p; \
+               neg := not p; if neg(false) and not neg(true) then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *proper procedure* (`procedure bump`) has no return value,
     // so the frontend emits an IIR `void` sibling function and a no-destination
     // `call` in statement position. This matrix cell keeps the body local so it
@@ -5746,6 +5758,36 @@ fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_procedure_results_drive_control_flow_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("boolean procedure neg(p)")
+                && program.src.contains("neg(false) and not neg(true)")
+        })
+        .expect("the ALGOL boolean procedure program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but boolean procedure control flow did not complete"
             );
             continue;
         };

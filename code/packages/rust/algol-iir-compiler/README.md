@@ -113,6 +113,12 @@ shared `int_to_real` IIR conversion: mixed numeric arithmetic and comparisons,
 `/`, real assignments/array elements/formals, and the real standard functions
 all accept integer inputs. `div` and `mod` remain integer-only.
 
+Typed procedures retain their result type at the call boundary. In particular,
+`boolean procedure neg(p); value p; boolean p; neg := not p` can return directly
+into `if neg(false) and not neg(true) then ...`, preserving the shared `bool`
+value through negation, conjunction, and the conditional branch on all seven
+standard backends.
+
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
 AL2). `integer array A[1:10]` (and `real`, `boolean`, or `string` arrays) becomes an
 `alloc_array` sized at run time from the bounds (`upper - lower + 1`, so dynamic

@@ -1285,12 +1285,10 @@ struct FnState<'a> {
     /// (`alloca`): every assignment becomes a `store`, every read a `load`. This
     /// is the naive-frontend / `opt -mem2reg` pattern (McCarthy W12b-3, F5).
     slots: std::collections::HashSet<String>,
-    /// The LLVM stack-slot type for each promoted variable — `"i64"` for the
-    /// usual integer/word values, `"double"` for an `f64` variable (LANG-FULL
-    /// enabler E3). A slot's `alloca`/`load`/`store` all use this type so a
-    /// `real` local stores a `double` into a `double` slot instead of the old
-    /// invalid `store i64 <double>`. Any slot not present here defaults to
-    /// `i64`. (See [`collect_slot_types`].)
+    /// The LLVM stack-slot type for each promoted variable — `i64` for the
+    /// usual integer/word values, `i1` for booleans, and `double` for `f64`
+    /// values. A slot's `alloca`/`load`/`store` all use this type. Any slot not
+    /// present here defaults to `i64`. (See [`collect_slot_types`].)
     slot_types: std::collections::HashMap<String, &'static str>,
 }
 
@@ -1301,7 +1299,7 @@ impl FnState<'_> {
     }
 
     /// The LLVM type of a promoted variable's stack slot (`"i64"` by default,
-    /// `"double"` for an `f64` slot).
+    /// `"i1"` for a boolean slot, and `"double"` for an `f64` slot).
     fn slot_ty(&self, name: &str) -> &'static str {
         self.slot_types.get(name).copied().unwrap_or("i64")
     }
@@ -1380,7 +1378,8 @@ fn lower_function(
             continue;
         }
         let pllvm = llvm_type_for(pty, &func.name)?;
-        let init = if pllvm == "i64" {
+        let slot_ty = slot_types.get(pname).copied().unwrap_or("i64");
+        let init = if pllvm == slot_ty {
             format!("%{pname}")
         } else {
             // i1 / i8 / i16 / i32 → widen to the i64 slot.
@@ -1388,7 +1387,7 @@ fn lower_function(
             out.push_str(&format!("  {widened} = zext {pllvm} %{pname} to i64\n"));
             widened
         };
-        out.push_str(&format!("  store i64 {init}, ptr %{pname}.slot\n"));
+        out.push_str(&format!("  store {slot_ty} {init}, ptr %{pname}.slot\n"));
     }
 
     let mut state = FnState {
@@ -1487,15 +1486,12 @@ fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
 
 /// Decide the LLVM stack-slot type for each promoted variable in `slots`.
 ///
-/// A slot is `"double"` if it ever holds an `f64` value — i.e. some
-/// instruction whose `dest` is that slot carries a float `type_hint` (a
-/// `const f64`, an `f64` arithmetic op, an `f64` `mov`, …). Otherwise it is the
-/// default `"i64"` word slot. (Float *parameters* are not promoted to slots —
-/// `param_slot_compatible` excludes them — so every slot we see here is a body
-/// local; a real local seeded with `const … : f64` then reassigned is the
-/// shape `ScalarType::Real` produces.) Enabler E3 (real arithmetic): without
-/// this, an `f64` variable was given an `i64` slot and `store i64 <double>`
-/// produced invalid IR that `clang` rejected.
+/// A slot is `"double"` if it ever holds an `f64` value, `"i1"` if it ever
+/// holds a boolean, and otherwise uses the default `"i64"` word type. A typed
+/// procedure's result variable has a seed plus an assignment and therefore
+/// becomes a slot even when its body has only one source-level assignment.
+/// (Float *parameters* are not promoted to slots — `param_slot_compatible`
+/// excludes them — so every float slot we see here is a body local.)
 fn collect_slot_types(
     func: &IIRFunction,
     slots: &std::collections::HashSet<String>,
@@ -1503,8 +1499,16 @@ fn collect_slot_types(
     let mut types = std::collections::HashMap::new();
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
-            if slots.contains(dest) && is_float_type(&instr.type_hint) {
-                types.insert(dest.clone(), "double");
+            if slots.contains(dest) {
+                match instr.type_hint.as_str() {
+                    "bool" | "i1" => {
+                        types.insert(dest.clone(), "i1");
+                    }
+                    ty if is_float_type(ty) => {
+                        types.insert(dest.clone(), "double");
+                    }
+                    _ => {}
+                }
             }
         }
     }
@@ -1512,11 +1516,9 @@ fn collect_slot_types(
 }
 
 /// Whether a parameter of IIR type `pty` can be promoted to a stack slot.
-/// Slots are `i64`, so only values that already flow as a 64-bit word qualify:
-/// every integer width, `bool`, `any`, `symbol`, and the lisp heap references.
-/// Floats/doubles do not fit the i64 slot model, so a reassigned float parameter
-/// is left as SSA (that path is a separate concern, tracked under enabler E3 —
-/// real arithmetic — and is no worse than before this change).
+/// Slots represent integers as `i64` and booleans as `i1`, so integer widths,
+/// `bool`, `any`, `symbol`, and lisp heap references qualify. Floats/doubles
+/// remain SSA for reassigned parameters (that path is a separate concern).
 fn param_slot_compatible(pty: &str) -> bool {
     matches!(
         pty,
@@ -1528,10 +1530,10 @@ fn param_slot_compatible(pty: &str) -> bool {
 /// Wrap [`lower_instr`] with the slot (`alloca`/`load`/`store`) protocol:
 ///
 /// 1. **Pre-load:** for every `Var` source operand that is a slot, emit
-///    `%t = load i64, ptr %v.slot` and temporarily rebind it in `env` so the
-///    instruction reads the loaded value.
+///    `%t = load <slot type>, ptr %v.slot` and temporarily rebind it in `env`
+///    (and `env_i1` for booleans) so the instruction reads the loaded value.
 /// 2. Lower the instruction normally.
-/// 3. **Post-store:** if `dest` is a slot, emit `store i64 <value>, ptr %v.slot`
+/// 3. **Post-store:** if `dest` is a slot, emit `store <slot type> <value>, ptr %v.slot`
 ///    (the value the instruction left in `env[dest]` — a literal for `const`/`mov`
 ///    or an SSA name for an emitted op) and then drop `env[dest]` so the variable
 ///    is only ever read back through its slot.
@@ -1549,15 +1551,20 @@ fn lower_instr_with_slots(
     }
 
     // 1. Pre-load slot source operands.
-    let mut saved: Vec<(String, Option<String>)> = Vec::new();
+    let mut saved: Vec<(String, Option<String>, Option<String>)> = Vec::new();
     for op in &instr.srcs {
         if let Operand::Var(name) = op {
             if state.slots.contains(name) {
                 let ty = state.slot_ty(name);
                 let fresh = state.fresh("ld");
                 out.push_str(&format!("  {fresh} = load {ty}, ptr %{name}.slot\n"));
-                let old = state.env.insert(name.clone(), fresh);
-                saved.push((name.clone(), old));
+                let old = state.env.insert(name.clone(), fresh.clone());
+                let old_i1 = if ty == "i1" {
+                    state.env_i1.insert(name.clone(), fresh)
+                } else {
+                    None
+                };
+                saved.push((name.clone(), old, old_i1));
             }
         }
     }
@@ -1605,19 +1612,29 @@ fn lower_instr_with_slots(
             }
         }
         state.env.remove(&fresh); // the fresh temp is not referenced again.
+        state.env_i1.remove(&fresh);
         state.env.remove(orig); // future reads of `orig` go through its slot load.
+        state.env_i1.remove(orig);
     } else {
         lower_instr(instr, state, out)?;
     }
 
     // 4. Restore the env bindings we overrode for the pre-loads.
-    for (name, old) in saved {
+    for (name, old, old_i1) in saved {
         match old {
             Some(v) => {
-                state.env.insert(name, v);
+                state.env.insert(name.clone(), v);
             }
             None => {
                 state.env.remove(&name);
+            }
+        }
+        match old_i1 {
+            Some(v) => {
+                state.env_i1.insert(name, v);
+            }
+            None => {
+                state.env_i1.remove(&name);
             }
         }
     }
@@ -3562,7 +3579,15 @@ fn lower_call(
         out.push_str(&format!(
             "  %{dest} = call {ret_ty} @{callee_ref}({args_joined})\n"
         ));
-        state.env.insert(dest.clone(), format!("%{dest}"));
+        let value = format!("%{dest}");
+        state.env.insert(dest.clone(), value.clone());
+        // A user-defined boolean procedure returns an LLVM `i1`, just like a
+        // boolean array read or comparison result. Keep the sidecar in sync so
+        // a following `not`/`and`/branch consumes that bit directly rather
+        // than trying to truncate it as an `i64` value.
+        if ret_ty == "i1" {
+            state.env_i1.insert(dest.clone(), value);
+        }
     } else {
         // Void return — no dest binding.  Per LLVM IR, a void `call` must
         // not be on the LHS of an assignment.

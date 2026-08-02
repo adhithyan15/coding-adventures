@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.5.1] — 2026-08-02
+
+### Fixed — compiled boolean procedures preserve their runtime type
+
+`GenericCirJit` represented every non-void return with `RET_I64`, including
+`ret_bool`. The integer carrier is suitable for arithmetic and branching, but
+is not structurally equal to `Value::Bool`: a caller that used a compiled
+boolean procedure result in a later boolean comparison could take the wrong
+branch. The JIT bytecode now has `RET_BOOL` (`0x62`), and `ret_bool` returns
+`Value::Bool` while integer returns continue to use `RET_I64`.
+
+The regression test compiles `neg(p) = not p` with a seeded result slot and
+checks both boolean arguments and boolean return values through the compiled
+parameter ABI.
+
 ## [0.5.0] — 2026-06-14 (LANG-FULL E2 — register width & wrap, backend 2 of 6)
 
 ### Added — the compiled tier wraps narrow-width arithmetic

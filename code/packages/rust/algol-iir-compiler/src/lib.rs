@@ -3841,20 +3841,16 @@ impl Compiler {
         if value.ty != ScalarType::Boolean {
             return Err(CompileError::Type("not operand must be boolean".into()));
         }
-        // Emit `cmp_eq bool_value, 0` with type_hint "i64" so LLVM generates
-        // `icmp eq i64 <i64_load>, 0` — correct when `b` is promoted to an i64
-        // alloca (written 2+ times).  The false constant uses `ScalarType::Boolean`
-        // so it gets a "bool" type_hint: in WASM this makes the false-slot an i32
-        // local, matching a non-promoted boolean variable's i32 register width.
-        // In LLVM both Bool(false) and Int(0) render as the literal "0", so the
-        // choice of ScalarType here has no effect on LLVM output.
+        // Comparisons carry their operand type hint. Both operands are booleans,
+        // so this remains a `bool` operation all the way through the typed call
+        // ABI: LLVM emits `icmp eq i1`, and WASM keeps the result in an i32 local.
         let false_slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
         let dest = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_eq",
             Some(dest.clone()),
             vec![Operand::Var(value.slot), Operand::Var(false_slot)],
-            "i64",
+            "bool",
         ));
         Ok(ExprValue {
             slot: dest,
@@ -5554,6 +5550,37 @@ mod tests {
         let src = "begin boolean b; integer result; boolean procedure neg(p); value p; boolean p; \
                    neg := not p; b := neg(false); if b then result := 42 else result := 1 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn boolean_procedure_results_drive_control_flow() {
+        let src = concat!(
+            "begin integer result; ",
+            "boolean procedure neg(p); value p; boolean p; ",
+            "neg := not p; ",
+            "if neg(false) and not neg(true) then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_procedure_control_flow").expect("compiles");
+        let neg = module.get_function("neg").expect("boolean procedure exists");
+        assert_eq!(neg.return_type, "bool");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "call" && instr.type_hint == "bool")
+                .count(),
+            2,
+            "both boolean procedure calls must remain typed bool values: {:?}",
+            main.instructions
+        );
+        assert!(
+            main.instructions.iter().any(|instr| instr.op == "jmp_if_false"),
+            "the boolean procedure results must feed the conditional branch: {:?}",
+            main.instructions
+        );
     }
 
     #[test]
