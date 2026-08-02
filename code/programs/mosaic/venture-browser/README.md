@@ -115,9 +115,10 @@ path, and observe the shared Rust session reproject the linked address and
 title into the generated chrome. The gates then use Command-Left/Right or
 Alt-Left/Right to traverse that shared history in both directions before they
 resize the real native content surface and require the production
-  adapter to reflow and repaint that retained shared session before reporting
-  success. Every transition must update the shared browser session before the
-  shell reports success.
+adapter to reflow that retained shared session and produce a successful native
+frame whose pixel dimensions match the resized surface before reporting
+success. Every transition must update the shared browser session before the
+shell reports success.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.

@@ -105,6 +105,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var lastSurfacePointerPoint: NSPoint?
   private var surfaceResizeBaseline: NSSize?
   private var lastSurfaceResizeSize: NSSize?
+  private var surfaceRenderBaseline: CGSize?
+  private var lastSurfaceRenderSize: CGSize?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -620,7 +622,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     startURL: String, targetURL: String, linkURL: String, markerPath: String, remaining: Int
   ) {
     if let baseline = surfaceResizeBaseline, let resized = lastSurfaceResizeSize,
-      abs(resized.width - baseline.width) > 0.5 || abs(resized.height - baseline.height) > 0.5
+      let renderBaseline = surfaceRenderBaseline, let rendered = lastSurfaceRenderSize,
+      (abs(resized.width - baseline.width) > 0.5
+        || abs(resized.height - baseline.height) > 0.5),
+      (abs(rendered.width - renderBaseline.width) > 0.5
+        || abs(rendered.height - renderBaseline.height) > 0.5)
     {
       writeInteractionResult(
         [
@@ -629,6 +635,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
           "surfacePointer": "link",
           "surfaceResize": "native-reflow",
+          "surfaceRepaint": "resized-frame",
           "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
           "targetAddress": targetURL, "linkAddress": linkURL,
           "pageTitle": "Venture link acceptance",
@@ -640,7 +647,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error",
-          "error": "native surface resize did not reflow the shared viewport",
+          "error": "native surface resize did not produce a resized shared frame",
         ],
         to: markerPath)
       return
@@ -752,9 +759,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func performNativeSurfaceResize() -> Bool {
     guard let contentView, let window = contentView.window else { return false }
     let baseline = contentView.bounds.size
-    guard baseline.width > 0, baseline.height > 0 else { return false }
+    guard let layer = contentView.layer as? CAMetalLayer else { return false }
+    let renderBaseline = layer.drawableSize
+    guard baseline.width > 0, baseline.height > 0,
+      renderBaseline.width > 0, renderBaseline.height > 0
+    else { return false }
     surfaceResizeBaseline = baseline
     lastSurfaceResizeSize = nil
+    surfaceRenderBaseline = renderBaseline
+    lastSurfaceRenderSize = nil
     let contentSize = window.contentView?.bounds.size ?? window.frame.size
     window.setContentSize(
       NSSize(width: contentSize.width + 80, height: contentSize.height + 60))
@@ -807,6 +820,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard let native, let browser else { return }
     let rawLayer = Unmanaged.passUnretained(layer).toOpaque()
     guard native.render(browser, rawLayer) != 0 else { return }
+    lastSurfaceRenderSize = layer.drawableSize
     reportAcceptanceIfRequested()
   }
 

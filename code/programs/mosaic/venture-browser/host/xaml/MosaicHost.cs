@@ -415,6 +415,7 @@ public static class MosaicHost
                     surfaceHistory = "back-forward",
                     surfacePointer = "link",
                     surfaceResize = "native-reflow",
+                    surfaceRepaint = "resized-frame",
                     reloadTitle = "Venture reload acceptance",
                     homeAddress = startUrl,
                     targetAddress = targetUrl,
@@ -572,6 +573,8 @@ public static class MosaicHost
         private uint pixelHeight;
         private double acceptedResizeWidth;
         private double acceptedResizeHeight;
+        private uint acceptedRenderBaselineWidth;
+        private uint acceptedRenderBaselineHeight;
 
         internal VentureContentSurface(VentureChrome component)
         {
@@ -713,8 +716,14 @@ public static class MosaicHost
             {
                 return false;
             }
+            if (pixelWidth == 0 || pixelHeight == 0)
+            {
+                return false;
+            }
             acceptedResizeWidth = 0;
             acceptedResizeHeight = 0;
+            acceptedRenderBaselineWidth = pixelWidth;
+            acceptedRenderBaselineHeight = pixelHeight;
             Width = Math.Max(1, baselineWidth - 80);
             Height = Math.Max(1, baselineHeight - 60);
             UpdateLayout();
@@ -723,7 +732,9 @@ public static class MosaicHost
                 if ((Math.Abs(acceptedResizeWidth - baselineWidth) > 0.5
                         || Math.Abs(acceptedResizeHeight - baselineHeight) > 0.5)
                     && pixelWidth > 0
-                    && pixelHeight > 0)
+                    && pixelHeight > 0
+                    && (pixelWidth != acceptedRenderBaselineWidth
+                        || pixelHeight != acceptedRenderBaselineHeight))
                 {
                     return true;
                 }
