@@ -45080,15 +45080,32 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::ApiKey, AuthMode::UsernamePassword],
             "unifi",
         ),
-        media_entry(
+        base_entry(
             "sonos",
             "Sonos",
-            "Local Sonos speaker and media-player integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Local Sonos ZonePlayer discovery and read-only player-state inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             "sonos",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("sonos_upnp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Current runtime support is polling-only; GENA subscriptions and media commands remain future work.",
+        ]),
         media_entry(
             "cast",
             "Google Cast",
@@ -59103,7 +59120,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            }];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
@@ -59221,7 +59238,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            }];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let risks = activation_risk_from_candidates(&[], candidates.iter());
         let sections =
@@ -59339,7 +59356,7 @@ mod tests {
                 highest_policy_tier: PrivilegeTier::ReadOnly,
                 local_only: true,
                 cloud_required: false,
-            }];
+        }];
         let candidates = activation_candidates_from_reports(reports.iter());
         let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
         let risks = activation_risk_from_candidates(&[], candidates.iter());
@@ -80807,6 +80824,32 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
         assert!(!roku
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.media")));
+    }
+
+    #[test]
+    fn sonos_entry_exposes_ssdp_and_read_only_upnp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let sonos = find_entry(&catalog, &IntegrationId::trusted("sonos")).unwrap();
+
+        assert_eq!(
+            sonos.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(sonos.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            sonos.supported_protocols,
+            vec![ProtocolFamily::Vendor("sonos_upnp".to_string())]
+        );
+        assert_eq!(sonos.auth_modes, vec![AuthMode::None]);
+        assert!(sonos
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(sonos
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!sonos
             .required_capabilities
             .contains(&CapabilityId::trusted("smart_home.command.media")));
     }

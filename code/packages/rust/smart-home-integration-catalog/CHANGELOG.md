@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Marked Sonos as a first-party polling runtime for SSDP discovery and
+  read-only UPnP player-state inspection.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-05-08

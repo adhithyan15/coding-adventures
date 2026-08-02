@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Made parallel filesystem-backend tests allocate distinct temporary roots even
+  when the platform clock returns the same timestamp.
+
 ### Added
 
 - `FsStorageBackendSummary`, `fs_storage_backend_summary()`, and

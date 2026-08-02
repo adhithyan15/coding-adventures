@@ -700,13 +700,19 @@ mod tests {
     use std::env;
     use storage_core::conformance;
 
+    static TEMP_ROOT_SEQUENCE: AtomicU64 = AtomicU64::new(0);
+
     fn temp_root() -> PathBuf {
         let mut p = env::temp_dir();
         let stamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        p.push(format!("storage-fs-test-{}-{}", std::process::id(), stamp));
+        let sequence = TEMP_ROOT_SEQUENCE.fetch_add(1, Ordering::Relaxed);
+        p.push(format!(
+            "storage-fs-test-{}-{stamp}-{sequence}",
+            std::process::id()
+        ));
         p
     }
 
