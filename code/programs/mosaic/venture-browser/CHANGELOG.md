@@ -4,6 +4,8 @@
 
 ### Added
 
+- Require generated SwiftUI and WinUI interaction acceptance to prove native
+  focus transfer from Mosaic-authored chrome into the hosted content surface.
 - Strengthen generated SwiftUI and WinUI resize acceptance to require a
   successful post-reflow native frame with changed pixel dimensions.
 - Extend generated SwiftUI and WinUI interaction acceptance through the native
