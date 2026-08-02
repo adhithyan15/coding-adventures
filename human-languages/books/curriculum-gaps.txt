@@ -1,0 +1,30 @@
+Human Languages curriculum gap report
+====================================
+20 tracks, 973 lessons, 20 books
+485 lessons at or above 300 effective seconds
+0 unknown prerequisites; 42 later-chapter lessons without prerequisites
+0 tracks without books; 257 lesson chapters without book chapters
+20 legacy, 0 mixed, 0 version-2 schema tracks
+
+Longest effective lessons:
+  ES-C18-subjuntivo: 731s (declared 360s, computed 731s; declared+computed)
+  PT-C16-ser-vs-estar: 565s (declared 360s, computed 565s; declared+computed)
+  SA-C06-numbers-1-5: 513s (declared 360s, computed 513s; declared+computed)
+  HI-W05-virama-namaste: 501s (declared 300s, computed 501s; declared+computed)
+  ES-C18-practice: 500s (declared 360s, computed 500s; declared+computed)
+  FR-C16-passe-compose-etre: 489s (declared 300s, computed 489s; declared+computed)
+  HI-W02-abugida-ka-ta: 465s (declared 300s, computed 465s; declared+computed)
+  ES-C18-quiero-que: 456s (declared 360s, computed 456s; declared+computed)
+  TA-W04-vowel-signs-nandri: 441s (declared 360s, computed 441s; declared+computed)
+  HI-C06-numbers-1-5: 426s (declared 300s, computed 426s; declared+computed)
+  PT-C16-ser: 409s (declared 300s, computed 409s; declared+computed)
+  PA-C06-numbers-1-5: 405s (declared 300s, computed 405s; declared+computed)
+  RU-C02-practice: 405s (declared 300s, computed 405s; declared+computed)
+  IT-C16-passato-prossimo-essere: 404s (declared 360s, computed 404s; declared+computed)
+  TA-W02-ma-retroflex-na: 401s (declared 300s, computed 401s; declared+computed)
+  TA-W01-curves-va-ka: 400s (declared 300s, computed 400s; declared+computed)
+  ES-C17-practice: 398s (declared 300s, computed 398s; declared+computed)
+  TA-W03-pulli-vanakkam: 398s (declared 300s, computed 398s; declared+computed)
+  HI-W04-ra-sa-mera-naam: 385s (declared 300s, computed 385s; declared+computed)
+  HI-W01-shirorekha-na-ma: 381s (declared 240s, computed 381s; computed)
+
