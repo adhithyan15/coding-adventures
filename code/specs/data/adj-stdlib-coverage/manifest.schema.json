@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/adj-stdlib-manifest-v1.json",
+  "title": "ADJ standard-library curriculum manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "coverage_roots", "objectives"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "coverage_roots": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/coverage_root"}
+    },
+    "objectives": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/objective"}
+    }
+  },
+  "$defs": {
+    "stable_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "string_array": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "coverage_root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "version",
+        "locator",
+        "status",
+        "retrieved_at",
+        "cas_hash"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/stable_id"},
+        "title": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "format": "uri"},
+        "status": {"enum": ["declared", "indexed", "byte_pinned"]},
+        "retrieved_at": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "format": "date-time"}
+          ]
+        },
+        "cas_hash": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/sha256"}
+          ]
+        }
+      }
+    },
+    "standard_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "objective"],
+      "properties": {
+        "root": {"$ref": "#/$defs/stable_id"},
+        "objective": {"type": "string", "minLength": 1}
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "provenance",
+        "tests",
+        "benchmark",
+        "crosswalk"
+      ],
+      "properties": {
+        "implementation": {"enum": ["missing", "partial", "present"]},
+        "provenance": {
+          "enum": ["missing", "source_labeled", "byte_pinned", "fully_verified"]
+        },
+        "tests": {"enum": ["missing", "partial", "present"]},
+        "benchmark": {"enum": ["missing", "pilot", "held_out"]},
+        "crosswalk": {"enum": ["unmapped", "partial", "mapped"]}
+      }
+    },
+    "objective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "band",
+        "domain",
+        "competency",
+        "coverage_roots",
+        "standards",
+        "prerequisites",
+        "libraries",
+        "modalities",
+        "source_cas_hashes",
+        "benchmark_paths",
+        "status"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/stable_id"},
+        "title": {"type": "string", "minLength": 1},
+        "band": {
+          "enum": ["K-2", "3-5", "6-8", "9-12", "pre-clinical", "clinical", "licensure"]
+        },
+        "domain": {"type": "string", "minLength": 1},
+        "competency": {
+          "enum": ["recall", "compute", "classify", "explain", "infer", "decide", "optimize", "interpret"]
+        },
+        "coverage_roots": {"$ref": "#/$defs/string_array"},
+        "standards": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/standard_mapping"},
+          "uniqueItems": true
+        },
+        "prerequisites": {"$ref": "#/$defs/string_array"},
+        "libraries": {"$ref": "#/$defs/string_array"},
+        "modalities": {"$ref": "#/$defs/string_array"},
+        "source_cas_hashes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"},
+          "uniqueItems": true
+        },
+        "benchmark_paths": {"$ref": "#/$defs/string_array"},
+        "status": {"$ref": "#/$defs/status"}
+      }
+    }
+  }
+}
