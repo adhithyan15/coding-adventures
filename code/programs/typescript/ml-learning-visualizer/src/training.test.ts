@@ -11,6 +11,7 @@ import {
   traceTinyDecoderTraining,
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -1078,5 +1079,96 @@ describe("scalar variational autoencoder lab", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: /Use updated parameters/ }));
     expect(screen.getByLabelText("Variational encode sample and decode path").textContent)
       .toMatch(/after one SGD step.*mean = 0\.4 \+ 0 = 0\.4.*log var = 0\.0025 \+ 0\.0025 = 0\.005.*z = 0\.90125156.*x_hat = 0\.91936283/s);
+  });
+});
+
+describe("one-dimensional GAN game", () => {
+  it("keeps the adversarial workbench in the generated production stylesheet", () => {
+    const css = transpileLatticeInBrowser(latticeSource);
+
+    expect(css).toContain(".workspace--gan");
+    expect(css).toContain(".gan-number-line__marker--fake");
+  });
+
+  it("scores one real and one generated point before either player moves", () => {
+    const trace = traceOneDimensionalGan();
+
+    expect(trace.initial.fakeSample).toBeCloseTo(0.2);
+    expect(trace.initial.realProbability).toBeCloseTo(0.7310585786300049);
+    expect(trace.initial.fakeProbability).toBeCloseTo(0.549833997312478);
+    expect(trace.initial.discriminatorLoss).toBeCloseTo(0.5557002784499074);
+    expect(trace.initial.generatorLoss).toBeCloseTo(0.5981388693815918);
+  });
+
+  it("detaches the fake and lowers only the discriminator objective", () => {
+    const trace = traceOneDimensionalGan();
+
+    expect(trace.discriminatorStep.backward.fakeSampleGradient).toBe(0);
+    expect(trace.discriminatorStep.backward.weightGradient)
+      .toBeCloseTo(-0.07948731095374975);
+    expect(trace.discriminatorStep.backward.biasGradient)
+      .toBeCloseTo(0.14044628797124142);
+    expect(trace.discriminatorStep.updatedParameters.weight)
+      .toBeCloseTo(1.0397436554768749);
+    expect(trace.discriminatorStep.updatedParameters.bias)
+      .toBeCloseTo(-0.07022314398562071);
+    expect(trace.discriminatorStep.state.discriminatorLoss)
+      .toBeLessThan(trace.initial.discriminatorLoss);
+  });
+
+  it("freezes the updated critic and sends its input slope into the generator", () => {
+    const trace = traceOneDimensionalGan();
+
+    expect(trace.generatorStep.backward.fakeSampleGradient)
+      .toBeCloseTo(-0.48412848285494775);
+    expect(trace.generatorStep.updatedParameters.weight)
+      .toBeCloseTo(0.32103212071373693);
+    expect(trace.generatorStep.updatedParameters.bias)
+      .toBeCloseTo(0.12103212071373694);
+    expect(trace.generatorStep.state.fakeSample).toBeCloseTo(0.44206424142747386);
+    expect(trace.generatorStep.state.generatorLoss)
+      .toBeLessThan(trace.discriminatorStep.state.generatorLoss);
+    expect(trace.generatorStep.state.discriminatorLoss)
+      .toBeGreaterThan(trace.discriminatorStep.state.discriminatorLoss);
+  });
+
+  it("audits each player against its own fixed-opponent objective", () => {
+    const trace = traceOneDimensionalGan();
+
+    expect(trace.discriminatorStep.gradientCheck.parameterOrder)
+      .toEqual(["discriminator.weight", "discriminator.bias"]);
+    expect(trace.generatorStep.gradientCheck.parameterOrder)
+      .toEqual(["generator.weight", "generator.bias"]);
+    expect(trace.discriminatorStep.gradientCheck.maxAbsoluteError)
+      .toBeLessThan(1e-8);
+    expect(trace.generatorStep.gradientCheck.maxAbsoluteError)
+      .toBeLessThan(1e-8);
+  });
+
+  it("switches from the forward pass through both alternating moves", () => {
+    render(React.createElement(RepresentationWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Adversarial game" }));
+
+    expect(screen.getByRole("heading", {
+      name: "A generator and discriminator on one number line",
+    })).toBeTruthy();
+    expect(screen.getByLabelText("GAN samples and discriminator probabilities").textContent)
+      .toMatch(/neither has moved.*fake 0\.2.*real 1.*0\.73105858.*0\.549834/s);
+    expect(screen.getByLabelText("GAN competing objectives").textContent)
+      .toMatch(/D loss 0\.55570028.*G loss 0\.59813887/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Discriminator moves/ }));
+    expect(screen.getByLabelText("GAN active gradient route").textContent)
+      .toMatch(/generated value is detached.*-0\.13447071.*0\.274917.*-0\.07948731 \/ 0\.14044629.*gradient into fake = 0/s);
+    expect(screen.getByLabelText("GAN competing objectives").textContent)
+      .toContain("D loss 0.54296489");
+
+    fireEvent.click(screen.getByRole("button", { name: /Generator responds/ }));
+    expect(screen.getByLabelText("GAN samples and discriminator probabilities").textContent)
+      .toMatch(/updated discriminator is frozen.*fake 0\.44206424.*0\.59614074/s);
+    expect(screen.getByLabelText("GAN active gradient route").textContent)
+      .toMatch(/critic becomes a teaching signal.*-0\.46562293.*-0\.48412848.*D parameters stay frozen/s);
+    expect(screen.getByLabelText("GAN competing objectives").textContent)
+      .toMatch(/D loss 0\.61411974.*G loss 0\.51727849/s);
   });
 });

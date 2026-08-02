@@ -34,13 +34,14 @@ larger network:
 14. [A Tiny Decoder-Only Language Model Training Step, by Hand](./tiny-decoder-language-model-training-by-hand.md)
 15. [A Two-Number Autoencoder Bottleneck, by Hand](./two-number-autoencoder-bottleneck-by-hand.md)
 16. [Variational Sampling and the KL Tradeoff, by Hand](./variational-sampling-and-kl-tradeoff-by-hand.md)
-17. [Matrix Math](../matrix-math.md)
-18. [Loss Functions](../loss-functions.md)
-19. [Gradient Descent](../gradient-descent.md)
-20. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-21. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-22. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-23. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+17. [A One-Dimensional GAN Game, by Hand](./one-dimensional-gan-game-by-hand.md)
+18. [Matrix Math](../matrix-math.md)
+19. [Loss Functions](../loss-functions.md)
+20. [Gradient Descent](../gradient-descent.md)
+21. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+22. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+23. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+24. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -95,6 +96,9 @@ has ten complementary views:
   bottleneck gradient, then switch to a scalar variational autoencoder to expose
   Gaussian parameters, saved-noise reparameterization, reconstruction versus
   beta-weighted KL gradients, six finite differences, and a full-model update.
+  Continue into a one-dimensional adversarial game to alternate a detached
+  discriminator move and a frozen-discriminator generator response on one
+  visible number line.
 
 ## Language-Neutral Corpus
 
@@ -161,6 +165,12 @@ Gaussian mean and log-variance, saved epsilon, reparameterized latent sample,
 half-squared reconstruction loss, beta-weighted KL divergence, separate
 gradient routes, six central finite differences, and one lower-total-loss step.
 
+NN18 adds `code/specs/fixtures/one-dimensional-gan-v1`, including one saved
+noise value, a real and fake scalar, sigmoid discriminator scores, detached
+discriminator gradients, a frozen-discriminator generator counter-move, two
+objective-specific central finite-difference audits, and all three loss
+snapshots.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -179,6 +189,7 @@ python code/scripts/validate_multi_head_attention_labs.py
 python code/scripts/validate_tiny_decoder_training_labs.py
 python code/scripts/validate_two_number_autoencoder_labs.py
 python code/scripts/validate_variational_autoencoder_labs.py
+python code/scripts/validate_one_dimensional_gan_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -216,6 +227,9 @@ entire encoder and decoder after one loss-reducing step.
 The first NN17 lab holds one Gaussian noise sample fixed, exposes how
 reconstruction and beta-weighted KL signals meet at the mean and log-variance,
 audits all six trainable gradients, and reruns the complete stochastic path.
+The first NN18 lab alternates a detached discriminator update and a generator
+counter-move through a frozen discriminator, audits each player's own
+objective, and makes the resulting pushback between losses explicit.
 
 ## How to Study a Model
 

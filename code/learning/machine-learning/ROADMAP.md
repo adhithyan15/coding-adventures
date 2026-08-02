@@ -40,7 +40,7 @@ trace, and tests.
 - [ ] Representation and generation
   - [x] Two-number autoencoder bottleneck.
   - [x] Variational sampling and KL tradeoff.
-  - [ ] One-dimensional GAN game.
+  - [x] One-dimensional GAN game.
   - [ ] One-dimensional diffusion forward and denoising steps.
 - [ ] Structured and memory networks
   - [ ] Hopfield associative memory.

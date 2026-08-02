@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
+import { GanWorkbench } from "./GanWorkbench.js";
 import { VariationalWorkbench } from "./VariationalWorkbench.js";
 
 export function RepresentationWorkbench() {
-  const [lab, setLab] = useState<"autoencoder" | "variational">("autoencoder");
+  const [lab, setLab] = useState<"autoencoder" | "variational" | "gan">("autoencoder");
 
   return (
     <div className="representation-workbench">
@@ -22,8 +23,21 @@ export function RepresentationWorkbench() {
         >
           Variational sample
         </button>
+        <button
+          aria-pressed={lab === "gan"}
+          type="button"
+          onClick={() => setLab("gan")}
+        >
+          Adversarial game
+        </button>
       </nav>
-      {lab === "autoencoder" ? <AutoencoderWorkbench /> : <VariationalWorkbench />}
+      {lab === "autoencoder" ? (
+        <AutoencoderWorkbench />
+      ) : lab === "variational" ? (
+        <VariationalWorkbench />
+      ) : (
+        <GanWorkbench />
+      )}
     </div>
   );
 }

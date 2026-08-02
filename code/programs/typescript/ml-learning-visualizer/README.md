@@ -141,6 +141,13 @@ sample, and decode it. Beta controls how reconstruction and KL-to-prior gradient
 routes combine. The balance point at beta `0.25`, a six-parameter numerical
 audit, and the complete post-update distribution remain directly inspectable.
 
+Continue into the adversarial view to place one real point and one generated
+point on the same number line. Advance a deterministic round from the initial
+scores through a detached discriminator update and a generator response against
+the frozen updated discriminator. Each player's objective, active gradient
+route, two-parameter numerical audit, and the opponent's counter-push stay
+visible at every phase.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -217,6 +224,11 @@ NN17 under `code/specs/fixtures/variational-autoencoder-v1` pins a scalar
 Gaussian encoder, saved epsilon, reparameterized sample, half-squared
 reconstruction error, beta-weighted KL divergence, both encoder gradient routes,
 six central finite differences, updated parameters, and lower total objective.
+
+NN18 under `code/specs/fixtures/one-dimensional-gan-v1` pins one complete
+scalar adversarial round: saved noise, real and fake scores, a detached
+discriminator update, a frozen-discriminator generator response, both players'
+loss snapshots, and two objective-specific finite-difference audits.
 
 ## Development
 

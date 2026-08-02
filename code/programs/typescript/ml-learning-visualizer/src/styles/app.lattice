@@ -5006,6 +5006,337 @@ code {
   font-size: 1.7rem;
 }
 
+.workspace--gan {
+  display: grid;
+  grid-template-columns: minmax(700px, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+
+.gan-stage,
+.gan-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.gan-intro,
+.gan-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.gan-intro,
+.gan-sample-panel,
+.gan-objective-panel,
+.gan-gradient-panel,
+.gan-update-panel,
+.gan-controls {
+  @include surface;
+  padding: 16px;
+}
+
+.gan-intro p:last-child,
+.gan-heading p,
+.gan-controls > p {
+  margin: 7px 0 0;
+  color: $muted;
+}
+
+.gan-chip {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(35, 122, 87, 0.3);
+  border-radius: 999px;
+  background: rgba(35, 122, 87, 0.08);
+  color: #185a40;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 750;
+}
+
+.gan-sample-panel,
+.gan-objective-panel,
+.gan-gradient-panel,
+.gan-update-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.gan-heading > code {
+  flex: 0 1 390px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: rgba(35, 122, 87, 0.07);
+  color: #185a40;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.gan-number-line {
+  position: relative;
+  min-height: 135px;
+  margin: 10px 22px 0;
+  border-bottom: 3px solid #334155;
+}
+
+.gan-number-line__axis {
+  position: absolute;
+  inset: auto 0 -25px;
+  display: flex;
+  justify-content: space-between;
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+}
+
+.gan-number-line__marker {
+  position: absolute;
+  bottom: 10px;
+  display: grid;
+  gap: 2px;
+  min-width: 95px;
+  padding: 8px;
+  border-radius: 6px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.gan-number-line__marker::after {
+  position: absolute;
+  bottom: -13px;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.gan-number-line__marker small {
+  color: $muted;
+}
+
+.gan-number-line__marker--fake {
+  bottom: 10px;
+  background: rgba(109, 91, 208, 0.09);
+  color: #4f3da9;
+}
+
+.gan-number-line__marker--real {
+  bottom: 70px;
+  background: rgba(35, 122, 87, 0.09);
+  color: #185a40;
+}
+
+.gan-number-line__marker--real::after {
+  bottom: -73px;
+  height: 70px;
+  border-radius: 0;
+  background: linear-gradient(currentColor, currentColor 2px, transparent 2px);
+}
+
+.gan-probability-grid,
+.gan-update-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gan-probability-grid > div,
+.gan-player,
+.gan-gradient-route > div,
+.gan-update-grid > div,
+.gan-freeze-key {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: $paper;
+}
+
+.gan-probability-grid small,
+.gan-player small,
+.gan-gradient-route small,
+.gan-update-grid small,
+.gan-freeze-key small {
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.gan-probability-grid code,
+.gan-player code,
+.gan-gradient-route code,
+.gan-update-grid code,
+.gan-freeze-key code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.gan-probability-grid strong,
+.gan-player strong,
+.gan-gradient-route strong,
+.gan-update-grid strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.gan-probability-grid strong {
+  color: #185a40;
+  font-size: 1.18rem;
+}
+
+.gan-objectives {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.gan-player {
+  border-left: 4px solid rgba(35, 122, 87, 0.38);
+}
+
+.gan-player--generator {
+  border-left-color: rgba(109, 91, 208, 0.42);
+}
+
+.gan-player--active {
+  border-color: rgba(35, 122, 87, 0.56);
+  background: rgba(35, 122, 87, 0.07);
+}
+
+.gan-player--active.gan-player--generator {
+  border-color: rgba(109, 91, 208, 0.56);
+  background: rgba(109, 91, 208, 0.08);
+}
+
+.gan-player span,
+.gan-gradient-route span,
+.gan-update-grid span,
+.gan-selected-summary span {
+  color: $muted;
+  font-size: 0.73rem;
+}
+
+.gan-versus,
+.gan-gradient-route > span {
+  align-self: center;
+  color: $muted;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gan-gradient-placeholder {
+  padding: 18px;
+  border: 1px dashed rgba(109, 91, 208, 0.35);
+  border-radius: 6px;
+  background: rgba(109, 91, 208, 0.035);
+  color: $muted;
+  text-align: center;
+}
+
+.gan-gradient-route {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1.2fr);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.gan-gradient-route__result {
+  border-color: rgba(35, 122, 87, 0.38) !important;
+  background: rgba(35, 122, 87, 0.06) !important;
+}
+
+.gan-gradient-route__result--generator {
+  border-color: rgba(109, 91, 208, 0.42) !important;
+  background: rgba(109, 91, 208, 0.07) !important;
+}
+
+.gan-update-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gan-update-grid > div:first-child {
+  border-left: 4px solid rgba(35, 122, 87, 0.42);
+}
+
+.gan-update-grid > div:last-child {
+  border-left: 4px solid rgba(109, 91, 208, 0.45);
+}
+
+.gan-counterpush {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px;
+  border-left: 4px solid rgba(183, 121, 31, 0.5);
+  background: rgba(183, 121, 31, 0.07);
+}
+
+.gan-counterpush strong {
+  color: #81520d;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.gan-counterpush p {
+  margin: 0 0 0 auto;
+  color: $muted;
+}
+
+.gan-controls {
+  position: sticky;
+  top: 14px;
+}
+
+.gan-phase-buttons {
+  display: grid;
+  gap: 8px;
+}
+
+.gan-phase-buttons button {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: left;
+}
+
+.gan-phase-buttons button span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+}
+
+.gan-phase-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.55);
+  background: rgba(109, 91, 208, 0.1);
+  color: #4f3da9;
+}
+
+.gan-selected-summary {
+  display: grid;
+  gap: 4px;
+  padding: 11px;
+  border-left: 3px solid rgba(109, 91, 208, 0.45);
+  background: rgba(109, 91, 208, 0.045);
+}
+
+.gan-selected-summary small {
+  color: $muted;
+}
+
+.gan-selected-summary strong {
+  color: #4f3da9;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.15rem;
+}
+
 @media (max-width: 1360px) {
   .app-header,
   .header-actions {
@@ -5057,7 +5388,8 @@ code {
     .workspace--multi-head,
     .workspace--decoder,
     .workspace--autoencoder,
-    .workspace--variational {
+    .workspace--variational,
+    .workspace--gan {
     grid-template-columns: 1fr;
   }
 
@@ -5087,6 +5419,11 @@ code {
   }
 
   .variational-controls {
+    position: static;
+    grid-column: 1 / -1;
+  }
+
+  .gan-controls {
     position: static;
     grid-column: 1 / -1;
   }
@@ -5128,7 +5465,8 @@ code {
     .workspace--multi-head,
     .workspace--decoder,
     .workspace--autoencoder,
-    .workspace--variational {
+    .workspace--variational,
+    .workspace--gan {
     grid-template-columns: 1fr;
   }
 
@@ -5158,7 +5496,9 @@ code {
     .autoencoder-intro,
     .autoencoder-heading,
     .variational-intro,
-    .variational-heading {
+    .variational-heading,
+    .gan-intro,
+    .gan-heading {
     display: grid;
     align-items: start;
   }
@@ -5489,6 +5829,31 @@ code {
 
   .variational-audit-row strong,
   .variational-loss-drop p {
+    margin-left: 0;
+  }
+
+  .gan-chip {
+    justify-self: start;
+  }
+
+  .gan-probability-grid,
+  .gan-objectives,
+  .gan-gradient-route,
+  .gan-update-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gan-versus,
+  .gan-gradient-route > span {
+    justify-self: center;
+  }
+
+  .gan-counterpush {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .gan-counterpush p {
     margin-left: 0;
   }
 
