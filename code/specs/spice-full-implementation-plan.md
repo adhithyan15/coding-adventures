@@ -33,11 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card surface-mobility validation.
+1. Rust Berkeley SPICE MOS model-card transconductance validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `U0` / `UO` values before
+   - Reject zero, negative, and non-finite model-card `KP` values before
      lowering MOS elements into engine parameters.
-   - Preserve zero and positive surface mobility, including the `UO` alias.
+   - Preserve positive explicit transconductance and its precedence over
+     mobility-derived values.
 
 ## Completed Slices
 
@@ -3925,6 +3926,13 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Positive oxide thicknesses remain accepted for mobility-derived
      transconductance.
+
+336. Rust Berkeley SPICE MOS model-card surface-mobility validation.
+   - Status: completed in PR 9459.
+   - Negative and non-finite model-card `U0` / `UO` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive surface mobility remain accepted, including the `UO`
+     alias.
 
 ## Backlog
 

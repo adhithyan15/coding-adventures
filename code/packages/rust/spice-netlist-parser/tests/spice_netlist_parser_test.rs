@@ -1606,6 +1606,31 @@ fn accepts_zero_mosfet_model_surface_mobility_aliases() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_transconductance() {
+    for transconductance in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model mobile NMOS(KP={transconductance})\nM1 d g s b mobile"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET KP must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_explicit_positive_mosfet_model_transconductance() {
+    let parsed =
+        parse_netlist(".model mobile NMOS(KP=250u TOX=100n U0=500)\nM1 d g s b mobile").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.kp, 250.0e-6);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
