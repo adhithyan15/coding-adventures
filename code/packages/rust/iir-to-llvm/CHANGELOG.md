@@ -1,5 +1,12 @@
 # Changelog — iir-to-llvm
 
+## 0.47.0 - 2026-08-02 - boolean procedure call results
+
+Boolean user-function calls now retain their LLVM `i1` companion value, and
+typed boolean procedure result slots use `i1` storage. A subsequent logical
+operation or conditional branch therefore does not truncate an `i1` result as
+if it were an `i64` slot.
+
 ## 0.46.0 - 2026-07-31 - boolean array elements
 
 `array<bool>` now loads and stores LLVM `i1` elements. Boolean array reads

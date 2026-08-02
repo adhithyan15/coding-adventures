@@ -803,6 +803,54 @@ fn call_user_fn_non_void_emits_typed_call() {
 }
 
 #[test]
+fn boolean_call_result_stays_i1_for_logical_ops_and_branches() {
+    let id = IIRFunction::new(
+        "id",
+        vec![("p".into(), "bool".into())],
+        "bool",
+        vec![IIRInstr::new("ret", None, vec![Operand::Var("p".into())], "bool")],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("f".into()), vec![Operand::Bool(false)], "bool"),
+            IIRInstr::new(
+                "call",
+                Some("called".into()),
+                vec![Operand::Var("id".into()), Operand::Var("f".into())],
+                "bool",
+            ),
+            IIRInstr::new("not", Some("inverted".into()), vec![Operand::Var("called".into())], "bool"),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var("inverted".into()), Operand::Var("no".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("label", None, vec![Operand::Var("no".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "bool_call".into(),
+        functions: vec![id, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+
+    let ll = lower(&module);
+    assert!(ll.contains("%called = call i1 @id(i1 0)"), "expected bool call; got:\n{ll}");
+    assert!(ll.contains("%inverted = xor i1 %called, -1"), "expected i1 not; got:\n{ll}");
+    assert!(ll.contains("br i1 %inverted"), "expected i1 branch; got:\n{ll}");
+    assert!(!ll.contains("trunc i64 %called to i1"), "must not widen and truncate a bool call; got:\n{ll}");
+}
+
+#[test]
 fn call_void_return_omits_lhs() {
     // sink(x) { ret_void }
     // f() { v = const 7; call sink(v); ret_void }
