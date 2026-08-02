@@ -27,6 +27,7 @@ CLAUSE_PATTERNS = {
 SOURCE_RE = re.compile(r'(?m)^\s*source\s+"')
 LOCATOR_RE = re.compile(r'(?m)^\s*locator\s+"')
 TRUST_RE = re.compile(r"(?m)^\s*trust\s+[a-zA-Z_]")
+IMPORT_RE = re.compile(r'(?m)^\s*import\s+"([^"]+)"')
 PINNED_QUOTE_RE = re.compile(
     r'(?m)^\s*quote\s+".*?"\s+at\s+\d+\s+snapshot\s+"[0-9a-f]{64}"\s*$'
 )
@@ -76,13 +77,26 @@ def _referenced_by_test(candidates: Iterable[str], test_texts: list[str]) -> boo
     )
 
 
+def discover_query_imports(collection_root: Path) -> set[Path]:
+    """Return the normalized files directly imported by worked queries."""
+
+    imports: set[Path] = set()
+    for query in collection_root.rglob("*.query.adj"):
+        text = query.read_text(encoding="utf-8")
+        imports.update(
+            (query.parent / imported).resolve()
+            for imported in IMPORT_RE.findall(text)
+        )
+    return imports
+
+
 def inspect_library(
     root: Path,
     collection: str,
     collection_root: Path,
     path: Path,
     test_texts: list[str],
-    query_texts: list[str],
+    query_imports: set[Path],
 ) -> dict[str, Any]:
     """Return structural evidence for one shipped ADJ file."""
 
@@ -109,11 +123,7 @@ def inspect_library(
         "domain": domain,
         "path": repo_path,
         "content_library": clause_count > 0,
-        "query_companion": any(
-            candidate in query_text
-            for candidate in (repo_path, collection_path, path.name)
-            for query_text in query_texts
-        ),
+        "query_companion": path.resolve() in query_imports,
         "test_reference": _referenced_by_test(
             (repo_path, collection_path, path.name), test_texts
         ),
@@ -157,10 +167,7 @@ def build_report(root: Path) -> dict[str, Any]:
     libraries: list[dict[str, Any]] = []
     for collection, relative_root in COLLECTIONS:
         collection_root = root / relative_root
-        query_texts = [
-            path.read_text(encoding="utf-8").replace("\\", "/")
-            for path in collection_root.rglob("*.query.adj")
-        ]
+        query_imports = discover_query_imports(collection_root)
         for path in sorted(collection_root.rglob("*.adj")):
             if path.name.endswith(".query.adj"):
                 continue
@@ -171,7 +178,7 @@ def build_report(root: Path) -> dict[str, Any]:
                     collection_root,
                     path,
                     test_texts,
-                    query_texts,
+                    query_imports,
                 )
             )
 
