@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance-length validation.
+1. Rust Berkeley SPICE MOS instance drain-squares validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite instance `L` values before lowering
-     MOS elements into engine parameters.
-   - Preserve positive instance lengths and model-card/default length fallback.
+   - Reject negative and non-finite instance `NRD` values before lowering MOS
+     elements into engine parameters.
+   - Preserve zero and positive drain-square counts for `RSH * NRD` resistance.
 
 ## Completed Slices
 
@@ -3870,6 +3870,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Zero, negative, and non-finite instance `W` values are rejected before
      lowering MOS elements into engine parameters.
    - Positive instance widths and model-card/default width fallback remain
+     accepted.
+
+328. Rust Berkeley SPICE MOS instance-length validation.
+   - Status: completed in PR 9432.
+   - Zero, negative, and non-finite instance `L` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive instance lengths and model-card/default length fallback remain
      accepted.
 
 ## Backlog

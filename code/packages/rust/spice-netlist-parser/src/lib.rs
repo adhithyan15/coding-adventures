@@ -2227,6 +2227,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(drain_squares) = instance_params.get("NRD") {
+                if !drain_squares.is_finite() || *drain_squares < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET NRD must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
