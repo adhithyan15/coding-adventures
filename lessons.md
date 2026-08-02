@@ -48,6 +48,13 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Python downstream tests should not assert exact dependency versions.** Assert minimum-compatible (`__version__ >= "0.3.0"`) or capability — exact-version asserts fail when a foundational package bumps and downstream gets force-rebuilt.
 - **TypeScript `package.json` must use `"main": "src/index.ts"`** (not `dist/index.js`) because Vitest resolves `file:` deps via `main` and we don't pre-compile. Also: `"type": "module"`, `@vitest/coverage-v8` in devDeps, run real coverage gate locally before pushing. Never commit `.js`/`.d.ts` transpile outputs alongside `.ts` sources.
 - **Vite-based TS programs with `file:` deps must NOT use `tsc -b` in build script.** `tsc -b` follows imports into nested `node_modules` (npm copies, not symlinks on Windows) and fails on un-installed transitives. Use plain `vite build`; type-check via vitest.
+- **Do not label a forward-only runtime as a training compiler.** Use the real
+  runtime for saved forward evidence, then name a new language-neutral
+  backward/optimizer contract explicitly. Keep backward, gradient reduction,
+  optimizer update, and zeroing as separate observable operations until the
+  production runtime implements those contracts. Prove persistence with a
+  nonzero incoming gradient buffer: reduce the current batch separately, add it
+  to the prior buffer, and finite-difference only the current batch loss.
 - **Haskell `cabal.project` must list every transitive local package.** Cabal does not discover sibling deps from a sibling's own `cabal.project`. Single-package validation: plain `cabal test` (NOT `cabal test all`, which builds the whole universe).
 - **Haskell record accessors share the module's top-level namespace.** A field such as `requestBodyKind` creates a function with that exact name, so a private helper with the same spelling fails with `Multiple declarations`. Name decision helpers distinctly (`determineRequestBodyKind`) before compiling.
 - **HTTP/1 parity must preserve fail-closed wire grammar, not legacy parser permissiveness.** Reject TE+CL ambiguity, conflicting duplicate lengths, non-final request chunking, whitespace before a field colon, variable start-line delimiters, and unbounded heads; response framing must receive HEAD/CONNECT request context, and parse errors must not retain raw targets or field values.
