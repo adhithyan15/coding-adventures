@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance source-perimeter validation.
+1. Rust Berkeley SPICE MOS model-card oxide-thickness validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite instance `PS` values before lowering MOS
-     elements into engine parameters.
-   - Preserve zero and positive source perimeters for sidewall-junction behavior.
+   - Reject zero, negative, and non-finite model-card `TOX` values before
+     lowering MOS elements into engine parameters.
+   - Preserve positive oxide thicknesses for mobility-derived transconductance.
 
 ## Completed Slices
 
@@ -3910,6 +3910,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite instance `PD` values are rejected before lowering
      MOS elements into engine parameters.
    - Zero and positive drain perimeters remain accepted for sidewall-junction
+     behavior.
+
+334. Rust Berkeley SPICE MOS instance source-perimeter validation.
+   - Status: completed in PR 9450.
+   - Negative and non-finite instance `PS` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive source perimeters remain accepted for sidewall-junction
      behavior.
 
 ## Backlog
