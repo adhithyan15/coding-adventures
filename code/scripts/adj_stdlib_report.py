@@ -215,30 +215,31 @@ def build_report(root: Path) -> dict[str, Any]:
     )
     provenance_error: str | None = None
     try:
-        adj_stdlib_provenance.validate_repository(
-            root / adj_stdlib_provenance.DEFAULT_ROOT,
-            root / adj_stdlib_provenance.DEFAULT_MANIFEST,
-            root / adj_stdlib_provenance.DEFAULT_SCHEMA,
-            workspace_root=root,
-        )
-        provenance_manifest = json.loads(
-            (root / adj_stdlib_provenance.DEFAULT_MANIFEST).read_text(encoding="utf-8")
-        )
-        cas = adj_stdlib_provenance.Cas(root / adj_stdlib_provenance.DEFAULT_ROOT)
-        cas.load()
-        for digest in provenance_manifest["bundle_hashes"]:
-            bundle = adj_stdlib_provenance._json_object(
-                cas, digest, "provenance_bundle"
+        cas_root = root / adj_stdlib_provenance.DEFAULT_ROOT
+        manifest_path = root / adj_stdlib_provenance.DEFAULT_MANIFEST
+        with adj_stdlib_provenance.CasRootLock(cas_root):
+            adj_stdlib_provenance._validate_repository_unlocked(
+                cas_root,
+                manifest_path,
+                root / adj_stdlib_provenance.DEFAULT_SCHEMA,
+                workspace_root=root,
             )
-            verified_libraries[bundle["library"]][digest] = {
-                (
-                    clause["quote"],
-                    clause["start"],
-                    clause["end"],
-                    clause["snapshot_sha256"],
+            provenance_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            cas = adj_stdlib_provenance.Cas(cas_root)
+            cas.load()
+            for digest in provenance_manifest["bundle_hashes"]:
+                bundle = adj_stdlib_provenance._json_object(
+                    cas, digest, "provenance_bundle"
                 )
-                for clause in bundle["clauses"]
-            }
+                verified_libraries[bundle["library"]][digest] = {
+                    (
+                        clause["quote"],
+                        clause["start"],
+                        clause["end"],
+                        clause["snapshot_sha256"],
+                    )
+                    for clause in bundle["clauses"]
+                }
     except (OSError, ValueError, json.JSONDecodeError) as error:
         provenance_error = str(error)
     libraries: list[dict[str, Any]] = []

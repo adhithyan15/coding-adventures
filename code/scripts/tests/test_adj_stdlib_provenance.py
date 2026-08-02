@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import json
+import multiprocessing
 import os
 import sys
 import tempfile
@@ -12,6 +13,23 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+
+
+def acquire_cas_lock_and_exit(cas_root: str, ready: object) -> None:
+    with provenance.CasRootLock(Path(cas_root), blocking=False):
+        ready.set()
+        os._exit(0)
+
+
+def acquire_cas_lock_with_alternate_temp(
+    cas_root: str, temp_root: str, ready: object, release: object
+) -> None:
+    os.environ["TEMP"] = temp_root
+    os.environ["TMP"] = temp_root
+    os.environ["TMPDIR"] = temp_root
+    with provenance.CasRootLock(Path(cas_root), blocking=False):
+        ready.set()
+        release.wait(10)
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
@@ -329,6 +347,202 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             second = cas.put(b"same bytes", kind="raw_source", label="different fetch")
             self.assertEqual(first, second)
             self.assertEqual(len(cas.index), 1)
+
+    def test_manifest_registration_preserves_unowned_bundle_roots(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            with provenance.BundleRegistrationTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                original = json.loads(
+                    transaction.cas.object_path(hashes["bundle"]).read_text(
+                        encoding="utf-8"
+                    )
+                )
+                ratio = json.loads(json.dumps(original))
+                ratio["bundle_id"] = "test.ratio.v1"
+                ratio_hash = transaction.cas.put_json(
+                    ratio,
+                    kind="provenance_bundle",
+                    label="ratio fixture bundle",
+                    links=provenance._bundle_declared_links(ratio),
+                )
+                registered = transaction.commit({"test.ratio.v1": ratio_hash})
+            with provenance.BundleRegistrationTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                rerun = transaction.commit({"test.arithmetic.v1": hashes["bundle"]})
+
+            self.assertEqual(registered, sorted([hashes["bundle"], ratio_hash]))
+            self.assertEqual(rerun, registered)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            self.assertEqual(manifest["bundle_hashes"], registered)
+
+    def test_manifest_registration_refuses_implicit_root_replacement(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            before = manifest_path.read_bytes()
+
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "explicit root-replacement migration",
+                ),
+                provenance.BundleRegistrationTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = json.loads(
+                    transaction.cas.object_path(hashes["bundle"]).read_text(
+                        encoding="utf-8"
+                    )
+                )
+                changed["library"] = "code/example/corrected-arithmetic.adj"
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="changed arithmetic fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                changed_path = transaction.cas.object_path(changed_hash)
+                transaction.commit({"test.arithmetic.v1": changed_hash})
+
+            self.assertEqual(manifest_path.read_bytes(), before)
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertFalse(changed_path.exists())
+
+    def test_manifest_registration_rejects_malformed_contracts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _hashes = self.build_repository(root)
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            cases = [
+                {**manifest, "schema_version": True},
+                {**manifest, "bundle_hashes": [{}]},
+            ]
+            for malformed in cases:
+                with self.subTest(manifest=malformed):
+                    manifest_path.write_bytes(
+                        provenance.canonical_json_bytes(malformed)
+                    )
+                    with (
+                        self.assertRaises(provenance.ProvenanceError),
+                        provenance.BundleRegistrationTransaction(
+                            cas_root,
+                            manifest_path,
+                            expected_manifest_id="test.provenance.v1",
+                            workspace_root=root,
+                        ),
+                    ):
+                        pass
+
+    def test_manifest_registration_lock_rejects_a_concurrent_writer(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            with provenance.BundleRegistrationTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                with (
+                    self.assertRaisesRegex(
+                        provenance.ProvenanceError,
+                        "another provenance operation",
+                    ),
+                    provenance.CasMutationTransaction(cas_root, blocking=False),
+                ):
+                    pass
+                transaction.commit({"test.arithmetic.v1": hashes["bundle"]})
+
+    def test_cas_root_lock_is_released_when_its_process_exits(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas_root = Path(directory) / "cas"
+            context = multiprocessing.get_context("spawn")
+            ready = context.Event()
+            process = context.Process(
+                target=acquire_cas_lock_and_exit,
+                args=(str(cas_root), ready),
+            )
+            process.start()
+            self.assertTrue(ready.wait(10), "child did not acquire the CAS lock")
+            process.join(10)
+            self.assertEqual(process.exitcode, 0)
+
+            with provenance.CasRootLock(cas_root, blocking=False):
+                pass
+
+    def test_cas_root_lock_does_not_depend_on_process_temp_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root = root / "cas"
+            alternate_temp = root / "alternate-temp"
+            alternate_temp.mkdir()
+            context = multiprocessing.get_context("spawn")
+            ready = context.Event()
+            release = context.Event()
+            process = context.Process(
+                target=acquire_cas_lock_with_alternate_temp,
+                args=(str(cas_root), str(alternate_temp), ready, release),
+            )
+            process.start()
+            try:
+                self.assertTrue(ready.wait(10), "child did not acquire the CAS lock")
+                with (
+                    self.assertRaisesRegex(
+                        provenance.ProvenanceError,
+                        "another provenance operation",
+                    ),
+                    provenance.CasRootLock(cas_root, blocking=False),
+                ):
+                    pass
+            finally:
+                release.set()
+                process.join(10)
+                if process.is_alive():
+                    process.terminate()
+                    process.join(10)
+            self.assertEqual(process.exitcode, 0)
+
+    def test_manifest_registration_rolls_back_failed_graph_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            with (
+                self.assertRaisesRegex(provenance.ProvenanceError, "unreferenced"),
+                provenance.BundleRegistrationTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                stray_hash = transaction.cas.put(
+                    b"unreachable staged bytes",
+                    kind="raw_source",
+                    label="rollback fixture",
+                )
+                stray_path = transaction.cas.object_path(stray_hash)
+                transaction.commit({"test.arithmetic.v1": hashes["bundle"]})
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertFalse(stray_path.exists())
 
     def test_partition_rejects_gaps_overlaps_and_unreasoned_discards(self) -> None:
         cases = [

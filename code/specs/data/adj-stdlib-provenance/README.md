@@ -57,6 +57,17 @@ The generator checks the retained source hashes and expected source spans before
 rebuilding both provenance bundles, their IR and transform objects, the CAS
 index, and the curriculum-manifest linkage.
 
+Per-root generators register only the bundle IDs they own inside a CAS-root
+transaction protected by the tracked `cas/lock` file and an OS-released lock.
+Because the stable lock identity is inside the CAS, it cannot diverge with
+process-specific temporary-directory settings. Authoritative Python and Rust
+readers and every CLI writer participate in the same lock, so neither split
+publication nor a lost index update is externally visible. Registration
+validates both the old and proposed graphs, is additive and idempotent, and
+rolls back newly written objects on failure. A different hash for an already
+registered bundle ID fails closed until an explicit root-replacement migration
+can prune the old unreachable graph.
+
 This separation prevents an untrusted source locator from turning the verifier
 into a network or SSRF primitive. Reads are bounded and reject links and Windows
 reparse points; object writes are exclusive; index writes are atomic. Existing

@@ -155,9 +155,7 @@ def local_source(
     )
 
 
-def main() -> None:
-    cas = provenance.Cas(REPO_ROOT / provenance.DEFAULT_ROOT)
-    cas.load()
+def build(cas: provenance.Cas) -> dict[str, str]:
     source_entries = []
     clauses = []
     for item in SOURCES:
@@ -439,23 +437,21 @@ def main() -> None:
         label="arithmetic.query.adj provenance bundle",
         links=provenance._bundle_declared_links(query_bundle),
     )
-    cas.write_index()
-    (REPO_ROOT / provenance.DEFAULT_MANIFEST).write_bytes(
-        provenance.canonical_json_bytes(
-            {
-                "algorithm": "sha256",
-                "bundle_hashes": sorted([bundle_hash, query_bundle_hash]),
-                "manifest_id": "adj.stdlib.provenance.v1",
-                "schema_version": 1,
-            }
-        )
-    )
-    provenance.validate_repository(
+    return {
+        bundle["bundle_id"]: bundle_hash,
+        query_bundle["bundle_id"]: query_bundle_hash,
+    }
+
+
+def main() -> None:
+    with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
         REPO_ROOT / provenance.DEFAULT_MANIFEST,
-        REPO_ROOT / provenance.DEFAULT_SCHEMA,
+        expected_manifest_id="adj.stdlib.provenance.v1",
+        schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
-    )
+    ) as transaction:
+        transaction.commit(build(transaction.cas))
 
 
 if __name__ == "__main__":
