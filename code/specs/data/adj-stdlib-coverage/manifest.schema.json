@@ -134,6 +134,11 @@
           "items": {"$ref": "#/$defs/sha256"},
           "uniqueItems": true
         },
+        "provenance_bundle_hashes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"},
+          "uniqueItems": true
+        },
         "benchmark_paths": {"$ref": "#/$defs/string_array"},
         "status": {"$ref": "#/$defs/status"}
       }

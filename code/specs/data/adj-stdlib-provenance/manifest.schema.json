@@ -1,0 +1,185 @@
+{
+  "$defs": {
+    "claim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "minLength": 1, "type": "string" },
+        "end": { "minimum": 1, "type": "integer" },
+        "quote": { "minLength": 1, "type": "string" },
+        "quote_sha256": { "$ref": "#/$defs/hash" },
+        "start": { "minimum": 0, "type": "integer" }
+      },
+      "required": ["claim_id", "end", "quote", "quote_sha256", "start"],
+      "type": "object"
+    },
+    "clause": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "minLength": 1, "type": "string" },
+        "end": { "minimum": 1, "type": "integer" },
+        "quote": { "minLength": 1, "type": "string" },
+        "quote_sha256": { "$ref": "#/$defs/hash" },
+        "resolution": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "authority_receipt_sha256": { "$ref": "#/$defs/hash" },
+                "authority_source_sha256": { "$ref": "#/$defs/hash" },
+                "classification": { "enum": ["accepted_fact", "accepted_law", "primary_definition", "primary_measurement"] },
+                "kind": { "const": "accepted_root" },
+                "reason": { "minLength": 1, "type": "string" }
+              },
+              "required": ["authority_receipt_sha256", "authority_source_sha256", "classification", "kind", "reason"],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "bundle_sha256": { "$ref": "#/$defs/hash" },
+                "claim_id": { "minLength": 1, "type": "string" },
+                "kind": { "const": "dependency" }
+              },
+              "required": ["bundle_sha256", "claim_id", "kind"],
+              "type": "object"
+            }
+          ]
+        },
+        "snapshot_sha256": { "$ref": "#/$defs/hash" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" },
+        "start": { "minimum": 0, "type": "integer" }
+      },
+      "required": ["claim_id", "end", "quote", "quote_sha256", "resolution", "snapshot_sha256", "source_ir_sha256", "start"],
+      "type": "object"
+    },
+    "fetch_receipt": {
+      "additionalProperties": false,
+      "properties": {
+        "body_sha256": { "$ref": "#/$defs/hash" },
+        "body_size": { "maximum": 67108864, "minimum": 0, "type": "integer" },
+        "final_locator": { "format": "uri", "pattern": "^https://", "type": "string" },
+        "headers": { "additionalProperties": { "type": "string" }, "type": "object" },
+        "kind": { "const": "fetch_receipt" },
+        "locator": { "format": "uri", "pattern": "^https://", "type": "string" },
+        "media_type": { "minLength": 1, "type": "string" },
+        "retrieved_at": { "format": "date-time", "type": "string" },
+        "status": { "maximum": 599, "minimum": 100, "type": "integer" }
+      },
+      "required": ["body_sha256", "body_size", "final_locator", "headers", "kind", "locator", "media_type", "retrieved_at", "status"],
+      "type": "object"
+    },
+    "hash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": { "enum": ["copy", "html_entity_decode"] },
+        "result_end": { "minimum": 1, "type": "integer" },
+        "result_start": { "minimum": 0, "type": "integer" },
+        "source_end": { "minimum": 1, "type": "integer" },
+        "source_start": { "minimum": 0, "type": "integer" }
+      },
+      "required": ["operation", "result_end", "result_start", "source_end", "source_start"],
+      "type": "object"
+    },
+    "provenance_bundle": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_id": { "minLength": 1, "type": "string" },
+        "clauses": { "items": { "$ref": "#/$defs/clause" }, "minItems": 1, "type": "array" },
+        "dependencies": { "items": { "$ref": "#/$defs/hash" }, "type": "array", "uniqueItems": true },
+        "kind": { "const": "provenance_bundle" },
+        "library": { "minLength": 1, "type": "string" },
+        "sources": { "items": { "$ref": "#/$defs/source" }, "minItems": 1, "type": "array" }
+      },
+      "required": ["bundle_id", "clauses", "dependencies", "kind", "library", "sources"],
+      "type": "object"
+    },
+    "representation": {
+      "additionalProperties": false,
+      "properties": {
+        "rendered_text_sha256": { "$ref": "#/$defs/hash" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" },
+        "transform_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["rendered_text_sha256", "source_ir_sha256", "transform_sha256"],
+      "type": "object"
+    },
+    "segment": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claims": { "items": { "$ref": "#/$defs/claim" }, "minItems": 1, "type": "array" },
+            "disposition": { "const": "represented" },
+            "end": { "minimum": 1, "type": "integer" },
+            "start": { "minimum": 0, "type": "integer" }
+          },
+          "required": ["claims", "disposition", "end", "start"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "disposition": { "const": "discarded" },
+            "end": { "minimum": 1, "type": "integer" },
+            "reason": { "minLength": 1, "type": "string" },
+            "start": { "minimum": 0, "type": "integer" }
+          },
+          "required": ["disposition", "end", "reason", "start"],
+          "type": "object"
+        }
+      ]
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "raw_source_sha256": { "$ref": "#/$defs/hash" },
+        "receipt_sha256": { "$ref": "#/$defs/hash" },
+        "representations": { "items": { "$ref": "#/$defs/representation" }, "type": "array" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["raw_source_sha256", "receipt_sha256", "representations", "source_ir_sha256"],
+      "type": "object"
+    },
+    "source_ir": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "source_ir" },
+        "segments": { "items": { "$ref": "#/$defs/segment" }, "type": "array" },
+        "source_sha256": { "$ref": "#/$defs/hash" },
+        "source_size": { "maximum": 67108864, "minimum": 0, "type": "integer" }
+      },
+      "required": ["kind", "segments", "source_sha256", "source_size"],
+      "type": "object"
+    },
+    "text_transform": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "text_transform" },
+        "operations": { "items": { "$ref": "#/$defs/operation" }, "minItems": 1, "type": "array" },
+        "result_sha256": { "$ref": "#/$defs/hash" },
+        "result_size": { "maximum": 67108864, "minimum": 0, "type": "integer" },
+        "source_sha256": { "$ref": "#/$defs/hash" },
+        "source_size": { "maximum": 67108864, "minimum": 0, "type": "integer" }
+      },
+      "required": ["kind", "operations", "result_sha256", "result_size", "source_sha256", "source_size"],
+      "type": "object"
+    }
+  },
+  "$id": "https://coding-adventures.dev/schemas/adj-stdlib-provenance-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "algorithm": { "const": "sha256" },
+    "bundle_hashes": {
+      "items": { "$ref": "#/$defs/hash" },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "manifest_id": { "minLength": 1, "type": "string" },
+    "schema_version": { "const": 1 }
+  },
+  "required": ["schema_version", "manifest_id", "algorithm", "bundle_hashes"],
+  "title": "ADJ standard-library provenance manifest",
+  "type": "object"
+}

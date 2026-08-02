@@ -71,7 +71,7 @@ class AdjStdlibManifestTests(unittest.TestCase):
     def validate(self, value: dict) -> list[str]:
         with tempfile.TemporaryDirectory() as directory:
             return manifest_module.validate_manifest(
-                Path(directory), value, self.evidence
+                Path(directory), value, self.evidence, provenance_bundles={}
             )
 
     def test_accepts_a_source_labeled_seed_objective(self) -> None:
@@ -100,7 +100,9 @@ class AdjStdlibManifestTests(unittest.TestCase):
 
         errors = self.validate(value)
 
-        self.assertTrue(any(error.startswith("prerequisite cycle:") for error in errors))
+        self.assertTrue(
+            any(error.startswith("prerequisite cycle:") for error in errors)
+        )
 
     def test_rejects_unknown_or_unsafe_library_paths(self) -> None:
         value = valid_manifest("../outside.adj")
@@ -117,6 +119,49 @@ class AdjStdlibManifestTests(unittest.TestCase):
 
         self.assertTrue(any("claims byte pins" in error for error in errors))
         self.assertTrue(any("no source_cas_hashes" in error for error in errors))
+        self.assertTrue(any("no provenance_bundle_hashes" in error for error in errors))
+
+    def test_provenance_bundle_must_be_verified_and_match_a_library(self) -> None:
+        value = valid_manifest(self.library)
+        bundle_hash = "a" * 64
+        value["objectives"][0]["provenance_bundle_hashes"] = [bundle_hash]
+
+        missing = manifest_module.validate_manifest(
+            Path("."), value, self.evidence, provenance_bundles={}
+        )
+        mismatched = manifest_module.validate_manifest(
+            Path("."),
+            value,
+            self.evidence,
+            provenance_bundles={bundle_hash: {"library": "code/other.adj"}},
+        )
+
+        self.assertTrue(
+            any("unverified provenance bundle" in error for error in missing)
+        )
+        self.assertTrue(
+            any("belongs to unlisted library" in error for error in mismatched)
+        )
+
+    def test_source_hashes_must_equal_resolved_bundle_sources(self) -> None:
+        value = valid_manifest(self.library)
+        bundle_hash = "a" * 64
+        value["objectives"][0]["provenance_bundle_hashes"] = [bundle_hash]
+        value["objectives"][0]["source_cas_hashes"] = ["b" * 64]
+        bundles = {
+            bundle_hash: {
+                "library": self.library,
+                "sources": [{"raw_source_sha256": "c" * 64}],
+            }
+        }
+
+        errors = manifest_module.validate_manifest(
+            Path("."), value, self.evidence, provenance_bundles=bundles
+        )
+
+        self.assertTrue(
+            any("disagree with resolved bundle sources" in e for e in errors)
+        )
 
     def test_rejects_mapped_and_held_out_claims_without_artifacts(self) -> None:
         value = valid_manifest(self.library)

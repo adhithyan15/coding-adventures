@@ -9,6 +9,7 @@ import re
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+import adj_stdlib_provenance
 import adj_stdlib_report
 
 DEFAULT_MANIFEST = Path("code/specs/data/adj-stdlib-coverage/manifest.json")
@@ -59,6 +60,33 @@ def _safe_repo_path(value: str) -> bool:
 def discover_library_evidence(root: Path) -> dict[str, dict[str, Any]]:
     report = adj_stdlib_report.build_report(root)
     return {row["path"]: row for row in report["libraries"]}
+
+
+def load_provenance_bundles(
+    root: Path,
+) -> tuple[dict[str, dict[str, Any]], list[str]]:
+    """Load only bundles already proven by the offline CAS verifier."""
+
+    cas_root = root / adj_stdlib_provenance.DEFAULT_ROOT
+    manifest_path = root / adj_stdlib_provenance.DEFAULT_MANIFEST
+    schema_path = root / adj_stdlib_provenance.DEFAULT_SCHEMA
+    try:
+        adj_stdlib_provenance.validate_repository(cas_root, manifest_path, schema_path)
+        manifest = _load_json(manifest_path)
+        cas = adj_stdlib_provenance.Cas(cas_root)
+        cas.load()
+        bundles = {
+            digest: adj_stdlib_provenance._json_object(cas, digest, "provenance_bundle")
+            for digest in manifest["bundle_hashes"]
+        }
+    except (
+        OSError,
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+        adj_stdlib_provenance.ProvenanceError,
+    ) as error:
+        return {}, [f"provenance CAS: {error}"]
+    return bundles, []
 
 
 def _validate_root(item: Any, index: int, errors: list[str]) -> str | None:
@@ -121,14 +149,21 @@ def _validate_status(
     } and any(not row.get("source_envelope") for row in evidence):
         errors.append(f"{prefix} claims sourced provenance without complete envelopes")
     if status.get("provenance") in {"byte_pinned", "fully_verified"} and any(
-        not row.get("pinned_quote") for row in evidence
+        not row.get("byte_verified") for row in evidence
     ):
-        errors.append(f"{prefix} claims byte pins that library evidence does not support")
+        errors.append(
+            f"{prefix} claims byte pins that library evidence does not support"
+        )
     source_hashes = objective.get("source_cas_hashes", [])
     if status.get("provenance") == "fully_verified" and not source_hashes:
         errors.append(f"{prefix} is fully_verified but has no source_cas_hashes")
+    bundle_hashes = objective.get("provenance_bundle_hashes", [])
+    if status.get("provenance") == "fully_verified" and not bundle_hashes:
+        errors.append(f"{prefix} is fully_verified but has no provenance_bundle_hashes")
     if status.get("benchmark") == "held_out" and not objective.get("benchmark_paths"):
-        errors.append(f"{prefix} claims a held-out benchmark but names no benchmark_paths")
+        errors.append(
+            f"{prefix} claims a held-out benchmark but names no benchmark_paths"
+        )
     if status.get("crosswalk") == "mapped" and not objective.get("standards"):
         errors.append(f"{prefix} claims a mapped crosswalk but names no standards")
 
@@ -162,10 +197,14 @@ def validate_manifest(
     root: Path,
     manifest: Any,
     library_evidence: dict[str, dict[str, Any]] | None = None,
+    provenance_bundles: dict[str, dict[str, Any]] | None = None,
 ) -> list[str]:
     """Return stable validation errors; an empty list means valid."""
 
     errors: list[str] = []
+    if provenance_bundles is None:
+        provenance_bundles, provenance_errors = load_provenance_bundles(root)
+        errors.extend(provenance_errors)
     if not isinstance(manifest, dict):
         return ["manifest must be a JSON object"]
     if manifest.get("schema_version") != 1:
@@ -182,7 +221,9 @@ def validate_manifest(
         root_id = _validate_root(item, index, errors)
         if root_id is not None:
             root_ids.append(root_id)
-    duplicates = sorted(root_id for root_id in set(root_ids) if root_ids.count(root_id) > 1)
+    duplicates = sorted(
+        root_id for root_id in set(root_ids) if root_ids.count(root_id) > 1
+    )
     errors.extend(f"duplicate coverage root id: {root_id}" for root_id in duplicates)
     root_id_set = set(root_ids)
 
@@ -258,12 +299,64 @@ def validate_manifest(
             if not _nonempty_string(standard.get("objective")):
                 errors.append(f"{standard_prefix}.objective must be non-empty")
 
-        for source_hash in item.get("source_cas_hashes", []):
-            if not SHA256_RE.fullmatch(source_hash):
+        source_hashes = item.get("source_cas_hashes", [])
+        if not isinstance(source_hashes, list):
+            source_hashes = []
+        for source_hash in source_hashes:
+            if not isinstance(source_hash, str) or not SHA256_RE.fullmatch(source_hash):
                 errors.append(f"{prefix} has malformed source CAS hash: {source_hash}")
+        bundle_hashes = item.get("provenance_bundle_hashes", [])
+        if not _string_list(bundle_hashes):
+            errors.append(
+                f"{prefix}.provenance_bundle_hashes must be an array of non-empty strings"
+            )
+            bundle_hashes = []
+        resolved_bundles: list[dict[str, Any]] = []
+        for bundle_hash in bundle_hashes:
+            if not isinstance(bundle_hash, str) or not SHA256_RE.fullmatch(bundle_hash):
+                errors.append(
+                    f"{prefix} has malformed provenance bundle hash: {bundle_hash}"
+                )
+                continue
+            if provenance_bundles is not None:
+                bundle = provenance_bundles.get(bundle_hash)
+                if bundle is None:
+                    errors.append(
+                        f"{prefix} references an unverified provenance bundle: {bundle_hash}"
+                    )
+                elif bundle["library"] not in paths:
+                    errors.append(
+                        f"{prefix} bundle {bundle_hash} belongs to unlisted library: "
+                        f"{bundle['library']}"
+                    )
+                else:
+                    resolved_bundles.append(bundle)
+        if resolved_bundles:
+            bundle_sources = {
+                source["raw_source_sha256"]
+                for bundle in resolved_bundles
+                for source in bundle["sources"]
+            }
+            if set(source_hashes) != bundle_sources:
+                errors.append(
+                    f"{prefix} source_cas_hashes disagree with resolved bundle sources"
+                )
+        status = item.get("status")
+        if isinstance(status, dict) and status.get("provenance") == "fully_verified":
+            bundle_libraries = {bundle["library"] for bundle in resolved_bundles}
+            expected_libraries = set(paths) if isinstance(paths, list) else set()
+            if bundle_libraries != expected_libraries:
+                errors.append(
+                    f"{prefix} fully_verified bundles do not cover every listed library"
+                )
         for benchmark_path in item.get("benchmark_paths", []):
-            if not _safe_repo_path(benchmark_path) or not (root / benchmark_path).is_file():
-                errors.append(f"{prefix} references missing benchmark: {benchmark_path}")
+            if (
+                not _safe_repo_path(benchmark_path)
+                or not (root / benchmark_path).is_file()
+            ):
+                errors.append(
+                    f"{prefix} references missing benchmark: {benchmark_path}"
+                )
         _validate_status(item, prefix, evidence, errors)
 
     duplicate_objectives = sorted(
@@ -274,8 +367,12 @@ def validate_manifest(
     for objective_id, prereqs in prerequisites.items():
         for prereq in prereqs:
             if prereq not in objective_id_set:
-                errors.append(f"{objective_id} references unknown prerequisite: {prereq}")
-    errors.extend(f"prerequisite cycle: {cycle}" for cycle in _find_cycles(prerequisites))
+                errors.append(
+                    f"{objective_id} references unknown prerequisite: {prereq}"
+                )
+    errors.extend(
+        f"prerequisite cycle: {cycle}" for cycle in _find_cycles(prerequisites)
+    )
     return sorted(set(errors))
 
 
@@ -303,19 +400,34 @@ def validate_json_schema(schema: Any, manifest: Any) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[2]
+    )
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--validate-json-schema", action="store_true")
     args = parser.parse_args()
 
     root = args.root.resolve()
-    manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
+    manifest_path = (
+        args.manifest if args.manifest.is_absolute() else root / args.manifest
+    )
     schema_path = args.schema if args.schema.is_absolute() else root / args.schema
     manifest = _load_json(manifest_path)
     schema = _load_json(schema_path)
-    errors = validate_manifest(root, manifest)
-    if schema.get("$id") != "https://coding-adventures.dev/schemas/adj-stdlib-manifest-v1.json":
+    provenance_bundles, provenance_errors = load_provenance_bundles(root)
+    errors = [
+        *validate_manifest(
+            root,
+            manifest,
+            provenance_bundles=provenance_bundles,
+        ),
+        *provenance_errors,
+    ]
+    if (
+        schema.get("$id")
+        != "https://coding-adventures.dev/schemas/adj-stdlib-manifest-v1.json"
+    ):
         errors.append("manifest schema has an unexpected $id")
     if args.validate_json_schema:
         errors.extend(validate_json_schema(schema, manifest))
