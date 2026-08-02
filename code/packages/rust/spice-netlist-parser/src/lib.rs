@@ -1915,6 +1915,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(sidewall_junction_capacitance) = params.get("CJSW") {
+            if !sidewall_junction_capacitance.is_finite() || *sidewall_junction_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CJSW must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

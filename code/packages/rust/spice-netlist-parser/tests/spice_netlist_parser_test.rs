@@ -1893,6 +1893,35 @@ fn preserves_non_negative_mosfet_model_bottom_junction_capacitance() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_sidewall_junction_capacitance() {
+    for capacitance in ["-3p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model sidewall NMOS(CJSW={capacitance})\nM1 d g s b sidewall"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CJSW must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_sidewall_junction_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("3p", 3.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model sidewall NMOS(CJSW={capacitance})\nM1 d g s b sidewall"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.sidewall_junction_capacitance, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
