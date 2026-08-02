@@ -800,10 +800,12 @@ plugs, switches, and lights:
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, and the Z-Wave, Zigbee, and Matter
-  runtime adapters: ONVIF PullPoint camera events, RTSP media transfer and
-  recording, vendor-specific camera/NVR integrations, authenticated KLAP/Tapo
-  devices and other broader device families, a production Matter
+  WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, authenticated Reolink CGI
+  device/channel/motion inspection, and the Z-Wave, Zigbee, and Matter runtime
+  adapters: ONVIF PullPoint camera events, RTSP media transfer and recording,
+  Reolink and other vendor-specific camera/NVR media, recording, control, and
+  push-event integrations, authenticated KLAP/Tapo devices and other broader
+  device families, a production Matter
   commissioning/secure-session/network host, a Thread border-router host, a
   production Zigbee coordinator/join/security host, and production Z-Wave
   inclusion and S2.

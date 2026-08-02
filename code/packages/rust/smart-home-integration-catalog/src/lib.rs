@@ -45121,15 +45121,32 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::VaultLease,
             PrimitiveFamily::Supervision,
         ]),
-        camera_entry(
+        base_entry(
             "reolink",
             "Reolink",
-            "Reolink camera, doorbell, siren, and sensor hub integration.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
+            "Authenticated local Reolink camera and NVR device, channel, and motion inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
             3,
             "reolink",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera, EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("reolink_cgi".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "This runtime slice covers authenticated CGI status and motion inspection; media transfer, recording, PTZ, and push events remain separate work.",
+        ]),
         camera_entry(
             "ring",
             "Ring",
@@ -80680,6 +80697,34 @@ mod tests {
             .discovery_mechanisms
             .contains(&DiscoveryMechanism::WsDiscovery));
         assert!(onvif
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn reolink_entry_exposes_authenticated_cgi_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let reolink = find_entry(&catalog, &IntegrationId::trusted("reolink")).unwrap();
+
+        assert_eq!(
+            reolink.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(reolink.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            reolink.supported_protocols,
+            vec![ProtocolFamily::Vendor("reolink_cgi".to_string())]
+        );
+        assert_eq!(reolink.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert!(reolink.target_entity_kinds.contains(&EntityKind::Camera));
+        assert!(reolink.target_entity_kinds.contains(&EntityKind::Sensor));
+        assert!(reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!reolink
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
