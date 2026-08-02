@@ -255,8 +255,11 @@ option mapping, or judge/evaluation failure.
 6. **Complete:** preserve imported and nested formula pins as first-class
    transitive evidence. Display corroborations remain available, but
    `adj-verify` now checks every lossless formula-source envelope independently.
-7. Add first-class fetch-receipt objects and a deterministic fanout-CAS-to-flat
-   snapshot projection instead of relying on receipt-shaped metadata.
+7. **Complete:** add first-class fetch-receipt objects and a deterministic
+   fanout-CAS-to-flat snapshot projection instead of relying on receipt-shaped
+   metadata. CI rehashes every object and checks bundle reachability, exact claim
+   slices and quote hashes, deterministic text transforms, and complete
+   represented/discarded byte partitions.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 

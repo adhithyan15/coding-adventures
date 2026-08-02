@@ -25,10 +25,7 @@ class AdjStdlibReportTests(unittest.TestCase):
     def test_measures_source_envelope_query_test_and_byte_pin(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = self.make_root(directory)
-            library = (
-                root
-                / "code/specs/data/adj-facts-stdlib/mathematics/counting.adj"
-            )
+            library = root / "code/specs/data/adj-facts-stdlib/mathematics/counting.adj"
             library.parent.mkdir(parents=True, exist_ok=True)
             digest = "a" * 64
             library.write_text(
@@ -47,7 +44,7 @@ class AdjStdlibReportTests(unittest.TestCase):
             )
             test = root / "code/packages/rust/adj-lang-cli/tests/counting_e2e.rs"
             test.write_text(
-                '// adj-facts-stdlib/mathematics/counting.adj\n', encoding="utf-8"
+                "// adj-facts-stdlib/mathematics/counting.adj\n", encoding="utf-8"
             )
 
             report = stdlib.build_report(root)
@@ -57,8 +54,12 @@ class AdjStdlibReportTests(unittest.TestCase):
         self.assertTrue(row["test_reference"])
         self.assertTrue(row["source_envelope"])
         self.assertTrue(row["pinned_quote"])
+        self.assertTrue(row["pin_syntax"])
+        self.assertFalse(row["cas_resolvable"])
+        self.assertFalse(row["byte_verified"])
         self.assertEqual(row["counts"]["tables"], 1)
-        self.assertEqual(report["summary"]["byte_pinned_libraries"], 1)
+        self.assertEqual(report["summary"]["pin_syntax_libraries"], 1)
+        self.assertEqual(report["summary"]["byte_pinned_libraries"], 0)
 
     def test_requires_a_complete_source_envelope_for_every_clause(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -90,6 +91,104 @@ class AdjStdlibReportTests(unittest.TestCase):
             report["gaps"]["missing_source_envelope"],
             ["code/specs/data/adj-facts-stdlib/science/two.adj"],
         )
+
+    def test_byte_verification_matches_exact_quote_range_and_snapshot(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            collection_root = root / stdlib.COLLECTIONS[0][1]
+            library = collection_root / "mathematics/counting.adj"
+            library.parent.mkdir(parents=True, exist_ok=True)
+            digest = "a" * 64
+            library.write_text(
+                "table count {\n"
+                "  columns item, value\n"
+                "  row (one, 1)\n"
+                f'  quote "one" at 0 snapshot "{digest}"\n'
+                '  source "one"\n'
+                '  locator "https://example.test/source"\n'
+                "  trust authoritative\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            repo_path = library.relative_to(root).as_posix()
+            forged = stdlib.inspect_library(
+                root,
+                "facts",
+                collection_root,
+                library,
+                [],
+                set(),
+                {repo_path: {"b" * 64: {("different", 0, 9, digest)}}},
+            )
+            matched = stdlib.inspect_library(
+                root,
+                "facts",
+                collection_root,
+                library,
+                [],
+                set(),
+                {repo_path: {"b" * 64: {("one", 0, 3, digest)}}},
+            )
+
+        self.assertTrue(forged["cas_resolvable"])
+        self.assertFalse(forged["byte_verified"])
+        self.assertTrue(matched["byte_verified"])
+
+    def test_two_pins_on_one_clause_do_not_cover_an_unpinned_clause(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            collection_root = root / stdlib.COLLECTIONS[0][1]
+            library = collection_root / "mathematics/two.adj"
+            library.parent.mkdir(parents=True, exist_ok=True)
+            digest = "a" * 64
+            library.write_text(
+                "table first {\n"
+                "  columns item, value\n"
+                "  row (one, 1)\n"
+                f'  quote "one" at 0 snapshot "{digest}"\n'
+                f'  quote "uno" at 10 snapshot "{digest}"\n'
+                "}\n"
+                "table second {\n"
+                "  columns item, value\n"
+                "  row (two, 2)\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            repo_path = library.relative_to(root).as_posix()
+            row = stdlib.inspect_library(
+                root,
+                "facts",
+                collection_root,
+                library,
+                [],
+                set(),
+                {
+                    repo_path: {
+                        "b" * 64: {
+                            ("one", 0, 3, digest),
+                            ("uno", 10, 13, digest),
+                        }
+                    }
+                },
+            )
+
+        self.assertFalse(row["pin_syntax"])
+        self.assertFalse(row["byte_verified"])
+
+    def test_pin_after_closing_brace_is_not_attached_to_previous_clause(self) -> None:
+        digest = "a" * 64
+        text = (
+            "table first {\n"
+            f'  quote "one" at 0 snapshot "{digest}"\n'
+            "}\n"
+            f'quote "detached" at 10 snapshot "{digest}"\n'
+            "table second {\n"
+            "}\n"
+        )
+
+        clauses = stdlib._clause_pin_evidence(text)
+
+        self.assertEqual(clauses, [{("one", 0, 3, digest)}, set()])
 
     def test_query_comments_do_not_count_as_imports(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

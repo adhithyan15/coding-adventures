@@ -11,6 +11,8 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+import adj_stdlib_provenance
+
 COLLECTIONS = (
     ("facts", Path("code/specs/data/adj-facts-stdlib")),
     ("formulas", Path("code/specs/data/adj-formula-stdlib")),
@@ -29,8 +31,10 @@ LOCATOR_RE = re.compile(r'(?m)^\s*locator\s+"')
 TRUST_RE = re.compile(r"(?m)^\s*trust\s+[a-zA-Z_]")
 IMPORT_RE = re.compile(r'(?m)^\s*import\s+"([^"]+)"')
 PINNED_QUOTE_RE = re.compile(
-    r'(?m)^\s*quote\s+".*?"\s+at\s+\d+\s+snapshot\s+"[0-9a-f]{64}"\s*$'
+    r'(?m)^\s*quote\s+"(?P<quote>(?:\\.|[^"\\])*)"\s+'
+    r'at\s+(?P<start>\d+)\s+snapshot\s+"(?P<snapshot>[0-9a-f]{64})"\s*$'
 )
+CLAUSE_DECLARATION_RE = re.compile(r"^\s*(?:table|formula|relate|rule|contributes)\b")
 TEST_SUFFIXES = {".py", ".rs", ".js", ".ts"}
 TEST_ROOTS = (
     Path("code/packages/rust/adj-lang-cli/tests"),
@@ -43,13 +47,10 @@ def _is_test_path(path: Path) -> bool:
     """Return whether a source file is part of a repository test surface."""
 
     name = path.name.lower()
-    return (
-        path.suffix.lower() in TEST_SUFFIXES
-        and (
-            "tests" in {part.lower() for part in path.parts}
-            or name.startswith("test_")
-            or name.endswith(("_test.py", ".test.js", ".test.ts"))
-        )
+    return path.suffix.lower() in TEST_SUFFIXES and (
+        "tests" in {part.lower() for part in path.parts}
+        or name.startswith("test_")
+        or name.endswith(("_test.py", ".test.js", ".test.ts"))
     )
 
 
@@ -70,11 +71,41 @@ def discover_test_texts(root: Path) -> list[str]:
 
 
 def _referenced_by_test(candidates: Iterable[str], test_texts: list[str]) -> bool:
-    return any(
-        candidate in text
-        for candidate in candidates
-        for text in test_texts
-    )
+    return any(candidate in text for candidate in candidates for text in test_texts)
+
+
+def _clause_pin_evidence(text: str) -> list[set[tuple[str, int, int, str]]]:
+    """Associate each pin with its nearest preceding ADJ clause declaration."""
+
+    clauses: list[set[tuple[str, int, int, str]]] = []
+    current_clause: set[tuple[str, int, int, str]] | None = None
+    current_scope_depth = 0
+    brace_depth = 0
+    for line in text.splitlines():
+        if CLAUSE_DECLARATION_RE.match(line):
+            current_clause = set()
+            clauses.append(current_clause)
+            current_scope_depth = brace_depth + line.count("{")
+        match = PINNED_QUOTE_RE.match(line)
+        if match is not None and current_clause is not None:
+            try:
+                quote = json.loads(f'"{match.group("quote")}"')
+            except json.JSONDecodeError:
+                quote = None
+            if quote is not None:
+                start = int(match.group("start"))
+                current_clause.add(
+                    (
+                        quote,
+                        start,
+                        start + len(quote.encode("utf-8")),
+                        match.group("snapshot"),
+                    )
+                )
+        brace_depth += line.count("{") - line.count("}")
+        if current_clause is not None and brace_depth < current_scope_depth:
+            current_clause = None
+    return clauses
 
 
 def discover_query_imports(collection_root: Path) -> set[Path]:
@@ -84,8 +115,7 @@ def discover_query_imports(collection_root: Path) -> set[Path]:
     for query in collection_root.rglob("*.query.adj"):
         text = query.read_text(encoding="utf-8")
         imports.update(
-            (query.parent / imported).resolve()
-            for imported in IMPORT_RE.findall(text)
+            (query.parent / imported).resolve() for imported in IMPORT_RE.findall(text)
         )
     return imports
 
@@ -97,26 +127,31 @@ def inspect_library(
     path: Path,
     test_texts: list[str],
     query_imports: set[Path],
+    verified_libraries: dict[str, dict[str, set[tuple[str, int, int, str]]]],
 ) -> dict[str, Any]:
     """Return structural evidence for one shipped ADJ file."""
 
     text = path.read_text(encoding="utf-8")
     repo_path = path.relative_to(root).as_posix()
     collection_path = path.relative_to(collection_root).as_posix()
-    domain = (
-        collection_path.split("/", 1)[0]
-        if "/" in collection_path
-        else "recall"
-    )
+    domain = collection_path.split("/", 1)[0] if "/" in collection_path else "recall"
     clause_counts = {
-        name: len(pattern.findall(text))
-        for name, pattern in CLAUSE_PATTERNS.items()
+        name: len(pattern.findall(text)) for name, pattern in CLAUSE_PATTERNS.items()
     }
     clause_count = sum(clause_counts.values())
     source_count = len(SOURCE_RE.findall(text))
     locator_count = len(LOCATOR_RE.findall(text))
     trust_count = len(TRUST_RE.findall(text))
-    pinned_quote_count = len(PINNED_QUOTE_RE.findall(text))
+    pin_matches = list(PINNED_QUOTE_RE.finditer(text))
+    pinned_quote_count = len(pin_matches)
+    clause_pins = _clause_pin_evidence(text)
+    bundles = verified_libraries.get(repo_path, {})
+    bundle_hashes = set(bundles)
+    pin_syntax = (
+        clause_count > 0
+        and len(clause_pins) == clause_count
+        and all(clause_pin for clause_pin in clause_pins)
+    )
 
     return {
         "collection": collection,
@@ -131,7 +166,15 @@ def inspect_library(
             clause_count > 0
             and min(source_count, locator_count, trust_count) >= clause_count
         ),
-        "pinned_quote": clause_count > 0 and pinned_quote_count >= clause_count,
+        "pin_syntax": pin_syntax,
+        "cas_resolvable": bool(bundle_hashes),
+        "byte_verified": bool(bundle_hashes)
+        and pin_syntax
+        and all(
+            clause_pin & set().union(*bundles.values()) for clause_pin in clause_pins
+        ),
+        "pinned_quote": pin_syntax,
+        "provenance_bundle_hashes": sorted(bundle_hashes),
         "counts": {
             **clause_counts,
             "clauses": clause_count,
@@ -152,7 +195,10 @@ def _summary(rows: list[dict[str, Any]]) -> dict[str, int]:
         "query_companions": sum(row["query_companion"] for row in content),
         "test_references": sum(row["test_reference"] for row in content),
         "source_envelopes": sum(row["source_envelope"] for row in content),
-        "byte_pinned_libraries": sum(row["pinned_quote"] for row in content),
+        "pin_syntax_libraries": sum(row["pin_syntax"] for row in content),
+        "cas_resolvable_libraries": sum(row["cas_resolvable"] for row in content),
+        "byte_verified_libraries": sum(row["byte_verified"] for row in content),
+        "byte_pinned_libraries": sum(row["byte_verified"] for row in content),
         "clauses": sum(row["counts"]["clauses"] for row in content),
         "source_annotations": sum(row["counts"]["sources"] for row in content),
         "pinned_quotes": sum(row["counts"]["pinned_quotes"] for row in content),
@@ -164,6 +210,36 @@ def build_report(root: Path) -> dict[str, Any]:
 
     root = root.resolve()
     test_texts = discover_test_texts(root)
+    verified_libraries: dict[str, dict[str, set[tuple[str, int, int, str]]]] = (
+        defaultdict(dict)
+    )
+    provenance_error: str | None = None
+    try:
+        adj_stdlib_provenance.validate_repository(
+            root / adj_stdlib_provenance.DEFAULT_ROOT,
+            root / adj_stdlib_provenance.DEFAULT_MANIFEST,
+            root / adj_stdlib_provenance.DEFAULT_SCHEMA,
+        )
+        provenance_manifest = json.loads(
+            (root / adj_stdlib_provenance.DEFAULT_MANIFEST).read_text(encoding="utf-8")
+        )
+        cas = adj_stdlib_provenance.Cas(root / adj_stdlib_provenance.DEFAULT_ROOT)
+        cas.load()
+        for digest in provenance_manifest["bundle_hashes"]:
+            bundle = adj_stdlib_provenance._json_object(
+                cas, digest, "provenance_bundle"
+            )
+            verified_libraries[bundle["library"]][digest] = {
+                (
+                    clause["quote"],
+                    clause["start"],
+                    clause["end"],
+                    clause["snapshot_sha256"],
+                )
+                for clause in bundle["clauses"]
+            }
+    except (OSError, ValueError, json.JSONDecodeError) as error:
+        provenance_error = str(error)
     libraries: list[dict[str, Any]] = []
     for collection, relative_root in COLLECTIONS:
         collection_root = root / relative_root
@@ -179,6 +255,7 @@ def build_report(root: Path) -> dict[str, Any]:
                     path,
                     test_texts,
                     query_imports,
+                    verified_libraries,
                 )
             )
 
@@ -198,7 +275,9 @@ def build_report(root: Path) -> dict[str, Any]:
                 queries=int(row["query_companion"]),
                 tests=int(row["test_reference"]),
                 source_envelopes=int(row["source_envelope"]),
-                byte_pins=int(row["pinned_quote"]),
+                pin_syntax=int(row["pin_syntax"]),
+                cas_resolvable=int(row["cas_resolvable"]),
+                byte_pins=int(row["byte_verified"]),
             )
 
     content = [row for row in libraries if row["content_library"]]
@@ -211,6 +290,7 @@ def build_report(root: Path) -> dict[str, Any]:
                 "A source label is not a byte-verified citation without a pinned snapshot.",
                 "Test reference means a test names the library, not exhaustive semantic coverage.",
             ],
+            "provenance_error": provenance_error,
         },
         "summary": {
             "collections": len(COLLECTIONS),
@@ -229,7 +309,10 @@ def build_report(root: Path) -> dict[str, Any]:
                 row["path"] for row in content if not row["source_envelope"]
             ],
             "missing_byte_pin": [
-                row["path"] for row in content if not row["pinned_quote"]
+                row["path"] for row in content if not row["byte_verified"]
+            ],
+            "missing_pin_syntax": [
+                row["path"] for row in content if not row["pin_syntax"]
             ],
         },
         "libraries": libraries,
@@ -254,7 +337,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "## Summary",
         "",
-        "| Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-pinned |",
+        "| Collection | Content libraries | Clauses | Query companions | Test references | Source envelopes | Byte-verified |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for collection, values in report["collections"].items():
@@ -267,18 +350,20 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"{values['byte_pinned_libraries']} ({_ratio(values['byte_pinned_libraries'], total)}) |"
         )
 
-    lines.extend([
-        "",
-        "A complete source envelope means every grounded clause has `source`,",
-        "`locator`, and `trust`. Byte-pinned additionally requires every clause to",
-        "have `quote ... at ... snapshot <sha256>`, which",
-        "lets `adj-verify --snapshots` check the exact bytes rather than trust a label.",
-        "",
-        "## Domains",
-        "",
-        "| Collection/domain | Libraries | Clauses | Queries | Tests | Source envelopes | Byte pins |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
-    ])
+    lines.extend(
+        [
+            "",
+            "A complete source envelope means every grounded clause has `source`,",
+            "`locator`, and `trust`. Pin syntax requires `quote ... at ... snapshot",
+            "<sha256>` for every clause. Byte-verified additionally requires a resolved",
+            "provenance bundle whose CAS graph proves all cited source bytes.",
+            "",
+            "## Domains",
+            "",
+            "| Collection/domain | Libraries | Clauses | Queries | Tests | Source envelopes | Byte pins |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
     for domain, values in report["domains"].items():
         lines.append(
             f"| `{domain}` | {values['libraries']} | {values['clauses']} | "
@@ -286,11 +371,13 @@ def render_markdown(report: dict[str, Any]) -> str:
             f"{values['source_envelopes']} | {values['byte_pins']} |"
         )
 
-    lines.extend([
-        "",
-        "## Structural Gaps",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Structural Gaps",
+            "",
+        ]
+    )
     labels = (
         ("missing_query_companion", "Missing worked-query import"),
         ("missing_test_reference", "Not named by a repository test"),
@@ -311,18 +398,20 @@ def render_markdown(report: dict[str, Any]) -> str:
             )
         lines.append("")
 
-    lines.extend([
-        "## What This Cannot Claim",
-        "",
-        "- It cannot measure curriculum coverage because shipped libraries have no",
-        "  objective IDs, grade bands, prerequisites, or standards crosswalk.",
-        "- It cannot prove quoted text came from a locator because the stdlib does not",
-        "  currently pin source snapshots and byte offsets.",
-        "- It cannot prove a domain is complete from library count or green examples.",
-        "- It cannot measure retrieval quality, decomposition quality, multi-hop",
-        "  composition, conflict handling, calibration, or held-out exam performance.",
-        "",
-    ])
+    lines.extend(
+        [
+            "## What This Cannot Claim",
+            "",
+            "- It cannot measure curriculum coverage because shipped libraries have no",
+            "  objective IDs, grade bands, prerequisites, or standards crosswalk.",
+            "- Pin-shaped syntax alone cannot prove quoted text came from a locator; only",
+            "  a verified provenance bundle establishes that byte path.",
+            "- It cannot prove a domain is complete from library count or green examples.",
+            "- It cannot measure retrieval quality, decomposition quality, multi-hop",
+            "  composition, conflict handling, calibration, or held-out exam performance.",
+            "",
+        ]
+    )
     return "\n".join(lines).rstrip() + "\n"
 
 
