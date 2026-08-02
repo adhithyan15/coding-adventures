@@ -7,6 +7,20 @@
       "title": "Hola and Buenos Días",
       "label": "ch:first-words",
       "output": "spanish/book/chapters/ch01-first-words.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 2,
+      "title": "The Rest of the Greetings",
+      "label": "ch:greetings",
+      "output": "spanish/book/chapters/ch02-greetings.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:introductions",
+      "output": "spanish/book/chapters/ch03-introductions.tex"
     }
   ]
 }

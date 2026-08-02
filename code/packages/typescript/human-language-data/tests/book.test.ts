@@ -62,12 +62,23 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain(`% canonical-source-hash: ${generated.sourceHash}`);
     expect(generated.tex.indexOf("lesson:A")).toBeLessThan(generated.tex.indexOf("lesson:B"));
     expect(generated.tex).toContain("\\begin{tcolorbox}");
+    expect(generated.tex).toContain("\\begin{itemize}\n\\raggedright");
     expect(generated.tex).toContain("\\item {[}YOU SAY: \\textbf{hello}{]}");
+  });
+
+  it("keeps arrows out of the PDF bookmark and running-header title", () => {
+    const lesson = parseLesson(source("A", 10, "vuestra merced → usted"), "test");
+    const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain("\\section[vuestra merced to usted]");
+    expect(generated.tex).toContain("$\\to$");
   });
 
   it("escapes LaTeX control characters while preserving authored emphasis", () => {
     expect(renderInlineMarkdown("**A&B** costs $5 and uses `x_y`")).toBe(
       "\\textbf{A\\&B} costs \\$5 and uses \\texttt{x\\_y}",
+    );
+    expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
+      "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
     );
   });
 

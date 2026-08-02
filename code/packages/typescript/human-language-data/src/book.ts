@@ -43,24 +43,17 @@ function escapeLatexCharacter(character: string): string {
 /** Render the deliberately small inline subset used by schema-v2 lessons. */
 export function renderInlineMarkdown(markdown: string): string {
   const output: string[] = [];
+  const emphasis: Array<"italic" | "bold"> = [];
   let cursor = 0;
+  const open = (kind: "italic" | "bold"): void => {
+    output.push(kind === "italic" ? "\\emph{" : "\\textbf{");
+    emphasis.push(kind);
+  };
+  const close = (): void => {
+    output.push("}");
+    emphasis.pop();
+  };
   while (cursor < markdown.length) {
-    if (markdown.startsWith("**", cursor)) {
-      const end = markdown.indexOf("**", cursor + 2);
-      if (end !== -1) {
-        output.push(`\\textbf{${renderInlineMarkdown(markdown.slice(cursor + 2, end))}}`);
-        cursor = end + 2;
-        continue;
-      }
-    }
-    if (markdown[cursor] === "*") {
-      const end = markdown.indexOf("*", cursor + 1);
-      if (end !== -1) {
-        output.push(`\\emph{${renderInlineMarkdown(markdown.slice(cursor + 1, end))}}`);
-        cursor = end + 1;
-        continue;
-      }
-    }
     if (markdown[cursor] === "`") {
       const end = markdown.indexOf("`", cursor + 1);
       if (end !== -1) {
@@ -83,9 +76,35 @@ export function renderInlineMarkdown(markdown: string): string {
         continue;
       }
     }
+    if (markdown.startsWith("***", cursor)) {
+      const top = emphasis.at(-1);
+      const below = emphasis.at(-2);
+      if (top && below && top !== below) {
+        close();
+        close();
+      } else {
+        open("italic");
+        open("bold");
+      }
+      cursor += 3;
+      continue;
+    }
+    if (markdown.startsWith("**", cursor)) {
+      if (emphasis.at(-1) === "bold") close();
+      else open("bold");
+      cursor += 2;
+      continue;
+    }
+    if (markdown[cursor] === "*") {
+      if (emphasis.at(-1) === "italic") close();
+      else open("italic");
+      cursor += 1;
+      continue;
+    }
     output.push(escapeLatexCharacter(markdown[cursor] ?? ""));
     cursor += 1;
   }
+  while (emphasis.length > 0) close();
   return output.join("");
 }
 
@@ -136,7 +155,7 @@ function renderMarkdown(markdown: string): string {
       flushParagraph();
       flushQuote();
       if (!listOpen) {
-        output.push("\\begin{itemize}");
+        output.push("\\begin{itemize}", "\\raggedright");
         listOpen = true;
       }
       flushListItem();
@@ -188,6 +207,15 @@ function lessonSequence(lesson: ParsedLesson): number {
   return Number(stringValue(lesson.frontmatter.sequence));
 }
 
+function sectionShortTitle(lesson: ParsedLesson): string {
+  const title = lesson.realization.type.startsWith("practice")
+    ? "Practice"
+    : lesson.realization.headword;
+  return renderInlineMarkdown(
+    title.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim(),
+  );
+}
+
 /** Render one configured chapter from the same typed lesson AST the app receives. */
 export function renderBookChapter(
   target: BookGenerationTarget,
@@ -219,11 +247,8 @@ export function renderBookChapter(
   const sourceHash = canonicalChapterHash(lessons);
   const sections = lessons.map((lesson) => {
     const id = lesson.realization.lessonId;
-    const shortTitle = lesson.realization.type.startsWith("practice")
-      ? "Practice"
-      : lesson.realization.headword;
     return [
-      `\\section[${renderInlineMarkdown(shortTitle)}]{${renderInlineMarkdown(lessonTitle(lesson))}}`,
+      `\\section[${sectionShortTitle(lesson)}]{${renderInlineMarkdown(lessonTitle(lesson))}}`,
       `\\label{lesson:${id}}`,
       "",
       ...lesson.blocks.map(renderBlock),
