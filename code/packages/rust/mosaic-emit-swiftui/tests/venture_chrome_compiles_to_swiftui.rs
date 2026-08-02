@@ -67,7 +67,12 @@ fn venture_chrome_lowers_to_native_swiftui_controls_and_project_shell() {
             "TextField(\"Enter a URL\", text: Binding(get: { address }, set: { dispatch(.addressChange(value: $0)) }))"
         ));
         assert!(result.output.contains(".onSubmit { dispatch(.navigate) }"));
-        for part in ["back-button", "address-input", "go-button"] {
+        for part in [
+            "back-button",
+            "forward-button",
+            "address-input",
+            "go-button",
+        ] {
             assert!(
                 result
                     .output

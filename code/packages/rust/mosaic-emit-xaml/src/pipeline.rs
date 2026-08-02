@@ -5283,7 +5283,9 @@ fn emit_host_button(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5360,7 +5362,7 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
 /// |---|---|
 /// | `checked: slot: c`      | `IsChecked="{x:Bind C, Mode=OneWay}"`                       |
 /// | `checked: true/false`   | `IsChecked="True"` / `IsChecked="False"`                    |
-/// | `disabled: slot: d`     | `IsEnabled="{x:Bind Not(D)}"` (shared Not(bool) helper)     |
+/// | `disabled: slot: d`     | `IsEnabled="{x:Bind Not(D), Mode=OneWay}"` (shared helper)  |
 /// | `disabled: true/false`  | `IsEnabled="False"` / `IsEnabled="True"`                    |
 /// | `indeterminate: slot:i` | `IsThreeState="True"` + binding via code-behind             |
 /// | `label: str / slot`     | `Content="..."` / `Content="{x:Bind Label}"`                |
@@ -5473,7 +5475,9 @@ fn emit_host_checkbox(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5635,7 +5639,9 @@ fn emit_host_radio(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -5896,7 +5902,7 @@ fn emit_host_tooltip(
 /// | `max: <n>`      | `Maximum="<n>"`                                            |
 /// | `step: <n>`     | `SmallChange="<n>"`                                        |
 /// | `placeholder`   | `PlaceholderText="..."` / bound                            |
-/// | `disabled`      | `IsEnabled="{x:Bind Not(D)}"` (polarity flip via Not helper) |
+/// | `disabled`      | `IsEnabled="{x:Bind Not(D), Mode=OneWay}"` (via Not helper)  |
 /// | `onChange: emit`| `ValueChanged="X_ValueChanged"` (only fires on commit, not per-keystroke) |
 fn emit_host_number_input(
     node: &LayoutNode,
@@ -5956,7 +5962,9 @@ fn emit_host_number_input(
                 return_type: "bool".to_string(),
                 body: "!b".to_string(),
             });
-            attrs.push_str(&format!(" IsEnabled=\"{{x:Bind Not({pascal})}}\""));
+            attrs.push_str(&format!(
+                " IsEnabled=\"{{x:Bind Not({pascal}), Mode=OneWay}}\""
+            ));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsEnabled=\"False\"");
@@ -8700,7 +8708,8 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("IsEnabled=\"{x:Bind Not(IsBusy)}\""),
+            r.xaml
+                .contains("IsEnabled=\"{x:Bind Not(IsBusy), Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -10132,8 +10141,9 @@ mod tests {
         }]);
         let r = compile(&c, &l, &empty_style("X"));
         assert!(
-            r.xaml.contains("IsEnabled=\"{x:Bind Not(Locked)}\""),
-            "expected `IsEnabled=\"{{x:Bind Not(Locked)}}\"`, got:\n{}",
+            r.xaml
+                .contains("IsEnabled=\"{x:Bind Not(Locked), Mode=OneWay}\""),
+            "expected a one-way IsEnabled binding for Locked, got:\n{}",
             r.xaml
         );
     }

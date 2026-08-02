@@ -48,8 +48,11 @@ fn venture_chrome_lowers_to_native_xaml_controls_and_project_shell() {
         .expect("emit Venture XAML project");
 
         assert!(result.xaml.contains(
-            "<Button x:Name=\"BackButton\" AutomationProperties.AutomationId=\"back-button\" Content=\"Back\" IsEnabled=\"{x:Bind Not(BackDisabled)}\""
+            "<Button x:Name=\"BackButton\" AutomationProperties.AutomationId=\"back-button\" Content=\"Back\" IsEnabled=\"{x:Bind Not(BackDisabled), Mode=OneWay}\""
         ));
+        assert!(result
+            .xaml
+            .contains("IsEnabled=\"{x:Bind Not(ForwardDisabled), Mode=OneWay}\""));
         assert!(result.xaml.contains(
             "<TextBox x:Name=\"AddressInput\" AutomationProperties.AutomationId=\"address-input\" Text=\"{x:Bind Address, Mode=TwoWay}\" IsReadOnly=\"{x:Bind NavigationDisabled}\""
         ));
@@ -57,7 +60,12 @@ fn venture_chrome_lowers_to_native_xaml_controls_and_project_shell() {
             .xaml
             .contains("TextChanged=\"AddressInput_TextChanged\""));
         assert!(result.xaml.contains("KeyDown=\"AddressInput_KeyDown\""));
-        for part in ["back-button", "address-input", "go-button"] {
+        for part in [
+            "back-button",
+            "forward-button",
+            "address-input",
+            "go-button",
+        ] {
             assert!(
                 result
                     .xaml

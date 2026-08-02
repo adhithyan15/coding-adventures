@@ -73,8 +73,10 @@ public static class MosaicHost
         var markerPath = Environment.GetEnvironmentVariable(
             "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH");
         var targetUrl = Environment.GetEnvironmentVariable("VENTURE_BROWSER_INTERACTION_URL");
+        var startUrl = Environment.GetEnvironmentVariable("VENTURE_START_URL");
         if (string.IsNullOrWhiteSpace(markerPath)
             || string.IsNullOrWhiteSpace(targetUrl)
+            || string.IsNullOrWhiteSpace(startUrl)
             || System.Threading.Interlocked.Exchange(ref interactionAcceptanceStarted, 1) != 0)
         {
             return;
@@ -86,8 +88,14 @@ public static class MosaicHost
             {
                 var addressInput = await FindAutomationElementAsync<TextBox>(
                     component, "address-input");
+                var backButton = await FindAutomationElementAsync<Button>(component, "back-button");
+                var forwardButton = await FindAutomationElementAsync<Button>(
+                    component, "forward-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
-                if (addressInput is null || goButton is null)
+                if (addressInput is null
+                    || backButton is null
+                    || forwardButton is null
+                    || goButton is null)
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -105,7 +113,7 @@ public static class MosaicHost
                     {
                         backend = "xaml",
                         status = "error",
-                        error = "native button automation provider unavailable",
+                        error = "native Go automation provider unavailable",
                     });
                     return;
                 }
@@ -132,34 +140,99 @@ public static class MosaicHost
                     return;
                 }
                 invokeProvider.Invoke();
-                for (var remaining = 50; remaining >= 0; remaining--)
+                if (!await WaitForPageAsync(
+                    component, targetUrl, "Venture interaction acceptance"))
                 {
-                    await System.Threading.Tasks.Task.Delay(100);
-                    _ = ApplyProps(component);
-                    if (string.Equals(component.Address, targetUrl, StringComparison.Ordinal)
-                        && string.Equals(
-                            component.PageTitle,
-                            "Venture interaction acceptance",
-                            StringComparison.Ordinal))
+                    WriteInteractionResult(markerPath, new
                     {
-                        WriteInteractionResult(markerPath, new
-                        {
-                            backend = "xaml",
-                            status = "interacted",
-                            address = component.Address,
-                            pageTitle = component.PageTitle,
-                        });
-                        return;
-                    }
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "navigation state did not update",
+                    });
+                    return;
+                }
+
+                if (!await WaitForEnabledAsync(backButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Back button did not become enabled",
+                    });
+                    return;
+                }
+                var backProvider = new ButtonAutomationPeer(backButton) as IInvokeProvider;
+                if (backProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Back automation provider unavailable",
+                    });
+                    return;
+                }
+                backProvider.Invoke();
+                if (!await WaitForPageAsync(component, startUrl, "Venture launch acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "back navigation state did not update",
+                    });
+                    return;
+                }
+
+                if (!await WaitForEnabledAsync(forwardButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Forward button did not become enabled",
+                    });
+                    return;
+                }
+                var forwardProvider = new ButtonAutomationPeer(forwardButton) as IInvokeProvider;
+                if (forwardProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Forward automation provider unavailable",
+                    });
+                    return;
+                }
+                forwardProvider.Invoke();
+                if (!await WaitForPageAsync(
+                    component, targetUrl, "Venture interaction acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "forward navigation state did not update",
+                    });
+                    return;
                 }
 
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
-                    status = "error",
+                    status = "interacted",
+                    history = "back-forward",
+                    backAddress = startUrl,
                     address = component.Address,
                     pageTitle = component.PageTitle,
-                    error = "navigation state did not update",
                 });
             }
             catch (Exception ex)
@@ -172,6 +245,37 @@ public static class MosaicHost
                 });
             }
         };
+    }
+
+    private static async System.Threading.Tasks.Task<bool> WaitForPageAsync(
+        VentureChrome component,
+        string address,
+        string pageTitle)
+    {
+        for (var remaining = 50; remaining >= 0; remaining--)
+        {
+            await System.Threading.Tasks.Task.Delay(100);
+            _ = ApplyProps(component);
+            if (string.Equals(component.Address, address, StringComparison.Ordinal)
+                && string.Equals(component.PageTitle, pageTitle, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static async System.Threading.Tasks.Task<bool> WaitForEnabledAsync(Button button)
+    {
+        for (var remaining = 50; remaining >= 0; remaining--)
+        {
+            await System.Threading.Tasks.Task.Delay(50);
+            if (button.IsEnabled)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static async System.Threading.Tasks.Task<T?> FindAutomationElementAsync<T>(
