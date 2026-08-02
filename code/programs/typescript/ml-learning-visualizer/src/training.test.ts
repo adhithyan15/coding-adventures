@@ -6,6 +6,7 @@ import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { forwardLayered } from "./layered-network.js";
@@ -61,6 +62,12 @@ import {
   sameCorrelation,
   traceResidualBlock,
 } from "./residual-field-lab.js";
+import {
+  DEFAULT_RECURRENT_INITIAL_STATE,
+  DEFAULT_RECURRENT_INPUTS,
+  DEFAULT_RECURRENT_PARAMETERS,
+  traceRecurrentUnroll,
+} from "./recurrent-unroll-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -388,6 +395,51 @@ describe("training helpers", () => {
     fireEvent.click(screen.getByRole("button", { name: "Select residual output 0" }));
     expect(screen.getByLabelText("Receptive field explorer").textContent)
       .toContain("receptive input indices = [0, 1, 2]");
+  });
+
+  it("unrolls one shared recurrent state through three exact steps", () => {
+    const trace = traceRecurrentUnroll();
+
+    expect(trace.states).toEqual([1, 3.5, 0.75]);
+    expect(trace.steps[1]).toMatchObject({
+      inputProduct: 4,
+      recurrentProduct: 0.5,
+      preactivation: 3.5,
+      state: 3.5,
+    });
+    expect(trace.steps[2]).toMatchObject({
+      input: 0,
+      previousState: 3.5,
+      inputProduct: 0,
+      recurrentProduct: 1.75,
+      state: 0.75,
+    });
+  });
+
+  it("isolates memory by cutting the recurrent contribution", () => {
+    const ablated = traceRecurrentUnroll(
+      DEFAULT_RECURRENT_INPUTS,
+      DEFAULT_RECURRENT_INITIAL_STATE,
+      DEFAULT_RECURRENT_PARAMETERS,
+      false,
+    );
+
+    expect(ablated.states).toEqual([1, 3, 0]);
+    expect(ablated.steps.every((step) => step.recurrentProduct === 0)).toBe(true);
+  });
+
+  it("selects an unrolled step and toggles recurrent memory interactively", () => {
+    render(React.createElement(RecurrentWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Recurrent-state unroller" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Select recurrent step 2" }));
+    expect(screen.getByLabelText("Selected recurrent arithmetic").textContent)
+      .toMatch(/2.*0.*0.*0\.5.*3\.5.*1\.75.*0\.75.*0\.75/s);
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Carry the previous state/ }));
+    expect(screen.getByText("final state").parentElement?.textContent).toContain("0");
+    expect(screen.getByLabelText("Selected recurrent arithmetic").textContent)
+      .toMatch(/carried state.*0\.5.*3.*0.*preactivation.*-1.*ReLU state.*0/s);
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

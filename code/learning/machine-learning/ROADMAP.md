@@ -29,7 +29,7 @@ trace, and tests.
   - [x] Tiny image CNN, channels, pooling, and normalization.
   - [x] Residual path and receptive-field explorer.
 - [ ] Sequence networks
-  - [ ] One recurrent state unrolled for three steps.
+  - [x] One recurrent state unrolled for three steps.
   - [ ] Backpropagation through time and gradient accumulation.
   - [ ] GRU and LSTM gate comparison.
 - [ ] Attention and transformers

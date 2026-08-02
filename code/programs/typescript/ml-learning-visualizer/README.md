@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has seven workbenches that move from one arithmetic update to small
+The app has eight workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -76,6 +76,15 @@ path back to the original inputs. Boundary selections make receptive-field
 clipping visible, while the shortcut toggle separates what depth changes from
 what the identity path preserves.
 
+### Recurrent-state lab
+
+The recurrent workbench unrolls one scalar ReLU cell across three time steps.
+Select any execution to separate its new-input product, previous-state product,
+bias, preactivation, and next state. The same parameter strip stays above all
+three cells to make sharing explicit. A memory toggle removes only the
+recurrent contribution and exposes why the final zero input still produces a
+positive state when earlier context is carried forward.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -112,6 +121,10 @@ max-pool values and winner coordinates.
 NN08 under `code/specs/fixtures/residual-receptive-v1` pins two same-padded
 local layers, the identity addition, all hidden-to-input expansions, input
 path counts, and boundary-clipped receptive fields.
+
+NN09 under `code/specs/fixtures/recurrent-unroll-v1` pins an explicit initial
+state, three shared-parameter recurrent steps, all scalar arithmetic, and the
+counterfactual trace with its recurrent contribution removed.
 
 ## Development
 

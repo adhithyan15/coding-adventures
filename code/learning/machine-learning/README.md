@@ -25,13 +25,14 @@ larger network:
 5. [Training a Convolution Kernel by Hand](./training-a-convolution-kernel-by-hand.md)
 6. [A Tiny Image CNN, Completely by Hand](./tiny-image-cnn-by-hand.md)
 7. [Residual Paths and Receptive Fields by Hand](./residual-paths-and-receptive-fields-by-hand.md)
-8. [Matrix Math](../matrix-math.md)
-9. [Loss Functions](../loss-functions.md)
-10. [Gradient Descent](../gradient-descent.md)
-11. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-12. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-13. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-14. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+8. [One Recurrent State, Unrolled by Hand](./recurrent-state-unrolled-by-hand.md)
+9. [Matrix Math](../matrix-math.md)
+10. [Loss Functions](../loss-functions.md)
+11. [Gradient Descent](../gradient-descent.md)
+12. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+13. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+14. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+15. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -41,7 +42,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has seven complementary views:
+has eight complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -63,6 +64,9 @@ has seven complementary views:
 - **Residual lab:** compare a two-layer local path with an identity shortcut,
   toggle the shortcut, and expand any output into exact input-path counts and
   boundary-clipped receptive fields.
+- **Recurrent lab:** unroll one shared scalar cell for three time steps, inspect
+  every input and carried-state term, and cut the recurrent link to isolate
+  what memory contributes.
 
 ## Language-Neutral Corpus
 
@@ -88,6 +92,10 @@ NN08 adds a two-layer residual block in
 paths, every expanded input dependency, path multiplicities, and clipped
 boundary receptive fields.
 
+NN09 adds a three-step scalar recurrent chain in
+`code/specs/fixtures/recurrent-unroll-v1`, including its explicit initial
+state, shared parameters, every forward term, and a no-memory ablation.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -97,6 +105,7 @@ python code/scripts/validate_convolution_learning_labs.py
 python code/scripts/validate_convolution_training_labs.py
 python code/scripts/validate_tiny_image_cnn_labs.py
 python code/scripts/validate_residual_receptive_labs.py
+python code/scripts/validate_recurrent_unroll_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -110,7 +119,8 @@ NN07 lab shows how input channels accumulate into output feature maps, which
 spatial values share normalization statistics, and which locations survive
 max pooling. The first NN08 lab expands a two-layer residual block into its
 deep and identity routes, then counts every path from one output back to the
-original input.
+original input. The first NN09 lab passes one hidden-state value through three
+executions of the same cell and compares it with the recurrent link removed.
 
 ## How to Study a Model
 

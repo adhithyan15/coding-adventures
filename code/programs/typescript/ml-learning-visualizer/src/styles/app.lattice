@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -2308,6 +2308,344 @@ code {
   text-transform: uppercase;
 }
 
+.workspace--recurrent {
+  display: grid;
+  grid-template-columns: minmax(760px, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+
+.recurrent-stage,
+.recurrent-controls,
+.recurrent-unroll-panel,
+.memory-ablation-panel {
+  @include surface;
+}
+
+.recurrent-stage {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.recurrent-intro,
+.recurrent-panel-heading,
+.recurrent-arithmetic-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.recurrent-intro p:not(.eyebrow),
+.recurrent-controls > p,
+.recurrent-panel-heading > p,
+.recurrent-note p {
+  margin: 5px 0 0;
+  color: $muted;
+}
+
+.recurrent-sequence-chip {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.11);
+  color: #4f3da9;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.recurrent-unroll-panel,
+.memory-ablation-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.recurrent-final-state {
+  display: grid;
+  min-width: 90px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.13);
+  color: $green;
+  text-align: center;
+}
+
+.recurrent-final-state small,
+.recurrent-initial-node small,
+.recurrent-cell small,
+.recurrent-equation small,
+.recurrent-selected-summary small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.recurrent-final-state strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.35rem;
+}
+
+.shared-parameter-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 9px;
+  border: 1px solid rgba(109, 91, 208, 0.22);
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.055);
+}
+
+.shared-parameter-strip span {
+  color: #4f3da9;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.shared-parameter-strip code {
+  min-height: 0;
+  padding: 4px 7px;
+}
+
+.recurrent-chain {
+  display: grid;
+  grid-template-columns: 94px 42px repeat(2, minmax(150px, 1fr) 42px) minmax(150px, 1fr);
+  align-items: center;
+  min-width: 0;
+}
+
+.recurrent-initial-node {
+  display: grid;
+  gap: 3px;
+  place-items: center;
+  min-height: 96px;
+  padding: 9px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.055);
+}
+
+.recurrent-initial-node code {
+  min-height: 0;
+  padding: 3px 8px;
+}
+
+.recurrent-connector {
+  display: grid;
+  place-items: center;
+  color: #4f3da9;
+}
+
+.recurrent-connector small {
+  color: $muted;
+  font-size: 0.62rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.recurrent-connector span {
+  font-size: 1.25rem;
+}
+
+.recurrent-connector--disabled {
+  filter: grayscale(1);
+  opacity: 0.42;
+}
+
+.recurrent-cell {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 12px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+  color: $ink;
+  text-align: left;
+}
+
+.recurrent-cell:hover {
+  border-color: rgba(37, 99, 235, 0.38);
+  background: #f7faff;
+}
+
+.recurrent-cell span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.76rem;
+}
+
+.recurrent-cell strong {
+  color: #173f8a;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1rem;
+}
+
+.recurrent-cell--active {
+  border-color: rgba(37, 99, 235, 0.62);
+  background: #edf4ff;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.14);
+}
+
+.recurrent-arithmetic {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border-block: 1px solid $line;
+}
+
+.recurrent-arithmetic-heading code {
+  min-height: 0;
+  padding: 4px 7px;
+}
+
+.recurrent-equation {
+  display: grid;
+  grid-template-columns: minmax(115px, 1fr) auto minmax(145px, 1.2fr) auto minmax(70px, 0.6fr) auto minmax(95px, 0.8fr) auto minmax(90px, 0.7fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.recurrent-equation > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 9px;
+  border-radius: 7px;
+  background: rgba(109, 91, 208, 0.055);
+  text-align: center;
+}
+
+.recurrent-equation strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.recurrent-equation > span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 850;
+}
+
+.recurrent-equation .equation-term--disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.recurrent-equation .recurrent-equation__state {
+  background: #eaf7ef;
+  color: $green;
+}
+
+.recurrent-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.recurrent-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.recurrent-table caption {
+  padding-bottom: 7px;
+  color: $muted;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-align: left;
+}
+
+.recurrent-table th,
+.recurrent-table td {
+  padding: 9px;
+  border-bottom: 1px solid $line;
+  text-align: right;
+}
+
+.recurrent-table th:first-child {
+  text-align: left;
+}
+
+.recurrent-table thead th {
+  color: $muted;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.recurrent-table-row--active {
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.recurrent-controls {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.recurrent-memory-control {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  border: 1px solid rgba(109, 91, 208, 0.2);
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.07);
+  cursor: pointer;
+}
+
+.recurrent-memory-control input {
+  width: 20px;
+  min-height: 20px;
+  accent-color: $violet;
+}
+
+.recurrent-memory-control span,
+.recurrent-selected-summary {
+  display: grid;
+  gap: 3px;
+}
+
+.recurrent-memory-control small,
+.recurrent-selected-summary span {
+  color: $muted;
+}
+
+.recurrent-selected-summary {
+  padding: 11px;
+  border-left: 3px solid rgba(37, 99, 235, 0.45);
+  background: rgba(37, 99, 235, 0.045);
+}
+
+.recurrent-selected-summary strong {
+  color: #173f8a;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.recurrent-note {
+  padding-top: 12px;
+  border-top: 1px solid $line;
+}
+
+.recurrent-note span {
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
 @media (max-width: 1180px) {
   .workspace--lab,
   .workspace--hidden {
@@ -2329,11 +2667,16 @@ code {
     grid-column: 1 / -1;
   }
 
+  .recurrent-controls {
+    grid-column: 1 / -1;
+  }
+
   .workspace--microscope,
   .workspace--optimization,
   .workspace--convolution,
   .workspace--image-cnn,
-  .workspace--residual {
+  .workspace--residual,
+  .workspace--recurrent {
     grid-template-columns: 1fr;
   }
 }
@@ -2359,9 +2702,10 @@ code {
   .workspace--hidden,
   .workspace--microscope,
   .workspace--optimization,
-    .workspace--convolution,
-    .workspace--image-cnn,
-    .workspace--residual {
+  .workspace--convolution,
+  .workspace--image-cnn,
+  .workspace--residual,
+  .workspace--recurrent {
     grid-template-columns: 1fr;
   }
 
@@ -2371,7 +2715,10 @@ code {
   .image-cnn-intro,
   .image-stage-heading,
   .residual-intro,
-  .residual-panel-heading {
+  .residual-panel-heading,
+  .recurrent-intro,
+  .recurrent-panel-heading,
+  .recurrent-arithmetic-heading {
     display: grid;
     align-items: start;
   }
@@ -2406,10 +2753,6 @@ code {
 
   .mode-toggle {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .mode-button:last-child {
-    grid-column: 1 / -1;
   }
 
   .image-pipeline {
@@ -2465,6 +2808,40 @@ code {
   .receptive-summary code {
     overflow-x: auto;
     white-space: nowrap;
+  }
+
+  .shared-parameter-strip {
+    flex-wrap: wrap;
+  }
+
+  .recurrent-chain {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .recurrent-initial-node,
+  .recurrent-cell {
+    min-height: 0;
+  }
+
+  .recurrent-connector {
+    min-height: 38px;
+  }
+
+  .recurrent-connector span {
+    transform: rotate(90deg);
+  }
+
+  .recurrent-equation {
+    grid-template-columns: 1fr;
+  }
+
+  .recurrent-equation > span {
+    justify-self: center;
+  }
+
+  .recurrent-equation > span:last-of-type {
+    transform: rotate(90deg);
   }
 
   .phase-strip {

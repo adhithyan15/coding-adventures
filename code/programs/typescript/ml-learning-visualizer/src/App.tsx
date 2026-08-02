@@ -6,6 +6,7 @@ import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
@@ -172,7 +173,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -285,6 +286,8 @@ export function App() {
                 ? "Channels become features"
               : workbench === "residual"
                 ? "Deep route, short route"
+              : workbench === "recurrent"
+                ? "Memory becomes an input"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -342,6 +345,13 @@ export function App() {
             >
               Residual
             </button>
+            <button
+              className={workbench === "recurrent" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("recurrent")}
+            >
+              Recurrent
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -354,6 +364,8 @@ export function App() {
               <>channels {"->"} <strong>normalize + ReLU</strong> {"->"} pool</>
             ) : workbench === "residual" ? (
               <>local layers + <strong>identity skip</strong> {"->"} wider field</>
+            ) : workbench === "recurrent" ? (
+              <>input + <strong>previous state</strong> {"->"} next state</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -373,6 +385,8 @@ export function App() {
         <ImageCnnWorkbench />
       ) : workbench === "residual" ? (
         <ResidualWorkbench />
+      ) : workbench === "recurrent" ? (
+        <RecurrentWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

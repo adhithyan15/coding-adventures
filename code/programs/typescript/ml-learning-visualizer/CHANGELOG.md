@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   spatial normalization, ReLU, max pooling, and synchronized path selection.
 - Add the NN08 residual-path and receptive-field workbench with an identity
   toggle, exact dependency expansion, and boundary-field exploration.
+- Add the NN09 three-step recurrent-state unroller with shared parameters,
+  selectable cell arithmetic, and a no-memory ablation.
 
 ### Changed
 
