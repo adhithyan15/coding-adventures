@@ -33,8 +33,9 @@ Chapter 1 words introduced — component strokes + stroke order, from the canoni
 
 **я** — one letter, PIE \**eǵh₂(om)* → Slavic \**azъ*, cousin of *ego / ich / I*;
 pronouns are the least borrowable part of a language → **ты / вы**, the split
-English threw away when *thou* left standard use in the 1600s. *Вы* is polite the
-way French *vous* is, but the routes differ: Russian and French use the
+English threw away when *thou* left standard use in the 1600s → a short support
+lesson on why ***вы* is polite**. *Вы* is polite the way French *vous* is, but
+the routes differ: Russian and French use the
 **2nd-person plural**, German the **3rd-person** (*Sie*), and Spanish **no plural
 at all** (*usted* ← "your grace") — with the *вы*/*vōs* cognate row flagged as
 only half a set, since English *you* and German *ihr* continue \**yūs*
@@ -44,18 +45,20 @@ sentence contains **no word for "my" and none for "name"**; the "they" is nobody
 but its **object form** — the course's first look at **case** → **как вас
 зовут?**, which asks **how** they call you, not *what*: Russian, French
 (*comment*) and Spanish (*cómo*) all ask about an **action** where English asks
-about a **possession** → **очень приятно**, "very pleasant", whose *приятно* ←
+about a **possession** in a separate comparison lesson → **очень приятно**,
+"very pleasant", whose *приятно* ←
 Slavic *prijati* "to favour" ← PIE \**preyH-* "to love, please" — the root behind
 Russian **приятель** "friend" *and* English **friend**, with **free** most likely
-in the same family ("belonging to the beloved household") → practice, which
-closes on the **zero copula** — scoped to ***очень приятно***, the one sentence
-with no verb at all (Russian *does* have a present-tense *есть*; it just drops
-the linking verb).
+in the same family ("belonging to the beloved household") → three short practice
+lessons: retrieve the exchange, contrast the person shapes, then close on the
+**zero copula** — scoped to ***очень приятно***, the one sentence with no verb at
+all (Russian *does* have a present-tense *есть*; it just drops the linking verb).
 
-Deliberately deferred, so the chapter stays five atoms plus practice: **это**,
-and *да/нет* revisited as full answers. New letters **я**, **ч**, **ы** and the soft sign **ь** are
-flagged read-now-draw-later — the writing track (RU-W01–W05) has taught
-в р с н б д п и е т and not yet reached them.
+Deliberately deferred, so the chapter stays five vocabulary atoms plus two
+support lessons and three focused practices: **это**, and *да/нет* revisited as
+full answers. Each lesson remains below five minutes. New letters **я**, **ч**,
+**ы** and the soft sign **ь** are flagged read-now-draw-later — the writing track
+(RU-W01–W05) has taught в р с н б д п и е т and not yet reached them.
 
 ## Chapter 3 — Being and having *(planned)*
 

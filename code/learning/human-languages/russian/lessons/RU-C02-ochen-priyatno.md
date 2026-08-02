@@ -6,7 +6,7 @@ headword: очень приятно
 gloss: "pleased to meet you — literally 'very pleasant', and a cousin of English FRIEND"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 romanization: óchen priyátno
-prerequisites: [RU-C02-kak-vas-zovut]
+prerequisites: [RU-C02-kak-cross-language]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [pie-preyh]
 etymology_hook: "приятно 'pleasant' comes from Slavic prijati 'to favour, be well-disposed' ← PIE *preyH- 'to love, please' — the same root that gave Germanic its word for FRIEND (one who is dear) and, most likely, FREE (originally 'belonging to the beloved household, not a slave')"

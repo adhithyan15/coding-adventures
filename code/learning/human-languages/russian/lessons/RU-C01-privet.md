@@ -10,7 +10,7 @@ prerequisites: []
 sounds: [cyrillic-false-friends, stress-unmarked, e-ye]
 roots: [pri, vet]
 etymology_hook: "привет ← при- + root вет- 'to speak' → same root as sovet 'council' → Soviet"
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 
@@ -18,9 +18,8 @@ reviews_of: []
 
 ## Warm-up
 
-[PAUSE 2s] Your first Russian word — and your first Cyrillic letters. Cyrillic
-looks familiar, and that is exactly the trap: several letters are **false
-friends** that look Latin but sound nothing like it. We'll meet them head-on.
+[PAUSE 2s] Your first Russian word and Cyrillic letters. Several shapes are
+**false friends** that look Latin but sound different; meet them head-on.
 
 ## The letters in this word
 
@@ -61,19 +60,11 @@ already know in English:
 So *привet* is a cousin of **Soviet** — the same "speak" root, one a friendly
 hello, the other the most famous Russian word in English.
 
-## Across the family — "hi" without the formality
+## Across the family
 
-| Language | informal "hi" | note |
-|---|---|---|
-| **Russian** | *privét* (привет) | to friends, family, peers |
-| Spanish | *hola* | |
-| French | *salut* | also informal-only |
-| German | *hallo* | |
-| English | *hi / hey* | |
-
-Every language keeps a *casual* greeting separate from the formal one. In
-Russian that line is sharp — use *привет* with friends, and the next lesson's
-*здравствуйте* with everyone else.
+Russian *privét*, Spanish *hola*, French *salut*, German *hallo*, and English
+*hi* fill the casual slot. Russian draws the line sharply: use *привет* with
+friends and the next lesson's formal greeting with everyone else.
 
 ## Why it's said this way
 

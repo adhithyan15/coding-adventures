@@ -10,7 +10,7 @@ prerequisites: [RU-C01-privet]
 sounds: [cyrillic-false-friends, silent-v, stress-unmarked]
 roots: [zdorov]
 etymology_hook: "здравствуйте ← здоровье 'health' → literally 'be healthy!'"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [RU-C01-privet]
 ---
 
@@ -60,19 +60,6 @@ English *health* — they come from different roots (English *health/whole/hale*
 is Germanic). The *idea* is the shared one: many languages greet by wishing
 **health** (Latin *salve* = "be well," the ancestor of Spanish *hola*'s cousin
 *salud*) or **peace** (Arabic *salām*, Hebrew *shalom*). Russian picked health.
-
-## Across the family — greetings that wish something
-
-| Language | formal greeting | literally wishes… |
-|---|---|---|
-| **Russian** | *zdravstvuyte* (здравствуйте) | **health** |
-| Latin | *salvē* | "be well" (health) |
-| Arabic | *as-salāmu ʿalaykum* | **peace** upon you |
-| Hebrew | *shalom* | **peace** |
-| English | *hello* | (nothing — just a call) |
-
-English *hello* is unusual: it wishes nothing at all, it just gets attention.
-Most languages greet by handing over health or peace.
 
 ## Grammar Lens — Russian's formal *you* is plural
 

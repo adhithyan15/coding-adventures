@@ -1,5 +1,19 @@
 # Changelog — Russian track
 
+## 0.4.0 — 2026-08-02
+
+- Corrected four honest four-minute estimates that had been rounded up to five
+  even though the shared duration model already placed them below that boundary.
+- Split the genuinely long Chapter 2 material into prerequisite-ordered support
+  lessons: *why вы is polite* and *why Russian asks how rather than what*.
+- Replaced the long cumulative recap with three focused practices for the
+  formal/informal exchange, subject/object person shapes, and the precise scope
+  of the zero copula.
+- Preserved the complete etymological and cross-language content while making
+  each individual lesson independently doable in under five minutes. Updated
+  the roadmap and session map to distinguish lesson duration from a commute
+  session that intentionally combines several lessons.
+
 ## 0.3.0 — 2026-08-02
 
 - Added the first downloadable LaTeX edition.
