@@ -3953,7 +3953,8 @@ fn emit_main_window_cs(
                              hostStatus = \"Status: sample props loaded\";\n        \
                          }}\n        \
                          this.StatusText.Text = hostStatus;\n        \
-                         this.Component.Dispatch += OnComponentDispatch;\n    \
+                         this.Component.Dispatch += OnComponentDispatch;\n        \
+                         TryRunMosaicHostInteractionAcceptance(this.Component);\n    \
                      }}\n\
                  \n    \
                      /// <summary>\n    \
@@ -3995,6 +3996,24 @@ fn build_optional_host_helpers(name: &str, namespace: &str) -> String {
              catch (System.Exception ex)\n        \
              {{\n            \
                  return $\"Mosaic host failed: {{ex.GetType().Name}}: {{ex.Message}}\";\n        \
+             }}\n    \
+         }}\n\
+         \n    \
+         private void TryRunMosaicHostInteractionAcceptance({name} component)\n    \
+         {{\n        \
+             var method = FindMosaicHostMethod(\n            \
+                 \"RunInteractionAcceptance\",\n            \
+                 typeof(Window),\n            \
+                 typeof({name}));\n        \
+             if (method is null) {{ return; }}\n        \
+             try\n        \
+             {{\n            \
+                 method.Invoke(null, new object[] {{ this, component }});\n        \
+             }}\n        \
+             catch (System.Exception ex)\n        \
+             {{\n            \
+                 System.Diagnostics.Debug.WriteLine(\n                \
+                     $\"Mosaic host interaction acceptance failed: {{ex}}\");\n        \
              }}\n    \
          }}\n\
          \n    \
@@ -9495,6 +9514,10 @@ mod tests {
         // MainWindow.xaml.cs can optionally delegate props/events to an
         // app-provided MosaicHost without requiring one to compile.
         assert!(p.main_window_cs.contains("TryApplyMosaicHostProps"));
+        assert!(p
+            .main_window_cs
+            .contains("TryRunMosaicHostInteractionAcceptance(this.Component)"));
+        assert!(p.main_window_cs.contains("\"RunInteractionAcceptance\""));
         assert!(p.main_window_cs.contains("CoerceMosaicHostResult"));
         assert!(p.main_window_cs.contains("FindMosaicHostMethod"));
         assert!(p

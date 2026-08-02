@@ -18,6 +18,9 @@
   SwiftUI content surface changes logical size.
 - Build and directly launch the Mosaic-emitted SwiftUI app in a platform-native
   integration gate, requiring a successful Metal host-surface render.
+- Extend the generated-app launch gate through native address editing and Go
+  activation, requiring the shared Rust session to load and title a second
+  deterministic page.
 
 ## 0.1.0
 

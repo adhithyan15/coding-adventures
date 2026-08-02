@@ -402,6 +402,9 @@ fn build_app_swift(component_name: &str, slots: &[SlotDecl]) -> String {
     writeln!(out, "  var body: some Scene {{").unwrap();
     writeln!(out, "    WindowGroup(\"{component_name}\") {{").unwrap();
     writeln!(out, "      {root_view}").unwrap();
+    writeln!(out, "      .onAppear {{").unwrap();
+    writeln!(out, "        host.runInteractionAcceptanceIfRequested()").unwrap();
+    writeln!(out, "      }}").unwrap();
     writeln!(out, "    }}").unwrap();
     writeln!(out, "  }}").unwrap();
     writeln!(out, "}}").unwrap();
@@ -461,9 +464,18 @@ fn host_value_for_slot(slot: &SlotDecl, props_expr: &str, host_expr: &str) -> St
 }
 
 fn build_mosaic_host_state(component_name: &str) -> String {
-    format!(
+    let state = format!(
         "private final class MosaicHostState: ObservableObject {{\n  @Published var props: [String: Any] = [:]\n  @Published var lastHostIntent: [String: Any]? = nil\n  private let bridge: MosaicHostBridgeObject?\n\n  init() {{\n    self.bridge = MosaicHostBridge.load()\n    bridge?.setPropsChangedHandler? {{ [weak self] in\n      DispatchQueue.main.async {{\n        self?.refreshProps()\n      }}\n    }}\n    refreshProps()\n  }}\n\n  func node(named name: String) -> AnyView {{\n    guard let object = bridge?.node?(named: name as NSString) else {{\n      return AnyView(EmptyView())\n    }}\n#if os(macOS)\n    guard let view = object as? NSView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#elseif os(iOS)\n    guard let view = object as? UIView else {{ return AnyView(EmptyView()) }}\n    return AnyView(MosaicHostPlatformView(view: view))\n#else\n    return AnyView(EmptyView())\n#endif\n  }}\n\n  func dispatch(_ event: {component_name}Event) {{\n    guard let bridge else {{\n      print(\"Mosaic dispatch: \\(event.mosaicEnvelope)\")\n      return\n    }}\n    applyHostResponse(bridge.handleEvent(event.mosaicEnvelope as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])\n  }}\n\n  private func refreshProps() {{\n    applyHostResponse(bridge?.applyProps() as? [String: Any])\n  }}\n\n  private func applyHostResponse(_ response: [String: Any]?) {{\n    guard let response else {{ return }}\n    if let intent = response[\"hostIntent\"] as? [String: Any] {{\n      self.lastHostIntent = intent\n    }}\n    if let next = response[\"props\"] as? [String: Any] {{\n      self.props = next\n      return\n    }}\n    if response[\"hostIntent\"] != nil || response[\"error\"] != nil {{\n      return\n    }}\n    self.props = response\n  }}\n}}\n\n@objc protocol MosaicHostBridgeObject {{\n  func applyProps() -> NSDictionary?\n  func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?\n  @objc optional func node(named name: NSString) -> NSObject?\n  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}}\n\n#if os(macOS)\nprivate struct MosaicHostPlatformView: NSViewRepresentable {{\n  let view: NSView\n  func makeNSView(context: Context) -> NSView {{ view }}\n  func updateNSView(_ nsView: NSView, context: Context) {{}}\n}}\n#elseif os(iOS)\nprivate struct MosaicHostPlatformView: UIViewRepresentable {{\n  let view: UIView\n  func makeUIView(context: Context) -> UIView {{ view }}\n  func updateUIView(_ uiView: UIView, context: Context) {{}}\n}}\n#endif\n\nprivate enum MosaicHostBridge {{\n  static func load() -> MosaicHostBridgeObject? {{\n    for className in [\"App.MosaicHost\", \"MosaicHost\"] {{\n      guard let hostType = NSClassFromString(className) as? NSObject.Type else {{\n        continue\n      }}\n      if let bridge = hostType.init() as? MosaicHostBridgeObject {{\n        return bridge\n      }}\n    }}\n    return nil\n  }}\n}}\n\nprivate enum MosaicHostValue {{\n  static func string(_ props: [String: Any], _ key: String, fallback: String) -> String {{\n    if let value = props[key] as? String {{ return value }}\n    if let value = props[key] {{ return String(describing: value) }}\n    return fallback\n  }}\n\n  static func double(_ props: [String: Any], _ key: String, fallback: Double) -> Double {{\n    if let value = props[key] as? Double {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.doubleValue }}\n    if let value = props[key] as? String, let parsed = Double(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func bool(_ props: [String: Any], _ key: String, fallback: Bool) -> Bool {{\n    if let value = props[key] as? Bool {{ return value }}\n    if let value = props[key] as? NSNumber {{ return value.boolValue }}\n    if let value = props[key] as? String, let parsed = Bool(value) {{ return parsed }}\n    return fallback\n  }}\n\n  static func stringList(_ props: [String: Any], _ key: String, fallback: [String]) -> [String] {{\n    if let value = props[key] as? [String] {{ return value }}\n    if let value = props[key] as? [Any] {{ return value.map {{ String(describing: $0) }} }}\n    return fallback\n  }}\n\n  static func doubleList(_ props: [String: Any], _ key: String, fallback: [Double]) -> [Double] {{\n    if let value = props[key] as? [Double] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.doubleValue }} }}\n    return fallback\n  }}\n\n  static func boolList(_ props: [String: Any], _ key: String, fallback: [Bool]) -> [Bool] {{\n    if let value = props[key] as? [Bool] {{ return value }}\n    if let value = props[key] as? [NSNumber] {{ return value.map {{ $0.boolValue }} }}\n    return fallback\n  }}\n}}\n"
-    )
+    );
+    state
+        .replace(
+            "  private func refreshProps() {",
+            "  func runInteractionAcceptanceIfRequested() {\n    bridge?.runInteractionAcceptance?()\n  }\n\n  private func refreshProps() {",
+        )
+        .replace(
+            "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n}",
+            "  @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)\n  @objc optional func runInteractionAcceptance()\n}",
+        )
 }
 
 fn sample_value_for_slot(slot: &SlotDecl) -> String {
@@ -7489,6 +7501,12 @@ mod tests {
             proj.app_swift.contains("host.dispatch(event)"),
             "App.swift should dispatch the Mosaic wire envelope through the host"
         );
+        assert!(proj
+            .app_swift
+            .contains("host.runInteractionAcceptanceIfRequested()"));
+        assert!(proj
+            .app_swift
+            .contains("@objc optional func runInteractionAcceptance()"));
     }
 
     #[test]

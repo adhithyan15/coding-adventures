@@ -1,5 +1,8 @@
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
+using Microsoft.UI.Xaml.Automation.Peers;
+using Microsoft.UI.Xaml.Automation.Provider;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
@@ -27,6 +30,7 @@ public static class MosaicHost
     private static IntPtr browser;
     private static VentureContentSurface? contentSurface;
     private static int acceptanceReported;
+    private static int interactionAcceptanceStarted;
 
     public static string ApplyProps(VentureChrome component)
     {
@@ -62,6 +66,139 @@ public static class MosaicHost
         var status = ApplyResponse(component, response);
         contentSurface?.Refresh();
         return status;
+    }
+
+    public static void RunInteractionAcceptance(Window window, VentureChrome component)
+    {
+        var markerPath = Environment.GetEnvironmentVariable(
+            "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH");
+        var targetUrl = Environment.GetEnvironmentVariable("VENTURE_BROWSER_INTERACTION_URL");
+        if (string.IsNullOrWhiteSpace(markerPath)
+            || string.IsNullOrWhiteSpace(targetUrl)
+            || System.Threading.Interlocked.Exchange(ref interactionAcceptanceStarted, 1) != 0)
+        {
+            return;
+        }
+
+        component.Loaded += async (_, _) =>
+        {
+            try
+            {
+                var addressInput = await FindAutomationElementAsync<TextBox>(
+                    component, "address-input");
+                var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
+                if (addressInput is null || goButton is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native controls not found",
+                    });
+                    return;
+                }
+
+                var valueProvider = new TextBoxAutomationPeer(addressInput)
+                    .GetPattern(PatternInterface.Value) as IValueProvider;
+                var invokeProvider = new ButtonAutomationPeer(goButton)
+                    .GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                if (valueProvider is null || invokeProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native automation patterns unavailable",
+                    });
+                    return;
+                }
+
+                valueProvider.SetValue(targetUrl);
+                invokeProvider.Invoke();
+                for (var remaining = 50; remaining >= 0; remaining--)
+                {
+                    await System.Threading.Tasks.Task.Delay(100);
+                    _ = ApplyProps(component);
+                    if (string.Equals(component.Address, targetUrl, StringComparison.Ordinal)
+                        && string.Equals(
+                            component.PageTitle,
+                            "Venture interaction acceptance",
+                            StringComparison.Ordinal))
+                    {
+                        WriteInteractionResult(markerPath, new
+                        {
+                            backend = "xaml",
+                            status = "interacted",
+                            address = component.Address,
+                            pageTitle = component.PageTitle,
+                        });
+                        return;
+                    }
+                }
+
+                WriteInteractionResult(markerPath, new
+                {
+                    backend = "xaml",
+                    status = "error",
+                    address = component.Address,
+                    pageTitle = component.PageTitle,
+                    error = "navigation state did not update",
+                });
+            }
+            catch (Exception ex)
+            {
+                WriteInteractionResult(markerPath, new
+                {
+                    backend = "xaml",
+                    status = "error",
+                    error = ex.ToString(),
+                });
+            }
+        };
+    }
+
+    private static async System.Threading.Tasks.Task<T?> FindAutomationElementAsync<T>(
+        DependencyObject root,
+        string automationId)
+        where T : FrameworkElement
+    {
+        for (var remaining = 50; remaining >= 0; remaining--)
+        {
+            if (FindAutomationElement<T>(root, automationId) is { } element)
+            {
+                return element;
+            }
+            await System.Threading.Tasks.Task.Delay(100);
+        }
+        return null;
+    }
+
+    private static T? FindAutomationElement<T>(DependencyObject root, string automationId)
+        where T : FrameworkElement
+    {
+        if (root is T candidate
+            && string.Equals(
+                AutomationProperties.GetAutomationId(candidate),
+                automationId,
+                StringComparison.Ordinal))
+        {
+            return candidate;
+        }
+        var count = VisualTreeHelper.GetChildrenCount(root);
+        for (var index = 0; index < count; index++)
+        {
+            if (FindAutomationElement<T>(VisualTreeHelper.GetChild(root, index), automationId)
+                is { } found)
+            {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private static void WriteInteractionResult(string path, object result)
+    {
+        File.WriteAllText(path, JsonSerializer.Serialize(result) + "\n");
     }
 
     private static void EnsureBrowser()

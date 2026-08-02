@@ -2,6 +2,13 @@
 
 ## [Unreleased] — VC2-xaml Grid: WinUI value translation + nested-For + per-column widths
 
+### Added - optional generated-shell interaction acceptance
+
+Generated WinUI applications now invoke an optional package-host interaction
+hook after wiring the Mosaic component's dispatch event. Package owners can
+exercise emitted native controls and shared dispatch in direct launch
+acceptance without adding application-specific behavior to the shell.
+
 ### Added - Native automation identifiers for authored controls
 
 `HostInput` and `HostButton` now preserve their MLL part names as WinUI
