@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Require the generated WinUI resize gate to observe a successfully rendered
+  bitmap whose pixel size changed after shared-session reflow.
 - Extend the generated WinUI direct-launch gate through Alt-Left/Right history
   traversal after native link activation.
 - Extend the generated WinUI direct-launch gate through the same wheel-delta

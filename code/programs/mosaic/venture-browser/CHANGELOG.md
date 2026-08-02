@@ -4,6 +4,8 @@
 
 ### Added
 
+- Strengthen generated SwiftUI and WinUI resize acceptance to require a
+  successful post-reflow native frame with changed pixel dimensions.
 - Extend generated SwiftUI and WinUI interaction acceptance through the native
   content surface's history shortcuts in both directions, requiring the shared
   Mosaic reducer to reproject each retained page.
