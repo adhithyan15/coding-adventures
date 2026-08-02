@@ -1,10 +1,10 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 973 lessons, 20 books
-485 lessons at or above 300 effective seconds
-0 unknown prerequisites; 42 later-chapter lessons without prerequisites
+20 tracks, 976 lessons, 20 books
+481 lessons at or above 300 effective seconds
+0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
-20 legacy, 0 mixed, 0 version-2 schema tracks
+19 legacy, 1 mixed, 0 version-2 schema tracks
 
 Longest effective lessons:
   ES-C18-subjuntivo: 731s (declared 360s, computed 731s; declared+computed)

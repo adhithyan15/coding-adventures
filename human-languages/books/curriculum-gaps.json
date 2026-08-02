@@ -12,15 +12,15 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 973,
+    "totalLessons": 976,
     "authoredBooks": 20,
-    "durationViolations": 485,
+    "durationViolations": 481,
     "unknownPrerequisites": 0,
-    "laterChapterLessonsWithoutPrerequisites": 42,
+    "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 257,
-    "legacySchemaTracks": 20,
-    "mixedSchemaTracks": 0,
+    "legacySchemaTracks": 19,
+    "mixedSchemaTracks": 1,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -5635,71 +5635,6 @@
         ]
       },
       {
-        "lessonId": "ES-C01-el-la",
-        "language": "spanish",
-        "chapter": 1,
-        "declaredSeconds": 240,
-        "computedSeconds": 318,
-        "effectiveSeconds": 318,
-        "wordCount": 476,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "ES-C03-como",
-        "language": "spanish",
-        "chapter": 3,
-        "declaredSeconds": 180,
-        "computedSeconds": 321,
-        "effectiveSeconds": 321,
-        "wordCount": 449,
-        "promptCount": 6,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "computed"
-        ]
-      },
-      {
-        "lessonId": "ES-C03-practice",
-        "language": "spanish",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 212,
-        "effectiveSeconds": 300,
-        "wordCount": 236,
-        "promptCount": 7,
-        "repeatCueCount": 1,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "ES-C03-tu-usted",
-        "language": "spanish",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 306,
-        "effectiveSeconds": 306,
-        "wordCount": 440,
-        "promptCount": 5,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
         "lessonId": "ES-C04-como-esta",
         "language": "spanish",
         "chapter": 4,
@@ -8108,16 +8043,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "ES-C03-como",
-        "language": "spanish",
-        "chapter": 3
-      },
-      {
-        "lessonId": "ES-C03-me",
-        "language": "spanish",
-        "chapter": 3
-      },
-      {
         "lessonId": "ES-C04-estar",
         "language": "spanish",
         "chapter": 4
@@ -8333,16 +8258,6 @@
         "lessonId": "SA-C04-punah",
         "language": "sanskrit",
         "chapter": 4
-      },
-      {
-        "lessonId": "ES-C03-como",
-        "language": "spanish",
-        "chapter": 3
-      },
-      {
-        "lessonId": "ES-C03-me",
-        "language": "spanish",
-        "chapter": 3
       },
       {
         "lessonId": "ES-C04-estar",
@@ -9367,10 +9282,11 @@
     "tracks": [
       {
         "language": "spanish",
-        "status": "legacy",
-        "lessonCount": 111,
+        "status": "mixed",
+        "lessonCount": 114,
         "versions": {
-          "1": 111
+          "1": 90,
+          "2": 24
         }
       },
       {
