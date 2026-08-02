@@ -2226,6 +2226,20 @@ const PROGRAMS: &[Prog] = &[
                integer result; result := entier(scale(7.0)) end",        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — real procedure values compose across two typed calls. Each
+    // `scale` result is an `f64` value actual for `combine`; its f64 return then
+    // reaches `entier`. This drives the complete real call ABI rather than a
+    // single call-result-to-builtin path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               real procedure scale(x); value x; real x; scale := x * 6.0; \
+               real procedure combine(a,b); value a,b; real a,b; combine := a + b; \
+               result := entier(combine(scale(3.0), scale(4.0))) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 -- integer-to-real promotion (LANG-FULL AL1). Integer values
     // may flow wherever a real is required: direct real assignment, a real
     // array element, a real value parameter, and a mixed real/integer
@@ -5877,6 +5891,36 @@ fn algol_string_procedure_values_compose_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but string procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("real procedure combine(a,b)")
+                && program.src.contains("combine(scale(3.0), scale(4.0))")
+        })
+        .expect("the ALGOL real procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but real procedure composition did not complete"
             );
             continue;
         };

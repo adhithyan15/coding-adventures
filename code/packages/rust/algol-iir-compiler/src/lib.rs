@@ -6627,6 +6627,50 @@ mod tests {
         assert_eq!(run_i64(src), 42);
     }
 
+    #[test]
+    fn real_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "real procedure scale(x); value x; real x; scale := x * 6.0; ",
+            "real procedure combine(a,b); value a,b; real a,b; combine := a + b; ",
+            "result := entier(combine(scale(3.0), scale(4.0))) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "real_procedure_composition").expect("compiles");
+        let combine = module.get_function("combine").expect("real procedure exists");
+        assert_eq!(combine.params, vec![
+            ("a".into(), "f64".into()),
+            ("b".into(), "f64".into()),
+        ]);
+        assert_eq!(combine.return_type, "f64");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.type_hint == "f64"
+                        && instr.srcs.first().and_then(Operand::as_var) == Some("scale")
+                })
+                .count(),
+            2,
+            "both scale calls must retain their f64 result type: {:?}",
+            main.instructions
+        );
+        let combine_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "f64"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("combine")
+            })
+            .expect("composition must call combine");
+        assert_eq!(combine_call.srcs.len(), 3, "combine receives two real call values");
+    }
+
     // ---- AL5: switches + conditional designational expressions ----
 
     fn switch_prog(index: i64) -> String {

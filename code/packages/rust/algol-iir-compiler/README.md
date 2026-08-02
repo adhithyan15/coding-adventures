@@ -123,6 +123,9 @@ value through negation, conjunction, and the conditional branch on all seven
 standard backends. Boolean procedure values also compose as value actuals, so
 `both(neg(false), not neg(true))` preserves each typed argument and the final
 boolean return across both procedure-call boundaries.
+Real procedure values compose through the same typed call path:
+`entier(combine(scale(3.0), scale(4.0)))` preserves two `f64` returns as
+arguments to `combine`, then converts its `f64` result only at the boundary.
 
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
 AL2). `integer array A[1:10]` (and `real`, `boolean`, or `string` arrays) becomes an
