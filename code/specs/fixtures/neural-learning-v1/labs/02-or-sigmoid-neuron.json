@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "or-sigmoid-neuron",
+  "title": "OR with one sigmoid neuron",
+  "stage": "single-neuron",
+  "question": "How does an activation derivative join the chain rule?",
+  "concepts": ["binary classification", "sigmoid", "chain rule", "sgd"],
+  "model": {
+    "kind": "single-neuron",
+    "input_count": 2,
+    "layers": [
+      {
+        "name": "output",
+        "weights": [[0], [0]],
+        "biases": [0],
+        "activation": "sigmoid"
+      }
+    ]
+  },
+  "dataset": {
+    "input_labels": ["a", "b"],
+    "target_labels": ["or"],
+    "rows": [
+      { "label": "0 OR 0", "input": [0, 0], "target": [0] },
+      { "label": "0 OR 1", "input": [0, 1], "target": [1] },
+      { "label": "1 OR 0", "input": [1, 0], "target": [1] },
+      { "label": "1 OR 1", "input": [1, 1], "target": [1] }
+    ]
+  },
+  "training": {
+    "loss": "mean-squared-error",
+    "optimizer": { "kind": "sgd", "learning_rate": 1 },
+    "batch": "full"
+  },
+  "expected": {
+    "absolute_tolerance": 0.000001,
+    "forward": [
+      { "row": "0 OR 0", "prediction": [0.5] },
+      { "row": "0 OR 1", "prediction": [0.5] },
+      { "row": "1 OR 0", "prediction": [0.5] },
+      { "row": "1 OR 1", "prediction": [0.5] }
+    ],
+    "first_step": {
+      "loss_before": 0.25,
+      "gradients": [
+        {
+          "name": "output",
+          "weights": [[-0.125], [-0.125]],
+          "biases": [-0.125]
+        }
+      ],
+      "parameters_after": [
+        {
+          "name": "output",
+          "weights": [[0.125], [0.125]],
+          "biases": [0.125],
+          "activation": "sigmoid"
+        }
+      ],
+      "loss_after": 0.20787068247658097
+    }
+  }
+}

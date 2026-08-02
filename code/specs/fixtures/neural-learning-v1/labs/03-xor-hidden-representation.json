@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "xor-hidden-representation",
+  "title": "XOR as two hidden features",
+  "stage": "hidden-layer",
+  "question": "What can hidden neurons represent that one line cannot?",
+  "concepts": ["hidden representation", "non-linearity", "OR feature", "NAND feature", "XOR"],
+  "model": {
+    "kind": "dense-network",
+    "input_count": 2,
+    "layers": [
+      {
+        "name": "hidden",
+        "weights": [[20, -20], [20, -20]],
+        "biases": [-10, 30],
+        "activation": "sigmoid"
+      },
+      {
+        "name": "output",
+        "weights": [[20], [20]],
+        "biases": [-30],
+        "activation": "sigmoid"
+      }
+    ]
+  },
+  "dataset": {
+    "input_labels": ["a", "b"],
+    "target_labels": ["xor"],
+    "rows": [
+      { "label": "0 XOR 0", "input": [0, 0], "target": [0] },
+      { "label": "0 XOR 1", "input": [0, 1], "target": [1] },
+      { "label": "1 XOR 0", "input": [1, 0], "target": [1] },
+      { "label": "1 XOR 1", "input": [1, 1], "target": [0] }
+    ]
+  },
+  "training": null,
+  "expected": {
+    "absolute_tolerance": 0.000001,
+    "forward": [
+      { "row": "0 XOR 0", "prediction": [0.000045439104876545914] },
+      { "row": "0 XOR 1", "prediction": [0.999954519621495] },
+      { "row": "1 XOR 0", "prediction": [0.999954519621495] },
+      { "row": "1 XOR 1", "prediction": [0.000045439104876545914] }
+    ],
+    "first_step": null
+  }
+}

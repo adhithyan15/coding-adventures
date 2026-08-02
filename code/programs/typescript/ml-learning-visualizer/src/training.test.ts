@@ -3,6 +3,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { forwardLayered } from "./layered-network.js";
 import {
   CELSIUS_DATASET,
@@ -22,6 +23,10 @@ import {
 } from "./hidden-layer-examples.js";
 import { predictLayeredWithVm, predictLinearWithVm } from "./neural-vm.js";
 import { renderHiddenNetworkSvg, renderLinearNetworkSvg } from "./NetworkDiagram.js";
+import {
+  DEFAULT_MICROSCOPE_STATE,
+  traceTrainingStep,
+} from "./training-microscope.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -91,6 +96,37 @@ describe("training helpers", () => {
     expect(activate(-2, "leakyRelu")).toBeCloseTo(-0.2);
     expect(activate(0, "sigmoid")).toBeCloseTo(0.5);
     expect(activate(0, "tanh")).toBeCloseTo(0);
+  });
+
+  it("traces the hand-calculated one-neuron training update", () => {
+    const trace = traceTrainingStep(DEFAULT_MICROSCOPE_STATE);
+
+    expect(trace.weightedInput).toBeCloseTo(1);
+    expect(trace.preActivation).toBeCloseTo(1.1);
+    expect(trace.prediction).toBeCloseTo(1.1);
+    expect(trace.loss).toBeCloseTo(0.01);
+    expect(trace.gradientWeight).toBeCloseTo(0.4);
+    expect(trace.gradientBias).toBeCloseTo(0.2);
+    expect(trace.nextWeight).toBeCloseTo(0.46);
+    expect(trace.nextBias).toBeCloseTo(0.08);
+    expect(trace.nextPrediction).toBeCloseTo(1);
+    expect(trace.nextLoss).toBeCloseTo(0);
+  });
+
+  it("reveals and applies one update in the training microscope", () => {
+    render(React.createElement(TrainingStepMicroscope));
+
+    expect(screen.getByRole("heading", { name: "Choose one training example" })).toBeTruthy();
+    for (let phase = 1; phase < 7; phase += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Next phase" }));
+    }
+    expect(screen.getByRole("heading", { name: "Move the parameters against the gradient" })).toBeTruthy();
+    expect(screen.getByText("After proposed update")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply this update" }));
+    expect(Number((screen.getByLabelText("Weight w") as HTMLInputElement).value)).toBeCloseTo(0.46);
+    expect(Number((screen.getByLabelText("Bias b") as HTMLInputElement).value)).toBeCloseTo(0.08);
+    expect(screen.getByText("update 1")).toBeTruthy();
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

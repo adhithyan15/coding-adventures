@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "celsius-linear-regression",
+  "title": "Celsius to Fahrenheit regression",
+  "stage": "single-neuron",
+  "question": "How do error and input scale produce a weight gradient?",
+  "concepts": ["linear regression", "mean squared error", "full-batch gradient", "sgd"],
+  "model": {
+    "kind": "single-neuron",
+    "input_count": 1,
+    "layers": [
+      {
+        "name": "output",
+        "weights": [[0.5]],
+        "biases": [0.5],
+        "activation": "identity"
+      }
+    ]
+  },
+  "dataset": {
+    "input_labels": ["celsius"],
+    "target_labels": ["fahrenheit"],
+    "rows": [
+      { "label": "freezing crossover", "input": [-40], "target": [-40] },
+      { "label": "water freezes", "input": [0], "target": [32] },
+      { "label": "hot day", "input": [40], "target": [104] }
+    ]
+  },
+  "training": {
+    "loss": "mean-squared-error",
+    "optimizer": { "kind": "sgd", "learning_rate": 0.0005 },
+    "batch": "full"
+  },
+  "expected": {
+    "absolute_tolerance": 0.000001,
+    "forward": [
+      { "row": "freezing crossover", "prediction": [-19.5] },
+      { "row": "water freezes", "prediction": [0.5] },
+      { "row": "hot day", "prediction": [20.5] }
+    ],
+    "first_step": {
+      "loss_before": 2794.9166666666665,
+      "gradients": [
+        {
+          "name": "output",
+          "weights": [[-2773.333333333333]],
+          "biases": [-63]
+        }
+      ],
+      "parameters_after": [
+        {
+          "name": "output",
+          "weights": [[1.8866666666666665]],
+          "biases": [0.5315],
+          "activation": "identity"
+        }
+      ],
+      "loss_after": 998.278344101852
+    }
+  }
+}

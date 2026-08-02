@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -169,6 +169,235 @@ h2 {
   grid-template-columns: 260px minmax(520px, 1fr) 310px;
   gap: 14px;
   align-items: start;
+}
+
+.workspace--microscope {
+  display: grid;
+  grid-template-columns: minmax(560px, 1fr) 320px;
+  gap: 14px;
+  align-items: start;
+}
+
+.microscope-stage {
+  display: grid;
+  gap: 12px;
+}
+
+.microscope-controls,
+.microscope-focus,
+.derivative-panel,
+.before-after {
+  @include surface;
+}
+
+.phase-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(76px, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phase-button {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  min-height: 58px;
+  padding: 7px 5px;
+  border-color: $line;
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.phase-button span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #eef4f0;
+  color: $ink;
+  line-height: 22px;
+}
+
+.phase-button--complete {
+  border-color: rgba(35, 122, 87, 0.42);
+  color: $green;
+}
+
+.phase-button--complete span {
+  background: rgba(35, 122, 87, 0.14);
+  color: $green;
+}
+
+.phase-button--active {
+  border-color: rgba(37, 99, 235, 0.58);
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.phase-button--active span {
+  background: $blue;
+  color: #ffffff;
+}
+
+.microscope-focus {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(260px, 1fr);
+  gap: 10px 24px;
+  min-height: 180px;
+  padding: 18px;
+}
+
+.microscope-focus code {
+  align-self: center;
+  min-height: 52px;
+  padding: 14px;
+  background: #edf4ff;
+  color: #173f8a;
+  font-size: 0.94rem;
+}
+
+.microscope-focus p {
+  margin: 0;
+  color: $muted;
+}
+
+.microscope-focus > p {
+  grid-column: 1 / -1;
+}
+
+.focus-question {
+  margin-top: 8px !important;
+  font-weight: 750;
+}
+
+.signal-pipeline {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(94px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0;
+}
+
+.signal-node {
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  min-height: 92px;
+  padding: 9px;
+  border-color: rgba(35, 122, 87, 0.32);
+  background: #ffffff;
+}
+
+.signal-node span {
+  color: $muted;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.signal-node strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.signal-node--active {
+  border-color: rgba(37, 99, 235, 0.62);
+  background: #edf4ff;
+}
+
+.signal-node--locked {
+  border-style: dashed;
+  background: rgba(255, 255, 255, 0.46);
+  color: $muted;
+}
+
+.derivative-panel {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr) auto minmax(120px, 1fr) auto minmax(140px, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+}
+
+.derivative-factor {
+  display: grid;
+  gap: 5px;
+}
+
+.derivative-factor span,
+.before-after span {
+  color: $muted;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.derivative-factor--result code {
+  background: #edf4ff;
+  color: #173f8a;
+}
+
+.derivative-times,
+.derivative-equals {
+  color: $muted;
+  font-weight: 850;
+}
+
+.before-after {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 15px;
+}
+
+.before-after > div:not(.update-arrow) {
+  display: grid;
+  gap: 4px;
+}
+
+.before-after strong,
+.before-after small {
+  display: block;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.before-after small {
+  color: $muted;
+}
+
+.update-arrow {
+  color: $blue;
+  font-size: 1.5rem;
+  font-weight: 850;
+}
+
+.microscope-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.microscope-actions button {
+  padding: 0 14px;
+}
+
+.microscope-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.primary-action {
+  border-color: $green;
+  background: $green;
+  color: #ffffff;
+}
+
+.primary-action:hover {
+  border-color: #195b40;
+  background: #195b40;
 }
 
 .lab-rail,
@@ -680,8 +909,13 @@ code {
     grid-template-columns: 270px minmax(420px, 1fr);
   }
 
-  .metrics {
+  .metrics,
+  .microscope-controls {
     grid-column: 1 / -1;
+  }
+
+  .workspace--microscope {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -703,7 +937,8 @@ code {
   }
 
   .workspace--lab,
-  .workspace--hidden {
+  .workspace--hidden,
+  .workspace--microscope {
     grid-template-columns: 1fr;
   }
 
@@ -717,5 +952,43 @@ code {
 
   .table-row {
     grid-template-columns: 1fr;
+  }
+
+  .mode-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .microscope-focus {
+    grid-template-columns: 1fr;
+  }
+
+  .microscope-focus > p {
+    grid-column: auto;
+  }
+
+  .signal-pipeline {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+    overflow: visible;
+  }
+
+  .derivative-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .derivative-times,
+  .derivative-equals {
+    display: none;
+  }
+
+  .before-after {
+    grid-template-columns: 1fr;
+  }
+
+  .update-arrow {
+    transform: rotate(90deg);
   }
 }
