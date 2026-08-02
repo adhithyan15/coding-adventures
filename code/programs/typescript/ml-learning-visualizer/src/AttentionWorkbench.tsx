@@ -4,6 +4,7 @@ import {
   traceAttentionQkv,
   type AttentionTokenId,
 } from "./attention-qkv-lab.js";
+import { AttentionWeightsWorkbench } from "./AttentionWeightsWorkbench.js";
 
 function formatNumber(value: number): string {
   if (Math.abs(value) < 1e-12) {
@@ -16,7 +17,11 @@ function formatVector(values: readonly number[]): string {
   return `[${values.map(formatNumber).join(", ")}]`;
 }
 
-export function AttentionWorkbench() {
+interface AttentionScoreWorkbenchProps {
+  onShowWeights: () => void;
+}
+
+function AttentionScoreWorkbench({ onShowWeights }: AttentionScoreWorkbenchProps) {
   const trace = useMemo(() => traceAttentionQkv(), []);
   const [queryId, setQueryId] = useState<AttentionTokenId>("blue");
   const [keyId, setKeyId] = useState<AttentionTokenId>("purple");
@@ -141,6 +146,10 @@ export function AttentionWorkbench() {
           say how much of a value to blend.
         </p>
 
+        <button className="attention-back-button" type="button" onClick={onShowWeights}>
+          Apply softmax and causal mask
+        </button>
+
         <label className="attention-scale-control">
           <input
             type="checkbox"
@@ -168,11 +177,20 @@ export function AttentionWorkbench() {
         <div className="attention-next-note">
           <span>What comes next?</span>
           <p>
-            Softmax turns each score row into weights. A later lab will use
+            Open the next view to turn each score row into weights and use
             those weights to blend the value vectors.
           </p>
         </div>
       </aside>
     </main>
   );
+}
+
+export function AttentionWorkbench() {
+  const [view, setView] = useState<"scores" | "weights">("scores");
+
+  if (view === "weights") {
+    return <AttentionWeightsWorkbench onShowScores={() => setView("scores")} />;
+  }
+  return <AttentionScoreWorkbench onShowWeights={() => setView("weights")} />;
 }

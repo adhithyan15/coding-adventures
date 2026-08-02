@@ -78,6 +78,10 @@ import {
   attentionCell,
   traceAttentionQkv,
 } from "./attention-qkv-lab.js";
+import {
+  attentionSoftmaxRow,
+  traceAttentionSoftmax,
+} from "./attention-softmax-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -705,5 +709,70 @@ describe("attention query-key-value lab", () => {
     expect(screen.getByLabelText("Selected dot-product arithmetic").textContent)
       .toMatch(/2 \/ sqrt\(2\) = 1\.414214/s);
     expect(screen.getByLabelText("Scaled attention scores").textContent).toContain("1.414214");
+  });
+});
+
+describe("attention softmax and causal mask lab", () => {
+  it("normalizes every causal row while zeroing future keys", () => {
+    const trace = traceAttentionSoftmax(true);
+
+    expect(trace.weightMatrix[0]).toEqual([1, 0, 0]);
+    expect(trace.weightMatrix[1]).toEqual([0.5, 0.5, 0]);
+    expect(trace.rows[0]!.maskedScores).toEqual([
+      1 / Math.sqrt(2),
+      null,
+      null,
+    ]);
+    for (const row of trace.rows) {
+      expect(row.weights.reduce((sum, weight) => sum + weight, 0)).toBeCloseTo(1);
+    }
+  });
+
+  it("mixes values into the expected causal contexts", () => {
+    const trace = traceAttentionSoftmax(true);
+
+    expect(attentionSoftmaxRow(trace, "red").context).toEqual([2, 0]);
+    expect(attentionSoftmaxRow(trace, "blue").valueContributions).toEqual([
+      [1, 0],
+      [0, 0.5],
+      [0, 0],
+    ]);
+    expect(attentionSoftmaxRow(trace, "blue").context).toEqual([1, 0.5]);
+    expect(attentionSoftmaxRow(trace, "purple").context[0]).toBeCloseTo(1.7832330964304126);
+  });
+
+  it("subtracts the row maximum before exponentiating large scores", () => {
+    const trace = traceAttentionSoftmax(
+      false,
+      [[1000, 999, 998], [0, 0, 0], [0, 0, 0]],
+    );
+    const row = trace.rows[0]!;
+
+    expect(row.shiftedScores).toEqual([0, -1, -2]);
+    expect(row.exponentials.every(Number.isFinite)).toBe(true);
+    expect(row.weights.reduce((sum, weight) => sum + weight, 0)).toBeCloseTo(1);
+  });
+
+  it("switches between causal and full-context value mixing interactively", () => {
+    render(React.createElement(AttentionWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Apply softmax and causal mask" }));
+
+    expect(screen.getByRole("heading", { name: "Causal-softmax mixer" })).toBeTruthy();
+    expect(screen.getByLabelText("Causal attention weight matrix").textContent)
+      .toMatch(/red q.*1.*blocked.*blocked.*blue q.*0\.5.*0\.5.*blocked/s);
+    expect(screen.getByLabelText("Selected softmax row trace").textContent)
+      .toMatch(/0\.707107.*0\.707107.*1\.414214.*0\.707107.*0\.707107.*blocked.*\[1, 1, 0\].*\[0\.5, 0\.5, 0\]/s);
+    expect(screen.getByLabelText("Selected weighted value mix").textContent)
+      .toMatch(/0\.5 × \[2, 0\].*= \[1, 0\].*0\.5 × \[0, 1\].*= \[0, 0\.5\].*0 × \[2, 1\].*= \[0, 0\]/s);
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /Block future keys/ }));
+    expect(screen.getByRole("heading", { name: "Unmasked attention weights" })).toBeTruthy();
+    expect(screen.getByLabelText("Selected softmax row trace").textContent)
+      .toContain("[0.248255, 0.248255, 0.50349]");
+    expect(screen.getByLabelText("Selected weighted value mix").textContent)
+      .toContain("[1.50349, 0.751745]");
+
+    fireEvent.click(screen.getByRole("button", { name: "Return to Q/K/V scores" }));
+    expect(screen.getByRole("heading", { name: "Query-key score microscope" })).toBeTruthy();
   });
 });

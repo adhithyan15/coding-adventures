@@ -29,13 +29,14 @@ larger network:
 9. [Backpropagation Through Time, by Hand](./backpropagation-through-time-by-hand.md)
 10. [GRU and LSTM Gates, by Hand](./gru-and-lstm-gates-by-hand.md)
 11. [Query, Key, and Value Scores by Hand](./attention-qkv-by-hand.md)
-12. [Matrix Math](../matrix-math.md)
-13. [Loss Functions](../loss-functions.md)
-14. [Gradient Descent](../gradient-descent.md)
-15. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-16. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-17. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-18. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+12. [Softmax Attention and Causal Masking, by Hand](./softmax-attention-and-causal-masking-by-hand.md)
+13. [Matrix Math](../matrix-math.md)
+14. [Loss Functions](../loss-functions.md)
+15. [Gradient Descent](../gradient-descent.md)
+16. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+17. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+18. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+19. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -76,7 +77,10 @@ has nine complementary views:
 - **Attention lab:** project three tokens into aligned query, key, and value
   rows; open any cell in the `3 x 3` query-key score matrix; inspect its two
   coordinate products; and switch between raw and dimension-scaled scores
-  without pretending that softmax or value mixing has happened yet.
+  without pretending that softmax or value mixing has happened yet. Then open
+  the causal-softmax view to select a whole query row, expose stable
+  normalization, block future keys, and follow every weight into its value
+  contribution and output context.
 
 ## Language-Neutral Corpus
 
@@ -119,6 +123,10 @@ NN12 adds `code/specs/fixtures/attention-qkv-v1`, including all three shared
 projection matrices, every token's query/key/value vectors, all nine
 coordinate-level dot products, and the raw and scaled score matrices.
 
+NN13 adds `code/specs/fixtures/attention-softmax-v1`, including masked and
+unmasked stable-softmax traces, row maxima, exponentials, denominators,
+attention weights, weighted value contributions, and output contexts.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -132,6 +140,7 @@ python code/scripts/validate_recurrent_unroll_labs.py
 python code/scripts/validate_recurrent_bptt_labs.py
 python code/scripts/validate_gated_recurrent_labs.py
 python code/scripts/validate_attention_qkv_labs.py
+python code/scripts/validate_attention_softmax_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -154,6 +163,8 @@ The first NN11 lab routes the same old memory and candidate through a GRU and
 an LSTM, then closes or opens one gate at a time to isolate its responsibility.
 The first NN12 lab gives three tokens separate asking, matching, and payload
 roles, then expands all nine query-key scores before softmax or value mixing.
+The first NN13 lab masks the future before normalization, proves that every
+allowed row sums to one, and carries those weights into an explicit value mix.
 
 ## How to Study a Model
 

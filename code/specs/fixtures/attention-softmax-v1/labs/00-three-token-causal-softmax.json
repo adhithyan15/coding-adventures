@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "three-token-causal-softmax",
+  "title": "Normalize and causally mask three attention rows",
+  "question": "How does a causal mask change softmax weights and the resulting value mix?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "stable softmax",
+    "causal mask",
+    "attention weights",
+    "weighted value sum"
+  ],
+  "operation": {
+    "kind": "three-token-attention-softmax",
+    "softmax": "stable-row-wise",
+    "causal_rule": "key-index-less-than-or-equal-query-index",
+    "masked_score_encoding": "null"
+  },
+  "token_ids": ["red", "blue", "purple"],
+  "scaled_score_matrix": [
+    [0.7071067811865475, -0.7071067811865475, 0],
+    [0.7071067811865475, 0.7071067811865475, 1.414213562373095],
+    [1.414213562373095, 0, 1.414213562373095]
+  ],
+  "values": [[2, 0], [0, 1], [2, 1]],
+  "expected": {
+    "unmasked": [
+      {
+        "query": "red",
+        "allowed": [true, true, true],
+        "scaled_scores": [0.7071067811865475, -0.7071067811865475, 0],
+        "masked_scores": [0.7071067811865475, -0.7071067811865475, 0],
+        "row_max": 0.7071067811865475,
+        "shifted_scores": [0, -1.414213562373095, -0.7071067811865475],
+        "exponentials": [1, 0.24311673443421425, 0.49306869139523984],
+        "denominator": 1.736185425829454,
+        "weights": [0.575975345215362, 0.14002924504337802, 0.28399540974126003],
+        "value_contributions": [[1.151950690430724, 0], [0, 0.14002924504337802], [0.5679908194825201, 0.28399540974126003]],
+        "context": [1.719941509913244, 0.424024654784638]
+      },
+      {
+        "query": "blue",
+        "allowed": [true, true, true],
+        "scaled_scores": [0.7071067811865475, 0.7071067811865475, 1.414213562373095],
+        "masked_scores": [0.7071067811865475, 0.7071067811865475, 1.414213562373095],
+        "row_max": 1.414213562373095,
+        "shifted_scores": [-0.7071067811865475, -0.7071067811865475, 0],
+        "exponentials": [0.49306869139523984, 0.49306869139523984, 1],
+        "denominator": 1.9861373827904796,
+        "weights": [0.2482550782577231, 0.2482550782577231, 0.5034898434845538],
+        "value_contributions": [[0.4965101565154462, 0], [0, 0.2482550782577231], [1.0069796869691077, 0.5034898434845538]],
+        "context": [1.5034898434845538, 0.7517449217422769]
+      },
+      {
+        "query": "purple",
+        "allowed": [true, true, true],
+        "scaled_scores": [1.414213562373095, 0, 1.414213562373095],
+        "masked_scores": [1.414213562373095, 0, 1.414213562373095],
+        "row_max": 1.414213562373095,
+        "shifted_scores": [0, -1.414213562373095, 0],
+        "exponentials": [1, 0.24311673443421425, 1],
+        "denominator": 2.2431167344342144,
+        "weights": [0.44580827410760315, 0.10838345178479356, 0.44580827410760315],
+        "value_contributions": [[0.8916165482152063, 0], [0, 0.10838345178479356], [0.8916165482152063, 0.44580827410760315]],
+        "context": [1.7832330964304126, 0.5541917258923967]
+      }
+    ],
+    "causal": [
+      {
+        "query": "red",
+        "allowed": [true, false, false],
+        "scaled_scores": [0.7071067811865475, -0.7071067811865475, 0],
+        "masked_scores": [0.7071067811865475, null, null],
+        "row_max": 0.7071067811865475,
+        "shifted_scores": [0, null, null],
+        "exponentials": [1, 0, 0],
+        "denominator": 1,
+        "weights": [1, 0, 0],
+        "value_contributions": [[2, 0], [0, 0], [0, 0]],
+        "context": [2, 0]
+      },
+      {
+        "query": "blue",
+        "allowed": [true, true, false],
+        "scaled_scores": [0.7071067811865475, 0.7071067811865475, 1.414213562373095],
+        "masked_scores": [0.7071067811865475, 0.7071067811865475, null],
+        "row_max": 0.7071067811865475,
+        "shifted_scores": [0, 0, null],
+        "exponentials": [1, 1, 0],
+        "denominator": 2,
+        "weights": [0.5, 0.5, 0],
+        "value_contributions": [[1, 0], [0, 0.5], [0, 0]],
+        "context": [1, 0.5]
+      },
+      {
+        "query": "purple",
+        "allowed": [true, true, true],
+        "scaled_scores": [1.414213562373095, 0, 1.414213562373095],
+        "masked_scores": [1.414213562373095, 0, 1.414213562373095],
+        "row_max": 1.414213562373095,
+        "shifted_scores": [0, -1.414213562373095, 0],
+        "exponentials": [1, 0.24311673443421425, 1],
+        "denominator": 2.2431167344342144,
+        "weights": [0.44580827410760315, 0.10838345178479356, 0.44580827410760315],
+        "value_contributions": [[0.8916165482152063, 0], [0, 0.10838345178479356], [0.8916165482152063, 0.44580827410760315]],
+        "context": [1.7832330964304126, 0.5541917258923967]
+      }
+    ]
+  }
+}

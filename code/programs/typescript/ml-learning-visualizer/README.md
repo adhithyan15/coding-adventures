@@ -103,7 +103,13 @@ and value vectors with three shared matrices. Open any cell in the aligned
 `3 x 3` score matrix to see its coordinate products and dot-product sum. A
 single control applies the standard square-root dimension scaling while
 keeping the raw score visible in the arithmetic. Values remain explicitly
-downstream: this lab stops before softmax, masking, or weighted value mixing.
+downstream in this first view.
+
+Continue into the causal-softmax mixer to select a whole query row. It shows
+the future-key mask, stable maximum subtraction, exponentials, denominator,
+and normalized weights as one connected flow. The triangular weight matrix and
+three value-contribution lanes update together, while a mask toggle provides an
+unmasked comparison without changing scores or values.
 
 ## Lab Families
 
@@ -157,6 +163,10 @@ states, and reset/update/forget/input/output counterfactuals.
 NN12 under `code/specs/fixtures/attention-qkv-v1` pins three token embeddings,
 the shared query/key/value projection matrices, every coordinate product in
 all nine query-key dot products, and the raw and scaled score matrices.
+
+NN13 under `code/specs/fixtures/attention-softmax-v1` pins both masked and
+unmasked stable-softmax rows, including allowed positions, shifts,
+exponentials, denominators, weights, value contributions, and contexts.
 
 ## Development
 

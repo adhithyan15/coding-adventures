@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
 - Add the NN12 query-key score microscope with aligned token projections, all
   nine selectable dot products, square-root scaling, and an explicit boundary
   before softmax and value mixing.
+- Extend the attention workbench with the NN13 causal-softmax mixer, including
+  stable row normalization, future-key masking, and weighted value traces.
 
 ### Changed
 

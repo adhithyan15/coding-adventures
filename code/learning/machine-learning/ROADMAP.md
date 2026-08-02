@@ -34,7 +34,7 @@ trace, and tests.
   - [x] GRU and LSTM gate comparison.
 - [ ] Attention and transformers
   - [x] Query/key/value dot products for three tokens.
-  - [ ] Softmax attention weights and causal masking.
+  - [x] Softmax attention weights and causal masking.
   - [ ] Multi-head attention, residual paths, and normalization.
   - [ ] Tiny decoder-only language model training trace.
 - [ ] Representation and generation
