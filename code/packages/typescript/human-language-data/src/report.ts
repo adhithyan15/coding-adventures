@@ -127,9 +127,25 @@ function declaredDurationSeconds(lesson: ParsedLesson): number {
   return minutes === undefined ? 0 : Math.ceil(minutes * 60);
 }
 
+function stripHtmlComments(markdown: string): string {
+  const parts: string[] = [];
+  let cursor = 0;
+  while (cursor < markdown.length) {
+    const start = markdown.indexOf("<!--", cursor);
+    if (start === -1) {
+      parts.push(markdown.slice(cursor));
+      break;
+    }
+    parts.push(markdown.slice(cursor, start), " ");
+    const end = markdown.indexOf("-->", start + 4);
+    if (end === -1) break;
+    cursor = end + 3;
+  }
+  return parts.join("");
+}
+
 function instructionalText(markdown: string): string {
-  return markdown
-    .replace(/<!--[\s\S]*?-->/g, " ")
+  return stripHtmlComments(markdown)
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/<[^>]+>/g, " ")

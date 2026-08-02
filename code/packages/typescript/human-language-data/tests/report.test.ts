@@ -64,6 +64,30 @@ describe("curriculum gap report", () => {
     expect(audio.computedSeconds).toBeGreaterThan(300);
   });
 
+  it("strips closed and adversarial unclosed HTML comments without a regex backtrack", () => {
+    const closed = estimateLessonDuration(
+      lesson({
+        id: "AL-COMMENT",
+        language: "alpha",
+        chapter: 1,
+        minutes: 1,
+        body: "visible <!-- hidden words --> shown",
+      }),
+    );
+    expect(closed.wordCount).toBe(2);
+
+    const unclosed = estimateLessonDuration(
+      lesson({
+        id: "AL-UNCLOSED",
+        language: "alpha",
+        chapter: 1,
+        minutes: 1,
+        body: `visible ${"<!--".repeat(10_000)} hidden`,
+      }),
+    );
+    expect(unclosed.wordCount).toBe(1);
+  });
+
   it("reports duration, prerequisite, book, and schema migration gaps", () => {
     const lessons = [
       lesson({ id: "AL-C01", language: "alpha", chapter: 1, minutes: 4 }),
