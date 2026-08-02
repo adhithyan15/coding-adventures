@@ -28,13 +28,14 @@ larger network:
 8. [One Recurrent State, Unrolled by Hand](./recurrent-state-unrolled-by-hand.md)
 9. [Backpropagation Through Time, by Hand](./backpropagation-through-time-by-hand.md)
 10. [GRU and LSTM Gates, by Hand](./gru-and-lstm-gates-by-hand.md)
-11. [Matrix Math](../matrix-math.md)
-12. [Loss Functions](../loss-functions.md)
-13. [Gradient Descent](../gradient-descent.md)
-14. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-15. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-16. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-17. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+11. [Query, Key, and Value Scores by Hand](./attention-qkv-by-hand.md)
+12. [Matrix Math](../matrix-math.md)
+13. [Loss Functions](../loss-functions.md)
+14. [Gradient Descent](../gradient-descent.md)
+15. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+16. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+17. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+18. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -44,7 +45,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has eight complementary views:
+has nine complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -72,6 +73,10 @@ has eight complementary views:
   shared-parameter gradient contributions, audit them with finite differences,
   and preview one loss-reducing update. Finally, compare aligned GRU and LSTM
   memory lanes and intervene on one gate without changing the other signals.
+- **Attention lab:** project three tokens into aligned query, key, and value
+  rows; open any cell in the `3 x 3` query-key score matrix; inspect its two
+  coordinate products; and switch between raw and dimension-scaled scores
+  without pretending that softmax or value mixing has happened yet.
 
 ## Language-Neutral Corpus
 
@@ -110,6 +115,10 @@ NN11 adds `code/specs/fixtures/gated-recurrent-v1`, including scalar GRU and
 LSTM gate preactivations, every state contribution, explicit LSTM cell/hidden
 outputs, and seven one-gate counterfactuals.
 
+NN12 adds `code/specs/fixtures/attention-qkv-v1`, including all three shared
+projection matrices, every token's query/key/value vectors, all nine
+coordinate-level dot products, and the raw and scaled score matrices.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -122,6 +131,7 @@ python code/scripts/validate_residual_receptive_labs.py
 python code/scripts/validate_recurrent_unroll_labs.py
 python code/scripts/validate_recurrent_bptt_labs.py
 python code/scripts/validate_gated_recurrent_labs.py
+python code/scripts/validate_attention_qkv_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -142,6 +152,8 @@ states, accumulates all three executions into one shared gradient set, and
 checks the result independently before applying an update.
 The first NN11 lab routes the same old memory and candidate through a GRU and
 an LSTM, then closes or opens one gate at a time to isolate its responsibility.
+The first NN12 lab gives three tokens separate asking, matching, and payload
+roles, then expands all nine query-key scores before softmax or value mixing.
 
 ## How to Study a Model
 

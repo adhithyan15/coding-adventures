@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
+import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -73,6 +74,10 @@ import {
   traceGateCounterfactual,
   traceGatedRecurrent,
 } from "./gated-recurrent-lab.js";
+import {
+  attentionCell,
+  traceAttentionQkv,
+} from "./attention-qkv-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -651,3 +656,54 @@ describe("training helpers", () => {
 function formatTestNumber(value: number): string {
   return Number(value.toFixed(5)).toString();
 }
+
+describe("attention query-key-value lab", () => {
+  it("projects three tokens and reproduces the canonical score matrices", () => {
+    const trace = traceAttentionQkv();
+
+    expect(trace.projections.map(({ query, key, value }) => ({ query, key, value }))).toEqual([
+      { query: [1, 0], key: [1, 1], value: [2, 0] },
+      { query: [0, 1], key: [-1, 1], value: [0, 1] },
+      { query: [1, 1], key: [0, 2], value: [2, 1] },
+    ]);
+    expect(trace.rawScoreMatrix).toEqual([
+      [1, -1, 0],
+      [1, 1, 2],
+      [2, 0, 2],
+    ]);
+    expect(trace.scaledScoreMatrix[1]![2]).toBeCloseTo(Math.SQRT2);
+  });
+
+  it("keeps the coordinate products behind every dot product", () => {
+    const bluePurple = attentionCell(traceAttentionQkv(), "blue", "purple");
+    const purpleBlue = attentionCell(traceAttentionQkv(), "purple", "blue");
+
+    expect(bluePurple.products).toEqual([0, 2]);
+    expect(bluePurple.rawScore).toBe(2);
+    expect(purpleBlue.products).toEqual([-1, 1]);
+    expect(purpleBlue.rawScore).toBe(0);
+  });
+
+  it("rejects inputs that leave the fixed V1 shapes", () => {
+    expect(() => traceAttentionQkv(undefined, [[1]])).toThrow(/three 2 x 2 matrices/);
+  });
+
+  it("opens raw, cancelling, and scaled score arithmetic interactively", () => {
+    render(React.createElement(AttentionWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Query-key score microscope" })).toBeTruthy();
+    expect(screen.getByLabelText("Selected dot-product arithmetic").textContent)
+      .toMatch(/blue asks.*purple matches.*0 × 0 \+ 1 × 2.*= 2.*coordinate products \[0, 2\]/s);
+    expect(screen.getByText("v_purple = [2, 1]")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("gridcell", { name: "Select purple query and blue key" }));
+    expect(screen.getByLabelText("Selected dot-product arithmetic").textContent)
+      .toMatch(/purple asks.*blue matches.*1 × -1 \+ 1 × 1.*= 0.*coordinate products \[-1, 1\]/s);
+
+    fireEvent.click(screen.getByRole("gridcell", { name: "Select blue query and purple key" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /Scale by sqrt/ }));
+    expect(screen.getByLabelText("Selected dot-product arithmetic").textContent)
+      .toMatch(/2 \/ sqrt\(2\) = 1\.414214/s);
+    expect(screen.getByLabelText("Scaled attention scores").textContent).toContain("1.414214");
+  });
+});

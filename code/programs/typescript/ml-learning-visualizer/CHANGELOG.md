@@ -21,6 +21,9 @@ All notable changes to this package will be documented in this file.
   verification, and one update preview.
 - Extend the recurrent workbench with the NN11 aligned GRU/LSTM gate comparator
   and zero/canonical/one interventions for every gate family.
+- Add the NN12 query-key score microscope with aligned token projections, all
+  nine selectable dot products, square-root scaling, and an explicit boundary
+  before softmax and value mixing.
 
 ### Changed
 

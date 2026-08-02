@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has eight workbenches that move from one arithmetic update to small
+The app has nine workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -96,6 +96,15 @@ inputs. Select reset, update, forget, input, or output; then use its canonical
 value or force it to zero or one. The two lanes remain visible together, and
 the LSTM keeps its private cell state separate from its exposed hidden state.
 
+### Attention score lab
+
+The attention workbench projects `red`, `blue`, and `purple` into query, key,
+and value vectors with three shared matrices. Open any cell in the aligned
+`3 x 3` score matrix to see its coordinate products and dot-product sum. A
+single control applies the standard square-root dimension scaling while
+keeping the raw score visible in the arithmetic. Values remain explicitly
+downstream: this lab stops before softmax, masking, or weighted value mixing.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -144,6 +153,10 @@ gradient, central finite-difference oracle, and one loss-reducing update.
 NN11 under `code/specs/fixtures/gated-recurrent-v1` pins scalar GRU and LSTM
 gate activations, candidate and memory contributions, explicit recurrent
 states, and reset/update/forget/input/output counterfactuals.
+
+NN12 under `code/specs/fixtures/attention-qkv-v1` pins three token embeddings,
+the shared query/key/value projection matrices, every coordinate product in
+all nine query-key dot products, and the raw and scaled score matrices.
 
 ## Development
 

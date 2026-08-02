@@ -33,7 +33,7 @@ trace, and tests.
   - [x] Backpropagation through time and gradient accumulation.
   - [x] GRU and LSTM gate comparison.
 - [ ] Attention and transformers
-  - [ ] Query/key/value dot products for three tokens.
+  - [x] Query/key/value dot products for three tokens.
   - [ ] Softmax attention weights and causal masking.
   - [ ] Multi-head attention, residual paths, and normalization.
   - [ ] Tiny decoder-only language model training trace.

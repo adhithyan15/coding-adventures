@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "three-token-qkv",
+  "title": "Project and compare three token vectors",
+  "question": "How does every query compare with every key before softmax?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "self-attention",
+    "query projection",
+    "key projection",
+    "value projection",
+    "dot product",
+    "scaled attention score"
+  ],
+  "operation": {
+    "kind": "three-token-qkv-dot-products",
+    "vector_orientation": "row",
+    "score_scaling": "inverse-square-root-key-dimension",
+    "softmax_applied": false
+  },
+  "tokens": [
+    { "id": "red", "embedding": [1, 0] },
+    { "id": "blue", "embedding": [0, 1] },
+    { "id": "purple", "embedding": [1, 1] }
+  ],
+  "matrices": {
+    "query": [[1, 0], [0, 1]],
+    "key": [[1, 1], [-1, 1]],
+    "value": [[2, 0], [0, 1]]
+  },
+  "expected": {
+    "queries": [[1, 0], [0, 1], [1, 1]],
+    "keys": [[1, 1], [-1, 1], [0, 2]],
+    "values": [[2, 0], [0, 1], [2, 1]],
+    "dot_products": [
+      { "query": "red", "key": "red", "products": [1, 0], "raw_score": 1, "scaled_score": 0.7071067811865475 },
+      { "query": "red", "key": "blue", "products": [-1, 0], "raw_score": -1, "scaled_score": -0.7071067811865475 },
+      { "query": "red", "key": "purple", "products": [0, 0], "raw_score": 0, "scaled_score": 0 },
+      { "query": "blue", "key": "red", "products": [0, 1], "raw_score": 1, "scaled_score": 0.7071067811865475 },
+      { "query": "blue", "key": "blue", "products": [0, 1], "raw_score": 1, "scaled_score": 0.7071067811865475 },
+      { "query": "blue", "key": "purple", "products": [0, 2], "raw_score": 2, "scaled_score": 1.414213562373095 },
+      { "query": "purple", "key": "red", "products": [1, 1], "raw_score": 2, "scaled_score": 1.414213562373095 },
+      { "query": "purple", "key": "blue", "products": [-1, 1], "raw_score": 0, "scaled_score": 0 },
+      { "query": "purple", "key": "purple", "products": [0, 2], "raw_score": 2, "scaled_score": 1.414213562373095 }
+    ],
+    "raw_score_matrix": [[1, -1, 0], [1, 1, 2], [2, 0, 2]],
+    "scaled_score_matrix": [
+      [0.7071067811865475, -0.7071067811865475, 0],
+      [0.7071067811865475, 0.7071067811865475, 1.414213562373095],
+      [1.414213562373095, 0, 1.414213562373095]
+    ]
+  }
+}
