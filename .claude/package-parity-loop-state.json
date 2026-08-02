@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9485,
   "last_inventory": {
     "revision": "f42c8218afee1c63551ff987bdf1d76e007ae12e",
     "schema_version": 3,
@@ -1155,11 +1155,11 @@
     {
       "id": "dart-current-14-of-15-document-ast",
       "title": "Port the shared Document AST model to Dart",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["dart-scaffold-capability-schema"],
       "branch": "codex/dart-document-ast-parity",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9477 and the collision-clean 1233e31db inventory. TE00 is a zero-dependency, types-only, empty-capability foundation with 68 exact cross-repository consumers across CommonMark, GFM, AsciiDoc, renderer, sanitizer, and Forme stacks, giving it more dependency leverage than the remaining cipher and data-structure leaves. Add a Dart surface contract, exhaustive discriminator/containment tests derived from TE00, package metadata, coverage, and real build-tool validation without expanding into downstream parsers."
+      "pr_number": 9485,
+      "notes": "Ready-for-review PR #9485. Selected after merged PR #9477 because TE00 is a zero-dependency, types-only, empty-capability foundation with 68 exact cross-repository consumers. Delivers Dart's sealed 24-node Document AST, stable discriminators, typed containment, immutable collections, structural value semantics, exhaustive tests, docs, metadata, and both build files without expanding into downstream parsers. Rebased onto f42c8218a after Sonos #9461 and SPICE #9481; refreshed inventory is collision-clean at 1,216 identities, 4,364 working slots, 271 high-consensus missing slots, 766 singletons, and 571 Rust singletons. Local validation passed format/analyze, 14 randomized tests, 100% production line coverage, no outdated dependencies, both package build files, targeted metadata-validating build-tool dry-run and real build, 21 capability/reporter tests, state/diff hygiene, and an independent no-blocker API/security audit. The separately logged Lua rockspec encoding defect blocks only the unrelated full 4,763-package Python build-tool scan."
     },
     {
       "id": "dart-current-14-of-15-atbash-scytale-vigenere",
