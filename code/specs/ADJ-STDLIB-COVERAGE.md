@@ -96,10 +96,12 @@ The CAS must deduplicate by content hash. A corrected fact produces a new
 content-addressed artifact and replays all dependent proofs without changing a
 model weight.
 
-### 4.2 No machine-readable curriculum manifest
+### 4.2 Machine-readable curriculum manifest: seed shipped, backfill open
 
-Libraries are organized by subject, explicitly not by level. There is no
-machine-readable record of:
+`data/adj-stdlib-coverage/manifest.json` now provides the version-1 control
+plane, with a JSON schema and `code/scripts/adj_stdlib_manifest.py` validator.
+The seed declares all six coverage roots and maps the ten arithmetic libraries
+to internal objectives. It records:
 
 - objective ID and standards version;
 - grade band, domain, and competency type;
@@ -110,8 +112,15 @@ machine-readable record of:
 - evidence tier and source CAS hashes;
 - implementation, provenance, test, and benchmark status.
 
-Without this manifest, the repository can count files but cannot compute missing
-objectives, prerequisite holes, stale guidelines, or exam-blueprint coverage.
+The validator rejects duplicate IDs, missing or cyclic prerequisites, unsafe or
+unknown library paths, unknown coverage roots, and status claims stronger than
+the structural evidence. It deliberately reports the seed as `source_labeled`,
+`unmapped`, and without held-out benchmarks. The external roots are `declared`,
+not falsely presented as fetched or byte-pinned.
+
+The remaining gap is large and explicit: 349 of 359 content libraries still
+need reviewed objective mappings. The standards indexes must enter the CAS
+before those entries can become a defensible standards crosswalk.
 
 ### 4.3 No semantic quality gates
 
@@ -218,12 +227,13 @@ option mapping, or judge/evaluation failure.
 
 ### Wave 0: make coverage enforceable
 
-1. Land the structural reporter and generated inventory.
-2. Define the curriculum-manifest schema and validator.
+1. **Complete:** land the structural reporter and generated inventory.
+2. **Complete:** define the curriculum-manifest schema, arithmetic seed, and validator.
 3. Import versioned Common Core, NGSS, and USMLE objective indexes into the CAS.
-4. Add CI gates for source envelopes, test references, manifest integrity, and
+4. Backfill reviewed objective mappings for the remaining 349 libraries.
+5. Add CI gates for source envelopes, test references, manifest integrity, and
    optional `--require-byte-pins` migration progress.
-5. Close the ten current worked-query gaps.
+6. Close the ten current worked-query gaps.
 
 ### Wave 1: prove the full provenance path
 
