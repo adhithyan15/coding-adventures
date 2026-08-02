@@ -1868,6 +1868,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(body_effect_coefficient) = params.get("GAMMA") {
+            if !body_effect_coefficient.is_finite() || *body_effect_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET GAMMA must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
