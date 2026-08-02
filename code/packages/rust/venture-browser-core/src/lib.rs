@@ -396,6 +396,14 @@ impl BrowserViewport {
         self.page = page;
     }
 
+    /// Replace the current page after viewport reflow while preserving the
+    /// current logical scroll position, clamped to the new document geometry.
+    pub fn reflow_page(&mut self, page: BrowserPage, viewport_height: f64) -> f64 {
+        self.page = page;
+        self.scroll
+            .set_dimensions(viewport_height, self.page.paint.scene.height)
+    }
+
     pub fn hit_test_link(&self, viewport_x: f64, viewport_y: f64) -> Option<&LinkRegion> {
         self.scroll
             .hit_test(&self.page.paint.links, viewport_x, viewport_y)
@@ -589,6 +597,31 @@ impl BrowserSession {
             .map_or(0.0, |viewport| viewport.resize(self.viewport_height))
     }
 
+    /// Recompose the retained document for a new layout viewport without
+    /// refetching or reparsing the page. Inline image resources continue to use
+    /// the browser-owned fetch seam, and failures remain recoverable paint
+    /// fallbacks just as they are during the initial page load.
+    pub fn reflow<'session, F, M, S, FM, R>(
+        &'session mut self,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+        viewport_height: f64,
+    ) -> Option<&'session BrowserViewport>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let page = pipeline.reflow(self.viewport.as_ref()?.page(), fetcher);
+        self.viewport_height = finite_non_negative(viewport_height);
+        self.viewport
+            .as_mut()?
+            .reflow_page(page, self.viewport_height);
+        self.viewport.as_ref()
+    }
+
     pub fn execute<'session, F, M, S, FM, R>(
         &'session mut self,
         navigation: BrowserNavigation,
@@ -737,8 +770,44 @@ where
         let document = BrowserDocument::from_document(&parsed);
         let render_tree =
             BrowserRenderTree::from_document_with_document_url(&parsed, &response.final_url);
+        let (paint, image_failures) = self.compose(&render_tree, fetcher);
+
+        Ok(BrowserPage {
+            requested_url: requested_url.to_string(),
+            final_url: response.final_url,
+            status: response.status,
+            source,
+            document,
+            render_tree,
+            paint,
+            image_failures,
+        })
+    }
+
+    /// Recompose a previously loaded page for this pipeline's viewport.
+    /// Document bytes, parse output, navigation metadata, and history identity
+    /// are retained; only layout, paint, links, and image placement change.
+    pub fn reflow<F>(&self, page: &BrowserPage, fetcher: &F) -> BrowserPage
+    where
+        F: BrowserResourceFetcher,
+    {
+        let (paint, image_failures) = self.compose(&page.render_tree, fetcher);
+        let mut reflowed = page.clone();
+        reflowed.paint = paint;
+        reflowed.image_failures = image_failures;
+        reflowed
+    }
+
+    fn compose<F>(
+        &self,
+        render_tree: &BrowserRenderTree,
+        fetcher: &F,
+    ) -> (HtmlPaintOutput, Vec<HtmlImageResourceError>)
+    where
+        F: BrowserResourceFetcher,
+    {
         let mut paint = html_render_tree_to_paint(
-            &render_tree,
+            render_tree,
             self.theme,
             self.viewport,
             self.measurer,
@@ -755,17 +824,7 @@ where
                 Ok(FetchedImage::new(resource.body, resource.media_type))
             });
         paint.scene = image_resolution.scene;
-
-        Ok(BrowserPage {
-            requested_url: requested_url.to_string(),
-            final_url: response.final_url,
-            status: response.status,
-            source,
-            document,
-            render_tree,
-            paint,
-            image_failures: image_resolution.failures,
-        })
+        (paint, image_resolution.failures)
     }
 }
 
@@ -1304,6 +1363,78 @@ mod tests {
         assert_eq!(viewport.scroll_state().offset_y(), 0.0);
         assert_eq!(viewport.scroll_state().content_height(), 20.0);
         assert_eq!(viewport.scroll_state().viewport_height(), 40.0);
+    }
+
+    #[test]
+    fn session_reflows_retained_document_without_refetching_page() {
+        let page_fetches = RefCell::new(0usize);
+        let body = (0..40)
+            .map(|index| {
+                format!("<p>Venture resize paragraph {index} has enough words to wrap.</p>")
+            })
+            .collect::<String>();
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/");
+            *page_fetches.borrow_mut() += 1;
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                format!("<title>Resize</title>{body}").into_bytes(),
+            ))
+        };
+
+        let theme = mosaic_html_theme();
+        let wide = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 120.0);
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/".into()),
+                &wide,
+                &fetcher,
+            )
+            .expect("initial page should load");
+        session
+            .viewport_mut()
+            .expect("page should create a viewport")
+            .scroll_by(80.0);
+        let history = session.history().clone();
+        let source = session
+            .viewport()
+            .expect("page should remain loaded")
+            .page()
+            .source
+            .clone();
+
+        let narrow = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(140.0, 72.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        assert!(session.reflow(&narrow, &fetcher, 72.0).is_some());
+
+        assert_eq!(*page_fetches.borrow(), 1, "resize must not refetch HTML");
+        assert_eq!(session.history(), &history);
+        let viewport = session
+            .viewport()
+            .expect("loaded document should remain after reflow");
+        assert_eq!(viewport.page().source, source);
+        assert_eq!(viewport.page().document.title.as_deref(), Some("Resize"));
+        assert_eq!(viewport.viewport_scene().width, 140.0);
+        assert_eq!(viewport.viewport_scene().height, 72.0);
+        assert_eq!(viewport.scroll_state().viewport_height(), 72.0);
+        assert!(viewport.scroll_state().offset_y() > 0.0);
+        assert!(viewport.scroll_state().offset_y() <= viewport.scroll_state().max_offset_y());
     }
 
     #[test]

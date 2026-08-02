@@ -16,6 +16,7 @@ private final class VentureNativeLibrary {
     UnsafeMutableRawPointer?, UnsafePointer<CChar>?
   ) -> UInt8
   typealias ActivateLink = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
+  typealias Resize = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias Render = @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> UInt8
   typealias StringFree = @convention(c) (UnsafeMutablePointer<CChar>?) -> Void
 
@@ -27,6 +28,7 @@ private final class VentureNativeLibrary {
   let scroll: Scroll
   let scrollCommand: ScrollCommand
   let activateLink: ActivateLink
+  let resize: Resize
   let render: Render
   let stringFree: StringFree
 
@@ -56,6 +58,7 @@ private final class VentureNativeLibrary {
         "venture_browser_macos_scroll_command", as: ScrollCommand.self
       ),
       let activateLink = symbol("venture_browser_macos_activate_link", as: ActivateLink.self),
+      let resize = symbol("venture_browser_macos_resize", as: Resize.self),
       let render = symbol("venture_browser_macos_render", as: Render.self),
       let stringFree = symbol("venture_browser_string_free", as: StringFree.self)
     else {
@@ -71,6 +74,7 @@ private final class VentureNativeLibrary {
     self.scroll = scroll
     self.scrollCommand = scrollCommand
     self.activateLink = activateLink
+    self.resize = resize
     self.render = render
     self.stringFree = stringFree
   }
@@ -167,6 +171,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     contentView?.renderPage()
     propsChangedHandler?()
   }
+
+  fileprivate func resize(width: Double, height: Double) {
+    guard let native, let browser else { return }
+    _ = native.resize(browser, width, height)
+  }
 }
 
 private final class VentureContentView: NSView {
@@ -197,9 +206,12 @@ private final class VentureContentView: NSView {
     super.layout()
     guard let layer = layer as? CAMetalLayer else { return }
     layer.contentsScale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 1
+    if bounds.width > 0, bounds.height > 0 {
+      host?.resize(width: bounds.width, height: bounds.height)
+    }
     layer.drawableSize = CGSize(
-      width: max(1024, bounds.width * layer.contentsScale),
-      height: max(640, bounds.height * layer.contentsScale)
+      width: max(1, bounds.width * layer.contentsScale),
+      height: max(1, bounds.height * layer.contentsScale)
     )
     renderPage()
   }
@@ -271,9 +283,10 @@ private final class VentureContentView: NSView {
 
   fileprivate func renderPage() {
     guard let layer = layer as? CAMetalLayer else { return }
+    let scale = layer.contentsScale > 0 ? layer.contentsScale : 1
     layer.drawableSize = CGSize(
-      width: max(1024, layer.drawableSize.width),
-      height: max(640, layer.drawableSize.height)
+      width: max(1, bounds.width * scale),
+      height: max(1, bounds.height * scale)
     )
     host?.render(layer: layer)
   }

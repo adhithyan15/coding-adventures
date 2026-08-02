@@ -191,6 +191,36 @@ impl WindowsBrowserHost {
         Ok(changed)
     }
 
+    /// Reflow the retained page for a new logical content-surface size.
+    pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        let width = finite_positive_or(width, self.width);
+        let height = finite_positive_or(height, self.height);
+        if self.width == width && self.height == height {
+            return false;
+        }
+
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(width, height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let reflowed = self
+            .session
+            .reflow(&pipeline, &self.fetcher, height)
+            .is_some();
+        self.width = width;
+        self.height = height;
+        reflowed
+    }
+
     #[cfg(target_os = "windows")]
     fn render_bgra(&self) -> Option<(u32, u32, Vec<u8>)> {
         let scene = self.session.viewport()?.viewport_scene();
@@ -361,6 +391,20 @@ mod ffi {
         .unwrap_or(0)
     }
 
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_resize(
+        host: *mut WindowsBrowserHost,
+        width: f64,
+        height: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.resize(width, height) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
     /// Render BGRA8 pixels for WinUI's `WriteableBitmap`.
     ///
     /// The required byte count is returned for both probe and copy calls. A
@@ -399,6 +443,14 @@ mod ffi {
         if !value.is_null() {
             drop(CString::from_raw(value));
         }
+    }
+}
+
+fn finite_positive_or(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 {
+        value
+    } else {
+        fallback.max(1.0)
     }
 }
 
@@ -470,5 +522,42 @@ mod tests {
         assert!(host.scroll_command(BrowserScrollCommand::DocumentEnd));
         assert!(host.scroll_command(BrowserScrollCommand::DocumentStart));
         assert!(!host.scroll_command(BrowserScrollCommand::DocumentStart));
+    }
+
+    #[test]
+    fn native_resize_reflows_without_refetching_the_document() {
+        use std::cell::Cell;
+        use std::rc::Rc;
+
+        let fetches = Rc::new(Cell::new(0usize));
+        let observed_fetches = Rc::clone(&fetches);
+        let body = (0..40)
+            .map(|index| format!("<p>Resizable Venture paragraph {index} wraps.</p>"))
+            .collect::<String>();
+        let fetcher = move |url: &str| {
+            observed_fetches.set(observed_fetches.get() + 1);
+            match url {
+                "http://example.test/" => Ok(page(url, "Resize", &body)),
+                _ => Err(format!("unexpected URL {url}")),
+            }
+        };
+        let mut host = WindowsBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("initial page loads");
+
+        assert_eq!(
+            host.session.viewport().unwrap().viewport_scene().width,
+            320.0
+        );
+        assert!(host.resize(144.0, 96.0));
+        let viewport = host.session.viewport().expect("viewport remains loaded");
+        assert_eq!(viewport.viewport_scene().width, 144.0);
+        assert_eq!(viewport.viewport_scene().height, 96.0);
+        assert_eq!(fetches.get(), 1, "resize must not refetch page HTML");
+        assert!(!host.resize(144.0, 96.0));
     }
 }

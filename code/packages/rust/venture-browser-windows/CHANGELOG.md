@@ -7,3 +7,5 @@
   scrolling, and link activation.
 - Accept the same host-neutral semantic keyboard-scroll commands as the macOS
   bridge for package-owned WinUI content-surface input.
+- Reflow the retained page through the shared Rust pipeline when the generated
+  WinUI content surface changes logical size.
