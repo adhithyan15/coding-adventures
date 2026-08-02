@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite Level-1 MOS model-card `TOX` values
+  before lowering netlist elements into the engine.
 - Reject negative and non-finite Level-1 MOS instance `PS` values before
   lowering netlist elements into the engine.
 - Reject negative and non-finite Level-1 MOS instance `PD` values before

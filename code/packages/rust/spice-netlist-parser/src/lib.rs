@@ -1822,10 +1822,20 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
     if params_text.starts_with('(') && params_text.ends_with(')') {
         params_text = &params_text[1..params_text.len() - 1];
     }
+    let params = parse_model_params(params_text)?;
+    if matches!(kind.as_str(), "NMOS" | "PMOS") {
+        if let Some(oxide_thickness) = params.get("TOX") {
+            if !oxide_thickness.is_finite() || *oxide_thickness <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET TOX must be finite and positive",
+                ));
+            }
+        }
+    }
     Ok(ModelCard {
         name: fields[1].clone(),
         kind,
-        params: parse_model_params(params_text)?,
+        params,
     })
 }
 

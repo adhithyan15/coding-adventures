@@ -1563,6 +1563,20 @@ fn derives_mosfet_transconductance_from_surface_mobility_and_oxide_thickness() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_oxide_thicknesses() {
+    for oxide_thickness in ["0", "-1n", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model mobile NMOS(TOX={oxide_thickness})\nM1 d g s b mobile"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET TOX must be finite and positive"));
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
