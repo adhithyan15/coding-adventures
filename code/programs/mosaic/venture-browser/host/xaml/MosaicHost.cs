@@ -31,38 +31,21 @@ public static class MosaicHost
     private static VentureContentSurface? contentSurface;
     private static int acceptanceReported;
     private static int interactionAcceptanceStarted;
-    private const uint KeyboardInputType = 1;
-    private const uint KeyEventKeyUp = 0x0002;
+    private const uint WmKeyDown = 0x0100;
+    private const uint WmKeyUp = 0x0101;
+    private const int EnterKeyDownLParam = 0x001C0001;
+    private const int EnterKeyUpLParam = unchecked((int)0xC01C0001);
 
-    [StructLayout(LayoutKind.Sequential)]
-    private struct NativeInput
-    {
-        public uint Type;
-        public NativeInputUnion Data;
-    }
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetFocus();
 
-    [StructLayout(LayoutKind.Explicit)]
-    private struct NativeInputUnion
-    {
-        [FieldOffset(0)]
-        public NativeKeyboardInput Keyboard;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    private struct NativeKeyboardInput
-    {
-        public ushort VirtualKey;
-        public ushort ScanCode;
-        public uint Flags;
-        public uint Time;
-        public UIntPtr ExtraInfo;
-    }
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern uint SendInput(
-        uint inputCount,
-        [In] NativeInput[] inputs,
-        int inputSize);
+    [DllImport("user32.dll", EntryPoint = "PostMessageW", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool PostMessage(
+        IntPtr windowHandle,
+        uint message,
+        IntPtr wordParameter,
+        IntPtr longParameter);
 
     public static string ApplyProps(VentureChrome component)
     {
@@ -534,34 +517,18 @@ public static class MosaicHost
         {
             return false;
         }
-        var inputs = new[]
-        {
-            new NativeInput
-            {
-                Type = KeyboardInputType,
-                Data = new NativeInputUnion
-                {
-                    Keyboard = new NativeKeyboardInput
-                    {
-                        VirtualKey = (ushort)VirtualKey.Enter,
-                    },
-                },
-            },
-            new NativeInput
-            {
-                Type = KeyboardInputType,
-                Data = new NativeInputUnion
-                {
-                    Keyboard = new NativeKeyboardInput
-                    {
-                        VirtualKey = (ushort)VirtualKey.Enter,
-                        Flags = KeyEventKeyUp,
-                    },
-                },
-            },
-        };
-        return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<NativeInput>())
-            == (uint)inputs.Length;
+        var focusHandle = GetFocus();
+        return focusHandle != IntPtr.Zero
+            && PostMessage(
+                focusHandle,
+                WmKeyDown,
+                (IntPtr)(int)VirtualKey.Enter,
+                (IntPtr)EnterKeyDownLParam)
+            && PostMessage(
+                focusHandle,
+                WmKeyUp,
+                (IntPtr)(int)VirtualKey.Enter,
+                (IntPtr)EnterKeyUpLParam);
     }
 
     private static async System.Threading.Tasks.Task<bool> WaitForPageAsync(
