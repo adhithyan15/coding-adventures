@@ -109,7 +109,8 @@ also capture an enclosing scalar `string` through typed module globals, and
 those captured strings can be reassigned from dynamic procedure results:
 `store(0); store(1); matches(shared)` observes the final runtime handle. An
 `own string` initializes to the empty string once and retains later assignments
-across calls.
+across calls, including replacements from runtime procedure results before the
+latest handle is passed onward through a string formal.
 
 `real` values lower to the IIR `f64` type and run across the established LANG
 backends. `2.5 * 2.0`, `7.0 / 2.0`, and real comparisons execute as IEEE-754

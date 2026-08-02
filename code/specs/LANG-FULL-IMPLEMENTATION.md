@@ -811,8 +811,10 @@ backend immediately) come before the enabler-dependent items.
   and runtime string-procedure elements can be read for lexical ordering and output.
   Captured strings use typed globals and can be reassigned from branch-selected
   procedure results before being forwarded through another string formal,
-  and `own string` initializes once to the empty string before retaining later
-  assignments across calls. Unicode-aware BEAM strings remain.
+  while an `own string` initializes once to the empty string and retains its
+  typed global identity as repeated calls replace it from procedure results
+  before forwarding the latest handle through another string formal.
+  Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
   native/LLVM/WASM/JVM/CLR/VM/JIT (`lang_matrix.rs`). `goto s[i]` lowers to a 1-based

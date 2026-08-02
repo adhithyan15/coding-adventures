@@ -4766,6 +4766,61 @@ mod tests {
         );
     }
 
+    /// An `own string` is a persistent typed global, so repeated calls may
+    /// replace its runtime handle before forwarding the current value to a
+    /// string formal.
+    const DYNAMIC_OWN_STRING_PROG: &str = "begin integer result; \
+         string procedure pick(n); value n; integer n; \
+            if n > 0 then pick := 'HI' else pick := 'LO'; \
+         integer procedure matches(s); value s; string s; \
+            if s = 'HI' then matches := 42 else matches := 0; \
+         integer procedure remember(n); value n; integer n; \
+            begin own string memo; memo := pick(n); remember := matches(memo) end; \
+         result := remember(0) + remember(1) end";
+
+    #[test]
+    fn dynamic_own_strings_reassign_and_forward_through_typed_globals() {
+        assert_eq!(run_i64(DYNAMIC_OWN_STRING_PROG), 42);
+
+        let module = compile_source(DYNAMIC_OWN_STRING_PROG, "dynamic_own_string")
+            .expect("dynamic own string program compiles");
+        let remember = module
+            .get_function("remember")
+            .expect("remember procedure exists");
+        assert!(
+            remember.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("pick")
+            }),
+            "remember must receive a dynamic str from pick: {:?}",
+            remember.instructions
+        );
+        assert!(
+            remember.instructions.iter().enumerate().any(|(index, instr)| {
+                instr.op == "global_store"
+                    && instr.srcs.get(1).and_then(Operand::as_var).is_some_and(|value| {
+                        remember.instructions[..index].iter().any(|producer| {
+                            producer.op == "str_concat"
+                                && producer.dest.as_deref() == Some(value)
+                                && producer.type_hint == "str"
+                        })
+                    })
+            }),
+            "the own string must store the dynamic str value: {:?}",
+            remember.instructions
+        );
+        assert!(
+            remember.instructions.iter().any(|instr| {
+                instr.op == "global_load"
+                    && instr.type_hint == "str"
+                    && instr.srcs.first().and_then(Operand::as_str_lit).is_some()
+            }),
+            "remember must reload its own string before forwarding it: {:?}",
+            remember.instructions
+        );
+    }
+
     #[test]
     fn al6_two_procedures_have_independent_own() {
         // Each procedure's `own n` is a DISTINCT global (`__algol_s1_n` vs

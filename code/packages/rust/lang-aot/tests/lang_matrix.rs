@@ -1839,6 +1839,24 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an `own string` retains its persistent global identity while
+    // successive calls replace it from branch-selected procedure results. The
+    // second call forwards the newer runtime handle through `matches`, so
+    // `remember(0) + remember(1)` is 0 + 42 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               string procedure pick(n); value n; integer n; \
+                  if n > 0 then pick := 'HI' else pick := 'LO'; \
+               integer procedure matches(s); value s; string s; \
+                  if s = 'HI' then matches := 42 else matches := 0; \
+               integer procedure remember(n); value n; integer n; \
+                  begin own string memo; memo := pick(n); remember := matches(memo) end; \
+               result := remember(0) + remember(1) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
     // 1-based linear `index == k ? jmp Lk` chain (portable jmp/jmp_if_false/label
@@ -6013,6 +6031,36 @@ fn algol_dynamic_captured_strings_reassign_on_every_available_standard_backend()
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but dynamic captured-string execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dynamic_own_strings_reassign_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("own string memo; memo := pick(n)")
+                && program.src.contains("result := remember(0) + remember(1)")
+        })
+        .expect("the ALGOL dynamic own-string program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but dynamic own-string execution did not complete"
             );
             continue;
         };
