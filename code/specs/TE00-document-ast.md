@@ -876,6 +876,7 @@ same immutable, discriminated-union-style design.
 | Rust       | `coding_adventures_document_ast`                         | `code/packages/rust/document-ast/`          |
 | Elixir     | `CodingAdventures.DocumentAST`                           | `code/packages/elixir/document-ast/`        |
 | Lua        | `coding_adventures.document_ast`                         | `code/packages/lua/document-ast/`           |
+| Dart       | `coding_adventures_document_ast`                         | `code/packages/dart/document-ast/`          |
 
 ### Language-idiomatic type representations
 
@@ -901,3 +902,15 @@ atom field. All structs are frozen by convention.
 
 **Lua:** Tables with a `type` string field. No static types — the spec is the
 contract.
+
+**Dart:** A sealed `Node` hierarchy with sealed `BlockNode`, `InlineNode`, and
+`ListChildNode` branches. Each concrete node is an immutable value object with
+a stable snake-case `type` discriminator and defensively copied, unmodifiable
+child lists. Dart's `int` cannot express the `1 | ... | 6` heading-level union,
+so `HeadingNode` rejects levels outside 1 through 6 with `ArgumentError`.
+Nullable fields use Dart nullable types. The package includes the five
+stabilized GFM model nodes already present in the established cross-lane
+surface — `TaskItemNode`, `TableNode`, `TableRowNode`, `TableCellNode`, and
+`StrikethroughNode` — while `FencedBlockNode` and TE05 dialect nodes remain
+owned by their extension specs. There is no parsing, rendering, I/O, or runtime
+dependency in this package.
