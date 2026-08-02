@@ -910,6 +910,7 @@ members = [
     "smart-home-lifx-lan-integration",
     "smart-home-kasa-lan-integration",
     "smart-home-reolink-integration",
+    "smart-home-roku-ecp-integration",
     "smart-home-home-assistant-migration",
     "smart-home-home-assistant-export",
     "smart-home-home-assistant-history",

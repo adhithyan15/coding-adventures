@@ -45147,6 +45147,33 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "This runtime slice covers authenticated CGI status and motion inspection; media transfer, recording, PTZ, and push events remain separate work.",
         ]),
+        base_entry(
+            "roku",
+            "Roku ECP",
+            "Local Roku player and TV discovery plus read-only device and application inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "roku",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("roku_ecp".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "This runtime slice is read-only until D23 has a protocol-neutral media command contract.",
+        ]),
         camera_entry(
             "ring",
             "Ring",
@@ -80727,6 +80754,33 @@ mod tests {
         assert!(!reolink
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn roku_entry_exposes_ssdp_and_read_only_ecp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let roku = find_entry(&catalog, &IntegrationId::trusted("roku")).unwrap();
+
+        assert_eq!(
+            roku.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(roku.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            roku.supported_protocols,
+            vec![ProtocolFamily::Vendor("roku_ecp".to_string())]
+        );
+        assert_eq!(roku.auth_modes, vec![AuthMode::None]);
+        assert!(roku
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Ssdp));
+        assert!(roku.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(roku
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(!roku
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.media")));
     }
 
     #[test]
