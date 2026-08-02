@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Block RAM memory built from logic gates — addressable read/write storage",
+    summary = "Block RAM memory built from logic gates â€” addressable read/write storage",
     license = "MIT",
 }
 dependencies = {

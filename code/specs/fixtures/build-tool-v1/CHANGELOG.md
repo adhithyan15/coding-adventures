@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-02
+
+- Declared strict UTF-8 as the portable metadata text contract for dependency
+  resolution and reserved `METADATA_INVALID_UTF8` for deterministic failures.
+- Added positive Unicode and adversarial invalid-byte Lua rockspec cases so
+  every build-tool implementation has the same resolution oracle.
+
 ## 2026-07-31
 
 - Replaced pathname `lstat`/glob/reopen execution-corpus reads with one

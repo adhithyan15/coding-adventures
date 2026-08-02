@@ -4,7 +4,7 @@ source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
 description = {
-    summary = "Tree data structure built on directed graphs — parent-child relationships, traversals",
+    summary = "Tree data structure built on directed graphs â€” parent-child relationships, traversals",
     license = "MIT",
 }
 dependencies = {

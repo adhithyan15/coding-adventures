@@ -35,10 +35,11 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 30-case bootstrap corpus covers every process-free v1 domain:
+The 32-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical membership plus Windows, macOS, and Linux BUILD precedence;
-- the shared Python dependency diamond;
+- the shared Python dependency diamond plus positive UTF-8 and fail-closed
+  invalid-UTF-8 Lua rockspec resolution;
 - deterministic diamond graph levels;
 - the build-plan distinction between `affected_packages: null` and `[]`; and
 - fail-closed rejection of a future plan version;

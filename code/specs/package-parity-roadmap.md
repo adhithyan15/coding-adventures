@@ -106,11 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `f42c8218a` after
-merged PR #9477 added the three Dart ML leaves and this branch added Dart
+working inventory was regenerated on August 2, 2026 from `6a59699f5` after
+merged PRs #9477 and #9485 added the three Dart ML leaves and Dart
 `document-ast`, following the serial Rust smart-home additions through Sonos
-(#9461) and the Rust SPICE model validation chain through #9481. It contains
-1,216 normalized implementation identities across 4,364 established-lane
+(#9461), Nanoleaf (#9486), and the Rust SPICE model validation chain. It contains
+1,217 normalized implementation identities across 4,365 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -118,23 +118,23 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 766 | 10,724 |
+| Present in one language | 767 | 10,738 |
 
-The loop must not start by attempting 10,724 singleton ports. It should finish
+The loop must not start by attempting 10,738 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`f42c8218afee1c63551ff987bdf1d76e007ae12e` is collision-clean at 1,216
-normalized implementation identities, 4,364 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 766 singletons, 571
+`6a59699f5ff6ee6453bfc0dd11efe210aaad7c54` is collision-clean at 1,217
+normalized implementation identities, 4,365 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 767 singletons, 572
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The eleven newest mixed Rust identities are `smart-home-camera-media`,
+The twelve newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
 `smart-home-reolink-integration`, `smart-home-roku-ecp-integration`,
-`smart-home-wemo-upnp-integration`, and
-`smart-home-sonos-upnp-integration`. All are
+`smart-home-wemo-upnp-integration`, `smart-home-sonos-upnp-integration`, and
+`smart-home-nanoleaf-local-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -148,14 +148,17 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, Wemo, and Sonos contribute deterministic codecs, bounded parsers and DTO
-validation, normalization, projection, stable identities/errors, command
+Roku, Wemo, Sonos, and Nanoleaf contribute deterministic codecs, bounded parsers
+and DTO validation, normalization, projection, stable identities/errors, command
 planning, and language-neutral fixtures to the parity backlog. Wemo specifically
 contributes SSDP header parsing, bounded setup/SOAP XML, service/device
 normalization, and switch/light command planning. Sonos additionally contributes
 credential-free URL/control-path validation, AVTransport, RenderingControl,
 DIDL metadata normalization, deterministic inspection planning, and
-protocol-neutral media-player projection. UDP multicast, DNS/TCP, LAN HTTP
+protocol-neutral media-player projection. Nanoleaf adds credential syntax and
+origin-configuration validation, bounded snapshot/state validation, stable
+identity and capability projection, RGB/HSV and mirek conversion, command
+planning, and verification. UDP multicast, DNS/TCP, LAN HTTP
 execution, timeouts, endpoint approval, CLI I/O, authorization, and runtime
 mutation remain native-host responsibilities.
 
@@ -203,13 +206,23 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
 
 - reconcile stale `BUILD_windows` prerequisite declarations reported by the
   build-tool validator across Python, Perl, TypeScript, Swift, Dart, Kotlin, and
-  related packages in dependency-shaped waves;
-- make the Python build tool's Lua rockspec decoding deterministic. A full
-  4,763-package dry-run currently aborts before diff selection when
-  `_parse_lua_deps` reads byte `0x97` from `lua/block_ram` and `lua/tree` at
-  offset 208 or `lua/trig` at offset 218; classify and normalize the three
-  metadata files or add a deterministic fail-closed encoding diagnostic with
-  fixtures rather than silently replacing bytes;
+  related packages in dependency-shaped waves. The Python validator now also
+  materializes a 10-file Lua wave covering the compiler, serializer, language
+  server, QR, and compression dependency chains;
+- keep the Python build tool's Lua rockspec decoding deterministic. The
+  encoding-blocker slice normalizes the three CP1252 metadata bytes, adds
+  positive and invalid-UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`;
+  its refreshed full scan succeeds across 4,764 packages and 7,093 edges;
+- bring the remaining Go, Rust, Swift, TypeScript, Lua, Perl, Ruby, Elixir, and
+  Haskell build-tool resolvers to the shared strict-UTF-8 rockspec contract.
+  Their current byte, replacement, silent-drop, and locale-sensitive behavior
+  is tracked separately from the Python full-scan blocker;
+- expose Haskell through the Python build tool's `--language` filter. Haskell
+  is already in its resolver and canonical language registry but is missing
+  from the native CLI choices;
+- make Python build-plan emission replace an existing destination atomically on
+  Windows. Repeated output currently leaves the temporary path and fails with
+  `WinError 183`, while a fresh destination succeeds;
 - remove environment-specific Starlark grammar lookup so build discovery works
   from arbitrary clean worktrees;
 - add explicit applicability and maturity data before either C/C++ or OCaml
@@ -1000,10 +1013,10 @@ language ports stay eligible for later dependency-shaped waves.
 
 ## Priority 4: Classify Sparse And Singleton Families
 
-The singleton inventory is led by 571 Rust, 86 Python, and 84 TypeScript
+The singleton inventory is led by 572 Rust, 86 Python, and 84 TypeScript
 packages. Classify families before opening implementation PRs.
 
-The July 30-August 2 inventories added thirty Rust singleton identities that now
+The July 30-August 2 inventories added thirty-one Rust singleton identities that now
 have explicit classification work in the loop state: `axiom-to-semantic-ir` is a
 likely portable deterministic lowering; `http1-client` needs its portable
 protocol core separated from native transport behavior; and
@@ -1093,6 +1106,17 @@ host profiles and external Layer 5 evidence remain separate owners. A shared
 follow-up consolidates the duplicated Shelly/WLED DNS, TCP, request encoding,
 bounded response, chunked decoding, and error projection behind a native LAN-
 HTTP executor while keeping `smart-home-local-http` a pure request planner.
+
+The newest identity, `smart-home-nanoleaf-local-integration`, is another mixed
+split rather than a blind port. Credential syntax and credential-free origin
+configuration, bounded snapshot and state validation, stable identifiers,
+capability and state normalization, RGB/HSV and mirek conversion, command
+planning, verification, and hostile inputs are deterministic portable-core
+candidates. mDNS, DNS/TCP, LAN HTTP execution, physical-presence pairing, token
+and Vault handling, trusted time, endpoint approval, CLI I/O, authorization,
+and SmartHomeRuntime mutation remain native-host responsibilities. Its portable
+owner depends on the shared confirmed command-effect lifecycle so that fixtures
+describe confirmed device state rather than optimistic runtime acceptance.
 
 The fourteenth identity, `smart-home-home-assistant-migration`, is a mixed
 boundary rather than an automatic fifteen-lane port. Its deterministic export

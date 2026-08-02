@@ -56,7 +56,11 @@ from build_tool.plan import (
     write_plan,
 )
 from build_tool.reporter import print_report
-from build_tool.resolver import DirectedGraph, resolve_dependencies
+from build_tool.resolver import (
+    DirectedGraph,
+    MetadataEncodingError,
+    resolve_dependencies,
+)
 from build_tool.starlark_evaluator import (
     evaluate_build_file,
     generate_commands,
@@ -337,7 +341,11 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Discovered {len(packages)} packages")
 
     # Step 4: Resolve dependencies
-    graph = resolve_dependencies(packages)
+    try:
+        graph = resolve_dependencies(packages)
+    except MetadataEncodingError as exc:
+        print(f"Dependency resolution failed: {exc}", file=sys.stderr)
+        return 2
 
     # Step 5: Determine which packages need building
     #

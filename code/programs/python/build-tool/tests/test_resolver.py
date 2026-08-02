@@ -9,6 +9,7 @@ import pytest
 from build_tool.discovery import Package, discover_packages
 from build_tool.resolver import (
     DirectedGraph,
+    MetadataEncodingError,
     _build_known_names,
     _parse_python_deps,
     _parse_ruby_deps,
@@ -289,6 +290,48 @@ class TestParseLuaDeps:
         deps = _parse_lua_deps(pkg, known)
         assert "lua/logic_gates" in deps
         assert "lua/arithmetic" in deps
+
+    def test_accepts_utf8_metadata(self, tmp_path):
+        pkg_dir = tmp_path / "pkg"
+        pkg_dir.mkdir()
+        (pkg_dir / "test-0.1.0-1.rockspec").write_text(
+            'description = { summary = "Portable metadata — UTF-8" }\n'
+            'dependencies = { "coding-adventures-other >= 0.1.0" }\n',
+            encoding="utf-8",
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+
+        assert _parse_lua_deps(
+            pkg, {"coding-adventures-other": "lua/other"}
+        ) == ["lua/other"]
+
+    def test_rejects_invalid_utf8_with_stable_metadata_error(self, tmp_path):
+        pkg_dir = (
+            tmp_path
+            / "code"
+            / "private-checkout"
+            / "code"
+            / "packages"
+            / "lua"
+            / "pkg"
+        )
+        pkg_dir.mkdir(parents=True)
+        manifest = pkg_dir / "test-0.1.0-1.rockspec"
+        manifest.write_bytes(
+            b'package = "coding-adventures-pkg"\n-- invalid byte: \x97\n'
+        )
+        pkg = Package(name="lua/pkg", path=pkg_dir, language="lua")
+
+        with pytest.raises(MetadataEncodingError) as error:
+            _parse_lua_deps(pkg, {})
+
+        assert error.value.code == "METADATA_INVALID_UTF8"
+        assert error.value.package == "lua/pkg"
+        assert error.value.manifest == "test-0.1.0-1.rockspec"
+        assert error.value.path == (
+            "code/packages/lua/pkg/test-0.1.0-1.rockspec"
+        )
+        assert str(tmp_path) not in str(error.value)
 
 
 class TestBuildKnownNamesLua:

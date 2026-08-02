@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2026-08-02
+
+### Fixed
+
+- **Deterministic metadata decoding**: Lua rockspec dependency resolution now
+  requires UTF-8 and returns `METADATA_INVALID_UTF8` with package and manifest
+  identity instead of exposing a host-specific `UnicodeDecodeError` traceback.
+
 ## [0.3.0] - 2026-03-29
 
 ### Added
