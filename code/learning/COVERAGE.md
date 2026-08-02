@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1247 | 1162 | 98 | 60 | 7 | 1082 |
+| 1248 | 1175 | 98 | 60 | 8 | 1082 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 10 | 0 | 785 |
+| P3 | 2 | 10 | 1 | 785 |
 
 ## P0 Backlog
 
@@ -1202,6 +1202,7 @@ mention provides a complete lesson.
 | `smart-home-runtime` | 1 | missing |
 | `smart-home-runtime-store` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |
+| `smart-home-wemo-upnp-integration` | 1 | missing |
 | `smart-home-wled-integration` | 1 | missing |
 | `smart-home-zigbee-integration` | 1 | missing |
 | `smart-home-zwave-host` | 1 | missing |
@@ -1216,7 +1217,7 @@ mention provides a complete lesson.
 | `symbol-core` | 1 | missing |
 | `task-core` | 1 | missing |
 | `tetrad-type-checker` | 1 | missing |
-| `text-core` | 1 | missing |
+| `text-core` | 1 | index-only |
 | `text-interfaces` | 1 | missing |
 | `text-native` | 1 | missing |
 | `text-native-coretext` | 1 | missing |

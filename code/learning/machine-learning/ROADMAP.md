@@ -54,7 +54,7 @@ trace, and tests.
   - [x] Vanishing and exploding gradient trace.
   - [x] Normalization, dropout, and residual comparisons.
 - [ ] Tensor and autograd bridge
-  - [ ] Shape and broadcasting visualizer.
+  - [x] Shape and broadcasting visualizer.
   - [ ] Dynamic computation graph and saved-value trace.
   - [ ] Gradient accumulation and zeroing behavior.
 - [ ] Compilation and performance bridge

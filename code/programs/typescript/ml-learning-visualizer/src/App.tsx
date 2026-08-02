@@ -12,6 +12,7 @@ import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { StructuredWorkbench } from "./StructuredWorkbench.js";
+import { TensorBroadcastingWorkbench } from "./TensorBroadcastingWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
@@ -177,7 +178,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -300,6 +301,8 @@ export function App() {
                 ? "Structure shapes computation"
               : workbench === "deep"
                 ? "Scale shapes forward and backward signals"
+              : workbench === "tensor"
+                ? "Forward reuses, backward sums"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -392,6 +395,13 @@ export function App() {
             >
               Deep Training
             </button>
+            <button
+              className={workbench === "tensor" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("tensor")}
+            >
+              Tensor + Autograd
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -414,6 +424,8 @@ export function App() {
               <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
             ) : workbench === "deep" ? (
               <>initialize {"->"} <strong>gradient flow</strong> {"->"} stabilize</>
+            ) : workbench === "tensor" ? (
+              <>align shapes {"->"} <strong>reuse coordinates</strong> {"->"} reduce gradients</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -443,6 +455,8 @@ export function App() {
         <StructuredWorkbench />
       ) : workbench === "deep" ? (
         <DeepTrainingWorkbench />
+      ) : workbench === "tensor" ? (
+        <TensorBroadcastingWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

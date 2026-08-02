@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has twelve workbenches that move from one arithmetic update to small
+The app has thirteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -196,6 +196,15 @@ dropout mask scaling, residual branch/skip split, input gradient, branch-weight
 gradient, and matching central finite differences. Dropout's evaluation output
 and exact training-mask expectation remain visible beside its sampled output.
 
+### Tensor shape and broadcasting lab
+
+The Tensor + Autograd workbench lines scalar, vector, and matrix shapes up from
+the right. Switch among two-sided expansion, rank padding, scalar expansion,
+and one mismatch. For every valid case, open any output cell to see the exact
+left and right coordinates it reuses. The reverse panel sums upstream values
+over expanded axes to recover both original input shapes and checks every
+gradient with central finite differences.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -311,6 +320,11 @@ NN25 under `code/specs/fixtures/training-stabilizers-v1` pins the shared branch,
 population layer-normalization statistics, deterministic inverted dropout and
 its expectation, an identity residual, all vector-Jacobian products, and input
 plus branch-weight finite-difference checks.
+
+NN26 under `code/specs/fixtures/tensor-broadcasting-v1` pins right-aligned
+shape inference, every output-to-input coordinate mapping, reduction over
+expanded axes, scalar and rank-padding cases, deterministic mismatch details,
+and all input finite-difference checks.
 
 ## Development
 

@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/tensor-broadcasting-v1.json",
+  "title": "Tensor Broadcasting V1 Lab",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "operation", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "const": 1e-8 },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "dimension_alignment", "mismatch_policy", "gradient_reduction", "storage_order", "finite_difference_epsilon"],
+      "properties": {
+        "kind": { "const": "elementwise-add-with-broadcasting" },
+        "dimension_alignment": { "const": "right" },
+        "mismatch_policy": { "const": "reject" },
+        "gradient_reduction": { "const": "sum-expanded-axes" },
+        "storage_order": { "const": "row-major" },
+        "finite_difference_epsilon": { "const": 0.00001 }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "shape": {
+      "type": "array",
+      "maxItems": 4,
+      "items": { "type": "integer", "minimum": 1, "maximum": 8 }
+    },
+    "tensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "values"],
+      "properties": {
+        "shape": { "$ref": "#/$defs/shape" },
+        "values": { "type": "array", "minItems": 1, "maxItems": 64, "items": { "type": "number" } }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "left", "right", "upstream", "expected"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "left": { "$ref": "#/$defs/tensor" },
+        "right": { "$ref": "#/$defs/tensor" },
+        "upstream": {
+          "oneOf": [
+            { "$ref": "#/$defs/tensor" },
+            { "type": "null" }
+          ]
+        },
+        "expected": {
+          "oneOf": [
+            { "$ref": "#/$defs/compatible" },
+            { "$ref": "#/$defs/incompatible" }
+          ]
+        }
+      }
+    },
+    "compatible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compatible", "padded_left_shape", "padded_right_shape", "output_shape", "left_expanded_axes", "right_expanded_axes", "output_values", "mappings", "left_gradient", "right_gradient", "finite_difference_left_gradient", "finite_difference_right_gradient", "max_gradient_absolute_error"],
+      "properties": {
+        "compatible": { "const": true },
+        "padded_left_shape": { "$ref": "#/$defs/shape" },
+        "padded_right_shape": { "$ref": "#/$defs/shape" },
+        "output_shape": { "$ref": "#/$defs/shape" },
+        "left_expanded_axes": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "right_expanded_axes": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "output_values": { "type": "array", "items": { "type": "number" } },
+        "mappings": { "type": "array", "items": { "$ref": "#/$defs/mapping" } },
+        "left_gradient": { "type": "array", "items": { "type": "number" } },
+        "right_gradient": { "type": "array", "items": { "type": "number" } },
+        "finite_difference_left_gradient": { "type": "array", "items": { "type": "number" } },
+        "finite_difference_right_gradient": { "type": "array", "items": { "type": "number" } },
+        "max_gradient_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "incompatible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compatible", "padded_left_shape", "padded_right_shape", "mismatch_axis", "left_dimension", "right_dimension", "error"],
+      "properties": {
+        "compatible": { "const": false },
+        "padded_left_shape": { "$ref": "#/$defs/shape" },
+        "padded_right_shape": { "$ref": "#/$defs/shape" },
+        "mismatch_axis": { "type": "integer", "minimum": 0 },
+        "left_dimension": { "type": "integer", "minimum": 1 },
+        "right_dimension": { "type": "integer", "minimum": 1 },
+        "error": { "type": "string", "minLength": 1 }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_index", "output_flat_index", "left_index", "left_flat_index", "right_index", "right_flat_index", "left_value", "right_value", "output_value", "upstream"],
+      "properties": {
+        "output_index": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "output_flat_index": { "type": "integer", "minimum": 0 },
+        "left_index": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "left_flat_index": { "type": "integer", "minimum": 0 },
+        "right_index": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+        "right_flat_index": { "type": "integer", "minimum": 0 },
+        "left_value": { "type": "number" },
+        "right_value": { "type": "number" },
+        "output_value": { "type": "number" },
+        "upstream": { "type": "number" }
+      }
+    }
+  }
+}
