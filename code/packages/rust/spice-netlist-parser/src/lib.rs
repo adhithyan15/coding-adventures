@@ -1901,6 +1901,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(sidewall_grading_coefficient) = params.get("MJSW") {
+            if !sidewall_grading_coefficient.is_finite() || *sidewall_grading_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET MJSW must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
