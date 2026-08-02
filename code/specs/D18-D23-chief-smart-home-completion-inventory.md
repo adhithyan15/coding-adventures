@@ -758,17 +758,35 @@ This slice adds a production local-UDP path for LAN-enabled Govee lights:
   production transport. LAN Control must be enabled on the device; this path
   does not accept Govee cloud credentials.
 
+## Current LIFX LAN Integration Slice
+
+This slice adds a production local-UDP path for LIFX lights:
+
+- Binary `GetService` probes use IPv4 UDP broadcast on port 56700, collect
+  bounded replies, validate packet size, protocol flags, source correlation,
+  service type, and device serial, and emit verified no-pairing D23 records.
+- Direct `GetColor` inspection correlates source, sequence, target, and packet
+  type before projecting power, brightness, RGB, and color-temperature state
+  into normalized light entities.
+- D23 authorization gates `SetLightPower` and `SetColor` mutations. Power,
+  brightness, RGB, and color-temperature commands are followed by a fresh
+  `GetColor` query that verifies and records the confirmed device state.
+- Real loopback UDP tests prove binary packet handling, discovery, inspection,
+  runtime installation, authorization, native transfer, and post-command
+  verification over the production transport. This path does not accept LIFX
+  cloud credentials.
+
 ## Smart Home Remaining Work
 
 These items move toward retiring an existing Home Assistant install:
 
 - Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  WLED, Govee LAN, and the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF
-  PullPoint camera events, RTSP media transfer and recording, vendor-specific
-  camera/NVR integrations, broader device families, a production Matter
-  commissioning/secure-session/network host, a Thread border-router host, a
-  production Zigbee coordinator/join/security host, and production Z-Wave
-  inclusion and S2.
+  WLED, Govee LAN, LIFX LAN, and the Z-Wave, Zigbee, and Matter runtime
+  adapters: ONVIF PullPoint camera events, RTSP media transfer and recording,
+  vendor-specific camera/NVR integrations, broader device families, a
+  production Matter commissioning/secure-session/network host, a Thread
+  border-router host, a production Zigbee coordinator/join/security host, and
+  production Z-Wave inclusion and S2.
 
 ## End-To-End Definition
 

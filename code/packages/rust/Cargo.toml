@@ -907,6 +907,7 @@ members = [
     "smart-home-shelly-integration",
     "smart-home-wled-integration",
     "smart-home-govee-lan-integration",
+    "smart-home-lifx-lan-integration",
     "smart-home-home-assistant-migration",
     "smart-home-home-assistant-export",
     "smart-home-home-assistant-history",
