@@ -30,4 +30,14 @@ export {
   loadScripts,
   loadEverything,
 } from "./loader.js";
+export {
+  DURATION_THRESHOLD_SECONDS,
+  estimateLessonDuration,
+  buildCurriculumGapReport,
+  renderCurriculumGapReport,
+  type DurationEstimate,
+  type CurriculumGapReport,
+  type CurriculumGapReportInput,
+} from "./report.js";
 export { runValidate } from "./cli.js";
+export { runCurriculumGapReport } from "./report-cli.js";

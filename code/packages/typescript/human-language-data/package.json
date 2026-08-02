@@ -6,6 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
+    "report": "node dist/report-cli.js",
     "validate": "vitest run tests/integration.test.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
