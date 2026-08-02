@@ -31,6 +31,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -86,6 +87,14 @@ func findRepoRoot(start string) string {
 
 func main() {
 	os.Exit(run())
+}
+
+func formatResolverError(err error) (string, int) {
+	var encodingError *resolver.MetadataEncodingError
+	if errors.As(err, &encodingError) {
+		return encodingError.Error(), 2
+	}
+	return fmt.Sprintf("Error: %v", err), 1
 }
 
 // expandAffectedSetWithPrereqs ensures all transitive prerequisites of the
@@ -381,7 +390,12 @@ func run() int {
 		fmt.Printf("Discovered %d packages\n", len(packages))
 
 		// Step 4: Resolve dependencies.
-		graph = resolver.ResolveDependencies(packages)
+		graph, err = resolver.ResolveDependencies(packages)
+		if err != nil {
+			message, exitCode := formatResolverError(err)
+			fmt.Fprintln(os.Stderr, message)
+			return exitCode
+		}
 
 		// Step 5: Git-diff change detection (default mode).
 		// Git is the source of truth — no cache file needed for primary workflow.

@@ -23,6 +23,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Lua `.rockspec` metadata is now decoded as strict UTF-8 before dependency
+  parsing. Invalid bytes fail closed with `METADATA_INVALID_UTF8`, package and
+  repository-relative manifest identity, and CLI exit code 2 without leaking
+  checkout paths.
 - Haskell dependency resolution now recognizes the plain Cabal names used by
   current packages as well as legacy `coding-adventures-*` names. The resolver
   registers directory and manifest aliases, parses every `build-depends`

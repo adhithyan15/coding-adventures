@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9495,
+  "active_pr": 9504,
   "last_inventory": {
-    "revision": "6a59699f5ff6ee6453bfc0dd11efe210aaad7c54",
+    "revision": "2140f0e5d9faba711d9bfe903804503ab9a5297d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1217,
@@ -325,11 +325,11 @@
     {
       "id": "build-tool-lua-rockspec-encoding",
       "title": "Make Python build-tool Lua metadata decoding deterministic",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-pure-domain-corpus"],
       "branch": "codex/build-tool-lua-rockspec-encoding",
       "pr_number": 9495,
-      "notes": "Discovered while validating the Dart document-ast slice. The Python build tool discovers 4,763 packages, then its Lua resolver aborts before diff selection because _parse_lua_deps exposes a raw UnicodeDecodeError. This slice defines positive and adversarial language-neutral rockspec UTF-8 fixtures, normalizes the only three invalid repository rockspecs, and makes Python fail closed with METADATA_INVALID_UTF8, package/manifest identity, and CLI exit 2 without host paths or silent replacement. Ready-for-review PR #9495 is open from the dedicated parity branch; final-base local validation includes 50 focused resolver/CLI tests, 57 conformance tests plus 52 subtests, the 32-case corpus, a 4,765-package/7,100-edge full plan, strict UTF-8 across all 246 rockspecs, and a collision-clean 1,217-identity inventory."
+      "notes": "Merged PR #9495 at cd7bc596221d1ecc47683f955d333176559b794e on 2026-08-02. Discovered while validating the Dart document-ast slice, this work defines positive and adversarial language-neutral rockspec UTF-8 fixtures, normalizes the only three invalid repository rockspecs, and makes Python fail closed with METADATA_INVALID_UTF8, package/manifest identity, and CLI exit 2 without host paths or silent replacement. Final-base local validation included 50 focused resolver/CLI tests, 57 conformance tests plus 52 subtests, the 32-case corpus, a 4,765-package/7,100-edge full plan, strict UTF-8 across all 246 rockspecs, and a collision-clean 1,217-identity inventory. GitHub auto-merged the ready PR because the repository currently has no required-check gate."
     },
     {
       "id": "build-tool-rockspec-utf8-remaining-engines",
@@ -339,6 +339,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the Python encoding-blocker audit. Rust and Swift silently drop invalid rockspec dependencies; TypeScript replaces invalid bytes; Go, Lua, and Perl accept them; Ruby and Haskell use locale-sensitive text decoding; Elixir is position-dependent. Remediate those nine engines against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity."
+    },
+    {
+      "id": "build-tool-go-rockspec-utf8-conformance",
+      "title": "Make the Go build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pr-open",
+      "depends_on": ["build-tool-lua-rockspec-encoding"],
+      "branch": "codex/build-tool-go-rockspec-utf8",
+      "pr_number": 9504,
+      "notes": "Ready PR #9504 is the first dependency-shaped child of build-tool-rockspec-utf8-remaining-engines. Go is prioritized because it is the intended operational oracle. The implementation binds its resolver to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, requires the exact expected edge set, rejects invalid bytes before parsing with a typed MetadataEncodingError, emits METADATA_INVALID_UTF8 with package and repository-relative manifest identity, and returns CLI exit 2 without host paths. Validation on rebased main 2140f0e5d passed go test and race test across every package, 73.2% total coverage, go vet, trimpath build, the 57-test/52-subtest language-neutral conformance suite, a 32-case/36-file corpus check, a real 4,763-package/8,348-edge plan, collision-free parity inventory, and an exact BUILD-validator baseline comparison of 73 issues before and after. The other eight engine remediations remain outside this slice."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
