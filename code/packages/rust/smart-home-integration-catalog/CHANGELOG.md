@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added a first-party native Tasmota local HTTP path for mDNS/manual discovery,
+  optional authenticated polling, and verified relay and light commands while
+  preserving MQTT as the preferred push transport.
 - Added first-party Nanoleaf local runtime coverage for mDNS discovery,
   physical-presence token pairing, authenticated polling, and verified light
   commands.

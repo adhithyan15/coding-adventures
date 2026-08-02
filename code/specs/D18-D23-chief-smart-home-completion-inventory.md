@@ -805,7 +805,8 @@ These items move toward retiring an existing Home Assistant install:
   inspection, Wemo UPnP discovery/state inspection/light-switch control,
   Sonos UPnP discovery and read-only player-state inspection, Nanoleaf local
   mDNS discovery, physical-presence token pairing, state inspection, and
-  verified light control, and
+  verified light control, Tasmota native local HTTP discovery, optional
+  authenticated relay/light/sensor inspection, and verified control, and
   the Z-Wave, Zigbee, and Matter runtime adapters: ONVIF PullPoint camera
   events, RTSP media transfer and recording,
   Reolink and other vendor-specific camera/NVR media, recording, control, and

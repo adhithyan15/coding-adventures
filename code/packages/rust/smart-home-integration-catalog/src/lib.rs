@@ -49027,10 +49027,10 @@ fn tasmota_entry() -> IntegrationCatalogEntry {
     base_entry(
         "tasmota",
         "Tasmota",
-        "MQTT-native Tasmota device integration.",
+        "Tasmota MQTT push and native local HTTP device integration.",
         IntegrationCategory::LocalDevice,
         ConnectivityClass::LocalPush,
-        ImplementationStatus::DelegatedToStandard,
+        ImplementationStatus::FirstPartyRuntime,
         1,
         "tasmota",
     )
@@ -49040,13 +49040,27 @@ fn tasmota_entry() -> IntegrationCatalogEntry {
         "smart_home.command.switch",
     ])
     .with_entities(&[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor])
-    .with_discovery(&[DiscoveryMechanism::Mqtt])
-    .with_auth(&[AuthMode::MqttCredentials])
+    .with_discovery(&[
+        DiscoveryMechanism::Mqtt,
+        DiscoveryMechanism::Mdns,
+        DiscoveryMechanism::Manual,
+    ])
+    .with_auth(&[
+        AuthMode::None,
+        AuthMode::UsernamePassword,
+        AuthMode::MqttCredentials,
+    ])
     .with_dependencies(&["mqtt"])
-    .with_protocols(vec![ProtocolFamily::Mqtt])
+    .with_protocols(vec![
+        ProtocolFamily::Mqtt,
+        ProtocolFamily::Vendor("tasmota_http".to_string()),
+    ])
     .with_primitives(&[
         PrimitiveFamily::Mqtt,
         PrimitiveFamily::MqttCredentials,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::VaultLease,
         PrimitiveFamily::CommandMapping,
         PrimitiveFamily::CapabilityPolicy,
         PrimitiveFamily::Supervision,
@@ -80979,6 +80993,34 @@ mod tests {
             PrimitiveFamily::CommandMapping,
         ] {
             assert!(nanoleaf.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn tasmota_entry_exposes_mqtt_and_native_local_http_runtime_paths() {
+        let catalog = first_party_catalog();
+        let tasmota = find_entry(&catalog, &IntegrationId::trusted("tasmota")).unwrap();
+
+        assert_eq!(
+            tasmota.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert!(tasmota.supported_protocols.contains(&ProtocolFamily::Mqtt));
+        assert!(tasmota
+            .supported_protocols
+            .contains(&ProtocolFamily::Vendor("tasmota_http".to_string())));
+        assert!(tasmota
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(tasmota.auth_modes.contains(&AuthMode::UsernamePassword));
+        for primitive in [
+            PrimitiveFamily::Mqtt,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::CommandMapping,
+        ] {
+            assert!(tasmota.required_primitives.contains(&primitive));
         }
     }
 
