@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card sidewall-junction-grading validation.
+1. Rust Berkeley SPICE MOS model-card bottom-junction-capacitance validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `MJSW` values before
+   - Reject negative and non-finite model-card `CJ` values before
      lowering MOS elements into engine parameters.
-   - Preserve zero and positive sidewall-junction grading coefficients.
+   - Preserve zero and positive bottom-junction capacitances.
 
 ## Completed Slices
 
@@ -3984,6 +3984,12 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Values at the inclusive lower boundary and below the exclusive upper
      boundary remain accepted.
+
+345. Rust Berkeley SPICE MOS model-card sidewall-junction-grading validation.
+   - Status: completed in PR 9492.
+   - Negative and non-finite model-card `MJSW` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive sidewall-junction grading coefficients remain accepted.
 
 ## Backlog
 

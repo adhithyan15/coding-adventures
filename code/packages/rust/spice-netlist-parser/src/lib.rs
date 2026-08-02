@@ -1908,6 +1908,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(bottom_junction_capacitance) = params.get("CJ") {
+            if !bottom_junction_capacitance.is_finite() || *bottom_junction_capacitance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET CJ must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
