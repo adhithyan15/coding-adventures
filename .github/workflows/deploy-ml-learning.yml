@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "code/programs/typescript/ml-learning-visualizer/**"
+      - "code/packages/typescript/cli-builder/**"
       - "code/packages/typescript/directed-graph/**"
       - "code/packages/typescript/state-machine/**"
       - "code/packages/typescript/grammar-tools/**"
@@ -14,6 +15,16 @@ on:
       - "code/packages/typescript/lattice-parser/**"
       - "code/packages/typescript/lattice-ast-to-css/**"
       - "code/packages/typescript/lattice-transpiler/**"
+      - "code/packages/typescript/matrix/**"
+      - "code/packages/typescript/matrix-rust-napi/**"
+      - "code/packages/typescript/multi-directed-graph/**"
+      - "code/packages/typescript/neural-graph-vm/**"
+      - "code/packages/typescript/neural-network/**"
+      - "code/packages/typescript/paint-instructions/**"
+      - "code/packages/typescript/paint-vm/**"
+      - "code/packages/typescript/paint-vm-svg/**"
+      - "code/packages/typescript/pixel-container/**"
+      - "code/packages/typescript/two-layer-network/**"
       - ".github/workflows/deploy-ml-learning.yml"
   workflow_dispatch:
 
@@ -47,7 +58,7 @@ jobs:
       - name: Install app dependencies
         run: |
           cd code/programs/typescript/ml-learning-visualizer
-          npm install
+          npm install --install-links
 
       - name: Build
         run: |
