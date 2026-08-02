@@ -4,8 +4,8 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has four workbenches that move from one arithmetic update to small
-hidden-layer networks.
+The app has five workbenches that move from one arithmetic update to small
+spatial and hidden-layer networks.
 
 ### Training-step microscope
 
@@ -48,6 +48,14 @@ circle classification, two moons, and feature interactions. It exposes selected
 hidden activations, matrix shapes, gradients, parameter updates, and the shared
 neural graph VM execution path.
 
+### Spatial lab
+
+The spatial workbench slides an editable one-dimensional kernel over an
+editable signal in valid, stride-one mode. Select any feature-map output to see
+its receptive-field window, element-wise products, and running accumulator. An
+asymmetric default kernel makes the neural cross-correlation convention
+visible instead of silently flipping weights.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -70,6 +78,9 @@ under `code/specs/fixtures/neural-learning-v1` pins forward values and first-ste
 gradients. NN04 under `code/specs/fixtures/optimization-learning-v1` pins
 finite-difference checks and batch-strategy trajectories so other language
 implementations can reproduce the same visualized arithmetic.
+
+NN05 under `code/specs/fixtures/convolution-learning-v1` pins the first
+sliding-kernel trace, including every window, product, accumulator, and output.
 
 ## Development
 

@@ -21,13 +21,14 @@ larger network:
 1. [From Data to One Neuron](./from-data-to-one-neuron.md)
 2. [Backpropagation by Hand](./backpropagation-by-hand.md)
 3. [Optimization Under the Microscope](./optimization-under-the-microscope.md)
-4. [Matrix Math](../matrix-math.md)
-5. [Loss Functions](../loss-functions.md)
-6. [Gradient Descent](../gradient-descent.md)
-7. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-8. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-9. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-10. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+4. [Convolution, Window by Window](./convolution-window-by-window.md)
+5. [Matrix Math](../matrix-math.md)
+6. [Loss Functions](../loss-functions.md)
+7. [Gradient Descent](../gradient-descent.md)
+8. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+9. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+10. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+11. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -37,7 +38,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has four complementary views:
+has five complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -50,13 +51,17 @@ has four complementary views:
 - **Hidden-layer lab:** inspect intermediate neuron activations and gradients
   for XOR-like logic, bends, thresholds, circles, moons, and feature
   interactions.
+- **Spatial lab:** slide one shared 1D kernel across a signal and inspect every
+  window, product, running accumulator, and feature-map output.
 
 ## Language-Neutral Corpus
 
 The learning examples are not owned by the visualizer. NN03 stores forward and
 first-step traces in `code/specs/fixtures/neural-learning-v1`. NN04 stores
 finite-difference checks and deterministic batch-strategy traces in
-`code/specs/fixtures/optimization-learning-v1`. That lets a Rust CLI, a Go
+`code/specs/fixtures/optimization-learning-v1`. NN05 stores valid 1D
+cross-correlation and complete multiply-accumulate traces in
+`code/specs/fixtures/convolution-learning-v1`. That lets a Rust CLI, a Go
 package, a Python notebook, or a browser visualizer explain the same
 computation.
 
@@ -65,12 +70,15 @@ Validate the bootstrap corpus with:
 ```text
 python code/scripts/validate_neural_learning_labs.py
 python code/scripts/validate_optimization_learning_labs.py
+python code/scripts/validate_convolution_learning_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
 sigmoid OR neuron, and the hidden representation used by a solved XOR network.
 The first NN04 lab covers a linear loss landscape, an independent gradient
-check, and stochastic, mini-batch, and full-batch trajectories.
+check, and stochastic, mini-batch, and full-batch trajectories. The first NN05
+lab covers an asymmetric shared kernel and every intermediate produced as it
+slides over a signal.
 
 ## How to Study a Model
 

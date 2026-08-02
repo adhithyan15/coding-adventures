@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
+import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
@@ -168,7 +169,9 @@ function groupColor(group: string | undefined, groups: string[]): string {
 }
 
 export function App() {
-  const [workbench, setWorkbench] = useState<"microscope" | "optimization" | "linear" | "hidden">("microscope");
+  const [workbench, setWorkbench] = useState<
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution"
+  >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
   const [activationKind, setActivationKind] = useState<ActivationKind>("linear");
@@ -274,6 +277,8 @@ export function App() {
               ? "No hidden magic"
               : workbench === "optimization"
                 ? "Trust, then independently verify"
+              : workbench === "convolution"
+                ? "One detector, every position"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -310,12 +315,21 @@ export function App() {
             >
               Hidden Layer
             </button>
+            <button
+              className={workbench === "convolution" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("convolution")}
+            >
+              Spatial
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
               <>forward {"->"} <strong>loss</strong> {"->"} gradients {"->"} update</>
             ) : workbench === "optimization" ? (
               <>loss surface {"->"} <strong>gradient check</strong> {"->"} batch strategy</>
+            ) : workbench === "convolution" ? (
+              <>window × <strong>shared kernel</strong> {"->"} feature</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -329,6 +343,8 @@ export function App() {
         <TrainingStepMicroscope />
       ) : workbench === "optimization" ? (
         <OptimizationWorkbench />
+      ) : workbench === "convolution" ? (
+        <ConvolutionWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

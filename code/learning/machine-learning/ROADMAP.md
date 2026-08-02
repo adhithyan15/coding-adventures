@@ -14,7 +14,7 @@ trace, and tests.
 
 ## Active Tranche
 
-- [ ] Optimization fundamentals
+- [x] Optimization fundamentals
   - [x] Loss-landscape view.
   - [x] Analytical-versus-finite-difference gradient check.
   - [x] Deterministic stochastic, mini-batch, and full-batch comparison.
@@ -24,7 +24,7 @@ trace, and tests.
 ## Architecture Tranches
 
 - [ ] Spatial networks
-  - [ ] Sliding one-dimensional kernel with every multiply-accumulate exposed.
+  - [x] Sliding one-dimensional kernel with every multiply-accumulate exposed.
   - [ ] Trainable one-dimensional convolution and gradient trace.
   - [ ] Tiny image CNN, channels, pooling, and normalization.
   - [ ] Residual path and receptive-field explorer.

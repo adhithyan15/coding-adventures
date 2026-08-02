@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Add the NN05 spatial workbench with editable 1D valid cross-correlation and
+  complete multiply-accumulate traces.
+
 ### Changed
 
 - Routed linear and hidden-layer visualizer predictions through the shared

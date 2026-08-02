@@ -136,7 +136,7 @@ h2 {
 
 .mode-toggle {
   display: inline-grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 4px;
   padding: 4px;
   border: 1px solid $line;
@@ -1121,6 +1121,234 @@ code {
   margin-top: 4px;
 }
 
+.workspace--convolution {
+  display: grid;
+  grid-template-columns: minmax(620px, 1fr) 320px;
+  gap: 14px;
+  align-items: start;
+}
+
+.convolution-stage,
+.convolution-controls,
+.kernel-slide,
+.mac-panel,
+.output-strip {
+  @include surface;
+}
+
+.convolution-stage {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.convolution-intro,
+.mac-heading,
+.array-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.convolution-intro p:not(.eyebrow),
+.convolution-controls p,
+.convolution-note p {
+  margin: 5px 0 0;
+  color: $muted;
+}
+
+.convolution-mode-chip {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.11);
+  color: #4f3da9;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.kernel-slide,
+.mac-panel,
+.output-strip {
+  padding: 14px;
+  overflow-x: auto;
+}
+
+.array-label {
+  min-width: 420px;
+  margin-bottom: 7px;
+  color: $muted;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.array-label code {
+  min-height: 0;
+  padding: 3px 7px;
+  text-transform: none;
+}
+
+.array-label--kernel {
+  margin-top: 14px;
+}
+
+.signal-array,
+.kernel-track {
+  display: grid;
+  min-width: 420px;
+  gap: 6px;
+}
+
+.signal-cell,
+.kernel-cell {
+  display: grid;
+  place-items: center;
+  min-height: 70px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.signal-cell small,
+.kernel-cell small,
+.product-card small,
+.accumulator-step small,
+.output-button small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.signal-cell strong,
+.kernel-cell strong,
+.product-card strong,
+.accumulator-step strong,
+.output-button strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.signal-cell--active {
+  border-color: rgba(37, 99, 235, 0.58);
+  background: #edf4ff;
+}
+
+.kernel-window {
+  display: grid;
+  gap: 6px;
+  padding: 5px;
+  border: 2px solid rgba(109, 91, 208, 0.55);
+  border-radius: 10px;
+  background: rgba(109, 91, 208, 0.07);
+}
+
+.kernel-cell {
+  min-height: 58px;
+  border-color: rgba(109, 91, 208, 0.26);
+}
+
+.mac-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.mac-result {
+  min-width: 72px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(35, 122, 87, 0.13);
+  color: $green;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.product-grid,
+.accumulator-strip,
+.output-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+  gap: 8px;
+}
+
+.product-card,
+.accumulator-step {
+  display: grid;
+  gap: 5px;
+  padding: 9px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.product-card code {
+  min-height: 0;
+  padding: 3px 6px;
+}
+
+.accumulator-step {
+  border-color: rgba(35, 122, 87, 0.22);
+  background: #f6fbf8;
+}
+
+.expanded-equation {
+  min-height: 0;
+  padding: 10px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.output-strip {
+  display: grid;
+  gap: 7px;
+}
+
+.output-button {
+  display: grid;
+  gap: 2px;
+  min-height: 60px;
+}
+
+.output-button--active {
+  border-color: rgba(35, 122, 87, 0.62);
+  background: #eaf7ef;
+  color: #17603f;
+}
+
+.convolution-controls {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+.convolution-controls .button-grid button:last-child {
+  grid-column: 1 / -1;
+}
+
+.convolution-note {
+  padding-top: 12px;
+  border-top: 1px solid $line;
+}
+
+.convolution-note span {
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.convolution-error {
+  padding: 20px;
+  border: 1px solid rgba(194, 65, 59, 0.28);
+  border-radius: 8px;
+  background: #fff5f4;
+  color: $red;
+  font-weight: 750;
+}
+
 @media (max-width: 1180px) {
   .workspace--lab,
   .workspace--hidden {
@@ -1129,12 +1357,14 @@ code {
 
   .metrics,
   .microscope-controls,
-  .optimization-controls {
+  .optimization-controls,
+  .convolution-controls {
     grid-column: 1 / -1;
   }
 
   .workspace--microscope,
-  .workspace--optimization {
+  .workspace--optimization,
+  .workspace--convolution {
     grid-template-columns: 1fr;
   }
 }
@@ -1159,8 +1389,19 @@ code {
   .workspace--lab,
   .workspace--hidden,
   .workspace--microscope,
-  .workspace--optimization {
+  .workspace--optimization,
+  .workspace--convolution {
     grid-template-columns: 1fr;
+  }
+
+  .convolution-intro,
+  .mac-heading {
+    display: grid;
+    align-items: start;
+  }
+
+  .convolution-mode-chip {
+    justify-self: start;
   }
 
   .lab-rail {
@@ -1176,7 +1417,11 @@ code {
   }
 
   .mode-toggle {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mode-button:last-child {
+    grid-column: 1 / -1;
   }
 
   .phase-strip {

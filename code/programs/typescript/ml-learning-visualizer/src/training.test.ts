@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { activate } from "./activation.js";
+import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
@@ -37,6 +38,12 @@ import {
   DEFAULT_MICROSCOPE_STATE,
   traceTrainingStep,
 } from "./training-microscope.js";
+import {
+  DEFAULT_CONVOLUTION_KERNEL,
+  DEFAULT_CONVOLUTION_SIGNAL,
+  parseNumberList,
+  traceValidCorrelation,
+} from "./convolution-lab.js";
 
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
@@ -176,6 +183,42 @@ describe("training helpers", () => {
     fireEvent.change(screen.getByLabelText("Optimization weight"), { target: { value: "1" } });
     const gradient = analyticalGradient(OPTIMIZATION_DATASET, { weight: 1, bias: 0, step: 0 });
     expect(screen.getAllByText(formatTestNumber(gradient.weight)).length).toBeGreaterThan(0);
+  });
+
+  it("traces every multiply-accumulate for an asymmetric sliding kernel", () => {
+    const traces = traceValidCorrelation(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      DEFAULT_CONVOLUTION_KERNEL,
+    );
+
+    expect(traces.map((trace) => trace.output)).toEqual([7, -2, 11, 0]);
+    expect(traces[2]!.window).toEqual([3, 0, 4]);
+    expect(traces[2]!.products).toEqual([3, 0, 8]);
+    expect(traces[2]!.accumulator).toEqual([0, 3, 3, 11]);
+  });
+
+  it("does not reverse the neural convolution kernel", () => {
+    const reversed = traceValidCorrelation(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      [...DEFAULT_CONVOLUTION_KERNEL].reverse(),
+    );
+
+    expect(reversed.map((trace) => trace.output)).toEqual([6, -1, 10, -2]);
+    expect(parseNumberList("2, -1, 1")).toEqual([2, -1, 1]);
+    expect(parseNumberList("2, nope, 1")).toBeNull();
+  });
+
+  it("lets the sliding-kernel microscope inspect and edit outputs", () => {
+    render(React.createElement(ConvolutionWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Sliding-kernel microscope" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Next" }));
+    expect(screen.getByText("Output y[1]")).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("Kernel weights"), {
+      target: { value: "2, -1, 1" },
+    });
+    expect(screen.getByRole("button", { name: "Select output 1" }).textContent).toContain("-1");
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {
