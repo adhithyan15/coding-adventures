@@ -352,11 +352,11 @@
     {
       "id": "build-tool-rust-rockspec-utf8-conformance",
       "title": "Make the Rust build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-go-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-rust-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized from build-tool-rockspec-utf8-remaining-engines after Go established the operational-oracle behavior. Rust currently converts fs::read_to_string failure into an empty dependency list, so invalid rockspec bytes silently erase edges. Bind the Rust resolver and CLI to the exact shared success and invalid-byte fixtures, preserve METADATA_INVALID_UTF8 with package and repository-relative manifest identity, return exit 2 without host paths, and leave the seven non-Rust engine remediations outside this slice."
+      "notes": "Selected after the a6845a83c dependency/leverage pass because Rust currently converts fs::read_to_string failure into an empty dependency list, silently erasing edges, while merged Go provides the operational-oracle behavior. Bind the Rust resolver and CLI to the exact shared success and invalid-byte fixtures, preserve METADATA_INVALID_UTF8 with package and repository-relative manifest identity, return exit 2 without host paths, and leave the seven non-Rust engine remediations outside this slice."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
