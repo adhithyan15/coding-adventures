@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9504,
+  "active_pr": 9510,
   "last_inventory": {
-    "revision": "2140f0e5d9faba711d9bfe903804503ab9a5297d",
+    "revision": "de44349bd147c9ce46ce27d2ac741f2f01fcc2de",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1217,
-    "implementation_package_slots": 4365,
+    "implementation_identities": 1218,
+    "implementation_package_slots": 4366,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 767,
-    "singleton_missing_slots": 10738,
-    "rust_singletons": 572,
+    "singleton_packages": 768,
+    "singleton_missing_slots": 10752,
+    "rust_singletons": 573,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -338,16 +338,34 @@
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the Python encoding-blocker audit. Rust and Swift silently drop invalid rockspec dependencies; TypeScript replaces invalid bytes; Go, Lua, and Perl accept them; Ruby and Haskell use locale-sensitive text decoding; Elixir is position-dependent. Remediate those nine engines against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity."
+      "notes": "Discovered by the Python encoding-blocker audit. Go was remediated in merged PR #9504. Of the eight remaining engines, Rust and Swift silently drop invalid rockspec dependencies; TypeScript replaces invalid bytes; Lua and Perl accept them; Ruby and Haskell use locale-sensitive text decoding; and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity."
     },
     {
       "id": "build-tool-go-rockspec-utf8-conformance",
       "title": "Make the Go build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": "codex/build-tool-go-rockspec-utf8",
       "pr_number": 9504,
-      "notes": "Ready PR #9504 is the first dependency-shaped child of build-tool-rockspec-utf8-remaining-engines. Go is prioritized because it is the intended operational oracle. The implementation binds its resolver to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, requires the exact expected edge set, rejects invalid bytes before parsing with a typed MetadataEncodingError, emits METADATA_INVALID_UTF8 with package and repository-relative manifest identity, and returns CLI exit 2 without host paths. Validation on rebased main 2140f0e5d passed go test and race test across every package, 73.2% total coverage, go vet, trimpath build, the 57-test/52-subtest language-neutral conformance suite, a 32-case/36-file corpus check, a real 4,763-package/8,348-edge plan, collision-free parity inventory, and an exact BUILD-validator baseline comparison of 73 issues before and after. The other eight engine remediations remain outside this slice."
+      "notes": "Merged PR #9504 at 3776a290063d40042e05c81a0979fc58ff258581 on 2026-08-02. This first dependency-shaped child of build-tool-rockspec-utf8-remaining-engines binds the Go resolver to the exact success and invalid-byte fixtures, requires the exact expected edge set, rejects invalid bytes before parsing with a typed MetadataEncodingError, emits METADATA_INVALID_UTF8 with package and repository-relative manifest identity, and returns CLI exit 2 without host paths. Final-base local validation passed Go tests and race tests, 73.2% total coverage, vet, trimpath build, language-neutral conformance and corpus gates, a real full-repository plan, collision-free inventory, and an exact 73-to-73 BUILD-validator baseline comparison. Post-merge Ubuntu, macOS, Windows, fixture-consumer, detection, and Go CodeQL checks all passed; irrelevant language CodeQL jobs were skipped."
+    },
+    {
+      "id": "build-tool-rust-rockspec-utf8-conformance",
+      "title": "Make the Rust build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pr-open",
+      "depends_on": ["build-tool-go-rockspec-utf8-conformance"],
+      "branch": "codex/build-tool-rust-rockspec-utf8",
+      "pr_number": 9510,
+      "notes": "Ready PR #9510 follows the a6845a83c dependency/leverage selection and is rebased on de44349bd. The implementation consumes the exact shared success and invalid-byte fixtures, requires exact edge equality, returns a typed METADATA_INVALID_UTF8 diagnostic with package and repository-relative manifest identity, exits 2 through the real CLI, and does not disclose host paths. Validation passed 136 unit plus one CLI integration test, strict Clippy, release build, 79.33% line coverage, 57 language-neutral conformance tests plus 52 subtests, the 32-case/36-file corpus, a real 258-package Lua dry-run plan across all 246 strict-UTF-8 rockspecs, collision-free parity inventory, and a zero-advisory RustSec audit. Full-repository plan validation separately reproduced untouched main's 4,766-package exit-101 panic on an elixir/grammar_tools self-edge, and BUILD validation output matched untouched main exactly; the dedicated pending self-edge and Lua BUILD_windows items own those baselines. The seven non-Rust encoding remediations remain outside this slice."
+    },
+    {
+      "id": "build-tool-rust-self-edge-diagnostic",
+      "title": "Make the Rust build tool reject self-edges without panicking",
+      "status": "pending",
+      "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Rust UTF-8 slice's real full-repository plan. On rebased de44349bd, both untouched main and the current branch discover 4,766 packages, then exit 101 because graph.add_edge panics on elixir/grammar_tools. Define a language-neutral self-edge resolution fixture, identify the exact Elixir resolver alias collision or self-reference, and return a stable resolver diagnostic instead of aborting the process. Keep this independent of strict rockspec decoding."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
@@ -1133,6 +1151,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Share the XOR codec, bounded JSON/status validation, device and identity normalization, state/capability projection, stable errors, command planning, and verification fixtures. Network, time, and runtime authority are excluded."
+    },
+    {
+      "id": "smart-home-tasmota-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable Tasmota local HTTP core",
+      "status": "pending",
+      "depends_on": ["smart-home-switch-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #9498 added the Rust-only Tasmota local HTTP host. Share bounded Status 0 JSON validation, relay/light/sensor normalization, stable identities and errors, state/capability projection, command planning, color conversion, and verification fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, credentials and Vault, trusted time, console I/O, authorization, and runtime mutation are excluded native-host responsibilities."
     },
     {
       "id": "smart-home-reolink-portable-core-extraction-and-conformance",

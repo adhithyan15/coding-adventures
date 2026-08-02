@@ -284,7 +284,13 @@ fn run() -> i32 {
     println!("Discovered {} packages", packages.len());
 
     // Step 4: Resolve dependencies.
-    let graph = resolver::resolve_dependencies(&packages);
+    let graph = match resolver::resolve_dependencies(&packages) {
+        Ok(graph) => graph,
+        Err(error) => {
+            eprintln!("{}", error);
+            return 2;
+        }
+    };
 
     // Step 5: Git-diff change detection (default mode).
     // Git is the source of truth — no cache file needed for primary workflow.

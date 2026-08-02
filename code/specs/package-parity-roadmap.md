@@ -106,11 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `2140f0e5d` after
-merged PRs #9477 and #9485 added the three Dart ML leaves and Dart
-`document-ast`, following the serial Rust smart-home additions through Sonos
-(#9461), Nanoleaf (#9486), and the Rust SPICE model validation chain. It contains
-1,217 normalized implementation identities across 4,365 established-lane
+working inventory was regenerated on August 2, 2026 from `de44349bd` after
+merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PRs
+#9502, #9505, and #9506 changed existing packages or learning assets without
+creating another implementation package directory. The inventory contains
+1,218 normalized implementation identities across 4,366 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -118,23 +118,24 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 767 | 10,738 |
+| Present in one language | 768 | 10,752 |
 
-The loop must not start by attempting 10,738 singleton ports. It should finish
+The loop must not start by attempting 10,752 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`2140f0e5d9faba711d9bfe903804503ab9a5297d` is collision-clean at 1,217
-normalized implementation identities, 4,365 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 767 singletons, 572
+`de44349bd147c9ce46ce27d2ac741f2f01fcc2de` is collision-clean at 1,218
+normalized implementation identities, 4,366 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 768 singletons, 573
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The twelve newest mixed Rust identities are `smart-home-camera-media`,
+The thirteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
 `smart-home-reolink-integration`, `smart-home-roku-ecp-integration`,
-`smart-home-wemo-upnp-integration`, `smart-home-sonos-upnp-integration`, and
-`smart-home-nanoleaf-local-integration`. All are
+`smart-home-wemo-upnp-integration`, `smart-home-sonos-upnp-integration`,
+`smart-home-nanoleaf-local-integration`, and
+`smart-home-tasmota-local-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -148,9 +149,10 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, Wemo, Sonos, and Nanoleaf contribute deterministic codecs, bounded parsers
-and DTO validation, normalization, projection, stable identities/errors, command
-planning, and language-neutral fixtures to the parity backlog. Wemo specifically
+Roku, Wemo, Sonos, Nanoleaf, and Tasmota contribute deterministic codecs,
+bounded parsers and DTO validation, normalization, projection, stable
+identities/errors, command planning, and language-neutral fixtures to the
+parity backlog. Wemo specifically
 contributes SSDP header parsing, bounded setup/SOAP XML, service/device
 normalization, and switch/light command planning. Sonos additionally contributes
 credential-free URL/control-path validation, AVTransport, RenderingControl,
@@ -158,7 +160,10 @@ DIDL metadata normalization, deterministic inspection planning, and
 protocol-neutral media-player projection. Nanoleaf adds credential syntax and
 origin-configuration validation, bounded snapshot/state validation, stable
 identity and capability projection, RGB/HSV and mirek conversion, command
-planning, and verification. UDP multicast, DNS/TCP, LAN HTTP
+planning, and verification. Tasmota adds bounded Status 0 JSON validation,
+relay/light/sensor normalization,
+state and capability projection, command planning, color conversion, and
+verification fixtures. UDP multicast, DNS/TCP, LAN HTTP
 execution, timeouts, endpoint approval, CLI I/O, authorization, and runtime
 mutation remain native-host responsibilities.
 
@@ -213,11 +218,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
   succeeds across 4,765 packages and 7,100 edges;
-- bring the remaining Go, Rust, Swift, TypeScript, Lua, Perl, Ruby, Elixir, and
+- bring the remaining Rust, Swift, TypeScript, Lua, Perl, Ruby, Elixir, and
   Haskell build-tool resolvers to the shared strict-UTF-8 rockspec contract.
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
-  is tracked separately from the Python full-scan blocker. The Go resolver is
-  the first prioritized child because it is the intended operational oracle;
+  is tracked separately from the Python full-scan blocker. Merged PR #9504
+  completed the Go operational-oracle child, and the Rust child is next;
+- make the Rust build tool reject resolver self-edges with a stable diagnostic.
+  A real 4,766-package plan reproduced the untouched-main exit-101 panic on
+  `elixir/grammar_tools`; this is tracked separately from UTF-8 decoding;
 - expose Haskell through the Python build tool's `--language` filter. Haskell
   is already in its resolver and canonical language registry but is missing
   from the native CLI choices;
