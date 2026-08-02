@@ -106,16 +106,14 @@ public static class MosaicHost
                     return;
                 }
 
-                var backProvider = new ButtonAutomationPeer(backButton) as IInvokeProvider;
-                var forwardProvider = new ButtonAutomationPeer(forwardButton) as IInvokeProvider;
                 var invokeProvider = new ButtonAutomationPeer(goButton) as IInvokeProvider;
-                if (backProvider is null || forwardProvider is null || invokeProvider is null)
+                if (invokeProvider is null)
                 {
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
-                        error = "native history automation provider unavailable",
+                        error = "native Go automation provider unavailable",
                     });
                     return;
                 }
@@ -156,6 +154,27 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!await WaitForEnabledAsync(backButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Back button did not become enabled",
+                    });
+                    return;
+                }
+                var backProvider = new ButtonAutomationPeer(backButton) as IInvokeProvider;
+                if (backProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Back automation provider unavailable",
+                    });
+                    return;
+                }
                 backProvider.Invoke();
                 if (!await WaitForPageAsync(component, startUrl, "Venture launch acceptance"))
                 {
@@ -170,6 +189,27 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!await WaitForEnabledAsync(forwardButton))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Forward button did not become enabled",
+                    });
+                    return;
+                }
+                var forwardProvider = new ButtonAutomationPeer(forwardButton) as IInvokeProvider;
+                if (forwardProvider is null)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Forward automation provider unavailable",
+                    });
+                    return;
+                }
                 forwardProvider.Invoke();
                 if (!await WaitForPageAsync(
                     component, targetUrl, "Venture interaction acceptance"))
@@ -218,6 +258,19 @@ public static class MosaicHost
             _ = ApplyProps(component);
             if (string.Equals(component.Address, address, StringComparison.Ordinal)
                 && string.Equals(component.PageTitle, pageTitle, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static async System.Threading.Tasks.Task<bool> WaitForEnabledAsync(Button button)
+    {
+        for (var remaining = 50; remaining >= 0; remaining--)
+        {
+            await System.Threading.Tasks.Task.Delay(50);
+            if (button.IsEnabled)
             {
                 return true;
             }
