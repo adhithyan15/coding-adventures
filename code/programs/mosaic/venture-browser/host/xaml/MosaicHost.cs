@@ -128,6 +128,7 @@ public static class MosaicHost
             VerticalContentAlignment = VerticalAlignment.Stretch;
             Content = image;
             IsTabStop = true;
+            SizeChanged += OnSizeChanged;
             KeyDown += OnKeyDown;
             PointerPressed += OnPointerPressed;
             PointerWheelChanged += OnPointerWheelChanged;
@@ -165,6 +166,18 @@ public static class MosaicHost
             ((IBufferByteAccess)bitmap.PixelBuffer).Buffer(out var destination);
             Marshal.Copy(pixels, 0, destination, pixels.Length);
             bitmap.Invalidate();
+        }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (browser == IntPtr.Zero || e.NewSize.Width <= 0 || e.NewSize.Height <= 0)
+            {
+                return;
+            }
+            if (Native.Resize(browser, e.NewSize.Width, e.NewSize.Height) != 0)
+            {
+                Refresh();
+            }
         }
 
         private void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -285,6 +298,10 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte ActivateLink(IntPtr browser, double x, double y);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_resize",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte Resize(IntPtr browser, double width, double height);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_render_bgra",
             CallingConvention = CallingConvention.Cdecl)]

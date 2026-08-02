@@ -14,6 +14,8 @@
   and link activation all stay backed by one Rust browser session.
 - Accept shared semantic keyboard-scroll commands through that dynamic bridge
   so the package-owned SwiftUI content surface can drive the same Rust model.
+- Reflow the retained page through the shared Rust pipeline when the generated
+  SwiftUI content surface changes logical size.
 
 ## 0.1.0
 

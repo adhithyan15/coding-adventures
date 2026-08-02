@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add retained-document reflow so native surface resizes recompute layout,
+  paint, links, image placement, and scroll bounds without refetching HTML.
 - Add host-neutral keyboard-scroll commands so native SwiftUI and WinUI page
   surfaces share exact line, page, start, and end scrolling behavior.
 

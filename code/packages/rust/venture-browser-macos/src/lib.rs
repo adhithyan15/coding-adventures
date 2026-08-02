@@ -501,6 +501,38 @@ impl MacBrowserHost {
         Ok(changed)
     }
 
+    /// Reflow the retained page for a new logical content-surface size.
+    /// The HTML document and navigation history stay in the shared session;
+    /// only layout, paint, image placement, and scroll bounds are recomputed.
+    pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        let width = finite_positive_or(width, self.width);
+        let height = finite_positive_or(height, self.height);
+        if self.width == width && self.height == height {
+            return false;
+        }
+
+        let theme = mosaic_html_theme();
+        let measurer = NativeMeasurer::new();
+        let shaper = NativeShaper::new();
+        let metrics = NativeMetrics::new();
+        let resolver = NativeResolver::new();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(width, height, 1.0),
+            &measurer,
+            &shaper,
+            &metrics,
+            &resolver,
+        );
+        let reflowed = self
+            .session
+            .reflow(&pipeline, &self.fetcher, height)
+            .is_some();
+        self.width = width;
+        self.height = height;
+        reflowed
+    }
+
     pub fn render_to_layer(&self, layer: objc_bridge::Id) -> Result<(), MacBrowserError> {
         let viewport = self
             .session
@@ -672,6 +704,20 @@ mod mosaic_ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_resize(
+        host: *mut MacBrowserHost,
+        width: f64,
+        height: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.resize(width, height) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_macos_render(
         host: *mut MacBrowserHost,
         metal_layer: *mut c_void,
@@ -695,6 +741,14 @@ mod mosaic_ffi {
         if !value.is_null() {
             drop(CString::from_raw(value));
         }
+    }
+}
+
+fn finite_positive_or(value: f64, fallback: f64) -> f64 {
+    if value.is_finite() && value > 0.0 {
+        value
+    } else {
+        fallback.max(1.0)
     }
 }
 
@@ -1143,6 +1197,46 @@ mod tests {
             .data
             .chunks_exact(4)
             .any(|pixel| pixel != [192, 192, 192, 255]));
+    }
+
+    #[cfg(target_vendor = "apple")]
+    #[test]
+    fn mosaic_host_resize_reflows_without_refetching_the_document() {
+        use std::cell::Cell;
+        use std::rc::Rc;
+
+        let fetches = Rc::new(Cell::new(0usize));
+        let observed_fetches = Rc::clone(&fetches);
+        let body = (0..40)
+            .map(|index| format!("<p>Resizable Venture paragraph {index} wraps.</p>"))
+            .collect::<String>();
+        let fetcher = move |url: &str| {
+            observed_fetches.set(observed_fetches.get() + 1);
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html; charset=utf-8".into()),
+                format!("<title>Resize</title>{body}").into_bytes(),
+            ))
+        };
+        let mut host = MacBrowserHost::new_with_fetcher(
+            "http://example.test/",
+            320.0,
+            180.0,
+            Box::new(fetcher),
+        )
+        .expect("Mosaic host should load the initial page");
+
+        assert_eq!(
+            host.session.viewport().unwrap().viewport_scene().width,
+            320.0
+        );
+        assert!(host.resize(144.0, 96.0));
+        let viewport = host.session.viewport().expect("viewport remains loaded");
+        assert_eq!(viewport.viewport_scene().width, 144.0);
+        assert_eq!(viewport.viewport_scene().height, 96.0);
+        assert_eq!(fetches.get(), 1, "resize must not refetch page HTML");
+        assert!(!host.resize(144.0, 96.0));
     }
 
     #[cfg(not(target_vendor = "apple"))]

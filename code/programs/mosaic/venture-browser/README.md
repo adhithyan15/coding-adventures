@@ -46,6 +46,10 @@ recreating the surrounding chrome in backend-specific UI code.
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
   Alt-Left/Right on Windows reuse the Mosaic `onBack`/`onForward` reducer
   events and reproject chrome props after navigation.
+- Native SwiftUI and WinUI surface-size changes use matching Rust resize ABIs.
+  The shared session recomposes its retained render tree for the new logical
+  viewport, preserves and clamps scroll state, updates hit regions, and
+  repaints without refetching the HTML document.
 
 ## Build every backend
 
