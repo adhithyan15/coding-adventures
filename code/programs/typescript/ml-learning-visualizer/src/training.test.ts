@@ -11,6 +11,7 @@ import {
   traceTinyDecoderTraining,
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
@@ -1172,5 +1173,109 @@ describe("one-dimensional GAN game", () => {
       .toMatch(/critic becomes a teaching signal.*-0\.46562293.*-0\.48412848.*D parameters stay frozen/s);
     expect(screen.getByLabelText("GAN competing objectives").textContent)
       .toMatch(/D loss 0\.61411974.*G loss 0\.51727849/s);
+  });
+});
+
+describe("one-dimensional diffusion round trip", () => {
+  it("keeps the diffusion workbench in the generated production stylesheet", () => {
+    const css = productionCss;
+
+    expect(css).toContain(".workspace--diffusion");
+    expect(css).toContain(".diffusion-reverse-lane");
+  });
+
+  it("mixes one clean sample with saved noise at two levels", () => {
+    const trace = traceOneDimensionalDiffusion();
+
+    expect(trace.forwardSteps.map((row) => row.alphaBar))
+      .toEqual([0.64, 0.36]);
+    expect(trace.forwardSteps.map((row) => row.signalScale))
+      .toEqual([0.8, 0.6]);
+    expect(trace.forwardSteps.map((row) => row.noiseScale))
+      .toEqual([0.6, 0.8]);
+    expect(trace.forwardSteps.map((row) => row.noisySample))
+      .toEqual([0.5, 0.19999999999999996]);
+  });
+
+  it("reduces both timestep examples into shared denoiser gradients", () => {
+    const trace = traceOneDimensionalDiffusion();
+
+    expect(trace.initialMeanLoss).toBeCloseTo(0.125);
+    expect(trace.backward.perStep.map((row) => row.predictionGradient))
+      .toEqual([0.25, 0.25]);
+    expect(trace.backward.sampleWeightGradient).toBeCloseTo(0.175);
+    expect(trace.backward.timestepWeightGradient).toBeCloseTo(0.375);
+    expect(trace.backward.biasGradient).toBeCloseTo(0.5);
+  });
+
+  it("audits three slopes and learns a better noise predictor", () => {
+    const trace = traceOneDimensionalDiffusion();
+
+    expect(trace.gradientCheck.parameterOrder).toEqual([
+      "denoiser.sample_weight",
+      "denoiser.timestep_weight",
+      "denoiser.bias",
+    ]);
+    expect(trace.gradientCheck.maxAbsoluteError).toBeLessThan(1e-8);
+    expect(trace.updatedDenoiser).toEqual({
+      sampleWeight: -0.0875,
+      timestepWeight: -0.1875,
+      bias: -0.25,
+    });
+    expect(trace.postUpdateDenoising.map((row) => row.predictedNoise))
+      .toEqual([-0.3875, -0.45499999999999996]);
+    expect(trace.postUpdateMeanLoss).toBeCloseTo(0.0036703125);
+    expect(trace.postUpdateMeanLoss).toBeLessThan(trace.initialMeanLoss);
+  });
+
+  it("runs the updated denoiser through two deterministic reverse means", () => {
+    const trace = traceOneDimensionalDiffusion();
+
+    expect(trace.reverseSteps.map((row) => row.t)).toEqual([2, 1]);
+    expect(trace.reverseSteps[0]!.outputMean).toBeCloseTo(0.5984375);
+    expect(trace.reverseSteps[1]!.predictedNoise)
+      .toBeCloseTo(-0.39611328125);
+    expect(trace.finalReconstruction).toBeCloseTo(1.0451318359375);
+    expect(trace.finalAbsoluteError).toBeCloseTo(0.0451318359375);
+  });
+
+  it("rejects a malformed diffusion schedule", () => {
+    expect(() => traceOneDimensionalDiffusion(
+      1,
+      -0.5,
+      0.5,
+      { sampleWeight: 0, timestepWeight: 0, bias: 0 },
+      [
+        { t: 1, beta: 0.36, normalizedT: 0.5 },
+        { t: 3, beta: 0.4375, normalizedT: 1 },
+      ],
+    )).toThrow(/consecutive increasing diffusion steps/);
+  });
+
+  it("walks through forward noise, learning, and both reverse steps", () => {
+    render(React.createElement(RepresentationWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Diffusion path" }));
+
+    expect(screen.getByRole("heading", {
+      name: "One clean number through a diffusion round trip",
+    })).toBeTruthy();
+    expect(screen.getByLabelText("Diffusion forward noise schedule").textContent)
+      .toMatch(/saved epsilon = -0\.5.*x0 = 1.*x1 = 0\.5.*alpha_bar = 0\.64.*x2 = 0\.2.*alpha_bar = 0\.36/s);
+    expect(screen.getByLabelText("Diffusion noise prediction objective").textContent)
+      .toMatch(/initial mean loss0\.125.*predicted 0.*target -0\.5/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Predict saved noise/ }));
+    expect(screen.getByLabelText("Diffusion noise prediction objective").textContent)
+      .toMatch(/mean loss after SGD0\.00367031.*predicted -0\.3875.*predicted -0\.455/s);
+    expect(screen.getByLabelText("Diffusion denoiser gradient and update").textContent)
+      .toMatch(/sample weight gradient0\.175.*timestep weight gradient0\.375.*bias gradient0\.5.*max error 6\.439e-12.*0\.125 -> 0\.00367031/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Denoise step 2/ }));
+    expect(screen.getByLabelText("Diffusion deterministic reverse mean path").textContent)
+      .toMatch(/reverse t = 2.*mean1 = 0\.5984375.*reverse t = 1\?/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Denoise step 1/ }));
+    expect(screen.getByLabelText("Diffusion deterministic reverse mean path").textContent)
+      .toMatch(/reverse t = 2.*mean1 = 0\.5984375.*reverse t = 1.*mean0 = 1\.04513184.*absolute error 0\.04513184/s);
   });
 });

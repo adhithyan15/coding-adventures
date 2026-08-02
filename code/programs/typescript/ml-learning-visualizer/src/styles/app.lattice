@@ -5337,6 +5337,319 @@ code {
   font-size: 1.15rem;
 }
 
+.workspace--diffusion {
+  display: grid;
+  grid-template-columns: minmax(700px, 1fr) 300px;
+  gap: 14px;
+  align-items: start;
+}
+
+.diffusion-stage,
+.diffusion-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.diffusion-intro,
+.diffusion-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.diffusion-intro,
+.diffusion-forward-panel,
+.diffusion-predict-panel,
+.diffusion-gradient-panel,
+.diffusion-reverse-panel,
+.diffusion-controls {
+  @include surface;
+  padding: 16px;
+}
+
+.diffusion-intro p:last-child,
+.diffusion-heading p,
+.diffusion-controls > p {
+  margin: 7px 0 0;
+  color: $muted;
+}
+
+.diffusion-chip {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(43, 108, 176, 0.3);
+  border-radius: 999px;
+  background: rgba(43, 108, 176, 0.08);
+  color: #235d98;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 750;
+}
+
+.diffusion-forward-panel,
+.diffusion-predict-panel,
+.diffusion-gradient-panel,
+.diffusion-reverse-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.diffusion-heading > code {
+  flex: 0 1 350px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: rgba(43, 108, 176, 0.07);
+  color: #235d98;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.diffusion-forward-lane {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.7fr) repeat(2, minmax(230px, 1fr));
+  gap: 9px;
+  align-items: stretch;
+}
+
+.diffusion-forward-hop {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.diffusion-forward-hop > span,
+.diffusion-reverse-lane > span {
+  align-self: center;
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.diffusion-state,
+.diffusion-prediction-grid > div,
+.diffusion-gradient-rows > div,
+.diffusion-gradient-sum > div,
+.diffusion-update-row > div,
+.diffusion-reverse-step,
+.diffusion-final-state,
+.diffusion-coefficient-grid > div {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: $paper;
+}
+
+.diffusion-state small,
+.diffusion-prediction-grid small,
+.diffusion-gradient-rows small,
+.diffusion-gradient-sum small,
+.diffusion-update-row small,
+.diffusion-reverse-step small,
+.diffusion-final-state small,
+.diffusion-coefficient-grid small,
+.diffusion-loss-badge small {
+  color: $muted;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.diffusion-state code,
+.diffusion-prediction-grid code,
+.diffusion-gradient-rows code,
+.diffusion-update-row code,
+.diffusion-reverse-step code,
+.diffusion-coefficient-grid code,
+.diffusion-equation code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.diffusion-state strong,
+.diffusion-prediction-grid strong,
+.diffusion-gradient-sum strong,
+.diffusion-update-row strong,
+.diffusion-reverse-step strong,
+.diffusion-final-state strong,
+.diffusion-coefficient-grid strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.diffusion-state span,
+.diffusion-prediction-grid span,
+.diffusion-gradient-rows span,
+.diffusion-update-row span,
+.diffusion-reverse-step span,
+.diffusion-final-state span {
+  color: $muted;
+  font-size: 0.73rem;
+}
+
+.diffusion-state--noisy {
+  border-color: rgba(43, 108, 176, 0.26);
+  background: rgba(43, 108, 176, 0.045);
+}
+
+.diffusion-state--active,
+.diffusion-reverse-step--active {
+  border-color: rgba(43, 108, 176, 0.62);
+  box-shadow: inset 0 0 0 2px rgba(43, 108, 176, 0.09);
+  background: rgba(43, 108, 176, 0.09);
+}
+
+.diffusion-state--active strong,
+.diffusion-reverse-step--active strong {
+  color: #235d98;
+}
+
+.diffusion-coefficient-grid,
+.diffusion-prediction-grid,
+.diffusion-gradient-rows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.diffusion-forward-note {
+  margin: 0;
+  padding: 9px 11px;
+  border-left: 3px solid rgba(183, 121, 31, 0.45);
+  background: rgba(183, 121, 31, 0.055);
+  color: $muted;
+}
+
+.diffusion-loss-badge {
+  display: grid;
+  gap: 2px;
+  min-width: 150px;
+  padding: 8px 10px;
+  border-left: 3px solid rgba(194, 65, 59, 0.5);
+  background: rgba(194, 65, 59, 0.05);
+}
+
+.diffusion-loss-badge strong {
+  color: #9f342f;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.18rem;
+}
+
+.diffusion-equation {
+  padding: 10px;
+  border: 1px dashed rgba(43, 108, 176, 0.35);
+  border-radius: 6px;
+  background: rgba(43, 108, 176, 0.035);
+  text-align: center;
+}
+
+.diffusion-prediction-grid > div {
+  border-left: 4px solid rgba(43, 108, 176, 0.38);
+}
+
+.diffusion-gradient-sum {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.diffusion-gradient-sum strong {
+  color: #4f3da9;
+  font-size: 1.15rem;
+}
+
+.diffusion-update-row {
+  display: grid;
+  grid-template-columns: 1.3fr 0.8fr 1fr;
+  gap: 8px;
+}
+
+.diffusion-loss-drop {
+  border-color: rgba(35, 122, 87, 0.35) !important;
+  background: rgba(35, 122, 87, 0.06) !important;
+}
+
+.diffusion-loss-drop strong {
+  color: #185a40;
+  font-size: 1.12rem;
+}
+
+.diffusion-reverse-lane {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.7fr) auto minmax(150px, 1fr) auto minmax(150px, 1fr) auto minmax(140px, 0.9fr);
+  gap: 8px;
+  align-items: stretch;
+}
+
+.diffusion-reverse-step {
+  border-color: rgba(109, 91, 208, 0.3);
+  background: rgba(109, 91, 208, 0.045);
+}
+
+.diffusion-final-state {
+  border-color: rgba(35, 122, 87, 0.38);
+  background: rgba(35, 122, 87, 0.06);
+}
+
+.diffusion-final-state strong {
+  color: #185a40;
+  font-size: 1.2rem;
+}
+
+.diffusion-controls {
+  position: sticky;
+  top: 14px;
+}
+
+.diffusion-phase-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.diffusion-phase-buttons button {
+  display: grid;
+  gap: 2px;
+  padding: 9px 10px;
+  border: 1px solid $line;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: left;
+}
+
+.diffusion-phase-buttons button span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+}
+
+.diffusion-phase-buttons button[aria-pressed="true"] {
+  border-color: rgba(43, 108, 176, 0.58);
+  background: rgba(43, 108, 176, 0.1);
+  color: #235d98;
+}
+
+.diffusion-selected-summary {
+  display: grid;
+  gap: 4px;
+  padding: 11px;
+  border-left: 3px solid rgba(43, 108, 176, 0.48);
+  background: rgba(43, 108, 176, 0.05);
+}
+
+.diffusion-selected-summary small,
+.diffusion-selected-summary span {
+  color: $muted;
+}
+
+.diffusion-selected-summary strong {
+  color: #235d98;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.15rem;
+}
+
 @media (max-width: 1360px) {
   .app-header,
   .header-actions {
@@ -5389,7 +5702,8 @@ code {
     .workspace--decoder,
     .workspace--autoencoder,
     .workspace--variational,
-    .workspace--gan {
+    .workspace--gan,
+    .workspace--diffusion {
     grid-template-columns: 1fr;
   }
 
@@ -5424,6 +5738,11 @@ code {
   }
 
   .gan-controls {
+    position: static;
+    grid-column: 1 / -1;
+  }
+
+  .diffusion-controls {
     position: static;
     grid-column: 1 / -1;
   }
@@ -5466,7 +5785,8 @@ code {
     .workspace--decoder,
     .workspace--autoencoder,
     .workspace--variational,
-    .workspace--gan {
+    .workspace--gan,
+    .workspace--diffusion {
     grid-template-columns: 1fr;
   }
 
@@ -5498,7 +5818,9 @@ code {
     .variational-intro,
     .variational-heading,
     .gan-intro,
-    .gan-heading {
+    .gan-heading,
+    .diffusion-intro,
+    .diffusion-heading {
     display: grid;
     align-items: start;
   }
@@ -5855,6 +6177,26 @@ code {
 
   .gan-counterpush p {
     margin-left: 0;
+  }
+
+  .diffusion-chip {
+    justify-self: start;
+  }
+
+  .diffusion-forward-lane,
+  .diffusion-forward-hop,
+  .diffusion-coefficient-grid,
+  .diffusion-prediction-grid,
+  .diffusion-gradient-rows,
+  .diffusion-gradient-sum,
+  .diffusion-update-row,
+  .diffusion-reverse-lane {
+    grid-template-columns: 1fr;
+  }
+
+  .diffusion-forward-hop > span,
+  .diffusion-reverse-lane > span {
+    justify-self: center;
   }
 
   .gate-model-label {

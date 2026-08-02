@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
+import { DiffusionWorkbench } from "./DiffusionWorkbench.js";
 import { GanWorkbench } from "./GanWorkbench.js";
 import { VariationalWorkbench } from "./VariationalWorkbench.js";
 
 export function RepresentationWorkbench() {
-  const [lab, setLab] = useState<"autoencoder" | "variational" | "gan">("autoencoder");
+  const [lab, setLab] = useState<
+    "autoencoder" | "variational" | "gan" | "diffusion"
+  >("autoencoder");
 
   return (
     <div className="representation-workbench">
@@ -30,13 +33,22 @@ export function RepresentationWorkbench() {
         >
           Adversarial game
         </button>
+        <button
+          aria-pressed={lab === "diffusion"}
+          type="button"
+          onClick={() => setLab("diffusion")}
+        >
+          Diffusion path
+        </button>
       </nav>
       {lab === "autoencoder" ? (
         <AutoencoderWorkbench />
       ) : lab === "variational" ? (
         <VariationalWorkbench />
-      ) : (
+      ) : lab === "gan" ? (
         <GanWorkbench />
+      ) : (
+        <DiffusionWorkbench />
       )}
     </div>
   );

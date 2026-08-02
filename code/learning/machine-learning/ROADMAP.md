@@ -37,11 +37,11 @@ trace, and tests.
   - [x] Softmax attention weights and causal masking.
   - [x] Multi-head attention, residual paths, and normalization.
   - [x] Tiny decoder-only language model training trace.
-- [ ] Representation and generation
+- [x] Representation and generation
   - [x] Two-number autoencoder bottleneck.
   - [x] Variational sampling and KL tradeoff.
   - [x] One-dimensional GAN game.
-  - [ ] One-dimensional diffusion forward and denoising steps.
+  - [x] One-dimensional diffusion forward and denoising steps.
 - [ ] Structured and memory networks
   - [ ] Hopfield associative memory.
   - [ ] Message passing on a tiny graph.

@@ -148,6 +148,12 @@ the frozen updated discriminator. Each player's objective, active gradient
 route, two-parameter numerical audit, and the opponent's counter-push stay
 visible at every phase.
 
+Finish the representation sequence with the diffusion view. It mixes one clean
+scalar with a saved noise value at two cumulative-alpha levels, trains a shared
+timestep-aware noise predictor, audits all three parameter gradients, and feeds
+two deterministic reverse means into each other. The final reconstruction keeps
+its small residual error visible rather than implying a perfect toy denoiser.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -229,6 +235,11 @@ NN18 under `code/specs/fixtures/one-dimensional-gan-v1` pins one complete
 scalar adversarial round: saved noise, real and fake scores, a detached
 discriminator update, a frozen-discriminator generator response, both players'
 loss snapshots, and two objective-specific finite-difference audits.
+
+NN19 under `code/specs/fixtures/one-dimensional-diffusion-v1` pins two scalar
+forward noise levels, cumulative schedule coefficients, saved-noise targets, a
+shared timestep-conditioned denoiser update, a three-parameter numerical audit,
+and the complete deterministic reverse-mean path.
 
 ## Development
 

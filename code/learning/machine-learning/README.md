@@ -35,13 +35,14 @@ larger network:
 15. [A Two-Number Autoencoder Bottleneck, by Hand](./two-number-autoencoder-bottleneck-by-hand.md)
 16. [Variational Sampling and the KL Tradeoff, by Hand](./variational-sampling-and-kl-tradeoff-by-hand.md)
 17. [A One-Dimensional GAN Game, by Hand](./one-dimensional-gan-game-by-hand.md)
-18. [Matrix Math](../matrix-math.md)
-19. [Loss Functions](../loss-functions.md)
-20. [Gradient Descent](../gradient-descent.md)
-21. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-22. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-23. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-24. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+18. [One-Dimensional Diffusion, by Hand](./one-dimensional-diffusion-by-hand.md)
+19. [Matrix Math](../matrix-math.md)
+20. [Loss Functions](../loss-functions.md)
+21. [Gradient Descent](../gradient-descent.md)
+22. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+23. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+24. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+25. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -98,7 +99,9 @@ has ten complementary views:
   beta-weighted KL gradients, six finite differences, and a full-model update.
   Continue into a one-dimensional adversarial game to alternate a detached
   discriminator move and a frozen-discriminator generator response on one
-  visible number line.
+  visible number line. Then follow one clean scalar through two diffusion noise
+  levels, train a timestep-aware noise predictor, and replay two deterministic
+  reverse means.
 
 ## Language-Neutral Corpus
 
@@ -171,6 +174,12 @@ discriminator gradients, a frozen-discriminator generator counter-move, two
 objective-specific central finite-difference audits, and all three loss
 snapshots.
 
+NN19 adds `code/specs/fixtures/one-dimensional-diffusion-v1`, including a
+two-level cumulative-alpha schedule, saved-noise forward mixtures, timestep-
+conditioned predictions, per-level and reduced gradients, a three-parameter
+central finite-difference audit, one loss-reducing update, and a deterministic
+two-step reverse mean.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -190,6 +199,7 @@ python code/scripts/validate_tiny_decoder_training_labs.py
 python code/scripts/validate_two_number_autoencoder_labs.py
 python code/scripts/validate_variational_autoencoder_labs.py
 python code/scripts/validate_one_dimensional_gan_labs.py
+python code/scripts/validate_one_dimensional_diffusion_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -230,6 +240,9 @@ audits all six trainable gradients, and reruns the complete stochastic path.
 The first NN18 lab alternates a detached discriminator update and a generator
 counter-move through a frozen discriminator, audits each player's own
 objective, and makes the resulting pushback between losses explicit.
+The first NN19 lab trades clean signal for saved noise at two cumulative levels,
+teaches one timestep-aware denoiser from both rows, audits its three shared
+gradients, and iterates the learned reverse mean back near the clean sample.
 
 ## How to Study a Model
 

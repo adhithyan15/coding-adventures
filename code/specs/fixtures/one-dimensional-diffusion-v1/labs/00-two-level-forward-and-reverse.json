@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "id": "two-level-forward-and-reverse",
+  "title": "Add saved noise at two levels, learn it, then reverse the mean path",
+  "question": "How does a diffusion model trade clean signal for noise and use a timestep-aware noise prediction to run the process backward?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "diffusion model",
+    "forward noising schedule",
+    "cumulative alpha",
+    "timestep conditioning",
+    "noise prediction",
+    "deterministic reverse mean"
+  ],
+  "operation": {
+    "kind": "one-dimensional-diffusion-round",
+    "forward": "closed-form-saved-noise",
+    "denoiser": "scalar-affine-with-normalized-timestep",
+    "loss": "mean-half-squared-noise-error",
+    "reverse": "deterministic-ddpm-mean",
+    "update": "sgd"
+  },
+  "clean_sample": 1,
+  "saved_noise": -0.5,
+  "schedule": [
+    { "t": 1, "beta": 0.36, "normalized_t": 0.5 },
+    { "t": 2, "beta": 0.4375, "normalized_t": 1 }
+  ],
+  "denoiser": {
+    "sample_weight": 0,
+    "timestep_weight": 0,
+    "bias": 0
+  },
+  "optimizer": { "learning_rate": 0.5 },
+  "expected": {
+    "forward_steps": [
+      {
+        "t": 1,
+        "beta": 0.36,
+        "alpha": 0.64,
+        "alpha_bar": 0.64,
+        "normalized_t": 0.5,
+        "signal_scale": 0.8,
+        "noise_scale": 0.6,
+        "signal_contribution": 0.8,
+        "noise_contribution": -0.3,
+        "noisy_sample": 0.5
+      },
+      {
+        "t": 2,
+        "beta": 0.4375,
+        "alpha": 0.5625,
+        "alpha_bar": 0.36,
+        "normalized_t": 1,
+        "signal_scale": 0.6,
+        "noise_scale": 0.8,
+        "signal_contribution": 0.6,
+        "noise_contribution": -0.4,
+        "noisy_sample": 0.2
+      }
+    ],
+    "initial_denoising": [
+      {
+        "t": 1,
+        "noisy_sample": 0.5,
+        "normalized_t": 0.5,
+        "predicted_noise": 0,
+        "target_noise": -0.5,
+        "error": 0.5,
+        "loss": 0.125
+      },
+      {
+        "t": 2,
+        "noisy_sample": 0.2,
+        "normalized_t": 1,
+        "predicted_noise": 0,
+        "target_noise": -0.5,
+        "error": 0.5,
+        "loss": 0.125
+      }
+    ],
+    "initial_mean_loss": 0.125,
+    "backward": {
+      "per_step": [
+        {
+          "t": 1,
+          "prediction_gradient": 0.25,
+          "sample_weight_contribution": 0.125,
+          "timestep_weight_contribution": 0.125,
+          "bias_contribution": 0.25
+        },
+        {
+          "t": 2,
+          "prediction_gradient": 0.25,
+          "sample_weight_contribution": 0.05,
+          "timestep_weight_contribution": 0.25,
+          "bias_contribution": 0.25
+        }
+      ],
+      "sample_weight_gradient": 0.175,
+      "timestep_weight_gradient": 0.375,
+      "bias_gradient": 0.5
+    },
+    "gradient_check": {
+      "epsilon": 1e-6,
+      "parameter_order": ["denoiser.sample_weight", "denoiser.timestep_weight", "denoiser.bias"],
+      "analytical": [0.175, 0.375, 0.5],
+      "numerical": [0.17499999999809335, 0.3749999999969056, 0.49999999999356115],
+      "max_absolute_error": 6.438849453616058e-12
+    },
+    "updated_denoiser": {
+      "sample_weight": -0.0875,
+      "timestep_weight": -0.1875,
+      "bias": -0.25
+    },
+    "post_update_denoising": [
+      {
+        "t": 1,
+        "noisy_sample": 0.5,
+        "normalized_t": 0.5,
+        "predicted_noise": -0.3875,
+        "target_noise": -0.5,
+        "error": 0.1125,
+        "loss": 0.006328125
+      },
+      {
+        "t": 2,
+        "noisy_sample": 0.2,
+        "normalized_t": 1,
+        "predicted_noise": -0.455,
+        "target_noise": -0.5,
+        "error": 0.045,
+        "loss": 0.0010125
+      }
+    ],
+    "post_update_mean_loss": 0.0036703125,
+    "reverse_steps": [
+      {
+        "t": 2,
+        "input_sample": 0.2,
+        "normalized_t": 1,
+        "predicted_noise": -0.455,
+        "noise_coefficient": 0.546875,
+        "scaled_noise_correction": -0.248828125,
+        "corrected_sample": 0.448828125,
+        "alpha_scale": 0.75,
+        "output_mean": 0.5984375
+      },
+      {
+        "t": 1,
+        "input_sample": 0.5984375,
+        "normalized_t": 0.5,
+        "predicted_noise": -0.39611328125,
+        "noise_coefficient": 0.6,
+        "scaled_noise_correction": -0.23766796875,
+        "corrected_sample": 0.83610546875,
+        "alpha_scale": 0.8,
+        "output_mean": 1.0451318359375
+      }
+    ],
+    "final_reconstruction": 1.0451318359375,
+    "final_absolute_error": 0.0451318359375
+  }
+}
