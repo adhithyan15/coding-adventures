@@ -1132,7 +1132,8 @@ code {
 .convolution-controls,
 .kernel-slide,
 .mac-panel,
-.output-strip {
+.output-strip,
+.training-panel {
   @include surface;
 }
 
@@ -1153,7 +1154,8 @@ code {
 
 .convolution-intro p:not(.eyebrow),
 .convolution-controls p,
-.convolution-note p {
+.convolution-note p,
+.training-heading p {
   margin: 5px 0 0;
   color: $muted;
 }
@@ -1319,10 +1321,172 @@ code {
   color: #17603f;
 }
 
+.training-panel {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.training-heading,
+.loss-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.gradient-check-badge {
+  display: grid;
+  flex: 0 0 auto;
+  min-width: 112px;
+  padding: 8px 10px;
+  border: 1px solid rgba(194, 65, 59, 0.3);
+  border-radius: 8px;
+  background: #fff5f4;
+  color: $red;
+  text-align: center;
+}
+
+.gradient-check-badge small,
+.loss-flow small,
+.kernel-update small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gradient-check-badge--pass {
+  border-color: rgba(35, 122, 87, 0.3);
+  background: #eaf7ef;
+  color: $green;
+}
+
+.loss-flow {
+  justify-content: center;
+  padding: 10px;
+  border-block: 1px solid $line;
+}
+
+.loss-flow > div {
+  display: grid;
+  min-width: 140px;
+  text-align: center;
+}
+
+.loss-flow strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.15rem;
+}
+
+.loss-flow span {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.selected-gradient-path {
+  display: grid;
+  gap: 10px;
+}
+
+.selected-gradient-path h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.selected-gradient-path .mac-heading > code {
+  min-height: 0;
+  white-space: nowrap;
+}
+
+.gradient-table-wrap {
+  overflow-x: auto;
+  border-block: 1px solid $line;
+}
+
+.gradient-table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.gradient-table caption {
+  padding: 10px 0 6px;
+  color: $muted;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  text-align: left;
+}
+
+.gradient-table th,
+.gradient-table td {
+  padding: 8px;
+  border-bottom: 1px solid $line;
+}
+
+.gradient-table thead th,
+.gradient-table tbody th {
+  color: $muted;
+  font-weight: 800;
+}
+
+.gradient-table thead th:first-child,
+.gradient-table tbody th {
+  text-align: left;
+}
+
+.gradient-sum {
+  background: #f0f8f4;
+  color: $green;
+  font-weight: 850;
+}
+
+.kernel-update-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.kernel-update {
+  display: grid;
+  gap: 5px;
+  padding: 9px;
+  border: 1px solid rgba(109, 91, 208, 0.22);
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.06);
+}
+
+.kernel-update code {
+  min-height: 0;
+  padding: 3px 6px;
+}
+
+.kernel-update strong {
+  color: #4f3da9;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
 .convolution-controls {
   display: grid;
   gap: 14px;
   padding: 14px;
+}
+
+.convolution-training-controls {
+  display: grid;
+  gap: 10px;
+  padding-block: 12px;
+  border-block: 1px solid $line;
+}
+
+.training-step-button {
+  border-color: rgba(109, 91, 208, 0.38);
+  background: #f1efff;
+  color: #4f3da9;
 }
 
 .convolution-controls .button-grid button:last-child {
@@ -1395,9 +1559,22 @@ code {
   }
 
   .convolution-intro,
-  .mac-heading {
+  .mac-heading,
+  .training-heading {
     display: grid;
     align-items: start;
+  }
+
+  .gradient-check-badge {
+    justify-self: start;
+  }
+
+  .loss-flow {
+    align-items: stretch;
+  }
+
+  .loss-flow > div {
+    min-width: 0;
   }
 
   .convolution-mode-chip {

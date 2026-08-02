@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   DEFAULT_CONVOLUTION_KERNEL,
+  DEFAULT_CONVOLUTION_LEARNING_RATE,
   DEFAULT_CONVOLUTION_SIGNAL,
+  DEFAULT_CONVOLUTION_TARGETS,
+  numericalKernelGradient,
   parseNumberList,
+  proposeConvolutionStep,
+  traceConvolutionTraining,
   traceValidCorrelation,
 } from "./convolution-lab.js";
 
@@ -20,9 +25,13 @@ function listText(values: readonly number[]): string {
 export function ConvolutionWorkbench() {
   const [signalText, setSignalText] = useState(listText(DEFAULT_CONVOLUTION_SIGNAL));
   const [kernelText, setKernelText] = useState(listText(DEFAULT_CONVOLUTION_KERNEL));
+  const [targetText, setTargetText] = useState(listText(DEFAULT_CONVOLUTION_TARGETS));
+  const [learningRate, setLearningRate] = useState(DEFAULT_CONVOLUTION_LEARNING_RATE);
+  const [trainingStep, setTrainingStep] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const signal = useMemo(() => parseNumberList(signalText), [signalText]);
   const kernel = useMemo(() => parseNumberList(kernelText), [kernelText]);
+  const targets = useMemo(() => parseNumberList(targetText), [targetText]);
   const error = signal === null || kernel === null
     ? "Use comma-separated finite numbers."
     : kernel.length > signal.length
@@ -32,18 +41,61 @@ export function ConvolutionWorkbench() {
     () => error === null ? traceValidCorrelation(signal!, kernel!) : [],
     [error, kernel, signal],
   );
+  const trainingError = error !== null
+    ? error
+    : targets === null
+      ? "Use comma-separated finite training targets."
+      : targets.length !== traces.length
+        ? `Valid mode produces ${traces.length} outputs, so enter ${traces.length} targets.`
+        : !Number.isFinite(learningRate) || learningRate <= 0
+          ? "The learning rate must be a positive number."
+          : null;
+  const trainingTrace = useMemo(
+    () => trainingError === null
+      ? traceConvolutionTraining(signal!, kernel!, targets!)
+      : null,
+    [kernel, signal, targets, trainingError],
+  );
+  const numericalGradient = useMemo(
+    () => trainingError === null
+      ? numericalKernelGradient(signal!, kernel!, targets!)
+      : [],
+    [kernel, signal, targets, trainingError],
+  );
+  const proposal = useMemo(
+    () => trainingError === null
+      ? proposeConvolutionStep(signal!, kernel!, targets!, learningRate)
+      : null,
+    [kernel, learningRate, signal, targets, trainingError],
+  );
+  const gradientCheckPasses = trainingTrace !== null
+    && trainingTrace.kernelGradient.every(
+      (gradient, index) => Math.abs(gradient - numericalGradient[index]!) <= 1e-7,
+    );
 
   useEffect(() => {
     setSelectedIndex((current) => Math.min(current, Math.max(traces.length - 1, 0)));
   }, [traces.length]);
 
   const trace = traces[selectedIndex];
+  const selectedContribution = trainingTrace?.contributions[selectedIndex];
   const activeEnd = trace === undefined ? -1 : trace.startIndex + trace.window.length;
 
   function reset(): void {
     setSignalText(listText(DEFAULT_CONVOLUTION_SIGNAL));
     setKernelText(listText(DEFAULT_CONVOLUTION_KERNEL));
+    setTargetText(listText(DEFAULT_CONVOLUTION_TARGETS));
+    setLearningRate(DEFAULT_CONVOLUTION_LEARNING_RATE);
+    setTrainingStep(0);
     setSelectedIndex(0);
+  }
+
+  function applyGradientStep(): void {
+    if (proposal === null) {
+      return;
+    }
+    setKernelText(listText(proposal.nextKernel));
+    setTrainingStep((step) => step + 1);
   }
 
   return (
@@ -168,6 +220,114 @@ export function ConvolutionWorkbench() {
                 ))}
               </div>
             </section>
+
+            <section className="training-panel" aria-label="Shared kernel gradient trace">
+              <div className="training-heading">
+                <div>
+                  <p className="eyebrow">NN06 · backward pass</p>
+                  <h2>Shared weights collect gradients</h2>
+                  <p>
+                    Every output sends a contribution back to each kernel weight.
+                    Columns add because the same weight was reused in every window.
+                  </p>
+                </div>
+                <div className={gradientCheckPasses
+                  ? "gradient-check-badge gradient-check-badge--pass"
+                  : "gradient-check-badge"}
+                >
+                  <small>finite difference</small>
+                  <strong>{gradientCheckPasses ? "PASS" : "CHECK"}</strong>
+                </div>
+              </div>
+
+              {trainingTrace === null || proposal === null || selectedContribution === undefined ? (
+                <div className="convolution-error" role="alert">{trainingError}</div>
+              ) : (
+                <>
+                  <div className="loss-flow" aria-label="Loss before and after proposed step">
+                    <div>
+                      <small>current MSE</small>
+                      <strong>{formatNumber(trainingTrace.loss)}</strong>
+                    </div>
+                    <span aria-hidden="true">− η∇</span>
+                    <div>
+                      <small>after proposed step</small>
+                      <strong>{formatNumber(proposal.nextLoss)}</strong>
+                    </div>
+                  </div>
+
+                  <section className="selected-gradient-path" aria-label="Selected output gradient path">
+                    <div className="mac-heading">
+                      <div>
+                        <p className="eyebrow">Selected path · y[{selectedIndex}]</p>
+                        <h3>One output sends three contributions</h3>
+                      </div>
+                      <code>
+                        dL/dy = 2/{trainingTrace.outputs.length} × {formatNumber(trainingTrace.errors[selectedIndex]!)}
+                        {" = "}{formatNumber(selectedContribution.outputGradient)}
+                      </code>
+                    </div>
+                    <div className="product-grid">
+                      {selectedContribution.kernelGradient.map((gradient, kernelIndex) => (
+                        <div className="product-card" key={kernelIndex}>
+                          <small>toward k[{kernelIndex}]</small>
+                          <code>
+                            {formatNumber(selectedContribution.outputGradient)} × {formatNumber(selectedContribution.window[kernelIndex]!)}
+                          </code>
+                          <strong>{formatNumber(gradient)}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <div className="gradient-table-wrap">
+                    <table className="gradient-table">
+                      <caption>Gradient contributions from every reused position</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">weight</th>
+                          {trainingTrace.contributions.map((contribution) => (
+                            <th scope="col" key={contribution.outputIndex}>
+                              y[{contribution.outputIndex}]
+                            </th>
+                          ))}
+                          <th scope="col">sum</th>
+                          <th scope="col">numeric</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {kernel.map((_, kernelIndex) => (
+                          <tr key={kernelIndex}>
+                            <th scope="row">dL/dk[{kernelIndex}]</th>
+                            {trainingTrace.contributions.map((contribution) => (
+                              <td key={contribution.outputIndex}>
+                                {formatNumber(contribution.kernelGradient[kernelIndex]!)}
+                              </td>
+                            ))}
+                            <td className="gradient-sum">
+                              {formatNumber(trainingTrace.kernelGradient[kernelIndex]!)}
+                            </td>
+                            <td>{formatNumber(numericalGradient[kernelIndex]!)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="kernel-update-grid" aria-label="Proposed kernel update">
+                    {kernel.map((value, kernelIndex) => (
+                      <div className="kernel-update" key={kernelIndex}>
+                        <small>update k[{kernelIndex}]</small>
+                        <code>
+                          {formatNumber(value)} − {formatNumber(learningRate)} × {formatNumber(trainingTrace.kernelGradient[kernelIndex]!)}
+                        </code>
+                        <strong>{formatNumber(proposal.nextKernel[kernelIndex]!)}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </section>
           </>
         )}
       </section>
@@ -194,6 +354,39 @@ export function ConvolutionWorkbench() {
             onChange={(event) => setKernelText(event.target.value)}
           />
         </label>
+        <div className="convolution-training-controls">
+          <div className="history__topline">
+            <span>Train shared weights</span>
+            <strong>step {trainingStep}</strong>
+          </div>
+          <label className="field">
+            <span>Training targets</span>
+            <input
+              aria-label="Training targets"
+              value={targetText}
+              onChange={(event) => setTargetText(event.target.value)}
+            />
+          </label>
+          <label className="field">
+            <span>Learning rate</span>
+            <input
+              aria-label="Convolution learning rate"
+              min="0.0001"
+              step="0.001"
+              type="number"
+              value={learningRate}
+              onChange={(event) => setLearningRate(Number(event.target.value))}
+            />
+          </label>
+          <button
+            className="training-step-button"
+            disabled={proposal === null}
+            type="button"
+            onClick={applyGradientStep}
+          >
+            Apply gradient step
+          </button>
+        </div>
         <div className="button-grid">
           <button
             type="button"
@@ -222,8 +415,9 @@ export function ConvolutionWorkbench() {
         <div className="convolution-note">
           <span>What scales next?</span>
           <p>
-            A trainable kernel learns these shared weights. Images add a second spatial
-            direction; channels and batches add more indexed loops, not new magic.
+            Images add a second spatial direction; channels and batches add more
+            indexed loops. The same shared-gradient reduction still happens for every
+            trainable filter.
           </p>
         </div>
       </aside>

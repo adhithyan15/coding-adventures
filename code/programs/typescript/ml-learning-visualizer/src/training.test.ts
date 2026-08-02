@@ -40,8 +40,13 @@ import {
 } from "./training-microscope.js";
 import {
   DEFAULT_CONVOLUTION_KERNEL,
+  DEFAULT_CONVOLUTION_LEARNING_RATE,
   DEFAULT_CONVOLUTION_SIGNAL,
+  DEFAULT_CONVOLUTION_TARGETS,
+  numericalKernelGradient,
   parseNumberList,
+  proposeConvolutionStep,
+  traceConvolutionTraining,
   traceValidCorrelation,
 } from "./convolution-lab.js";
 
@@ -219,6 +224,63 @@ describe("training helpers", () => {
       target: { value: "2, -1, 1" },
     });
     expect(screen.getByRole("button", { name: "Select output 1" }).textContent).toContain("-1");
+  });
+
+  it("accumulates a shared kernel gradient from every output window", () => {
+    const trace = traceConvolutionTraining(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      DEFAULT_CONVOLUTION_KERNEL,
+      DEFAULT_CONVOLUTION_TARGETS,
+    );
+
+    expect(trace.loss).toBeCloseTo(0.5);
+    expect(trace.errors).toEqual([1, 0, 1, 0]);
+    expect(trace.outputGradients).toEqual([0.5, 0, 0.5, 0]);
+    expect(trace.contributions[0]!.kernelGradient).toEqual([1, 0.5, 1.5]);
+    expect(trace.contributions[2]!.kernelGradient).toEqual([1.5, 0, 2]);
+    expect(trace.kernelGradient).toEqual([2.5, 0.5, 3.5]);
+  });
+
+  it("matches the convolution backward pass with finite differences", () => {
+    const trace = traceConvolutionTraining(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      DEFAULT_CONVOLUTION_KERNEL,
+      DEFAULT_CONVOLUTION_TARGETS,
+    );
+    const numerical = numericalKernelGradient(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      DEFAULT_CONVOLUTION_KERNEL,
+      DEFAULT_CONVOLUTION_TARGETS,
+    );
+
+    for (const [index, gradient] of trace.kernelGradient.entries()) {
+      expect(numerical[index]).toBeCloseTo(gradient, 8);
+    }
+  });
+
+  it("proposes a kernel update that lowers convolution loss", () => {
+    const proposal = proposeConvolutionStep(
+      DEFAULT_CONVOLUTION_SIGNAL,
+      DEFAULT_CONVOLUTION_KERNEL,
+      DEFAULT_CONVOLUTION_TARGETS,
+      DEFAULT_CONVOLUTION_LEARNING_RATE,
+    );
+
+    expect(proposal.nextKernel).toEqual([0.95, -1.01, 1.93]);
+    expect(proposal.nextOutputs).toEqual([6.68, -2.08, 10.57, -0.18000000000000016]);
+    expect(proposal.nextLoss).toBeCloseTo(0.206525);
+  });
+
+  it("applies one shared-kernel gradient step in the workbench", () => {
+    render(React.createElement(ConvolutionWorkbench));
+
+    expect(screen.getByRole("heading", { name: "Shared weights collect gradients" })).toBeTruthy();
+    expect(screen.getByText("PASS")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Apply gradient step" }));
+
+    expect((screen.getByLabelText("Kernel weights") as HTMLInputElement).value)
+      .toBe("0.95, -1.01, 1.93");
+    expect(screen.getByText("step 1")).toBeTruthy();
   });
 
   it("registers the hidden-layer teaching examples without sine yet", () => {

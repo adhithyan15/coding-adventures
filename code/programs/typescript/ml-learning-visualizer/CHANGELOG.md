@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Add the NN05 spatial workbench with editable 1D valid cross-correlation and
   complete multiply-accumulate traces.
+- Extend the spatial workbench with NN06 shared-kernel gradient accumulation,
+  finite-difference verification, and an apply-one-step interaction.
 
 ### Changed
 

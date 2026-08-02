@@ -22,13 +22,14 @@ larger network:
 2. [Backpropagation by Hand](./backpropagation-by-hand.md)
 3. [Optimization Under the Microscope](./optimization-under-the-microscope.md)
 4. [Convolution, Window by Window](./convolution-window-by-window.md)
-5. [Matrix Math](../matrix-math.md)
-6. [Loss Functions](../loss-functions.md)
-7. [Gradient Descent](../gradient-descent.md)
-8. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-9. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-10. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-11. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+5. [Training a Convolution Kernel by Hand](./training-a-convolution-kernel-by-hand.md)
+6. [Matrix Math](../matrix-math.md)
+7. [Loss Functions](../loss-functions.md)
+8. [Gradient Descent](../gradient-descent.md)
+9. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+10. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+11. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+12. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -52,7 +53,8 @@ has five complementary views:
   for XOR-like logic, bends, thresholds, circles, moons, and feature
   interactions.
 - **Spatial lab:** slide one shared 1D kernel across a signal and inspect every
-  window, product, running accumulator, and feature-map output.
+  window, product, running accumulator, feature-map output, per-position
+  gradient contribution, shared-weight reduction, and proposed update.
 
 ## Language-Neutral Corpus
 
@@ -65,12 +67,17 @@ cross-correlation and complete multiply-accumulate traces in
 package, a Python notebook, or a browser visualizer explain the same
 computation.
 
+NN06 adds a trainable shared-kernel trace in
+`code/specs/fixtures/convolution-training-v1`, including a central finite-
+difference check and one complete gradient-descent update.
+
 Validate the bootstrap corpus with:
 
 ```text
 python code/scripts/validate_neural_learning_labs.py
 python code/scripts/validate_optimization_learning_labs.py
 python code/scripts/validate_convolution_learning_labs.py
+python code/scripts/validate_convolution_training_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -78,7 +85,8 @@ sigmoid OR neuron, and the hidden representation used by a solved XOR network.
 The first NN04 lab covers a linear loss landscape, an independent gradient
 check, and stochastic, mini-batch, and full-batch trajectories. The first NN05
 lab covers an asymmetric shared kernel and every intermediate produced as it
-slides over a signal.
+slides over a signal. The first NN06 lab shows how every output contributes to
+the shared kernel gradient and verifies one loss-reducing update.
 
 ## How to Study a Model
 

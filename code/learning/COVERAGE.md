@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1246 | 1142 | 98 | 60 | 7 | 1081 |
+| 1247 | 1143 | 98 | 60 | 7 | 1082 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 10 | 0 | 784 |
+| P3 | 2 | 10 | 0 | 785 |
 
 ## P0 Backlog
 
@@ -1198,6 +1198,7 @@ mention provides a complete lesson.
 | `smart-home-onvif-integration` | 1 | missing |
 | `smart-home-registry` | 1 | missing |
 | `smart-home-reolink-integration` | 1 | missing |
+| `smart-home-roku-ecp-integration` | 1 | missing |
 | `smart-home-runtime` | 1 | missing |
 | `smart-home-runtime-store` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |

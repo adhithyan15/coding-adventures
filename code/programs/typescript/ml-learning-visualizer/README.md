@@ -54,7 +54,10 @@ The spatial workbench slides an editable one-dimensional kernel over an
 editable signal in valid, stride-one mode. Select any feature-map output to see
 its receptive-field window, element-wise products, and running accumulator. An
 asymmetric default kernel makes the neural cross-correlation convention
-visible instead of silently flipping weights.
+visible instead of silently flipping weights. The same selected output exposes
+its loss derivative and contribution to each shared kernel weight. A reduction
+table checks the analytical gradient against central finite differences and
+previews or applies one loss-reducing update.
 
 ## Lab Families
 
@@ -81,6 +84,9 @@ implementations can reproduce the same visualized arithmetic.
 
 NN05 under `code/specs/fixtures/convolution-learning-v1` pins the first
 sliding-kernel trace, including every window, product, accumulator, and output.
+NN06 under `code/specs/fixtures/convolution-training-v1` pins every shared-
+weight gradient contribution, the finite-difference oracle, and one optimizer
+step.
 
 ## Development
 
