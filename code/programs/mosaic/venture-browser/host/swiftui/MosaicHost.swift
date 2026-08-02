@@ -100,6 +100,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var acceptanceReported = false
   private var interactionAcceptanceStarted = false
   private var lastSurfaceKeyboardCommand: String?
+  private var lastSurfacePointerPoint: NSPoint?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -149,6 +150,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard !interactionAcceptanceStarted,
       let markerPath = environment["VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH"],
       let targetURL = environment["VENTURE_BROWSER_INTERACTION_URL"],
+      environment["VENTURE_BROWSER_INTERACTION_LINK_URL"] != nil,
       let startURL = environment["VENTURE_START_URL"]
     else { return }
     interactionAcceptanceStarted = true
@@ -410,16 +412,84 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         to: markerPath)
       return
     }
+    guard performNativeSurfaceKey(keyCode: 115) else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native Home key could not reset the shared viewport",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+      self?.activateSurfaceLink(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath)
+    }
+  }
+
+  private func activateSurfaceLink(
+    startURL: String, targetURL: String, markerPath: String
+  ) {
+    guard lastSurfaceKeyboardCommand == "document-start" else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native Home key did not reset the shared viewport",
+        ],
+        to: markerPath)
+      return
+    }
+    guard performNativeSurfaceClick(at: NSPoint(x: 32, y: 26)) else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "content surface unavailable for native link activation",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+      self?.verifySurfaceLink(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+    }
+  }
+
+  private func verifySurfaceLink(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let linkURL = ProcessInfo.processInfo.environment["VENTURE_BROWSER_INTERACTION_LINK_URL"] ?? ""
     let response = applyProps()
     let props = response?["props"] as? NSDictionary
-    writeInteractionResult(
-      [
-        "backend": "swiftui", "status": "interacted",
-        "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
-        "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
-        "targetAddress": targetURL, "pageTitle": props?["page-title"] as? String ?? "",
-      ],
-      to: markerPath)
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == linkURL, pageTitle == "Venture link acceptance" {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted",
+          "controls": "back-forward-reload-home", "surfaceKeyboard": "document-end",
+          "surfacePointer": "link", "reloadTitle": "Venture reload acceptance",
+          "homeAddress": startURL, "targetAddress": targetURL,
+          "linkAddress": linkURL, "pageTitle": pageTitle,
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      let pointer = lastSurfacePointerPoint.map { "\($0.x),\($0.y)" } ?? "unhandled"
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "surfacePoint": pointer,
+          "error": "native surface link did not navigate",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifySurfaceLink(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
   }
 
   private func findEditableTextField(
@@ -483,21 +553,40 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return true
   }
 
+  private func performNativeSurfaceClick(at point: NSPoint) -> Bool {
+    guard let contentView, let window = contentView.window else { return false }
+    NSApp.activate(ignoringOtherApps: true)
+    let location = contentView.convert(point, to: nil)
+    guard
+      let mouseDown = primaryMouseEvent(type: .leftMouseDown, at: location, in: window),
+      let mouseUp = primaryMouseEvent(type: .leftMouseUp, at: location, in: window)
+    else { return false }
+    contentView.mouseDown(with: mouseDown)
+    contentView.mouseUp(with: mouseUp)
+    return true
+  }
+
   private func sendPrimaryClick(at location: NSPoint, to window: NSWindow) {
     for eventType in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
-      guard let event = NSEvent.mouseEvent(
-        with: eventType,
-        location: location,
-        modifierFlags: [],
-        timestamp: ProcessInfo.processInfo.systemUptime,
-        windowNumber: window.windowNumber,
-        context: nil,
-        eventNumber: 0,
-        clickCount: 1,
-        pressure: eventType == .leftMouseDown ? 1 : 0)
+      guard let event = primaryMouseEvent(type: eventType, at: location, in: window)
       else { continue }
       NSApp.sendEvent(event)
     }
+  }
+
+  private func primaryMouseEvent(
+    type: NSEvent.EventType, at location: NSPoint, in window: NSWindow
+  ) -> NSEvent? {
+    NSEvent.mouseEvent(
+      with: type,
+      location: location,
+      modifierFlags: [],
+      timestamp: ProcessInfo.processInfo.systemUptime,
+      windowNumber: window.windowNumber,
+      context: nil,
+      eventNumber: 0,
+      clickCount: 1,
+      pressure: type == .leftMouseDown ? 1 : 0)
   }
 
   private func nativeChildren(of object: NSObject) -> [NSObject] {
@@ -553,6 +642,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   }
 
   fileprivate func activateLink(at point: NSPoint) {
+    lastSurfacePointerPoint = point
     guard let native, let browser, native.activateLink(browser, point.x, point.y) != 0 else {
       return
     }

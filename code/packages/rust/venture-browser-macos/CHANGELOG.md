@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extend the generated SwiftUI direct-launch gate through an AppKit click on a
+  deterministic HTML link after restoring the scrolled viewport to document
+  start.
 - Exercise the generated SwiftUI content surface's End-key path against a
   scrollable live page and require the shared Rust viewport to change.
 

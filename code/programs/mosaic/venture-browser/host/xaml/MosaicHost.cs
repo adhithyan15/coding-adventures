@@ -73,9 +73,12 @@ public static class MosaicHost
         var markerPath = Environment.GetEnvironmentVariable(
             "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH");
         var targetUrl = Environment.GetEnvironmentVariable("VENTURE_BROWSER_INTERACTION_URL");
+        var linkUrl = Environment.GetEnvironmentVariable(
+            "VENTURE_BROWSER_INTERACTION_LINK_URL");
         var startUrl = Environment.GetEnvironmentVariable("VENTURE_START_URL");
         if (string.IsNullOrWhiteSpace(markerPath)
             || string.IsNullOrWhiteSpace(targetUrl)
+            || string.IsNullOrWhiteSpace(linkUrl)
             || string.IsNullOrWhiteSpace(startUrl)
             || System.Threading.Interlocked.Exchange(ref interactionAcceptanceStarted, 1) != 0)
         {
@@ -311,15 +314,40 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!contentSurface.RunPointerAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native surface link did not activate",
+                    });
+                    return;
+                }
+                if (!await WaitForPageAsync(component, linkUrl, "Venture link acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        error = "native surface link did not navigate",
+                    });
+                    return;
+                }
+
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
                     status = "interacted",
                     controls = "back-forward-reload-home",
                     surfaceKeyboard = "document-end",
+                    surfacePointer = "link",
                     reloadTitle = "Venture reload acceptance",
-                    homeAddress = component.Address,
+                    homeAddress = startUrl,
                     targetAddress = targetUrl,
+                    linkAddress = linkUrl,
                     pageTitle = component.PageTitle,
                 });
             }
@@ -573,6 +601,14 @@ public static class MosaicHost
             return HandleKey(VirtualKey.End, false, false, out var changed) && changed;
         }
 
+        internal bool RunPointerAcceptance()
+        {
+            _ = Focus(FocusState.Programmatic);
+            return HandleKey(VirtualKey.Home, false, false, out var changed)
+                && changed
+                && ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
+        }
+
         private bool HandleKey(
             VirtualKey key,
             bool menuKeyDown,
@@ -622,18 +658,26 @@ public static class MosaicHost
 
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (pixelWidth == 0 || pixelHeight == 0 || ActualWidth <= 0 || ActualHeight <= 0)
+            if (ActivateSurfacePoint(e.GetCurrentPoint(image).Position))
             {
-                return;
-            }
-            var point = e.GetCurrentPoint(image).Position;
-            var x = point.X * pixelWidth / ActualWidth;
-            var y = point.Y * pixelHeight / ActualHeight;
-            if (Native.ActivateLink(browser, x, y) != 0)
-            {
-                _ = ApplyProps(component);
                 e.Handled = true;
             }
+        }
+
+        private bool ActivateSurfacePoint(Windows.Foundation.Point point)
+        {
+            if (pixelWidth == 0 || pixelHeight == 0 || ActualWidth <= 0 || ActualHeight <= 0)
+            {
+                return false;
+            }
+            var x = point.X * pixelWidth / ActualWidth;
+            var y = point.Y * pixelHeight / ActualHeight;
+            if (Native.ActivateLink(browser, x, y) == 0)
+            {
+                return false;
+            }
+            _ = ApplyProps(component);
+            return true;
         }
     }
 
