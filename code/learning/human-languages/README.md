@@ -70,7 +70,7 @@ edition is authored.
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Starter curriculum authored |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Shared-spine pilot: greetings, responses, and self-introduction |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | Shared-spine pilot plus a two-chapter starter book |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Shared-spine pilot: greetings, responses, and self-introduction |
 
 Spanish is the pilot that proved the format; every other track replicates it,
