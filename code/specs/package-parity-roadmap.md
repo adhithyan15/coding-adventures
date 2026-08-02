@@ -293,6 +293,10 @@ host PRs do not occupy the scoped parity slot.
 The audit also found private matrix/MSE helpers in Dart `single-layer-network`
 and `two-layer-network`; their migration to the shared packages is a separate
 downstream backlog item rather than hidden scope in this port.
+The security pass also found that ML01 does not define a shared NaN/infinity
+input policy: Dart and the Python reference can clamp NaN cross-entropy
+predictions to a finite boundary. A separate all-lane fixture and conformance
+item owns that decision instead of introducing a Dart-only behavioral fork.
 The build-tool execution critical path remains blocked on external
 immutable-runner and attester provisioning.
 

@@ -1126,6 +1126,15 @@
       "notes": "Discovered during the Dart ML parity audit. single-layer-network and two-layer-network duplicate private matrix and MSE helpers. Migrate them in a separate downstream slice after the shared packages land, preserving their public APIs and training fixtures."
     },
     {
+      "id": "ml01-non-finite-input-contract-conformance",
+      "title": "Define and enforce the ML01 non-finite input policy across lanes",
+      "status": "pending",
+      "depends_on": ["dart-current-14-of-15-matrix-family"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Dart loss-functions security review. ML01 does not define whether NaN and infinity are rejected or propagated; Dart num.clamp and the Python reference can map NaN predictions to a finite cross-entropy boundary. Define language-neutral fixtures and update every established loss-functions lane together rather than adding a Dart-only divergence."
+    },
+    {
       "id": "c-cpp-graduation",
       "title": "Review C/C++ graduation and native build-tool requirements",
       "status": "pending",
