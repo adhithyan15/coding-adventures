@@ -7143,6 +7143,58 @@ mod tests {
         );
     }
 
+    /// A runtime string procedure result remains a typed `str` value when it
+    /// immediately becomes the value actual of another typed procedure.
+    #[test]
+    fn string_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "string procedure pick(n); value n; integer n; ",
+            "if n > 0 then pick := 'HI' else pick := 'LO'; ",
+            "integer procedure matches(s); value s; string s; ",
+            "if s = 'HI' then matches := 42 else matches := 0; ",
+            "result := matches(pick(1)) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "test").expect("string composition compiles");
+        let matches_fn = module
+            .functions
+            .iter()
+            .find(|function| function.name == "matches")
+            .expect("matches procedure exists");
+        assert!(
+            matches_fn.params.iter().any(|(_, ty)| ty == "str"),
+            "the string formal must retain the str IIR type: {:?}",
+            matches_fn.params
+        );
+
+        let main = module.get_function("main").expect("has main");
+        let pick_call = main
+            .instructions
+            .iter()
+            .position(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "str"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "pick")
+            })
+            .expect("pick call returns str");
+        let matches_call = main
+            .instructions
+            .iter()
+            .position(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "i64"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "matches")
+            })
+            .expect("matches call returns integer");
+        assert!(
+            pick_call < matches_call,
+            "the string result must be evaluated before it is passed onward: {:?}",
+            main.instructions
+        );
+    }
+
     // ── AL-pow: ALGOL 60 `↑` exponentiation (spelled `^`) ───────────────────
 
     /// `integer ↑ integer-literal` unrolls to repeated integer multiply and

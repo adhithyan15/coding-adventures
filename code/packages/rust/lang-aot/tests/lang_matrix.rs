@@ -1363,6 +1363,22 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a branch-selected `string procedure` result can become the
+    // `string` value actual of a second typed procedure without becoming a
+    // literal-only string. `matches(pick(1))` crosses the `str` return and
+    // parameter boundary before the callee's equality test selects 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  string procedure pick(n); value n; integer n; \
+                    if n > 0 then pick := 'HI' else pick := 'LO'; \
+                  integer procedure matches(s); value s; string s; \
+                    if s = 'HI' then matches := 42 else matches := 0; \
+                  result := matches(pick(1)) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — explicit empty argument lists for a zero-argument typed
     // procedure in value position and a proper procedure in statement
     // position. Both lower through the shared zero-argument IIR call ABI.
@@ -5831,6 +5847,36 @@ fn algol_boolean_procedure_values_compose_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but boolean procedure composition did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_string_procedure_values_compose_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure matches(s)")
+                && program.src.contains("matches(pick(1))")
+        })
+        .expect("the ALGOL string procedure composition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but string procedure composition did not complete"
             );
             continue;
         };
