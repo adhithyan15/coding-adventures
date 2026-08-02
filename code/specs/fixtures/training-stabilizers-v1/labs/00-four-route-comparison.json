@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "nn25-four-route-stabilizer-comparison",
+  "title": "Plain, normalized, dropout, and residual branch comparison",
+  "question": "How do normalization, dropout, and an identity residual change the same branch's forward values and reverse gradient?",
+  "absolute_tolerance": 1e-9,
+  "concepts": ["layer normalization", "population variance", "inverted dropout", "dropout expectation", "residual path", "vector-Jacobian product", "finite difference"],
+  "operation": {
+    "kind": "vector-training-stabilizers",
+    "normalization": "population-layer-normalization",
+    "normalization_epsilon": 0,
+    "dropout": "inverted-training-dropout",
+    "keep_probability": 0.5,
+    "finite_difference_epsilon": 1e-6
+  },
+  "input": [1, 1, 3, 3],
+  "branch_weight": 0.5,
+  "upstream_gradient": [1, 0, 0, -1],
+  "dropout_mask": [1, 0, 1, 0],
+  "expected": {
+    "branch": [0.5, 0.5, 1.5, 1.5],
+    "normalization": {
+      "mean": 1,
+      "centered": [-0.5, -0.5, 0.5, 0.5],
+      "variance": 0.25,
+      "standard_deviation": 0.5,
+      "normalized": [-1, -1, 1, 1],
+      "upstream_sum": 0,
+      "upstream_dot_normalized": -2
+    },
+    "dropout": {
+      "scaled_mask": [2, 0, 2, 0],
+      "evaluation_output": [0.5, 0.5, 1.5, 1.5],
+      "training_expectation": [0.5, 0.5, 1.5, 1.5]
+    },
+    "routes": [
+      {
+        "id": "plain",
+        "output": [0.5, 0.5, 1.5, 1.5],
+        "score": -1,
+        "branch_gradient": [1, 0, 0, -1],
+        "skip_gradient": [0, 0, 0, 0],
+        "input_gradient": [0.5, 0, 0, -0.5],
+        "weight_gradient": -2,
+        "finite_difference_input_gradient": [0.5000000000143778, 0, 0, -0.500000000069889],
+        "finite_difference_weight_gradient": -1.999999999946489,
+        "input_gradient_absolute_error": [1.4377832258105627e-11, 0, 0, 6.988898348936345e-11],
+        "weight_gradient_absolute_error": 5.3510973430093145e-11
+      },
+      {
+        "id": "normalization",
+        "output": [-1, -1, 1, 1],
+        "score": -2,
+        "branch_gradient": [1, -1, 1, -1],
+        "skip_gradient": [0, 0, 0, 0],
+        "input_gradient": [0.5, -0.5, 0.5, -0.5],
+        "weight_gradient": 0,
+        "finite_difference_input_gradient": [0.500000000069889, -0.4999999997368221, 0.4999999999588667, -0.500000000069889],
+        "finite_difference_weight_gradient": 0,
+        "input_gradient_absolute_error": [6.988898348936345e-11, 2.631779238981835e-10, 4.11333189731522e-11, 6.988898348936345e-11],
+        "weight_gradient_absolute_error": 0
+      },
+      {
+        "id": "dropout",
+        "output": [1, 0, 3, 0],
+        "score": 1,
+        "branch_gradient": [2, 0, 0, 0],
+        "skip_gradient": [0, 0, 0, 0],
+        "input_gradient": [1, 0, 0, 0],
+        "weight_gradient": 2,
+        "finite_difference_input_gradient": [0.9999999999732445, 0, 0, 0],
+        "finite_difference_weight_gradient": 2.000000000002,
+        "input_gradient_absolute_error": [2.6755486715046572e-11, 0, 0, 0],
+        "weight_gradient_absolute_error": 2.000177801164682e-12
+      },
+      {
+        "id": "residual",
+        "output": [1.5, 1.5, 4.5, 4.5],
+        "score": -3,
+        "branch_gradient": [1, 0, 0, -1],
+        "skip_gradient": [1, 0, 0, -1],
+        "input_gradient": [1.5, 0, 0, -1.5],
+        "weight_gradient": -2,
+        "finite_difference_input_gradient": [1.4999999997655777, 0, 0, -1.4999999997655777],
+        "finite_difference_weight_gradient": -1.9999999993913775,
+        "input_gradient_absolute_error": [2.3442225938197225e-10, 0, 0, 2.3442225938197225e-10],
+        "weight_gradient_absolute_error": 6.086224857426714e-10
+      }
+    ]
+  }
+}

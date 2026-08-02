@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { transpileLatticeInBrowser } from "@coding-adventures/lattice-transpiler/src/browser.js";
 import { activate } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
@@ -31,6 +31,8 @@ import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
+import { TrainingStabilizersWorkbench } from "./TrainingStabilizersWorkbench.js";
+import { traceTrainingStabilizers } from "./training-stabilizers-lab.js";
 import latticeSource from "./styles/app.lattice?raw";
 import { forwardLayered } from "./layered-network.js";
 import {
@@ -1570,5 +1572,76 @@ describe("vanishing and exploding gradients", () => {
     render(React.createElement(GradientFlowWorkbench));
     fireEvent.click(screen.getByRole("button", { name: /layer 1.*upstream 0\.006587/ }));
     expect(screen.getByLabelText("Selected gradient calculation").textContent).toMatch(/0\.006587 x 0\.786448 = 0\.00518.*0\.00518 x 0\.5 = 0\.00259/s);
+  });
+});
+
+describe("normalization dropout and residual comparisons", () => {
+  it("keeps the stabilizer comparison in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--stabilizers");
+    expect(productionCss).toContain(".stabilizer-equations");
+  });
+
+  it("pins the shared branch and exact layer-normalization statistics", () => {
+    const trace = traceTrainingStabilizers();
+    expect(trace.branch).toEqual([0.5, 0.5, 1.5, 1.5]);
+    expect(trace.normalization.mean).toBe(1);
+    expect(trace.normalization.variance).toBe(0.25);
+    expect(trace.normalization.standardDeviation).toBe(0.5);
+    expect(trace.normalization.normalized).toEqual([-1, -1, 1, 1]);
+    expect(trace.normalization.upstreamDotNormalized).toBe(-2);
+  });
+
+  it("separates the four mechanisms in forward and reverse mode", () => {
+    const routes = Object.fromEntries(
+      traceTrainingStabilizers().routes.map((route) => [route.id, route]),
+    );
+    expect(routes.plain!.inputGradient).toEqual([0.5, 0, 0, -0.5]);
+    expect(routes.normalization!.branchGradient).toEqual([1, -1, 1, -1]);
+    expect(routes.normalization!.weightGradient).toBe(0);
+    expect(routes.dropout!.output).toEqual([1, 0, 3, 0]);
+    expect(routes.dropout!.inputGradient).toEqual([1, 0, 0, 0]);
+    expect(routes.residual!.skipGradient).toEqual([1, 0, 0, -1]);
+    expect(routes.residual!.inputGradient).toEqual([1.5, 0, 0, -1.5]);
+  });
+
+  it("keeps inverted-dropout expectation equal to evaluation output", () => {
+    const dropout = traceTrainingStabilizers().dropout;
+    expect(dropout.scaledMask).toEqual([2, 0, 2, 0]);
+    expect(dropout.evaluationOutput).toEqual([0.5, 0.5, 1.5, 1.5]);
+    expect(dropout.trainingExpectation).toEqual(dropout.evaluationOutput);
+  });
+
+  it("checks every analytical input and weight gradient numerically", () => {
+    traceTrainingStabilizers().routes.forEach((route) => {
+      expect(Math.max(...route.inputGradientAbsoluteError)).toBeLessThan(1e-8);
+      expect(route.weightGradientAbsoluteError).toBeLessThan(1e-8);
+    });
+  });
+
+  it("rejects malformed vectors masks probabilities and zero variance", () => {
+    expect(() => traceTrainingStabilizers([1, 2])).toThrow(/four finite/);
+    expect(() => traceTrainingStabilizers([1, 1, 3, 3], 0.5, [1, 0, 0, -1], [1, 2, 1, 0])).toThrow(/binary mask/);
+    expect(() => traceTrainingStabilizers([1, 1, 3, 3], 0.5, [1, 0, 0, -1], [1, 0, 1, 0], 0)).toThrow(/probability/);
+    expect(() => traceTrainingStabilizers([1, 1, 1, 1])).toThrow(/variance/);
+  });
+
+  it("switches deep-training routes and opens coupled coordinate arithmetic", () => {
+    render(React.createElement(DeepTrainingWorkbench));
+    fireEvent.click(screen.getByRole("button", { name: "Stabilizers" }));
+    expect(screen.getByRole("heading", { name: "Normalization, dropout, and residual paths" })).toBeTruthy();
+    const comparison = screen.getByLabelText("Training stabilizer route comparison");
+    fireEvent.click(within(comparison).getByRole("button", { name: /Layer normalization/ }));
+    expect(screen.getByLabelText("Selected stabilizer forward trace").textContent).toMatch(/mean1.*variance.*0\.25.*standard deviation0\.5.*normalized output.*-1.*-1.*1.*1/s);
+    fireEvent.click(screen.getByRole("button", { name: "Open stabilizer coordinate 2" }));
+    expect(screen.getByLabelText("Selected stabilizer coordinate calculation").textContent).toMatch(/4 × 0 - 0 - -1 × -2.*= -1.*0\.5 × -1 \+ 0 = -0\.5/s);
+    fireEvent.click(within(comparison).getByRole("button", { name: /Inverted dropout/ }));
+    expect(screen.getByLabelText("Selected stabilizer forward trace").textContent).toMatch(/binary mask.*1.*0.*1.*0.*evaluation.*0\.5.*0\.5.*1\.5.*1\.5.*expectation/s);
+    fireEvent.click(within(comparison).getByRole("button", { name: /Identity residual/ }));
+    expect(screen.getByLabelText("Selected stabilizer backward trace").textContent).toMatch(/through identity skip.*1.*0.*0.*-1.*total dS\/dinput.*1\.5.*0.*0.*-1\.5/s);
+  });
+
+  it("renders the stabilizer workbench directly", () => {
+    render(React.createElement(TrainingStabilizersWorkbench));
+    expect(screen.getByLabelText("Training stabilizer finite difference audit").textContent).toMatch(/0\.5.*0\.5.*6\.989e-11.*-2.*-2.*5\.351e-11/s);
   });
 });

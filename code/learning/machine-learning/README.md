@@ -41,13 +41,14 @@ larger network:
 21. [Graph Convolution and Attention, by Hand](./graph-convolution-and-attention-by-hand.md)
 22. [Initialization and Activation Distributions, by Hand](./initialization-and-activation-distributions-by-hand.md)
 23. [Vanishing and Exploding Gradients, by Hand](./vanishing-and-exploding-gradients-by-hand.md)
-24. [Matrix Math](../matrix-math.md)
-25. [Loss Functions](../loss-functions.md)
-26. [Gradient Descent](../gradient-descent.md)
-27. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-28. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-29. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-30. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+24. [Normalization, Dropout, and Residual Paths, by Hand](./normalization-dropout-and-residual-paths-by-hand.md)
+25. [Matrix Math](../matrix-math.md)
+26. [Loss Functions](../loss-functions.md)
+27. [Gradient Descent](../gradient-descent.md)
+28. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+29. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+30. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+31. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -121,7 +122,11 @@ has twelve complementary views:
   and watch population standard deviation change across layers. Then reverse a
   four-layer scalar chain, select any chain-rule step, compare small-weight and
   saturated vanishing paths with stable and exploding ReLU controls, and audit
-  the input gradient with finite differences.
+  the input gradient with finite differences. Finish by routing one fixed
+  four-coordinate branch through plain, population-normalized, deterministic
+  inverted-dropout, and identity-residual paths. Compare their outputs,
+  vector-Jacobian products, input and weight gradients, dropout expectation,
+  and twenty independent finite differences.
 
 ## Language-Neutral Corpus
 
@@ -222,6 +227,11 @@ NN24 adds `code/specs/fixtures/gradient-flow-v1`, including four scalar forward
 chains, activation derivatives, local Jacobians, every reverse-mode gradient,
 the total chain product, flow classification, and input finite differences.
 
+NN25 adds `code/specs/fixtures/training-stabilizers-v1`, including one shared
+four-coordinate branch, population layer-normalization statistics, a pinned
+inverted-dropout mask and expectation, an identity residual, every input and
+branch-weight gradient, and central finite differences.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -247,6 +257,7 @@ python code/scripts/validate_tiny_message_passing_labs.py
 python code/scripts/validate_graph_convolution_attention_labs.py
 python code/scripts/validate_initialization_activation_distribution_labs.py
 python code/scripts/validate_gradient_flow_labs.py
+python code/scripts/validate_training_stabilizer_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a

@@ -49,10 +49,10 @@ trace, and tests.
 
 ## Depth and Scaling Tranches
 
-- [ ] Deep-training mechanics
+- [x] Deep-training mechanics
   - [x] Initialization and activation-distribution explorer.
   - [x] Vanishing and exploding gradient trace.
-  - [ ] Normalization, dropout, and residual comparisons.
+  - [x] Normalization, dropout, and residual comparisons.
 - [ ] Tensor and autograd bridge
   - [ ] Shape and broadcasting visualizer.
   - [ ] Dynamic computation graph and saved-value trace.

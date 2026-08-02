@@ -7960,3 +7960,421 @@ code {
     justify-self: center;
   }
 }
+
+.workspace--stabilizers {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.stabilizer-stage {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.stabilizer-intro,
+.stabilizer-common-panel,
+.stabilizer-comparison-panel,
+.stabilizer-forward-panel,
+.stabilizer-backward-panel,
+.stabilizer-arithmetic-panel,
+.stabilizer-audit-panel,
+.stabilizer-controls {
+  @include surface;
+}
+
+.stabilizer-intro,
+.stabilizer-common-panel,
+.stabilizer-comparison-panel,
+.stabilizer-forward-panel,
+.stabilizer-backward-panel,
+.stabilizer-arithmetic-panel,
+.stabilizer-audit-panel {
+  padding: 18px;
+}
+
+.stabilizer-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stabilizer-intro h2,
+.stabilizer-controls h2 {
+  margin: 0;
+}
+
+.stabilizer-intro p:not(.eyebrow),
+.stabilizer-controls > p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.stabilizer-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(35, 122, 87, 0.4);
+  border-radius: 999px;
+  background: rgba(35, 122, 87, 0.08);
+  color: #1d6849;
+  padding: 8px 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.stabilizer-common-panel,
+.stabilizer-comparison-panel,
+.stabilizer-forward-panel,
+.stabilizer-backward-panel,
+.stabilizer-arithmetic-panel,
+.stabilizer-audit-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.stabilizer-common-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 9px;
+}
+
+.stabilizer-flow-arrow,
+.stabilizer-plus {
+  align-self: center;
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 850;
+  text-align: center;
+}
+
+.stabilizer-vector {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.stabilizer-vector > span {
+  color: $muted;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.stabilizer-vector > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.stabilizer-vector code {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.055);
+  color: #234c9f;
+  padding: 9px 5px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  text-align: center;
+}
+
+.stabilizer-vector code small {
+  color: $muted;
+  font-size: 0.6rem;
+}
+
+.stabilizer-vector code.is-selected {
+  border-color: rgba(194, 65, 59, 0.58);
+  box-shadow: inset 0 -3px rgba(194, 65, 59, 0.13);
+}
+
+.stabilizer-vector--purple code {
+  border-color: rgba(109, 91, 208, 0.2);
+  background: rgba(109, 91, 208, 0.06);
+  color: #4b3e9d;
+}
+
+.stabilizer-vector--green code {
+  border-color: rgba(35, 122, 87, 0.22);
+  background: rgba(35, 122, 87, 0.065);
+  color: #1d6849;
+}
+
+.stabilizer-vector--red code {
+  border-color: rgba(194, 65, 59, 0.2);
+  background: rgba(194, 65, 59, 0.055);
+  color: #9b3131;
+}
+
+.stabilizer-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.stabilizer-comparison-grid button {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.78);
+  color: $ink;
+  padding: 11px;
+  text-align: left;
+}
+
+.stabilizer-comparison-grid button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.08);
+}
+
+.stabilizer-comparison-grid span,
+.stabilizer-comparison-grid small {
+  color: $muted;
+  font-size: 0.7rem;
+}
+
+.stabilizer-comparison-grid code,
+.stabilizer-comparison-grid small {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.stabilizer-comparison-grid code {
+  overflow-wrap: anywhere;
+  color: #4b3e9d;
+  font-size: 0.67rem;
+}
+
+.stabilizer-mechanism-trace,
+.stabilizer-gradient-flow {
+  display: grid;
+  gap: 12px;
+}
+
+.stabilizer-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stabilizer-stat-grid > div,
+.stabilizer-dropout-compare > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.045);
+  padding: 10px;
+}
+
+.stabilizer-stat-grid small,
+.stabilizer-dropout-compare small,
+.stabilizer-audit-grid small {
+  color: $muted;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.stabilizer-stat-grid strong,
+.stabilizer-dropout-compare code,
+.stabilizer-audit-grid code,
+.stabilizer-formula,
+.stabilizer-equations code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.stabilizer-dropout-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stabilizer-dropout-compare code {
+  color: #1d6849;
+  overflow-wrap: anywhere;
+}
+
+.stabilizer-formula {
+  border-radius: 8px;
+  background: rgba(109, 91, 208, 0.07);
+  color: #4b3e9d;
+  padding: 11px;
+  overflow-wrap: anywhere;
+}
+
+.stabilizer-gradient-flow {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stabilizer-equations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 0.6fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.stabilizer-equations code,
+.stabilizer-equations span {
+  min-width: 0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.stabilizer-equations code {
+  background: rgba(37, 99, 235, 0.07);
+  color: #234c9f;
+  overflow-wrap: anywhere;
+}
+
+.stabilizer-equations span {
+  color: $muted;
+  font-size: 0.75rem;
+}
+
+.stabilizer-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stabilizer-audit-grid > div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.stabilizer-audit-grid code {
+  color: #1d6849;
+}
+
+.stabilizer-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.stabilizer-route-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.stabilizer-route-buttons button {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.stabilizer-route-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.48);
+  background: rgba(109, 91, 208, 0.1);
+  color: #4b3e9d;
+}
+
+.stabilizer-route-buttons span {
+  color: $muted;
+  font-size: 0.7rem;
+}
+
+.stabilizer-coordinate-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.stabilizer-coordinate-buttons button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 7px 4px;
+}
+
+.stabilizer-coordinate-buttons button[aria-pressed="true"] {
+  border-color: rgba(194, 65, 59, 0.5);
+  background: rgba(194, 65, 59, 0.075);
+}
+
+.stabilizer-coordinate-buttons code {
+  color: $muted;
+  font-size: 0.62rem;
+}
+
+.stabilizer-reading {
+  display: grid;
+  gap: 7px;
+  margin-top: 6px;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.065);
+  padding: 11px;
+}
+
+.stabilizer-reading h2,
+.stabilizer-reading p {
+  margin: 0;
+}
+
+@media (max-width: 1180px) {
+  .workspace--stabilizers {
+    grid-template-columns: 1fr;
+  }
+
+  .stabilizer-controls {
+    position: static;
+  }
+
+  .stabilizer-route-buttons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .stabilizer-intro,
+  .stabilizer-common-panel .panel-heading,
+  .stabilizer-comparison-panel .panel-heading,
+  .stabilizer-forward-panel .panel-heading,
+  .stabilizer-backward-panel .panel-heading,
+  .stabilizer-arithmetic-panel .panel-heading,
+  .stabilizer-audit-panel .panel-heading {
+    display: grid;
+  }
+
+  .stabilizer-chip {
+    justify-self: start;
+  }
+
+  .stabilizer-common-flow,
+  .stabilizer-comparison-grid,
+  .stabilizer-stat-grid,
+  .stabilizer-dropout-compare,
+  .stabilizer-gradient-flow,
+  .stabilizer-equations,
+  .stabilizer-audit-grid,
+  .stabilizer-route-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .stabilizer-flow-arrow {
+    transform: rotate(90deg);
+  }
+}

@@ -413,7 +413,7 @@ export function App() {
             ) : workbench === "structured" ? (
               <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
             ) : workbench === "deep" ? (
-              <>initialize {"->"} <strong>activation spread</strong> {"->"} gradient flow</>
+              <>initialize {"->"} <strong>gradient flow</strong> {"->"} stabilize</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (

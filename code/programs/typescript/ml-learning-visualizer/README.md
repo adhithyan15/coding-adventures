@@ -188,6 +188,14 @@ to expand `dL/da`, `da/dz`, `dL/dz`, the input gradient, and the weight gradient
 The complete chain product and an independent input finite difference remain
 visible beside all four scenarios.
 
+Switch to stabilizers to hold one four-coordinate learned branch fixed while
+comparing a plain control, population layer normalization, deterministic
+inverted dropout, and an identity residual. Open any coordinate to see the
+selected vector-Jacobian-product arithmetic, shared normalization sums,
+dropout mask scaling, residual branch/skip split, input gradient, branch-weight
+gradient, and matching central finite differences. Dropout's evaluation output
+and exact training-mask expectation remain visible beside its sampled output.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -298,6 +306,11 @@ NN24 under `code/specs/fixtures/gradient-flow-v1` pins four scalar chains,
 every activation derivative and local Jacobian, all reverse-mode input and
 weight gradients, vanishing/stable/exploding classifications, and input finite-
 difference checks.
+
+NN25 under `code/specs/fixtures/training-stabilizers-v1` pins the shared branch,
+population layer-normalization statistics, deterministic inverted dropout and
+its expectation, an identity residual, all vector-Jacobian products, and input
+plus branch-weight finite-difference checks.
 
 ## Development
 
