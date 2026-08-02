@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C03-mucho
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 220
 chapter: 3
 type: word
 headword: mucho
@@ -8,7 +11,19 @@ concept_tag: ES-WORD-MUCHO
 prerequisites: [ES-C02-noche]
 sounds: [soft-c, vowel-o]
 roots: [multus]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-NOCHE]
+introduces:
+  knowledge: [ES-LEX-MUCHO]
+practises:
+  knowledge: [ES-LEX-MUCHO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-se-llama]
 ---
 

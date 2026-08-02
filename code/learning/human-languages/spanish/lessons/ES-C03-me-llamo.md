@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C03-me-llamo
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 150
 chapter: 3
 type: word
 headword: me llamo
@@ -8,7 +11,19 @@ concept_tag: INTRO-MY-NAME-IS
 prerequisites: [ES-C03-me, ES-C03-llamar]
 sounds: [ll-y]
 roots: [clamare]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-ME, ES-LEX-LLAMO]
+introduces:
+  knowledge: [ES-LEX-ME-LLAMO, ES-GRAMMAR-REFLEXIVE-FIRST-PERSON]
+practises:
+  knowledge: [ES-LEX-ME, ES-LEX-LLAMO, ES-LEX-ME-LLAMO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-me, ES-C03-llamar]
 ---
 

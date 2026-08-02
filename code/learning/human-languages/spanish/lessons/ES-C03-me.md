@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C03-me
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 130
 chapter: 3
 type: word
 headword: me
 gloss: me / myself
 concept_tag: PRONOUN-ME
-prerequisites: []
+prerequisites: [ES-C02-practice]
 sounds: [vowel-e]
 roots: [me-latin]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-ME, ES-GRAMMAR-OBJECT-PRONOUN]
+practises:
+  knowledge: [ES-LEX-ME, ES-GRAMMAR-OBJECT-PRONOUN]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: []
 ---
 

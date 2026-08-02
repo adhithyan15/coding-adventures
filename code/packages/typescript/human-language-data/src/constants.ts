@@ -44,12 +44,18 @@ export const CONTENT_TYPES = new Set(["word", "phrase"]);
  *   accent) and its `gloss` names it; it takes no `concept_tag`, because a mark
  *   is not a word that joins across languages. See HL00 "writing nuances" and
  *   HL02 (the app renders these for hand-writing practice).
+ *
+ * `grammar` and `etymology` are short support lessons whose progression lives
+ * in knowledge atoms rather than the cross-language vocabulary join.
  */
 export const EXEMPT_TYPES = new Set([
   "practice",
   "practice-mix",
   "review",
   "writing",
+  // Short support lessons are ordered by knowledge atoms, not concept joins.
+  "grammar",
+  "etymology",
 ]);
 
 /** A language-local concept id: two-letter lang prefix + SCREAMING-KEBAB name. */

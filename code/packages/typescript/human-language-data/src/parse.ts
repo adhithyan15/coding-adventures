@@ -9,6 +9,8 @@ import type {
   Concept,
   Dataset,
   Gender,
+  LessonBodyBlock,
+  LessonBlockType,
   Realization,
   Script,
   Taxonomy,
@@ -21,6 +23,10 @@ export interface ParsedLesson {
   frontmatter: Frontmatter;
   /** Lossless Markdown after the frontmatter, used by both books and apps. */
   body: string;
+  /** Markdown before the first level-two teaching block, normally the title. */
+  preamble: string;
+  /** Typed, ordered body blocks for schema-v2 validation and rendering. */
+  blocks: LessonBodyBlock[];
   realization: Realization;
 }
 
@@ -32,6 +38,62 @@ function arrayify(value: Frontmatter[string] | undefined): string[] {
 
 function str(value: Frontmatter[string] | undefined): string {
   return typeof value === "string" ? value : "";
+}
+
+function classifyBlock(title: string): LessonBlockType {
+  const normalized = title.toLowerCase();
+  if (normalized === "warm-up" || normalized === "warmup") return "warmup";
+  if (normalized.startsWith("you'll want to know")) return "input";
+  if (normalized.startsWith("sounds you'll need")) return "pronunciation";
+  if (normalized.startsWith("the word, taken apart")) return "etymology";
+  if (normalized.startsWith("why it's said this way")) return "culture-pragmatics";
+  if (
+    normalized.startsWith("grammar lens") ||
+    normalized.startsWith("the adjective sibling") ||
+    normalized.startsWith("its two tags")
+  ) return "grammar";
+  if (normalized.startsWith("guided practice") || normalized.startsWith("how to answer")) {
+    return "guided-production";
+  }
+  if (normalized.startsWith("wrap-up recall")) return "recall";
+  if (normalized.startsWith("what you've built")) return "notice";
+  if (normalized.startsWith("the exchange") || normalized.startsWith("the two words")) return "input";
+  return "unknown";
+}
+
+/** Parse level-two lesson sections into the stable HL04 body-block vocabulary. */
+export function parseBodyBlocks(body: string): {
+  preamble: string;
+  blocks: LessonBodyBlock[];
+} {
+  const lines = body.split(/\r?\n/);
+  const preamble: string[] = [];
+  const blocks: LessonBodyBlock[] = [];
+  let current: LessonBodyBlock | undefined;
+  const blockLines: string[] = [];
+  const finish = (): void => {
+    if (!current) return;
+    current.markdown = blockLines.join("\n").replace(/^\n|\n$/g, "");
+    blocks.push(current);
+    blockLines.length = 0;
+  };
+  for (const line of lines) {
+    const trimmed = line.trimStart();
+    if (trimmed.startsWith("## ") && !trimmed.startsWith("### ")) {
+      finish();
+      const title = trimmed.slice(3).trim();
+      current = { type: classifyBlock(title), title, markdown: "" };
+    } else if (current) {
+      blockLines.push(line);
+    } else {
+      preamble.push(line);
+    }
+  }
+  finish();
+  return {
+    preamble: preamble.join("\n").replace(/^\n|\n$/g, ""),
+    blocks,
+  };
 }
 
 /** Gender: prefer an explicit field, else sniff the gloss, else none. */
@@ -83,7 +145,16 @@ export function parseLesson(
     roots: arrayify(fm.roots),
     etymologyHook: str(fm.etymology_hook),
   };
-  return { language, script: resolvedScript, frontmatter: fm, body, realization };
+  const typedBody = parseBodyBlocks(body);
+  return {
+    language,
+    script: resolvedScript,
+    frontmatter: fm,
+    body,
+    preamble: typedBody.preamble,
+    blocks: typedBody.blocks,
+    realization,
+  };
 }
 
 /**

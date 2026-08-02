@@ -42,6 +42,26 @@ describe("splitFrontmatter", () => {
     expect(frontmatter).toEqual({ id: "X" });
   });
 
+  it("flattens one schema-v2 nested map level to dotted keys", () => {
+    const { frontmatter } = splitFrontmatter(
+      [
+        "---",
+        "duration:",
+        "  max_seconds: 240",
+        "requires:",
+        "  knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]",
+        "register: neutral",
+        "---",
+        "",
+      ].join("\n"),
+    );
+    expect(frontmatter).toEqual({
+      "duration.max_seconds": "240",
+      "requires.knowledge": ["ES-LEX-HOLA", "ES-SOUND-H-SILENT"],
+      register: "neutral",
+    });
+  });
+
   it("returns null frontmatter when there is no fence", () => {
     const { frontmatter, body } = splitFrontmatter("no frontmatter here");
     expect(frontmatter).toBeNull();

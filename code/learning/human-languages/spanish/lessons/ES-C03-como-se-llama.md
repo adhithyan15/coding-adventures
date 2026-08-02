@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C03-como-se-llama
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 210
 chapter: 3
 type: word
 headword: ¿cómo se llama usted?
 gloss: what's your name? (formal)
 concept_tag: INTRO-WHATS-YOUR-NAME
-prerequisites: [ES-C03-como, ES-C03-se-llama, ES-C03-tu-usted]
+prerequisites: [ES-C03-como, ES-C03-familia-qu, ES-C03-se-llama, ES-C03-tu-usted]
 sounds: [inverted-marks, accent-mark]
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-LEX-SE-LLAMA, ES-LEX-USTED]
+introduces:
+  knowledge: [ES-LEX-COMO-SE-LLAMA]
+practises:
+  knowledge: [ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-me-llamo, ES-C03-como, ES-C03-se-llama]
 ---
 

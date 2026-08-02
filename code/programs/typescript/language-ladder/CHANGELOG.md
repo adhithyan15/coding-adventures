@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — schema-v2 lesson compatibility
+
+- Keep the browser's lightweight dataset adapter compatible with the canonical
+  typed lesson AST.
+- Derive the lesson-card minute label from schema-v2 `duration.max_seconds`,
+  while retaining `est_minutes` for unmigrated tracks.
+
 ## 0.25.0 — the same syllable in its sister scripts (syllabary, PR 9)
 
 - **Telugu కి, Kannada ಕಿ, Malayalam കി — side by side.** The three Dravidian

@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C03-se-llama
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 200
 chapter: 3
 type: word
 headword: se llama
 gloss: he/she calls himself; you (formal) call yourself
 concept_tag: ES-SE-LLAMA
-prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted]
+prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-usted-origin]
 sounds: [vowel-e, ll-y]
 roots: [se-latin, clamare]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED]
+introduces:
+  knowledge: [ES-LEX-SE-LLAMA, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON]
+practises:
+  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-LEX-SE-LLAMA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted]
 ---
 

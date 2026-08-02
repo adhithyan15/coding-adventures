@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C01-bien
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 20
 chapter: 1
 type: word
 headword: bien
@@ -8,7 +11,19 @@ concept_tag: WORD-WELL
 prerequisites: [ES-C01-hola]
 sounds: [diphthong-ie, v-b]
 roots: [bene, bonus]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-BIEN, ES-MORPH-BUENO-BUENA]
+practises:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-MORPH-BUENO-BUENA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-hola]
 ---
 

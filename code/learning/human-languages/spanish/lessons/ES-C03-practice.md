@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C03-practice
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 240
 chapter: 3
 type: practice-mix
 headword: (practice)
@@ -8,7 +11,19 @@ concept_tag: CH3-PRACTICE
 prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
 sounds: []
 roots: []
-est_minutes: 5
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-ME-LLAMO, ES-REGISTER-TU-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-MUCHO-GUSTO]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-MUCHO-GUSTO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
 ---
 

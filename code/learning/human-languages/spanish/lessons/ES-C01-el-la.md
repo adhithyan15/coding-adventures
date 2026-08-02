@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C01-el-la
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 30
 chapter: 1
 type: word
 headword: el / la
@@ -8,7 +11,19 @@ concept_tag: GRAMMAR-THE
 prerequisites: [ES-C01-bien]
 sounds: [vowel-e, vowel-a]
 roots: [ille, illa]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-MORPH-BUENO-BUENA]
+introduces:
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-ETYMON-ILLE-ILLA]
+practises:
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-ETYMON-ILLE-ILLA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-bien]
 ---
 
@@ -16,10 +31,9 @@ reviews_of: [ES-C01-bien]
 
 ## Warm-up
 
-[PAUSE 2s] Before your first noun, meet the two smallest, most frequent words
-in Spanish: *el* and *la*, both meaning "the." They look trivial. They are
-not — they're *how Spanish carries gender*, so you have to understand them
-before nouns can make sense.
+[PAUSE 2s] Before your first noun, meet two of the smallest, most frequent
+words in Spanish: *el* and *la*. Both mean "the." Your job here is simply to
+recognize the pair and connect each form to its label.
 
 ## You'll want to know first
 
@@ -34,7 +48,7 @@ before nouns can make sense.
 ## The word, taken apart
 
 **el** — "the" (masculine). **la** — "the" (feminine). English has one word,
-"the"; Spanish has two, because "the" must **match the gender** of its noun.
+"the"; Spanish makes this two-way distinction.
 
 **Where they come from.** Both are worn-down Latin **demonstratives** — words
 that meant "**that one (over there)**":
@@ -53,33 +67,20 @@ the pronoun *él* ("he") are twins from one Latin parent — told apart only by
 the accent. (English "the," by contrast, is Germanic and *unrelated* — a
 shared job, not a shared root.)
 
-## Grammar Lens: grammatical gender, and where it comes from
+## What you've built
 
-Every Spanish noun belongs to one of two **genders** — masculine or feminine.
-This is a grammatical *class*, not a claim about biological sex; it's just how
-the language sorts its nouns. It comes straight from **Latin**, which sorted
-nouns into *three* genders (masculine, feminine, and neuter). Spanish
-simplified to *two*, folding most old neuter nouns into the masculine pile.
-
-*el* and *la* are how that gender shows up in the open: a masculine noun takes
-*el*, a feminine noun takes *la* — *el día* ("the day"), *la noche* ("the
-night"). From here on you'll always learn a noun **with its article**, because
-a noun's gender can't be reliably guessed — you have to know it.
-
-> Part of speech: *el*/*la* are **articles** (little words marking "the"), not
-> to be confused with their accented twins *él*/*ella*, the **pronouns**
-> "he/she." Same Latin parent, different jobs.
+*el* and *la* are **articles**: little words that mark "the." Keep them apart
+from their accented relatives *él* and *ella*, the pronouns "he" and "she."
+The next micro-lesson explains why Spanish needs two article forms.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "el" then "la" — the two "the"s]
-- [YOU SAY: "el día" (masculine) then "la noche" (feminine)]
 - [YOU SAY: which article goes with a masculine noun? with a feminine one?]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] *el* and *la* both come from a Latin word meaning what? ("That
-one" — the demonstratives *ille* / *illa*.) How many genders did Latin have,
-and how many did Spanish keep? (Three → two.) What accented twins share their
-root? (*él* / *ella*, "he / she.")
+[PAUSE 3s] Which form is labelled masculine? (*el*.) Which is labelled
+feminine? (*la*.) Both come from Latin words meaning what? ("That one" —
+*ille* / *illa*.) What accented twins share their root? (*él* / *ella*.)

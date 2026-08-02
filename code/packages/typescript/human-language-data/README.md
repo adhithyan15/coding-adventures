@@ -9,7 +9,7 @@ consume. It implements [`HL01`](../../../specs/HL01-concept-taxonomy-and-data-la
 ## What it does
 
 The curriculum is a pile of per-language Markdown lessons. This package parses
-their frontmatter, joins them through the canonical **concept taxonomy**
+their frontmatter and lossless typed body blocks, joins them through the canonical **concept taxonomy**
 (`concepts/taxonomy.json`), and exposes the result as a queryable dataset —
 plus a **validator** that keeps the lessons and the taxonomy from drifting apart.
 It also produces the versioned migration-gap report published with every book
@@ -59,8 +59,9 @@ until the existing corpus has been split.
 
 | Module | Role | Pure? |
 |---|---|---|
-| `frontmatter.ts` | tiny zero-dep YAML-frontmatter reader | ✅ |
-| `parse.ts` | frontmatter → `Realization`; realizations → `Dataset` | ✅ |
+| `frontmatter.ts` | tiny zero-dep frontmatter reader with one nested-map level | ✅ |
+| `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
+| `curriculum.ts` | spine, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `report.ts` | deterministic duration, prerequisite, book, and schema gap report | ✅ |
@@ -82,6 +83,12 @@ namespaced), one realization per (concept, language), required fields present,
 field shapes, script-glyph coverage (where script data exists), and core-concept
 coverage (enforced only for tracks that declare `parity: complete`). The
 integration test runs it against the real curriculum, so drift breaks CI.
+
+For a lesson declaring `schema_version: 2`, `validateCurriculum()` additionally
+enforces its canonical spine node, unique per-language sequence, 1–299 second
+declared and computed duration, stable typed body sections, explicit
+skill/mode/strand/register/variety metadata, same-language prerequisites, and
+transitive knowledge closure. Schema-v1 tracks remain readable during migration.
 
 ## Scope note
 

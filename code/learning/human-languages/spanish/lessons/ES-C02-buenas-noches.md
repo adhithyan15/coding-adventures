@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C02-buenas-noches
+spine_node: SPINE-TIME-OF-DAY
+sequence: 110
 chapter: 2
 type: word
 headword: buenas noches
@@ -8,7 +11,19 @@ concept_tag: GREETING-GOODNIGHT
 prerequisites: [ES-C02-buenas-tardes, ES-C02-noche]
 sounds: [diphthong-ue, soft-c]
 roots: [bonus, nox]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE]
+introduces:
+  knowledge: [ES-LEX-BUENAS-NOCHES]
+practises:
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-bien, ES-C02-noche]
 ---
 
