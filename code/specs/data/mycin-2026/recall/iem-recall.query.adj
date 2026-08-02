@@ -1,0 +1,6 @@
+% Worked binding queries over the inherited-metabolic-disease recall library.
+import "iem-edges.adj"
+
+? deficient_in(tay_sachs, $Enzyme)  % expect hexosaminidase_a
+? accumulates(gaucher, $Substrate)  % expect glucocerebroside
+? inherited_as(lesch_nyhan, $Pattern)  % expect x_linked_recessive

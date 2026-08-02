@@ -1,0 +1,7 @@
+% Worked consumer for the arithmetic-mean library.
+import "average.adj"
+
+observe value_one(4)
+observe value_two(6)
+
+? mean_two(value_one, value_two)  % expect 5

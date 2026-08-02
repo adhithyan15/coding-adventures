@@ -234,7 +234,8 @@ option mapping, or judge/evaluation failure.
 5. **Partial:** CI now gates manifest integrity, JSON Schema validity, validator
    tests, and test references. Complete the source-envelope and
    `--require-byte-pins` gates as those migrations reach zero debt.
-6. Close the ten current worked-query gaps.
+6. [complete] Close the ten current worked-query gaps with executable consumers
+   and a CLI integration test over their answers and provenance.
 
 ### Wave 1: prove the full provenance path
 

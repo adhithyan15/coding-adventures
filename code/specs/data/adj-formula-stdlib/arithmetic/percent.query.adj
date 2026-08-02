@@ -1,0 +1,10 @@
+% Worked consumer for percentage and percentage-change formulas.
+import "percent.adj"
+
+observe part(30)
+observe whole(40)
+? percent(part, whole)  % expect 75
+
+observe old_amount(200)
+observe new_amount(250)
+? percent_change(old_amount, new_amount)  % expect 25
