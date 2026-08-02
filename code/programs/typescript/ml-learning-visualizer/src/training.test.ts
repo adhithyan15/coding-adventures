@@ -98,6 +98,8 @@ import {
   traceMultiHeadAttention,
 } from "./multi-head-attention-lab.js";
 
+const productionCss = transpileLatticeInBrowser(latticeSource);
+
 describe("training helpers", () => {
   it("reduces MSE loss for a small learning rate", () => {
     const initial: ModelState = { weight: 0.5, bias: 0.5, epoch: 0 };
@@ -856,7 +858,7 @@ describe("multi-head attention add-and-norm lab", () => {
 
 describe("tiny decoder-only language model training lab", () => {
   it("keeps the decoder workbench in the generated production stylesheet", () => {
-    const css = transpileLatticeInBrowser(latticeSource);
+    const css = productionCss;
 
     expect(css).toContain(".workspace--decoder");
     expect(css).toContain(".decoder-forward-flow");
@@ -935,7 +937,7 @@ describe("tiny decoder-only language model training lab", () => {
 
 describe("two-number autoencoder bottleneck lab", () => {
   it("keeps the autoencoder workbench in the generated production stylesheet", () => {
-    const css = transpileLatticeInBrowser(latticeSource);
+    const css = productionCss;
 
     expect(css).toContain(".workspace--autoencoder");
     expect(css).toContain(".autoencoder-bottleneck");
@@ -1004,7 +1006,7 @@ describe("two-number autoencoder bottleneck lab", () => {
 
 describe("scalar variational autoencoder lab", () => {
   it("keeps the variational workbench in the generated production stylesheet", () => {
-    const css = transpileLatticeInBrowser(latticeSource);
+    const css = productionCss;
 
     expect(css).toContain(".workspace--variational");
     expect(css).toContain(".variational-sample-node");
@@ -1084,7 +1086,7 @@ describe("scalar variational autoencoder lab", () => {
 
 describe("one-dimensional GAN game", () => {
   it("keeps the adversarial workbench in the generated production stylesheet", () => {
-    const css = transpileLatticeInBrowser(latticeSource);
+    const css = productionCss;
 
     expect(css).toContain(".workspace--gan");
     expect(css).toContain(".gan-number-line__marker--fake");
