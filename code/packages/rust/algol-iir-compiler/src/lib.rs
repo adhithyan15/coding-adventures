@@ -5584,6 +5584,34 @@ mod tests {
     }
 
     #[test]
+    fn boolean_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "boolean procedure neg(p); value p; boolean p; neg := not p; ",
+            "boolean procedure both(p,q); value p,q; boolean p,q; both := p and q; ",
+            "if both(neg(false), not neg(true)) then result := 42 else result := 0 end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "boolean_procedure_composition").expect("compiles");
+        let both = module.get_function("both").expect("boolean procedure exists");
+        assert_eq!(both.params, vec![("p".into(), "bool".into()), ("q".into(), "bool".into())]);
+        assert_eq!(both.return_type, "bool");
+
+        let main = module.get_function("main").expect("has main");
+        let both_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "bool"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("both")
+            })
+            .expect("composition must call both");
+        assert_eq!(both_call.srcs.len(), 3, "both must receive two boolean call values");
+    }
+
+    #[test]
     fn procedure_call_as_statement_runs() {
         // A typed procedure invoked in statement position: the result is
         // discarded, but the call still executes (and the assignment of `m`

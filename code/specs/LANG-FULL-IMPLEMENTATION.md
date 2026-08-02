@@ -783,8 +783,9 @@ backend immediately) come before the enabler-dependent items.
   params only (by-name is AL7); zero-argument calls may use explicit `f()` in
   value or statement position; procedures may capture enclosing scalar, array,
   array-formal, and scalar-formal declarations through typed globals.
-  `boolean procedure` results now also feed compound conditions directly across
-  all seven standard backends (`neg(false) and not neg(true)` → a real branch).
+  `boolean procedure` results now also feed compound conditions directly and
+  compose as typed actuals across all seven standard backends
+  (`both(neg(false), not neg(true))` → a real branch).
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
