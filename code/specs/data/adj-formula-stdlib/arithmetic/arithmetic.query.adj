@@ -1,0 +1,18 @@
+% Worked consumers for the four elementary arithmetic primitives.
+import "arithmetic.adj"
+
+observe addend_one(7)
+observe addend_two(5)
+? sum(addend_one, addend_two)  % expect 12
+
+observe minuend(7)
+observe subtrahend(5)
+? difference(minuend, subtrahend)  % expect 2
+
+observe factor_one(6)
+observe factor_two(7)
+? product(factor_one, factor_two)  % expect 42
+
+observe dividend(20)
+observe divisor(5)
+? quotient(dividend, divisor)  % expect 4

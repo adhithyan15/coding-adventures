@@ -13,8 +13,12 @@ fn data_root() -> PathBuf {
 }
 
 #[test]
-fn missing_stdlib_worked_queries_execute_with_provenance() {
+fn stdlib_worked_queries_execute_with_provenance() {
     let cases: &[(&str, &[&str])] = &[
+        (
+            "adj-formula-stdlib/arithmetic/arithmetic.query.adj",
+            &["\"name\":\"sum\"", "\"value\":12", "Sum.html"],
+        ),
         (
             "adj-formula-stdlib/arithmetic/average.query.adj",
             &[
@@ -26,6 +30,10 @@ fn missing_stdlib_worked_queries_execute_with_provenance() {
         (
             "adj-formula-stdlib/arithmetic/percent.query.adj",
             &["\"name\":\"percent\"", "\"value\":75", "Percent.html"],
+        ),
+        (
+            "adj-formula-stdlib/arithmetic/ratio.query.adj",
+            &["\"name\":\"ratio\"", "\"value\":0.75", "Ratio.html"],
         ),
         (
             "adj-formula-stdlib/clinical/bmi.query.adj",

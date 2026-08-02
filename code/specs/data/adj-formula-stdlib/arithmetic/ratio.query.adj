@@ -1,0 +1,7 @@
+% Worked consumer for a ratio composed from the quotient primitive.
+import "ratio.adj"
+
+observe numerator(3)
+observe denominator(4)
+
+? ratio(numerator, denominator)  % expect 0.75

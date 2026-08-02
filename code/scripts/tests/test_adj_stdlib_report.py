@@ -91,6 +91,29 @@ class AdjStdlibReportTests(unittest.TestCase):
             ["code/specs/data/adj-facts-stdlib/science/two.adj"],
         )
 
+    def test_query_comments_do_not_count_as_imports(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            library = root / "code/specs/data/adj-facts-stdlib/math/counting.adj"
+            library.parent.mkdir(parents=True, exist_ok=True)
+            library.write_text(
+                'relate counts(one, 1) source "one" trust authoritative\n',
+                encoding="utf-8",
+            )
+            (library.parent / "other.query.adj").write_text(
+                '% import "counting.adj" is only an example\n? other($Value)\n',
+                encoding="utf-8",
+            )
+
+            report = stdlib.build_report(root)
+            row = next(item for item in report["libraries"] if item["content_library"])
+
+        self.assertFalse(row["query_companion"])
+        self.assertEqual(
+            report["gaps"]["missing_query_companion"],
+            [library.relative_to(root).as_posix()],
+        )
+
     def test_excludes_consumers_from_content_gap_denominators(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = self.make_root(directory)

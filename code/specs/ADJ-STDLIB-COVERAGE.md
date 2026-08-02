@@ -236,6 +236,9 @@ option mapping, or judge/evaluation failure.
    `--require-byte-pins` gates as those migrations reach zero debt.
 6. [complete] Close the ten current worked-query gaps with executable consumers
    and a CLI integration test over their answers and provenance.
+7. **Complete:** parse executable `import` statements when measuring worked
+   queries; filename mentions in comments are not coverage evidence. The stricter
+   audit exposed and closed two additional gaps (`arithmetic.adj`, `ratio.adj`).
 
 ### Wave 1: prove the full provenance path
 
