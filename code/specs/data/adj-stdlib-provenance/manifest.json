@@ -1,6 +1,9 @@
 {
   "algorithm": "sha256",
-  "bundle_hashes": [],
+  "bundle_hashes": [
+    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0",
+    "6e15e27142c2f8113babc916b0d71ba388425d15f2f71360807460abd788ffa5"
+  ],
   "manifest_id": "adj.stdlib.provenance.v1",
   "schema_version": 1
 }

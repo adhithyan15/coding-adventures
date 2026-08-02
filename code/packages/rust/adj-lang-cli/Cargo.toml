@@ -22,3 +22,6 @@ adj-constraint-solver = { path = "../adj-constraint-solver" }
 logic-engine = { path = "../logic-engine" }
 logic-core = { path = "../logic-core" }
 cli-builder = { path = "../cli-builder" }
+
+[dev-dependencies]
+serde_json = "1"

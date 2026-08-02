@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.sum",
+          "end": 35,
+          "quote": "A sum is the result of an addition.",
+          "quote_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 35,
+      "start": 0
+    }
+  ],
+  "source_sha256": "a25e7c5dc6fa3e742f796e1798f208032990b45ff6b9e93498b9df569df5fe86",
+  "source_size": 35
+}

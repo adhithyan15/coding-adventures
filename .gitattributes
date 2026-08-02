@@ -6,3 +6,6 @@
 
 # WPT tree-construction data includes inputs whose trailing spaces are semantic.
 code/packages/rust/html-parser/tests/fixtures/html5lib-tree-construction-smoke.dat whitespace=-trailing-space
+
+# Content-addressed evidence must survive checkout without byte normalization.
+code/specs/data/adj-stdlib-provenance/cas/objects/** binary

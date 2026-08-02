@@ -1,0 +1,33 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 299,
+      "reason": "publisher markup and context before the selected definition",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.quotient",
+          "end": 417,
+          "quote": "The term &quot;quotient&quot; is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.",
+          "quote_sha256": "a620f6c994c10c868e845483555c9ace996d51b5ff87d3a6bc3493b32d5df915",
+          "start": 299
+        }
+      ],
+      "disposition": "represented",
+      "end": 417,
+      "start": 299
+    },
+    {
+      "disposition": "discarded",
+      "end": 60805,
+      "reason": "publisher markup, references, and context after the selected definition",
+      "start": 417
+    }
+  ],
+  "source_sha256": "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86",
+  "source_size": 60805
+}

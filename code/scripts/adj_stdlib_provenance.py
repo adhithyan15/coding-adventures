@@ -817,7 +817,7 @@ def _validate_source_entry(
     raw_ir = _validate_source_ir(cas, ir_hash, raw_hash)
     raw_claims = _claims_by_id(raw_ir)
     claims = {ir_hash: raw_claims}
-    authorities = {raw_hash: (raw_hash, receipt_hash)} if is_external_authority else {}
+    authorities = {raw_hash: (raw_hash, receipt_hash)}
     links = {raw_hash, receipt_hash, ir_hash}
     representations = source["representations"]
     if not isinstance(representations, list):
@@ -1024,6 +1024,7 @@ def _validate_bundle(
             "claim_id",
             "end",
             "input_claim",
+            "locator",
             "quote",
             "quote_sha256",
             "resolution",
@@ -1069,6 +1070,11 @@ def _validate_bundle(
             raise ProvenanceError(
                 f"{prefix} input claim disagrees with the decomposed ADJ bytes"
             )
+        locator = _require_nonempty(clause["locator"], f"{prefix}.locator")
+        if f'locator "{locator}"' not in input_claim["quote"]:
+            raise ProvenanceError(
+                f"{prefix} locator is absent from its ADJ input claim"
+            )
         resolution = clause["resolution"]
         if not isinstance(resolution, dict):
             raise ProvenanceError(f"{prefix}.resolution must be an object")
@@ -1106,6 +1112,24 @@ def _validate_bundle(
             if authorities.get(snapshot) != authority:
                 raise ProvenanceError(
                     f"{prefix} accepted root does not name the snapshot authority"
+                )
+            receipt_kinds = cas.index[authority[1]]["kinds"]
+            if "fetch_receipt" in receipt_kinds:
+                authority_locator = _json_object(cas, authority[1], "fetch_receipt")[
+                    "locator"
+                ]
+            else:
+                authority_path = _json_object(cas, authority[1], "input_receipt")[
+                    "repo_path"
+                ]
+                authority_locator = f"repo://{authority_path}"
+            if locator != authority_locator:
+                raise ProvenanceError(
+                    f"{prefix} ADJ locator disagrees with its authority receipt"
+                )
+            if authority[0] == input_raw_hash:
+                raise ProvenanceError(
+                    f"{prefix} cannot use its own code bytes as an accepted root"
                 )
         elif resolution.get("kind") == "dependency":
             if set(resolution) != {"bundle_sha256", "claim_id", "kind"}:

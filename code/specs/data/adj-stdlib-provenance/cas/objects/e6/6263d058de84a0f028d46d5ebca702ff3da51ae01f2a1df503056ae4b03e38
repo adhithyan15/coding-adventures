@@ -1,0 +1,167 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.addend_one",
+          "end": 16,
+          "quote": "addend_one is 7.",
+          "quote_sha256": "905e07be3f2b642cf4f2484d92e491e16287a67e8c4baf09a12a3e14b5baa887",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 16,
+      "start": 0
+    },
+    {
+      "disposition": "discarded",
+      "end": 17,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 16
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.addend_two",
+          "end": 33,
+          "quote": "addend_two is 5.",
+          "quote_sha256": "19fea63b5e1968b04a2accbbd8994aad3d49ac6efa218acac2d0534263fac793",
+          "start": 17
+        }
+      ],
+      "disposition": "represented",
+      "end": 33,
+      "start": 17
+    },
+    {
+      "disposition": "discarded",
+      "end": 34,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 33
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.minuend",
+          "end": 47,
+          "quote": "minuend is 7.",
+          "quote_sha256": "e9f54e2839bb7c80fa51d2cbefed070ad7075ff8de1b1d5007413d35c4e829bd",
+          "start": 34
+        }
+      ],
+      "disposition": "represented",
+      "end": 47,
+      "start": 34
+    },
+    {
+      "disposition": "discarded",
+      "end": 48,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 47
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.subtrahend",
+          "end": 64,
+          "quote": "subtrahend is 5.",
+          "quote_sha256": "e728ef2c3a03768f21d83fa007e57f309a9f1be9e1f70966f6fe5562285b3bf6",
+          "start": 48
+        }
+      ],
+      "disposition": "represented",
+      "end": 64,
+      "start": 48
+    },
+    {
+      "disposition": "discarded",
+      "end": 65,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 64
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.factor_one",
+          "end": 81,
+          "quote": "factor_one is 6.",
+          "quote_sha256": "9115f76426eb8aaeea1006a1263b83ef62928340236cd7c871f5f2139f4fb69d",
+          "start": 65
+        }
+      ],
+      "disposition": "represented",
+      "end": 81,
+      "start": 65
+    },
+    {
+      "disposition": "discarded",
+      "end": 82,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 81
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.factor_two",
+          "end": 98,
+          "quote": "factor_two is 7.",
+          "quote_sha256": "9bed8956ef838f37f71d65d8a0d2e343baa0978d6f586097c8f9507b036f758e",
+          "start": 82
+        }
+      ],
+      "disposition": "represented",
+      "end": 98,
+      "start": 82
+    },
+    {
+      "disposition": "discarded",
+      "end": 99,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 98
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.dividend",
+          "end": 114,
+          "quote": "dividend is 20.",
+          "quote_sha256": "2058e458a31ce8088f354176979d18d2473255a360413e66519b1662676ef7d9",
+          "start": 99
+        }
+      ],
+      "disposition": "represented",
+      "end": 114,
+      "start": 99
+    },
+    {
+      "disposition": "discarded",
+      "end": 115,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 114
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.divisor",
+          "end": 128,
+          "quote": "divisor is 5.",
+          "quote_sha256": "8fc94d5df57f41a91e70596d3c389b56138c89b92e9555e69025b36cbd3e6b03",
+          "start": 115
+        }
+      ],
+      "disposition": "represented",
+      "end": 128,
+      "start": 115
+    },
+    {
+      "disposition": "discarded",
+      "end": 129,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 128
+    }
+  ],
+  "source_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+  "source_size": 129
+}

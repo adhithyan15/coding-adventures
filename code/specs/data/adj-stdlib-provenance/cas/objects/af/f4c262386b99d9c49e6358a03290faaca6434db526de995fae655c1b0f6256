@@ -1,0 +1,33 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 283,
+      "reason": "publisher markup and context before the selected definition",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.product",
+          "end": 364,
+          "quote": "The term &quot;product&quot; refers to the result of one or more multiplications.",
+          "quote_sha256": "ef22f888bd47814d52b39c689d3d8b8ba67731307ff16119eb1c183582e466e7",
+          "start": 283
+        }
+      ],
+      "disposition": "represented",
+      "end": 364,
+      "start": 283
+    },
+    {
+      "disposition": "discarded",
+      "end": 57820,
+      "reason": "publisher markup, references, and context after the selected definition",
+      "start": 364
+    }
+  ],
+  "source_sha256": "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac",
+  "source_size": 57820
+}

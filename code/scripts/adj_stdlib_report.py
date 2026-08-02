@@ -219,6 +219,7 @@ def build_report(root: Path) -> dict[str, Any]:
             root / adj_stdlib_provenance.DEFAULT_ROOT,
             root / adj_stdlib_provenance.DEFAULT_MANIFEST,
             root / adj_stdlib_provenance.DEFAULT_SCHEMA,
+            workspace_root=root,
         )
         provenance_manifest = json.loads(
             (root / adj_stdlib_provenance.DEFAULT_MANIFEST).read_text(encoding="utf-8")

@@ -132,7 +132,9 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             label="fixture text transform",
             links=[raw_hash, rendered_hash],
         )
-        input_body = b"formula sum(a, b) = a + b\n"
+        input_body = (
+            b'formula sum(a, b) = a + b\n  locator "https://example.test/sum"\n'
+        )
         input_path = root / "code/example/arithmetic.adj"
         input_path.parent.mkdir(parents=True)
         input_path.write_bytes(input_body)
@@ -203,6 +205,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 "quote_sha256": provenance.sha256_bytes(input_body),
                 "start": 0,
             },
+            "locator": "https://example.test/sum",
             "quote": rendered.decode("utf-8"),
             "quote_sha256": provenance.sha256_bytes(rendered),
             "resolution": {

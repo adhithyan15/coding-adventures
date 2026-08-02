@@ -28,6 +28,7 @@
           "required": ["end", "quote", "quote_sha256", "start"],
           "type": "object"
         },
+        "locator": { "minLength": 1, "type": "string" },
         "quote": { "minLength": 1, "type": "string" },
         "quote_sha256": { "$ref": "#/$defs/hash" },
         "resolution": {
@@ -60,7 +61,7 @@
         "source_ir_sha256": { "$ref": "#/$defs/hash" },
         "start": { "minimum": 0, "type": "integer" }
       },
-      "required": ["claim_id", "end", "input_claim", "quote", "quote_sha256", "resolution", "snapshot_sha256", "source_ir_sha256", "start"],
+      "required": ["claim_id", "end", "input_claim", "locator", "quote", "quote_sha256", "resolution", "snapshot_sha256", "source_ir_sha256", "start"],
       "type": "object"
     },
     "fetch_receipt": {
