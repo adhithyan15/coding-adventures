@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has fifteen workbenches that move from one arithmetic update to small
+The app has sixteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -226,6 +226,15 @@ reset to watch a new `0.8` gradient contaminate a stale buffer of `4`. The
 optimizer panel makes its non-clearing behavior explicit, while fresh forward
 passes audit every local gradient numerically.
 
+### Forward graph lowering lab
+
+The IR Lowering workbench holds one six-node weighted-ReLU graph fixed while it
+becomes a deterministic twelve-instruction NN00 `CANN` forward function and a
+six-operation NN01 `CANM` matrix plan. Open any scalar instruction to inspect
+its first-row reads and write, or open any matrix operation to reveal its exact
+source instructions, graph nodes, and edge provenance. Switch from one row to a
+two-row batch while direct graph, NeuralIR, and MatrixIR outputs remain aligned.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -354,6 +363,11 @@ live post-forward mutations, and analytical-versus-numerical leaf gradients.
 NN28 under `code/specs/fixtures/gradient-accumulation-v1` pins persistent
 gradient-buffer transitions across backward, optimizer, and explicit-zero
 events, including mean scaling and one intentionally stale next batch.
+
+NN29 under `code/specs/fixtures/forward-graph-lowering-v1` pins one stable
+topological schedule, exact NeuralIR value IDs, seven-to-one weighted-sum
+fusion, complete source provenance, and direct/NeuralIR/MatrixIR parity for one
+row and a two-row batch.
 
 ## Development
 

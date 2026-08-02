@@ -1,6 +1,6 @@
 # Neural Learning Delivery Roadmap
 
-This roadmap drives the long-lived neural-learning pull request. Each tranche
+This roadmap drives the long-lived neural-learning delivery loop. Each tranche
 should land as one reviewable commit and must include the smallest complete
 learning loop: explanation, hand calculation, deterministic oracle, interactive
 trace, and tests.
@@ -58,7 +58,7 @@ trace, and tests.
   - [x] Dynamic computation graph and saved-value trace.
   - [x] Gradient accumulation and zeroing behavior.
 - [ ] Compilation and performance bridge
-  - [ ] Forward graph lowering to NeuralIR and MatrixIR.
+  - [x] Forward graph lowering to NeuralIR and MatrixIR.
   - [ ] Backward and optimizer graph lowering.
   - [ ] CPU, Rust core, and accelerated-backend parity.
   - [ ] Precision, quantization, and buffer-residency experiments.
@@ -72,8 +72,10 @@ trace, and tests.
 
 1. Keep at most one neural-learning pull request open.
 2. Inspect current PR checks before starting the next tranche.
-3. Work on the same branch and push only validated commits.
+3. Use one fresh branch and one focused commit per tranche; push only validated
+   work.
 4. Update this roadmap in each commit.
 5. Do not mark a tranche complete without direct numerical and interaction
    evidence.
-6. Do not merge autonomously.
+6. Use repository-supported auto-merge only after required checks pass, confirm
+   the merge and post-merge checks, then create the next tranche branch.

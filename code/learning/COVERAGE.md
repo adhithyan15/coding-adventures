@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1249 | 1182 | 98 | 60 | 8 | 1083 |
+| 1250 | 1183 | 98 | 60 | 8 | 1084 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 10 | 1 | 786 |
+| P3 | 2 | 10 | 1 | 787 |
 
 ## P0 Backlog
 
@@ -1195,6 +1195,7 @@ mention provides a complete lesson.
 | `smart-home-lifx-lan-integration` | 1 | missing |
 | `smart-home-matter-integration` | 1 | missing |
 | `smart-home-mqtt-integration` | 1 | missing |
+| `smart-home-nanoleaf-local-integration` | 1 | missing |
 | `smart-home-onvif-integration` | 1 | missing |
 | `smart-home-registry` | 1 | missing |
 | `smart-home-reolink-integration` | 1 | missing |

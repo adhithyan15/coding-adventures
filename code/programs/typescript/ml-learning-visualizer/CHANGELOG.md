@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Add the NN29 forward-lowering workbench with graph topology, exact NeuralIR
+  instructions, MatrixIR fusion provenance, scalar reads and writes, batch
+  columns, and three-path execution parity.
 - Add the NN28 gradient-buffer workbench with selectable backward, optimizer,
   and zeroing events, persistent buffer state, micro-batch mean scaling,
   stale-gradient failure, and per-event central finite differences.

@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/specs/forward-graph-lowering-v1/schema.json",
+  "title": "NN29 forward graph lowering lab",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "graph",
+    "expected_neural_ir",
+    "expected_matrix_ir",
+    "examples"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "$ref": "#/$defs/documentId" },
+    "title": { "$ref": "#/$defs/text" },
+    "question": { "$ref": "#/$defs/text" },
+    "absolute_tolerance": { "const": 1e-10 },
+    "graph": { "$ref": "#/$defs/graph" },
+    "expected_neural_ir": { "$ref": "#/$defs/neuralIr" },
+    "expected_matrix_ir": { "$ref": "#/$defs/matrixIr" },
+    "examples": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/example" }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]{0,63}$"
+    },
+    "documentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 128
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "boundedNumber": {
+      "type": "number",
+      "minimum": -1000,
+      "maximum": 1000
+    },
+    "idArray": {
+      "type": "array",
+      "maxItems": 24,
+      "items": { "$ref": "#/$defs/identifier" }
+    },
+    "inputNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op", "input_name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "const": "input" },
+        "input_name": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "constantNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op", "value"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "const": "constant" },
+        "value": { "$ref": "#/$defs/boundedNumber" }
+      }
+    },
+    "weightedSumNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "const": "weighted_sum" }
+      }
+    },
+    "activationNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op", "activation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "const": "activation" },
+        "activation": { "enum": ["relu", "sigmoid", "tanh", "none"] }
+      }
+    },
+    "outputNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "op", "output_name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": { "const": "output" },
+        "output_name": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "weight"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "from": { "$ref": "#/$defs/identifier" },
+        "to": { "$ref": "#/$defs/identifier" },
+        "weight": { "$ref": "#/$defs/boundedNumber" }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "nodes", "edges"],
+      "properties": {
+        "name": { "$ref": "#/$defs/documentId" },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/inputNode" },
+              { "$ref": "#/$defs/constantNode" },
+              { "$ref": "#/$defs/weightedSumNode" },
+              { "$ref": "#/$defs/activationNode" },
+              { "$ref": "#/$defs/outputNode" }
+            ]
+          }
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 24,
+          "items": { "$ref": "#/$defs/edge" }
+        }
+      }
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": { "$ref": "#/$defs/boundedNumber" },
+        "input_name": { "$ref": "#/$defs/identifier" },
+        "edge_id": { "$ref": "#/$defs/identifier" },
+        "activation": { "enum": ["relu", "sigmoid", "tanh", "none"] },
+        "output_name": { "$ref": "#/$defs/identifier" },
+        "edge_ids": { "$ref": "#/$defs/idArray" },
+        "weights": {
+          "type": "array",
+          "maxItems": 24,
+          "items": { "$ref": "#/$defs/boundedNumber" }
+        }
+      }
+    },
+    "normalizedInstruction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "op",
+        "output",
+        "inputs",
+        "attributes",
+        "source_nodes",
+        "source_edges"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": {
+          "enum": [
+            "LOAD_INPUT",
+            "LOAD_CONST",
+            "LOAD_EDGE_WEIGHT",
+            "MUL",
+            "ADD",
+            "ACTIVATE",
+            "STORE_OUTPUT"
+          ]
+        },
+        "output": {
+          "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "inputs": { "$ref": "#/$defs/idArray" },
+        "attributes": { "$ref": "#/$defs/attributes" },
+        "source_nodes": { "$ref": "#/$defs/idArray" },
+        "source_edges": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "normalizedMatrixOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "op",
+        "output",
+        "inputs",
+        "attributes",
+        "source_instructions",
+        "source_nodes",
+        "source_edges"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "op": {
+          "enum": [
+            "LOAD_INPUT_MATRIX",
+            "LOAD_CONST_MATRIX",
+            "WEIGHTED_SUM_MATRIX",
+            "ACTIVATE_MATRIX",
+            "STORE_OUTPUT_MATRIX"
+          ]
+        },
+        "output": {
+          "oneOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "inputs": { "$ref": "#/$defs/idArray" },
+        "attributes": { "$ref": "#/$defs/attributes" },
+        "source_instructions": { "$ref": "#/$defs/idArray" },
+        "source_nodes": { "$ref": "#/$defs/idArray" },
+        "source_edges": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "neuralIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["magic", "version", "instructions"],
+      "properties": {
+        "magic": { "const": "CANN" },
+        "version": { "const": 0 },
+        "instructions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/normalizedInstruction" }
+        }
+      }
+    },
+    "matrixIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["magic", "version", "source_neural_ir_version", "operations"],
+      "properties": {
+        "magic": { "const": "CANM" },
+        "version": { "const": 0 },
+        "source_neural_ir_version": { "const": 0 },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/normalizedMatrixOperation" }
+        }
+      }
+    },
+    "inputColumns": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/identifier" },
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 8,
+        "items": { "$ref": "#/$defs/boundedNumber" }
+      }
+    },
+    "valueColumn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value_id", "values"],
+      "properties": {
+        "value_id": { "$ref": "#/$defs/identifier" },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "number" }
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direct_outputs",
+        "neural_ir_outputs",
+        "matrix_ir_outputs",
+        "neural_value_rows",
+        "matrix_value_columns"
+      ],
+      "properties": {
+        "direct_outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "number" }
+        },
+        "neural_ir_outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "number" }
+        },
+        "matrix_ir_outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "number" }
+        },
+        "neural_value_rows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": { "type": "number" }
+          }
+        },
+        "matrix_value_columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/valueColumn" }
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "inputs", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "title": { "$ref": "#/$defs/text" },
+        "inputs": { "$ref": "#/$defs/inputColumns" },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    }
+  }
+}

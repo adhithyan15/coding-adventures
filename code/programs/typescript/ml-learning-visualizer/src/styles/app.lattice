@@ -367,6 +367,398 @@ button.distribution-card[aria-pressed="true"] {
   }
 }
 
+.workspace--forward-lowering {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.forward-lowering-stage {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.forward-lowering-intro,
+.forward-lowering-graph,
+.forward-lowering-ir,
+.forward-lowering-selection,
+.forward-lowering-parity,
+.forward-lowering-controls {
+  @include surface;
+}
+
+.forward-lowering-intro,
+.forward-lowering-graph,
+.forward-lowering-ir,
+.forward-lowering-selection,
+.forward-lowering-parity {
+  padding: 18px;
+}
+
+.forward-lowering-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.forward-lowering-intro h2,
+.forward-lowering-controls h2,
+.forward-lowering-graph h2,
+.forward-lowering-ir h2,
+.forward-lowering-selection h2,
+.forward-lowering-parity h2 {
+  margin: 0;
+}
+
+.forward-lowering-intro p:not(.eyebrow),
+.forward-lowering-controls > p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.forward-lowering-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(109, 91, 208, 0.38);
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.08);
+  color: #4b3e9d;
+  padding: 8px 12px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.forward-lowering-graph,
+.forward-lowering-ir,
+.forward-lowering-selection,
+.forward-lowering-parity {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.forward-lowering-graph .panel-heading > code,
+.forward-lowering-ir .panel-heading > code,
+.forward-lowering-selection .panel-heading > code,
+.forward-lowering-parity .panel-heading > code {
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.07);
+  color: #234c9f;
+  padding: 7px 10px;
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.forward-lowering-node-flow {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) auto repeat(3, minmax(120px, 0.65fr));
+  align-items: center;
+  gap: 8px;
+}
+
+.forward-lowering-input-stack,
+.forward-lowering-flow-tail {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.forward-lowering-flow-tail {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.forward-lowering-flow-tail:last-child {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.forward-lowering-input-stack article,
+.forward-lowering-flow-tail article {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.045);
+  padding: 10px;
+}
+
+.forward-lowering-input-stack span,
+.forward-lowering-flow-tail span,
+.forward-lowering-edge-grid span,
+.forward-lowering-instruction-lane span,
+.forward-lowering-matrix-lane span,
+.forward-lowering-scenario-buttons span {
+  color: $muted;
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.forward-lowering-arrow {
+  color: rgba(109, 91, 208, 0.65);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.forward-lowering-edge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.forward-lowering-edge-grid > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 9px;
+  min-width: 0;
+  border-radius: 8px;
+  background: rgba(183, 121, 31, 0.07);
+  padding: 10px;
+}
+
+.forward-lowering-edge-grid span {
+  grid-column: 1 / -1;
+}
+
+.forward-lowering-edge-grid code,
+.forward-lowering-edge-grid strong {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.forward-lowering-edge-grid code {
+  color: #7a5318;
+}
+
+.forward-lowering-instruction-lane,
+.forward-lowering-matrix-lane {
+  display: grid;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.forward-lowering-instruction-lane {
+  grid-template-columns: repeat(12, minmax(142px, 1fr));
+}
+
+.forward-lowering-matrix-lane {
+  grid-template-columns: repeat(6, minmax(165px, 1fr));
+}
+
+.forward-lowering-instruction-lane button,
+.forward-lowering-matrix-lane button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.84);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.forward-lowering-instruction-lane button[aria-pressed="true"],
+.forward-lowering-matrix-lane button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.52);
+  background: rgba(109, 91, 208, 0.09);
+  box-shadow: inset 0 -3px rgba(109, 91, 208, 0.14);
+}
+
+.forward-lowering-instruction-lane small,
+.forward-lowering-matrix-lane small,
+.forward-lowering-detail-grid small {
+  color: $muted;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.forward-lowering-instruction-lane strong,
+.forward-lowering-matrix-lane strong {
+  overflow-wrap: anywhere;
+}
+
+.forward-lowering-instruction-lane code,
+.forward-lowering-matrix-lane code,
+.forward-lowering-detail-grid code,
+.forward-lowering-equation code,
+.forward-lowering-parity-table code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.forward-lowering-instruction-lane code,
+.forward-lowering-matrix-lane code {
+  color: #234c9f;
+  font-size: 0.68rem;
+}
+
+.forward-lowering-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.forward-lowering-detail-grid > div {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.05);
+  padding: 11px;
+}
+
+.forward-lowering-detail-grid code {
+  color: #1d6849;
+  overflow-wrap: anywhere;
+}
+
+.forward-lowering-parity-table {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.forward-lowering-parity-table > div {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(62px, 1fr));
+  gap: 6px;
+  align-items: center;
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.045);
+  padding: 9px;
+}
+
+.forward-lowering-parity-table .forward-lowering-parity-head {
+  background: rgba(109, 91, 208, 0.08);
+  color: #4b3e9d;
+  font-size: 0.7rem;
+}
+
+.forward-lowering-parity-table code {
+  color: #1d6849;
+}
+
+.forward-lowering-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 11px;
+  padding: 16px;
+}
+
+.forward-lowering-scenario-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.forward-lowering-scenario-buttons button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 10px;
+  text-align: left;
+}
+
+.forward-lowering-scenario-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.09);
+}
+
+.forward-lowering-equation,
+.forward-lowering-mental-model {
+  display: grid;
+  gap: 7px;
+  border-radius: 9px;
+  padding: 11px;
+}
+
+.forward-lowering-equation {
+  background: rgba(37, 99, 235, 0.055);
+}
+
+.forward-lowering-equation code {
+  color: #234c9f;
+  overflow-wrap: anywhere;
+}
+
+.forward-lowering-mental-model {
+  background: rgba(35, 122, 87, 0.065);
+}
+
+.forward-lowering-mental-model h2,
+.forward-lowering-mental-model p {
+  margin: 0;
+}
+
+.forward-lowering-mental-model p:not(.eyebrow) {
+  color: $muted;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .workspace--forward-lowering {
+    grid-template-columns: 1fr;
+  }
+
+  .forward-lowering-controls {
+    position: static;
+  }
+
+  .forward-lowering-scenario-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .forward-lowering-intro,
+  .forward-lowering-graph .panel-heading,
+  .forward-lowering-ir .panel-heading,
+  .forward-lowering-selection .panel-heading,
+  .forward-lowering-parity .panel-heading {
+    display: grid;
+  }
+
+  .forward-lowering-chip {
+    justify-self: start;
+  }
+
+  .forward-lowering-node-flow,
+  .forward-lowering-edge-grid,
+  .forward-lowering-detail-grid,
+  .forward-lowering-scenario-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .forward-lowering-flow-tail {
+    grid-template-columns: 1fr;
+  }
+
+  .forward-lowering-node-flow > .forward-lowering-arrow,
+  .forward-lowering-flow-tail > .forward-lowering-arrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .forward-lowering-parity-table {
+    overflow-x: auto;
+  }
+
+  .forward-lowering-parity-table > div {
+    min-width: 570px;
+  }
+}
+
 .workspace--dynamic-autograd {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
