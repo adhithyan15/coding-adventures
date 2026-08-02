@@ -79,6 +79,16 @@ def load_provenance_bundles(
             digest: adj_stdlib_provenance._json_object(cas, digest, "provenance_bundle")
             for digest in manifest["bundle_hashes"]
         }
+        for digest, bundle in bundles.items():
+            library_path = root / bundle["library"]
+            library_bytes = adj_stdlib_provenance._read_regular_file(library_path)
+            if (
+                adj_stdlib_provenance.sha256_bytes(library_bytes)
+                != bundle["input"]["raw_source_sha256"]
+            ):
+                raise adj_stdlib_provenance.ProvenanceError(
+                    f"bundle {digest} input bytes disagree with {bundle['library']}"
+                )
     except (
         OSError,
         UnicodeDecodeError,

@@ -132,6 +132,56 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             label="fixture text transform",
             links=[raw_hash, rendered_hash],
         )
+        input_body = b"formula sum(a, b) = a + b\n"
+        input_path = root / "code/example/arithmetic.adj"
+        input_path.parent.mkdir(parents=True)
+        input_path.write_bytes(input_body)
+        input_hash = cas.put(input_body, kind="raw_source", label="fixture ADJ input")
+        input_receipt = provenance.build_input_receipt(
+            repo_path="code/example/arithmetic.adj",
+            captured_at="2026-08-02T12:00:00Z",
+            body_sha256=input_hash,
+            body_size=len(input_body),
+            body_git_sha1=provenance.git_blob_sha1(input_body),
+        )
+        input_receipt_hash = cas.put_json(
+            input_receipt,
+            kind="input_receipt",
+            label="fixture input receipt",
+            links=[input_hash],
+        )
+        input_ir = provenance.build_source_ir(
+            source_sha256=input_hash,
+            source=input_body,
+            segments=[
+                {
+                    "claims": [
+                        {
+                            "claim_id": claim_id,
+                            "end": len(input_body),
+                            "quote": input_body.decode("utf-8"),
+                            "quote_sha256": provenance.sha256_bytes(input_body),
+                            "start": 0,
+                        }
+                    ],
+                    "disposition": "represented",
+                    "end": len(input_body),
+                    "start": 0,
+                }
+            ],
+        )
+        input_ir_hash = cas.put_json(
+            input_ir,
+            kind="source_ir",
+            label="fixture input IR",
+            links=[input_hash],
+        )
+        input_source_entry = {
+            "raw_source_sha256": input_hash,
+            "receipt_sha256": input_receipt_hash,
+            "representations": [],
+            "source_ir_sha256": input_ir_hash,
+        }
         source_entry = {
             "raw_source_sha256": raw_hash,
             "receipt_sha256": receipt_hash,
@@ -147,6 +197,12 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         clause = {
             "claim_id": claim_id,
             "end": len(rendered),
+            "input_claim": {
+                "end": len(input_body),
+                "quote": input_body.decode("utf-8"),
+                "quote_sha256": provenance.sha256_bytes(input_body),
+                "start": 0,
+            },
             "quote": rendered.decode("utf-8"),
             "quote_sha256": provenance.sha256_bytes(rendered),
             "resolution": {
@@ -164,9 +220,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             "bundle_id": "test.arithmetic.v1",
             "clauses": [clause],
             "dependencies": [],
+            "input": {
+                "raw_source_sha256": input_hash,
+                "receipt_sha256": input_receipt_hash,
+                "source_ir_sha256": input_ir_hash,
+            },
             "kind": "provenance_bundle",
-            "library": "arithmetic.adj",
-            "sources": [source_entry],
+            "library": "code/example/arithmetic.adj",
+            "sources": [source_entry, input_source_entry],
         }
         bundle_hash = cas.put_json(
             bundle,
@@ -191,6 +252,9 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 "rendered_ir": rendered_ir_hash,
                 "receipt": receipt_hash,
                 "ir": ir_hash,
+                "input": input_hash,
+                "input_ir": input_ir_hash,
+                "input_receipt": input_receipt_hash,
                 "bundle": bundle_hash,
                 "transform": transform_hash,
                 "snapshot": rendered_hash,
@@ -233,7 +297,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             )
 
             self.assertEqual(result["bundles"], 1)
-            self.assertEqual(result["objects"], 7)
+            self.assertEqual(result["objects"], 10)
             self.assertEqual(result["snapshots"], 1)
             self.assertTrue(result["valid"])
             self.assertEqual(projected["projected"], 1)
@@ -530,6 +594,25 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 headers={"Set-Cookie": "secret=1"},
             )
 
+    def test_input_receipt_pins_repo_path_and_git_blob(self) -> None:
+        body = b"formula sum(a, b) = a + b\n"
+        receipt = provenance.build_input_receipt(
+            repo_path="code/example.adj",
+            captured_at="2026-08-02T12:00:00Z",
+            body_sha256=provenance.sha256_bytes(body),
+            body_size=len(body),
+            body_git_sha1=provenance.git_blob_sha1(body),
+        )
+        self.assertEqual(receipt["body_git_sha1"], provenance.git_blob_sha1(body))
+        with self.assertRaisesRegex(provenance.ProvenanceError, "repository-relative"):
+            provenance.build_input_receipt(
+                repo_path="../outside.adj",
+                captured_at="2026-08-02T12:00:00Z",
+                body_sha256=provenance.sha256_bytes(body),
+                body_size=len(body),
+                body_git_sha1=provenance.git_blob_sha1(body),
+            )
+
     def test_receipt_and_ir_must_link_the_same_raw_bytes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -542,6 +625,41 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             with self.assertRaisesRegex(
                 provenance.ProvenanceError, "receipt must link"
             ):
+                provenance.validate_repository(cas_root, manifest_path)
+
+    def test_bundle_requires_matching_decomposed_input_claim(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _ = self.build_repository(root)
+
+            def mutate(bundle: dict[str, object], cas: provenance.Cas) -> None:
+                source = bundle["sources"][1]
+                input_hash = source["raw_source_sha256"]
+                body = provenance._read_regular_file(cas.object_path(input_hash))
+                empty_ir = provenance.build_source_ir(
+                    source_sha256=input_hash,
+                    source=body,
+                    segments=[
+                        {
+                            "disposition": "discarded",
+                            "end": len(body),
+                            "reason": "incorrectly omitted code claim",
+                            "start": 0,
+                        }
+                    ],
+                )
+                empty_ir_hash = cas.put_json(
+                    empty_ir,
+                    kind="source_ir",
+                    label="empty input IR",
+                    links=[input_hash],
+                )
+                source["source_ir_sha256"] = empty_ir_hash
+                bundle["input"]["source_ir_sha256"] = empty_ir_hash
+
+            self.replace_bundle(cas_root, manifest_path, mutate)
+
+            with self.assertRaisesRegex(provenance.ProvenanceError, "input claim"):
                 provenance.validate_repository(cas_root, manifest_path)
 
     def test_unreferenced_objects_fail_complete_graph_accounting(self) -> None:

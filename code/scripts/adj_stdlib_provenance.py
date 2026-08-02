@@ -30,6 +30,7 @@ MAX_OBJECT_BYTES = 64 * 1024 * 1024
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 OBJECT_KINDS = {
     "fetch_receipt",
+    "input_receipt",
     "provenance_bundle",
     "raw_source",
     "rendered_text",
@@ -344,6 +345,46 @@ def build_fetch_receipt(
     }
 
 
+def _require_repo_path(value: Any, field: str) -> str:
+    repo_path = _require_nonempty(value, field)
+    path = PurePosixPath(repo_path)
+    if path.is_absolute() or ".." in path.parts or path.as_posix() != repo_path:
+        raise ProvenanceError(f"{field} must be a normalized repository-relative path")
+    return repo_path
+
+
+def git_blob_sha1(data: bytes) -> str:
+    header = f"blob {len(data)}\0".encode("ascii")
+    return hashlib.sha1(header + data, usedforsecurity=False).hexdigest()
+
+
+def build_input_receipt(
+    *,
+    repo_path: str,
+    captured_at: str,
+    body_sha256: str,
+    body_size: int,
+    body_git_sha1: str,
+) -> dict[str, Any]:
+    _require_repo_path(repo_path, "receipt.repo_path")
+    _require_utc_timestamp(captured_at, "receipt.captured_at")
+    _require_hash(body_sha256, "receipt.body_sha256")
+    if not _is_integer(body_size) or body_size < 0 or body_size > MAX_OBJECT_BYTES:
+        raise ProvenanceError("receipt.body_size is outside the supported range")
+    if not isinstance(body_git_sha1, str) or not re.fullmatch(
+        r"[0-9a-f]{40}", body_git_sha1
+    ):
+        raise ProvenanceError("receipt.body_git_sha1 must be a lowercase Git SHA-1")
+    return {
+        "body_git_sha1": body_git_sha1,
+        "body_sha256": body_sha256,
+        "body_size": body_size,
+        "captured_at": captured_at,
+        "kind": "input_receipt",
+        "repo_path": repo_path,
+    }
+
+
 def _validate_claim(
     claim: Any, source: bytes, segment_start: int, segment_end: int
 ) -> None:
@@ -645,6 +686,7 @@ def _validate_cas_schemas(schema_path: Path, cas: Cas) -> None:
     definitions = schema.get("$defs", {})
     schema_kinds = {
         "fetch_receipt",
+        "input_receipt",
         "provenance_bundle",
         "source_ir",
         "text_transform",
@@ -732,29 +774,50 @@ def _validate_source_entry(
     if cas.index[raw_hash]["links"]:
         raise ProvenanceError(f"{prefix} raw source must not carry graph links")
     raw = _read_regular_file(cas.object_path(raw_hash))
-    receipt = _json_object(cas, receipt_hash, "fetch_receipt")
-    normalized_receipt = build_fetch_receipt(
-        locator=receipt.get("locator"),
-        final_locator=receipt.get("final_locator"),
-        retrieved_at=receipt.get("retrieved_at"),
-        status=receipt.get("status"),
-        media_type=receipt.get("media_type"),
-        body_sha256=receipt.get("body_sha256"),
-        body_size=receipt.get("body_size"),
-        headers=receipt.get("headers"),
-    )
+    receipt_kinds = set(cas.index.get(receipt_hash, {}).get("kinds", []))
+    if "fetch_receipt" in receipt_kinds:
+        receipt = _json_object(cas, receipt_hash, "fetch_receipt")
+        normalized_receipt = build_fetch_receipt(
+            locator=receipt.get("locator"),
+            final_locator=receipt.get("final_locator"),
+            retrieved_at=receipt.get("retrieved_at"),
+            status=receipt.get("status"),
+            media_type=receipt.get("media_type"),
+            body_sha256=receipt.get("body_sha256"),
+            body_size=receipt.get("body_size"),
+            headers=receipt.get("headers"),
+        )
+        if not 200 <= receipt["status"] <= 299:
+            raise ProvenanceError(
+                f"{prefix} unsuccessful receipt cannot ground a bundle"
+            )
+        is_external_authority = True
+    elif "input_receipt" in receipt_kinds:
+        receipt = _json_object(cas, receipt_hash, "input_receipt")
+        normalized_receipt = build_input_receipt(
+            repo_path=receipt.get("repo_path"),
+            captured_at=receipt.get("captured_at"),
+            body_sha256=receipt.get("body_sha256"),
+            body_size=receipt.get("body_size"),
+            body_git_sha1=receipt.get("body_git_sha1"),
+        )
+        if receipt["body_git_sha1"] != git_blob_sha1(raw):
+            raise ProvenanceError(
+                f"{prefix} input receipt has the wrong Git blob SHA-1"
+            )
+        is_external_authority = False
+    else:
+        raise ProvenanceError(f"{prefix} receipt has an unsupported kind")
     if receipt != normalized_receipt:
         raise ProvenanceError(f"{prefix} receipt has unknown or inconsistent fields")
     if receipt["body_sha256"] != raw_hash or receipt["body_size"] != len(raw):
         raise ProvenanceError(f"{prefix} receipt does not identify its exact raw bytes")
-    if not 200 <= receipt["status"] <= 299:
-        raise ProvenanceError(f"{prefix} unsuccessful receipt cannot ground a bundle")
     if cas.index[receipt_hash]["links"] != [raw_hash]:
         raise ProvenanceError(f"{prefix} receipt must link only to its raw bytes")
     raw_ir = _validate_source_ir(cas, ir_hash, raw_hash)
     raw_claims = _claims_by_id(raw_ir)
     claims = {ir_hash: raw_claims}
-    authorities = {raw_hash: (raw_hash, receipt_hash)}
+    authorities = {raw_hash: (raw_hash, receipt_hash)} if is_external_authority else {}
     links = {raw_hash, receipt_hash, ir_hash}
     representations = source["representations"]
     if not isinstance(representations, list):
@@ -837,7 +900,8 @@ def _validate_source_entry(
                     f"{item_prefix} transform leaves claim {claim_id} bytes unmapped"
                 )
         claims[text_ir_hash] = text_claims
-        authorities[text_hash] = (raw_hash, receipt_hash)
+        if is_external_authority:
+            authorities[text_hash] = (raw_hash, receipt_hash)
         links.update((text_hash, text_ir_hash, transform_hash))
     return links, claims, authorities
 
@@ -850,6 +914,7 @@ def _validate_bundle(
     validated: set[str],
     snapshots: set[str],
     bundle_claims: dict[str, set[str]],
+    bundle_inputs: dict[str, str],
 ) -> None:
     if digest in validated:
         return
@@ -861,6 +926,7 @@ def _validate_bundle(
         "bundle_id",
         "clauses",
         "dependencies",
+        "input",
         "kind",
         "library",
         "sources",
@@ -882,6 +948,7 @@ def _validate_bundle(
             validated=validated,
             snapshots=snapshots,
             bundle_claims=bundle_claims,
+            bundle_inputs=bundle_inputs,
         )
     sources = bundle["sources"]
     if not isinstance(sources, list) or not sources:
@@ -889,11 +956,20 @@ def _validate_bundle(
     expected_links: set[str] = set(dependencies)
     claims: dict[str, dict[str, dict[str, Any]]] = {}
     authorities: dict[str, tuple[str, str]] = {}
+    source_identities: set[tuple[str, str, str]] = set()
+    source_by_identity: dict[tuple[str, str, str], dict[str, Any]] = {}
     for index, source in enumerate(sources):
         links, source_claims, source_authorities = _validate_source_entry(
             cas, source, f"bundle.sources[{index}]"
         )
         expected_links.update(links)
+        identity = (
+            source["raw_source_sha256"],
+            source["receipt_sha256"],
+            source["source_ir_sha256"],
+        )
+        source_identities.add(identity)
+        source_by_identity[identity] = source
         for ir_hash, ir_claims in source_claims.items():
             if ir_hash in claims:
                 raise ProvenanceError(f"bundle {digest} repeats source IR {ir_hash}")
@@ -904,6 +980,40 @@ def _validate_bundle(
                     f"bundle {digest} gives snapshot {snapshot_hash} conflicting authorities"
                 )
             authorities[snapshot_hash] = authority
+    input_binding = bundle["input"]
+    if not isinstance(input_binding, dict) or set(input_binding) != {
+        "raw_source_sha256",
+        "receipt_sha256",
+        "source_ir_sha256",
+    }:
+        raise ProvenanceError(f"bundle {digest} input must have the exact schema")
+    input_identity = (
+        _require_hash(
+            input_binding["raw_source_sha256"], "bundle.input.raw_source_sha256"
+        ),
+        _require_hash(input_binding["receipt_sha256"], "bundle.input.receipt_sha256"),
+        _require_hash(
+            input_binding["source_ir_sha256"], "bundle.input.source_ir_sha256"
+        ),
+    )
+    if input_identity not in source_identities:
+        raise ProvenanceError(f"bundle {digest} input is absent from its source graph")
+    if source_by_identity[input_identity]["representations"]:
+        raise ProvenanceError(f"bundle {digest} input must use its exact raw bytes")
+    input_raw_hash, input_receipt_hash, input_ir_hash = input_identity
+    input_receipt = _json_object(cas, input_receipt_hash, "input_receipt")
+    if input_receipt["repo_path"] != bundle["library"]:
+        raise ProvenanceError(f"bundle {digest} input path disagrees with its library")
+    if cas.index[input_ir_hash]["links"] != [input_raw_hash]:
+        raise ProvenanceError(
+            f"bundle {digest} input IR does not describe its input bytes"
+        )
+    prior_input = bundle_inputs.get(bundle["library"])
+    if prior_input is not None and prior_input != input_raw_hash:
+        raise ProvenanceError(
+            f"bundles disagree on input bytes for {bundle['library']}"
+        )
+    bundle_inputs[bundle["library"]] = input_raw_hash
     clauses = bundle["clauses"]
     if not isinstance(clauses, list) or not clauses:
         raise ProvenanceError(f"bundle {digest} must contain clauses")
@@ -913,6 +1023,7 @@ def _validate_bundle(
         if not isinstance(clause, dict) or set(clause) != {
             "claim_id",
             "end",
+            "input_claim",
             "quote",
             "quote_sha256",
             "resolution",
@@ -940,6 +1051,24 @@ def _validate_bundle(
         }
         if expected_claim != clause_claim:
             raise ProvenanceError(f"{prefix} disagrees with its byte-verified IR claim")
+        input_claim = clause["input_claim"]
+        if not isinstance(input_claim, dict) or set(input_claim) != {
+            "end",
+            "quote",
+            "quote_sha256",
+            "start",
+        }:
+            raise ProvenanceError(f"{prefix}.input_claim has the wrong schema")
+        expected_input_claim = claims.get(input_ir_hash, {}).get(claim_id)
+        normalized_input_claim = (
+            {key: expected_input_claim[key] for key in input_claim}
+            if expected_input_claim is not None
+            else None
+        )
+        if input_claim != normalized_input_claim:
+            raise ProvenanceError(
+                f"{prefix} input claim disagrees with the decomposed ADJ bytes"
+            )
         resolution = clause["resolution"]
         if not isinstance(resolution, dict):
             raise ProvenanceError(f"{prefix}.resolution must be an object")
@@ -1011,7 +1140,10 @@ def _validate_bundle(
 
 
 def validate_repository(
-    cas_root: Path, manifest_path: Path, schema_path: Path | None = None
+    cas_root: Path,
+    manifest_path: Path,
+    schema_path: Path | None = None,
+    workspace_root: Path | None = None,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -1036,6 +1168,7 @@ def validate_repository(
     snapshots: set[str] = set()
     validated: set[str] = set()
     bundle_claims: dict[str, set[str]] = {}
+    bundle_inputs: dict[str, str] = {}
     for bundle in bundles:
         _validate_bundle(
             cas,
@@ -1044,7 +1177,17 @@ def validate_repository(
             validated=validated,
             snapshots=snapshots,
             bundle_claims=bundle_claims,
+            bundle_inputs=bundle_inputs,
         )
+    effective_workspace_root = workspace_root or manifest_path.parent
+    for repo_path, expected_hash in sorted(bundle_inputs.items()):
+        input_bytes = _read_regular_file(
+            effective_workspace_root / PurePosixPath(repo_path)
+        )
+        if sha256_bytes(input_bytes) != expected_hash:
+            raise ProvenanceError(
+                f"workspace input bytes disagree with bundle for {repo_path}"
+            )
     reachable = _reachable(cas, bundles)
     unreferenced = sorted(set(cas.index) - reachable)
     if unreferenced:
@@ -1063,8 +1206,11 @@ def project_snapshots(
     manifest_path: Path,
     output: Path,
     schema_path: Path | None = None,
+    workspace_root: Path | None = None,
 ) -> dict[str, Any]:
-    result = validate_repository(cas_root, manifest_path, schema_path)
+    result = validate_repository(
+        cas_root, manifest_path, schema_path, workspace_root=workspace_root
+    )
     cas = Cas(cas_root)
     cas.load()
     _ensure_real_directory(output)
@@ -1156,6 +1302,13 @@ def main() -> int:
     capture_parser.add_argument("--headers", type=Path)
     capture_parser.add_argument("--label", required=True)
 
+    input_parser = subparsers.add_parser("capture-input")
+    input_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
+    input_parser.add_argument("--body", type=Path, required=True)
+    input_parser.add_argument("--repo-path", required=True)
+    input_parser.add_argument("--captured-at", required=True)
+    input_parser.add_argument("--label", required=True)
+
     rendered_parser = subparsers.add_parser("put-rendered")
     rendered_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
     rendered_parser.add_argument("--source", required=True)
@@ -1188,6 +1341,7 @@ def main() -> int:
                 _resolve(repo_root, args.cas),
                 _resolve(repo_root, args.manifest),
                 _resolve(repo_root, args.schema),
+                workspace_root=repo_root,
             )
         elif args.command == "project":
             result = project_snapshots(
@@ -1195,6 +1349,7 @@ def main() -> int:
                 _resolve(repo_root, args.manifest),
                 _resolve(repo_root, args.output),
                 _resolve(repo_root, args.schema),
+                workspace_root=repo_root,
             )
         elif args.command == "capture":
             cas = Cas(_resolve(repo_root, args.cas))
@@ -1219,6 +1374,33 @@ def main() -> int:
                 receipt,
                 kind="fetch_receipt",
                 label=f"fetch receipt: {args.label}",
+                links=[raw_hash],
+            )
+            cas.write_index()
+            result = {"raw_source_sha256": raw_hash, "receipt_sha256": receipt_hash}
+        elif args.command == "capture-input":
+            cas = Cas(_resolve(repo_root, args.cas))
+            cas.load()
+            repo_path = _require_repo_path(args.repo_path, "receipt.repo_path")
+            body_path = _resolve(repo_root, args.body)
+            expected_path = repo_root / PurePosixPath(repo_path)
+            if os.path.abspath(body_path) != os.path.abspath(expected_path):
+                raise ProvenanceError(
+                    "capture-input body must be the file named by --repo-path"
+                )
+            body = _read_regular_file(body_path)
+            raw_hash = cas.put(body, kind="raw_source", label=args.label)
+            receipt = build_input_receipt(
+                repo_path=repo_path,
+                captured_at=args.captured_at,
+                body_sha256=raw_hash,
+                body_size=len(body),
+                body_git_sha1=git_blob_sha1(body),
+            )
+            receipt_hash = cas.put_json(
+                receipt,
+                kind="input_receipt",
+                label=f"input receipt: {args.label}",
                 links=[raw_hash],
             )
             cas.write_index()
