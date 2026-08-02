@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the generated SwiftUI direct-launch gate through a synthesized AppKit
+  wheel event and require shared viewport scroll before keyboard acceptance.
 - Extend the generated SwiftUI direct-launch gate through a real AppKit surface
   resize and require the package-owned adapter to report shared-session reflow.
 - Extend the generated SwiftUI direct-launch gate through an AppKit click on a

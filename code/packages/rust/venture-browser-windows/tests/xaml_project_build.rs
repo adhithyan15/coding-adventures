@@ -263,6 +263,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
         "WinUI interaction failed: {interaction}"
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
+    assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
     assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));

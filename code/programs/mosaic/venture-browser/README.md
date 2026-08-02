@@ -40,7 +40,9 @@ recreating the surrounding chrome in backend-specific UI code.
   adapter. It loads `venture_browser_windows.dll`, projects that same shared
   reducer into generated WinUI controls, and mounts Direct2D-rendered pixels
   in the generated `content-surface` `UIElement`. Pointer-wheel scrolling and
-  link activation call back into the same Rust browser session.
+  link activation call back into the same Rust browser session. The direct
+  generated-app gates inject native wheel deltas and require those production
+  paths to scroll and repaint the shared viewport.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
@@ -105,9 +107,10 @@ cargo test -p venture-browser-windows
 These gates launch the generated window, render the host surface, edit and
 navigate the native address control, and invoke the Mosaic-authored Back,
 Forward, Reload, and Home controls. They then focus the emitted native content
-surface and require an End-key command to scroll the shared Rust viewport. From
-that scrolled state, each host must return to document start, activate a real
-  HTML link through the native surface pointer path, and observe the shared Rust
+surface and require a wheel delta followed by an End-key command to scroll the
+shared Rust viewport. From that scrolled state, each host must return to
+document start, activate a real HTML link through the native surface pointer
+path, and observe the shared Rust
   session reproject the linked address and title into the generated chrome. The
   gate then resizes the real native content surface and requires the production
   adapter to reflow and repaint that retained shared session before reporting
