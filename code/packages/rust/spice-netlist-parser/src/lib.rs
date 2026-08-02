@@ -2262,6 +2262,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(source_perimeter) = instance_params.get("PS") {
+                if !source_perimeter.is_finite() || *source_perimeter < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET PS must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],

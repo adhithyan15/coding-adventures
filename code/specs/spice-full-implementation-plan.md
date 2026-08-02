@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance drain-perimeter validation.
+1. Rust Berkeley SPICE MOS instance source-perimeter validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite instance `PD` values before lowering MOS
+   - Reject negative and non-finite instance `PS` values before lowering MOS
      elements into engine parameters.
-   - Preserve zero and positive drain perimeters for sidewall-junction behavior.
+   - Preserve zero and positive source perimeters for sidewall-junction behavior.
 
 ## Completed Slices
 
@@ -3904,6 +3904,13 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite instance `AS` values are rejected before lowering
      MOS elements into engine parameters.
    - Zero and positive source areas remain accepted for bulk-junction behavior.
+
+333. Rust Berkeley SPICE MOS instance drain-perimeter validation.
+   - Status: completed in PR 9448.
+   - Negative and non-finite instance `PD` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Zero and positive drain perimeters remain accepted for sidewall-junction
+     behavior.
 
 ## Backlog
 
