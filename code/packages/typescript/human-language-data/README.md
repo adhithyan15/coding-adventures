@@ -13,7 +13,8 @@ their frontmatter and lossless typed body blocks, joins them through the canonic
 (`concepts/taxonomy.json`), and exposes the result as a queryable dataset —
 plus a **validator** that keeps the lessons and the taxonomy from drifting apart.
 It also produces the versioned migration-gap report published with every book
-bundle.
+bundle and deterministically renders configured LaTeX chapters from that same
+lesson AST.
 
 ```
 lessons/*.md frontmatter  ─┐
@@ -49,6 +50,19 @@ npm run --silent report -- --format json > curriculum-gaps.json
 npm run --silent report -- --format text > curriculum-gaps.txt
 ```
 
+Generate configured book chapters, or verify the committed output is current:
+
+```bash
+npm run build
+npm run generate:books
+npm run check:books
+```
+
+`core/book-generation.json` declares each generated chapter. The generator
+orders schema-v2 lessons by `sequence`, writes the LaTeX chapter, and records a
+stable FNV-1a fingerprint in `core/generated-book-hashes.json`. The fingerprint
+detects drift between book and app inputs; it is not a security hash.
+
 The duration estimator uses instructional word count, explicit pauses, repeat
 cues, learner-response prompts, and a safety margin. Its effective duration is
 the greater of that estimate and the lesson's declared budget. A value of 300
@@ -61,6 +75,8 @@ until the existing corpus has been split.
 |---|---|---|
 | `frontmatter.ts` | tiny zero-dep frontmatter reader with one nested-map level | ✅ |
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
+| `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
+| `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
 | `curriculum.ts` | spine, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
@@ -68,8 +84,9 @@ until the existing corpus has been split.
 | `loader.ts` | reads the curriculum off disk | ⛔ (fs) |
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
+| `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
 
-Only `loader.ts`, `cli.ts`, and `report-cli.ts` touch the filesystem (declared in
+Only `loader.ts`, `cli.ts`, `report-cli.ts`, and `book-cli.ts` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
 against inline fixtures.
 

@@ -5,6 +5,7 @@
 
 import { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 import { LANGUAGE_SCRIPT, CONTENT_TYPES, hasOwn } from "./constants.js";
+import { canonicalLessonHash } from "./hash.js";
 import type {
   Concept,
   Dataset,
@@ -27,6 +28,8 @@ export interface ParsedLesson {
   preamble: string;
   /** Typed, ordered body blocks for schema-v2 validation and rendering. */
   blocks: LessonBodyBlock[];
+  /** Deterministic fingerprint of the canonical frontmatter and typed body AST. */
+  sourceHash: string;
   realization: Realization;
 }
 
@@ -146,15 +149,18 @@ export function parseLesson(
     etymologyHook: str(fm.etymology_hook),
   };
   const typedBody = parseBodyBlocks(body);
-  return {
+  const parsed: ParsedLesson = {
     language,
     script: resolvedScript,
     frontmatter: fm,
     body,
     preamble: typedBody.preamble,
     blocks: typedBody.blocks,
+    sourceHash: "",
     realization,
   };
+  parsed.sourceHash = canonicalLessonHash(parsed);
+  return parsed;
 }
 
 /**

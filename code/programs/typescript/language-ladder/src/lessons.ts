@@ -65,6 +65,10 @@ export interface Lesson {
   etymologyHook: string;
   /** Lossless authored lesson Markdown, shared with the book corpus. */
   body: string;
+  /** Canonical AST fingerprint; generated books combine these in authored order. */
+  sourceHash?: string;
+  /** Explicit schema-v2 local order. Legacy lessons omit it. */
+  sequence?: number;
   /** The author's upper bound for this micro-lesson. */
   estMinutes: number;
 }
@@ -123,6 +127,11 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     script: r.script,
     etymologyHook: r.etymologyHook,
     body: parsed.body,
+    sourceHash: parsed.sourceHash,
+    sequence:
+      typeof fm.sequence === "string" && Number.isFinite(Number(fm.sequence))
+        ? Number(fm.sequence)
+        : undefined,
     estMinutes,
   };
 }

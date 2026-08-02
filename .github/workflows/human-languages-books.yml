@@ -45,6 +45,7 @@ jobs:
         run: |
           npm ci
           npm run build
+          npm run check:books
           mkdir -p "$GITHUB_WORKSPACE/dist/human-languages/books"
           npm run --silent report -- --format json \
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.json"

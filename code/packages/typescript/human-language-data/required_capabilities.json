@@ -14,7 +14,19 @@
       "action": "list",
       "target": "../../learning/human-languages/**",
       "justification": "The loader enumerates each track's lessons/ directory and data/scripts/ to discover files to parse."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/**/book/chapters/*.tex",
+      "justification": "The explicit generate:books command refreshes configured LaTeX chapters from the canonical lesson AST; CI normally uses the read-only check:books drift gate."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "../../learning/human-languages/core/generated-book-hashes.json",
+      "justification": "The explicit generate:books command refreshes the deterministic app/book source-hash manifest; CI normally verifies it without writing."
     }
   ],
-  "justification": "Read-only filesystem access to the Human Languages curriculum directory. The parse/build/validate/query/report core is pure; only loader-backed CLI entry points touch the filesystem. No write, network, or process access needed."
+  "justification": "Filesystem access stays in loader-backed CLI entry points. Validation/reporting are read-only; the explicit book generator writes only configured LaTeX chapters and their shared source-hash manifest. No network or process access is needed."
 }

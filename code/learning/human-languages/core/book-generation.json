@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "language": "spanish",
+      "chapter": 1,
+      "title": "Hola and Buenos Días",
+      "label": "ch:first-words",
+      "output": "spanish/book/chapters/ch01-first-words.tex"
+    }
+  ]
+}

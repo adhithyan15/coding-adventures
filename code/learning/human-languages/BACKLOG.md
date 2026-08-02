@@ -5,9 +5,10 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after PR #9483: 20 registered
-tracks, 973 Markdown lessons, and 20 downloadable LaTeX books. HL-V01 makes the
-remaining migration debt reproducible in both JSON and human-readable reports.
+Last prioritized: 2026-08-02. Current baseline after PR #9497: 20 registered
+tracks, 976 Markdown lessons, and 20 downloadable LaTeX books. HL-V01 makes the
+remaining migration debt reproducible in both JSON and human-readable reports;
+HL-S01 proves the strict schema on the first 24 Spanish lessons.
 
 ## Priority rules
 
@@ -41,8 +42,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 
 | ID | Status | Work item | Why it follows P0 |
 |---|---|---|---|
-| HL-S01 | Complete in the Spanish schema-v2 PR | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | The 24-lesson slice has unique order, transitive knowledge closure, typed blocks, and no effective-duration violation. |
-| HL-G01 | Next | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy now that the AST contract is executable. |
+| HL-S01 | Complete (#9497) | Migrate Spanish Chapters 1–3 to schema version 2 with typed body blocks and knowledge closure. | The 24-lesson slice has unique order, transitive knowledge closure, typed blocks, and no effective-duration violation. |
+| HL-G01 | Complete in the canonical-generation PR | Generate a Spanish LaTeX chapter from the canonical lesson AST and compare source hashes with the app. | Removes the first handwritten book copy now that the AST contract is executable. |
+| HL-G02 | Next | Generate Spanish Chapters 2–3 from their canonical schema-v2 lesson AST. | Extends the proven one-source path across the rest of the migrated pilot before broad corpus work. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The audit must exist first so the debt remains measurable throughout migration. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
@@ -72,6 +74,22 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   typed body blocks, explicit coverage metadata, same-language prerequisites,
   and transitive knowledge closure. Block-boundary prompt/answer knowledge
   declarations remain a later refinement; this slice does not claim them.
+
+## Findings from HL-G01
+
+- Spanish Chapter 1 is generated deterministically from seven canonical
+  schema-v2 lessons in authored `sequence` order; the 18-book source is now 122
+  rendered pages with no generated-chapter overfull boxes.
+- The generated chapter and Language Ladder independently combine the same
+  per-lesson FNV-1a fingerprints. The app exposes `book synced` only when its
+  loaded Chapter 1 lesson AST matches the committed manifest.
+- The unified book job now fails when generated TeX or the hash manifest is
+  missing or stale. The fingerprint is a deterministic drift signal, not a
+  cryptographic integrity claim.
+- Chapter 1 is the first one-source slice. Spanish Chapters 2–18 remain
+  handwritten LaTeX until their lessons are migrated and configured; HL-G02
+  deliberately limits the next expansion to the already-schema-v2 Chapters
+  2–3.
 
 ## Completed foundations
 

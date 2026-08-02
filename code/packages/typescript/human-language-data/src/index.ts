@@ -9,6 +9,20 @@ export * from "./constants.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
+  fnv1a64,
+  canonicalLessonSource,
+  canonicalLessonHash,
+  combineLessonHashes,
+  canonicalChapterHash,
+  type LessonHashEntry,
+} from "./hash.js";
+export {
+  renderInlineMarkdown,
+  renderBookChapter,
+  type BookGenerationTarget,
+  type GeneratedBookChapter,
+} from "./book.js";
+export {
   allConcepts,
   conceptsByLanguage,
   languagesForConcept,
@@ -41,3 +55,4 @@ export {
 } from "./report.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
+export { generatedBookOutputs, runBookGeneration } from "./book-cli.js";
