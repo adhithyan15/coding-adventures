@@ -55,11 +55,10 @@ import {
   scriptsById,
   firstIntroductionByScript,
   scriptIntroFor,
+  scriptOf,
   type ScriptIntro,
 } from "./scriptintro.ts";
 import {
-  sweepableConcepts,
-  activeChain,
   LANGUAGE_CHAIN,
   spineProgress,
 } from "./sequence.ts";
@@ -67,9 +66,12 @@ import type { SessionStep } from "./session.ts";
 import {
   crossLanguageConcepts,
   datasetFromLessons,
-  unlockedOrAll,
+  unlockedIndices,
   type ConceptCard,
 } from "./concepts.ts";
+import { LANGUAGE_REGISTRY, SPINE_CONCEPTS, languageName, spineNodeForConcept } from "./curriculum.ts";
+import { loadLanguages, saveLanguages } from "./languagestore.ts";
+import { lessonSections } from "./lessonbody.ts";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
 import type { Taxonomy } from "@coding-adventures/human-language-data/src/types.ts";
 import {
@@ -78,7 +80,6 @@ import {
   fromSaved,
   loadProgress,
   saveProgress,
-  seenCount,
   toSaved,
 } from "./progress.ts";
 import "./styles.css";
@@ -98,13 +99,12 @@ let mode: Mode = "learn";
 // teaching sweep across the active chain, each stop carrying its connections
 // back to earlier languages that share a root.
 //
-// The whole chain is active: a concept simply appears in whichever of the ten
-// languages actually teach it (a sweep is "the languages that CAN show it").
-const ACTIVE_COUNT = LANGUAGE_CHAIN.length;
+// Languages are selected explicitly by the learner from the complete registry.
+// The authored registry order remains the stable order of every mixed sweep.
 // How far along the spine the learner has walked. Everything up to and including
 // this concept is "covered" (what the review quiz will later draw from); this
-// concept is the one currently being taught. The spine itself (CONCEPT_SPINE) is
-// built just below, once LESSONS is loaded.
+// concept is the one currently being taught. The spine is filtered from the
+// structured curriculum once lessons and the learner's language mix are known.
 let conceptCursor = 0;
 
 // --- lesson review state ----------------------------------------------------
@@ -116,6 +116,11 @@ let conceptCursor = 0;
 // written to localStorage (see progress.ts), so the app finally remembers you.
 const LESSONS = loadLessons();
 const LESSON_IDS = LESSONS.map((l) => l.id);
+const REVIEW_STORAGE = browserStorage();
+const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
+  LESSONS.some((lesson) => lesson.language === language),
+);
+let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 // Consolidation lessons — chapter practice, mixed drills, dialogues, reviews —
 // are not atomic concepts: their headword is a placeholder ("(practice)"), they
 // carry no roots, and they exist to REVISIT earlier lessons (`reviews_of`).
@@ -124,10 +129,17 @@ const LESSON_IDS = LESSONS.map((l) => l.id);
 // grammar, one concept at a time, not land on "(practice)".
 const CONSOLIDATION_TYPES = new Set(["practice", "practice-mix", "review"]);
 const CONCEPT_LESSONS = LESSONS.filter((l) => !CONSOLIDATION_TYPES.has(l.type));
-// The book-ordered concept spine the Learn session walks — the concepts taught
-// by any active language, in the order the book first introduces them. Constant
-// for the page's lifetime (the curriculum does not change while it is open).
-const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUNT));
+// The explicit shared spine, filtered to concepts represented in the selected
+// languages. Language-local extensions remain available in Lessons mode.
+function activeConceptSpine(): string[] {
+  const selected = new Set(selectedLanguages);
+  const realized = new Set(
+    CONCEPT_LESSONS
+      .filter((lesson) => selected.has(lesson.language))
+      .map((lesson) => lesson.concept),
+  );
+  return SPINE_CONCEPTS.filter((concept) => realized.has(concept));
+}
 
 // Script introductions (phase 7). Index the script data by id, then precompute
 // which concept is the FIRST (in book order) to teach each non-Latin script we
@@ -135,7 +147,7 @@ const CONCEPT_SPINE = sweepableConcepts(CONCEPT_LESSONS, activeChain(ACTIVE_COUN
 // are constant for the page's lifetime and grounded in the real scripts JSON.
 const SCRIPTS_BY_ID = scriptsById(SCRIPTS);
 const SCRIPT_INTRO_AT = firstIntroductionByScript(
-  CONCEPT_SPINE,
+  SPINE_CONCEPTS,
   CONCEPT_LESSONS,
   new Set(SCRIPTS_BY_ID.keys()),
 );
@@ -162,7 +174,6 @@ const LESSON_BY_ID = new Map(LESSONS.map((l) => [l.id, l]));
 // Restore the review's SRS state + answer log from localStorage so the quiz
 // remembers you between visits (reusing the same storage port progress.ts owns).
 // A missing, corrupt, or wrong-version blob restores as empty — never throws.
-const REVIEW_STORAGE = browserStorage();
 const restoredReview = loadReview(REVIEW_STORAGE);
 let reviewProgress: Progress = restoredReview.progress;
 let reviewSession = restoredReview.session; // advances once per answered question — the SRS clock
@@ -173,7 +184,7 @@ let reviewChosen: string | null = null; // cellKey of the picked option; null = 
 // Resume the teaching walk where it was left off: restore the concept cursor
 // from storage, clamped to the current spine (the curriculum may have grown or
 // shrunk since the save). A missing/corrupt value starts at 0.
-conceptCursor = loadCursor(REVIEW_STORAGE, CONCEPT_SPINE.length);
+conceptCursor = loadCursor(REVIEW_STORAGE, activeConceptSpine().length);
 
 // "Reset progress" is a two-click confirm: the first click ARMS it (so a stray
 // tap can't wipe everything), the second executes. This flag is that arming.
@@ -267,7 +278,7 @@ function syllabaryGate(): SyllabaryGate | null {
 
 const SUBTITLES: Record<Mode, string> = {
   learn:
-    "Walk the curriculum the way the book does — one concept at a time, across every language that teaches it, with the threads back to what you already know.",
+    "Walk the shared spine one concept at a time, across the languages you choose, with the threads back to what you already know.",
   browse:
     "Pick a script and a letter to see its pieces and stroke order — for pen-and-paper practice.",
   practice:
@@ -771,7 +782,12 @@ function pickLesson(): void {
   //
   // Recomputed per pick because `seen` grows as you study; it is a single pass
   // over ~700 lessons, dwarfed by the render that follows.
-  const open = new Set(unlockedOrAll(LESSONS, seenLessonIds()));
+  const selected = new Set(selectedLanguages);
+  const open = new Set(
+    unlockedIndices(LESSONS, seenLessonIds()).filter((index) =>
+      selected.has(LESSONS[index]!.language),
+    ),
+  );
 
   // The scan itself is a pure function in lessons.ts (and tested there); this
   // only threads the cursor. LESSON_GROUPS / LESSON_POOL are computed once —
@@ -846,6 +862,69 @@ function firstGloss(teaching: SessionStep[]): string {
   return teaching[0]?.lessons[0]?.gloss ?? "";
 }
 
+/** The complete registry-backed language mixer shared by Learn and practice views. */
+function renderLanguagePicker(): HTMLElement {
+  const details = el("details", "language-picker") as HTMLDetailsElement;
+  const summary = el("summary", "language-picker__summary");
+  summary.textContent = `Languages · ${selectedLanguages.length} of ${AVAILABLE_LANGUAGE_IDS.length} selected`;
+  details.appendChild(summary);
+
+  const note = el("p", "muted language-picker__note");
+  note.textContent = "Choose any mix. The shared spine stays in the same order; each language contributes its own realization and extensions.";
+  details.appendChild(note);
+
+  const grid = el("div", "language-picker__grid");
+  const selected = new Set(selectedLanguages);
+  for (const definition of LANGUAGE_REGISTRY.filter((language) =>
+    AVAILABLE_LANGUAGE_IDS.includes(language.id),
+  )) {
+    const label = el("label", "language-picker__item");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = definition.id;
+    input.checked = selected.has(definition.id);
+    input.onchange = () => {
+      const next = new Set(selectedLanguages);
+      if (input.checked) next.add(definition.id);
+      else next.delete(definition.id);
+      selectedLanguages = saveLanguages(REVIEW_STORAGE, next, AVAILABLE_LANGUAGE_IDS);
+      conceptCursor = Math.max(0, Math.min(conceptCursor, activeConceptSpine().length - 1));
+      reviewCell = null;
+      lessonIndex = null;
+      pickLesson();
+      render();
+    };
+    const text = el("span", "");
+    text.textContent = `${definition.name} · ${definition.script}`;
+    label.append(input, text);
+    grid.appendChild(label);
+  }
+  details.appendChild(grid);
+  return details;
+}
+
+/** Render the authored Markdown as text-only sections; no unsafe HTML path. */
+function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = false): HTMLElement {
+  const details = el("details", "lesson-body") as HTMLDetailsElement;
+  details.open = initiallyOpen;
+  const summary = el("summary", "lesson-body__summary");
+  summary.textContent = `Open ${lesson.estMinutes || 5}-minute lesson`;
+  details.appendChild(summary);
+  for (const sectionData of lessonSections(lesson.body)) {
+    const sectionEl = el("section", "lesson-body__section");
+    const heading = el("h4", "lesson-body__heading");
+    heading.textContent = sectionData.title;
+    sectionEl.appendChild(heading);
+    for (const block of sectionData.blocks) {
+      const p = el("p", block.startsWith("• ") ? "lesson-body__bullet" : "");
+      p.textContent = block;
+      sectionEl.appendChild(p);
+    }
+    details.appendChild(sectionEl);
+  }
+  return details;
+}
+
 /** One stop of the sweep: a language, its word(s) for the concept, its threads back. */
 function renderTeachingStep(
   step: SessionStep,
@@ -853,12 +932,13 @@ function renderTeachingStep(
   intro: ScriptIntro | null,
 ): HTMLElement {
   const card = el("div", "step");
+  card.dataset.language = step.language;
 
   const head = el("div", "step__head");
   const num = el("span", "step__num");
   num.textContent = String(ordinal + 1);
   const lang = el("span", "step__lang");
-  lang.textContent = step.language;
+  lang.textContent = languageName(step.language);
   head.append(num, lang);
   if (ordinal === 0) {
     // The first stop has no connections — it is where the concept enters.
@@ -889,6 +969,7 @@ function renderTeachingStep(
     const row = el("div", "step__word");
     const glyph = el("span", "step__glyph");
     glyph.textContent = lesson.headword; // in its own script
+    glyph.dir = SCRIPTS_BY_ID.get(lesson.script)?.direction ?? "auto";
     row.appendChild(glyph);
 
     const meta = el("div", "step__meta");
@@ -909,6 +990,7 @@ function renderTeachingStep(
       hook.textContent = lesson.etymologyHook;
       card.appendChild(hook);
     }
+    if (lesson.body.trim() !== "") card.appendChild(renderLessonBody(lesson));
   }
 
   // The threads back to earlier languages — the spiral, made literal. Each is a
@@ -928,8 +1010,8 @@ function renderTeachingStep(
  * (the covered set changed), persists so the app resumes here, and re-renders.
  * A no-op if the target is where we already are.
  */
-function jumpToConcept(index: number): void {
-  const target = Math.max(0, Math.min(index, CONCEPT_SPINE.length - 1));
+function jumpToConcept(index: number, spine = activeConceptSpine()): void {
+  const target = Math.max(0, Math.min(index, spine.length - 1));
   if (target === conceptCursor) return;
   conceptCursor = target;
   reviewCell = null;
@@ -937,7 +1019,7 @@ function jumpToConcept(index: number): void {
   render();
 }
 
-function renderLearnNav(): HTMLElement {
+function renderLearnNav(spine: readonly string[]): HTMLElement {
   const nav = el("div", "learn__nav");
 
   const prev = el("button", "opt") as HTMLButtonElement;
@@ -949,19 +1031,19 @@ function renderLearnNav(): HTMLElement {
   // A native <select> gives free keyboard type-ahead over the book-ordered list.
   const jump = el("select", "learn__jump") as HTMLSelectElement;
   jump.title = "Jump to concept";
-  CONCEPT_SPINE.forEach((concept, i) => {
+  spine.forEach((concept, i) => {
     const opt = el("option", "") as HTMLOptionElement;
     opt.value = String(i);
     opt.textContent = `${i + 1}. ${conceptTitle(concept)}`;
     if (i === conceptCursor) opt.selected = true;
     jump.appendChild(opt);
   });
-  jump.onchange = () => jumpToConcept(Number(jump.value));
+  jump.onchange = () => jumpToConcept(Number(jump.value), spine);
 
   const next = el("button", "opt") as HTMLButtonElement;
   next.textContent = "Next →";
-  next.disabled = conceptCursor >= CONCEPT_SPINE.length - 1;
-  next.onclick = () => jumpToConcept(conceptCursor + 1);
+  next.disabled = conceptCursor >= spine.length - 1;
+  next.onclick = () => jumpToConcept(conceptCursor + 1, spine);
 
   nav.append(prev, jump, next);
   return nav;
@@ -969,8 +1051,10 @@ function renderLearnNav(): HTMLElement {
 
 function renderLearn(): HTMLElement {
   const wrap = el("div", "learn");
+  wrap.appendChild(renderLanguagePicker());
+  const conceptSpine = activeConceptSpine();
 
-  if (CONCEPT_SPINE.length === 0) {
+  if (conceptSpine.length === 0) {
     const empty = el("p", "muted");
     empty.textContent = "No concepts to walk yet.";
     wrap.appendChild(empty);
@@ -979,18 +1063,18 @@ function renderLearn(): HTMLElement {
 
   // The cursor only moves via the nav buttons, but clamp defensively so a stray
   // value can never index off the end of the spine.
-  conceptCursor = Math.max(0, Math.min(conceptCursor, CONCEPT_SPINE.length - 1));
+  conceptCursor = Math.max(0, Math.min(conceptCursor, conceptSpine.length - 1));
 
-  const concept = CONCEPT_SPINE[conceptCursor]!;
+  const concept = conceptSpine[conceptCursor]!;
   // Everything up to and including the current concept is "covered" — the review
   // quiz (a later slice) draws from exactly this. Here we render the teaching
   // pass: the current concept alone, swept across the chain.
-  const covered = CONCEPT_SPINE.slice(0, conceptCursor + 1);
-  const plan = planSession(concept, covered, CONCEPT_LESSONS, ACTIVE_COUNT);
+  const covered = conceptSpine.slice(0, conceptCursor + 1);
+  const plan = planSession(concept, covered, CONCEPT_LESSONS, selectedLanguages);
 
   const progress = el("p", "score");
   progress.textContent =
-    `Concept ${conceptCursor + 1} of ${CONCEPT_SPINE.length}` +
+    `Concept ${conceptCursor + 1} of ${conceptSpine.length}` +
     ` · taught in ${plan.teaching.length} language${plan.teaching.length === 1 ? "" : "s"}`;
   wrap.appendChild(progress);
 
@@ -998,7 +1082,7 @@ function renderLearn(): HTMLElement {
   // journey that the bare "N of M" count doesn't convey at a glance.
   const track = el("div", "progress");
   const fill = el("div", "progress__fill");
-  const pct = spineProgress(conceptCursor, CONCEPT_SPINE.length) * 100;
+  const pct = spineProgress(conceptCursor, conceptSpine.length) * 100;
   fill.style.width = `${pct}%`;
   track.appendChild(fill);
   wrap.appendChild(track);
@@ -1006,6 +1090,12 @@ function renderLearn(): HTMLElement {
   const heading = el("h2", "learn__concept");
   heading.textContent = conceptTitle(concept);
   wrap.appendChild(heading);
+  const node = spineNodeForConcept(concept);
+  if (node) {
+    const canDo = el("p", "learn__can-do");
+    canDo.textContent = `${node.stage} · ${node.canDo}`;
+    wrap.appendChild(canDo);
+  }
   const gloss = firstGloss(plan.teaching);
   if (gloss) {
     const g = el("p", "muted learn__gloss");
@@ -1020,13 +1110,18 @@ function renderLearn(): HTMLElement {
   } else {
     const sweep = el("div", "sweep");
     plan.teaching.forEach((step, i) => {
-      const intro = scriptIntroFor(concept, step.language, SCRIPT_INTRO_AT, SCRIPTS_BY_ID);
+      const scriptAlreadyIntroduced = plan.teaching
+        .slice(0, i)
+        .some((earlier) => scriptOf(earlier.language) === scriptOf(step.language));
+      const intro = scriptAlreadyIntroduced
+        ? null
+        : scriptIntroFor(concept, step.language, SCRIPT_INTRO_AT, SCRIPTS_BY_ID);
       sweep.appendChild(renderTeachingStep(step, i, intro));
     });
     wrap.appendChild(sweep);
   }
 
-  wrap.appendChild(renderLearnNav());
+  wrap.appendChild(renderLearnNav(conceptSpine));
 
   // The review pass: a cumulative, SRS-weighted quiz over everything covered so
   // far (this concept and all before it). `plan.reviewGrid` is exactly that grid.
@@ -1047,6 +1142,7 @@ function executeReset(): void {
   reviewOptions = [];
   reviewChosen = null;
   conceptCursor = 0;
+  selectedLanguages = [...AVAILABLE_LANGUAGE_IDS];
   // The Lessons-mode schedule is one of the cleared keys, so its in-memory state
   // must be zeroed too — otherwise Lessons still shows the old stats and the next
   // grade would `persistLessons()` the stale schedule straight back into the key
@@ -1289,14 +1385,21 @@ function renderReview(grid: GridCell[]): HTMLElement {
  */
 function renderConcepts(): HTMLElement {
   const wrap = el("div", "practice");
+  wrap.appendChild(renderLanguagePicker());
+  const selected = new Set(selectedLanguages);
+  const cards = CONCEPT_CARDS.map((card) => ({
+    ...card,
+    realizations: card.realizations.filter((realization) => selected.has(realization.language)),
+  })).filter((card) => new Set(card.realizations.map((realization) => realization.language)).size >= 2);
+  const selectedLessonCount = LESSONS.filter((lesson) => selected.has(lesson.language)).length;
 
   const stats = el("p", "score");
   stats.textContent =
-    `${CONCEPT_CARDS.length} concepts shared by two or more languages` +
-    ` · from ${LESSONS.length} lessons`;
+    `${cards.length} concepts shared by two or more selected languages` +
+    ` · from ${selectedLessonCount} lessons`;
   wrap.appendChild(stats);
 
-  if (CONCEPT_CARDS.length === 0) {
+  if (cards.length === 0) {
     const empty = el("p", "muted");
     empty.textContent = "No concept is taught in more than one language yet.";
     wrap.appendChild(empty);
@@ -1304,7 +1407,7 @@ function renderConcepts(): HTMLElement {
   }
 
   const list = el("div", "concept-list");
-  for (const card of CONCEPT_CARDS) {
+  for (const card of cards) {
     const item = el("div", "concept");
 
     const langs = new Set(card.realizations.map((r) => r.language));
@@ -1333,7 +1436,7 @@ function renderConcepts(): HTMLElement {
         const row = el("div", "concept__row");
 
         const lang = el("span", "concept__lang");
-        lang.textContent = r.language;
+        lang.textContent = languageName(r.language);
         row.appendChild(lang);
 
         const word = el("span", "concept__word");
@@ -1378,13 +1481,19 @@ function renderConcepts(): HTMLElement {
 
 function renderLessons(): HTMLElement {
   const wrap = el("div", "practice");
+  wrap.appendChild(renderLanguagePicker());
+  const selected = new Set(selectedLanguages);
+  const selectedIndices = LESSONS.map((lesson, index) => ({ lesson, index }))
+    .filter(({ lesson }) => selected.has(lesson.language))
+    .map(({ index }) => index);
+  const selectedStates = selectedIndices.map((index) => lessonSchedule[index]!);
 
-  const due = lessonSchedule.filter((s) => s.dueAtSession <= lessonSession).length;
-  const seen = seenCount(LESSON_IDS, savedProgress);
+  const due = selectedStates.filter((s) => s.dueAtSession <= lessonSession).length;
+  const seen = selectedStates.filter((s) => s.reps > 0 || s.lapses > 0 || s.box > 0).length;
   const stats = el("p", "score");
   stats.textContent =
-    `${LESSONS.length} lessons · ${due} due · ` +
-    `${seen} started · mastered ${masteredCount(lessonSchedule)}`;
+    `${selectedIndices.length} lessons · ${due} due · ` +
+    `${seen} started · mastered ${masteredCount(selectedStates)}`;
   wrap.appendChild(stats);
 
   if (lessonIndex === null) {
@@ -1396,13 +1505,14 @@ function renderLessons(): HTMLElement {
 
   const lesson = LESSONS[lessonIndex]!;
   const meta = el("p", "muted");
-  meta.textContent = `${lesson.language} · chapter ${lesson.chapter} · ${lesson.id}`;
+  meta.textContent = `${languageName(lesson.language)} · chapter ${lesson.chapter} · ${lesson.id}`;
   wrap.appendChild(meta);
 
   // Prompt: the headword, in its own script. Answer hidden until asked for —
   // recall, not recognition.
   const prompt = el("p", "prompt-glyph");
   prompt.textContent = lesson.headword;
+  prompt.dir = SCRIPTS_BY_ID.get(lesson.script)?.direction ?? "auto";
   wrap.appendChild(prompt);
 
   if (!lessonRevealed) {
@@ -1419,6 +1529,7 @@ function renderLessons(): HTMLElement {
   const gloss = el("p", "");
   gloss.textContent = lesson.gloss;
   wrap.appendChild(gloss);
+  if (lesson.body.trim() !== "") wrap.appendChild(renderLessonBody(lesson, true));
 
   const buttons = el("div", "opts");
   ([["Again", false], ["Got it", true]] as [string, boolean][]).forEach(

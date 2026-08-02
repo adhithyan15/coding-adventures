@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "languages": [
+    { "id": "spanish", "name": "Spanish", "family": "Romance", "script": "latin", "status": "active", "bridges": ["latin", "french", "italian", "portuguese"] },
+    { "id": "latin", "name": "Latin", "family": "Italic", "script": "latin", "status": "active", "bridges": ["spanish", "french", "italian", "portuguese"] },
+    { "id": "french", "name": "French", "family": "Romance", "script": "latin", "status": "active", "bridges": ["latin", "spanish"] },
+    { "id": "german", "name": "German", "family": "Germanic", "script": "latin", "status": "active", "bridges": ["english"] },
+    { "id": "arabic", "name": "Arabic", "family": "Semitic", "script": "arabic", "status": "active", "bridges": ["persian", "urdu", "hindi"] },
+    { "id": "hindi", "name": "Hindi", "family": "Indo-Aryan", "script": "devanagari", "status": "active", "bridges": ["urdu", "sanskrit", "marathi"] },
+    { "id": "tamil", "name": "Tamil", "family": "Dravidian", "script": "tamil", "status": "active", "bridges": ["kannada", "telugu", "malayalam"] },
+    { "id": "kannada", "name": "Kannada", "family": "Dravidian", "script": "kannada", "status": "active", "bridges": ["tamil", "telugu", "sanskrit"] },
+    { "id": "telugu", "name": "Telugu", "family": "Dravidian", "script": "telugu", "status": "active", "bridges": ["kannada", "sanskrit"] },
+    { "id": "malayalam", "name": "Malayalam", "family": "Dravidian", "script": "malayalam", "status": "active", "bridges": ["tamil", "sanskrit"] },
+    { "id": "italian", "name": "Italian", "family": "Romance", "script": "latin", "status": "active", "bridges": ["latin", "spanish"] },
+    { "id": "portuguese", "name": "Portuguese", "family": "Romance", "script": "latin", "status": "active", "bridges": ["latin", "spanish"] },
+    { "id": "marathi", "name": "Marathi", "family": "Indo-Aryan", "script": "devanagari", "status": "active", "bridges": ["hindi", "sanskrit"] },
+    { "id": "punjabi", "name": "Punjabi", "family": "Indo-Aryan", "script": "gurmukhi", "status": "active", "bridges": ["hindi", "urdu", "sanskrit"] },
+    { "id": "bengali", "name": "Bengali", "family": "Indo-Aryan", "script": "bengali", "status": "active", "bridges": ["sanskrit", "hindi"] },
+    { "id": "gujarati", "name": "Gujarati", "family": "Indo-Aryan", "script": "gujarati", "status": "active", "bridges": ["sanskrit", "hindi"] },
+    { "id": "russian", "name": "Russian", "family": "Slavic", "script": "cyrillic", "status": "active", "bridges": ["sanskrit", "german"] },
+    { "id": "sanskrit", "name": "Sanskrit", "family": "Indo-Aryan", "script": "devanagari", "status": "active", "bridges": ["hindi", "marathi", "bengali", "gujarati", "punjabi"] },
+    { "id": "persian", "name": "Persian", "family": "Iranian", "script": "perso-arabic", "status": "active", "bridges": ["arabic", "urdu", "hindi"] },
+    { "id": "urdu", "name": "Urdu", "family": "Indo-Aryan", "script": "urdu-nastaliq", "status": "active", "bridges": ["hindi", "persian", "arabic"] }
+  ]
+}

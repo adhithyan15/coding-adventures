@@ -25,6 +25,7 @@ import { buildSession, type SessionStep } from "./session";
 import { coveredGrid, cellKey, type GridCell, type QuizState } from "./quiz";
 import { recordAnswer, demote, type AnswerRecord } from "./mistakes";
 import { intervalFor, MAX_BOX } from "./scheduler";
+import type { LanguageSelection } from "./sequence";
 
 /** Everything the UI needs to run one session, assembled from the engine. */
 export interface SessionPlan {
@@ -45,12 +46,12 @@ export function planSession(
   current: string,
   covered: Iterable<string>,
   lessons: Lesson[],
-  activeCount: number,
+  active: LanguageSelection,
 ): SessionPlan {
   return {
     concept: current,
-    teaching: buildSession(current, lessons, activeCount),
-    reviewGrid: coveredGrid(covered, lessons, activeCount),
+    teaching: buildSession(current, lessons, active),
+    reviewGrid: coveredGrid(covered, lessons, active),
   };
 }
 

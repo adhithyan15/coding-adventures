@@ -74,6 +74,65 @@ export interface Dataset {
   languages: string[];
 }
 
+// ---- Shared curriculum spine (HL04) ---------------------------------------
+
+export type CurriculumStage = "pre-A1" | "A1" | "A2" | "B1" | string;
+
+export interface LanguageDefinition {
+  id: string;
+  name: string;
+  family: string;
+  script: Script;
+  status: "active" | "planned" | string;
+  /** Languages whose history, vocabulary, or structure gives this track a bridge. */
+  bridges: string[];
+}
+
+export interface LanguageRegistry {
+  version: number;
+  /** Authored order used as the default cross-language walk. */
+  languages: LanguageDefinition[];
+}
+
+export interface SpineNode {
+  id: string;
+  stage: CurriculumStage;
+  canDo: string;
+  prerequisites: string[];
+  core: boolean;
+  /** Canonical concept ids taught inside this communicative ability. */
+  concepts: string[];
+}
+
+export interface CurriculumSpine {
+  version: number;
+  stages: CurriculumStage[];
+  nodes: SpineNode[];
+}
+
+/** One authored chapter from an existing LaTeX book. */
+export interface BookChapter {
+  language: string;
+  chapter: number;
+  slug: string;
+  title: string;
+  /** Curriculum-root-relative path, suitable for provenance and diagnostics. */
+  source: string;
+  /** Original LaTeX. Kept losslessly so future renderers do not scrape PDFs. */
+  tex: string;
+}
+
+/** The authored LaTeX layer that surrounds and sequences the short lessons. */
+export interface LanguageBook {
+  language: string;
+  entrypoint: string;
+  chapters: BookChapter[];
+}
+
+export interface BookCorpus {
+  books: LanguageBook[];
+}
+
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----
 //
 // Deliberately GENERAL, so one schema can teach any writing system. It has to

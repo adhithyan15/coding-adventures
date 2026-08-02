@@ -15,7 +15,10 @@ from this repo's standard software-package process. Later specs build on it:
 [`HL01`](./HL01-concept-taxonomy-and-data-layer.md) defines the cross-language
 **concept taxonomy** and the machine-readable **data layer** derived from these
 lessons; [`HL02`](./HL02-companion-practice-app.md) defines the **companion
-practice app** and the learning-science method behind it. (An earlier draft
+practice app** and the learning-science method behind it; and
+[`HL04`](./HL04-shared-spine-and-content-pipeline.md) defines the ordered shared
+spine, strict sub-five-minute and knowledge-closure contracts, language-specific
+extensions, and the one-source book/app/practice pipeline. (An earlier draft
 reserved `HL01`+ for per-language notes; those never materialized and the
 numbers are repurposed here — nothing is released, so this is a free change.)
 

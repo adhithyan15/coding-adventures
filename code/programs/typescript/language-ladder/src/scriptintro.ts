@@ -18,33 +18,21 @@
 // stop?" is unit-testable without a browser.
 // ---------------------------------------------------------------------------
 
-import type { ChainLanguage } from "./sequence.ts";
 import type { ScriptData } from "./types.ts";
+import { LANGUAGE_REGISTRY } from "./curriculum.ts";
 
 /**
- * Which writing system each chain language uses. The four Latin-script languages
- * map to "latin" — the base the learner already reads, so it is never
- * "introduced". The Dravidian trio (kannada/telugu/malayalam) map to their own
- * scripts even though we may not yet have `signature` data for them: the mapping
- * is the truth about the language; whether a NOTE shows is gated separately on
- * having data, so we never fabricate one.
+ * Which writing system each registered language uses. This is derived from the
+ * same registry as the language picker, so new tracks cannot silently fall back
+ * to Latin in script introductions.
  */
-export const LANGUAGE_SCRIPT: Record<ChainLanguage, string> = {
-  spanish: "latin",
-  latin: "latin",
-  french: "latin",
-  german: "latin",
-  arabic: "arabic",
-  hindi: "devanagari",
-  tamil: "tamil",
-  kannada: "kannada",
-  telugu: "telugu",
-  malayalam: "malayalam",
-};
+export const LANGUAGE_SCRIPT: Record<string, string> = Object.fromEntries(
+  LANGUAGE_REGISTRY.map((language) => [language.id, language.script]),
+);
 
 /** The script id a language is written in; "latin" for anything off the chain. */
 export function scriptOf(language: string): string {
-  return LANGUAGE_SCRIPT[language as ChainLanguage] ?? "latin";
+  return LANGUAGE_SCRIPT[language] ?? "latin";
 }
 
 /** Index script data by its `script` id for O(1) lookup. */

@@ -16,9 +16,16 @@ export {
 } from "./queries.js";
 export { validate, hasErrors, summarize, type ValidateInput } from "./validate.js";
 export {
+  validateCurriculum,
+  type CurriculumValidationInput,
+} from "./curriculum.js";
+export {
   defaultCurriculumRoot,
   trackScript,
   loadTaxonomy,
+  loadLanguageRegistry,
+  loadCurriculumSpine,
+  loadBookCorpus,
   loadLessons,
   loadScripts,
   loadEverything,

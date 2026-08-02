@@ -105,6 +105,7 @@ export function datasetFromLessons(
     // `buildDataset` reads only `.realization`; frontmatter is inert here, and
     // an empty object is honest about that rather than reconstructing a fake.
     frontmatter: {},
+    body: l.body,
     realization: {
       concept: l.concept,
       language: l.language,
@@ -135,17 +136,16 @@ export function datasetFromLessons(
  * Is this lesson teachable yet?
  *
  * A lesson unlocks when every id in its `prerequisites` has been seen. Unknown
- * ids — a typo, or a prerequisite pointing at a lesson not yet written — are
- * treated as ALREADY SATISFIED rather than as a permanent lock. A curriculum
- * bug should degrade to "shown slightly early", never to "silently unreachable
- * forever," which is the failure mode nobody notices.
+ * ids — a typo, or a prerequisite pointing at a lesson not yet written — fail
+ * closed. The curriculum validator must surface the data bug; the app must not
+ * teach material whose declared foundation it cannot prove was learned.
  */
 export function isUnlocked(
   lesson: Lesson,
   seen: ReadonlySet<string>,
   known: ReadonlySet<string>,
 ): boolean {
-  return lesson.prerequisites.every((id) => !known.has(id) || seen.has(id));
+  return lesson.prerequisites.every((id) => known.has(id) && seen.has(id));
 }
 
 /**
@@ -172,17 +172,15 @@ export function unlockedIndices(
 }
 
 /**
- * `unlockedIndices`, but never empty — falls back to every index.
- *
- * Practice stalling completely is the one outcome worse than practising
- * something slightly too early, so the gate is allowed to fail open.
+ * Compatibility name retained for callers. It now fails closed exactly like
+ * `unlockedIndices`; an empty result is a visible curriculum problem, never
+ * permission to show material early.
  */
 export function unlockedOrAll(
   lessons: Lesson[],
   seen: ReadonlySet<string>,
 ): number[] {
-  const gated = unlockedIndices(lessons, seen);
-  return gated.length > 0 ? gated : lessons.map((_, i) => i);
+  return unlockedIndices(lessons, seen);
 }
 
 /**

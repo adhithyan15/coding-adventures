@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "Curriculum Naskh";
+  src: url("../../../../learning/human-languages/_fonts/NotoNaskhArabic-Static.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --bg: #faf9f7;
   --card: #ffffff;
@@ -281,6 +287,46 @@ body {
   text-transform: capitalize;
 }
 .learn__gloss { margin: 0 0 18px; font-size: 1rem; font-style: normal; }
+.learn__can-do {
+  margin: 0 0 18px;
+  padding: 9px 12px;
+  border-left: 3px solid var(--accent);
+  background: #eef1fd;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+/* Registry-backed cross-language mixer. */
+.language-picker {
+  margin: 0 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+.language-picker__summary {
+  padding: 10px 13px;
+  cursor: pointer;
+  font-weight: 650;
+}
+.language-picker__note { margin: 0; padding: 0 13px 10px; line-height: 1.45; }
+.language-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 7px;
+  padding: 0 13px 13px;
+}
+.language-picker__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--bg);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.language-picker__item input { accent-color: var(--accent); }
 
 /* The sweep: one card per language stop, read top-to-bottom in chain order. */
 .sweep { display: flex; flex-direction: column; gap: 12px; }
@@ -322,10 +368,22 @@ body {
 }
 .step__word { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .step__glyph { font-size: 1.9rem; line-height: 1.2; }
+.step[data-language="persian"] .step__glyph,
+.step[data-language="urdu"] .step__glyph { font-family: "Curriculum Naskh", serif; }
 .step__meta { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .step__rom { color: var(--muted); font-style: italic; font-size: 0.95rem; }
 .step__gloss { font-size: 0.95rem; }
 .step__hook { margin: 8px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
+.lesson-body {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.lesson-body__summary { color: var(--accent); cursor: pointer; font-size: 0.85rem; font-weight: 650; }
+.lesson-body__section { margin-top: 12px; }
+.lesson-body__heading { margin: 0 0 5px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.035em; color: var(--muted); }
+.lesson-body__section p { margin: 5px 0; font-size: 0.9rem; line-height: 1.58; }
+.lesson-body__bullet { padding-left: 10px; }
 /* The threads back to earlier languages — the reason the whole app exists. */
 .step__conn {
   margin: 8px 0 0;

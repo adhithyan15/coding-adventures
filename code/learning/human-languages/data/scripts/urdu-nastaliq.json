@@ -1,0 +1,26 @@
+{
+  "script": "urdu-nastaliq",
+  "name": "Urdu alphabet (Nastaliq)",
+  "font": "_fonts/NotoNaskhArabic-Static.ttf",
+  "direction": "rtl",
+  "system": "abjad",
+  "signature": "Right-to-left words descend diagonally in calligraphic Nastaliq, with dense joins and carefully placed dots.",
+  "complete": false,
+  "combination": "Letters join right-to-left and change shape by position. Urdu is conventionally printed in Nastaliq; the bundled Naskh font is currently a readable fallback while the course data records Nastaliq structure. Short vowels are normally omitted.",
+  "notes": "Starter inventory for the first Urdu shared-spine lessons, grounded in Zero Zabar. A true vendored Nastaliq font and full letter inventory are explicit next-track work.",
+  "letters": [
+    { "glyph": "ا", "sound": "ā / vowel carrier", "role": "letter", "forms": { "isolated": "ا", "initial": "ا", "medial": "ـا", "final": "ـا" }, "components": ["one tall vertical"], "strokeOrder": ["downward vertical"], "strokeOrderNote": "common handwriting order", "notes": "Does not join to the following letter." },
+    { "glyph": "ج", "sound": "j", "role": "consonant", "forms": { "isolated": "ج", "initial": "جـ", "medial": "ـجـ", "final": "ـج" }, "components": ["curved body and tail", "one dot below"], "strokeOrder": ["body", "tail", "dot"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ر", "sound": "r", "role": "consonant", "forms": { "isolated": "ر", "initial": "ر", "medial": "ـر", "final": "ـر" }, "components": ["one descending curve"], "strokeOrder": ["curve"], "strokeOrderNote": "common handwriting order", "notes": "Does not join to the following letter." },
+    { "glyph": "س", "sound": "s", "role": "consonant", "forms": { "isolated": "س", "initial": "سـ", "medial": "ـسـ", "final": "ـس" }, "components": ["three teeth", "final bowl"], "strokeOrder": ["teeth", "bowl"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ش", "sound": "sh", "role": "consonant", "forms": { "isolated": "ش", "initial": "شـ", "medial": "ـشـ", "final": "ـش" }, "components": ["three teeth and bowl", "three dots above"], "strokeOrder": ["body", "dots"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ک", "sound": "k", "role": "consonant", "forms": { "isolated": "ک", "initial": "کـ", "medial": "ـکـ", "final": "ـک" }, "components": ["angled body", "upper hook"], "strokeOrder": ["body", "hook"], "strokeOrderNote": "common handwriting order", "notes": "Urdu uses this kaf shape rather than Arabic ك." },
+    { "glyph": "ل", "sound": "l", "role": "consonant", "forms": { "isolated": "ل", "initial": "لـ", "medial": "ـلـ", "final": "ـل" }, "components": ["tall upright", "base curve"], "strokeOrder": ["upright", "curve"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "م", "sound": "m", "role": "consonant", "forms": { "isolated": "م", "initial": "مـ", "medial": "ـمـ", "final": "ـم" }, "components": ["round head", "descending tail"], "strokeOrder": ["head", "tail"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ن", "sound": "n", "role": "consonant", "forms": { "isolated": "ن", "initial": "نـ", "medial": "ـنـ", "final": "ـن" }, "components": ["bowl", "one dot above"], "strokeOrder": ["bowl", "dot"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ہ", "sound": "h", "role": "consonant", "forms": { "isolated": "ہ", "initial": "ہـ", "medial": "ـہـ", "final": "ـہ" }, "components": ["looping do-chashmi he body"], "strokeOrder": ["looping body"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ی", "sound": "y / ī", "role": "letter", "forms": { "isolated": "ی", "initial": "یـ", "medial": "ـیـ", "final": "ـی" }, "components": ["joined tooth or final bowl"], "strokeOrder": ["body"], "strokeOrderNote": "common handwriting order" },
+    { "glyph": "ں", "sound": "nasalizes the preceding vowel", "role": "other", "forms": { "isolated": "ں", "final": "ـں" }, "components": ["dotless noon bowl"], "strokeOrder": ["bowl"], "strokeOrderNote": "common handwriting order", "notes": "Noon ghunna marks a nasal vowel and lacks the dot of ن." },
+    { "glyph": "ے", "sound": "e / ai", "role": "letter", "forms": { "isolated": "ے", "final": "ـے" }, "components": ["broad final bowl"], "strokeOrder": ["bowl"], "strokeOrderNote": "common handwriting order", "notes": "Bari ye usually occurs at the end of a word." }
+  ]
+}

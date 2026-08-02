@@ -1,64 +1,42 @@
-# Build the Human Languages curriculum's LaTeX books to PDF and upload
-# them as build artifacts.
+# Build every Human Languages LaTeX book in one job. Pull requests retain one
+# complete publication bundle as a build artifact; main-branch builds publish
+# that same bundle as a stable download catalog on GitHub Pages.
 #
 # Each language track under code/learning/human-languages/<lang>/book/
 # contains a self-contained XeLaTeX book (see HL00 spec). This workflow
-# discovers every such book/ directory dynamically, so adding a new
-# language track needs zero changes here.
+# discovers every such book/ directory dynamically, installs TeX once, and
+# compiles the books sequentially so adding a new track needs zero changes here.
 
 name: Human Languages Books
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
     paths:
-      - "code/learning/human-languages/**/book/**"
+      - "code/learning/human-languages/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - ".github/workflows/human-languages-books.yml"
   pull_request:
     branches: [main]
     paths:
-      - "code/learning/human-languages/**/book/**"
+      - "code/learning/human-languages/**"
+      - "code/scripts/build_human_language_book_catalog.py"
+      - ".github/workflows/human-languages-books.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: human-languages-books-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  discover:
+  build-and-publish:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.find-books.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Find book directories
-        id: find-books
-        run: |
-          dirs=$(find code/learning/human-languages -mindepth 2 -maxdepth 2 -type d -name book | sort)
-          json=$(printf '%s\n' "$dirs" | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "matrix=$json" >> "$GITHUB_OUTPUT"
-
-  build:
-    needs: discover
-    if: needs.discover.outputs.matrix != '[]'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        book_dir: ${{ fromJson(needs.discover.outputs.matrix) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Determine language name
-        id: lang
-        run: |
-          name=$(basename "$(dirname "${{ matrix.book_dir }}")")
-          echo "name=$name" >> "$GITHUB_OUTPUT"
 
       # Install the COMPLETE TeX Live distribution rather than a hand-picked
       # list of texlive-* sub-packages. The earlier granular approach broke
@@ -78,13 +56,57 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             texlive-full latexmk fonts-noto-core fonts-noto-extra
 
-      - name: Build ${{ steps.lang.outputs.name }} book
-        working-directory: ${{ matrix.book_dir }}
-        run: latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+      - name: Build every book
+        run: |
+          set -euo pipefail
+          output_dir="dist/human-languages/books"
+          mkdir -p "$output_dir"
+          book_count=0
 
-      - name: Upload PDF
+          while IFS= read -r book_dir; do
+            language=$(basename "$(dirname "$book_dir")")
+            echo "::group::Build $language"
+            (
+              cd "$book_dir"
+              latexmk -xelatex -interaction=nonstopmode -halt-on-error book.tex
+            )
+            cp "$book_dir/book.pdf" "$output_dir/$language.pdf"
+            echo "::endgroup::"
+            book_count=$((book_count + 1))
+          done < <(
+            find code/learning/human-languages \
+              -mindepth 2 -maxdepth 2 -type d -name book | sort
+          )
+
+          test "$book_count" -gt 0
+          echo "Built $book_count human-language books"
+
+      - name: Build download catalog
+        run: |
+          python code/scripts/build_human_language_book_catalog.py \
+            --pdf-dir dist/human-languages/books \
+            --registry code/learning/human-languages/core/languages.json \
+            --output-dir dist/human-languages/books
+
+      - name: Verify publication bundle
+        run: |
+          test -s dist/human-languages/books/index.html
+          test -s dist/human-languages/books/catalog.json
+          test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
+
+      - name: Upload complete publication bundle
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.lang.outputs.name }}-book
-          path: ${{ matrix.book_dir }}/book.pdf
+          name: human-language-books
+          path: dist/human-languages/books
           if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish books to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/human-languages/books
+          destination_dir: human-languages/books
+          keep_files: true

@@ -18,6 +18,8 @@ function L(language: string, concept: string, id: string, chapter = 1): Lesson {
     romanization: "x",
     script: language,
     etymologyHook: "",
+    body: "",
+    estMinutes: 5,
   };
 }
 

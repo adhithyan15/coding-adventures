@@ -22,6 +22,7 @@ describe("parseLesson", () => {
     expect(p.script).toBe("latin");
     expect(p.realization.romanization).toBe("hola");
     expect(p.realization.concept).toBe("GREETING-HELLO");
+    expect(p.body).toBe("body");
   });
 
   it("keeps romanization empty for a non-Latin lesson that omits it", () => {

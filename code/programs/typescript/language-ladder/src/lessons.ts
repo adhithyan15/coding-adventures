@@ -63,6 +63,10 @@ export interface Lesson {
   script: string;
   /** ≤120-char memory anchor; "" when not yet authored. */
   etymologyHook: string;
+  /** Lossless authored lesson Markdown, shared with the book corpus. */
+  body: string;
+  /** The author's upper bound for this micro-lesson. */
+  estMinutes: number;
 }
 
 /**
@@ -110,6 +114,8 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     romanization: r.romanization,
     script: r.script,
     etymologyHook: r.etymologyHook,
+    body: parsed.body,
+    estMinutes: Number(typeof fm.est_minutes === "string" ? fm.est_minutes : 0),
   };
 }
 

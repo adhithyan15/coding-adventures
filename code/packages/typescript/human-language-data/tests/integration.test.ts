@@ -5,9 +5,10 @@
 import { describe, it, expect } from "vitest";
 import { loadEverything } from "../src/loader.js";
 import { validate, hasErrors } from "../src/validate.js";
+import { validateCurriculum } from "../src/curriculum.js";
 import { languagesForConcept } from "../src/queries.js";
 
-const { taxonomy, lessons, scripts, dataset } = loadEverything();
+const { taxonomy, registry, spine, books, lessons, scripts, dataset } = loadEverything();
 
 describe("real curriculum", () => {
   it("has zero validation errors", () => {
@@ -19,10 +20,26 @@ describe("real curriculum", () => {
   });
 
   it("loaded every track (17+ and growing)", () => {
-    expect(dataset.languages.length).toBeGreaterThanOrEqual(17);
-    for (const t of ["spanish", "telugu", "arabic", "russian"]) {
+    expect(dataset.languages.length).toBeGreaterThanOrEqual(20);
+    for (const t of ["spanish", "telugu", "arabic", "russian", "persian", "urdu"]) {
       expect(dataset.languages).toContain(t);
     }
+  });
+
+  it("has a valid shared spine covering every registered language", () => {
+    const issues = validateCurriculum({ registry, spine, taxonomy, lessons, books });
+    expect(issues.filter((issue) => issue.level === "error").map((issue) => issue.message)).toEqual([]);
+    expect(registry.languages.map((language) => language.id)).toEqual(dataset.languages.sort((a, b) => {
+      const order = new Map(registry.languages.map((language, index) => [language.id, index]));
+      return order.get(a)! - order.get(b)!;
+    }));
+  });
+
+  it("preserves every existing LaTeX book and maps each chapter to short lessons", () => {
+    expect(books.books.length).toBeGreaterThanOrEqual(17);
+    expect(books.books.reduce((sum, book) => sum + book.chapters.length, 0)).toBeGreaterThanOrEqual(100);
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(18);
+    expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

@@ -24,6 +24,9 @@ export const LANGUAGE_SCRIPT: Record<string, Script> = {
   telugu: "telugu",
   malayalam: "malayalam",
   arabic: "arabic",
+  russian: "cyrillic",
+  persian: "perso-arabic",
+  urdu: "urdu-nastaliq",
 };
 
 /** Lesson types that teach a real concept and take part in the cross-language join. */

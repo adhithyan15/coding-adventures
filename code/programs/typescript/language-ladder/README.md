@@ -2,8 +2,8 @@
 
 **The HL03 unified curriculum learning app** (it began life as the HL02
 `script-writing-visualizer` and has subsumed that app's modes). Five modes.
-**Learn** (the default) walks the curriculum the way the book does — one concept
-at a time, forward along the language chain, each new language showing its
+**Learn** (the default) walks the structured shared spine — one concept
+at a time, across the learner's selected language mix, each new language showing its
 threads back to the ones already learned, then reviewing it all with a
 randomised SRS quiz. **Browse** and **Practice** work on *script letters*;
 **Lessons** drills the *written curriculum* — every lesson in every track — on a
@@ -13,21 +13,23 @@ one idea in every language that has it, side by side.
 ## Learn mode (the curriculum session)
 
 The spine of the app: [HL03](../../../specs/HL03-unified-language-learning-app.md)
-in one screen. For each concept in book order (`sweepableConcepts`), the
+and [HL04](../../../specs/HL04-shared-spine-and-content-pipeline.md) in one screen.
+For each concept in the explicit `core/spine.json` order, the
 engine's *teaching pass* (`sessionplan.ts` → `planSession`) is rendered as a
-numbered sweep — one card per language that teaches it, in chain order
-(Spanish → Latin → French → … → Malayalam). Each card carries the word in its
-own script, its etymology hook, and the **connections back** to earlier
+numbered sweep — one card per selected language that teaches it, in registry
+order. The picker includes every current track, including Russian, Persian, and
+Urdu. Each card carries the word in its own script, its etymology hook, its full
+authored Markdown micro-lesson, and the **connections back** to earlier
 languages that share a root, so the cross-language memory the interleaving is
 meant to build is made visible rather than left implicit. Prev / Next walk the
 spine, and a **jump picker** (a `<select>` of the whole book-ordered spine) leaps
-straight to any concept; a slim **progress bar** shows how far along the 186-
-concept walk you are. Consolidation lessons (`practice`/`review`) are left to the
+straight to any concept; a slim **progress bar** shows progress through the
+selected portion of the shared spine. Consolidation lessons (`practice`/`review`) are left to the
 review quiz, not the teaching sweep.
 
 The session **introduces writing systems as-needed** (`scriptintro.ts`): the
-first time the walk reaches a non-Latin script — Arabic, then Devanagari, then
-Tamil — that step gets a compact *"New script"* note (name, system, and how to
+first time the walk reaches a non-Latin script — including Persian and Urdu's
+distinct script identities — that step gets a compact *"New script"* note (name, system, and how to
 recognise it, from the script data's `signature`), shown once at the earliest
 concept that teaches it. It's grounded: a script with no data (Kannada / Telugu
 / Malayalam today) gets no note rather than an invented one.
@@ -50,7 +52,8 @@ to is saved on each Prev/Next and restored at startup, so the app resumes where
 you left off rather than back at the first concept. The restored index is
 clamped to the current spine, and a bad blob falls back to the start.
 
-A quiet **"Reset progress"** control at the foot of the Learn view clears it all
+A quiet **"Reset progress"** control at the foot of the Learn view clears it all,
+including the saved language mix,
 (`reset.ts` — only the keys this app owns), behind a two-click confirm so a stray
 tap can't wipe everything.
 
@@ -64,7 +67,7 @@ This mode is that join, and it is the data package's own
 `languagesForConcept` — a function shipped from the start, documented as "what
 the companion app calls," which until now had **no caller**.
 
-- **39 concepts are shared by two or more tracks**, from 701 lessons. A concept
+- **42 concepts are shared by two or more tracks**, from 973 lessons. A concept
   only one language tags is filtered out: there is nothing to compare it with,
   which also removes almost every namespaced (`ES-…`) tag without a special case.
 - Each row shows the **headword**, a **romanization** where it differs, and the
@@ -76,7 +79,7 @@ the companion app calls," which until now had **no caller**.
 
 ## Lessons mode
 
-Reads all **701 lessons across 18 languages** straight from the curriculum via
+Reads all **973 lessons across 20 languages** straight from the curriculum via
 `@coding-adventures/human-language-data`, and schedules them with the same
 Leitner machinery the letter drills use (`scheduler.ts` is generic over an
 index; it never needed to know what an item is).
@@ -85,7 +88,9 @@ index; it never needed to know what an item is).
   id** — never by array index, because indices shift every time a lesson is
   added and saving by position would reattribute your history to the wrong
   lesson. New lessons simply appear as unseen items.
-- **It mixes languages.** Consecutive reviews round-robin across tracks — Arabic,
+- **It uses the same authored content as the books.** Reveal opens the complete
+  Markdown micro-lesson rather than discarding its explanations and practice.
+- **It mixes the languages you selected.** Consecutive reviews round-robin across tracks — Arabic,
   then Bengali, then French — rather than marching through one language. That
   interleaving is deliberate: it forces discrimination instead of coasting.
 - **Recall, not recognition.** You see the headword in its own script; the
