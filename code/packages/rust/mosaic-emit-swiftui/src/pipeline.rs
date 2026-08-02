@@ -2681,6 +2681,16 @@ fn emit_host_input(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     // The opening `TextField` expression.
     let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
 
+    // Keep the author-owned MLL part identity on the native control. This is
+    // the stable cross-platform handle for accessibility and interaction
+    // acceptance; hosts do not need to invent a parallel AppKit control tree.
+    if let Some(part_name) = &node.part_name {
+        line.push_str(&format!(
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        ));
+    }
+
     // Modifier chain. We deliberately keep each modifier on the same
     // line — Swift accepts chained modifiers without line breaks, and
     // the generated source stays compact and grep-friendly.
@@ -2843,6 +2853,12 @@ fn emit_host_button(
     // Closing brace, then any trailing modifiers on the same line so the
     // generated source stays compact.
     let mut closing = format!("{pad}}}");
+    if let Some(part_name) = &node.part_name {
+        closing.push_str(&format!(
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        ));
+    }
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -4959,6 +4975,28 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_input_part_name_becomes_accessibility_identifier() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("address-input".to_string()),
+            props: vec![prop_string("placeholder", "Enter a URL")],
+            children: vec![],
+        };
+        let layout = layout_with("Form", container_node("Box", vec![input]));
+        let out = from_pipeline(
+            &component("Form", vec![], vec![]),
+            &layout,
+            &empty_style("Form"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".accessibilityIdentifier(\"address-input\")"),
+            "expected the MLL part name on the native TextField, got:\n{out}"
+        );
+    }
+
     // ---------------------------------------------------------------------
     // Test 16b — a `HostInput` with BOTH a `value` slot and an `onChange`
     // handler is EDITABLE: it lowers to a writable `Binding(get:set:)` whose
@@ -5236,6 +5274,28 @@ mod tests {
         assert!(
             out.contains("Text(caption)"),
             "expected label closure with Text(caption), got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn host_button_part_name_becomes_accessibility_identifier() {
+        let button = LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: Some("go-button".to_string()),
+            props: vec![prop_string("label", "Go")],
+            children: vec![],
+        };
+        let layout = layout_with("Bar", container_node("Box", vec![button]));
+        let out = from_pipeline(
+            &component("Bar", vec![], vec![]),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(".accessibilityIdentifier(\"go-button\")"),
+            "expected the MLL part name on the native Button, got:\n{out}"
         );
     }
 

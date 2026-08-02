@@ -43,3 +43,6 @@
 - The XAML host writes rendered BGRA pixels through WinRT's supported
   `IBuffer.AsStream()` projection, avoiding a native COM projection crash in
   the emitted WinUI application.
+- The Mosaic-authored address field and toolbar buttons retain their MLL part
+  names as native SwiftUI and WinUI automation identifiers, establishing one
+  cross-platform identity contract for direct interaction gates.

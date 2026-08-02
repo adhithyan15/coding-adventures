@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - Native automation identifiers for authored controls
+
+`HostInput` and `HostButton` now preserve their MLL part names as SwiftUI
+`accessibilityIdentifier` values. Generated applications can locate the same
+Mosaic-authored control deterministically for accessibility and direct native
+interaction acceptance without adding a parallel AppKit control tree.
+
 ### Added - host-driven prop refresh
 
 Generated SwiftUI project shells now let optional native `MosaicHost` adapters

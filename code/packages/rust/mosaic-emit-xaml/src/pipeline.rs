@@ -5086,6 +5086,12 @@ fn emit_host_input(
 
     // -- Build the attribute set --
     let mut attrs = String::new();
+    if let Some(part_name) = &node.part_name {
+        attrs.push_str(&format!(
+            " AutomationProperties.AutomationId=\"{}\"",
+            escape_xaml_attr(part_name)
+        ));
+    }
 
     // value: slot/string/expr â†’ Text binding
     match find_prop_value(node, "value") {
@@ -5217,6 +5223,12 @@ fn emit_host_button(
     register_host_visual_states(node, "Button", &x_name, part_styles, ctx);
 
     let mut attrs = String::new();
+    if let Some(part_name) = &node.part_name {
+        attrs.push_str(&format!(
+            " AutomationProperties.AutomationId=\"{}\"",
+            escape_xaml_attr(part_name)
+        ));
+    }
 
     // label: slot/string
     match find_prop_value(node, "label") {
@@ -8311,6 +8323,12 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"formula-field\""),
+            "got:\n{}",
+            r.xaml
+        );
     }
 
     #[test]
@@ -8495,6 +8513,12 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml.contains("<Button x:Name=\"Submit\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"submit\""),
             "got:\n{}",
             r.xaml
         );
@@ -12292,7 +12316,12 @@ mod tests {
         let r = compile(&c, &l, &s);
         assert!(
             r.xaml
-                .contains("<Button x:Name=\"Button\" Background=\"#202020\""),
+                .contains("<Button x:Name=\"Button\" AutomationProperties.AutomationId=\"button\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("Background=\"#202020\""),
             "got:\n{}",
             r.xaml
         );
