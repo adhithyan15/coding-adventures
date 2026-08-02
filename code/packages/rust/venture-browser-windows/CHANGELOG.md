@@ -16,3 +16,6 @@
 - Extend the generated-app launch gate through the native WinUI address
   control and button invoke provider, requiring the shared Rust session to
   load and title a second deterministic page.
+- Extend direct generated-app interaction acceptance through the native WinUI
+  Back and Forward invoke providers, requiring both history entries to reload
+  through the shared Rust session before the gate succeeds.

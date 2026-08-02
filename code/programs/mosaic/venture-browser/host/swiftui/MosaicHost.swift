@@ -147,22 +147,30 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let environment = ProcessInfo.processInfo.environment
     guard !interactionAcceptanceStarted,
       let markerPath = environment["VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH"],
-      let targetURL = environment["VENTURE_BROWSER_INTERACTION_URL"]
+      let targetURL = environment["VENTURE_BROWSER_INTERACTION_URL"],
+      let startURL = environment["VENTURE_START_URL"]
     else { return }
     interactionAcceptanceStarted = true
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-      self?.attemptInteraction(targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      self?.attemptInteraction(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
     }
   }
 
-  private func attemptInteraction(targetURL: String, markerPath: String, remaining: Int) {
+  private func attemptInteraction(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
     guard !NSApp.windows.isEmpty else {
-      retryInteraction(targetURL: targetURL, markerPath: markerPath, remaining: remaining)
+      retryInteraction(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining)
       return
     }
     var visited = Set<ObjectIdentifier>()
     guard let address = findEditableTextField(in: NSApp, visited: &visited) else {
-      retryInteraction(targetURL: targetURL, markerPath: markerPath, remaining: remaining)
+      retryInteraction(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining)
       return
     }
 
@@ -185,11 +193,14 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         to: window)
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-      self?.verifyInteraction(targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      self?.verifyInitialNavigation(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
     }
   }
 
-  private func retryInteraction(targetURL: String, markerPath: String, remaining: Int) {
+  private func retryInteraction(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
     guard remaining > 0 else {
       writeInteractionResult(
         ["backend": "swiftui", "status": "error", "error": "native controls not found"],
@@ -198,22 +209,29 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
       self?.attemptInteraction(
-        targetURL: targetURL, markerPath: markerPath, remaining: remaining - 1)
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
     }
   }
 
-  private func verifyInteraction(targetURL: String, markerPath: String, remaining: Int) {
+  private func verifyInitialNavigation(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
     let response = applyProps()
     let props = response?["props"] as? NSDictionary
     let address = props?["address"] as? String ?? ""
     let pageTitle = props?["page-title"] as? String ?? ""
     if address == targetURL, pageTitle == "Venture interaction acceptance" {
-      writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "interacted", "address": address,
-          "pageTitle": pageTitle,
-        ],
-        to: markerPath)
+      guard performNativeButtonClick(identifier: "back-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "back-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyBackNavigation(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
       return
     }
     guard remaining > 0 else {
@@ -226,8 +244,80 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyInteraction(
-        targetURL: targetURL, markerPath: markerPath, remaining: remaining - 1)
+      self?.verifyInitialNavigation(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyBackNavigation(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == startURL, pageTitle == "Venture launch acceptance" {
+      guard performNativeButtonClick(identifier: "forward-button") else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "forward-button not found",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+        self?.verifyForwardNavigation(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "back navigation state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyBackNavigation(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
+    }
+  }
+
+  private func verifyForwardNavigation(
+    startURL: String, targetURL: String, markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    if address == targetURL, pageTitle == "Venture interaction acceptance" {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted", "history": "back-forward",
+          "backAddress": startURL, "address": address, "pageTitle": pageTitle,
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "error": "forward navigation state did not update",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyForwardNavigation(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        remaining: remaining - 1)
     }
   }
 
@@ -243,6 +333,31 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       }
     }
     return nil
+  }
+
+  private func performNativeButtonClick(identifier: String) -> Bool {
+    NSApp.activate(ignoringOtherApps: true)
+    let position: CGFloat
+    switch identifier {
+    case "back-button": position = 0.12
+    case "forward-button": position = 0.34
+    default: return false
+    }
+    var visited = Set<ObjectIdentifier>()
+    guard let address = findEditableTextField(in: NSApp, visited: &visited),
+      let window = address.window, let contentView = window.contentView
+    else { return false }
+    // SwiftUI owns these buttons inside its hosting view. Target their stable Mosaic toolbar
+    // positions relative to the real native address field, then send ordinary AppKit events.
+    let addressFrame = address.convert(address.bounds, to: contentView)
+    let leadingChromeWidth = addressFrame.minX - contentView.bounds.minX
+    let windowPoint = contentView.convert(
+      NSPoint(
+        x: contentView.bounds.minX + leadingChromeWidth * position,
+        y: addressFrame.midY),
+      to: nil)
+    sendPrimaryClick(at: windowPoint, to: window)
+    return true
   }
 
   private func sendPrimaryClick(at location: NSPoint, to window: NSWindow) {

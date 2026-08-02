@@ -57,7 +57,12 @@ fn venture_chrome_lowers_to_native_xaml_controls_and_project_shell() {
             .xaml
             .contains("TextChanged=\"AddressInput_TextChanged\""));
         assert!(result.xaml.contains("KeyDown=\"AddressInput_KeyDown\""));
-        for part in ["back-button", "address-input", "go-button"] {
+        for part in [
+            "back-button",
+            "forward-button",
+            "address-input",
+            "go-button",
+        ] {
             assert!(
                 result
                     .xaml

@@ -50,23 +50,25 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     target.join("debug/libventure_browser_macos.dylib")
 }
 
-fn serve_html_once(title: &'static str) -> String {
+fn serve_html_twice(title: &'static str) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind acceptance server");
     let address = listener.local_addr().expect("read acceptance address");
     thread::spawn(move || {
-        let (mut stream, _) = listener.accept().expect("accept Venture request");
-        let mut request = [0_u8; 1024];
-        let _ = stream.read(&mut request);
-        let body = format!("<!doctype html><title>{title}</title><main>Ready</main>");
-        write!(
-            stream,
-            "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
-            body.len()
-        )
-        .expect("write acceptance response headers");
-        stream
-            .write_all(body.as_bytes())
-            .expect("write acceptance response body");
+        for _ in 0..2 {
+            let (mut stream, _) = listener.accept().expect("accept Venture request");
+            let mut request = [0_u8; 1024];
+            let _ = stream.read(&mut request);
+            let body = format!("<!doctype html><title>{title}</title><main>Ready</main>");
+            write!(
+                stream,
+                "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            )
+            .expect("write acceptance response headers");
+            stream
+                .write_all(body.as_bytes())
+                .expect("write acceptance response body");
+        }
     });
     format!("http://{address}/")
 }
@@ -132,13 +134,13 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
 
     let marker = output.join("swiftui-ready.json");
     let interaction_marker = output.join("swiftui-interaction.json");
-    let start_url = serve_html_once("Venture launch acceptance");
-    let target_url = serve_html_once("Venture interaction acceptance");
+    let start_url = serve_html_twice("Venture launch acceptance");
+    let target_url = serve_html_twice("Venture interaction acceptance");
     let app_log = output.join("swiftui-app.log");
     let log = File::create(&app_log).expect("create SwiftUI app log");
     let mut child = Command::new(project.join(".build/debug/App"))
         .current_dir(&project)
-        .env("VENTURE_START_URL", start_url)
+        .env("VENTURE_START_URL", &start_url)
         .env("VENTURE_BROWSER_LIBRARY", &library)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
@@ -164,8 +166,18 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(readiness.contains("\"status\":\"ready\""));
     let interaction =
         fs::read_to_string(&interaction_marker).expect("read SwiftUI interaction marker");
-    assert!(interaction.contains("\"backend\":\"swiftui\""));
-    assert!(interaction.contains("\"status\":\"interacted\""));
+    assert!(
+        interaction.contains("\"backend\":\"swiftui\""),
+        "unexpected SwiftUI interaction marker: {interaction}"
+    );
+    assert!(
+        interaction.contains("\"status\":\"interacted\""),
+        "SwiftUI interaction failed: {interaction}"
+    );
+    assert!(interaction.contains("\"history\":\"back-forward\""));
+    assert!(
+        interaction.contains(&start_url) || interaction.contains(&start_url.replace('/', "\\/"))
+    );
     assert!(
         interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
     );

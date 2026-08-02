@@ -21,6 +21,9 @@
 - Extend the generated-app launch gate through native address editing and Go
   activation, requiring the shared Rust session to load and title a second
   deterministic page.
+- Extend direct generated-app interaction acceptance through the native Back
+  and Forward buttons, requiring both history entries to reload through the
+  shared Rust session before the gate succeeds.
 
 ## 0.1.0
 
