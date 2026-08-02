@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card transconductance validation.
+1. Rust Berkeley SPICE MOS model-card threshold-voltage validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite model-card `KP` values before
+   - Reject non-finite model-card `VT0` / `VTO` / `VTH` values before
      lowering MOS elements into engine parameters.
-   - Preserve positive explicit transconductance and its precedence over
-     mobility-derived values.
+   - Preserve arbitrary finite NMOS and PMOS threshold voltages across all
+     accepted aliases.
 
 ## Completed Slices
 
@@ -3933,6 +3933,13 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Zero and positive surface mobility remain accepted, including the `UO`
      alias.
+
+337. Rust Berkeley SPICE MOS model-card transconductance validation.
+   - Status: completed in PR 9464.
+   - Zero, negative, and non-finite model-card `KP` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive explicit transconductance remains accepted and takes precedence
+     over mobility-derived values.
 
 ## Backlog
 

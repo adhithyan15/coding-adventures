@@ -1845,6 +1845,14 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        for threshold_voltage in [params.get("VT0"), params.get("VTO"), params.get("VTH")]
+            .into_iter()
+            .flatten()
+        {
+            if !threshold_voltage.is_finite() {
+                return Err(NetlistParseError::new("MOSFET VT0 must be finite"));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

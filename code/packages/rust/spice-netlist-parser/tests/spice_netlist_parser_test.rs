@@ -1631,6 +1631,33 @@ fn preserves_explicit_positive_mosfet_model_transconductance() {
 }
 
 #[test]
+fn rejects_non_finite_mosfet_model_threshold_aliases() {
+    for alias in ["VT0", "VTO", "VTH"] {
+        let error = parse_netlist(&format!(
+            ".model threshold NMOS({alias}=1e999)\nM1 d g s b threshold"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains("MOSFET VT0 must be finite"));
+    }
+}
+
+#[test]
+fn preserves_finite_mosfet_model_threshold_aliases() {
+    for (alias, threshold_voltage) in [("VT0", "-0.7"), ("VTO", "0"), ("VTH", "0.7")] {
+        let parsed = parse_netlist(&format!(
+            ".model threshold NMOS({alias}={threshold_voltage})\nM1 d g s b threshold"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.vt0, threshold_voltage.parse().unwrap());
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
