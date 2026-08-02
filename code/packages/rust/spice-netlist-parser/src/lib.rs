@@ -2241,6 +2241,13 @@ fn parse_element(
                     ));
                 }
             }
+            if let Some(drain_area) = instance_params.get("AD") {
+                if !drain_area.is_finite() || *drain_area < 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET AD must be finite and non-negative",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],
