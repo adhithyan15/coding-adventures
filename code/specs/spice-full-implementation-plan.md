@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card channel-length-modulation validation.
+1. Rust Berkeley SPICE MOS model-card bulk-potential validation.
    - Status: current PR completion candidate.
-   - Reject non-finite model-card `LAMBDA` / `LAM` values before
+   - Reject zero, negative, and non-finite model-card `PHI` values before
      lowering MOS elements into engine parameters.
-   - Preserve arbitrary finite channel-length-modulation values across both
-     accepted aliases.
+   - Preserve positive explicit bulk-potential values.
 
 ## Completed Slices
 
@@ -3947,6 +3946,13 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Arbitrary finite NMOS and PMOS threshold voltages remain accepted across
      all aliases.
+
+339. Rust Berkeley SPICE MOS model-card channel-length-modulation validation.
+   - Status: completed in PR 9473.
+   - Non-finite model-card `LAMBDA` / `LAM` values are rejected before lowering
+     MOS elements into engine parameters.
+   - Arbitrary finite channel-length-modulation values remain accepted across
+     both aliases.
 
 ## Backlog
 

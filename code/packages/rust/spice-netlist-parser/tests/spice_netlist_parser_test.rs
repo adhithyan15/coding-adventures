@@ -1688,6 +1688,30 @@ fn preserves_finite_mosfet_model_channel_length_modulation_aliases() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_bulk_potential() {
+    for bulk_potential in ["0", "-0.8", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model bulk NMOS(PHI={bulk_potential})\nM1 d g s b bulk"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET PHI must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_bulk_potential() {
+    let parsed = parse_netlist(".model bulk NMOS(PHI=0.8)\nM1 d g s b bulk").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.phi, 0.8);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
