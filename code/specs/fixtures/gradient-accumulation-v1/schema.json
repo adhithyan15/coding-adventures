@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/gradient-accumulation-v1.json",
+  "title": "Gradient Accumulation V1 Lab",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "operation", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "const": 1e-8 },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "loss", "backward", "optimizer", "optimizer_step_zeroes_gradient", "finite_difference_epsilon"],
+      "properties": {
+        "kind": { "const": "persistent-scalar-gradient-buffer" },
+        "loss": { "const": "half-squared-error" },
+        "backward": { "const": "add-to-buffer" },
+        "optimizer": { "const": "sgd" },
+        "optimizer_step_zeroes_gradient": { "const": false },
+        "finite_difference_epsilon": { "const": 0.00001 }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,31}$" },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "input", "target"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "input": { "type": "number" },
+        "target": { "type": "number" }
+      }
+    },
+    "backwardEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "sample_id"],
+      "properties": {
+        "kind": { "const": "backward" },
+        "sample_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "zeroEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": { "kind": { "const": "zero_grad" } }
+    },
+    "optimizerEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "divisor"],
+      "properties": {
+        "kind": { "const": "optimizer_step" },
+        "divisor": { "type": "integer", "minimum": 1, "maximum": 4 }
+      }
+    },
+    "event": {
+      "oneOf": [
+        { "$ref": "#/$defs/backwardEvent" },
+        { "$ref": "#/$defs/zeroEvent" },
+        { "$ref": "#/$defs/optimizerEvent" }
+      ]
+    },
+    "traceBaseProperties": {
+      "index": { "type": "integer", "minimum": 0, "maximum": 11 },
+      "parameter_before": { "type": "number" },
+      "parameter_after": { "type": "number" },
+      "buffer_before": { "type": "number" },
+      "buffer_after": { "type": "number" }
+    },
+    "backwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "kind", "sample_id", "parameter_before", "parameter_after", "buffer_before", "buffer_after", "prediction", "residual", "loss", "local_gradient", "numerical_gradient", "gradient_absolute_error"],
+      "properties": {
+        "index": { "type": "integer" },
+        "kind": { "const": "backward" },
+        "sample_id": { "$ref": "#/$defs/identifier" },
+        "parameter_before": { "type": "number" },
+        "parameter_after": { "type": "number" },
+        "buffer_before": { "type": "number" },
+        "buffer_after": { "type": "number" },
+        "prediction": { "type": "number" },
+        "residual": { "type": "number" },
+        "loss": { "type": "number" },
+        "local_gradient": { "type": "number" },
+        "numerical_gradient": { "type": "number" },
+        "gradient_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "zeroTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "kind", "parameter_before", "parameter_after", "buffer_before", "buffer_after"],
+      "properties": {
+        "index": { "type": "integer" },
+        "kind": { "const": "zero_grad" },
+        "parameter_before": { "type": "number" },
+        "parameter_after": { "type": "number" },
+        "buffer_before": { "type": "number" },
+        "buffer_after": { "type": "number" }
+      }
+    },
+    "optimizerTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "kind", "parameter_before", "parameter_after", "buffer_before", "buffer_after", "divisor", "applied_gradient", "parameter_delta"],
+      "properties": {
+        "index": { "type": "integer" },
+        "kind": { "const": "optimizer_step" },
+        "parameter_before": { "type": "number" },
+        "parameter_after": { "type": "number" },
+        "buffer_before": { "type": "number" },
+        "buffer_after": { "type": "number" },
+        "divisor": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "applied_gradient": { "type": "number" },
+        "parameter_delta": { "type": "number" }
+      }
+    },
+    "trace": {
+      "oneOf": [
+        { "$ref": "#/$defs/backwardTrace" },
+        { "$ref": "#/$defs/zeroTrace" },
+        { "$ref": "#/$defs/optimizerTrace" }
+      ]
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["steps", "final_parameter", "final_gradient_buffer", "max_gradient_absolute_error"],
+      "properties": {
+        "steps": { "type": "array", "minItems": 1, "maxItems": 12, "items": { "$ref": "#/$defs/trace" } },
+        "final_parameter": { "type": "number" },
+        "final_gradient_buffer": { "type": "number" },
+        "max_gradient_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "initial_parameter", "learning_rate", "samples", "events", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "title": { "type": "string", "minLength": 1 },
+        "initial_parameter": { "type": "number" },
+        "learning_rate": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "samples": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "$ref": "#/$defs/sample" } },
+        "events": { "type": "array", "minItems": 1, "maxItems": 12, "items": { "$ref": "#/$defs/event" } },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    }
+  }
+}

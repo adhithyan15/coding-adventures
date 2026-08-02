@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "id": "gradient-accumulation-zeroing",
+  "title": "Gradient accumulation and zeroing",
+  "question": "What stays in a parameter gradient buffer after backward, optimizer step, and zeroing calls?",
+  "absolute_tolerance": 1e-8,
+  "operation": {
+    "kind": "persistent-scalar-gradient-buffer",
+    "loss": "half-squared-error",
+    "backward": "add-to-buffer",
+    "optimizer": "sgd",
+    "optimizer_step_zeroes_gradient": false,
+    "finite_difference_epsilon": 0.00001
+  },
+  "cases": [
+    {
+      "id": "accumulate_two_calls",
+      "title": "Two backward calls accumulate",
+      "initial_parameter": 1,
+      "learning_rate": 0.1,
+      "samples": [
+        { "id": "a", "input": 2, "target": 1 },
+        { "id": "b", "input": -1, "target": 1 }
+      ],
+      "events": [
+        { "kind": "backward", "sample_id": "a" },
+        { "kind": "backward", "sample_id": "b" }
+      ],
+      "expected": {
+        "steps": [
+          {
+            "index": 0,
+            "kind": "backward",
+            "sample_id": "a",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 0,
+            "buffer_after": 2,
+            "prediction": 2,
+            "residual": 1,
+            "loss": 0.5,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 1,
+            "kind": "backward",
+            "sample_id": "b",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 2,
+            "buffer_after": 4,
+            "prediction": -1,
+            "residual": -2,
+            "loss": 2,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          }
+        ],
+        "final_parameter": 1,
+        "final_gradient_buffer": 4,
+        "max_gradient_absolute_error": 0
+      }
+    },
+    {
+      "id": "zero_between_calls",
+      "title": "Zero between backward calls",
+      "initial_parameter": 1,
+      "learning_rate": 0.1,
+      "samples": [
+        { "id": "a", "input": 2, "target": 1 },
+        { "id": "b", "input": -1, "target": 1 }
+      ],
+      "events": [
+        { "kind": "backward", "sample_id": "a" },
+        { "kind": "zero_grad" },
+        { "kind": "backward", "sample_id": "b" }
+      ],
+      "expected": {
+        "steps": [
+          {
+            "index": 0,
+            "kind": "backward",
+            "sample_id": "a",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 0,
+            "buffer_after": 2,
+            "prediction": 2,
+            "residual": 1,
+            "loss": 0.5,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 1,
+            "kind": "zero_grad",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 2,
+            "buffer_after": 0
+          },
+          {
+            "index": 2,
+            "kind": "backward",
+            "sample_id": "b",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 0,
+            "buffer_after": 2,
+            "prediction": -1,
+            "residual": -2,
+            "loss": 2,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          }
+        ],
+        "final_parameter": 1,
+        "final_gradient_buffer": 2,
+        "max_gradient_absolute_error": 0
+      }
+    },
+    {
+      "id": "mean_then_zero",
+      "title": "Mean micro-batch update then zero",
+      "initial_parameter": 1,
+      "learning_rate": 0.1,
+      "samples": [
+        { "id": "a", "input": 2, "target": 1 },
+        { "id": "b", "input": -1, "target": 1 }
+      ],
+      "events": [
+        { "kind": "backward", "sample_id": "a" },
+        { "kind": "backward", "sample_id": "b" },
+        { "kind": "optimizer_step", "divisor": 2 },
+        { "kind": "zero_grad" }
+      ],
+      "expected": {
+        "steps": [
+          {
+            "index": 0,
+            "kind": "backward",
+            "sample_id": "a",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 0,
+            "buffer_after": 2,
+            "prediction": 2,
+            "residual": 1,
+            "loss": 0.5,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 1,
+            "kind": "backward",
+            "sample_id": "b",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 2,
+            "buffer_after": 4,
+            "prediction": -1,
+            "residual": -2,
+            "loss": 2,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 2,
+            "kind": "optimizer_step",
+            "parameter_before": 1,
+            "parameter_after": 0.8,
+            "buffer_before": 4,
+            "buffer_after": 4,
+            "divisor": 2,
+            "applied_gradient": 2,
+            "parameter_delta": -0.2
+          },
+          {
+            "index": 3,
+            "kind": "zero_grad",
+            "parameter_before": 0.8,
+            "parameter_after": 0.8,
+            "buffer_before": 4,
+            "buffer_after": 0
+          }
+        ],
+        "final_parameter": 0.8,
+        "final_gradient_buffer": 0,
+        "max_gradient_absolute_error": 0
+      }
+    },
+    {
+      "id": "stale_next_batch",
+      "title": "Forgotten zero contaminates the next batch",
+      "initial_parameter": 1,
+      "learning_rate": 0.1,
+      "samples": [
+        { "id": "a", "input": 2, "target": 1 },
+        { "id": "b", "input": -1, "target": 1 },
+        { "id": "c", "input": 1, "target": 0 }
+      ],
+      "events": [
+        { "kind": "backward", "sample_id": "a" },
+        { "kind": "backward", "sample_id": "b" },
+        { "kind": "optimizer_step", "divisor": 2 },
+        { "kind": "backward", "sample_id": "c" },
+        { "kind": "optimizer_step", "divisor": 1 }
+      ],
+      "expected": {
+        "steps": [
+          {
+            "index": 0,
+            "kind": "backward",
+            "sample_id": "a",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 0,
+            "buffer_after": 2,
+            "prediction": 2,
+            "residual": 1,
+            "loss": 0.5,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 1,
+            "kind": "backward",
+            "sample_id": "b",
+            "parameter_before": 1,
+            "parameter_after": 1,
+            "buffer_before": 2,
+            "buffer_after": 4,
+            "prediction": -1,
+            "residual": -2,
+            "loss": 2,
+            "local_gradient": 2,
+            "numerical_gradient": 2,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 2,
+            "kind": "optimizer_step",
+            "parameter_before": 1,
+            "parameter_after": 0.8,
+            "buffer_before": 4,
+            "buffer_after": 4,
+            "divisor": 2,
+            "applied_gradient": 2,
+            "parameter_delta": -0.2
+          },
+          {
+            "index": 3,
+            "kind": "backward",
+            "sample_id": "c",
+            "parameter_before": 0.8,
+            "parameter_after": 0.8,
+            "buffer_before": 4,
+            "buffer_after": 4.8,
+            "prediction": 0.8,
+            "residual": 0.8,
+            "loss": 0.32,
+            "local_gradient": 0.8,
+            "numerical_gradient": 0.8,
+            "gradient_absolute_error": 0
+          },
+          {
+            "index": 4,
+            "kind": "optimizer_step",
+            "parameter_before": 0.8,
+            "parameter_after": 0.32,
+            "buffer_before": 4.8,
+            "buffer_after": 4.8,
+            "divisor": 1,
+            "applied_gradient": 4.8,
+            "parameter_delta": -0.48
+          }
+        ],
+        "final_parameter": 0.32,
+        "final_gradient_buffer": 4.8,
+        "max_gradient_absolute_error": 0
+      }
+    }
+  ]
+}

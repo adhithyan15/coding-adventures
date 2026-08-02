@@ -18,6 +18,12 @@ import {
   traceDynamicAutogradProgram,
   type DynamicAutogradScenario,
 } from "./dynamic-autograd-lab.js";
+import { GradientAccumulationWorkbench } from "./GradientAccumulationWorkbench.js";
+import {
+  traceGradientAccumulation,
+  traceGradientAccumulationProgram,
+  type GradientAccumulationScenario,
+} from "./gradient-accumulation-lab.js";
 import { traceOneDimensionalDiffusion } from "./diffusion-lab.js";
 import { traceOneDimensionalGan } from "./gan-lab.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
@@ -1917,5 +1923,154 @@ describe("dynamic autograd and saved values", () => {
     fireEvent.click(screen.getByRole("button", { name: "Restore forward-time live values" }));
     expect(screen.getByLabelText("Selected node forward and saved value trace").textContent)
       .toMatch(/forward 3.*live 3/s);
+  });
+});
+
+describe("gradient accumulation and zeroing", () => {
+  it("keeps the gradient buffer timeline in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--gradient-buffer");
+    expect(productionCss).toContain(".gradient-buffer-event-lane");
+  });
+
+  it("adds two backward calls into one persistent buffer", () => {
+    const trace = traceGradientAccumulation("accumulate_two_calls");
+    expect(trace.steps.map((step) => [step.kind, step.bufferBefore, step.bufferAfter])).toEqual([
+      ["backward", 0, 2],
+      ["backward", 2, 4],
+    ]);
+    expect(trace.finalParameter).toBe(1);
+    expect(trace.finalGradientBuffer).toBe(4);
+  });
+
+  it("makes zeroing an explicit state transition", () => {
+    const trace = traceGradientAccumulation("zero_between_calls");
+    expect(trace.steps.map((step) => step.kind)).toEqual([
+      "backward", "zero_grad", "backward",
+    ]);
+    expect(trace.steps[1]).toMatchObject({
+      parameterBefore: 1,
+      parameterAfter: 1,
+      bufferBefore: 2,
+      bufferAfter: 0,
+    });
+    expect(trace.finalGradientBuffer).toBe(2);
+  });
+
+  it("shows that optimizer steps read but do not clear the buffer", () => {
+    const clean = traceGradientAccumulation("mean_then_zero");
+    const stale = traceGradientAccumulation("stale_next_batch");
+    expect(clean.steps[2]).toMatchObject({
+      kind: "optimizer_step",
+      divisor: 2,
+      appliedGradient: 2,
+      parameterBefore: 1,
+      parameterAfter: 0.8,
+      bufferBefore: 4,
+      bufferAfter: 4,
+    });
+    expect(clean.finalGradientBuffer).toBe(0);
+    expect(stale.steps[3]).toMatchObject({
+      kind: "backward",
+      localGradient: 0.8,
+      bufferBefore: 4,
+      bufferAfter: 4.8,
+    });
+    expect(stale.finalParameter).toBeCloseTo(0.32, 12);
+    expect(stale.finalGradientBuffer).toBeCloseTo(4.8, 12);
+  });
+
+  it("checks every backward event with fresh forward passes", () => {
+    ([
+      "accumulate_two_calls",
+      "zero_between_calls",
+      "mean_then_zero",
+      "stale_next_batch",
+    ] as const).forEach((id) => {
+      const trace = traceGradientAccumulation(id);
+      expect(trace.maxGradientAbsoluteError).toBeLessThan(1e-8);
+      trace.steps.forEach((step) => {
+        if (step.kind === "backward") {
+          expect(step.numericalGradient).toBeCloseTo(step.localGradient, 8);
+        }
+      });
+    });
+  });
+
+  it("fails closed on malformed schedules and snapshots caller data", () => {
+    const sample = { id: "constructor", input: 1, target: 0 };
+    const scenario: GradientAccumulationScenario = {
+      id: "accumulate_two_calls",
+      title: "prototype-like id",
+      summary: "prototype-like id",
+      initialParameter: 1,
+      learningRate: 0.1,
+      samples: [sample],
+      events: [{ kind: "backward", sampleId: "constructor" }],
+    };
+    const trace = traceGradientAccumulationProgram(scenario);
+    sample.input = 99;
+    expect(trace.steps[0]).toMatchObject({ localGradient: 1, bufferAfter: 1 });
+    expect(trace.scenario.samples[0]!.input).toBe(1);
+    expect(Object.isFrozen(trace.scenario.samples[0])).toBe(true);
+
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      samples: { length: 1 } as unknown as GradientAccumulationScenario["samples"],
+    })).toThrow(/arrays/);
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      samples: [{ id: "x", input: Number.NaN, target: 0 }],
+      events: [{ kind: "backward", sampleId: "x" }],
+    })).toThrow(/finite and bounded/);
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      events: [{ kind: "backward", sampleId: "ghost" }],
+    })).toThrow(/unknown sample/);
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      events: [
+        { kind: "backward", sampleId: "constructor" },
+        { kind: "optimizer_step", divisor: 0 },
+      ],
+    })).toThrow(/divisor/);
+    expect(() => traceGradientAccumulationProgram(scenario, 0)).toThrow(/epsilon/);
+
+    const hostileId = {
+      toString: () => { throw new Error("identifier was coerced"); },
+    } as unknown as string;
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      samples: [{ id: hostileId, input: 1, target: 0 }],
+      events: [{ kind: "backward", sampleId: "constructor" }],
+    })).toThrow(/bounded identifier/);
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      events: [{ kind: "backward", sampleId: hostileId }],
+    })).toThrow(/bounded identifier/);
+    expect(() => traceGradientAccumulationProgram({
+      ...scenario,
+      title: [] as unknown as string,
+    })).toThrow(/bounded strings/);
+  });
+
+  it("opens buffer events and compares clean with stale schedules", () => {
+    render(React.createElement(GradientAccumulationWorkbench));
+    expect(screen.getByRole("heading", { name: "Gradient buffer timeline" })).toBeTruthy();
+    expect(screen.getByLabelText("Gradient schedule timeline").textContent)
+      .toMatch(/backward\(a\).*grad 0 → 2.*backward\(b\).*grad 2 → 4/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Open event 2, backward\(b\)/ }));
+    expect(screen.getByLabelText("Selected gradient buffer calculation").textContent)
+      .toMatch(/local gradient.*\(-1 - 1\) × -1.*dL\/dw = 2.*buffer addition.*2 \+ 2.*w.grad = 4/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Mean, step, zero/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Open event 3, step\(grad \/ 2\)/ }));
+    expect(screen.getByLabelText("Selected gradient buffer calculation").textContent)
+      .toMatch(/4 \/ 2 = 2.*1 - 0.1 × 2.*w = 0.8.*left that buffer unchanged/s);
+
+    fireEvent.click(screen.getByRole("button", { name: /Forgotten zero/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Open event 4, backward\(c\)/ }));
+    expect(screen.getByLabelText("Selected gradient buffer calculation").textContent)
+      .toMatch(/dL\/dw = 0.8.*4 \+ 0.8.*w.grad = 4.8/s);
   });
 });

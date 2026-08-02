@@ -44,13 +44,14 @@ larger network:
 24. [Normalization, Dropout, and Residual Paths, by Hand](./normalization-dropout-and-residual-paths-by-hand.md)
 25. [Tensor Shapes and Broadcasting, by Hand](./tensor-shapes-and-broadcasting-by-hand.md)
 26. [Dynamic Autograd and Saved Values, by Hand](./dynamic-autograd-and-saved-values-by-hand.md)
-27. [Matrix Math](../matrix-math.md)
-28. [Loss Functions](../loss-functions.md)
-29. [Gradient Descent](../gradient-descent.md)
-30. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-31. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-32. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-33. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+27. [Gradient Accumulation and Zeroing, by Hand](./gradient-accumulation-and-zeroing-by-hand.md)
+28. [Matrix Math](../matrix-math.md)
+29. [Loss Functions](../loss-functions.md)
+30. [Gradient Descent](../gradient-descent.md)
+31. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+32. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+33. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+34. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -60,7 +61,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has fourteen complementary views:
+has fifteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -136,7 +137,10 @@ has fourteen complementary views:
   before any buffer is touched. Then open the dynamic graph microscope to see
   executed operation nodes, topological and reverse-topological orders,
   immutable saved snapshots, runtime branch selection, post-forward live
-  mutation, and a central finite-difference audit of every leaf.
+  mutation, and a central finite-difference audit of every leaf. Finish with a
+  persistent gradient-buffer timeline: replay backward additions, explicit
+  zeroing, mean micro-batch scaling, optimizer reads that do not clear, and one
+  stale-gradient failure while checking every local gradient numerically.
 
 ## Language-Neutral Corpus
 
@@ -252,6 +256,11 @@ operation rosters, topological and reverse-topological orders, runtime branch
 selection, immutable saved forward snapshots, local derivatives, parent
 contributions, post-forward live values, and central finite differences.
 
+NN28 adds `code/specs/fixtures/gradient-accumulation-v1`, including persistent
+gradient-buffer states before and after every backward, optimizer, and zeroing
+event, explicit mean divisors, a stale next-batch schedule, and central finite
+differences at every backward call.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -280,6 +289,7 @@ python code/scripts/validate_gradient_flow_labs.py
 python code/scripts/validate_training_stabilizer_labs.py
 python code/scripts/validate_tensor_broadcasting_labs.py
 python code/scripts/validate_dynamic_autograd_labs.py
+python code/scripts/validate_gradient_accumulation_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a

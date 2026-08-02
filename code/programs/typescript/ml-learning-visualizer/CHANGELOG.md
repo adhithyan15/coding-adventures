@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Add the NN28 gradient-buffer workbench with selectable backward, optimizer,
+  and zeroing events, persistent buffer state, micro-batch mean scaling,
+  stale-gradient failure, and per-event central finite differences.
 - Add the NN27 dynamic-autograd workbench with executed graph topology,
   branch-dependent nodes, immutable saved snapshots, selectable reverse steps,
   mutation isolation, and central finite differences.
