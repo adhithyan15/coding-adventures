@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "resolution/elixir-program-package",
+  "domain": "resolution",
+  "summary": "An Elixir program and package with the same basename retain distinct identities.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/elixir/grammar_tools/BUILD",
+        "content_utf8": "mix test\n"
+      },
+      {
+        "path": "code/packages/elixir/grammar_tools/mix.exs",
+        "content_utf8": "defmodule CodingAdventures.GrammarTools.MixProject do\n  use Mix.Project\n  def project, do: [app: :coding_adventures_grammar_tools, deps: []]\nend\n"
+      },
+      {
+        "path": "code/programs/elixir/grammar_tools/BUILD",
+        "content_utf8": "mix test\n"
+      },
+      {
+        "path": "code/programs/elixir/grammar_tools/mix.exs",
+        "content_utf8": "defmodule GrammarTools.MixProject do\n  use Mix.Project\n  def project, do: [app: :grammar_tools_program, deps: deps()]\n  defp deps, do: [{:coding_adventures_grammar_tools, path: \"../../../packages/elixir/grammar_tools\"}]\nend\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "elixir"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/elixir-program-package",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "elixir/grammar_tools",
+          "elixir/programs/grammar_tools"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

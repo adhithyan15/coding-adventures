@@ -4,6 +4,19 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.3] - 2026-08-02
+
+### Fixed
+
+- Preserve a `programs` segment in discovered program identities and prefer
+  library packages when an ecosystem dependency alias is shared. This keeps
+  `code/packages/elixir/grammar_tools` distinct from its CLI program and
+  resolves the program's dependency to the library.
+- Reject genuine dependency self-edges with `DEPENDENCY_SELF_EDGE`, stable
+  package, dependency, and repository-relative manifest identities, CLI exit
+  code 2, and no checkout-path disclosure instead of panicking in the graph.
+  Resolver and CLI coverage consume the language-neutral Elixir fixtures.
+
 ## [0.2.2] - 2026-08-02
 
 ### Fixed

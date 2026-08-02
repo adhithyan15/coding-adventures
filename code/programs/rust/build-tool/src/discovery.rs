@@ -142,13 +142,25 @@ fn infer_language(path: &Path) -> String {
     "unknown".to_string()
 }
 
-/// Builds a qualified package name like "python/logic-gates" from the
-/// language and the directory's basename.
+/// Builds a qualified package name from the language and directory path.
+///
+/// Programs retain a `programs` identity segment so a library package and a
+/// program with the same basename remain distinct graph nodes.
 fn infer_package_name(path: &Path, language: &str) -> String {
     let dir_name = path
         .file_name()
         .map(|n| n.to_string_lossy().to_string())
         .unwrap_or_default();
+    let components: Vec<String> = path
+        .components()
+        .map(|component| component.as_os_str().to_string_lossy().into_owned())
+        .collect();
+    if components
+        .windows(2)
+        .any(|pair| pair[0] == "code" && pair[1] == "programs")
+    {
+        return format!("{}/programs/{}", language, dir_name);
+    }
     format!("{}/{}", language, dir_name)
 }
 
@@ -318,6 +330,15 @@ mod tests {
     fn test_infer_package_name() {
         let path = Path::new("/repo/code/packages/python/logic-gates");
         assert_eq!(infer_package_name(path, "python"), "python/logic-gates");
+    }
+
+    #[test]
+    fn test_infer_package_name_preserves_program_identity() {
+        let path = Path::new("/repo/code/programs/elixir/grammar_tools");
+        assert_eq!(
+            infer_package_name(path, "elixir"),
+            "elixir/programs/grammar_tools"
+        );
     }
 
     #[test]

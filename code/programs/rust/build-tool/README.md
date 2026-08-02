@@ -4,7 +4,7 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 ## What it does
 
-This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
 ## Building
 
@@ -111,6 +111,17 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 
 The resolver and real CLI tests materialize the language-neutral
 `resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+A resolved dependency self-edge also fails closed with exit code `2` instead
+of reaching the embedded graph assertion:
+
+```text
+DEPENDENCY_SELF_EDGE: package=elixir/pkg manifest=code/packages/elixir/pkg/mix.exs dependency=elixir/pkg
+```
+
+The shared `resolution/elixir-program-package` fixture verifies that the
+`grammar_tools` package and program remain distinct, while
+`resolution/elixir-self-edge` verifies the stable error path.
 
 ## How it fits in the stack
 
