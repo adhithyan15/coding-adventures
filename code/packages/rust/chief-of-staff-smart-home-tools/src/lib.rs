@@ -90189,6 +90189,8 @@ fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError>
     match label {
         "mdns" => Ok(DiscoverySource::Mdns),
         "ssdp" => Ok(DiscoverySource::Ssdp),
+        "udp_multicast" => Ok(DiscoverySource::UdpMulticast),
+        "udp_broadcast" => Ok(DiscoverySource::UdpBroadcast),
         "bluetooth" => Ok(DiscoverySource::Bluetooth),
         "usb" => Ok(DiscoverySource::Usb),
         "dhcp" => Ok(DiscoverySource::Dhcp),
@@ -90418,6 +90420,7 @@ fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCall
         "ws_discovery" => Ok(DiscoveryMechanism::WsDiscovery),
         "ssdp" => Ok(DiscoveryMechanism::Ssdp),
         "udp_multicast" => Ok(DiscoveryMechanism::UdpMulticast),
+        "udp_broadcast" => Ok(DiscoveryMechanism::UdpBroadcast),
         "bluetooth" => Ok(DiscoveryMechanism::Bluetooth),
         "usb" => Ok(DiscoveryMechanism::Usb),
         "dhcp" => Ok(DiscoveryMechanism::Dhcp),
@@ -91949,6 +91952,7 @@ fn discovery_mechanism_label(mechanism: DiscoveryMechanism) -> &'static str {
         DiscoveryMechanism::WsDiscovery => "ws_discovery",
         DiscoveryMechanism::Ssdp => "ssdp",
         DiscoveryMechanism::UdpMulticast => "udp_multicast",
+        DiscoveryMechanism::UdpBroadcast => "udp_broadcast",
         DiscoveryMechanism::Bluetooth => "bluetooth",
         DiscoveryMechanism::Usb => "usb",
         DiscoveryMechanism::Dhcp => "dhcp",
@@ -96310,6 +96314,18 @@ mod tests {
         assert_eq!(
             discovery_mechanism_label(DiscoveryMechanism::UdpMulticast),
             "udp_multicast"
+        );
+        assert_eq!(
+            parse_discovery_mechanism("udp_broadcast").unwrap(),
+            DiscoveryMechanism::UdpBroadcast
+        );
+        assert_eq!(
+            discovery_mechanism_label(DiscoveryMechanism::UdpBroadcast),
+            "udp_broadcast"
+        );
+        assert_eq!(
+            parse_discovery_source("udp_broadcast").unwrap(),
+            DiscoverySource::UdpBroadcast
         );
         assert_eq!(
             smart_home_core::BridgeTransport::LanUdp.as_str(),

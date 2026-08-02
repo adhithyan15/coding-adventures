@@ -222,6 +222,13 @@ impl UdpClient {
         Ok(())
     }
 
+    /// Enable or disable IPv4 broadcast sends on this socket.
+    pub fn set_broadcast(&self, enabled: bool) -> Result<(), UdpError> {
+        self.socket
+            .set_broadcast(enabled)
+            .map_err(|err| UdpError::SendFailed(err.to_string()))
+    }
+
     /// Send exactly one datagram to an explicit destination.
     pub fn send_to(&self, payload: &[u8], destination: SocketAddr) -> Result<usize, UdpError> {
         self.validate_payload_len(payload)?;
@@ -584,6 +591,14 @@ mod tests {
 
         assert_eq!(local.ip(), IpAddr::V4(Ipv4Addr::LOCALHOST));
         assert_ne!(local.port(), 0);
+    }
+
+    #[test]
+    fn broadcast_configuration_is_exposed() {
+        let client = UdpClient::bind(UdpOptions::default()).unwrap();
+
+        client.set_broadcast(true).unwrap();
+        client.set_broadcast(false).unwrap();
     }
 
     #[test]

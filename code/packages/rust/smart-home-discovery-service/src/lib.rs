@@ -674,6 +674,7 @@ fn parse_discovery_source(value: &str) -> Result<DiscoverySource, DiscoveryServi
         "mdns" => Ok(DiscoverySource::Mdns),
         "ssdp" => Ok(DiscoverySource::Ssdp),
         "udp_multicast" => Ok(DiscoverySource::UdpMulticast),
+        "udp_broadcast" => Ok(DiscoverySource::UdpBroadcast),
         "bluetooth" => Ok(DiscoverySource::Bluetooth),
         "usb" => Ok(DiscoverySource::Usb),
         "dhcp" => Ok(DiscoverySource::Dhcp),
@@ -1079,10 +1080,14 @@ mod tests {
     }
 
     #[test]
-    fn persisted_udp_multicast_source_round_trips() {
+    fn persisted_udp_sources_round_trip() {
         assert_eq!(
             parse_discovery_source("udp_multicast").unwrap(),
             DiscoverySource::UdpMulticast
+        );
+        assert_eq!(
+            parse_discovery_source("udp_broadcast").unwrap(),
+            DiscoverySource::UdpBroadcast
         );
     }
 }

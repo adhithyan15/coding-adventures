@@ -72,6 +72,7 @@ pub enum DiscoveryMechanism {
     WsDiscovery,
     Ssdp,
     UdpMulticast,
+    UdpBroadcast,
     Bluetooth,
     Usb,
     Dhcp,
@@ -45012,16 +45013,17 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         local_device_entry(
             "lifx",
             "LIFX",
-            "Local LIFX light integration.",
+            "Local LIFX LAN UDP discovery, state, and light control.",
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             2,
             &["smart_home.read", "smart_home.command.light"],
             &[EntityKind::Light],
-            &[DiscoveryMechanism::Dhcp, DiscoveryMechanism::Manual],
+            &[DiscoveryMechanism::UdpBroadcast, DiscoveryMechanism::Manual],
             &[AuthMode::None],
             "lifx",
-        ),
+        )
+        .with_protocols(vec![ProtocolFamily::Vendor("lifx_lan".to_string())]),
         {
             let mut entry = base_entry(
                 "govee_light_local",
@@ -55088,7 +55090,9 @@ fn local_transport_primitives(
             DiscoveryMechanism::Mdns => Some(PrimitiveFamily::Mdns),
             DiscoveryMechanism::WsDiscovery => Some(PrimitiveFamily::WsDiscovery),
             DiscoveryMechanism::Ssdp => Some(PrimitiveFamily::Ssdp),
-            DiscoveryMechanism::UdpMulticast => Some(PrimitiveFamily::Udp),
+            DiscoveryMechanism::UdpMulticast | DiscoveryMechanism::UdpBroadcast => {
+                Some(PrimitiveFamily::Udp)
+            }
             DiscoveryMechanism::Bluetooth => Some(PrimitiveFamily::BluetoothLowEnergy),
             DiscoveryMechanism::Usb => Some(PrimitiveFamily::Usb),
             DiscoveryMechanism::Dhcp => Some(PrimitiveFamily::Dhcp),
@@ -80753,6 +80757,29 @@ mod tests {
         assert!(!govee
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
+    }
+
+    #[test]
+    fn lifx_entry_exposes_executable_udp_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let lifx = find_entry(&catalog, &IntegrationId::trusted("lifx")).unwrap();
+
+        assert_eq!(
+            lifx.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(lifx.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            lifx.supported_protocols,
+            vec![ProtocolFamily::Vendor("lifx_lan".to_string())]
+        );
+        assert!(lifx
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::UdpBroadcast));
+        assert!(lifx.required_primitives.contains(&PrimitiveFamily::Udp));
+        assert!(!lifx
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalToken));
     }
 
     #[test]
