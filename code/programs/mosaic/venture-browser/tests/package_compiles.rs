@@ -151,7 +151,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "private void OnKeyDown",
         "RunFocusAcceptance",
         "CommitAddressWithEnter",
-        "PostMessage(",
+        "SendInput(",
         "addressCommit = \"native-return\"",
         "FocusState != Microsoft.UI.Xaml.FocusState.Unfocused",
         "surfaceFocus = \"native\"",

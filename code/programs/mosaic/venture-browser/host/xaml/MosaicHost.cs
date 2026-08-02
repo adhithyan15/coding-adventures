@@ -31,18 +31,38 @@ public static class MosaicHost
     private static VentureContentSurface? contentSurface;
     private static int acceptanceReported;
     private static int interactionAcceptanceStarted;
-    private const uint WmKeyDown = 0x0100;
-    private const uint WmKeyUp = 0x0101;
-    private const int EnterKeyDownLParam = 0x001C0001;
-    private const int EnterKeyUpLParam = unchecked((int)0xC01C0001);
+    private const uint KeyboardInputType = 1;
+    private const uint KeyEventKeyUp = 0x0002;
 
-    [DllImport("user32.dll", EntryPoint = "PostMessageW", SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool PostMessage(
-        IntPtr windowHandle,
-        uint message,
-        IntPtr wordParameter,
-        IntPtr longParameter);
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeInput
+    {
+        public uint Type;
+        public NativeInputUnion Data;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    private struct NativeInputUnion
+    {
+        [FieldOffset(0)]
+        public NativeKeyboardInput Keyboard;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeKeyboardInput
+    {
+        public ushort VirtualKey;
+        public ushort ScanCode;
+        public uint Flags;
+        public uint Time;
+        public UIntPtr ExtraInfo;
+    }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern uint SendInput(
+        uint inputCount,
+        [In] NativeInput[] inputs,
+        int inputSize);
 
     public static string ApplyProps(VentureChrome component)
     {
@@ -326,7 +346,7 @@ public static class MosaicHost
                     await System.Threading.Tasks.Task.Delay(50);
                 }
                 if (!string.Equals(component.Address, targetUrl, StringComparison.Ordinal)
-                    || !CommitAddressWithEnter(window, addressInput))
+                    || !CommitAddressWithEnter(addressInput))
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -508,24 +528,40 @@ public static class MosaicHost
         };
     }
 
-    private static bool CommitAddressWithEnter(Window window, TextBox addressInput)
+    private static bool CommitAddressWithEnter(TextBox addressInput)
     {
         if (addressInput.FocusState == FocusState.Unfocused)
         {
             return false;
         }
-        var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        return windowHandle != IntPtr.Zero
-            && PostMessage(
-                windowHandle,
-                WmKeyDown,
-                (IntPtr)(int)VirtualKey.Enter,
-                (IntPtr)EnterKeyDownLParam)
-            && PostMessage(
-                windowHandle,
-                WmKeyUp,
-                (IntPtr)(int)VirtualKey.Enter,
-                (IntPtr)EnterKeyUpLParam);
+        var inputs = new[]
+        {
+            new NativeInput
+            {
+                Type = KeyboardInputType,
+                Data = new NativeInputUnion
+                {
+                    Keyboard = new NativeKeyboardInput
+                    {
+                        VirtualKey = (ushort)VirtualKey.Enter,
+                    },
+                },
+            },
+            new NativeInput
+            {
+                Type = KeyboardInputType,
+                Data = new NativeInputUnion
+                {
+                    Keyboard = new NativeKeyboardInput
+                    {
+                        VirtualKey = (ushort)VirtualKey.Enter,
+                        Flags = KeyEventKeyUp,
+                    },
+                },
+            },
+        };
+        return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf<NativeInput>())
+            == (uint)inputs.Length;
     }
 
     private static async System.Threading.Tasks.Task<bool> WaitForPageAsync(

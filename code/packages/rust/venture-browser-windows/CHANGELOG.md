@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Extend the generated WinUI interaction gate through a native Enter message
+- Extend the generated WinUI interaction gate through native Enter input
   in the Mosaic-authored address field after the existing Go-button path.
 - Require the generated WinUI interaction gate to verify programmatic focus on
   the hosted content surface before surface input.
