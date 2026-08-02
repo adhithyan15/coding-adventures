@@ -1831,6 +1831,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        for surface_mobility in [params.get("U0"), params.get("UO")].into_iter().flatten() {
+            if !surface_mobility.is_finite() || *surface_mobility < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET U0 must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

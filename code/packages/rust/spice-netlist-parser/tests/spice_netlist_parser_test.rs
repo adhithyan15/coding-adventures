@@ -1577,6 +1577,35 @@ fn rejects_invalid_mosfet_model_oxide_thicknesses() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_surface_mobility_aliases() {
+    for alias in ["U0", "UO"] {
+        for surface_mobility in ["-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model mobile NMOS({alias}={surface_mobility})\nM1 d g s b mobile"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET U0 must be finite and non-negative"));
+        }
+    }
+}
+
+#[test]
+fn accepts_zero_mosfet_model_surface_mobility_aliases() {
+    for alias in ["U0", "UO"] {
+        let parsed =
+            parse_netlist(&format!(".model mobile NMOS({alias}=0)\nM1 d g s b mobile")).unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.surface_mobility, 0.0);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
