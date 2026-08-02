@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "2686fe41a4ed6aee87c4dca17e9f34914709f35c",
+  "body_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+  "body_size": 3869,
+  "captured_at": "2026-08-02T23:39:01Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/ratio.adj"
+}

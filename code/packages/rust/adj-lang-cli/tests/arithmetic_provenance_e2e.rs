@@ -1,4 +1,4 @@
-//! End-to-end CAS projection and verification for the arithmetic stdlib root.
+//! End-to-end CAS projection and verification for arithmetic stdlib roots.
 
 use std::collections::BTreeSet;
 use std::fs::{File, OpenOptions};
@@ -42,30 +42,57 @@ fn lock_cas(root: &Path) -> File {
     file
 }
 
-fn project_manifest_snapshots(root: &Path, snapshots: &Path) -> usize {
+fn read_bundle(root: &Path, digest: &str) -> serde_json::Value {
+    serde_json::from_slice(&read_cas_object(root, digest)).expect("parse provenance bundle")
+}
+
+fn collect_bundle_snapshots(
+    root: &Path,
+    bundle_hash: &str,
+    visited: &mut BTreeSet<String>,
+    snapshot_hashes: &mut BTreeSet<String>,
+) {
+    if !visited.insert(bundle_hash.to_owned()) {
+        return;
+    }
+    let bundle = read_bundle(root, bundle_hash);
+    for dependency in bundle["dependencies"]
+        .as_array()
+        .expect("bundle dependencies")
+    {
+        collect_bundle_snapshots(
+            root,
+            dependency.as_str().expect("dependency hash string"),
+            visited,
+            snapshot_hashes,
+        );
+    }
+    for clause in bundle["clauses"].as_array().expect("bundle clauses") {
+        snapshot_hashes.insert(
+            clause["snapshot_sha256"]
+                .as_str()
+                .expect("clause snapshot hash")
+                .to_owned(),
+        );
+    }
+}
+
+fn project_bundle_snapshots(root: &Path, snapshots: &Path, bundle_id: &str) -> usize {
     let _cas_lock = lock_cas(root);
-    std::fs::create_dir_all(snapshots).expect("create snapshot directory");
     let manifest_path = root.join("code/specs/data/adj-stdlib-provenance/manifest.json");
     let manifest: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&manifest_path).expect("read provenance manifest"))
             .expect("parse provenance manifest");
-    let bundle_hashes = manifest["bundle_hashes"]
+    let selected = manifest["bundle_hashes"]
         .as_array()
-        .expect("bundle hash array");
+        .expect("bundle hash array")
+        .iter()
+        .map(|value| value.as_str().expect("bundle hash string"))
+        .find(|digest| read_bundle(root, digest)["bundle_id"] == bundle_id)
+        .unwrap_or_else(|| panic!("manifest does not register bundle {bundle_id}"));
     let mut snapshot_hashes = BTreeSet::new();
-    for bundle_hash in bundle_hashes {
-        let bundle_hash = bundle_hash.as_str().expect("bundle hash string");
-        let bundle: serde_json::Value = serde_json::from_slice(&read_cas_object(root, bundle_hash))
-            .expect("parse provenance bundle");
-        for clause in bundle["clauses"].as_array().expect("bundle clauses") {
-            snapshot_hashes.insert(
-                clause["snapshot_sha256"]
-                    .as_str()
-                    .expect("clause snapshot hash")
-                    .to_owned(),
-            );
-        }
-    }
+    collect_bundle_snapshots(root, selected, &mut BTreeSet::new(), &mut snapshot_hashes);
+    std::fs::create_dir_all(snapshots).expect("create snapshot directory");
     for digest in &snapshot_hashes {
         std::fs::write(snapshots.join(digest), read_cas_object(root, digest))
             .expect("project CAS snapshot");
@@ -95,7 +122,10 @@ fn arithmetic_bundle_projects_and_fully_verifies_all_four_queries() {
     let snapshots =
         std::env::temp_dir().join(format!("adj_arithmetic_provenance_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&snapshots);
-    assert_eq!(project_manifest_snapshots(&root, &snapshots), 5);
+    assert_eq!(
+        project_bundle_snapshots(&root, &snapshots, "adj.math.arithmetic.primitives.query.v1"),
+        5
+    );
 
     let program = "code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.query.adj";
     let execution = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
@@ -146,6 +176,55 @@ fn arithmetic_bundle_projects_and_fully_verifies_all_four_queries() {
     assert_eq!(verified["totals"]["quotes_verified"], 12, "{output}");
     assert_eq!(
         verified["totals"]["query_computations_fully_verified"], 4,
+        "{output}"
+    );
+
+    std::fs::remove_dir_all(snapshots).expect("remove projected snapshots");
+}
+
+#[test]
+fn ratio_bundle_reuses_quotient_and_fully_verifies_its_query() {
+    let root = repo_root();
+    let snapshots =
+        std::env::temp_dir().join(format!("adj_ratio_provenance_{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&snapshots);
+    assert_eq!(
+        project_bundle_snapshots(&root, &snapshots, "adj.math.arithmetic.ratio.query.v1"),
+        6
+    );
+
+    let program = "code/specs/data/adj-formula-stdlib/arithmetic/ratio.query.adj";
+    let execution = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .current_dir(&root)
+        .arg(program)
+        .output()
+        .expect("run ratio query");
+    let answers = String::from_utf8(execution.stdout).expect("UTF-8 query output");
+    assert!(execution.status.success(), "execution failed: {answers}");
+    let answer_json: serde_json::Value = serde_json::from_str(&answers).expect("JSON query output");
+    assert_eq!(answer_json["derived"][0]["name"], "ratio", "{answers}");
+    assert_eq!(answer_json["derived"][0]["value"], 0.75, "{answers}");
+    assert!(answers.contains("mathworld.wolfram.com/Ratio.html"));
+    assert!(answers.contains("mathworld.wolfram.com/Quotient.html"));
+
+    let verification = Command::new(env!("CARGO_BIN_EXE_adj-verify"))
+        .current_dir(&root)
+        .arg("--snapshots")
+        .arg(&snapshots)
+        .arg(program)
+        .output()
+        .expect("run adj-verify for ratio");
+    let output = String::from_utf8(verification.stdout).expect("UTF-8 verifier output");
+    assert!(
+        verification.status.success(),
+        "verification failed: {output}"
+    );
+    let verified: serde_json::Value =
+        serde_json::from_str(&output).expect("JSON verification output");
+    assert_eq!(verified["fully_verified"], true, "{output}");
+    assert_eq!(verified["totals"]["quotes_verified"], 4, "{output}");
+    assert_eq!(
+        verified["totals"]["query_computations_fully_verified"], 1,
         "{output}"
     );
 

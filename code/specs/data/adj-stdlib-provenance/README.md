@@ -46,16 +46,32 @@ python code/scripts/adj_stdlib_provenance.py project --output <directory>
 
 ## Reviewed roots
 
-The arithmetic primitive root and its four-query fixture are rebuilt entirely
-offline from the retained CAS source bodies:
+The arithmetic primitive and ratio roots and their worked-query fixtures are
+rebuilt entirely offline from retained CAS source bodies:
 
 ```text
 python code/scripts/build_adj_arithmetic_provenance.py
+python code/scripts/build_adj_ratio_provenance.py
 ```
 
-The generator checks the retained source hashes and expected source spans before
-rebuilding both provenance bundles, their IR and transform objects, the CAS
-index, and the curriculum-manifest linkage.
+Each generator checks retained source hashes and expected source spans before
+rebuilding its provenance bundles, IR and transform objects, and CAS linkage.
+The ratio generator's reviewed one-time bootstrap accepts captured bytes without
+opening the locator; after those exact bytes enter the CAS, ordinary reruns need
+no external file:
+
+```text
+python code/scripts/build_adj_ratio_provenance.py --captured-source <ratio.html>
+python code/scripts/build_adj_ratio_provenance.py
+```
+
+The reviewed ratio capture was repeated six times with `Accept: text/html`,
+identity transfer encoding, no request cookies, and the same user agent. All six
+52,191-byte bodies rehashed to
+`8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf`.
+The receipt retains only the allow-listed content type; the response's session
+cookie is deliberately excluded because it is neither source content nor
+provenance evidence.
 
 Per-root generators register only the bundle IDs they own inside a CAS-root
 transaction protected by the tracked `cas/lock` file and an OS-released lock.

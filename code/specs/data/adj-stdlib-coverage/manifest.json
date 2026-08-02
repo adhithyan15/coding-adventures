@@ -175,9 +175,10 @@
       "prerequisites": ["adj.math.arithmetic.primitives"],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/ratio.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": [],
+      "source_cas_hashes": ["8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf", "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"],
+      "provenance_bundle_hashes": ["4ac3c56cc15d3543fda906a98f36bc85441d1876d8bc554cf3ed24f5b484446d"],
       "benchmark_paths": [],
-      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+      "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
       "id": "adj.math.arithmetic.simple_interest",

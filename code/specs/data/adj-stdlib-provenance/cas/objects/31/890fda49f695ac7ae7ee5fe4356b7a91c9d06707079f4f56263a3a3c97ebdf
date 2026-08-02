@@ -1,0 +1,93 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 1843,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.ratio.import.arithmetic",
+          "end": 1867,
+          "quote": "import \"arithmetic.adj\"\n",
+          "quote_sha256": "967650df942445e6134491a1ff88fbdd91b2ebd6e304d52399c84bb290a4f0db",
+          "start": 1843
+        }
+      ],
+      "disposition": "represented",
+      "end": 1867,
+      "start": 1843
+    },
+    {
+      "disposition": "discarded",
+      "end": 2262,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 1867
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.ratio.vocabulary",
+          "end": 2553,
+          "quote": "dictionary ratio_vocab {\n    define numerator   : finding  surface \"numerator\", \"antecedent\", \"part\", \"first quantity\"\n    define denominator : finding  surface \"denominator\", \"consequent\", \"whole\", \"second quantity\"\n    define ratio       : finding  surface \"ratio\", \"rate\", \"proportion\"\n}\n",
+          "quote_sha256": "f686312382168104f8082e4b46834d8d9f100af7daaeabb7f70a0990342fc574",
+          "start": 2262
+        }
+      ],
+      "disposition": "represented",
+      "end": 2553,
+      "start": 2262
+    },
+    {
+      "disposition": "discarded",
+      "end": 3258,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 2553
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.ratio.use.ratio_vocab",
+          "end": 3278,
+          "quote": "    use ratio_vocab\n",
+          "quote_sha256": "4d8db5a780250278442a381af0f1e083411c290c449d0ba17fd65fd1610698e9",
+          "start": 3258
+        }
+      ],
+      "disposition": "represented",
+      "end": 3278,
+      "start": 3258
+    },
+    {
+      "disposition": "discarded",
+      "end": 3279,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 3278
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.ratio",
+          "end": 3867,
+          "quote": "    formula ratio(numerator, denominator) = quotient(numerator, denominator)\n        quote \"The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.\" at 0 snapshot \"93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73\"\n        source \"The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.\"\n        locator \"https://mathworld.wolfram.com/Ratio.html\"\n        trust authoritative\n",
+          "quote_sha256": "6cc6f6d9d9bc931cb1d236c7b9070790fce98cc03a1fa0b6188d3c7160b7ba9e",
+          "start": 3279
+        }
+      ],
+      "disposition": "represented",
+      "end": 3867,
+      "start": 3279
+    },
+    {
+      "disposition": "discarded",
+      "end": 3869,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 3867
+    }
+  ],
+  "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+  "source_size": 3869
+}

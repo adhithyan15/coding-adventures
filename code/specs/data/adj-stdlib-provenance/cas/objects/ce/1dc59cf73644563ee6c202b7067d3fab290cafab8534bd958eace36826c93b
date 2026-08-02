@@ -1,0 +1,13 @@
+{
+  "body_sha256": "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf",
+  "body_size": 52191,
+  "final_locator": "https://mathworld.wolfram.com/Ratio.html",
+  "headers": {
+    "content-type": "text/html; charset=UTF-8"
+  },
+  "kind": "fetch_receipt",
+  "locator": "https://mathworld.wolfram.com/Ratio.html",
+  "media_type": "text/html; charset=UTF-8",
+  "retrieved_at": "2026-08-02T22:38:04Z",
+  "status": 200
+}
