@@ -229,8 +229,14 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     assert!(readiness.contains("\"status\":\"ready\""));
     let interaction =
         fs::read_to_string(&interaction_marker).expect("read WinUI interaction marker");
-    assert!(interaction.contains("\"backend\":\"xaml\""));
-    assert!(interaction.contains("\"status\":\"interacted\""));
+    assert!(
+        interaction.contains("\"backend\":\"xaml\""),
+        "unexpected WinUI interaction marker: {interaction}"
+    );
+    assert!(
+        interaction.contains("\"status\":\"interacted\""),
+        "WinUI interaction failed: {interaction}"
+    );
     assert!(
         interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
     );
