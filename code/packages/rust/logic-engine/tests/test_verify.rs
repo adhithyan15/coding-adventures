@@ -11,11 +11,12 @@
 //! from no verifier at all, and it is the one component whose bugs are
 //! invisible — a broken checker reports success.
 
-use logic_core::{atom, compound, var, Substitution, Term};
+use logic_core::{atom, compound, int, var, Substitution, Term};
 use logic_engine::{
-    enumerate_all, verify_proof, verify_quote, BodyLiteral, DerivationOrigin, Fact, FactId,
-    LogicFailure, LogicStatus, MemorySnapshots, NoSnapshots, Proof, ProofStep, Provenance,
-    QuoteMiss, QuoteStatus, Rule, RuleId, TrustTier, UnverifiedReason,
+    compute, enumerate_all, verify_derived, verify_proof, verify_quote, BodyLiteral,
+    ComputationFailure, ComputationStatus, ComputeExpr, ComputeOp, DerivationNode,
+    DerivationOrigin, Fact, FactId, LogicFailure, LogicStatus, MemorySnapshots, NoSnapshots, Proof,
+    ProofStep, Provenance, QuoteMiss, QuoteStatus, Rule, RuleId, TrustTier, UnverifiedReason,
 };
 
 /// The document every quoted fact in this file is grounded in. Short on
@@ -38,6 +39,13 @@ fn snapshots() -> MemorySnapshots {
     let mut s = MemorySnapshots::new();
     s.insert(DOC.as_bytes().to_vec());
     s
+}
+
+fn quote_from(doc: &str, text: &str) -> Provenance {
+    let offset = doc.find(text).expect("quoted test span must exist");
+    Provenance::new("computed-answer fixture", None, TrustTier::Authoritative)
+        .with_quote_in(doc, offset, text.len())
+        .expect("fixture quote must be byte-addressable")
 }
 
 // ---------------------------------------------------------------------------
@@ -778,4 +786,174 @@ fn a_consistent_multi_variable_rule_trail_still_passes() {
         "a consistent q(a),r(a) derivation of p(a) must survive: {:?}",
         report.first_failure()
     );
+}
+
+// ---------------------------------------------------------------------------
+// Computed answers: re-run the math and verify formula + input bytes.
+// ---------------------------------------------------------------------------
+
+const COMPUTE_DOC: &str = "Formula: total is a plus b. Input a is 7. Input b is 5.";
+
+fn grounded_sum() -> (
+    logic_engine::KnowledgeBase,
+    logic_engine::Derived,
+    MemorySnapshots,
+) {
+    let mut kb = logic_engine::KnowledgeBase::new();
+    kb.add_fact(
+        Fact::certain(compound("a", vec![int(7)]))
+            .with_provenance(quote_from(COMPUTE_DOC, "Input a is 7")),
+    );
+    kb.add_fact(
+        Fact::certain(compound("b", vec![int(5)]))
+            .with_provenance(quote_from(COMPUTE_DOC, "Input b is 5")),
+    );
+    let expr = ComputeExpr::Bin(
+        ComputeOp::Add,
+        Box::new(ComputeExpr::Ref("a".into())),
+        Box::new(ComputeExpr::Ref("b".into())),
+    );
+    let derived = compute("total", &expr, &kb)
+        .expect("fixture arithmetic must compute")
+        .with_provenance(quote_from(COMPUTE_DOC, "total is a plus b"));
+    kb.add_derived(derived);
+    let derived = kb.derived_for("total").unwrap().clone();
+    let mut snapshots = MemorySnapshots::new();
+    snapshots.insert(COMPUTE_DOC.as_bytes().to_vec());
+    (kb, derived, snapshots)
+}
+
+#[test]
+fn a_computed_answer_rechecks_math_formula_and_input_quotes() {
+    let (kb, derived, snapshots) = grounded_sum();
+    let report = verify_derived(&derived, &kb, &snapshots);
+
+    assert_eq!(report.computation, ComputationStatus::ReChecked);
+    assert_eq!(report.formula_quotes.len(), 1);
+    assert_eq!(report.input_quotes.len(), 2);
+    assert!(report.passed());
+    assert!(
+        report.fully_verified(),
+        "full verification requires the CPU math, formula bytes, and both input spans"
+    );
+}
+
+#[test]
+fn tampered_formula_arithmetic_fails_independent_recomputation() {
+    let (kb, mut derived, snapshots) = grounded_sum();
+    if let DerivationNode::Op { result, .. } = &mut derived.tree {
+        *result = 13.0;
+    } else {
+        panic!("fixture must be an operation");
+    }
+
+    let report = verify_derived(&derived, &kb, &snapshots);
+    assert!(matches!(
+        report.computation,
+        ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan)
+    ));
+    assert!(!report.passed());
+    assert!(!report.fully_verified());
+}
+
+#[test]
+fn coordinated_operator_and_result_forgery_does_not_redefine_the_formula() {
+    let (kb, mut derived, snapshots) = grounded_sum();
+    if let DerivationNode::Op { op, result, .. } = &mut derived.tree {
+        *op = ComputeOp::Sub;
+        *result = 2.0;
+        derived.value = 2.0;
+    } else {
+        panic!("fixture must be an operation");
+    }
+
+    let report = verify_derived(&derived, &kb, &snapshots);
+    assert!(matches!(
+        report.computation,
+        ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan)
+    ));
+    assert!(!report.fully_verified());
+}
+
+#[test]
+fn an_aggregation_cannot_omit_or_duplicate_observed_inputs() {
+    let mut kb = logic_engine::KnowledgeBase::new();
+    kb.add_fact(
+        Fact::certain(compound("reading", vec![int(7)]))
+            .with_provenance(quote_from(COMPUTE_DOC, "Input a is 7")),
+    );
+    kb.add_fact(
+        Fact::certain(compound("reading", vec![int(5)]))
+            .with_provenance(quote_from(COMPUTE_DOC, "Input b is 5")),
+    );
+    let derived = compute(
+        "total",
+        &ComputeExpr::Agg(ComputeOp::Sum, "reading".into()),
+        &kb,
+    )
+    .unwrap()
+    .with_provenance(quote_from(COMPUTE_DOC, "total is a plus b"));
+    kb.add_derived(derived);
+    let mut forged = kb.derived_for("total").unwrap().clone();
+    if let DerivationNode::Op {
+        operands, result, ..
+    } = &mut forged.tree
+    {
+        operands.pop();
+        *result = 7.0;
+        forged.value = 7.0;
+    }
+    let mut snapshots = MemorySnapshots::new();
+    snapshots.insert(COMPUTE_DOC.as_bytes().to_vec());
+
+    let report = verify_derived(&forged, &kb, &snapshots);
+    assert!(matches!(
+        report.computation,
+        ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan)
+    ));
+    assert!(!report.fully_verified());
+}
+
+#[test]
+fn later_observation_cannot_substitute_for_the_original_input_scope() {
+    let (mut kb, _, snapshots) = grounded_sum();
+    kb.add_fact(
+        Fact::certain(compound("a", vec![int(99)]))
+            .with_provenance(quote_from(COMPUTE_DOC, "Input a is 7")),
+    );
+    let derived = kb.derived_for("total").unwrap();
+
+    let report = verify_derived(derived, &kb, &snapshots);
+    assert_eq!(report.computation, ComputationStatus::ReChecked);
+    assert!(report.fully_verified());
+}
+
+#[test]
+fn mutating_the_artifacts_expression_breaks_its_plan_binding() {
+    let (kb, mut derived, snapshots) = grounded_sum();
+    derived.expr = ComputeExpr::Bin(
+        ComputeOp::Sub,
+        Box::new(ComputeExpr::Ref("a".into())),
+        Box::new(ComputeExpr::Ref("b".into())),
+    );
+
+    let report = verify_derived(&derived, &kb, &snapshots);
+    assert_eq!(
+        report.computation,
+        ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan)
+    );
+    assert!(!report.fully_verified());
+}
+
+#[test]
+fn a_computed_answer_with_unavailable_source_bytes_is_not_fully_verified() {
+    let (kb, derived, _) = grounded_sum();
+    let report = verify_derived(&derived, &kb, &NoSnapshots);
+
+    assert_eq!(report.computation, ComputationStatus::ReChecked);
+    assert!(
+        report.passed(),
+        "unavailable bytes are honest uncertainty, not a fabrication"
+    );
+    assert!(!report.fully_verified());
 }

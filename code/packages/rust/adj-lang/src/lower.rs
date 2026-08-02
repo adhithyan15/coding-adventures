@@ -661,8 +661,9 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .with_provenance(prov);
                 kb.add_joint_contribution(clause);
             }
-            Statement::Observe { term } => {
-                kb.add_fact(Fact::certain(lower_term(term)));
+            Statement::Observe { term, annotations } => {
+                let prov = annotations_to_provenance(annotations)?;
+                kb.add_fact(Fact::certain(lower_term(term)).with_provenance(prov));
             }
             Statement::Relate { edge, annotations } => {
                 // A ground relational edge → a Certain Fact carrying its citation
@@ -761,8 +762,14 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // `quotient`'s (a corroboration). The derivation is auditable
                     // back to every formula that produced it.
                     let primary = annotations_to_provenance(&fd.annotations)?;
-                    let prov = compose_provenance(primary, &chain);
-                    kb.add_derived(derived.with_provenance(prov));
+                    let prov = compose_provenance(primary.clone(), &chain);
+                    let mut formula_sources = vec![primary];
+                    formula_sources.extend(chain.iter().cloned());
+                    kb.add_derived(
+                        derived
+                            .with_formula_sources(prov, formula_sources)
+                            .as_query_answer(),
+                    );
                 } else {
                     // An ordinary query. Lower with a per-query variable scope so
                     // repeated `$Var`s in one goal share identity (Prolog clause-scope
@@ -872,7 +879,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // library provenance (its audit trail is the derivation tree). A
                 // `let` that applied formulas carries their composed cites.
                 let derived = match compose_chain(&chain) {
-                    Some(prov) => derived.with_provenance(prov),
+                    Some(prov) => derived.with_formula_sources(prov, chain.clone()),
                     None => derived,
                 };
                 kb.add_derived(derived);
@@ -1216,7 +1223,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
         // the audit trail for a fired `obese` verdict cites BOTH the WHO obesity
         // threshold (on the contribution clause) AND the BMI definition (here).
         let derived = match compose_chain(&chain) {
-            Some(prov) => derived.with_provenance(prov),
+            Some(prov) => derived.with_formula_sources(prov, chain.clone()),
             None => derived,
         };
         kb.add_derived(derived);
@@ -1477,7 +1484,7 @@ fn enforce_vocabulary<'a>(
                     check_finding(t)?;
                 }
             }
-            Statement::Observe { term } => check_finding(term)?,
+            Statement::Observe { term, .. } => check_finding(term)?,
             _ => {}
         }
     }
@@ -5576,6 +5583,14 @@ rule { head: r(a) when: x(t) }";
         assert!((d.value - 0.75).abs() < 1e-9, "3/4 = 0.75, got {}", d.value);
         let prov = d.provenance.as_ref().expect("carries composed provenance");
         assert_eq!(prov.source, "ratio def", "ratio's cite is primary");
+        assert_eq!(
+            d.formula_sources
+                .iter()
+                .map(|source| source.source.as_str())
+                .collect::<Vec<_>>(),
+            vec!["ratio def", "quotient def"],
+            "lossless formula sources stay independently verifiable"
+        );
         // quotient's cite composes in as a corroboration — both are auditable.
         assert!(
             prov.corroborations

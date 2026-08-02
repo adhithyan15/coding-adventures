@@ -82,7 +82,7 @@ interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for
 
 uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { annotation } ;
 
-observe_decl     = "observe" term ;
+observe_decl     = "observe" term { annotation } ;
 
 # ----------------------------------------------------------------
 # `relate <rel>(<a>, <b>)` — a ground RELATIONAL EDGE (MYCIN-2026 REL-2),

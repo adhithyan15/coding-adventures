@@ -242,12 +242,23 @@ option mapping, or judge/evaluation failure.
 
 ### Wave 1: prove the full provenance path
 
+0. **Complete:** computed answers are independently verifiable. `observe` inputs
+   can carry byte pins, and `adj-verify` re-evaluates a separately stored compiler
+   plan in its original fact/binding scope plus every formula/input quote before
+   a formula-only query can become `fully_verified`.
 1. Migrate the ten arithmetic libraries first because every later layer imports
    them.
 2. Store source bytes and fetch receipts in the CAS.
 3. Add byte offsets and snapshot hashes to every grounded clause.
 4. Recursively decompose source dependencies with discarded-byte accounting.
 5. Require independent `adj-verify` success in tests.
+6. **Complete:** preserve imported and nested formula pins as first-class
+   transitive evidence. Display corroborations remain available, but
+   `adj-verify` now checks every lossless formula-source envelope independently.
+7. Add first-class fetch-receipt objects and a deterministic fanout-CAS-to-flat
+   snapshot projection instead of relying on receipt-shaped metadata.
+8. Replace the dead MathWorld `PercentageChange` locator before migrating
+   `percent.adj`; a source returning 404 cannot ground that clause.
 
 ### Wave 2: complete K-8 foundations
 

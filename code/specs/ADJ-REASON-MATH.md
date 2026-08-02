@@ -831,6 +831,14 @@ are **never produced by the offline pass** — they are the slots D3's adapter-r
 re-fetch reports into. Shipping the statuses ahead of the fetcher is deliberate: it
 keeps the outcome type closed, so D3 cannot quietly widen what "verified" means.
 
+**Computed-answer extension shipped.** `verify_derived` now re-evaluates the
+compiler-owned expression stored separately from the result artifact, in the exact
+fact and derived-binding prefix visible to the original computation. It compares the
+fresh value, exact sidecar, dimension, and complete tree; recursively verifies prior
+derived inputs; and checks every applied formula and observed input against pinned
+bytes. `adj-verify` includes those checks in both `verified` and `fully_verified`, so
+a formula-only answer no longer bypasses the audit path.
+
 Two verdicts that must not be conflated, and are not: `verified` (every step
 re-executed) versus `fully_verified` (every step re-executed **and** every quote
 confirmed against a snapshot, over a non-empty trace). Today's stdlib is

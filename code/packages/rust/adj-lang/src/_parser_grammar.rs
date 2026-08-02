@@ -142,6 +142,7 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"observe"#.to_string() },
                 GrammarElement::RuleReference { name: r#"term"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
             ] },
             line_number: 85,
         },

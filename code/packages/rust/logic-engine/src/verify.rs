@@ -71,18 +71,18 @@
 //! layer has somewhere honest to report into; this offline pass never produces
 //! them.
 
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap, HashSet};
 
 use logic_core::{unify, LogicVar, Substitution, Term};
 
-use crate::compute::compute;
+use crate::compute::{compute, ComputeError, DerivationNode, Derived};
 use crate::lr_aggregate::CmpOp;
 use crate::proof_dag::{DerivationOrigin, Proof, ProofStep};
-use crate::BodyLiteral;
 use crate::provenance::{ContentHash, Provenance, Quote};
+use crate::BodyLiteral;
 use crate::{
-    enumerate_all, ContributionClauseId, FactId, JointContributionClauseId,
-    KnowledgeBase, PredicateContributionClauseId, PriorClauseId, RuleId,
+    enumerate_all, ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase,
+    PredicateContributionClauseId, PriorClauseId, RuleId,
 };
 
 /// How far two log-odds values may differ and still count as "the same
@@ -94,6 +94,72 @@ use crate::{
 /// false ones. `1e-9` is many orders of magnitude below any log-odds difference
 /// that changes a decision, and many orders above accumulated rounding.
 pub const LOGIT_TOLERANCE: f64 = 1e-9;
+
+/// The outcome of independently evaluating the original computation expression.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComputationStatus {
+    ReChecked,
+    Unverifiable(&'static str),
+    Failed(ComputationFailure),
+}
+
+/// A localized reason a computed artifact did not reproduce.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComputationFailure {
+    PlanUnavailable,
+    ArtifactDoesNotMatchPlan,
+    ScopeUnavailable,
+    EvaluationFailed(ComputeError),
+    ValueDiffers { recorded: f64, recomputed: f64 },
+    ExactValueDiffers,
+    DimensionDiffers,
+    TreeDiffers,
+    ReferencedDerivedDiffers(String),
+}
+
+/// One input fact's byte-verification result in a computed answer.
+#[derive(Debug, Clone, PartialEq)]
+pub struct InputQuoteVerification {
+    pub fact_id: FactId,
+    pub quote: QuoteStatus,
+}
+
+/// Independent math and byte verification for one derived result.
+#[derive(Debug, Clone, PartialEq)]
+pub struct DerivedVerification {
+    pub name: String,
+    pub computation: ComputationStatus,
+    pub formula_quotes: Vec<QuoteStatus>,
+    pub input_quotes: Vec<InputQuoteVerification>,
+    pub is_query_answer: bool,
+}
+
+impl DerivedVerification {
+    pub fn passed(&self) -> bool {
+        matches!(self.computation, ComputationStatus::ReChecked)
+            && self
+                .formula_quotes
+                .iter()
+                .all(|quote| !matches!(quote, QuoteStatus::QuoteMissing(_)))
+            && self
+                .input_quotes
+                .iter()
+                .all(|input| !matches!(input.quote, QuoteStatus::QuoteMissing(_)))
+    }
+
+    pub fn fully_verified(&self) -> bool {
+        self.passed()
+            && !self.formula_quotes.is_empty()
+            && self
+                .formula_quotes
+                .iter()
+                .all(|quote| matches!(quote, QuoteStatus::Verified { .. }))
+            && self
+                .input_quotes
+                .iter()
+                .all(|input| matches!(input.quote, QuoteStatus::Verified { .. }))
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Snapshot access
@@ -494,6 +560,199 @@ pub fn verify_quote(prov: &Provenance, snapshots: &dyn SnapshotStore) -> QuoteSt
             byte_offset,
             byte_len,
         })
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Computed-answer verification
+// ---------------------------------------------------------------------------
+
+fn same_number(left: f64, right: f64) -> bool {
+    left.to_bits() == right.to_bits()
+}
+
+fn collect_computation_dependencies(
+    node: &DerivationNode,
+    facts: &mut BTreeSet<FactId>,
+    derived_names: &mut Vec<String>,
+) {
+    match node {
+        DerivationNode::Leaf { fact_id, .. } => {
+            facts.insert(*fact_id);
+        }
+        DerivationNode::DerivedRef { name, .. } => derived_names.push(name.clone()),
+        DerivationNode::Op { operands, .. } => {
+            for operand in operands {
+                collect_computation_dependencies(operand, facts, derived_names);
+            }
+        }
+        DerivationNode::Round { operand, .. }
+        | DerivationNode::ToScientific { operand, .. }
+        | DerivationNode::ToPercent { operand, .. }
+        | DerivationNode::ToCurrency { operand, .. } => {
+            collect_computation_dependencies(operand, facts, derived_names);
+        }
+        DerivationNode::Lit { .. } => {}
+    }
+}
+
+fn has_inexact_narrowing(node: &DerivationNode) -> bool {
+    match node {
+        DerivationNode::Round {
+            operand,
+            operand_exact,
+            ..
+        }
+        | DerivationNode::ToScientific {
+            operand,
+            operand_exact,
+            ..
+        }
+        | DerivationNode::ToPercent {
+            operand,
+            operand_exact,
+            ..
+        }
+        | DerivationNode::ToCurrency {
+            operand,
+            operand_exact,
+            ..
+        } => operand_exact.is_none() || has_inexact_narrowing(operand),
+        DerivationNode::Op { operands, .. } => operands.iter().any(has_inexact_narrowing),
+        DerivationNode::Leaf { .. }
+        | DerivationNode::DerivedRef { .. }
+        | DerivationNode::Lit { .. } => false,
+    }
+}
+
+fn recheck_derived_recursive(
+    derived: &Derived,
+    kb: &KnowledgeBase,
+    visiting: &mut HashSet<usize>,
+    checked: &mut HashSet<usize>,
+    input_ids: &mut BTreeSet<FactId>,
+    formula_sources: &mut Vec<Provenance>,
+) -> ComputationStatus {
+    let Some(id) = derived.computation_id else {
+        return ComputationStatus::Failed(ComputationFailure::PlanUnavailable);
+    };
+    let Some(plan) = kb.computation_plan(id) else {
+        return ComputationStatus::Failed(ComputationFailure::PlanUnavailable);
+    };
+    if kb.derived_bindings().get(id.0) != Some(derived) {
+        return ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan);
+    }
+    formula_sources.extend(plan.formula_sources.iter().cloned());
+    let Some(view) = kb.at_computation_scope(plan.scope) else {
+        return ComputationStatus::Failed(ComputationFailure::ScopeUnavailable);
+    };
+    let fresh = match compute(derived.name.clone(), &plan.expr, &view) {
+        Ok(fresh) => fresh,
+        Err(error) => {
+            return ComputationStatus::Failed(ComputationFailure::EvaluationFailed(error))
+        }
+    };
+    if !same_number(fresh.value, derived.value) {
+        return ComputationStatus::Failed(ComputationFailure::ValueDiffers {
+            recorded: derived.value,
+            recomputed: fresh.value,
+        });
+    }
+    if fresh.exact != derived.exact {
+        return ComputationStatus::Failed(ComputationFailure::ExactValueDiffers);
+    }
+    if fresh.dim != derived.dim {
+        return ComputationStatus::Failed(ComputationFailure::DimensionDiffers);
+    }
+    if fresh.tree != derived.tree {
+        return ComputationStatus::Failed(ComputationFailure::TreeDiffers);
+    }
+
+    let mut names = Vec::new();
+    collect_computation_dependencies(&fresh.tree, input_ids, &mut names);
+    for name in names {
+        let Some(index) = view
+            .derived_bindings()
+            .iter()
+            .rposition(|candidate| candidate.name == name)
+        else {
+            return ComputationStatus::Failed(ComputationFailure::ReferencedDerivedDiffers(name));
+        };
+        if checked.contains(&index) {
+            continue;
+        }
+        if !visiting.insert(index) {
+            return ComputationStatus::Failed(ComputationFailure::ReferencedDerivedDiffers(name));
+        }
+        let dependency = &kb.derived_bindings()[index];
+        let status = recheck_derived_recursive(
+            dependency,
+            kb,
+            visiting,
+            checked,
+            input_ids,
+            formula_sources,
+        );
+        visiting.remove(&index);
+        if !matches!(status, ComputationStatus::ReChecked) {
+            return match status {
+                ComputationStatus::Unverifiable(_) => ComputationStatus::Unverifiable(
+                    "referenced computation has an inexact narrowing source",
+                ),
+                _ => ComputationStatus::Failed(ComputationFailure::ReferencedDerivedDiffers(name)),
+            };
+        }
+        checked.insert(index);
+    }
+
+    if has_inexact_narrowing(&fresh.tree) {
+        ComputationStatus::Unverifiable("inexact narrowing source")
+    } else {
+        ComputationStatus::ReChecked
+    }
+}
+
+/// Re-evaluate the original expression in its original binding scope, then
+/// verify every transitive formula and observed-input byte span.
+pub fn verify_derived(
+    derived: &Derived,
+    kb: &KnowledgeBase,
+    snapshots: &dyn SnapshotStore,
+) -> DerivedVerification {
+    let mut input_ids = BTreeSet::new();
+    let mut formula_sources = Vec::new();
+    let computation = recheck_derived_recursive(
+        derived,
+        kb,
+        &mut HashSet::new(),
+        &mut HashSet::new(),
+        &mut input_ids,
+        &mut formula_sources,
+    );
+    let formula_quotes = formula_sources
+        .iter()
+        .map(|provenance| verify_quote(provenance, snapshots))
+        .collect();
+    let input_quotes = input_ids
+        .into_iter()
+        .map(|fact_id| InputQuoteVerification {
+            fact_id,
+            quote: kb
+                .fact(fact_id)
+                .map(|fact| verify_quote(&fact.provenance, snapshots))
+                .unwrap_or(QuoteStatus::Unverified(UnverifiedReason::NoProvenance)),
+        })
+        .collect();
+
+    DerivedVerification {
+        name: derived.name.clone(),
+        computation,
+        formula_quotes,
+        input_quotes,
+        is_query_answer: derived
+            .computation_id
+            .and_then(|id| kb.computation_plan(id))
+            .is_some_and(|plan| plan.is_query_answer),
     }
 }
 

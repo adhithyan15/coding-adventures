@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.51.0] - 2026-08-02 - computed-answer verification
+
+- Added `verify_derived`, which re-evaluates a compiler-owned expression stored separately
+  from the result artifact, in the original fact and derived-binding scope. It compares the
+  fresh value, exact sidecar, dimension, and complete derivation tree.
+- Prior derived inputs are verified recursively. Coordinated operator/result forgery, omitted
+  aggregation operands, stale binding substitution, and altered narrowing sidecars fail closed.
+- Every applied formula and unique observed input keeps its lossless provenance envelope and
+  is verified against pinned bytes. Inexact narrowing remains explicitly unverifiable.
+
 ## [0.50.0] — 2026-07-30 — NUM-6v: audit re-check of the precision/format narrowings
 
 Closes the NUM-6 audit-exactness promise (`ADJ-NUMERIC-SUBSTRATE.md` §4.3, §6, §7): the

@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.69.0] - 2026-08-02 - byte-grounded observed inputs
+
+- `observe` declarations now accept the standard provenance annotations, including exact
+  `quote`, byte offset, and snapshot hash pins.
+- The lowerer attaches that provenance to the emitted fact, so formula verification can trace
+  every numeric input back to the bytes from which it was decomposed.
+- Formula application keeps every nested source envelope losslessly, rather than reducing inner
+  formula pins to display-only corroborations.
+- Unannotated observations remain source-compatible and retain their previous behavior.
+
 ## [0.68.0] — 2026-07-30 — AR-3: attack edges compose INSIDE the `argument` block
 
 A paper's ATTACK edges — rebuttals and undercuts — can now live inside the pure `argument`
