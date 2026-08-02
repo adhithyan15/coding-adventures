@@ -117,7 +117,9 @@ Typed procedures retain their result type at the call boundary. In particular,
 `boolean procedure neg(p); value p; boolean p; neg := not p` can return directly
 into `if neg(false) and not neg(true) then ...`, preserving the shared `bool`
 value through negation, conjunction, and the conditional branch on all seven
-standard backends.
+standard backends. Boolean procedure values also compose as value actuals, so
+`both(neg(false), not neg(true))` preserves each typed argument and the final
+boolean return across both procedure-call boundaries.
 
 **Arrays** lower and run on **all seven standard backends** (LANG-FULL E5 /
 AL2). `integer array A[1:10]` (and `real`, `boolean`, or `string` arrays) becomes an

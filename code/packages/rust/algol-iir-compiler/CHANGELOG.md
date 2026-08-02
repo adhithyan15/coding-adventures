@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.57.0 — 2026-08-02 — composed boolean procedure calls
+
+Regression coverage now proves that boolean procedure results remain typed when
+they become value actuals for another boolean procedure before branching.
+
 ## 0.56.0 — 2026-08-02 — boolean procedure control-flow results
 
 Boolean procedure values now keep a `bool` comparison type through negation,
