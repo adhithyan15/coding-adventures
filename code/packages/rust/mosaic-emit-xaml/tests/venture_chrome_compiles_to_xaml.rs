@@ -48,15 +48,23 @@ fn venture_chrome_lowers_to_native_xaml_controls_and_project_shell() {
         .expect("emit Venture XAML project");
 
         assert!(result.xaml.contains(
-            "<Button x:Name=\"BackButton\" Content=\"Back\" IsEnabled=\"{x:Bind Not(BackDisabled)}\""
+            "<Button x:Name=\"BackButton\" AutomationProperties.AutomationId=\"back-button\" Content=\"Back\" IsEnabled=\"{x:Bind Not(BackDisabled)}\""
         ));
         assert!(result.xaml.contains(
-            "<TextBox x:Name=\"AddressInput\" Text=\"{x:Bind Address, Mode=TwoWay}\" IsReadOnly=\"{x:Bind NavigationDisabled}\""
+            "<TextBox x:Name=\"AddressInput\" AutomationProperties.AutomationId=\"address-input\" Text=\"{x:Bind Address, Mode=TwoWay}\" IsReadOnly=\"{x:Bind NavigationDisabled}\""
         ));
         assert!(result
             .xaml
             .contains("TextChanged=\"AddressInput_TextChanged\""));
         assert!(result.xaml.contains("KeyDown=\"AddressInput_KeyDown\""));
+        for part in ["back-button", "address-input", "go-button"] {
+            assert!(
+                result
+                    .xaml
+                    .contains(&format!("AutomationProperties.AutomationId=\"{part}\"")),
+                "generated XAML chrome omits the native identifier for {part}"
+            );
+        }
         assert!(result
             .xaml
             .contains("Binding IsPressed, ElementName=GoButton"));
