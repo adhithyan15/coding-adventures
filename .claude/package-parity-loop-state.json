@@ -343,9 +343,9 @@
     {
       "id": "build-tool-go-rockspec-utf8-conformance",
       "title": "Make the Go build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
-      "branch": null,
+      "branch": "codex/build-tool-go-rockspec-utf8",
       "pr_number": null,
       "notes": "First dependency-shaped child of build-tool-rockspec-utf8-remaining-engines. Go is prioritized because it is the intended operational oracle and currently treats arbitrary rockspec bytes as text. Bind its resolver and front door to resolution/lua-utf8 and resolution/lua-invalid-utf8, returning METADATA_INVALID_UTF8 with package and repository-relative manifest identity before dependency parsing; do not mix the other eight engine remediations into this slice."
     },
