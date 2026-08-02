@@ -45,13 +45,14 @@ larger network:
 25. [Tensor Shapes and Broadcasting, by Hand](./tensor-shapes-and-broadcasting-by-hand.md)
 26. [Dynamic Autograd and Saved Values, by Hand](./dynamic-autograd-and-saved-values-by-hand.md)
 27. [Gradient Accumulation and Zeroing, by Hand](./gradient-accumulation-and-zeroing-by-hand.md)
-28. [Matrix Math](../matrix-math.md)
-29. [Loss Functions](../loss-functions.md)
-30. [Gradient Descent](../gradient-descent.md)
-31. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-32. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-33. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-34. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+28. [Forward Graph Lowering, by Hand](./forward-graph-lowering-by-hand.md)
+29. [Matrix Math](../matrix-math.md)
+30. [Loss Functions](../loss-functions.md)
+31. [Gradient Descent](../gradient-descent.md)
+32. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+33. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+34. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+35. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -61,7 +62,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has fifteen complementary views:
+has sixteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -141,6 +142,11 @@ has fifteen complementary views:
   persistent gradient-buffer timeline: replay backward additions, explicit
   zeroing, mean micro-batch scaling, optimizer reads that do not clear, and one
   stale-gradient failure while checking every local gradient numerically.
+- **Compilation lab:** follow one six-node weighted-ReLU graph into twelve
+  deterministic NN00 NeuralIR instructions, then open the six-operation NN01
+  MatrixIR plan and inspect exactly which weight loads, products, and addition
+  fuse together. Run one row or two while direct graph, scalar NeuralIR, and
+  matrix-plan outputs remain in parity.
 
 ## Language-Neutral Corpus
 
@@ -261,6 +267,11 @@ gradient-buffer states before and after every backward, optimizer, and zeroing
 event, explicit mean divisors, a stale next-batch schedule, and central finite
 differences at every backward call.
 
+NN29 adds `code/specs/fixtures/forward-graph-lowering-v1`, including stable
+topological scheduling, exact NeuralIR value allocation, matrix fusion with
+source-instruction and graph-edge provenance, one hand-calculable row, one
+two-row batch, and direct/NeuralIR/MatrixIR parity.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -290,6 +301,7 @@ python code/scripts/validate_training_stabilizer_labs.py
 python code/scripts/validate_tensor_broadcasting_labs.py
 python code/scripts/validate_dynamic_autograd_labs.py
 python code/scripts/validate_gradient_accumulation_labs.py
+python code/scripts/validate_forward_graph_lowering_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -339,6 +351,12 @@ input shapes, and rejects an incompatible trailing dimension.
 The first NN27 lab records only executed operations, reverses one paper-sized
 graph, shows which values each local derivative saves, and proves a later live
 mutation cannot rewrite the computation being differentiated.
+The first NN28 lab separates a persistent gradient buffer from its parameter,
+then exposes backward addition, optimizer reads, explicit zeroing, and one stale
+next batch.
+The first NN29 lab turns a six-node weighted-ReLU graph into twelve scalar
+instructions and six fused matrix operations, retaining every source ID while
+all three execution paths reproduce `6` and `[6, 13]`.
 
 ## How to Study a Model
 

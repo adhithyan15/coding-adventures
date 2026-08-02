@@ -18,6 +18,12 @@ import {
   traceDynamicAutogradProgram,
   type DynamicAutogradScenario,
 } from "./dynamic-autograd-lab.js";
+import { ForwardLoweringWorkbench } from "./ForwardLoweringWorkbench.js";
+import {
+  traceForwardLowering,
+  traceForwardLoweringProgram,
+  type ForwardLoweringScenario,
+} from "./forward-lowering-lab.js";
 import { GradientAccumulationWorkbench } from "./GradientAccumulationWorkbench.js";
 import {
   traceGradientAccumulation,
@@ -2072,5 +2078,129 @@ describe("gradient accumulation and zeroing", () => {
     fireEvent.click(screen.getByRole("button", { name: /Open event 4, backward\(c\)/ }));
     expect(screen.getByLabelText("Selected gradient buffer calculation").textContent)
       .toMatch(/dL\/dw = 0.8.*4 \+ 0.8.*w.grad = 4.8/s);
+  });
+});
+
+describe("forward graph lowering", () => {
+  it("keeps the three-lane compiler map in the production stylesheet", () => {
+    expect(productionCss).toContain(".workspace--forward-lowering");
+    expect(productionCss).toContain(".forward-lowering-instruction-lane");
+    expect(productionCss).toContain(".forward-lowering-matrix-lane");
+  });
+
+  it("emits the canonical twelve-instruction NeuralIR stream", () => {
+    const trace = traceForwardLowering("single_row");
+    expect(trace.graph.topologicalOrder).toEqual(["bias", "x0", "x1", "sum", "relu", "out"]);
+    expect(trace.neuralIr.magic).toBe("CANN");
+    expect(trace.neuralIr.instructions.map((instruction) => instruction.op)).toEqual([
+      "LOAD_CONST",
+      "LOAD_INPUT",
+      "LOAD_INPUT",
+      "LOAD_EDGE_WEIGHT",
+      "MUL",
+      "LOAD_EDGE_WEIGHT",
+      "MUL",
+      "LOAD_EDGE_WEIGHT",
+      "MUL",
+      "ADD",
+      "ACTIVATE",
+      "STORE_OUTPUT",
+    ]);
+    expect(trace.neuralValueRows[0]).toEqual([
+      1, 4, 8, -1, -1, 0.25, 1, 0.75, 6, 6, 6,
+    ]);
+  });
+
+  it("fuses seven scalar instructions into one weighted matrix operation", () => {
+    const trace = traceForwardLowering("single_row");
+    expect(trace.matrixIr.magic).toBe("CANM");
+    expect(trace.matrixIr.operations.map((operation) => operation.op)).toEqual([
+      "LOAD_CONST_MATRIX",
+      "LOAD_INPUT_MATRIX",
+      "LOAD_INPUT_MATRIX",
+      "WEIGHTED_SUM_MATRIX",
+      "ACTIVATE_MATRIX",
+      "STORE_OUTPUT_MATRIX",
+    ]);
+    expect(trace.matrixIr.operations[3]).toMatchObject({
+      inputs: ["v0", "v1", "v2"],
+      attributes: {
+        edge_ids: ["bias_to_sum", "w0", "w1"],
+        weights: [-1, 0.25, 0.75],
+      },
+      sourceInstructions: ["i3", "i4", "i5", "i6", "i7", "i8", "i9"],
+      sourceEdges: ["bias_to_sum", "w0", "w1"],
+    });
+  });
+
+  it("keeps direct NeuralIR and MatrixIR execution in parity for both batches", () => {
+    (["single_row", "two_row_batch"] as const).forEach((id) => {
+      const trace = traceForwardLowering(id);
+      expect(trace.directOutputs).toEqual(trace.neuralIrOutputs);
+      expect(trace.neuralIrOutputs).toEqual(trace.matrixIrOutputs);
+      expect(trace.maxParityError).toBe(0);
+    });
+    expect(traceForwardLowering("single_row").directOutputs).toEqual([6]);
+    expect(traceForwardLowering("two_row_batch").directOutputs).toEqual([6, 13]);
+  });
+
+  it("fails closed on malformed inputs and snapshots caller data", () => {
+    const x0 = [4];
+    const scenario: ForwardLoweringScenario = {
+      id: "custom",
+      title: "custom",
+      summary: "custom",
+      inputs: { x0, x1: [8] },
+    };
+    const trace = traceForwardLoweringProgram(scenario);
+    x0[0] = 999;
+    expect(trace.scenario.inputs.x0).toEqual([4]);
+    expect(Object.isFrozen(trace.scenario.inputs.x0)).toBe(true);
+    expect(Object.isFrozen(trace.neuralIr.instructions[0])).toBe(true);
+
+    expect(() => traceForwardLoweringProgram({
+      ...scenario,
+      inputs: { x0: [4], x1: [8, 16] },
+    })).toThrow(/same bounded length/);
+    expect(() => traceForwardLoweringProgram({
+      ...scenario,
+      inputs: { x0: [Number.NaN], x1: [8] },
+    })).toThrow(/finite and bounded/);
+    expect(() => traceForwardLoweringProgram({
+      ...scenario,
+      inputs: [] as unknown as ForwardLoweringScenario["inputs"],
+    })).toThrow(/inputs must be an object/);
+    expect(() => traceForwardLoweringProgram({
+      ...scenario,
+      inputs: { x0: [4], x1: [8], constructor: [0] } as unknown as ForwardLoweringScenario["inputs"],
+    })).toThrow(/exactly x0 and x1/);
+
+    const hostileId = {
+      toString: () => { throw new Error("identifier was coerced"); },
+    } as unknown as string;
+    expect(() => traceForwardLoweringProgram({ ...scenario, id: hostileId }))
+      .toThrow(/bounded string/);
+  });
+
+  it("opens scalar instructions fused operations and the two-row parity table", () => {
+    render(React.createElement(ForwardLoweringWorkbench));
+    expect(screen.getByRole("heading", { name: "Forward graph lowering map" })).toBeTruthy();
+    expect(screen.getAllByRole("columnheader")).toHaveLength(6);
+    expect(screen.getAllByRole("cell")).toHaveLength(6);
+    expect(screen.getByLabelText("Forward lowering execution parity").textContent)
+      .toMatch(/Three paths, the same prediction.*0.*4.*8.*6.*6.*6/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open NeuralIR i9, ADD" }));
+    expect(screen.getByLabelText("Selected lowering detail").textContent)
+      .toMatch(/ADD.*v4=-1, v6=1, v8=6.*v9=6.*sum/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open MatrixIR m3, WEIGHTED_SUM_MATRIX" }));
+    expect(screen.getByLabelText("Selected lowering detail").textContent)
+      .toMatch(/WEIGHTED_SUM_MATRIX.*i3, i4, i5, i6, i7, i8, i9.*bias_to_sum, w0, w1/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "The same plan, two rows" }));
+    expect(screen.getAllByRole("cell")).toHaveLength(12);
+    expect(screen.getByLabelText("Forward lowering execution parity").textContent)
+      .toMatch(/1.*8.*16.*13.*13.*13/s);
   });
 });

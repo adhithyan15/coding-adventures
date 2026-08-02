@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "id": "nn29-forward-graph-lowering",
+  "title": "Lower one weighted ReLU graph without losing its meaning",
+  "question": "How do six graph nodes become twelve NeuralIR instructions and then six fused MatrixIR operations?",
+  "absolute_tolerance": 1e-10,
+  "graph": {
+    "name": "tiny-weighted-relu",
+    "nodes": [
+      { "id": "x0", "op": "input", "input_name": "x0" },
+      { "id": "x1", "op": "input", "input_name": "x1" },
+      { "id": "bias", "op": "constant", "value": 1 },
+      { "id": "sum", "op": "weighted_sum" },
+      { "id": "relu", "op": "activation", "activation": "relu" },
+      { "id": "out", "op": "output", "output_name": "prediction" }
+    ],
+    "edges": [
+      { "id": "w0", "from": "x0", "to": "sum", "weight": 0.25 },
+      { "id": "w1", "from": "x1", "to": "sum", "weight": 0.75 },
+      { "id": "bias_to_sum", "from": "bias", "to": "sum", "weight": -1 },
+      { "id": "sum_to_relu", "from": "sum", "to": "relu", "weight": 1 },
+      { "id": "relu_to_out", "from": "relu", "to": "out", "weight": 1 }
+    ]
+  },
+  "expected_neural_ir": {
+    "magic": "CANN",
+    "version": 0,
+    "instructions": [
+      {
+        "id": "i0",
+        "op": "LOAD_CONST",
+        "output": "v0",
+        "inputs": [],
+        "attributes": { "value": 1 },
+        "source_nodes": ["bias"],
+        "source_edges": []
+      },
+      {
+        "id": "i1",
+        "op": "LOAD_INPUT",
+        "output": "v1",
+        "inputs": [],
+        "attributes": { "input_name": "x0" },
+        "source_nodes": ["x0"],
+        "source_edges": []
+      },
+      {
+        "id": "i2",
+        "op": "LOAD_INPUT",
+        "output": "v2",
+        "inputs": [],
+        "attributes": { "input_name": "x1" },
+        "source_nodes": ["x1"],
+        "source_edges": []
+      },
+      {
+        "id": "i3",
+        "op": "LOAD_EDGE_WEIGHT",
+        "output": "v3",
+        "inputs": [],
+        "attributes": { "edge_id": "bias_to_sum" },
+        "source_nodes": [],
+        "source_edges": ["bias_to_sum"]
+      },
+      {
+        "id": "i4",
+        "op": "MUL",
+        "output": "v4",
+        "inputs": ["v0", "v3"],
+        "attributes": {},
+        "source_nodes": [],
+        "source_edges": ["bias_to_sum"]
+      },
+      {
+        "id": "i5",
+        "op": "LOAD_EDGE_WEIGHT",
+        "output": "v5",
+        "inputs": [],
+        "attributes": { "edge_id": "w0" },
+        "source_nodes": [],
+        "source_edges": ["w0"]
+      },
+      {
+        "id": "i6",
+        "op": "MUL",
+        "output": "v6",
+        "inputs": ["v1", "v5"],
+        "attributes": {},
+        "source_nodes": [],
+        "source_edges": ["w0"]
+      },
+      {
+        "id": "i7",
+        "op": "LOAD_EDGE_WEIGHT",
+        "output": "v7",
+        "inputs": [],
+        "attributes": { "edge_id": "w1" },
+        "source_nodes": [],
+        "source_edges": ["w1"]
+      },
+      {
+        "id": "i8",
+        "op": "MUL",
+        "output": "v8",
+        "inputs": ["v2", "v7"],
+        "attributes": {},
+        "source_nodes": [],
+        "source_edges": ["w1"]
+      },
+      {
+        "id": "i9",
+        "op": "ADD",
+        "output": "v9",
+        "inputs": ["v4", "v6", "v8"],
+        "attributes": {},
+        "source_nodes": ["sum"],
+        "source_edges": []
+      },
+      {
+        "id": "i10",
+        "op": "ACTIVATE",
+        "output": "v10",
+        "inputs": ["v9"],
+        "attributes": { "activation": "relu" },
+        "source_nodes": ["relu"],
+        "source_edges": []
+      },
+      {
+        "id": "i11",
+        "op": "STORE_OUTPUT",
+        "output": null,
+        "inputs": ["v10"],
+        "attributes": { "output_name": "prediction" },
+        "source_nodes": ["out"],
+        "source_edges": []
+      }
+    ]
+  },
+  "expected_matrix_ir": {
+    "magic": "CANM",
+    "version": 0,
+    "source_neural_ir_version": 0,
+    "operations": [
+      {
+        "id": "m0",
+        "op": "LOAD_CONST_MATRIX",
+        "output": "v0",
+        "inputs": [],
+        "attributes": { "value": 1 },
+        "source_instructions": ["i0"],
+        "source_nodes": ["bias"],
+        "source_edges": []
+      },
+      {
+        "id": "m1",
+        "op": "LOAD_INPUT_MATRIX",
+        "output": "v1",
+        "inputs": [],
+        "attributes": { "input_name": "x0" },
+        "source_instructions": ["i1"],
+        "source_nodes": ["x0"],
+        "source_edges": []
+      },
+      {
+        "id": "m2",
+        "op": "LOAD_INPUT_MATRIX",
+        "output": "v2",
+        "inputs": [],
+        "attributes": { "input_name": "x1" },
+        "source_instructions": ["i2"],
+        "source_nodes": ["x1"],
+        "source_edges": []
+      },
+      {
+        "id": "m3",
+        "op": "WEIGHTED_SUM_MATRIX",
+        "output": "v9",
+        "inputs": ["v0", "v1", "v2"],
+        "attributes": {
+          "edge_ids": ["bias_to_sum", "w0", "w1"],
+          "weights": [-1, 0.25, 0.75]
+        },
+        "source_instructions": ["i3", "i4", "i5", "i6", "i7", "i8", "i9"],
+        "source_nodes": ["sum"],
+        "source_edges": ["bias_to_sum", "w0", "w1"]
+      },
+      {
+        "id": "m4",
+        "op": "ACTIVATE_MATRIX",
+        "output": "v10",
+        "inputs": ["v9"],
+        "attributes": { "activation": "relu" },
+        "source_instructions": ["i10"],
+        "source_nodes": ["relu"],
+        "source_edges": []
+      },
+      {
+        "id": "m5",
+        "op": "STORE_OUTPUT_MATRIX",
+        "output": null,
+        "inputs": ["v10"],
+        "attributes": { "output_name": "prediction" },
+        "source_instructions": ["i11"],
+        "source_nodes": ["out"],
+        "source_edges": []
+      }
+    ]
+  },
+  "examples": [
+    {
+      "id": "single_row",
+      "title": "One row by hand",
+      "inputs": { "x0": [4], "x1": [8] },
+      "expected": {
+        "direct_outputs": [6],
+        "neural_ir_outputs": [6],
+        "matrix_ir_outputs": [6],
+        "neural_value_rows": [
+          [1, 4, 8, -1, -1, 0.25, 1, 0.75, 6, 6, 6]
+        ],
+        "matrix_value_columns": [
+          { "value_id": "v0", "values": [1] },
+          { "value_id": "v1", "values": [4] },
+          { "value_id": "v2", "values": [8] },
+          { "value_id": "v9", "values": [6] },
+          { "value_id": "v10", "values": [6] }
+        ]
+      }
+    },
+    {
+      "id": "two_row_batch",
+      "title": "The same plan, two rows",
+      "inputs": { "x0": [4, 8], "x1": [8, 16] },
+      "expected": {
+        "direct_outputs": [6, 13],
+        "neural_ir_outputs": [6, 13],
+        "matrix_ir_outputs": [6, 13],
+        "neural_value_rows": [
+          [1, 4, 8, -1, -1, 0.25, 1, 0.75, 6, 6, 6],
+          [1, 8, 16, -1, -1, 0.25, 2, 0.75, 12, 13, 13]
+        ],
+        "matrix_value_columns": [
+          { "value_id": "v0", "values": [1, 1] },
+          { "value_id": "v1", "values": [4, 8] },
+          { "value_id": "v2", "values": [8, 16] },
+          { "value_id": "v9", "values": [6, 13] },
+          { "value_id": "v10", "values": [6, 13] }
+        ]
+      }
+    }
+  ]
+}
