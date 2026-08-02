@@ -744,6 +744,7 @@ mod mosaic_ffi {
     }
 }
 
+#[cfg(target_vendor = "apple")]
 fn finite_positive_or(value: f64, fallback: f64) -> f64 {
     if value.is_finite() && value > 0.0 {
         value
