@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added first-party Fronius Solar API v1 local runtime coverage for mDNS/manual
+  discovery and read-only site and inverter power and energy telemetry.
 - Added a first-party native Tasmota local HTTP path for mDNS/manual discovery,
   optional authenticated polling, and verified relay and light commands while
   preserving MQTT as the preferred push transport.

@@ -45268,15 +45268,33 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             4,
             "enphase_envoy",
         ),
-        energy_entry(
+        base_entry(
             "fronius",
             "Fronius",
-            "Local inverter and solar telemetry integration.",
+            "Local Fronius Solar API v1 site and inverter telemetry integration.",
+            IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             4,
             "fronius",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "fronius_solar_api_v1".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ]),
         energy_entry(
             "tesla_powerwall",
             "Tesla Powerwall",
@@ -81021,6 +81039,38 @@ mod tests {
             PrimitiveFamily::CommandMapping,
         ] {
             assert!(tasmota.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn fronius_entry_exposes_read_only_local_energy_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let fronius = find_entry(&catalog, &IntegrationId::trusted("fronius")).unwrap();
+
+        assert_eq!(
+            fronius.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(fronius.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(fronius.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            fronius.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "fronius_solar_api_v1".to_string()
+            )]
+        );
+        assert_eq!(
+            fronius.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(fronius.required_primitives.contains(&primitive));
         }
     }
 
