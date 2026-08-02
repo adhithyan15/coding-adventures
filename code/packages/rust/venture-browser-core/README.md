@@ -46,8 +46,10 @@ six MIL events to `BrowserNavigation`, synchronizes redirects only after a
 successful load, and projects one coherent `BrowserChromeProps` snapshot for
 the six MIL slots. Generated Mosaic shells now expose the native node seam on
 all registered backends. The first concrete adapter connects this reducer and
-the live Metal page renderer to the generated SwiftUI shell; Windows and the
-remaining native hosts still require equivalent direct acceptance.
+the live Metal page renderer to the generated SwiftUI shell, and the matching
+WinUI adapter mounts Direct2D pixels. Platform-native integration gates now
+build and directly launch both generated projects through those adapters; UI
+interaction acceptance and the remaining native hosts are still incomplete.
 
 ## Development
 

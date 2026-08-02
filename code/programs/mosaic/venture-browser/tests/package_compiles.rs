@@ -116,6 +116,8 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "host?.resize(width: bounds.width, height: bounds.height)",
         "override func keyDown",
         "navigateHistory(eventName:",
+        "VENTURE_BROWSER_ACCEPTANCE_PATH",
+        "\"backend\": \"swiftui\"",
     ] {
         assert!(host.contains(symbol), "SwiftUI host omits {symbol}");
     }
@@ -136,6 +138,8 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "private void OnKeyDown",
         "Focus(FocusState.Pointer)",
         "VentureContentSurface : ContentControl",
+        "VENTURE_BROWSER_ACCEPTANCE_PATH",
+        "\\\"backend\\\":\\\"xaml\\\"",
     ] {
         assert!(host.contains(symbol), "XAML host omits {symbol}");
     }

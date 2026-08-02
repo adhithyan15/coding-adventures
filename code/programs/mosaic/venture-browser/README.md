@@ -50,6 +50,10 @@ recreating the surrounding chrome in backend-specific UI code.
   The shared session recomposes its retained render tree for the new logical
   viewport, preserves and clamps scroll state, updates hit regions, and
   repaints without refetching the HTML document.
+- Platform-native integration gates build and directly launch the emitted
+  SwiftUI and WinUI applications against a local deterministic page. Each app
+  must load its package-owned bridge and render the native `content-surface`
+  before writing its acceptance marker.
 
 ## Build every backend
 
@@ -85,6 +89,21 @@ DLL beside the generated WinUI project, and runs the x64 `dotnet build`. The
 generated project copies that native bridge next to the executable so its
 package-owned `MosaicHost.cs` can load it without a handwritten Win32 chrome
 layer.
+
+The macOS and Windows Rust package tests are the authoritative direct-launch
+gates. Each test builds its platform bridge in an isolated temporary target
+before emitting and launching the generated project:
+
+```sh
+cargo test -p venture-browser-macos
+```
+
+```powershell
+cargo test -p venture-browser-windows
+```
+
+These gates stop after the generated window mounts and renders; they do not yet
+claim direct UI interaction acceptance.
 
 This package is a browser-wiring milestone, not a claim of complete Venture or
 HTML conformance.

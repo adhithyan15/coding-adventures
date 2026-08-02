@@ -24,6 +24,7 @@ public static class MosaicHost
     private const double ViewportHeight = 640;
     private static IntPtr browser;
     private static VentureContentSurface? contentSurface;
+    private static int acceptanceReported;
 
     public static string ApplyProps(VentureChrome component)
     {
@@ -166,6 +167,7 @@ public static class MosaicHost
             ((IBufferByteAccess)bitmap.PixelBuffer).Buffer(out var destination);
             Marshal.Copy(pixels, 0, destination, pixels.Length);
             bitmap.Invalidate();
+            ReportAcceptanceIfRequested();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -253,6 +255,18 @@ public static class MosaicHost
                 e.Handled = true;
             }
         }
+    }
+
+    private static void ReportAcceptanceIfRequested()
+    {
+        var path = Environment.GetEnvironmentVariable("VENTURE_BROWSER_ACCEPTANCE_PATH");
+        if (string.IsNullOrWhiteSpace(path)
+            || System.Threading.Interlocked.Exchange(ref acceptanceReported, 1) != 0)
+        {
+            return;
+        }
+
+        System.IO.File.WriteAllText(path, "{\"backend\":\"xaml\",\"status\":\"ready\"}\n");
     }
 
     [ComImport]

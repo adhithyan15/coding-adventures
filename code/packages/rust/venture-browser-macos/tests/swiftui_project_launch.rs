@@ -1,4 +1,4 @@
-#![cfg(target_os = "windows")]
+#![cfg(target_os = "macos")]
 
 use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
 use std::fs::{self, File};
@@ -23,7 +23,10 @@ fn temporary_output() -> PathBuf {
         .duration_since(UNIX_EPOCH)
         .expect("system clock after epoch")
         .as_nanos();
-    std::env::temp_dir().join(format!("venture-xaml-{}-{nonce}", std::process::id()))
+    std::env::temp_dir().join(format!(
+        "venture-swiftui-launch-{}-{nonce}",
+        std::process::id()
+    ))
 }
 
 fn build_native_bridge(output: &Path) -> PathBuf {
@@ -32,19 +35,19 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     let build = Command::new(cargo)
         .arg("build")
         .arg("-p")
-        .arg("venture-browser-windows")
+        .arg("venture-browser-macos")
         .arg("--target-dir")
         .arg(&target)
         .current_dir(env!("CARGO_MANIFEST_DIR"))
         .output()
-        .expect("build Venture Windows bridge");
+        .expect("build Venture macOS bridge");
     assert!(
         build.status.success(),
-        "Venture Windows bridge failed to build\nstdout:\n{}\nstderr:\n{}",
+        "Venture macOS bridge failed to build\nstdout:\n{}\nstderr:\n{}",
         String::from_utf8_lossy(&build.stdout),
         String::from_utf8_lossy(&build.stderr)
     );
-    target.join("debug/venture_browser_windows.dll")
+    target.join("debug/libventure_browser_macos.dylib")
 }
 
 fn serve_html_once() -> String {
@@ -68,50 +71,39 @@ fn serve_html_once() -> String {
     format!("http://{address}/")
 }
 
-fn find_executable(root: &Path) -> Option<PathBuf> {
-    for entry in fs::read_dir(root).ok()? {
-        let path = entry.ok()?.path();
-        if path.is_dir() {
-            if let Some(found) = find_executable(&path) {
-                return Some(found);
-            }
-        } else if path.file_name().and_then(|name| name.to_str()) == Some("VentureChrome.exe") {
-            return Some(path);
-        }
-    }
-    None
-}
-
 fn wait_for_ready(child: &mut Child, marker: &Path) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
         if marker.exists() {
             return;
         }
-        if let Some(status) = child.try_wait().expect("poll generated WinUI app") {
-            panic!("generated WinUI app exited before rendering: {status}");
+        if let Some(status) = child.try_wait().expect("poll generated SwiftUI app") {
+            panic!("generated SwiftUI app exited before rendering: {status}");
         }
         thread::sleep(Duration::from_millis(100));
     }
     let _ = child.kill();
     let _ = child.wait();
-    panic!("generated WinUI app did not report a rendered Mosaic host surface within 30 seconds");
+    panic!("generated SwiftUI app did not report a rendered Mosaic host surface within 30 seconds");
 }
 
 #[test]
-fn package_owned_xaml_host_compiles_in_generated_winui_project() {
+fn package_owned_swiftui_project_launches_and_renders() {
     let output = temporary_output();
     let result = build_package(&BuildOptions {
         package_root: venture_package_root(),
         output_root: output.clone(),
-        backend: Backend::Xaml,
+        backend: Backend::SwiftUI,
         emit_project: true,
         theme: Some("light".to_string()),
     })
-    .expect("emit Venture XAML package");
-    let project = output.join("xaml");
-    let host = project.join("MosaicHost.cs");
-    assert!(host.exists(), "package-owned XAML host must be installed");
+    .expect("emit Venture SwiftUI package");
+    let project = output.join("swiftui");
+    let host = project.join("Sources/App/MosaicHost.swift");
+    assert!(
+        host.exists(),
+        "package-owned SwiftUI host must be installed"
+    );
     assert!(
         result.artifacts.iter().any(|artifact| artifact == &host),
         "installed host must be a package artifact"
@@ -120,52 +112,48 @@ fn package_owned_xaml_host_compiles_in_generated_winui_project() {
     let library = build_native_bridge(&output);
     assert!(
         library.exists(),
-        "build venture-browser-windows before this launch gate: {}",
+        "build venture-browser-macos before this launch gate: {}",
         library.display()
     );
-    fs::copy(&library, project.join("venture_browser_windows.dll"))
-        .expect("install Venture Windows bridge");
+    fs::copy(&library, project.join("libventure_browser_macos.dylib"))
+        .expect("install Venture macOS bridge");
 
-    let build = Command::new("dotnet")
+    let build = Command::new("swift")
         .arg("build")
-        .arg("VentureChrome.csproj")
-        .arg("-p:Platform=x64")
         .current_dir(&project)
         .output()
-        .expect("run dotnet build for generated WinUI project");
-    if !build.status.success() {
-        panic!(
-            "generated Venture WinUI project failed to build\nstdout:\n{}\nstderr:\n{}",
-            String::from_utf8_lossy(&build.stdout),
-            String::from_utf8_lossy(&build.stderr)
-        );
-    }
+        .expect("run swift build");
+    assert!(
+        build.status.success(),
+        "generated Venture SwiftUI project failed to build\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&build.stdout),
+        String::from_utf8_lossy(&build.stderr)
+    );
 
-    let executable = find_executable(&project.join("bin"))
-        .expect("generated WinUI build must produce VentureChrome.exe");
-    let marker = output.join("xaml-ready.json");
-    let app_log = output.join("xaml-app.log");
-    let log = File::create(&app_log).expect("create WinUI app log");
-    let mut child = Command::new(&executable)
-        .current_dir(executable.parent().expect("WinUI executable directory"))
+    let marker = output.join("swiftui-ready.json");
+    let app_log = output.join("swiftui-app.log");
+    let log = File::create(&app_log).expect("create SwiftUI app log");
+    let mut child = Command::new(project.join(".build/debug/App"))
+        .current_dir(&project)
         .env("VENTURE_START_URL", serve_html_once())
+        .env("VENTURE_BROWSER_LIBRARY", &library)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
-        .stdout(Stdio::from(log.try_clone().expect("clone WinUI app log")))
+        .stdout(Stdio::from(log.try_clone().expect("clone SwiftUI app log")))
         .stderr(Stdio::from(log))
         .spawn()
-        .expect("launch generated Venture WinUI app");
+        .expect("launch generated Venture SwiftUI app");
     wait_for_ready(&mut child, &marker);
+    thread::sleep(Duration::from_millis(500));
     let _ = child.kill();
     let _ = child.wait();
 
-    let readiness = fs::read_to_string(&marker).expect("read WinUI readiness marker");
-    assert!(readiness.contains("\"backend\":\"xaml\""));
+    let readiness = fs::read_to_string(&marker).expect("read SwiftUI readiness marker");
+    assert!(readiness.contains("\"backend\":\"swiftui\""));
     assert!(readiness.contains("\"status\":\"ready\""));
-    let diagnostics = fs::read_to_string(&app_log).expect("read WinUI app log");
+    let diagnostics = fs::read_to_string(&app_log).expect("read SwiftUI app log");
     assert!(
         !diagnostics.contains("assertion failed") && !diagnostics.contains("Assertion failed"),
-        "generated WinUI app reported a native assertion:\n{diagnostics}"
+        "generated SwiftUI app reported a native assertion:\n{diagnostics}"
     );
-
     fs::remove_dir_all(&output).expect("remove clean acceptance output");
 }

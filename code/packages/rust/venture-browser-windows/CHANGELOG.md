@@ -9,3 +9,5 @@
   bridge for package-owned WinUI content-surface input.
 - Reflow the retained page through the shared Rust pipeline when the generated
   WinUI content surface changes logical size.
+- Build and directly launch the Mosaic-emitted WinUI app in a platform-native
+  integration gate, requiring a successful Direct2D host-surface render.

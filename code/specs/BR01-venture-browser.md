@@ -100,9 +100,11 @@ through thin dynamic Rust bridges. They carry address and navigation events,
 native scrolling, link activation, keyboard navigation, and logical surface
 resize through one browser session without handwritten platform chrome. Resize
 reflows the retained render tree, image placement, link regions, and scroll
-bounds without refetching the HTML document. Direct launch and interaction
-acceptance plus the remaining platform hosts still remain before the browser
-shell is complete.
+bounds without refetching the HTML document. Direct launch acceptance now
+builds and starts the emitted SwiftUI and WinUI applications, loads each
+package-owned native bridge, and requires a rendered host-surface readiness
+signal. Direct UI interaction acceptance plus the remaining platform hosts
+still remain before the browser shell is complete.
 
 ## Where It Fits
 

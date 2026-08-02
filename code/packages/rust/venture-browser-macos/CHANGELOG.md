@@ -16,6 +16,8 @@
   so the package-owned SwiftUI content surface can drive the same Rust model.
 - Reflow the retained page through the shared Rust pipeline when the generated
   SwiftUI content surface changes logical size.
+- Build and directly launch the Mosaic-emitted SwiftUI app in a platform-native
+  integration gate, requiring a successful Metal host-surface render.
 
 ## 0.1.0
 
