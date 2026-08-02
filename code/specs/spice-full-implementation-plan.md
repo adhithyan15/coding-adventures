@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS instance-parameter validation.
+1. Rust Berkeley SPICE MOS instance-width validation.
    - Status: current PR completion candidate.
-   - Reject unsupported MOS instance parameter names before lowering instead of
-     silently ignoring typos.
-   - Preserve the supported `W`, `L`, `NRD`, `NRS`, `AD`, `AS`, `PD`, and `PS`
-     geometry and diffusion fields.
+   - Reject zero, negative, and non-finite instance `W` values before lowering
+     MOS elements into engine parameters.
+   - Preserve positive instance widths and model-card/default width fallback.
 
 ## Completed Slices
 
@@ -3858,6 +3857,13 @@ the Rust, Python, and TypeScript surfaces together.
      flicker-noise calculations.
    - Zero and positive flicker-noise exponents remain aligned across Rust,
      Python, and TypeScript.
+
+326. Rust Berkeley SPICE MOS instance-parameter validation.
+   - Status: completed in PR 9427.
+   - Unsupported MOS instance parameter names are rejected before lowering
+     instead of silently ignoring typos.
+   - Supported `W`, `L`, `NRD`, `NRS`, `AD`, `AS`, `PD`, and `PS` geometry and
+     diffusion fields remain accepted.
 
 ## Backlog
 

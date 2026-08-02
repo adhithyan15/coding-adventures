@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite Level-1 MOS instance `W` values before
+  lowering netlist elements into the engine.
 - Reject unsupported Level-1 MOS instance parameters instead of silently
   ignoring misspelled geometry or diffusion fields.
 - Preserve Level-1 MOS model-card `U0` / `UO` and derive `KP` from surface

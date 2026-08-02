@@ -2213,6 +2213,13 @@ fn parse_element(
                     "unsupported MOSFET parameter {param_name:?}"
                 )));
             }
+            if let Some(width) = instance_params.get("W") {
+                if !width.is_finite() || *width <= 0.0 {
+                    return Err(NetlistParseError::new(
+                        "MOSFET W must be finite and positive",
+                    ));
+                }
+            }
             Ok(Element::Mosfet(Mosfet::with_model(
                 name,
                 &fields[1],

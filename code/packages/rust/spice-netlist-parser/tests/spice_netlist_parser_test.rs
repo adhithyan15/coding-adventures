@@ -844,6 +844,18 @@ fn rejects_unsupported_mosfet_element_params() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_instance_widths() {
+    for width in ["0", "-1u", "1e999"] {
+        let error =
+            parse_netlist(&format!(".model nch NMOS\nM1 d g s b nch W={width}")).unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET W must be finite and positive"));
+    }
+}
+
+#[test]
 fn parses_tf_transfer_function_analysis_cards() {
     let parsed = parse_netlist(
         r#"
