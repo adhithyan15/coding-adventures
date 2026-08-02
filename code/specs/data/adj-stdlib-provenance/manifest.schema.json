@@ -17,6 +17,17 @@
       "properties": {
         "claim_id": { "minLength": 1, "type": "string" },
         "end": { "minimum": 1, "type": "integer" },
+        "input_claim": {
+          "additionalProperties": false,
+          "properties": {
+            "end": { "minimum": 1, "type": "integer" },
+            "quote": { "minLength": 1, "type": "string" },
+            "quote_sha256": { "$ref": "#/$defs/hash" },
+            "start": { "minimum": 0, "type": "integer" }
+          },
+          "required": ["end", "quote", "quote_sha256", "start"],
+          "type": "object"
+        },
         "quote": { "minLength": 1, "type": "string" },
         "quote_sha256": { "$ref": "#/$defs/hash" },
         "resolution": {
@@ -49,7 +60,7 @@
         "source_ir_sha256": { "$ref": "#/$defs/hash" },
         "start": { "minimum": 0, "type": "integer" }
       },
-      "required": ["claim_id", "end", "quote", "quote_sha256", "resolution", "snapshot_sha256", "source_ir_sha256", "start"],
+      "required": ["claim_id", "end", "input_claim", "quote", "quote_sha256", "resolution", "snapshot_sha256", "source_ir_sha256", "start"],
       "type": "object"
     },
     "fetch_receipt": {
@@ -69,6 +80,19 @@
       "type": "object"
     },
     "hash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "input_receipt": {
+      "additionalProperties": false,
+      "properties": {
+        "body_git_sha1": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "body_sha256": { "$ref": "#/$defs/hash" },
+        "body_size": { "maximum": 67108864, "minimum": 0, "type": "integer" },
+        "captured_at": { "format": "date-time", "type": "string" },
+        "kind": { "const": "input_receipt" },
+        "repo_path": { "minLength": 1, "type": "string" }
+      },
+      "required": ["body_git_sha1", "body_sha256", "body_size", "captured_at", "kind", "repo_path"],
+      "type": "object"
+    },
     "operation": {
       "additionalProperties": false,
       "properties": {
@@ -87,11 +111,12 @@
         "bundle_id": { "minLength": 1, "type": "string" },
         "clauses": { "items": { "$ref": "#/$defs/clause" }, "minItems": 1, "type": "array" },
         "dependencies": { "items": { "$ref": "#/$defs/hash" }, "type": "array", "uniqueItems": true },
+        "input": { "$ref": "#/$defs/source_binding" },
         "kind": { "const": "provenance_bundle" },
         "library": { "minLength": 1, "type": "string" },
         "sources": { "items": { "$ref": "#/$defs/source" }, "minItems": 1, "type": "array" }
       },
-      "required": ["bundle_id", "clauses", "dependencies", "kind", "library", "sources"],
+      "required": ["bundle_id", "clauses", "dependencies", "input", "kind", "library", "sources"],
       "type": "object"
     },
     "representation": {
@@ -139,6 +164,16 @@
         "source_ir_sha256": { "$ref": "#/$defs/hash" }
       },
       "required": ["raw_source_sha256", "receipt_sha256", "representations", "source_ir_sha256"],
+      "type": "object"
+    },
+    "source_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "raw_source_sha256": { "$ref": "#/$defs/hash" },
+        "receipt_sha256": { "$ref": "#/$defs/hash" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["raw_source_sha256", "receipt_sha256", "source_ir_sha256"],
       "type": "object"
     },
     "source_ir": {

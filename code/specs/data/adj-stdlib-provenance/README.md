@@ -11,6 +11,9 @@ It starts empty and grows only through reviewed source migrations.
 - A `fetch_receipt` is a content-addressed object, not mutable metadata. It binds
   an HTTPS locator, retrieval time, status, media type, safe response headers,
   and exact response-body hash.
+- An `input_receipt` binds a normalized repository path to exact SHA-256 and Git
+  blob identities. The input bytes receive the same complete source IR as any
+  fetched source.
 - A `source_ir` partitions every source byte contiguously. Each represented claim
   records its exact byte range, UTF-8 quote, and quote hash; every discarded range
   has a non-empty reason.
@@ -22,6 +25,8 @@ It starts empty and grows only through reviewed source migrations.
   Dependency decisions name the exact exported claim. Accepted roots classify
   the terminal fact, law, definition, or measurement and pin its raw source and
   successful receipt.
+  Every clause must also exist in the bundle's designated ADJ input IR, so code
+  cannot bypass decomposition while its external citations are checked.
 - `manifest.json` pins bundle hashes. Only snapshots reachable from verified
   bundle clauses may be projected for `adj-verify`.
 
@@ -30,6 +35,7 @@ to a file and passes that file plus its receipt facts to the offline CAS tool:
 
 ```text
 python code/scripts/adj_stdlib_provenance.py capture ...
+python code/scripts/adj_stdlib_provenance.py capture-input ...
 python code/scripts/adj_stdlib_provenance.py put-rendered ...
 python code/scripts/adj_stdlib_provenance.py put-ir ...
 python code/scripts/adj_stdlib_provenance.py put-transform ...

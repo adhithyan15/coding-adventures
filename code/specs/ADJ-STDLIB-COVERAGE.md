@@ -260,6 +260,9 @@ option mapping, or judge/evaluation failure.
    metadata. CI rehashes every object and checks bundle reachability, exact claim
    slices and quote hashes, deterministic text transforms, and complete
    represented/discarded byte partitions.
+7a. **Complete:** add first-class repository-input receipts and require every
+    provenance bundle clause to bind its decomposed ADJ source bytes as well as
+    its external grounding bytes. Code is evidence and must not bypass IR.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 
