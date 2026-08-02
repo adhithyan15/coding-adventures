@@ -79,3 +79,10 @@ trace, and tests.
    evidence.
 6. Use repository-supported auto-merge only after required checks pass, confirm
    the merge and post-merge checks, then create the next tranche branch.
+
+## Reliability Backlog
+
+- [x] **P0:** Restore clean-install deployment of the ML Learning Visualizer by
+  closing its local TypeScript package dependency graph. Discovered after NN30
+  when main run `30771651855` followed source-linked packages into directories
+  without installed transitive dependencies.
