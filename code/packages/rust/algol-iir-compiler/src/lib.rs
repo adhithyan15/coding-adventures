@@ -5537,6 +5537,50 @@ mod tests {
     }
 
     #[test]
+    fn integer_procedure_results_compose_as_value_arguments() {
+        let src = concat!(
+            "begin integer result; ",
+            "integer procedure scale(x); value x; integer x; scale := x * 6; ",
+            "integer procedure combine(a,b); value a,b; integer a,b; combine := a + b; ",
+            "result := combine(scale(3), scale(4)) end",
+        );
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "integer_procedure_composition").expect("compiles");
+        let combine = module.get_function("combine").expect("integer procedure exists");
+        assert_eq!(combine.params, vec![
+            ("a".into(), "i64".into()),
+            ("b".into(), "i64".into()),
+        ]);
+        assert_eq!(combine.return_type, "i64");
+
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "call"
+                        && instr.type_hint == "i64"
+                        && instr.srcs.first().and_then(Operand::as_var) == Some("scale")
+                })
+                .count(),
+            2,
+            "both scale calls must retain their i64 result type: {:?}",
+            main.instructions
+        );
+        let combine_call = main
+            .instructions
+            .iter()
+            .find(|instr| {
+                instr.op == "call"
+                    && instr.type_hint == "i64"
+                    && instr.srcs.first().and_then(Operand::as_var) == Some("combine")
+            })
+            .expect("composition must call combine");
+        assert_eq!(combine_call.srcs.len(), 3, "combine receives two integer call values");
+    }
+
+    #[test]
     fn recursive_procedure_runs() {
         // Factorial uses an if-*statement* body so the recursion's base case is
         // a `cond_stmt`, and recurses through a `proc_call` in the else branch.

@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.220.32 - 2026-08-02 (ALGOL composed integer procedures — seven-backend matrix)
+
+The matrix now feeds two integer procedure results to a second integer procedure
+on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
 ## 0.220.31 - 2026-08-02 (ALGOL composed real procedures — seven-backend matrix)
 
 The matrix now passes two real procedure results to a second real procedure and
