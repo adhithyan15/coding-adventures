@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/recurrent-bptt-v1.json",
+  "title": "Recurrent BPTT lab v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "question",
+    "absolute_tolerance",
+    "concepts",
+    "operation",
+    "initial_state",
+    "inputs",
+    "target",
+    "parameters",
+    "learning_rate",
+    "finite_difference_epsilon",
+    "expected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "steps", "activation", "loss", "parameter_sharing"],
+      "properties": {
+        "kind": { "const": "scalar-elman-rnn-bptt" },
+        "steps": { "const": 3 },
+        "activation": { "const": "relu" },
+        "loss": { "const": "half-squared-error" },
+        "parameter_sharing": { "const": "all-steps" }
+      }
+    },
+    "initial_state": { "type": "number" },
+    "inputs": { "$ref": "#/$defs/three_numbers" },
+    "target": { "type": "number" },
+    "parameters": { "$ref": "#/$defs/parameters" },
+    "learning_rate": { "type": "number", "exclusiveMinimum": 0 },
+    "finite_difference_epsilon": { "type": "number", "exclusiveMinimum": 0 },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["forward", "backward_steps", "gradient_totals", "gradient_check", "update"],
+      "properties": {
+        "forward": { "$ref": "#/$defs/forward" },
+        "backward_steps": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/backward_step" }
+        },
+        "gradient_totals": { "$ref": "#/$defs/gradient_totals" },
+        "gradient_check": { "$ref": "#/$defs/gradient_check" },
+        "update": { "$ref": "#/$defs/update" }
+      }
+    }
+  },
+  "$defs": {
+    "three_numbers": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_weight", "recurrent_weight", "bias"],
+      "properties": {
+        "input_weight": { "type": "number" },
+        "recurrent_weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "forward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preactivations", "states", "prediction", "loss"],
+      "properties": {
+        "preactivations": { "$ref": "#/$defs/three_numbers" },
+        "states": { "$ref": "#/$defs/three_numbers" },
+        "prediction": { "type": "number" },
+        "loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "backward_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "direct_loss_gradient",
+        "future_state_gradient",
+        "state_gradient",
+        "relu_derivative",
+        "preactivation_gradient",
+        "input_weight_gradient",
+        "recurrent_weight_gradient",
+        "bias_gradient",
+        "previous_state_gradient"
+      ],
+      "properties": {
+        "time": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "direct_loss_gradient": { "type": "number" },
+        "future_state_gradient": { "type": "number" },
+        "state_gradient": { "type": "number" },
+        "relu_derivative": { "type": "number" },
+        "preactivation_gradient": { "type": "number" },
+        "input_weight_gradient": { "type": "number" },
+        "recurrent_weight_gradient": { "type": "number" },
+        "bias_gradient": { "type": "number" },
+        "previous_state_gradient": { "type": "number" }
+      }
+    },
+    "gradient_totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_weight", "recurrent_weight", "bias", "initial_state"],
+      "properties": {
+        "input_weight": { "type": "number" },
+        "recurrent_weight": { "type": "number" },
+        "bias": { "type": "number" },
+        "initial_state": { "type": "number" }
+      }
+    },
+    "gradient_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerical", "absolute_errors", "max_absolute_error"],
+      "properties": {
+        "numerical": { "$ref": "#/$defs/parameters" },
+        "absolute_errors": { "$ref": "#/$defs/parameters" },
+        "max_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameters", "preactivations", "states", "loss"],
+      "properties": {
+        "parameters": { "$ref": "#/$defs/parameters" },
+        "preactivations": { "$ref": "#/$defs/three_numbers" },
+        "states": { "$ref": "#/$defs/three_numbers" },
+        "loss": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/training-stabilizers-v1.json",
+  "title": "Training stabilizers V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "input", "branch_weight", "upstream_gradient", "dropout_mask", "expected"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "absolute_tolerance": {"type": "number", "exclusiveMinimum": 0},
+    "concepts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "normalization", "normalization_epsilon", "dropout", "keep_probability", "finite_difference_epsilon"],
+      "properties": {
+        "kind": {"const": "vector-training-stabilizers"},
+        "normalization": {"const": "population-layer-normalization"},
+        "normalization_epsilon": {"const": 0},
+        "dropout": {"const": "inverted-training-dropout"},
+        "keep_probability": {"const": 0.5},
+        "finite_difference_epsilon": {"const": 1e-6}
+      }
+    },
+    "input": {"$ref": "#/$defs/vector4"},
+    "branch_weight": {"type": "number"},
+    "upstream_gradient": {"$ref": "#/$defs/vector4"},
+    "dropout_mask": {"$ref": "#/$defs/mask4"},
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["branch", "normalization", "dropout", "routes"],
+      "properties": {
+        "branch": {"$ref": "#/$defs/vector4"},
+        "normalization": {"$ref": "#/$defs/normalization"},
+        "dropout": {"$ref": "#/$defs/dropout"},
+        "routes": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/route"}}
+      }
+    }
+  },
+  "$defs": {
+    "vector4": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
+    "mask4": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"enum": [0, 1]}},
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean", "centered", "variance", "standard_deviation", "normalized", "upstream_sum", "upstream_dot_normalized"],
+      "properties": {
+        "mean": {"type": "number"},
+        "centered": {"$ref": "#/$defs/vector4"},
+        "variance": {"type": "number", "minimum": 0},
+        "standard_deviation": {"type": "number", "exclusiveMinimum": 0},
+        "normalized": {"$ref": "#/$defs/vector4"},
+        "upstream_sum": {"type": "number"},
+        "upstream_dot_normalized": {"type": "number"}
+      }
+    },
+    "dropout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scaled_mask", "evaluation_output", "training_expectation"],
+      "properties": {
+        "scaled_mask": {"$ref": "#/$defs/vector4"},
+        "evaluation_output": {"$ref": "#/$defs/vector4"},
+        "training_expectation": {"$ref": "#/$defs/vector4"}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "output", "score", "branch_gradient", "skip_gradient", "input_gradient", "weight_gradient", "finite_difference_input_gradient", "finite_difference_weight_gradient", "input_gradient_absolute_error", "weight_gradient_absolute_error"],
+      "properties": {
+        "id": {"enum": ["plain", "normalization", "dropout", "residual"]},
+        "output": {"$ref": "#/$defs/vector4"},
+        "score": {"type": "number"},
+        "branch_gradient": {"$ref": "#/$defs/vector4"},
+        "skip_gradient": {"$ref": "#/$defs/vector4"},
+        "input_gradient": {"$ref": "#/$defs/vector4"},
+        "weight_gradient": {"type": "number"},
+        "finite_difference_input_gradient": {"$ref": "#/$defs/vector4"},
+        "finite_difference_weight_gradient": {"type": "number"},
+        "input_gradient_absolute_error": {"$ref": "#/$defs/vector4"},
+        "weight_gradient_absolute_error": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}

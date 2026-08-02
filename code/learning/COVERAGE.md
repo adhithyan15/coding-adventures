@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1245 | 1139 | 98 | 59 | 7 | 1081 |
+| 1247 | 1162 | 98 | 60 | 7 | 1082 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 9 | 0 | 784 |
+| P3 | 2 | 10 | 0 | 785 |
 
 ## P0 Backlog
 
@@ -966,7 +966,6 @@ mention provides a complete lesson.
 | `dom-core` | 1 | missing |
 | `double-ratchet` | 1 | missing |
 | `dsp-complex` | 1 | missing |
-| `dsp-conv` | 1 | missing |
 | `dsp-dct` | 1 | missing |
 | `dsp-fft` | 1 | missing |
 | `dsp-filters` | 1 | missing |
@@ -1198,6 +1197,8 @@ mention provides a complete lesson.
 | `smart-home-mqtt-integration` | 1 | missing |
 | `smart-home-onvif-integration` | 1 | missing |
 | `smart-home-registry` | 1 | missing |
+| `smart-home-reolink-integration` | 1 | missing |
+| `smart-home-roku-ecp-integration` | 1 | missing |
 | `smart-home-runtime` | 1 | missing |
 | `smart-home-runtime-store` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |

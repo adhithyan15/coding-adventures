@@ -4,6 +4,40 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Add the NN05 spatial workbench with editable 1D valid cross-correlation and
+  complete multiply-accumulate traces.
+- Extend the spatial workbench with NN06 shared-kernel gradient accumulation,
+  finite-difference verification, and an apply-one-step interaction.
+- Add the NN07 tiny-image CNN workbench with channel-specific correlation,
+  spatial normalization, ReLU, max pooling, and synchronized path selection.
+- Add the NN08 residual-path and receptive-field workbench with an identity
+  toggle, exact dependency expansion, and boundary-field exploration.
+- Add the NN09 three-step recurrent-state unroller with shared parameters,
+  selectable cell arithmetic, and a no-memory ablation.
+- Extend the recurrent workbench with the NN10 BPTT microscope, including
+  selectable reverse steps, shared-gradient accumulation, finite-difference
+  verification, and one update preview.
+- Extend the recurrent workbench with the NN11 aligned GRU/LSTM gate comparator
+  and zero/canonical/one interventions for every gate family.
+- Add the NN12 query-key score microscope with aligned token projections, all
+  nine selectable dot products, square-root scaling, and an explicit boundary
+  before softmax and value mixing.
+- Extend the attention workbench with the NN13 causal-softmax mixer, including
+  stable row normalization, future-key masking, and weighted value traces.
+- Extend the attention workbench with the NN14 two-head comparator and the full
+  concatenate, output-project, residual-add, and layer-normalize path.
+- Extend the attention workbench with the NN15 two-position decoder training
+  trace, including causal next-token shift, cross-entropy gradients, shared-head
+  SGD, and a before/after loss comparison.
+- Add the NN16 representation workbench with a `2 -> 1 -> 2` autoencoder,
+  selectable decoder branches, bottleneck-gradient accumulation, seven central
+  finite differences, and one full-model SGD update.
+- Extend the representation workbench with the NN17 scalar variational
+  autoencoder, saved-noise reparameterization, interactive beta/KL tradeoff,
+  six central finite differences, and one complete stochastic-path update.
+
 ### Changed
 
 - Routed linear and hidden-layer visualizer predictions through the shared

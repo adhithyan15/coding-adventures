@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "id": "discriminator-generator-round",
+  "title": "Let a scalar discriminator move, then let the generator answer",
+  "question": "How do two separately optimized networks push one fake point in opposite directions during one alternating GAN round?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "generative adversarial network",
+    "alternating optimization",
+    "detached fake sample",
+    "binary cross-entropy",
+    "non-saturating generator loss",
+    "adversarial counter-move"
+  ],
+  "operation": {
+    "kind": "one-dimensional-gan-round",
+    "generator": "scalar-affine",
+    "discriminator": "sigmoid-of-scalar-affine",
+    "discriminator_loss": "mean-binary-cross-entropy",
+    "generator_loss": "non-saturating-binary-cross-entropy",
+    "schedule": "discriminator-then-generator",
+    "fake_handling": "detach-during-discriminator-step",
+    "update": "sgd"
+  },
+  "real_sample": 1,
+  "noise": 1,
+  "generator": { "weight": 0.2, "bias": 0 },
+  "discriminator": { "weight": 1, "bias": 0 },
+  "optimizer": {
+    "discriminator_learning_rate": 0.5,
+    "generator_learning_rate": 0.25
+  },
+  "expected": {
+    "initial": {
+      "generator_product": 0.2,
+      "fake_sample": 0.2,
+      "real_logit": 1,
+      "real_probability": 0.7310585786300049,
+      "fake_logit": 0.2,
+      "fake_probability": 0.549833997312478,
+      "discriminator_loss": 0.5557002784499074,
+      "generator_loss": 0.5981388693815918
+    },
+    "discriminator_backward": {
+      "real_logit_gradient": -0.13447071068499755,
+      "fake_logit_gradient": 0.274916998656239,
+      "fake_value_gradient": 0,
+      "weight_gradient": -0.07948731095374975,
+      "bias_gradient": 0.14044628797124142
+    },
+    "updated_discriminator": {
+      "weight": 1.0397436554768749,
+      "bias": -0.07022314398562071
+    },
+    "after_discriminator": {
+      "generator_product": 0.2,
+      "fake_sample": 0.2,
+      "real_logit": 0.9695205114912542,
+      "real_probability": 0.7250239152436962,
+      "fake_logit": 0.13772558710975427,
+      "fake_probability": 0.5343770742867348,
+      "discriminator_loss": 0.5429648914153535,
+      "generator_loss": 0.6266535575924759
+    },
+    "discriminator_gradient_check": {
+      "epsilon": 1e-6,
+      "parameter_order": ["discriminator.weight", "discriminator.bias"],
+      "analytical": [-0.07948731095374975, 0.14044628797124142],
+      "numerical": [-0.07948731090001715, 0.14044628798837167],
+      "max_absolute_error": 5.373260170138394e-11
+    },
+    "generator_backward": {
+      "fake_logit_gradient": -0.46562292571326525,
+      "fake_value_gradient": -0.48412848285494775,
+      "weight_gradient": -0.48412848285494775,
+      "bias_gradient": -0.48412848285494775
+    },
+    "updated_generator": {
+      "weight": 0.32103212071373693,
+      "bias": 0.12103212071373694
+    },
+    "after_generator": {
+      "generator_product": 0.32103212071373693,
+      "fake_sample": 0.44206424142747386,
+      "real_logit": 0.9695205114912542,
+      "real_probability": 0.7250239152436962,
+      "fake_logit": 0.3894103463517927,
+      "fake_probability": 0.5961407441300886,
+      "discriminator_loss": 0.6141197382031501,
+      "generator_loss": 0.5172784919260304
+    },
+    "generator_gradient_check": {
+      "epsilon": 1e-6,
+      "parameter_order": ["generator.weight", "generator.bias"],
+      "analytical": [-0.48412848285494775, -0.48412848285494775],
+      "numerical": [-0.4841284828582815, -0.4841284828582815],
+      "max_absolute_error": 3.333722187193189e-12
+    }
+  }
+}

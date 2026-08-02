@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "linear-loss-landscape",
+  "title": "A Linear Neuron on Its Loss Landscape",
+  "question": "How can we verify a gradient and compare batch strategies without hiding the arithmetic?",
+  "concepts": [
+    "mean-squared-error",
+    "analytical-gradient",
+    "finite-difference",
+    "stochastic-gradient-descent",
+    "mini-batch",
+    "full-batch"
+  ],
+  "model": {
+    "kind": "linear-neuron",
+    "parameters": {
+      "weight": -0.5,
+      "bias": 0.0
+    }
+  },
+  "dataset": {
+    "rows": [
+      { "label": "x-minus-one", "x": -1.0, "target": -1.0 },
+      { "label": "x-zero", "x": 0.0, "target": 1.0 },
+      { "label": "x-one", "x": 1.0, "target": 3.0 },
+      { "label": "x-two", "x": 2.0, "target": 5.0 }
+    ]
+  },
+  "loss": {
+    "kind": "mean-squared-error",
+    "reduction": "mean"
+  },
+  "gradient_check": {
+    "epsilon": 0.00001,
+    "expected": {
+      "absolute_tolerance": 1e-9,
+      "loss": 12.875,
+      "analytical": {
+        "weight": -8.5,
+        "bias": -4.5
+      },
+      "numerical": {
+        "weight": -8.50000000003348,
+        "bias": -4.499999999918458
+      }
+    }
+  },
+  "optimizer_comparison": {
+    "learning_rate": 0.05,
+    "steps": 12,
+    "absolute_tolerance": 1e-9,
+    "strategies": [
+      {
+        "kind": "stochastic",
+        "batch_size": 1,
+        "expected_parameters": {
+          "weight": 1.761738097196,
+          "bias": 1.1038861280305
+        },
+        "expected_loss": 0.07119332254935665
+      },
+      {
+        "kind": "mini-batch",
+        "batch_size": 2,
+        "expected_parameters": {
+          "weight": 1.7373974644419516,
+          "bias": 1.0625041671183766
+        },
+        "expected_loss": 0.09093315566120634
+      },
+      {
+        "kind": "full-batch",
+        "batch_size": 4,
+        "expected_parameters": {
+          "weight": 1.6909794672603606,
+          "bias": 1.0398542870140077
+        },
+        "expected_loss": 0.13251310567040367
+      }
+    ]
+  }
+}

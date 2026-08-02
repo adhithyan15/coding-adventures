@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "id": "nn23-three-layer-scale-comparison",
+  "title": "Three-layer initialization and activation comparison",
+  "question": "How do weight scale and activation choice change signal spread across three layers?",
+  "absolute_tolerance": 1e-12,
+  "concepts": ["weight initialization", "Xavier scale", "He scale", "activation distribution", "population variance", "tanh saturation", "ReLU zeros"],
+  "operation": {
+    "kind": "initialization-activation-distribution",
+    "bias": "none",
+    "variance": "population",
+    "zero_threshold": 1e-12,
+    "tanh_saturation_threshold": 0.95,
+    "canonical_initializer": "xavier",
+    "canonical_activation": "tanh"
+  },
+  "inputs": [[1, 0], [0, 1], [-1, 0], [0, -1]],
+  "weight_templates": [
+    [[1, -1], [1, 1]],
+    [[1, -1], [1, 1]],
+    [[1, -1], [1, 1]]
+  ],
+  "initializers": ["tiny", "xavier", "he", "large"],
+  "activations": ["tanh", "relu"],
+  "expected": {
+    "canonical": {
+      "initializer": "xavier",
+      "activation": "tanh",
+      "layers": [
+        {
+          "layer": 1,
+          "scale": 0.7071067811865475,
+          "preactivations": [
+            [0.7071067811865475, -0.7071067811865475],
+            [0.7071067811865475, 0.7071067811865475],
+            [-0.7071067811865475, 0.7071067811865475],
+            [-0.7071067811865475, -0.7071067811865475]
+          ],
+          "activations": [
+            [0.6088593650139138, -0.6088593650139138],
+            [0.6088593650139138, 0.6088593650139138],
+            [-0.6088593650139138, 0.6088593650139138],
+            [-0.6088593650139138, -0.6088593650139138]
+          ],
+          "summary": {
+            "mean": 0,
+            "variance": 0.3707097263651463,
+            "standard_deviation": 0.6088593650139138,
+            "minimum": -0.6088593650139138,
+            "maximum": 0.6088593650139138,
+            "zero_fraction": 0,
+            "saturated_fraction": 0
+          }
+        },
+        {
+          "layer": 2,
+          "scale": 0.7071067811865475,
+          "preactivations": [
+            [0, -0.8610571715805475],
+            [0.8610571715805475, 0],
+            [0, 0.8610571715805475],
+            [-0.8610571715805475, 0]
+          ],
+          "activations": [
+            [0, -0.6968019533538969],
+            [0.6968019533538969, 0],
+            [0, 0.6968019533538969],
+            [-0.6968019533538969, 0]
+          ],
+          "summary": {
+            "mean": 0,
+            "variance": 0.2427664810989032,
+            "standard_deviation": 0.49271338636057294,
+            "minimum": -0.6968019533538969,
+            "maximum": 0.6968019533538969,
+            "zero_fraction": 0.5,
+            "saturated_fraction": 0
+          }
+        },
+        {
+          "layer": 3,
+          "scale": 0.7071067811865475,
+          "preactivations": [
+            [-0.4927133863605729, -0.4927133863605729],
+            [0.4927133863605729, -0.4927133863605729],
+            [0.4927133863605729, 0.4927133863605729],
+            [-0.4927133863605729, 0.4927133863605729]
+          ],
+          "activations": [
+            [-0.4563673571184874, -0.4563673571184874],
+            [0.4563673571184874, -0.4563673571184874],
+            [0.4563673571184874, 0.4563673571184874],
+            [-0.4563673571184874, 0.4563673571184874]
+          ],
+          "summary": {
+            "mean": 0,
+            "variance": 0.20827116464331302,
+            "standard_deviation": 0.4563673571184874,
+            "minimum": -0.4563673571184874,
+            "maximum": 0.4563673571184874,
+            "zero_fraction": 0,
+            "saturated_fraction": 0
+          }
+        }
+      ]
+    },
+    "comparison": [
+      {
+        "initializer": "tiny",
+        "activation": "tanh",
+        "standard_deviations": [0.09966799462495582, 0.014093316370682047, 0.0019930932758819753],
+        "zero_fractions": [0, 0.5, 0],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "tiny",
+        "activation": "relu",
+        "standard_deviations": [0.05, 0.006959705453537528, 0.0008569568250501307],
+        "zero_fractions": [0.5, 0.5, 0.625],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "xavier",
+        "activation": "tanh",
+        "standard_deviations": [0.6088593650139138, 0.49271338636057294, 0.4563673571184874],
+        "zero_fractions": [0, 0.5, 0],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "xavier",
+        "activation": "relu",
+        "standard_deviations": [0.35355339059327373, 0.3479852726768763, 0.3029799910885205],
+        "zero_fractions": [0.5, 0.5, 0.625],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "he",
+        "activation": "tanh",
+        "standard_deviations": [0.7615941559557649, 0.642938024488458, 0.7207728874757855],
+        "zero_fractions": [0, 0.5, 0],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "he",
+        "activation": "relu",
+        "standard_deviations": [0.5, 0.6959705453537527, 0.8569568250501305],
+        "zero_fractions": [0.5, 0.5, 0.625],
+        "saturated_fractions": [0, 0, 0]
+      },
+      {
+        "initializer": "large",
+        "activation": "tanh",
+        "standard_deviations": [0.9640275800758169, 0.7064744481065454, 0.9639010024012616],
+        "zero_fractions": [0, 0.5, 0],
+        "saturated_fractions": [1, 0.5, 1]
+      },
+      {
+        "initializer": "large",
+        "activation": "relu",
+        "standard_deviations": [1, 2.7838821814150108, 6.855654600401044],
+        "zero_fractions": [0.5, 0.5, 0.625],
+        "saturated_fractions": [0, 0, 0]
+      }
+    ]
+  }
+}

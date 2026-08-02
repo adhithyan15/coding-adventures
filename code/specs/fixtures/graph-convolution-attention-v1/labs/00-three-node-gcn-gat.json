@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "three-node-gcn-gat",
+  "title": "GCN and GAT on one three-node path",
+  "question": "How do structural degree weights and feature-dependent attention weight the same neighborhoods?",
+  "absolute_tolerance": 1e-12,
+  "concepts": ["self-loop", "symmetric-degree-normalization", "graph-convolution", "stable-neighborhood-softmax", "graph-attention", "weighted-neighbor-aggregation"],
+  "operation": {"kind": "graph-convolution-attention-comparison", "gcn": "symmetric-degree-normalized-sum", "gat_score": "source-feature", "gat_normalization": "stable-neighborhood-softmax", "activation": "relu"},
+  "features": [1, 2, -1],
+  "neighborhoods": [[0, 1], [0, 1, 2], [1, 2]],
+  "expected": {
+    "degrees": [2, 3, 2],
+    "gcn": [
+      {"target": 0, "rows": [{"source": 0, "source_feature": 1, "source_degree": 2, "target_degree": 2, "coefficient": 0.5, "contribution": 0.5}, {"source": 1, "source_feature": 2, "source_degree": 3, "target_degree": 2, "coefficient": 0.4082482904638631, "contribution": 0.8164965809277261}], "preactivation": 1.3164965809277263, "output": 1.3164965809277263},
+      {"target": 1, "rows": [{"source": 0, "source_feature": 1, "source_degree": 2, "target_degree": 3, "coefficient": 0.4082482904638631, "contribution": 0.4082482904638631}, {"source": 1, "source_feature": 2, "source_degree": 3, "target_degree": 3, "coefficient": 0.3333333333333333, "contribution": 0.6666666666666666}, {"source": 2, "source_feature": -1, "source_degree": 2, "target_degree": 3, "coefficient": 0.4082482904638631, "contribution": -0.4082482904638631}], "preactivation": 0.6666666666666665, "output": 0.6666666666666665},
+      {"target": 2, "rows": [{"source": 1, "source_feature": 2, "source_degree": 3, "target_degree": 2, "coefficient": 0.4082482904638631, "contribution": 0.8164965809277261}, {"source": 2, "source_feature": -1, "source_degree": 2, "target_degree": 2, "coefficient": 0.5, "contribution": -0.5}], "preactivation": 0.31649658092772615, "output": 0.31649658092772615}
+    ],
+    "gat": [
+      {"target": 0, "maximum_score": 2, "denominator": 1.3678794411714423, "rows": [{"source": 0, "source_feature": 1, "score": 1, "shifted_score": -1, "exponential": 0.36787944117144233, "attention_weight": 0.2689414213699951, "contribution": 0.2689414213699951}, {"source": 1, "source_feature": 2, "score": 2, "shifted_score": 0, "exponential": 1, "attention_weight": 0.7310585786300049, "contribution": 1.4621171572600098}], "preactivation": 1.7310585786300048, "output": 1.7310585786300048},
+      {"target": 1, "maximum_score": 2, "denominator": 1.4176665095393062, "rows": [{"source": 0, "source_feature": 1, "score": 1, "shifted_score": -1, "exponential": 0.36787944117144233, "attention_weight": 0.25949646034241913, "contribution": 0.25949646034241913}, {"source": 1, "source_feature": 2, "score": 2, "shifted_score": 0, "exponential": 1, "attention_weight": 0.7053845126982412, "contribution": 1.4107690253964824}, {"source": 2, "source_feature": -1, "score": -1, "shifted_score": -3, "exponential": 0.049787068367863944, "attention_weight": 0.03511902695933973, "contribution": -0.03511902695933973}], "preactivation": 1.6351464587795619, "output": 1.6351464587795619},
+      {"target": 2, "maximum_score": 2, "denominator": 1.0497870683678638, "rows": [{"source": 1, "source_feature": 2, "score": 2, "shifted_score": 0, "exponential": 1, "attention_weight": 0.9525741268224334, "contribution": 1.9051482536448667}, {"source": 2, "source_feature": -1, "score": -1, "shifted_score": -3, "exponential": 0.049787068367863944, "attention_weight": 0.04742587317756679, "contribution": -0.04742587317756679}], "preactivation": 1.8577223804673, "output": 1.8577223804673}
+    ],
+    "gcn_outputs": [1.3164965809277263, 0.6666666666666665, 0.31649658092772615],
+    "gat_outputs": [1.7310585786300048, 1.6351464587795619, 1.8577223804673]
+  }
+}

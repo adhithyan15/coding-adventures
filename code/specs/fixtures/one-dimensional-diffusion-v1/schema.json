@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/one-dimensional-diffusion-v1.json",
+  "title": "One-dimensional diffusion learning lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "clean_sample", "saved_noise", "schedule", "denoiser", "optimizer", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "forward", "denoiser", "loss", "reverse", "update"],
+      "properties": {
+        "kind": { "const": "one-dimensional-diffusion-round" },
+        "forward": { "const": "closed-form-saved-noise" },
+        "denoiser": { "const": "scalar-affine-with-normalized-timestep" },
+        "loss": { "const": "mean-half-squared-noise-error" },
+        "reverse": { "const": "deterministic-ddpm-mean" },
+        "update": { "const": "sgd" }
+      }
+    },
+    "clean_sample": { "type": "number" },
+    "saved_noise": { "type": "number" },
+    "schedule": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/scheduleStep" }
+    },
+    "denoiser": { "$ref": "#/$defs/denoiserParameters" },
+    "optimizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning_rate"],
+      "properties": { "learning_rate": { "type": "number", "exclusiveMinimum": 0 } }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["forward_steps", "initial_denoising", "initial_mean_loss", "backward", "gradient_check", "updated_denoiser", "post_update_denoising", "post_update_mean_loss", "reverse_steps", "final_reconstruction", "final_absolute_error"],
+      "properties": {
+        "forward_steps": { "type": "array", "items": { "$ref": "#/$defs/forwardStep" } },
+        "initial_denoising": { "type": "array", "items": { "$ref": "#/$defs/predictionStep" } },
+        "initial_mean_loss": { "type": "number", "minimum": 0 },
+        "backward": { "$ref": "#/$defs/backwardTrace" },
+        "gradient_check": { "$ref": "#/$defs/gradientCheck" },
+        "updated_denoiser": { "$ref": "#/$defs/denoiserParameters" },
+        "post_update_denoising": { "type": "array", "items": { "$ref": "#/$defs/predictionStep" } },
+        "post_update_mean_loss": { "type": "number", "minimum": 0 },
+        "reverse_steps": { "type": "array", "items": { "$ref": "#/$defs/reverseStep" } },
+        "final_reconstruction": { "type": "number" },
+        "final_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "scheduleStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "beta", "normalized_t"],
+      "properties": {
+        "t": { "type": "integer", "minimum": 1 },
+        "beta": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1 },
+        "normalized_t": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+      }
+    },
+    "denoiserParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_weight", "timestep_weight", "bias"],
+      "properties": {
+        "sample_weight": { "type": "number" },
+        "timestep_weight": { "type": "number" },
+        "bias": { "type": "number" }
+      }
+    },
+    "forwardStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "beta", "alpha", "alpha_bar", "normalized_t", "signal_scale", "noise_scale", "signal_contribution", "noise_contribution", "noisy_sample"],
+      "properties": {
+        "t": { "type": "integer" },
+        "beta": { "type": "number" },
+        "alpha": { "type": "number" },
+        "alpha_bar": { "type": "number" },
+        "normalized_t": { "type": "number" },
+        "signal_scale": { "type": "number" },
+        "noise_scale": { "type": "number" },
+        "signal_contribution": { "type": "number" },
+        "noise_contribution": { "type": "number" },
+        "noisy_sample": { "type": "number" }
+      }
+    },
+    "predictionStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "noisy_sample", "normalized_t", "predicted_noise", "target_noise", "error", "loss"],
+      "properties": {
+        "t": { "type": "integer" },
+        "noisy_sample": { "type": "number" },
+        "normalized_t": { "type": "number" },
+        "predicted_noise": { "type": "number" },
+        "target_noise": { "type": "number" },
+        "error": { "type": "number" },
+        "loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "gradientContribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "prediction_gradient", "sample_weight_contribution", "timestep_weight_contribution", "bias_contribution"],
+      "properties": {
+        "t": { "type": "integer" },
+        "prediction_gradient": { "type": "number" },
+        "sample_weight_contribution": { "type": "number" },
+        "timestep_weight_contribution": { "type": "number" },
+        "bias_contribution": { "type": "number" }
+      }
+    },
+    "backwardTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["per_step", "sample_weight_gradient", "timestep_weight_gradient", "bias_gradient"],
+      "properties": {
+        "per_step": { "type": "array", "items": { "$ref": "#/$defs/gradientContribution" } },
+        "sample_weight_gradient": { "type": "number" },
+        "timestep_weight_gradient": { "type": "number" },
+        "bias_gradient": { "type": "number" }
+      }
+    },
+    "vector3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+    "gradientCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "parameter_order", "analytical", "numerical", "max_absolute_error"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "parameter_order": { "const": ["denoiser.sample_weight", "denoiser.timestep_weight", "denoiser.bias"] },
+        "analytical": { "$ref": "#/$defs/vector3" },
+        "numerical": { "$ref": "#/$defs/vector3" },
+        "max_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    },
+    "reverseStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "input_sample", "normalized_t", "predicted_noise", "noise_coefficient", "scaled_noise_correction", "corrected_sample", "alpha_scale", "output_mean"],
+      "properties": {
+        "t": { "type": "integer" },
+        "input_sample": { "type": "number" },
+        "normalized_t": { "type": "number" },
+        "predicted_noise": { "type": "number" },
+        "noise_coefficient": { "type": "number" },
+        "scaled_noise_correction": { "type": "number" },
+        "corrected_sample": { "type": "number" },
+        "alpha_scale": { "type": "number" },
+        "output_mean": { "type": "number" }
+      }
+    }
+  }
+}

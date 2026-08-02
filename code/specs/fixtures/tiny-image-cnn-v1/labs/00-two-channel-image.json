@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "id": "two-channel-image",
+  "title": "Follow two image channels through a tiny CNN",
+  "question": "How do channel-specific kernels become normalized and pooled feature values?",
+  "absolute_tolerance": 1e-12,
+  "concepts": [
+    "two-dimensional cross-correlation",
+    "input and output channels",
+    "spatial normalization",
+    "ReLU activation",
+    "max pooling"
+  ],
+  "operation": {
+    "kind": "cross-correlation-2d",
+    "padding": "valid",
+    "stride": [1, 1],
+    "activation": "relu",
+    "pooling": {
+      "kind": "max",
+      "window": [2, 2],
+      "stride": [2, 2],
+      "tie_break": "first-row-major"
+    }
+  },
+  "input": {
+    "shape": [2, 3, 3],
+    "channels": [
+      {
+        "name": "vertical-position",
+        "values": [[0, 0, 0], [1, 1, 1], [2, 2, 2]]
+      },
+      {
+        "name": "horizontal-position",
+        "values": [[0, 1, 2], [0, 1, 2], [0, 1, 2]]
+      }
+    ]
+  },
+  "filters": [
+    {
+      "name": "toward-bottom-right",
+      "kernels": [
+        [[4, 0], [0, 0]],
+        [[2, 0], [0, 0]]
+      ],
+      "bias": 0
+    },
+    {
+      "name": "toward-top-left",
+      "kernels": [
+        [[-4, 0], [0, 0]],
+        [[-2, 0], [0, 0]]
+      ],
+      "bias": 6
+    }
+  ],
+  "normalization": {
+    "kind": "spatial-per-output-channel",
+    "epsilon": 4,
+    "gamma": [1, 1],
+    "beta": [0, 0]
+  },
+  "expected": {
+    "channel_contributions": [
+      [
+        [[0, 0], [4, 4]],
+        [[0, 2], [0, 2]]
+      ],
+      [
+        [[0, 0], [-4, -4]],
+        [[0, -2], [0, -2]]
+      ]
+    ],
+    "convolution": [
+      [[0, 2], [4, 6]],
+      [[6, 4], [2, 0]]
+    ],
+    "normalization": {
+      "means": [3, 3],
+      "variances": [5, 5],
+      "denominators": [3, 3],
+      "maps": [
+        [[-1, -0.3333333333333333], [0.3333333333333333, 1]],
+        [[1, 0.3333333333333333], [-0.3333333333333333, -1]]
+      ]
+    },
+    "activation": [
+      [[0, 0], [0.3333333333333333, 1]],
+      [[1, 0.3333333333333333], [0, 0]]
+    ],
+    "pooling": {
+      "values": [1, 1],
+      "argmax": [[1, 1], [0, 0]]
+    }
+  }
+}

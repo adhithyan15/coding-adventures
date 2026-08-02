@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/tiny-decoder-training-v1.json",
+  "title": "Tiny decoder-only language model training lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "vocabulary", "sequence", "input_tokens", "target_tokens", "causal_prefixes", "decoder_states", "unembedding", "bias", "optimizer", "expected"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 },
+    "concepts": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "position_count", "model_width", "vocabulary_size", "state_source", "objective", "softmax", "reduction", "trainable_parameters", "update"],
+      "properties": {
+        "kind": { "const": "saved-causal-decoder-state-next-token-step" },
+        "position_count": { "const": 2 },
+        "model_width": { "const": 2 },
+        "vocabulary_size": { "const": 3 },
+        "state_source": { "const": "frozen-causal-decoder-block-output" },
+        "objective": { "const": "next-token-cross-entropy" },
+        "softmax": { "const": "stable-row-wise" },
+        "reduction": { "const": "mean-over-positions" },
+        "trainable_parameters": { "const": ["unembedding", "bias"] },
+        "update": { "const": "sgd" }
+      }
+    },
+    "vocabulary": { "$ref": "#/$defs/uniqueVector3Text" },
+    "sequence": { "$ref": "#/$defs/vector3Text" },
+    "input_tokens": { "$ref": "#/$defs/vector2Text" },
+    "target_tokens": { "$ref": "#/$defs/vector2Text" },
+    "causal_prefixes": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "minLength": 1 } },
+        { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string", "minLength": 1 } }
+      ],
+      "items": false
+    },
+    "decoder_states": { "$ref": "#/$defs/matrix2x2" },
+    "unembedding": { "$ref": "#/$defs/matrix2x3" },
+    "bias": { "$ref": "#/$defs/vector3" },
+    "optimizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning_rate"],
+      "properties": { "learning_rate": { "type": "number", "exclusiveMinimum": 0 } }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "mean_loss", "unembedding_gradient", "bias_gradient", "gradient_check", "updated_unembedding", "updated_bias", "post_update_rows", "post_update_mean_loss"],
+      "properties": {
+        "rows": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/trainingRow" } },
+        "mean_loss": { "type": "number", "minimum": 0 },
+        "unembedding_gradient": { "$ref": "#/$defs/matrix2x3" },
+        "bias_gradient": { "$ref": "#/$defs/vector3" },
+        "gradient_check": { "$ref": "#/$defs/gradientCheck" },
+        "updated_unembedding": { "$ref": "#/$defs/matrix2x3" },
+        "updated_bias": { "$ref": "#/$defs/vector3" },
+        "post_update_rows": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/postUpdateRow" } },
+        "post_update_mean_loss": { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "vector2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+    "vector3": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" } },
+    "vector2Text": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string", "minLength": 1 } },
+    "vector3Text": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "string", "minLength": 1 } },
+    "uniqueVector3Text": { "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "matrix2x2": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/vector2" } },
+    "matrix2x3": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/vector3" } },
+    "matrix3x2": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/vector2" } },
+    "trainingRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "input_token", "target_token", "causal_prefix", "decoder_state", "logit_products", "logits", "row_max", "shifted_logits", "exponentials", "denominator", "probabilities", "target_probability", "loss", "logit_gradients", "unembedding_gradient_contribution", "bias_gradient_contribution", "state_gradient"],
+      "properties": {
+        "position": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "input_token": { "type": "string", "minLength": 1 },
+        "target_token": { "type": "string", "minLength": 1 },
+        "causal_prefix": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "minLength": 1 } },
+        "decoder_state": { "$ref": "#/$defs/vector2" },
+        "logit_products": { "$ref": "#/$defs/matrix3x2" },
+        "logits": { "$ref": "#/$defs/vector3" },
+        "row_max": { "type": "number" },
+        "shifted_logits": { "$ref": "#/$defs/vector3" },
+        "exponentials": { "$ref": "#/$defs/vector3" },
+        "denominator": { "type": "number", "exclusiveMinimum": 0 },
+        "probabilities": { "$ref": "#/$defs/vector3" },
+        "target_probability": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "loss": { "type": "number", "minimum": 0 },
+        "logit_gradients": { "$ref": "#/$defs/vector3" },
+        "unembedding_gradient_contribution": { "$ref": "#/$defs/matrix2x3" },
+        "bias_gradient_contribution": { "$ref": "#/$defs/vector3" },
+        "state_gradient": { "$ref": "#/$defs/vector2" }
+      }
+    },
+    "postUpdateRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position", "logits", "probabilities", "target_probability", "loss"],
+      "properties": {
+        "position": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "logits": { "$ref": "#/$defs/vector3" },
+        "probabilities": { "$ref": "#/$defs/vector3" },
+        "target_probability": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "loss": { "type": "number", "minimum": 0 }
+      }
+    },
+    "gradientCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epsilon", "numerical_unembedding_gradient", "numerical_bias_gradient", "max_absolute_error"],
+      "properties": {
+        "epsilon": { "type": "number", "exclusiveMinimum": 0 },
+        "numerical_unembedding_gradient": { "$ref": "#/$defs/matrix2x3" },
+        "numerical_bias_gradient": { "$ref": "#/$defs/vector3" },
+        "max_absolute_error": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

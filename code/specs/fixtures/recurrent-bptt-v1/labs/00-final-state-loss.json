@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "id": "final-state-loss",
+  "title": "Backpropagate one final-state loss through three steps",
+  "question": "How do three executions contribute to gradients for one shared recurrent parameter set?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "backpropagation through time",
+    "shared parameter gradient",
+    "gradient accumulation",
+    "finite difference",
+    "recurrent update"
+  ],
+  "operation": {
+    "kind": "scalar-elman-rnn-bptt",
+    "steps": 3,
+    "activation": "relu",
+    "loss": "half-squared-error",
+    "parameter_sharing": "all-steps"
+  },
+  "initial_state": 0,
+  "inputs": [1, 2, 0],
+  "target": 0,
+  "parameters": {
+    "input_weight": 2,
+    "recurrent_weight": 0.5,
+    "bias": -1
+  },
+  "learning_rate": 0.1,
+  "finite_difference_epsilon": 1e-6,
+  "expected": {
+    "forward": {
+      "preactivations": [1, 3.5, 0.75],
+      "states": [1, 3.5, 0.75],
+      "prediction": 0.75,
+      "loss": 0.28125
+    },
+    "backward_steps": [
+      {
+        "time": 2,
+        "direct_loss_gradient": 0.75,
+        "future_state_gradient": 0,
+        "state_gradient": 0.75,
+        "relu_derivative": 1,
+        "preactivation_gradient": 0.75,
+        "input_weight_gradient": 0,
+        "recurrent_weight_gradient": 2.625,
+        "bias_gradient": 0.75,
+        "previous_state_gradient": 0.375
+      },
+      {
+        "time": 1,
+        "direct_loss_gradient": 0,
+        "future_state_gradient": 0.375,
+        "state_gradient": 0.375,
+        "relu_derivative": 1,
+        "preactivation_gradient": 0.375,
+        "input_weight_gradient": 0.75,
+        "recurrent_weight_gradient": 0.375,
+        "bias_gradient": 0.375,
+        "previous_state_gradient": 0.1875
+      },
+      {
+        "time": 0,
+        "direct_loss_gradient": 0,
+        "future_state_gradient": 0.1875,
+        "state_gradient": 0.1875,
+        "relu_derivative": 1,
+        "preactivation_gradient": 0.1875,
+        "input_weight_gradient": 0.1875,
+        "recurrent_weight_gradient": 0,
+        "bias_gradient": 0.1875,
+        "previous_state_gradient": 0.09375
+      }
+    ],
+    "gradient_totals": {
+      "input_weight": 0.9375,
+      "recurrent_weight": 3,
+      "bias": 1.3125,
+      "initial_state": 0.09375
+    },
+    "gradient_check": {
+      "numerical": {
+        "input_weight": 0.9375000001310418,
+        "recurrent_weight": 3.000000000086267,
+        "bias": 1.3125000000446807
+      },
+      "absolute_errors": {
+        "input_weight": 1.3104184404255648e-10,
+        "recurrent_weight": 8.626699354863376e-11,
+        "bias": 4.46807035814345e-11
+      },
+      "max_absolute_error": 1.3104184404255648e-10
+    },
+    "update": {
+      "parameters": {
+        "input_weight": 1.90625,
+        "recurrent_weight": 0.2,
+        "bias": -1.13125
+      },
+      "preactivations": [0.775, 2.83625, -0.564],
+      "states": [0.775, 2.83625, 0],
+      "loss": 0
+    }
+  }
+}

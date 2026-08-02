@@ -1,8 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
+import { AttentionWorkbench } from "./AttentionWorkbench.js";
+import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
+import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
+import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
+import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
+import { ResidualWorkbench } from "./ResidualWorkbench.js";
+import { StructuredWorkbench } from "./StructuredWorkbench.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import {
   loss,
@@ -167,7 +176,9 @@ function groupColor(group: string | undefined, groups: string[]): string {
 }
 
 export function App() {
-  const [workbench, setWorkbench] = useState<"microscope" | "linear" | "hidden">("microscope");
+  const [workbench, setWorkbench] = useState<
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep"
+  >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
   const [activationKind, setActivationKind] = useState<ActivationKind>("linear");
@@ -271,6 +282,24 @@ export function App() {
           <p className="eyebrow">
             {workbench === "microscope"
               ? "No hidden magic"
+              : workbench === "optimization"
+                ? "Trust, then independently verify"
+              : workbench === "convolution"
+                ? "One detector, every position"
+              : workbench === "image-cnn"
+                ? "Channels become features"
+              : workbench === "residual"
+                ? "Deep route, short route"
+              : workbench === "recurrent"
+                ? "Memory becomes an input"
+              : workbench === "attention"
+                ? "Every token asks and matches"
+              : workbench === "representation"
+                ? "Compress, then reconstruct"
+              : workbench === "structured"
+                ? "Structure shapes computation"
+              : workbench === "deep"
+                ? "Scale shapes forward and backward signals"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -287,6 +316,13 @@ export function App() {
               Microscope
             </button>
             <button
+              className={workbench === "optimization" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("optimization")}
+            >
+              Optimization
+            </button>
+            <button
               className={workbench === "linear" ? "mode-button mode-button--active" : "mode-button"}
               type="button"
               onClick={() => setWorkbench("linear")}
@@ -300,10 +336,84 @@ export function App() {
             >
               Hidden Layer
             </button>
+            <button
+              className={workbench === "convolution" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("convolution")}
+            >
+              Spatial
+            </button>
+            <button
+              className={workbench === "image-cnn" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("image-cnn")}
+            >
+              Image CNN
+            </button>
+            <button
+              className={workbench === "residual" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("residual")}
+            >
+              Residual
+            </button>
+            <button
+              className={workbench === "recurrent" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("recurrent")}
+            >
+              Recurrent
+            </button>
+            <button
+              className={workbench === "attention" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("attention")}
+            >
+              Attention
+            </button>
+            <button
+              className={workbench === "representation" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("representation")}
+            >
+              Representation
+            </button>
+            <button
+              className={workbench === "structured" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("structured")}
+            >
+              Structured
+            </button>
+            <button
+              className={workbench === "deep" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("deep")}
+            >
+              Deep Training
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
               <>forward {"->"} <strong>loss</strong> {"->"} gradients {"->"} update</>
+            ) : workbench === "optimization" ? (
+              <>loss surface {"->"} <strong>gradient check</strong> {"->"} batch strategy</>
+            ) : workbench === "convolution" ? (
+              <>window × <strong>shared kernel</strong> {"->"} feature</>
+            ) : workbench === "image-cnn" ? (
+              <>channels {"->"} <strong>normalize + ReLU</strong> {"->"} pool</>
+            ) : workbench === "residual" ? (
+              <>local layers + <strong>identity skip</strong> {"->"} wider field</>
+            ) : workbench === "recurrent" ? (
+              <>input + <strong>previous state</strong> {"->"} next state</>
+            ) : workbench === "attention" ? (
+              <>2 heads {"->"} <strong>join</strong> {"->"} add + norm</>
+            ) : workbench === "representation" ? (
+              <>encode {"->"} <strong>constrained latent</strong> {"->"} reconstruct</>
+            ) : workbench === "structured" ? (
+              <>connections {"->"} <strong>shared rule</strong> {"->"} updated state</>
+            ) : workbench === "deep" ? (
+              <>initialize {"->"} <strong>gradient flow</strong> {"->"} stabilize</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -315,6 +425,24 @@ export function App() {
 
       {workbench === "microscope" ? (
         <TrainingStepMicroscope />
+      ) : workbench === "optimization" ? (
+        <OptimizationWorkbench />
+      ) : workbench === "convolution" ? (
+        <ConvolutionWorkbench />
+      ) : workbench === "image-cnn" ? (
+        <ImageCnnWorkbench />
+      ) : workbench === "residual" ? (
+        <ResidualWorkbench />
+      ) : workbench === "recurrent" ? (
+        <RecurrentWorkbench />
+      ) : workbench === "attention" ? (
+        <AttentionWorkbench />
+      ) : workbench === "representation" ? (
+        <RepresentationWorkbench />
+      ) : workbench === "structured" ? (
+        <StructuredWorkbench />
+      ) : workbench === "deep" ? (
+        <DeepTrainingWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

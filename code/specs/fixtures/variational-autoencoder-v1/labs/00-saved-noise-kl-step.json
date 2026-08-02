@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "id": "saved-noise-kl-step",
+  "title": "Sample one latent number and balance reconstruction with KL",
+  "question": "How does saved Gaussian noise keep a variational sample differentiable, and how does beta trade reconstruction against a sampleable prior?",
+  "absolute_tolerance": 1e-9,
+  "concepts": [
+    "variational autoencoder",
+    "Gaussian latent variable",
+    "reparameterization trick",
+    "KL divergence",
+    "beta-VAE objective",
+    "central finite differences"
+  ],
+  "operation": {
+    "kind": "scalar-variational-autoencoder-step",
+    "input_width": 1,
+    "latent_width": 1,
+    "output_width": 1,
+    "posterior": "diagonal-gaussian",
+    "sampling": "reparameterization-with-saved-epsilon",
+    "decoder_activation": "identity",
+    "reconstruction_loss": "half-squared-error",
+    "kl_prior": "standard-normal",
+    "objective": "beta-vae",
+    "trainable_parameters": ["encoder.mean", "encoder.log_variance", "decoder"],
+    "update": "sgd"
+  },
+  "input": 1,
+  "encoder": {
+    "mean": { "weight": 0.4, "bias": 0 },
+    "log_variance": { "weight": 0, "bias": 0 }
+  },
+  "decoder": { "weight": 1, "bias": 0 },
+  "sample": { "epsilon": 0.5 },
+  "objective": { "beta": 0.1 },
+  "optimizer": { "learning_rate": 0.1 },
+  "expected": {
+    "forward": {
+      "mean_product": 0.4,
+      "mean": 0.4,
+      "log_variance_product": 0,
+      "log_variance": 0,
+      "variance": 1,
+      "standard_deviation": 1,
+      "epsilon": 0.5,
+      "noise_contribution": 0.5,
+      "latent": 0.9,
+      "decoder_product": 0.9,
+      "reconstruction": 0.9,
+      "error": -0.1,
+      "reconstruction_loss": 0.005,
+      "mean_squared": 0.16,
+      "kl": 0.08,
+      "weighted_kl": 0.008,
+      "total_loss": 0.013
+    },
+    "backward": {
+      "reconstruction_gradient": -0.1,
+      "decoder_weight_gradient": -0.09,
+      "decoder_bias_gradient": -0.1,
+      "latent_gradient": -0.1,
+      "reconstruction_mean_gradient": -0.1,
+      "reconstruction_log_variance_gradient": -0.025,
+      "kl_mean_gradient": 0.4,
+      "kl_log_variance_gradient": 0,
+      "weighted_kl_mean_gradient": 0.04,
+      "weighted_kl_log_variance_gradient": 0,
+      "mean_gradient": -0.06,
+      "log_variance_gradient": -0.025,
+      "mean_weight_gradient": -0.06,
+      "mean_bias_gradient": -0.06,
+      "log_variance_weight_gradient": -0.025,
+      "log_variance_bias_gradient": -0.025
+    },
+    "gradient_check": {
+      "epsilon": 1e-6,
+      "parameter_order": ["encoder.mean.weight", "encoder.mean.bias", "encoder.log_variance.weight", "encoder.log_variance.bias", "decoder.weight", "decoder.bias"],
+      "analytical": [-0.06, -0.06, -0.025, -0.025, -0.09, -0.1],
+      "numerical": [-0.06000000000311312, -0.06000000000311312, -0.025000000007657786, -0.025000000007657786, -0.09000000000293495, -0.10000000000287557],
+      "max_absolute_error": 7.657791067927633e-12
+    },
+    "updated_parameters": {
+      "encoder": {
+        "mean": { "weight": 0.406, "bias": 0.006 },
+        "log_variance": { "weight": 0.0025, "bias": 0.0025 }
+      },
+      "decoder": { "weight": 1.009, "bias": 0.01 }
+    },
+    "post_update": {
+      "mean_product": 0.406,
+      "mean": 0.412,
+      "log_variance_product": 0.0025,
+      "log_variance": 0.005,
+      "variance": 1.005012520859401,
+      "standard_deviation": 1.0025031276057952,
+      "epsilon": 0.5,
+      "noise_contribution": 0.5012515638028976,
+      "latent": 0.9132515638028976,
+      "decoder_product": 0.9214708278771237,
+      "reconstruction": 0.9314708278771237,
+      "error": -0.06852917212287635,
+      "reconstruction_loss": 0.002348123715923406,
+      "mean_squared": 0.16974400000000003,
+      "kl": 0.08487826042970054,
+      "weighted_kl": 0.008487826042970053,
+      "total_loss": 0.01083594975889346
+    }
+  }
+}

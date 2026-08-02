@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/tiny-message-passing-v1.json",
+  "title": "Tiny graph message passing V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "concepts", "operation", "node_features", "edges", "parameters", "expected"],
+  "properties": {
+    "schema_version": {"const": 1}, "id": {"type": "string", "minLength": 1}, "title": {"type": "string", "minLength": 1}, "question": {"type": "string", "minLength": 1},
+    "absolute_tolerance": {"type": "number", "exclusiveMinimum": 0},
+    "concepts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "operation": {"type": "object", "additionalProperties": false, "required": ["kind", "edge_mode", "message", "aggregation", "update", "round"], "properties": {"kind": {"const": "tiny-graph-message-passing"}, "edge_mode": {"const": "undirected-expanded-both-directions"}, "message": {"const": "source-feature-times-shared-weight"}, "aggregation": {"const": "sum"}, "update": {"const": "shared-affine-plus-relu"}, "round": {"const": "synchronous"}}},
+    "node_features": {"type": "array", "minItems": 2, "items": {"type": "number"}},
+    "edges": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/edge"}},
+    "parameters": {"$ref": "#/$defs/parameters"},
+    "expected": {"type": "object", "additionalProperties": false, "required": ["directed_messages", "node_updates", "output_features"], "properties": {"directed_messages": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/message"}}, "node_updates": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/update"}}, "output_features": {"type": "array", "minItems": 2, "items": {"type": "number"}}}}
+  },
+  "$defs": {
+    "edge": {"type": "object", "additionalProperties": false, "required": ["source", "target"], "properties": {"source": {"type": "integer", "minimum": 0}, "target": {"type": "integer", "minimum": 0}}},
+    "parameters": {"type": "object", "additionalProperties": false, "required": ["message_weight", "self_weight", "bias"], "properties": {"message_weight": {"type": "number"}, "self_weight": {"type": "number"}, "bias": {"type": "number"}}},
+    "message": {"type": "object", "additionalProperties": false, "required": ["source", "target", "source_feature", "message_weight", "message"], "properties": {"source": {"type": "integer"}, "target": {"type": "integer"}, "source_feature": {"type": "number"}, "message_weight": {"type": "number"}, "message": {"type": "number"}}},
+    "update": {"type": "object", "additionalProperties": false, "required": ["node", "old_feature", "incoming", "aggregate", "self_contribution", "bias", "preactivation", "output_feature"], "properties": {"node": {"type": "integer"}, "old_feature": {"type": "number"}, "incoming": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/message"}}, "aggregate": {"type": "number"}, "self_contribution": {"type": "number"}, "bias": {"type": "number"}, "preactivation": {"type": "number"}, "output_feature": {"type": "number", "minimum": 0}}}
+  }
+}
