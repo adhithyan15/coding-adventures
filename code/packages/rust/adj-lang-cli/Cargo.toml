@@ -24,4 +24,5 @@ logic-core = { path = "../logic-core" }
 cli-builder = { path = "../cli-builder" }
 
 [dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
 serde_json = "1"

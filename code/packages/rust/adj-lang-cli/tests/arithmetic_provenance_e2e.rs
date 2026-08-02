@@ -1,5 +1,6 @@
 //! End-to-end CAS projection and verification for the arithmetic stdlib root.
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -11,27 +12,60 @@ fn repo_root() -> PathBuf {
         .to_path_buf()
 }
 
+fn read_cas_object(root: &Path, digest: &str) -> Vec<u8> {
+    assert_eq!(digest.len(), 64, "CAS digest must be SHA-256 hex");
+    let path = root
+        .join("code/specs/data/adj-stdlib-provenance/cas/objects")
+        .join(&digest[..2])
+        .join(&digest[2..]);
+    let bytes = std::fs::read(&path).unwrap_or_else(|error| {
+        panic!("read CAS object {}: {error}", path.display());
+    });
+    assert_eq!(
+        coding_adventures_sha256::sha256_hex(&bytes),
+        digest,
+        "CAS object bytes must match their fanout path"
+    );
+    bytes
+}
+
+fn project_manifest_snapshots(root: &Path, snapshots: &Path) -> usize {
+    std::fs::create_dir_all(snapshots).expect("create snapshot directory");
+    let manifest_path = root.join("code/specs/data/adj-stdlib-provenance/manifest.json");
+    let manifest: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&manifest_path).expect("read provenance manifest"))
+            .expect("parse provenance manifest");
+    let bundle_hashes = manifest["bundle_hashes"]
+        .as_array()
+        .expect("bundle hash array");
+    let mut snapshot_hashes = BTreeSet::new();
+    for bundle_hash in bundle_hashes {
+        let bundle_hash = bundle_hash.as_str().expect("bundle hash string");
+        let bundle: serde_json::Value = serde_json::from_slice(&read_cas_object(root, bundle_hash))
+            .expect("parse provenance bundle");
+        for clause in bundle["clauses"].as_array().expect("bundle clauses") {
+            snapshot_hashes.insert(
+                clause["snapshot_sha256"]
+                    .as_str()
+                    .expect("clause snapshot hash")
+                    .to_owned(),
+            );
+        }
+    }
+    for digest in &snapshot_hashes {
+        std::fs::write(snapshots.join(digest), read_cas_object(root, digest))
+            .expect("project CAS snapshot");
+    }
+    snapshot_hashes.len()
+}
+
 #[test]
 fn arithmetic_bundle_projects_and_fully_verifies_all_four_queries() {
     let root = repo_root();
     let snapshots =
         std::env::temp_dir().join(format!("adj_arithmetic_provenance_{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&snapshots);
-
-    let python = if cfg!(windows) { "python" } else { "python3" };
-    let projection = Command::new(python)
-        .current_dir(&root)
-        .arg("code/scripts/adj_stdlib_provenance.py")
-        .arg("project")
-        .arg("--output")
-        .arg(&snapshots)
-        .output()
-        .expect("run offline provenance projection");
-    assert!(
-        projection.status.success(),
-        "projection failed: {}",
-        String::from_utf8_lossy(&projection.stdout)
-    );
+    assert_eq!(project_manifest_snapshots(&root, &snapshots), 5);
 
     let program = "code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.query.adj";
     let execution = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
