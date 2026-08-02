@@ -126,6 +126,13 @@
       "family": "Iranian",
       "script": "perso-arabic",
       "file": "persian.pdf"
+    },
+    {
+      "id": "urdu",
+      "name": "Urdu",
+      "family": "Indo-Aryan",
+      "script": "urdu-nastaliq",
+      "file": "urdu.pdf"
     }
   ]
 }
