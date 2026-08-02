@@ -1946,6 +1946,14 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(gate_drain_overlap_capacitance) = params.get("CGDO") {
+            if !gate_drain_overlap_capacitance.is_finite() || *gate_drain_overlap_capacitance < 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET CGDO must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
