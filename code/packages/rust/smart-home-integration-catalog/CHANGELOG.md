@@ -1,5 +1,7 @@
 # Changelog
 
+- Upgrade Blue Iris with permission-probed, readback-verified manual recording
+  and bounded PTZ controls over the authenticated local JSON session host.
 - Add first-party Blue Iris local HTTPS challenge-response authentication and
   read-only NVR/camera health inspection.
 - Record capability-probed, queue-aware Axis preset recall and bounded PTZ
