@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C06-dative-ku
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 310
 chapter: 6
 type: word
 headword: -కు
@@ -10,19 +13,33 @@ prerequisites: [TE-C05-practice, TE-C03-nenu, TE-C02-peru]
 sounds: [retroflex-contrast]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian marks case by ADDING a suffix that means one thing and stays visible at the seam — unlike Latin, where a fused ending like -īs carries case AND number AND declension together and doesn't even settle which case (dative or ablative); -ku is the shared Dravidian dative, cousin of Tamil -ukku, Kannada -ge, Malayalam -ikku"
-est_minutes: 4
+duration:
+  max_seconds: 290
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02]
+practises:
+  knowledge: [TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C03-nenu, TE-C02-peru, TE-C05-practice]
 ---
 
 # -కు (-ku) — "to, for"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first **case ending**. English puts "to" in **front** as its own
 word. Telugu sticks it on the **back** — and that difference is the biggest
 structural fact about the language.
 
-## Adding it on
+## You'll want to know: Adding it on
+<!-- hl-knowledge: introduces=[TE-LEX-C06-DATIVE-KU-01]; assesses=[] -->
 
 | word | + -ku | meaning |
 |---|---|---|
@@ -39,7 +56,8 @@ And with "I", which changes its body first:
 *Nēnu* becomes *nā-* before the ending. Nouns don't do this; they just take the
 suffix.
 
-## Why this matters
+## Grammar Lens: Why this matters
+<!-- hl-knowledge: introduces=[TE-GRAMMAR-C06-DATIVE-KU-02]; assesses=[] -->
 
 | | Telugu **-ku** | a Latin ending like **-īs** |
 |---|---|---|
@@ -57,6 +75,7 @@ That's what "**agglutinative**" means, and it's why Telugu words grow long witho
 growing hard: they are **built**, not memorised.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*pēru* … *pēruku*"]
@@ -65,6 +84,7 @@ growing hard: they are **built**, not memorised.
 - [YOU SAY: the principle — "one suffix, one meaning, visible seam"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02] -->
 
 [PAUSE 3s] What does **-కు** mean? ("**To**" or "**for**.") Where does it go? (**On
 the end** of the noun.) What is "to me"? (**నాకు** *nāku* — *nēnu* shrinks to *nā-*

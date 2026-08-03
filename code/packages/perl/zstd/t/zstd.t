@@ -1,8 +1,51 @@
 use strict;
 use warnings;
 use Test2::V0;
+use File::Temp qw(tempfile);
 
 use CodingAdventures::Zstd qw(compress decompress);
+
+# ============================================================================
+# CLI interop helpers (TC-9)
+# ============================================================================
+# These wrap the real `zstd` CLI binary via a plain `system()` call, redirecting
+# stdout to a temp file (rather than backticks/shell pipes) so binary output
+# is never mangled by shell interpretation. Tests using these helpers SKIP
+# (not fail) when the `zstd` binary is not on PATH, since dev/CI environments
+# vary — this mirrors the sibling Java/Kotlin ports' interop tests.
+
+# _zstd_cli_available returns true iff `zstd --version` runs successfully.
+sub _zstd_cli_available {
+    my $rc = system('zstd --version >/dev/null 2>&1');
+    return $rc == 0;
+}
+
+# _run_zstd runs `zstd @$args_ref -f -q -o <tmpfile> <input_path>` (list-form
+# system(), never a shell, so binary data can never be mangled by shell
+# interpretation) against a temp file holding $input_bytes, and returns the
+# captured output bytes. Dies on nonzero exit.
+sub _run_zstd {
+    my ($args_ref, $input_bytes) = @_;
+
+    my ($in_fh, $in_path) = tempfile(SUFFIX => '.bin', UNLINK => 1);
+    binmode $in_fh;
+    print $in_fh $input_bytes;
+    close $in_fh;
+
+    my (undef, $out_path) = tempfile(SUFFIX => '.bin', UNLINK => 1);
+
+    my @cmd = ('zstd', @$args_ref, '-f', '-q', '-o', $out_path, $in_path);
+    my $rc = system(@cmd);
+    die "zstd CLI failed (exit " . ($rc >> 8) . "): @cmd\n" if $rc != 0;
+
+    open(my $read_fh, '<', $out_path) or die "cannot read $out_path: $!\n";
+    binmode $read_fh;
+    local $/;
+    my $result = <$read_fh>;
+    close $read_fh;
+
+    return $result;
+}
 
 # ============================================================================
 # TC-1: Empty round-trip
@@ -133,11 +176,69 @@ subtest 'TC-8: 300 KB repetitive text' => sub {
 };
 
 # ============================================================================
-# TC-9: Bad magic → exception
+# TC-9: Cross-language / interoperability (CMP07-zstd.md spec TC-9)
+# ============================================================================
+# This is the test that actually proves the wire format is real RFC 8878, not
+# just a self-consistent internal format — a codec whose encoder and decoder
+# always agree with each other can still be silently wrong (see lessons.md
+# Lesson 96 for exactly this shape of bug in the sibling java/zstd and
+# rust/zstd ports: a fabricated two-pass FSE table-spread algorithm and a
+# wrong per-sequence field order that both round-tripped fine against
+# themselves but were rejected by the real `zstd` CLI with "Data corruption
+# detected"). Skipped (not failed) when the `zstd` binary isn't on PATH,
+# since CI/dev environments vary.
+#
+# Both directions must work:
+#   1. Compress with ours, decompress with the real `zstd -d` CLI.
+#   2. Compress with the real `zstd` CLI, decompress with ours (this also
+#      exercises our decoder's handling of a real Content_Checksum_Flag=1
+#      frame, since `zstd` enables checksums by default — see Lesson 95).
+
+subtest 'TC-9: real zstd CLI interop' => sub {
+    skip_all('zstd CLI not found on PATH — skipping interop test')
+        unless _zstd_cli_available();
+
+    my $text = "the quick brown fox jumps over the lazy dog " x 25;
+
+    # ── Direction 1: compress with ours, decompress with `zstd -d` ────────
+    my $our_compressed = compress($text);
+    my $decoded_by_cli = _run_zstd(['-d'], $our_compressed);
+    is($decoded_by_cli, $text, "real zstd -d correctly decodes our compressed output");
+
+    # ── Direction 2: compress with `zstd`, decompress with ours ───────────
+    my $their_compressed = _run_zstd([], $text);
+    my $decoded_by_us    = decompress($their_compressed);
+    is($decoded_by_us, $text, "our decompress() correctly decodes real zstd's compressed output");
+};
+
+# ============================================================================
+# RT-11: CLI interop with a high sequence count (2-byte seq-count boundary)
+# ============================================================================
+# A repeating 6-byte cycle across 9000 bytes gives LZSS plenty of short,
+# distinct matches — comfortably more than 128 sequences in one block, which
+# is the exact boundary where the sequence-count wire encoding switches from
+# its 1-byte form to its 2-byte form (RFC 8878 §3.1.1.3.1). Not one of the
+# spec's 10 mandatory TCs; extra regression coverage alongside TC-9.
+
+subtest 'RT-11: CLI interop, high sequence count' => sub {
+    skip_all('zstd CLI not found on PATH — skipping interop test')
+        unless _zstd_cli_available();
+
+    my $src   = "ABCDEF";
+    my $input = $src x int(9000 / length($src));
+
+    my $our_compressed = compress($input);
+    my $decoded_by_cli = _run_zstd(['-d'], $our_compressed);
+    is($decoded_by_cli, $input,
+       "real zstd -d correctly decodes our high-sequence-count output");
+};
+
+# ============================================================================
+# ERR-1: Bad magic → exception
 # ============================================================================
 # A frame with the wrong magic number must die (not silently produce garbage).
 
-subtest 'TC-9: bad magic dies' => sub {
+subtest 'ERR-1: bad magic dies' => sub {
     # Replace magic with 0xDEADBEEF (LE bytes: DE AD BE EF)
     my $bad = "\xDE\xAD\xBE\xEF" . "\x00" x 20;
     my $result = eval { decompress($bad); 1 };

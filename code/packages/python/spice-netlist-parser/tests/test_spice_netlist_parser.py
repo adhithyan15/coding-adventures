@@ -842,6 +842,38 @@ def test_rejects_invalid_diode_thermal_voltage(parameter: str, value: str) -> No
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("2", 2.0)])
+def test_accepts_valid_diode_emission_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(N={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.N
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_emission_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode N must be finite and positive"):
+        parse_netlist(f".model clamp D(N={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("5.5", 5.5)])
+def test_accepts_valid_diode_breakdown_voltage(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(BV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.BV
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_breakdown_voltage(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode BV must be finite and positive"):
+        parse_netlist(f".model clamp D(BV={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """

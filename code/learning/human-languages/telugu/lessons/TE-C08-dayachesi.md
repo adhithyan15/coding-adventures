@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C08-dayachesi
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 350
 chapter: 8
 type: word
 headword: దయచేసి
@@ -9,18 +12,32 @@ prerequisites: [TE-C01-avunu]
 sounds: [telugu-vowel-sign-ee, telugu-vowel-sign-i, telugu-ca]
 roots: [daya-compassion]
 etymology_hook: "దయచేసి = 'having done compassion' — Telugu asks please with daya, like Tamil, Kannada, Arabic faḍl and Hindi kṛpā"
-est_minutes: 4
+duration:
+  max_seconds: 255
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04]
+practises:
+  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: polite
+variety: standard-colloquial
 reviews_of: [TE-C01-avunu]
 ---
 
 # దయచేసి (dayacēsi) — please (having done compassion)
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Telugu's "please" carries a whole small sentence inside it: "having
 **done** (me) a compassion."
 
-## The word
+## You'll want to know: The word
+<!-- hl-knowledge: introduces=[TE-LEX-C08-DAYACHESI-01]; assesses=[] -->
 
 **దయచేసి** = **please**, literally "**having done kindness / compassion**." Two
 pieces:
@@ -36,7 +53,8 @@ It is the twin of **Tamil** *tayavu seytu* ("**do** the kindness") — both use 
 compassion"). Further off, **Arabic** *min faḍlik* ("from your **grace**") and
 **Hindi** *kṛpayā* (from *kṛpā*, "**compassion**") ask in the very same spirit.
 
-## The Dravidian family, side by side
+## The word, taken apart - The Dravidian family, side by side
+<!-- hl-knowledge: introduces=[TE-ETYMON-C08-DAYACHESI-02]; assesses=[] -->
 
 **daya** + a light verb, four ways:
 
@@ -45,14 +63,16 @@ compassion"). Further off, **Arabic** *min faḍlik* ("from your **grace**") and
 - Kannada **ದಯವಿಟ್ಟು** *daya**viṭṭu*** — compassion **+ having placed**
 - Malayalam **ദയവായി** *daya**vāyi*** — compassion **+ as / having become**
 
-## Be honest about how it's used
+## Why it's said this way: Be honest about how it's used
+<!-- hl-knowledge: introduces=[TE-PRAGMATICS-C08-DAYACHESI-03]; assesses=[] -->
 
 Honestly: the standalone word is somewhat **formal / emphatic**. Day-to-day,
 Telugu politeness rides on the **respectful command** ending **‑ండి** (*-aṇḍi*):
 **కూర్చోండి** (*kūrcōṇḍi*) "please sit," **చెప్పండి** (*ceppaṇḍi*) "please tell me."
 That *-aṇḍi* is already "please." Put **దయచేసి** in front to warm it further.
 
-## Sound & structure point
+## Script you'll notice: Sound & structure point
+<!-- hl-knowledge: introduces=[TE-SCRIPT-C08-DAYACHESI-04]; assesses=[] -->
 
 The middle syllable **చే** is *ca* wearing the **long‑ē** sign **‑ే** (the
 counterpart of the short‑e sign **‑ె**), giving *cē*; then **సి** is *sa* + the
@@ -61,6 +81,7 @@ vowel's length and quality by the little sign riding on the consonant — the
 consonant stays put, the vowel-sign changes the tune.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "daya" — compassion — then "cēsi," having done]
@@ -68,6 +89,7 @@ consonant stays put, the vowel-sign changes the tune.
 - [YOU SAY: the everyday way — the verb ending: "kūrcōṇḍi" = please sit]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04] -->
 
 [PAUSE 3s] What is the Telugu word for please? (**దయచేసి** *dayacēsi*.) What do
 its pieces mean? ("**Compassion**" *daya* + "**having done**" *cēsi*.) Which

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C30-subha-sayantram
+spine_node: SPINE-TIME-OF-DAY
+sequence: 580
 chapter: 30
 type: phrase
 headword: శుభ సాయంత్రం
@@ -9,26 +12,41 @@ prerequisites: [TE-C27-sayantram]
 sounds: [telugu-sha, telugu-anusvara]
 roots: [su-good, sanskrit-sayam-evening]
 etymology_hook: "శుభ సాయంత్రం (śubha sāyantram, 'good evening') pairs శుభ with సాయంత్రం (TE-C27's word with the striking distant cognate to Latin sērus/French soir); unlike GREETING-MORNING's శుభోదయం, which rested on ONE dramatic, low-authority source claiming displacement by English, TWO independently fetched sources here agree it's genuinely, commonly used in BOTH formal and informal contexts — a real difference in evidence quality, worth noting explicitly rather than treating every 'good ___' greeting in this arc the same way; నమస్కారం remains confirmed as a time-independent, any-occasion alternative rather than something that has displaced this specific greeting"
-est_minutes: 4
+duration:
+  max_seconds: 255
+requires:
+  knowledge: [TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02]
+introduces:
+  knowledge: [TE-ETYMON-C30-SUBHA-SAYANTRAM-01, TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02]
+practises:
+  knowledge: [TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-ETYMON-C30-SUBHA-SAYANTRAM-01, TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal-and-neutral
+variety: standard-colloquial
 reviews_of: [TE-C27-sayantram]
 ---
 
 # శుభ సాయంత్రం (śubha sāyantram) — a claim that actually holds up on checking
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->
 
 [PAUSE 2s] Last lesson's morning greeting rested on one dramatic,
 shaky source. This one is different — and the difference itself is
 worth noticing.
 
-## శుభ సాయంత్రం — paired with సాయంత్రం's own striking story
+## The word, taken apart - శుభ సాయంత్రం — paired with సాయంత్రం's own striking story
+<!-- hl-knowledge: introduces=[TE-ETYMON-C30-SUBHA-SAYANTRAM-01]; assesses=[] -->
 
 **శుభ సాయంత్రం** (**śubha sāyantram**) — "**good evening**" — pairs
 **శుభ** ("good") with **సాయంత్రం** (already met, Chapter 27 — the word
 whose PIE root, *seh₁-, turned out to be a genuine distant cognate of
 Latin's *sērus*, and so of French **soir** and Italian **sera**).
 
-## Be honest: this claim actually checked out, unlike the last one
+## Why it's said this way: Be honest: this claim actually checked out, unlike the last one
+<!-- hl-knowledge: introduces=[TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02]; assesses=[] -->
 
 Here's the honest contrast worth drawing explicitly: last lesson's
 **శుభోదయం** rested on **one** dramatic, low-authority source claiming
@@ -48,6 +66,7 @@ just as honest about a claim holding up as about one that doesn't.
 English reportedly displaced శుభోదయం.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-ETYMON-C30-SUBHA-SAYANTRAM-01, TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubha sāyantram" — "good evening," śubha + sāyantram]
@@ -57,6 +76,7 @@ English reportedly displaced శుభోదయం.
   replacement here]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02, TE-ETYMON-C30-SUBHA-SAYANTRAM-01, TE-PRAGMATICS-C30-SUBHA-SAYANTRAM-02] -->
 
 [PAUSE 3s] What word does శుభ సాయంత్రం pair with, and what's that
 word's own striking cross-language story? (**సాయంత్రం** — a genuine

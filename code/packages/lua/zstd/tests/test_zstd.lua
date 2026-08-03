@@ -14,6 +14,15 @@
 --   TC-9  Bad magic number rejected
 --   TC-10 Truncated input (magic only, no FHD) rejected
 --
+-- NOTE: the local TC-9/TC-10/TC-11 labels below predate this file's
+-- discovery that the CMP07 spec (code/specs/CMP07-zstd.md) reserves TC-9 for
+-- a *different* test — real cross-implementation interop against the `zstd`
+-- CLI — and TC-10 for a hand-built minimal wire-format frame. Renumbering
+-- the existing (still valuable) local tests is out of scope here; the
+-- spec's TC-9 interop test is added below as its own top-level describe
+-- block, explicitly labelled "spec TC-9" to avoid confusion with the
+-- differently-numbered local block above.
+--
 -- Both compress() and decompress() accept Lua strings and return Lua strings.
 -- LUA_PATH must include both the zstd and lzss src trees; see BUILD.
 --
@@ -332,6 +341,215 @@ describe("CodingAdventures.Zstd", function()
             local ok, result = pcall(function() return zstd.decompress(frame) end)
             assert.is_true(ok, "clean frame should decompress without error")
             assert.are.equal("hello", result)
+        end)
+    end)
+
+    -- =========================================================================
+    -- Spec TC-9: Cross-language / interoperability (real `zstd` CLI)
+    -- =========================================================================
+    --
+    -- code/specs/CMP07-zstd.md TC-9: compress with the standard `zstd` CLI,
+    -- decompress with ours, AND compress with ours, decompress with the
+    -- standard `zstd -d` CLI — both directions must round-trip exactly.
+    --
+    -- Why this matters (see lessons.md Lesson 96): a same-codebase
+    -- round-trip test (compress-then-decompress with our OWN implementation)
+    -- can never catch a systematic, symmetric protocol deviation, because
+    -- both sides of the comparison are wrong in the identical way. Only
+    -- testing against an INDEPENDENT, spec-conformant implementation can.
+    -- This exact bug class (a fabricated two-pass FSE table-spread
+    -- algorithm, wrong per-sequence field order, and a missing
+    -- last-sequence state-update special case) passed every internal
+    -- round-trip test in this package before being fixed, and was only
+    -- caught by a test in this shape.
+    --
+    -- The test is skipped (not failed) if the `zstd` binary isn't on PATH,
+    -- since CLI availability varies by environment.
+
+    describe("Spec TC-9: cross-language interop via real zstd CLI", function()
+        -- shell_ok normalises os.execute's return value across Lua versions:
+        -- Lua 5.1 returns a plain exit-code number (0 = success); Lua 5.2+
+        -- returns (bool_or_nil, "exit"/"signal", code).
+        local function shell_ok(cmd)
+            local a, _, c = os.execute(cmd)
+            if type(a) == "number" then return a == 0 end
+            if type(a) == "boolean" then return a end
+            return c == 0
+        end
+
+        -- shell_quote wraps a string in single quotes for safe POSIX shell
+        -- argument passing, escaping any embedded single quote as '\''.
+        --
+        -- NOTE: Lua's `%q` string.format specifier produces a *Lua
+        -- source-literal* escape (safe for load()), NOT POSIX shell quoting
+        -- — it does not escape `$`, backticks, or other shell-active
+        -- characters inside double quotes. Every path built in this test
+        -- file comes exclusively from os.tmpname() (never external or
+        -- untrusted input), so this wasn't currently exploitable either
+        -- way — but using real shell quoting here, rather than relying on
+        -- %q, keeps that true even if this helper is ever reused with a
+        -- filename or corpus derived from less trusted input.
+        local function shell_quote(s)
+            return "'" .. s:gsub("'", "'\\''") .. "'"
+        end
+
+        local zstd_available = shell_ok("zstd --version >/dev/null 2>&1")
+
+        -- read_file/write_file: binary-safe whole-file I/O, used to shuttle
+        -- data through the real zstd CLI via temp files (not stdin/stdout
+        -- pipes, which are more awkward to keep binary-safe across
+        -- io.popen's platform differences).
+        local function write_file(path, data)
+            local f = assert(io.open(path, "wb"))
+            f:write(data)
+            f:close()
+        end
+
+        local function read_file(path)
+            local f = io.open(path, "rb")
+            if not f then return nil end
+            local data = f:read("*a")
+            f:close()
+            return data
+        end
+
+        -- A high-sequence-count input: semi-repetitive words from a small
+        -- deterministic LCG-driven vocabulary. This exercises many LZ77
+        -- matches (and therefore many FSE-coded sequences, well past a
+        -- single sequence) — the exact shape of input that surfaced the
+        -- three-bug FSE conformance failure described in lessons.md
+        -- Lesson 96. A trivial one-or-two-sequence input is NOT sufficient:
+        -- the missing last-sequence-skip bug in particular only misaligns
+        -- the bitstream when there is a sequence *after* the one it
+        -- mishandles.
+        local function build_interop_corpus()
+            local seed = 1234
+            local function rnd(n)
+                seed = (seed * 1103515245 + 12345) % 2147483648
+                return seed % n
+            end
+            local words = {
+                "alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta",
+            }
+            local parts = {}
+            for _ = 1, 3000 do
+                parts[#parts + 1] = words[rnd(#words) + 1]
+                parts[#parts + 1] = " "
+            end
+            return table.concat(parts)
+        end
+
+        it("compresses with ours, decompresses with the real zstd CLI", function()
+            if not zstd_available then
+                pending("zstd CLI not found on PATH; skipping interop test")
+                return
+            end
+
+            local text = build_interop_corpus()
+            local compressed = zstd.compress(text)
+
+            -- Use os.tmpname()'s own paths directly (no derived/concatenated
+            -- filenames): os.tmpname() atomically reserves the path it
+            -- returns, but a path built by appending a suffix to it (e.g.
+            -- `os.tmpname() .. ".zst"`) is never itself atomically reserved
+            -- and would be vulnerable to a symlink race on a shared temp
+            -- directory. The `zstd` CLI doesn't require a `.zst` extension
+            -- when an explicit `-o` output path is given.
+            local in_path  = os.tmpname()
+            local out_path = os.tmpname()
+            write_file(in_path, compressed)
+
+            local ok = shell_ok(string.format(
+                "zstd -d -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
+            local result = ok and read_file(out_path) or nil
+
+            os.remove(in_path)
+            os.remove(out_path)
+
+            assert.is_true(ok, "real zstd CLI failed to decompress our output "
+                .. "(likely FSE sequences-codec non-conformance)")
+            assert.are.equal(text, result,
+                "real zstd CLI decompressed our output to different bytes")
+        end)
+
+        it("compresses with the real zstd CLI, decompresses with ours", function()
+            if not zstd_available then
+                pending("zstd CLI not found on PATH; skipping interop test")
+                return
+            end
+
+            local text = build_interop_corpus()
+
+            local in_path  = os.tmpname()
+            local out_path = os.tmpname()
+            write_file(in_path, text)
+
+            local ok = shell_ok(string.format(
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
+            local cli_compressed = ok and read_file(out_path) or nil
+
+            os.remove(in_path)
+            os.remove(out_path)
+
+            assert.is_true(ok, "real zstd CLI failed to compress the input")
+            assert.is_string(cli_compressed)
+
+            -- The real zstd CLI writes a Content_Checksum by default (FHD
+            -- bit 2 set — see lessons.md Lesson 95). Our decompress() must
+            -- correctly locate and skip that trailing 4-byte checksum
+            -- rather than rejecting it as unexpected trailing data.
+            local decompressed = zstd.decompress(cli_compressed)
+            assert.are.equal(text, decompressed,
+                "our decompress() produced different bytes from real zstd's output")
+        end)
+
+        it("round-trips a plain English sentence through the real zstd CLI (both directions)", function()
+            if not zstd_available then
+                pending("zstd CLI not found on PATH; skipping interop test")
+                return
+            end
+
+            -- The pangram repeated 25 times — deliberately the same corpus
+            -- code/specs/CMP07-zstd.md's TC-9 example uses, and what the
+            -- sibling java/zstd port's tc9CliInterop test uses. Avoid inputs
+            -- with a long run at a single fixed offset (e.g. many repeated
+            -- identical characters back to back): the real zstd CLI's
+            -- encoder will use RFC 8878's Repeat_Offset (R1/R2/R3) shortcut
+            -- codes for those, which this educational codec deliberately
+            -- doesn't implement on either the encode or the decode side
+            -- (matching java/zstd's documented "no repeat-offset shortcuts"
+            -- scope) — decoding one raises a clear "decoded offset
+            -- underflow" error rather than silently misinterpreting it.
+            local text = ("the quick brown fox jumps over the lazy dog "):rep(25)
+
+            -- ours -> CLI
+            local compressed = zstd.compress(text)
+            local in_path  = os.tmpname()
+            local out_path = os.tmpname()
+            write_file(in_path, compressed)
+            local ok1 = shell_ok(string.format(
+                "zstd -d -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
+            local result1 = ok1 and read_file(out_path) or nil
+            os.remove(in_path)
+            os.remove(out_path)
+            assert.is_true(ok1, "real zstd CLI failed to decompress our output")
+            assert.are.equal(text, result1)
+
+            -- CLI -> ours
+            local plain_path = os.tmpname()
+            local cli_zst    = os.tmpname()
+            write_file(plain_path, text)
+            local ok2 = shell_ok(string.format(
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(cli_zst), shell_quote(plain_path)))
+            local cli_bytes = ok2 and read_file(cli_zst) or nil
+            os.remove(plain_path)
+            os.remove(cli_zst)
+            assert.is_true(ok2, "real zstd CLI failed to compress the input")
+            assert.are.equal(text, zstd.decompress(cli_bytes))
         end)
     end)
 

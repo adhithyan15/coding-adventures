@@ -3,6 +3,69 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.2] — 2026-08-03
+
+### Fixed
+
+- **FSE sequences-section codec had three compounding conformance bugs** —
+  none catchable by internal round-trip tests, all found via real `zstd`
+  CLI interop (a sibling audit of `java/zstd` and `rust/zstd` surfaced the
+  same bug class; this package had it too). See lessons.md Lesson 96 for
+  the full writeup.
+  1. `buildDecodeTable` / `buildEncodeTable` spread FSE table symbols using a
+     fabricated two-pass split ("all count>1 symbols first, then all
+     count==1 symbols", both in ascending symbol order) instead of the real
+     algorithm: a SINGLE pass over symbols `0..maxSymbolValue`, placing each
+     symbol's full count immediately when encountered
+     (`FSE_buildDTable_internal`'s low-probability branch in the reference C
+     source). The two-pass version produced a different but internally
+     self-consistent table layout.
+  2. Per-sequence field order was wrong in two ways. A conformant decoder
+     PEEKS all three symbols (LL, OF, ML) from the current states first —
+     a bare table lookup that consumes no bits — THEN reads the value extra
+     bits in order **OF, ML, LL**, THEN updates the states in order
+     **LL, ML, OF**. The previous code combined peek-and-update into one
+     step per field and read/wrote the extras and state-updates in the
+     wrong relative order (and the wrong OF/ML sub-order).
+  3. The state-transition update is skipped entirely after the **last**
+     sequence in a block (there is no "next" sequence to prepare a state
+     for). The encoder's mirror-image first iteration (its reverse loop
+     starts at the semantically last sequence) must derive its starting
+     state directly via a new `fseInitState` helper (mirroring real zstd's
+     `FSE_initCState2`, which writes no bits) instead of a normal
+     bit-flushing `fseEncodeSym` transition. The previous encoder always
+     flushed a transition for every sequence uniformly, writing bits a real
+     decoder would never read and shifting the bit-alignment of everything
+     that followed.
+
+  All three bugs were self-cancelling as long as our own encoder and decoder
+  used the same (wrong) convention — every one of the pre-existing 36 tests,
+  including internal FSE round-trip coverage, passed regardless of which of
+  the three bugs were present, because both sides of every comparison were
+  wrong identically. Only testing against an independent, spec-conformant
+  implementation (the real `zstd` CLI) could catch it.
+- **FHD `Content_Checksum_Flag` documented/commented as bit 4; corrected to
+  bit 2** per RFC 8878 §3.1.1.1 (verified empirically: `zstd -c` emits FHD
+  byte `0x64`, `zstd -c --no-check` emits `0x60` — the differing bit is
+  bit 2). This package always emits `0` for both bits (it never produces a
+  content checksum), so the mislabeling was never a functional bug here —
+  only a stale/incorrect comment — but it's corrected for accuracy. The
+  shared spec (`code/specs/CMP07-zstd.md`) had the same mislabeling and is
+  also corrected. See lessons.md Lesson 95.
+
+### Added
+
+- **Real TC-9 CLI-interop test**, previously missing: the package's
+  `describe("TC-9: ...")` block actually covered bad-magic error handling,
+  not the spec's TC-9 ("Cross-language / interoperability" — compress with
+  the real `zstd` CLI and decompress with ours, and vice versa). That block
+  is renamed to `"bad magic throws"` and a new
+  `"TC-9: cross-language / interoperability (real zstd CLI)"` block is
+  added, shelling out to the real `zstd` binary via `node:child_process` in
+  both directions, plus a regression case pushing a single block's sequence
+  count past 128 (the 1-byte/2-byte wire-format boundary). Both tests are
+  skipped gracefully (not failed) when `zstd` isn't on `PATH`.
+
 ## [0.1.1] — 2026-04-26
 
 ### Fixed

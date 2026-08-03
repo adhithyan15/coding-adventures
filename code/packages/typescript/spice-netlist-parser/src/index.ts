@@ -1166,6 +1166,22 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode VT must be finite and positive");
   }
+  const diodeEmissionCoefficient = params.get("N");
+  if (
+    kind === "D" &&
+    diodeEmissionCoefficient !== undefined &&
+    (!Number.isFinite(diodeEmissionCoefficient) || diodeEmissionCoefficient <= 0.0)
+  ) {
+    throw new NetlistParseError("diode N must be finite and positive");
+  }
+  const diodeBreakdownVoltage = params.get("BV");
+  if (
+    kind === "D" &&
+    diodeBreakdownVoltage !== undefined &&
+    (!Number.isFinite(diodeBreakdownVoltage) || diodeBreakdownVoltage <= 0.0)
+  ) {
+    throw new NetlistParseError("diode BV must be finite and positive");
+  }
   const diodeJunctionCapacitance =
     params.get("CJO") ?? params.get("CJ") ?? params.get("CJ0");
   if (

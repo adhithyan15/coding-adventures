@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C06-dative-subject
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 320
 chapter: 6
 type: phrase
 headword: నాకు తెలుగు వచ్చు
@@ -10,19 +13,33 @@ prerequisites: [TE-C06-dative-ku, TE-C05-nenu-telugu-maatlaadataanu]
 sounds: [gemination-cc]
 roots: [dravidian-dative-ku]
 etymology_hook: "Telugu says knowing a language literally as 'to me it COMES' (vaccu, the verb already taught for 'come') — the experiencer goes in the dative because knowing happens TO you; the same dative-subject construction runs through Tamil, Kannada and Malayalam"
-est_minutes: 4
+duration:
+  max_seconds: 285
+requires:
+  knowledge: [TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02]
+introduces:
+  knowledge: [TE-LEX-C06-DATIVE-SUBJECT-01, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-ETYMON-C06-DATIVE-SUBJECT-03]
+practises:
+  knowledge: [TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02, TE-LEX-C06-DATIVE-SUBJECT-01, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-ETYMON-C06-DATIVE-SUBJECT-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C06-dative-ku, TE-C05-nenu-telugu-maatlaadataanu, TE-C04-vellu]
 ---
 
 # నాకు తెలుగు వచ్చు — "I know Telugu"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02] -->
 
 [PAUSE 2s] Chapter 5 gave you **నేను తెలుగు మాట్లాడతాను** — "**I** speak Telugu."
 Now say "I **know** Telugu." Telugu won't let you use *nēnu* — and the verb it
 uses instead will surprise you.
 
-## The sentence
+## You'll want to know: The sentence
+<!-- hl-knowledge: introduces=[TE-LEX-C06-DATIVE-SUBJECT-01]; assesses=[] -->
 
 > **నాకు తెలుగు వచ్చు.**
 > *nāku telugu vaccu.*
@@ -38,7 +55,8 @@ Two things at once. **You are not the subject** — *nēnu* is gone, moved into 
 dative, and what's left unmarked is *telugu*. And the verb is literally "**to
 come**": a language you know is a thing that **comes to you**.
 
-## Why: things that happen *to* you
+## Grammar Lens: Why: things that happen *to* you
+<!-- hl-knowledge: introduces=[TE-GRAMMAR-C06-DATIVE-SUBJECT-02]; assesses=[] -->
 
 Telugu sorts experiences from actions. Speaking is something you **do**, so Ch. 5
 used *nēnu*. But knowing, liking, wanting, being hungry — these **arrive** at you.
@@ -53,7 +71,8 @@ Telugu marks that by putting the person in the **dative**.
 English keeps one fossil of exactly this: "**methinks**" — *me* is a dative, "it
 seems **to me**." Telugu made it the rule.
 
-## All four sisters do it
+## The word, taken apart - All four sisters do it
+<!-- hl-knowledge: introduces=[TE-ETYMON-C06-DATIVE-SUBJECT-03]; assesses=[] -->
 
 | language | "I know [the language]" | the dative |
 |---|---|---|
@@ -67,6 +86,7 @@ One construction across four languages, with four suffixes that are visibly the
 bones, just as *blanc/bianco/branco* did for Romance.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02, TE-LEX-C06-DATIVE-SUBJECT-01, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-ETYMON-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*nāku telugu vaccu*"]
@@ -75,6 +95,7 @@ bones, just as *blanc/bianco/branco* did for Romance.
 - [YOU SAY: the four cousins — "*-ku · -ukku · -ge · -ikku*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02, TE-LEX-C06-DATIVE-SUBJECT-01, TE-GRAMMAR-C06-DATIVE-SUBJECT-02, TE-ETYMON-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 3s] What does **నాకు తెలుగు వచ్చు** literally say? ("**To-me** Telugu
 **comes**.") Which verb is doing the work, and where did you meet it? (**వచ్చు**
