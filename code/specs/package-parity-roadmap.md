@@ -237,10 +237,12 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
   byte fixtures plus real CLI exit-2 coverage. Merged PR #9572 completed
   TypeScript with strict decoding, exact shared-fixture coverage, and green
-  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Ready PR
-  #9603 is the active Lua child: it validates raw rockspec bytes strictly,
-  consumes both shared fixtures, returns the stable repository-relative
-  diagnostic with real CLI exit code 2, and covers malformed Unicode classes;
+  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Merged PR
+  #9603 completed Lua with strict raw-byte validation, both shared fixtures,
+  the stable repository-relative diagnostic, real CLI exit code 2, malformed
+  Unicode coverage, and green Ubuntu, macOS, and Windows checks. The Perl child
+  is materialized next because its raw-byte boundary is the narrowest remaining
+  resolver and Perl 5.38 is locally available;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
