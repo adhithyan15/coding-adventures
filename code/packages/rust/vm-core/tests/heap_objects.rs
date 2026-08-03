@@ -117,9 +117,11 @@ fn is_null_distinguishes_nil_from_first_object() {
 
 /// A field that itself holds nil, read back through `field_load` with a
 /// `"ref<...>"` type hint (the shape a `cdr` accessor uses), must still read
-/// as null even though it comes back as a `Value::HeapRef` rather than the
-/// top-level `Value::Int(0)` sentinel — `is_null` must treat
-/// `HeapRef::is_null()` as null too, not just literal `Int(0)`.
+/// as null. Under the tag-based decode this round-trips as `Value::Int(0)`
+/// (tag `000`, same as the top-level sentinel), not a `HeapRef` — exercising
+/// the ordinary `Value::Int(0) => true` arm of `is_null`, not the defensive
+/// `HeapRef::is_null()` one (which nothing in `dispatch.rs` currently
+/// produces; see `handle_is_null`'s doc comment).
 #[test]
 fn is_null_recognizes_nil_stored_and_reloaded_through_a_field() {
     assert_eq!(
