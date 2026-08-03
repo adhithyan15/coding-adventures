@@ -160,6 +160,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       let markerPath = environment["VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH"],
       let targetURL = environment["VENTURE_BROWSER_INTERACTION_URL"],
       environment["VENTURE_BROWSER_INTERACTION_LINK_URL"] != nil,
+      environment["VENTURE_BROWSER_INTERACTION_FAILURE_URL"] != nil,
       let startURL = environment["VENTURE_START_URL"]
     else { return }
     interactionAcceptanceStarted = true
@@ -851,22 +852,24 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       (abs(rendered.width - renderBaseline.width) > 0.5
         || abs(rendered.height - renderBaseline.height) > 0.5)
     {
-      writeInteractionResult(
-        [
-          "backend": "swiftui", "status": "interacted",
-          "controls": "back-forward-reload-home", "addressCommit": "native-return",
-          "navigationState": "native-disabled-transitions",
-          "surfaceWheel": "scroll",
-          "surfaceFocus": "native",
-          "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
-          "surfacePointer": "link",
-          "surfaceResize": "native-reflow",
-          "surfaceRepaint": "resized-frame",
-          "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
-          "targetAddress": targetURL, "linkAddress": linkURL,
-          "pageTitle": "Venture link acceptance",
-        ],
-        to: markerPath)
+      guard
+        let failureURL = ProcessInfo.processInfo.environment[
+          "VENTURE_BROWSER_INTERACTION_FAILURE_URL"],
+        performNativeAddressCommit(value: failureURL)
+      else {
+        writeInteractionResult(
+          [
+            "backend": "swiftui", "status": "error",
+            "error": "failed-navigation native address commit unavailable",
+          ],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        self?.verifyFailedNavigation(
+          startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+          failureURL: failureURL, markerPath: markerPath, remaining: 50)
+      }
       return
     }
     guard remaining > 0 else {
@@ -882,6 +885,56 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       self?.verifySurfaceResize(
         startURL: startURL, targetURL: targetURL, linkURL: linkURL,
         markerPath: markerPath, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyFailedNavigation(
+    startURL: String, targetURL: String, linkURL: String, failureURL: String,
+    markerPath: String, remaining: Int
+  ) {
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let address = props?["address"] as? String ?? ""
+    let pageTitle = props?["page-title"] as? String ?? ""
+    let statusText = props?["status-text"] as? String ?? ""
+    let backDisabled = props?["back-disabled"] as? Bool
+    let forwardDisabled = props?["forward-disabled"] as? Bool
+    if address == failureURL, pageTitle == "Venture link acceptance",
+      statusText.hasPrefix("Load failed: HTTP status 503"),
+      backDisabled == false, forwardDisabled == true
+    {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "interacted",
+          "controls": "back-forward-reload-home", "addressCommit": "native-return",
+          "navigationState": "native-disabled-transitions",
+          "failedNavigation": "transaction-retained", "failureStatus": statusText,
+          "failureAddress": failureURL,
+          "surfaceWheel": "scroll", "surfaceFocus": "native",
+          "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
+          "surfacePointer": "link", "surfaceResize": "native-reflow",
+          "surfaceRepaint": "resized-frame",
+          "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
+          "targetAddress": targetURL, "linkAddress": linkURL,
+          "pageTitle": pageTitle,
+        ],
+        to: markerPath)
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": address,
+          "pageTitle": pageTitle, "statusText": statusText,
+          "error": "failed navigation did not preserve the shared browser transaction",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyFailedNavigation(
+        startURL: startURL, targetURL: targetURL, linkURL: linkURL,
+        failureURL: failureURL, markerPath: markerPath, remaining: remaining - 1)
     }
   }
 

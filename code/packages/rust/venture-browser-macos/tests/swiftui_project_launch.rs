@@ -82,6 +82,29 @@ fn serve_html_sequence(titles: Vec<&'static str>, link_url: Option<String>) -> S
     format!("http://{address}/")
 }
 
+fn serve_http_failure() -> String {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("bind failure acceptance server");
+    let address = listener
+        .local_addr()
+        .expect("read failure acceptance address");
+    thread::spawn(move || {
+        let (mut stream, _) = listener.accept().expect("accept failed Venture request");
+        let mut request = [0_u8; 1024];
+        let _ = stream.read(&mut request);
+        let body = "deterministic Venture navigation failure";
+        write!(
+            stream,
+            "HTTP/1.0 503 Service Unavailable\r\nContent-Type: text/plain\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+            body.len()
+        )
+        .expect("write failure response headers");
+        stream
+            .write_all(body.as_bytes())
+            .expect("write failure response body");
+    });
+    format!("http://{address}/")
+}
+
 fn wait_for_marker(child: &mut Child, marker: &Path, description: &str) {
     let deadline = Instant::now() + Duration::from_secs(30);
     while Instant::now() < deadline {
@@ -192,6 +215,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         ],
         None,
     );
+    let failure_url = serve_http_failure();
     let app_log = output.join("swiftui-app.log");
     let log = File::create(&app_log).expect("create SwiftUI app log");
     let mut child = Command::new(project.join(".build/debug/App"))
@@ -201,6 +225,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .env("VENTURE_BROWSER_INTERACTION_URL", &target_url)
         .env("VENTURE_BROWSER_INTERACTION_LINK_URL", &link_url)
+        .env("VENTURE_BROWSER_INTERACTION_FAILURE_URL", &failure_url)
         .env(
             "VENTURE_BROWSER_INTERACTION_ACCEPTANCE_PATH",
             &interaction_marker,
@@ -234,6 +259,8 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"addressCommit\":\"native-return\""));
     assert!(interaction.contains("\"navigationState\":\"native-disabled-transitions\""));
+    assert!(interaction.contains("\"failedNavigation\":\"transaction-retained\""));
+    assert!(interaction.contains("HTTP status 503"));
     assert!(interaction.contains("\"surfaceFocus\":\"native\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
@@ -249,6 +276,10 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
         interaction.contains(&target_url) || interaction.contains(&target_url.replace('/', "\\/"))
     );
     assert!(interaction.contains(&link_url) || interaction.contains(&link_url.replace('/', "\\/")));
+    assert!(
+        interaction.contains(&failure_url)
+            || interaction.contains(&failure_url.replace('/', "\\/"))
+    );
     assert!(interaction.contains("Venture link acceptance"));
     let diagnostics = fs::read_to_string(&app_log).expect("read SwiftUI app log");
     assert!(

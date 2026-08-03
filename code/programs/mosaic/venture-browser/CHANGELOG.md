@@ -4,6 +4,10 @@
 
 ### Added
 
+- Extend generated SwiftUI and WinUI direct interaction acceptance through a
+  failing native address commit, requiring the shared Rust transaction to
+  retain the current page and history while Mosaic reprojects the failure
+  status and attempted address.
 - Strengthen generated SwiftUI direct interaction acceptance to require both
   cold-start history controls to expose their disabled Mosaic state and
   suppress native dispatch before the first navigation.
