@@ -277,6 +277,9 @@ MUST:
 - preserve the `programs` identity segment when a package and program share a
   language and basename, so a program dependency resolves to the package
   instead of collapsing into a self-edge;
+- merge qualified internal dependencies from the selected legacy BUILD file's
+  `# build-tool: deps=` comment with ecosystem metadata, preserving canonical
+  package/program identities and emitting sorted unique edges;
 - reject a resolved self-edge as `DEPENDENCY_SELF_EDGE`, including the
   repository-relative manifest path, package identity, and dependency identity;
 - reject ambiguous manifests, ambiguous aliases, and duplicate package

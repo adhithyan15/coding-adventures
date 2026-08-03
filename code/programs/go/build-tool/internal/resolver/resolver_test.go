@@ -117,14 +117,18 @@ func materializeResolutionFixture(
 			continue
 		}
 		packageName := segments[2] + "/" + segments[3]
+		if segments[1] == "programs" {
+			packageName = segments[2] + "/programs/" + segments[3]
+		}
 		if seenPackages[packageName] {
 			continue
 		}
 		seenPackages[packageName] = true
 		packages = append(packages, discovery.Package{
-			Name:     packageName,
-			Path:     filepath.Join(root, filepath.FromSlash(strings.Join(segments[:4], "/"))),
-			Language: segments[2],
+			Name:         packageName,
+			Path:         filepath.Join(root, filepath.FromSlash(strings.Join(segments[:4], "/"))),
+			Language:     segments[2],
+			BuildContent: string(data),
 		})
 	}
 	return root, packages
@@ -132,6 +136,7 @@ func materializeResolutionFixture(
 
 func TestLuaResolutionConformanceFixtures(t *testing.T) {
 	for _, name := range []string{
+		"resolution-build-deps-comment.json",
 		"resolution-lua-utf8.json",
 		"resolution-lua-invalid-utf8.json",
 	} {

@@ -43,6 +43,21 @@ The resolver never inserts replacement characters and never includes the host
 checkout root in this error. A literal U+FFFD character encoded correctly as
 UTF-8 remains valid metadata.
 
+## Canonical Discovery and Identities
+
+Discovery uses the repository's canonical language registry and treats only
+the exact component immediately below `packages` or `programs` as the language
+bucket. Programs retain a `programs` identity segment, such as
+`go/programs/build-tool`, so a library and program with the same basename stay
+distinct. Specification fixture trees are excluded, and duplicate qualified
+identities fail closed with exit code `2` and repository-relative paths.
+
+The resolver preserves those identities in metadata edges and in qualified
+dependencies declared by the selected legacy BUILD file's
+`# build-tool: deps=` comment. The shared discovery, duplicate-identity,
+package/program, and BUILD-comment fixtures exercise the same contracts used by
+other build-tool implementations.
+
 ## Canonical Starlark BUILD Files
 
 Canonical Starlark files are evaluated with the normalized build-tool v1
@@ -65,10 +80,10 @@ bundle install
 bundle exec rake test
 ```
 
-The `test/test_resolution_utf8.rb` coverage exercises the shared
-language-neutral valid and invalid fixtures, representative malformed sequence
-classes, and the real CLI subprocess. The full Rake suite enforces the
-whole-program coverage threshold. Starlark evaluator tests are mandatory: the
+The `test/test_identity_registry.rb` and `test/test_resolution_utf8.rb` coverage
+exercise shared language-neutral discovery, dependency, valid-text, and
+invalid-text fixtures plus real CLI subprocesses. The full Rake suite enforces
+the whole-program coverage threshold. Starlark evaluator tests are mandatory: the
 suite removes ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and
 proves that the repository-local interpreter loads through the build tool's
 declared bundle rather than skipping when it is unavailable.

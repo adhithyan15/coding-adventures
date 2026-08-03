@@ -2,6 +2,10 @@
 
 ## 2026-08-03
 
+- Expanded the canonical language-registry case with representative Elixir,
+  Go, and Rust programs whose identities retain the `programs` segment.
+- Added a language-neutral legacy BUILD dependency-comment case that preserves
+  the `lua/conduit` to `lua/programs/conduit-hello` edge.
 - Expanded the structured Starlark command/context case to use the canonical
   multiline target return shape, including trailing commas, so adapters must
   parse the same form used by repository rule helpers.

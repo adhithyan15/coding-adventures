@@ -413,6 +413,24 @@
       "notes": "Discovered while proving the 44 canonical Starlark package records against the Go oracle. Ruby and Go agree on package counts and on every affected Starlark record field, but Ruby's dependency-edge identities omit the canonical programs segment: the Go/Ruby set differences are 42/42 for Go and 76/76 for Rust, while Elixir has 21 Go-only and 12 Ruby-only edges plus nine independently missing semantic edges. Lua has the same conduit-hello identity drift and one Go-only edge. Adopt the canonical language and package-identity registry, preserve repository-relative program identities such as go/programs/build-tool, rust/programs/closurec, and elixir/programs/ircd, then consume language-neutral identity and dependency-edge fixtures across canonical and legacy BUILD paths. Keep the separately owned missing semantic dependency edges out of the Starlark evaluator compatibility slice. Selected after PR #9677 merged and the collision-clean fbd52e79 inventory. The dependency/leverage pass ranks this directly unblocked cross-language graph repair ahead of the independent Haskell and Elixir UTF-8 children because it corrects canonical identity and edge semantics across Lua, Elixir, Go, and Rust plans while the Ruby toolchain, exact Go comparisons, and affected fixtures are already warm; all newly classified Chief items remain dependency-blocked."
     },
     {
+      "id": "build-tool-elixir-resolution-semantic-parity",
+      "title": "Adjudicate Ruby and Go Elixir dependency-resolution semantics",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after canonical program identities removed the structural edge drift from the real 282-package Elixir plans. Ruby and Go then differed on 13 semantic edges: Go alone reports eleven package edges, while Ruby alone reports the two real grammar_tools program dependencies on grammar_tools and cli_builder; the net edge-count difference is the nine-edge debt already observed during PR #9677. Minimize each manifest form into language-neutral fixtures, adjudicate against actual Mix metadata rather than treating either engine as authoritative, and repair the affected resolver implementations without reopening the canonical identity slice."
+    },
+    {
+      "id": "build-tool-go-language-identity-registry",
+      "title": "Bring Go build-tool discovery to the complete canonical language registry",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discover 4,776 packages, but Go classifies all fourteen Mosaic packages and programs as unknown while Ruby follows the shared canonical registry and preserves mosaic/programs identities. Make Go consume the existing language-registry and duplicate-identity fixtures, include every canonical and retained host bucket, exclude specification fixture trees, and prove a collision-free full plan without widening into the separately owned resolver-semantic edges."
+    },
+    {
       "id": "build-tool-perl-runtime-security-floor",
       "title": "Define audited Perl and core-module security floors for the Perl build tool",
       "status": "pending",

@@ -255,7 +255,12 @@ module BuildTool
       end
 
       # -- Step 2: Discover packages --------------------------------------------
-      packages = Discovery.discover_packages(code_root)
+      packages = begin
+        Discovery.discover_packages(code_root)
+      rescue DuplicatePackageIdentityError => e
+        $stderr.puts e.message
+        return 2
+      end
 
       if packages.empty?
         $stderr.puts "No packages found."

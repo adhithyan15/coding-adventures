@@ -351,6 +351,17 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   dependency/leverage pass selected that now-unblocked registry migration next
   because it repairs canonical identity and edge semantics across Lua, Elixir,
   Go, and Rust without widening the completed evaluator repair;
+- adjudicate the residual Ruby/Go Elixir resolver semantics after canonical
+  identities remove the structural drift. The real 282-package plans differ
+  on eleven Go-only and two Ruby-only edges; the Ruby-only pair corresponds to
+  declared `grammar_tools` program dependencies, so the follow-up must derive
+  language-neutral fixtures from actual Mix metadata instead of assuming that
+  either engine is the oracle. This child depends on the identity migration;
+- bring Go discovery to the complete shared language registry. The full-plan
+  comparison finds the same 4,776 package directories in Ruby and Go, but Go
+  classifies all fourteen Mosaic packages and programs as `unknown`. The
+  dedicated child consumes the existing registry and duplicate-identity
+  fixtures and keeps resolver-semantic work separate;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
