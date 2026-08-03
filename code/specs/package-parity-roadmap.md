@@ -106,19 +106,19 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `9441f4c7` after
-rebasing the Haskell Python-resolution slice. The inventory contains 1,247 normalized
-implementation identities across 4,400 established-lane package slots and
+working inventory was regenerated on August 3, 2026 from `88772e0d` after
+rebasing the Haskell Rust-resolution slice. The inventory contains 1,249 normalized
+implementation identities across 4,403 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 173 | 272 |
+| Present in 10-15 languages | 173 | 271 |
 | Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 795 | 11,130 |
+| Present in one language | 799 | 11,186 |
 
-The loop must not start by attempting 11,130 singleton ports. It should finish
+The loop must not start by attempting 11,186 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -326,25 +326,32 @@ program edges and identities, and matches the Go oracle exactly. That repair
 exposed the same generic-token debt in the real 205-package Haskell lane. PR
 #9806 completed the dependency-shaped Cabal slice: it replaced 43 false edges
 from non-authoritative manifest text with `build-depends` parsing and now
-matches all 486 canonical edges. The post-merge leverage audit selects Python
-next because it is the largest affected lane: 488 real packages collapse into
-an all-node cycle, with 1,492 Haskell edges versus 1,118 canonical edges, 383
-false edges, and nine missing PEP 503-normalized edges. A dependent backlog
-owner carries the remaining post-Python readers. The post-rebase `9441f4c7`
-collision-checked inventory has 1,247
-identities and 4,400 implementation slots across 15 established lanes, with
-173 high-consensus packages and 272 missing slots, 797 singleton packages and
-11,158 missing slots, 602 Rust singletons, and zero collisions or unknown
-buckets. The Python slice now reads only PEP 621
-`[project].dependencies` and applies PEP 503 distribution-name normalization.
-Its full 488-package lane completes without failures, and the repaired
-1,118-edge graph matches the Go oracle exactly: zero Haskell-only edges and
-zero Go-only edges. The two unrelated Python `BUILD_windows` prerequisite gaps
+matches all 486 canonical edges. The next leverage audit selected Python
+because its 488 real packages collapsed into an all-node cycle, with 1,492
+Haskell edges versus 1,118 canonical edges, 383 false edges, and nine missing
+PEP 503-normalized edges. PR #9817 completed that slice by reading only PEP 621
+`[project].dependencies` and applying PEP 503 distribution-name normalization;
+the real lane now completes without failures and its 1,118-edge graph matches
+the Go oracle exactly. The new post-merge audit selects Rust because it is the
+largest remaining clean repair: 945 packages, 3,201 Haskell edges versus 2,353
+canonical edges, 848 false edges, and zero missing edges. A dependent backlog
+owner carries the remaining post-Rust readers. The repair reads only inline
+path entries from Cargo's top-level `[dependencies]` table. Full-graph
+validation also exposed valid renamed dependencies missing from the Go oracle,
+so the shared contract and both engines now honor Cargo `package` overrides.
+On the rebased tree, both engines discover 948 packages and match exactly at
+2,373 edges; the Haskell front door completes the lane with zero failures. The
+`88772e0d` collision-checked inventory has 1,249
+identities and 4,403 implementation slots across 15 established lanes, with
+173 high-consensus packages and 271 missing slots, 799 singleton packages and
+11,186 missing slots, 604 Rust singletons, and zero collisions or unknown
+buckets. The two unrelated Python `BUILD_windows` prerequisite gaps
 exposed by the full validator remain owned by
 `build-file-standalone-integrity`. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill
 existing identities; ZStd
-is complete across all 15 lanes and ZIP now spans 12. The new Chief daemon
-keyring and Synology Surveillance singleton packages own concrete filesystem or
+is complete across all 15 lanes and ZIP now spans 13. The Chief daemon keyring,
+new Chief daemon credential persistence adapter, Chief daemon composition root,
+and Synology Surveillance singleton packages own concrete filesystem or
 credentialed network authority and have excluded native-authority review
 owners. The previously discovered singleton,
 `smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR

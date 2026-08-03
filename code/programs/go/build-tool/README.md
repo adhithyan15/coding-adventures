@@ -78,6 +78,12 @@ bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
 repository-relative manifest, and return CLI exit code 2 without exposing the
 checkout path or silently replacing input.
 
+Cargo dependency resolution reads inline path dependencies from the top-level
+`[dependencies]` table. When a dependency uses a local source alias together
+with `package = "published-name"`, the published package name drives internal
+lookup. Package metadata, features, dev/build/target tables, and registry-only
+dependencies remain outside this graph contract.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

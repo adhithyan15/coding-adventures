@@ -314,6 +314,16 @@ normalization: each run of hyphens, underscores, or periods becomes one hyphen
 before internal-package lookup. Extras, version specifiers, and environment
 markers do not form part of the normalized distribution name.
 
+For Rust `Cargo.toml` manifests, dependency candidates come only from inline
+entries in the top-level `[dependencies]` table whose value contains a `path`
+assignment. The dependency key before the first `=` is matched against known
+Cargo package names unless the inline table provides a quoted `package`
+override, in which case that published package name is authoritative. Resolvers
+ignore `[package]`, `[lib]`, features, workspace
+metadata, dev dependencies, build dependencies, target-specific dependency
+tables, non-path registry dependencies, comments, and every other field or
+table. Reaching any new TOML table ends the authoritative dependency table.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,

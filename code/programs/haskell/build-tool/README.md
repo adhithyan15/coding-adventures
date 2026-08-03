@@ -48,6 +48,14 @@ PEP 503 naming. Shared fixtures cover the canonical diamond, field boundaries,
 version and environment markers, and mixed-separator aliases. The complete
 488-package Python lane matches the Go oracle at 1,118 edges.
 
+Rust dependency resolution reads only inline, path-based entries in the
+top-level Cargo `[dependencies]` table. Package metadata, features, workspace
+fields, dev/build/target dependency tables, comments, and registry-only
+dependencies cannot invent graph edges. Renamed dependencies use the inline
+`package = "..."` value rather than the local source alias. The shared
+field-boundary fixture and complete 948-package lane match the canonical Go
+resolver exactly at 2,373 edges.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

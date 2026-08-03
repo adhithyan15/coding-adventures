@@ -23,7 +23,7 @@ import Data.Char (isAlpha, isAlphaNum, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
-import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
+import Data.Maybe (fromMaybe, listToMaybe, mapMaybe, maybeToList)
 import qualified Data.Set as Set
 import Data.Set (Set)
 import qualified Data.Text as Text
@@ -779,6 +779,7 @@ readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
+    | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
 readCabalDependencyTokens :: Package -> IO [String]
@@ -930,6 +931,100 @@ hasUnquotedCharacter target = go Nothing
     go (Just quote) (character : rest)
         | character == quote = go Nothing rest
         | otherwise = go (Just quote) rest
+
+readRustDependencyTokens :: Package -> IO [String]
+readRustDependencyTokens pkg = do
+    let cargoPath = packagePath pkg </> "Cargo.toml"
+    exists <- doesFileExist cargoPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict cargoPath
+            pure (rustDependencyTokens contents)
+
+rustDependencyTokens :: String -> [String]
+rustDependencyTokens = nub . collect False . lines
+  where
+    collect _ [] = []
+    collect inDependencies (rawLine : rest) =
+        let stripped = trim (stripTomlComment rawLine)
+         in case tomlSectionName stripped of
+                Just sectionName -> collect (sectionName == "dependencies") rest
+                Nothing ->
+                    if inDependencies
+                        then maybeToList (rustDependencyToken stripped) ++ collect True rest
+                        else collect False rest
+
+rustDependencyToken :: String -> Maybe String
+rustDependencyToken stripped =
+    let (dependencyKey, assignment) = break (== '=') stripped
+        dependencyValue = drop 1 assignment
+        normalizedKey = map toLower (trim dependencyKey)
+        resolvedKey =
+            map toLower
+                (fromMaybe normalizedKey (cargoInlineStringValue "package" dependencyValue))
+     in if null assignment
+            || null normalizedKey
+            || not (hasCargoPathAssignment dependencyValue)
+            then Nothing
+            else Just resolvedKey
+
+cargoInlineStringValue :: String -> String -> Maybe String
+cargoInlineStringValue fieldName value =
+    listToMaybe
+        [ quotedValue
+        | field <- splitCargoInlineFields value
+        , let withoutOpeningBrace = dropWhile (`elem` [' ', '\t', '{']) field
+        , let (key, assignment) = break (== '=') withoutOpeningBrace
+        , map toLower (trim key) == fieldName
+        , not (null assignment)
+        , quotedValue <- take 1 (extractQuotedValues (drop 1 assignment))
+        ]
+
+splitCargoInlineFields :: String -> [String]
+splitCargoInlineFields = go Nothing []
+  where
+    go _ current [] = [reverse current]
+    go Nothing current (',' : rest) = reverse current : go Nothing [] rest
+    go Nothing current (character : rest)
+        | character `elem` ['"', '\''] = go (Just character) (character : current) rest
+        | otherwise = go Nothing (character : current) rest
+    go (Just quote) current ('\\' : escaped : rest)
+        | quote == '"' = go (Just quote) (escaped : '\\' : current) rest
+    go (Just quote) current (character : rest)
+        | character == quote = go Nothing (character : current) rest
+        | otherwise = go (Just quote) (character : current) rest
+
+hasCargoPathAssignment :: String -> Bool
+hasCargoPathAssignment = scan Nothing . map toLower . hideTomlStringContents
+  where
+    scan _ [] = False
+    scan previous remaining@(character : rest)
+        | isCargoPathFieldStart previous remaining = True
+        | otherwise = scan (Just character) rest
+
+    isCargoPathFieldStart previous remaining =
+        "path" `isPrefixOf` remaining
+            && maybe True (not . isCargoKeyCharacter) previous
+            && case dropWhile (`elem` [' ', '\t']) (drop 4 remaining) of
+                '=' : _ -> True
+                _ -> False
+
+isCargoKeyCharacter :: Char -> Bool
+isCargoKeyCharacter character = isAlphaNum character || character `elem` ['_', '-']
+
+hideTomlStringContents :: String -> String
+hideTomlStringContents = go Nothing
+  where
+    go _ [] = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = ' ' : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : _escaped : rest)
+        | quote == '"' = ' ' : ' ' : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = ' ' : go Nothing rest
+        | otherwise = ' ' : go (Just quote) rest
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

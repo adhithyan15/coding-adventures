@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/rust-field-aware",
+  "domain": "resolution",
+  "summary": "Rust resolution reads only inline path dependencies in the top-level Cargo dependencies table.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/rust/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/rust/alpha/Cargo.toml",
+        "content_utf8": "[package]\nname = \"alpha\"\nversion = \"0.1.0\"\ndescription = \"Mentions gamma without depending on it.\"\n\n[features]\ngamma = [\"coding-adventures-gamma\"]\n\n[dependencies]\nbeta_alias = { package = \"beta-helper\", path = \"../beta-helper\" }\ndelta = { version = \"0.1.0\", path = \"../delta\" } # gamma stays a comment\ngamma = { version = \"0.1.0\", features = [\"path\"] }\nserde = \"1\"\n\n[dev-dependencies]\ngamma = { path = \"../gamma\" }\n\n[build-dependencies]\ngamma = { path = \"../gamma\" }\n\n[target.'cfg(unix)'.dependencies]\ngamma = { path = \"../gamma\" }\n"
+      },
+      {
+        "path": "code/packages/rust/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/rust/beta-helper/Cargo.toml",
+        "content_utf8": "[package]\nname = \"beta-helper\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/delta/BUILD",
+        "content_utf8": "echo build delta\n"
+      },
+      {
+        "path": "code/packages/rust/delta/Cargo.toml",
+        "content_utf8": "[package]\nname = \"delta\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/rust/gamma/Cargo.toml",
+        "content_utf8": "[package]\nname = \"gamma\"\nversion = \"0.1.0\"\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "rust"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/rust-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "rust/beta-helper",
+          "rust/alpha"
+        ],
+        [
+          "rust/delta",
+          "rust/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

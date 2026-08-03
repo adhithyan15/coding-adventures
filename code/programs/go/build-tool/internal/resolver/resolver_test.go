@@ -978,12 +978,26 @@ func TestParseRustDeps(t *testing.T) {
 name = "arithmetic"
 version = "0.1.0"
 edition = "2021"
+description = "Mentions gamma without depending on it"
+
+[features]
+gamma = ["gamma"]
 
 [dependencies]
-logic-gates = { path = "../logic-gates" }
+logic_alias = { package = "logic-gates", path = "../logic-gates" }
+gamma = { version = "0.1.0", features = ["path"] }
+serde = "1"
+
+[dev-dependencies]
+gamma = { path = "../gamma" }
 `,
 		"logic-gates/Cargo.toml": `[package]
 name = "logic-gates"
+version = "0.1.0"
+edition = "2021"
+`,
+		"gamma/Cargo.toml": `[package]
+name = "gamma"
 version = "0.1.0"
 edition = "2021"
 `,
@@ -992,6 +1006,7 @@ edition = "2021"
 	packages := []discovery.Package{
 		{Name: "rust/arithmetic", Path: filepath.Join(root, "arithmetic"), Language: "rust"},
 		{Name: "rust/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "rust"},
+		{Name: "rust/gamma", Path: filepath.Join(root, "gamma"), Language: "rust"},
 	}
 
 	known := BuildKnownNames(packages)

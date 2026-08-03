@@ -405,9 +405,9 @@ func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string
 //	[dependencies]
 //	logic-gates = { path = "../logic-gates" }
 //
-// We look for lines in the [dependencies] section that contain `path =` and
-// extract the crate name (the key before the `=`). We then look up that name
-// in the known names mapping.
+// We look for inline-table entries in the [dependencies] section with a
+// quoted `path` field and extract the crate name (the key before the first
+// `=`). We then look up that name in the known names mapping.
 func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	cargoToml := filepath.Join(pkg.Path, "Cargo.toml")
 	data, err := os.ReadFile(cargoToml)
@@ -434,13 +434,19 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 		}
 
 		// Look for lines like: logic-gates = { path = "../logic-gates" }
-		if strings.Contains(trimmed, "path") && strings.Contains(trimmed, "=") {
+		if strings.Contains(trimmed, "=") {
 			// Extract the crate name (everything before the first '=')
 			parts := strings.SplitN(trimmed, "=", 2)
 			if len(parts) < 2 {
 				continue
 			}
+			if cargoInlineStringValue(parts[1], "path") == "" {
+				continue
+			}
 			crateName := strings.TrimSpace(strings.ToLower(parts[0]))
+			if packageName := cargoInlineStringValue(parts[1], "package"); packageName != "" {
+				crateName = strings.ToLower(packageName)
+			}
 			if pkgName, ok := knownNames[crateName]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
@@ -448,6 +454,53 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	return internalDeps
+}
+
+// cargoInlineStringValue returns a quoted string field from a Cargo inline
+// table. Commas inside quoted strings stay within their field, so a package
+// rename cannot be confused with neighboring version or path metadata.
+func cargoInlineStringValue(value, target string) string {
+	for _, field := range splitCargoInlineFields(value) {
+		field = strings.TrimLeft(strings.TrimSpace(field), "{")
+		parts := strings.SplitN(field, "=", 2)
+		if len(parts) != 2 || strings.TrimSpace(strings.ToLower(parts[0])) != target {
+			continue
+		}
+		quoted := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(parts[1]), "}"))
+		if len(quoted) >= 2 && ((quoted[0] == '"' && quoted[len(quoted)-1] == '"') ||
+			(quoted[0] == '\'' && quoted[len(quoted)-1] == '\'')) {
+			return quoted[1 : len(quoted)-1]
+		}
+	}
+	return ""
+}
+
+func splitCargoInlineFields(value string) []string {
+	fields := make([]string, 0, 3)
+	start := 0
+	var quote byte
+	for index := 0; index < len(value); index++ {
+		character := value[index]
+		if quote != 0 {
+			if quote == '"' && character == '\\' {
+				index++
+				continue
+			}
+			if character == quote {
+				quote = 0
+			}
+			continue
+		}
+		if character == '"' || character == '\'' {
+			quote = character
+			continue
+		}
+		if character == ',' {
+			fields = append(fields, value[start:index])
+			start = index + 1
+		}
+	}
+	return append(fields, value[start:])
 }
 
 func dependencyScope(language string) string {
