@@ -1973,6 +1973,10 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(params["CJ"]) or params["CJ"] < 0.0
         ):
             raise NetlistParseError("MOSFET CJ must be finite and non-negative")
+        if "CJSW" in params and (
+            not math.isfinite(params["CJSW"]) or params["CJSW"] < 0.0
+        ):
+            raise NetlistParseError("MOSFET CJSW must be finite and non-negative")
         nominal_temperature = params.get("T_NOM", params.get("TNOM"))
         if nominal_temperature is not None and (
             not math.isfinite(nominal_temperature) or nominal_temperature <= 0.0

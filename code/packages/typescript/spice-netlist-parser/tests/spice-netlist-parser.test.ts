@@ -1721,6 +1721,28 @@ Xright c d load
     expect(element.params.CJ).toBeCloseTo(expected, 15);
   });
 
+  it.each(["-1p", "1e999"])(
+    "rejects invalid MOSFET model CJSW=%s",
+    (sidewallCapacitance) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(CJSW=${sidewallCapacitance})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET CJSW must be finite and non-negative");
+    },
+  );
+
+  it.each([
+    ["0", 0.0],
+    ["3p", 3.0e-12],
+  ])("lowers valid MOSFET model CJSW=%s", (sidewallCapacitance, expected) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(CJSW=${sidewallCapacitance})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.CJSW).toBeCloseTo(expected, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
