@@ -154,6 +154,131 @@ export interface Message {
   readonly payload: Uint8Array;
 }
 
+/** UTF-8 message presented to a one-file Level 2 agent handler. */
+export interface AgentMessage extends Message {
+  /** Verified payload decoded as strict UTF-8 text. */
+  readonly plaintext: string;
+}
+
+/** The complete author-facing contract for a Level 2 one-file agent. */
+export type AgentHandler = (message: AgentMessage) => Promise<string>;
+
+/** Static channel wiring supplied by the trusted agent wrapper. */
+export interface SimpleAgentRuntimeConfig {
+  /** Channel from which the agent receives its next input. */
+  readonly inputChannelId: string;
+  /** Different one-way channel to which the agent publishes responses. */
+  readonly outputChannelId: string;
+}
+
+/** Result of polling at most one Level 2 input message. */
+export type SimpleAgentRunOutcome =
+  | { readonly status: "idle" }
+  | {
+      readonly status: "processed";
+      /** Input identity acknowledged after successful publication. */
+      readonly inputMessageId: string;
+      /** Output identity returned by the host. */
+      readonly outputMessageId: string;
+      /** Exact handler text encoded and published by the runtime. */
+      readonly response: string;
+    };
+
+/** MIME type used for Level 2 handler responses. */
+export const SIMPLE_AGENT_RESPONSE_CONTENT_TYPE = "text/plain; charset=utf-8";
+
+/**
+ * Injected receive/handler/publish/ack runtime for one-file Level 2 agents.
+ *
+ * A handler or publication failure leaves the input unacknowledged so the
+ * host can redeliver it after recovery. The runtime performs no ambient I/O.
+ */
+export class SimpleAgentRuntime {
+  private readonly inputChannelId: string;
+  private readonly outputChannelId: string;
+
+  constructor(
+    private readonly channels: ChannelClient,
+    config: SimpleAgentRuntimeConfig,
+    private readonly handler: AgentHandler,
+  ) {
+    validateIdentifier(config.inputChannelId, "inputChannelId");
+    validateIdentifier(config.outputChannelId, "outputChannelId");
+    if (config.inputChannelId === config.outputChannelId) {
+      throw new ChiefSdkError(
+        "Level 2 input and output channels must be different",
+      );
+    }
+    validateHandler(handler);
+    this.inputChannelId = config.inputChannelId;
+    this.outputChannelId = config.outputChannelId;
+  }
+
+  /** Poll and process at most one input message. */
+  async runOnce(): Promise<SimpleAgentRunOutcome> {
+    const input = await this.channels.read(this.inputChannelId);
+    if (input === null) {
+      return { status: "idle" };
+    }
+
+    let plaintext: string;
+    try {
+      plaintext = new TextDecoder("utf-8", { fatal: true }).decode(
+        input.payload,
+      );
+    } catch {
+      throw new ChiefSdkError("Level 2 input payload is not UTF-8 text");
+    }
+    const message: AgentMessage = { ...input, plaintext };
+    const response = await this.handler(message);
+    if (typeof response !== "string" || response.trim().length === 0) {
+      throw new ChiefSdkError(
+        "Level 2 agent handler must return non-empty text",
+      );
+    }
+
+    const outputMessageId = await this.channels.write(
+      this.outputChannelId,
+      new TextEncoder().encode(response),
+      SIMPLE_AGENT_RESPONSE_CONTENT_TYPE,
+    );
+    await this.channels.ack(this.inputChannelId, input.id);
+    return {
+      status: "processed",
+      inputMessageId: input.id,
+      outputMessageId,
+      response,
+    };
+  }
+}
+
+let definedAgentHandler: AgentHandler | undefined;
+
+/** Register the single handler exported by a Level 2 agent module. */
+export function defineAgent(handler: AgentHandler): void {
+  validateHandler(handler);
+  if (definedAgentHandler !== undefined) {
+    throw new ChiefSdkError("a Level 2 agent handler is already defined");
+  }
+  definedAgentHandler = handler;
+}
+
+/** Clear the registered Level 2 handler during wrapper shutdown or tests. */
+export function clearDefinedAgent(): void {
+  definedAgentHandler = undefined;
+}
+
+/** Bind the currently defined handler to trusted channel wiring. */
+export function createDefinedAgentRuntime(
+  channels: ChannelClient,
+  config: SimpleAgentRuntimeConfig,
+): SimpleAgentRuntime {
+  if (definedAgentHandler === undefined) {
+    throw new ChiefSdkError("no Level 2 agent handler has been defined");
+  }
+  return new SimpleAgentRuntime(channels, config, definedAgentHandler);
+}
+
 /** Typed Level 3 channel client over one host transport. */
 export class ChannelClient {
   constructor(private readonly transport: HostTransport) {}
@@ -302,6 +427,12 @@ function validateIdentifier(
   field: string,
 ): asserts value is string {
   validateNonEmptyString(value, field, MAX_IDENTIFIER_BYTES);
+}
+
+function validateHandler(value: unknown): asserts value is AgentHandler {
+  if (typeof value !== "function") {
+    throw new ChiefSdkError("Level 2 agent handler must be a function");
+  }
 }
 
 function validateNonEmptyString(

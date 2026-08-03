@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-08-03
+
+### Added
+
+- Level 2 `defineAgent` registration for one-file TypeScript agents.
+- Injected `SimpleAgentRuntime` with receive, handler, publish, acknowledge
+  ordering and fail-closed UTF-8/output validation.
+
 ## [0.1.0] - 2026-08-03
 
 ### Added

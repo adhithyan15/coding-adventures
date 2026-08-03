@@ -1,14 +1,19 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  SIMPLE_AGENT_RESPONSE_CONTENT_TYPE,
   ChannelClient,
   ChiefSdkError,
   HostRpcError,
   JsonRpcLineTransport,
+  SimpleAgentRuntime,
   channel_ack,
   channel_read,
   channel_write,
+  clearDefinedAgent,
   clearHostTransport,
   configureHostTransport,
+  createDefinedAgentRuntime,
+  defineAgent,
   type HostTransport,
   type JsonLineDuplex,
 } from "../src/index.js";
@@ -46,11 +51,16 @@ class ScriptedTransport implements HostTransport {
     params: Readonly<Record<string, unknown>>,
   ): Promise<unknown> {
     this.calls.push({ method, params });
-    return this.results.shift();
+    const result = this.results.shift();
+    if (result instanceof Error) throw result;
+    return result;
   }
 }
 
-beforeEach(() => clearHostTransport());
+beforeEach(() => {
+  clearHostTransport();
+  clearDefinedAgent();
+});
 
 describe("JsonRpcLineTransport", () => {
   it("writes strict requests and returns matching results", async () => {
@@ -286,5 +296,180 @@ describe("module-level channel API", () => {
       "channel.write",
       "channel.ack",
     ]);
+  });
+});
+
+describe("Level 2 defineAgent runtime", () => {
+  const incoming = {
+    message_id: "0198-input",
+    sequence: "7",
+    timestamp_ns: "9007199254740993",
+    content_type: "application/json",
+    payload_b64: "eyJjaXR5IjoiU2VhdHRsZSJ9",
+  };
+
+  it("runs a defined one-file handler before publishing and acknowledging", async () => {
+    const handler = vi.fn(async (message) => {
+      const body = JSON.parse(message.plaintext) as { city: string };
+      expect(message.sequence).toBe(7n);
+      expect(message.contentType).toBe("application/json");
+      return `The weather in ${body.city} is sunny.`;
+    });
+    defineAgent(handler);
+    const transport = new ScriptedTransport(
+      incoming,
+      { message_id: "0198-output" },
+      null,
+    );
+    const runtime = createDefinedAgentRuntime(new ChannelClient(transport), {
+      inputChannelId: "weather-requests",
+      outputChannelId: "weather-reports",
+    });
+
+    await expect(runtime.runOnce()).resolves.toEqual({
+      status: "processed",
+      inputMessageId: "0198-input",
+      outputMessageId: "0198-output",
+      response: "The weather in Seattle is sunny.",
+    });
+    expect(handler).toHaveBeenCalledOnce();
+    expect(transport.calls.map((call) => call.method)).toEqual([
+      "channel.read",
+      "channel.write",
+      "channel.ack",
+    ]);
+    expect(transport.calls[1]!.params).toEqual({
+      channel_id: "weather-reports",
+      payload_b64: "VGhlIHdlYXRoZXIgaW4gU2VhdHRsZSBpcyBzdW5ueS4=",
+      content_type: SIMPLE_AGENT_RESPONSE_CONTENT_TYPE,
+    });
+  });
+
+  it("returns idle without invoking the handler or output channel", async () => {
+    const handler = vi.fn(async () => "unused");
+    const runtime = new SimpleAgentRuntime(
+      new ChannelClient(new ScriptedTransport(null)),
+      { inputChannelId: "in", outputChannelId: "out" },
+      handler,
+    );
+
+    await expect(runtime.runOnce()).resolves.toEqual({ status: "idle" });
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("leaves input unacknowledged when handler or publication fails", async () => {
+    const handlerFailure = new ScriptedTransport(incoming);
+    const throwingRuntime = new SimpleAgentRuntime(
+      new ChannelClient(handlerFailure),
+      { inputChannelId: "in", outputChannelId: "out" },
+      async () => {
+        throw new Error("handler failed");
+      },
+    );
+    await expect(throwingRuntime.runOnce()).rejects.toThrow("handler failed");
+    expect(handlerFailure.calls.map((call) => call.method)).toEqual([
+      "channel.read",
+    ]);
+
+    const publishFailure = new ScriptedTransport(
+      incoming,
+      new HostRpcError(-32001, "CapabilityDenied"),
+    );
+    const publishingRuntime = new SimpleAgentRuntime(
+      new ChannelClient(publishFailure),
+      { inputChannelId: "in", outputChannelId: "out" },
+      async () => "response",
+    );
+    await expect(publishingRuntime.runOnce()).rejects.toThrow(
+      "CapabilityDenied",
+    );
+    expect(publishFailure.calls.map((call) => call.method)).toEqual([
+      "channel.read",
+      "channel.write",
+    ]);
+  });
+
+  it("rejects non-UTF-8 input and empty or non-string handler output", async () => {
+    const nonUtf8 = { ...incoming, payload_b64: "/w==" };
+    const invalidInputRuntime = new SimpleAgentRuntime(
+      new ChannelClient(new ScriptedTransport(nonUtf8)),
+      { inputChannelId: "in", outputChannelId: "out" },
+      async () => "unused",
+    );
+    await expect(invalidInputRuntime.runOnce()).rejects.toThrow("UTF-8");
+
+    for (const response of ["   ", 42] as unknown[]) {
+      const transport = new ScriptedTransport(incoming);
+      const runtime = new SimpleAgentRuntime(
+        new ChannelClient(transport),
+        { inputChannelId: "in", outputChannelId: "out" },
+        async () => response as string,
+      );
+      await expect(runtime.runOnce()).rejects.toThrow("non-empty text");
+      expect(transport.calls.map((call) => call.method)).toEqual([
+        "channel.read",
+      ]);
+    }
+  });
+
+  it("preserves an acknowledgement failure after publication", async () => {
+    const transport = new ScriptedTransport(
+      incoming,
+      { message_id: "output" },
+      new HostRpcError(-32603, "ack failed"),
+    );
+    const runtime = new SimpleAgentRuntime(
+      new ChannelClient(transport),
+      { inputChannelId: "in", outputChannelId: "out" },
+      async () => "response",
+    );
+
+    await expect(runtime.runOnce()).rejects.toThrow("ack failed");
+    expect(transport.calls.map((call) => call.method)).toEqual([
+      "channel.read",
+      "channel.write",
+      "channel.ack",
+    ]);
+  });
+
+  it("validates registration and static one-way channel wiring", () => {
+    expect(() =>
+      createDefinedAgentRuntime(new ChannelClient(new ScriptedTransport()), {
+        inputChannelId: "in",
+        outputChannelId: "out",
+      }),
+    ).toThrow("no Level 2");
+    expect(() => defineAgent(null as unknown as () => Promise<string>)).toThrow(
+      "function",
+    );
+    expect(
+      () =>
+        new SimpleAgentRuntime(
+          new ChannelClient(new ScriptedTransport()),
+          { inputChannelId: "same", outputChannelId: "same" },
+          async () => "response",
+        ),
+    ).toThrow("different");
+    expect(
+      () =>
+        new SimpleAgentRuntime(
+          new ChannelClient(new ScriptedTransport()),
+          { inputChannelId: "", outputChannelId: "out" },
+          async () => "response",
+        ),
+    ).toThrow("inputChannelId");
+  });
+
+  it("allows exactly one handler definition per wrapper process", async () => {
+    defineAgent(async () => "first");
+    const first = createDefinedAgentRuntime(
+      new ChannelClient(
+        new ScriptedTransport(incoming, { message_id: "one" }, null),
+      ),
+      { inputChannelId: "in", outputChannelId: "out" },
+    );
+
+    await expect(first.runOnce()).resolves.toMatchObject({ response: "first" });
+    expect(() => defineAgent(async () => "second")).toThrow("already defined");
   });
 });

@@ -5,7 +5,24 @@ Chief of Staff host. Agent code never needs filesystem, network, process,
 clock, or random-number permissions. It sends typed requests to a host over an
 injected transport, and the host enforces the sealed manifest.
 
-This first Level 3 slice implements direct encrypted-channel access:
+The SDK supports Level 2 one-file handlers and Level 3 direct encrypted-channel
+access. A Level 2 agent contains only its handler:
+
+```typescript
+import { defineAgent } from "@coding-adventures/chief-of-staff-sdk";
+
+defineAgent(async (message) => {
+  const { city } = JSON.parse(message.plaintext);
+  return `The weather in ${city} is sunny.`;
+});
+```
+
+The trusted wrapper binds that definition to a `SimpleAgentRuntime`. Each
+`runOnce()` performs receive, strict UTF-8 decoding, handler execution,
+publication, and acknowledgement in that order. Handler and publication
+failures leave the input unacknowledged for host-driven retry.
+
+Level 3 agents can operate channels directly:
 
 ```typescript
 import {
@@ -46,3 +63,5 @@ wire and `bigint` in agent code, avoiding JavaScript's 53-bit integer limit.
   content types, payloads, and protocol lines are rejected.
 - Host errors retain their numeric code and structured data without exposing
   unchecked response objects as SDK values.
+- Level 2 input must be strict UTF-8, handler output must be non-empty text,
+  and publication must succeed before acknowledgement.
