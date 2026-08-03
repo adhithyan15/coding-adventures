@@ -309,4 +309,173 @@ public class ZipTests
         var entries = ZipArchive.Unzip(archive);
         Assert.Empty(entries);
     }
+
+    // =========================================================================
+    // Security / adversarial-input hardening
+    // =========================================================================
+    //
+    // These are not part of the CMP09 spec's 12 numbered conformance cases —
+    // they exercise the defenses added during security review: zip-slip
+    // normalization on write, ZIP32 field-width limits on write, and
+    // overflow-safe bounds checking + a decompression-bomb budget on read.
+
+    // A malicious or careless caller must not be able to bake a path-traversal
+    // shaped entry name into an archive this library produces — any downstream
+    // extractor that does File.WriteAllBytes(Path.Combine(outDir, entry.Name),
+    // ...) on the round-tripped entries must never see "..".
+    [Fact]
+    public void Security_WriterNormalizesTraversalSegmentsOutOfEntryNames()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile("../../etc/passwd", "not actually passwd"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.DoesNotContain("..", entries[0].Name);
+        Assert.Equal("etc/passwd", entries[0].Name);
+    }
+
+    // Backslashes (Windows-style separators) and a leading absolute slash must
+    // be normalized the same way as forward-slash ".." segments.
+    [Fact]
+    public void Security_WriterNormalizesBackslashesAndLeadingSlash()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile(@"..\..\windows\system32\evil.dll", "x"u8.ToArray());
+        writer.AddFile("/etc/shadow", "y"u8.ToArray());
+        var archive = writer.Finish();
+
+        var names = ZipArchive.Unzip(archive).Select(e => e.Name).ToList();
+        Assert.Contains("windows/system32/evil.dll", names);
+        Assert.Contains("etc/shadow", names);
+        Assert.DoesNotContain(names, n => n.Contains(".."));
+        Assert.DoesNotContain(names, n => n.StartsWith('/'));
+    }
+
+    // A directory entry's trailing slash must survive normalization.
+    [Fact]
+    public void Security_WriterNormalizationPreservesTrailingSlashForDirectories()
+    {
+        var writer = new ZipWriter();
+        writer.AddDirectory("../weird/dir/");
+        var archive = writer.Finish();
+
+        var reader = new ZipReader(archive);
+        Assert.Contains("weird/dir/", reader.Entries.Select(e => e.Name));
+    }
+
+    // An entry name that normalizes away to nothing (e.g. pure ".." segments)
+    // has no safe representation and must be rejected outright rather than
+    // silently written as an empty name.
+    [Fact]
+    public void Security_WriterRejectsNameThatNormalizesToEmpty()
+    {
+        var writer = new ZipWriter();
+        Assert.Throws<ArgumentException>(() => writer.AddFile("../..", "x"u8.ToArray()));
+    }
+
+    // ZIP32's name_len field is 16 bits; a name that encodes to more than
+    // 65535 UTF-8 bytes must be rejected rather than silently truncated (a
+    // silent truncation would desynchronize the declared length from the
+    // bytes actually written, corrupting the archive layout).
+    [Fact]
+    public void Security_WriterRejectsNameExceedingZip32Limit()
+    {
+        var hugeName = new string('a', 70_000);
+        var writer = new ZipWriter();
+        Assert.Throws<ArgumentException>(() => writer.AddFile(hugeName, "x"u8.ToArray()));
+    }
+
+    // ZIP32's entries_total field is 16 bits; adding more than 65535 entries
+    // must fail Finish() rather than silently wrap the declared count (which
+    // would desynchronize it from the number of records actually written —
+    // the same class of bug already hardened against in the sibling Ruby
+    // package's parser).
+    [Fact]
+    public void Security_WriterRejectsMoreThanZip32EntryLimit()
+    {
+        var writer = new ZipWriter();
+        for (var i = 0; i <= ushort.MaxValue; i++)
+        {
+            writer.AddDirectory($"d{i}/");
+        }
+        Assert.Throws<InvalidOperationException>(() => writer.Finish());
+    }
+
+    // A Central Directory offset field crafted to sit in the upper half of the
+    // uint range (>= 0x80000000) must not defeat the reader's bounds checks by
+    // wrapping negative when narrowed to `int`. Before the fix, this specific
+    // shape made `cdOffset + cdSize > data.Length` pass incorrectly and the
+    // code went on to throw the wrong exception type
+    // (ArgumentOutOfRangeException) instead of the documented
+    // InvalidDataException.
+    [Fact]
+    public void Security_ReaderRejectsOverflowingCentralDirectoryOffset()
+    {
+        // Build a minimal 22-byte EOCD-only "archive" whose cd_offset is
+        // 0xFFFFFFFF (-1 as a signed int32) and whose cd_size is small enough
+        // that the (buggy) `cdOffset + cdSize > data.Length` check would pass.
+        var eocd = new byte[22];
+        BitConverter.GetBytes(0x06054B50u).CopyTo(eocd, 0);       // EOCD signature "PK\x05\x06"
+        // disk_number, disk_with_cd_start, entries_on_this_disk, entries_total: all 0 (bytes 4-11)
+        BitConverter.GetBytes((uint)6).CopyTo(eocd, 12);          // cd_size = 6
+        BitConverter.GetBytes(0xFFFFFFFFu).CopyTo(eocd, 16);      // cd_offset = 0xFFFFFFFF
+        // comment_length = 0 (bytes 20-21)
+
+        Assert.Throws<InvalidDataException>(() => new ZipReader(eocd));
+    }
+
+    // A Central Directory record's local_offset field crafted to sit in the
+    // upper half of the uint range must likewise be rejected with
+    // InvalidDataException rather than reaching an unchecked negative-offset
+    // span access.
+    [Fact]
+    public void Security_ReaderRejectsOverflowingLocalOffset()
+    {
+        // Build a real archive, then corrupt the local_offset field (bytes
+        // 42-45 of the Central Directory header) to 0xFFFFFFFF.
+        var archive = ZipArchive.Zip([new ZipEntry("f.txt", "hi"u8.ToArray())]);
+        var corrupted = (byte[])archive.Clone();
+
+        var cdSigOffset = FindSignatureOffset(corrupted, 0x02014B50u); // CD signature "PK\x01\x02"
+        BitConverter.GetBytes(0xFFFFFFFFu).CopyTo(corrupted, cdSigOffset + 42);
+
+        var reader = new ZipReader(corrupted);
+        Assert.Throws<InvalidDataException>(() => reader.Read("f.txt"));
+    }
+
+    private static int FindSignatureOffset(byte[] data, uint signature)
+    {
+        var sigBytes = BitConverter.GetBytes(signature);
+        for (var i = 0; i <= data.Length - 4; i++)
+        {
+            if (data[i] == sigBytes[0] && data[i + 1] == sigBytes[1] &&
+                data[i + 2] == sigBytes[2] && data[i + 3] == sigBytes[3])
+                return i;
+        }
+        throw new InvalidOperationException("signature not found");
+    }
+
+    // ZipArchive.Unzip must refuse to expand an archive whose aggregate
+    // decompressed size exceeds the caller's (or default) budget, even though
+    // every individual entry stays comfortably under the per-entry cap —
+    // guards against a "decompression bomb" made of several moderately-sized
+    // entries rather than one enormous one.
+    [Fact]
+    public void Security_UnzipEnforcesAggregateDecompressionBudget()
+    {
+        var chunk = "0123456789"u8.ToArray();
+        var data  = Enumerable.Repeat(chunk, 1000).SelectMany(x => x).ToArray(); // 10 KB, compresses well
+        var archive = ZipArchive.Zip([new ZipEntry("big.bin", data)]);
+
+        // Budget smaller than the entry's true decompressed size (10 KB) but
+        // larger than the compressed archive itself, so the guard can only be
+        // observed by actually decompressing and tracking the running total.
+        Assert.Throws<InvalidDataException>(() => ZipArchive.Unzip(archive, maxTotalBytes: 1024));
+
+        // With a sufficient budget the same archive extracts normally.
+        var entries = ZipArchive.Unzip(archive, maxTotalBytes: 1024 * 1024);
+        Assert.Equal(data, entries[0].Data);
+    }
 }

@@ -75,7 +75,7 @@ IReadOnlyList<ZipEntry> extracted = ZipArchive.Unzip(zipped);
 | Method | Description |
 |--------|-------------|
 | `Zip(IEnumerable<ZipEntry>)` | Compress a list of entries into a ZIP archive. |
-| `Unzip(byte[])` | Extract all entries from an archive. |
+| `Unzip(byte[] data, long maxTotalBytes = 512 MiB)` | Extract all entries from an archive. Throws `InvalidDataException` if the combined decompressed size of all entries exceeds `maxTotalBytes` (decompression-bomb guard). |
 
 ### `ZipEntry`
 
@@ -90,6 +90,36 @@ public record ZipEntry(string Name, byte[] Data);
 - Timestamps use the fixed DOS epoch 1980-01-01 00:00:00.
 - Compression: DEFLATE (method 8) if it saves space; Stored (method 0) otherwise.
 - No encryption, no ZIP64, no multi-disk archives.
+
+## Security hardening
+
+This package parses and produces archives that may cross a trust boundary
+(untrusted uploads, third-party `.zip` files), so it defends against a few
+adversarial-input classes beyond simple format conformance:
+
+- **Zip-slip / path traversal**: `ZipWriter.AddFile`/`AddDirectory` normalize
+  every entry name before writing it — backslashes become forward slashes,
+  and empty, `.`, and `..` segments are dropped — the same
+  `normalize_part_name` pattern used by `rust/opc-writer`. This package
+  performs no filesystem I/O itself, but a downstream extractor that does
+  `File.WriteAllBytes(Path.Combine(outDir, entry.Name), entry.Data)` on the
+  round-tripped entries can never receive a `..`-shaped or absolute name.
+- **Integer-overflow-safe bounds checking**: every offset/size field read
+  from an untrusted archive (`cd_offset`, `cd_size`, `local_offset`,
+  `compressed_size`, `uncompressed_size`) is attacker-controlled and can be
+  as large as `0xFFFFFFFF`. All arithmetic that combines such a field with a
+  position is done in `long` and range-checked *before* narrowing to `int`,
+  so a value ≥ `0x80000000` can't wrap negative and slip past a bounds check.
+- **ZIP32 field-width limits enforced on write**: more than 65535 entries, or
+  a single entry name encoding to more than 65535 UTF-8 bytes, is rejected
+  outright rather than silently truncated (which would desynchronize a
+  declared length from the bytes actually written and corrupt the archive).
+- **Decompression-bomb guards**: `DeflateDecompressor` caps any single
+  entry's decompressed output at 256 MiB, and `ZipArchive.Unzip` separately
+  caps the *aggregate* decompressed size across all entries in one archive
+  (default 512 MiB, overridable via `maxTotalBytes`) — several
+  moderately-sized entries can each stay under the per-entry cap while still
+  exhausting memory in total.
 
 ## Dependencies
 

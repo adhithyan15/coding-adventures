@@ -727,10 +727,55 @@ public sealed class ZipWriter
         AddEntry(name, [], compress: false, ZipConstants.UnixModeDir);
     }
 
+    /// <summary>
+    /// Normalize an entry name into a safe relative path before it is written
+    /// into the archive.
+    ///
+    /// Entry names may originate from untrusted data (copied from another
+    /// archive, derived from user input, etc). An unsanitized name like
+    /// <c>"../../evil.txt"</c> would be written verbatim as the ZIP member
+    /// name, and while this library performs no filesystem I/O itself, a naive
+    /// extractor downstream that does <c>File.WriteAllBytes(Path.Combine(outDir,
+    /// entry.Name), entry.Data)</c> on the round-tripped entries would then
+    /// write *outside* its target directory — the classic "Zip Slip"
+    /// vulnerability. We normalize defensively and structurally, mirroring the
+    /// <c>normalize_part_name</c> pattern already used by
+    /// <c>rust/opc-writer</c> for the same reason: backslashes become forward
+    /// slashes, then every empty, "." or ".." segment is dropped. The result
+    /// can never be absolute and can never traverse upward, whatever the
+    /// input. A trailing slash (directory marker) is preserved.
+    /// </summary>
+    private static string NormalizeEntryName(string name)
+    {
+        var isDirectory = name.EndsWith('/') || name.EndsWith('\\');
+        var segments = name.Replace('\\', '/')
+            .Split('/')
+            .Where(s => s.Length > 0 && s != "." && s != "..")
+            .ToArray();
+        if (segments.Length == 0)
+            throw new ArgumentException(
+                $"zip: entry name '{name}' contains no safe path segments after normalization",
+                nameof(name));
+        var normalized = string.Join("/", segments);
+        return isDirectory ? normalized + "/" : normalized;
+    }
+
     // Internal: write one entry (file or directory) with the given Unix mode.
     private void AddEntry(string name, byte[] data, bool compress, uint unixMode)
     {
+        name = NormalizeEntryName(name);
         var nameBytes = Encoding.UTF8.GetBytes(name);
+
+        // ZIP32 name_len is a 16-bit field (Local Header + Central Directory).
+        // Silently truncating would desynchronize the declared length from the
+        // bytes actually written, corrupting the archive layout for this entry
+        // and shifting every offset after it. Reject instead of truncating.
+        if (nameBytes.Length > ushort.MaxValue)
+            throw new ArgumentException(
+                $"zip: entry name '{name}' encodes to {nameBytes.Length} UTF-8 bytes, " +
+                $"exceeding the ZIP32 name_len limit of {ushort.MaxValue}",
+                nameof(name));
+
         var crc = Crc32Helper.Compute(data);
         var uncompressedSize = (uint)data.Length;
 
@@ -800,6 +845,15 @@ public sealed class ZipWriter
     /// </summary>
     public byte[] Finish()
     {
+        // The EOCD's entries_total field is a 16-bit count (ZIP32). Silently
+        // wrapping past 65535 would make the declared count disagree with the
+        // number of records actually written, producing an internally
+        // inconsistent archive — the exact bug already fixed for the sibling
+        // Ruby ZIP package's parser; reject it symmetrically here on write.
+        if (_entries.Count > ushort.MaxValue)
+            throw new InvalidOperationException(
+                $"zip: entry count {_entries.Count} exceeds the ZIP32 limit of {ushort.MaxValue}");
+
         var cdOffset = (uint)_buf.Count;
 
         // ── Central Directory Headers ──────────────────────────────────────────
@@ -919,12 +973,25 @@ public sealed class ZipReader
             ?? throw new InvalidDataException("zip: no End of Central Directory record found");
 
         // Read EOCD fields: cd_size at +12, cd_offset at +16.
-        var cdOffset = (int)ReadU32(data, eocdOffset + 16);
-        var cdSize   = (int)ReadU32(data, eocdOffset + 12);
+        //
+        // Both fields are attacker-controlled 32-bit values read from the
+        // archive. Narrowing them to `int` *before* bounds-checking (as a
+        // naive `(int)ReadU32(...)` would) lets a raw value >= 0x80000000
+        // become negative, which can make `cdOffset + cdSize > data.Length`
+        // pass even though the real (unsigned) range is nowhere near the file
+        // — the check would then be silently bypassed. We do the addition in
+        // `long` first and only narrow to `int` once we know both ends of the
+        // range fit inside `data`, which guarantees the cast below is safe.
+        var cdOffsetRaw = ReadU32(data, eocdOffset + 16);
+        var cdSizeRaw   = ReadU32(data, eocdOffset + 12);
+        var cdEnd       = (long)cdOffsetRaw + cdSizeRaw;
 
-        if (cdOffset + cdSize > data.Length)
+        if (cdEnd > data.Length)
             throw new InvalidDataException(
-                $"zip: Central Directory [{cdOffset}, {cdOffset + cdSize}) out of bounds (file size {data.Length})");
+                $"zip: Central Directory [{cdOffsetRaw}, {cdEnd}) out of bounds (file size {data.Length})");
+
+        var cdOffset = (int)cdOffsetRaw;
+        var cdSize   = (int)cdSizeRaw;
 
         // Parse Central Directory headers.
         var pos = cdOffset;
@@ -993,6 +1060,19 @@ public sealed class ZipReader
     {
         if (meta.IsDirectory) return [];
 
+        // meta.LocalOffset is an attacker-controlled uint pulled straight from
+        // the Central Directory. Cast to `int` unconditionally (as the local
+        // header offsets below implicitly are) it could go negative for any
+        // raw value >= 0x80000000, which would then slip past the `offset + n
+        // > data.Length` guards in ReadU16/ReadU32 (they never check for a
+        // negative offset) and reach `data.AsSpan(negative, n)`, which throws
+        // ArgumentOutOfRangeException instead of the InvalidDataException this
+        // class documents for corrupt input. Bounds-check the raw uint first so
+        // the narrowing cast below is provably safe.
+        if (meta.LocalOffset > (uint)_data.Length)
+            throw new InvalidDataException(
+                $"zip: entry '{meta.Name}' local header offset {meta.LocalOffset} " +
+                $"out of bounds (file size {_data.Length})");
         var lhOff = (int)meta.LocalOffset;
 
         // Reject encrypted entries (GP flag bit 0 = 1).
@@ -1005,11 +1085,15 @@ public sealed class ZipReader
         var lhNameLen  = ReadU16(_data, lhOff + 26);
         var lhExtraLen = ReadU16(_data, lhOff + 28);
         var dataStart  = lhOff + 30 + lhNameLen + lhExtraLen;
-        var dataEnd    = dataStart + (int)meta.CompressedSize;
 
-        if (dataEnd > _data.Length)
+        // meta.CompressedSize is likewise an attacker-controlled uint; add it
+        // in `long` so a huge raw value can't wrap `dataStart + size` back
+        // under `_data.Length` and defeat the bounds check.
+        var dataEndLong = (long)dataStart + meta.CompressedSize;
+        if (dataEndLong > _data.Length)
             throw new InvalidDataException(
-                $"zip: entry '{meta.Name}' data [{dataStart}, {dataEnd}) out of bounds");
+                $"zip: entry '{meta.Name}' data [{dataStart}, {dataEndLong}) out of bounds");
+        var dataEnd = (int)dataEndLong;
 
         var compressed = _data[dataStart..dataEnd];
 
@@ -1022,8 +1106,13 @@ public sealed class ZipReader
                 $"zip: unsupported compression method {m} for '{meta.Name}'"),
         };
 
-        // Trim to declared uncompressed size to guard against decompressor over-read.
-        if (decompressed.Length > (int)meta.UncompressedSize)
+        // Trim to declared uncompressed size to guard against decompressor
+        // over-read. Compare in `long` — meta.UncompressedSize is another
+        // attacker-controlled uint, and casting a value > int.MaxValue
+        // straight to `int` would go negative, making the slice below throw
+        // ArgumentOutOfRangeException instead of failing the CRC check below
+        // with the documented InvalidDataException.
+        if ((long)decompressed.Length > meta.UncompressedSize)
             decompressed = decompressed[..(int)meta.UncompressedSize];
 
         // Verify CRC-32 — this detects corruption of the decompressed content.
@@ -1064,16 +1153,23 @@ public sealed class ZipReader
 
     // ── Little-endian readers ──────────────────────────────────────────────────
 
+    // `offset` derives, directly or via arithmetic, from attacker-controlled
+    // header fields elsewhere in this file. Every call site is expected to
+    // pre-validate the *end* of the read region against data.Length, but a
+    // negative `offset` can still make `offset + n > data.Length` pass (a
+    // small negative number is less than a large positive length) without
+    // this explicit check — so we guard the low end here, once, for every
+    // caller, rather than trusting each call site to get it right.
     private static ushort ReadU16(byte[] data, int offset)
     {
-        if (offset + 2 > data.Length)
+        if (offset < 0 || offset + 2 > data.Length)
             throw new InvalidDataException($"zip: read U16 at {offset} out of bounds");
         return BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(offset, 2));
     }
 
     private static uint ReadU32(byte[] data, int offset)
     {
-        if (offset + 4 > data.Length)
+        if (offset < 0 || offset + 4 > data.Length)
             throw new InvalidDataException($"zip: read U32 at {offset} out of bounds");
         return BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(offset, 4));
     }
@@ -1106,19 +1202,39 @@ public static class ZipArchive
         return writer.Finish();
     }
 
+    // Default aggregate decompression-bomb budget for Unzip(): the sum of every
+    // entry's decompressed size in one call. DeflateDecompressor already caps
+    // a *single* entry at 256 MB, but a small archive can hold many entries
+    // that each individually stay under that cap while still expanding to
+    // gigabytes in total (fixed-Huffman back-references can each turn a
+    // handful of compressed bytes into up to 258 output bytes). 512 MB gives
+    // headroom for a couple of legitimately large entries while still bounding
+    // the worst case for a caller that blindly calls Unzip() on untrusted
+    // input.
+    private const long DefaultMaxTotalBytes = 512L * 1024 * 1024;
+
     /// <summary>
     /// Extract all file entries from a ZIP archive.
     /// Directory entries are included with empty <see cref="ZipEntry.Data"/>.
-    /// Throws <see cref="InvalidDataException"/> on corrupt archives.
+    /// Throws <see cref="InvalidDataException"/> on corrupt archives, or if the
+    /// combined decompressed size of all entries exceeds
+    /// <paramref name="maxTotalBytes"/> (decompression-bomb guard — each
+    /// individual entry is separately capped inside <see cref="ZipReader"/>).
     /// </summary>
-    public static IReadOnlyList<ZipEntry> Unzip(byte[] data)
+    public static IReadOnlyList<ZipEntry> Unzip(byte[] data, long maxTotalBytes = DefaultMaxTotalBytes)
     {
         ArgumentNullException.ThrowIfNull(data);
         var reader = new ZipReader(data);
         var result = new List<ZipEntry>();
+        var totalBytes = 0L;
         foreach (var entry in reader.Entries)
         {
             var bytes = entry.Name.EndsWith('/') ? [] : reader.Read(entry.Name);
+            totalBytes += bytes.Length;
+            if (totalBytes > maxTotalBytes)
+                throw new InvalidDataException(
+                    $"zip: aggregate decompressed size exceeds the {maxTotalBytes}-byte " +
+                    "limit (decompression bomb guard)");
             result.Add(new ZipEntry(entry.Name, bytes));
         }
         return result;
