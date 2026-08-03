@@ -1,6 +1,6 @@
 [package]
 name = "gc-core"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2021"
 description = "The shared GC engine (FlatHeap) for the LANG pipeline: linked directly by native-AOT backends (via gc-core-capi) and by vm-core."
 license = "MIT"

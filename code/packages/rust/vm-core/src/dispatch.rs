@@ -61,6 +61,9 @@ pub struct DispatchCtx<'a> {
     /// Heap of bounds-checked arrays (LANG-FULL E5). Indexed by the array
     /// *handle* (`alloc_array`'s 0-based result). See [`crate::core::VMCore`].
     pub arrays: &'a mut Vec<Vec<Value>>,
+    /// The shared GC engine `gc_alloc`'d objects live on. See
+    /// [`crate::core::VMCore`]'s `heap` field.
+    pub heap: &'a mut gc_core::FlatHeap,
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
@@ -1113,6 +1116,243 @@ fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
     Ok(Some(value))
 }
 
+// ---------------------------------------------------------------------------
+// GC-managed heap objects — `gc_alloc` / `gc_field_load` / `gc_field_store` /
+// `safepoint` / `gc_collect`
+// ---------------------------------------------------------------------------
+//
+// Everything above (`alloc`, `alloc_array`, `field_store`, `field_load`) lives
+// on `ctx.arrays`, a plain Rust bump arena that is never collected. These four
+// ops are the **additive** GC-managed alternative: they allocate on the same
+// `FlatHeap` engine (`ctx.heap`) the native-AOT backends share via
+// `gc-core-capi`, just linked directly as a Rust dependency. A `gc_alloc`'d
+// object's fields are raw 64-bit words — no NaN-boxing — mirroring exactly
+// how the native cons-cell path represents a pair (see aarch64-backend's
+// `alloc` op doc comment): a word is either a nested `Value::HeapRef`'s raw
+// address or a plain `Value::Int`, decoded on load by `instr.type_hint`
+// (`"ref..."` vs. anything else), same convention `gc-core::HeapRef`'s own
+// docs establish ("registers typed `ref<T>`").
+//
+// Objects here are allocated at kind `0` (opaque/conservative): every payload
+// word is a mark candidate, which is always sound (a look-alike integer that
+// isn't really a live heap address is filtered out by `find_header`, not
+// followed) even though it is less precise than a registered kind's exact
+// ref-field map. A future rung could register a kind per object shape for
+// full precision; kind 0 is the safe, always-correct default this additive
+// path starts from — exactly gc-core's own "unregistered kind falls back to
+// conservative" invariant.
+
+/// `gc_alloc [<size_bytes>] -> dest` — allocate a GC-managed heap object on
+/// the shared `FlatHeap` collector, returning a `Value::HeapRef`.
+///
+/// `srcs[0]` is an optional compile-time byte count; defaults to 16 (two
+/// 8-byte words, matching `alloc`'s and the native backends' default pair
+/// size). Traced, reclaimed, and — once a `safepoint` runs a compacting
+/// cycle — relocated by the real collector, unlike `alloc`'s array-heap
+/// objects.
+fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let bytes = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        match instr.srcs.first() {
+            Some(_) => resolve_src(frame, &instr.srcs, 0)?.as_i64().ok_or_else(|| {
+                VMError::Custom("gc_alloc size must be an integer".into())
+            })?,
+            None => 16,
+        }
+    };
+    if bytes <= 0 {
+        return Err(VMError::Custom(format!("gc_alloc size must be positive, got {bytes}")));
+    }
+    let ptr = ctx.heap.alloc(bytes as usize, 0);
+    if ptr.is_null() {
+        return Err(VMError::Custom("gc_alloc: allocation failed".into()));
+    }
+    let value = Value::HeapRef(gc_core::HeapRef::new(ptr as usize));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `gc_field_load dest <- obj, idx` — read the `idx`-th 8-byte word from a
+/// `gc_alloc`'d object's payload.
+///
+/// Bounds-checked against the object's *actual* allocated size
+/// (`FlatHeap::payload_size`), which also rejects a null or otherwise
+/// invalid `HeapRef` — `payload_size` reads `0` for any address that isn't a
+/// live block, and `0 + 8 > 0` fails the check for every index, so a null
+/// dereference traps exactly like an out-of-bounds one, no special-casing
+/// needed.
+fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (obj, idx) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let o = resolve_src(frame, &instr.srcs, 0)?.as_heap_ref()
+            .ok_or_else(|| VMError::Custom("gc_field_load: obj must be a heap ref".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("gc_field_load: index must be an integer".into()))?;
+        (o, i)
+    };
+    if idx < 0 {
+        return Err(VMError::Custom(format!("gc_field_load: negative index {idx}")));
+    }
+    let size = ctx.heap.payload_size(obj.addr());
+    let byte_off = (idx as usize).saturating_mul(8);
+    if byte_off.saturating_add(8) > size {
+        return Err(VMError::Custom(format!(
+            "gc_field_load: index {idx} out of bounds for a {size}-byte object"
+        )));
+    }
+    // SAFETY: `byte_off + 8 <= size`, and `size` came from `payload_size`,
+    // which returns a live block's *actual* payload size or 0 (rejected
+    // above) — so this read stays within the allocation `ctx.heap.alloc`
+    // returned for `obj`.
+    let word = unsafe { std::ptr::read_unaligned((obj.addr() + byte_off) as *const i64) };
+    let value = if instr.type_hint.starts_with("ref") {
+        Value::HeapRef(gc_core::HeapRef::new(word as usize))
+    } else {
+        Value::Int(word)
+    };
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+    }
+    Ok(Some(value))
+}
+
+/// `gc_field_store obj, idx, val` (no dest) — write the `idx`-th 8-byte word
+/// of a `gc_alloc`'d object's payload.
+///
+/// `val` must be `Value::HeapRef` (stores the raw address and runs the
+/// generational write barrier, [`gc_core::FlatHeap::write_barrier`] — the
+/// object graph must stay barrier-correct for `collect_minor` to be sound)
+/// or `Value::Int` (stores the raw word; no barrier needed since it can't
+/// keep a young object alive). Any other `Value` variant is rejected: a raw
+/// 64-bit-word field has no room for a boxed `String`/`f64` without a
+/// NaN-boxing convention this additive path doesn't introduce (the same
+/// limitation the native cons-cell path documents for itself).
+fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    let (obj, idx, val) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        let o = resolve_src(frame, &instr.srcs, 0)?.as_heap_ref()
+            .ok_or_else(|| VMError::Custom("gc_field_store: obj must be a heap ref".into()))?;
+        let i = resolve_src(frame, &instr.srcs, 1)?.as_i64()
+            .ok_or_else(|| VMError::Custom("gc_field_store: index must be an integer".into()))?;
+        let v = resolve_src(frame, &instr.srcs, 2)?;
+        (o, i, v)
+    };
+    if idx < 0 {
+        return Err(VMError::Custom(format!("gc_field_store: negative index {idx}")));
+    }
+    let size = ctx.heap.payload_size(obj.addr());
+    let byte_off = (idx as usize).saturating_mul(8);
+    if byte_off.saturating_add(8) > size {
+        return Err(VMError::Custom(format!(
+            "gc_field_store: index {idx} out of bounds for a {size}-byte object"
+        )));
+    }
+    let word: i64 = match &val {
+        Value::HeapRef(r) => r.addr() as i64,
+        Value::Int(n) => *n,
+        other => return Err(VMError::Custom(format!(
+            "gc_field_store: unsupported value kind {other:?} — only heap refs \
+             and integers can be stored in a raw GC field"
+        ))),
+    };
+    let field_addr = obj.addr() + byte_off;
+    // SAFETY: `byte_off + 8 <= size`, bounds-checked above against the
+    // object's actual allocated payload size.
+    unsafe {
+        std::ptr::write_unaligned(field_addr as *mut i64, word);
+    }
+    if let Value::HeapRef(child) = &val {
+        // SAFETY: `obj.addr()` is the payload address of the live object we
+        // just wrote into (bounds-checked above); `write_barrier` only reads
+        // one byte at its header, never dereferences `child`.
+        unsafe {
+            ctx.heap.write_barrier(obj.addr(), child.addr());
+        }
+    }
+    Ok(None)
+}
+
+/// Push the interior-address root slot for `v` into `roots`, if `v` is a
+/// `Value::HeapRef`. The pushed address is `v`'s own storage location's
+/// interior word — `HeapRef::as_mut_ptr` — so a compacting collection's
+/// root-slot rewrite updates `v` itself in place.
+fn push_heap_ref_root(v: &mut Value, roots: &mut Vec<usize>) {
+    if let Value::HeapRef(r) = v {
+        roots.push(r.as_mut_ptr() as usize);
+    }
+}
+
+/// [`push_heap_ref_root`] over a slice — one frame's register file, or one
+/// array's elements.
+fn push_heap_ref_roots(values: &mut [Value], roots: &mut Vec<usize>) {
+    for v in values.iter_mut() {
+        push_heap_ref_root(v, roots);
+    }
+}
+
+/// Build vm-core's own **precise** root set — every live `Value::HeapRef`
+/// vm-core itself can see: every register across every active frame, every
+/// global, every `memory` slot, and every array element — and run one
+/// `collect_mixed` cycle on `ctx.heap`, unconditionally.
+///
+/// No conservative stack scan, unlike the native-AOT `gc-core-capi` path: an
+/// interpreter already knows exactly where every reference lives, so there
+/// is nothing to scan conservatively.
+fn collect_now(ctx: &mut DispatchCtx) {
+    let mut roots: Vec<usize> = Vec::new();
+    for frame in ctx.frames.iter_mut() {
+        push_heap_ref_roots(&mut frame.registers, &mut roots);
+    }
+    for v in ctx.globals.values_mut() {
+        push_heap_ref_root(v, &mut roots);
+    }
+    for v in ctx.memory.values_mut() {
+        push_heap_ref_root(v, &mut roots);
+    }
+    for arr in ctx.arrays.iter_mut() {
+        push_heap_ref_roots(arr, &mut roots);
+    }
+    // SAFETY: every collected address is the interior field of a live
+    // Value::HeapRef owned by frames/globals/memory/arrays, all reachable
+    // through `ctx` for the duration of this call, so they stay valid and
+    // exclusively-writable across the collection.
+    unsafe {
+        ctx.heap.collect_mixed(&roots, &[]);
+    }
+}
+
+/// Collect on `ctx.heap` only if its threshold says a collection is due —
+/// the **paced** policy the explicit `safepoint` opcode and the dispatch
+/// loop's periodic automatic check (`AUTO_SAFEPOINT_INTERVAL`) both use, so
+/// a long-running loop with no explicit `safepoint` still gets collected
+/// under allocation pressure without collecting on every single tick.
+fn run_safepoint(ctx: &mut DispatchCtx) {
+    if ctx.heap.should_collect() {
+        collect_now(ctx);
+    }
+}
+
+/// `safepoint` (no operands, no dest) — a **paced** collection point: only
+/// collects if `ctx.heap` is over threshold. See [`run_safepoint`].
+fn handle_safepoint(ctx: &mut DispatchCtx, _instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    run_safepoint(ctx);
+    Ok(None)
+}
+
+/// `gc_collect` (no operands, no dest) — an **unconditional** collection,
+/// regardless of `ctx.heap`'s threshold. The explicit-request counterpart to
+/// the paced `safepoint` op, mirroring `gc-core-capi`'s own split between
+/// its paced `__gc_safepoint` and its unconditional `__gc_collect_precise` /
+/// `__gc_collect_compacting` builtins — a program (or a test) that wants a
+/// guaranteed collection point calls this instead of allocating enough
+/// garbage to cross the threshold incidentally.
+fn handle_gc_collect(ctx: &mut DispatchCtx, _instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    collect_now(ctx);
+    Ok(None)
+}
+
 /// `array_len dest <- arr` — the element count of array `arr`.
 fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let handle = {
@@ -1584,6 +1824,14 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "field_store"  => Some(handle_array_set),
         "field_load"   => Some(handle_array_get),
         "is_null"      => Some(handle_is_null),
+        // GC-managed heap objects (additive; see the module comment above
+        // handle_gc_alloc) — allocate/access on the shared FlatHeap collector
+        // instead of the array-heap bump arena.
+        "gc_alloc"        => Some(handle_gc_alloc),
+        "gc_field_load"   => Some(handle_gc_field_load),
+        "gc_field_store"  => Some(handle_gc_field_store),
+        "safepoint"       => Some(handle_safepoint),
+        "gc_collect"      => Some(handle_gc_collect),
         // Dynamic-value box/unbox are the identity on the VM (a `Value` is already
         // the dynamic value); union `match` emits `box` on tags/fields.
         "box"          => Some(handle_box),
@@ -1612,6 +1860,13 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
 // ---------------------------------------------------------------------------
 // Main dispatch loop
 // ---------------------------------------------------------------------------
+
+/// How often (in dispatched instructions) the dispatch loop checks
+/// `ctx.heap` for an automatic GC safepoint, independent of any explicit
+/// `safepoint` op. Matches the interval the old (now-removed) `GcCore`
+/// facade's `with_safepoint_interval` example used — cheap enough to check
+/// every tick without measurably affecting dispatch throughput.
+const AUTO_SAFEPOINT_INTERVAL: u64 = 4096;
 
 /// Run instructions until the frame stack is empty.
 ///
@@ -1676,6 +1931,16 @@ pub(crate) fn run_dispatch_loop(
         };
 
         *ctx.metrics_instrs += 1;
+
+        // Automatic GC safepoint: mirrors a backend-emitted safepoint at a fixed
+        // instruction cadence (the interval `GcCore`'s old `with_safepoint_interval`
+        // default used), so a long-running loop with no explicit `safepoint` op
+        // still gets collected under allocation pressure instead of running the
+        // heap unbounded. `run_safepoint` itself no-ops unless `ctx.heap` is over
+        // threshold, so this is a cheap counter check on every other tick.
+        if *ctx.metrics_instrs % AUTO_SAFEPOINT_INTERVAL == 0 {
+            run_safepoint(ctx);
+        }
 
         // Enforce per-execution instruction budget (sandbox / untrusted-IIR mode).
         // An IIR program with an unconditional backward jump runs forever without

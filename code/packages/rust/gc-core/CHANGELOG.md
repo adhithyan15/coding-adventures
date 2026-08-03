@@ -1,5 +1,26 @@
 # Changelog — gc-core
 
+## 0.26.0 — 2026-08-02 — `payload_size` + `HeapRef::as_mut_ptr` (for vm-core's direct FlatHeap integration)
+
+- **`FlatHeap::payload_size(addr) -> usize`** — the live heap object's
+  allocated payload size in bytes, or `0` for a null/non-heap/stale address.
+  A sibling of the existing `kind_of(addr)`, same safety argument (resolved
+  fresh from the header at `addr`, so it stays correct across a compacting
+  collection without the caller needing an address-keyed side table of its
+  own). Lets a consumer bounds-check a raw field access against an object's
+  *actual* size. Tests: `payload_size_reports_allocated_bytes_and_zero_for_non_heap`,
+  `payload_size_survives_compaction_at_the_new_address`.
+- **`HeapRef::as_mut_ptr(&mut self) -> *mut usize`** — a raw pointer to a
+  `HeapRef`'s interior address word, for a consumer that embeds a `HeapRef`
+  in its own root storage (a VM register, a global slot) to hand that exact
+  address to `collect_mixed`/`collect_compacting` as a root slot — reads the
+  current address, and under compaction, has the post-move address written
+  back through it. Test: `as_mut_ptr_reads_and_writes_through_to_the_ref`.
+- Both exist to support `vm-core` 0.20.0 depending on `gc-core` directly and
+  rooting its own `Value::HeapRef`s precisely, without going through the C
+  ABI (`gc-core-capi`) that native-AOT backends use — see `vm-core`'s
+  changelog for the consumer side.
+
 ## 0.25.0 — 2026-08-02 — remove the dead `GcCore`/`GcAdapter` facade
 
 - **Removed `gc_core`, `adapter`, `root_set`, and `write_barrier` modules** —

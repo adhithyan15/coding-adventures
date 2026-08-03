@@ -1,5 +1,55 @@
 # Changelog — vm-core
 
+## [0.20.0] — 2026-08-02 (a real, shared GC — `gc_alloc`/`gc_field_load`/`gc_field_store`/`safepoint`/`gc_collect`)
+
+vm-core gets a real garbage collector, sharing the exact engine (`gc-core`'s
+`FlatHeap`) the native-AOT backends already use via `gc-core-capi` — linked
+directly as a Rust dependency instead of through the C ABI, since vm-core is
+already Rust. This closes a real gap: `gc-core`'s only prior interpreter-facing
+design (`GcCore`/`GcAdapter`, over a separate `garbage-collector` crate) was
+never actually wired into vm-core despite its own doc comments claiming
+otherwise — see `gc-core`'s 0.25.0 changelog entry, which removes it.
+
+This is **additive**, not a replacement for the existing heap model: `alloc`/
+`alloc_array`/`field_store`/`field_load` still allocate on `ctx.arrays` (a
+plain Rust bump arena, never collected) exactly as before. The new ops are:
+
+- **`gc_alloc [<size_bytes>] -> dest`** — allocates on the shared `FlatHeap`
+  (kind 0, conservative), returning a `Value::HeapRef`.
+- **`gc_field_load dest <- obj, idx`** / **`gc_field_store obj, idx, val`** —
+  read/write the `idx`-th 8-byte word of a `gc_alloc`'d object's payload, raw
+  words with no NaN-boxing (mirroring the native cons-cell convention).
+  Bounds-checked against the object's *actual* allocated size via the new
+  `FlatHeap::payload_size` (see `gc-core` 0.25.0) — which also rejects a null
+  or invalid `HeapRef` for free, since it reads `0` for any non-live address.
+  `gc_field_store` runs the generational write barrier when storing a nested
+  `Value::HeapRef`.
+- **`safepoint`** — a **paced** collection point: collects only if `FlatHeap`
+  is over its adaptive threshold. The dispatch loop also checks every 4096
+  instructions automatically, so a long-running loop with no explicit
+  `safepoint` still gets collected under allocation pressure.
+- **`gc_collect`** — an **unconditional** collection, mirroring
+  `gc-core-capi`'s split between its paced `__gc_safepoint` and its
+  unconditional `__gc_collect_precise`/`__gc_collect_compacting` builtins.
+
+Root-finding is **precise by construction**, with no conservative stack scan
+at all: `dispatch::collect_now` walks every `Value::HeapRef` vm-core itself
+can see — every register across every active frame, every global, every
+`memory` slot, and every array element — and hands their exact storage
+addresses to `FlatHeap::collect_mixed`. An interpreter always knows exactly
+where every reference lives, so there is nothing to scan conservatively.
+
+New `Value::HeapRef(gc_core::HeapRef)` variant (`iir_type_name() == "ref"`,
+falsy iff null, `Display` via `HeapRef`'s own). `vm-runtime`'s
+`VmResult::from_value` gained the corresponding `Value::HeapRef -> VmResult::Ref`
+arm (LANG16's `VmResultTag::Ref`/`from_ref` already anticipated this).
+
+Tests: `tests/gc_heap.rs` (9 new integration tests), including the headline
+proof — `gc_collect_frees_an_object_whose_only_root_was_overwritten` — that a
+collection genuinely reclaims an object once its only root is gone, while
+`gc_collect_reclaims_unreachable_and_preserves_reachable` proves a live
+object's field data survives intact.
+
 ## [0.19.0] — 2026-07-14 (E6d list `null?` on the generic VM — `is_null` + nil-handle reservation)
 
 Completes the E6d dynamic features on the generic VM: Twig **list** builtins

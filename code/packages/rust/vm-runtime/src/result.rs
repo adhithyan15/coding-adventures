@@ -192,6 +192,7 @@ impl VmResult {
             Value::Float(f) => VmResult { tag: VmResultTag::U64, payload: f.to_bits() },
             Value::Bool(b) => VmResult::from_bool(b),
             Value::Str(_) => VmResult { tag: VmResultTag::Str, payload: 0 }, // intern idx TBD
+            Value::HeapRef(r) => VmResult::from_ref(r.addr() as u64),
             Value::Null => VmResult::void(),
         }
     }

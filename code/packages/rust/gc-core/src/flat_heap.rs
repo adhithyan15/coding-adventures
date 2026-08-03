@@ -613,6 +613,28 @@ impl FlatHeap {
         }
     }
 
+    /// Payload size in bytes of the live heap object at `addr`, or `0` if `addr`
+    /// is not inside any live block (null, non-heap, or a stale/freed pointer).
+    ///
+    /// Lets a consumer bounds-check a raw field access (`addr + offset`)
+    /// against the object's *actual* allocated size without tracking it in a
+    /// side table of its own — which would go stale across a compacting
+    /// collection unless painstakingly kept in sync. This never goes stale:
+    /// it is always resolved fresh from the header at `addr`, and `addr`
+    /// itself is only ever trustworthy in the caller's hands because it was
+    /// either just returned by [`Self::alloc`] or is a root slot the
+    /// collector kept up to date (see [`crate::HeapRef::as_mut_ptr`]).
+    /// Same O(n) cost and safety argument as [`Self::kind_of`].
+    pub fn payload_size(&self, addr: usize) -> usize {
+        let h = self.find_header(addr);
+        if h.is_null() {
+            0
+        } else {
+            // SAFETY: `find_header` returned a live block we own; its header is valid.
+            unsafe { (*h).size }
+        }
+    }
+
     /// Whether the live set has reached the threshold — i.e. a collection is due.
     ///
     /// This is the *policy* half of paced collection: it answers "should I collect
@@ -2706,6 +2728,43 @@ mod tests {
         assert_eq!(heap.kind_of(0xdead_beef), 0, "a non-heap address → 0 (no OOB read)");
         // An interior address of a live block still resolves to that block's kind.
         assert_eq!(heap.kind_of(pair + 8), cons, "interior address resolves to the block's kind");
+    }
+
+    #[test]
+    fn payload_size_reports_allocated_bytes_and_zero_for_non_heap() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.alloc(16, 0) as usize;
+        let wide = heap.alloc(40, 0) as usize;
+
+        assert_eq!(heap.payload_size(pair), 16);
+        assert_eq!(heap.payload_size(wide), 40);
+        assert_eq!(heap.payload_size(0), 0, "null → 0");
+        assert_eq!(heap.payload_size(0xdead_beef), 0, "a non-heap address → 0 (no OOB read)");
+        // An interior address of a live block still resolves to that block's size —
+        // a bounds check must key off the block's *start*, not whatever address a
+        // caller happens to probe with.
+        assert_eq!(heap.payload_size(pair + 8), 16, "interior address resolves to the block's size");
+    }
+
+    /// A compacting collection relocates the object; `payload_size` resolved at
+    /// the *new* address must still report the original size — proving a caller
+    /// that bounds-checks field access via `payload_size` stays correct across
+    /// compaction without maintaining any address-keyed side table of its own.
+    #[test]
+    fn payload_size_survives_compaction_at_the_new_address() {
+        let mut heap = FlatHeap::new();
+        let cons = heap.register_kind(&[0, 8]);
+        let root = heap.alloc(16, cons) as usize;
+        assert_eq!(heap.payload_size(root), 16);
+
+        let slots = [&root as *const usize as usize];
+        unsafe {
+            heap.collect_compacting(&slots, &[]);
+        }
+
+        let relocated = root; // the root slot was rewritten in place to the new address
+        assert_ne!(relocated, 0, "sanity: still a real address");
+        assert_eq!(heap.payload_size(relocated), 16, "size still correct at the relocated address");
     }
 
     /// The headline property: with a precise kind whose only ref field is at

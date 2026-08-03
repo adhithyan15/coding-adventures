@@ -149,6 +149,17 @@ pub struct VMCore {
     /// (unlike the single Brainfuck byte-tape, which is one flat space).
     arrays: Vec<Vec<Value>>,
 
+    /// The shared GC engine (`gc-core`'s `FlatHeap`) `gc_alloc`'d objects live
+    /// on. This is a real, per-`VMCore` collector instance — not a C-ABI
+    /// singleton like `gc-core-capi`'s — allocating and collecting through
+    /// the exact same engine the native-AOT backends use, just linked
+    /// directly as a Rust dependency instead of through the C ABI. Rooted
+    /// precisely at each `safepoint` from `Value::HeapRef`s found in
+    /// `frames`/`globals`/`memory`/`arrays` (see `dispatch::run_safepoint`) —
+    /// no stack scanning needed, because an interpreter already knows
+    /// exactly where every reference lives.
+    heap: gc_core::FlatHeap,
+
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
     jit_handlers: JitHandlerMap,
@@ -204,6 +215,7 @@ impl VMCore {
             memory: HashMap::new(),
             globals: HashMap::new(),
             arrays: Vec::new(),
+            heap: gc_core::FlatHeap::new(),
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
             builtins: BuiltinRegistry::new(),
@@ -327,6 +339,7 @@ impl VMCore {
             memory: &mut self.memory,
             globals: &mut self.globals,
             arrays: &mut self.arrays,
+            heap: &mut self.heap,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -401,6 +414,7 @@ impl VMCore {
             memory: &mut self.memory,
             globals: &mut self.globals,
             arrays: &mut self.arrays,
+            heap: &mut self.heap,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -448,6 +462,14 @@ impl VMCore {
     /// Total profiling observations recorded in the last `execute()` call.
     pub fn total_observations(&self) -> u64 {
         self.profiler.as_ref().map_or(0, |p| p.total_observations())
+    }
+
+    /// Read-only view of the shared GC engine `gc_alloc`'d objects live on.
+    ///
+    /// Useful for tests and diagnostics (live byte count, collection count,
+    /// profile) without exposing mutation outside the dispatch loop.
+    pub fn gc_heap(&self) -> &gc_core::FlatHeap {
+        &self.heap
     }
 
     // ── LANG17: branch / loop / hot-function introspection ────────────────
