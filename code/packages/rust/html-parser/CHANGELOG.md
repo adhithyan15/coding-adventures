@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Full-document parsing now reports unexpected tokens that force recovery from
+  the Standard's after-body and after-after-body insertion modes, closing 8
+  previously silent malformed corpus cases without changing DOM recovery.
 - Initial doctypes now report the Standard's parse error when their name,
   public identifier, or system identifier does not match the allowed HTML
   forms, closing 14 previously silent malformed corpus cases.

@@ -4341,6 +4341,31 @@ impl BrowserRenderNode {
     }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum DocumentTailMode {
+    InBody,
+    AfterBody,
+    AfterHtml,
+}
+
+impl DocumentTailMode {
+    fn diagnostic_code(self) -> &'static str {
+        match self {
+            Self::AfterBody => "unexpected-token-after-body",
+            Self::AfterHtml => "unexpected-token-after-html",
+            Self::InBody => unreachable!("the in-body mode does not report tail diagnostics"),
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Self::AfterBody => "after body",
+            Self::AfterHtml => "after after body",
+            Self::InBody => "in body",
+        }
+    }
+}
+
 /// Streaming-friendly parser core over already-tokenized HTML.
 #[derive(Debug)]
 pub struct HtmlParser {
@@ -4358,6 +4383,7 @@ pub struct HtmlParser {
     explicit_body_end_seen: bool,
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
+    document_tail_mode: DocumentTailMode,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -4381,6 +4407,7 @@ impl Default for HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4434,6 +4461,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4459,6 +4487,7 @@ impl HtmlParser {
             explicit_body_end_seen: false,
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
+            document_tail_mode: DocumentTailMode::InBody,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -4576,6 +4605,7 @@ impl HtmlParser {
 
     fn process_token(&mut self, token: Token) {
         self.process_initial_insertion_mode(&token);
+        self.process_document_tail_mode(&token);
         if matches!(token, Token::Eof) {
             self.flush_foreign_cdata_text();
         }
@@ -4643,6 +4673,43 @@ impl HtmlParser {
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
             }
+        }
+    }
+
+    fn process_document_tail_mode(&mut self, token: &Token) {
+        if self.is_fragment || self.document_has_closed_frameset() {
+            return;
+        }
+
+        if matches!(self.document_tail_mode, DocumentTailMode::InBody) {
+            return;
+        }
+        let allowed_in_both_modes = matches!(
+            token,
+            Token::Comment(_)
+                | Token::ProcessingInstruction { .. }
+                | Token::Doctype { .. }
+                | Token::Eof
+        ) || matches!(token, Token::Text(text) if is_html_whitespace_text(text))
+            || matches!(token, Token::StartTag { name, .. } if name == "html");
+        let allowed = allowed_in_both_modes
+            || (matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+                && matches!(token, Token::EndTag { name } if name == "html"));
+
+        if matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
+            && matches!(token, Token::EndTag { name } if name == "html")
+        {
+            self.document_tail_mode = DocumentTailMode::AfterHtml;
+        } else if !allowed {
+            let mode = self.document_tail_mode;
+            self.diagnostics.push(ParserDiagnostic::new(
+                mode.diagnostic_code(),
+                format!(
+                    "unexpected token was reprocessed from the {} insertion mode",
+                    mode.name()
+                ),
+            ));
+            self.document_tail_mode = DocumentTailMode::InBody;
         }
     }
 
@@ -6623,6 +6690,24 @@ impl HtmlParser {
         }
         if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
+        }
+        if !self.is_fragment
+            && !self.document_has_closed_frameset()
+            && name == "body"
+            && self.has_open_element("body")
+            && !self.has_disallowed_open_element_for_body_end_tag()
+        {
+            self.document_tail_mode = DocumentTailMode::AfterBody;
+        }
+        if !self.is_fragment
+            && !self.document_has_closed_frameset()
+            && name == "html"
+            && self.has_open_element("html")
+            && !self.has_open_table_context()
+            && (!self.has_open_element("body")
+                || !self.has_disallowed_open_element_for_body_end_tag())
+        {
+            self.document_tail_mode = DocumentTailMode::AfterHtml;
         }
         if name == "body" {
             self.explicit_body_end_seen = true;
@@ -32964,6 +33049,48 @@ mod tests {
             let allowed = parse_html_with_diagnostics(source).unwrap();
             assert!(allowed.parser_diagnostics.is_empty(), "source {source:?}");
         }
+    }
+
+    #[test]
+    fn reports_unexpected_tokens_after_body_and_html() {
+        for (source, code) in [
+            (
+                "<!doctype html><body></body><p>x</p><div>y</div>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html><body></body></html>text<p>x</p>",
+                "unexpected-token-after-html",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == code)
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><body></body> \n<!--after body--><?pi?></html><!--after html-->",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            !matches!(
+                diagnostic.code.as_str(),
+                "unexpected-token-after-body" | "unexpected-token-after-html"
+            )
+        }));
+
+        let ignored_html_end =
+            parse_html_with_diagnostics("<!doctype html><menuitem></html><p>x").unwrap();
+        assert!(!ignored_html_end.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-html"
+        }));
     }
 
     #[test]
