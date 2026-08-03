@@ -1021,6 +1021,24 @@ def test_lowers_valid_mosfet_instance_drain_area(
     assert isclose(mosfet.model.model.params.AD, expected)
 
 
+@pytest.mark.parametrize("source_area", ["-1n", "1e999"])
+def test_rejects_invalid_mosfet_instance_source_area(source_area: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET AS must be finite and non-negative"
+    ):
+        parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AS={source_area}\n")
+
+
+@pytest.mark.parametrize(("source_area", "expected"), [("0", 0.0), ("4n", 4.0e-9)])
+def test_lowers_valid_mosfet_instance_source_area(
+    source_area: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model nfast NMOS\nM1 d g s b nfast AS={source_area}\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.AS, expected)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
