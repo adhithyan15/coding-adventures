@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS instance `NRS` values before lowering
+  valid source diffusion square counts.
 - Reject negative and non-finite MOS instance `NRD` values before lowering
   valid drain diffusion square counts.
 - Reject MOS model-card `LD` values that are non-finite, negative, or leave a
