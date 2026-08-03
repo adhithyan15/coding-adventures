@@ -1095,17 +1095,16 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // never-collected `ctx.arrays` bump arena — a deliberate, separate heap, not
 // an oversight (arrays have no analogous "real" collector to reuse yet).
 //
-// A `gc_alloc`'d object's fields are raw 64-bit words — no NaN-boxing —
-// mirroring exactly how the native cons-cell path represents a pair (see
-// aarch64-backend's `alloc` op doc comment): a word is either a nested
-// `Value::HeapRef`'s raw address, a plain `Value::Int`, an `f64`'s bit
-// pattern (`Value::Float`), or a `Value::Bool` as `0`/`1` — decoded on load
-// by `instr.type_hint` (`"ref..."` / `"f64"`/`"float"` / `"bool"` / anything
-// else defaults to `Int`), same convention `gc-core::HeapRef`'s own docs
-// establish ("registers typed `ref<T>`"). `Value::Str` has no raw-word
-// representation and is rejected — no Twig lowering pass boxes a string into
-// its own heap cell for a record/union/closure field on any backend today,
-// so this is pre-existing unsupported territory, not a regression.
+// A `gc_alloc`'d object's fields are raw 64-bit words — no NaN-boxing at the
+// `FlatHeap` level. A word is either a nested `Value::HeapRef`'s raw address
+// or a plain `Value::Int`, disambiguated by a 3-bit tag carried in the word
+// itself (see `FIELD_TAG_MASK`'s doc comment) rather than `instr.type_hint`
+// — a dynamically-typed lisp field (`ref<any>`) can hold either at the same
+// position, so the hint alone can't tell them apart. `Value::Float`/`Bool`/
+// `Str` have no representation in this tag scheme and are rejected — no
+// Twig lowering pass stores one directly into a record/union/closure field
+// on any backend today, so this is pre-existing unsupported territory, not
+// a regression.
 //
 // Objects here are allocated at kind `0` (opaque/conservative): every payload
 // word is a mark candidate, which is always sound (a look-alike integer that
