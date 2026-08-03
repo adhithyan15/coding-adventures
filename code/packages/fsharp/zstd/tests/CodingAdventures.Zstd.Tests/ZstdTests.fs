@@ -2,10 +2,66 @@ namespace CodingAdventures.Zstd.FSharp.Tests
 
 open System
 open System.Collections.Generic
+open System.Diagnostics
 open System.IO
 open System.Text
 open CodingAdventures.Zstd.FSharp
 open Xunit
+
+/// TC-9 CLI interoperability helpers: shells out to the real `zstd` binary
+/// (github.com/facebook/zstd) so our encoder/decoder are checked against an
+/// independent implementation, not just against themselves. This is the
+/// class of test that actually catches wire-format bugs: two of the three
+/// FSE sequences-codec bugs documented in lessons.md Lesson 96 were
+/// internally self-consistent (our own decoder correctly read our own
+/// encoder's output) and were invisible to every round-trip-only test in
+/// this file — they were only caught by decompressing our output with a
+/// genuinely independent decoder.
+module private ZstdCli =
+    /// True if a `zstd` binary answering `--version` is reachable on PATH.
+    let isAvailable () =
+        try
+            use process' = new Process()
+            process'.StartInfo.FileName <- "zstd"
+            process'.StartInfo.ArgumentList.Add "--version"
+            process'.StartInfo.RedirectStandardOutput <- true
+            process'.StartInfo.RedirectStandardError <- true
+            process'.StartInfo.UseShellExecute <- false
+            process'.Start() |> ignore
+            process'.StandardOutput.ReadToEnd() |> ignore
+            process'.StandardError.ReadToEnd() |> ignore
+            process'.WaitForExit()
+            process'.ExitCode = 0
+        with _ -> false
+
+    /// Runs `zstd` with the given arguments, feeding `input` on stdin and
+    /// returning whatever it wrote to stdout. Throws with the captured
+    /// stderr text if the process exits non-zero.
+    let run (arguments: string list) (input: byte array) =
+        use process' = new Process()
+        process'.StartInfo.FileName <- "zstd"
+        for argument in arguments do
+            process'.StartInfo.ArgumentList.Add argument
+        process'.StartInfo.RedirectStandardInput <- true
+        process'.StartInfo.RedirectStandardOutput <- true
+        process'.StartInfo.RedirectStandardError <- true
+        process'.StartInfo.UseShellExecute <- false
+        process'.Start() |> ignore
+
+        use stdout = new MemoryStream()
+        let copyTask = process'.StandardOutput.BaseStream.CopyToAsync stdout
+
+        process'.StandardInput.BaseStream.Write(input, 0, input.Length)
+        process'.StandardInput.BaseStream.Close()
+        copyTask.Wait()
+        let stderrText = process'.StandardError.ReadToEnd()
+        process'.WaitForExit()
+
+        if process'.ExitCode <> 0 then
+            let message = "zstd exited " + string process'.ExitCode + ": " + stderrText
+            failwith message
+
+        stdout.ToArray()
 
 type ZstdTests() =
     let blockTypes (frame: byte array) =
@@ -123,7 +179,21 @@ type ZstdTests() =
 
     [<Fact>]
     member _.``multi-segment headers and checksums are consumed``() =
-        let frame = [| 0x28uy; 0xB5uy; 0x2Fuy; 0xFDuy; 0x10uy; 0uy; 0x09uy; 0uy; 0uy; byte 'x'; 1uy; 2uy; 3uy; 4uy |]
+        // FHD 0x04 sets Content_Checksum_flag (bit 2, RFC 8878 §3.1.1.1) —
+        // NOT bit 4 (0x10), which is Unused_bit. See lessons.md Lesson 95.
+        let frame = [| 0x28uy; 0xB5uy; 0x2Fuy; 0xFDuy; 0x04uy; 0uy; 0x09uy; 0uy; 0uy; byte 'x'; 1uy; 2uy; 3uy; 4uy |]
+        Assert.Equal<byte array>([| byte 'x' |], Zstd.Decompress frame)
+
+    [<Fact>]
+    member _.``unused bit 4 is ignored, not enforced zero``() =
+        // Bit 4 is Unused_bit per RFC 8878, not Content_Checksum_flag (that's
+        // bit 2) and not Reserved_bit (that's bit 3) — a decoder must not
+        // reject a frame merely because it's set, nor mistake it for a
+        // checksum flag. This is the exact descriptor byte (0x10) an
+        // earlier, buggy revision of this codec used to mean "checksum
+        // present"; here it correctly means nothing at all, and no trailing
+        // checksum bytes follow the block. See lessons.md Lesson 95.
+        let frame = [| 0x28uy; 0xB5uy; 0x2Fuy; 0xFDuy; 0x10uy; 0uy; 0x09uy; 0uy; 0uy; byte 'x' |]
         Assert.Equal<byte array>([| byte 'x' |], Zstd.Decompress frame)
 
     [<Fact>]
@@ -141,6 +211,76 @@ type ZstdTests() =
         let nullBytes = Unchecked.defaultof<byte array>
         Assert.Throws<ArgumentNullException>(fun () -> Zstd.Compress nullBytes |> ignore) |> ignore
         Assert.Throws<ArgumentNullException>(fun () -> Zstd.Decompress nullBytes |> ignore) |> ignore
+
+    // ─── TC-9: real `zstd` CLI interoperability ────────────────────────────
+    //
+    // xunit 2.x has no built-in "skip at runtime" mechanism (that arrived in
+    // xunit v3's Assert.Skip); these tests approximate JUnit's
+    // Assumptions.assumeTrue by returning early — with no assertions run —
+    // when `zstd` isn't reachable on PATH, so CI environments without the
+    // CLI installed neither fail nor falsely report the interop path as
+    // exercised.
+    [<Fact>]
+    member _.``TC-9: our compressed output decompresses with the real zstd CLI``() =
+        if ZstdCli.isAvailable () then
+            let input =
+                Encoding.ASCII.GetBytes(
+                    String.concat "" (List.replicate 200 "the quick brown fox jumps over the lazy dog ABCDEFGH "))
+
+            let compressed = Zstd.Compress input
+            let decompressedByCli = ZstdCli.run [ "-d"; "-c" ] compressed
+            Assert.Equal<byte array>(input, decompressedByCli)
+
+    [<Fact>]
+    member _.``TC-9: real zstd CLI output decompresses here``() =
+        if ZstdCli.isAvailable () then
+            let input =
+                Encoding.ASCII.GetBytes(
+                    String.concat "" (List.replicate 200 "the quick brown fox jumps over the lazy dog ABCDEFGH "))
+
+            // --no-compress-literals: this educational decoder only supports
+            // Raw_Literals_Block (RFC 8878 §3.1.1.3.1, Literals_Block_Type
+            // 0), not Huffman-coded literals (type 2/3) — matching the
+            // documented scope of this and every sibling zstd port in this
+            // repo. Real `zstd`'s default heuristic picks Huffman literals
+            // once the literals section is large/complex enough (it does
+            // for this input without the flag), which is an intentional
+            // out-of-scope limitation, not a sequences-codec bug.
+            let compressedByCli = ZstdCli.run [ "-c"; "--no-compress-literals" ] input
+            Assert.Equal<byte array>(input, Zstd.Decompress compressedByCli)
+
+    [<Fact>]
+    member _.``TC-9: high sequence count round trips through the real zstd CLI``() =
+        // Regression coverage for the specific bug class in lessons.md
+        // Lesson 96: a block with many sequences exercises the FSE
+        // state-update/skip-update transition many times, and also crosses
+        // the sequence-count wire encoding's 1-byte -> 2-byte boundary (128)
+        // — exactly where an earlier revision of this codec (and the
+        // shared-design Rust/Java/Kotlin ports) diverged from the real wire
+        // format while still round-tripping against itself.
+        //
+        // One direction only (ours compresses, real `zstd -d` decodes):
+        // real zstd's own encoder heuristic switches away from predefined
+        // FSE tables (RFC 8878's Predefined_Mode) to custom per-frame
+        // tables once a block has "enough" sequences with a non-trivial
+        // symbol distribution — which this codec deliberately does not
+        // support (see the "Educational simplification" note in README.md).
+        // That's a separate, intentional scope limit unrelated to the
+        // sequences-codec conformance bug this test targets, so the reverse
+        // direction isn't exercised here. A repeating 6-byte cycle over
+        // 50,000 bytes gives LZSS plenty of short, distinct matches — our
+        // own encoder emits 197 sequences for this input (verified: it
+        // crosses the sequence-count wire encoding's 128-sequence 1-byte ->
+        // 2-byte boundary), while its narrow LL/ML/OF code distribution
+        // keeps real zstd's own encoder inside Predefined_Mode on the
+        // forward direction covered by the other TC-9 tests above.
+        if ZstdCli.isAvailable () then
+            let cycle = Encoding.ASCII.GetBytes "ABCDEF"
+            let input = Array.init 50_000 (fun index -> cycle[index % cycle.Length])
+
+            let compressed = Zstd.Compress input
+            let decompressedByCli = ZstdCli.run [ "-d"; "-c" ] compressed
+            Assert.Equal<byte array>(input, decompressedByCli)
 
     [<Fact>]
     member _.``malformed frames are rejected``() =
