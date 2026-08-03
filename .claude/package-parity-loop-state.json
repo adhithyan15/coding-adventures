@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "46d95281010e384243dd027a0b94063d5cd6b382",
+    "revision": "816bd31f41bd21ce5bda30c1dfaac8b8b5102de0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1224,
-    "implementation_package_slots": 4372,
+    "implementation_identities": 1225,
+    "implementation_package_slots": 4373,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 774,
-    "singleton_missing_slots": 10836,
-    "rust_singletons": 579,
+    "singleton_packages": 775,
+    "singleton_missing_slots": 10850,
+    "rust_singletons": 580,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -365,7 +365,7 @@
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-ruby-rockspec-utf8",
       "pr_number": null,
-      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. Pre-rebase validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, and a real 258-Lua-package/382-edge plan. Full-repository validation separately discovered the undeclared Starlark runtime dependency and recurring canonical BUILD parse failures; both have dedicated pending owners below and do not expand this UTF-8 slice."
+      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. After conflict-free rebases through 816bd31f, exact-head validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, a real 258-Lua-package/382-edge plan, and the collision-clean inventory. Full-repository validation separately discovered the undeclared Starlark runtime dependency and 44 canonical BUILD parse fallbacks; both have dedicated pending owners below and do not expand this UTF-8 slice."
     },
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
@@ -401,7 +401,7 @@
       "depends_on": ["build-tool-ruby-starlark-runtime-closure"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates."
+      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -905,6 +905,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9609 added Rust-only chief-of-staff-channel-crypto. Define language-neutral vectors for the versioned bounded grant/message wire records, stable storage keys, framed authenticated headers, digest/signature inputs, epoch transition rules, retry/conflict handling, and sequence reservation/recovery. Expand deterministic codecs and cryptographic behavior only where each lane has suitable constant-time primitives; keep OS CSPRNG access, key custody, durable sequence persistence, storage, and actor routing behind injected or native authority boundaries, with reviewed exceptions where a safe implementation is unavailable."
+    },
+    {
+      "id": "chief-channel-store-portable-conformance",
+      "title": "Fixture and expand the portable Chief encrypted channel store",
+      "status": "pending",
+      "depends_on": ["chief-channel-crypto-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 9bb12864 inventory after PR #9640 added Rust-only chief-of-staff-channel-store. Define language-neutral fixtures for two-phase CAS sequence reservation, exact pending-header recovery, nonce-safe abandoned gaps, idempotent encrypted-message and sealed-grant persistence, ordered pagination, monotonic per-receiver acknowledgements, conflict/retry ceilings, corrupt-record rejection, and stable repository-owned storage keys/errors. Expand the authority-free orchestration over injected StorageBackend and channel-crypto contracts after the cryptographic vectors land; backend I/O, filesystem durability, key custody, entropy, and actor routing remain separately injected or native and are not part of this portable package."
     },
     {
       "id": "venture-browser-qt-portable-bridge-and-native-host",
