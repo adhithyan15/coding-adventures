@@ -824,6 +824,18 @@ jobs:
           }
           Set-Location code/packages/rust
           cargo test -p venture-browser-windows
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows bridge tests failed with exit code $LASTEXITCODE"
+          }
+          Set-Location ..\..\programs\mosaic\venture-browser
+          cargo test
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Mosaic package tests failed with exit code $LASTEXITCODE"
+          }
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-all.ps1
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows backend matrix failed with exit code $LASTEXITCODE"
+          }
 
       - name: Build and test Venture macOS acceptance
         if: runner.os == 'macOS' && needs.detect.outputs.needs_venture_windows == 'true'

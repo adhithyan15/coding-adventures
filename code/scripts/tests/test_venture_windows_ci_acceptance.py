@@ -118,6 +118,15 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             3,
         )
         self.assertIn("cargo test -p venture-browser-windows", workflow)
+        self.assertIn(
+            "Set-Location ..\\..\\programs\\mosaic\\venture-browser",
+            workflow,
+        )
+        self.assertIn(
+            "powershell -NoProfile -ExecutionPolicy Bypass -File "
+            "scripts\\build-all.ps1",
+            workflow,
+        )
         self.assertIn("cargo test -p venture-browser-macos", workflow)
 
 
