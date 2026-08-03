@@ -116,7 +116,7 @@ complete.
    `status-text` slot, and let the generated SwiftUI and WinUI content surfaces
    select their native pointing-hand cursor. Gate the same behavior through
    direct generated-app interaction tests on macOS and Windows.
-2. **P1 — native scrollbar projection.** Expose the shared viewport offset and
+2. **P1 — native scrollbar projection (completed).** Expose the shared viewport offset and
    extent as target-neutral state, then bind generated native scrollbars to the
    same Mosaic-hosted content surface without recreating browser chrome in
    AppKit or Win32.

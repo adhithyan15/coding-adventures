@@ -263,6 +263,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(interaction.contains("HTTP status 503"));
     assert!(interaction.contains("\"surfaceFocus\":\"native\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
+    assert!(interaction.contains("\"surfaceScrollbar\":\"native-projection\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"surfaceHistory\":\"back-forward\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
