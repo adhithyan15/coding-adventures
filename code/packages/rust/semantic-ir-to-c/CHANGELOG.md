@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.36.0 — `<<`, Ruby's shift operator
+
+`ruby-to-semantic-ir` 0.9.0 lowers `<<` to a top-level `BuiltinCall("<<",
+[lhs, rhs])` (the same op-name-keyed protocol `+`/`-`/`*`/`/` use, not the
+`__method__` dispatch protocol Collections methods use). This adds the C
+runtime side: a new `"<<" => "_sir_shift_left"` entry in `variadic_helper`,
+and `_sir_shift_left_v`, polymorphic over three receiver types:
+
+- **Array** — pushes each RHS operand in place (`_sir_array_push_one`,
+  the same slice-4 growth helper `Array#push` uses) and returns the
+  (mutated) receiver, so `a << 1 << 2` chains and mutation is visible
+  through a shared binding, exactly like `push`.
+- **Integer** — bitwise shift, matching real Ruby's rules: a NEGATIVE
+  shift amount REVERSES direction (`5 << -1 == 5 >> 1 == 2`); since this
+  runtime has no bignum (unlike real Ruby, which grows arbitrarily — `1 <<
+  63 == 9223372036854775808`, one past this runtime's `INT64_MAX`), an
+  out-of-range left shift SATURATES at `INT64_MAX`/`INT64_MIN` rather than
+  wrapping or reaching C's shift-amount-exceeds-width UB (shifting by
+  `>= 64` on a 64-bit type is UB, so every actual C shift is pre-checked
+  into range first). The exact-boundary case (`-1 << 63 == INT64_MIN`,
+  which fits with no truncation) is verified to NOT spuriously saturate.
+- **String** — concatenates via `_sir_cat`/`_sir_str_of` (the same helper
+  `_sir_plus_v` already uses for `+`'s String-receiver case) and returns a
+  NEW string. Two documented divergences from real Ruby: (1) true
+  `String#<<` mutates in place with shared-reference visibility (like
+  Array's push) — this runtime's `SIR_STR` is a bare `const char *` with
+  no heap box/pointer identity (unlike `SIR_SEQ`/`SIR_MAP`), so in-place
+  mutation isn't representable without a different String representation
+  entirely; (2) real Ruby's `"a" << 98` appends the CHARACTER at codepoint
+  98 (`"ab"`) — `_sir_str_of` only recognizes String/Symbol, so a
+  non-String RHS here is silently dropped instead (matching `_sir_plus_v`'s
+  existing behavior for `"a" + 5` in this same runtime, which also drops a
+  non-string operand rather than stringifying or raising).
+
+Only the C backend has a `<<` runtime implementation so far — Python/JS/
+Go/Rust/Ruby all ACCEPT `<<` at emit time (confirmed via direct probe) but
+their shared runtime packages don't register a `"<<"` builtin entry, so
+running the emitted program raises a clean runtime error naming the gap
+(confirmed for Python: `NameError: SIR builtin '<<' is not implemented in
+sir-runtime-core's dispatch table ... a backend coverage gap`) — the SAME
+shape of gap as `[]`/`[]=` bracket-index dispatch, tracked as its own
+follow-up rather than blocking this PR.
+
+`semantic-ir-to-c` 0.35.0 -> 0.36.0.
+
 ## 0.35.0 — deferred-from-slice-8 String methods: char-set + padding
 
 Widens `_sir_builtin_method_v` with the two String method families slice 8

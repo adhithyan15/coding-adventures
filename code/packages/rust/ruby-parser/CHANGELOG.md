@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.8.0] - 2026-08-03
+
+### Added — `<<` as a binary operator
+
+New `shift` grammar rule, inserted between `comparison` and `sum`:
+`comparison = shift {CMP shift}; shift = sum {"<<" sum}; sum = term {...}`.
+Matches real Ruby's precedence — `<<` binds LOOSER than `+`/`-` (additive)
+and TIGHTER than comparison, so `1 + 2 << 3` parses as `(1 + 2) << 3` and
+`a << 1 == b` parses as `(a << 1) == b`.
+
+`<<` has no dedicated lexer `TokenType` (the same catch-all-`Name`
+treatment `<`/`<=`/`&&` already get), so `shift` matches it by VALUE, the
+same technique `comparison` uses. The lexer already fuses `<<` into one
+token (needed pre-existingly for heredoc-vs-operator disambiguation —
+`is_heredoc_open` only treats `<<` as a heredoc opener in expression-START
+position; after a value, e.g. `3 << 1`, it's already a plain operator
+token), so this required no lexer changes.
+
+`method_call_no_paren`'s negative-lookahead guard list (the fix for a bare
+comparison/logical statement mis-parsing as a paren-less call, e.g. `x > 2`
+swallowing `>` as a call argument) gained `!"<<"` — without it, a bare
+`a << 1` would reproduce the exact same mis-parse the guard exists to
+prevent, since `<<` is now a real operator lexeme reachable at that
+position.
+
+Two tests previously pinned `<<` as an intentionally-unsupported bitwise
+operator (`test_unsupported_bitwise_operators_still_split_unchanged`,
+mirrored by comparison-precedence tests that counted `sum` children of
+`comparison` directly) — updated: `<<` removed from the "unsupported"
+list (kept for `**`/`>>`/`^`/`&`/`|`, which remain unimplemented), and new
+tests added for the `shift` precedence level itself.
+
+`coding-adventures-ruby-parser` 0.7.0 -> 0.8.0.
+
 ## [0.7.0] - 2026-08-03
 
 ### Fixed — bracket-index (`a[i]` / `a[i] = v`) had no grammar rule at all

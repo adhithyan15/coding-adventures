@@ -2,6 +2,27 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.9.0 — lower `<<` (Ruby's shift operator)
+
+`ruby-parser` 0.8.0 adds the `shift` grammar rule for `<<` (see that
+crate's CHANGELOG for the precedence/lexer details). This release adds a
+new `lower_shift_chain`, modeled directly on `lower_comparison_chain`
+(matches its single operator by LEXEME, since `<<` has no dedicated lexer
+`TokenType` either): `a << b` → `BuiltinCall("<<", [a, b])`, folding
+left-associatively for a chain (`a << 1 << 2` → nested `<<` calls, exactly
+how `+`/`-` already fold over `sum`). This is the op-name-keyed
+binary-operator protocol `+`/`-`/`*`/`/` use, NOT the `__method__`
+dispatch protocol Collections methods use — `<<` is an expression, not a
+dot-call.
+
+Two "still cleanly unsupported" pinning tests (`bitwise_operators_are_
+still_cleanly_unsupported_not_mis_parsed` here and its `ruby-parser`
+mirror) had `<<` removed from their operator list, since it's no longer
+unsupported; new tests cover the `<<` lowering shape and its precedence
+relative to `+` and `==` directly.
+
+`ruby-to-semantic-ir` 0.8.0 -> 0.9.0.
+
 ## 0.8.0 — lower bracket-index read/write through `__method__` dispatch
 
 `ruby-parser` 0.7.0 adds real grammar rules for `recv[k]` (read,

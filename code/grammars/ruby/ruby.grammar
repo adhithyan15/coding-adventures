@@ -622,13 +622,17 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # succeeding on a malformed one-token "argument") and the `statement` /
 # `modifier_statement` alternation falls through to `expression_stmt`, which
 # parses the WHOLE `x > 2` correctly via `comparison`/`logical_and`/
-# `logical_or`.  (`**`/bitwise `<<`/`>>`/`^`/`&`/`|` are NOT included: this
+# `logical_or`.  (`**`/bitwise `>>`/`^`/`&`/`|` are NOT included: this
 # grammar has no binary-operator rule for them at all — `x ** 2` was never a
 # supported expression, so there is no correct fallback parse to preserve;
-# only the operators actually implemented in `comparison`/`logical_and`/
-# `logical_or` are guarded here.)
+# only the operators actually implemented in `comparison`/`shift`/
+# `logical_and`/`logical_or` are guarded here.  `<<` WAS added here — see
+# the `shift` rule below — so it needs the same guard: a bare `a << 1`
+# would otherwise mis-parse as a paren-less call to `a` with `<<` consumed
+# as the FIRST "argument", the exact bug this whole guard list exists to
+# prevent.)
 method_call_no_paren = ( NAME | !"super" KEYWORD )
-    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||"
+    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||" !"<<"
     expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
@@ -749,7 +753,23 @@ logical_and  = logical_not { ( "&&" | "and" ) logical_not } ;
 # backtracking issues when statements like `a || b` lived inside a
 # `def` body (the alternation didn't unwind cleanly).
 logical_not  = { ( "!" | "not" ) } comparison ;
-comparison   = sum { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) sum } ;
+# `<<` — Ruby's shift operator, added as its own precedence level between
+# `comparison` and `sum`: real Ruby places `<<`/`>>` LOOSER than additive
+# (`+`/`-`) and TIGHTER than comparison, so `1 + 2 << 3` parses as
+# `(1 + 2) << 3` and `a << 1 == b` parses as `(a << 1) == b`.  Only `<<` is
+# implemented here (not the full bitwise pyramid `>>`/`&`/`|`/`^`) — the
+# motivating use case is `Array#push`/`String#concat` shorthand and
+# `Integer` bitwise-left-shift; `>>` etc. are a documented follow-up.
+#
+# Token typing: the lexer already fuses `<<` into ONE token (needed for
+# heredoc-vs-operator disambiguation — see `ruby-lexer`'s
+# `is_heredoc_open`, which only treats `<<` as a heredoc opener in
+# expression-START position; after a value, e.g. `3 << 1`, it's already a
+# plain operator token) with no dedicated `TokenType` (same catch-all-Name
+# treatment as `<`/`<=`/`&&`), so this matches by VALUE, the same trick
+# `comparison` uses just below.
+comparison   = shift { ( "==" | "!=" | "<=" | ">=" | "<" | ">" ) shift } ;
+shift        = sum { "<<" sum } ;
 sum          = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
 # Phase 6k — unary minus.  New `factor` alternative AFTER literals/names

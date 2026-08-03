@@ -2989,6 +2989,128 @@ static SirValue _sir_object_frozen_p(SirValue v) {
     }
 }
 
+/* `<<` -- Ruby's shift operator, polymorphic like `+`:
+ *   Array    -- push each RHS operand in place (`_sir_array_push_one`,
+ *               slice 4's growth helper), returns the (mutated) receiver.
+ *               Chains left-to-right: `a << 1 << 2` pushes both.
+ *   Integer  -- bitwise shift; see `_sir_shift_left_i64` below for the
+ *               overflow/negative-amount handling.
+ *   String   -- concatenates and returns a NEW string (via `_sir_str_of` +
+ *               `_sir_cat`, the SAME helper `_sir_plus_v` already uses for
+ *               `+`'s String-receiver case). This diverges from real Ruby
+ *               in two ways, both DOCUMENTED, not silent: (1) true
+ *               `String#<<` mutates in place with shared-reference
+ *               visibility (like Array's push) -- this runtime's `SIR_STR`
+ *               is a bare `const char *` with no heap box/pointer identity
+ *               (unlike `SIR_SEQ`/`SIR_MAP`), so in-place mutation isn't
+ *               representable without a different String representation
+ *               entirely, a materially larger undertaking; (2) real Ruby's
+ *               `"a" << 98` appends the CHARACTER at codepoint 98 (`"ab"`),
+ *               not the stringified integer -- deferred (needs UTF-8
+ *               encoding of an arbitrary codepoint). `_sir_str_of` only
+ *               recognizes `SIR_STR`/`SIR_SYM` (returns `""` for anything
+ *               else, e.g. an Integer) -- so a non-String/Symbol RHS is
+ *               silently DROPPED (contributes nothing to the result),
+ *               exactly matching `_sir_plus_v`'s existing behavior for
+ *               `"a" + 5` in this same runtime (which also drops the `5`
+ *               rather than stringifying it -- real Ruby raises `TypeError`
+ *               for that expression instead; this runtime never raises
+ *               here, matching its established never-raise-on-`+` floor).
+ */
+
+/* Extracts a shift-amount argument as a plain `int64_t`, the same
+   UB-avoidance discipline `round(ndigits)`/`ljust` use for their own
+   numeric arguments: never a bare `(int64_t)v.as.f` cast (UB for a
+   non-finite/out-of-range Float), routed through the shared saturating
+   helper instead. Real Ruby truncates a Float shift amount toward zero
+   (`5 << 2.5 == 5 << 2`); `_sir_f64_to_i64_saturating` already truncates
+   for any in-range value and saturates for a hostile huge/non-finite one. */
+static int64_t _sir_shift_amount_arg(SirValue v) {
+    if (v.tag == SIR_INT) return v.as.i;
+    if (v.tag == SIR_FLOAT) return _sir_f64_to_i64_saturating(v.as.f);
+    return 0;
+}
+
+/* Bitwise-shifts `n` by `amount`, matching real Ruby's rules:
+ *   - `amount == 0` or `n == 0`: identity (no-op).
+ *   - `amount < 0`: a NEGATIVE shift amount REVERSES direction -- it's a
+ *     RIGHT shift by `|amount|` (Ruby: `5 << -1 == 5 >> 1 == 2`). `n >> k`
+ *     for a negative `n` is implementation-defined (not UB) in C99; every
+ *     platform this project targets (gcc/clang/MSVC on x86/ARM) implements
+ *     it as an arithmetic (sign-extending) shift, matching Ruby's floor
+ *     semantics (`-8 << -1 == -4`) -- accepted as a documented platform
+ *     assumption, the same class of "implementation-defined but
+ *     universally consistent in practice" already relied on elsewhere in
+ *     this runtime.
+ *   - `amount > 0`: LEFT shift, no bignum growth (unlike real Ruby, which
+ *     grows arbitrarily -- `1 << 63 == 9223372036854775808`, one past this
+ *     runtime's `INT64_MAX`), so this SATURATES at `INT64_MAX`/`INT64_MIN`
+ *     once the true mathematical result would not fit, rather than
+ *     silently wrapping -- the same never-raise-by-saturating convention
+ *     `round`/`gcd`/`abs` already use. The overflow check happens BEFORE
+ *     any left-shift is performed on the magnitude (a raw `mag << k` where
+ *     `k` approaches 64 risks shifting bits out of a 64-bit register,
+ *     which is well-defined for `uint64_t` -- shifts wrap-discard rather
+ *     than trap -- but would silently lose the very bits this check needs
+ *     to notice), so the "would this overflow" test is done with a
+ *     right-shift-and-compare rather than by inspecting the (already
+ *     lossy) left-shifted result.
+ *   - A shift amount whose magnitude is `>= 64` (either direction) drains
+ *     every bit: saturates to 0/-1 (right) or `INT64_MAX`/`INT64_MIN`
+ *     (left, `n != 0`) rather than reaching a C shift-amount-exceeds-width
+ *     UB (shifting by `>= 64` on a 64-bit type is UB in C, so this always
+ *     shifts by a checked, in-range amount).
+ */
+static int64_t _sir_shift_left_i64(int64_t n, int64_t amount) {
+    if (amount == 0 || n == 0) return n;
+    if (amount < 0) {
+        uint64_t k = _sir_i64_abs_u(amount);
+        if (k >= 64) return (n < 0) ? -1 : 0;
+        return n >> (int)k;
+    }
+    {
+        uint64_t k = (uint64_t)amount;
+        int neg = n < 0;
+        uint64_t mag;
+        if (k >= 64) return neg ? INT64_MIN : INT64_MAX;
+        mag = _sir_i64_abs_u(n);
+        if ((mag >> (64 - k)) != 0) return neg ? INT64_MIN : INT64_MAX;
+        {
+            uint64_t shifted = mag << k;
+            uint64_t limit = neg ? ((uint64_t)INT64_MAX + 1u) : (uint64_t)INT64_MAX;
+            if (shifted > limit) return neg ? INT64_MIN : INT64_MAX;
+            if (neg) return (shifted == limit) ? INT64_MIN : -(int64_t)shifted;
+            return (int64_t)shifted;
+        }
+    }
+}
+
+SirValue _sir_shift_left_v(SirValue *xs, int n) {
+    int i;
+    if (n <= 0) return _sir_int(0);
+    if (xs[0].tag == SIR_SEQ) {
+        for (i = 1; i < n; i++) _sir_array_push_one(xs[0].as.seq, xs[i]);
+        return xs[0];
+    }
+    if (xs[0].tag == SIR_STR) {
+        const char *acc = xs[0].as.s;
+        for (i = 1; i < n; i++) acc = _sir_cat(acc, _sir_str_of(xs[i]));
+        return _sir_str(acc);
+    }
+    {
+        int64_t acc = (xs[0].tag == SIR_INT) ? xs[0].as.i : 0;
+        for (i = 1; i < n; i++) acc = _sir_shift_left_i64(acc, _sir_shift_amount_arg(xs[i]));
+        return _sir_int(acc);
+    }
+}
+SirValue _sir_shift_left(int n, ...) {
+    va_list ap; SirValue *xs; SirValue r;
+    va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap);
+    r = _sir_shift_left_v(xs, n);
+    if (xs) free(xs);
+    return r;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the

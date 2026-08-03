@@ -9423,15 +9423,17 @@ b = "y"
 
     #[test]
     fn bitwise_operators_are_still_cleanly_unsupported_not_mis_parsed() {
-        // `**`/`<<`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
+        // `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
         // this Ruby subset at all (only used elsewhere: `**`/`&` as call-arg
-        // prefixes, `<<` for singleton-class, `|` for block params, `^` for
-        // pin patterns) — so the fix deliberately does NOT guard them: there
-        // is no correct fallback parse to preserve for `x << 2`. This pins
-        // that they remain UNCHANGED (still lower as separate statements,
-        // same as before the fix), so a future contributor doesn't assume
-        // this fix silently added bitwise-operator support.
-        for op in ["**", "<<", ">>", "^", "&", "|"] {
+        // prefixes, `|` for block params, `^` for pin patterns) — so the fix
+        // deliberately does NOT guard them: there is no correct fallback
+        // parse to preserve for `x ^ 2`. This pins that they remain
+        // UNCHANGED (still lower as separate statements, same as before the
+        // fix), so a future contributor doesn't assume this fix silently
+        // added bitwise-operator support. (`<<` USED to be in this list —
+        // it's now a supported binary operator; see
+        // `shift_operator_lowers_to_a_single_builtin_call` below.)
+        for op in ["**", ">>", "^", "&", "|"] {
             let src = format!("x = 3\nx {op} 2\n");
             let m = lower(&src);
             assert_eq!(
@@ -9440,6 +9442,38 @@ b = "y"
                 "`x {op} 2` is not a supported binary expression here; it should \
                  still split into two statements (unchanged), not one: {src:?}"
             );
+        }
+    }
+
+    #[test]
+    fn shift_operator_lowers_to_a_builtin_call() {
+        let m = lower("y = x << 2");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "<<");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(<<, …)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn shift_binds_tighter_than_comparison_after_lowering() {
+        // `x << 1 == y` should lower as `(x << 1) == y`: the outer
+        // BuiltinCall is `==`, whose LHS is itself a `<<` BuiltinCall.
+        let m = lower("z = (x << 1 == y)");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name: outer, args, .. }, .. } => {
+                assert_eq!(outer, "==");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, .. } => assert_eq!(inner, "<<"),
+                    other => panic!("expected LHS = <<(x, 1), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(BuiltinCall(==, …)), got {:?}", other),
         }
     }
 
