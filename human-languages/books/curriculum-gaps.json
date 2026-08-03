@@ -18,9 +18,9 @@
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 155,
-    "legacySchemaTracks": 8,
-    "mixedSchemaTracks": 12,
+    "lessonChaptersWithoutBooks": 129,
+    "legacySchemaTracks": 7,
+    "mixedSchemaTracks": 13,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -1166,9 +1166,7 @@
           2,
           3,
           4,
-          5
-        ],
-        "missingBookChapters": [
+          5,
           6,
           7,
           8,
@@ -1196,8 +1194,9 @@
           30,
           31
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 16
+        "coveragePercent": 100
       },
       {
         "language": "italian",
@@ -1532,10 +1531,11 @@
       },
       {
         "language": "malayalam",
-        "status": "legacy",
+        "status": "mixed",
         "lessonCount": 64,
         "versions": {
-          "1": 64
+          "1": 31,
+          "2": 33
         }
       },
       {
