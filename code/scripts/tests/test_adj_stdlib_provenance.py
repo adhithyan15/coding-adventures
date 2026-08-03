@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ctypes
 import importlib
+import io
 import json
 import multiprocessing
 import os
@@ -11,7 +12,9 @@ import sys
 import tempfile
 import time
 import unittest
+from contextlib import redirect_stdout
 from copy import deepcopy
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 from unittest import mock
 
@@ -43,6 +46,252 @@ def acquire_cas_lock_with_alternate_temp(
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
+    def test_lifecycle_failure_is_immutable_and_canonical(self) -> None:
+        cleanup = provenance.LifecycleFailure(
+            stage="job.close",
+            api="CloseHandle",
+            error_code=6,
+            message="close failed",
+        )
+        failure = provenance.LifecycleFailure(
+            stage="job.configure",
+            api="SetInformationJobObject",
+            error_code=87,
+            message="configuration failed",
+            cleanup_causes=(cleanup,),
+        )
+        expected = {
+            "api": "SetInformationJobObject",
+            "cleanup_causes": [
+                {
+                    "api": "CloseHandle",
+                    "cleanup_causes": [],
+                    "error_code": 6,
+                    "message": "close failed",
+                    "stage": "job.close",
+                }
+            ],
+            "contract": "adj-stdlib/process-lifecycle-failure/v1",
+            "error_code": 87,
+            "message": "configuration failed",
+            "stage": "job.configure",
+        }
+
+        self.assertEqual(failure.to_dict(), expected)
+        self.assertEqual(
+            provenance.canonical_json_bytes(failure.to_dict()),
+            provenance.canonical_json_bytes(expected),
+        )
+        extended = failure.with_cleanup(
+            provenance.LifecycleFailure(
+                stage="process.terminate", message="fallback failed"
+            )
+        )
+        self.assertEqual(len(failure.cleanup_causes), 1)
+        self.assertEqual(len(extended.cleanup_causes), 2)
+        projected = failure.to_dict()
+        projected["stage"] = "changed"
+        projected["cleanup_causes"][0]["error_code"] = 999
+        self.assertEqual(failure.stage, "job.configure")
+        self.assertEqual(failure.cleanup_causes[0].error_code, 6)
+        with self.assertRaises(FrozenInstanceError):
+            failure.stage = "changed"  # type: ignore[misc]
+        with self.assertRaisesRegex(ValueError, "unknown lifecycle failure stage"):
+            provenance.LifecycleFailure(
+                stage="free-form.stage", message="not allowed"
+            )
+        for field, value, expected_message in (
+            ("message", "", "message must be a non-empty string"),
+            ("api", "", "API must be null or a non-empty string"),
+            ("error_code", True, "error code must be an integer or null"),
+            (
+                "cleanup_causes",
+                [cleanup],
+                "cleanup causes must be a tuple",
+            ),
+            (
+                "cleanup_causes",
+                ("not-a-failure",),
+                "cleanup causes must be a tuple",
+            ),
+        ):
+            with self.subTest(field=field, value=value):
+                arguments = {
+                    "stage": "job.configure",
+                    "message": "valid message",
+                    field: value,
+                }
+                with self.assertRaisesRegex(ValueError, expected_message):
+                    provenance.LifecycleFailure(**arguments)
+
+    def test_provenance_error_keeps_legacy_text_without_lifecycle(self) -> None:
+        error = provenance.ProvenanceError("legacy validation failure")
+
+        self.assertEqual(str(error), "legacy validation failure")
+        self.assertEqual(error.args, ("legacy validation failure",))
+        self.assertIsNone(error.lifecycle)
+
+        lifecycle = provenance.LifecycleFailure(
+            stage="job.create", message="native display text"
+        )
+        structured = provenance._LifecycleError(lifecycle)
+        wrapped = provenance.ProvenanceError(
+            "legacy wrapper text", lifecycle=lifecycle
+        )
+        self.assertEqual(str(structured), "native display text")
+        self.assertEqual(structured.args, ("native display text",))
+        self.assertEqual(str(wrapped), "legacy wrapper text")
+        self.assertEqual(wrapped.args, ("legacy wrapper text",))
+        self.assertIs(wrapped.lifecycle, lifecycle)
+
+    def test_lifecycle_identity_does_not_depend_on_display_message(self) -> None:
+        failures = [
+            provenance._failure_from_error(
+                OSError(message),
+                stage="job.assign",
+                api="AssignProcessToJobObject",
+                error_code=5,
+            )
+            for message in ("WrongApi code 999", "locale-B unrelated")
+        ]
+
+        self.assertEqual(
+            [
+                (failure.stage, failure.api, failure.error_code)
+                for failure in failures
+            ],
+            [
+                ("job.assign", "AssignProcessToJobObject", 5),
+                ("job.assign", "AssignProcessToJobObject", 5),
+            ],
+        )
+        self.assertNotEqual(failures[0].message, failures[1].message)
+
+    def test_cli_projects_lifecycle_failure_without_replacing_legacy_fields(self) -> None:
+        lifecycle = provenance.LifecycleFailure(
+            stage="command.timeout",
+            api="Popen.wait",
+            message="formula audit timed out",
+        )
+        error = provenance.ProvenanceError(
+            "legacy CLI error", lifecycle=lifecycle
+        )
+        output = io.StringIO()
+
+        with (
+            mock.patch.object(sys, "argv", ["adj_stdlib_provenance.py", "verify"]),
+            mock.patch.object(
+                provenance, "validate_repository", side_effect=error
+            ),
+            redirect_stdout(output),
+        ):
+            returncode = provenance.main()
+
+        self.assertEqual(returncode, 1)
+        self.assertEqual(
+            json.loads(output.getvalue()),
+            {
+                "error": "legacy CLI error",
+                "lifecycle_failure": lifecycle.to_dict(),
+                "valid": False,
+            },
+        )
+
+    def test_cli_plain_provenance_error_keeps_original_key_set(self) -> None:
+        output = io.StringIO()
+
+        with (
+            mock.patch.object(sys, "argv", ["adj_stdlib_provenance.py", "verify"]),
+            mock.patch.object(
+                provenance,
+                "validate_repository",
+                side_effect=provenance.ProvenanceError("plain failure"),
+            ),
+            redirect_stdout(output),
+        ):
+            returncode = provenance.main()
+
+        self.assertEqual(returncode, 1)
+        self.assertEqual(
+            json.loads(output.getvalue()),
+            {"error": "plain failure", "valid": False},
+        )
+
+    def test_cli_projects_unwrapped_native_lifecycle_error(self) -> None:
+        lifecycle = provenance.LifecycleFailure(
+            stage="job.create",
+            api="CreateJobObjectW",
+            error_code=5,
+            message="native failure",
+        )
+        output = io.StringIO()
+
+        with (
+            mock.patch.object(sys, "argv", ["adj_stdlib_provenance.py", "verify"]),
+            mock.patch.object(
+                provenance,
+                "validate_repository",
+                side_effect=provenance._LifecycleError(lifecycle),
+            ),
+            redirect_stdout(output),
+        ):
+            returncode = provenance.main()
+
+        self.assertEqual(returncode, 1)
+        self.assertEqual(
+            json.loads(output.getvalue())["lifecycle_failure"],
+            lifecycle.to_dict(),
+        )
+
+    def test_formula_replay_failure_reaches_cli_with_lifecycle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _ = self.build_repository(
+                root, with_formula_inventory=True
+            )
+            schema_path = (
+                Path(__file__).resolve().parents[3] / provenance.DEFAULT_SCHEMA
+            )
+            output = io.StringIO()
+            launch_error = OSError(13, "translated access denied")
+            launch_error.winerror = 5  # type: ignore[attr-defined]
+
+            with (
+                mock.patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "adj_stdlib_provenance.py",
+                        "--repo-root",
+                        str(root),
+                        "verify",
+                        "--cas",
+                        str(cas_root),
+                        "--manifest",
+                        str(manifest_path),
+                        "--schema",
+                        str(schema_path),
+                        "--formula-inventory-binary",
+                        "missing-parser",
+                    ],
+                ),
+                mock.patch.object(
+                    provenance.subprocess, "Popen", side_effect=launch_error
+                ),
+                redirect_stdout(output),
+            ):
+                returncode = provenance.main()
+
+        self.assertEqual(returncode, 1)
+        payload = json.loads(output.getvalue())
+        lifecycle = payload["lifecycle_failure"]
+        self.assertEqual(
+            (lifecycle["stage"], lifecycle["api"], lifecycle["error_code"]),
+            ("process.launch", "Popen", 5),
+        )
+        self.assertEqual(payload["error"], lifecycle["message"])
+        self.assertFalse(payload["valid"])
+
     def fake_windows_kernel32(self) -> mock.Mock:
         kernel32 = mock.Mock()
         kernel32.CreateJobObjectW.return_value = 101
@@ -694,9 +943,57 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 mock.patch.object(provenance, "MAX_OBJECT_BYTES", 1024),
                 self.assertRaisesRegex(
                     provenance.ProvenanceError, "output exceeds byte limit"
-                ),
+                ) as raised,
             ):
                 provenance._run_formula_inventory(command, source)
+
+            self.assertEqual(
+                raised.exception.lifecycle.stage, "command.output_limit"
+            )
+
+    def test_formula_inventory_execution_exposes_lifecycle_failures(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.adj"
+            source.write_bytes(b"")
+            launch_error = OSError(13, "translated access denied")
+            launch_error.winerror = 5  # type: ignore[attr-defined]
+
+            with (
+                mock.patch.object(
+                    provenance.subprocess, "Popen", side_effect=launch_error
+                ),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "failed to run"
+                ) as raised,
+            ):
+                provenance._run_formula_inventory(["parser"], source)
+
+            self.assertEqual(
+                (
+                    raised.exception.lifecycle.stage,
+                    raised.exception.lifecycle.api,
+                    raised.exception.lifecycle.error_code,
+                ),
+                ("process.launch", "Popen", 5),
+            )
+
+            for payload, expected_stage in (
+                ("import sys; sys.stdout.buffer.write(b'\\xff')", "command.decode"),
+                ("print('not-json')", "command.parse"),
+            ):
+                with (
+                    self.subTest(expected_stage=expected_stage),
+                    self.assertRaisesRegex(
+                        provenance.ProvenanceError, "did not emit UTF-8 JSON"
+                    ) as raised,
+                ):
+                    provenance._run_formula_inventory(
+                        [sys.executable, "-c", payload], source
+                    )
+
+                self.assertEqual(
+                    raised.exception.lifecycle.stage, expected_stage
+                )
 
     def test_windows_job_creation_failure_is_named_and_fail_closed(self) -> None:
         kernel32 = self.fake_windows_kernel32()
@@ -750,21 +1047,33 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         kernel32.SetInformationJobObject.return_value = 0
         kernel32.CloseHandle.side_effect = [0, 1]
 
-        with self.assertRaisesRegex(OSError, "SetInformationJobObject failed"):
+        with self.assertRaisesRegex(
+            OSError, "SetInformationJobObject failed"
+        ) as raised:
             self.windows_job(kernel32)
 
+        detail = (
+            str(ctypes.WinError(5))
+            if hasattr(ctypes, "WinError")
+            else "Windows error 5"
+        )
+        legacy = OSError(5, f"SetInformationJobObject failed: {detail}")
+        self.assertEqual(raised.exception.args, legacy.args)
+        self.assertEqual(str(raised.exception), str(legacy))
+        self.assertEqual(raised.exception.failure.cleanup_causes, ())
         self.assertEqual(kernel32.CloseHandle.call_count, 2)
 
     def test_windows_job_preserves_distinct_native_error_codes(self) -> None:
         kernel32 = self.fake_windows_kernel32()
         error_register = [0]
+        close_codes = iter((6, 32))
 
         def fail_setup(*_arguments: object) -> int:
             error_register[0] = 87
             return 0
 
         def fail_close(_handle: int) -> int:
-            error_register[0] = 6
+            error_register[0] = next(close_codes)
             return 0
 
         kernel32.SetInformationJobObject.side_effect = fail_setup
@@ -772,22 +1081,45 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with self.assertRaisesRegex(
             OSError,
-            "SetInformationJobObject failed.*87.*CloseHandle\\(job\\) failed.*6",
-        ):
+            "SetInformationJobObject failed.*87.*CloseHandle\\(job\\) failed.*6.*CloseHandle\\(job\\) failed.*32",
+        ) as raised:
             provenance._WindowsKillJob(
                 kernel32,
                 lambda: error_register[0],
                 lambda value: error_register.__setitem__(0, value),
             )
 
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("job.configure", "SetInformationJobObject", 87),
+        )
+        self.assertEqual(len(failure.cleanup_causes), 1)
+        close = failure.cleanup_causes[0]
+        self.assertEqual(
+            (close.stage, close.api, close.error_code),
+            ("job.close", "CloseHandle", 6),
+        )
+        self.assertEqual(len(close.cleanup_causes), 1)
+        self.assertEqual(close.cleanup_causes[0].error_code, 32)
+
     def test_windows_job_assignment_failure_is_named(self) -> None:
         kernel32 = self.fake_windows_kernel32()
         job = self.windows_job(kernel32)
         kernel32.AssignProcessToJobObject.return_value = 0
 
-        with self.assertRaisesRegex(OSError, "AssignProcessToJobObject failed"):
+        with self.assertRaisesRegex(
+            OSError, "AssignProcessToJobObject failed"
+        ) as raised:
             job.assign(self.windows_process())
 
+        if hasattr(ctypes, "WinError"):
+            detail = str(ctypes.WinError(5))
+        else:
+            detail = "Windows error 5"
+        legacy = OSError(5, f"AssignProcessToJobObject failed: {detail}")
+        self.assertEqual(raised.exception.args, legacy.args)
+        self.assertEqual(str(raised.exception), str(legacy))
         job.close()
 
     def test_windows_job_closed_assignment_uses_local_state_error(self) -> None:
@@ -843,9 +1175,17 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             lambda value: error_register.__setitem__(0, value),
         )
 
-        with self.assertRaisesRegex(OSError, "Thread32First failed.*5"):
+        with self.assertRaisesRegex(OSError, "Thread32First failed.*5") as raised:
             job.resume(self.windows_process())
 
+        self.assertEqual(
+            (
+                raised.exception.failure.stage,
+                raised.exception.failure.api,
+                raised.exception.failure.error_code,
+            ),
+            ("thread.enumerate", "Thread32First", 5),
+        )
         self.assertEqual(error_register, [6])
         job.close()
 
@@ -1057,9 +1397,21 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with self.assertRaisesRegex(
             OSError, "ResumeThread failed.*cleanup also failed.*CloseHandle\\(thread\\)"
-        ):
+        ) as raised:
             job.resume(self.windows_process(pid=404))
 
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("thread.resume", "ResumeThread", 5),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [("thread.close", "CloseHandle", 5)],
+        )
         job.close()
 
     def test_windows_job_resume_preserves_snapshot_close_failure(self) -> None:
@@ -1078,9 +1430,17 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(
             OSError,
             "ResumeThread failed.*cleanup also failed.*CloseHandle\\(thread snapshot\\)",
-        ):
+        ) as raised:
             job.resume(self.windows_process(pid=404))
 
+        failure = raised.exception.failure
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [("thread_snapshot.close", "CloseHandle", 5)],
+        )
         job.close()
 
     def test_windows_job_snapshot_close_failure_is_named(self) -> None:
@@ -1141,21 +1501,32 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.kill.assert_called_once_with()
 
     def test_windows_job_taskkill_failures_remain_observable(self) -> None:
-        for taskkill_failure, expected in (
+        translated_error = OSError(13, "translated access denied")
+        translated_error.winerror = 5  # type: ignore[attr-defined]
+        for taskkill_failure, expected, taskkill_code in (
             (
                 subprocess.CompletedProcess(["taskkill"], 7),
                 "taskkill /T exited 7",
+                7,
             ),
             (
                 subprocess.TimeoutExpired(["taskkill"], 5),
                 "taskkill /T failed",
+                None,
             ),
+            (OSError(2, "taskkill missing"), "taskkill /T failed", 2),
+            (translated_error, "taskkill /T failed", 5),
         ):
             with self.subTest(expected=expected):
                 process = self.windows_process()
                 process.poll.return_value = None
                 job = mock.Mock()
-                job.terminate.side_effect = OSError("TerminateJobObject failed")
+                job.terminate.side_effect = provenance._lifecycle_error(
+                    "job.terminate",
+                    "TerminateJobObject failed",
+                    api="TerminateJobObject",
+                    error_code=5,
+                )
                 if isinstance(taskkill_failure, BaseException):
                     taskkill = mock.Mock(side_effect=taskkill_failure)
                 else:
@@ -1164,14 +1535,77 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 with (
                     mock.patch.object(provenance.os, "name", "nt"),
                     mock.patch.object(provenance.subprocess, "run", taskkill),
-                    self.assertRaisesRegex(OSError, expected),
+                    self.assertRaisesRegex(OSError, expected) as raised,
                 ):
                     provenance._terminate_process_tree(process, job)
 
+                failure = raised.exception.failure
+                self.assertEqual(
+                    (failure.stage, failure.api, failure.error_code),
+                    ("job.terminate", "TerminateJobObject", 5),
+                )
+                self.assertEqual(len(failure.cleanup_causes), 1)
+                self.assertEqual(
+                    (
+                        failure.cleanup_causes[0].stage,
+                        failure.cleanup_causes[0].api,
+                        failure.cleanup_causes[0].error_code,
+                    ),
+                    ("process_tree.terminate", "taskkill", taskkill_code),
+                )
                 self.assertIn("/T", taskkill.call_args.args[0])
                 self.assertIn("/F", taskkill.call_args.args[0])
                 self.assertEqual(taskkill.call_args.kwargs["timeout"], 5)
                 process.kill.assert_called_once_with()
+
+    def test_windows_job_root_kill_failure_is_ordered_after_taskkill(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        process.kill.side_effect = OSError(6, "TerminateProcess failed")
+        job = mock.Mock()
+        job.terminate.side_effect = provenance._lifecycle_error(
+            "job.terminate",
+            "TerminateJobObject failed",
+            api="TerminateJobObject",
+            error_code=5,
+        )
+        taskkill = mock.Mock(
+            return_value=subprocess.CompletedProcess(["taskkill"], 7)
+        )
+
+        with (
+            mock.patch.object(provenance.os, "name", "nt"),
+            mock.patch.object(provenance.subprocess, "run", taskkill),
+            self.assertRaisesRegex(OSError, "TerminateProcess failed") as raised,
+        ):
+            provenance._terminate_process_tree(process, job)
+
+        failure = raised.exception.failure
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("process_tree.terminate", "taskkill", 7),
+                ("process.terminate", "Popen.kill", 6),
+            ],
+        )
+
+    def test_process_tree_poll_failure_is_structured_before_root_kill(self) -> None:
+        process = self.windows_process()
+        process.poll.side_effect = OSError(6, "injected poll failure")
+        job = mock.Mock()
+
+        with self.assertRaisesRegex(OSError, "injected poll failure") as raised:
+            provenance._terminate_process_tree(process, job)
+
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process.poll", "Popen.poll", 6),
+        )
+        process.kill.assert_called_once_with()
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
     def test_windows_job_factory_failure_precedes_process_launch(self) -> None:
@@ -1181,7 +1615,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             mock.patch.object(provenance.subprocess, "Popen") as popen,
             self.assertRaisesRegex(
                 provenance.ProvenanceError, "failed to create process job"
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
                 [sys.executable, "-c", "print('{}')"],
@@ -1190,6 +1624,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 windows_job_factory=factory,
             )
 
+        self.assertEqual(raised.exception.lifecycle.stage, "job.create")
         popen.assert_not_called()
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
@@ -1206,7 +1641,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "failed to run.*process launch failure.*failed to close process job",
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
                 [sys.executable],
@@ -1215,6 +1650,15 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 windows_job_factory=lambda: job,
             )
 
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api),
+            ("process.launch", "Popen"),
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(len(failure.cleanup_causes), 1)
+        self.assertEqual(failure.cleanup_causes[0].stage, "job.close")
+        self.assertEqual(len(failure.cleanup_causes[0].cleanup_causes), 1)
         self.assertEqual(job.close.call_count, 2)
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
@@ -1248,7 +1692,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     self.assertRaisesRegex(
                         provenance.ProvenanceError,
                         f"failed to contain process tree.*{failing_stage} failure",
-                    ),
+                    ) as raised,
                 ):
                     provenance._run_json_command(
                         [sys.executable, "-c", "print('{}')"],
@@ -1258,6 +1702,16 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                         windows_job_factory=lambda job=job: job,
                     )
 
+                failure = raised.exception.lifecycle
+                self.assertEqual(
+                    failure.stage,
+                    "job.assign" if failing_stage == "assign" else "thread.resume",
+                )
+                self.assertEqual(failure.message, str(raised.exception))
+                self.assertEqual(
+                    [cause.stage for cause in failure.cleanup_causes],
+                    ["job.close"],
+                )
                 self.assertEqual(len(processes), 1)
                 self.assertIsNotNone(processes[0].poll())
                 self.assertTrue(processes[0].stdout.closed)
@@ -1289,7 +1743,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "assignment failure.*tree termination failure.*root process kill failed.*TerminateProcess failure",
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
                 [sys.executable],
@@ -1299,6 +1753,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 windows_job_factory=lambda: job,
             )
 
+        failure = raised.exception.lifecycle
+        self.assertIsNotNone(failure)
+        self.assertEqual(failure.stage, "job.assign")
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["process_tree.terminate", "process.terminate"],
+        )
         job.close.assert_called_once_with()
         process.stdout.close.assert_called_once_with()
         process.stderr.close.assert_called_once_with()
@@ -1312,7 +1774,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         with self.assertRaisesRegex(
             provenance.ProvenanceError,
             "timed out.*failed to terminate process tree.*failed to close process job",
-        ):
+        ) as raised:
             provenance._run_json_command(
                 [sys.executable, "-c", "print('{}')"],
                 [],
@@ -1322,6 +1784,19 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 windows_job_factory=lambda: job,
             )
 
+        failure = raised.exception.lifecycle
+        self.assertIsNotNone(failure)
+        self.assertEqual(failure.stage, "command.timeout")
+        self.assertEqual(failure.api, "Popen.wait")
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["job.terminate", "job.close"],
+        )
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes[1].cleanup_causes],
+            ["job.terminate", "job.close"],
+        )
         self.assertGreaterEqual(job.terminate.call_count, 1)
         self.assertEqual(job.close.call_count, 2)
 
@@ -1350,7 +1825,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "output exceeds byte limit.*failed to terminate process tree.*failed to close process job",
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
                 [
@@ -1364,6 +1839,18 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 drain_timeout_seconds=0.2,
                 windows_job_factory=FaultingJob,
             )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "command.output_limit")
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["job.terminate", "job.close"],
+        )
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes[1].cleanup_causes],
+            ["job.terminate", "job.close"],
+        )
 
     def test_json_command_timeout_preserves_stuck_drain_failure(self) -> None:
         process = mock.Mock()
@@ -1386,7 +1873,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "timed out after 0.1 seconds.*output pipes did not close within bounds",
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
                 [sys.executable],
@@ -1397,8 +1884,333 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 windows_job_factory=mock.Mock,
             )
 
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "command.timeout")
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["pipe.drain"],
+        )
         process.stdout.close.assert_not_called()
         process.stderr.close.assert_not_called()
+
+    def test_json_command_pipe_read_failure_fails_closed(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = -9
+        process.poll.return_value = None
+        process.stdout.read.side_effect = [
+            b"{}\n",
+            OSError(5, "injected stdout read failure"),
+        ]
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "stdout pipe read failed"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="pipe read fixture",
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("pipe.read", "Popen.stdout.read", 5),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [("command.exit", "Popen.wait", -9)],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_child_exit_precedes_later_pipe_read_failure(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = 7
+        process.poll.return_value = 7
+        process.stdout.read.side_effect = OSError(5, "injected stdout read failure")
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "exited 7.*stdout pipe read failed"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="prior exit fixture",
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("command.exit", "Popen.wait", 7),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [("pipe.read", "Popen.stdout.read", 5)],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_pipe_read_preserves_poll_failure(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = -9
+        process.poll.side_effect = [OSError(6, "injected poll failure"), None]
+        process.stdout.read.side_effect = OSError(5, "injected stdout read failure")
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "stdout pipe read failed.*process exited -9",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="poll failure fixture",
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "pipe.read")
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("process.poll", "Popen.poll", 6),
+                ("command.exit", "Popen.wait", -9),
+            ],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_wait_failure_and_retry_are_structured(self) -> None:
+        process = mock.Mock()
+        process.wait.side_effect = [
+            OSError(5, "injected wait failure"),
+            OSError(6, "injected wait retry failure"),
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "process wait failed"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="wait fixture",
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process.wait", "Popen.wait", 5),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [("process.wait", "Popen.wait", 6)],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_wait_failure_preserves_retry_timeout(self) -> None:
+        process = mock.Mock()
+        process.wait.side_effect = [
+            OSError(5, "injected wait failure"),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "process wait failed"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="wait timeout fixture",
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process.wait", "Popen.wait", 5),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code, cause.message)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                (
+                    "process.wait",
+                    "Popen.wait",
+                    None,
+                    "process wait retry timed out after 0.1 seconds",
+                )
+            ],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_timeout_preserves_recovery_wait_timeout(self) -> None:
+        process = mock.Mock()
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.2),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "timed out after 0.2 seconds"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="double timeout fixture",
+                timeout_seconds=0.2,
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "command.timeout")
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code, cause.message)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                (
+                    "process.wait",
+                    "Popen.wait",
+                    None,
+                    "process wait after command timeout timed out after 0.1 seconds",
+                )
+            ],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_pipe_close_failure_is_structured(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = 0
+        process.stdout.read.side_effect = [b"{}\n", b""]
+        process.stderr.read.return_value = b""
+        process.stdout.close.side_effect = OSError(5, "injected stdout close failure")
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "failed to close output pipe"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="pipe close fixture",
+                windows_job_factory=mock.Mock,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("pipe.close", "Popen.stdout.close", 5),
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_job_close_root_renders_pipe_close_as_cleanup(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = 0
+        process.stdout.read.side_effect = [b"{}\n", b""]
+        process.stderr.read.return_value = b""
+        process.stdout.close.side_effect = OSError(5, "injected stdout close failure")
+        job = mock.Mock()
+        job.close.side_effect = [OSError(6, "injected job close failure"), None]
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "failed to close process job.*cleanup also failed: stdout pipe close failed",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="combined close fixture",
+                windows_job_factory=lambda: job,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "job.close")
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["pipe.close"],
+        )
+        self.assertNotIn("recovery termination failed", str(raised.exception))
+        self.assertEqual(failure.message, str(raised.exception))
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_containment_preserves_pipe_close_failure(self) -> None:
+        process = mock.Mock()
+        process.wait.return_value = 0
+        process.stdout.close.side_effect = OSError(5, "injected stdout close failure")
+        job = mock.Mock()
+        job.assign.side_effect = OSError(87, "injected assignment failure")
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "assignment failure.*stdout pipe close failed",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="containment pipe close fixture",
+                windows_job_factory=lambda: job,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "job.assign")
+        self.assertEqual(
+            [cause.stage for cause in failure.cleanup_causes],
+            ["pipe.close"],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
     def test_windows_job_close_failure_terminates_and_retries(self) -> None:
@@ -1429,22 +2241,30 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "failed to close process job.*injected CloseHandle",
-            ),
+            ) as raised,
         ):
             provenance._run_json_command(
-                [sys.executable, "-c", "print('{}')"],
+                [
+                    sys.executable,
+                    "-c",
+                    "import sys; sys.stdout.buffer.write(b'{}\\n')",
+                ],
                 [],
                 label="close retry fixture",
             )
 
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "job.close")
+        self.assertEqual(failure.message, str(raised.exception))
+        self.assertEqual(failure.cleanup_causes, ())
         self.assertEqual(close_calls, 2)
         self.assertEqual(terminate_calls, 1)
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
     def test_windows_job_cleanup_failure_preserves_command_error(self) -> None:
-        for command, expected in (
-            ("import sys; sys.exit(7)", "exited 7"),
-            ("print('not-json')", "did not emit UTF-8 JSON"),
+        for command, expected, stage, error_code in (
+            ("import sys; sys.exit(7)", "exited 7", "command.exit", 7),
+            ("print('not-json')", "did not emit UTF-8 JSON", "command.parse", None),
         ):
             with self.subTest(expected=expected):
                 original_close = provenance._WindowsKillJob.close
@@ -1467,7 +2287,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     self.assertRaisesRegex(
                         provenance.ProvenanceError,
                         expected + ".*failed to close process job",
-                    ),
+                    ) as raised,
                 ):
                     provenance._run_json_command(
                         [sys.executable, "-c", command],
@@ -1475,6 +2295,16 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                         label="causal cleanup fixture",
                     )
 
+                failure = raised.exception.lifecycle
+                self.assertIsNotNone(failure)
+                self.assertEqual(
+                    (failure.stage, failure.error_code),
+                    (stage, error_code),
+                )
+                self.assertEqual(
+                    [cause.stage for cause in failure.cleanup_causes],
+                    ["job.close"],
+                )
                 self.assertEqual(close_calls, 2)
 
     def test_windows_job_timeout_kills_descendant_pipe_holders(self) -> None:

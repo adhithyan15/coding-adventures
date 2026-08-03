@@ -345,9 +345,20 @@ option mapping, or judge/evaluation failure.
      termination and a close retry. Failed Job termination invokes bounded `/T` tree
      termination before the root-process fallback. The Windows PR matrix runs the
      focused fake and real-process containment slice.
-13g. **Backlog:** replace concatenated Windows lifecycle error text with structured
-     stage, API, error-code, and cleanup-cause records so callers can inspect failures
-     without parsing localized operating-system messages.
+13g. **Complete:** process lifecycle failures are immutable recursive records with a
+     stable `stage`, native `api`, numeric `error_code`, human `message`, and ordered
+     `cleanup_causes`. `ProvenanceError.lifecycle` exposes the record while preserving
+     legacy exception text and arguments. `to_dict()` provides the versioned
+     `adj-stdlib/process-lifecycle-failure/v1` projection, and CLI failures include it
+     as `lifecycle_failure` without removing the legacy `error` or `valid` fields.
+     Native setup and enumeration errors, process launch and containment, command
+     timeout/output/exit/decoding, taskkill and root fallback, pipe drain, termination,
+     process waits, pipe reads and closes, and close retries all retain
+     machine-inspectable causal structure. Worker-thread I/O faults fail closed even
+     when the bytes received before the fault happen to form valid canonical JSON.
+13h. **Backlog:** add platform-neutral fault injection for POSIX process-group
+     termination, including `killpg` permission/lookup failures, root-kill fallback,
+     simultaneous pipe cleanup failures, and hosted Linux/macOS execution gates.
 
 ### Wave 2: complete K-8 foundations
 
