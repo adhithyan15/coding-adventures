@@ -18,6 +18,14 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "spanish", chapter)).toBe("synced");
   });
 
+  it("matches the browser-loaded Marathi Chapter 6 AST across both lessons", () => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("marathi", 6);
+    expect(expected?.lessonIds).toHaveLength(2);
+    expect(actualChapterHash(lessons, "marathi", 6)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "marathi", 6)).toBe("synced");
+  });
+
   it("reports a generated chapter stale when one canonical lesson changes", () => {
     const lessons = loadLessons();
     const changed = lessons.map((lesson) =>

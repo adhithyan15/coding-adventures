@@ -160,6 +160,13 @@
     "TIME-AFTERNOON": { "family": "TIME", "gloss": "afternoon (noun)", "core": false, "retires": ["TARDE"] },
     "TIME-EVENING": { "family": "TIME", "gloss": "evening (noun)", "core": false, "retires": ["ABEND", "SOIR"] },
 
+    "NUMBER-ONE-TO-FIVE": {
+      "family": "NUMBER",
+      "gloss": "the cardinal numbers one through five",
+      "core": false,
+      "notes": "A shared retrieval ability whose language-specific realizations may add script, sound-change, agreement, classifier, or etymology extensions."
+    },
+
     "WORD-GOOD": { "family": "WORD", "gloss": "good (adjective)", "core": false, "retires": ["BON", "GOOD", "GUT"] },
     "WORD-WELL": { "family": "WORD", "gloss": "well / fine (adverb)", "core": false, "retires": ["BIEN"] },
     "WORD-NAME": { "family": "WORD", "gloss": "name (noun)", "core": false, "retires": ["NAME"] },

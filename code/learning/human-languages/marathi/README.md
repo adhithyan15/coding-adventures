@@ -35,9 +35,9 @@ book.
   *don* copied *tīn*, why Hindi retains *pāṁch*'s nasal, and why written *chār*
   sounds nearer *tsār* in Marathi.
 
-Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
-its one-source book publication remains explicitly tracked in the shared
-backlog.
+Chapters 1–6 are in the book. Chapter 6 is generated from the same canonical
+schema-v2 lesson AST and source hashes that Language Ladder loads, while the
+first five chapters retain their authored long-form narrative during migration.
 
 ## Book / fonts
 

@@ -8,6 +8,15 @@ export interface BookGenerationTarget {
   title: string;
   label: string;
   output: string;
+  /** Unicode Script property whose runs need the book's dedicated font command. */
+  unicodeScript?: string;
+  /** LaTeX command name, without the leading backslash, used for those runs. */
+  scriptCommand?: string;
+}
+
+export interface InlineRenderOptions {
+  unicodeScript: string;
+  scriptCommand: string;
 }
 
 export interface GeneratedBookChapter {
@@ -41,10 +50,25 @@ function escapeLatexCharacter(character: string): string {
   return escaped[character] ?? character;
 }
 
+function scriptMatcher(options: InlineRenderOptions | undefined): RegExp | undefined {
+  if (!options) return undefined;
+  if (!/^[A-Za-z_]+$/.test(options.unicodeScript)) {
+    throw new Error(`invalid Unicode script '${options.unicodeScript}'`);
+  }
+  if (!/^[A-Za-z@]+$/.test(options.scriptCommand)) {
+    throw new Error(`invalid LaTeX script command '${options.scriptCommand}'`);
+  }
+  return new RegExp(`^\\p{Script_Extensions=${options.unicodeScript}}$`, "u");
+}
+
 /** Render the deliberately small inline subset used by schema-v2 lessons. */
-export function renderInlineMarkdown(markdown: string): string {
+export function renderInlineMarkdown(
+  markdown: string,
+  options?: InlineRenderOptions,
+): string {
   const output: string[] = [];
   const emphasis: Array<"italic" | "bold"> = [];
+  const script = scriptMatcher(options);
   let cursor = 0;
   const open = (kind: "italic" | "bold"): void => {
     output.push(kind === "italic" ? "\\emph{" : "\\textbf{");
@@ -55,6 +79,20 @@ export function renderInlineMarkdown(markdown: string): string {
     emphasis.pop();
   };
   while (cursor < markdown.length) {
+    const codePoint = markdown.codePointAt(cursor);
+    const character = codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+    if (script?.test(character)) {
+      const run: string[] = [];
+      while (cursor < markdown.length) {
+        const nextCodePoint = markdown.codePointAt(cursor);
+        const next = nextCodePoint === undefined ? "" : String.fromCodePoint(nextCodePoint);
+        if (!script.test(next)) break;
+        run.push(escapeLatexCharacter(next));
+        cursor += next.length;
+      }
+      output.push(`\\${options!.scriptCommand}{${run.join("")}}`);
+      continue;
+    }
     if (markdown[cursor] === "`") {
       const end = markdown.indexOf("`", cursor + 1);
       if (end !== -1) {
@@ -72,7 +110,7 @@ export function renderInlineMarkdown(markdown: string): string {
       const labelEnd = markdown.indexOf("](", cursor + 1);
       const destinationEnd = labelEnd === -1 ? -1 : markdown.indexOf(")", labelEnd + 2);
       if (labelEnd !== -1 && destinationEnd !== -1) {
-        output.push(renderInlineMarkdown(markdown.slice(cursor + 1, labelEnd)));
+        output.push(renderInlineMarkdown(markdown.slice(cursor + 1, labelEnd), options));
         cursor = destinationEnd + 1;
         continue;
       }
@@ -109,7 +147,7 @@ export function renderInlineMarkdown(markdown: string): string {
   return output.join("");
 }
 
-function renderMarkdown(markdown: string): string {
+function renderMarkdown(markdown: string, options?: InlineRenderOptions): string {
   const output: string[] = [];
   const paragraph: string[] = [];
   const quote: string[] = [];
@@ -119,17 +157,22 @@ function renderMarkdown(markdown: string): string {
 
   const flushParagraph = (): void => {
     if (paragraph.length === 0) return;
-    output.push(renderInlineMarkdown(paragraph.join(" ")), "");
+    output.push(renderInlineMarkdown(paragraph.join(" "), options), "");
     paragraph.length = 0;
   };
   const flushQuote = (): void => {
     if (quote.length === 0) return;
-    output.push("\\begin{quote}", renderInlineMarkdown(quote.join(" ")), "\\end{quote}", "");
+    output.push(
+      "\\begin{quote}",
+      renderInlineMarkdown(quote.join(" "), options),
+      "\\end{quote}",
+      "",
+    );
     quote.length = 0;
   };
   const flushListItem = (): void => {
     if (listItem.length === 0) return;
-    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "))}`);
+    output.push(`  \\item ${renderInlineMarkdown(listItem.join(" "), options)}`);
     listItem = [];
   };
   const closeList = (): void => {
@@ -147,7 +190,10 @@ function renderMarkdown(markdown: string): string {
       separator.every((cell) => /^:?-{3,}:?$/.test(cell));
     if (!isSeparator || header.length === 0) {
       output.push(
-        ...tableRows.flatMap((row) => [renderInlineMarkdown(`| ${row.join(" | ")} |`), ""]),
+        ...tableRows.flatMap((row) => [
+          renderInlineMarkdown(`| ${row.join(" | ")} |`, options),
+          "",
+        ]),
       );
       tableRows.length = 0;
       return;
@@ -157,7 +203,9 @@ function renderMarkdown(markdown: string): string {
       () => ">{\\raggedright\\arraybackslash}X",
     ).join("");
     const cells = (row: string[]): string[] =>
-      Array.from({ length: header.length }, (_, index) => renderInlineMarkdown(row[index] ?? ""));
+      Array.from({ length: header.length }, (_, index) =>
+        renderInlineMarkdown(row[index] ?? "", options),
+      );
     output.push(
       `\\begin{tabularx}{\\linewidth}{@{}${columns}@{}}`,
       "\\toprule",
@@ -229,9 +277,9 @@ function renderMarkdown(markdown: string): string {
   return output.join("\n").trimEnd();
 }
 
-function renderBlock(block: LessonBodyBlock): string {
-  const content = renderMarkdown(block.markdown);
-  const title = renderInlineMarkdown(block.title);
+function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptions): string {
+  const content = renderMarkdown(block.markdown, options);
+  const title = renderInlineMarkdown(block.title, options);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
   if (block.type === "etymology") return `\\begin{cousinweb}\n${content}\n\\end{cousinweb}`;
   if (block.type === "grammar" || block.type === "notice") {
@@ -260,13 +308,26 @@ function lessonSequence(lesson: ParsedLesson): number {
   return Number(stringValue(lesson.frontmatter.sequence));
 }
 
-function sectionShortTitle(lesson: ParsedLesson): string {
+function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptions): string {
   const title = lesson.realization.type.startsWith("practice")
     ? "Practice"
-    : lesson.realization.headword;
+    : options && stringValue(lesson.frontmatter.romanization).trim() !== ""
+      ? stringValue(lesson.frontmatter.romanization)
+      : lesson.realization.headword;
   return renderInlineMarkdown(
     title.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim(),
+    options,
   );
+}
+
+function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptions | undefined {
+  if (target.unicodeScript === undefined && target.scriptCommand === undefined) return undefined;
+  if (target.unicodeScript === undefined || target.scriptCommand === undefined) {
+    throw new Error(
+      `${target.language} chapter ${target.chapter}: unicodeScript and scriptCommand must be declared together`,
+    );
+  }
+  return { unicodeScript: target.unicodeScript, scriptCommand: target.scriptCommand };
 }
 
 /** Render one configured chapter from the same typed lesson AST the app receives. */
@@ -274,6 +335,7 @@ export function renderBookChapter(
   target: BookGenerationTarget,
   allLessons: ParsedLesson[],
 ): GeneratedBookChapter {
+  const renderOptions = targetRenderOptions(target);
   const lessons = allLessons
     .filter(
       (lesson) =>
@@ -301,10 +363,10 @@ export function renderBookChapter(
   const sections = lessons.map((lesson) => {
     const id = lesson.realization.lessonId;
     return [
-      `\\section[${sectionShortTitle(lesson)}]{${renderInlineMarkdown(lessonTitle(lesson))}}`,
+      `\\section[${sectionShortTitle(lesson, renderOptions)}]{${renderInlineMarkdown(lessonTitle(lesson), renderOptions)}}`,
       `\\label{lesson:${id}}`,
       "",
-      ...lesson.blocks.map(renderBlock),
+      ...lesson.blocks.map((block) => renderBlock(block, renderOptions)),
     ].join("\n\n");
   });
   const tex = [
@@ -312,7 +374,7 @@ export function renderBookChapter(
     `% canonical-source-hash: ${sourceHash}`,
     `% canonical-lessons: ${lessons.map((lesson) => lesson.realization.lessonId).join(", ")}`,
     "",
-    `\\chapter{${renderInlineMarkdown(target.title)}}`,
+    `\\chapter{${renderInlineMarkdown(target.title, renderOptions)}}`,
     `\\label{${target.label}}`,
     "",
     "This chapter is generated from the canonical micro-lessons used by Language Ladder.",

@@ -3,6 +3,16 @@
   "algorithm": "fnv1a64",
   "chapters": [
     {
+      "language": "marathi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:d0addd66aaedf900",
+      "lessonIds": [
+        "MR-C06-numbers-1-5",
+        "MR-C06-number-differences"
+      ],
+      "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:ad881fd61b3c4d60",
