@@ -371,8 +371,18 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
 
 #[test]
 fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
+    let build = read_package_file("BUILD");
+    let build_windows = read_package_file("BUILD_windows");
     let shell = read_package_file("scripts/build-all.sh");
     let powershell = read_package_file("scripts/build-all.ps1");
+    assert!(
+        build.contains("./scripts/build-all.sh"),
+        "POSIX BUILD must execute the generated-shell matrix"
+    );
+    assert!(
+        build_windows.contains("scripts\\build-all.ps1"),
+        "Windows BUILD must execute the generated-shell matrix"
+    );
     let backends = [
         "react",
         "electron",

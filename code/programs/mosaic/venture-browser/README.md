@@ -73,6 +73,9 @@ backend on the current machine:
 .\scripts\build-all.ps1
 ```
 
+Repository package CI reaches those same scripts through `BUILD` on POSIX and
+`BUILD_windows` on Windows, after the Rust package-contract tests pass.
+
 React and Electron run their production builds; HTML and Web Components run
 JavaScript syntax checks plus one shared package-owned jsdom interaction gate;
 SwiftUI, Qt, XAML, Flutter, and Compose invoke their native toolchains. React

@@ -13,6 +13,9 @@ cross-platform proving application. Items are ordered by risk and dependency.
   covering disabled controls, address editing, Return, Go, and host-driven prop
   refresh. Keep both outputs sourced from the shared Venture MIL/MLL/MSL
   package.
+- [x] **P2 — CI entry-point coverage.** Route the authoritative POSIX and
+  Windows package build entry points through the shared generated-shell matrix
+  so backend interaction acceptance cannot be bypassed by package-level CI.
 
 ## Completed foundations
 
