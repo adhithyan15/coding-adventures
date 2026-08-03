@@ -1281,6 +1281,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Eg=model.params.get("EG", 1.11),
             Rs=model.params.get("RS", 0.0),
             Kf=model.params.get("KF", 0.0),
+            Af=model.params.get("AF", 1.0),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")
@@ -2002,6 +2003,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or flicker_noise_coefficient < 0.0
         ):
             raise NetlistParseError("diode KF must be finite and non-negative")
+        flicker_noise_exponent = params.get("AF")
+        if flicker_noise_exponent is not None and (
+            not math.isfinite(flicker_noise_exponent)
+            or flicker_noise_exponent < 0.0
+        ):
+            raise NetlistParseError("diode AF must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (

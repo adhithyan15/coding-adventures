@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower diode model-card `AF` flicker-noise exponent.
 - Validate and lower diode model-card `KF` flicker-noise coefficient.
 - Validate and lower diode model-card `EG` energy gap.
 - Validate and lower diode model-card `XTI` temperature exponent.
