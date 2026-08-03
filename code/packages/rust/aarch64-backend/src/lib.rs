@@ -1474,12 +1474,14 @@ fn emit_instr(
     // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
     // `call_builtin "cons"/"car"/"cdr"/"null?"` into these word-granular heap
     // ops.  A pair is a **2-word (16-byte) cell**: field 0 = car/head,
-    // field 1 = cdr/tail.  We allocate it with the same `__twig_alloc_bytes`
-    // runtime helper `alloc_bytes` uses, and read/write fields with plain
+    // field 1 = cdr/tail.  It is allocated via the `alloc` op immediately
+    // below — the GC-managed, movable `{0,8}` pair kind (`__twig_gc_alloc_pair`),
+    // not the old `__twig_alloc_bytes` — and fields are read/written with plain
     // 64-bit loads/stores at byte offset `idx*8`.  Values are **raw 64-bit
     // words** — no NaN-boxing — so a cons-of-integers program round-trips
     // exactly: `(CAR (CONS 7 9))` allocates a cell, stores 7/9, loads field
-    // 0, and returns the raw `7`.  (V1 leaks like `alloc_bytes`; no GC.)
+    // 0, and returns the raw `7`.  Traced and reclaimed by gc-core (see the
+    // `alloc` op's doc comment below for the allocator choice) — not leaked.
 
     // `alloc [<size>] -> <dest>` — allocate a GC-managed heap object.
     //

@@ -1,5 +1,13 @@
 # Changelog — `aarch64-backend`
 
+## 0.36.1 - 2026-08-02 - fix stale "no GC" comment on cons-cell allocation
+
+The comment block introducing the heap-cons-cell lowering still described
+the pre-AOT00 allocator (`__twig_alloc_bytes`, "V1 leaks... no GC"), even
+though the `alloc` op it sits directly above has allocated cons cells
+through the GC-managed, movable `__twig_gc_alloc_pair` path since 0.34.0.
+No behavior change — corrects the comment to match the code.
+
 ## 0.36.0 - 2026-07-31 - boolean array elements
 
 The native array element-size helper now accepts `bool`, using the backend's
