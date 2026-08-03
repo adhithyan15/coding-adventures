@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C05-hasta-pronto
+spine_node: SPINE-TAKE-LEAVE
+sequence: 430
 chapter: 5
 type: phrase
 headword: hasta pronto
 gloss: see you soon (literally "until soon")
 concept_tag: FAREWELL-SOON
-prerequisites: [ES-C05-hasta-luego]
+prerequisites: [ES-C05-hasta-manana]
 sounds: [vowel-o, pr-cluster]
 roots: [hatta-arabic, promptus-latin]
 etymology_hook: "pronto ← Latin promptus 'brought forth, ready' → English prompt; 'until soon'"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HASTA, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA]
+introduces:
+  knowledge: [ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]
+practises:
+  knowledge: [ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C05-hasta-luego, ES-C05-hasta-manana]
 ---
 
@@ -25,7 +40,7 @@ it's hiding in plain sight in English.
 
 - **hasta pronto** = *AHS-tah PRON-toh* — a clean *pr*, a pure *o*.
 
-## The phrase, taken apart
+## The word, taken apart — the phrase
 
 > **hasta pronto** = "until soon" → "see you soon."
 

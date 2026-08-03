@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C06-hablar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 470
 chapter: 6
 type: word
 headword: hablar
 gloss: to speak / to talk (your first regular -ar verb)
 concept_tag: ES-VERB-HABLAR
-prerequisites: []
+prerequisites: [ES-C06-por-favor]
 sounds: [silent-h, r-tap, v-b]
 roots: [fabulari-latin]
 etymology_hook: "hablar ← Latin fabulārī 'to chat, tell tales' (← fābula 'story' → fable); the f→h sound-law"
-est_minutes: 4
+duration:
+  max_seconds: 270
+requires:
+  knowledge: [ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-GRAMMAR-FIRST-PERSON-VERB, ES-SOUND-H-SILENT]
+introduces:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI]
+practises:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C06-por-favor]
 ---
 
@@ -17,10 +32,10 @@ reviews_of: [ES-C06-por-favor]
 
 ## Warm-up
 
-[PAUSE 2s] Until now you've assembled fixed phrases. **hablar** ("to speak") is
-your first real **verb** — and with it comes the single most powerful pattern in
-Spanish: the **-ar present tense**. Learn this one template and you can drive
-*hundreds* of verbs.
+[PAUSE 2s] Until now you've assembled fixed phrases. **hablar** (“to speak”)
+gives you the first reusable verb pattern: the singular **-ar present**. One
+small ending swap will let you say “I speak,” ask a friend, or address someone
+formally.
 
 ## Sounds you'll need
 
@@ -35,36 +50,24 @@ Spanish: the **-ar present tense**. Learn this one template and you can drive
 That **fābula** is thoroughly English: **fable**, **fabulous** ("story-like"),
 **confabulate**, and **ineffable** ("un-speak-able").
 
-### The f→h sound-law (a decoder for hundreds of words)
-
-Notice: Latin **f-** became Spanish **h-**. This happened across the whole
-language, and it's a superpower — put the *f* back and the Latin/English cousin
-appears:
-
-| Spanish (h-) | Latin (f-) | English cousin |
-|---|---|---|
-| **hablar** | *fābulārī* | fable |
-| **harina** (flour) | *farīna* | farina, farinaceous |
-| **hacer** (to do) | *facere* | fact, factory |
-| **hijo** (son) | *fīlius* | filial, affiliate |
-| **hierro** (iron) | *ferrum* | ferrous, ferric |
+The initial Latin **f-** weakened and eventually disappeared in this word,
+leaving the written but silent Spanish **h-**. The single path you need today
+is **fābulārī → hablar**; later words will let you test how broadly the same
+historical pattern reaches.
 
 ## Grammar Lens: the -ar present tense (the big one)
 
-Spanish verbs come in three families, by their ending: **-ar**, **-er**, **-ir**.
-*hablar* is **-ar**, the biggest. To conjugate, **drop -ar** and add the ending
-for the person:
+**Hablar** belongs to the **-ar** family. To conjugate the three singular
+forms you need now, **drop -ar** and add the ending for the person:
 
 | person | ending | *hablar* → | meaning |
 |---|---|---|---|
-| yo (I) | **-o** | **hablo** | I speak |
+| I (the ending carries the subject) | **-o** | **hablo** | I speak |
 | tú (you) | **-as** | **hablas** | you speak |
-| él/ella/usted | **-a** | **habla** | he/she speaks / you (formal) speak |
-| (nosotros) | -amos | hablamos | we speak |
-| (ellos/ustedes) | -an | hablan | they/you-all speak |
+| usted (you, formal) | **-a** | **habla** | you speak |
 
-And — as with *io*/*eu* in the other tracks — **you drop the *yo***: the *-o*
-ending already says "I." *Hablo español* = "I speak Spanish," no *yo* needed.
+The **-o** ending already says “I,” so Spanish normally leaves the subject
+pronoun unstated. That is **pro-drop**: *hablo* is a complete “I speak.”
 
 **This same template fits every regular -ar verb.** Next you'll snap two more
 verbs straight into it.
@@ -73,12 +76,13 @@ verbs straight into it.
 
 [PAUSE 1s]
 - [YOU SAY: "hablar" — *ah-BLAR*, silent *h*]
-- [YOU SAY: the pattern — "hablo, hablas, habla" (I / you / he-she speak)]
+- [YOU SAY: the pattern — “hablo, hablas, habla” (I / tú / usted)]
 - [YOU SAY: "hablar" then English "fable, fabulous, ineffable" — the *fābula* root]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] What Latin word is *hablar* from, and what English word shares it?
-(*fābulārī* ← *fābula* — fable.) What sound-law turned *f-* into *h-*? (Latin *f*
-→ Spanish *h*: *facere* → *hacer*.) How do you say "I speak," and why no *yo*?
-(*Hablo* — the *-o* ending is "I".) Next: **trabajar**, "to work."
+(*fābulārī* ← *fābula* — fable.) What happened to its initial Latin *f-*?
+(It weakened away, leaving silent Spanish *h-*.) How do you say “I speak,”
+and why is no subject pronoun required? (*Hablo* — the *-o* ending carries
+“I.”) Next: **trabajar**, “to work.”

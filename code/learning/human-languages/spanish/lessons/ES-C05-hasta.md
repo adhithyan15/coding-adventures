@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C05-hasta
+spine_node: SPINE-TAKE-LEAVE
+sequence: 390
 chapter: 5
 type: word
 headword: hasta
@@ -9,7 +12,19 @@ prerequisites: [ES-C05-adios]
 sounds: [silent-h, vowel-a]
 roots: [hatta-arabic]
 etymology_hook: "hasta ← Arabic ḥattā حتى 'until' — a rare Arabic FUNCTION word in Spanish (most loans are nouns)"
-est_minutes: 4
+duration:
+  max_seconds: 250
+requires:
+  knowledge: [ES-LEX-ADIOS]
+introduces:
+  knowledge: [ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS]
+practises:
+  knowledge: [ES-LEX-HASTA, ES-ETYMON-HATTA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C05-adios]
 ---
 

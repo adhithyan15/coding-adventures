@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C04-de-nada
+spine_node: SPINE-COURTESY-THANK
+sequence: 260
 chapter: 4
 type: phrase
 headword: de nada
@@ -9,7 +12,19 @@ prerequisites: [ES-C04-gracias]
 sounds: [vowel-a, d-soft]
 roots: [de-latin, nada-nata-latin]
 etymology_hook: "nada ← Latin (rem) nata '(thing) born' → 'nothing'; the reply waves the favour away"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-GRACIAS]
+introduces:
+  knowledge: [ES-LEX-DE-NADA, ES-ETYMON-NATA]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C04-gracias]
 ---
 
@@ -28,7 +43,7 @@ problem."*
   not a hard English *d*. Spanish *d* between vowels always softens.
 - `vowel-a` — three clean *ah* sounds: *deh NAH-thah*.
 
-## The phrase, taken apart
+## The word, taken apart — the phrase
 
 - **de** = "of / from" (Latin **dē**) — the same *de* hiding in English
   **de**part, **de**duct, **de**scend.

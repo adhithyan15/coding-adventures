@@ -1,14 +1,29 @@
 ---
+schema_version: 2
 id: ES-C05-practice
+spine_node: SPINE-TAKE-LEAVE
+sequence: 440
 chapter: 5
 type: practice-mix
 headword: (practice)
 gloss: closing a conversation — the full set of farewells
 concept_tag: CH5-PRACTICE
-prerequisites: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto]
+prerequisites: [ES-C05-adios, ES-C05-hasta-pronto]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-ADIOS, ES-PRAGMATICS-FINAL-FAREWELL, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-COMO-ESTA-USTED, ES-PRAGMATICS-AND-YOU]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ES-LEX-ADIOS, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-HOLA, ES-LEX-COMO-ESTA-USTED]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus, fluency]
+register: neutral
+variety: general
 reviews_of: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto, ES-C04-practice]
 ---
 
@@ -20,7 +35,7 @@ reviews_of: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta, ES-C05-hasta-luego
 …* goodbyes — now close a real conversation, and fold back into the whole arc
 you've built since *hola*.
 
-## Choosing the right goodbye
+## Grammar Lens: choosing the right goodbye
 
 The choice is about **when you'll meet again**:
 
@@ -31,7 +46,7 @@ The choice is about **when you'll meet again**:
 | just "see you" (neutral default) | **Hasta luego.** |
 | leaving for the day | **Hasta mañana.** |
 
-## The whole exchange, start to finish
+## The exchange — start to finish
 
 Everything from Chapters 1–5, in one conversation:
 
@@ -39,7 +54,7 @@ Everything from Chapters 1–5, in one conversation:
 > — Me llamo Luis. Mucho gusto.
 > — ¿Cómo está usted?
 > — Bien, gracias. ¿Y usted?
-> — Muy bien. Bueno… **hasta mañana**, Luis.
+> — Bien. **Hasta mañana**, Luis.
 > — **Hasta mañana**, Ana. **¡Adiós!**
 
 ## What you've built this chapter

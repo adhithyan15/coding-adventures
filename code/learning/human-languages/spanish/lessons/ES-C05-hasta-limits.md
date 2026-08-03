@@ -1,49 +1,61 @@
 ---
+schema_version: 2
 id: ES-C05-hasta-limits
+spine_node: SPINE-TAKE-LEAVE
+sequence: 400
 chapter: 5
 type: grammar
-headword: hasta aquí, hasta las tres, hasta luego
-gloss: hasta points to an endpoint in space or time and builds several everyday farewells
+headword: hasta aquí / hasta la noche
+gloss: hasta points to an endpoint in space or time
 prerequisites: [ES-C05-hasta]
 sounds: [silent-h, vowel-a]
-roots: [hatta-arabic, arabic-law-sha-allah]
-etymology_hook: "hasta marks a spatial or temporal limit; beside it, ojalá is another rare Arabic function-word loan that will later select the subjunctive"
-est_minutes: 4
+roots: [hatta-arabic]
+etymology_hook: "hasta marks a spatial or temporal limit; the endpoint may be a place such as aquí or a known time word such as la noche"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HASTA, ES-LEX-NOCHE, ES-GRAMMAR-DEFINITE-ARTICLES]
+introduces:
+  knowledge: [ES-LEX-AQUI, ES-GRAMMAR-HASTA-ENDPOINT]
+practises:
+  knowledge: [ES-LEX-HASTA, ES-LEX-AQUI, ES-LEX-NOCHE, ES-GRAMMAR-HASTA-ENDPOINT]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C05-hasta, ES-C05-adios]
 ---
 
-# hasta aquí, hasta luego — point to the limit
+# hasta aquí / hasta la noche — point to the limit
 
-## Space and time
+## Warm-up
 
-**Hasta** marks the endpoint of movement or duration:
+[PAUSE 2s] You know **hasta** means “until” or “up to.” Give that small word
+one spatial endpoint and one temporal endpoint, using only one new word.
 
-- **hasta aquí** — up to here
-- **hasta las tres** — until three o'clock
-- **hasta luego** — until later
-- **hasta mañana** — until tomorrow
-- **hasta pronto** — until soon
+## Grammar Lens: endpoints in space and time
 
-The same preposition points to a place, a clock time, or the next meeting.
-That is why farewells built with **hasta** become transparent once "until"
-is secure.
+**Aquí** means **here**. Put it after **hasta**:
 
-## One more Arabic function word
+> **hasta aquí** — up to here
 
-**Hasta** is not the only grammatical tool Spanish borrowed from Arabic.
-**Ojalá**, from Andalusi Arabic *law šāʾ Allāh* ("if God should will"),
-will later trigger the subjunctive. A preposition and a mood-trigger show
-that Arabic contact reached beyond objects into everyday grammar.
+For a time endpoint, reuse **la noche**, “the night,” from Chapter 2:
+
+> **hasta la noche** — until the night / until tonight
+
+The same preposition points to a place or the end of a stretch of time.
+The next lessons will place new time words after it one at a time.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "hasta aquí" — up to here]
-- [YOU SAY: "hasta las tres" — until three]
-- [YOU SAY: "hasta luego / mañana / pronto"]
+- [YOU SAY: “aquí” — here]
+- [YOU SAY: “hasta aquí” — up to here]
+- [YOU SAY: “hasta la noche” — until tonight]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] What does **hasta** point to? (**An endpoint.**) Give one spatial
-and one temporal example. (**Hasta aquí; hasta las tres.**) Which other
-Arabic function word returns later? (**Ojalá.**)
+and one temporal example. (**Hasta aquí; hasta la noche.**) What is the only
+new lexical item? (**Aquí**, “here.”)

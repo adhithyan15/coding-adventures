@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C06-espanol
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 500
 chapter: 6
 type: phrase
 headword: Hablo español
 gloss: "I speak Spanish" — your first full sentence (español = Spanish)
 concept_tag: ES-WORD-ESPANOL
-prerequisites: [ES-C06-hablar]
+prerequisites: [ES-C06-estudiar, ES-W02-enye, ES-W03-question-span]
 sounds: [enye-ny, silent-h]
 roots: [hispania-latin]
 etymology_hook: "español ← Hispania (Roman name for Iberia); the -ñol ending brings back the ñ"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-FORM-ESPANOL, ES-SCRIPT-ENYE, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+introduces:
+  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE, ES-ETYMON-HISPANIA]
+practises:
+  knowledge: [ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SCRIPT-ENYE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C06-hablar, ES-W02-enye]
 ---
 
@@ -21,7 +36,7 @@ reviews_of: [ES-C06-hablar, ES-W02-enye]
 you conjugated and a **noun**, and make a sentence **nobody handed you
 pre-assembled**. *Hablo español* — "I speak Spanish."
 
-## The new word: español
+## The word, taken apart — español
 
 **español** = "Spanish" (the language, and a Spaniard), from **Hispania**, the
 Roman name for the Iberian peninsula. The path *Hispania → hispaniolus → español*
@@ -33,7 +48,7 @@ a-tilde you met in the writing lesson (*Hispaniolus* → *españ-ol*). Say it
 fittingly, *español* itself may trace back through Latin to a **Phoenician** name
 for the coast, "land of hyraxes / rabbits.")
 
-## The sentence, assembled
+## What you've built — the sentence assembled
 
 Snap two things you already own together:
 
@@ -41,26 +56,27 @@ Snap two things you already own together:
 
 That's it — a complete, grammatical Spanish sentence. Note what's *not* there:
 
-- **No *yo*.** The *-o* of *hablo* already says "I" (the pro-drop you met with
-  *io*/*eu*). *Yo hablo español* is fine too, but only for emphasis.
+- **No separate subject word.** The *-o* of *hablo* already says “I,” reusing
+  the pro-drop pattern from the previous lesson.
 - **No "the" or "a."** Languages are bare: *hablo español*, not "*el* español."
 
 Now swap the pieces and watch it generate:
 
-- **Estudio español.** — "I study Spanish."
-- **Trabajo** … , **Hablas español?** — "Do you speak Spanish?" (just raise the
-  tone — and remember the **¿ ?** from the writing chapter).
+- **Estudio español.** — “I study Spanish.”
+- **Trabajo.** — “I work.”
+- **¿Hablas español?** — “Do you speak Spanish?” (reuse the **¿ ?** from the
+  writing lesson).
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "Hablo español" — *AH-bloh es-pa-NYOL*]
-- [YOU SAY: swap the verb — "Estudio español", "Trabajo mucho"]
+- [YOU SAY: swap the verb — “Estudio español”, “Trabajo”]
 - [YOU SAY: ask it — "¿Hablas español?" (raise the pitch, ¿ opens the question)]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Where does *español* come from, and what letter does its ending bring
-back? (*Hispania*; the *ñ*.) In *Hablo español*, why is there no *yo* and no
-"the"? (The *-o* ending is "I"; languages take no article.) You just built your
+back? (*Hispania*; the *ñ*.) In *Hablo español*, why is there no separate subject
+word and no “the”? (The *-o* ending carries “I”; languages take no article.) You just built your
 first sentence from parts — that's the whole game from here. Next: practice.

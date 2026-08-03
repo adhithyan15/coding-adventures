@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C05-hasta-manana
+spine_node: SPINE-TAKE-LEAVE
+sequence: 420
 chapter: 5
 type: phrase
 headword: hasta mañana
@@ -9,7 +12,19 @@ prerequisites: [ES-C05-hasta-luego, ES-W02-enye]
 sounds: [enye-ny, vowel-a]
 roots: [hatta-arabic, maneana-latin]
 etymology_hook: "mañana ← Latin (hora) maneana 'early hour' → morning → tomorrow; carries the ñ from the ñ-lesson"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HASTA, ES-LEX-HASTA-LUEGO, ES-FORM-MANANA, ES-SCRIPT-ENYE]
+introduces:
+  knowledge: [ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-ETYMON-MANEANA]
+practises:
+  knowledge: [ES-LEX-HASTA, ES-LEX-MANANA, ES-LEX-HASTA-MANANA, ES-SCRIPT-ENYE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C05-hasta-luego, ES-W02-enye]
 ---
 
@@ -27,7 +42,7 @@ in a word you'll say every evening.
   "canyon" (your ñ writing lesson — the tilde is a tiny second *n*, remember).
   Three soft *ah*'s: *ma-**ÑA**-na*.
 
-## The phrase, taken apart
+## The word, taken apart — the phrase
 
 > **hasta mañana** = "until tomorrow" → "see you tomorrow."
 
@@ -36,8 +51,6 @@ in a word you'll say every evening.
   **(hōra) maneana**, "the **early** hour" (from *māne*, "in the morning"). The
   logic: the next "early hour" you'll see is *tomorrow morning* → *mañana* came to
   mean both **morning** and **tomorrow**.
-  - *por la mañana* = "in the morning."
-  - *hasta mañana* = "until tomorrow."
 
 **The ñ, in the wild.** Recall the writing lesson: *ñ* is a frozen *nn* — a
 scribe's shorthand for a doubled *n*. *mañana* comes from Latin *maneana*, whose
@@ -54,8 +67,7 @@ with *hasta*, it's always **tomorrow**: *hasta mañana*, "until tomorrow."
 [PAUSE 1s]
 - [YOU SAY: "mañana" — *mah-NYAH-nah*, squished *ñ*]
 - [YOU SAY: "hasta mañana" — until tomorrow]
-- [YOU SAY: "por la mañana" (in the morning) vs "hasta mañana" (until tomorrow) —
-  same word, context decides]
+- [YOU SAY: “mañana” once as “morning,” then once as “tomorrow” — context decides]
 
 ## Wrap-up Recall
 

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C04-como-estas-register
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 290
 chapter: 4
 type: grammar
 headword: ¿cómo está usted? / ¿cómo estás?
@@ -8,13 +11,30 @@ prerequisites: [ES-C04-como-esta]
 sounds: [vowel-o, r-tap]
 roots: [quomodo-latin, stare-latin]
 etymology_hook: "the formal/informal split reuses the usted/tú register choice and estar endings already learned: está usted versus estás"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-ESTAR-ESTA-ESTAS]
+introduces:
+  knowledge: [ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST]
+practises:
+  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: contrastive-formal-informal
+variety: general
 reviews_of: [ES-C04-como-esta, ES-C03-tu-usted]
 ---
 
 # ¿cómo está usted? / ¿cómo estás? — choose the register
 
-## One question, two relationships
+## Warm-up
+
+[PAUSE 2s] You can already ask a stranger **¿Cómo está usted?** Now change
+only the relationship: ask the same question of a friend.
+
+## Grammar Lens: one question, two relationships
 
 | register | question |
 |---|---|

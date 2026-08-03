@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C04-regular
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 300
 chapter: 4
 type: word
 headword: regular
@@ -9,7 +12,19 @@ prerequisites: [ES-C04-como-estas-register]
 sounds: [vowel-e, r-tap, l-clear]
 roots: [regula-latin, magis-minus-latin]
 etymology_hook: "regular ← Latin regula 'straight rod, rule'; the middling answer — 'on the rule / average'"
-est_minutes: 4
+duration:
+  max_seconds: 270
+requires:
+  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-LEX-BIEN]
+introduces:
+  knowledge: [ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-ETYMON-REGULA]
+practises:
+  knowledge: [ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-BIEN, ES-LEX-COMO-ESTAS]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C01-bien, ES-C04-como-estas-register, ES-C04-como-esta]
 ---
 
@@ -21,13 +36,13 @@ reviews_of: [ES-C01-bien, ES-C04-como-estas-register, ES-C04-como-esta]
 middling, or a wave of the hand. You already have **bien** ("well," Chapter 1).
 Today, the *middling* answers — because nobody is *bien* every day.
 
-## Review first (20 seconds)
+## You'll want to know first
 
 [PAUSE 2s] Recall from Chapter 1: **bien** — "well." Root? (Latin *bene*, "well"
 — same as *bene*fit, *bene*volent.) So *estoy bien* = "I'm well." Now the answer
 for when you're *not* quite bien.
 
-## The words, taken apart
+## The word, taken apart — two answers
 
 **regular** — as an answer to "how are you?", it means **"so-so, average, not
 great."** (A famous false-friend trap: it does **not** mean English "regular /

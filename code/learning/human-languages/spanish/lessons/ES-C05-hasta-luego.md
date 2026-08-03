@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C05-hasta-luego
+spine_node: SPINE-TAKE-LEAVE
+sequence: 410
 chapter: 5
 type: phrase
 headword: hasta luego
@@ -9,7 +12,19 @@ prerequisites: [ES-C05-hasta-limits]
 sounds: [diphthong-ue, g-soft-gw]
 roots: [hatta-arabic, loco-latin]
 etymology_hook: "hasta (Arabic) + luego (← Latin loco 'at the place' → then/soon) — 'until soon'"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HASTA, ES-GRAMMAR-HASTA-ENDPOINT]
+introduces:
+  knowledge: [ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]
+practises:
+  knowledge: [ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C05-hasta-limits, ES-C05-hasta, ES-C05-adios]
 ---
 
@@ -26,7 +41,7 @@ today you add **luego** ("later"), and it has a very Latin backstory.
 - `diphthong-ue` — **luego** = *LWEH-goh*: the *ue* is a *w*-glide, *lweh-*.
 - The whole phrase: *AHS-tah LWEH-goh*.
 
-## The phrase, taken apart
+## The word, taken apart — the phrase
 
 > **hasta luego** = "until later" → "see you later."
 
