@@ -44,7 +44,7 @@ Spain spoke Arabic.**
 
 ## The word, taken apart
 
-**hasta** comes from Arabic **ḥattā** (حَتَّى), "until, up to." From **711 CE**,
+**hasta** comes from Arabic **ḥattā**, “until, up to.” From **711 CE**,
 Muslim armies ruled much of the Iberian Peninsula — *al-Andalus* — and Arabic was
 the language of government, science, and poetry there for **centuries**, until
 1492. Spanish absorbed roughly **four thousand** Arabic words in that time — more

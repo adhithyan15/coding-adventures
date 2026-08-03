@@ -61,6 +61,8 @@ than mere schoolwork.
 
 Drop **-ar**, add the ending — for the third time:
 
+| person | form | meaning |
+|---|---|---|
 | I (ending carries the subject) | **estudio** | I study |
 | tú | **estudias** | you study |
 | usted | **estudia** | you (formal) study |

@@ -49,6 +49,57 @@
         "ES-C03-practice"
       ],
       "tex": "spanish/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:a8f2ef77f4c94859",
+      "lessonIds": [
+        "ES-C04-gracias",
+        "ES-C04-de-nada",
+        "ES-C04-estar",
+        "ES-C04-como-esta",
+        "ES-C04-como-estas-register",
+        "ES-C04-regular",
+        "ES-C04-y",
+        "ES-W01-acento",
+        "ES-W01-tilde-diacritica",
+        "ES-W02-enye",
+        "ES-W03-inverted",
+        "ES-W03-question-span",
+        "ES-C04-practice"
+      ],
+      "tex": "spanish/book/chapters/ch04-how-are-you.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:3008dfa4a25b0bd2",
+      "lessonIds": [
+        "ES-C05-adios",
+        "ES-C05-hasta",
+        "ES-C05-hasta-limits",
+        "ES-C05-hasta-luego",
+        "ES-C05-hasta-manana",
+        "ES-C05-hasta-pronto",
+        "ES-C05-practice"
+      ],
+      "tex": "spanish/book/chapters/ch05-farewells.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:081983e1f50e4d6c",
+      "lessonIds": [
+        "ES-C06-cafe",
+        "ES-C06-por-favor",
+        "ES-C06-hablar",
+        "ES-C06-trabajar",
+        "ES-C06-estudiar",
+        "ES-C06-espanol",
+        "ES-C06-practice"
+      ],
+      "tex": "spanish/book/chapters/ch06-first-verbs.tex"
     }
   ]
 }

@@ -21,6 +21,27 @@
       "title": "Introducing Yourself",
       "label": "ch:introductions",
       "output": "spanish/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 4,
+      "title": "How Are You?",
+      "label": "ch:how-are-you",
+      "output": "spanish/book/chapters/ch04-how-are-you.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 5,
+      "title": "Farewells",
+      "label": "ch:farewells",
+      "output": "spanish/book/chapters/ch05-farewells.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 6,
+      "title": "The First Verbs",
+      "label": "ch:first-verbs",
+      "output": "spanish/book/chapters/ch06-first-verbs.tex"
     }
   ]
 }

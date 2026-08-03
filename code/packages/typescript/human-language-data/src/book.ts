@@ -36,6 +36,7 @@ function escapeLatexCharacter(character: string): string {
     "]": "{]}",
     "←": "$\\leftarrow$",
     "→": "$\\to$",
+    "≈": "$\\approx$",
   };
   return escaped[character] ?? character;
 }
@@ -114,6 +115,7 @@ function renderMarkdown(markdown: string): string {
   const quote: string[] = [];
   let listOpen = false;
   let listItem: string[] = [];
+  const tableRows: string[][] = [];
 
   const flushParagraph = (): void => {
     if (paragraph.length === 0) return;
@@ -137,14 +139,64 @@ function renderMarkdown(markdown: string): string {
     listOpen = false;
   };
 
+  const flushTable = (): void => {
+    if (tableRows.length === 0) return;
+    const [header = [], separator = [], ...body] = tableRows;
+    const isSeparator =
+      separator.length === header.length &&
+      separator.every((cell) => /^:?-{3,}:?$/.test(cell));
+    if (!isSeparator || header.length === 0) {
+      output.push(
+        ...tableRows.flatMap((row) => [renderInlineMarkdown(`| ${row.join(" | ")} |`), ""]),
+      );
+      tableRows.length = 0;
+      return;
+    }
+    const columns = Array.from(
+      { length: header.length },
+      () => ">{\\raggedright\\arraybackslash}X",
+    ).join("");
+    const cells = (row: string[]): string[] =>
+      Array.from({ length: header.length }, (_, index) => renderInlineMarkdown(row[index] ?? ""));
+    output.push(
+      `\\begin{tabularx}{\\linewidth}{@{}${columns}@{}}`,
+      "\\toprule",
+      `${cells(header)
+        .map((cell) => `\\textbf{${cell}}`)
+        .join(" & ")} \\\\`,
+      "\\midrule",
+      ...body.map((row) => `${cells(row).join(" & ")} \\\\`),
+      "\\bottomrule",
+      "\\end{tabularx}",
+      "",
+    );
+    tableRows.length = 0;
+  };
+
   for (const rawLine of markdown.split(/\r?\n/)) {
     const line = rawLine.trimEnd();
     if (line.trim() === "") {
       flushParagraph();
       flushQuote();
       closeList();
+      flushTable();
       continue;
     }
+    if (/^\s*\|.*\|\s*$/.test(line)) {
+      flushParagraph();
+      flushQuote();
+      closeList();
+      tableRows.push(
+        line
+          .trim()
+          .replace(/^\|/, "")
+          .replace(/\|$/, "")
+          .split("|")
+          .map((cell) => cell.trim()),
+      );
+      continue;
+    }
+    flushTable();
     if (line.startsWith("> ")) {
       flushParagraph();
       closeList();
@@ -173,6 +225,7 @@ function renderMarkdown(markdown: string): string {
   flushParagraph();
   flushQuote();
   closeList();
+  flushTable();
   return output.join("\n").trimEnd();
 }
 

@@ -32,10 +32,9 @@ reviews_of: [ES-C06-por-favor]
 
 ## Warm-up
 
-[PAUSE 2s] Until now you've assembled fixed phrases. **hablar** (“to speak”)
-gives you the first reusable verb pattern: the singular **-ar present**. One
-small ending swap will let you say “I speak,” ask a friend, or address someone
-formally.
+[PAUSE 2s] Fixed phrases got you this far. **Hablar** (“to speak”) gives you a
+reusable singular **-ar** pattern. One ending swap says “I speak,” asks a
+friend, or addresses someone formally.
 
 ## Sounds you'll need
 
