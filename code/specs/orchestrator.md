@@ -227,7 +227,7 @@ what `supervisor` provides.
 
 ### Service Registry
 
-A registry of running hosts:
+A durable registry of host intent plus the orchestrator's last observation:
 
 ```rust
 pub struct ServiceRegistry {
@@ -236,13 +236,17 @@ pub struct ServiceRegistry {
 
 pub struct HostEntry {
     pub host_name:        HostName,
-    pub package_path:     PathBuf,
+    pub package_path:     String,        // bounded portable UTF-8 path
     pub package_hash:     [u8; 32],     // SHA-256 of the signed package
-    pub pid:              u32,
+    pub restart_policy:   RestartPolicy,
+    pub desired_state:    DesiredState,
+    pub pid:              Option<u32>,
     pub status:           HostStatus,
-    pub started_at:       SystemTime,
-    pub last_heartbeat:   SystemTime,
-    pub channel_id:       ChannelId,    // the secure-host-channel for this host
+    pub started_at_ns:    Option<u64>,
+    pub last_heartbeat_ns: Option<u64>,
+    pub channel_id:       Option<ChannelId>, // current secure host channel
+    pub restart_count:    u32,
+    pub last_restart_ns:  Option<u64>,
 }
 
 pub enum HostStatus {
@@ -251,19 +255,29 @@ pub enum HostStatus {
     Restarting,
     Stopping,
     Stopped,
-    Quarantined { until: SystemTime, reason: String },
+    Crashed { exit_code: Option<i32> },
+    Quarantined { until_ns: u64, reason: String },
 }
 ```
 
-The registry is persisted to disk under the orchestrator's data
-directory (default `./.orchestrator/registry.json`) on every change
-and re-read at startup. Persistence uses atomic write (write to
-`registry.json.tmp`, fsync, rename) so a crash during write never
-leaves a corrupt registry.
+Each host is stored as one bounded, versioned record behind the repository-owned
+`StorageBackend` interface. Registration is create-if-absent, observation and
+intent changes use revision compare-and-swap, deletion is revision-guarded, and
+list order is the stable host-name key order. The default local-folder backend
+stores these records below the orchestrator data directory and supplies its
+crash-safe atomic-write contract; the registry does not implement a second
+bespoke JSON/TOML file writer.
+
+Persisting `restart_policy` and `desired_state` is required for reconstruction:
+a cached PID or `Running` status can be stale after a crash, while the durable
+intent still tells reconciliation whether the host should be relaunched.
 
 The registry is **not authoritative** about what is actually
 running; the supervisor's child set is. The registry is a cache for
-fast lookup and for reconstructing intent on restart.
+fast lookup and for reconstructing intent on restart. It also does not duplicate
+channel membership or ciphertext state: durable channel definitions remain the
+authority for channel topology, and this entry only caches the current secure
+host control-channel identifier.
 
 ### Trust Checker
 
@@ -466,8 +480,8 @@ config level — it is a runtime-only concept.
      (vault://orchestrator/trusted-keys/)
 
 3. Reconstruct from registry:
-   read ./.orchestrator/registry.json
-   for each entry:
+   list the service-registry namespace through StorageBackend
+   decode each bounded versioned host entry:
      if pid is alive AND package_hash matches what's on disk:
        reattach to the host process
        wait for the host to re-handshake on its existing channel
@@ -599,7 +613,8 @@ shutdown(mode):
 
 ```
 .orchestrator/
-├── registry.json              service-registry snapshot
+├── storage/                   default local-folder StorageBackend root
+│   └── service-registry/      versioned host records (backend-owned layout)
 ├── audit.jsonl                append-only structured audit log
 ├── panic-log.jsonl            append-only panic-signal forensic log
 ├── orchestrator.toml          configuration (read-only after start)
@@ -608,9 +623,9 @@ shutdown(mode):
     └── ...
 ```
 
-`registry.json` and `audit.jsonl` are written via atomic
-write-then-rename; `panic-log.jsonl` is fsync-on-write to ensure
-no signal is ever lost in a crash. The pids directory exists for
+The default local-folder backend provides atomic record writes for the service
+registry; `audit.jsonl` uses atomic write-then-rename and `panic-log.jsonl` is
+fsync-on-write to ensure no signal is ever lost in a crash. The pids directory exists for
 external observability (a sysadmin can `cat .orchestrator/pids/*`
 to see what is running).
 
@@ -721,8 +736,9 @@ pub enum SignatureError {
 
 1. **Signature verification** — known good, unknown key, tampered
    signature, malformed package, key tier capping.
-2. **Registry persistence** — round-trip of every host status; atomic
-   write semantics (kill mid-write must leave a valid file).
+2. **Registry persistence** — round-trip of every host status and intent;
+   create-if-absent registration, revision-CAS updates/deletes, corrupt-record
+   rejection, and restart through a real local-folder backend.
 3. **Trust checker** — Tier 0 passes without challenge; Tier 1
    notify-and-auto-approve; Tier 2 biometric; Tier 3 hardware key;
    timeouts and denials propagate correctly.
@@ -757,7 +773,8 @@ pub enum SignatureError {
 
 13. **Audit log shape** — every supervision event produces a record
     matching the published JSON schema for AuditRecord.
-14. **Registry shape** — registry.json matches the published schema.
+14. **Registry shape** — every versioned host record obeys the bounded codec and
+    stable storage-key contract.
 
 ### Coverage Target
 
