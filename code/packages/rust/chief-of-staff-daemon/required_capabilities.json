@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon",
+  "capabilities": [
+    {
+      "category": "env",
+      "action": "read",
+      "target": "HOME or USERPROFILE",
+      "justification": "Resolves the spec-default per-user configuration path and validated home-relative paths."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "configured config, public keys, packages, credential, and state paths",
+      "justification": "Loads bounded configuration and composes the existing keyring, package verification, credential, and durable registry adapters."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "configured credential and state paths",
+      "justification": "Composes owner-only credential publication and filesystem-backed durable registry initialization."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "configured credential and state paths",
+      "justification": "Persists the local credential and durable orchestrator intent through their existing bounded adapters."
+    },
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "configured loopback address",
+      "justification": "Serves the authenticated local WebSocket control API."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "configured Chief host executable",
+      "justification": "Composes verified shell-free host process supervision."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "self and owned host children",
+      "justification": "Receives cooperative service shutdown and reaps owned children during teardown."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "monotonic process clock",
+      "justification": "Schedules reconciliation and validates host heartbeat age."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "bounded reconciliation, shutdown, and process-control waits",
+      "justification": "Composes existing bounded scheduler, signal delivery, credential publication, and child shutdown waits."
+    }
+  ],
+  "justification": "Composition root for the local D18 Chief daemon; all privileged behavior remains inside repository-owned bounded adapters."
+}

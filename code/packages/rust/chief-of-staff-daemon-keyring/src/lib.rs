@@ -86,7 +86,7 @@ fn read_public_key(path: &Path) -> Result<[u8; ED25519_PUBLIC_KEY_BYTES], Keyrin
         return Err(KeyringLoadError::KeyFileNotRegular);
     }
 
-    let file = File::open(path).map_err(|_| KeyringLoadError::KeyFileUnavailable)?;
+    let file = open_readonly(path)?;
     let opened = file
         .metadata()
         .map_err(|_| KeyringLoadError::KeyFileUnavailable)?;
@@ -111,6 +111,21 @@ fn read_public_key(path: &Path) -> Result<[u8; ED25519_PUBLIC_KEY_BYTES], Keyrin
     Ok(public_key)
 }
 
+#[cfg(not(windows))]
+fn open_readonly(path: &Path) -> Result<File, KeyringLoadError> {
+    File::open(path).map_err(|_| KeyringLoadError::KeyFileUnavailable)
+}
+
+#[cfg(windows)]
+fn open_readonly(path: &Path) -> Result<File, KeyringLoadError> {
+    use std::os::windows::fs::OpenOptionsExt;
+    std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(windows_sys::Win32::Storage::FileSystem::FILE_SHARE_READ)
+        .open(path)
+        .map_err(|_| KeyringLoadError::KeyFileUnavailable)
+}
+
 #[cfg(unix)]
 fn same_file(left: &Metadata, right: &Metadata) -> bool {
     use std::os::unix::fs::MetadataExt;
@@ -120,8 +135,10 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 #[cfg(windows)]
 fn same_file(left: &Metadata, right: &Metadata) -> bool {
     use std::os::windows::fs::MetadataExt;
-    left.volume_serial_number() == right.volume_serial_number()
-        && left.file_index() == right.file_index()
+    left.file_attributes() == right.file_attributes()
+        && left.creation_time() == right.creation_time()
+        && left.last_write_time() == right.last_write_time()
+        && left.file_size() == right.file_size()
 }
 
 #[cfg(not(any(unix, windows)))]

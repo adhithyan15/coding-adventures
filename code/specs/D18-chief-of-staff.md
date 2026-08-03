@@ -2034,6 +2034,20 @@ creation supplies a protected DACL with exactly one allow ACE for the current to
 user. Existing Windows credentials must retain that owner and protected one-ACE DACL;
 inherited directory permissions are not sufficient.
 
+The concrete `chief-of-staff-daemon` executable is the composition root for these
+contracts. With no arguments it resolves `~/.chief-of-staff/config.toml` from the
+platform user-home environment; one explicit absolute config path is also accepted.
+The config file is bounded to 256 KiB, must remain a regular non-link file throughout
+loading, and is parsed by the closed schema above. Startup then loads the package
+keyring and local credential, initializes the filesystem service registry, constructs
+the verified shell-free host supervisor, binds the authenticated WebSocket API to the
+validated loopback address, reconciles once, and schedules further reconciliation at
+`health_check_interval`. Three missed intervals are tolerated before a heartbeat is
+stale. Channel topology mutation remains fail-closed until the Trust Checker exists.
+Unix `SIGINT`/`SIGTERM` and Windows console termination events cooperatively stop the
+listener; teardown releases the control plane and reaps every child owned by that
+daemon instance.
+
 **Host restart policies:**
 
 | Policy       | Behavior                                          |
