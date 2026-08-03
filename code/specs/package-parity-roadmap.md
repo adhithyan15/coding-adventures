@@ -250,8 +250,9 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   from 655 unknown records and 217 duplicate groups;
 - make TypeScript build-plan package paths portable on Windows. The identity-
   registry validation found that `rel_path` values still use host backslashes;
-  normalize serialized repository-relative paths in a separate fixture-driven
-  slice rather than widening discovery behavior;
+  this is the selected next fixture-driven slice because every one of the real
+  plan's 4,768 package records is affected on Windows. Normalize serialized
+  repository-relative paths without widening discovery behavior;
 - make Swift build-tool file options recognize Windows drive-letter absolute
   paths. The UTF-8 validation run discovered that `--emit-plan` reaches
   resolution but then joins an absolute Windows path under the repository;

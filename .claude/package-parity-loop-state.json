@@ -370,11 +370,11 @@
     {
       "id": "build-tool-typescript-windows-plan-rel-path-portability",
       "title": "Emit portable TypeScript build-plan package paths on Windows",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-typescript-language-identity-registry"],
-      "branch": null,
+      "branch": "codex/build-tool-typescript-windows-plan-rel-path",
       "pr_number": null,
-      "notes": "Discovered by the real full-repository plan validation for the TypeScript language/identity-registry slice. On Windows, package rel_path values are emitted with backslashes because index.ts serializes path.relative directly, while the language-neutral canonical path contract requires forward slashes. Keep this separate from discovery identity: add a cross-platform plan fixture and real CLI coverage, normalize only repository-relative serialized paths, and preserve absolute destination option handling for its separately owned file-option concerns."
+      "notes": "Selected after merged PR #9582 and the collision-clean 3f8eb7b8 inventory because its dependency is satisfied and Windows corrupts all 4,768 serialized package rel_path records, affecting every downstream plan consumer. This outranks the existing gitdiff item, whose seven failures are local test-fixture portability only, and the next strict-UTF-8 child, whose leverage is confined to one engine. Add a language-neutral cross-platform plan fixture plus real TypeScript CLI coverage, normalize only repository-relative serialized package paths to forward slashes, preserve absolute destination option handling, and do not widen into the separately owned gitdiff or file-option concerns."
     },
     {
       "id": "build-tool-go-rockspec-utf8-conformance",
