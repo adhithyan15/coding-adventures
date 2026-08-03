@@ -9,7 +9,7 @@ prerequisites: [GE-C14-haben, GE-C05-machen]
 sounds: [ge-prefix, final-t]
 roots: [germanic-ga-perfective]
 etymology_hook: "the ge- of gesagt ← Germanic *ga-, a prefix meaning 'completely, together' that marked an action as FINISHED — English dropped it, but it survives fossilised inside enough (Old English genōg) and archaic yclept; German still wraps its participle in it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C14-haben, GE-C05-machen, GE-C05-lernen]
 ---
 

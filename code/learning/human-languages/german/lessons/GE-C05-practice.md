@@ -8,7 +8,7 @@ concept_tag: CH5-PRACTICE
 prerequisites: [GE-C05-wohnen, GE-C05-machen, GE-C05-lernen, GE-C05-ich-lerne-deutsch]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C05-wohnen, GE-C05-machen, GE-C05-lernen, GE-C05-ich-lerne-deutsch, GE-C03-practice]
 ---
 

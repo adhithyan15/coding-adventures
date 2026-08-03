@@ -9,7 +9,7 @@ prerequisites: []
 sounds: [diphthong-ei, umlaut-ue]
 roots: [germanic-numerals, grimms-law]
 etymology_hook: "eins/zwei/drei/vier/fünf are Germanic twins of English one/two/three/four/five — NOT borrowed from Latin, but cousins of it through Grimm's Law"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C05-practice]
 ---
 

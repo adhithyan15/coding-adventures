@@ -9,7 +9,7 @@ prerequisites: [GE-C12-zahlen-13-20]
 sounds: [schw-cluster, eszett]
 roots: [germanic-swartaz, germanic-hweit]
 etymology_hook: "schwarz ← *swartaz (English 'swarthy'; cousin of Latin sordēs 'dirt' → sordid); weiß ← *hwītaz = English white — and German's own blank ('shiny') is the word French/Italian/Portuguese BORROWED for 'white'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C12-zahlen-13-20, GE-C11-brot-wasser]
 ---
 

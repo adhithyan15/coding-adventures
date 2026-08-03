@@ -8,7 +8,7 @@ concept_tag: CH4-PRACTICE
 prerequisites: [GE-C04-auf-wiedersehen, GE-C04-tschuss, GE-C04-bis-bald, GE-C04-bis-morgen]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C04-auf-wiedersehen, GE-C04-tschuss, GE-C04-bis-bald, GE-C04-bis-morgen, GE-C03-practice]
 ---
 

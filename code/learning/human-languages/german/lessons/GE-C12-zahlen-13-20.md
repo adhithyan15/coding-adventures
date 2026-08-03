@@ -9,7 +9,7 @@ prerequisites: [GE-C12-elf-zwoelf]
 sounds: [zehn-ts, ig-final]
 roots: [germanic-tehun, germanic-twaintig]
 etymology_hook: "dreizehn…neunzehn = digit + zehn, the exact mirror of English thir-teen…nine-teen (-teen IS ten); zwanzig ← twaintig 'two-tens' = English twenty; German never breaks the pattern, unlike the Romance sisters"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C12-elf-zwoelf, GE-C06-zahlen-6-10]
 ---
 

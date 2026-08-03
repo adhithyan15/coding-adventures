@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [GE-C02-ich-heisse, GE-C02-wie-heissen-sie, GE-C02-freut-mich]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C02-ich, GE-C02-heissen, GE-C02-ich-heisse, GE-C02-du-sie, GE-C02-wie, GE-C02-wie-heissen-sie, GE-C02-freut-mich]
 ---
 

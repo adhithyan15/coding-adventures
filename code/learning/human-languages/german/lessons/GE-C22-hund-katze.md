@@ -9,7 +9,7 @@ prerequisites: [GE-C14-alter]
 sounds: [u-umlaut-none, tz-affricate]
 roots: [germanic-hund-dog, latin-cattus-afroasiatic]
 etymology_hook: "Hund is native Germanic (Proto-Indo-European *kwon-), cognate with English's OWN 'hound' — the word English ITSELF replaced with the still-unexplained 'dog,' the same shape of mystery as Spanish's perro; Katze, surprisingly, is NOT native Germanic at all — like French/Spanish/Italian, German borrowed the same Late Latin cattus, so 'cat' words are remarkably widespread across Germanic AND Romance (though NOT every European language: Romanian and much of South Slavic use their own onomatopoeic cat-words instead), while 'dog' words go their own separate ways almost everywhere"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [GE-C14-alter]
 ---
 

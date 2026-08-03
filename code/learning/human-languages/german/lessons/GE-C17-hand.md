@@ -5,12 +5,12 @@ type: word
 headword: die Hand
 gloss: the hand — the same word as English, and unrelated to Romance manus
 concept_tag: GE-BODY-HAND
-prerequisites: [GE-C17-kopf, GE-C01-der-die-das]
+prerequisites: [GE-C17-kopf-haupt, GE-C01-der-die-das]
 sounds: [final-devoicing, vowel-a-german]
 roots: [germanic-handuz]
 etymology_hook: "die Hand IS English hand — Germanic *handuz, with no Latin relative at all; where French/Italian/Portuguese all continue manus, Germanic simply has a different word, so this is the body part where the two families do NOT meet"
 est_minutes: 4
-reviews_of: [GE-C17-kopf, GE-C01-der-die-das]
+reviews_of: [GE-C17-kopf, GE-C17-kopf-haupt, GE-C01-der-die-das]
 ---
 
 # die Hand — "the hand"

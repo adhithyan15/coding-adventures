@@ -3,96 +3,64 @@ id: GE-C16-perfekt-sein
 chapter: 16
 type: phrase
 headword: ich bin gegangen
-gloss: "the perfect built on sein — motion and change-of-state verbs, with no agreement at all"
+gloss: the perfect with sein for motion, arrival, and change of state
 concept_tag: GE-PAST-PERFEKT-SEIN
 prerequisites: [GE-C16-sein, GE-C15-perfekt, GE-C03-gehen]
 sounds: [ich-laut, ge-prefix]
 roots: [germanic-ga-participle]
-etymology_hook: "German splits its perfect between haben and sein on the same motion/change-of-state line as French — but unlike French the participle never agrees IN THE PERFECT (gegangen is gegangen for everyone), though it still inflects attributively (der angekommene Zug); and the split is a parallel Germanic development alongside Romance, not something inherited from Latin"
-est_minutes: 5
+etymology_hook: "German uses sein with a bounded motion/change family while ordinary activity verbs keep haben"
+est_minutes: 4
 reviews_of: [GE-C16-sein, GE-C15-perfekt, GE-C03-gehen]
 ---
 
-# ich bin gegangen — the perfect built on "sein"
+# Ich bin gegangen — the perfect with sein
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 15 built the perfect with *haben*: *ich habe gelernt*. A
-particular family of verbs takes **sein** instead — and the line it draws will
-look familiar if you have seen the French track.
-
-## The rule
-
-> **Verbs of motion and change of state take *sein*.**
-
-*Gehen* (Ch. 3) is the model:
+[PAUSE 2s] Chapter 15 built **ich habe gelernt** with *haben*. A smaller family
+uses **sein**.
 
 | | |
 |---|---|
-| ich **bin** gegangen | I went / I have gone |
-| du **bist** gegangen | you went |
-| er **ist** gegangen | he went |
-| wir **sind** gegangen | we went |
+| ich **bin gegangen** | I went / have gone |
+| du **bist gegangen** | you went |
+| er **ist gegangen** | he went |
+| wir **sind gegangen** | we went |
 
-The rest of the family:
+## The family
 
-| verb | perfect | |
+The centre is a change of place or state with a clear result:
+
+| verb | perfect | meaning |
 |---|---|---|
-| kommen | ich **bin** gekommen | I came |
-| fahren | ich **bin** gefahren | I travelled, drove |
-| bleiben | ich **bin** geblieben | I stayed |
-| werden | ich **bin** geworden | I became |
-| **sein** itself | ich **bin** gewesen | I have been |
+| gehen | **bin gegangen** | went |
+| kommen | **bin gekommen** | came |
+| fahren | **bin gefahren** | travelled |
+| werden | **bin geworden** | became |
 
-Motion (*gehen, kommen, fahren*), change of state (*werden*) — and then a small
-set that breaks the pattern and simply has to be learned: **sein** and
-**bleiben**, which are the *opposite* of change, plus *gelingen* (succeed),
-*geschehen* / *passieren* (happen) and *begegnen* (meet).
+Ordinary activity without that result usually keeps **haben**: *ich habe
+gearbeitet*, *ich habe getanzt*.
 
-## No agreement — the German simplification
+A small learned group also takes *sein*: **sein** itself (*bin gewesen*),
+**bleiben** (*bin geblieben*), plus verbs such as *gelingen* (succeed),
+*geschehen / passieren* (happen), and *begegnen* (meet).
 
-Here is where German is *easier* than French. Compare:
+Build each perfect as:
 
-| | French | German |
-|---|---|---|
-| he went | il est **allé** | er ist **gegangen** |
-| she went | elle est **allé*e*** | sie ist **gegangen** |
-| they went | ils sont **allé*s*** | sie sind **gegangen** |
+> present form of **sein** + past participle
 
-French makes the participle agree with the subject. **In the perfect, German
-makes it agree with nothing** — *gegangen* is *gegangen* for every person and
-gender. (German participles *do* still inflect when used as adjectives in front
-of a noun — *ein geschrieben**er** Brief*, *der angekommen**e** Zug*, *die
-eingeschlafen**e** Katze*. It is specifically the perfect where the ending is
-gone.)
-
-Old High German did inflect the participle here, at least variably; German lost
-that, along with most of its other adjective-like endings in this position.
-
-And note what did **not** happen: German didn't get this from Latin. The
-*haben*-perfect and the *sein*-perfect are native Germanic developments that grew
-up **alongside** the Romance ones — neighbouring languages drifting the same way
-through centuries of contact, the same areal spread that Ch. 15 blamed for the
-simple past retreating in French, German and Italian together.
-
-Two things to carry forward: the **split** is parallel, the **agreement** is not
-shared.
+The participle stays at the end, just as it did with *haben*.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "ich bin gegangen, du bist gegangen, wir sind gegangen"]
-- [YOU SAY: the contrast — "ich **habe** gelernt … ich **bin** gegangen"]
-- [YOU SAY: the odd ones out — "**sein**, **bleiben**, **geschehen**"]
-- [YOU SAY: the comparison — "elle est allé**e** … sie ist gegangen — **no ending**"]
+- [YOU SAY: “ich bin gegangen; wir sind gegangen”]
+- [YOU SAY: “ich habe gelernt; ich bin gegangen”]
+- [YOU SAY: “bin gekommen; bin geworden; bin geblieben”]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Which verbs form the perfect with *sein*? (Verbs of **motion** and
-**change of state**.) Say "I went." (*Ich bin gegangen*.) Name two non-motion verbs that also
-take *sein*. (***Sein***, ***bleiben*** — or *geschehen*, *gelingen*.) Does the
-German participle agree with the subject **in the perfect**? (**No.** *Gegangen*
-never changes.) Where does it still inflect? (**In front of a noun** — *der
-angekommen**e** Zug*.) Does the French participle agree? (**Yes** — *elle est
-allé**e***.) Did German get this split from Latin? (**No** — it grew up
-**alongside** Romance, through contact.) Next chapter: the **body**.
+[PAUSE 3s] Which broad family takes *sein*? (Resultative **motion/change**.) Say
+“I went.” (**Ich bin gegangen**.) Name two learned exceptions. (**Sein,
+bleiben**, or *geschehen*.) Where does the participle go? (**At the end**.) Next:
+compare German agreement with French.

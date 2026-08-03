@@ -9,7 +9,7 @@ prerequisites: [GE-C13-schwarz-weiss]
 sounds: [long-o, diphthong-au]
 roots: [pie-rewdh, germanic-blao]
 etymology_hook: "rot ← *raudaz ← PIE *h₁rewdʰ-, the same root as Latin ruber → French rouge — genuine cousins; and blau, like blank, was borrowed INTO Romance (bleu, blu), then English took blue back from French"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C13-schwarz-weiss, GE-C12-zahlen-13-20]
 ---
 

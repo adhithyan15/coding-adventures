@@ -9,7 +9,7 @@ prerequisites: [GE-C14-alter]
 sounds: [w-as-v, umlaut-none]
 roots: [germanic-wetter-weather, germanic-regen-rain]
 etymology_hook: "das Wetter is a native Germanic word (Proto-Germanic *wedrą) — the SAME word as English 'weather' itself, not a Latin loan like every Romance language's tempus-based word; es regnet ('it's raining') is likewise native, from Proto-Germanic *regnōną — the SAME root as English 'rain'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C14-alter]
 ---
 

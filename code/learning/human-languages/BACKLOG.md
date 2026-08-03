@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the French duration
-tranche: 20 registered tracks, 997 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the German duration
+tranche: 20 registered tracks, 1,002 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -56,7 +56,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01G | Complete in the Italian duration PR | Remove all twenty sub-five-minute violations from the Italian track. | The report measures zero Italian violations; four new prerequisite-ordered micro-lessons preserve the register, metaphor, suppletion, and agreement content that did not fit safely in the original lessons. |
 | HL-D01H | Complete in the Portuguese duration PR | Remove all twenty-three sub-five-minute violations from the Portuguese track. | The report measures zero Portuguese violations; five new prerequisite-ordered micro-lessons preserve the register, suppletion, grammar-choice, and etymology content from the five computed violations. |
 | HL-D01I | Complete in the French duration PR | Remove all twenty-five sub-five-minute violations from the French track. | The report measures zero French violations; three new prerequisite-ordered micro-lessons preserve register, suppletion, and pronominal-agreement depth. |
-| HL-D01J | Next | Remove all twenty-seven sub-five-minute violations from the German track. | German is now the smallest remaining set: twenty-two declaration-only lessons and five genuinely computed violations, with a 360-second maximum. |
+| HL-D01J | Complete in the German duration PR | Remove all twenty-seven sub-five-minute violations from the German track. | The report measures zero German violations; five new prerequisite-ordered micro-lessons preserve register, practice, areal-history, agreement, and etymology depth. |
+| HL-D01K | Next | Remove all thirty-six sub-five-minute violations from the Telugu track. | Telugu is now the smallest remaining set: thirty-five declaration-only lessons and one genuinely computed violation, with a 360-second maximum. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -75,6 +76,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B17 | Queued | Remove Portuguese's LaTeX layout warnings. | A forced build succeeds with no missing glyphs, overfull boxes, duplicate labels, or Hyperref warnings, but reports three underfull boxes; the clean-build signal is zero. |
 | HL-B18 | Queued | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The French PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
 | HL-B19 | Queued | Remove French's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports sixteen overfull boxes, nine underfull boxes, and six Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B20 | Queued | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The German PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
+| HL-B21 | Queued | Remove German's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports seventeen overfull boxes, eleven underfull boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -334,6 +337,30 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - German's twenty-seven violations are now the smallest remaining set.
   Twenty-two are declaration-only and five genuinely compute above the limit,
   with a 360-second maximum, so HL-D01J is next.
+
+## Findings from HL-D01J
+
+- German now has zero duration violations. The corpus grows from 997 to 1,002
+  lessons and drops from 356 to 329 violations overall; unknown prerequisites
+  remain at zero.
+- Twenty-two lessons needed only honest declared-budget corrections. Five new
+  prerequisite-ordered lessons preserve the longer content: informal wellbeing
+  language → formal *Ihnen* register → casual practice → formal practice;
+  Präteritum forms → north/south areal history; *sein*-perfect auxiliaries → the
+  French/German agreement contrast; *Kopf* as cup → inherited *Haupt* and the
+  Grimm's-law/container comparison.
+- The new and rewritten lessons compute between 147 and 244 seconds.
+  `GE-C16-sein` at 287 seconds and `GE-W03-capitalization` at 285 are the
+  tightest remaining German lessons and should be watched during copy edits.
+- The German PDF builds successfully at 84 pages through Chapter 16 while
+  canonical lessons continue through Chapter 23. HL-B20 records the schema-v2
+  migration and generated publication work for Chapters 17–23.
+- The build has no missing glyphs or duplicate labels, but reports seventeen
+  overfull boxes, eleven underfull boxes, and three Hyperref warnings. HL-B21
+  records that pre-existing clean-build debt.
+- Telugu's thirty-six violations are now the smallest remaining set.
+  Thirty-five are declaration-only and one genuinely computes above the limit,
+  with a 360-second maximum, so HL-D01K is next.
 
 ## Completed foundations
 

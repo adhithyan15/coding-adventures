@@ -9,7 +9,7 @@ prerequisites: [GE-C13-rot-blau, GE-C05-machen]
 sounds: [long-a, final-t]
 roots: [germanic-habjana]
 etymology_hook: "haben ← Germanic *habjaną (= English have), from PIE *kap- 'to seize' — the SAME root as Latin capere (capture/captive). Latin habēre only LOOKS like it: it descends from *gʰabʰ-, whose English child is GIVE. A textbook false cognate — same sound, same meaning, opposite ancestry"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C13-rot-blau, GE-C05-machen, GE-C10-geschwister]
 ---
 

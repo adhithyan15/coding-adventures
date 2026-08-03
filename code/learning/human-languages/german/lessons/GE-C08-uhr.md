@@ -9,7 +9,7 @@ prerequisites: [GE-C06-zahlen-1-5]
 sounds: [vowel-u-long, r-final]
 roots: [hora-latin]
 etymology_hook: "Uhr ← Latin hōra 'hour' — a LATIN LOANWORD, unlike German's native numbers and day-gods; the same hōra behind French heure and English hour"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C06-zahlen-1-5, GE-C07-wochentage-2]
 ---
 

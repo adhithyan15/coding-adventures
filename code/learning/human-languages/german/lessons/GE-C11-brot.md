@@ -9,7 +9,7 @@ prerequisites: [GE-C10-geschwister, GE-C01-hallo]
 sounds: [long-o, r-uvular]
 roots: [germanic-braudam]
 etymology_hook: "Brot is INHERITED Germanic (← *braudam), the direct twin of English bread — NOT the Latin pānis the Romance sisters use; and it introduces the third gender, das (neuter)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C10-geschwister, GE-C01-hallo]
 ---
 
