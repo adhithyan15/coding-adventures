@@ -45337,6 +45337,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "OTP/device-token authentication, events, snapshots, recordings, playback, export, PTZ, external recording, and configuration remain separate lifecycle- or capability-specific work.",
         ]),
         base_entry(
+            "zoneminder",
+            "ZoneMinder",
+            "Authenticated local ZoneMinder host, API, and monitor health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "zoneminder",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "zoneminder_http_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the documented API 2.0 HTTPS login and short-lived JWT access-token flow; plain HTTP is loopback-test-only.",
+            "Credentials, refresh tokens, access tokens, login payloads, and token-bearing request targets remain inside the bounded transport.",
+            "Events, snapshots, streams, recordings, PTZ, monitor configuration, and token renewal remain separate lifecycle- or capability-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
             "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
@@ -81253,6 +81283,41 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
         assert!(!synology
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn zoneminder_entry_exposes_api_v2_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let zoneminder = find_entry(&catalog, &IntegrationId::trusted("zoneminder")).unwrap();
+
+        assert_eq!(
+            zoneminder.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(zoneminder.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            zoneminder.supported_protocols,
+            vec![ProtocolFamily::Vendor("zoneminder_http_api".to_string())]
+        );
+        assert_eq!(zoneminder.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(zoneminder.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            zoneminder.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert_eq!(
+            zoneminder.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!zoneminder
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
