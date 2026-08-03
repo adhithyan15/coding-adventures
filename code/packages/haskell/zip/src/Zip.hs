@@ -86,6 +86,9 @@ import Data.Word (Word8, Word16, Word32, Word64)
 import Data.Bits ((.&.), (.|.), shiftL, shiftR, xor, testBit, complement, popCount)
 import Data.List (foldl')
 import qualified Data.Array as Array
+import Data.Sequence (Seq, (|>))
+import qualified Data.Sequence as Seq
+import Data.Foldable (toList)
 import LZSS (Token(..), encodeWith)
 
 -- =============================================================================
@@ -588,12 +591,30 @@ fixedLLDecode br =
 --
 -- After decompression, the output is capped at 256 MB to guard against
 -- decompression-bomb attacks (crafted archives that expand to huge sizes).
+--
+-- == Why the accumulator is a 'Seq', not a plain list
+--
+-- The output-so-far accumulator must support two operations on
+-- attacker-controlled input: checking its length (once per output byte,
+-- to enforce 'maxOut') and, for back-references, indexing @dist@ positions
+-- from the end (@dist@ is attacker-controlled, up to 32768). A plain
+-- @[Word8]@ makes both of those O(n): 'length' walks the whole spine, and
+-- list indexing walks @dist@ cells. That turns decompression into an
+-- O(n²) (length check) / O(n·dist) (back-reference copy) algorithm —
+-- exactly the kind of algorithmic-complexity blow-up the 'maxOut' cap is
+-- supposed to prevent, except the cap itself would never be reached in
+-- practice because the process pins a CPU core long before 256 MB of
+-- output accumulates. 'Data.Sequence.Seq' gives O(1) length and
+-- O(log(min(i, n-i))) indexed access, so both operations stay cheap even
+-- at the maximum RFC 1951 distance and the full 256 MB cap. This mirrors
+-- the sibling @lzss@ package's own overlap-safe decoder, which uses the
+-- same 'Seq' trick for the same reason (see @LZSS.decodeToken@).
 
 -- | Decompress a raw RFC 1951 DEFLATE bit-stream.
 -- Returns @Left msg@ on malformed or unsupported (BTYPE=10) input.
 deflateDecompress :: ByteString -> Either String ByteString
 deflateDecompress bs =
-    go (newBitReader bs) []
+    go (newBitReader bs) Seq.empty
   where
     maxOut = 256 * 1024 * 1024  -- 256 MB safety cap
 
@@ -622,21 +643,21 @@ deflateDecompress bs =
                         if (nlen `xor` 0xFFFF) /= len
                             then Left "deflate: stored LEN/NLEN mismatch"
                             else let n = fromIntegral len
-                                 in if length acc + n > maxOut
+                                 in if Seq.length acc + n > maxOut
                                         then Left "deflate: output size limit exceeded"
                                         else copyStored (fromIntegral n) br3 acc bfinal
 
     copyStored 0 br acc bfinal =
         if bfinal == 1
-            then Right (BS.pack (reverse acc))
+            then Right (BS.pack (toList acc))
             else go br acc
     copyStored n br acc bfinal =
         case readLsb br 8 of
             (Nothing, _) -> Left "deflate: EOF inside stored block"
             (Just b, br') ->
-                if length acc >= maxOut
+                if Seq.length acc >= maxOut
                     then Left "deflate: output size limit exceeded"
-                    else copyStored (n-1) br' (fromIntegral b : acc) bfinal
+                    else copyStored (n-1) br' (acc |> fromIntegral b) bfinal
 
     handleFixed bfinal br acc = decodeFixedSymbols bfinal br acc
 
@@ -648,13 +669,13 @@ deflateDecompress bs =
                     256 ->
                         -- End-of-block
                         if bfinal == 1
-                            then Right (BS.pack (reverse acc))
+                            then Right (BS.pack (toList acc))
                             else go br1 acc
                     s | s <= 255 ->
                         -- Literal byte
-                        if length acc >= maxOut
+                        if Seq.length acc >= maxOut
                             then Left "deflate: output size limit exceeded"
-                            else decodeFixedSymbols bfinal br1 (fromIntegral s : acc)
+                            else decodeFixedSymbols bfinal br1 (acc |> fromIntegral s)
                     s | s >= 257 && s <= 285 ->
                         -- Back-reference
                         let idx = fromIntegral s - 257
@@ -675,32 +696,29 @@ deflateDecompress bs =
                                                             (Nothing, _)   -> Left "deflate: EOF reading distance extra"
                                                             (Just dv, br4) ->
                                                                 let dist = dBase + fromIntegral dv
-                                                                    outLen = length acc
+                                                                    outLen = Seq.length acc
                                                                 in if dist > outLen
                                                                     then Left ("deflate: back-ref offset " ++ show dist ++ " > output len " ++ show outLen)
                                                                     else if outLen + len > maxOut
                                                                         then Left "deflate: output size limit exceeded"
-                                                                        else let copied = copyBackRef acc dist len
-                                                                             in decodeFixedSymbols bfinal br4 (reverse copied ++ acc)
+                                                                        else decodeFixedSymbols bfinal br4 (copyBackRef acc dist len)
                     _ -> Left ("deflate: invalid LL symbol " ++ show sym)
 
--- | Copy @len@ bytes starting @dist@ positions back in the output buffer
--- (which is stored in reverse order in @acc@). Returns the copied bytes in
--- forward order.
+-- | Append @len@ bytes to @acc@, each copied from @dist@ positions back
+-- from the current end.
 --
--- The copy is done byte-by-byte so overlapping matches work correctly:
--- e.g. dist=1, len=6 applied to @[A]@ yields @[A, A, A, A, A, A, A]@.
-copyBackRef :: [Word8] -> Int -> Int -> [Word8]
-copyBackRef acc dist len = go acc dist len []
+-- The copy is done one byte at a time, appending each copied byte back
+-- onto the sequence before reading the next, so overlapping matches work
+-- correctly: e.g. dist=1, len=6 applied to @[A]@ yields
+-- @[A, A, A, A, A, A, A]@ (each new 'A' becomes visible to the next
+-- lookup, one position closer).
+copyBackRef :: Seq Word8 -> Int -> Int -> Seq Word8
+copyBackRef acc0 dist len = go acc0 len
   where
-    -- Each step: index into the current acc, append to result, then add that
-    -- byte to acc so future steps see it (for overlapping matches).
-    go _ _ 0 result = result
-    go a d n result =
-        -- acc is reversed, so position @outLen - dist@ from the front
-        -- corresponds to index @dist - 1@ from the back of acc (index 0 of acc).
-        let b = a !! (d - 1)  -- d-1 because acc[0] = output[outLen-1], acc[d-1] = output[outLen-d]
-        in go (b : a) d (n - 1) (result ++ [b])
+    go acc 0 = acc
+    go acc n =
+        let b = Seq.index acc (Seq.length acc - dist)
+        in go (acc |> b) (n - 1)
 
 -- =============================================================================
 -- ZIP Entry type

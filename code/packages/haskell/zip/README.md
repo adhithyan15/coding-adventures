@@ -67,6 +67,15 @@ data ZipEntry = ZipEntry
     }
 ```
 
+> **Security note (zip-slip):** `entryName` comes straight from the archive's
+> Central Directory and is returned as-is — it is **not** validated or
+> sanitised. This module never writes to disk itself, so there is no
+> traversal bug here today, but any caller that joins `entryName` onto a
+> filesystem path (e.g. to extract an archive) must first reject or
+> normalise names containing `..` path segments, absolute paths, or
+> drive-qualified Windows paths. This is the classic "zip-slip"
+> vulnerability class — treat every `entryName` as attacker-controlled.
+
 ## Wire format (all integers little-endian)
 
 ```

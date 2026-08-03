@@ -24,6 +24,27 @@
   skipped) — `ZipEntry(..)` is already exported with its constructor in the
   module's export list, avoiding the Windows-CI silent-skip pitfall.
 
+### Security
+
+- Fixed two HIGH-severity algorithmic-complexity DoS findings from security
+  review in `deflateDecompress`: the output accumulator was a plain
+  `[Word8]`, so the `maxOut` (256 MB) decompression-bomb guard's `length acc`
+  check was O(n) per byte (O(n²) overall), and `copyBackRef`'s list index
+  (`!!`) made each back-reference byte O(distance) (up to O(32768) at the
+  RFC 1951 maximum). Together, a small crafted archive with long-distance
+  back-references could pin a CPU core indefinitely, well before the byte
+  cap would ever trigger — the cap existed but the code that was supposed to
+  enforce it was itself the bottleneck. Switched the accumulator to
+  `Data.Sequence.Seq` (O(1) length, O(log n) indexed access), the same
+  technique the sibling `lzss` package already uses in `LZSS.decodeToken`
+  for its own overlap-safe decode. Added `containers` to `zip.cabal`'s
+  dependencies for `Data.Sequence`.
+- Documented the zip-slip / path-traversal hazard in `README.md`: `entryName`
+  is returned exactly as read from the archive with no validation. This
+  module never writes to disk itself, so there's no traversal bug in this
+  code today, but any caller that later writes `entryName` to a filesystem
+  path must sanitise it first (reject `..` segments and absolute paths).
+
 ## [0.1.0] — 2026-04-24
 
 ### Added
