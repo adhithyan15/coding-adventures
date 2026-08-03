@@ -48,8 +48,17 @@ French *nuit* — one Indo-European word, split four ways.
 - **Chapter 15 — The Two Past Tenses**: Perfekt, Präteritum.
 - **Chapter 16 — To Be, and the Past That Takes It**: sein (three ancient verbs
   in one paradigm), the Perfekt with *sein*.
+- **Chapter 17 — Head and Hand**: *der Kopf*, *Haupt*, *die Hand*.
+- **Chapter 18 — Yes and No**: *ja*, *nein*, and the negative-answer *doch*.
+- **Chapter 19 — Please**: *Wasser, bitte* from previously learned words.
+- **Chapter 20 — Sorry**: *Entschuldigung*, *es tut mir leid*.
+- **Chapter 21 — Weather**: *das Wetter*, *es ist heiß/kalt*, *es regnet*.
+- **Chapter 22 — Dog and Cat**: *Hund*, *Katze*.
+- **Chapter 23 — Green and Yellow**: *grün*, *gelb*.
 
-**All sixteen chapters are authored and in the book (84 pages).**
+**All twenty-three chapters are authored and in the book (104 pages).** Chapters
+17–23 are generated from the same canonical lesson AST and source hashes that
+Language Ladder verifies independently.
 
 ## Files
 

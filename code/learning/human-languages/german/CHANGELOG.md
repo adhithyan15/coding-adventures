@@ -1,5 +1,23 @@
 # Changelog
 
+## Canonical Chapters 17–23 (2026-08-03)
+
+- Migrated the ten lessons in Chapters 17–23 to schema version 2 with typed
+  blocks, explicit shared-spine concepts, prerequisite-closed knowledge atoms,
+  and honest sub-five-minute duration contracts.
+- Repaired the missing shared-spine step between yes/no and sorry: a new
+  164-second `bitte` lesson assembles only previously learned words into
+  **Wasser, bitte**, while `Entschuldigung` moves from Chapter 19 to Chapter 20.
+- Generated seven LaTeX chapters from those canonical lessons and added
+  independent Language Ladder source-hash and lesson-count assertions, so the
+  app and downloadable book now consume one source of truth through Chapter 23.
+- Expanded the book from 84 to 104 pages. A forced XeLaTeX build has no missing
+  glyphs, duplicate destinations, LaTeX warnings, or leaked generator metadata;
+  all 104 rendered pages and the complete outline were inspected.
+- Recorded eighteen overfull boxes, one underfull horizontal box, eleven
+  underfull vertical boxes, and three Hyperref warnings for the focused HL-B21
+  cleanup tranche.
+
 ## Sub-five-minute lesson remediation (2026-08-02)
 
 - All twenty-seven German duration violations are resolved. Twenty-two lessons

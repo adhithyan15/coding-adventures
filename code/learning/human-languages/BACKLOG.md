@@ -87,9 +87,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B16 | Complete (#9744) | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Fifty schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B17 | Complete (#9748) | Remove Portuguese's LaTeX layout warnings. | The forced 105-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B18 | Complete (#9752) | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | Nine schema-v2 lessons now generate seven chapters whose source hashes are independently verified against the Language Ladder corpus. |
-| HL-B19 | Complete in this PR | Remove French's LaTeX layout and Unicode bookmark warnings. | The forced 98-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
-| HL-B20 | Next | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The German PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
-| HL-B21 | Queued | Remove German's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports seventeen overfull boxes, eleven underfull boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B19 | Complete (#9761) | Remove French's LaTeX layout and Unicode bookmark warnings. | The forced 98-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
+| HL-B20 | Complete in this PR | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | Ten schema-v2 lessons now generate seven chapters whose source hashes are independently verified against the Language Ladder corpus. |
+| HL-B21 | Next | Remove German's LaTeX layout and Unicode bookmark warnings. | The expanded forced build has no missing glyphs or duplicate destinations but reports eighteen overfull boxes, one underfull horizontal box, eleven underfull vertical boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B22 | Queued | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Telugu PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
 | HL-B23 | Queued | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports four overfull boxes, three underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and a font-shape substitution warning; the clean-build signal is zero of each. |
 | HL-B24 | Queued | Publish Kannada Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Kannada PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
@@ -651,6 +651,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings.
 - HL-B20 is next: close the seven-chapter German app/book gap before its measured
   presentation-cleanup follow-up.
+
+## Findings from HL-B20
+
+- German Chapters 17–23 now comprise ten strict schema-v2 micro-lessons with
+  explicit shared-spine anchors, prerequisite-closed knowledge atoms, typed
+  teaching blocks, and authored skill, mode, strand, register, variety, and
+  duration contracts. Their computed durations range from 164 to 262 seconds.
+- The audit found that `Entschuldigung` occupied Chapter 19 while no Chapter 20
+  lesson existed. A new Chapter 19 lesson now reviews `bitte` as “please” in
+  **Wasser, bitte** using only Chapters 3 and 11; the unchanged apology content
+  follows as prerequisite-dependent Chapter 20.
+- Seven generated chapters carry deterministic hashes and lesson ids that
+  Language Ladder independently reproduces from the canonical AST. The corpus
+  grows to 1,066 lessons, repository-wide missing book chapters fall from 213
+  to 207, and unknown prerequisites and duration violations remain at zero.
+- A forced XeLaTeX build produces 104 pages with zero missing glyphs, duplicate
+  destinations, LaTeX warnings, or leaked generator metadata. All pages were
+  rendered and inspected; the outline retains Preface, pronunciation, and
+  Chapters 1–23.
+- The expanded warning baseline is eighteen overfull boxes, one underfull
+  horizontal box, eleven underfull vertical boxes, and three Hyperref warnings.
+  HL-B21 is next and records cleanup against the full 104-page artifact.
 
 ## Findings from HL-D01C
 
