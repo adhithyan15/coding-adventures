@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Xunit;
 
@@ -130,12 +131,30 @@ public sealed class ZstdTests
     [Fact]
     public void MultiSegmentHeadersAndChecksumsAreConsumed()
     {
+        // Descriptor 0x04 sets ONLY Content_Checksum_Flag (bit 2, per RFC
+        // 8878 §3.1.1.1 — see lessons.md Lesson 95). Bit 5 (Single_Segment)
+        // is unset, so a 1-byte window descriptor follows.
+        byte[] frame =
+        [
+            0x28, 0xB5, 0x2F, 0xFD,
+            0x04, 0x00,
+            0x09, 0, 0, (byte)'x',
+            1, 2, 3, 4,
+        ];
+        Assert.Equal([(byte)'x'], Zstd.Decompress(frame));
+    }
+
+    [Fact]
+    public void Bit4IsUnusedAndMustNotBeTreatedAsChecksumOrReserved()
+    {
+        // Descriptor 0x10 sets only bit 4 (Unused_bit). A conformant decoder
+        // must ignore it entirely: no checksum trailer, no rejection. This
+        // guards against reintroducing the Lesson 95 bit-4/bit-2 mixup.
         byte[] frame =
         [
             0x28, 0xB5, 0x2F, 0xFD,
             0x10, 0x00,
             0x09, 0, 0, (byte)'x',
-            1, 2, 3, 4,
         ];
         Assert.Equal([(byte)'x'], Zstd.Decompress(frame));
     }
@@ -181,6 +200,158 @@ public sealed class ZstdTests
         new byte[] { 0x28, 0xB5, 0x2F, 0xFD, 0x20, 0, 0x01, 0, 0, 0xFF },
         new byte[] { 0x28, 0xB5, 0x2F, 0xFD, 0x20, 0, 0x05, 0, 0 },
     };
+
+    // ─── TC-9: real `zstd` CLI interoperability ────────────────────────────
+    //
+    // Every prior test in this file only ever round-trips through OUR OWN
+    // encoder/decoder pair. That is necessary but never sufficient: an
+    // encoder and decoder that systematically agree with each other on a
+    // WRONG wire-format convention (bit order, table-construction algorithm)
+    // pass every internal round-trip test while producing output no other
+    // implementation can read. That is exactly the shape of the bug fixed
+    // alongside this test — see lessons.md Lesson 96 and CHANGELOG.md.
+    // Skipped (not failed) when the `zstd` binary isn't on PATH, since dev/CI
+    // environments vary.
+    [Fact]
+    public void Tc9CliInterop()
+    {
+        if (!IsZstdCliAvailable())
+        {
+            return;
+        }
+
+        var text = string.Concat(Enumerable.Repeat("the quick brown fox jumps over the lazy dog ", 25));
+        var original = Encoding.UTF8.GetBytes(text);
+
+        // Direction 1: compress with ours, decompress with the real `zstd -d`.
+        var ourCompressed = Zstd.Compress(original);
+        var oursZst = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(oursZst, ourCompressed);
+            var decodedByCli = RunZstd(["-d", "-q", "-c", oursZst]);
+            Assert.Equal(original, decodedByCli);
+        }
+        finally
+        {
+            File.Delete(oursZst);
+        }
+
+        // Direction 2: compress with real `zstd`, decompress with ours.
+        var theirsInput = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(theirsInput, original);
+            var theirCompressed = RunZstd(["-q", "-c", theirsInput]);
+            var decodedByUs = Zstd.Decompress(theirCompressed);
+            Assert.Equal(original, decodedByUs);
+        }
+        finally
+        {
+            File.Delete(theirsInput);
+        }
+    }
+
+    /// <summary>
+    /// Real `zstd` CLI interop on an input large enough to push the
+    /// compressor's single-block sequence count well past a handful of
+    /// sequences, exercising the FSE sequences codec across many
+    /// state-transition steps (not just the boundary case). A codec that
+    /// gets the per-sequence field order or last-sequence special-case wrong
+    /// (Lesson 96) fails on multi-sequence input even though a
+    /// one-or-two-sequence smoke test can pass by coincidence.
+    /// </summary>
+    [Fact]
+    public void RepeatingPatternCliInterop()
+    {
+        if (!IsZstdCliAvailable())
+        {
+            return;
+        }
+
+        var cycle = "ABCDEF"u8.ToArray();
+        var original = new byte[9000];
+        for (var index = 0; index < original.Length; index++)
+        {
+            original[index] = cycle[index % cycle.Length];
+        }
+
+        var ourCompressed = Zstd.Compress(original);
+        var oursZst = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(oursZst, ourCompressed);
+            var decodedByCli = RunZstd(["-d", "-q", "-c", oursZst]);
+            Assert.Equal(original, decodedByCli);
+        }
+        finally
+        {
+            File.Delete(oursZst);
+        }
+    }
+
+    private static bool IsZstdCliAvailable()
+    {
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo("zstd", "--version")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            });
+            if (process is null)
+            {
+                return false;
+            }
+
+            return process.WaitForExit(10_000) && process.ExitCode == 0;
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            return false;
+        }
+    }
+
+    private static byte[] RunZstd(IEnumerable<string> args)
+    {
+        var startInfo = new ProcessStartInfo("zstd")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+        };
+        foreach (var arg in args)
+        {
+            startInfo.ArgumentList.Add(arg);
+        }
+
+        using var process = Process.Start(startInfo) ?? throw new InvalidOperationException("failed to start zstd");
+
+        // Both stdout and stderr are redirected, so both must be drained
+        // concurrently with (not after) WaitForExit: if `zstd` writes enough
+        // to stderr to fill the OS pipe buffer while nothing is reading it,
+        // the child blocks on that write and the parent deadlocks blocked on
+        // reading stdout. Draining both asynchronously up front avoids that.
+        using var stdout = new MemoryStream();
+        var stdoutTask = process.StandardOutput.BaseStream.CopyToAsync(stdout);
+        var stderrTask = process.StandardError.ReadToEndAsync();
+
+        if (!process.WaitForExit(30_000))
+        {
+            process.Kill();
+            throw new InvalidOperationException("zstd CLI timed out");
+        }
+
+        stdoutTask.GetAwaiter().GetResult();
+        var stderr = stderrTask.GetAwaiter().GetResult();
+
+        if (process.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"zstd CLI failed (exit {process.ExitCode}): {stderr}");
+        }
+
+        return stdout.ToArray();
+    }
 
     private static List<int> BlockTypes(byte[] frame)
     {

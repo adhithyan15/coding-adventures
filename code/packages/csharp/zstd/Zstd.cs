@@ -231,14 +231,28 @@ public static class Zstd
 
         var position = 4;
         var descriptor = data[position++];
-        if ((descriptor & 0x0C) != 0)
+
+        // Frame_Header_Descriptor bit layout (RFC 8878 §3.1.1.1):
+        //   bit 7-6: Frame_Content_Size_Flag
+        //   bit 5:   Single_Segment_Flag
+        //   bit 4:   Unused_bit (decoders MUST ignore it, not reject it)
+        //   bit 3:   Reserved (must be 0)
+        //   bit 2:   Content_Checksum_Flag
+        //   bit 1-0: Dictionary_ID_Flag
+        // An earlier revision of this decoder read the checksum flag from
+        // bit 4 and rejected any frame with bit 2 set as "reserved" — both
+        // backwards from the RFC. Verified empirically against the real
+        // `zstd` CLI: `zstd -c` (checksum on by default) emits FHD 0x64;
+        // `zstd -c --no-check` emits FHD 0x60 — the differing bit is bit 2.
+        // See lessons.md Lesson 95.
+        if ((descriptor & 0x08) != 0)
         {
             throw new InvalidDataException("reserved frame-header bits are set");
         }
 
         var contentSizeFlag = descriptor >> 6;
         var singleSegment = (descriptor & 0x20) != 0;
-        var checksum = (descriptor & 0x10) != 0;
+        var checksum = (descriptor & 0x04) != 0;
         var dictionaryFlag = descriptor & 3;
 
         if (!singleSegment)
@@ -384,31 +398,60 @@ public static class Zstd
         var literalTable = BuildDecodeTable(LiteralLengthNorm, LiteralLengthAccuracyLog);
         var matchTable = BuildDecodeTable(MatchLengthNorm, MatchLengthAccuracyLog);
         var offsetTable = BuildDecodeTable(OffsetNorm, OffsetAccuracyLog);
+
+        // Initial states are read LL, OF, ML — RFC 8878 §3.1.1.3.2.1.2. This
+        // is a DIFFERENT order from the per-sequence update order below
+        // (LL, ML, OF); the RFC is genuinely asymmetric here.
         var literalState = reader.ReadBits(LiteralLengthAccuracyLog);
-        var matchState = reader.ReadBits(MatchLengthAccuracyLog);
         var offsetState = reader.ReadBits(OffsetAccuracyLog);
+        var matchState = reader.ReadBits(MatchLengthAccuracyLog);
         var literalPosition = 0;
 
         for (var sequenceIndex = 0; sequenceIndex < sequenceCount; sequenceIndex++)
         {
-            var (literalCode, nextLiteralState) = DecodeSymbol(literalState, literalTable, reader);
-            var (offsetCode, nextOffsetState) = DecodeSymbol(offsetState, offsetTable, reader);
-            var (matchCode, nextMatchState) = DecodeSymbol(matchState, matchTable, reader);
-            literalState = nextLiteralState;
-            offsetState = nextOffsetState;
-            matchState = nextMatchState;
+            // Step 1 — peek all three symbols from the CURRENT states. This
+            // is a bare table lookup (the FSE state IS the decode-table
+            // index); it consumes zero bits. Only the state UPDATE in step 3
+            // reads bits.
+            if ((uint)literalState >= literalTable.Length
+                || (uint)offsetState >= offsetTable.Length
+                || (uint)matchState >= matchTable.Length)
+            {
+                throw new InvalidDataException("invalid FSE decoder state");
+            }
+
+            var literalEntry = literalTable[literalState];
+            var offsetEntry = offsetTable[offsetState];
+            var matchEntry = matchTable[matchState];
+            var literalCode = literalEntry.Symbol;
+            var offsetCode = offsetEntry.Symbol;
+            var matchCode = matchEntry.Symbol;
 
             if ((uint)literalCode >= LiteralLengthCodes.Length || (uint)matchCode >= MatchLengthCodes.Length)
             {
                 throw new InvalidDataException("invalid sequence code");
             }
 
-            var literalLength = LiteralLengthCodes[literalCode].Baseline
-                + reader.ReadBits(LiteralLengthCodes[literalCode].ExtraBits);
+            // Step 2 — read extra value bits, in order OF, ML, LL.
+            var rawOffset = (1 << offsetCode) | reader.ReadBits(offsetCode);
             var matchLength = MatchLengthCodes[matchCode].Baseline
                 + reader.ReadBits(MatchLengthCodes[matchCode].ExtraBits);
-            var rawOffset = (1 << offsetCode) | reader.ReadBits(offsetCode);
+            var literalLength = LiteralLengthCodes[literalCode].Baseline
+                + reader.ReadBits(LiteralLengthCodes[literalCode].ExtraBits);
             var matchOffset = rawOffset - 3;
+
+            // Step 3 — update FSE states (consumes bits), in order LL, ML,
+            // OF, preparing the states the NEXT sequence's peek will use —
+            // but only if this is not the last sequence. There is no "next"
+            // sequence to prepare a state for after the last one, and a
+            // conformant encoder never wrote any bits for that non-existent
+            // transition (see FseInitState in EncodeSequences).
+            if (sequenceIndex != sequenceCount - 1)
+            {
+                literalState = literalEntry.Baseline + reader.ReadBits(literalEntry.Bits);
+                matchState = matchEntry.Baseline + reader.ReadBits(matchEntry.Bits);
+                offsetState = offsetEntry.Baseline + reader.ReadBits(offsetEntry.Bits);
+            }
 
             if (literalLength < 0 || literalPosition + literalLength > literals.Length)
             {
@@ -542,6 +585,34 @@ public static class Zstd
         return (0x7F00 + data[1] + (data[2] << 8), 3);
     }
 
+    // Per RFC 8878 §3.1.1.3.2.1.2, verified against the reference C source
+    // (ZSTD_decodeSequence / FSE_encodeSymbol / FSE_initCState2 in
+    // github.com/facebook/zstd), a forward decoder processes each sequence
+    // in three strictly ordered steps:
+    //   1. Peek all three symbols (LL, OF, ML) from the CURRENT states —
+    //      a bare table lookup that consumes zero bits.
+    //   2. Read extra value bits, in order OF, ML, LL.
+    //   3. Update the FSE states (consumes bits), in order LL, ML, OF — but
+    //      ONLY if this is not the last sequence in the block. There is no
+    //      "next" sequence to prepare a state for after the last one.
+    // The very first read of all (the initial states, before sequence 1) is
+    // a separate, differently-ordered step: LL, OF, ML.
+    //
+    // The encoder mirrors this in exact reverse, since the bitstream is
+    // written backward: it processes sequences from last to first. The
+    // FIRST sequence it processes (the semantically LAST real sequence) has
+    // no incoming bit-consuming transition — mirroring step 3 being skipped
+    // on the decode side — so its starting state must be computed directly
+    // via FseInitState (zstd's FSE_initCState2), writing zero bits, rather
+    // than a normal FseEncodeTransition.
+    //
+    // An earlier revision of this codec combined peek-and-update into one
+    // step (in the wrong LL/OF/ML order), wrote extra bits in the wrong
+    // LL/ML/OF order, and flushed a state transition for every sequence
+    // uniformly instead of special-casing the last one. All three bugs were
+    // self-cancelling in this package's own round-trip tests (encoder and
+    // decoder agreed with each other) but produced output the real `zstd`
+    // CLI rejected as corrupt. See lessons.md Lesson 96.
     private static byte[] EncodeSequences(IReadOnlyList<Sequence> sequences)
     {
         var (literalEntries, literalStates) = BuildEncodeTables(LiteralLengthNorm, LiteralLengthAccuracyLog);
@@ -550,10 +621,11 @@ public static class Zstd
         var literalSize = 1 << LiteralLengthAccuracyLog;
         var matchSize = 1 << MatchLengthAccuracyLog;
         var offsetSize = 1 << OffsetAccuracyLog;
-        var literalState = literalSize;
-        var matchState = matchSize;
-        var offsetState = offsetSize;
+        var literalState = 0;
+        var matchState = 0;
+        var offsetState = 0;
         var writer = new ReverseBitWriter();
+        var first = true;
 
         for (var index = sequences.Count - 1; index >= 0; index--)
         {
@@ -563,28 +635,56 @@ public static class Zstd
             var rawOffset = sequence.Offset + 3;
             var offsetCode = BitOperations.Log2((uint)rawOffset);
             var offsetExtra = rawOffset - (1 << offsetCode);
-            writer.AddBits((uint)offsetExtra, offsetCode);
-            writer.AddBits(
-                (uint)(sequence.MatchLength - MatchLengthCodes[matchCode].Baseline),
-                MatchLengthCodes[matchCode].ExtraBits);
-            writer.AddBits(
-                (uint)(sequence.LiteralLength - LiteralLengthCodes[literalCode].Baseline),
-                LiteralLengthCodes[literalCode].ExtraBits);
+            var matchExtra = sequence.MatchLength - MatchLengthCodes[matchCode].Baseline;
+            var literalExtra = sequence.LiteralLength - LiteralLengthCodes[literalCode].Baseline;
 
-            (matchState, var bits, var value) = EncodeSymbol(matchState, matchCode, matchEntries, matchStates);
-            writer.AddBits((uint)value, bits);
-            (offsetState, bits, value) = EncodeSymbol(offsetState, offsetCode, offsetEntries, offsetStates);
-            writer.AddBits((uint)value, bits);
-            (literalState, bits, value) = EncodeSymbol(literalState, literalCode, literalEntries, literalStates);
-            writer.AddBits((uint)value, bits);
+            if (first)
+            {
+                // Last real sequence: no incoming transition to flush. The
+                // starting state is derived directly from the symbol, with
+                // zero bits written (mirrors FSE_initCState2).
+                offsetState = FseInitState(offsetCode, offsetEntries, offsetStates);
+                matchState = FseInitState(matchCode, matchEntries, matchStates);
+                literalState = FseInitState(literalCode, literalEntries, literalStates);
+                first = false;
+            }
+            else
+            {
+                // Transition write order OF, ML, LL — a forward decoder
+                // consumes these in reverse (LL, ML, OF) as the state
+                // UPDATE immediately after decoding this same sequence.
+                offsetState = FseEncodeTransition(offsetState, offsetCode, offsetEntries, offsetStates, writer);
+                matchState = FseEncodeTransition(matchState, matchCode, matchEntries, matchStates, writer);
+                literalState = FseEncodeTransition(literalState, literalCode, literalEntries, literalStates, writer);
+            }
+
+            // Extra bits, write order LL, ML, OF — a forward decoder reads
+            // these in order OF, ML, LL immediately after peeking symbols.
+            writer.AddBits((uint)literalExtra, LiteralLengthCodes[literalCode].ExtraBits);
+            writer.AddBits((uint)matchExtra, MatchLengthCodes[matchCode].ExtraBits);
+            writer.AddBits((uint)offsetExtra, offsetCode);
         }
 
-        writer.AddBits((uint)(offsetState - offsetSize), OffsetAccuracyLog);
+        // Flush the initial states (the states used to peek the FIRST real
+        // sequence). A forward decoder reads these first, in order LL, OF,
+        // ML. Since these are the very last bits written and the stream is
+        // read backward, write them in reverse: ML, OF, LL.
         writer.AddBits((uint)(matchState - matchSize), MatchLengthAccuracyLog);
+        writer.AddBits((uint)(offsetState - offsetSize), OffsetAccuracyLog);
         writer.AddBits((uint)(literalState - literalSize), LiteralLengthAccuracyLog);
         return writer.Finish();
     }
 
+    // Real FSE table-spread algorithm, verified against the reference C
+    // source (FSE_buildDTable_internal's low-probability branch in
+    // fse_decompress.c): a SINGLE pass over symbols 0..maxSymbolValue in
+    // ascending order, placing each symbol's full count immediately when
+    // encountered. There is no "count>1 symbols first, then count==1
+    // symbols" split — an earlier revision of this codec used exactly that
+    // fabricated two-pass convention, which produces a different table
+    // layout that is internally self-consistent (this package's own
+    // encoder/decoder agreed with each other) but is rejected as corrupt by
+    // the real `zstd` CLI. See lessons.md Lesson 96.
     private static DecodeEntry[] BuildDecodeTable(IReadOnlyList<int> normalized, int accuracyLog)
     {
         var size = 1 << accuracyLog;
@@ -598,32 +698,34 @@ public static class Zstd
         {
             if (normalized[symbol] == -1)
             {
-                symbols[high--] = symbol;
+                symbols[high] = symbol;
+                if (high > 0)
+                {
+                    high--;
+                }
+
                 symbolNext[symbol] = 1;
             }
         }
 
         var position = 0;
-        for (var pass = 0; pass < 2; pass++)
+        for (var symbol = 0; symbol < normalized.Count; symbol++)
         {
-            for (var symbol = 0; symbol < normalized.Count; symbol++)
+            var count = normalized[symbol];
+            if (count <= 0)
             {
-                var count = normalized[symbol];
-                if (count <= 0 || ((pass == 0) != (count > 1)))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                symbolNext[symbol] = count;
-                for (var occurrence = 0; occurrence < count; occurrence++)
+            symbolNext[symbol] = count;
+            for (var occurrence = 0; occurrence < count; occurrence++)
+            {
+                symbols[position] = symbol;
+                do
                 {
-                    symbols[position] = symbol;
-                    do
-                    {
-                        position = (position + step) & (size - 1);
-                    }
-                    while (position > high);
+                    position = (position + step) & (size - 1);
                 }
+                while (position > high);
             }
         }
 
@@ -661,30 +763,33 @@ public static class Zstd
         {
             if (normalized[symbol] == -1)
             {
-                spread[high--] = symbol;
+                spread[high] = symbol;
+                if (high > 0)
+                {
+                    high--;
+                }
             }
         }
 
+        // Single pass over symbols in ascending order — must mirror
+        // BuildDecodeTable's spread exactly (see comment there).
         var position = 0;
-        for (var pass = 0; pass < 2; pass++)
+        for (var symbol = 0; symbol < normalized.Count; symbol++)
         {
-            for (var symbol = 0; symbol < normalized.Count; symbol++)
+            var count = normalized[symbol];
+            if (count <= 0)
             {
-                var count = normalized[symbol];
-                if (count <= 0 || ((pass == 0) != (count > 1)))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                for (var occurrence = 0; occurrence < count; occurrence++)
+            for (var occurrence = 0; occurrence < count; occurrence++)
+            {
+                spread[position] = symbol;
+                do
                 {
-                    spread[position] = symbol;
-                    do
-                    {
-                        position = (position + step) & (size - 1);
-                    }
-                    while (position > high);
+                    position = (position + step) & (size - 1);
                 }
+                while (position > high);
             }
         }
 
@@ -714,8 +819,46 @@ public static class Zstd
         return (entries, states);
     }
 
-    private static (int State, int Bits, int Value) EncodeSymbol(
+    /// <summary>
+    /// Performs a normal FSE encode transition (mirrors real zstd's
+    /// <c>FSE_encodeSymbol</c>): flushes the bits needed to move from
+    /// <paramref name="state"/> to the next state that will decode as
+    /// <paramref name="symbol"/>, and returns that next state.
+    /// </summary>
+    private static int FseEncodeTransition(
         int state,
+        int symbol,
+        IReadOnlyList<EncodeEntry> entries,
+        IReadOnlyList<int> states,
+        ReverseBitWriter writer)
+    {
+        if ((uint)symbol >= entries.Count)
+        {
+            throw new InvalidDataException("FSE symbol is outside the predefined table");
+        }
+
+        var entry = entries[symbol];
+        var bits = (state + entry.DeltaBits) >> 16;
+        var value = state & ((1 << bits) - 1);
+        writer.AddBits((uint)value, bits);
+        var slot = (state >> bits) + entry.DeltaFindState;
+        if ((uint)slot >= states.Count)
+        {
+            throw new InvalidDataException("invalid FSE encoder state");
+        }
+
+        return states[slot];
+    }
+
+    /// <summary>
+    /// Computes an FSE encoder's starting state directly from a symbol,
+    /// writing zero bits (mirrors real zstd's <c>FSE_initCState2</c>). Used
+    /// for the first symbol processed in the reverse encode loop — the
+    /// semantically LAST real sequence — which has no incoming bit-consuming
+    /// transition, because a real decoder never performs a state update
+    /// after decoding the final sequence in a block.
+    /// </summary>
+    private static int FseInitState(
         int symbol,
         IReadOnlyList<EncodeEntry> entries,
         IReadOnlyList<int> states)
@@ -726,29 +869,15 @@ public static class Zstd
         }
 
         var entry = entries[symbol];
-        var bits = (state + entry.DeltaBits) >> 16;
-        var value = state & ((1 << bits) - 1);
-        var slot = (state >> bits) + entry.DeltaFindState;
+        var bits = (entry.DeltaBits + (1 << 15)) >> 16;
+        var value = (bits << 16) - entry.DeltaBits;
+        var slot = (value >> bits) + entry.DeltaFindState;
         if ((uint)slot >= states.Count)
         {
             throw new InvalidDataException("invalid FSE encoder state");
         }
 
-        return (states[slot], bits, value);
-    }
-
-    private static (int Symbol, int State) DecodeSymbol(
-        int state,
-        IReadOnlyList<DecodeEntry> table,
-        ReverseBitReader reader)
-    {
-        if ((uint)state >= table.Count)
-        {
-            throw new InvalidDataException("invalid FSE decoder state");
-        }
-
-        var entry = table[state];
-        return (entry.Symbol, entry.Baseline + reader.ReadBits(entry.Bits));
+        return states[slot];
     }
 
     private static int ValueToCode(int value, IReadOnlyList<CodeRange> codes)
