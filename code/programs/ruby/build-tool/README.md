@@ -53,11 +53,24 @@ bundle exec rake test
 The `test/test_resolution_utf8.rb` coverage exercises the shared
 language-neutral valid and invalid fixtures, representative malformed sequence
 classes, and the real CLI subprocess. The full Rake suite enforces the
-whole-program coverage threshold.
+whole-program coverage threshold. Starlark evaluator tests are mandatory: the
+suite removes ambient `RUBYLIB` and `RUBYOPT` injection in a subprocess and
+proves that the repository-local interpreter loads through the build tool's
+declared bundle rather than skipping when it is unavailable.
 
 ## Dependencies
 
-Zero runtime gem dependencies -- uses only Ruby standard library modules:
+The build tool has no third-party runtime gems. Its source-tree runtime closure
+is repository-owned:
+
+- `coding_adventures_progress_bar` provides progress reporting.
+- `coding_adventures_starlark_interpreter` and its transitive repository gems
+  are imported from the interpreter's authoritative Gemfile.
+
+After `bundle install`, `bundle exec ruby build.rb ...` loads that closure with
+no manual Ruby search path and performs no network resolution during build
+execution. The remaining runtime modules come from the Ruby standard library:
+
 - `json` for cache serialization
 - `digest/sha2` for file hashing
 - `open3` for subprocess execution
@@ -65,4 +78,4 @@ Zero runtime gem dependencies -- uses only Ruby standard library modules:
 - `optparse` for CLI argument parsing
 - `set` for efficient set operations
 
-Dev dependencies: minitest, rake, simplecov.
+Development dependencies: minitest, rake, simplecov.
