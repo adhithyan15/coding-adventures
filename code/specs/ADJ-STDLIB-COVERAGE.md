@@ -327,9 +327,13 @@ option mapping, or judge/evaluation failure.
      between all inventoried formula roots and witnessed query dependencies. These
      are six replay examples, not a universal proof over every input; boundary,
      exceptional, and property-based execution coverage remains backlog work.
-13d. **Complete:** every trusted parser/audit subprocess bound applies to its
-     complete process tree and to pipe-drain joins, so a timed-out descendant cannot
-     keep provenance verification alive indefinitely.
+13d. **Complete for the original process group:** every trusted parser/audit
+     subprocess starts in a fresh session. Verifier-observed timeout, output
+     overflow, I/O failure, or command-parent exit applies bounded termination to
+     that process group, kills and reaps the root as a fallback, and bounds pipe
+     drain. This tranche did not contain a descendant that called `setsid()`, and
+     its in-process cleanup did not survive abrupt verifier death; 13i closes those
+     gaps where the host exposes a hard containment primitive.
 13e. **Complete:** verified execution inputs resolve uniquely across the complete
      bundle closure. Each normalized input pins its owning bundle role and ID, exact
      ADJ source and IR, and exact cited snapshot and IR; dependency-owned inputs also
@@ -346,10 +350,11 @@ option mapping, or judge/evaluation failure.
      termination before the root-process fallback. The Windows PR matrix runs the
      focused fake and real-process containment slice.
 13g. **Complete:** process lifecycle failures are immutable recursive records with a
-     stable `stage`, native `api`, numeric `error_code`, human `message`, and ordered
-     `cleanup_causes`. `ProvenanceError.lifecycle` exposes the record while preserving
+     stable `stage`, native `api`, numeric `error_code`, symbolic `status_code`, human
+     `message`, and ordered `cleanup_causes`. `ProvenanceError.lifecycle` exposes the
+     record while preserving
      legacy exception text and arguments. `to_dict()` provides the versioned
-     `adj-stdlib/process-lifecycle-failure/v1` projection, and CLI failures include it
+     `adj-stdlib/process-lifecycle-failure/v2` projection, and CLI failures include it
      as `lifecycle_failure` without removing the legacy `error` or `valid` fields.
      Native setup and enumeration errors, process launch and containment, command
      timeout/output/exit/decoding, taskkill and root fallback, pipe drain, termination,
@@ -362,14 +367,34 @@ option mapping, or judge/evaluation failure.
      stdout/stderr close failures remain in the lifecycle tree. An attempt-ordered event
      ledger preserves concurrent reader causality and every repeated termination, and a
      final bounded wait reaps the root after recovery termination. Hosted Linux runs the
-     full provenance suite in `detect`; hosted macOS runs the focused POSIX/process-tree
-     selector with pinned Python, and the Windows selector includes all Job and generic
-     process-tree cases.
-13i. **Backlog:** contain descendants that deliberately create a new session and add
-     kill-on-verifier-crash semantics for POSIX, where `start_new_session=True` alone
-     cannot guarantee cleanup after abrupt verifier termination. Add independently
-     bounded raw-handle closure for readers that remain stuck after tree termination;
-     ordinary buffered `close()` can itself block behind a concurrent read.
+     full provenance suite in `detect`; hosted macOS runs the focused unsupported-
+     boundary, guardian-protocol, process-tree, drain, and raw-close selector with
+     pinned Python, and the Windows selector includes all Job, generic process-tree,
+     drain, and raw-close cases.
+13i. **Complete with an explicit platform boundary:** Linux strict execution now uses
+     one short-lived external guardian per command. The guardian validates an operator-
+     delegated cgroup-v2 root, becomes a subreaper, creates a fresh command cgroup,
+     forks behind a gate, writes the root to `cgroup.procs`, and releases it only after
+     containment exists. Normal root exit, explicit cancellation, and EOF on the
+     verifier's private control pipe share one monotonic cleanup deadline. Cleanup
+     writes `cgroup.kill`, supplements it with a still-identity-safe process-group
+     signal when the root has not been reaped, requires one exact `populated 0` field,
+     reaps the root and adopted descendants, and removes the cgroup. A separate bounded
+     canonical status pipe must attest cleanup before helper JSON can be accepted;
+     symbolic guardian codes and compound cleanup causes project directly into v2
+     lifecycle fields without message parsing.
+     Hosted Linux creates and enters a temporary delegated cgroup and exercises both a
+     `setsid()` descendant and verifier `SIGKILL`. Windows retains pre-exec suspended
+     Job assignment and kernel `KILL_ON_JOB_CLOSE`. macOS and generic POSIX have no
+     equivalent unprivileged hard container, so strict helper execution rejects before
+     launch rather than silently weakening the claim. Reader channels retain explicit
+     identity; a stuck channel starts an independently observed raw-owner close worker,
+     healthy channels still close normally, and timeout, start failure, or close failure
+     remains ordered lifecycle evidence. A permanently wedged close may retain its raw
+     owner in a daemon worker until host exit, but cannot block verification or permit
+     output acceptance. The guarantee assumes the guardian and kernel remain alive and
+     the trusted helper does not attack the same-UID guardian or delegated cgroup;
+     defending against that stronger adversary requires a privilege boundary.
 
 ### Wave 2: complete K-8 foundations
 

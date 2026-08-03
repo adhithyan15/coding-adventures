@@ -16,9 +16,11 @@ import html
 import json
 import os
 import re
+import selectors
 import signal
 import stat
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -55,7 +57,7 @@ RECEIPT_HEADERS = {
     "etag",
     "last-modified",
 }
-LIFECYCLE_FAILURE_CONTRACT = "adj-stdlib/process-lifecycle-failure/v1"
+LIFECYCLE_FAILURE_CONTRACT = "adj-stdlib/process-lifecycle-failure/v2"
 POSIX_SIGKILL = getattr(signal, "SIGKILL", 9)
 LIFECYCLE_STAGES = frozenset(
     {
@@ -66,6 +68,8 @@ LIFECYCLE_STAGES = frozenset(
         "command.parse",
         "command.shape",
         "command.timeout",
+        "containment.configure",
+        "containment.confirm",
         "job.assign",
         "job.close",
         "job.configure",
@@ -97,6 +101,7 @@ class LifecycleFailure:
     message: str
     api: str | None = None
     error_code: int | None = None
+    status_code: str | None = None
     cleanup_causes: tuple[LifecycleFailure, ...] = ()
 
     def __post_init__(self) -> None:
@@ -113,6 +118,12 @@ class LifecycleFailure:
             or isinstance(self.error_code, bool)
         ):
             raise ValueError("lifecycle failure error code must be an integer or null")
+        if self.status_code is not None and (
+            not isinstance(self.status_code, str) or not self.status_code
+        ):
+            raise ValueError(
+                "lifecycle failure status code must be null or a non-empty string"
+            )
         if not isinstance(self.cleanup_causes, tuple) or not all(
             isinstance(cause, LifecycleFailure) for cause in self.cleanup_causes
         ):
@@ -133,6 +144,7 @@ class LifecycleFailure:
             "error_code": self.error_code,
             "message": self.message,
             "stage": self.stage,
+            "status_code": self.status_code,
         }
         if include_contract:
             result["contract"] = LIFECYCLE_FAILURE_CONTRACT
@@ -193,6 +205,7 @@ def _lifecycle_error(
     *,
     api: str | None = None,
     error_code: int | None = None,
+    status_code: str | None = None,
     cleanup_causes: Sequence[LifecycleFailure] = (),
     legacy_args: tuple[Any, ...] | None = None,
 ) -> _LifecycleError:
@@ -201,6 +214,7 @@ def _lifecycle_error(
             stage=stage,
             api=api,
             error_code=error_code,
+            status_code=status_code,
             message=message,
             cleanup_causes=tuple(cleanup_causes),
         ),
@@ -1274,6 +1288,221 @@ class _WindowsKillJob:
             self._handle = None
 
 
+class _PosixGuardian:
+    """Verifier-side handles for one external Linux cgroup guardian."""
+
+    CONTRACT = "adj-stdlib/process-guardian/v1"
+    MAX_STATUS_BYTES = 4096
+    CGROUP_ENV = "ADJ_PROVENANCE_CGROUP_ROOT"
+
+    def __init__(self, command: Sequence[str], cleanup_timeout_seconds: float) -> None:
+        if not sys.platform.startswith("linux"):
+            raise _lifecycle_error(
+                "containment.configure",
+                "strict process containment is unavailable on this POSIX platform",
+                api="cgroup.kill",
+            )
+        cgroup_root = os.environ.get(self.CGROUP_ENV)
+        if not cgroup_root or not os.path.isabs(cgroup_root):
+            raise _lifecycle_error(
+                "containment.configure",
+                f"{self.CGROUP_ENV} must name an absolute delegated cgroup v2 root",
+                api="cgroup.kill",
+            )
+        self._control_read = -1
+        self._control_write = -1
+        self._status_read = -1
+        self._status_write = -1
+        self._cleanup_requested = False
+        try:
+            self._control_read, self._control_write = os.pipe()
+            self._status_read, self._status_write = os.pipe()
+            for descriptor in (
+                self._control_read,
+                self._control_write,
+                self._status_read,
+                self._status_write,
+            ):
+                os.set_inheritable(descriptor, False)
+        except OSError:
+            self.close()
+            raise
+        guardian_path = Path(__file__).with_name("adj_process_guardian.py").resolve()
+        self.command = [
+            sys.executable,
+            os.fspath(guardian_path),
+            "--control-fd",
+            str(self._control_read),
+            "--status-fd",
+            str(self._status_write),
+            "--cgroup-root",
+            cgroup_root,
+            "--cleanup-timeout-seconds",
+            f"{cleanup_timeout_seconds:g}",
+            "--",
+            *command,
+        ]
+        self.popen_options = {
+            "pass_fds": (self._control_read, self._status_write),
+            "start_new_session": True,
+        }
+
+    def _close_owned(self, name: str) -> None:
+        descriptor = getattr(self, name)
+        if descriptor < 0:
+            return
+        setattr(self, name, -1)
+        os.close(descriptor)
+
+    def parent_started(self) -> None:
+        failures: list[OSError] = []
+        for name in ("_control_read", "_status_write"):
+            try:
+                self._close_owned(name)
+            except OSError as error:
+                failures.append(error)
+        if failures:
+            raise failures[0]
+
+    def launch_failed(self) -> None:
+        self.close()
+
+    def request_cleanup(self) -> bool:
+        if self._cleanup_requested:
+            return False
+        self._cleanup_requested = True
+        self._close_owned("_control_write")
+        return True
+
+    def read_status(self, timeout_seconds: float) -> dict[str, Any]:
+        self.request_cleanup()
+        raw = bytearray()
+        deadline = time.monotonic() + timeout_seconds
+        selected = selectors.DefaultSelector()
+        os.set_blocking(self._status_read, False)
+        selected.register(self._status_read, selectors.EVENT_READ)
+        try:
+            while len(raw) <= self.MAX_STATUS_BYTES:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0 or not selected.select(remaining):
+                    raise _lifecycle_error(
+                        "containment.confirm",
+                        (
+                            "process guardian status did not close within "
+                            f"{timeout_seconds:g} seconds"
+                        ),
+                        api="guardian.status",
+                    )
+                try:
+                    chunk = os.read(
+                        self._status_read,
+                        self.MAX_STATUS_BYTES + 1 - len(raw),
+                    )
+                except BlockingIOError:
+                    continue
+                if not chunk:
+                    break
+                raw.extend(chunk)
+        finally:
+            selected.close()
+        self._close_owned("_status_read")
+        if not raw or len(raw) > self.MAX_STATUS_BYTES:
+            raise _lifecycle_error(
+                "containment.confirm",
+                "process guardian status is missing or exceeds its byte ceiling",
+                api="guardian.status",
+            )
+        try:
+            status = json.loads(bytes(raw).decode("utf-8", errors="strict"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise _lifecycle_error(
+                "containment.confirm",
+                "process guardian status is not UTF-8 JSON",
+                api="guardian.status",
+                error_code=_os_error_code(error) if isinstance(error, OSError) else None,
+            ) from error
+        if bytes(raw) != canonical_json_bytes(status):
+            raise _lifecycle_error(
+                "containment.confirm",
+                "process guardian status is not canonical JSON",
+                api="guardian.status",
+            )
+        return status
+
+    def close(self) -> None:
+        for name in (
+            "_control_read",
+            "_control_write",
+            "_status_read",
+            "_status_write",
+        ):
+            descriptor = getattr(self, name)
+            if descriptor >= 0:
+                try:
+                    self._close_owned(name)
+                except OSError:
+                    pass
+
+
+@dataclass
+class _DrainEndpoint:
+    name: str
+    stream: Any
+    output: bytearray
+    limit: int
+    index: int
+    thread: threading.Thread | None = None
+
+
+class _RawPipeCloseAttempt:
+    """Observe a potentially blocking raw-stream close without blocking teardown."""
+
+    def __init__(self, endpoint: _DrainEndpoint) -> None:
+        self.endpoint = endpoint
+        self._done = threading.Event()
+        self._error: BaseException | None = None
+        raw_stream = getattr(endpoint.stream, "raw", endpoint.stream)
+
+        def close_raw() -> None:
+            try:
+                raw_stream.close()
+            except BaseException as error:  # noqa: BLE001 - report worker failures
+                self._error = error
+            finally:
+                self._done.set()
+
+        self._thread = threading.Thread(
+            target=close_raw,
+            name=f"adj-close-{endpoint.name}",
+            daemon=True,
+        )
+        self._thread.start()
+
+    def observe(self, timeout_seconds: float) -> LifecycleFailure | None:
+        if not self._done.wait(timeout_seconds):
+            return LifecycleFailure(
+                stage="pipe.close",
+                api=f"Popen.{self.endpoint.name}.raw.close",
+                error_code=None,
+                message=(
+                    f"{self.endpoint.name} raw pipe close timed out after "
+                    f"{timeout_seconds:g} seconds"
+                ),
+            )
+        if self._error is None:
+            return None
+        return LifecycleFailure(
+            stage="pipe.close",
+            api=f"Popen.{self.endpoint.name}.raw.close",
+            error_code=(
+                _os_error_code(self._error)
+                if isinstance(self._error, OSError)
+                else None
+            ),
+            message=f"{self.endpoint.name} raw pipe close failed: {self._error}",
+        )
+
+
 def _terminate_process_tree(
     process: subprocess.Popen[bytes],
     windows_job: _WindowsKillJob | None,
@@ -1381,17 +1610,27 @@ def _run_json_command(
     label: str,
     timeout_seconds: float = 60,
     drain_timeout_seconds: float = 5,
+    raw_close_timeout_seconds: float = 1,
     windows_job_factory: Callable[[], _WindowsKillJob] = _WindowsKillJob,
+    posix_guardian_factory: Callable[..., _PosixGuardian] = _PosixGuardian,
+    raw_close_attempt_factory: Callable[[_DrainEndpoint], _RawPipeCloseAttempt] = (
+        _RawPipeCloseAttempt
+    ),
     process_tree_terminator: (
         Callable[[subprocess.Popen[bytes], _WindowsKillJob | None], None] | None
     ) = None,
 ) -> dict[str, Any]:
     if not command:
         raise ProvenanceError(f"{label} command must not be empty")
-    if timeout_seconds <= 0 or drain_timeout_seconds <= 0:
+    if (
+        timeout_seconds <= 0
+        or drain_timeout_seconds <= 0
+        or raw_close_timeout_seconds <= 0
+    ):
         raise ProvenanceError(f"{label} timeout bounds must be positive")
     terminate_process_tree = process_tree_terminator or _terminate_process_tree
     windows_job: _WindowsKillJob | None = None
+    posix_guardian: _PosixGuardian | None = None
     if os.name == "nt":
         try:
             windows_job = windows_job_factory()
@@ -1402,6 +1641,7 @@ def _run_json_command(
                 detail,
                 lifecycle=replace(failure, message=detail),
             ) from error
+    full_command = [*command, *arguments]
     popen_options: dict[str, Any] = {}
     if os.name == "nt":
         popen_options["creationflags"] = (
@@ -1410,15 +1650,38 @@ def _run_json_command(
             | 0x00000004
         )
     else:
-        popen_options["start_new_session"] = True
+        try:
+            posix_guardian = posix_guardian_factory(
+                full_command,
+                cleanup_timeout_seconds=drain_timeout_seconds,
+            )
+        except OSError as error:
+            detail = f"{label} failed to configure strict process containment: {error}"
+            failure = (
+                error.failure
+                if isinstance(error, _LifecycleError)
+                else _failure_from_error(
+                    error,
+                    stage="containment.configure",
+                    api="guardian.setup",
+                )
+            )
+            raise ProvenanceError(
+                detail,
+                lifecycle=replace(failure, message=detail),
+            ) from error
+        full_command = posix_guardian.command
+        popen_options.update(posix_guardian.popen_options)
     try:
         process = subprocess.Popen(
-            [*command, *arguments],
+            full_command,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             **popen_options,
         )
     except OSError as error:
+        if posix_guardian is not None:
+            posix_guardian.launch_failed()
         cleanup_failures: list[LifecycleFailure] = []
         close_failure_text: list[str] = []
         if windows_job is not None:
@@ -1453,6 +1716,198 @@ def _run_json_command(
         raise ProvenanceError(
             detail, lifecycle=replace(failure, message=detail)
         ) from error
+    recovery_wait_seconds = (
+        drain_timeout_seconds * 2
+        if posix_guardian is not None
+        else drain_timeout_seconds
+    )
+    def guardian_failure_record(
+        record: Any,
+        *,
+        process_returncode: int | None,
+        depth: int = 0,
+    ) -> LifecycleFailure:
+        if depth > 16 or not isinstance(record, dict) or set(record) != {
+            "cleanup_causes",
+            "error",
+            "error_code",
+        }:
+            raise _lifecycle_error(
+                "containment.confirm",
+                "failed process guardian status is malformed",
+                api="guardian.status",
+            )
+        error_text = record.get("error")
+        status_code = record.get("error_code")
+        causes = record.get("cleanup_causes")
+        if not (
+            isinstance(error_text, str)
+            and error_text
+            and isinstance(status_code, str)
+            and status_code
+            and isinstance(causes, list)
+        ):
+            raise _lifecycle_error(
+                "containment.confirm",
+                "failed process guardian status is malformed",
+                api="guardian.status",
+            )
+        cleanup_causes = tuple(
+            guardian_failure_record(
+                cause,
+                process_returncode=None,
+                depth=depth + 1,
+            )
+            for cause in causes
+        )
+        return LifecycleFailure(
+            stage="containment.confirm",
+            api="guardian.status",
+            error_code=process_returncode,
+            status_code=status_code,
+            message=(
+                "process guardian did not confirm cleanup: "
+                f"{status_code}: {error_text}"
+            ),
+            cleanup_causes=cleanup_causes,
+        )
+
+    def guardian_status_returncode(
+        status: Any, *, guardian_returncode: int
+    ) -> int:
+        if (
+            not isinstance(status, dict)
+            or status.get("contract") != posix_guardian.CONTRACT
+        ):
+            raise _lifecycle_error(
+                "containment.confirm",
+                "process guardian status contract disagrees",
+                api="guardian.status",
+            )
+        if status.get("cleanup_confirmed") is True:
+            if set(status) != {
+                "cleanup_confirmed",
+                "contract",
+                "returncode",
+                "verifier_gone",
+            } or not (
+                isinstance(status["returncode"], int)
+                and not isinstance(status["returncode"], bool)
+                and isinstance(status["verifier_gone"], bool)
+                and guardian_returncode == 0
+            ):
+                raise _lifecycle_error(
+                    "containment.confirm",
+                    "successful process guardian status is malformed",
+                    api="guardian.status",
+                )
+            return status["returncode"]
+        if set(status) != {
+            "cleanup_confirmed",
+            "contract",
+            "cleanup_causes",
+            "error",
+            "error_code",
+        } or status.get("cleanup_confirmed") is not False:
+            raise _lifecycle_error(
+                "containment.confirm",
+                "failed process guardian status is malformed",
+                api="guardian.status",
+            )
+        raise _LifecycleError(
+            guardian_failure_record(
+                {
+                    "cleanup_causes": status["cleanup_causes"],
+                    "error": status["error"],
+                    "error_code": status["error_code"],
+                },
+                process_returncode=guardian_returncode,
+            )
+        )
+
+    if posix_guardian is not None:
+        try:
+            posix_guardian.parent_started()
+        except OSError as error:
+            cleanup_failures: list[LifecycleFailure] = []
+            try:
+                posix_guardian.request_cleanup()
+            except OSError as cleanup_error:
+                cleanup_failures.append(
+                    _failure_from_error(
+                        cleanup_error,
+                        stage="process_tree.terminate",
+                        api="guardian.control",
+                    )
+                )
+            try:
+                guardian_returncode = process.wait(timeout=recovery_wait_seconds)
+                status = posix_guardian.read_status(drain_timeout_seconds)
+                guardian_status_returncode(
+                    status, guardian_returncode=guardian_returncode
+                )
+            except subprocess.TimeoutExpired:
+                cleanup_failures.append(
+                    LifecycleFailure(
+                        stage="process.wait",
+                        api="Popen.wait",
+                        error_code=None,
+                        message=(
+                            "process guardian did not exit after parent handoff "
+                            f"within {recovery_wait_seconds:g} seconds"
+                        ),
+                    )
+                )
+            except OSError as wait_error:
+                cleanup_failures.append(
+                    wait_error.failure
+                    if isinstance(wait_error, _LifecycleError)
+                    else _failure_from_error(
+                        wait_error,
+                        stage="process.wait",
+                        api="Popen.wait",
+                    )
+                )
+            close_deadline = time.monotonic() + raw_close_timeout_seconds
+            for pipe_index, (pipe_name, stream) in enumerate(
+                (("stdout", process.stdout), ("stderr", process.stderr))
+            ):
+                endpoint = _DrainEndpoint(
+                    pipe_name,
+                    stream,
+                    bytearray(),
+                    0,
+                    pipe_index,
+                )
+                try:
+                    attempt = raw_close_attempt_factory(endpoint)
+                    close_failure = attempt.observe(
+                        max(0, close_deadline - time.monotonic())
+                    )
+                except BaseException as close_error:  # noqa: BLE001 - fail closed
+                    close_failure = LifecycleFailure(
+                        stage="pipe.close",
+                        api=f"Popen.{pipe_name}.raw.close",
+                        error_code=(
+                            _os_error_code(close_error)
+                            if isinstance(close_error, OSError)
+                            else None
+                        ),
+                        message=f"{pipe_name} raw pipe close failed: {close_error}",
+                    )
+                if close_failure is not None:
+                    cleanup_failures.append(close_failure)
+            posix_guardian.close()
+            detail = f"{label} failed to complete process guardian handoff: {error}"
+            failure = _failure_from_error(
+                error,
+                stage="containment.configure",
+                api="guardian.parent_handoff",
+            ).with_cleanup(*cleanup_failures)
+            raise ProvenanceError(
+                detail,
+                lifecycle=replace(failure, message=detail),
+            ) from error
     if windows_job is not None:
         def fail_containment(error: OSError, default_stage: str) -> None:
             containment_errors = [str(error)]
@@ -1559,6 +2014,7 @@ def _run_json_command(
     failure_event_lock = threading.Lock()
     failure_events: list[LifecycleFailure] = []
     termination_failures: list[LifecycleFailure] = []
+    containment_failures: list[LifecycleFailure] = []
     pipe_read_failures: list[LifecycleFailure | None] = [None, None]
     pipe_read_event_indices: list[int | None] = [None, None]
     pipe_read_terminated_process = [False, False]
@@ -1572,8 +2028,20 @@ def _run_json_command(
         with failure_event_lock:
             failure_events[index] = failure
 
-    def terminate() -> None:
+    def terminate(*, force: bool = False) -> None:
         with termination_lock:
+            if posix_guardian is not None:
+                try:
+                    posix_guardian.request_cleanup()
+                except OSError as error:
+                    failure = _failure_from_error(
+                        error,
+                        stage="process_tree.terminate",
+                        api="guardian.control",
+                    )
+                    termination_failures.append(failure)
+                    record_failure_event(failure)
+                return
             try:
                 terminate_process_tree(process, windows_job)
             except OSError as error:
@@ -1643,33 +2111,40 @@ def _run_json_command(
                 terminate()
                 return
 
-    threads = (
-        threading.Thread(
-            target=drain,
-            args=(process.stdout, stdout, MAX_OBJECT_BYTES, 0, "stdout"),
-            daemon=True,
-        ),
-        threading.Thread(
-            target=drain,
-            args=(process.stderr, stderr, 4096, 1, "stderr"),
-            daemon=True,
-        ),
+    endpoints = (
+        _DrainEndpoint("stdout", process.stdout, stdout, MAX_OBJECT_BYTES, 0),
+        _DrainEndpoint("stderr", process.stderr, stderr, 4096, 1),
     )
-    for thread in threads:
-        thread.start()
+    for endpoint in endpoints:
+        endpoint.thread = threading.Thread(
+            target=drain,
+            args=(
+                endpoint.stream,
+                endpoint.output,
+                endpoint.limit,
+                endpoint.index,
+                endpoint.name,
+            ),
+            name=f"adj-drain-{endpoint.name}",
+            daemon=True,
+        )
+        endpoint.thread.start()
+    threads = tuple(endpoint.thread for endpoint in endpoints)
     timeout_error: subprocess.TimeoutExpired | None = None
     wait_failure: LifecycleFailure | None = None
     recovery_wait_failures: list[LifecycleFailure] = []
     returncode: int | None = None
     close_failures: list[LifecycleFailure] = []
     pipe_close_failures: list[LifecycleFailure] = []
+    drain_failure_record: LifecycleFailure | None = None
+    raw_close_endpoints: set[str] = set()
     try:
         returncode = process.wait(timeout=timeout_seconds)
     except subprocess.TimeoutExpired as error:
         timeout_error = error
         terminate()
         try:
-            returncode = process.wait(timeout=drain_timeout_seconds)
+            returncode = process.wait(timeout=recovery_wait_seconds)
         except subprocess.TimeoutExpired:
             recovery_failure = LifecycleFailure(
                 stage="process.wait",
@@ -1677,14 +2152,14 @@ def _run_json_command(
                 error_code=None,
                 message=(
                     "process wait after command timeout timed out after "
-                    f"{drain_timeout_seconds:g} seconds"
+                    f"{recovery_wait_seconds:g} seconds"
                 ),
             )
             recovery_wait_failures.append(recovery_failure)
             record_failure_event(recovery_failure)
-            terminate()
+            terminate(force=True)
             try:
-                returncode = process.wait(timeout=drain_timeout_seconds)
+                returncode = process.wait(timeout=recovery_wait_seconds)
             except subprocess.TimeoutExpired:
                 final_failure = LifecycleFailure(
                     stage="process.wait",
@@ -1692,7 +2167,7 @@ def _run_json_command(
                     error_code=None,
                     message=(
                         "final process wait timed out after "
-                        f"{drain_timeout_seconds:g} seconds"
+                        f"{recovery_wait_seconds:g} seconds"
                     ),
                 )
                 recovery_wait_failures.append(final_failure)
@@ -1720,9 +2195,9 @@ def _run_json_command(
             )
             recovery_wait_failures.append(recovery_failure)
             record_failure_event(recovery_failure)
-            terminate()
+            terminate(force=True)
             try:
-                returncode = process.wait(timeout=drain_timeout_seconds)
+                returncode = process.wait(timeout=recovery_wait_seconds)
             except (OSError, subprocess.TimeoutExpired) as final_error:
                 if isinstance(final_error, subprocess.TimeoutExpired):
                     final_failure = LifecycleFailure(
@@ -1731,7 +2206,7 @@ def _run_json_command(
                         error_code=None,
                         message=(
                             "final process wait timed out after "
-                            f"{drain_timeout_seconds:g} seconds"
+                            f"{recovery_wait_seconds:g} seconds"
                         ),
                     )
                 else:
@@ -1757,7 +2232,7 @@ def _run_json_command(
         )
         terminate()
         try:
-            returncode = process.wait(timeout=drain_timeout_seconds)
+            returncode = process.wait(timeout=recovery_wait_seconds)
         except subprocess.TimeoutExpired:
             retry_failure = LifecycleFailure(
                 stage="process.wait",
@@ -1765,14 +2240,14 @@ def _run_json_command(
                 error_code=None,
                 message=(
                     "process wait retry timed out after "
-                    f"{drain_timeout_seconds:g} seconds"
+                    f"{recovery_wait_seconds:g} seconds"
                 ),
             )
             recovery_wait_failures.append(retry_failure)
             record_failure_event(retry_failure)
-            terminate()
+            terminate(force=True)
             try:
-                returncode = process.wait(timeout=drain_timeout_seconds)
+                returncode = process.wait(timeout=recovery_wait_seconds)
             except (OSError, subprocess.TimeoutExpired) as final_error:
                 if isinstance(final_error, subprocess.TimeoutExpired):
                     final_failure = LifecycleFailure(
@@ -1781,7 +2256,7 @@ def _run_json_command(
                         error_code=None,
                         message=(
                             "final process wait timed out after "
-                            f"{drain_timeout_seconds:g} seconds"
+                            f"{recovery_wait_seconds:g} seconds"
                         ),
                     )
                 else:
@@ -1806,9 +2281,9 @@ def _run_json_command(
             )
             recovery_wait_failures.append(retry_failure)
             record_failure_event(retry_failure)
-            terminate()
+            terminate(force=True)
             try:
-                returncode = process.wait(timeout=drain_timeout_seconds)
+                returncode = process.wait(timeout=recovery_wait_seconds)
             except (OSError, subprocess.TimeoutExpired) as final_error:
                 if isinstance(final_error, subprocess.TimeoutExpired):
                     final_failure = LifecycleFailure(
@@ -1817,7 +2292,7 @@ def _run_json_command(
                         error_code=None,
                         message=(
                             "final process wait timed out after "
-                            f"{drain_timeout_seconds:g} seconds"
+                        f"{recovery_wait_seconds:g} seconds"
                         ),
                     )
                 else:
@@ -1870,14 +2345,80 @@ def _run_json_command(
         final_drain_deadline = time.monotonic() + 1
         for thread in stuck_drains:
             thread.join(timeout=max(0, final_drain_deadline - time.monotonic()))
-    drain_failure = any(thread.is_alive() for thread in threads)
-    drain_failure_record: LifecycleFailure | None = None
-    if drain_failure:
-        drain_failure_record = LifecycleFailure(
-            stage="pipe.drain",
-            message="output pipes did not close within bounds",
-        )
-        record_failure_event(drain_failure_record)
+        stuck_endpoints = [
+            endpoint
+            for endpoint in endpoints
+            if endpoint.thread is not None and endpoint.thread.is_alive()
+        ]
+        if stuck_endpoints:
+            drain_failure_record = LifecycleFailure(
+                stage="pipe.drain",
+                message="output pipes did not close within bounds",
+            )
+            record_failure_event(drain_failure_record)
+            attempts: list[tuple[_DrainEndpoint, _RawPipeCloseAttempt]] = []
+            for endpoint in stuck_endpoints:
+                raw_close_endpoints.add(endpoint.name)
+                try:
+                    attempts.append(
+                        (endpoint, raw_close_attempt_factory(endpoint))
+                    )
+                except BaseException as error:  # noqa: BLE001 - fail closed
+                    failure = LifecycleFailure(
+                        stage="pipe.close",
+                        api=f"Popen.{endpoint.name}.raw.close",
+                        error_code=(
+                            _os_error_code(error)
+                            if isinstance(error, OSError)
+                            else None
+                        ),
+                        message=(
+                            f"{endpoint.name} raw pipe close could not start: {error}"
+                        ),
+                    )
+                    pipe_close_failures.append(failure)
+                    record_failure_event(failure)
+            raw_close_deadline = time.monotonic() + raw_close_timeout_seconds
+            for _endpoint, attempt in attempts:
+                failure = attempt.observe(
+                    max(0, raw_close_deadline - time.monotonic())
+                )
+                if failure is not None:
+                    pipe_close_failures.append(failure)
+                    record_failure_event(failure)
+            for endpoint in stuck_endpoints:
+                assert endpoint.thread is not None
+                endpoint.thread.join(
+                    timeout=max(0, raw_close_deadline - time.monotonic())
+                )
+    if posix_guardian is not None:
+        guardian_returncode = returncode
+        try:
+            if guardian_returncode is None:
+                raise _lifecycle_error(
+                    "containment.confirm",
+                    "process guardian did not exit before the cleanup deadline",
+                    api="guardian.status",
+                )
+            status = posix_guardian.read_status(drain_timeout_seconds)
+            returncode = guardian_status_returncode(
+                status, guardian_returncode=guardian_returncode
+            )
+        except OSError as error:
+            failure = (
+                error.failure
+                if isinstance(error, _LifecycleError)
+                else _failure_from_error(
+                    error,
+                    stage="containment.confirm",
+                    api="guardian.status",
+                )
+            )
+            containment_failures.append(failure)
+            record_failure_event(failure)
+        finally:
+            posix_guardian.close()
+    drain_failure = drain_failure_record is not None
     causal_pipe_read_exit: LifecycleFailure | None = None
     if (
         returncode is not None
@@ -1891,25 +2432,27 @@ def _run_json_command(
             message=f"process exited {returncode} after pipe-read termination",
         )
         record_failure_event(causal_pipe_read_exit)
-    if not drain_failure:
-        for pipe_name, stream in (
-            ("stdout", process.stdout),
-            ("stderr", process.stderr),
+    for endpoint in endpoints:
+        if endpoint.name in raw_close_endpoints or (
+            endpoint.thread is not None and endpoint.thread.is_alive()
         ):
-            try:
-                stream.close()
-            except OSError as error:
-                message = f"{pipe_name} pipe close failed: {error}"
-                close_failure = replace(
-                    _failure_from_error(
-                        error,
-                        stage="pipe.close",
-                        api=f"Popen.{pipe_name}.close",
-                    ),
-                    message=message,
-                )
-                pipe_close_failures.append(close_failure)
-                record_failure_event(close_failure)
+            continue
+        pipe_name = endpoint.name
+        stream = endpoint.stream
+        try:
+            stream.close()
+        except OSError as error:
+            message = f"{pipe_name} pipe close failed: {error}"
+            close_failure = replace(
+                _failure_from_error(
+                    error,
+                    stage="pipe.close",
+                    api=f"Popen.{pipe_name}.close",
+                ),
+                message=message,
+            )
+            pipe_close_failures.append(close_failure)
+            record_failure_event(close_failure)
     pipe_read_failure_events = [
         (
             pipe_read_event_indices[index],
@@ -1925,6 +2468,7 @@ def _run_json_command(
     ]
     cleanup_failures = [
         *termination_failures,
+        *containment_failures,
         *close_failures,
         *pipe_close_failures,
     ]
@@ -1934,6 +2478,9 @@ def _run_json_command(
             "failed to terminate process tree: "
             + termination_failures[0].message
         )
+    cleanup_failure_text.extend(
+        failure.message for failure in containment_failures
+    )
     if close_failures:
         close_failure = close_failures[0]
         close_text = close_failure.message
@@ -1998,6 +2545,9 @@ def _run_json_command(
         primary_failure = wait_failure
         for failure in pipe_read_failure_records:
             add_cleanup_failure(failure)
+    elif containment_failures:
+        primary_failure = containment_failures[0]
+        primary_error = primary_failure.message
     elif returncode is not None and returncode != 0 and not any(
         terminated
         for _event_index, _failure, terminated in pipe_read_failure_events
@@ -2080,6 +2630,15 @@ def _run_json_command(
             *(event for event in failure_events if event is not primary)
         )
         detail = f"{label} failed to terminate process tree: {failure.message}"
+        raise ProvenanceError(
+            detail, lifecycle=replace(failure, message=detail)
+        )
+    if containment_failures:
+        primary = containment_failures[0]
+        failure = primary.with_cleanup(
+            *(event for event in failure_events if event is not primary)
+        )
+        detail = f"{label} failed to confirm process containment: {failure.message}"
         raise ProvenanceError(
             detail, lifecycle=replace(failure, message=detail)
         )

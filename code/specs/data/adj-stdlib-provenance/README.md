@@ -117,18 +117,25 @@ can prune the old unreachable graph.
 
 This separation prevents an untrusted source locator from turning the verifier
 into a network or SSRF primitive. Reads are bounded and reject links and Windows
-reparse points; object writes are exclusive; index writes are atomic. Trusted
-parser and audit commands run in isolated process groups; output overflow or timeout
-terminates the complete process tree, and pipe-drain joins have their own bound.
+reparse points; object writes are exclusive; index writes are atomic. Trusted parser
+and audit commands use a hard platform containment boundary. Windows assigns a
+suspended root to a kill-on-close Job before execution. Linux requires the absolute
+`ADJ_PROVENANCE_CGROUP_ROOT` path to an operator-delegated cgroup-v2 subtree; an
+external guardian assigns the command to a fresh child before release, survives
+verifier death through a private control-pipe EOF, and accepts cleanup only after
+`cgroup.kill`, exact `populated 0`, reaping, and child removal. macOS and generic POSIX
+strict execution reject before launch because process groups cannot contain a
+descendant that creates another session.
 Windows Job lifecycle calls are fault-injected in platform-neutral tests and exercised
 against real suspended processes in the Windows PR matrix. Native enumeration errors,
 truncated thread records, incomplete resumes, termination failures, and handle-close
 failures all prevent a verifier result from being accepted.
 Lifecycle failures remain human-readable but also expose an immutable recursive record
-through `ProvenanceError.lifecycle`: stage, native API, numeric error code, message, and
-ordered cleanup causes. Its `to_dict()` projection is canonical JSON-ready, so callers
+through `ProvenanceError.lifecycle`: stage, native API, numeric error code, symbolic
+status code, message, and ordered cleanup causes. Its `to_dict()` projection is
+canonical JSON-ready, so callers
 do not need to parse localized operating-system messages to diagnose containment. The
-projection is versioned as `adj-stdlib/process-lifecycle-failure/v1`; CLI failures add
+projection is versioned as `adj-stdlib/process-lifecycle-failure/v2`; CLI failures add
 it as `lifecycle_failure` while retaining the existing `error` and `valid` fields.
 Process-wait, pipe-read, and pipe-close faults are records too; partial output is never
 accepted merely because its prefix happens to be valid canonical JSON.
@@ -136,7 +143,16 @@ POSIX group termination is fault-injected independently of the host OS: lookup m
 permission errors, poll failures, root-process fallback, and simultaneous pipe-close
 failures retain API-attempt ordering. Repeated termination attempts are never collapsed,
 concurrent reader failures use event order, and recovery ends with a bounded root wait.
-Linux runs the complete suite and macOS runs the focused POSIX/process-tree gate before
-merge.
+Linux runs the complete suite; macOS runs the focused unsupported-boundary, guardian-
+protocol, process-tree, drain, and raw-close gate before merge.
+The Linux gate enters its delegated root before running the provenance suite, then uses
+real fixtures to prove cleanup of a `setsid()` descendant and cleanup after verifier
+`SIGKILL`. Guardian status travels on a separate bounded canonical pipe, so helper
+bytes cannot forge containment success. Stuck pipe readers use independently bounded
+raw-owner close attempts; healthy channels close independently, and every unconfirmed
+close fails closed. The guardian threat model covers accidental session escape and
+abrupt verifier death while the guardian and kernel remain alive. A same-UID helper
+that deliberately attacks the guardian or delegated cgroup requires a stronger
+privilege boundary.
 Existing hashes are reused, while missing or changed bytes, claims, transforms, graph
 edges, receipts, partitions, and projections fail closed.
