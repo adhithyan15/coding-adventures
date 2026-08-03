@@ -3696,7 +3696,18 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "|") == 0)        return _sir_bor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "^") == 0)        return _sir_bxor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "~") == 0)        return _sir_bnot(_sir_arg(args, argc, 0));
-    if (strcmp(name, "<<") == 0)       return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    /* `"<<"` here is Ruby's polymorphic shift operator (Array push/String
+       concat/saturating-Integer-shift) -- matching `variadic_helper`'s
+       `"<<" => "_sir_shift_left"` mapping in emit.rs, for a builtin
+       referenced BY NAME (`Scope::Builtin`, e.g. a hypothetical
+       `arr.reduce(:<<)`) rather than emitted inline. `"c<<"` is the C
+       frontend's OWN raw bitwise left shift -- kept as a DISTINCT name so
+       the two never collide (the bug this split fixes: both frontends
+       used to share the bare `"<<"` name, so the C-emit-time dispatch had
+       to pick ONE meaning and silently applied Ruby's saturating semantics
+       to C-sourced shifts too -- see this crate's CHANGELOG). */
+    if (strcmp(name, "<<") == 0)       return _sir_shift_left_v(args, argc);
+    if (strcmp(name, "c<<") == 0)      return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, ">>") == 0)       return _sir_shr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "tdiv") == 0)     return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
