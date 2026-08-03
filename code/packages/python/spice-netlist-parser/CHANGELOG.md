@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `GAMMA` values before lowering
+  Level-1 body effect.
 - Reject non-finite MOS model-card `LAMBDA` / `LAM` values and lower the `LAM`
   alias into Level-1 channel-length modulation.
 - Reject non-finite MOS model-card `VT0` / `VTO` / `VTH` values and lower the

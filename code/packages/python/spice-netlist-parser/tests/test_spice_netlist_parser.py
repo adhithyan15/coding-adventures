@@ -1485,6 +1485,24 @@ def test_lowers_finite_mosfet_model_channel_modulation_aliases(alias: str) -> No
     assert mosfet.model.model.params.LAMBDA == -0.02
 
 
+@pytest.mark.parametrize("body_effect", ["-0.01", "1e999"])
+def test_rejects_invalid_mosfet_model_body_effect(body_effect: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET GAMMA must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(GAMMA={body_effect})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("body_effect", ["0", "0.45"])
+def test_lowers_valid_mosfet_model_body_effect(body_effect: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS(GAMMA={body_effect})\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(body_effect) == mosfet.model.model.params.GAMMA
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
