@@ -128,6 +128,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "\"surfaceResize\": \"native-reflow\"",
         "lastSurfaceRenderSize",
         "\"surfaceRepaint\": \"resized-frame\"",
+        "initial native disabled navigation control dispatched",
         "native disabled Forward button dispatched",
         "native disabled Back button dispatched",
         "\"navigationState\": \"native-disabled-transitions\"",
