@@ -17,6 +17,7 @@ import os
 import re
 import stat
 import tempfile
+import xml.etree.ElementTree as ET
 from collections.abc import Iterable
 from datetime import datetime
 from pathlib import Path, PurePosixPath
@@ -491,6 +492,55 @@ def build_source_ir(
     }
 
 
+def _mathml_to_infix(source: bytes, prefix: str) -> bytes:
+    upper_source = source.upper()
+    if b"<!DOCTYPE" in upper_source or b"<!ENTITY" in upper_source:
+        raise ProvenanceError(f"{prefix} MathML declarations are forbidden")
+    try:
+        root = ET.fromstring(source.decode("utf-8"))
+    except (UnicodeDecodeError, ET.ParseError) as error:
+        raise ProvenanceError(f"{prefix} source is not valid UTF-8 MathML") from error
+
+    def render(node: ET.Element) -> str:
+        tag = node.tag.rsplit("}", 1)[-1]
+        children = list(node)
+        for child in children:
+            if child.tail is not None and child.tail.strip():
+                raise ProvenanceError(f"{prefix} MathML contains mixed tail text")
+        if tag == "math":
+            if node.text is not None and node.text.strip():
+                raise ProvenanceError(f"{prefix} MathML contains mixed root text")
+            if len(children) != 1:
+                raise ProvenanceError(f"{prefix} MathML math root is ambiguous")
+            return render(children[0])
+        if tag == "semantics":
+            if node.text is not None and node.text.strip():
+                raise ProvenanceError(f"{prefix} MathML contains mixed semantics text")
+            if not children:
+                raise ProvenanceError(f"{prefix} MathML semantics is empty")
+            alternatives = [render(child) for child in children]
+            if any(value != alternatives[0] for value in alternatives[1:]):
+                raise ProvenanceError(f"{prefix} MathML semantic branches disagree")
+            return alternatives[0]
+        if tag in {"mrow", "annotation-xml"}:
+            if node.text is not None and node.text.strip():
+                raise ProvenanceError(f"{prefix} MathML contains mixed container text")
+            return "".join(render(child) for child in children)
+        if tag in {"mi", "mn", "mo"}:
+            if children or node.text is None:
+                raise ProvenanceError(f"{prefix} MathML token is not canonical")
+            return node.text.replace("×", "*")
+        if tag == "mfrac":
+            if len(children) != 2:
+                raise ProvenanceError(
+                    f"{prefix} MathML fraction must have two operands"
+                )
+            return f"({render(children[0])}/{render(children[1])})"
+        raise ProvenanceError(f"{prefix} MathML element {tag!r} is unsupported")
+
+    return render(root).encode("utf-8")
+
+
 def build_text_transform(
     *,
     source_sha256: str,
@@ -542,6 +592,8 @@ def build_text_transform(
                 expected = html.unescape(source_slice.decode("utf-8")).encode("utf-8")
             except UnicodeDecodeError as error:
                 raise ProvenanceError(f"{prefix} source is not UTF-8") from error
+        elif operation_name == "mathml_to_infix":
+            expected = _mathml_to_infix(source_slice, prefix)
         else:
             raise ProvenanceError(f"{prefix}.operation is unsupported")
         if expected != result[result_start:result_end]:

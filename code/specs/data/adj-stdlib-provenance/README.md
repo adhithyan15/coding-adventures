@@ -18,8 +18,8 @@ It starts empty and grows only through reviewed source migrations.
   records its exact byte range, UTF-8 quote, and quote hash; every discarded range
   has a non-empty reason.
 - A `text_transform` proves how selected raw response bytes reproduce every byte
-  of a rendered-text representation. Copy and HTML-entity decoding are the only
-  accepted operations.
+  of a rendered-text representation. Copy, HTML-entity decoding, and a strict
+  MathML-to-infix projection are the only accepted operations.
 - A `provenance_bundle` binds stable clause IDs to snapshots, byte ranges, source
   IR, receipts, and recursively checked dependency or accepted-root decisions.
   Dependency decisions name the exact exported claim. Accepted roots classify
@@ -46,12 +46,13 @@ python code/scripts/adj_stdlib_provenance.py project --output <directory>
 
 ## Reviewed roots
 
-The arithmetic primitive and ratio roots and their worked-query fixtures are
-rebuilt entirely offline from retained CAS source bodies:
+The arithmetic primitive, ratio, and percent-of roots and their worked-query
+fixtures are rebuilt entirely offline from retained CAS source bodies:
 
 ```text
 python code/scripts/build_adj_arithmetic_provenance.py
 python code/scripts/build_adj_ratio_provenance.py
+python code/scripts/build_adj_percent_of_provenance.py
 ```
 
 Each generator checks retained source hashes and expected source spans before
@@ -64,6 +65,14 @@ no external file:
 python code/scripts/build_adj_ratio_provenance.py --captured-source <ratio.html>
 python code/scripts/build_adj_ratio_provenance.py
 ```
+
+The percent-of bootstrap follows the same offline contract. Six controlled
+captures of the OpenStax rational-numbers page produced the identical
+666,580-byte body with SHA-256
+`89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e`.
+Its formal MathML rule is projected deterministically to
+`n% of x items is (n/100)*x.`; both the raw MathML and every rendered byte remain
+linked in the CAS.
 
 The reviewed ratio capture was repeated six times with `Accept: text/html`,
 identity transfer encoding, no request cookies, and the same user agent. All six

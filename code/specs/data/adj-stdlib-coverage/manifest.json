@@ -121,18 +121,24 @@
     },
     {
       "id": "adj.math.arithmetic.percent_of",
-      "title": "Recover a whole or rate from a percent relationship",
+      "title": "Compute a percentage of a whole",
       "band": "6-8",
       "domain": "mathematics",
       "competency": "compute",
       "coverage_roots": ["ccss.math"],
       "standards": [],
-      "prerequisites": ["adj.math.arithmetic.percent"],
+      "prerequisites": ["adj.math.arithmetic.primitives"],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/percent-of.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": [],
+      "source_cas_hashes": [
+        "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834",
+        "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e"
+      ],
+      "provenance_bundle_hashes": [
+        "465ae3a5e0ad6c1d9eca7431b00811f30a07e885e9dead4387e99556be961a0a"
+      ],
       "benchmark_paths": [],
-      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+      "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
       "id": "adj.math.arithmetic.powers",

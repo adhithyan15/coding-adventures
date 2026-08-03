@@ -1,0 +1,75 @@
+{
+  "bundle_id": "adj.math.arithmetic.percent_of.query.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.input.arithmetic.percent_of.whole",
+      "end": 12,
+      "input_claim": {
+        "end": 965,
+        "quote": "observe whole(50)\n    quote \"whole is 50.\" at 0 snapshot \"3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28\"\n    source \"percent-of input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "a70ad61a1d3c87a4acf9f4c425735a0d27e214c1e65ee64beddb32bbf4001822",
+        "start": 689
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt",
+      "quote": "whole is 50.",
+      "quote_sha256": "1a8ec1ad749f8e4404e607c5f3592da31a1b642af6441b48547384d956417094",
+      "resolution": {
+        "authority_receipt_sha256": "da646c72e581e3ed619f1f82b734dacce21fa4be8ce1483c804b1a98711abf51",
+        "authority_source_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic percent-of query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+      "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.input.arithmetic.percent_of.rate",
+      "end": 24,
+      "input_claim": {
+        "end": 1240,
+        "quote": "observe rate(20)\n    quote \"rate is 20.\" at 13 snapshot \"3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28\"\n    source \"percent-of input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "8a0de2dc0d22192d072f15794b4c00efb7edcd4d4198b03008e758e76f266b9b",
+        "start": 965
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt",
+      "quote": "rate is 20.",
+      "quote_sha256": "91ccf7b85ad9a0758c0b0d20fccc2c97c9ecc875f17cde04c8ff5342ecb0c4e5",
+      "resolution": {
+        "authority_receipt_sha256": "da646c72e581e3ed619f1f82b734dacce21fa4be8ce1483c804b1a98711abf51",
+        "authority_source_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic percent-of query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+      "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f",
+      "start": 13
+    }
+  ],
+  "dependencies": [
+    "465ae3a5e0ad6c1d9eca7431b00811f30a07e885e9dead4387e99556be961a0a"
+  ],
+  "input": {
+    "raw_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+    "receipt_sha256": "bb91bde708681949c46105a74a3da8b93e48f718ed1781916e5d6d0dd3d7e8ad",
+    "source_ir_sha256": "46764c7358a78dc14d3fcce8b350c18b80a87d0272ca3ec45b87583a6f1e4ddd"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/percent-of.query.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+      "receipt_sha256": "bb91bde708681949c46105a74a3da8b93e48f718ed1781916e5d6d0dd3d7e8ad",
+      "representations": [],
+      "source_ir_sha256": "46764c7358a78dc14d3fcce8b350c18b80a87d0272ca3ec45b87583a6f1e4ddd"
+    },
+    {
+      "raw_source_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+      "receipt_sha256": "da646c72e581e3ed619f1f82b734dacce21fa4be8ce1483c804b1a98711abf51",
+      "representations": [],
+      "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f"
+    }
+  ]
+}

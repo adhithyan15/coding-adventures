@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
+percent_of_builder = importlib.import_module("build_adj_percent_of_provenance")
 
 
 def acquire_cas_lock_and_exit(cas_root: str, ready: object) -> None:
@@ -651,14 +652,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             captured_source.write_bytes(
                 provenance._read_regular_file(cas.object_path(ratio_builder.RAW_HASH))
             )
-            arithmetic_roots = []
+            non_ratio_roots = []
             for digest in manifest["bundle_hashes"]:
                 bundle_id = provenance._json_object(cas, digest, "provenance_bundle")[
                     "bundle_id"
                 ]
-                if bundle_id.startswith("adj.math.arithmetic.primitives"):
-                    arithmetic_roots.append(digest)
-            reachable = provenance._reachable(cas, arithmetic_roots)
+                if not bundle_id.startswith("adj.math.arithmetic.ratio"):
+                    non_ratio_roots.append(digest)
+            reachable = provenance._reachable(cas, non_ratio_roots)
             for digest in sorted(set(cas.index) - reachable):
                 cas.object_path(digest).unlink()
             cas.index = {
@@ -667,17 +668,15 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 if digest in reachable
             }
             cas.write_index()
-            manifest["bundle_hashes"] = sorted(arithmetic_roots)
+            manifest["bundle_hashes"] = sorted(non_ratio_roots)
             manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
-            arithmetic_only = provenance.validate_repository(
+            without_ratio = provenance.validate_repository(
                 cas_root,
                 manifest_path,
                 workspace / provenance.DEFAULT_SCHEMA,
                 workspace_root=workspace,
             )
-            self.assertEqual(
-                (arithmetic_only["bundles"], arithmetic_only["objects"]), (2, 35)
-            )
+            self.assertEqual(without_ratio["bundles"], len(non_ratio_roots))
 
             ratio_builder.REPO_ROOT = workspace
             try:
@@ -693,6 +692,166 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     )
             finally:
                 ratio_builder.REPO_ROOT = original_root
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+
+    def test_percent_of_generator_is_offline_idempotent_and_bootstrappable(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = percent_of_builder.REPO_ROOT
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(repo_root / provenance.DEFAULT_ROOT.parent, provenance_copy)
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic",
+                arithmetic_copy,
+            )
+
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            original_root = percent_of_builder.REPO_ROOT
+
+            def register(captured_source: Path | None) -> None:
+                percent_of_builder.REPO_ROOT = workspace
+                try:
+                    with provenance.BundleRegistrationTransaction(
+                        cas_root,
+                        manifest_path,
+                        expected_manifest_id="adj.stdlib.provenance.v1",
+                        schema_path=workspace / provenance.DEFAULT_SCHEMA,
+                        workspace_root=workspace,
+                    ) as transaction:
+                        transaction.commit(
+                            percent_of_builder.build(transaction.cas, captured_source)
+                        )
+                finally:
+                    percent_of_builder.REPO_ROOT = original_root
+
+            register(None)
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            bundles = {
+                provenance._json_object(cas, digest, "provenance_bundle")[
+                    "bundle_id"
+                ]: (
+                    digest,
+                    provenance._json_object(cas, digest, "provenance_bundle"),
+                )
+                for digest in manifest["bundle_hashes"]
+            }
+            formula_hash, formula_bundle = bundles["adj.math.arithmetic.percent_of.v1"]
+            query_hash, query_bundle = bundles[
+                "adj.math.arithmetic.percent_of.query.v1"
+            ]
+            self.assertEqual(
+                formula_bundle["dependencies"],
+                [percent_of_builder.ARITHMETIC_BUNDLE_HASH],
+            )
+            self.assertEqual(
+                formula_bundle["clauses"][0]["resolution"]["kind"],
+                "accepted_root",
+            )
+            arithmetic = provenance._json_object(
+                cas,
+                percent_of_builder.ARITHMETIC_BUNDLE_HASH,
+                "provenance_bundle",
+            )
+            arithmetic_raw = {
+                source["raw_source_sha256"] for source in arithmetic["sources"]
+            }
+            self.assertTrue(
+                arithmetic_raw.isdisjoint(
+                    source["raw_source_sha256"] for source in formula_bundle["sources"]
+                )
+            )
+            self.assertEqual(query_bundle["dependencies"], [formula_hash])
+            self.assertIn(query_hash, manifest["bundle_hashes"])
+
+            def claim_ids(bundle: dict[str, object]) -> set[str]:
+                ir = provenance._json_object(
+                    cas, bundle["input"]["source_ir_sha256"], "source_ir"
+                )
+                return {
+                    item["claim_id"]
+                    for segment in ir["segments"]
+                    for item in segment.get("claims", [])
+                }
+
+            self.assertEqual(
+                claim_ids(formula_bundle),
+                {
+                    "adj.code.arithmetic.percent_of.import.arithmetic",
+                    "adj.code.arithmetic.percent_of.use.percent_of_vocab",
+                    "adj.code.arithmetic.percent_of.vocabulary",
+                    "adj.math.arithmetic.percent_of",
+                },
+            )
+            self.assertEqual(
+                claim_ids(query_bundle),
+                {
+                    "adj.code.arithmetic.percent_of.query.import",
+                    "adj.input.arithmetic.percent_of.rate",
+                    "adj.input.arithmetic.percent_of.whole",
+                    "adj.question.arithmetic.percent_of.compute",
+                },
+            )
+            query_ir = provenance._json_object(
+                cas, query_bundle["input"]["source_ir_sha256"], "source_ir"
+            )
+            self.assertIn(
+                "disabled edge-case example deliberately excluded from the "
+                "executable worked query",
+                {
+                    segment.get("reason")
+                    for segment in query_ir["segments"]
+                    if segment["disposition"] == "discarded"
+                },
+            )
+
+            captured_source = workspace / "captured-percent-of.html"
+            captured_source.write_bytes(
+                provenance._read_regular_file(
+                    cas.object_path(percent_of_builder.RAW_HASH)
+                )
+            )
+            other_roots = [
+                digest
+                for digest in manifest["bundle_hashes"]
+                if not provenance._json_object(cas, digest, "provenance_bundle")[
+                    "bundle_id"
+                ].startswith("adj.math.arithmetic.percent_of")
+            ]
+            reachable = provenance._reachable(cas, other_roots)
+            for digest in sorted(set(cas.index) - reachable):
+                cas.object_path(digest).unlink()
+            cas.index = {
+                digest: record
+                for digest, record in cas.index.items()
+                if digest in reachable
+            }
+            cas.write_index()
+            manifest["bundle_hashes"] = sorted(other_roots)
+            manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+            provenance.validate_repository(
+                cas_root,
+                manifest_path,
+                workspace / provenance.DEFAULT_SCHEMA,
+                workspace_root=workspace,
+            )
+
+            register(captured_source)
             self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
             self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
 
@@ -780,6 +939,110 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ],
         )
         self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_reproduces_canonical_infix_bytes(self) -> None:
+        source = (
+            b"<math><semantics><mrow><mfrac><mi>n</mi><mn>100</mn></mfrac>"
+            b'<mo>\xc3\x97</mo><mi>x</mi></mrow><annotation-xml encoding="MathML-Content">'
+            b"<mrow><mfrac><mi>n</mi><mn>100</mn></mfrac><mo>\xc3\x97</mo>"
+            b"<mi>x</mi></mrow></annotation-xml></semantics></math>"
+        )
+        result = b"(n/100)*x"
+        transform = provenance.build_text_transform(
+            source_sha256=provenance.sha256_bytes(source),
+            source=source,
+            result_sha256=provenance.sha256_bytes(result),
+            result=result,
+            operations=[
+                {
+                    "operation": "mathml_to_infix",
+                    "result_end": len(result),
+                    "result_start": 0,
+                    "source_end": len(source),
+                    "source_start": 0,
+                }
+            ],
+        )
+        self.assertEqual(transform["result_size"], len(result))
+
+    def test_mathml_transform_rejects_unsupported_semantics(self) -> None:
+        source = b"<math><msqrt><mi>x</mi></msqrt></math>"
+        with self.assertRaisesRegex(provenance.ProvenanceError, "unsupported"):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"x"),
+                result=b"x",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def test_mathml_transform_rejects_entity_declarations(self) -> None:
+        source = b'<!DOCTYPE math [<!ENTITY x "expanded">]><math><mi>&x;</mi></math>'
+        with self.assertRaisesRegex(provenance.ProvenanceError, "forbidden"):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"expanded"),
+                result=b"expanded",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 8,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def test_mathml_transform_rejects_disagreeing_semantic_branch(self) -> None:
+        source = (
+            b"<math><semantics><mi>x</mi><annotation-xml><mi>y</mi>"
+            b"</annotation-xml></semantics></math>"
+        )
+        with self.assertRaisesRegex(provenance.ProvenanceError, "disagree"):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"x"),
+                result=b"x",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def test_mathml_transform_rejects_unaccounted_mixed_text(self) -> None:
+        source = b"<math><mrow><mi>x</mi>contradiction</mrow></math>"
+        with self.assertRaisesRegex(provenance.ProvenanceError, "mixed tail text"):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"x"),
+                result=b"x",
+                operations=[
+                    {
+                        "operation": "mathml_to_infix",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
 
     def test_unsuccessful_receipt_cannot_ground_a_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

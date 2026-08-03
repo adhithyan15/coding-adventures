@@ -1,0 +1,93 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 2465,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.percent_of.import.arithmetic",
+          "end": 2489,
+          "quote": "import \"arithmetic.adj\"\n",
+          "quote_sha256": "967650df942445e6134491a1ff88fbdd91b2ebd6e304d52399c84bb290a4f0db",
+          "start": 2465
+        }
+      ],
+      "disposition": "represented",
+      "end": 2489,
+      "start": 2465
+    },
+    {
+      "disposition": "discarded",
+      "end": 3002,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 2489
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.percent_of.vocabulary",
+          "end": 3297,
+          "quote": "dictionary percent_of_vocab {\n    define whole      : finding  surface \"whole\", \"total\", \"base\", \"amount\", \"of\"\n    define rate       : finding  surface \"rate\", \"percent\", \"percentage\", \"rate percent\"\n    define percent_of : finding  surface \"percent of\", \"part\", \"amount that is the percent\"\n}\n",
+          "quote_sha256": "578b7a65fffb0057af5f7b9ebbf759865edd81ef6ab2274794ae2a0ac869d390",
+          "start": 3002
+        }
+      ],
+      "disposition": "represented",
+      "end": 3297,
+      "start": 3002
+    },
+    {
+      "disposition": "discarded",
+      "end": 3984,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 3297
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.percent_of.use.percent_of_vocab",
+          "end": 4009,
+          "quote": "    use percent_of_vocab\n",
+          "quote_sha256": "4ab61f15de19971c1aedcb787a193eea2686669b2bcdc16bf0e43c9f07d56509",
+          "start": 3984
+        }
+      ],
+      "disposition": "represented",
+      "end": 4009,
+      "start": 3984
+    },
+    {
+      "disposition": "discarded",
+      "end": 4010,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 4009
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.percent_of",
+          "end": 4379,
+          "quote": "    formula percent_of(whole, rate) = product(quotient(rate, 100), whole)\n        quote \"n% of x items is (n/100)*x.\" at 0 snapshot \"ac765615e8da33fba525925ae28f392d3c9343ac7539ea54fd0a103ca18fc718\"\n        source \"n% of x items is (n/100)*x.\"\n        locator \"https://openstax.org/books/contemporary-mathematics/pages/3-4-rational-numbers\"\n        trust authoritative\n",
+          "quote_sha256": "46bbf7a8e25623518755ed11e8eb1064b490d2a798a9f36d06acd4cd11e7ebcd",
+          "start": 4010
+        }
+      ],
+      "disposition": "represented",
+      "end": 4379,
+      "start": 4010
+    },
+    {
+      "disposition": "discarded",
+      "end": 4381,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 4379
+    }
+  ],
+  "source_sha256": "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834",
+  "source_size": 4381
+}

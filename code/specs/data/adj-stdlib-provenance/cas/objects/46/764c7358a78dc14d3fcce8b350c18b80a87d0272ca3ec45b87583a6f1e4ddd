@@ -1,0 +1,93 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 664,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.percent_of.query.import",
+          "end": 688,
+          "quote": "import \"percent-of.adj\"\n",
+          "quote_sha256": "9ef400f69ec078255731736e0e1d12279b2519fb170ee544c53c436ddfdc4a74",
+          "start": 664
+        }
+      ],
+      "disposition": "represented",
+      "end": 688,
+      "start": 664
+    },
+    {
+      "disposition": "discarded",
+      "end": 689,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 688
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.percent_of.whole",
+          "end": 965,
+          "quote": "observe whole(50)\n    quote \"whole is 50.\" at 0 snapshot \"3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28\"\n    source \"percent-of input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "a70ad61a1d3c87a4acf9f4c425735a0d27e214c1e65ee64beddb32bbf4001822",
+          "start": 689
+        }
+      ],
+      "disposition": "represented",
+      "end": 965,
+      "start": 689
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.percent_of.rate",
+          "end": 1240,
+          "quote": "observe rate(20)\n    quote \"rate is 20.\" at 13 snapshot \"3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28\"\n    source \"percent-of input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "8a0de2dc0d22192d072f15794b4c00efb7edcd4d4198b03008e758e76f266b9b",
+          "start": 965
+        }
+      ],
+      "disposition": "represented",
+      "end": 1240,
+      "start": 965
+    },
+    {
+      "disposition": "discarded",
+      "end": 1241,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 1240
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.percent_of.compute",
+          "end": 1266,
+          "quote": "? percent_of(whole, rate)",
+          "quote_sha256": "1ccace450557b9a0dd9b4ec17f436d14d51f827375d876143d7da7166ae79ec4",
+          "start": 1241
+        }
+      ],
+      "disposition": "represented",
+      "end": 1266,
+      "start": 1241
+    },
+    {
+      "disposition": "discarded",
+      "end": 1281,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 1266
+    },
+    {
+      "disposition": "discarded",
+      "end": 1640,
+      "reason": "disabled edge-case example deliberately excluded from the executable worked query",
+      "start": 1281
+    }
+  ],
+  "source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+  "source_size": 1640
+}

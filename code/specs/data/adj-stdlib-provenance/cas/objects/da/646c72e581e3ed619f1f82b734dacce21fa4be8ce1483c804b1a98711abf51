@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "e03aec543b28291bc8f9d80f84c0dccb30ea2f37",
+  "body_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+  "body_size": 25,
+  "captured_at": "2026-08-03T00:30:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-stdlib-provenance/fixtures/percent-of-inputs.txt"
+}
