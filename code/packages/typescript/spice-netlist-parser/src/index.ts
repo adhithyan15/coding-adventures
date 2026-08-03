@@ -1180,6 +1180,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     params.get("BETA") ??
     params.get("BETA_F") ??
     params.get("HFE");
+  const bjtSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtSaturationCurrent !== undefined &&
+    (!Number.isFinite(bjtSaturationCurrent) || bjtSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT IS must be finite and positive");
+  }
   if (
     (kind === "NPN" || kind === "PNP") &&
     bjtForwardBeta !== undefined &&
