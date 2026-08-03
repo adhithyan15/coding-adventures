@@ -1450,6 +1450,38 @@ J1 drain gate source fast
     },
   );
 
+  it.each(["PB", "VJ"])("parses the JFET %s junction-potential alias", (parameter) => {
+    const parsed = parseNetlist(`
+.model fast NJF(${parameter}=0.8)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      junctionPotential: 0.8,
+    });
+  });
+
+  it("prefers canonical JFET PB over the VJ alias", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(PB=0.9 VJ=0.8)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      junctionPotential: 0.9,
+    });
+  });
+
+  it.each(["PB", "VJ"])("rejects invalid JFET %s junction potential", (parameter) => {
+    for (const value of ["0", "-0.1", "1e999"]) {
+      expect(() => parseNetlist(`.model fast NJF(${parameter}=${value})`)).toThrow(
+        "JFET PB must be finite and positive",
+      );
+    }
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)

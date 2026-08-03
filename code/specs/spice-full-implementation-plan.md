@@ -4451,15 +4451,21 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine JFET flicker-noise coefficient field.
 
 426. Python and TypeScript Berkeley SPICE JFET flicker-noise exponent parity.
-   - Status: completed in this JFET flicker-noise exponent parity slice.
+   - Status: completed in PR 9837.
    - Both parser facades validate finite non-negative `AF` values and lower
      them into the shared engine JFET flicker-noise exponent field.
+
+427. Python and TypeScript Berkeley SPICE JFET junction-potential parity.
+   - Status: completed in this JFET junction-potential parity slice.
+   - Both parser facades validate positive finite `PB` / `VJ` values, prefer
+     canonical `PB`, and lower the result into the shared engine JFET
+     junction-potential field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited JFET model-card gaps, beginning with `PB` / `VJ`,
-     then `FC`, `IS`, `XTI`, `EG`, `B`, `NLEV`, `GDSNOI`, `RD`, `RS`,
+   - Continue the audited JFET model-card gaps, beginning with `FC`, then `IS`,
+     `XTI`, `EG`, `B`, `NLEV`, `GDSNOI`, `RD`, `RS`,
      `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.

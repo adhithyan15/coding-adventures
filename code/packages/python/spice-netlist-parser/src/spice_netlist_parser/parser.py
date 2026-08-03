@@ -1337,6 +1337,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Cgd=model.params.get("CGD", model.params.get("CGD0", 0.0)),
             Kf=model.params.get("KF", 0.0),
             Af=model.params.get("AF", 1.0),
+            Pb=model.params.get("PB", model.params.get("VJ", 1.0)),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2085,6 +2086,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or flicker_noise_exponent < 0.0
         ):
             raise NetlistParseError("JFET AF must be finite and non-negative")
+        junction_potential = params.get("PB", params.get("VJ"))
+        if junction_potential is not None and (
+            not math.isfinite(junction_potential) or junction_potential <= 0.0
+        ):
+            raise NetlistParseError("JFET PB must be finite and positive")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]
