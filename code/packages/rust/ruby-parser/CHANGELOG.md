@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.6.0] - 2026-08-03
+
+### Fixed — bare comparison/logical statement mis-parsed as a paren-less call
+
+`<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have no dedicated lexer token type
+(`classify_op_token` in `ruby-lexer` deliberately leaves every operator
+lexeme without one on `TokenType::Name` — "the parser dispatches by
+value"). `factor`'s bare `NAME` alternative doesn't check a Name token's
+VALUE, so `method_call_no_paren = ( NAME | ... ) expression { ... }` — the
+paren-less "command call" production (`puts "hi"`) — could match a bare
+statement like `x > 2` as `x` (callee) applied to `>` itself, swallowed
+whole as an ordinary name-shaped argument, leaving `2` behind as an
+unrelated second statement. Lowering the malformed "argument" then emitted
+a call to whatever that bare name resolved to, which downstream validation
+correctly rejected. Found while writing block-predicate tests for the SIR
+Collections cascade (`[1,2,3].select { |x| x > 2 }` failed identically —
+every backend consumes this same grammar, so the bug wasn't C-specific).
+
+Fixed with a negative lookahead in `method_call_no_paren` (`ruby.grammar`)
+for these seven operators, so the rule fails to match on them and
+`expression_stmt` (`comparison`/`logical_and`/`logical_or`) parses the
+whole expression correctly instead. `==` was accidentally already immune
+(`classify_op_token` gives it its own dedicated `EqualsEquals` type).
+`**`/bitwise `<<`/`>>`/`^`/`&`/`|` are deliberately NOT included: this
+grammar has no binary-operator rule for them at all, so there is no
+correct fallback parse to preserve — pinned by a regression test that they
+remain unchanged.
+
+### Added
+
+- `src/bin/regen_grammars.rs` — a `cargo run -p coding-adventures-ruby-parser
+  --bin regen_grammars` binary that regenerates `src/_grammar.rs` from
+  `ruby.grammar` (mirrors `adj-lang`'s binary of the same name). Previously
+  this crate had no committed regeneration tool despite `_grammar.rs`'s own
+  header directing readers to one.
+
 ## [0.5.0] - 2026-07-01
 
 (Cargo manifest minor bump 0.4.0 → 0.5.0.  Note: the older CHANGELOG headers

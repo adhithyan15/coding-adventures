@@ -587,7 +587,36 @@ call_arg     = NAME COLON expression | [ "*" | "**" | "&" ] expression ;
 # Issue #59 — `!"super"` guard mirrors `method_call`: a parenless
 # `super x` at statement level routes to `super_expr` (via expression_stmt),
 # not to a spurious paren-less call to a method named `super`.
-method_call_no_paren = ( NAME | !"super" KEYWORD ) expression { COMMA expression } ;
+#
+# Bug fix — bare comparison/logical statement mis-lowered as a paren-less
+# call.  `<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have no dedicated token type
+# (`classify_op_token` in ruby-lexer, by design, leaves every operator
+# lexeme without one on `TokenType::Name` — "the parser dispatches by
+# value").  `factor`'s bare `NAME` alternative doesn't check a Name token's
+# VALUE, so for a bare statement like `x > 2`, this rule matched `x` as the
+# callee and then happily consumed the `>` token AS THE CALL'S SOLE
+# ARGUMENT (an ordinary-looking `factor → NAME` atom, since nothing here
+# excludes an operator-shaped value) — leaving `2` behind as an unrelated
+# SECOND statement.  Lowering that argument then emitted a `DirectCall` to
+# whatever the bare name resolved to (here, literally `x` — the *receiver*,
+# reused as if it were a callee), which `semantic-ir`'s validator correctly
+# rejected as a call to an unknown function.  (`==` and `<=>` were
+# accidentally immune: `classify_op_token` gives `==` its own dedicated
+# `EqualsEquals` type, and `<=>` apparently follows a different path, so
+# neither is `TokenType::Name` and `factor`'s `NAME` alternative can't touch
+# them.)  The fix: negative-lookahead these operator lexemes right after the
+# leading name, so `method_call_no_paren` itself fails to match (rather than
+# succeeding on a malformed one-token "argument") and the `statement` /
+# `modifier_statement` alternation falls through to `expression_stmt`, which
+# parses the WHOLE `x > 2` correctly via `comparison`/`logical_and`/
+# `logical_or`.  (`**`/bitwise `<<`/`>>`/`^`/`&`/`|` are NOT included: this
+# grammar has no binary-operator rule for them at all — `x ** 2` was never a
+# supported expression, so there is no correct fallback parse to preserve;
+# only the operators actually implemented in `comparison`/`logical_and`/
+# `logical_or` are guarded here.)
+method_call_no_paren = ( NAME | !"super" KEYWORD )
+    !"<" !">" !"<=" !">=" !"!=" !"&&" !"||"
+    expression { COMMA expression } ;
 expression_stmt = expression ;
 # Phase 6i — comparison operators at the top of the precedence pyramid.
 #
