@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card drain-resistance validation.
+1. Rust Berkeley SPICE MOS model-card source-resistance validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `RD` values before lowering MOS
+   - Reject negative and non-finite model-card `RS` values before lowering MOS
      elements into engine parameters.
-   - Preserve zero and positive drain resistances.
+   - Preserve zero and positive source resistances.
 
 ## Completed Slices
 
@@ -4065,12 +4065,17 @@ the Rust, Python, and TypeScript surfaces together.
      `L - 2*LD <= 0`, are rejected before lowering MOS elements.
    - Valid zero and positive lateral-diffusion lengths remain accepted.
 
+358. Rust Berkeley SPICE MOS model-card drain-resistance validation.
+   - Status: completed in PR 9543.
+   - Negative and non-finite model-card `RD` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive drain resistances remain accepted.
+
 ## Backlog
 
 1. Rust Berkeley SPICE MOS model-card validation follow-ups.
-   - Validate the remaining facade gaps in priority order: source resistance
-     `RS`, sheet resistance `RSH`, flicker-noise coefficient `KF`, and
-     flicker-noise exponent `AF`.
+   - Validate the remaining facade gaps in priority order: sheet resistance
+     `RSH`, flicker-noise coefficient `KF`, and flicker-noise exponent `AF`.
    - Reuse the finite non-negative contracts and diagnostics already aligned
      across the Rust, Python, and TypeScript engines.
 
