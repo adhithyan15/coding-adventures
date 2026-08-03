@@ -2,6 +2,17 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.7.1 — regression tests for a `ruby-parser` grammar fix
+
+No behavior change in this crate — the actual fix (a bare comparison/logical
+statement, e.g. `x > 2`, mis-parsing as a paren-less call and splitting into
+two statements) lives entirely in `coding-adventures-ruby-parser`'s
+`ruby.grammar` (see that crate's 0.6.0 CHANGELOG entry). Adds regression
+tests here at the lowering/validation layer — the level a consumer would
+actually notice the bug at — covering the bare-statement, block-tail, and
+`def`-tail positions, plus a control case pinning that the (deliberately
+unguarded) bitwise operators remain unchanged.
+
 ## 0.7.0 — lift a class CONSTANT to its name for `is_a?` / `when SomeClass`
 
 `case x when Integer` and `x.is_a?(Integer)` compiled on **Python alone**. Both

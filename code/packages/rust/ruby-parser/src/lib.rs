@@ -5053,5 +5053,61 @@ mod tests {
     fn test_reasonable_nesting_stays_under_the_cap() {
         assert!(try_parse(&nested_paren_source(10)).is_ok());
     }
+
+    // -------------------------------------------------------------------
+    // Bug fix: a bare comparison/logical statement must parse as ONE
+    // statement, not split across a mis-parsed `method_call_no_paren` and a
+    // leftover operand.
+    //
+    // `<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have no dedicated lexer token
+    // type (`classify_op_token` in `ruby-lexer` deliberately leaves every
+    // operator lexeme without one on `TokenType::Name` — "the parser
+    // dispatches by value"). `factor`'s bare `NAME` alternative doesn't
+    // check a Name token's VALUE, so `method_call_no_paren = ( NAME | ... )
+    // expression { ... }` could match `x` as the callee and then swallow the
+    // operator token itself as an ordinary name-shaped "argument" — e.g.
+    // `x > 2` parsed as TWO statements (`x(>)` and a leftover `2`) instead of
+    // one (`x > 2`). Fixed by a negative lookahead in `method_call_no_paren`
+    // (`ruby.grammar`) for these operators, so the rule fails to match and
+    // `expression_stmt` correctly parses the whole comparison/logical chain.
+    // -------------------------------------------------------------------
+
+    /// `==` has its own dedicated `EqualsEquals` token type, so it was
+    /// accidentally already immune — included as a same-shape control case.
+    #[test]
+    fn test_bare_comparison_statement_parses_as_one_statement() {
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||", "=="] {
+            let ast = parse_ruby(&format!("x = 3\nx {op} 2\n"));
+            assert_program_root(&ast);
+            assert_eq!(
+                count_statements(&ast),
+                2,
+                "`x = 3` then `x {op} 2` should be exactly two statements, not \
+                 three (a mis-parsed call plus a leftover operand)"
+            );
+        }
+    }
+
+    /// `**`/`<<`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule at
+    /// all in this Ruby subset (only used elsewhere: `**`/`&` as call-arg
+    /// prefixes, `<<` for singleton-class, `|` for block params, `^` for pin
+    /// patterns) — so the fix does NOT guard them; there is no correct
+    /// fallback parse to preserve for e.g. `x << 2`. This pins that they are
+    /// UNCHANGED (still split into three statements), so a future
+    /// contributor doesn't assume this fix silently added bitwise-operator
+    /// support.
+    #[test]
+    fn test_unsupported_bitwise_operators_still_split_unchanged() {
+        for op in ["**", "<<", ">>", "^", "&", "|"] {
+            let ast = parse_ruby(&format!("x = 3\nx {op} 2\n"));
+            assert_program_root(&ast);
+            assert_eq!(
+                count_statements(&ast),
+                3,
+                "`x {op} 2` is not a supported binary expression here; it \
+                 should still split into three statements (unchanged)"
+            );
+        }
+    }
 }
 

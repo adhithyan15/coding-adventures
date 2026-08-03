@@ -9351,4 +9351,95 @@ b = "y"
             result.errors().collect::<Vec<_>>()
         );
     }
+
+    // Regression for a grammar bug: `<`, `>`, `<=`, `>=`, `!=`, `&&`, `||` have
+    // no dedicated lexer token type (`classify_op_token` in `ruby-lexer`
+    // deliberately leaves every operator lexeme without one on
+    // `TokenType::Name` — "the parser dispatches by value"), so `factor`'s
+    // bare `NAME` alternative could match one of THEM too. A bare statement
+    // like `x > 2` mis-parsed as `method_call_no_paren` — `x` as the callee,
+    // the `>` token swallowed whole as if it were an ordinary name-shaped
+    // argument — leaving `2` behind as an unrelated second statement, and
+    // lowering the malformed "argument" emitted a `DirectCall` to whatever
+    // that bare name resolved to (here, `x` itself), which the SIR validator
+    // correctly rejected as a call to an unknown function. Fixed by a
+    // negative-lookahead in `method_call_no_paren` (`ruby.grammar`) so it
+    // fails to match on these operators and `expression_stmt` (`comparison`/
+    // `logical_and`/`logical_or`) parses the whole expression correctly
+    // instead. `==` was accidentally already immune (its own dedicated
+    // `EqualsEquals` token type) — included below as a same-shape control
+    // case that must keep passing. (`<=>` is a SEPARATE, pre-existing,
+    // out-of-scope gap: it isn't in `comparison`'s operator set at all, so it
+    // was never supported as a bare statement or otherwise — not touched
+    // here.)
+    #[test]
+    fn bare_comparison_statement_validates() {
+        // The BARE (unwrapped) shape that originally triggered the bug — as
+        // opposed to `puts(x > 2)`, where the comparison is nested as a call
+        // ARGUMENT and always worked. `==` was accidentally already immune
+        // (see the module-level comment above) — included as a same-shape
+        // control case that must keep validating.
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||", "=="] {
+            let src = format!("x = 3\nx {op} 2\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "bare `x {op} 2` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bare_comparison_in_block_tail_position_validates() {
+        // The shape that originally surfaced the bug: a comparison as a
+        // block's IMPLICIT RETURN value (`select`/`any?`/etc.'s predicate).
+        for op in ["<", ">", "<=", ">=", "!="] {
+            let src = format!("puts [1, 2, 3].select {{ |x| x {op} 2 }}\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "`{{ |x| x {op} 2 }}` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bare_comparison_in_def_tail_position_validates() {
+        for op in ["<", ">", "<=", ">=", "!=", "&&", "||"] {
+            let src = format!("def f(x)\n  x {op} 2\nend\nputs f(3)\n");
+            let m = lower(&src);
+            let result = semantic_ir::validate(&m);
+            assert!(
+                result.is_ok(),
+                "`def f(x); x {op} 2; end` should validate: {:?}",
+                result.errors().collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn bitwise_operators_are_still_cleanly_unsupported_not_mis_parsed() {
+        // `**`/`<<`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
+        // this Ruby subset at all (only used elsewhere: `**`/`&` as call-arg
+        // prefixes, `<<` for singleton-class, `|` for block params, `^` for
+        // pin patterns) — so the fix deliberately does NOT guard them: there
+        // is no correct fallback parse to preserve for `x << 2`. This pins
+        // that they remain UNCHANGED (still lower as separate statements,
+        // same as before the fix), so a future contributor doesn't assume
+        // this fix silently added bitwise-operator support.
+        for op in ["**", "<<", ">>", "^", "&", "|"] {
+            let src = format!("x = 3\nx {op} 2\n");
+            let m = lower(&src);
+            assert_eq!(
+                m.functions.iter().find(|f| f.name == "main").unwrap().body.stmts.len(),
+                2,
+                "`x {op} 2` is not a supported binary expression here; it should \
+                 still split into two statements (unchanged), not one: {src:?}"
+            );
+        }
+    }
 }
