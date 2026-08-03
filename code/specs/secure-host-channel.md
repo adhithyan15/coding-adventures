@@ -148,39 +148,44 @@ established before any Host Protocol message flows:
 ORCHESTRATOR                                          CHILD HOST PROCESS
 ────────────                                          ──────────────────
 
-(holds long-term identity key OIK from vault-key-custody)
-generate per-spawn ephemeral X25519 key OEK
-publish PreKeyBundle{OIK_pub, OEK_pub, signature}
-to a fresh in-memory location
+(holds long-term identity key OIK after vault-key-custody unlock)
+generate a fresh per-spawn signed X25519 prekey OSPK
+build the standard X3DH PreKeyBundle
+  { OIK_x25519_pub, OIK_ed25519_pub,
+    OSPK_pub, OIK_signature(OSPK_pub) }
 
 spawn child process with:
   - argv: <path to host package>
   - env:  CHANNEL_BOOTSTRAP_FD=3  (the fd carrying bootstrap)
   - fd 3: read end of pipe carrying:
-          { protocol_version: "1.0",
-            orch_prekey_bundle: { OIK_pub, OEK_pub, sig },
-            child_session_id:   uuid,
-            channel_aad_prefix: "host://<child_id>/<session_id>" }
+          a bounded, versioned BootstrapOffer containing:
+          { host_id, canonical UUID-v7 session_id,
+            orch_prekey_bundle }
                                                        │
                                                        ▼
                                                  read bootstrap from fd 3
                                                  generate child identity key CIK
-                                                 generate child ephemeral key CEK
+                                                 (X3DH generates a single-use
+                                                  child ephemeral key CEK)
 
                                                  ChannelInitiator::open(
                                                    identity = CIK,
-                                                   bundle   = OIK+OEK,
+                                                   bundle   = OIK+OSPK,
                                                    payload  = "hello",
-                                                   aad      = channel_aad_prefix)
+                                                   aad      = bootstrap_aad(
+                                                                host_id,
+                                                                session_id))
                                                  produces first wire message
 
-                                                 send first wire message to
+                                                 send ClientHello containing
+                                                 CIK_x25519_pub and the first
+                                                 vault-channel wire message to
                                                  orchestrator over the bidirectional
                                                  transport (e.g., stdin/stdout)
 
-orch reads first wire message
+orch reads ClientHello
 ChannelResponder::accept(...)
-recovers child's ephemeral key CEK_pub
+uses CIK_x25519_pub plus the embedded CEK_pub
 both sides now share a ratchet root
                                                        ◄── ratcheted from here on ──►
 
@@ -198,10 +203,10 @@ Properties this gives us:
    identity key from the moment of spawn, the attacker cannot impersonate
    the orchestrator to other children.
 
-2. The orchestrator's per-spawn ephemeral key OEK is rotated on every
-   spawn. If a child is compromised and exfiltrates OEK_pub plus its own
+2. The orchestrator's per-spawn signed prekey OSPK is rotated on every
+   spawn. If a child is compromised and exfiltrates OSPK_pub plus its own
    state, the attacker still cannot read other children's traffic; their
-   X3DH used a different OEK.
+   X3DH used a different OSPK.
 
 3. The bootstrap travels over a fresh pipe fd known only to the parent and
    the immediate child. It does not pass through stdin/stdout (which a
@@ -209,10 +214,18 @@ Properties this gives us:
    environment variables (which could be inspected by a sibling process
    on a non-sandboxed system).
 
-4. The channel AAD prefix binds every encrypted message to the specific
-   child and session. A captured ciphertext from one session cannot be
-   replayed into another — the AEAD verification fails because the AAD
-   does not match.
+4. The AAD is derived internally from the protocol domain, host id,
+   session id, direction, and sequence. Callers cannot accidentally omit
+   or vary one of those fields. A captured ciphertext from one session
+   cannot be replayed into another — the AEAD verification fails because
+   the AAD does not match.
+
+The protocol kernel does not open file descriptors or choose a transport.
+It encodes/decodes the offer and hello and turns plaintext into bounded wire
+frames. The process supervisor is responsible for carrying those byte strings
+over an inherited pipe, stdio, a Unix socket, or a named pipe. Keeping I/O
+behind that boundary makes the cryptographic state machine deterministic and
+portable across all three CI operating systems.
 
 ### Per-Message Encryption
 
@@ -221,17 +234,25 @@ chunk — passes through the channel as an AEAD ciphertext:
 
 ```
 plaintext  = utf-8 json (a single Host Protocol message)
-aad        = channel_aad_prefix || ":" || direction || ":" || sequence
+aad        = len(domain) || domain || len(host_id) || host_id
+             || session_id || direction_tag || sequence_be_u64
 ciphertext = vault_secure_channel.send(plaintext, aad)
 ```
 
-The `direction` is `"orch"` or `"child"`; the `sequence` is a monotonically
-increasing per-direction counter. Including direction in AAD prevents an
+The direction is an unambiguous one-byte tag and the sequence is a monotonically
+increasing big-endian `u64` per direction. Length-prefixing variable fields
+prevents concatenation ambiguity. Including direction in AAD prevents an
 attacker from replaying a child's request as if it came from the
-orchestrator.
+orchestrator. Sequence exhaustion closes the channel rather than wrapping.
 
 The Double Ratchet's internal counters and DH ratchet steps are managed by
 `vault-secure-channel`; this spec does not override them.
+
+If AEAD authentication fails, the protocol kernel permanently closes that
+channel instance. The underlying ratchet consumes key material while attempting
+decryption, so retrying after an authentication failure would operate from an
+ambiguous state. Structural frame errors are rejected before invoking the
+ratchet and do not advance the receive sequence.
 
 ### Key Rotation Schedule
 
@@ -554,22 +575,31 @@ ones. A replay window of 10,000 IDs is maintained per origin.
 
 ## Wire Format
 
-Every encrypted frame on the wire:
+Bootstrap and encrypted records use separate magic values and one common
+version. Every encrypted data frame on the wire is:
 
 ```
 ┌──────────────┬────────────────────────────────────────────────┐
-│ length: u32  │ ciphertext: vault-secure-channel format         │
-│ big-endian   │   First message:  "C1" || ek_pub(32) || dr_hdr  │
-│ (payload     │                       (40) || ct_len(4) || ct   │
-│  size)       │   Subsequent:     "CN" || dr_hdr(40) ||         │
-│              │                       ct_len(4) || ct           │
+│ "D18F"       │ version │ direction │ session UUID │ sequence  │
+├──────────────┼─────────┴───────────┴──────────────┴───────────┤
+│ length: u32  │ vault-secure-channel ciphertext                │
+│ big-endian   │ ("CN" || DR header || inner length || AEAD)     │
 └──────────────┴────────────────────────────────────────────────┘
 ```
 
-The outer length prefix is identical across transports (stdio,
-Unix socket, named pipe). The inner payload is exactly what
-`vault-secure-channel` produces — no double-wrapping, no extra
-header.
+The host frame header is authenticated indirectly because its direction,
+session, and sequence fields are reconstructed as AEAD AAD. The receiver
+validates magic, version, direction, canonical UUID-v7 bits, expected sequence,
+and the declared ciphertext length before copying or decrypting ciphertext.
+Unknown versions, truncated records, padded records, wrong-session records,
+wrong-direction records, oversized lengths, and trailing bytes fail closed.
+
+`BootstrapOffer` uses magic `D18O`; `ClientHello` uses magic `D18H`. Both carry
+the same version, bounded host id, and canonical UUID-v7 session id as the data
+frame. The offer additionally carries the orchestrator X3DH public bundle. The
+hello additionally carries the child's X25519 identity public key and a bounded
+vault `FirstMessage`. Each decoder validates every declared length before
+copying the corresponding bytes and requires exact end-of-record consumption.
 
 For stdio transport, the line-delimited JSON format from
 `host-protocol.md` is **replaced** by length-prefixed framing once the
@@ -582,10 +612,10 @@ frames).
 without decryption. Streaming large payloads is done with multiple
 chunked frames (as defined in `host-protocol.md`).
 
-**Replay window:** The Double Ratchet inherently handles in-order
-delivery; out-of-order frames within a small window (default 16) are
-buffered and processed when the gap fills. Frames more than 16 sequence
-numbers behind the highest seen are rejected as replays.
+**Replay policy:** V1 supervisor transports are ordered byte streams, so the
+protocol kernel requires the exact next sequence. Replays and gaps fail before
+decryption. A future datagram adapter may add a bounded reorder window outside
+the cryptographic state machine; it must not weaken the in-order stream mode.
 
 ---
 
@@ -617,36 +647,34 @@ Rust implementation, matching the existing vault crates.
 // Channel handle (used by both orchestrator and child sides)
 // ─────────────────────────────────────────────────────────────────
 
+pub struct OrchestratorBootstrap { /* OIK + per-spawn OSPK */ }
+pub struct ChildBootstrap { /* per-spawn CIK */ }
+pub struct BootstrapOffer(Vec<u8>);
+pub struct ClientHello(Vec<u8>);
+
 pub struct SecureHostChannel {
-    /* opaque internals: ratchet, queues, window, circuit */
+    /* opaque ratchet, role, host/session identity, and counters */
+}
+
+impl OrchestratorBootstrap {
+    pub fn new(identity: IdentityKeyPair, host: HostId, session: SessionId)
+        -> Result<Self, ChannelError>;
+    pub fn offer(&self) -> Result<BootstrapOffer, ChannelError>;
+    pub fn accept(self, hello: &ClientHello)
+        -> Result<SecureHostChannel, ChannelError>;
+}
+
+impl ChildBootstrap {
+    pub fn open(offer: &BootstrapOffer)
+        -> Result<(SecureHostChannel, ClientHello), ChannelError>;
 }
 
 impl SecureHostChannel {
-    /// Bootstrap as the orchestrator side.
-    pub fn open_orchestrator(
-        identity:       &IdentityKey,
-        per_spawn:      EphemeralKey,
-        child_session:  SessionId,
-        transport:      Box<dyn Transport>,
-    ) -> Result<Self, ChannelError>;
-
-    /// Bootstrap as the child side. Reads bootstrap from the fd
-    /// the parent supplied, then completes X3DH.
-    pub fn open_child(
-        bootstrap_fd:   RawFd,
-        transport:      Box<dyn Transport>,
-    ) -> Result<Self, ChannelError>;
-
-    /// Send a Host Protocol message. Returns once the message is
-    /// queued; flow-control backpressure may apply.
-    pub fn send(&mut self, msg: HostProtocolMessage) -> Result<(), SendError>;
-
-    /// Receive the next decrypted message. Blocks until one is available
-    /// or the channel is closed.
-    pub fn recv(&mut self) -> Result<HostProtocolMessage, RecvError>;
-
-    /// Close the channel cleanly. Zeroizes keys.
-    pub fn close(self) -> Result<(), ChannelError>;
+    pub fn send(&mut self, plaintext: &[u8]) -> Result<Vec<u8>, ChannelError>;
+    pub fn receive(&mut self, frame: &[u8]) -> Result<Vec<u8>, ChannelError>;
+    pub fn role(&self) -> ChannelRole;
+    pub fn host_id(&self) -> &HostId;
+    pub fn session_id(&self) -> SessionId;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -654,24 +682,18 @@ impl SecureHostChannel {
 // ─────────────────────────────────────────────────────────────────
 
 pub enum ChannelError {
-    BootstrapFailed(String),
-    Crypto(CryptoError),
-    Transport(io::Error),
-    PolicyViolation,
-}
-
-pub enum SendError {
-    Backpressure,           // channel queue full; try again later
-    CircuitOpen,            // child's circuit breaker is open
+    InvalidHostId,
+    InvalidSessionId,
+    MalformedBootstrap,
+    MalformedFrame,
+    UnsupportedVersion,
+    FrameTooLarge,
+    WrongSession,
+    WrongDirection,
+    UnexpectedSequence,
+    SequenceExhausted,
+    Crypto,
     Closed,
-    Crypto(CryptoError),
-}
-
-pub enum RecvError {
-    Decryption,             // AEAD verification failed
-    InvalidFrame,           // malformed wire format
-    Closed,
-    PolicyViolation,        // rate limit, oversize frame, etc.
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -686,7 +708,6 @@ pub struct ChannelPolicy {
     pub ssthresh:              u32,
     pub max_cwnd:              u32,
     pub max_frame_size:        u32,
-    pub replay_window:         u32,
     pub circuit_failure_threshold: u32,
     pub circuit_cooldown:      Duration,
     pub idle_dh_rotation:      Duration,
@@ -703,7 +724,6 @@ impl Default for ChannelPolicy {
             ssthresh:              64,
             max_cwnd:              256,
             max_frame_size:        1 * 1024 * 1024,
-            replay_window:         16,
             circuit_failure_threshold: 10,
             circuit_cooldown:      Duration::from_secs(30),
             idle_dh_rotation:      Duration::from_secs(60),
@@ -713,6 +733,15 @@ impl Default for ChannelPolicy {
 }
 ```
 
+The first implementation slice is the transport-independent protocol kernel:
+X3DH bootstrap, strict offer/hello/frame codecs, AAD construction, authenticated
+encryption, exact stream sequencing, and fail-closed state transitions. Queueing,
+token buckets, AIMD, circuit breakers, timers, process termination, and panic
+broadcast remain supervisor/transport layers. They retain the acceptance tests
+below and are not silently approximated inside the cryptographic kernel. A
+future datagram adapter may define its own bounded reorder policy; the base
+`ChannelPolicy` deliberately has no replay-window field.
+
 ---
 
 ## Test Strategy
@@ -720,7 +749,7 @@ impl Default for ChannelPolicy {
 ### Unit Tests
 
 1. **Bootstrap correctness.** Orchestrator and child complete the X3DH
-   handshake; both derive the same ratchet root.
+   handshake and exchange authenticated application messages.
 2. **Per-message encryption / decryption round-trip.** Send 1000 messages
    in each direction; every one decrypts correctly with the right AAD.
 3. **Forward secrecy.** Snapshot the channel state at message N. Modify
@@ -732,72 +761,78 @@ impl Default for ChannelPolicy {
 5. **Per-child isolation.** Bootstrap two children with the same
    orchestrator. Snapshot child A's keys. Verify they cannot decrypt
    child B's traffic.
-6. **AAD binding.** Tamper with channel AAD prefix; verify AEAD rejects.
-7. **Replay rejection.** Re-send a captured ciphertext; verify rejected
-   by the replay window.
-8. **Wire format.** Malformed frame headers (length too large, length
-   too small, truncated payload) are rejected without decryption attempt.
+6. **AAD binding.** Reuse a frame with a different host, session, direction,
+   or sequence; verify it is rejected.
+7. **Replay rejection.** Re-send a captured ciphertext; verify the exact-next
+   sequence policy rejects it before decryption.
+8. **Strict wire format.** Every truncated prefix of an offer, hello, and frame
+   is rejected. Unknown versions, invalid host/session values, wrong direction,
+   gaps, oversized declared lengths, padding, and trailing bytes are rejected.
+9. **State transitions.** A structural rejection does not advance the receive
+   sequence, so the valid expected frame still succeeds. An AEAD authentication
+   failure closes the channel and all subsequent operations return `Closed`.
+10. **Sequence exhaustion.** Sending or receiving never wraps a `u64` sequence.
 
 ### DOS Protection Tests
 
-9. **Token bucket.** A child sending at 2x its budget receives
+11. **Token bucket.** A child sending at 2x its budget receives
    `RateLimited` for the excess. Tokens refill at the configured rate.
-10. **AIMD slow start.** With cwnd=4 and ssthresh=64, after 4 successful
+12. **AIMD slow start.** With cwnd=4 and ssthresh=64, after 4 successful
     round-trips cwnd reaches 64.
-11. **AIMD multiplicative decrease.** Inject a congestion signal at
+13. **AIMD multiplicative decrease.** Inject a congestion signal at
     cwnd=128; verify cwnd halves to 64 and growth resumes linearly.
-12. **Mailbox saturation.** Drive a child's inbound rate above the
+14. **Mailbox saturation.** Drive a child's inbound rate above the
     orchestrator's drain rate; verify queue depth triggers cwnd
     reduction.
-13. **Circuit open.** Trigger 10 consecutive `RateLimited` responses;
+15. **Circuit open.** Trigger 10 consecutive `RateLimited` responses;
     verify circuit opens, all subsequent inbound messages dropped
     without decryption.
-14. **Circuit half-open.** After the cooldown, one probe is permitted.
+16. **Circuit half-open.** After the cooldown, one probe is permitted.
     Success closes the circuit; failure re-opens with reset timer.
-15. **Priority starvation.** A child sending many `system.log`
+17. **Priority starvation.** A child sending many `system.log`
     notifications cannot delay another child's `network.fetch` requests.
-16. **No cross-child impact.** A misbehaving child A (max rate, max
+18. **No cross-child impact.** A misbehaving child A (max rate, max
     queue depth, circuit thrashing) does not affect throughput or
     latency for child B.
 
 ### Panic Broadcast Tests
 
-17. **Panic on circuit open.** Trigger a circuit open; verify a
+19. **Panic on circuit open.** Trigger a circuit open; verify a
     PanicSignal with severity Warn is emitted on the parent panic
     channel within 100 ms.
-18. **Panic escalation.** Open two circuits within 60 seconds; verify
+20. **Panic escalation.** Open two circuits within 60 seconds; verify
     severity escalates to Alert.
-19. **Brutal kill on panic.** Parent receives a panic signal naming a
+21. **Brutal kill on panic.** Parent receives a panic signal naming a
     child; verify the child process is killed within 100 ms without a
     graceful shutdown attempt.
-20. **Quarantine.** A killed child is marked quarantined; the
+22. **Quarantine.** A killed child is marked quarantined; the
     supervisor refuses to restart it for the cooldown period; after
     cooldown a single trial restart is permitted; a fresh panic doubles
     the cooldown.
-21. **Threshold tightening on siblings.** A panic in subtree X causes
+23. **Threshold tightening on siblings.** A panic in subtree X causes
     siblings of X to halve their bucket and cwnd; thresholds restore
     after 60 seconds of quiet.
-22. **Panic forging defense.** A child attempting to send a forged
+24. **Panic forging defense.** A child attempting to send a forged
     panic about its sibling cannot — the panic channel keys are not
     available to children, only to orchestrators.
-23. **Panic replay rejection.** Re-sending a captured panic signal is
+25. **Panic replay rejection.** Re-sending a captured panic signal is
     rejected by the per-origin replay window.
-24. **Tree-wide quarantine.** Five distinct alerts within 60 seconds
+26. **Tree-wide quarantine.** Five distinct alerts within 60 seconds
     across the tree triggers tree-wide quarantine at the root: no new
     spawns, no manifest installs, human paged.
 
 ### Integration Tests
 
-17. **End-to-end with two real children.** Spawn two child host
+27. **End-to-end with two real children.** Spawn two child host
     processes, exchange thousands of Host Protocol calls in parallel,
     verify all complete correctly.
-18. **Child crash mid-channel.** Kill a child while it has outstanding
+28. **Child crash mid-channel.** Kill a child while it has outstanding
     requests. Orchestrator detects via transport EOF, zeroizes keys,
     notifies supervisor.
-19. **Forced re-handshake.** Run a channel for 24 hours simulated time;
+29. **Forced re-handshake.** Run a channel for 24 hours simulated time;
     verify the full re-handshake fires and the new keys differ from the
     old.
-20. **Compromise simulation.** Capture a snapshot of one child's
+30. **Compromise simulation.** Capture a snapshot of one child's
     ratchet state. Continue running for one ratchet step. Verify the
     snapshot can no longer decrypt new messages.
 
