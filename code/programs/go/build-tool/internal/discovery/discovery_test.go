@@ -28,6 +28,15 @@ func makeFixture(t *testing.T, tree map[string]string) string {
 	return root
 }
 
+func mustDiscoverPackages(t *testing.T, root string) []Package {
+	t.Helper()
+	packages, err := DiscoverPackages(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return packages
+}
+
 // ---------------------------------------------------------------------------
 // Tests for readLines
 // ---------------------------------------------------------------------------
@@ -338,7 +347,7 @@ func TestDiscoverSimplePackage(t *testing.T) {
 		"packages/python/pkg-a/src/main.py":    "print('hello')\n",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 1 {
 		t.Fatalf("expected 1 package, got %d", len(packages))
 	}
@@ -361,7 +370,7 @@ func TestDiscoverMultiplePackages(t *testing.T) {
 		"packages/python/pkg-b/BUILD": "echo b",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 2 {
 		t.Fatalf("expected 2 packages, got %d", len(packages))
 	}
@@ -376,7 +385,7 @@ func TestDiscoverMultiplePackages(t *testing.T) {
 
 func TestDiscoverEmptyDirectory(t *testing.T) {
 	root := t.TempDir()
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 0 {
 		t.Fatalf("expected 0 packages, got %d", len(packages))
 	}
@@ -386,7 +395,7 @@ func TestDiscoverNoBUILD(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"subdir/nothing": "just a file",
 	})
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 0 {
 		t.Fatalf("expected 0 packages, got %d", len(packages))
 	}
@@ -395,17 +404,17 @@ func TestDiscoverNoBUILD(t *testing.T) {
 func TestDiscoverDiamondStructure(t *testing.T) {
 	// Four packages at the same level — the diamond dependency shape.
 	root := makeFixture(t, map[string]string{
-		"pkgs/python/pkg-a/BUILD":       "echo a",
-		"pkgs/python/pkg-a/src/main.py": "pass",
-		"pkgs/python/pkg-b/BUILD":       "echo b",
-		"pkgs/python/pkg-b/src/main.py": "pass",
-		"pkgs/python/pkg-c/BUILD":       "echo c",
-		"pkgs/python/pkg-c/src/main.py": "pass",
-		"pkgs/python/pkg-d/BUILD":       "echo d",
-		"pkgs/python/pkg-d/src/main.py": "pass",
+		"packages/python/pkg-a/BUILD":       "echo a",
+		"packages/python/pkg-a/src/main.py": "pass",
+		"packages/python/pkg-b/BUILD":       "echo b",
+		"packages/python/pkg-b/src/main.py": "pass",
+		"packages/python/pkg-c/BUILD":       "echo c",
+		"packages/python/pkg-c/src/main.py": "pass",
+		"packages/python/pkg-d/BUILD":       "echo d",
+		"packages/python/pkg-d/src/main.py": "pass",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 4 {
 		t.Fatalf("expected 4 packages, got %d", len(packages))
 	}
@@ -428,7 +437,7 @@ func TestDiscoverMultiLanguage(t *testing.T) {
 		"programs/python/app/BUILD":    "echo app",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 6 {
 		t.Fatalf("expected 6 packages, got %d", len(packages))
 	}
@@ -449,7 +458,7 @@ func TestDiscoverBUILDStopsRecursion(t *testing.T) {
 		"pkg-a/sub/BUILD": "echo sub",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 1 {
 		t.Fatalf("expected 1 package (BUILD stops recursion), got %d", len(packages))
 	}
@@ -470,7 +479,7 @@ func TestDiscoverSkipsSkipListDirs(t *testing.T) {
 		"packages/python/pkg-b/__pycache__/BUILD":  "echo pycache",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	// Should only find pkg-a and pkg-b (BUILD stops recursion at pkg level,
 	// so .venv and node_modules inside pkg-a are irrelevant). .git at root
 	// is skipped.
@@ -486,7 +495,7 @@ func TestDiscoverSkipsTargetDir(t *testing.T) {
 		"packages/rust/lib-rs/target/debug/BUILD": "echo target",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	// BUILD at lib-rs stops recursion, so target is not reached anyway.
 	// But verify the package is found.
 	if len(packages) != 1 {
@@ -505,7 +514,7 @@ func TestDiscoverSkipsRootLevelSkipDirs(t *testing.T) {
 		"vendor/some-dep/BUILD":        "echo vendor",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 1 {
 		t.Fatalf("expected 1 package, got %d: %v", len(packages), packages)
 	}
@@ -521,7 +530,7 @@ func TestDiscoverSkipsSpecificationFixtureTrees(t *testing.T) {
 		"specs/fixtures/scaffold-generator/program/BUILD": "opam exec -- dune build",
 	})
 
-	packages := DiscoverPackages(root)
+	packages := mustDiscoverPackages(t, root)
 	if len(packages) != 1 {
 		t.Fatalf("expected only the real package, got %d: %v", len(packages), packages)
 	}

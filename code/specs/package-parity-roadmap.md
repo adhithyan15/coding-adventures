@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 780 | 10,920 |
+| Present in one language | 783 | 10,962 |
 
-The loop must not start by attempting 10,920 singleton ports. It should finish
+The loop must not start by attempting 10,962 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`29d78677fe65719e0b84e2441e9a568a67e7f4f4` is collision-clean at 1,230
-normalized implementation identities, 4,378 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 780 singletons, 585
+`b42d1683d85daa9fd26cb96da3d928612034aa24` is collision-clean at 1,233
+normalized implementation identities, 4,381 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 783 singletons, 588
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -242,6 +242,27 @@ filesystems, networks, package verification, and supervisor effects remain
 injected or native. Its dedicated backlog owner depends on the secure-host-
 channel contract and therefore remains dependency-blocked.
 
+The `9ad8105f` refresh added `chief-of-staff-process-supervisor`. This crate is
+the concrete native authority behind the portable reconciler and host-control
+contracts: it reads and re-verifies signed package files, spawns, signals, owns,
+and reaps child processes, transports bootstrap records over pipes, and samples
+and sleeps against monotonic time. Its deterministic protocol seams already
+belong to the service-reconciler, host-control, and secure-channel backlog
+owners. A dedicated dependency-blocked review now owns the native-lane
+exceptions; the parity loop must not manufacture unsafe process-control ports.
+
+The `481a30c3` refresh adds `chief-of-staff-orchestrator-core` and
+`venture-browser-cairo`. The Chief core is a zero-capability, transport-
+independent coordinator over injected storage, supervision, authorization,
+and monotonic time. Stable host lifecycle, bounded reconciliation, health,
+clock regression, safe deregistration, authorize-before-mutate channel wiring,
+idempotency, and payload-blind errors now have a dependency-shaped portable
+owner. The Cairo crate centralizes a native RGBA renderer and unsafe Qt,
+Flutter, and Compose C ABIs around `venture-browser-core`; its reusable event,
+navigation, scrolling, hover, link, and projection behavior joins the existing
+Venture bridge owner, while Cairo rendering, pointers, buffers, dynamic
+libraries, and toolkit launch remain native exceptions.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -357,18 +378,31 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   rebased `29d78677` passes 307 Ruby tests at 89.43% line and 72.55% branch
   coverage, all shared fixture consumers, the valid 38-case/61-file corpus,
   Go test/vet/build, dependency and security checks, and the collision-clean
-  1,230-identity inventory without widening the completed evaluator repair;
+  1,230-identity inventory without widening the completed evaluator repair.
+  Guarded squash auto-completion merged PR #9691 as `9ad8105f38` after all 17
+  exact-head checks were terminal: twelve succeeded, four skipped, and one
+  completed neutrally;
 - adjudicate the residual Ruby/Go Elixir resolver semantics after canonical
   identities remove the structural drift. The real 282-package plans differ
   on eleven Go-only and two Ruby-only edges; the Ruby-only pair corresponds to
   declared `grammar_tools` program dependencies, so the follow-up must derive
   language-neutral fixtures from actual Mix metadata instead of assuming that
   either engine is the oracle. This child depends on the identity migration;
-- bring Go discovery to the complete shared language registry. The full-plan
-  comparison finds the same 4,776 package directories in Ruby and Go, but Go
-  classifies all fourteen Mosaic packages and programs as `unknown`. The
-  dedicated child consumes the existing registry and duplicate-identity
-  fixtures and keeps resolver-semantic work separate;
+- bring Go discovery to the complete shared language registry. The selected
+  implementation recognizes every canonical and retained bucket only at an
+  exact `packages` or `programs` boundary, preserves program identities,
+  excludes specification and build-artifact trees, and fails closed on a
+  duplicate with the shared typed, root-redacted diagnostic and CLI exit 2.
+  On rebased `b42d1683`, independent Go and Ruby real plans match all 4,779
+  `(name, language, rel_path)` tuples with zero duplicate or backslash paths,
+  all fourteen Mosaic identities canonical, and only the intentional
+  `unknown/blog` bucket. Exact-head validation passes gofmt, the full Go suite
+  at 73.6% aggregate and 93.9% discovery coverage, vet, race, trimpath build,
+  module verification, zero-reachable-vulnerability govulncheck, the 17+40
+  conformance suites, and the valid 38-case/61-file corpus. The committed Go-
+  lane dry-run selects 13 of 301 packages and skips 288. The full validator
+  separately reproduces the owned 73-gap BUILD debt gate: 12 Python, 3 Swift,
+  and 58 TypeScript. Resolver-semantic work remains a separate child;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

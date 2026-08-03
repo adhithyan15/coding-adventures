@@ -34,13 +34,13 @@
 //
 // # Language inference
 //
-// We infer a package's language from its directory path. If the path contains
-// a known language name as a component under "packages" or "programs", that is
-// the language. The package name is "{language}/{dirname}", e.g.,
-// "python/logic-gates" or "go/directed-graph".
+// We infer a package's language only from the exact bucket immediately below a
+// "packages" or "programs" boundary. Programs retain a "programs" identity
+// segment, for example "go/programs/build-tool".
 package discovery
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -60,11 +60,36 @@ type Package struct {
 	Name          string   // Qualified name, e.g. "python/logic-gates"
 	Path          string   // Absolute path to the package directory
 	BuildCommands []string // Lines from the BUILD file (commands to execute)
-	Language      string   // Inferred language: "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "c", "cpp", "csharp", "fsharp", "dotnet", "starlark", or "unknown"
+	Language      string   // Canonical package/program bucket, or "unknown"
 	BuildContent  string   // Raw BUILD file content (used for Starlark detection)
 	IsStarlark    bool     // Whether this BUILD file is Starlark (vs shell)
 	DeclaredSrcs  []string // Explicit source files from Starlark srcs field
 	DeclaredDeps  []string // Explicit deps from Starlark deps field
+}
+
+// DuplicatePackageIdentityError reports two or more package directories that
+// normalize to one graph identity. Paths are stable repository-relative
+// identities so diagnostics never disclose the checkout root.
+type DuplicatePackageIdentityError struct {
+	Code    string
+	Package string
+	Paths   []string
+}
+
+func (e *DuplicatePackageIdentityError) Error() string {
+	return fmt.Sprintf("%s: package=%s paths=%s", e.Code, e.Package, strings.Join(e.Paths, ","))
+}
+
+// knownLanguages is the canonical discovery registry. The package-parity
+// denominator is defined separately; dotnet remains a shared host bucket.
+var knownLanguages = map[string]bool{
+	"csharp": true, "dart": true, "elixir": true, "fsharp": true,
+	"go": true, "haskell": true, "java": true, "kotlin": true,
+	"lua": true, "perl": true, "python": true, "ruby": true,
+	"rust": true, "swift": true, "typescript": true,
+	"c": true, "cpp": true, "ocaml": true,
+	"wasm": true, "mosaic": true, "twig": true, "starlark": true,
+	"dotnet": true,
 }
 
 // skipDirs is the set of directory names that should never be traversed
@@ -117,25 +142,27 @@ func readLines(filepath string) []string {
 	return lines
 }
 
-// inferLanguage inspects the directory path to determine the programming
-// language. We look for known language names ("python", "ruby", "go", "rust",
-// "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "haskell",
-// "starlark", "c", "cpp", "csharp", "fsharp", "dotnet") as path components.
-// For example, "/repo/code/packages/python/logic-gates" yields "python" and
-// "/repo/code/programs/dotnet/hello-world-csharp" yields "dotnet".
-//
-// The match is by *exact* path component, so "c" matches only a literal `c/`
-// directory (e.g. code/packages/c/ringbuf) — it never matches inside "csharp"
-// or "cpp". Likewise "cpp" matches only a `cpp/` directory.
-func inferLanguage(path string) string {
-	// Split the path into its components and search for a known language.
+// packageBoundary returns the final packages/programs boundary in path. The
+// final boundary is authoritative so nested temporary fixture roots retain
+// their own identity rather than borrowing a bucket from a host checkout.
+func packageBoundary(path string) (kind, bucket string, ok bool) {
 	parts := strings.Split(filepath.ToSlash(path), "/")
-	for _, lang := range []string{"python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "dart", "wasm", "haskell", "starlark", "java", "kotlin", "cpp", "c", "csharp", "fsharp", "dotnet"} {
-		for _, part := range parts {
-			if part == lang {
-				return lang
-			}
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "packages" || parts[index] == "programs" {
+			kind = parts[index]
+			bucket = parts[index+1]
+			ok = true
 		}
+	}
+	return kind, bucket, ok
+}
+
+// inferLanguage accepts only canonical exact boundary buckets. A canonical
+// word elsewhere in the path cannot change an unknown bucket.
+func inferLanguage(path string) string {
+	_, bucket, ok := packageBoundary(path)
+	if ok && knownLanguages[bucket] {
+		return bucket
 	}
 	return "unknown"
 }
@@ -154,11 +181,30 @@ func inferLanguage(path string) string {
 //
 //	"go/programs/grammar-tools"
 func inferPackageName(path, language string) string {
-	normalized := filepath.ToSlash(path)
-	if strings.Contains(normalized, "/programs/") {
+	kind, _, _ := packageBoundary(path)
+	if kind == "programs" {
 		return language + "/programs/" + filepath.Base(path)
 	}
 	return language + "/" + filepath.Base(path)
+}
+
+func repositoryPackagePath(root, packagePath string) string {
+	parts := strings.Split(filepath.ToSlash(packagePath), "/")
+	canonicalStart := -1
+	for index := 0; index+1 < len(parts); index++ {
+		if parts[index] == "code" && (parts[index+1] == "packages" || parts[index+1] == "programs") {
+			canonicalStart = index
+		}
+	}
+	if canonicalStart >= 0 {
+		return strings.Join(parts[canonicalStart:], "/")
+	}
+
+	relative, err := filepath.Rel(root, packagePath)
+	if err == nil && relative != "." && relative != "" && relative != ".." && !strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+		return filepath.ToSlash(relative)
+	}
+	return filepath.Base(packagePath)
 }
 
 // getBuildFile returns the path to the appropriate BUILD file for the current
@@ -292,13 +338,37 @@ func walkDirs(directory string, packages *[]Package) {
 //
 // This is the main entry point for the discovery module. The root
 // parameter should typically be the "code/" directory inside the repo.
-func DiscoverPackages(root string) []Package {
+func DiscoverPackages(root string) ([]Package, error) {
 	var packages []Package
 	walkDirs(root, &packages)
 	sort.Slice(packages, func(i, j int) bool {
+		if packages[i].Name == packages[j].Name {
+			return packages[i].Path < packages[j].Path
+		}
 		return packages[i].Name < packages[j].Name
 	})
-	return packages
+
+	for index := 0; index < len(packages); {
+		end := index + 1
+		for end < len(packages) && packages[end].Name == packages[index].Name {
+			end++
+		}
+		if end-index > 1 {
+			paths := make([]string, 0, end-index)
+			for _, pkg := range packages[index:end] {
+				paths = append(paths, repositoryPackagePath(root, pkg.Path))
+			}
+			sort.Strings(paths)
+			return nil, &DuplicatePackageIdentityError{
+				Code:    "DUPLICATE_PACKAGE_IDENTITY",
+				Package: packages[index].Name,
+				Paths:   paths,
+			}
+		}
+		index = end
+	}
+
+	return packages, nil
 }
 
 // ReadLines is exported for use by the resolver (to read go.mod, etc.).

@@ -66,7 +66,7 @@ On Windows, use the compiled `.exe`:
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, java, kotlin, haskell, dotnet, or all |
+| `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
@@ -77,6 +77,25 @@ contract. In particular, Lua `.rockspec` files must be strict UTF-8. Invalid
 bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
 repository-relative manifest, and return CLI exit code 2 without exposing the
 checkout path or silently replacing input.
+
+## Canonical discovery identities
+
+Discovery uses only the exact bucket immediately below a `packages` or
+`programs` path component. It recognizes every established implementation
+lane, the emerging C, C++, and OCaml lanes, the WASM target, the Mosaic and
+Twig domain languages, the Starlark build language, and the retained shared
+`.NET` host bucket. Programs keep a `programs` segment, such as
+`go/programs/build-tool`, so they cannot collide with a library of the same
+name. Specification fixture trees are not buildable packages.
+
+Discovery fails closed when two directories normalize to the same identity:
+
+```text
+DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,code/packages/beta/demo
+```
+
+The diagnostic contains sorted repository-relative paths, never the checkout
+root, and the CLI returns exit code `2`.
 
 ## Architecture
 
