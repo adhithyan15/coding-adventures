@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate finite, non-negative diode model-card `TT` transit time.
 - Validate positive finite BJT model-card `IS` saturation current.
 - Validate finite, non-negative BJT model-card `TF` and `TR` transit times.
 - Validate BJT model-card `CJC` / `CJC0` / `CBC` base-collector capacitance and

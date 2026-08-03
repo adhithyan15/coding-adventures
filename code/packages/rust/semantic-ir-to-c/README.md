@@ -224,6 +224,17 @@ DoS cap needed, since this runtime's integer is a fixed `int64_t`), and the
 BLOCK-taking `times`/`upto`/`downto`/`step` (a zero `step` stride is a
 documented no-op, never a hang); `to_i`/`to_f` widen to accept a numeric
 receiver alongside their slice-8 String forms.
+`round` was later widened past its slice-9 0-arg form to also accept a
+single `ndigits` argument (matching real Ruby's full dispatch): Integer
+`ndigits >= 0` is a no-op, Integer `ndigits < 0` rounds to the nearest
+`10^(-ndigits)` half-away-from-zero (`1234.round(-2) == 1200`), Float
+`ndigits > 0` rounds to that many decimal places and stays a Float
+(`3.14159.round(2) == 3.14`), and Float `ndigits <= 0` rounds and CONVERTS
+to an Integer (`1234.5.round(-2) == 1200`), each confirmed against a live
+`ruby -e` interpreter. Every path is bounds-capped (19 decimal digits for
+Integer, `double`'s ~17 significant digits for Float) and a round-up carry
+that would need one more digit than `int64_t` holds saturates at
+`INT64_MAX`/`INT64_MIN` rather than wrapping.
 **Slice 10** (Symbol + universal Object/Bool methods): Symbol widens
 `to_s`/`length`/`size`/`empty?`/`upcase`/`downcase`/`to_sym` from the
 slice-1/8 String helpers (`upcase`/`downcase` re-intern as a fresh Symbol,

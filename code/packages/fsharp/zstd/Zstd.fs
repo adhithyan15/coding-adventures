@@ -166,17 +166,33 @@ type Zstd private () =
                 high <- high - 1
                 symbolNext[symbol] <- 1
 
+        // Spread the remaining (non -1) symbols across the table with a SINGLE
+        // pass over symbols in ascending order 0..maxSymbolValue, placing each
+        // symbol's full count immediately when encountered. This is the real
+        // zstd algorithm (FSE_buildDTable_internal's low-probability branch,
+        // verified against the reference C source at github.com/facebook/zstd).
+        //
+        // An earlier revision of this codec (inherited from the same buggy
+        // design as code/packages/java/zstd, code/packages/kotlin/zstd, and
+        // code/packages/rust/zstd — see lessons.md Lesson 96) used a
+        // fabricated two-pass split instead: all count>1 symbols first, then
+        // all count==1 symbols, both in ascending symbol order. That's a
+        // plausible-looking but entirely invented convention with no basis
+        // in the reference algorithm — it produces a completely different
+        // (yet internally self-consistent) table layout, so our own
+        // decoder mirrored our own encoder and every round-trip test passed,
+        // while the real `zstd -d` CLI rejected our output with "Data
+        // corruption detected".
         let mutable position = 0
-        for pass in 0..1 do
-            for symbol in 0..normalized.Length - 1 do
-                let count = normalized[symbol]
-                if count > 0 && ((pass = 0) = (count > 1)) then
-                    symbolNext[symbol] <- count
-                    for _ in 1..count do
-                        symbols[position] <- symbol
+        for symbol in 0..normalized.Length - 1 do
+            let count = normalized[symbol]
+            if count > 0 then
+                symbolNext[symbol] <- count
+                for _ in 1..count do
+                    symbols[position] <- symbol
+                    position <- (position + step) &&& (size - 1)
+                    while position > high do
                         position <- (position + step) &&& (size - 1)
-                        while position > high do
-                            position <- (position + step) &&& (size - 1)
 
         let next = Array.copy symbolNext
         Array.init size (fun index ->
@@ -203,16 +219,18 @@ type Zstd private () =
                 spread[high] <- symbol
                 high <- high - 1
 
+        // Single pass over symbols in ascending order — must mirror
+        // BuildDecodeTable's spread exactly (same reasoning: the real
+        // algorithm has no count>1-vs-count==1 split; see Lesson 96 above).
         let mutable position = 0
-        for pass in 0..1 do
-            for symbol in 0..normalized.Length - 1 do
-                let count = normalized[symbol]
-                if count > 0 && ((pass = 0) = (count > 1)) then
-                    for _ in 1..count do
-                        spread[position] <- symbol
+        for symbol in 0..normalized.Length - 1 do
+            let count = normalized[symbol]
+            if count > 0 then
+                for _ in 1..count do
+                    spread[position] <- symbol
+                    position <- (position + step) &&& (size - 1)
+                    while position > high do
                         position <- (position + step) &&& (size - 1)
-                        while position > high do
-                            position <- (position + step) &&& (size - 1)
 
         let occurrences = Array.zeroCreate<int> normalized.Length
         let states = Array.zeroCreate<int> size
@@ -232,6 +250,10 @@ type Zstd private () =
                       DeltaFindState = cumulative[symbol] - count })
         entries, states
 
+    /// Normal FSE encode transition: flushes bits for the incoming state and
+    /// returns the new state. Used for every sequence EXCEPT the first one
+    /// processed in the reverse encode loop (see EncodeSequences) — that one
+    /// has no incoming state to transition from and must use InitEncodeState.
     static member private EncodeSymbol(state: int, symbol: int, entries: EncodeEntry array, states: int array) =
         if symbol < 0 || symbol >= entries.Length then
             raise (InvalidDataException("FSE symbol is outside the predefined table"))
@@ -242,10 +264,39 @@ type Zstd private () =
         if slot < 0 || slot >= states.Length then raise (InvalidDataException("invalid FSE encoder state"))
         states[slot], bits, value
 
-    static member private DecodeSymbol(state: int, table: DecodeEntry array, reader: ReverseBitReader) =
+    /// Initialise an FSE encoder state directly from a symbol, WITHOUT
+    /// flushing any bits — mirrors real zstd's FSE_initCState2.
+    ///
+    /// RFC 8878's decoder never performs a state-update read after the LAST
+    /// sequence in a block (there's no "next" sequence whose peek needs a
+    /// fresh state) — see DecompressBlock. Symmetrically, the encoder's
+    /// first symbol processed in its reverse loop (which corresponds to
+    /// that same last sequence) cannot derive its starting state via a
+    /// normal EncodeSymbol flush, since there's no bit-consuming update on
+    /// the decode side to produce it — it must be computed directly by this
+    /// formula instead.
+    static member private InitEncodeState(symbol: int, entries: EncodeEntry array, states: int array) =
+        if symbol < 0 || symbol >= entries.Length then
+            raise (InvalidDataException("FSE symbol is outside the predefined table"))
+        let entry = entries[symbol]
+        let bits = (entry.DeltaBits + (1 <<< 15)) >>> 16
+        let value = (bits <<< 16) - entry.DeltaBits
+        let slot = (value >>> bits) + entry.DeltaFindState
+        if slot < 0 || slot >= states.Length then raise (InvalidDataException("invalid FSE encoder state"))
+        states[slot]
+
+    /// PEEK the symbol encoded at the current FSE decoder state. This is a
+    /// bare table lookup — the state itself IS the decode-table index — and
+    /// consumes NO bits from the reader. Only UpdateDecodeState (below)
+    /// reads bits, and only when this isn't the last sequence in the block.
+    static member private PeekEntry(state: int, table: DecodeEntry array) =
         if state < 0 || state >= table.Length then raise (InvalidDataException("invalid FSE decoder state"))
-        let entry = table[state]
-        entry.Symbol, entry.Baseline + reader.ReadBits entry.Bits
+        table[state]
+
+    /// Consume bits to transition an FSE decoder state forward, using the
+    /// entry already peeked via PeekEntry.
+    static member private UpdateDecodeState(entry: DecodeEntry, reader: ReverseBitReader) =
+        entry.Baseline + reader.ReadBits entry.Bits
 
     static member private ValueToCode(value: int, codes: CodeRange array) =
         let mutable code = 0
@@ -324,6 +375,35 @@ type Zstd private () =
             Zstd.RequireAvailable(data.Length, 0, 3, "sequence count")
             0x7F00 + int data[1] + (int data[2] <<< 8), 3
 
+    /// Encodes the sequences section's FSE bitstream.
+    ///
+    /// RFC 8878 §3.1.1.3.2.1.2, cross-checked against the real `zstd` CLI
+    /// and the reference C source (ZSTD_decodeSequence / FSE_encodeSymbol /
+    /// FSE_initCState2 from github.com/facebook/zstd):
+    ///
+    ///   Per-sequence decode order: peek all 3 symbols (free), then read
+    ///   extra bits in order OF, ML, LL, then — ONLY IF this is not the
+    ///   last sequence — update states in order LL, ML, OF (consuming bits
+    ///   to prepare the state the NEXT sequence's peek will use).
+    ///
+    ///   The state used to peek the very LAST sequence is never reached via
+    ///   a bit-consuming update (there's no "next" sequence to prepare for)
+    ///   — so it can't be produced by a normal EncodeSymbol flush either.
+    ///   It must be computed directly via InitEncodeState (real zstd's
+    ///   FSE_initCState2), which touches no bits at all.
+    ///
+    /// An earlier revision of this codec (a) got the extras/updates
+    /// relative order backwards, (b) got the OF/ML update order backwards,
+    /// and (c) always flushed a transition for every sequence instead of
+    /// special-casing the last one — internally self-consistent (our own
+    /// decoder mirrored our own encoder) but not the real wire format. See
+    /// lessons.md Lesson 96.
+    ///
+    /// Because the bitstream is written BACKWARD (ReverseBitWriter: the
+    /// LAST call is the FIRST thing a forward reader consumes), and this
+    /// loop itself already runs sequences in reverse (last real sequence in
+    /// iteration 0), each iteration writes the extras first, then (for
+    /// every iteration except the very first) the state transitions.
     static member private EncodeSequences(sequences: ResizeArray<Sequence>) =
         let literalEntries, literalStates = Zstd.BuildEncodeTables(literalNorm, literalAccuracyLog)
         let matchEntries, matchStates = Zstd.BuildEncodeTables(matchNorm, matchAccuracyLog)
@@ -335,6 +415,7 @@ type Zstd private () =
         let mutable matchState = matchSize
         let mutable offsetState = offsetSize
         let writer = ReverseBitWriter()
+        let mutable first = true
 
         for index in sequences.Count - 1 .. -1 .. 0 do
             let sequence = sequences[index]
@@ -342,22 +423,45 @@ type Zstd private () =
             let matchCode = Zstd.ValueToCode(sequence.MatchLength, matchCodes)
             let rawOffset = sequence.Offset + 3
             let offsetCode = BitOperations.Log2(uint32 rawOffset)
-            writer.AddBits(uint64 (rawOffset - (1 <<< offsetCode)), offsetCode)
-            writer.AddBits(uint64 (sequence.MatchLength - matchCodes[matchCode].Baseline), matchCodes[matchCode].ExtraBits)
+
+            if first then
+                // Last real sequence: no incoming transition to flush.
+                // Initialise state directly from the symbol (no bits written).
+                offsetState <- Zstd.InitEncodeState(offsetCode, offsetEntries, offsetStates)
+                matchState <- Zstd.InitEncodeState(matchCode, matchEntries, matchStates)
+                literalState <- Zstd.InitEncodeState(literalCode, literalEntries, literalStates)
+                first <- false
+            else
+                // Transition state FROM "state used to peek the sequence
+                // processed in the PREVIOUS iteration" TO "state used to
+                // peek THIS sequence" — write order OF, ML, LL (what a
+                // forward decoder will consume, in order LL, ML, OF, as the
+                // update AFTER decoding this sequence).
+                let newOffsetState, offsetBits, offsetValue = Zstd.EncodeSymbol(offsetState, offsetCode, offsetEntries, offsetStates)
+                offsetState <- newOffsetState
+                writer.AddBits(uint64 offsetValue, offsetBits)
+                let newMatchState, matchBits, matchValue = Zstd.EncodeSymbol(matchState, matchCode, matchEntries, matchStates)
+                matchState <- newMatchState
+                writer.AddBits(uint64 matchValue, matchBits)
+                let newLiteralState, literalBits, literalValue = Zstd.EncodeSymbol(literalState, literalCode, literalEntries, literalStates)
+                literalState <- newLiteralState
+                writer.AddBits(uint64 literalValue, literalBits)
+
+            // Extra bits, write order LL, ML, OF (a forward decoder reads
+            // these in order OF, ML, LL immediately after peeking symbols).
             writer.AddBits(uint64 (sequence.LiteralLength - literalCodes[literalCode].Baseline), literalCodes[literalCode].ExtraBits)
+            writer.AddBits(uint64 (sequence.MatchLength - matchCodes[matchCode].Baseline), matchCodes[matchCode].ExtraBits)
+            writer.AddBits(uint64 (rawOffset - (1 <<< offsetCode)), offsetCode)
 
-            let newMatchState, matchBits, matchValue = Zstd.EncodeSymbol(matchState, matchCode, matchEntries, matchStates)
-            matchState <- newMatchState
-            writer.AddBits(uint64 matchValue, matchBits)
-            let newOffsetState, offsetBits, offsetValue = Zstd.EncodeSymbol(offsetState, offsetCode, offsetEntries, offsetStates)
-            offsetState <- newOffsetState
-            writer.AddBits(uint64 offsetValue, offsetBits)
-            let newLiteralState, literalBits, literalValue = Zstd.EncodeSymbol(literalState, literalCode, literalEntries, literalStates)
-            literalState <- newLiteralState
-            writer.AddBits(uint64 literalValue, literalBits)
-
-        writer.AddBits(uint64 (offsetState - offsetSize), offsetAccuracyLog)
+        // Flush initial states (the state used to peek the FIRST real
+        // sequence). RFC 8878 §3.1.1.3.2.1.2: a forward-reading decoder
+        // reads these FIRST, in order LL_state, OF_state, ML_state (note:
+        // OF before ML here — different from the per-sequence update order
+        // above). Since these are the very LAST bits written overall, they
+        // become the FIRST bits a forward reader sees; to get decode order
+        // [LL, OF, ML] we write the reverse: [ML, OF, LL].
         writer.AddBits(uint64 (matchState - matchSize), matchAccuracyLog)
+        writer.AddBits(uint64 (offsetState - offsetSize), offsetAccuracyLog)
         writer.AddBits(uint64 (literalState - literalSize), literalAccuracyLog)
         writer.Finish()
 
@@ -409,25 +513,54 @@ type Zstd private () =
                 let literalTable = Zstd.BuildDecodeTable(literalNorm, literalAccuracyLog)
                 let matchTable = Zstd.BuildDecodeTable(matchNorm, matchAccuracyLog)
                 let offsetTable = Zstd.BuildDecodeTable(offsetNorm, offsetAccuracyLog)
+                // Initial states are read in order LL, OF, ML — a DIFFERENT
+                // order from the per-sequence symbol decode below (LL, ML,
+                // OF). The RFC is asymmetric here; verified against the RFC
+                // text and cross-checked against the real `zstd` CLI.
                 let mutable literalState = reader.ReadBits literalAccuracyLog
-                let mutable matchState = reader.ReadBits matchAccuracyLog
                 let mutable offsetState = reader.ReadBits offsetAccuracyLog
+                let mutable matchState = reader.ReadBits matchAccuracyLog
                 let mutable literalPosition = 0
 
-                for _ in 1..sequenceCount do
-                    let literalCode, nextLiteralState = Zstd.DecodeSymbol(literalState, literalTable, reader)
-                    let offsetCode, nextOffsetState = Zstd.DecodeSymbol(offsetState, offsetTable, reader)
-                    let matchCode, nextMatchState = Zstd.DecodeSymbol(matchState, matchTable, reader)
-                    literalState <- nextLiteralState
-                    offsetState <- nextOffsetState
-                    matchState <- nextMatchState
+                for sequenceIndex in 0..sequenceCount - 1 do
+                    // Step 1 — PEEK symbols from the current states. Bare
+                    // table lookups; consume NO bits.
+                    let literalEntry = Zstd.PeekEntry(literalState, literalTable)
+                    let matchEntry = Zstd.PeekEntry(matchState, matchTable)
+                    let offsetEntry = Zstd.PeekEntry(offsetState, offsetTable)
+                    let literalCode = literalEntry.Symbol
+                    let matchCode = matchEntry.Symbol
+                    let offsetCode = offsetEntry.Symbol
                     if literalCode < 0 || literalCode >= literalCodes.Length || matchCode < 0 || matchCode >= matchCodes.Length then
                         raise (InvalidDataException("invalid sequence code"))
 
-                    let literalLength = literalCodes[literalCode].Baseline + reader.ReadBits literalCodes[literalCode].ExtraBits
-                    let matchLength = matchCodes[matchCode].Baseline + reader.ReadBits matchCodes[matchCode].ExtraBits
+                    // Step 2 — read the value extra bits, order OF, ML, LL
+                    // (RFC 8878 §3.1.1.3.2.1.2: "Decoding starts by reading
+                    // the Number_of_Bits required to decode offset. It does
+                    // the same for Match_Length and then for
+                    // Literals_Length.").
                     let rawOffset = (1 <<< offsetCode) ||| reader.ReadBits offsetCode
+                    let matchLength = matchCodes[matchCode].Baseline + reader.ReadBits matchCodes[matchCode].ExtraBits
+                    let literalLength = literalCodes[literalCode].Baseline + reader.ReadBits literalCodes[literalCode].ExtraBits
                     let matchOffset = rawOffset - 3
+
+                    // Step 3 — update FSE states (consumes bits), order LL,
+                    // ML, OF, preparing the states the NEXT sequence's peek
+                    // (step 1) will use. Per the reference decoder
+                    // (ZSTD_decodeSequence), this update is skipped
+                    // entirely for the LAST sequence — there's no "next"
+                    // sequence to prepare a state for, and (symmetrically)
+                    // the encoder never flushed any bits for that
+                    // non-existent transition (see InitEncodeState in
+                    // EncodeSequences). Performing this read unconditionally,
+                    // as an earlier revision of this codec did, consumes
+                    // bits that were never written, corrupting the position
+                    // of every stream that follows. See lessons.md Lesson 96.
+                    if sequenceIndex <> sequenceCount - 1 then
+                        literalState <- Zstd.UpdateDecodeState(literalEntry, reader)
+                        matchState <- Zstd.UpdateDecodeState(matchEntry, reader)
+                        offsetState <- Zstd.UpdateDecodeState(offsetEntry, reader)
+
                     if literalLength < 0 || literalPosition + literalLength > literals.Length then
                         raise (InvalidDataException("literal run exceeds the literals section"))
 
@@ -489,10 +622,28 @@ type Zstd private () =
         let mutable position = 4
         let descriptor = data[position]
         position <- position + 1
-        if (descriptor &&& 0x0Cuy) <> 0uy then raise (InvalidDataException("reserved frame-header bits are set"))
+        // Frame Header Descriptor bit layout (RFC 8878 §3.1.1.1):
+        //   bits [7:6] = Frame_Content_Size_flag
+        //   bit  5     = Single_Segment_flag
+        //   bit  4     = Unused_bit (decoders must ignore, not enforce zero)
+        //   bit  3     = Reserved_bit (must be 0)
+        //   bit  2     = Content_Checksum_flag
+        //   bits [1:0] = Dictionary_ID_flag
+        //
+        // An earlier revision of this codec (and, as of this writing,
+        // code/specs/CMP07-zstd.md, code/packages/go/zstd, and
+        // code/packages/rust/zstd — see lessons.md Lesson 95) read
+        // Content_Checksum_flag at bit 4 and treated bits [3:2] as reserved.
+        // That's wrong on both counts: verified empirically against the
+        // real `zstd` CLI, `zstd -c file` (checksum on by default) emits
+        // FHD byte 0x64, `zstd -c --no-check file` emits 0x60 — the
+        // differing bit is bit 2, and the checksummed output is exactly 4
+        // bytes longer (the trailing xxHash64). Bit 4 is Unused_bit. Only
+        // bit 3 is actually Reserved_bit.
+        if (descriptor &&& 0x08uy) <> 0uy then raise (InvalidDataException("reserved frame-header bits are set"))
         let contentSizeFlag = int (descriptor >>> 6)
         let singleSegment = (descriptor &&& 0x20uy) <> 0uy
-        let checksum = (descriptor &&& 0x10uy) <> 0uy
+        let checksum = (descriptor &&& 0x04uy) <> 0uy
         let dictionaryFlag = int (descriptor &&& 3uy)
 
         if not singleSegment then
