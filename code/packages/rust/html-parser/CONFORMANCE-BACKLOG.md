@@ -25,8 +25,8 @@ The 2026-08-02 upstream audit covered all 1,934 WPT tree-construction cases and
 all 6,806 html5lib tokenizer cases with zero missing signatures and zero
 normalized skips. DOM output is complete, but diagnostic coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the document-tail insertion-mode slice, 1,781 of those cases emit at
-least one lexer or parser diagnostic and 402 remain uncovered. Another 139
+After the implied-body tail-transition slice, 1,786 of those cases emit at
+least one lexer or parser diagnostic and 397 remain uncovered. Another 139
 cases emit diagnostics despite having no legacy `#errors` rows. These are
 reviewed rather than automatically removed: 89 are full-document inputs for
 which the legacy fixtures omit the Standard-required missing-doctype error,
@@ -38,15 +38,20 @@ Prioritized work items:
    explicit and implied `html`, `head`, and `body` creation. Missing-doctype
    handling, nonconforming initial-doctype diagnostics, duplicate shell
    start-tag diagnostics, body/html end tags with disallowed open elements,
-   full-document in-body EOF diagnostics, and unexpected-token recovery in the
-   after-body and after-after-body modes are complete. Re-audit the remaining
-   silent shell cases before selecting the next bounded diagnostic slice.
+   full-document in-body EOF diagnostics, unexpected-token recovery in the
+   after-body and after-after-body modes, and the implied-shell `</body>`
+   transition are complete. The fresh 397-case inventory identifies
+   after-after-frameset unexpected tokens, stray end tags before an implied
+   root or body, and rejected frameset starts as the remaining concrete shell
+   slices, in that order.
 2. **Fragment EOF diagnostics.** Audit the current in-body EOF rule against
    fragment parsing. Legacy fragment fixtures omit many EOF error rows, so add
    explicit current-WHATWG evidence before extending the full-document
    diagnostic into fragments.
 3. **In-body and text insertion modes.** Cover scope failures, implied-end-tag
-   recovery, formatting reconstruction, and stray start/end tags.
+   recovery, formatting reconstruction, stray start/end tags, and the large
+   executable cluster of unclosed script/style/title/noframes text-mode EOF
+   diagnostics.
 4. **Table, select, and template insertion modes.** Cover foster parenting,
    table scopes, select recovery, and template mode-stack errors.
 5. **Adoption agency and active formatting.** Cover malformed formatting cases
