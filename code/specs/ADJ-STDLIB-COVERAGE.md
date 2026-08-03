@@ -281,8 +281,22 @@ option mapping, or judge/evaluation failure.
     perturb an already verified consumer.
 7f. **Complete:** add a strict MathML-to-infix transform so formula bytes embedded
     in publisher markup can become readable citations without invented symbols.
+7g. **Complete:** add reasoned zero-output operations to text transforms. Once a
+    transform discards source bytes, its operations must partition the selected
+    source span contiguously and bind every discarded range to one claim and an
+    explicit reason.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
+9. Add executable formula preconditions or domain guards before migrating
+   `proportion.adj`; `a/b=c/x` requires nonzero `a`, `b`, and `c`, while the
+   current formula fails closed only on its final divisor.
+10. Add first-class derivation objects and execute every exported formula before
+    migrating `average.adj`; prose cannot prove its `N=2` and `N=3` specializations.
+11. Replace `powers.adj`'s `Cube.html` locator, which describes the geometric
+    solid, and ground both exported formulas in stable, domain-correct bytes.
+12. Revisit `simple-interest.adj` with its variable/unit context, explicit
+    rejection of contradicted page metadata, unit-bearing query facts, and a
+    structured lowering from source notation to primitive operations.
 
 ### Wave 2: complete K-8 foundations
 
