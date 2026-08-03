@@ -122,10 +122,21 @@ base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
 `@__twig_alloc_bytes` returns an i64 handle (`inttoptr`'d to `base`
 immediately, the same convention `alloc`'s own handle uses) rather than the
 `@calloc` this called through v0.47.0 — `@calloc` was never freed or traced,
-a genuine, confirmed leak. `array_elem_llvm` only accepts scalar/numeric
-element types, so an array can never hold a GC reference; `find_header`
-resolves the `base + 8` interior handle back to its enclosing block
-correctly, so this stays a valid, collectible root.
+a genuine, confirmed leak. `find_header` resolves the `base + 8` interior
+handle back to its enclosing block correctly, so this stays a valid,
+collectible root.
+
+**Known gap (found by security review, not fixed):** the array's block is
+always registered under `__twig_alloc_bytes`'s no-ref `HeapKind`, which is
+only correct for genuinely scalar element types. `array<str>`/`array<any>`/
+`array<symbol>` elements are i64 *handles* to separately GC-managed blocks —
+`llvm_type_for` maps all of these down to the same `"i64"` LLVM type plain
+integers use, so they pass `array_elem_llvm`'s check too, and a
+string/symbol reachable only via such an array element isn't traced as a
+root. Pre-existing (the old `@calloc` block was equally untraced) and
+cross-backend (`aarch64-backend`/`x86_64-backend` share it); tracked
+separately, not attempted here. See `code/specs/AOT00-T1w-llvm-gc-completion.md`
+§5.
 
 Unlike the JVM/CLR managed-array backends (whose runtime bounds-checks every
 element access for free), the native/LLVM target has no such runtime, so each

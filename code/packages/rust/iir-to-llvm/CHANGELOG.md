@@ -11,11 +11,11 @@ claim about a gap that doesn't actually exist:
   instead of raw, never-freed, never-traced `@calloc` — the same GC-tracked
   allocator `aarch64-backend`/`x86_64-backend` already use for these ops, and
   the one this runtime's own `str_concat`/`str_slice` helpers already
-  allocate through. `array_elem_llvm` only ever accepts scalar/numeric
-  element types (no `ptr`/`ref` type exists in that match — confirmed by
-  reading the type table), so an LLVM-compiled array can never hold a GC
-  reference, making `__twig_alloc_bytes`'s no-ref `HeapKind` exactly right.
-  Both call sites' i64 handle is recovered as a `ptr` via `inttoptr`, the
+  allocate through. Registering the array's block under `__twig_alloc_bytes`'s
+  no-ref `HeapKind` is correct for genuinely scalar element types — but see
+  the security-review finding below: it is *not* correct for every element
+  type this op can be asked to lower, and that gap is left open here, not
+  fixed. Both call sites' i64 handle is recovered as a `ptr` via `inttoptr`, the
   same convention `field_store`/`field_load` already use for `alloc`'s own
   handle. `array_get`/`array_set`/`array_len`'s interior-pointer handle model
   (8 bytes past the length header) is unaffected — `FlatHeap::find_header`

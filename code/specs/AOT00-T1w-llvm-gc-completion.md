@@ -60,11 +60,15 @@ LANG-FULL E5 array. Both now call `@__twig_alloc_bytes`
 allocator `aarch64-backend`/`x86_64-backend` already use for the identical
 ops, and the same one this runtime's own `str_concat`/`str_slice` helpers
 already allocate through. `__twig_alloc_bytes` registers its blocks under a
-no-ref `HeapKind` (an empty field map — nothing to trace), which is exactly
-right here: `array_elem_llvm` only ever accepts scalar/numeric element types
-(`i1`/`i8`/`i16`/`i32`/`i64`/`float`/`double`; no `ptr`/`ref` type exists in
-that match), so an LLVM-compiled array can never hold a GC reference in the
-first place — confirmed by reading the type table, not assumed.
+no-ref `HeapKind` (an empty field map — nothing to trace), which is correct
+for genuinely scalar element types (`i1`/`i8`/`i16`/`i32`/`i64`/`float`/
+`double`) — but, as §5 details, *not* correct for every `array<T>` this op
+can be asked to lower: `array<str>`/`array<any>`/`array<symbol>` collapse to
+the same LLVM `i64` type via `llvm_type_for` and pass `array_elem_llvm`'s
+check too, so this fix leaves that gap open rather than closing it. This was
+an early, incorrect assumption of this investigation, corrected by a
+security review — see §5 for the accurate account and why the fix isn't
+attempted here.
 
 Both call sites' new i64-handle return value is recovered as a `ptr` via
 `inttoptr`, the same convention `lower_field_store`/`lower_field_load`
