@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite MOS model-card `PHI` values before
+  lowering Level-1 surface potential.
 - Reject negative and non-finite MOS model-card `GAMMA` values before lowering
   Level-1 body effect.
 - Reject non-finite MOS model-card `LAMBDA` / `LAM` values and lower the `LAM`

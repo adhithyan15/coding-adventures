@@ -1503,6 +1503,27 @@ def test_lowers_valid_mosfet_model_body_effect(body_effect: str) -> None:
     assert float(body_effect) == mosfet.model.model.params.GAMMA
 
 
+@pytest.mark.parametrize("surface_potential", ["0", "-0.01", "1e999"])
+def test_rejects_invalid_mosfet_model_surface_potential(
+    surface_potential: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET PHI must be finite and positive",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(PHI={surface_potential})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_surface_potential() -> None:
+    parsed = parse_netlist(".model nfast NMOS(PHI=0.65)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.PHI == 0.65
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

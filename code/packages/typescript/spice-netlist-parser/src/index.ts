@@ -1205,6 +1205,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET GAMMA must be finite and non-negative");
   }
+  const surfacePotential = params.get("PHI");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfacePotential !== undefined &&
+    (!Number.isFinite(surfacePotential) || surfacePotential <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET PHI must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,
