@@ -2128,6 +2128,30 @@ fn preserves_non_negative_mosfet_model_saturation_current_density() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_widths() {
+    for width in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS(W={width})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET W must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_width() {
+    let parsed = parse_netlist(".model geometry NMOS(W=2u)\nM1 d g s b geometry").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.w, 2.0e-6);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
