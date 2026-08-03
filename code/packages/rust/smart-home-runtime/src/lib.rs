@@ -6478,7 +6478,9 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
             | DeviceControlCommandType::SetCompensatedDisplay
             | DeviceControlCommandType::TestIndicator
             | DeviceControlCommandType::SetCorrectionProfile
-            | DeviceControlCommandType::SetCameraRecording,
+            | DeviceControlCommandType::SetCameraRecording
+            | DeviceControlCommandType::RecallCameraPtzPreset
+            | DeviceControlCommandType::MoveCameraPtz,
         ) => return None,
     };
 

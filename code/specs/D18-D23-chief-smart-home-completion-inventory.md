@@ -885,6 +885,26 @@ bounded camera/NVR control that the current transport can verify:
 - A real loopback HTTP test proves inspection, capability detection, denial,
   native recording control, readback verification, logout, and D23 state update.
 
+## Current Reolink PTZ Control Slice
+
+This slice adds bounded physical camera movement without claiming position
+state that the portable CGI contract cannot read back:
+
+- D23 exposes a reusable `camera.ptz` capability plus distinct preset-recall
+  and bounded-movement commands at the human-approval policy tier.
+- Online channels probe `GetPtzPreset`; only channels with a successful native
+  response advertise PTZ or accept its commands, and disabled presets are not
+  valid recall targets.
+- Preset recall validates a probed preset ID and a 1-64 speed before using the
+  existing authenticated `PtzCtrl` host.
+- Directional movement accepts only left/right/up/down, a 1-64 speed, and a
+  duration of at most five seconds, then emits an explicit native `Stop` in the
+  same login-token session.
+- Invalid, unsupported, and unauthorized requests stop before credentials or
+  transport I/O. The runtime does not invent optimistic orientation state.
+- A real loopback HTTP test proves probing, preset filtering, denial, recall,
+  bounded start/stop movement, logout, and exact native request shapes.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -896,14 +916,15 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Add capability-probed Reolink PTZ preset and bounded movement controls over
-   the existing authenticated CGI host.
+4. Add another vendor-specific camera or NVR integration where authenticated
+   protocol and transport primitives are concrete.
 5. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-6. Add Reolink push events only after a concrete webhook or event-stream host
+6. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+   each operation has a capability-specific probe and the firmware exposes the
+   native state needed to avoid invented orientation claims.
+7. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-7. Add another vendor-specific camera or NVR integration where authenticated
-   protocol and transport primitives are concrete.
 8. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
 9. Add ONVIF PullPoint events once a concrete event host and subscription

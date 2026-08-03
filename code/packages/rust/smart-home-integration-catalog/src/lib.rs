@@ -45204,7 +45204,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "reolink",
             "Reolink",
-            "Authenticated local Reolink camera and NVR inspection plus verified recording control.",
+            "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,

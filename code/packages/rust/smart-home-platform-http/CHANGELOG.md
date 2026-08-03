@@ -1,5 +1,7 @@
 # Changelog
 
+- Add local API labels for typed camera PTZ preset recall and bounded movement.
+
 - Expose device indicator/display and sensor calibration command labels through
   the local smart-home API contract.
 

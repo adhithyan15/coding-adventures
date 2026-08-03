@@ -1,5 +1,8 @@
 # Changelog
 
+- Add Chief boundary labels for typed camera PTZ preset recall and bounded
+  movement commands.
+
 - Expose device indicator/display and sensor calibration command labels across
   the Chief smart-home tool boundary.
 

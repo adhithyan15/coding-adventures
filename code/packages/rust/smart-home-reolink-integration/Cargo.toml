@@ -1,6 +1,6 @@
 [package]
 name = "smart-home-reolink-integration"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Authenticated Reolink camera and NVR CGI inspection and recording control for the smart-home runtime"
 license = "MIT"
