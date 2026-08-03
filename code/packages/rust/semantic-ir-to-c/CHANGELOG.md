@@ -27,6 +27,38 @@ simple-operand case (inline, mirroring `SeqLit`'s simple path) and
 
 `semantic-ir-to-c` 0.36.3 -> 0.36.4.
 
+## 0.36.3 — fix: `Foo.new` never invoked `initialize`
+
+Filed as a follow-up in 0.36.1 and fixed here. `__new__` used to lower
+straight to `_sir_new_instance(cls)` — a bare allocation — and the
+emitter's own scan REJECTED any `__new__` with more than the class-name
+arg ("`__new__` with constructor arguments or a non-constant class name"),
+so `Foo.new(args)` either compiled to an object whose constructor never
+ran (every `@ivar` an `initialize` would have set stayed nil) or, once
+constructor args were involved, failed to compile at all. This matched
+NONE of the other five backends: Go's `_sir_call_new`, Rust's equivalent,
+and Ruby's `sir_new` have always allocated THEN explicitly invoked the
+registered `initialize` (if any) with the constructor args — a comment on
+`semantic-ir-to-ruby`'s own `__new__` arm already described this as
+mirroring "the Go/C/Rust runtimes", which was aspirational for C until
+now. The `counter_state` program in `sir-conformance`'s corpus (`class
+Counter; def initialize; @n = 0; end; ...`) was previously SKIPPED on the
+C backend for exactly this reason (a declared v0 gap, not a faithfulness
+bug) — it now runs and agrees with every other backend.
+
+Fixed with a new `_sir_call_new(cls, argc, ...)` runtime helper: allocate
+via the existing `_sir_new_instance`, resolve `initialize` up the
+ancestry with the existing `_sir_resolve_method` (the same walk
+`_sir_call_method` uses, so an inherited `initialize` runs correctly),
+bind `self` to the new object and invoke it with the constructor args if
+found, restore `self`, and always return the object — even with no
+`initialize` registered (Ruby's default no-op `Object#initialize`). The
+emitter's scan now only requires `__new__`'s first arg to be a `StrLit`
+class name; any further args are ordinary constructor arguments emitted
+like any other call args, no longer specially rejected.
+
+`semantic-ir-to-c` 0.36.2 -> 0.36.3.
+
 ## 0.36.2 — fix: `<<` builtin name collided between C's bitwise shift and Ruby's operator
 
 `variadic_helper`'s `"<<" => "_sir_shift_left"` entry (added when Ruby's

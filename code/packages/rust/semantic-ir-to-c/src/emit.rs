@@ -1583,13 +1583,21 @@ fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usiz
         }
         return;
     }
-    // OOP slice 1: `Foo.new` → `_sir_new_instance("Foo")`.  `args[0]` is the class
-    // name (a `StrLit`), emitted as a QUOTED C string literal (no injection); the
-    // scan guarantees exactly one `StrLit` arg (constructor args need `initialize`,
-    // a later slice), so this arm never reaches the compound path.
+    // `Foo.new(args…)` → `_sir_call_new("Foo", argc, args…)`.  `args[0]` is the
+    // class name (a `StrLit`), emitted as a QUOTED C string literal (no
+    // injection); the remaining args are the constructor arguments, passed
+    // through to the registered `initialize` (if any) — matching the Go/Rust/
+    // Ruby backends, which have always run `initialize` here (see this crate's
+    // CHANGELOG for the fix that brought C in line with them).
     if name == "__new__" {
         if let Some(Expr::StrLit { value, .. }) = args.first() {
-            let _ = write!(out, "_sir_new_instance({})", quote_c_string(value));
+            let ctor_args = &args[1..];
+            let _ = write!(out, "_sir_call_new({}, {}", quote_c_string(value), ctor_args.len());
+            for a in ctor_args {
+                out.push_str(", ");
+                emit_expr(out, a, indent);
+            }
+            out.push(')');
         } else {
             let _ = write!(out, "_sir_unknown_builtin({})", quote_c_string(name));
         }
@@ -2246,15 +2254,13 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             if !is_supported_builtin(name) {
                 return Some((name.clone(), span.clone()));
             }
-            // OOP slice 1: `__new__` must be `[StrLit(class)]` — exactly one
-            // constant class name, no constructor arguments (those need
-            // `initialize`, a later slice).  Anything else is rejected cleanly so
-            // the emitter's single-`StrLit` assumption holds.
-            if name == "__new__"
-                && !matches!(args.as_slice(), [Expr::StrLit { .. }])
-            {
+            // `__new__` must start with `StrLit(class)` — a constant class name;
+            // any further args are constructor arguments forwarded to
+            // `initialize` and emitted like ordinary call args, so they need no
+            // shape constraint of their own.
+            if name == "__new__" && !matches!(args.first(), Some(Expr::StrLit { .. })) {
                 return Some((
-                    "__new__ with constructor arguments or a non-constant class name".to_string(),
+                    "__new__ with a non-constant class name".to_string(),
                     span.clone(),
                 ));
             }
