@@ -1345,6 +1345,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET CGD must be finite and non-negative");
   }
+  const jfetFlickerNoiseCoefficient = params.get("KF");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(jfetFlickerNoiseCoefficient) || jfetFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("JFET KF must be finite and non-negative");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1932,6 +1940,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("LAMBDA") ?? 0.0,
       model.params.get("CGS") ?? model.params.get("CGS0") ?? 0.0,
       model.params.get("CGD") ?? model.params.get("CGD0") ?? 0.0,
+      model.params.get("KF") ?? 0.0,
     );
   }
   if (prefix === "M") {
