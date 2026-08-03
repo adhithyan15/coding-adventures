@@ -562,6 +562,9 @@ fn tree(value: &DerivationNode, kb: &KnowledgeBase) -> Result<TreeDto, Failure> 
             op,
             operands,
             result,
+            // NUM-7's Real/BigDouble sqrt companion is a separate additive audit channel
+            // (rendered in the CLI JSON and --explain); this witness format doesn't capture it.
+            real: _,
         } => TreeDto::Operation {
             f64_bits: bits(*result),
             operands: operands

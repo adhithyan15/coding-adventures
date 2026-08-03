@@ -678,10 +678,24 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             op,
             operands,
             result,
+            real,
         } => {
             let sep = format!(" {} ", op.symbol());
             let expr = operands.iter().map(label).collect::<Vec<_>>().join(&sep);
-            out.push(format!("{ind}{} = {}", fmt_num(*result), expr));
+            // NUM-7: a square root of an exact base additionally shows the arbitrary-precision
+            // `Real`/`BigDouble` companion the `f64` result was cross-checked against.
+            let real_note = match real {
+                Some(rc) => format!(
+                    " [real: {} @ {} bits, {}]",
+                    rc.value
+                        .to_decimal_string()
+                        .unwrap_or_else(|| rc.value.to_f64().to_string()),
+                    rc.value.precision_bits(),
+                    fmt_mode(rc.mode)
+                ),
+                None => String::new(),
+            };
+            out.push(format!("{ind}{} = {}{}", fmt_num(*result), expr, real_note));
             for c in operands {
                 if expands(c) {
                     expand(c, depth + 1, kb, out);

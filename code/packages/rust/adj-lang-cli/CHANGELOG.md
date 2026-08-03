@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.34.0] - 2026-08-02 - NUM-7b: render the sqrt Real/BigDouble audit companion
+
+- The `op` node's JSON audit gains an additive `"real":{"precision_bits":…,"mode":…,"value":…}`
+  key when logic-engine populates a square root's `RealCompanion` — absent for every other `Op`
+  node, byte-neutral otherwise.
+- `--explain` shows the same companion inline (`[real: <digits> @ <bits> bits, <mode>]`) next to
+  a sqrt's ordinary derivation line.
+- New e2e coverage (`tests/num7b_real_sqrt_e2e.rs`): default 256-bit precision renders far more
+  digits than an `f64` could hold; a perfect square (`sqrt(9)`) still gets a companion (not
+  special-cased away); an ordinary (non-sqrt) power carries no `"real"` key.
+
 ## [0.33.0] - 2026-08-02 - parser-backed formula inventory
 
 - Added `adj-formula-inventory`, which emits canonical JSON from the real Adj-Lang parser for

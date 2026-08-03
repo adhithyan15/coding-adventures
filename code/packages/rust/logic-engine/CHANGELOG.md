@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.53.0] - 2026-08-02 - NUM-7b: the sqrt `Real`/`BigDouble` audit companion
+
+- `DerivationNode::Op` gains an additive `real: Option<RealCompanion>` field (new public types
+  `ApproxReal`, `RealCompanion`), populated only when a `Pow` node is a square root (evaluated
+  exponent bit-exactly `0.5`) of a base that carried an exact rational sidecar — every other `Op`,
+  including a sqrt of an inexact base, keeps `real: None`. Detected on the evaluated `f64`
+  exponent rather than its exact sidecar, since a literal `0.5` (how both `\sqrt{x}` and
+  `\sqrt[n]{x}` lower) never carries one.
+- The plain `f64` result for this case now uses `f64::sqrt()` instead of `powf(0.5)`, so it can
+  never disagree in the last bit with the correctly-rounded `BigDouble` companion computed
+  alongside it.
+- Safety-critical: `BigDouble::sqrt` panics on a negative operand. The `result.is_finite()` guard
+  alone does **not** exclude every negative base — an exact rational whose magnitude underflows
+  the `f64` path rounds to `-0.0`, and IEEE-754 `powf(-0.0, 0.5) == +0.0` (finite!), so a
+  since-security-reviewed fix checks the *exact* sidecar's own sign explicitly before promoting,
+  skipping the companion (never a panic) for a negative base — regression-tested with an
+  underflowed-negative-exact-base case that reaches this code without one.
+- No contagion this rung: further arithmetic on a sqrt's result does not carry its `Real`
+  companion forward (ADJ-NUMERIC-SUBSTRATE §8's scoped, additive design, not the full §5 tower).
+
 ## [0.52.0] - 2026-08-02 - NUM-7a: per-KnowledgeBase `Real`/`BigDouble` precision setting
 
 - Added `KnowledgeBase::real_precision_bits()`/`with_real_precision_bits(u32)`/
