@@ -1455,6 +1455,21 @@ def test_preserves_positive_explicit_mosfet_model_transconductance() -> None:
     assert isclose(mosfet.model.model.params.KP, 175.0e-6)
 
 
+@pytest.mark.parametrize("alias", ["VT0", "VTO", "VTH"])
+def test_rejects_non_finite_mosfet_model_threshold_voltage(alias: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET VT0 must be finite"):
+        parse_netlist(f".model nfast NMOS({alias}=1e999)\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["VT0", "VTO", "VTH"])
+def test_lowers_finite_mosfet_model_threshold_voltage_aliases(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=-0.38)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.VT0 == -0.38
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

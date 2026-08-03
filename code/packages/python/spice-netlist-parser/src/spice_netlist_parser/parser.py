@@ -1893,6 +1893,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             raise NetlistParseError("MOSFET U0 must be finite and non-negative")
         if "KP" in params and (not math.isfinite(params["KP"]) or params["KP"] <= 0.0):
             raise NetlistParseError("MOSFET KP must be finite and positive")
+        threshold_voltage = next(
+            (params[name] for name in ("VT0", "VTO", "VTH") if name in params),
+            None,
+        )
+        if threshold_voltage is not None and not math.isfinite(threshold_voltage):
+            raise NetlistParseError("MOSFET VT0 must be finite")
     return ModelCard(name=name, kind=kind, params=params)
 
 
@@ -1932,6 +1938,7 @@ _LEVEL1_PARAM_ALIASES = {
     "TNOM": "T_NOM",
     "UO": "U0",
     "VTO": "VT0",
+    "VTH": "VT0",
 }
 
 

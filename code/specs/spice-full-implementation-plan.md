@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
+1. Python and TypeScript Berkeley SPICE MOS threshold-voltage validation parity.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite explicit model-card `KP` values with
-     the shared diagnostic.
-   - Preserve positive explicit `KP` and the derived-`KP` behavior completed in
-     the preceding slice.
+   - Reject non-finite `VT0` / `VTO` / `VTH` values with the shared diagnostic.
+   - Lower finite `VTH` values through the canonical Level-1 threshold-voltage
+     field instead of silently discarding that alias.
 
 ## Completed Slices
 
@@ -4145,15 +4144,21 @@ the Rust, Python, and TypeScript surfaces together.
    - Shared engine semantics derive `KP` from surface mobility and `TOX` while
      preserving explicit `KP` precedence.
 
+371. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
+   - Status: completed in PR 9595.
+   - Zero, negative, and non-finite explicit model-card `KP` values are rejected
+     with the shared diagnostic.
+   - Positive explicit `KP` and derived transconductance behavior remain intact.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
-   - Reject zero, negative, and non-finite explicit `KP` values with the shared
-     diagnostic while preserving derived transconductance behavior.
+1. Python and TypeScript Berkeley SPICE MOS threshold-voltage validation parity.
+   - Reject non-finite `VT0` / `VTO` / `VTH` values and lower all three aliases
+     into canonical Level-1 threshold voltage.
 
 2. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
-   - Apply Rust-aligned domains and diagnostics to already lowered `VT0`,
-     `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, and nominal-temperature fields.
+   - Apply Rust-aligned domains and diagnostics to already lowered `LAMBDA`,
+     `GAMMA`, `PHI`, `W`, `L`, `IS`, and nominal-temperature fields.
 
 3. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
    - Lower missing canonical resistance, geometry, capacitance, junction, and
