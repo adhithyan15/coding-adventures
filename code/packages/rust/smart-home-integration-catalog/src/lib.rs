@@ -45231,6 +45231,34 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "Event streaming, snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
         ]),
         base_entry(
+            "blue_iris",
+            "Blue Iris",
+            "Authenticated local Blue Iris NVR and managed-camera health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "blue_iris_json",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("blue_iris_json".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the documented JSON challenge-response login over local HTTPS; plain HTTP is test-only on loopback.",
+            "Credentials, challenge hashes, sessions, and the server license value remain outside normalized state and request-plan debug output.",
+            "PTZ, recording changes, snapshots, clips, media transfer, alerts, and administrative configuration remain separate permission-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
             "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
@@ -81018,6 +81046,34 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
         assert!(!axis
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn blue_iris_entry_exposes_authenticated_json_inspection_primitives() {
+        let catalog = first_party_catalog();
+        let blue_iris = find_entry(&catalog, &IntegrationId::trusted("blue_iris")).unwrap();
+
+        assert_eq!(
+            blue_iris.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(blue_iris.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            blue_iris.supported_protocols,
+            vec![ProtocolFamily::Vendor("blue_iris_json".to_string())]
+        );
+        assert_eq!(blue_iris.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(blue_iris.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(blue_iris.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        assert!(blue_iris
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(blue_iris
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!blue_iris
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }

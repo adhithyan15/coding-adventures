@@ -1,5 +1,7 @@
 # Changelog
 
+- Add first-party Blue Iris local HTTPS challenge-response authentication and
+  read-only NVR/camera health inspection.
 - Record capability-probed, queue-aware Axis preset recall and bounded PTZ
   movement over the authenticated VAPIX host.
 - Add the first-party Axis VAPIX mDNS and authenticated inspection runtime.
