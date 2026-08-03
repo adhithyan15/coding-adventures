@@ -43,6 +43,33 @@ def acquire_cas_lock_with_alternate_temp(
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
+    def fake_windows_kernel32(self) -> mock.Mock:
+        kernel32 = mock.Mock()
+        kernel32.CreateJobObjectW.return_value = 101
+        kernel32.SetInformationJobObject.return_value = 1
+        kernel32.AssignProcessToJobObject.return_value = 1
+        kernel32.TerminateJobObject.return_value = 1
+        kernel32.CloseHandle.return_value = 1
+        kernel32.CreateToolhelp32Snapshot.return_value = 202
+        kernel32.Thread32First.return_value = 0
+        kernel32.Thread32Next.return_value = 0
+        kernel32.OpenThread.return_value = 303
+        kernel32.ResumeThread.return_value = 1
+        return kernel32
+
+    def windows_job(
+        self, kernel32: mock.Mock, error_code: list[int] | None = None
+    ) -> object:
+        errors = error_code or [5]
+        return provenance._WindowsKillJob(
+            kernel32, lambda: errors[0], mock.Mock()
+        )
+
+    def windows_process(self, *, pid: int = 404) -> mock.Mock:
+        process = mock.Mock(pid=pid)
+        process._handle = 505
+        return process
+
     def process_is_alive(self, pid: int) -> bool:
         if os.name == "nt":
             kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
@@ -671,7 +698,786 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ):
                 provenance._run_formula_inventory(command, source)
 
-    def test_json_command_timeout_kills_descendant_pipe_holders(self) -> None:
+    def test_windows_job_creation_failure_is_named_and_fail_closed(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        kernel32.CreateJobObjectW.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "CreateJobObjectW failed"):
+            self.windows_job(kernel32)
+
+        kernel32.CloseHandle.assert_not_called()
+
+    def test_windows_job_setup_failure_closes_created_handle(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        kernel32.SetInformationJobObject.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "SetInformationJobObject failed"):
+            self.windows_job(kernel32)
+
+        kernel32.CloseHandle.assert_called_once_with(101)
+
+    def test_windows_job_setup_installs_kill_on_close(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        handle, information_class, pointer, size = (
+            kernel32.SetInformationJobObject.call_args.args
+        )
+        self.assertEqual(handle, 101)
+        self.assertEqual(information_class, 9)
+        self.assertEqual(
+            pointer._obj.basic_limit_information.limit_flags,  # type: ignore[attr-defined]
+            0x00002000,
+        )
+        self.assertEqual(size, ctypes.sizeof(pointer._obj))  # type: ignore[attr-defined]
+        job.close()
+
+    def test_windows_job_setup_preserves_close_failure(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        kernel32.SetInformationJobObject.return_value = 0
+        kernel32.CloseHandle.return_value = 0
+
+        with self.assertRaisesRegex(
+            OSError,
+            "SetInformationJobObject failed.*cleanup also failed.*CloseHandle\\(job\\)",
+        ):
+            self.windows_job(kernel32)
+
+        self.assertEqual(kernel32.CloseHandle.call_count, 2)
+
+    def test_windows_job_setup_retries_transient_close_failure(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        kernel32.SetInformationJobObject.return_value = 0
+        kernel32.CloseHandle.side_effect = [0, 1]
+
+        with self.assertRaisesRegex(OSError, "SetInformationJobObject failed"):
+            self.windows_job(kernel32)
+
+        self.assertEqual(kernel32.CloseHandle.call_count, 2)
+
+    def test_windows_job_preserves_distinct_native_error_codes(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        error_register = [0]
+
+        def fail_setup(*_arguments: object) -> int:
+            error_register[0] = 87
+            return 0
+
+        def fail_close(_handle: int) -> int:
+            error_register[0] = 6
+            return 0
+
+        kernel32.SetInformationJobObject.side_effect = fail_setup
+        kernel32.CloseHandle.side_effect = fail_close
+
+        with self.assertRaisesRegex(
+            OSError,
+            "SetInformationJobObject failed.*87.*CloseHandle\\(job\\) failed.*6",
+        ):
+            provenance._WindowsKillJob(
+                kernel32,
+                lambda: error_register[0],
+                lambda value: error_register.__setitem__(0, value),
+            )
+
+    def test_windows_job_assignment_failure_is_named(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+        kernel32.AssignProcessToJobObject.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "AssignProcessToJobObject failed"):
+            job.assign(self.windows_process())
+
+        job.close()
+
+    def test_windows_job_closed_assignment_uses_local_state_error(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+        job.close()
+
+        with self.assertRaisesRegex(OSError, "closed Windows Job"):
+            job.assign(self.windows_process())
+
+        kernel32.AssignProcessToJobObject.assert_not_called()
+
+    def test_windows_job_snapshot_failure_is_named(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+        kernel32.CreateToolhelp32Snapshot.return_value = ctypes.c_void_p(-1).value
+
+        with self.assertRaisesRegex(OSError, "CreateToolhelp32Snapshot failed"):
+            job.resume(self.windows_process())
+
+        job.close()
+
+    def test_windows_job_thread_first_failure_is_not_treated_as_end(self) -> None:
+        for error_code in (0, 5):
+            with self.subTest(error_code=error_code):
+                kernel32 = self.fake_windows_kernel32()
+                job = self.windows_job(kernel32, [error_code])
+
+                with self.assertRaisesRegex(OSError, "Thread32First failed"):
+                    job.resume(self.windows_process())
+
+                job._set_last_error.assert_called_once_with(0)
+                kernel32.CloseHandle.assert_called_once_with(202)
+                job.close()
+
+    def test_windows_job_thread_error_is_captured_before_cleanup(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        error_register = [99]
+
+        def fail_first(_snapshot: int, _pointer: object) -> int:
+            error_register[0] = 5
+            return 0
+
+        def close_with_different_error(_handle: int) -> int:
+            error_register[0] = 6
+            return 1
+
+        kernel32.Thread32First.side_effect = fail_first
+        kernel32.CloseHandle.side_effect = close_with_different_error
+        job = provenance._WindowsKillJob(
+            kernel32,
+            lambda: error_register[0],
+            lambda value: error_register.__setitem__(0, value),
+        )
+
+        with self.assertRaisesRegex(OSError, "Thread32First failed.*5"):
+            job.resume(self.windows_process())
+
+        self.assertEqual(error_register, [6])
+        job.close()
+
+    def test_windows_job_thread_first_no_more_files_means_no_thread(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32, [provenance._WindowsKillJob.ERROR_NO_MORE_FILES])
+
+        with self.assertRaisesRegex(OSError, "has no primary thread"):
+            job.resume(self.windows_process(pid=404))
+
+        kernel32.CloseHandle.assert_called_once_with(202)
+        job.close()
+
+    def test_windows_job_thread_next_failure_is_not_treated_as_end(self) -> None:
+        for error_code in (0, 5):
+            with self.subTest(error_code=error_code):
+                kernel32 = self.fake_windows_kernel32()
+                job = self.windows_job(kernel32, [error_code])
+
+                def unrelated_thread(_snapshot: int, pointer: object) -> int:
+                    pointer._obj.owner_process_id = 999  # type: ignore[attr-defined]
+                    pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+                    return 1
+
+                kernel32.Thread32First.side_effect = unrelated_thread
+
+                with self.assertRaisesRegex(OSError, "Thread32Next failed"):
+                    job.resume(self.windows_process(pid=404))
+
+                self.assertEqual(
+                    job._set_last_error.call_args_list,
+                    [mock.call(0), mock.call(0)],
+                )
+                job.close()
+
+    def test_windows_job_rejects_truncated_thread_record(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def truncated_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.size = job._thread_entry_owner_end - 1  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = truncated_thread
+
+        with self.assertRaisesRegex(OSError, "truncated THREADENTRY32"):
+            job.resume(self.windows_process())
+
+        job.close()
+
+    def test_windows_job_resets_thread_record_size_before_next(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(
+            kernel32, [provenance._WindowsKillJob.ERROR_NO_MORE_FILES]
+        )
+        observed_sizes: list[int] = []
+
+        def unrelated_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 999  # type: ignore[attr-defined]
+            pointer._obj.size = job._thread_entry_owner_end  # type: ignore[attr-defined]
+            return 1
+
+        def no_next_thread(_snapshot: int, pointer: object) -> int:
+            observed_sizes.append(pointer._obj.size)  # type: ignore[attr-defined]
+            return 0
+
+        kernel32.Thread32First.side_effect = unrelated_thread
+        kernel32.Thread32Next.side_effect = no_next_thread
+
+        with self.assertRaisesRegex(OSError, "has no primary thread"):
+            job.resume(self.windows_process())
+
+        self.assertEqual(observed_sizes, [ctypes.sizeof(job._thread_entry_type)])
+        job.close()
+
+    def test_windows_job_traverses_to_primary_thread(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def unrelated_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 999  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 707  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = unrelated_thread
+        kernel32.Thread32Next.side_effect = primary_thread
+
+        job.resume(self.windows_process(pid=404))
+
+        kernel32.OpenThread.assert_called_once_with(0x0002, False, 707)
+        job.close()
+
+    def test_windows_job_open_thread_failure_is_named(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+        kernel32.OpenThread.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "OpenThread failed"):
+            job.resume(self.windows_process(pid=404))
+
+        job.close()
+
+    def test_windows_job_resume_failure_closes_thread_and_snapshot(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+        kernel32.ResumeThread.return_value = 0xFFFFFFFF
+
+        with self.assertRaisesRegex(OSError, "ResumeThread failed"):
+            job.resume(self.windows_process(pid=404))
+
+        self.assertEqual(
+            kernel32.CloseHandle.call_args_list,
+            [mock.call(303), mock.call(202)],
+        )
+        job.close()
+
+    def test_windows_job_requires_exact_suspended_resume_count(self) -> None:
+        for previous_suspend_count in (0, 2):
+            with self.subTest(previous_suspend_count=previous_suspend_count):
+                kernel32 = self.fake_windows_kernel32()
+                job = self.windows_job(kernel32)
+
+                def primary_thread(_snapshot: int, pointer: object) -> int:
+                    pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+                    pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+                    return 1
+
+                kernel32.Thread32First.side_effect = primary_thread
+                kernel32.ResumeThread.return_value = previous_suspend_count
+
+                with self.assertRaisesRegex(
+                    OSError, f"previous suspend count {previous_suspend_count}"
+                ):
+                    job.resume(self.windows_process(pid=404))
+
+                job.close()
+
+    def test_windows_job_exact_resume_success_closes_both_handles(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+
+        job.resume(self.windows_process(pid=404))
+
+        self.assertEqual(
+            kernel32.CloseHandle.call_args_list,
+            [mock.call(303), mock.call(202)],
+        )
+        job.close()
+
+    def test_windows_job_thread_close_failure_still_closes_snapshot(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+        kernel32.CloseHandle.side_effect = lambda handle: int(handle != 303)
+
+        with self.assertRaisesRegex(OSError, "CloseHandle\\(thread\\) failed"):
+            job.resume(self.windows_process(pid=404))
+
+        self.assertEqual(
+            kernel32.CloseHandle.call_args_list,
+            [mock.call(303), mock.call(202)],
+        )
+        job.close()
+
+    def test_windows_job_resume_preserves_thread_close_failure(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+        kernel32.ResumeThread.return_value = 0xFFFFFFFF
+        kernel32.CloseHandle.side_effect = lambda handle: int(handle != 303)
+
+        with self.assertRaisesRegex(
+            OSError, "ResumeThread failed.*cleanup also failed.*CloseHandle\\(thread\\)"
+        ):
+            job.resume(self.windows_process(pid=404))
+
+        job.close()
+
+    def test_windows_job_resume_preserves_snapshot_close_failure(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+
+        def primary_thread(_snapshot: int, pointer: object) -> int:
+            pointer._obj.owner_process_id = 404  # type: ignore[attr-defined]
+            pointer._obj.thread_id = 606  # type: ignore[attr-defined]
+            return 1
+
+        kernel32.Thread32First.side_effect = primary_thread
+        kernel32.ResumeThread.return_value = 0xFFFFFFFF
+        kernel32.CloseHandle.side_effect = lambda handle: int(handle != 202)
+
+        with self.assertRaisesRegex(
+            OSError,
+            "ResumeThread failed.*cleanup also failed.*CloseHandle\\(thread snapshot\\)",
+        ):
+            job.resume(self.windows_process(pid=404))
+
+        job.close()
+
+    def test_windows_job_snapshot_close_failure_is_named(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(
+            kernel32, [provenance._WindowsKillJob.ERROR_NO_MORE_FILES]
+        )
+        kernel32.CloseHandle.side_effect = lambda handle: int(handle != 202)
+
+        with self.assertRaisesRegex(OSError, "CloseHandle\\(thread snapshot\\) failed"):
+            job.resume(self.windows_process())
+
+        job.close()
+
+    def test_windows_job_termination_failure_is_named(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+        kernel32.TerminateJobObject.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "TerminateJobObject failed"):
+            job.terminate()
+
+        job.close()
+
+    def test_windows_job_close_failure_keeps_handle_for_retry(self) -> None:
+        kernel32 = self.fake_windows_kernel32()
+        job = self.windows_job(kernel32)
+        kernel32.CloseHandle.return_value = 0
+
+        with self.assertRaisesRegex(OSError, "CloseHandle\\(job\\) failed"):
+            job.close()
+
+        kernel32.CloseHandle.return_value = 1
+        job.close()
+        job.close()
+        self.assertEqual(kernel32.CloseHandle.call_count, 2)
+
+    def test_windows_job_termination_failure_still_kills_parent(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        job = mock.Mock()
+        job.terminate.side_effect = OSError("TerminateJobObject failed")
+        taskkill = mock.Mock(
+            return_value=subprocess.CompletedProcess(["taskkill"], 0)
+        )
+
+        with (
+            mock.patch.object(provenance.os, "name", "nt"),
+            mock.patch.object(provenance.subprocess, "run", taskkill),
+            self.assertRaisesRegex(OSError, "TerminateJobObject failed"),
+        ):
+            provenance._terminate_process_tree(process, job)
+
+        self.assertEqual(taskkill.call_args.args[0][:3], ["taskkill", "/PID", "404"])
+        self.assertIn("/T", taskkill.call_args.args[0])
+        self.assertIn("/F", taskkill.call_args.args[0])
+        self.assertEqual(taskkill.call_args.kwargs["timeout"], 5)
+        process.kill.assert_called_once_with()
+
+    def test_windows_job_taskkill_failures_remain_observable(self) -> None:
+        for taskkill_failure, expected in (
+            (
+                subprocess.CompletedProcess(["taskkill"], 7),
+                "taskkill /T exited 7",
+            ),
+            (
+                subprocess.TimeoutExpired(["taskkill"], 5),
+                "taskkill /T failed",
+            ),
+        ):
+            with self.subTest(expected=expected):
+                process = self.windows_process()
+                process.poll.return_value = None
+                job = mock.Mock()
+                job.terminate.side_effect = OSError("TerminateJobObject failed")
+                if isinstance(taskkill_failure, BaseException):
+                    taskkill = mock.Mock(side_effect=taskkill_failure)
+                else:
+                    taskkill = mock.Mock(return_value=taskkill_failure)
+
+                with (
+                    mock.patch.object(provenance.os, "name", "nt"),
+                    mock.patch.object(provenance.subprocess, "run", taskkill),
+                    self.assertRaisesRegex(OSError, expected),
+                ):
+                    provenance._terminate_process_tree(process, job)
+
+                self.assertIn("/T", taskkill.call_args.args[0])
+                self.assertIn("/F", taskkill.call_args.args[0])
+                self.assertEqual(taskkill.call_args.kwargs["timeout"], 5)
+                process.kill.assert_called_once_with()
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_factory_failure_precedes_process_launch(self) -> None:
+        factory = mock.Mock(side_effect=OSError("injected CreateJobObjectW failure"))
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen") as popen,
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "failed to create process job"
+            ),
+        ):
+            provenance._run_json_command(
+                [sys.executable, "-c", "print('{}')"],
+                [],
+                label="job factory fixture",
+                windows_job_factory=factory,
+            )
+
+        popen.assert_not_called()
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_popen_failure_preserves_close_failure(self) -> None:
+        job = mock.Mock()
+        job.close.side_effect = OSError("injected CloseHandle(job) failure")
+
+        with (
+            mock.patch.object(
+                provenance.subprocess,
+                "Popen",
+                side_effect=OSError("injected process launch failure"),
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "failed to run.*process launch failure.*failed to close process job",
+            ),
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="launch cleanup fixture",
+                windows_job_factory=lambda: job,
+            )
+
+        self.assertEqual(job.close.call_count, 2)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_containment_failure_cleans_process_and_pipes(self) -> None:
+        original_popen = subprocess.Popen
+        for failing_stage in ("assign", "resume"):
+            with self.subTest(failing_stage=failing_stage):
+                processes: list[subprocess.Popen[bytes]] = []
+                job = mock.Mock()
+                getattr(job, failing_stage).side_effect = OSError(
+                    f"injected {failing_stage} failure"
+                )
+                job.close.side_effect = [
+                    OSError("injected transient CloseHandle(job) failure"),
+                    None,
+                ]
+
+                def capture_process(
+                    *args: object,
+                    _processes: list[subprocess.Popen[bytes]] = processes,
+                    **kwargs: object,
+                ) -> object:
+                    process = original_popen(*args, **kwargs)
+                    _processes.append(process)
+                    return process
+
+                with (
+                    mock.patch.object(
+                        provenance.subprocess, "Popen", capture_process
+                    ),
+                    self.assertRaisesRegex(
+                        provenance.ProvenanceError,
+                        f"failed to contain process tree.*{failing_stage} failure",
+                    ),
+                ):
+                    provenance._run_json_command(
+                        [sys.executable, "-c", "print('{}')"],
+                        [],
+                        label="containment cleanup fixture",
+                        drain_timeout_seconds=0.2,
+                        windows_job_factory=lambda job=job: job,
+                    )
+
+                self.assertEqual(len(processes), 1)
+                self.assertIsNotNone(processes[0].poll())
+                self.assertTrue(processes[0].stdout.closed)
+                self.assertTrue(processes[0].stderr.closed)
+                job.terminate.assert_called_once_with()
+                self.assertEqual(job.close.call_count, 2)
+                if failing_stage == "assign":
+                    job.resume.assert_not_called()
+                else:
+                    job.assign.assert_called_once_with(processes[0])
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_containment_preserves_final_kill_failure(self) -> None:
+        process = mock.Mock()
+        process.stdout = mock.Mock()
+        process.stderr = mock.Mock()
+        process.wait.side_effect = subprocess.TimeoutExpired(["fixture"], 0.1)
+        process.kill.side_effect = OSError("injected TerminateProcess failure")
+        job = mock.Mock()
+        job.assign.side_effect = OSError("injected assignment failure")
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(
+                provenance,
+                "_terminate_process_tree",
+                side_effect=OSError("injected tree termination failure"),
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "assignment failure.*tree termination failure.*root process kill failed.*TerminateProcess failure",
+            ),
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="final kill fixture",
+                drain_timeout_seconds=0.1,
+                windows_job_factory=lambda: job,
+            )
+
+        job.close.assert_called_once_with()
+        process.stdout.close.assert_called_once_with()
+        process.stderr.close.assert_called_once_with()
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_timeout_preserves_termination_and_close_failures(self) -> None:
+        job = mock.Mock()
+        job.terminate.side_effect = OSError("injected TerminateJobObject failure")
+        job.close.side_effect = OSError("injected CloseHandle(job) failure")
+
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError,
+            "timed out.*failed to terminate process tree.*failed to close process job",
+        ):
+            provenance._run_json_command(
+                [sys.executable, "-c", "print('{}')"],
+                [],
+                label="timeout cleanup fixture",
+                timeout_seconds=0.1,
+                drain_timeout_seconds=0.2,
+                windows_job_factory=lambda: job,
+            )
+
+        self.assertGreaterEqual(job.terminate.call_count, 1)
+        self.assertEqual(job.close.call_count, 2)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_overflow_preserves_termination_and_close_failures(self) -> None:
+        class FaultingJob:
+            def __init__(self) -> None:
+                self.inner = provenance._WindowsKillJob()
+
+            def assign(self, process: subprocess.Popen[bytes]) -> None:
+                self.inner.assign(process)
+
+            def resume(self, process: subprocess.Popen[bytes]) -> None:
+                self.inner.resume(process)
+
+            def terminate(self) -> None:
+                self.inner.terminate()
+                raise OSError("injected TerminateJobObject failure")
+
+            def close(self) -> None:
+                self.inner.close()
+                raise OSError("injected CloseHandle(job) failure")
+
+        with (
+            mock.patch.object(provenance, "MAX_OBJECT_BYTES", 1024),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "output exceeds byte limit.*failed to terminate process tree.*failed to close process job",
+            ),
+        ):
+            provenance._run_json_command(
+                [
+                    sys.executable,
+                    "-c",
+                    "import sys; sys.stdout.buffer.write(b'x' * 2048)",
+                ],
+                [],
+                label="overflow cleanup fixture",
+                timeout_seconds=5,
+                drain_timeout_seconds=0.2,
+                windows_job_factory=FaultingJob,
+            )
+
+    def test_json_command_timeout_preserves_stuck_drain_failure(self) -> None:
+        process = mock.Mock()
+        process.stdout = mock.Mock()
+        process.stderr = mock.Mock()
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+            -9,
+        ]
+        threads = [mock.Mock(), mock.Mock()]
+        for thread in threads:
+            thread.is_alive.return_value = True
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(
+                provenance.threading, "Thread", side_effect=threads
+            ),
+            mock.patch.object(provenance, "_terminate_process_tree"),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "timed out after 0.1 seconds.*output pipes did not close within bounds",
+            ),
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="stuck drain fixture",
+                timeout_seconds=0.1,
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+            )
+
+        process.stdout.close.assert_not_called()
+        process.stderr.close.assert_not_called()
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_close_failure_terminates_and_retries(self) -> None:
+        original_close = provenance._WindowsKillJob.close
+        original_terminate = provenance._WindowsKillJob.terminate
+        close_calls = 0
+        terminate_calls = 0
+
+        def fail_first_close(job: object) -> None:
+            nonlocal close_calls
+            close_calls += 1
+            if close_calls == 1:
+                raise OSError("injected CloseHandle(job) failure")
+            original_close(job)
+
+        def tracked_terminate(job: object) -> None:
+            nonlocal terminate_calls
+            terminate_calls += 1
+            original_terminate(job)
+
+        with (
+            mock.patch.object(
+                provenance._WindowsKillJob, "close", fail_first_close
+            ),
+            mock.patch.object(
+                provenance._WindowsKillJob, "terminate", tracked_terminate
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "failed to close process job.*injected CloseHandle",
+            ),
+        ):
+            provenance._run_json_command(
+                [sys.executable, "-c", "print('{}')"],
+                [],
+                label="close retry fixture",
+            )
+
+        self.assertEqual(close_calls, 2)
+        self.assertEqual(terminate_calls, 1)
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_windows_job_cleanup_failure_preserves_command_error(self) -> None:
+        for command, expected in (
+            ("import sys; sys.exit(7)", "exited 7"),
+            ("print('not-json')", "did not emit UTF-8 JSON"),
+        ):
+            with self.subTest(expected=expected):
+                original_close = provenance._WindowsKillJob.close
+                close_calls = 0
+
+                def fail_first_close(
+                    job: object,
+                    _original_close=original_close,
+                ) -> None:
+                    nonlocal close_calls
+                    close_calls += 1
+                    if close_calls == 1:
+                        raise OSError("injected CloseHandle(job) failure")
+                    _original_close(job)
+
+                with (
+                    mock.patch.object(
+                        provenance._WindowsKillJob, "close", fail_first_close
+                    ),
+                    self.assertRaisesRegex(
+                        provenance.ProvenanceError,
+                        expected + ".*failed to close process job",
+                    ),
+                ):
+                    provenance._run_json_command(
+                        [sys.executable, "-c", command],
+                        [],
+                        label="causal cleanup fixture",
+                    )
+
+                self.assertEqual(close_calls, 2)
+
+    def test_windows_job_timeout_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
             child = (
@@ -704,7 +1510,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertLess(time.monotonic() - started, 8)
             self.assert_process_exits(int(pid_path.read_text()))
 
-    def test_json_command_parent_exit_kills_descendant_pipe_holders(self) -> None:
+    def test_windows_job_parent_exit_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
             child = (
@@ -737,7 +1543,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assert_process_exits(int(pid_path.read_text()))
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
-    def test_json_command_assigns_job_before_process_execution(self) -> None:
+    def test_windows_job_assigns_before_process_execution(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "process-started"
             command = (

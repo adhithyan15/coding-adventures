@@ -351,11 +351,16 @@ jobs:
           go-version: '1.23'
 
       - name: Set up Python
-        if: needs.detect.outputs.needs_python == 'true'
+        if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
           allow-prereleases: true
+
+      - name: Test ADJ Windows Job containment
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'

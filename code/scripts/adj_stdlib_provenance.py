@@ -23,7 +23,7 @@ import tempfile
 import threading
 import time
 import xml.etree.ElementTree as ET
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -895,7 +895,14 @@ def _validate_formula_inventory(
 class _WindowsKillJob:
     """Own a Windows process tree until verification has drained its output."""
 
-    def __init__(self) -> None:
+    ERROR_NO_MORE_FILES = 18
+
+    def __init__(
+        self,
+        kernel32: Any | None = None,
+        last_error: Callable[[], int] | None = None,
+        set_last_error: Callable[[int], None] | None = None,
+    ) -> None:
         class LargeInteger(ctypes.Structure):
             _fields_ = [("quad_part", ctypes.c_longlong)]
 
@@ -932,7 +939,22 @@ class _WindowsKillJob:
                 ("peak_job_memory_used", ctypes.c_size_t),
             ]
 
-        self._kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        class ThreadEntry(ctypes.Structure):
+            _fields_ = [
+                ("size", ctypes.c_ulong),
+                ("usage", ctypes.c_ulong),
+                ("thread_id", ctypes.c_ulong),
+                ("owner_process_id", ctypes.c_ulong),
+                ("base_priority", ctypes.c_long),
+                ("priority_delta", ctypes.c_long),
+                ("flags", ctypes.c_ulong),
+            ]
+
+        if kernel32 is None:
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        self._kernel32 = kernel32
+        self._last_error = last_error or ctypes.get_last_error
+        self._set_last_error = set_last_error or ctypes.set_last_error
         self._kernel32.CreateJobObjectW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p]
         self._kernel32.CreateJobObjectW.restype = ctypes.c_void_p
         self._kernel32.SetInformationJobObject.argtypes = [
@@ -951,37 +973,6 @@ class _WindowsKillJob:
         self._kernel32.TerminateJobObject.restype = ctypes.c_int
         self._kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
         self._kernel32.CloseHandle.restype = ctypes.c_int
-
-        handle = self._kernel32.CreateJobObjectW(None, None)
-        if not handle:
-            raise ctypes.WinError(ctypes.get_last_error())
-        self._handle: int | None = handle
-        limits = ExtendedLimitInformation()
-        limits.basic_limit_information.limit_flags = 0x00002000
-        if not self._kernel32.SetInformationJobObject(
-            handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
-        ):
-            error = ctypes.WinError(ctypes.get_last_error())
-            self.close()
-            raise error
-
-    def assign(self, process: subprocess.Popen[bytes]) -> None:
-        if self._handle is None or not self._kernel32.AssignProcessToJobObject(
-            self._handle, int(process._handle)  # type: ignore[attr-defined]
-        ):
-            raise ctypes.WinError(ctypes.get_last_error())
-
-    def resume(self, process: subprocess.Popen[bytes]) -> None:
-        class ThreadEntry(ctypes.Structure):
-            _fields_ = [
-                ("size", ctypes.c_ulong),
-                ("usage", ctypes.c_ulong),
-                ("thread_id", ctypes.c_ulong),
-                ("owner_process_id", ctypes.c_ulong),
-                ("base_priority", ctypes.c_long),
-                ("priority_delta", ctypes.c_long),
-                ("flags", ctypes.c_ulong),
-            ]
 
         self._kernel32.CreateToolhelp32Snapshot.argtypes = [
             ctypes.c_ulong,
@@ -1007,48 +998,159 @@ class _WindowsKillJob:
         self._kernel32.ResumeThread.argtypes = [ctypes.c_void_p]
         self._kernel32.ResumeThread.restype = ctypes.c_ulong
 
+        self._thread_entry_type = ThreadEntry
+        self._thread_entry_owner_end = (
+            ThreadEntry.owner_process_id.offset + ctypes.sizeof(ctypes.c_ulong)
+        )
+
+        handle = self._kernel32.CreateJobObjectW(None, None)
+        if not handle:
+            raise self._error("CreateJobObjectW")
+        self._handle: int | None = handle
+        limits = ExtendedLimitInformation()
+        limits.basic_limit_information.limit_flags = 0x00002000
+        if not self._kernel32.SetInformationJobObject(
+            handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
+        ):
+            error = self._error("SetInformationJobObject")
+            try:
+                self.close()
+            except OSError as close_error:
+                try:
+                    self.close()
+                except OSError as retry_error:
+                    cleanup_error = OSError(
+                        f"{close_error}; close retry also failed: {retry_error}"
+                    )
+                    raise self._with_cleanup_error(
+                        error, cleanup_error
+                    ) from error
+            raise error
+
+    def _error(self, operation: str, code: int | None = None) -> OSError:
+        if code is None:
+            code = self._last_error()
+        if hasattr(ctypes, "WinError"):
+            detail = str(ctypes.WinError(code))
+        else:
+            detail = f"Windows error {code}"
+        return OSError(code, f"{operation} failed: {detail}")
+
+    @staticmethod
+    def _with_cleanup_error(primary: OSError, cleanup: OSError) -> OSError:
+        return OSError(f"{primary}; cleanup also failed: {cleanup}")
+
+    def _close_handle(self, handle: int, label: str) -> None:
+        if not self._kernel32.CloseHandle(handle):
+            raise self._error(f"CloseHandle({label})")
+
+    def _validate_thread_entry(self, entry: ctypes.Structure) -> None:
+        if entry.size < self._thread_entry_owner_end:
+            raise OSError(
+                "thread enumeration returned a truncated THREADENTRY32 "
+                f"record ({entry.size} bytes; need {self._thread_entry_owner_end})"
+            )
+
+    def assign(self, process: subprocess.Popen[bytes]) -> None:
+        if self._handle is None:
+            raise OSError("cannot assign a process to a closed Windows Job")
+        if not self._kernel32.AssignProcessToJobObject(
+            self._handle,
+            int(process._handle),  # type: ignore[attr-defined]
+        ):
+            raise self._error("AssignProcessToJobObject")
+
+    def resume(self, process: subprocess.Popen[bytes]) -> None:
         snapshot = self._kernel32.CreateToolhelp32Snapshot(0x00000004, 0)
         if snapshot == ctypes.c_void_p(-1).value:
-            raise ctypes.WinError(ctypes.get_last_error())
+            raise self._error("CreateToolhelp32Snapshot")
+        resume_error: OSError | None = None
+        resumed = False
         try:
-            entry = ThreadEntry()
+            entry = self._thread_entry_type()
             entry.size = ctypes.sizeof(entry)
+            self._set_last_error(0)
             found = self._kernel32.Thread32First(snapshot, ctypes.byref(entry))
+            first_error = self._last_error() if not found else 0
+            if not found and first_error != self.ERROR_NO_MORE_FILES:
+                raise self._error("Thread32First", first_error)
             while found:
+                self._validate_thread_entry(entry)
                 if entry.owner_process_id == process.pid:
                     thread = self._kernel32.OpenThread(0x0002, False, entry.thread_id)
                     if not thread:
-                        raise ctypes.WinError(ctypes.get_last_error())
+                        raise self._error("OpenThread")
+                    thread_error: OSError | None = None
                     try:
-                        if self._kernel32.ResumeThread(thread) == 0xFFFFFFFF:
-                            raise ctypes.WinError(ctypes.get_last_error())
+                        previous_suspend_count = self._kernel32.ResumeThread(thread)
+                        if previous_suspend_count == 0xFFFFFFFF:
+                            thread_error = self._error("ResumeThread")
+                        elif previous_suspend_count != 1:
+                            thread_error = OSError(
+                                "ResumeThread did not release the CREATE_SUSPENDED "
+                                f"process (previous suspend count {previous_suspend_count})"
+                            )
                     finally:
-                        self._kernel32.CloseHandle(thread)
-                    return
+                        try:
+                            self._close_handle(thread, "thread")
+                        except OSError as close_error:
+                            if thread_error is not None:
+                                raise self._with_cleanup_error(
+                                    thread_error, close_error
+                                ) from thread_error
+                            raise
+                    if thread_error is not None:
+                        raise thread_error
+                    resumed = True
+                    break
+                entry.size = ctypes.sizeof(entry)
+                self._set_last_error(0)
                 found = self._kernel32.Thread32Next(snapshot, ctypes.byref(entry))
+                next_error = self._last_error() if not found else 0
+                if not found and next_error != self.ERROR_NO_MORE_FILES:
+                    raise self._error("Thread32Next", next_error)
+        except OSError as error:
+            resume_error = error
         finally:
-            self._kernel32.CloseHandle(snapshot)
+            try:
+                self._close_handle(snapshot, "thread snapshot")
+            except OSError as close_error:
+                if resume_error is not None:
+                    raise self._with_cleanup_error(
+                        resume_error, close_error
+                    ) from resume_error
+                raise
+        if resume_error is not None:
+            raise resume_error
+        if resumed:
+            return
         raise OSError(f"suspended process {process.pid} has no primary thread")
 
     def terminate(self) -> None:
-        if self._handle is not None:
-            self._kernel32.TerminateJobObject(self._handle, 1)
+        if self._handle is not None and not self._kernel32.TerminateJobObject(
+            self._handle, 1
+        ):
+            raise self._error("TerminateJobObject")
 
     def close(self) -> None:
         if self._handle is not None:
-            self._kernel32.CloseHandle(self._handle)
+            self._close_handle(self._handle, "job")
             self._handle = None
 
 
 def _terminate_process_tree(
     process: subprocess.Popen[bytes], windows_job: _WindowsKillJob | None
 ) -> None:
+    errors: list[OSError] = []
     if os.name == "nt":
         if windows_job is not None:
-            windows_job.terminate()
-        else:
             try:
-                subprocess.run(
+                windows_job.terminate()
+            except OSError as error:
+                errors.append(error)
+        if windows_job is None or errors:
+            try:
+                result = subprocess.run(
                     ["taskkill", "/PID", str(process.pid), "/T", "/F"],
                     check=False,
                     creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
@@ -1056,15 +1158,24 @@ def _terminate_process_tree(
                     stdout=subprocess.DEVNULL,
                     timeout=5,
                 )
-            except (OSError, subprocess.TimeoutExpired):
-                pass
+                if result.returncode != 0:
+                    errors.append(
+                        OSError(f"taskkill /T exited {result.returncode}")
+                    )
+            except (OSError, subprocess.TimeoutExpired) as error:
+                errors.append(OSError(f"taskkill /T failed: {error}"))
     else:
         try:
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
     if process.poll() is None:
-        process.kill()
+        try:
+            process.kill()
+        except OSError as error:
+            errors.append(OSError(f"root process kill failed: {error}"))
+    if errors:
+        raise OSError("; ".join(str(error) for error in errors))
 
 
 def _run_json_command(
@@ -1074,6 +1185,7 @@ def _run_json_command(
     label: str,
     timeout_seconds: float = 60,
     drain_timeout_seconds: float = 5,
+    windows_job_factory: Callable[[], _WindowsKillJob] = _WindowsKillJob,
 ) -> dict[str, Any]:
     if not command:
         raise ProvenanceError(f"{label} command must not be empty")
@@ -1082,14 +1194,18 @@ def _run_json_command(
     windows_job: _WindowsKillJob | None = None
     if os.name == "nt":
         try:
-            windows_job = _WindowsKillJob()
+            windows_job = windows_job_factory()
         except OSError as error:
-            raise ProvenanceError(f"{label} failed to create process job: {error}") from error
+            raise ProvenanceError(
+                f"{label} failed to create process job: {error}"
+            ) from error
     popen_options: dict[str, Any] = {}
     if os.name == "nt":
-        popen_options["creationflags"] = getattr(
-            subprocess, "CREATE_NEW_PROCESS_GROUP", 0
-        ) | getattr(subprocess, "CREATE_NO_WINDOW", 0) | 0x00000004
+        popen_options["creationflags"] = (
+            getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
+            | getattr(subprocess, "CREATE_NO_WINDOW", 0)
+            | 0x00000004
+        )
     else:
         popen_options["start_new_session"] = True
     try:
@@ -1100,35 +1216,73 @@ def _run_json_command(
             **popen_options,
         )
     except OSError as error:
+        close_error: OSError | None = None
         if windows_job is not None:
-            windows_job.close()
-        raise ProvenanceError(f"{label} failed to run: {error}") from error
+            try:
+                windows_job.close()
+            except OSError as cleanup_error:
+                try:
+                    windows_job.close()
+                except OSError as retry_error:
+                    close_error = OSError(
+                        f"{cleanup_error}; close retry also failed: {retry_error}"
+                    )
+                else:
+                    close_error = cleanup_error
+        detail = f"{label} failed to run: {error}"
+        if close_error is not None:
+            detail += f"; failed to close process job: {close_error}"
+        raise ProvenanceError(detail) from error
     if windows_job is not None:
         try:
             windows_job.assign(process)
             windows_job.resume(process)
         except OSError as error:
+            containment_errors = [str(error)]
             try:
-                _terminate_process_tree(process, windows_job)
+                try:
+                    _terminate_process_tree(process, windows_job)
+                except OSError as termination_error:
+                    containment_errors.append(str(termination_error))
                 try:
                     process.wait(timeout=drain_timeout_seconds)
                 except subprocess.TimeoutExpired:
-                    process.kill()
+                    try:
+                        process.kill()
+                    except OSError as kill_error:
+                        containment_errors.append(
+                            f"root process kill failed: {kill_error}"
+                        )
             finally:
-                windows_job.close()
+                try:
+                    windows_job.close()
+                except OSError as close_error:
+                    containment_errors.append(str(close_error))
+                    try:
+                        windows_job.close()
+                    except OSError as retry_error:
+                        containment_errors.append(
+                            f"close retry also failed: {retry_error}"
+                        )
                 process.stdout.close()
                 process.stderr.close()
             raise ProvenanceError(
-                f"{label} failed to contain process tree: {error}"
+                f"{label} failed to contain process tree: "
+                + "; ".join(containment_errors)
             ) from error
     stdout = bytearray()
     stderr = bytearray()
     overflow = threading.Event()
     termination_lock = threading.Lock()
+    termination_errors: list[OSError] = []
 
     def terminate() -> None:
         with termination_lock:
-            _terminate_process_tree(process, windows_job)
+            try:
+                _terminate_process_tree(process, windows_job)
+            except OSError as error:
+                if not termination_errors:
+                    termination_errors.append(error)
 
     def drain(stream: Any, output: bytearray, limit: int) -> None:
         while True:
@@ -1156,6 +1310,7 @@ def _run_json_command(
         thread.start()
     timeout_error: subprocess.TimeoutExpired | None = None
     returncode: int | None = None
+    close_error: OSError | None = None
     try:
         returncode = process.wait(timeout=timeout_seconds)
     except subprocess.TimeoutExpired as error:
@@ -1168,7 +1323,21 @@ def _run_json_command(
     finally:
         with termination_lock:
             if windows_job is not None:
-                windows_job.close()
+                try:
+                    windows_job.close()
+                except OSError as error:
+                    close_error = error
+                    try:
+                        _terminate_process_tree(process, windows_job)
+                    except OSError as termination_error:
+                        if not termination_errors:
+                            termination_errors.append(termination_error)
+                    try:
+                        windows_job.close()
+                    except OSError as retry_error:
+                        close_error = OSError(
+                            f"{error}; close retry also failed: {retry_error}"
+                        )
         drain_deadline = time.monotonic() + drain_timeout_seconds
         for thread in threads:
             thread.join(timeout=max(0, drain_deadline - time.monotonic()))
@@ -1178,27 +1347,60 @@ def _run_json_command(
         final_drain_deadline = time.monotonic() + 1
         for thread in stuck_drains:
             thread.join(timeout=max(0, final_drain_deadline - time.monotonic()))
-    if any(thread.is_alive() for thread in threads):
-        raise ProvenanceError(f"{label} output pipes did not close within bounds")
-    process.stdout.close()
-    process.stderr.close()
+    cleanup_failures: list[str] = []
+    if termination_errors:
+        cleanup_failures.append(
+            f"failed to terminate process tree: {termination_errors[0]}"
+        )
+    if close_error is not None:
+        cleanup_failures.append(f"failed to close process job: {close_error}")
+
+    def with_cleanup_failures(primary: str) -> str:
+        if not cleanup_failures:
+            return primary
+        return primary + "; " + "; ".join(cleanup_failures)
+
+    drain_failure = any(thread.is_alive() for thread in threads)
+    if not drain_failure:
+        process.stdout.close()
+        process.stderr.close()
+    primary_error: str | None = None
+    primary_cause: BaseException | None = None
+    value: Any = None
+    drain_error = f"{label} output pipes did not close within bounds"
     if timeout_error is not None:
-        raise ProvenanceError(
-            f"{label} timed out after {timeout_seconds:g} seconds"
-        ) from timeout_error
-    if overflow.is_set():
-        raise ProvenanceError(f"{label} output exceeds byte limit")
-    if returncode != 0:
+        primary_error = f"{label} timed out after {timeout_seconds:g} seconds"
+        primary_cause = timeout_error
+    elif overflow.is_set():
+        primary_error = f"{label} output exceeds byte limit"
+    elif returncode != 0:
         detail = bytes(stderr).decode("utf-8", errors="replace").strip()
-        raise ProvenanceError(f"{label} exited {returncode}: {detail}")
-    try:
-        value = json.loads(bytes(stdout).decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise ProvenanceError(f"{label} did not emit UTF-8 JSON") from error
-    if not isinstance(value, dict):
-        raise ProvenanceError(f"{label} output must be an object")
-    if bytes(stdout) != canonical_json_bytes(value):
-        raise ProvenanceError(f"{label} output is not canonical JSON")
+        primary_error = f"{label} exited {returncode}: {detail}"
+    elif drain_failure:
+        primary_error = drain_error
+    else:
+        try:
+            value = json.loads(bytes(stdout).decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            primary_error = f"{label} did not emit UTF-8 JSON"
+            primary_cause = error
+        else:
+            if not isinstance(value, dict):
+                primary_error = f"{label} output must be an object"
+            elif bytes(stdout) != canonical_json_bytes(value):
+                primary_error = f"{label} output is not canonical JSON"
+    if drain_failure and primary_error != drain_error:
+        cleanup_failures.append("output pipes did not close within bounds")
+    if primary_error is not None:
+        raise ProvenanceError(with_cleanup_failures(primary_error)) from primary_cause
+    if termination_errors:
+        raise ProvenanceError(
+            f"{label} failed to terminate process tree: {termination_errors[0]}"
+        ) from termination_errors[0]
+    if close_error is not None:
+        raise ProvenanceError(
+            f"{label} failed to close process job: {close_error}"
+        ) from close_error
     return value
 
 
