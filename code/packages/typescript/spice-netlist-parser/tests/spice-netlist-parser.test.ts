@@ -1817,6 +1817,23 @@ Xright c d load
     expect(element.params.MJSW).toBe(Number(gradingCoefficient));
   });
 
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid MOSFET model FC=%s",
+    (coefficient) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(FC=${coefficient})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET FC must be finite and in [0, 1)");
+    },
+  );
+
+  it.each(["0", "0.5"])("lowers valid MOSFET model FC=%s", (coefficient) => {
+    const parsed = parseNetlist(`.model nfast NMOS(FC=${coefficient})\nM1 d g s b nfast\n`);
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.FC).toBe(Number(coefficient));
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });

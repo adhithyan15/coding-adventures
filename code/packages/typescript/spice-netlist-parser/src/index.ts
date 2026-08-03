@@ -1324,6 +1324,16 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET MJSW must be finite and non-negative");
   }
+  const forwardBiasCoefficient = params.get("FC");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    forwardBiasCoefficient !== undefined &&
+    (!Number.isFinite(forwardBiasCoefficient) ||
+      forwardBiasCoefficient < 0.0 ||
+      forwardBiasCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("MOSFET FC must be finite and in [0, 1)");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1430,6 +1440,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "PB",
     "MJ",
     "MJSW",
+    "FC",
     "IS",
     "N_SUB",
     "T_NOM",
