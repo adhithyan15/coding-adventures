@@ -161,7 +161,7 @@ if ($isMacOS -and (Test-Command "swift")) {
     Skip-Backend -Backend "swiftui" -Reason "swift is not installed"
 }
 
-if (Test-Command "cmake") {
+if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
     Write-Host "==> Building qt"
     Push-Location (Join-Path $outputRoot "qt")
     try {
@@ -171,11 +171,15 @@ if (Test-Command "cmake") {
             Invoke-Checked -Command "cmake" -Arguments @("-S", ".", "-B", "build")
         }
         Invoke-Checked -Command "cmake" -Arguments @("--build", "build")
+        Write-Host "==> Testing qt interactions"
+        Invoke-Checked -Command "qmltestrunner" -Arguments @("-platform", "offscreen", "-style", "Basic", "-input", "test", "-import", ".")
     } finally {
         Pop-Location
     }
-} else {
+} elseif (-not (Test-Command "cmake")) {
     Skip-Backend -Backend "qt" -Reason "cmake is not installed"
+} else {
+    Skip-Backend -Backend "qt" -Reason "qmltestrunner is not installed"
 }
 
 if ($isWindows -and (Test-Command "dotnet")) {

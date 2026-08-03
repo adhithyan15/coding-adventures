@@ -78,6 +78,8 @@ JavaScript syntax checks; SwiftUI, Qt, XAML, Flutter, and Compose invoke their
 native toolchains. The Flutter gate additionally pumps the emitted `MosaicApp`
 with a recording host and drives the generated native controls, including
 disabled buttons, address editing, Return, Go, and host-driven prop refresh.
+The Qt gate runs the same contract through Qt Quick Test against the emitted
+part-backed native controls and its generated `mosaicHost` seam.
 Platform-exclusive builds are explicitly deferred to their
 native host; missing host-applicable toolchains are reported as skips. Pass
 `--strict` on POSIX or `-Strict` on PowerShell to reject those missing
