@@ -194,6 +194,7 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
     cd "$output_root/flutter"
     flutter pub get
     flutter analyze lib
+    flutter test test/venture_chrome_interaction_test.dart
     if [[ ! -d "$flutter_platform" ]]; then
       flutter create "--platforms=$flutter_platform" .
     fi

@@ -343,20 +343,21 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
             "import '{component_name}.dart';\n",
             "import 'mosaic_host.dart';\n\n",
             "void main() {{\n",
-            "  runApp(const _MosaicApp());\n",
+            "  runApp(const MosaicApp());\n",
             "}}\n\n",
-            "class _MosaicApp extends StatefulWidget {{\n",
-            "  const _MosaicApp();\n\n",
+            "class MosaicApp extends StatefulWidget {{\n",
+            "  const MosaicApp({{super.key, this.mosaicHost}});\n\n",
+            "  final MosaicHost? mosaicHost;\n\n",
             "  @override\n",
-            "  State<_MosaicApp> createState() => _MosaicAppState();\n",
+            "  State<MosaicApp> createState() => _MosaicAppState();\n",
             "}}\n\n",
-            "class _MosaicAppState extends State<_MosaicApp> {{\n",
+            "class _MosaicAppState extends State<MosaicApp> {{\n",
             "  late final MosaicHost? _mosaicHost;\n",
             "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
-            "    _mosaicHost = MosaicHost.load();\n",
+            "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n",
             "    _queueMosaicResponse(_mosaicHost?.props());\n",
             "  }}\n\n",
             "  @override\n",
@@ -856,6 +857,10 @@ struct TableCtx<'a> {
     sheet_text_color: Option<&'a str>,
     sheet_font_family: Option<&'a str>,
     sheet_font_size: Option<&'a str>,
+    /// True only while emitting a widget that is a direct child of a
+    /// `Row`. Flutter text fields require a finite horizontal constraint,
+    /// so direct row inputs lower through `Expanded`.
+    direct_row_child: bool,
 }
 
 /// Scan a `HostTable`'s children for the
@@ -911,7 +916,7 @@ fn emit_widget_tree(
         return emit_host_surface(node, indent);
     }
     if node.tag == "HostInput" {
-        return emit_host_input(node, indent, part_styles, component);
+        return emit_host_input(node, indent, part_styles, component, ctx.direct_row_child);
     }
     if node.tag == "HostButton" {
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
@@ -1122,6 +1127,10 @@ fn emit_container(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 2);
+    let child_ctx = TableCtx {
+        direct_row_child: widget == "Row",
+        ..ctx
+    };
 
     let style_props = node
         .part_name
@@ -1142,7 +1151,15 @@ fn emit_container(
         // conditional background + text colour. See `emit_styled_box`.
         if let Some(part) = node.part_name.as_deref() {
             if part_has_decoration(style_props) || node_has_state_when(node) {
-                return emit_styled_box(node, part, indent, part_styles, component, emits, ctx);
+                return emit_styled_box(
+                    node,
+                    part,
+                    indent,
+                    part_styles,
+                    component,
+                    emits,
+                    child_ctx,
+                );
             }
         }
 
@@ -1164,7 +1181,7 @@ fn emit_container(
                 part_styles,
                 component,
                 emits,
-                ctx,
+                child_ctx,
             )?;
             let child_src = child_src.trim_end_matches('\n');
             return Ok(format!(
@@ -1178,7 +1195,7 @@ fn emit_container(
             part_styles,
             component,
             emits,
-            ctx,
+            child_ctx,
         )?;
         return Ok(format!(
             "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
@@ -1196,7 +1213,7 @@ fn emit_container(
         part_styles,
         component,
         emits,
-        ctx,
+        child_ctx,
     )?;
 
     if children.is_empty() {
@@ -2042,8 +2059,14 @@ fn emit_host_input(
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
+    direct_row_child: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    let field_pad = if direct_row_child {
+        " ".repeat(indent + 2)
+    } else {
+        pad.clone()
+    };
     // UI28-1 / U29-D1 — accept Expr in `value:` so
     // mosaic-pkg-grid v0.2.0's `HostInput ( value: ( v ) )` shape
     // reaches the TextField with the For-bound cell text. The Expr
@@ -2070,20 +2093,29 @@ fn emit_host_input(
     };
 
     let mut out = String::new();
-    writeln!(out, "{pad}TextField(").unwrap();
+    if direct_row_child {
+        writeln!(out, "{pad}Expanded(").unwrap();
+        writeln!(out, "{field_pad}child: TextField(").unwrap();
+    } else {
+        writeln!(out, "{field_pad}TextField(").unwrap();
+    }
     writeln!(
         out,
-        "{pad}  controller: TextEditingController(text: {value_expr}),"
+        "{field_pad}  controller: TextEditingController(text: {value_expr}),"
     )
     .unwrap();
 
     if let Some(p) = find_string_prop(node, "placeholder") {
         writeln!(
             out,
-            "{pad}  decoration: InputDecoration(hintText: \"{}\"),",
+            "{field_pad}  decoration: InputDecoration(hintText: \"{}\"),",
             escape_dart_string(p)
         )
         .unwrap();
+    }
+
+    if let Some(read_only) = bool_prop_expression(node, "read-only")? {
+        writeln!(out, "{field_pad}  readOnly: {read_only},").unwrap();
     }
 
     // onChange — wraps the new value in a dispatched event.
@@ -2109,11 +2141,23 @@ fn emit_host_input(
         validate_emit_name(&case)?;
         writeln!(
             out,
-            "{pad}  onChanged: (value) => dispatch({component}Event{case}(value: value)),"
+            "{field_pad}  onChanged: (value) => dispatch({component}Event{case}(value: value)),"
         )
         .unwrap();
     }
-    writeln!(out, "{pad})").unwrap();
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        writeln!(
+            out,
+            "{field_pad}  onSubmitted: (_) => dispatch({component}Event{case}()),"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{field_pad})").unwrap();
+    if direct_row_child {
+        writeln!(out, "{pad})").unwrap();
+    }
     Ok(out)
 }
 
@@ -2154,10 +2198,7 @@ fn emit_host_button(
     // Current behavior: zero-payload events keep the `EventCase()`
     // shape, while single text-like/number payloads borrow the nearest
     // `For` item/index when present.
-    let disabled_is_true = matches!(find_keyword_prop(node, "disabled"), Some("true"));
-    let on_pressed_expr: String = if disabled_is_true {
-        "null".to_string()
-    } else if let Some(emit_name) =
+    let callback: String = if let Some(emit_name) =
         find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
     {
         let case = pascalize(&strip_on_prefix(emit_name));
@@ -2171,6 +2212,11 @@ fn emit_host_button(
         format!("() => dispatch({component}Event{case}({args}))")
     } else {
         "() {}".to_string()
+    };
+    let on_pressed_expr = match bool_prop_expression(node, "disabled")?.as_deref() {
+        Some("true") => "null".to_string(),
+        Some("false") | None => callback,
+        Some(disabled) => format!("{disabled} ? null : {callback}"),
     };
 
     let style_arg = host_button_style_arg(node, part_styles);
@@ -2523,6 +2569,7 @@ fn emit_host_table(
         sheet_text_color: sheet_text_color.as_deref(),
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
+        direct_row_child: false,
     };
 
     // UI28-1 / U29-D1 — HostTable now walks its children (sub-tags:
@@ -3306,6 +3353,28 @@ fn find_slot_ref_prop<'a>(node: &'a LayoutNode, name: &str) -> Option<&'a str> {
     })
 }
 
+fn bool_prop_expression(
+    node: &LayoutNode,
+    name: &str,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, name) else {
+        return Ok(None);
+    };
+    let expression = match value {
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            camel
+        }
+        LayoutPropValue::Keyword(keyword) if keyword == "true" || keyword == "false" => {
+            keyword.clone()
+        }
+        LayoutPropValue::Expr(expression) => expression.trim().to_string(),
+        _ => return Ok(None),
+    };
+    Ok(Some(expression))
+}
+
 fn emit_host_surface(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let expression = if let Some(slot) = find_slot_ref_prop(node, "content") {
@@ -3878,6 +3947,40 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_button_disabled_slot_controls_onpressed() {
+        let m = component(
+            "BrowserChrome",
+            vec![slot("back-disabled", SlotType::Bool, true)],
+            vec![emit("onBack", vec![])],
+        );
+        let l = layout(
+            "BrowserChrome",
+            node_with(
+                "HostButton",
+                vec![
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::SlotRef("back-disabled".into()),
+                    },
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onBack".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
+        assert!(
+            r.output.contains(
+                "onPressed: backDisabled ? null : () => dispatch(BrowserChromeEventBack())"
+            ),
+            "slot-backed disabled state must control the native button:\n{}",
+            r.output
+        );
+    }
+
     // ----- HostInput with placeholder + slot value ---------------------
 
     #[test]
@@ -3905,6 +4008,74 @@ mod tests {
         assert!(out.contains("TextField("));
         assert!(out.contains("TextEditingController(text: formula)"));
         assert!(out.contains("hintText: \"Type a formula\""));
+    }
+
+    #[test]
+    fn host_input_lowers_read_only_slot_and_commit_event() {
+        let m = component(
+            "BrowserChrome",
+            vec![
+                slot("address", SlotType::Text, true),
+                slot("navigation-disabled", SlotType::Bool, true),
+            ],
+            vec![emit("onNavigate", vec![])],
+        );
+        let l = layout(
+            "BrowserChrome",
+            node_with(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("address".into()),
+                    },
+                    LayoutProp {
+                        name: "read-only".into(),
+                        value: LayoutPropValue::SlotRef("navigation-disabled".into()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".into(),
+                        value: LayoutPropValue::EmitRef("onNavigate".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
+        assert!(r.output.contains("readOnly: navigationDisabled"));
+        assert!(r
+            .output
+            .contains("onSubmitted: (_) => dispatch(BrowserChromeEventNavigate())"));
+    }
+
+    #[test]
+    fn host_input_directly_inside_row_receives_finite_width() {
+        let m = component(
+            "BrowserChrome",
+            vec![slot("address", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "BrowserChrome",
+            node_with(
+                "Row",
+                vec![],
+                vec![node_with(
+                    "HostInput",
+                    vec![LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("address".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("BrowserChrome")).unwrap();
+        assert!(
+            r.output.contains("Expanded(") && r.output.contains("child: TextField("),
+            "a direct Row input must be flex-constrained:\n{}",
+            r.output
+        );
     }
 
     /// Regression: `HostInput { onChange: emit: onFormulaChange }`
@@ -5049,6 +5220,17 @@ mod tests {
         assert!(
             proj.main_dart.contains("MosaicHost.load()"),
             "main.dart must load the optional Mosaic host"
+        );
+        assert!(
+            proj.main_dart
+                .contains("class MosaicApp extends StatefulWidget")
+                && proj
+                    .main_dart
+                    .contains("const MosaicApp({super.key, this.mosaicHost})")
+                && proj
+                    .main_dart
+                    .contains("widget.mosaicHost ?? MosaicHost.load()"),
+            "main.dart must expose host injection for direct shell acceptance"
         );
         assert!(
             proj.readme
