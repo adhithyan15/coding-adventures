@@ -1,0 +1,48 @@
+# Chief of Staff SDK
+
+The TypeScript SDK is the capability-safe interface between an agent and its
+Chief of Staff host. Agent code never needs filesystem, network, process,
+clock, or random-number permissions. It sends typed requests to a host over an
+injected transport, and the host enforces the sealed manifest.
+
+This first Level 3 slice implements direct encrypted-channel access:
+
+```typescript
+import {
+  JsonRpcLineTransport,
+  configureHostTransport,
+  channel_read,
+  channel_write,
+  channel_ack,
+} from "@coding-adventures/chief-of-staff-sdk";
+
+configureHostTransport(new JsonRpcLineTransport(lines));
+
+const message = await channel_read("finance-requests");
+if (message !== null) {
+  await channel_write(
+    "finance-summaries",
+    new TextEncoder().encode("complete"),
+    "text/plain",
+  );
+  await channel_ack("finance-requests", message.id);
+}
+```
+
+`lines` implements `JsonLineDuplex`. A Deno or subprocess wrapper owns the
+actual stdin/stdout handles and injects them; the SDK itself has no ambient OS
+access. Requests are serialized so one ordered stdio stream never has multiple
+unmatched responses in flight.
+
+Channel payloads use canonical base64 on the wire and `Uint8Array` in agent
+code. Sequence numbers and nanosecond timestamps use decimal strings on the
+wire and `bigint` in agent code, avoiding JavaScript's 53-bit integer limit.
+
+## Security properties
+
+- JSON-RPC version, response ID, result/error exclusivity, and result shapes
+  are validated before data reaches agent code.
+- Malformed base64, non-canonical decimal integers, oversized identifiers,
+  content types, payloads, and protocol lines are rejected.
+- Host errors retain their numeric code and structured data without exposing
+  unchecked response objects as SDK values.

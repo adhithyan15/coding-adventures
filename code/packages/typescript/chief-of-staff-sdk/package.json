@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/chief-of-staff-sdk",
+  "version": "0.1.0",
+  "description": "Capability-safe TypeScript SDK for Chief of Staff agents",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "chief-of-staff",
+    "agent",
+    "sdk",
+    "json-rpc"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}
