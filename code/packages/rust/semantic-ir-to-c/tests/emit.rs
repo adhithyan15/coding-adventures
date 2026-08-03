@@ -143,20 +143,23 @@ fn string_literals_are_trigraph_safe() {
 
 #[test]
 fn builtin_method_dispatch_is_rejected() {
-    // A built-in method NOT in the Collections slice yet (`ljust` — one of
-    // slice 8's explicitly-deferred padding methods, see that slice's
-    // CHANGELOG/spec-addendum entry) lowers to a `__method__` dispatch the
+    // A built-in method NOT in the Collections slice yet (`respond_to?` —
+    // slice 10's explicitly-deferred reflective-query method, see that
+    // slice's CHANGELOG/spec-addendum entry: it needs a full reflective
+    // query across BOTH the user-defined method table and the entire
+    // `is_builtin_method` catalog, a materially larger undertaking than
+    // slice 10's other methods) lowers to a `__method__` dispatch the
     // module never registers via `__def_method__`, so the allowlist rejects
     // it cleanly (rather than emitting a call that `NoMethodError`s at
-    // runtime).  (`length`/`upcase`/`strip`/… ARE lowered now — see
+    // runtime).  (`length`/`upcase`/`strip`/`ljust`/… ARE lowered now — see
     // `collection_string_methods_route_to_the_builtin_dispatcher` and the
-    // `compile_and_run_string_methods`/`compile_and_run_string_methods_slice8`
-    // execution proofs.)
-    let m = lower_ruby("puts \"hi\".ljust(5)");
+    // `compile_and_run_string_methods`/`compile_and_run_string_methods_slice8`/
+    // `compile_and_run_string_charset_padding` execution proofs.)
+    let m = lower_ruby("puts \"hi\".respond_to?(\"upcase\")");
     let err = compile(&m).expect_err("rejects a not-yet-lowered built-in method dispatch");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     assert!(
-        err.message.contains("ljust"),
+        err.message.contains("respond_to?"),
         "names the built-in method: {}",
         err.message
     );

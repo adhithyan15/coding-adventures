@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.35.0 — deferred-from-slice-8 String methods: char-set + padding
+
+Widens `_sir_builtin_method_v` with the two String method families slice 8
+explicitly deferred to keep that slice reviewable, matched against the
+Python/TS `sir-runtime-oop` reference catalog:
+
+- **Char-set methods** — `count(charset, ...)`, `delete(charset, ...)`,
+  `squeeze(charset=nil)`. Each `charset` argument is treated LITERALLY as
+  the set of characters it contains (Ruby's char-range (`"a-z"`) and
+  negation (`"^abc"`) forms stay a documented follow-up, the same
+  literal-only scope precedent `tr`/`sub`/`gsub` already use). Multiple
+  charset arguments INTERSECT. `squeeze` with no charset argument collapses
+  every consecutive run; with one or more charset arguments, only runs of
+  chars in the (intersected) set collapse — kept as genuinely separate
+  cases (not "empty intersection"), since a truly empty intersection must
+  squeeze NOTHING while "no charset at all" must squeeze EVERYTHING.
+  `count`/`delete` share their method names with Array#count (slice 3) and
+  Hash#delete (slice 6) — merged into those EXISTING dispatch arms rather
+  than given a second `else if` on the same `strcmp`, since this file's
+  dispatcher is one long if/else-if chain where the first name match wins
+  regardless of whether its body actually returns.
+- **Padding methods** — `ljust(width, pad=" ")`, `rjust`, `center`. Pad to
+  `width` BYTES (this runtime is byte-oriented throughout, matching
+  `length`/`bytes`) using `pad` repeated cyclically; `center` puts any odd
+  leftover pad byte on the RIGHT (Ruby's rule — the opposite of Python's
+  single-char-only `str.center`). The deficit is clamped at
+  `SIR_MAX_PAD_LEN` (100,000,000, mirroring the Python/TS reference's
+  `_MAX_REPEAT_LEN`) so a hostile width (`"".ljust(10**18)`) cannot exhaust
+  memory — `_sir_alloc` only guards a FAILED allocation, not a succeeding
+  multi-gigabyte one. The width argument is extracted via a new
+  `_sir_str_width_arg`, never a bare `(int64_t)v.as.f` cast (UB for a
+  non-finite/out-of-range Float), and the `width <= 0` short-circuit is
+  load-bearing, not just an optimization: `width` can be `INT64_MIN` (a
+  saturated hostile Float argument), and `width - len` on that value would
+  be signed-overflow UB — the short-circuit sidesteps computing the
+  subtraction at all.
+
+Also discovered, and filed as its own backlog item rather than fixed here
+(out of scope): a string literal whose content is `"*"`/`"**"`/`"&"`, when
+it appears as a non-first, comma-separated call argument, crashes the Ruby
+frontend's PARSER with an internal panic rather than a graceful error —
+confirmed independent of these new methods (a bare `foo(1, "*")`
+reproduces it). Worked around in this PR's own tests by using `"-"` as the
+example pad character instead of Ruby's usual `"*"`.
+
 ## 0.34.0 — `Numeric#round(ndigits)`, the multi-digit form
 
 `round` previously only accepted the 0-arg form (Collections slice 9). This
