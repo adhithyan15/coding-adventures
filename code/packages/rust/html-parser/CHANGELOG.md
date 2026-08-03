@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- SVG and MathML start tags foster-parented out of table structure now report
+  the table insertion-mode parse error, covering 26 previously silent malformed
+  corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
 - Non-whitespace character data foster-parented out of table structure now
   reports the table-text parse error, covering 14 previously silent malformed
   corpus cases without changing DOM recovery or undeclared-diagnostic coverage.

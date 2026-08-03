@@ -5240,6 +5240,10 @@ impl HtmlParser {
             && matches!(name.as_str(), "svg" | "math")
             && self.current_element_is_table_structure()
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-foreign-start-tag-in-table",
+                format!("start tag `<{name}>` in a table context was foster parented"),
+            ));
             let namespace = self.namespace_for_start_tag(&name);
             let name = adjusted_foreign_start_tag_name(name, namespace);
             let attributes = adjusted_foreign_attributes(attributes, namespace);
@@ -33371,6 +33375,35 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
+    }
+
+    #[test]
+    fn reports_foreign_start_tags_fostered_from_tables() {
+        for (source, name) in [
+            ("<!doctype html><table><svg></svg></table>", "svg"),
+            ("<!doctype html><table><math></math></table>", "math"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-foreign-start-tag-in-table",
+                            format!("start tag `<{name}>` in a table context was foster parented"),
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><svg></svg><math></math></td></tr></table>",
+        )
+        .unwrap();
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-foreign-start-tag-in-table"));
     }
 
     #[test]
