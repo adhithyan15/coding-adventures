@@ -1311,6 +1311,39 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
     return r;
 }
 
+/* `Foo.new(args…)` — allocate a `cls` instance and run its `initialize`.
+ *
+ * Allocates via `_sir_new_instance`, then — if `initialize` resolves on `cls`
+ * or an ancestor (`_sir_resolve_method`, the same ancestry walk `_sir_call_
+ * method` uses) — binds `self` to the new object and invokes it with `args`,
+ * so constructor-body `@ivar` assignments land on the new object (mirroring
+ * the Go/Rust/Ruby backends, which have always run `initialize` here).  Self
+ * is restored afterward, same save/restore as `_sir_call_method`.  The object
+ * is always returned, even with no `initialize` registered — a plain
+ * allocation, matching Ruby's default no-op `Object#initialize`. */
+SirValue _sir_call_new(const char *cls, int argc, ...) {
+    va_list ap;
+    SirValue *args, obj, fn;
+    obj = _sir_new_instance(cls);
+    fn = _sir_resolve_method(cls, "initialize");
+    if (fn.tag == SIR_CLOSURE) {
+        va_start(ap, argc);
+        args = _sir_va_collect(argc, ap);
+        va_end(ap);
+        {
+            SirValue saved_self = _sir_current_self;
+            const char *saved_class = _sir_current_class;
+            _sir_current_self = obj;
+            _sir_current_class = obj.as.inst->sir_class;
+            fn.as.clo->fn(fn.as.clo->caps, args, argc);
+            _sir_current_self = saved_self;
+            _sir_current_class = saved_class;
+        }
+        if (args) free(args);
+    }
+    return obj;
+}
+
 /* OOP slice 4: `super` from within `defining_class`'s method `method`.  Resolve
  * `method` starting at the SUPERCLASS of `defining_class` (so it does not
  * re-enter the same override) and apply it to the CURRENT `self` — `super` runs
