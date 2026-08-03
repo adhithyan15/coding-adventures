@@ -1554,6 +1554,23 @@ def test_lowers_positive_mosfet_model_length() -> None:
     assert isclose(mosfet.model.model.params.L, 2.0e-6)
 
 
+@pytest.mark.parametrize("saturation_current", ["0", "-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_saturation_current(
+    saturation_current: str,
+) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET IS must be finite and positive"):
+        parse_netlist(
+            f".model nfast NMOS(IS={saturation_current})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_saturation_current() -> None:
+    parsed = parse_netlist(".model nfast NMOS(IS=2f)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.IS, 2.0e-15)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
