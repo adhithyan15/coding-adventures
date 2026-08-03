@@ -48,8 +48,17 @@ is assumed: the text supplies every Spanish form in full, as enrichment, so the
 - **Chapter 15 — The Compound Past**: passé composé, passé simple.
 - **Chapter 16 — To Be, and the Past That Takes It**: être, passé composé with
   *être*.
+- **Chapter 17 — Head and Hand**: *la tête*, *la main*.
+- **Chapter 18 — Yes and No**: *oui*, *non*.
+- **Chapter 19 — Please**: *s'il vous plaît*.
+- **Chapter 20 — Sorry**: *je suis désolé(e)*.
+- **Chapter 21 — Weather**: *le temps*, *il pleut*.
+- **Chapter 22 — Dog and Cat**: *chien*, *chat*.
+- **Chapter 23 — Green and Yellow**: *vert*, *jaune*.
 
-**All sixteen chapters are authored and in the book (79 pages).**
+**All twenty-three chapters are authored and in the book (98 pages).** Chapters
+17–23 are generated from the same canonical lesson AST and source hashes that
+Language Ladder verifies independently.
 
 ## Files
 

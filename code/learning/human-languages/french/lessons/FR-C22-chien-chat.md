@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: FR-C22-chien-chat
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 690
 chapter: 22
 type: word
 headword: chien, chat
@@ -9,20 +12,34 @@ prerequisites: [FR-C14-age]
 sounds: [ca-to-cha-shift, nasal-en]
 roots: [latin-canis-dog, latin-cattus-afroasiatic]
 etymology_hook: "chien is the fully REGULAR French descendant of Latin canis — the same ca- → cha- palatalization that also gives champ (← campus) and chanter (← cantāre) — unlike Spanish, which replaced canis-derived can with the still-unexplained perro; chat continues cattus, the same word (probably Afro-Asiatic, traveling with the cat out of Egypt) behind Spanish's gato and Italian's gatto"
-est_minutes: 4
+duration:
+  max_seconds: 233
+requires:
+  knowledge: []
+introduces:
+  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
+practises:
+  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [FR-C14-age]
 ---
 
 # chien, chat — the regular one, and the well-traveled one
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've met Spanish's *perro*, a genuine unsolved mystery, and
 Latin's own *canis*/*fēlēs*→*cattus* history. French's two animal words tell
 a cleaner story: one is perfectly regular, the other is the same well-
 documented word you already know.
 
-## chien — the regular, expected descendant of canis
+## The word, taken apart: chien
+<!-- hl-knowledge: introduces=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03]; assesses=[] -->
 
 **chien** ("**dog**") comes straight from Latin **canis** (accusative
 *canem*) — and unlike Spanish, French kept it. Two separate, regular changes
@@ -36,7 +53,8 @@ even though the precise phonetic trigger is still debated). Put together,
 predictably — a genuinely different story from Spanish, where the expected
 descendant (*can*) got pushed aside by the still-unexplained *perro*.
 
-## chat — the same well-traveled word as gato
+## The word, taken apart: chat
+<!-- hl-knowledge: introduces=[FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]; assesses=[] -->
 
 **chat** ("**cat**") continues **cattus**, the same Late Latin word — most
 likely ultimately **Afro-Asiatic** (compare Nubian *kadis*) — that spread
@@ -46,6 +64,7 @@ French, Spanish, and Italian all independently inherited the exact same Late
 Latin replacement for Classical *fēlēs*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "chien" — dog, the regular descendant of canis]
@@ -55,6 +74,7 @@ Latin replacement for Classical *fēlēs*.
   Rome]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05] -->
 
 [PAUSE 3s] Is *chien* a regular or irregular descendant of Latin *canis*?
 (**Regular** — the same *ca- → cha-* shift as *champ* and *chanter*.) Does

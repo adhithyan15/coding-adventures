@@ -270,6 +270,55 @@
       "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "french",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:fr-head-and-hand",
+      "output": "french/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:fr-yes-and-no",
+      "output": "french/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:fr-please",
+      "output": "french/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:fr-sorry",
+      "output": "french/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:fr-weather",
+      "output": "french/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:fr-dog-and-cat",
+      "output": "french/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:fr-green-and-yellow",
+      "output": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
