@@ -97,6 +97,14 @@ func formatResolverError(err error) (string, int) {
 	return fmt.Sprintf("Error: %v", err), 1
 }
 
+func formatDiscoveryError(err error) (string, int) {
+	var duplicateError *discovery.DuplicatePackageIdentityError
+	if errors.As(err, &duplicateError) {
+		return duplicateError.Error(), 2
+	}
+	return fmt.Sprintf("Error: %v", err), 1
+}
+
 // expandAffectedSetWithPrereqs ensures all transitive prerequisites of the
 // currently affected packages are also scheduled. This matters on fresh CI
 // runners: some package BUILD steps materialize local dependency state
@@ -150,7 +158,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, dart, wasm, c, cpp, csharp, fsharp, dotnet, all")
+	language := flag.String("language", "all", "Filter to a canonical package language or all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -329,7 +337,12 @@ func run() int {
 
 	if !usedPlan {
 		// Step 2: Discover packages.
-		packages = discovery.DiscoverPackages(codeRoot)
+		packages, err = discovery.DiscoverPackages(codeRoot)
+		if err != nil {
+			message, exitCode := formatDiscoveryError(err)
+			fmt.Fprintln(os.Stderr, message)
+			return exitCode
+		}
 		if len(packages) == 0 {
 			fmt.Fprintln(os.Stderr, "No packages found.")
 			return 0

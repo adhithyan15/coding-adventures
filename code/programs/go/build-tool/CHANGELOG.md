@@ -6,6 +6,15 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Canonical discovery identity registry.** Go discovery now consumes the
+  shared language-registry and duplicate-identity fixtures, recognizes every
+  canonical package/program bucket including Mosaic, Twig, OCaml, and retained
+  `.NET` hosts, preserves the `programs` identity segment, and excludes
+  specification fixture trees.
+- **Fail-closed duplicate identities.** Two directories that normalize to one
+  graph name now return typed `DUPLICATE_PACKAGE_IDENTITY` details with sorted
+  repository-relative paths; the CLI prints the stable root-redacted
+  diagnostic and exits `2`.
 - **C and C++ as first-class languages.** `inferLanguage` now recognizes `c`
   and `cpp` path components (exact-match, so `c` never fires inside `csharp` or
   `cpp`). Existing C++ packages (`cpp/conduit`, `cpp/conduit-hello`,
