@@ -15,6 +15,8 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   same ordered source hash to Language Ladder.
 - Generate Gujarati Chapter 6 from its two strict canonical lessons, preserving
   Gujarati-script runs and bookmark-safe romanization from the shared AST.
+- Generate Punjabi Chapter 6 from its two strict canonical lessons, preserving
+  Gurmukhi runs and bookmark-safe romanization from the shared AST.
 
 ### Added — block-boundary knowledge closure
 

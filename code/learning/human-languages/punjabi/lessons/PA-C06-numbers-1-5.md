@@ -1,26 +1,44 @@
 ---
+schema_version: 2
 id: PA-C06-numbers-1-5
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 340
 chapter: 6
 type: word
 headword: ਇੱਕ ਦੋ ਤਿੰਨ ਚਾਰ ਪੰਜ
+romanization: ikk do tinn chār panj
 gloss: one to five — meeting the panj of Punjabi as an actual number
 concept_tag: PA-NUMBERS-1-5
 prerequisites: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han]
 sounds: [sihari-i, tippi-nasal, kanna-aa]
 roots: [sanskrit-panca, persian-panj]
 etymology_hook: "Chapter 5 introduced panj inside panjabi; learn it as the ordinary number five here, then trace Punjabi and Persian panj as convergence in the next short lesson"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
+practises:
+  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han]
 ---
 
 # ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ — one to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Four of these are new. The fifth you have known since **Chapter 5** —
 you just didn't know it was a number.
 
-## The five
+## You'll want to know: the five
+<!-- hl-knowledge: introduces=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL]; assesses=[] -->
 
 | | Punjabi | said |
 |---|---|---|
@@ -41,7 +59,8 @@ Two marks worth telling apart, because they look similar and do different jobs:
 (So *tinn*'s double *n* is not the addak's doing — that word is spelled with a
 nasal mark, and the doubling is in the pronunciation.)
 
-## ਪੰਜ — a word you already know
+## What you've built: ਪੰਜ as a number
+<!-- hl-knowledge: introduces=[PA-HISTORY-PANJABI-FIVE-RIVERS]; assesses=[] -->
 
 Chapter 5 took the name **ਪੰਜਾਬੀ** (*panjābī*) apart for you: Persian **ਪੰਜ**
 *panj*, "five," plus **ਆਬ** *āb*, "water" — the language **of the five rivers**.
@@ -53,6 +72,7 @@ The next prerequisite-ordered lesson explains an important twist: Punjabi's
 numeral and the Persian word reached the same *panj* shape independently.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ikk, do, tinn, chār, panj"]
@@ -60,6 +80,7 @@ numeral and the Persian word reached the same *panj* shape independently.
 - [YOU SAY: the Ch. 5 callback — "**panj** + **āb** = five rivers"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS] -->
 
 [PAUSE 3s] Count to five in Punjabi. (*Ikk, do, tinn, chār, panj*.) What script is
 this? (**Gurmukhi** — related to Devanagari, and it has a top line too.) What does

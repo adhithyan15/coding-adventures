@@ -11,8 +11,8 @@
 - Independently combine loaded lesson fingerprints and show `book synced` for a
   generated chapter only when the app AST matches the committed book manifest;
   Spanish Chapters 1–6 now verify all 51 migrated lessons this way, and Marathi
-  and Gujarati Chapter 6 verify both of their canonical lessons independently
-  of the book generator.
+  Gujarati, Marathi, and Punjabi Chapter 6 verify both of their canonical
+  lessons independently of the book generator.
 
 ## 0.25.0 — the same syllable in its sister scripts (syllabary, PR 9)
 
