@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9832,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9832",
-    "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution"
+    "number": 9846,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9846",
+    "branch": "codex/build-tool-haskell-ruby-field-aware-manifest-resolution"
   },
   "last_inventory": {
-    "revision": "88772e0dc3fce6f7303ea381076e6eeaa3c30b1c",
+    "revision": "fd1035868a7b935fec29a35e928b3444ef7a6b8a",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1249,
-    "implementation_package_slots": 4403,
+    "implementation_identities": 1254,
+    "implementation_package_slots": 4408,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 799,
-    "singleton_missing_slots": 11186,
-    "rust_singletons": 604,
+    "singleton_packages": 804,
+    "singleton_missing_slots": 11256,
+    "rust_singletons": 609,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -419,20 +419,29 @@
     {
       "id": "build-tool-haskell-post-python-field-aware-manifest-resolution",
       "title": "Make Haskell Rust manifest resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-non-cabal-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution",
       "pr_number": 9832,
-      "notes": "Narrowed from the post-Python umbrella after guarded PR #9817 auto-merged exact head 2444811586 as b608f29c45 on 2026-08-03. The post-merge collision-checked inventory initially held 1,247 identities and 4,400 slots, 173 high-consensus packages with 272 missing slots, 797 singletons with 11,158 missing slots, 602 Rust singletons, and zero collisions or unknown buckets. The selection audit identified Rust as the largest clean dependency-shaped repair: its then-current 945-package snapshot had 3,201 Haskell edges versus 2,353 canonical Go edges, 848 false edges, and zero missing edges. TypeScript has larger two-sided drift (147 false and 948 missing), while Ruby has 123 false and zero missing; resolving Rust first removes the most false-cycle risk without mixing alias discovery and missing-edge work. The implementation now reads only inline path entries in Cargo's top-level dependencies table and ignores every non-authoritative table. Full-graph validation exposed two valid renamed-package edges that the Go oracle itself omitted, so the shared contract and both engines now honor Cargo package overrides before alias lookup. After conflict-free rebases through merged parity PR #9829 at 88772e0d, both engines discover 948 packages and match exactly at 2,373 edges with zero differences; the Haskell front door completes the lane with zero failures. The refreshed collision-checked inventory has 1,249 identities and 4,403 slots, 173 high-consensus packages with 271 missing slots, 799 singletons with 11,186 missing slots, 604 Rust singletons, and zero collisions or unknown buckets. Haskell ZIP fills an existing identity. The new chief-of-staff-daemon-credential and chief-of-staff-daemon singletons own concrete native authority and have newly logged excluded native-authority reviews. PR #9829 changes existing SPICE packages only, leaves inventory unchanged, and does not displace this selected repair. Ready-for-review PR #9832 is open with the complete validation summary."
+      "notes": "Narrowed from the post-Python umbrella after guarded PR #9817 auto-merged exact head 2444811586 as b608f29c45 on 2026-08-03. The post-merge collision-checked inventory initially held 1,247 identities and 4,400 slots, 173 high-consensus packages with 272 missing slots, 797 singletons with 11,158 missing slots, 602 Rust singletons, and zero collisions or unknown buckets. The selection audit identified Rust as the largest clean dependency-shaped repair: its then-current 945-package snapshot had 3,201 Haskell edges versus 2,353 canonical Go edges, 848 false edges, and zero missing edges. TypeScript has larger two-sided drift (147 false and 948 missing), while Ruby has 123 false and zero missing; resolving Rust first removes the most false-cycle risk without mixing alias discovery and missing-edge work. The implementation now reads only inline path entries in Cargo's top-level dependencies table and ignores every non-authoritative table. Full-graph validation exposed two valid renamed-package edges that the Go oracle itself omitted, so the shared contract and both engines now honor Cargo package overrides before alias lookup. After conflict-free rebases through merged parity PR #9829 at 88772e0d, both engines discover 948 packages and match exactly at 2,373 edges with zero differences; the Haskell front door completes the lane with zero failures. The refreshed collision-checked inventory has 1,249 identities and 4,403 slots, 173 high-consensus packages with 271 missing slots, 799 singletons with 11,186 missing slots, 604 Rust singletons, and zero collisions or unknown buckets. Haskell ZIP fills an existing identity. The new chief-of-staff-daemon-credential and chief-of-staff-daemon singletons own concrete native authority and have newly logged excluded native-authority reviews. PR #9829 changes existing SPICE packages only, leaves inventory unchanged, and does not displace this selected repair. Ready-for-review PR #9832 opened with the complete validation summary, then guarded squash auto-completion merged exact head 10f5415742 as 8784e6e436 on 2026-08-03 after all 17 exact-head checks were terminal, no failing conclusion remained, and two consecutive mergeability readings were MERGEABLE/CLEAN."
     },
     {
       "id": "build-tool-haskell-post-rust-field-aware-manifest-resolution",
-      "title": "Make the remaining post-Rust Haskell build-tool manifest readers field-aware",
-      "status": "pending",
+      "title": "Make Haskell Ruby manifest resolution field-aware",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-post-python-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-ruby-field-aware-manifest-resolution",
+      "pr_number": 9846,
+      "notes": "Materialized after the post-Python leverage audit selected Rust. The post-Rust 8784e6e4 collision-checked inventory had 1,250 identities and 4,404 established-lane slots, 173 high-consensus packages with 271 missing slots, 800 singletons with 11,200 missing slots, 605 Rust singletons, and zero collisions or unknown buckets. The new chief-of-staff-daemon-service-files singleton is a zero-capability deterministic renderer and now has a separate portable-conformance backlog owner. After parser-parity PR #9837 merged externally, the refreshed a9179a61 collision-checked inventory has 1,251 identities and 4,405 slots, 173 high-consensus packages with 271 missing slots, 801 singletons with 11,214 missing slots, 606 Rust singletons, and zero collisions or unknown buckets. The sole new identity was chief-of-staff-daemon-installer; its native filesystem publication and supervisor-command authority now has a separate excluded native-authority review. The later b76de6c6 collision-checked inventory has 1,253 identities and 4,407 slots, 173 high-consensus packages with 271 missing slots, 803 singletons with 11,242 missing slots, 608 Rust singletons, and zero collisions or unknown buckets. Its new neural-learning-capi identity is a tested Rust/C ABI wrapper around the portable neural-learning core and now has an excluded wrapper/native-ABI review. Its new smart-home-enphase-envoy-integration identity is split into an eligible deterministic request/response/projection conformance owner and an excluded live TCP/TLS/token/runtime authority review. The subsequent fd103586 inventory has 1,254 identities and 4,408 slots, 804 singletons with 11,256 missing slots, 609 Rust singletons, and otherwise unchanged high-consensus and collision counts. Its sole new chief-of-staff-cli identity composes credential loading, loopback WebSocket transport, native installer publication, supervisor execution, environment and stdout effects around separately owned portable CLI-core and service-rendering contracts, so it now has an excluded native composition-root review. None of these discoveries displaces this already implemented portable resolver repair. The quick resolver audit reconfirmed TypeScript at 469 packages, 274 Haskell edges versus 1,075 Go edges, 147 false and 948 missing; its canonical audit also reaches separately owned BUILD_windows prerequisite debt. Ruby began at 301 packages, 543 Haskell edges versus 420 Go edges, 123 apparent false edges, and zero apparent missing edges. Corpus inspection found six legitimate add_runtime_dependency declarations plus 28 valid dependencies that use declared gem names rather than mechanically derived directory aliases. The shared Ruby contract and both engines now accept runtime dependency synonyms while excluding development/comments/metadata, and Go registers manifest-declared aliases. The complete lane now matches exactly at 301 packages and 454 edges with zero one-sided edges. Ruby remains a coherent field-boundary repair because it removes false-cycle risk and repairs its oracle without mixing unrelated manifest grammars or build-file remediation. Prior exact drift remains Perl 95/2, Swift 65/0, C# 47/178, F# 39/178, Go 26/0, Kotlin 9/13, Elixir 8/0, Java 4/24, Dart 0/67, and the non-denominator Wasm execution target 12/1. Ready-for-review PR #9846 is open with the complete validation and classification summary."
+    },
+    {
+      "id": "build-tool-haskell-post-ruby-field-aware-manifest-resolution",
+      "title": "Make the remaining post-Ruby Haskell build-tool manifest readers field-aware",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-post-rust-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized after the post-Python leverage audit selected Rust. Remaining exact graph drift is TypeScript 147 false/948 missing, Ruby 123/0, Perl 95/2, Swift 65/0, C# 47/178, F# 39/178, Go 26/0, Kotlin 9/13, Elixir 8/0, Java 4/24, Dart 0/67, and the non-denominator Wasm execution target 12/1. Re-run the complete oracle audit after Rust lands, then split the highest-leverage coherent ecosystem without combining unrelated manifest grammars."
+      "notes": "Materialized after the post-Rust leverage audit selected Ruby's clean 123-false-edge repair. Re-run the complete oracle audit after Ruby lands, then split the next coherent ecosystem without combining unrelated manifest grammars or separately owned BUILD_windows debt."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1779,6 +1788,60 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean bbb0276a inventory after chief-of-staff-daemon landed as the Rust-only concrete D18 composition root. It reads environment and configuration, opens trusted files, creates and writes durable credential/state paths, listens on loopback, executes and signals child processes, handles shutdown signals, and owns monotonic scheduling and bounded waits. Review the composed authority and platform evidence after its component native reviews; keep only dependency-injected orchestration ordering in portable contracts, and do not manufacture all-language privileged daemon executables. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Rust resolver repair."
+    },
+    {
+      "id": "chief-daemon-service-files-portable-conformance",
+      "title": "Fixture and port deterministic Chief daemon service-file renderers",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 8784e6e4 inventory after chief-of-staff-daemon-service-files landed as a Rust-only zero-capability package. Define language-neutral fixtures for absolute executable/config path validation, launchd plist, systemd user unit, and Windows scheduled-task XML rendering, escaping, login startup, single-instance/restart policy, and stable diagnostics. Port the pure deterministic renderers across supported lanes; keep filesystem writes, owner-only permissions, launchctl/systemctl/schtasks execution, native registration, environment lookup, and process authority outside this contract."
+    },
+    {
+      "id": "chief-daemon-installer-native-authority-review",
+      "title": "Review the Chief daemon installer native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-daemon-service-files-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean a9179a61 inventory after chief-of-staff-daemon-installer landed as a Rust-only secure per-user installer. The crate inspects and creates native user directories, validates file identity and permissions, publishes owner-only service definitions durably, and invokes launchctl, systemctl, or schtasks without a shell, so the concrete installer is a native-runtime boundary rather than an all-language portable target. Review the minimum truthful filesystem, process-execution, and platform authority plus cross-platform evidence; keep pure install-plan validation and service-definition rendering in the separately owned portable conformance seam, and record the residual mutation and registration adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Ruby resolver repair."
+    },
+    {
+      "id": "chief-cli-executable-native-authority-review",
+      "title": "Review the Chief operator CLI composition-root exception",
+      "status": "pending",
+      "depends_on": ["chief-cli-core-portable-conformance", "chief-daemon-api-native-authority-review", "chief-daemon-credential-native-authority-review", "chief-daemon-installer-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean fd103586 inventory after chief-of-staff-cli landed as the Rust-only concrete D18 operator executable. It reads environment and native paths, loads or creates the owner-only credential, connects and authenticates over the loopback WebSocket API, writes terminal output, publishes native service definitions, and executes launchctl, systemctl, schtasks, or id without a shell. Review the composed environment, filesystem, credential, connect, process, and stdout authority plus platform evidence after its component owners; keep argv grammar, typed dispatch, deterministic result rendering, install-plan validation, and service-file rendering in the existing portable CLI-core and service-file contracts; and do not manufacture all-language host-mutating operator executables. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "neural-learning-capi-wrapper-native-abi-review",
+      "title": "Review the neural-learning C ABI wrapper exception",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean b76de6c6 inventory after neural-learning-capi landed as a Rust-only cdylib/staticlib/rlib boundary around the already portable neural-learning weighted-neuron core. Classify it as a tested wrapper/native ABI surface rather than an all-language package gap; review fixed-width layout, pointer and overlap validation, panic containment, caller-owned buffers, stable status/version behavior, generated C header parity, and platform build evidence against the existing neural-learning-rust-cabi-v1 fixture. Keep the mathematical weighted-neuron semantics in the portable neural-learning owner and do not manufacture foreign-function wrappers in languages that do not export this C ABI. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-enphase-envoy-portable-core-extraction-and-conformance",
+      "title": "Extract and fixture the portable Enphase Envoy adapter core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed as a mixed Rust-only package. Define language-neutral fixtures for credential-free HTTPS-origin and loopback-test validation, gateway serial and VaultRef handling, the two bounded GET request plans, bearer-header redaction, HTTP response framing limits, meter inventory/readings correlation by EID, duplicate and malformed record rejection, stable identities, aggregate health, telemetry projection, and authorization-before-effect ordering behind an injected transport. Port the deterministic validation, parsing, planning, and projection core across supported lanes while keeping live DNS/TCP/TLS, token materialization, Vault access, clocks, and SmartHomeRuntime host effects outside the portable contract."
+    },
+    {
+      "id": "smart-home-enphase-envoy-native-authority-review",
+      "title": "Review the Enphase Envoy integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-enphase-envoy-portable-core-extraction-and-conformance", "rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean b76de6c6 inventory after smart-home-enphase-envoy-integration landed with concrete TcpStream, DNS resolution, platform TLS, bearer-token materialization, bounded network reads, and SmartHomeRuntime authorization and mutation. Review the minimum truthful connect, DNS, TLS, credential, time, and runtime authority plus platform evidence; consolidate the concrete LAN executor with the shared smart-home transport owner; require secrets and diagnostics to stay redacted and zeroized; and record the residual production adapter as a native-runtime exception after the deterministic core has portable fixture ownership. This review is excluded from autonomous delivery selection by parity policy."
     },
     {
       "id": "smart-home-synology-surveillance-native-authority-review",

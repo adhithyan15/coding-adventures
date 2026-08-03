@@ -324,6 +324,15 @@ metadata, dev dependencies, build dependencies, target-specific dependency
 tables, non-path registry dependencies, comments, and every other field or
 table. Reaching any new TOML table ends the authoritative dependency table.
 
+For Ruby `.gemspec` manifests, dependency candidates come only from the first
+quoted gem-name argument of `add_dependency` and `add_runtime_dependency`
+calls on the `Gem::Specification.new` block receiver. The two methods are
+runtime-dependency synonyms for graph purposes. Resolvers ignore gem identity,
+summary and description text, file and require-path lists, metadata, comments,
+`add_development_dependency` calls, and every other field or method. Both Ruby
+quote forms and optional call parentheses are accepted; the gem name is matched
+case-insensitively against known Ruby package aliases.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,

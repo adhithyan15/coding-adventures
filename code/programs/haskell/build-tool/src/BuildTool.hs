@@ -779,6 +779,7 @@ readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
+    | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
@@ -1025,6 +1026,73 @@ hideTomlStringContents = go Nothing
     go (Just quote) (character : rest)
         | character == quote = ' ' : go Nothing rest
         | otherwise = ' ' : go (Just quote) rest
+
+readRubyDependencyTokens :: Package -> IO [String]
+readRubyDependencyTokens pkg = do
+    entries <- listDirectory (packagePath pkg)
+    let gemspecPaths =
+            sort
+                [ packagePath pkg </> entry
+                | entry <- entries
+                , map toLower (takeExtension entry) == ".gemspec"
+                ]
+    case listToMaybe gemspecPaths of
+        Nothing -> pure []
+        Just gemspecPath -> do
+            contents <- readFileStrict gemspecPath
+            pure (rubyDependencyTokens contents)
+
+rubyDependencyTokens :: String -> [String]
+rubyDependencyTokens contents =
+    case rubySpecificationReceiver contents of
+        Nothing -> []
+        Just receiver ->
+            nub (mapMaybe (rubyDependencyToken receiver) (lines contents))
+
+rubySpecificationReceiver :: String -> Maybe String
+rubySpecificationReceiver = listToMaybe . mapMaybe receiverFromLine . lines
+  where
+    receiverFromLine rawLine =
+        let stripped = trim rawLine
+            declaration = "Gem::Specification.new"
+            afterDeclaration = drop (length declaration) stripped
+            afterOpeningBar = dropWhile (/= '|') afterDeclaration
+            receiver = takeWhile (/= '|') (drop 1 afterOpeningBar)
+         in if declaration `isPrefixOf` stripped
+                && "do" `isPrefixOf` trim afterDeclaration
+                && not (null afterOpeningBar)
+                && isRubyIdentifier receiver
+                then Just receiver
+                else Nothing
+
+isRubyIdentifier :: String -> Bool
+isRubyIdentifier [] = False
+isRubyIdentifier (first : rest) =
+    (isAlpha first || first == '_')
+        && all (\character -> isAlphaNum character || character == '_') rest
+
+rubyDependencyToken :: String -> String -> Maybe String
+rubyDependencyToken receiver rawLine =
+    listToMaybe
+        [ map toLower gemName
+        | methodName <- ["add_dependency", "add_runtime_dependency"]
+        , let prefix = receiver ++ "." ++ methodName
+        , let stripped = trim rawLine
+        , prefix `isPrefixOf` stripped
+        , let remainder = drop (length prefix) stripped
+        , rubyCallBoundary remainder
+        , gemName <- take 1 (extractQuotedValues (dropRubyCallOpening remainder))
+        ]
+
+rubyCallBoundary :: String -> Bool
+rubyCallBoundary [] = False
+rubyCallBoundary (character : _) = character `elem` [' ', '\t', '(']
+
+dropRubyCallOpening :: String -> String
+dropRubyCallOpening value =
+    case trim value of
+        '(' : rest -> trim rest
+        rest -> rest
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

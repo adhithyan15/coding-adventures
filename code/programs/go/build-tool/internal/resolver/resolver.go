@@ -176,12 +176,13 @@ func extractDeps(line string, knownNames map[string]string, deps *[]string) {
 
 // parseRubyDeps extracts internal dependencies from a Ruby .gemspec file.
 //
-// Ruby gemspecs declare dependencies with:
+// Ruby gemspecs declare runtime dependencies with either of these synonyms:
 //
 //	spec.add_dependency "coding_adventures_logic_gates"
+//	spec.add_runtime_dependency("coding_adventures_logic_gates")
 //
-// We use a regex to find these lines and map the gem names to our
-// internal package names.
+// Only calls on the Gem::Specification block receiver are authoritative.
+// Development dependencies and other metadata do not affect build ordering.
 func parseRubyDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	// Find .gemspec files in the package directory
 	entries, err := os.ReadDir(pkg.Path)
@@ -206,21 +207,114 @@ func parseRubyDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	text := string(data)
+	receiver := rubySpecificationReceiver(text)
+	if receiver == "" {
+		return nil
+	}
 	var internalDeps []string
 
-	// Match: spec.add_dependency "coding_adventures_something"
-	re := regexp.MustCompile(`spec\.add_dependency\s+"([^"]+)"`)
-	for _, match := range re.FindAllStringSubmatch(text, -1) {
-		if len(match) < 2 {
+	for _, line := range strings.Split(text, "\n") {
+		gemName := rubyDependencyName(line, receiver)
+		if gemName == "" {
 			continue
 		}
-		gemName := strings.TrimSpace(strings.ToLower(match[1]))
 		if pkgName, ok := knownNames[gemName]; ok {
 			internalDeps = append(internalDeps, pkgName)
 		}
 	}
 
 	return internalDeps
+}
+
+var rubySpecificationReceiverPattern = regexp.MustCompile(
+	`^\s*Gem::Specification\.new\s+do\s+\|([A-Za-z_][A-Za-z0-9_]*)\|`,
+)
+
+func rubySpecificationReceiver(text string) string {
+	for _, line := range strings.Split(text, "\n") {
+		match := rubySpecificationReceiverPattern.FindStringSubmatch(line)
+		if len(match) == 2 {
+			return match[1]
+		}
+	}
+	return ""
+}
+
+func rubyDependencyName(line, receiver string) string {
+	stripped := strings.TrimSpace(line)
+	for _, method := range []string{"add_dependency", "add_runtime_dependency"} {
+		prefix := receiver + "." + method
+		if !strings.HasPrefix(stripped, prefix) {
+			continue
+		}
+		remainder := stripped[len(prefix):]
+		if remainder == "" || (!isRubySpace(remainder[0]) && remainder[0] != '(') {
+			continue
+		}
+		remainder = strings.TrimSpace(remainder)
+		if strings.HasPrefix(remainder, "(") {
+			remainder = strings.TrimSpace(remainder[1:])
+		}
+		if gemName := firstRubyQuotedString(remainder); gemName != "" {
+			return strings.ToLower(strings.TrimSpace(gemName))
+		}
+	}
+	return ""
+}
+
+func isRubySpace(character byte) bool {
+	return character == ' ' || character == '\t'
+}
+
+func firstRubyQuotedString(value string) string {
+	value = strings.TrimSpace(value)
+	if len(value) < 2 || (value[0] != '\'' && value[0] != '"') {
+		return ""
+	}
+	quote := value[0]
+	closing := strings.IndexByte(value[1:], quote)
+	if closing < 0 {
+		return ""
+	}
+	return value[1 : closing+1]
+}
+
+func rubySpecificationNames(packagePath string) []string {
+	entries, err := os.ReadDir(packagePath)
+	if err != nil {
+		return nil
+	}
+	var names []string
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".gemspec") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(packagePath, entry.Name()))
+		if err != nil {
+			continue
+		}
+		text := string(data)
+		receiver := rubySpecificationReceiver(text)
+		if receiver == "" {
+			continue
+		}
+		prefix := receiver + ".name"
+		for _, line := range strings.Split(text, "\n") {
+			stripped := strings.TrimSpace(line)
+			if !strings.HasPrefix(stripped, prefix) {
+				continue
+			}
+			remainder := strings.TrimSpace(stripped[len(prefix):])
+			if !strings.HasPrefix(remainder, "=") {
+				continue
+			}
+			if name := firstRubyQuotedString(remainder[1:]); name != "" {
+				names = append(names, strings.ToLower(name))
+				break
+			}
+		}
+	}
+	return names
 }
 
 // parseGoDeps extracts internal dependencies from a Go go.mod file.
@@ -1074,6 +1168,9 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Convert dir name to gem name: "logic_gates" → "coding_adventures_logic_gates"
 			gemName := "coding_adventures_" + strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(gemName, pkg.Name, pkg.Path, pkg.Language)
+			for _, declaredName := range rubySpecificationNames(pkg.Path) {
+				setKnown(declaredName, pkg.Name, pkg.Path, pkg.Language)
+			}
 
 		case "go":
 			// For Go, read the module path from go.mod.  Go module paths are
