@@ -11,6 +11,7 @@ use crate::{
 use coding_adventures_sha256::sha256;
 
 const GRANT_MAGIC: &[u8; 4] = b"D18G";
+const HEADER_MAGIC: &[u8; 4] = b"D18H";
 const MESSAGE_MAGIC: &[u8; 4] = b"D18M";
 
 /// Current Chief channel record version.
@@ -137,6 +138,73 @@ pub fn decode_key_grant(bytes: &[u8]) -> Result<SealedChannelKeyGrant, ChannelWi
     })
 }
 
+/// Encode an authenticated message header for durable pre-encryption reservation.
+pub fn encode_message_header(header: &MessageHeader) -> Result<Vec<u8>, ChannelWireError> {
+    validate_length(
+        "originator_id",
+        header.fields.originator_id.len(),
+        MAX_IDENTITY_BYTES,
+    )?;
+    validate_length(
+        "content_type",
+        header.fields.content_type.len(),
+        MAX_CONTENT_TYPE_BYTES,
+    )?;
+    let mut encoded = Vec::with_capacity(
+        5 + 16
+            + 8
+            + 4
+            + header.fields.originator_id.len()
+            + 16
+            + 8
+            + 8
+            + 4
+            + header.fields.content_type.len()
+            + 32,
+    );
+    encoded.extend_from_slice(HEADER_MAGIC);
+    encoded.push(WIRE_VERSION);
+    encoded.extend_from_slice(&header.fields.message_id);
+    encoded.extend_from_slice(&header.fields.timestamp_ns.to_be_bytes());
+    put_bytes_u32(&mut encoded, &header.fields.originator_id);
+    encoded.extend_from_slice(&header.fields.channel_id.0);
+    encoded.extend_from_slice(&header.fields.sequence.0.to_be_bytes());
+    encoded.extend_from_slice(&header.fields.key_epoch.0.to_be_bytes());
+    put_bytes_u32(&mut encoded, header.fields.content_type.as_bytes());
+    encoded.extend_from_slice(&header.plaintext_hash);
+    Ok(encoded)
+}
+
+/// Decode one structurally valid authenticated message header.
+pub fn decode_message_header(bytes: &[u8]) -> Result<MessageHeader, ChannelWireError> {
+    let mut decoder = Decoder::new(bytes);
+    decoder.expect_magic(HEADER_MAGIC)?;
+    decoder.expect_version()?;
+    let message_id = decoder.read_array()?;
+    let timestamp_ns = decoder.read_u64()?;
+    let originator_id = decoder.read_vec_u32("originator_id", MAX_IDENTITY_BYTES)?;
+    let channel_id = ChannelId(decoder.read_array()?);
+    let sequence = Sequence(decoder.read_u64()?);
+    let key_epoch = KeyEpoch(decoder.read_u64()?);
+    let content_type_bytes = decoder.read_vec_u32("content_type", MAX_CONTENT_TYPE_BYTES)?;
+    let content_type = String::from_utf8(content_type_bytes)
+        .map_err(|_| ChannelWireError::InvalidUtf8("content_type"))?;
+    let plaintext_hash = decoder.read_array()?;
+    decoder.finish()?;
+    Ok(MessageHeader {
+        fields: MessageFields {
+            message_id,
+            timestamp_ns,
+            originator_id,
+            channel_id,
+            sequence,
+            key_epoch,
+            content_type,
+        },
+        plaintext_hash,
+    })
+}
+
 /// Encode an encrypted append-log message as one bounded binary record.
 pub fn encode_message(message: &EncryptedMessage) -> Result<Vec<u8>, ChannelWireError> {
     validate_length(
@@ -222,7 +290,12 @@ pub fn decode_message(bytes: &[u8]) -> Result<EncryptedMessage, ChannelWireError
 
 /// Stable, lexicographically ordered storage key for one encrypted message.
 pub fn message_record_key(channel_id: ChannelId, sequence: Sequence) -> String {
-    format!("{}/messages/{:020}", encode_hex(&channel_id.0), sequence.0)
+    format!("{}{:020}", message_record_prefix(channel_id), sequence.0)
+}
+
+/// Stable storage-key prefix for all encrypted messages in one channel.
+pub fn message_record_prefix(channel_id: ChannelId) -> String {
+    format!("{}/messages/", encode_hex(&channel_id.0))
 }
 
 /// Stable storage key for the durable next-sequence record of one channel.
@@ -464,8 +537,23 @@ mod tests {
     }
 
     #[test]
+    fn authenticated_header_round_trip_is_exact() {
+        let (message, _, _) = encrypted_message();
+        let encoded = encode_message_header(&message.header).unwrap();
+        assert_eq!(decode_message_header(&encoded).unwrap(), message.header);
+    }
+
+    #[test]
     fn every_truncated_record_prefix_is_rejected() {
         let (message, _, _) = encrypted_message();
+        let header_bytes = encode_message_header(&message.header).unwrap();
+        for end in 0..header_bytes.len() {
+            assert!(
+                decode_message_header(&header_bytes[..end]).is_err(),
+                "header prefix {end}"
+            );
+        }
+
         let message_bytes = encode_message(&message).unwrap();
         for end in 0..message_bytes.len() {
             assert!(

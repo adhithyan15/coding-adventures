@@ -6,6 +6,8 @@
   channel-log messages.
 - Add stable storage keys for messages, key grants, sequence state, and
   receiver acknowledgements.
+- Add authenticated-header preparation, encoding, and post-reservation
+  encryption for durable nonce-safe appends.
 
 ## 0.1.0
 

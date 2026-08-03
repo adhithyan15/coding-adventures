@@ -483,21 +483,46 @@ pub fn encrypt_message(
     cmk: &ChannelMasterKey,
     signing_key: &OriginatorSigningKey,
 ) -> EncryptedMessage {
-    let header = MessageHeader {
+    let header = prepare_message_header(fields, plaintext);
+    encrypt_message_with_header(header, plaintext, cmk, signing_key)
+        .expect("a freshly prepared header always matches its plaintext")
+}
+
+/// Prepare the exact authenticated header before message encryption.
+///
+/// Durable channel stores use this to persist a sequence reservation before
+/// any ciphertext is produced with that sequence's nonce.
+pub fn prepare_message_header(fields: MessageFields, plaintext: &[u8]) -> MessageHeader {
+    MessageHeader {
         fields,
         plaintext_hash: sha256(plaintext),
-    };
+    }
+}
+
+/// Sign and encrypt plaintext using an already prepared authenticated header.
+///
+/// The plaintext hash must still match, preventing a recovered durable
+/// reservation from being reused for different plaintext.
+pub fn encrypt_message_with_header(
+    header: MessageHeader,
+    plaintext: &[u8],
+    cmk: &ChannelMasterKey,
+    signing_key: &OriginatorSigningKey,
+) -> Result<EncryptedMessage, ChannelCryptoError> {
+    if sha256(plaintext) != header.plaintext_hash {
+        return Err(ChannelCryptoError::PlaintextHashMismatch);
+    }
     let authenticated_header = canonical_message_header(&header);
     let nonce = message_nonce(header.fields.channel_id, header.fields.sequence);
     let (ciphertext, authentication_tag) =
         xchacha20_poly1305_aead_encrypt(plaintext, cmk.as_bytes(), &nonce, &authenticated_header);
     let originator_signature = sign(&authenticated_header, &signing_key.secret_key);
-    EncryptedMessage {
+    Ok(EncryptedMessage {
         header,
         ciphertext,
         authentication_tag,
         originator_signature,
-    }
+    })
 }
 
 /// Verify and decrypt one channel-log message.
