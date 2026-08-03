@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "51797a6fe0878f5fbb6bfdcdb6f0e453f0213beb",
+    "revision": "ec53a3f9e9b2f31deefc43552a4d48658c49f3f4",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1222,
-    "implementation_package_slots": 4370,
+    "implementation_identities": 1224,
+    "implementation_package_slots": 4372,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 772,
-    "singleton_missing_slots": 10808,
-    "rust_singletons": 577,
+    "singleton_packages": 774,
+    "singleton_missing_slots": 10836,
+    "rust_singletons": 579,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -356,7 +356,7 @@
       "depends_on": ["build-tool-lua-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-perl-rockspec-utf8",
       "pr_number": null,
-      "notes": "Selected after merged PR #9603 and the collision-clean 51797a6f inventory. The four-engine leverage pass ranked Perl first because its raw-byte rockspec reader is the narrowest remaining boundary, Perl 5.38 is locally available, and the shared valid/invalid fixtures plus five merged reference implementations pin the exact contract. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 cases, preserve the success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and test the real CLI exit contract without leaking the checkout root. Keep Ruby and Haskell locale-sensitive decoding and Elixir's position-dependent decoding as separate later children."
+      "notes": "Selected after merged PR #9603 and the collision-clean 51797a6f inventory. The four-engine leverage pass ranked Perl first because its raw-byte rockspec reader is the narrowest remaining boundary, and the shared valid/invalid fixtures plus five merged reference implementations pin the exact contract. Implemented strict raw-byte decoding, a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, exact success edges without the rockspec package field becoming a self-dependency, malformed-sequence and literal-U+FFFD coverage, and a real CLI exit-2 contract without checkout-root leakage. Rebased conflict-free onto ec53a3f9; the full 127-test Perl suite, MakeMaker workflow, syntax, severity-5 Perl::Critic, coverage, canonical Go test/vet/build and 256-package Perl validator, 57 conformance tests, 37-case/56-file corpus, 258-package real Lua plan, collision inventory, diff, dependency, and credential scans pass. Keep Ruby and Haskell locale-sensitive decoding and Elixir's position-dependent decoding as separate later children."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -851,6 +851,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "The July 30-August 1 inventories added axiom-to-semantic-ir, http1-client, smart-home-discovery-service, hue-integration, venture-browser-core, smart-home-runtime-store, venture-browser-macos, smart-home-automation-runtime, smart-home-zwave-integration, smart-home-zwave-host, smart-home-mqtt-integration, smart-home-zigbee-integration, smart-home-matter-integration, smart-home-home-assistant-migration, smart-home-home-assistant-export, smart-home-home-assistant-history, smart-home-home-assistant-definitions, smart-home-home-assistant-dashboard-migration, smart-home-dashboard-core, venture-browser-windows, smart-home-camera-media, smart-home-onvif-integration, and smart-home-shelly-integration; also reconcile the existing matter-core contract with the new adapter split. Review axiom-to-semantic-ir as a likely portable deterministic lowering; http1-client and venture-browser-core for portable-core versus native transport boundaries; the smart-home discovery, Hue, runtime-store, automation-runtime, Z-Wave integration, Z-Wave serial-host, MQTT integration, Zigbee adapter, Matter adapter, camera-media broker, ONVIF integration, Shelly integration, and Home Assistant packages as native/service/storage boundary cases; venture-browser-macos as an Apple-native AppKit/CoreText/Metal host with native-source applicability; and venture-browser-windows as a mixed boundary whose duplicated session/chrome/status/event bridge belongs in venture-browser-core or a shared portable bridge while WinUI/Direct2D/C-ABI behavior remains native-source. Home Assistant migration, export, history, definitions, and dashboard migration contain deterministic parsing or validation, normalization, planning, diagnostics, identities, fingerprints, projections, and receipts that are portable-core candidates, while WebSocket/TLS collection, runtime application, atomic filesystem writes, CLI behavior, Rust-only runtime dependencies, environment-token intake, clock/console effects, and missing capability manifests require explicit host-boundary review. Smart-home-dashboard-core is already a zero-capability, protocol-neutral deterministic manifest parser, validator, and summarizer, so its fixture and cross-lane expansion has a separate explicit owner. The MQTT package's deterministic discovery/topic/entity/value/payload transformations remain candidates for a separately fixture-driven portable core. The Zigbee adapter is pure logic above coordinator transport, uses only an opaque VaultRef for the network key, and should be reviewed as a portable adapter core with a separate native coordinator-host boundary. The Matter adapter is likewise zero-capability deterministic logic above commissioning, sessions, credentials, and I/O; extract or fold its portable projection/report/command logic through matter-core, classify residual SmartHomeRuntime wiring as Rust-canonical under D23, and keep the future commissioning/CASE/PASE/certificate/subscription controller as the native host boundary. Camera-media policy, generation-bound lease state, quotas, and redacted audit are portable candidates, but endpoint use belongs behind an injected trusted host. ONVIF discovery/SOAP/profile parsing, deterministic UsernameToken construction, origin policy, projection, and hostile fixtures are portable candidates, while UDP/DNS/TCP/TLS, trusted time/randomness, Vault leases, process I/O, and endpoint allowlists remain host-owned. Shelly JSON-RPC validation, component projection, stable identities, command planning, and normalized error classes are portable candidates; mDNS, DNS/TCP, plaintext LAN HTTP, trusted clock, console I/O, runtime-effect ordering, future credentials, endpoint policy, and truthful capability profiles remain host-owned."
+    },
+    {
+      "id": "chief-channel-crypto-portable-conformance",
+      "title": "Classify and fixture the portable Chief channel cryptography core",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9609 added Rust-only chief-of-staff-channel-crypto. Define language-neutral vectors for the versioned bounded grant/message wire records, stable storage keys, framed authenticated headers, digest/signature inputs, epoch transition rules, retry/conflict handling, and sequence reservation/recovery. Expand deterministic codecs and cryptographic behavior only where each lane has suitable constant-time primitives; keep OS CSPRNG access, key custody, durable sequence persistence, storage, and actor routing behind injected or native authority boundaries, with reviewed exceptions where a safe implementation is unavailable."
+    },
+    {
+      "id": "venture-browser-qt-portable-bridge-and-native-host",
+      "title": "Classify the Venture Qt bridge and its native shell",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9615 added Rust-only venture-browser-qt. Reconcile its deterministic BrowserHostController projection, Mosaic event decoding, input normalization, and C-ABI state/error contract with venture-browser-core and the Windows/macOS bridge owners, using shared language-neutral fixtures where portable. Classify Cairo rasterization, Qt Quick/QML registration, dynamic-library loading, C++ adapter code, native pointer and buffer lifetimes, CMake/Qt discovery, and live application launch as native-source or wrapper behavior with direct platform tests rather than all-language gaps."
     },
     {
       "id": "smart-home-camera-media-security-boundary-hardening",
