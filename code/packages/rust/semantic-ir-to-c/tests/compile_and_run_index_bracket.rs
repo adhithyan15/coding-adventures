@@ -11,6 +11,11 @@
 //! are the non-string-key Hash writes (`h[2] = ...`, `h[:sym] = ...`) — the
 //! rejected heuristic design (string-literal key -> Map, else -> Seq) would
 //! have mis-routed these to the Array path and crashed.
+//!
+//! Bracket-index WRITE was originally v0-scoped to a bare-NAME, single-
+//! bracket receiver only; later widened to a dotted/chained receiver
+//! (`obj.data[i] = v`, `a[i][j] = v`) — see the tests near the end of this
+//! file for that follow-up's coverage.
 
 use std::process::Command;
 
@@ -148,6 +153,65 @@ fn hash_write_updates_an_existing_key_in_place() {
 fn chained_array_read() {
     match run_ruby("a = [[1, 2], [3, 4]]\nputs a[1][0]\n") {
         Some(out) => assert_eq!(out, "3\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+// -----------------------------------------------------------------------
+// Bug fix: bracket-index WRITE with a dotted/chained receiver
+// (`obj.data[i] = v`, `a[i][j] = v`) -- originally v0-scoped to a bare-NAME,
+// single-bracket receiver only (`a[i] = v`). The grammar's
+// `index_write_receiver_postfix` repetition (see its own doc comment in
+// `ruby.grammar` for the lookahead trick that tells the RECEIVER's
+// postfixes apart from the FINAL write-target bracket) widens this to the
+// same dot/scope/bracket postfix chain `factor` already admits for reads.
+// Every value below is independently confirmed against a live `ruby -e`
+// interpreter.
+// -----------------------------------------------------------------------
+
+#[test]
+fn chained_bracket_write_on_a_nested_array() {
+    match run_ruby("a = [[1, 2], [3, 4]]\na[0][1] = 99\nputs a[0][1]\nputs a[0][0]\nputs a[1][0]\n") {
+        Some(out) => assert_eq!(out, "99\n1\n3\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn dotted_receiver_write_through_an_oop_method_call() {
+    match run_ruby(
+        "class Box\n  def data\n    [1, 2]\n  end\nend\nb = Box.new\nb.data[0] = 42\nputs b.data[0]\n",
+    ) {
+        // `data` returns a FRESH `[1, 2]` literal every call (no ivar
+        // persistence), so the write lands in one temporary array and the
+        // second `b.data[0]` call reads a brand-new one -- `1`, not `42`.
+        // Real Ruby behaves identically for this exact program (confirmed);
+        // this is a semantically-honest execution proof, not a runtime
+        // quirk. What matters here is that the write DISPATCHES correctly
+        // (no NoMethodError/crash) on an OOP-method-call receiver chain.
+        Some(out) => assert_eq!(out, "1\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn dotted_receiver_write_through_a_hash_value_persists() {
+    // Unlike the OOP-method case above, a Hash VALUE is a genuinely shared
+    // object (real Ruby: mutating `h["a"]` in place is visible on every
+    // subsequent `h["a"]` read) -- so this write DOES persist.
+    match run_ruby("h = {\"a\" => [1, 2]}\nh[\"a\"][0] = 42\nputs h[\"a\"][0]\nputs h[\"a\"][1]\n") {
+        Some(out) => assert_eq!(out, "42\n2\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn single_bracket_write_on_a_bare_name_receiver_is_unaffected() {
+    // Regression check: the ORIGINAL v0-scoped shape (no receiver
+    // postfixes at all) must still parse/lower/run identically after
+    // widening the grammar to admit the (now-optional) postfix chain.
+    match run_ruby("a = [1, 2, 3]\na[1] = 20\nputs a[0]\nputs a[1]\nputs a[2]\n") {
+        Some(out) => assert_eq!(out, "1\n20\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }

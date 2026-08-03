@@ -205,6 +205,7 @@ repo's standard workflow):
 | — | Bug fix: `puts` on an Array bracket-displayed instead of unpacking (C AND Ruby backends) | ✅ merged | #9772 |
 | — | Follow-up: `round(ndigits)`, the multi-digit form deferred by slice 9 | ✅ merged | — |
 | — | Follow-up: String char-set methods (`count`/`delete`/`squeeze`) + padding methods (`ljust`/`rjust`/`center`), deferred by slice 8 | ✅ merged | — |
+| — | Follow-up: bracket-index write with a dotted/chained receiver (`obj.data[i] = v`, `a[i][j] = v`), deferred by the bracket-index bug fix (#9686) | ✅ merged | — |
 
 **Slice 8's char-set/padding deferral is now closed**: `count(charset, ...)`,
 `delete(charset, ...)`, `squeeze(charset=nil)`, and `ljust`/`rjust`/

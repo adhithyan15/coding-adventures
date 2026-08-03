@@ -5290,6 +5290,66 @@ mod tests {
         }
     }
 
+    // -------------------------------------------------------------------
+    // Widened `index_assignment` to a dotted/chained receiver
+    // (`obj.data[i] = v`, `a[i][j] = v`) -- originally v0-scoped to a
+    // bare-NAME, single-bracket receiver only (see the grammar's
+    // `index_write_receiver_postfix` rule for the lookahead trick that
+    // tells the RECEIVER's postfixes apart from the FINAL write-target
+    // bracket, needed since this parser has no backtracking once a
+    // repetition commits).
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn test_bracket_index_write_with_chained_brackets() {
+        // `a[0][1] = 3` -- the FIRST `[0]` belongs to the receiver chain
+        // (wrapped in `index_write_receiver_postfix`), the SECOND `[1]` is
+        // the write target (the rule's own trailing, mandatory
+        // `index_suffix`).
+        let ast = parse_ruby("a[0][1] = 3\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        assert!(
+            tree_contains_rule(ia, "index_write_receiver_postfix"),
+            "the first bracket should be a receiver postfix, not the write target"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_write_with_dotted_receiver() {
+        // `obj.data[0] = 3` -- `.data` is a receiver postfix (a `dot_call`
+        // wrapped in `index_write_receiver_postfix`), `[0]` is the write
+        // target.
+        let ast = parse_ruby("obj.data[0] = 3\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        let postfix = find_descendant(ia, "index_write_receiver_postfix")
+            .expect("expected a receiver postfix");
+        assert!(
+            tree_contains_rule(postfix, "dot_call"),
+            "the receiver postfix should wrap a dot_call"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_write_single_bracket_still_has_no_receiver_postfix() {
+        // Regression: the ORIGINAL v0-scoped shape (no receiver postfixes
+        // at all) must still parse the same way after widening the
+        // grammar to admit the (now-optional) postfix chain.
+        let ast = parse_ruby("a[0] = 9\n");
+        assert_program_root(&ast);
+        let ia = find_descendant(&ast, "index_assignment")
+            .expect("expected index_assignment subnode");
+        assert!(
+            !tree_contains_rule(ia, "index_write_receiver_postfix"),
+            "a single-bracket write has no receiver postfixes"
+        );
+    }
+
     #[test]
     fn test_bracket_index_write_is_not_confused_with_plain_assignment() {
         // A plain assignment (`x = 1`) must NOT be mis-routed through the new

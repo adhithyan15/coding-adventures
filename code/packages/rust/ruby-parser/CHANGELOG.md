@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.8.1] - 2026-08-03
+
+### Widened — bracket-index WRITE (`recv[expr] = value`) to a dotted/chained receiver
+
+`index_assignment` was v0-scoped to a bare-`NAME`, single-bracket receiver
+only (`a[i] = v`, `h[k] = v`) — a dotted receiver (`obj.data[i] = v`) or
+nested brackets (`a[i][j] = v`) fell through to a clean parse error.
+Widened via a new `index_write_receiver_postfix = dot_call |
+scope_resolution | index_suffix` rule, reused in a repetition:
+`index_assignment = NAME { index_write_receiver_postfix
+&index_write_receiver_postfix } index_suffix EQUALS expression`.
+
+The interesting part: telling apart brackets that belong to the RECEIVER
+from the FINAL bracket that's the actual write target. For `a[i][j] = v`,
+a plain greedy `{ dot_call | scope_resolution | index_suffix }`
+repetition (this parser has no backtracking once a repetition commits)
+would swallow BOTH brackets, leaving nothing for the required trailing
+`index_suffix` and failing the whole rule. Fixed with a POSITIVE
+LOOKAHEAD: each repetition iteration only commits to consuming a postfix
+element if ANOTHER one is confirmed to follow (checked without
+consuming) — so `[i]` in `a[i][j]` is consumed (`[j]` follows) but `[j]`
+is not (nothing follows — next is `=`), correctly leaving it for the
+mandatory trailing `index_suffix`. Verified with a standalone probe
+grammar before touching `ruby.grammar` (no prior usage of a
+lookahead-over-a-grouped-alternation existed anywhere in this repo's
+~130 grammar files, so this was unverified territory for the shared
+`parser` engine). The original single-bracket case parses identically to
+before (the lookahead fails on the very first iteration, contributing
+zero repetition elements).
+
+New tests: `test_bracket_index_write_with_chained_brackets`,
+`test_bracket_index_write_with_dotted_receiver`,
+`test_bracket_index_write_single_bracket_still_has_no_receiver_postfix`
+(the backward-compatibility regression check).
+
+`coding-adventures-ruby-parser` 0.8.0 -> 0.8.1.
+
 ## [0.8.0] - 2026-08-03
 
 ### Added — `<<` as a binary operator

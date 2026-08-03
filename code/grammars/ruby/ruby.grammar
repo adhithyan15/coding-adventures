@@ -477,12 +477,34 @@ ensure_clause   = "ensure" { !"end" statement } ;
 # `[` where an assignment operator was expected. Placed BEFORE `assignment`
 # so the bracket form wins — `assignment` itself fails to match cleanly on
 # `NAME [` anyway (no assignment operator follows a bare `NAME` there), so
-# this ordering doesn't shadow anything. v0 scope: a single bracket on a
-# bare NAME receiver (`a[i] = v`, `h[k] = v`) — a dotted/chained receiver
-# (`obj.data[i] = v`) or nested brackets on the LHS (`a[i][j] = v`) are NOT
-# covered by this rule (falls through to a clean parse-error, not a silent
-# misparse); can be widened later if needed.
-index_assignment = NAME index_suffix EQUALS expression ;
+# this ordering doesn't shadow anything.
+#
+# Widened to a dotted/chained receiver (`obj.data[i] = v`) and nested
+# brackets (`a[i][j] = v`) — originally v0-scoped to a bare-NAME, single-
+# bracket receiver only. The widened LHS reuses `dot_call`/`scope_resolution`/
+# `index_suffix`, the SAME three postfix element kinds `factor`'s own
+# repetition already admits for READS, so the receiver chain covers exactly
+# what a read expression like `obj.data[i]` already parses as.
+#
+# The tricky part: telling apart "brackets that belong to the RECEIVER"
+# from "the FINAL bracket that's actually being assigned into." For
+# `a[i][j] = v`, `[i]` is a receiver postfix (read `a[i]` first, THEN write
+# index `j` into it) while `[j]` is the write target — but a plain greedy
+# `{ dot_call | scope_resolution | index_suffix }` repetition (this parser
+# has no backtracking once a repetition commits) would swallow BOTH
+# brackets, leaving nothing for a REQUIRED trailing `index_suffix` to match
+# and failing the whole rule. Fixed with a positive lookahead
+# (`index_write_receiver_postfix &index_write_receiver_postfix`): each
+# repetition iteration only commits to consuming a postfix element if
+# ANOTHER one is confirmed to follow (checked without consuming) — so for
+# `a[i][j]`, `[i]` is consumed (an ELSE follows: `[j]`) but `[j]` is NOT
+# (nothing postfix-shaped follows — next is `=`), correctly leaving `[j]`
+# for the mandatory trailing `index_suffix`. For the original single-
+# bracket case (`a[i] = v`), the lookahead fails on the very first
+# iteration (nothing follows `[i]` either), so the repetition contributes
+# zero elements and behavior is unchanged from before this widening.
+index_write_receiver_postfix = dot_call | scope_resolution | index_suffix ;
+index_assignment = NAME { index_write_receiver_postfix &index_write_receiver_postfix } index_suffix EQUALS expression ;
 assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | ">>=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
 # Phase 7e — Ruby 3.0 rightward (single-line) assignment `expr => var`.
 #
