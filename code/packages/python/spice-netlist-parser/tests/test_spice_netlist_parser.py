@@ -1470,6 +1470,21 @@ def test_lowers_finite_mosfet_model_threshold_voltage_aliases(alias: str) -> Non
     assert mosfet.model.model.params.VT0 == -0.38
 
 
+@pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
+def test_rejects_non_finite_mosfet_model_channel_modulation(alias: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET LAMBDA must be finite"):
+        parse_netlist(f".model nfast NMOS({alias}=1e999)\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["LAMBDA", "LAM"])
+def test_lowers_finite_mosfet_model_channel_modulation_aliases(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=-0.02)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.LAMBDA == -0.02
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

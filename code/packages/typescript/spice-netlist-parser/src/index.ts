@@ -1189,6 +1189,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET VT0 must be finite");
   }
+  const channelModulation = params.get("LAMBDA") ?? params.get("LAM");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    channelModulation !== undefined &&
+    !Number.isFinite(channelModulation)
+  ) {
+    throw new NetlistParseError("MOSFET LAMBDA must be finite");
+  }
   return {
     name: fields[1],
     kind,
@@ -1230,6 +1238,7 @@ function parseElementParams(tokens: readonly string[], label: string): ReadonlyM
 const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
   ["VTO", "VT0"],
   ["VTH", "VT0"],
+  ["LAM", "LAMBDA"],
   ["NSUB", "N_SUB"],
   ["N", "N_SUB"],
   ["TNOM", "T_NOM"],

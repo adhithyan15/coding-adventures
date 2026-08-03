@@ -1899,6 +1899,9 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         )
         if threshold_voltage is not None and not math.isfinite(threshold_voltage):
             raise NetlistParseError("MOSFET VT0 must be finite")
+        channel_modulation = params.get("LAMBDA", params.get("LAM"))
+        if channel_modulation is not None and not math.isfinite(channel_modulation):
+            raise NetlistParseError("MOSFET LAMBDA must be finite")
     return ModelCard(name=name, kind=kind, params=params)
 
 
@@ -1939,6 +1942,7 @@ _LEVEL1_PARAM_ALIASES = {
     "UO": "U0",
     "VTO": "VT0",
     "VTH": "VT0",
+    "LAM": "LAMBDA",
 }
 
 
