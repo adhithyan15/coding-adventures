@@ -6603,6 +6603,15 @@ impl HtmlParser {
         if name == "html" {
             self.explicit_html_end_seen = true;
         }
+        if matches!(name, "body" | "html")
+            && self.has_open_element("body")
+            && self.has_disallowed_open_element_for_body_end_tag()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "shell-end-tag-with-unclosed-elements",
+                format!("end tag `</{name}>` was seen with disallowed open elements"),
+            ));
+        }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -7997,6 +8006,34 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+    }
+
+    fn has_disallowed_open_element_for_body_end_tag(&self) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_some()
+                    || !matches!(
+                        element.name.as_str(),
+                        "dd" | "dt"
+                            | "li"
+                            | "optgroup"
+                            | "option"
+                            | "p"
+                            | "rb"
+                            | "rp"
+                            | "rt"
+                            | "rtc"
+                            | "tbody"
+                            | "td"
+                            | "tfoot"
+                            | "th"
+                            | "thead"
+                            | "tr"
+                            | "body"
+                            | "html"
+                    )
+            })
+        })
     }
 
     fn has_document_type(&self) -> bool {
@@ -32788,6 +32825,28 @@ mod tests {
     }
 
     #[test]
+    fn reports_shell_end_tags_with_disallowed_open_elements() {
+        for (source, end_tag) in [
+            ("<!doctype html><menuitem></body>", "body"),
+            ("<!doctype html><menuitem></html>", "html"),
+            ("<!doctype html><table><tbody><tr><td></body>", "body"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "shell-end-tag-with-unclosed-elements",
+                    format!("end tag `</{end_tag}>` was seen with disallowed open elements")
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
+        assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
     fn ignores_head_start_tags_after_body_content_starts() {
         let output = parse_html_with_diagnostics(
             "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>",
@@ -32927,7 +32986,13 @@ mod tests {
         )
         .unwrap();
 
-        assert!(output.parser_diagnostics.is_empty());
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "shell-end-tag-with-unclosed-elements",
+                "end tag `</html>` was seen with disallowed open elements"
+            )]
+        );
         assert_eq!(element(&head(&output.document).children[0]).name, "title");
 
         let output_body = body(&output.document);
