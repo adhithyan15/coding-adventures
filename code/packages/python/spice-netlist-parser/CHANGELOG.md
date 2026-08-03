@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `CGS` and `CGS0` gate-source capacitance
+  parameters instead of silently dropping them.
 - Validate MOS model-card `NSS` and `TPG` process parameters and derive missing
   `VT0`, `GAMMA`, and `PHI` values from `N_SUB` / `TOX` through shared engine semantics.
 - Validate and lower MOS model-card `CJS` and `CJD` aliases as canonical `CBS`

@@ -884,6 +884,28 @@ J1 drain gate source fast
     assert jfet.lambda_ == 0.02
 
 
+@pytest.mark.parametrize("parameter", ["CGS", "CGS0"])
+def test_parse_jfet_gate_source_capacitance_aliases(parameter: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({parameter}=3p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Cgs, 3.0e-12)
+
+
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_source_capacitance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET CGS must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(CGS={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

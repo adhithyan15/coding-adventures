@@ -1314,6 +1314,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             beta=model.params.get("BETA", model.params.get("B", 1.0e-4)),
             vto=model.params.get("VTO", -2.0 if model.kind == "NJF" else 2.0),
             lambda_=model.params.get("LAMBDA", 0.0),
+            Cgs=model.params.get("CGS", model.params.get("CGS0", 0.0)),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -1905,6 +1906,13 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
     params = _parse_model_params(params_text)
+    if kind in {"NJF", "PJF"}:
+        gate_source_capacitance = params.get("CGS", params.get("CGS0"))
+        if gate_source_capacitance is not None and (
+            not math.isfinite(gate_source_capacitance)
+            or gate_source_capacitance < 0.0
+        ):
+            raise NetlistParseError("JFET CGS must be finite and non-negative")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]
