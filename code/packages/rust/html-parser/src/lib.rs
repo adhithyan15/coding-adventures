@@ -4654,7 +4654,24 @@ impl HtmlParser {
         match token {
             Token::Text(text) if is_html_whitespace_text(text) => {}
             Token::Comment(_) | Token::ProcessingInstruction { .. } => {}
-            Token::Doctype { .. } => self.initial_insertion_mode = false,
+            Token::Doctype {
+                name,
+                public_identifier,
+                system_identifier,
+                ..
+            } => {
+                if !is_conforming_initial_doctype(
+                    name.as_deref(),
+                    public_identifier.as_deref(),
+                    system_identifier.as_deref(),
+                ) {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "nonconforming-doctype",
+                        "initial doctype did not match the HTML Standard's allowed form",
+                    ));
+                }
+                self.initial_insertion_mode = false;
+            }
             _ => {
                 self.initial_insertion_mode = false;
                 self.quirks_mode = true;
@@ -10269,6 +10286,16 @@ fn doctype_triggers_quirks(
         system_identifier
             .eq_ignore_ascii_case("http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd")
     })
+}
+
+fn is_conforming_initial_doctype(
+    name: Option<&str>,
+    public_identifier: Option<&str>,
+    system_identifier: Option<&str>,
+) -> bool {
+    name.is_some_and(|name| name.eq_ignore_ascii_case("html"))
+        && public_identifier.is_none()
+        && system_identifier.is_none_or(|identifier| identifier == "about:legacy-compat")
 }
 
 fn is_table_section(name: &str) -> bool {
@@ -32749,6 +32776,33 @@ mod tests {
             .parser_diagnostics
             .iter()
             .any(|diagnostic| diagnostic.code == "missing-doctype"));
+    }
+
+    #[test]
+    fn reports_nonconforming_initial_doctypes() {
+        for source in [
+            "<!doctype potato>",
+            "<!doctype html public 'legacy'>",
+            "<!doctype html system 'legacy'>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "nonconforming-doctype",
+                    "initial doctype did not match the HTML Standard's allowed form"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html>",
+            "<!doctype html system 'about:legacy-compat'>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
+        }
     }
 
     #[test]
