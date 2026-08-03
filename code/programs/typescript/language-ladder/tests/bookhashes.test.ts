@@ -101,6 +101,22 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "french", chapter)).toBe("synced");
   });
 
+  it.each([
+    [17, 3],
+    [18, 2],
+    [19, 1],
+    [20, 1],
+    [21, 1],
+    [22, 1],
+    [23, 1],
+  ])("matches the browser-loaded German Chapter %i AST across %i lessons", (chapter, count) => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("german", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "german", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "german", chapter)).toBe("synced");
+  });
+
   it("reports a generated chapter stale when one canonical lesson changes", () => {
     const lessons = loadLessons();
     const changed = lessons.map((lesson) =>

@@ -77,6 +77,72 @@
       "tex": "french/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "german",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:fdbd2e7e24d5d6f2",
+      "lessonIds": [
+        "GE-C17-kopf",
+        "GE-C17-kopf-haupt",
+        "GE-C17-hand"
+      ],
+      "tex": "german/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:0fd5b6c217dea39e",
+      "lessonIds": [
+        "GE-C18-ja",
+        "GE-C18-nein"
+      ],
+      "tex": "german/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:56d533c514140e42",
+      "lessonIds": [
+        "GE-C19-bitte-requests"
+      ],
+      "tex": "german/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:7f75baaef49241c0",
+      "lessonIds": [
+        "GE-C20-entschuldigung"
+      ],
+      "tex": "german/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e773a690ba617e60",
+      "lessonIds": [
+        "GE-C21-das-wetter"
+      ],
+      "tex": "german/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:d7f81c59cce27f45",
+      "lessonIds": [
+        "GE-C22-hund-katze"
+      ],
+      "tex": "german/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+      "lessonIds": [
+        "GE-C23-gruen-gelb"
+      ],
+      "tex": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:388a6950ab136cc1",
