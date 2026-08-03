@@ -114,7 +114,7 @@ build_node_project() {
     return
   fi
   echo "==> Building $backend"
-  (cd "$output_root/$backend" && npm install --ignore-scripts && npm run build)
+  (cd "$output_root/$backend" && npm install --ignore-scripts && npm test && npm run build)
 }
 
 build_node_project react

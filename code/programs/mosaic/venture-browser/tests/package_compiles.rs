@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 5);
+    assert_eq!(package.host_assets.files.len(), 7);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -128,6 +128,18 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         package.host_assets.files[4].target,
         "src/test/kotlin/VentureChromeInteractionTest.kt"
     );
+    for index in [5, 6] {
+        assert_eq!(
+            package.host_assets.files[index].source,
+            "host/react/VentureChromeInteraction.test.tsx"
+        );
+        assert_eq!(
+            package.host_assets.files[index].target,
+            "src/VentureChromeInteraction.test.tsx"
+        );
+    }
+    assert_eq!(package.host_assets.files[5].backend, "react");
+    assert_eq!(package.host_assets.files[6].backend, "electron");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -308,6 +320,21 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "Compose interaction acceptance omits {symbol}"
         );
     }
+
+    let react_acceptance =
+        read_package_file("host/react/VentureChromeInteraction.test.tsx");
+    for symbol in [
+        "React and Electron renderer controls cross the Mosaic host seam",
+        "button.click()",
+        "enabledAddress.dispatchEvent",
+        "mosaic-host-ready",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            react_acceptance.contains(symbol),
+            "React/Electron interaction acceptance omits {symbol}"
+        );
+    }
 }
 
 #[test]
@@ -342,6 +369,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     for required in [
         "--emit-project",
         "npm run build",
+        "npm test",
         "node --check",
         "swift build",
         "cargo \"${bridge_args[@]}\"",
@@ -359,6 +387,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
     for required in [
         "--emit-project",
         "npm",
+        "@(\"test\")",
         "node",
         "swift",
         "venture-browser-macos",
