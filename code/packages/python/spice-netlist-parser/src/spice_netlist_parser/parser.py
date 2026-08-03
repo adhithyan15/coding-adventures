@@ -1270,7 +1270,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             N=model.params.get("N", 1.0),
             BV=model.params.get("BV"),
             IBV=model.params.get("IBV", 1e-3),
-            Cjo=model.params.get("CJO", model.params.get("CJ0", 0.0)),
+            Cjo=model.params.get(
+                "CJO", model.params.get("CJ", model.params.get("CJ0", 0.0))
+            ),
             Tt=model.params.get("TT", 0.0),
         )
     if prefix == "Q":
@@ -1918,6 +1920,14 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(thermal_voltage) or thermal_voltage <= 0.0
         ):
             raise NetlistParseError("diode VT must be finite and positive")
+        junction_capacitance = next(
+            (params[name] for name in ("CJO", "CJ", "CJ0") if name in params),
+            None,
+        )
+        if junction_capacitance is not None and (
+            not math.isfinite(junction_capacitance) or junction_capacitance < 0.0
+        ):
+            raise NetlistParseError("diode CJO must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

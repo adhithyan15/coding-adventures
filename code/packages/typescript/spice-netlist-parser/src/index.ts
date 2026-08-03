@@ -1166,6 +1166,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode VT must be finite and positive");
   }
+  const diodeJunctionCapacitance =
+    params.get("CJO") ?? params.get("CJ") ?? params.get("CJ0");
+  if (
+    kind === "D" &&
+    diodeJunctionCapacitance !== undefined &&
+    (!Number.isFinite(diodeJunctionCapacitance) || diodeJunctionCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("diode CJO must be finite and non-negative");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -1692,7 +1701,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("N") ?? 1.0,
       model.params.get("BV"),
       model.params.get("IBV") ?? 1.0e-3,
-      model.params.get("CJO") ?? model.params.get("CJ0") ?? 0.0,
+      model.params.get("CJO") ?? model.params.get("CJ") ?? model.params.get("CJ0") ?? 0.0,
       model.params.get("TT") ?? 0.0,
     );
   }
