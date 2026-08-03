@@ -2448,7 +2448,12 @@ static int64_t _sir_f64_to_i64_saturating(double f);
    NOT via an all-empty set, since "in no set" must mean "squeeze nothing"
    there, not "squeeze everything"). */
 static void _sir_charset_membership(int argc, SirValue *args, unsigned char *in_set /* [256] */) {
-    unsigned char counts[256];
+    /* `int`, not `unsigned char` -- a `count`/`delete`/`squeeze` call with
+       more than 255 String charset arguments would wrap an `unsigned char`
+       counter modulo 256, silently under-counting the intersection for a
+       byte present in all of them (wrong answer, not a memory-safety bug,
+       but avoided outright since the extra stack is negligible). */
+    int counts[256];
     int nsets = 0, i, c;
     memset(counts, 0, sizeof(counts));
     for (i = 0; i < argc; i++) {
@@ -2521,13 +2526,16 @@ static int64_t _sir_str_width_arg(SirValue v) {
 }
 
 /* Builds a FRESH buffer of exactly `n` bytes by repeating `pad` cyclically
-   (truncating the final repeat); `n <= 0` returns `""`. Caller guarantees
-   `pad` is non-empty (a `\0`-length `pad` here would divide by zero). */
+   (truncating the final repeat); `n <= 0` returns `""`. The current caller
+   (`_sir_str_justify`) already guarantees a non-empty `pad`, but `pl == 0`
+   is guarded here too, self-contained, rather than trusted purely by
+   caller discipline -- an empty `pad` would otherwise divide by zero. */
 static char *_sir_str_pad_buf(const char *pad, int64_t n) {
     size_t pl, i;
     char *out;
     if (n <= 0) return _sir_dup("");
     pl = strlen(pad);
+    if (pl == 0) { pad = " "; pl = 1; }
     out = (char *)_sir_alloc((size_t)n + 1);
     for (i = 0; i < (size_t)n; i++) out[i] = pad[i % pl];
     out[n] = '\0';
