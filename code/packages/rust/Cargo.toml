@@ -1,5 +1,12 @@
 [workspace]
 resolver = "2"
+# `os-kernel` is deliberately NOT a member (see `exclude` below): it targets
+# `x86_64-unknown-uefi` (no_std + a `panic_handler`) and cannot compile for the
+# host triple `cargo build --workspace`/`--all`/`clippy --workspace` use. It
+# still lives under this directory tree so the custom Go build-tool
+# (`code/programs/go/build-tool`) discovers it via its own `BUILD` file scan
+# (independent of this `members` list) and applies the documented SKIP.
+exclude = ["os-kernel"]
 members = [
     "adj-lang",
     "adj-lang-cli",
@@ -339,7 +346,6 @@ members = [
     "ml-framework-keras",
     "ml-framework-tf",
     "ml-framework-torch",
-    "os-kernel",
     "os-kernel-simulator",
     "parallel-execution-engine",
     "parser",
