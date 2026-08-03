@@ -291,7 +291,8 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   canonical Go test/vet/build and a 300-package Ruby plan, the 17+40
   conformance suites and 37-case/56-file corpus, and a real 258-package Ruby-
   engine plan with zero LoadErrors while preserving all 44 separately owned
-  canonical Starlark parse fallbacks;
+  canonical Starlark parse fallbacks. Ready PR #9660 is the sole active parity
+  PR;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

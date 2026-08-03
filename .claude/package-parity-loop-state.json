@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-ruby-starlark-runtime-closure",
+    "number": 9660,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9660",
+    "branch": "codex/build-tool-ruby-starlark-runtime-closure"
+  },
   "last_inventory": {
     "revision": "2c740cd5f41f57d014c28ae7260c7c71668efa6e",
     "schema_version": 3,
@@ -388,11 +393,11 @@
     {
       "id": "build-tool-ruby-starlark-runtime-closure",
       "title": "Make the Ruby build tool declare and load its Starlark runtime closure",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ruby-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-ruby-starlark-runtime-closure",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9648 and the collision-clean b3a6616a inventory. The build tool lazily required coding_adventures_starlark_interpreter whenever a Starlark BUILD file was present, but its Gemfile declared only progress_bar and test gems; a clean source-tree invocation therefore aborted with LoadError until every Ruby package lib directory was injected through RUBYLIB. The implementation imports the interpreter's authoritative repository-local Gemfile closure, makes the existing evaluator integration test mandatory, and proves a clean Bundler subprocess resolves the exact repository feature with RUBYLIB and RUBYOPT removed and network proxies pointed at a dead loopback endpoint. Exact-base validation on 2c740cd5 passed 297 Ruby runs/589 assertions with one existing Windows platform skip and 87.91% line/72.05% branch coverage; 38 interpreter runs/60 assertions; Ruby syntax, changed-file Lint/Security RuboCop, and zero-advisory bundle audit; canonical Go test/vet/trimpath build and a 300-package Ruby plan; 17 schema and 40 runner conformance tests plus the valid 37-case/56-file corpus; and a real 258-Lua-package source-tree plan with zero LoadErrors. The plan also reproduced all 44 separately owned canonical Starlark parse fallbacks without widening this runtime-closure slice. Collision, diff, state, and credential checks are clean. The post-merge dependency/leverage pass ranked this ahead of Haskell and Elixir UTF-8 because Ruby 3.4.9 is already validated locally, the fix is the narrowest unblocked build-tool boundary, and it unlocks the dependent 44-case canonical BUILD compatibility repair."
+      "pr_number": 9660,
+      "notes": "Selected after merged PR #9648 and the collision-clean b3a6616a inventory. The build tool lazily required coding_adventures_starlark_interpreter whenever a Starlark BUILD file was present, but its Gemfile declared only progress_bar and test gems; a clean source-tree invocation therefore aborted with LoadError until every Ruby package lib directory was injected through RUBYLIB. The implementation imports the interpreter's authoritative repository-local Gemfile closure, makes the existing evaluator integration test mandatory, and proves a clean Bundler subprocess resolves the exact repository feature with RUBYLIB and RUBYOPT removed and network proxies pointed at a dead loopback endpoint. Exact-base validation on 2c740cd5 passed 297 Ruby runs/589 assertions with one existing Windows platform skip and 87.91% line/72.05% branch coverage; 38 interpreter runs/60 assertions; Ruby syntax, changed-file Lint/Security RuboCop, and zero-advisory bundle audit; canonical Go test/vet/trimpath build and a 300-package Ruby plan; 17 schema and 40 runner conformance tests plus the valid 37-case/56-file corpus; and a real 258-Lua-package source-tree plan with zero LoadErrors. The plan also reproduced all 44 separately owned canonical Starlark parse fallbacks without widening this runtime-closure slice. Collision, diff, state, and credential checks are clean. The post-merge dependency/leverage pass ranked this ahead of Haskell and Elixir UTF-8 because Ruby 3.4.9 is already validated locally, the fix is the narrowest unblocked build-tool boundary, and it unlocks the dependent 44-case canonical BUILD compatibility repair. Ready PR #9660 opened at exact pushed head 15d4a5cc55d910c713e5a6a157b9e24992bd3636."
     },
     {
       "id": "build-tool-ruby-starlark-canonical-build-compatibility",
