@@ -4394,17 +4394,22 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine diode emission-coefficient field.
 
 415. Python and TypeScript Berkeley SPICE diode breakdown-voltage validation parity.
-   - Status: completed in this diode breakdown-voltage validation slice.
+   - Status: completed in PR 9805.
    - Both parser facades validate positive finite `BV` values before lowering
      them into the shared engine diode breakdown-voltage field.
+
+416. Python and TypeScript Berkeley SPICE diode breakdown-current validation parity.
+   - Status: completed in this diode breakdown-current validation slice.
+   - Both parser facades validate positive finite `IBV` values before lowering
+     them into the shared engine diode breakdown-current field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the parser-to-engine validation audit with positive finite diode
-     breakdown current `IBV`.
-   - Audit remaining directly lowerable diode fields before moving to model
-     parameters that require new parser-to-engine lowering surfaces.
+   - Audit remaining diode model-card parameters that require new lowering
+     surfaces, starting with finite non-negative series resistance `RS`, then
+     junction potential `VJ`, grading coefficient `M`, and depletion
+     coefficient `FC`.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

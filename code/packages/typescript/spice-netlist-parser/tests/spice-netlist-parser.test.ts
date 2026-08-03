@@ -907,6 +907,24 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["1u", 1.0e-6],
+    ["2m", 2.0e-3],
+  ])("accepts valid diode IBV breakdown current %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(IBV=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      breakdownCurrent: expected,
+    });
+  });
+
+  it.each(["0", "-1u", "1e999"])("rejects invalid diode IBV %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(IBV=${value})`)).toThrow(
+      "diode IBV must be finite and positive",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

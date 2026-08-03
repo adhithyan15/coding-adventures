@@ -1182,6 +1182,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode BV must be finite and positive");
   }
+  const diodeBreakdownCurrent = params.get("IBV");
+  if (
+    kind === "D" &&
+    diodeBreakdownCurrent !== undefined &&
+    (!Number.isFinite(diodeBreakdownCurrent) || diodeBreakdownCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("diode IBV must be finite and positive");
+  }
   const diodeJunctionCapacitance =
     params.get("CJO") ?? params.get("CJ") ?? params.get("CJ0");
   if (
