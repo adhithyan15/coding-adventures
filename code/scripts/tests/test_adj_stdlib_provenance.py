@@ -2399,6 +2399,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         process.kill.assert_called_once_with()
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_repeated_termination_failures_are_ordered(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2486,6 +2487,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertFalse(any("exited None" in cause.message for cause in failure.cleanup_causes))
         self.assertEqual(process.wait.call_count, 3)
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_failure_preserves_both_pipe_close_causes(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2786,6 +2788,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ["job.terminate", "job.close"],
         )
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_timeout_preserves_stuck_drain_failure(self) -> None:
         process = mock.Mock()
         process.stdout = mock.Mock()
@@ -2831,6 +2834,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.stdout.close.assert_not_called()
         process.stderr.close.assert_not_called()
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_primary_stuck_drain_is_not_self_causal(self) -> None:
         process = mock.Mock(pid=404)
         process.stdout = mock.Mock()
@@ -2867,6 +2871,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.cleanup_causes, ())
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_stuck_stdout_raw_close_does_not_skip_healthy_stderr(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = 0
@@ -2943,6 +2948,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertTrue(attempt._done.wait(1))
         self.assertIn("timed out", failure.message)
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_raw_pipe_close_start_failure_is_ordered_after_drain(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = 0
@@ -2976,6 +2982,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ["pipe.close", "pipe.close"],
         )
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_read_failure_fails_closed(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -3014,6 +3021,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_child_exit_precedes_later_pipe_read_failure(self) -> None:
         process = mock.Mock()
         process.wait.return_value = 7
@@ -3052,6 +3060,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_reader_primary_follows_event_order(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -3099,6 +3108,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ],
         )
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_read_preserves_poll_failure(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -3135,6 +3145,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_wait_failure_and_retry_are_structured(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -3173,6 +3184,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_wait_failure_preserves_retry_timeout(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -3219,6 +3231,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_timeout_preserves_recovery_wait_timeout(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -3263,6 +3276,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_close_failure_is_structured(self) -> None:
         process = mock.Mock()
         process.wait.return_value = 0
