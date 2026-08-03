@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate diode model-card `IS` / `JS` saturation current and lower the `JS`
+  alias instead of silently dropping it.
 - Validate and lower JFET model-card `CGD` and `CGD0` gate-drain capacitance
   parameters instead of silently dropping them.
 - Validate and lower JFET model-card `CGS` and `CGS0` gate-source capacitance

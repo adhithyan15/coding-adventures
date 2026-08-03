@@ -1150,6 +1150,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   }
   const kind = match[1].toUpperCase();
   const params = parseModelParams(paramsText);
+  const diodeSaturationCurrent = params.get("IS") ?? params.get("JS");
+  if (
+    kind === "D" &&
+    diodeSaturationCurrent !== undefined &&
+    (!Number.isFinite(diodeSaturationCurrent) || diodeSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("diode IS must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -1671,7 +1679,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       name,
       fields[1],
       fields[2],
-      model.params.get("IS") ?? 1.0e-15,
+      model.params.get("IS") ?? model.params.get("JS") ?? 1.0e-15,
       model.params.get("VT") ?? 0.02585,
       model.params.get("N") ?? 1.0,
       model.params.get("BV"),
