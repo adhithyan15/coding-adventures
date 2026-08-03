@@ -311,10 +311,12 @@ option mapping, or judge/evaluation failure.
      linked CAS input on every verification. Output is bounded while streaming, and
      each formula requires its own enclosing input-IR claim. The isolated bridge is
      schema-checked; current manifest roots remain explicitly unmigrated.
-13b. Migrate parser inventories into every formula-bearing provenance root, add
-     explicit dependency-hash inputs to dependent builders, then add
-     `formula_derivation` and execution-witness objects and enforce set equality
-     across parsed exports, replayed derivations, and fully verified query executions.
+13b. **In progress:** dependent provenance builders now require an explicit,
+     syntactically valid primitive-root hash and reject roots whose bundle identity
+     is not the expected arithmetic dependency. Next migrate parser inventories into
+     every formula-bearing provenance root, add `formula_derivation` and
+     execution-witness objects, and enforce set equality across parsed exports,
+     replayed derivations, and fully verified query executions.
 
 ### Wave 2: complete K-8 foundations
 

@@ -18,9 +18,6 @@ INPUT_CAPTURED_AT = "2026-08-02T23:39:01Z"
 RAW_HASH = "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf"
 RECEIPT_HASH = "ce1dc59cf73644563ee6c202b7067d3fab290cafab8534bd958eace36826c93b"
 RENDERED_HASH = "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73"
-ARITHMETIC_BUNDLE_HASH = (
-    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"
-)
 RATIO_CLAIM = "adj.math.arithmetic.ratio"
 QUESTION_CLAIM = "adj.question.arithmetic.ratio.compute"
 SELECTED_TEXT = (
@@ -279,9 +276,17 @@ def input_claim_payload(item: dict) -> dict:
     return {key: item[key] for key in ("end", "quote", "quote_sha256", "start")}
 
 
-def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
+def build(
+    cas: provenance.Cas,
+    captured_source: Path | None,
+    *,
+    arithmetic_bundle_sha256: str,
+) -> dict[str, str]:
+    arithmetic_bundle_sha256 = provenance._require_hash(
+        arithmetic_bundle_sha256, "arithmetic_bundle_sha256"
+    )
     arithmetic = provenance._json_object(
-        cas, ARITHMETIC_BUNDLE_HASH, "provenance_bundle"
+        cas, arithmetic_bundle_sha256, "provenance_bundle"
     )
     if arithmetic.get("bundle_id") != "adj.math.arithmetic.primitives.v1":
         raise provenance.ProvenanceError("arithmetic dependency bundle ID drifted")
@@ -326,7 +331,7 @@ def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
                 "input_claim": input_claim_payload(input_claims[RATIO_CLAIM]),
                 "locator": LOCATOR,
                 "resolution": {
-                    "bundle_sha256": ARITHMETIC_BUNDLE_HASH,
+                    "bundle_sha256": arithmetic_bundle_sha256,
                     "claim_id": "adj.math.arithmetic.quotient",
                     "kind": "dependency",
                 },
@@ -336,7 +341,7 @@ def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
                 ],
             }
         ],
-        "dependencies": [ARITHMETIC_BUNDLE_HASH],
+        "dependencies": [arithmetic_bundle_sha256],
         "input": {
             key: input_source[key]
             for key in ("raw_source_sha256", "receipt_sha256", "source_ir_sha256")
@@ -451,6 +456,14 @@ def main() -> None:
         type=Path,
         help="reviewed Ratio.html bytes for the one-time CAS bootstrap",
     )
+    parser.add_argument(
+        "--arithmetic-bundle-sha256",
+        required=True,
+        type=lambda value: provenance._require_hash(
+            value, "--arithmetic-bundle-sha256"
+        ),
+        help="verified current primitive arithmetic provenance root",
+    )
     args = parser.parse_args()
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
@@ -459,7 +472,13 @@ def main() -> None:
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
     ) as transaction:
-        transaction.commit(build(transaction.cas, args.captured_source))
+        transaction.commit(
+            build(
+                transaction.cas,
+                args.captured_source,
+                arithmetic_bundle_sha256=args.arithmetic_bundle_sha256,
+            )
+        )
 
 
 if __name__ == "__main__":

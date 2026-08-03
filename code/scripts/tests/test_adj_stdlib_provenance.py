@@ -5,6 +5,7 @@ import json
 import multiprocessing
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -317,6 +318,23 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 "snapshot": rendered_hash,
             },
         )
+
+    def registered_bundle_hash(
+        self, cas_root: Path, manifest_path: Path, bundle_id: str
+    ) -> str:
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        matches = [
+            digest
+            for digest in manifest["bundle_hashes"]
+            if provenance._json_object(cas, digest, "provenance_bundle").get(
+                "bundle_id"
+            )
+            == bundle_id
+        ]
+        self.assertEqual(len(matches), 1, f"expected one registered {bundle_id} root")
+        return matches[0]
 
     def replace_bundle(
         self, cas_root: Path, manifest_path: Path, mutate: object
@@ -766,7 +784,6 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             cas_root, manifest_path, hashes = self.build_repository(root)
             baseline_index = (cas_root / "index.json").read_bytes()
             baseline_manifest = manifest_path.read_bytes()
-
             with (
                 self.assertRaisesRegex(
                     provenance.ProvenanceError, "staged unreferenced new objects"
@@ -1241,7 +1258,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             provenance_source = repo_root / provenance.DEFAULT_ROOT.parent
             provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
             provenance_copy.parent.mkdir(parents=True)
-            shutil.copytree(provenance_source, provenance_copy)
+            shutil.copytree(
+                provenance_source,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
             arithmetic_source = (
                 repo_root / "code/specs/data/adj-formula-stdlib/arithmetic"
             )
@@ -1255,6 +1276,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             manifest_path = workspace / provenance.DEFAULT_MANIFEST
             baseline_index = (cas_root / "index.json").read_bytes()
             baseline_manifest = manifest_path.read_bytes()
+            arithmetic_hash = self.registered_bundle_hash(
+                cas_root,
+                manifest_path,
+                "adj.math.arithmetic.primitives.v1",
+            )
             original_root = ratio_builder.REPO_ROOT
             ratio_builder.REPO_ROOT = workspace
             try:
@@ -1265,7 +1291,13 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     schema_path=workspace / provenance.DEFAULT_SCHEMA,
                     workspace_root=workspace,
                 ) as transaction:
-                    transaction.commit(ratio_builder.build(transaction.cas, None))
+                    transaction.commit(
+                        ratio_builder.build(
+                            transaction.cas,
+                            None,
+                            arithmetic_bundle_sha256=arithmetic_hash,
+                        )
+                    )
             finally:
                 ratio_builder.REPO_ROOT = original_root
 
@@ -1282,13 +1314,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             }
             ratio_hash, ratio_bundle = bundles["adj.math.arithmetic.ratio.v1"]
             query_hash, query_bundle = bundles["adj.math.arithmetic.ratio.query.v1"]
-            self.assertEqual(
-                ratio_bundle["dependencies"], [ratio_builder.ARITHMETIC_BUNDLE_HASH]
-            )
+            self.assertEqual(ratio_bundle["dependencies"], [arithmetic_hash])
             self.assertEqual(
                 ratio_bundle["clauses"][0]["resolution"],
                 {
-                    "bundle_sha256": ratio_builder.ARITHMETIC_BUNDLE_HASH,
+                    "bundle_sha256": arithmetic_hash,
                     "claim_id": "adj.math.arithmetic.quotient",
                     "kind": "dependency",
                 },
@@ -1375,7 +1405,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     workspace_root=workspace,
                 ) as transaction:
                     transaction.commit(
-                        ratio_builder.build(transaction.cas, captured_source)
+                        ratio_builder.build(
+                            transaction.cas,
+                            captured_source,
+                            arithmetic_bundle_sha256=arithmetic_hash,
+                        )
                     )
             finally:
                 ratio_builder.REPO_ROOT = original_root
@@ -1390,7 +1424,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             repo_root = percent_of_builder.REPO_ROOT
             provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
             provenance_copy.parent.mkdir(parents=True)
-            shutil.copytree(repo_root / provenance.DEFAULT_ROOT.parent, provenance_copy)
+            shutil.copytree(
+                repo_root / provenance.DEFAULT_ROOT.parent,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
             arithmetic_copy = (
                 workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
             )
@@ -1404,6 +1442,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             manifest_path = workspace / provenance.DEFAULT_MANIFEST
             baseline_index = (cas_root / "index.json").read_bytes()
             baseline_manifest = manifest_path.read_bytes()
+            arithmetic_hash = self.registered_bundle_hash(
+                cas_root,
+                manifest_path,
+                "adj.math.arithmetic.primitives.v1",
+            )
             original_root = percent_of_builder.REPO_ROOT
 
             def register(captured_source: Path | None) -> None:
@@ -1417,7 +1460,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                         workspace_root=workspace,
                     ) as transaction:
                         transaction.commit(
-                            percent_of_builder.build(transaction.cas, captured_source)
+                            percent_of_builder.build(
+                                transaction.cas,
+                                captured_source,
+                                arithmetic_bundle_sha256=arithmetic_hash,
+                            )
                         )
                 finally:
                     percent_of_builder.REPO_ROOT = original_root
@@ -1444,7 +1491,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ]
             self.assertEqual(
                 formula_bundle["dependencies"],
-                [percent_of_builder.ARITHMETIC_BUNDLE_HASH],
+                [arithmetic_hash],
             )
             self.assertEqual(
                 formula_bundle["clauses"][0]["resolution"]["kind"],
@@ -1452,7 +1499,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             )
             arithmetic = provenance._json_object(
                 cas,
-                percent_of_builder.ARITHMETIC_BUNDLE_HASH,
+                arithmetic_hash,
                 "provenance_bundle",
             )
             arithmetic_raw = {
@@ -1541,6 +1588,170 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             register(captured_source)
             self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
             self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+
+    def test_dependent_generators_reject_unverified_dependency_hashes(self) -> None:
+        cas_root = ratio_builder.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = ratio_builder.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        arithmetic_hash = self.registered_bundle_hash(
+            cas_root,
+            manifest_path,
+            "adj.math.arithmetic.primitives.v1",
+        )
+        wrong_hash = next(
+            digest for digest in manifest["bundle_hashes"] if digest != arithmetic_hash
+        )
+        raw_source_hash = next(
+            digest
+            for digest, record in cas.index.items()
+            if "raw_source" in record["kinds"]
+            and "provenance_bundle" not in record["kinds"]
+        )
+
+        for builder in (ratio_builder, percent_of_builder):
+            with (
+                self.subTest(builder=builder.__name__, failure="absent hash"),
+                self.assertRaises(TypeError),
+            ):
+                builder.build(cas, None)
+            with (
+                self.subTest(builder=builder.__name__, failure="malformed hash"),
+                self.assertRaisesRegex(provenance.ProvenanceError, "lowercase SHA-256"),
+            ):
+                builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256="not-a-sha256",
+                )
+            with (
+                self.subTest(builder=builder.__name__, failure="wrong bundle"),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "arithmetic dependency bundle ID drifted",
+                ),
+            ):
+                builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256=wrong_hash,
+                )
+            with (
+                self.subTest(builder=builder.__name__, failure="missing object"),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "missing CAS object"
+                ),
+            ):
+                builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256="0" * 64,
+                )
+            with (
+                self.subTest(builder=builder.__name__, failure="non-bundle object"),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "must be a provenance_bundle object"
+                ),
+            ):
+                builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256=raw_source_hash,
+                )
+
+    def test_dependent_generator_clis_require_the_dependency_hash(self) -> None:
+        for builder in (ratio_builder, percent_of_builder):
+            with self.subTest(builder=builder.__name__):
+                process = subprocess.run(
+                    [sys.executable, os.fspath(Path(builder.__file__))],
+                    capture_output=True,
+                    check=False,
+                    text=True,
+                )
+                self.assertEqual(process.returncode, 2)
+                self.assertIn(
+                    "the following arguments are required: --arithmetic-bundle-sha256",
+                    process.stderr,
+                )
+
+    def test_dependent_generators_honor_alternate_same_id_dependency(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = ratio_builder.REPO_ROOT
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / provenance.DEFAULT_ROOT.parent,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic",
+                arithmetic_copy,
+            )
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            arithmetic_hash = self.registered_bundle_hash(
+                cas_root,
+                manifest_path,
+                "adj.math.arithmetic.primitives.v1",
+            )
+            alternate = provenance._json_object(
+                cas, arithmetic_hash, "provenance_bundle"
+            )
+            alternate["clauses"][0]["resolution"]["reason"] = (
+                "alternate same-ID dependency selected explicitly by the caller"
+            )
+            alternate_hash = cas.put_json(
+                alternate,
+                kind="provenance_bundle",
+                label="alternate primitive arithmetic dependency",
+                links=provenance._bundle_declared_links(alternate),
+            )
+            self.assertNotEqual(alternate_hash, arithmetic_hash)
+
+            original_ratio_root = ratio_builder.REPO_ROOT
+            original_percent_root = percent_of_builder.REPO_ROOT
+            ratio_builder.REPO_ROOT = workspace
+            percent_of_builder.REPO_ROOT = workspace
+            try:
+                ratio_roots = ratio_builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256=alternate_hash,
+                )
+                percent_roots = percent_of_builder.build(
+                    cas,
+                    None,
+                    arithmetic_bundle_sha256=alternate_hash,
+                )
+            finally:
+                ratio_builder.REPO_ROOT = original_ratio_root
+                percent_of_builder.REPO_ROOT = original_percent_root
+
+            ratio = provenance._json_object(
+                cas,
+                ratio_roots["adj.math.arithmetic.ratio.v1"],
+                "provenance_bundle",
+            )
+            percent_of = provenance._json_object(
+                cas,
+                percent_roots["adj.math.arithmetic.percent_of.v1"],
+                "provenance_bundle",
+            )
+            self.assertEqual(ratio["dependencies"], [alternate_hash])
+            self.assertEqual(
+                ratio["clauses"][0]["resolution"]["bundle_sha256"],
+                alternate_hash,
+            )
+            self.assertEqual(percent_of["dependencies"], [alternate_hash])
 
     def test_partition_rejects_gaps_overlaps_and_unreasoned_discards(self) -> None:
         cases = [
