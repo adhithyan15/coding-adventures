@@ -763,6 +763,7 @@ members = [
     "chief-of-staff-daemon-api",
     "chief-of-staff-daemon-runtime",
     "chief-of-staff-daemon-config",
+    "chief-of-staff-daemon-policy",
     "chief-of-staff-cli-core",
     "chief-of-staff-tool-api",
     "chief-of-staff-host-runtime",
