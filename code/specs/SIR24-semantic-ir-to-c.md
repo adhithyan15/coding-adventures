@@ -397,7 +397,12 @@ lockstep:
    `Modules` (a module's methods register like a class's; `include`/`extend`
    record `(class, module)` mixins that `_sir_resolve_method` /
    `_sir_resolve_class_method` consult) landed in 0.21.0 — the FINAL OOP slice,
-   giving full 6-backend OOP parity.
+   giving full 6-backend OOP parity, EXCEPT that `Foo.new` did not actually run
+   `initialize` until 0.36.3 (`_sir_call_new`: allocate, resolve `initialize`
+   up the ancestry, invoke it with the constructor args, return the object) —
+   `__new__` had silently rejected constructor arguments since 0.13.0, so
+   every other backend's `.new` ran the constructor and C's did not. True
+   parity landed in 0.36.3.
 7. **Optional / later** — `Bignum`; SIR21 sized-integer native lowering
    (`int64_t`/`uint32_t` from `IntSpec`); `Range` / regex / backtick shims.
 
