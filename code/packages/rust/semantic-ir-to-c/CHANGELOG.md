@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.27.0 — Collections slice 6: Hash non-block methods
+
+No new `Feature`.
+
+- New methods: `keys`/`values` (fresh arrays in INSERTION order, matching how
+  a map already prints), `fetch(k)` (like `h[k]` but RAISES `KeyError` out of
+  range instead of nil — `Array#fetch` already raises `IndexError` the same
+  way), `to_a` (a fresh array of `[k, v]` pairs; `to_a`/`fetch` both widen
+  their existing Array-only arms to also accept a Hash receiver), `to_h`
+  (identity, mirroring `Array#to_a`'s self-identity), `dig(k0, k1, ...)`
+  (looks up `k0` then recurses into the result for each remaining key if it's
+  itself a Hash or Array, else nil — lenient rather than Ruby's `TypeError`
+  on a non-diggable intermediate; polymorphic over the STARTING receiver too,
+  so `Array#dig` comes for free), `merge(other)` (a fresh map, `other`'s
+  entries win on a shared key, never mutates the receiver), `invert` (a fresh
+  map with keys/values swapped; a later duplicate value overwrites the
+  earlier one, matching Ruby).
+- `delete(k)`/`clear` are the FIRST Hash methods that mutate the receiver:
+  `delete` removes an entry (shifting later entries down by one, mirroring
+  `Array#shift`'s in-place style — no reallocation) and returns its value
+  (nil if absent); `clear` resets `len` to 0 in place (the backing array is
+  never freed, matching `Array#pop`) and returns the (now-empty) receiver.
+  Both mutate the EXISTING `SirMap` box, like `MapSet` — every binding
+  sharing the map sees the change.
+- No block-taking Hash method exists yet (that's slice 7), so none of these
+  helpers invoke a closure mid-loop — the length/mutation security discipline
+  slice 4 established for Array's block helpers doesn't yet apply here, but
+  slice 7 must apply the same len+entries-pointer snapshot pattern once it
+  lands (a block-taking Hash helper running while `delete`/`clear` mutates
+  the SAME map would face the identical class of bug slice 4 found and fixed).
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
+
 ## 0.26.0 — Collections slice 4: Array mutation + 1-arg query methods
 
 `push`/`pop`/`shift` are the FIRST Array methods that mutate the receiver

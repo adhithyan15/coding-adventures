@@ -1766,9 +1766,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// `reduce`/`inject`; `count` also widens to accept its block form); slice 4
 /// = Array mutation (`push`/`pop`/`shift`) + 1-arg query methods (`fetch`/
 /// `values_at`/`rotate`/`zip`; `include?`/`index` widen to accept an Array
-/// receiver alongside their slice-2 String arms). The dispatcher raises
-/// `NoMethodError` on an unsupported receiver type or a malformed call
-/// (missing/extra args, a non-closure block position), matching Ruby.
+/// receiver alongside their slice-2 String arms); slice 6 = Hash non-block
+/// methods (`keys`/`values`/`to_h`/`dig`/`merge`/`delete`/`clear`/`invert`;
+/// `fetch`/`to_a` widen to accept a Hash receiver alongside their Array
+/// forms). The dispatcher raises `NoMethodError` on an unsupported receiver
+/// type or a malformed call (missing/extra args, a non-closure block
+/// position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1784,6 +1787,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "sort_by" | "each_with_index" | "reduce" | "inject"
         // slice 4 — Array mutation + 1-arg query methods
         | "push" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
+        // slice 6 — Hash non-block methods
+        | "keys" | "values" | "to_h" | "dig" | "merge" | "delete" | "clear" | "invert"
     )
 }
 
