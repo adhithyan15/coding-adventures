@@ -3378,23 +3378,97 @@ fn offset_calendar(ijd: i64, months: i64) -> Option<i64> {
     ymd_hms_to_ijd(ny, nmo, d, 0, 0, 0.0).checked_add(tod)
 }
 
+/// Extract a plain number from a time-value argument, for the interpretation
+/// modifiers (`unixepoch`/`julianday`/`auto`), which reinterpret the RAW value
+/// rather than parsing it as a date. Integers/reals/booleans are their value;
+/// a numeric string parses; anything else (an ISO date string, NULL, blob) has
+/// no numeric reading, so the modified call is NULL — matching SQLite.
+fn numeric_time_value(v: &SqlValue) -> Option<f64> {
+    match v {
+        SqlValue::Int(i) => Some(*i as f64),
+        SqlValue::Bool(b) => Some(*b as i64 as f64),
+        SqlValue::Float(f) => Some(*f),
+        SqlValue::Text(s) => s.parse::<f64>().ok(),
+        _ => None,
+    }
+}
+
+/// Convert Unix epoch seconds to `iJD` milliseconds (for the `unixepoch`
+/// modifier). Fractional seconds are kept to the millisecond; overflow → None.
+fn unix_seconds_to_ijd(secs: f64) -> Option<i64> {
+    if !secs.is_finite() {
+        return None;
+    }
+    let ms = (secs * 1000.0).round();
+    if !ms.is_finite() {
+        return None;
+    }
+    UNIX_EPOCH_IJD_MS.checked_add(ms as i64)
+}
+
+/// Apply a leading INTERPRETATION modifier (`unixepoch` / `julianday` / `auto`)
+/// to the raw time value, returning the resulting `iJD`. These reinterpret a
+/// NUMBER: `unixepoch` reads it as Unix seconds; `julianday` as a Julian day;
+/// `auto` picks Julian when the number is in the Julian-day range, else Unix
+/// (matching SQLite). Returns `None` for a non-numeric value. Not one of these
+/// keywords → `Ok(None)` sentinel via the outer match (handled by the caller).
+fn interpret_time_value(kind: &str, v: &SqlValue) -> Option<i64> {
+    let n = numeric_time_value(v)?;
+    match kind {
+        "unixepoch" => unix_seconds_to_ijd(n),
+        "julianday" => julian_number_to_ijd(n),
+        // `auto`: a value inside the Julian-day window is a Julian day; anything
+        // else (e.g. a large Unix timestamp) is Unix epoch seconds.
+        "auto" => {
+            if (0.0..MAX_JULIAN_DAY).contains(&n) {
+                julian_number_to_ijd(n)
+            } else {
+                unix_seconds_to_ijd(n)
+            }
+        }
+        _ => None,
+    }
+}
+
 /// Shared front-end for `date`/`time`/`datetime`/`julianday`/`unixepoch`: resolve
 /// the first (time-value) argument to `iJD`, then fold in any trailing modifier
 /// arguments left-to-right. Returns `None` (→ SQL NULL) if the time value or any
 /// modifier is invalid, or if a modifier pushes the result outside the
 /// representable Julian-day range. The zero-argument form means `'now'`.
+///
+/// A leading `unixepoch`/`julianday`/`auto` modifier is special: it reinterprets
+/// the raw time value (see [`interpret_time_value`]) instead of the default
+/// Julian-day/ISO parse, so `datetime(1234567890, 'unixepoch')` works. Elsewhere
+/// those keywords are not recognized (→ NULL), as are `localtime`/`utc` (which
+/// would need a timezone database).
 fn datetime_base_ijd(args: &[SqlValue]) -> Option<i64> {
-    let (mut ijd, mods) = match args.split_first() {
-        None => (now_ijd()?, &[][..]),
-        Some((first, rest)) => (time_value_to_ijd(first)?, rest),
+    let (first, mods) = match args.split_first() {
+        None => return finish_datetime_ijd(now_ijd()?, &[]),
+        Some((first, rest)) => (first, rest),
     };
-    for m in mods {
+    // A leading interpretation modifier changes how the raw value is read.
+    let (mut ijd, rest) = match mods.first() {
+        Some(SqlValue::Text(m0))
+            if matches!(m0.to_ascii_lowercase().as_str(), "unixepoch" | "julianday" | "auto") =>
+        {
+            (interpret_time_value(&m0.to_ascii_lowercase(), first)?, &mods[1..])
+        }
+        _ => (time_value_to_ijd(first)?, mods),
+    };
+    for m in rest {
         let text = match m {
             SqlValue::Text(s) => s,
             _ => return None, // NULL or non-text modifier → NULL
         };
         ijd = apply_modifier(ijd, text)?;
     }
+    finish_datetime_ijd(ijd, &[])
+}
+
+/// Final validity gate shared by both entry paths: an out-of-range `iJD` (a
+/// modifier walked it past year 9999 or before year 0) is NULL. The `_unused`
+/// slice keeps the signature symmetric with the fold above.
+fn finish_datetime_ijd(ijd: i64, _unused: &[SqlValue]) -> Option<i64> {
     // A modifier may have walked the value out of the valid Julian-day window.
     if !(0.0..MAX_JULIAN_DAY).contains(&(ijd as f64 / 86_400_000.0)) {
         return None;
@@ -6715,6 +6789,28 @@ mod tests {
         assert_eq!(m("2026-07-30", &["+1000000000000000000 years"]), SqlValue::Null);
         assert_eq!(m("2026-07-30", &["+9999999999999999999 days"]), SqlValue::Null);
         assert_eq!(m("2026-07-30", &["+106749529914.55 days", "weekday 0"]), SqlValue::Null);
+
+        // Interpretation modifiers reinterpret the RAW numeric value.
+        let dt = |args: Vec<SqlValue>| call_builtin("DATETIME", args).unwrap();
+        // unixepoch: number OR numeric string → Unix seconds; further mods apply.
+        assert_eq!(dt(vec![SqlValue::Int(1234567890), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        assert_eq!(dt(vec![txt("1234567890"), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        assert_eq!(
+            dt(vec![SqlValue::Int(1234567890), txt("unixepoch"), txt("+1 day")]),
+            txt("2009-02-14 23:31:30")
+        );
+        assert_eq!(dt(vec![SqlValue::Float(1234567890.5), txt("unixepoch")]), txt("2009-02-13 23:31:30"));
+        // A non-numeric value with 'unixepoch' is NULL (nothing to reinterpret).
+        assert_eq!(dt(vec![txt("2026-07-30"), txt("unixepoch")]), SqlValue::Null);
+        // julianday forces the default numeric (Julian) reading; auto chooses.
+        assert_eq!(dt(vec![SqlValue::Float(2451545.0), txt("julianday")]), txt("2000-01-01 12:00:00"));
+        assert_eq!(dt(vec![SqlValue::Float(2451545.0), txt("auto")]), txt("2000-01-01 12:00:00"));
+        assert_eq!(dt(vec![SqlValue::Int(1234567890), txt("auto")]), txt("2009-02-13 23:31:30"));
+        // Extreme / non-finite Unix seconds must NULL out (checked_add + is_finite
+        // guards), never panic or land out of the representable range.
+        assert_eq!(dt(vec![SqlValue::Float(1e300), txt("unixepoch")]), SqlValue::Null);
+        assert_eq!(dt(vec![txt("1e400"), txt("unixepoch")]), SqlValue::Null); // parses to +inf
+        assert_eq!(dt(vec![SqlValue::Int(i64::MAX), txt("unixepoch")]), SqlValue::Null);
     }
 
     #[test]

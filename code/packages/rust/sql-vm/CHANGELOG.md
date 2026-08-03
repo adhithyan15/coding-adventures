@@ -3,6 +3,23 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.45] - Unreleased
+
+### Added
+
+- **Date/time interpretation modifiers `unixepoch` / `julianday` / `auto`.** A
+  leading one of these reinterprets the raw numeric time value instead of the
+  default Julian-day/ISO parse: `unixepoch` reads it as Unix epoch seconds
+  (number or numeric string; negative and fractional allowed), `julianday` forces
+  the Julian-day reading, and `auto` picks Julian when the value is inside the
+  Julian-day window else Unix — matching SQLite. So `datetime(1234567890,
+  'unixepoch')` → `2009-02-13 23:31:30`, and further modifiers still apply. A
+  non-numeric value (e.g. an ISO date) with one of these is NULL. New helpers
+  `numeric_time_value` / `unix_seconds_to_ijd` / `interpret_time_value`;
+  `datetime_base_ijd` peeks the first modifier and the shared final range gate is
+  factored into `finish_datetime_ijd`. `localtime`/`utc` stay unimplemented (they
+  need a timezone database) — they, like any unknown modifier, yield NULL.
+
 ## [0.4.44] - Unreleased
 
 ### Added
