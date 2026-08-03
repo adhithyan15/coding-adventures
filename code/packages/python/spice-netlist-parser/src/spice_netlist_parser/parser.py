@@ -1280,6 +1280,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Xti=model.params.get("XTI", 3.0),
             Eg=model.params.get("EG", 1.11),
             Rs=model.params.get("RS", 0.0),
+            Kf=model.params.get("KF", 0.0),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")
@@ -1995,6 +1996,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(energy_gap) or energy_gap <= 0.0
         ):
             raise NetlistParseError("diode EG must be finite and positive")
+        flicker_noise_coefficient = params.get("KF")
+        if flicker_noise_coefficient is not None and (
+            not math.isfinite(flicker_noise_coefficient)
+            or flicker_noise_coefficient < 0.0
+        ):
+            raise NetlistParseError("diode KF must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (
