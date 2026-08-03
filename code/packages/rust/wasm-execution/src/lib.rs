@@ -1654,7 +1654,7 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     *slot = pop_wasm(vm)?;
                 }
                 let obj = GcStruct { type_idx: op.type_idx, fields };
-                let handle = gc::alloc(ctx, obj);
+                let handle = gc::alloc(ctx, obj)?;
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
 

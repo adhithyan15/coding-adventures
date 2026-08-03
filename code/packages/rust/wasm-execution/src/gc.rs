@@ -33,7 +33,7 @@
 use crate::{GcStruct, WasmExecutionContext, WasmValue, REF_NULL_SENTINEL, REF_TAG};
 use gc_core::profile::GcCycleStats;
 use gc_core::GcProfile;
-use virtual_machine::{GenericVM, Value};
+use virtual_machine::{GenericVM, VMError, Value};
 
 /// Object-count threshold a fresh [`GcState`] starts at (analogous to
 /// `gc-core`'s `INITIAL_THRESHOLD`, but counting live objects rather than
@@ -158,6 +158,23 @@ fn mark(vm: &GenericVM, ctx: &WasmExecutionContext) -> Vec<bool> {
 /// the field-vector memory it held), tombstone it to `None`, and push its
 /// index onto the free list for `struct.new` to reuse. Returns the number
 /// of objects freed.
+///
+/// Also shrinks `gc_heap`'s trailing run of tombstoned slots, if any (a
+/// security-review finding, not just tidiness): `mark`'s `marked` vector and
+/// this function's own sweep loop both cost O(`gc_heap.len()`), and without
+/// this, that length is a monotonically non-decreasing high-water mark for
+/// the whole call — a program that transiently spikes the live count (and,
+/// via `adapt_threshold`, the collection threshold) high, then settles into
+/// a low-retention allocate/discard steady state, would otherwise pay that
+/// peak cost on *every* subsequent collection for the rest of the call, an
+/// unbounded amplification relative to its actual live-object count. This is
+/// **not** compaction — no live object moves or is renumbered, so it doesn't
+/// need the handle-rewriting machinery compaction would (see `W04-wasm-gc.md`
+/// §2); it only drops Vec capacity that's provably all-garbage at the tail.
+/// A live/dead-interleaved tail (the highest-indexed object still live) sees
+/// no benefit from this pass alone, but a low-retention churn pattern —
+/// exactly the one the finding describes — keeps shrinking back down as the
+/// previously-highest survivor is eventually collected on a later cycle too.
 fn sweep(ctx: &mut WasmExecutionContext, marked: &[bool]) -> usize {
     // Disjoint field borrows off one `&mut WasmExecutionContext` — sound
     // because `gc_heap` and `gc_state` are different fields, not aliases.
@@ -171,6 +188,16 @@ fn sweep(ctx: &mut WasmExecutionContext, marked: &[bool]) -> usize {
         }
     }
     gc_state.live_count -= freed;
+
+    while matches!(gc_heap.last(), Some(None)) {
+        gc_heap.pop();
+    }
+    // Every truncated index no longer exists in gc_heap at all, so it must
+    // not be left in free_list — a later alloc() reusing it would index past
+    // the (now shorter) Vec's end.
+    let new_len = gc_heap.len() as u32;
+    gc_state.free_list.retain(|&idx| idx < new_len);
+
     freed
 }
 
@@ -203,16 +230,26 @@ pub(crate) fn maybe_collect(vm: &GenericVM, ctx: &mut WasmExecutionContext) {
 /// Allocate a `GcStruct`, reusing a tombstoned slot from `gc_state.free_list`
 /// before growing `gc_heap` — the free-list half of the slot-arena design.
 /// Returns the new object's handle.
-pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcStruct) -> u32 {
+///
+/// A handle is a `u32` (the WASM-spec-mandated representation), so growing
+/// `gc_heap` past `u32::MAX` entries would silently wrap the new handle onto
+/// an already-occupied low index — a wrong-object aliasing bug, not a
+/// memory-safety one (still a checked Rust index), but a real logic error a
+/// security review flagged. Guarded here with a checked conversion so that
+/// (practically unreachable — it implies 100+GB of simultaneously live,
+/// uncollected heap) case is a clean trap instead of silent corruption.
+pub(crate) fn alloc(ctx: &mut WasmExecutionContext, obj: GcStruct) -> Result<u32, VMError> {
     let WasmExecutionContext { gc_heap, gc_state, .. } = ctx;
     gc_state.live_count += 1;
     if let Some(idx) = gc_state.free_list.pop() {
         gc_heap[idx as usize] = Some(obj);
-        idx
+        Ok(idx)
     } else {
-        let handle = gc_heap.len() as u32;
+        let handle = u32::try_from(gc_heap.len()).map_err(|_| {
+            VMError::GenericError("gc_heap exceeded u32::MAX live objects".to_string())
+        })?;
         gc_heap.push(Some(obj));
-        handle
+        Ok(handle)
     }
 }
 
@@ -290,17 +327,24 @@ mod tests {
         assert_eq!(high.threshold, MAX_THRESHOLD, "never exceeds the ceiling");
     }
 
+    /// `alloc` returning `Result` only guards a practically-unreachable
+    /// `u32` overflow (needs 100+GB of live heap); tests below don't
+    /// exercise that path, so unwrap it away for readability.
+    fn alloc_ok(ctx: &mut WasmExecutionContext, obj: GcStruct) -> u32 {
+        alloc(ctx, obj).unwrap()
+    }
+
     #[test]
     fn alloc_reuses_free_list_before_growing() {
         let mut ctx = empty_ctx();
 
-        let a = alloc(&mut ctx, obj(vec![WasmValue::I32(1)]));
-        let b = alloc(&mut ctx, obj(vec![WasmValue::I32(2)]));
+        let a = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(1)]));
+        let b = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(2)]));
         assert_eq!(ctx.gc_heap.len(), 2);
 
         ctx.gc_state.free_list.push(a);
         ctx.gc_state.live_count -= 1; // simulate a's collection
-        let c = alloc(&mut ctx, obj(vec![WasmValue::I32(3)]));
+        let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(3)]));
         assert_eq!(c, a, "reused the freed slot instead of growing");
         assert_eq!(ctx.gc_heap.len(), 2, "arena did not grow");
         assert_eq!(
@@ -316,9 +360,9 @@ mod tests {
         let vm = GenericVM::new();
 
         // c <- b <- a, only `a` is a root (a global).
-        let c = alloc(&mut ctx, obj(vec![WasmValue::I32(42)]));
-        let b = alloc(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
-        let a = alloc(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
+        let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
+        let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
+        let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
         ctx.globals.push(WasmValue::Ref(Some(a)));
 
         let marked = mark(&vm, &ctx);
@@ -331,12 +375,12 @@ mod tests {
         ctx.gc_state.threshold = 1; // force collection eligibility
         let vm = GenericVM::new();
 
-        let c = alloc(&mut ctx, obj(vec![WasmValue::I32(42)]));
-        let b = alloc(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
-        let a = alloc(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
+        let c = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(42)]));
+        let b = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(c))]));
+        let a = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(b))]));
         ctx.globals.push(WasmValue::Ref(Some(a)));
         // Pure garbage: unreachable from anything.
-        let garbage = alloc(&mut ctx, obj(vec![WasmValue::I32(999)]));
+        let garbage = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(999)]));
 
         maybe_collect(&vm, &mut ctx);
 
@@ -344,8 +388,12 @@ mod tests {
         assert!(ctx.gc_heap[a as usize].is_some());
         assert!(ctx.gc_heap[b as usize].is_some());
         assert!(ctx.gc_heap[c as usize].is_some());
-        assert!(ctx.gc_heap[garbage as usize].is_none(), "unreachable object tombstoned");
-        assert_eq!(ctx.gc_state.free_list, vec![garbage], "its slot is ready for reuse");
+        // `garbage` was the last-allocated (highest-index, trailing) object,
+        // so the sweep's trailing-truncation shrinks it away entirely rather
+        // than leaving a `None` at its old index — its slot doesn't exist at
+        // all anymore, not "exists but empty".
+        assert_eq!(ctx.gc_heap.len(), garbage as usize, "the trailing garbage slot was truncated away");
+        assert!(ctx.gc_state.free_list.is_empty(), "no stale index left for a slot that no longer exists");
         assert_eq!(ctx.gc_state.profile.total_collections, 1);
         assert_eq!(ctx.gc_state.profile.total_freed, 1);
     }
@@ -362,16 +410,17 @@ mod tests {
 
         // Allocate both first (fields default to I32(0)), then wire the cycle
         // via struct.set-equivalent direct field mutation.
-        let x = alloc(&mut ctx, obj(vec![WasmValue::I32(0)]));
-        let y = alloc(&mut ctx, obj(vec![WasmValue::Ref(Some(x))]));
+        let x = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(0)]));
+        let y = alloc_ok(&mut ctx, obj(vec![WasmValue::Ref(Some(x))]));
         ctx.gc_heap[x as usize].as_mut().unwrap().fields[0] = WasmValue::Ref(Some(y));
         // No root anywhere points at x or y.
 
         maybe_collect(&vm, &mut ctx);
 
         assert_eq!(ctx.gc_state.live_count, 0, "the cycle is unreachable, so both members are freed");
-        assert!(ctx.gc_heap[x as usize].is_none());
-        assert!(ctx.gc_heap[y as usize].is_none());
+        // Both were garbage, both trailing -> the whole arena truncates away.
+        assert_eq!(ctx.gc_heap.len(), 0);
+        let _ = (x, y);
     }
 
     /// A live root sitting only in a *suspended caller's* frame (not the
@@ -382,7 +431,7 @@ mod tests {
         let mut ctx = empty_ctx();
         let vm = GenericVM::new();
 
-        let kept = alloc(&mut ctx, obj(vec![WasmValue::I32(7)]));
+        let kept = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(7)]));
         // The active frame's locals don't reference it...
         ctx.typed_locals = vec![WasmValue::I32(0)];
         // ...but a paused caller, one level up the call stack, does.
@@ -399,5 +448,60 @@ mod tests {
 
         let marked = mark(&vm, &ctx);
         assert!(marked[kept as usize], "a saved caller frame's local is a live root");
+    }
+
+    /// Security-review fix: `gc_heap`'s trailing tombstoned slots are
+    /// dropped after a sweep that reclaims everything, so the arena's
+    /// length — and therefore future `mark`/`sweep` cost — actually shrinks
+    /// back down instead of being pinned at its lifetime peak. Also proves
+    /// `free_list` never retains an index for a slot that no longer exists
+    /// (which would otherwise panic the next `alloc` that tries to reuse it).
+    #[test]
+    fn sweep_shrinks_arena_when_everything_is_reclaimed() {
+        let mut ctx = empty_ctx();
+        ctx.gc_state.threshold = 1;
+        let vm = GenericVM::new();
+
+        for i in 0..50 {
+            alloc_ok(&mut ctx, obj(vec![WasmValue::I32(i)]));
+        }
+        assert_eq!(ctx.gc_heap.len(), 50);
+        // No roots anywhere -- everything is garbage.
+
+        maybe_collect(&vm, &mut ctx);
+
+        assert_eq!(ctx.gc_state.live_count, 0);
+        assert_eq!(ctx.gc_heap.len(), 0, "the fully-garbage arena shrinks back to empty");
+        assert!(ctx.gc_state.free_list.is_empty(), "no stale indices left to reuse");
+
+        // A later alloc still works correctly against the shrunk arena.
+        let fresh = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(7)]));
+        assert_eq!(fresh, 0, "reuses index 0 in the now-empty arena");
+        assert_eq!(ctx.gc_heap.len(), 1);
+    }
+
+    /// A live object sitting in the *middle* of the arena (not at the tail)
+    /// blocks the trailing-truncation optimization from reaching past it —
+    /// proving the fix is honestly partial (as documented), not a silent
+    /// full compaction in disguise.
+    #[test]
+    fn sweep_does_not_truncate_past_a_live_object_in_the_middle() {
+        let mut ctx = empty_ctx();
+        ctx.gc_state.threshold = 1;
+        let vm = GenericVM::new();
+
+        let garbage_before = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(1)]));
+        let kept = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(2)]));
+        let garbage_after = alloc_ok(&mut ctx, obj(vec![WasmValue::I32(3)]));
+        ctx.globals.push(WasmValue::Ref(Some(kept)));
+
+        maybe_collect(&vm, &mut ctx);
+
+        assert_eq!(ctx.gc_state.live_count, 1);
+        // The trailing garbage slot is truncated away...
+        assert_eq!(ctx.gc_heap.len(), (kept + 1) as usize, "truncated only past the last live object");
+        assert!(ctx.gc_heap[kept as usize].is_some(), "the live object itself is untouched");
+        assert!(ctx.gc_heap[garbage_before as usize].is_none(), "garbage before it is tombstoned, not removed");
+        let _ = garbage_after; // consumed by the truncation, not separately observable
     }
 }

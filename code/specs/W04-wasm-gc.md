@@ -63,6 +63,25 @@ trap cleanly — the same fail-closed convention `struct_get_on_null_traps_clean
 already established, just extended to cover a reclaimed handle the same way
 it covers a dangling one.
 
+**The arena's length shrinks when it can (a security-review finding, not
+just tidiness).** Because the free-list reuses tombstoned indices rather
+than shrinking `gc_heap`, its length is otherwise a monotonically
+non-decreasing high-water mark for the life of a call — and `mark`/`sweep`
+both cost O(`gc_heap.len()`), not O(live objects). A program that
+transiently spikes the live count (and, via `adapt_threshold`, the
+collection threshold) high, then settles into a low-retention
+allocate/discard steady state, would otherwise pay that peak cost on every
+subsequent collection for the rest of the call. `sweep` closes this by
+dropping `gc_heap`'s trailing run of tombstoned slots after reclaiming them
+(and removing those indices from the free list, since they no longer exist
+in the — now shorter — `Vec` at all). This is **not** compaction: no live
+object moves or is renumbered, so it needs none of §2's handle-rewriting
+machinery — it only drops Vec capacity that's provably all garbage at the
+tail. A live object sitting in the middle of the arena blocks truncation
+from reaching past it, so this is a partial, honest mitigation for the
+realistic churn pattern the finding describes, not a full compaction in
+disguise.
+
 ## 3. Root set — transitive and cycle-safe (the heap is graph-shaped)
 
 `struct.set` can store a `Ref` into a field after construction, so cycles

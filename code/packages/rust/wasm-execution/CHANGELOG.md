@@ -55,6 +55,22 @@ crate. A long-running WASM-compiled program could allocate without bound.
   objects while keeping exactly one alive, proving both that the kept
   object survives with its field intact and that the live count is
   reclaimed mid-run rather than left to accumulate.
+- **Security-review fixes, before this landed**:
+  - `sweep` now also drops `gc_heap`'s trailing run of tombstoned slots
+    (removing their indices from `free_list` too). Without this, the
+    arena's length — and therefore `mark`/`sweep`'s O(len) cost — was a
+    monotonically non-decreasing high-water mark for the life of a call: a
+    program that transiently spiked the live count high, then settled into
+    low-retention churn, would keep paying that peak cost on every
+    subsequent collection. Not compaction (no live object moves or is
+    renumbered) — only provably-all-garbage trailing capacity is dropped.
+  - `gc::alloc`'s new-handle assignment now uses a checked `u32` conversion
+    (clean trap on failure) instead of an unchecked `as u32` cast, so an
+    eventual overflow (practically unreachable — it implies 100+GB of
+    live, uncollected heap) can't silently alias a fresh object's handle
+    onto an already-occupied lower index.
+  - Tests: `sweep_shrinks_arena_when_everything_is_reclaimed`,
+    `sweep_does_not_truncate_past_a_live_object_in_the_middle`.
 - See `code/specs/W04-wasm-gc.md` for the full design rationale.
 
 ## [0.5.0] — 2026-07-07
