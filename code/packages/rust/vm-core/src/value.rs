@@ -16,11 +16,13 @@
 //! `safepoint` (see `dispatch::run_safepoint`): every `Value::HeapRef` found
 //! in a register, global, memory slot, or array element is a live root into
 //! `gc-core`'s `FlatHeap`, the same collector engine the native-AOT backends
-//! share via `gc-core-capi`. It is deliberately **additive** — the existing
-//! `alloc`/`alloc_array`/`field_store`/`field_load` ops still allocate on
-//! `ctx.arrays` (a plain Rust bump arena, never collected) exactly as
-//! before; `HeapRef` only appears via the new `gc_alloc`/`gc_field_load`/
-//! `gc_field_store` ops.
+//! share via `gc-core-capi`. E6d records/unions/closures/cons cells
+//! (`alloc`/`field_store`/`field_load`) allocate here — `alloc` is a direct
+//! alias for `gc_alloc`, so every Twig program that builds lisp/record/union
+//! data gets a real, collected heap. Only `alloc_array`/`array_get`/
+//! `array_set` (E5 arrays) still allocate on `ctx.arrays`, a separate, plain
+//! Rust bump arena that is never collected — arrays have no analogous real
+//! collector to reuse yet, a deliberate, separate gap, not an oversight.
 //!
 //! Language frontends that need additional value kinds beyond these six may
 //! extend this in a wrapper enum without modifying vm-core itself.

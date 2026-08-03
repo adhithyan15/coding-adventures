@@ -125,19 +125,26 @@ reads these slots to guide specialisation.
 
 ## GC-managed heap objects
 
-`alloc`/`alloc_array`/`field_store`/`field_load` (above) allocate on
-`ctx.arrays`, a plain Rust bump arena that is never collected. A second,
-**additive** set of ops allocates on `gc-core`'s `FlatHeap` — the exact same
-collector engine the native-AOT backends share via `gc-core-capi`, linked
-here directly as a Rust dependency:
+`alloc`/`field_store`/`field_load`/`is_null` — what Twig's compiler actually
+emits for every cons cell, record, union, and closure — allocate on
+`gc-core`'s `FlatHeap`, the exact same collector engine the native-AOT
+backends share via `gc-core-capi`, linked here directly as a Rust
+dependency. They are direct dispatch-table aliases for `gc_alloc`/
+`gc_field_store`/`gc_field_load` below (also reachable under those opcode
+strings directly, e.g. for hand-built test IIR):
 
 | Op | Effect |
 |----|--------|
-| `gc_alloc [<size_bytes>] -> dest` | Allocate on `FlatHeap` (kind 0), returning a `Value::HeapRef`. Capped by `max_memory_entries` live objects (an O(1)-tracked count) — bounds `gc_field_load`/`gc_field_store`'s O(live-count) size check against DoS |
-| `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word; `ref`-typed `type_hint` decodes it as a `HeapRef`, else `Int` |
-| `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word; runs the write barrier for a `HeapRef` value |
+| `alloc` / `gc_alloc [<size_bytes>] -> dest` | Allocate on `FlatHeap` (kind 0), returning a `Value::HeapRef`. No operand defaults to 16 bytes (a 2-word cons cell). Capped by `max_memory_entries` live objects (an O(1)-tracked count) — bounds `gc_field_load`/`gc_field_store`'s O(live-count) size check against DoS |
+| `field_load` / `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word. Decoded from a 3-bit tag in the word itself (low bits `111` → `HeapRef`, else → `Int`) — **not** from `type_hint`, which can't disambiguate a dynamically-typed field (a cons cell's car/cdr can hold either a nested pair or a plain integer at the same position) |
+| `field_store` / `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word, tagging it (`HeapRef` → low bits `111`, address masked; `Int` → low bits `000`, value shifted left 3 — rejected if outside `[i64::MIN >> 3, i64::MAX >> 3]`, not truncated). Runs the write barrier for a `HeapRef` value. `Float`/`Bool`/`Str` are rejected — none fits the tag scheme |
+| `is_null` | `true` for the top-level nil sentinel (`Int(0)`) *or* a `HeapRef` whose address is null — a field that stored nil and was read back through a `ref<...>`-hinted load decodes as the latter |
 | `safepoint` | Collect only if `FlatHeap` is over its adaptive threshold (**paced**); also **compacts** (relocates objects) when `FlatHeap::should_compact` says fragmentation warrants it — the same shared policy `gc-core-capi`'s `__gc_safepoint` consults |
 | `gc_collect` | Collect unconditionally, non-moving |
+
+`alloc_array`/`array_get`/`array_set` (E5 arrays) remain on `ctx.arrays`, a
+plain Rust bump arena that is never collected — a separate, still-open gap,
+not an oversight.
 
 Root-finding is **precise by construction** — no conservative stack scan.
 `dispatch::collect_now` walks every `Value::HeapRef` across every frame's

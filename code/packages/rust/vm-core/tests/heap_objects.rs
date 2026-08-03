@@ -2,11 +2,12 @@
 //!
 //! A Twig record/union/closure builds `(car . cdr)` cons cells with the
 //! word-granular heap ops the native/LLVM (`__twig_gc_alloc`) and structural
-//! (`object[]`) backends already run. These tests confirm the generic `vm-core`
-//! now executes them too, reusing its bounds-checked array heap: `alloc` reserves
-//! a fixed-size object (default 2 words), and `field_store`/`field_load`
-//! write/read a field by index — the same handle+index model as `array_set`/
-//! `array_get`.
+//! (`object[]`) backends already run. These tests confirm the generic
+//! `vm-core` now executes them too, on the **real, collected** `FlatHeap`
+//! (`alloc`/`field_store`/`field_load` are direct aliases for `gc_alloc`/
+//! `gc_field_store`/`gc_field_load` — see `dispatch.rs`'s module comment): a
+//! cons cell is a 2-word object by default, and `field_store`/`field_load`
+//! write/read a field by index.
 
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
@@ -88,12 +89,12 @@ fn distinct_allocs_do_not_alias() {
     );
 }
 
-/// `is_null` + reserved handle 0: nil (`Int(0)`) is null; a real cons cell (handle
-/// ≥ 1 after the reservation) is not. `c = alloc; return is_null(c)` ⇒ false, and
-/// `is_null(const 0)` ⇒ true.
+/// `is_null`: nil (`const Int(0) : ref<LispyPair>`) is null; a real cons cell
+/// (a genuine `Value::HeapRef` from `alloc`) is not. `c = alloc; return
+/// is_null(c)` ⇒ false, and `is_null(const 0)` ⇒ true.
 #[test]
 fn is_null_distinguishes_nil_from_first_object() {
-    // A freshly-allocated object is NOT nil (its handle is ≥ 1, not 0).
+    // A freshly-allocated object is a HeapRef, never the Int(0) nil sentinel.
     assert_eq!(
         run(vec![
             ins("alloc", Some("c"), vec![], "ref<LispyPair>"),
@@ -101,7 +102,7 @@ fn is_null_distinguishes_nil_from_first_object() {
             ins("ret", None, vec![Operand::Var("r".into())], "bool"),
         ]),
         Some(Value::Bool(false)),
-        "the first allocated object must not read as nil"
+        "a freshly allocated object must not read as nil"
     );
     // The nil sentinel (const Int(0) : ref<LispyPair>) IS nil.
     assert_eq!(
@@ -112,4 +113,83 @@ fn is_null_distinguishes_nil_from_first_object() {
         ]),
         Some(Value::Bool(true))
     );
+}
+
+/// A field that itself holds nil, read back through `field_load` with a
+/// `"ref<...>"` type hint (the shape a `cdr` accessor uses), must still read
+/// as null even though it comes back as a `Value::HeapRef` rather than the
+/// top-level `Value::Int(0)` sentinel — `is_null` must treat
+/// `HeapRef::is_null()` as null too, not just literal `Int(0)`.
+#[test]
+fn is_null_recognizes_nil_stored_and_reloaded_through_a_field() {
+    assert_eq!(
+        run(vec![
+            ins("const", Some("nil"), vec![Operand::Int(0)], "ref<LispyPair>"),
+            ins("alloc", Some("c"), vec![], "ref<LispyPair>"),
+            ins("field_store", None, vec![Operand::Var("c".into()), Operand::Int(1), Operand::Var("nil".into())], "void"),
+            ins("field_load", Some("cdr"), vec![Operand::Var("c".into()), Operand::Int(1)], "ref<LispyPair>"),
+            ins("is_null", Some("r"), vec![Operand::Var("cdr".into())], "bool"),
+            ins("ret", None, vec![Operand::Var("r".into())], "bool"),
+        ]),
+        Some(Value::Bool(true)),
+        "nil round-tripped through a field must still read as null"
+    );
+}
+
+/// The core regression this reroute must not reintroduce: a cons cell field
+/// is dynamically typed (`ref<any>`) — it can hold either a nested pair or a
+/// plain integer depending on runtime data, and the *load* instruction's
+/// type hint can't tell you which (both accessors use the same generic
+/// `"ref<any>"` hint, exactly as real Twig lowering emits for `car`/`cdr`).
+/// This proves both cases round-trip correctly out of the *same* field
+/// position, decoded purely from the stored word's own tag bits.
+#[test]
+fn field_load_disambiguates_int_and_nested_pair_from_the_same_dynamically_typed_field() {
+    // field 0 holds a plain integer.
+    assert_eq!(
+        run(vec![
+            ins("const", Some("v"), vec![Operand::Int(42)], "i64"),
+            ins("alloc", Some("c"), vec![], "ref<LispyPair>"),
+            ins("field_store", None, vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("v".into())], "void"),
+            ins("field_load", Some("r"), vec![Operand::Var("c".into()), Operand::Int(0)], "ref<any>"),
+            ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ]),
+        Some(Value::Int(42)),
+        "a plain integer in a ref<any> field must decode as Int, not HeapRef"
+    );
+    // field 0 (same index, same type hint) holds a nested pair instead.
+    let result = run(vec![
+        ins("alloc", Some("inner"), vec![], "ref<LispyPair>"),
+        ins("alloc", Some("outer"), vec![], "ref<LispyPair>"),
+        ins("field_store", None, vec![Operand::Var("outer".into()), Operand::Int(0), Operand::Var("inner".into())], "void"),
+        ins("field_load", Some("r"), vec![Operand::Var("outer".into()), Operand::Int(0)], "ref<any>"),
+        ins("is_null", Some("n"), vec![Operand::Var("r".into())], "bool"),
+        ins("ret", None, vec![Operand::Var("n".into())], "bool"),
+    ]);
+    assert_eq!(
+        result,
+        Some(Value::Bool(false)),
+        "a nested pair in the same ref<any> field position must decode as a non-null HeapRef, not be misread as an integer"
+    );
+}
+
+/// An integer outside the tag scheme's representable range (`[i64::MIN >>
+/// 3, i64::MAX >> 3]`) is rejected by `field_store` rather than silently
+/// truncated — the field storage layer traps cleanly instead of corrupting
+/// data.
+#[test]
+fn field_store_rejects_an_integer_too_large_for_the_tag_scheme() {
+    let f = IIRFunction::new(
+        "main", vec![], "i64",
+        vec![
+            ins("const", Some("huge"), vec![Operand::Int(i64::MAX)], "i64"),
+            ins("alloc", Some("c"), vec![], "ref<LispyPair>"),
+            ins("field_store", None, vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("huge".into())], "void"),
+            ins("ret", None, vec![Operand::Int(0)], "i64"),
+        ],
+    );
+    let mut m = IIRModule::new("heap", "heap");
+    m.add_or_replace(f);
+    let r = VMCore::new().execute(&mut m, "main", &[]);
+    assert!(r.is_err(), "storing i64::MAX into a dynamically-typed field must trap, got {r:?}");
 }

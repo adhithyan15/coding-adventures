@@ -1,5 +1,69 @@
 # Changelog — vm-core
 
+## [0.22.0] — 2026-08-03 (Twig GC completion: `alloc`/`field_store`/`field_load`/`is_null` reroute onto the real heap)
+
+A harder verification pass ("it cannot be leaking, we cannot assume
+something is working") found that 0.20.0/0.21.x's GC wiring, while real,
+was never actually exercised: `gc_alloc`/`gc_field_load`/`gc_field_store`
+were wired to opcode strings (`"gc_alloc"` etc.) that nothing in
+`twig-ir-compiler`/`iir-builtin-lowering` ever emits. Every real Twig
+cons/record/union/closure cell still went through `alloc`/`field_store`/
+`field_load`, which allocate on `ctx.arrays` — a plain `Vec<Vec<Value>>` bump
+arena, never collected. The additive 0.20.0 landing closed nothing for a
+real Twig program.
+
+- **`"alloc"`/`"field_store"`/`"field_load"` are now direct dispatch-table
+  aliases for `handle_gc_alloc`/`handle_gc_field_store`/`handle_gc_field_load`.**
+  Every `alloc` emission site in the whole pipeline
+  (`twig-ir-compiler::compiler`, `iir-builtin-lowering::heap`) already
+  passes zero operands with `type_hint = "ref<LispyPair>"` — always the
+  16-byte/2-word default both allocators already agreed on — so this is a
+  like-for-like swap, no adapter needed. The old, never-collected
+  `handle_alloc`/`ctx.arrays`-backed implementation is deleted; only
+  `alloc_array`/`array_get`/`array_set` (E5 arrays — a separate, still
+  uncollected heap, not an oversight) remain on `ctx.arrays`.
+- **A 3-bit tag in the raw word disambiguates `Int` from `HeapRef` in a
+  dynamically-typed field** — the one real blocker found during
+  implementation. A cons cell's car/cdr is typed `ref<any>` (either field
+  can hold a nested pair or a plain integer depending on runtime data, and
+  both accessors use the same generic hint), so `gc_field_load`'s previous
+  `type_hint`-based decode (`"ref..." → HeapRef, else → Int`) silently
+  misread every plain integer stored in such a field as a bogus `HeapRef` —
+  caught by `vm-core/tests/heap_objects.rs`'s existing round-trip tests
+  failing immediately after the reroute. Fixed by tagging the word itself at
+  store time (`HeapRef` → low bits `111`, address masked; `Int` → low bits
+  `000`, value shifted left 3) and decoding purely from those bits at load
+  time, ignoring `type_hint` — mirrors `iir-builtin-lowering::dyn_repr`'s
+  NaN-boxing convention for the native backends, adapted to vm-core's own,
+  independent `FlatHeap` object layout (nothing else reads vm-core's heap,
+  so there's no cross-backend bit-layout constraint to match).
+  `FlatHeap::alloc`'s existing 16-byte-aligned-payload guarantee makes the
+  tag sound with no allocator changes. Costs 3 bits of integer range for
+  values that pass through a dynamically-typed field (rejected, not
+  truncated, if out of `[i64::MIN >> 3, i64::MAX >> 3]`) — parity with what
+  `dyn_repr`'s boxing already costs native lisp integers, not a new
+  limitation. `Value::Float`/`Bool`/`Str` stay rejected in a raw GC field —
+  none fits the tag scheme, and no Twig lowering pass stores one directly
+  into a record/union/closure field on any backend today (confirmed by
+  investigation) — pre-existing unsupported territory, not a regression.
+- **`is_null` recognizes `HeapRef::NULL` as null, alongside the literal
+  `Int(0)` sentinel.** Nil itself is still `const Int(0)` (unchanged), but
+  nil *stored into a field* and read back through a `"ref<...>"`-hinted
+  `field_load` now decodes as `Value::HeapRef(HeapRef::NULL)` — the same
+  "nothing here" concept, a different representation once it round-trips
+  through a real heap field instead of `ctx.arrays`.
+- Tests: `vm-core/tests/heap_objects.rs` —
+  `field_load_disambiguates_int_and_nested_pair_from_the_same_dynamically_typed_field`
+  (the headline regression proof), `field_store_rejects_an_integer_too_large_for_the_tag_scheme`,
+  `is_null_recognizes_nil_stored_and_reloaded_through_a_field`; all
+  pre-existing round-trip/aliasing/`is_null` tests re-verified against the
+  real collector. `lang-aot/tests/vm_gc_reclamation.rs` (new file) compiles
+  and runs a genuine 100-cons-cell Twig program through the real frontend +
+  lowering pipeline and proves the collector reclaims all of it once
+  unreachable — not just that hand-built IIR round-trips. Full
+  `lang-aot/tests/lang_matrix.rs` Vm/Jit column (every E6d-1 through E6d-4
+  cons/list/record/union/closure case) re-verified green.
+
 ## [0.21.1] — 2026-08-02 (security fix: cap live `gc_alloc` count to bound `gc_field_load`/`gc_field_store` cost)
 
 A security review of the 0.20.0/0.21.0 GC work found that `gc_field_load`/

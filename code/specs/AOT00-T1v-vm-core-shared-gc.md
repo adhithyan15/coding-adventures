@@ -1,12 +1,19 @@
 # AOT00-T1v — vm-core shares the real GC (capstone: complete)
 
-> **Status: complete.** `vm-core` (the bytecode interpreter) now allocates
-> and collects through `gc-core`'s `FlatHeap` — the exact same collector
-> engine the native-AOT backends use via `gc-core-capi` — as a direct Rust
-> dependency. This closes the interpreter-side half of a caveat the T1
-> capstone (`AOT00-twig-native-gc-coverage.md`) never actually covered: that
-> document is scoped to Twig's *native-AOT* heap surface only, and nothing
-> in the repo previously gave the interpreter tier a real collector at all.
+> **Status: complete**, including the reroute (§2.4). `vm-core` (the
+> bytecode interpreter) now allocates and collects through `gc-core`'s
+> `FlatHeap` — the exact same collector engine the native-AOT backends use
+> via `gc-core-capi` — as a direct Rust dependency, and **Twig's compiler
+> now actually targets it**: `alloc`/`field_store`/`field_load` (what
+> `twig-ir-compiler`/`iir-builtin-lowering` emit for every cons cell,
+> record, union, and closure) are direct aliases for `gc_alloc`/
+> `gc_field_store`/`gc_field_load`. §2.2–2.3 describe the original additive
+> landing (the real collector wired in *alongside* the old, never-collected
+> `ctx.arrays`-backed `alloc` family); §2.4 describes the follow-up that
+> found and closed the gap a later, harder verification pass demanded ("it
+> cannot be leaking, we cannot assume something is working") — the additive
+> family alone did nothing for real Twig programs, since nothing emitted
+> `gc_alloc` in the first place.
 
 ## 1. The problem, found by reading code, not commit messages
 
@@ -129,16 +136,41 @@ cannot drift apart:
   instead of `collect_mixed` under the same policy, over its own
   always-precise root set.
 
+### 2.4 The reroute: `alloc`/`field_store`/`field_load`/`is_null` become `gc_alloc`/`gc_field_store`/`gc_field_load` (vm-core 0.22.0)
+
+§3's original scoping argument against this — "`Value` is a heterogeneous
+non-`Copy` enum, folding *all* of it onto `FlatHeap` needs a full word-collapse
+redesign" — turned out to overstate the blocker. E6d cons/record/union
+cells only ever need **two** of `Value`'s six variants in a raw GC field:
+`HeapRef` (a nested cell) and `Int` (a scalar payload) — never `Value`
+itself word-for-word. The actual redesign needed is narrow: a 3-bit tag in
+the low bits of each stored word (`HeapRef` → tag `111`, address masked;
+`Int` → tag `000`, value shifted), decided from the real `Value` at
+`gc_field_store` time and read back from the tag — never from the load
+instruction's `type_hint` — at `gc_field_load` time. That last point is the
+one genuine trap found during implementation: a cons cell's car/cdr is
+*dynamically* typed (`type_hint = "ref<any>"`, since either field could hold
+a nested pair or a plain integer depending on runtime data), so the hint
+cannot tell you what a specific word actually is — only the tag can.
+`FlatHeap::alloc`'s existing 16-byte payload alignment guarantee (4 free low
+bits) makes the tag scheme sound with no new allocator changes. `Value::Str`
+stays rejected (no raw word fits a variable-length string), matching
+`gc_field_store`'s original limitation — no Twig lowering pass stores one
+directly into a record/union/closure field on any backend today, confirmed
+by investigation, so this is pre-existing unsupported territory, not newly
+introduced.
+
+With this, `alloc`/`field_store`/`field_load` are now literally the same
+dispatch-table entries as `gc_alloc`/`gc_field_store`/`gc_field_load` — every
+`alloc` emission site in the pipeline already passed zero operands with
+`type_hint = "ref<LispyPair>"` (always the 16-byte default), so the swap
+needed no adapter. `is_null` gained one case: nil stored into a field and
+read back via a `"ref<...>"`-hinted `field_load` decodes as
+`Value::HeapRef(HeapRef::NULL)`, not the top-level `Int(0)` sentinel —
+`is_null` now treats both as null.
+
 ## 3. What's explicitly out of scope (not a silent gap)
 
-- **Migrating `ctx.arrays`/E5 array storage and E6d cons-cell lowering onto
-  `FlatHeap`.** `Value` today is a heterogeneous, non-`Copy` Rust enum
-  (`Str(String)` alone is 24 bytes) — `FlatHeap`'s tracing model assumes
-  every traced word *is itself* a candidate pointer, which a `Vec<Value>`
-  doesn't fit. Folding that storage onto `FlatHeap` too needs a `Value`
-  word-collapse redesign (effectively NaN-boxing or an explicit tag byte)
-  first — a separate, much larger project. `gc_alloc`'s raw-word model is
-  deliberately scoped to *new* GC-managed objects only.
 - **A per-kind precise interior trace for `gc_alloc`'d objects.**
   `gc_alloc` uses kind 0 (opaque/conservative) uniformly. Registering a kind
   per object shape (`FlatHeap::register_kind`) for exact ref-field tracing
@@ -170,3 +202,24 @@ cannot drift apart:
   clean; `vm-runtime`'s one real break (`VmResult::from_value`'s
   non-exhaustive match on the new `Value::HeapRef`) is fixed, mapping to the
   `VmResultTag::Ref`/`from_ref` case that type already anticipated.
+
+### §2.4 reroute tests
+
+- `vm-core`: `tests/heap_objects.rs` —
+  `field_load_disambiguates_int_and_nested_pair_from_the_same_dynamically_typed_field`
+  (the headline regression proof: the same `ref<any>`-hinted field position
+  must decode an `Int` and a nested pair correctly, which a `type_hint`-only
+  decode cannot do), `field_store_rejects_an_integer_too_large_for_the_tag_scheme`,
+  `is_null_recognizes_nil_stored_and_reloaded_through_a_field`, plus the
+  pre-existing round-trip/nesting/aliasing/`is_null` tests re-verified
+  against the real collector instead of `ctx.arrays`.
+- `lang-aot`: `tests/vm_gc_reclamation.rs` —
+  `real_twig_cons_heavy_program_reclaims_its_garbage_on_the_generic_vm`
+  compiles and runs a genuine Twig program (`(car (list 1..100))`, 100 real
+  `cons` allocations) through the actual frontend + lowering pipeline (not
+  hand-built IIR), then forces a collection and asserts the live object
+  count drops to exactly 0 — proof the reroute holds for real compiled
+  Twig source, not only synthetic test IIR.
+- `lang-aot`: full `tests/lang_matrix.rs` Vm/Jit column (every E6d-1
+  through E6d-4 cons/list/record/union/closure case) re-verified green
+  after the reroute — the regression backstop.
