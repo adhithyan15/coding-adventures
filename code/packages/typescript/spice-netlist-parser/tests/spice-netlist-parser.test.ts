@@ -1429,6 +1429,27 @@ J1 drain gate source fast
     },
   );
 
+  it("parses the JFET flicker-noise exponent", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(AF=1.4)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      flickerNoiseExponent: 1.4,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])(
+    "rejects invalid JFET flicker-noise exponent %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(AF=${value})`)).toThrow(
+        "JFET AF must be finite and non-negative",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
