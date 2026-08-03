@@ -48,6 +48,8 @@
 //! This crate is part of the coding-adventures monorepo, a ground-up
 //! implementation of the computing stack from transistors to operating systems.
 
+mod gc;
+
 use std::any::Any;
 use std::collections::HashMap;
 
@@ -1191,11 +1193,14 @@ pub struct SavedFrame {
 /// (`fields[0]` = car, `fields[1]` = cdr).  Each field is itself an `anyref`
 /// (an `I32` i31 payload, or a nested `Ref` to another cons / null).
 ///
-/// The heap is an **append-only arena**: `struct.new` pushes a new object and
-/// returns its index as the handle; there is no reclamation.  That is correct
-/// and sufficient for terminating lisp evaluation — the total number of
-/// allocations is bounded by the VM's instruction budget, so a program cannot
-/// allocate unboundedly without first exhausting its step budget.
+/// The heap (`WasmExecutionContext::gc_heap`) is a real, collected mark-sweep
+/// arena (W04) — see the [`gc`](crate::gc) module for the collector itself.
+/// It is a **tombstone + free-list slot arena**, not a plain growable `Vec`:
+/// a `WasmValue::Ref(Some(handle))` is a `Vec` index (a WASM-spec-mandated
+/// representation), so a dead object's slot is tombstoned to `None` and its
+/// index reused by a later `struct.new`, rather than the `Vec` being
+/// shrunk — shrinking it would silently invalidate every other live handle
+/// pointing past the removed index.
 #[derive(Debug, Clone, PartialEq)]
 pub struct GcStruct {
     /// The struct type index this object was allocated with (`struct.new N`).
@@ -1228,18 +1233,24 @@ pub struct WasmExecutionContext {
     /// holds the decoded `(sub, type_idx, field_idx)`.  Like `br_table_targets`
     /// this is per-function and saved/restored across calls.
     pub gc_ops: Vec<GcOp>,
-    /// The WasmGC object heap (LANG77 L3b-3a-3b) — an append-only arena of
-    /// `struct.new` allocations.  A `WasmValue::Ref(Some(h))` indexes into this
-    /// Vec.  **Module-global**: it persists across calls within one run (a cons
-    /// built in a callee and returned stays live), so it is *not* saved/restored
-    /// per call.
-    pub gc_heap: Vec<GcStruct>,
+    /// The WasmGC object heap (LANG77 L3b-3a-3b) — a real, collected
+    /// mark-sweep arena (W04): `Some` is a live object, `None` is a
+    /// tombstoned/reclaimed slot available for reuse (see the
+    /// [`gc`](crate::gc) module). A `WasmValue::Ref(Some(h))` indexes into
+    /// this Vec.  **Module-global**: it persists across calls within one run
+    /// (a cons built in a callee and returned stays live), so it is *not*
+    /// saved/restored per call.
+    pub gc_heap: Vec<Option<GcStruct>>,
     /// Field counts per struct type index (LANG77 L3b-3a-3b).  `struct.new N`
     /// pops `struct_field_counts[N]` field values.  Supplied by the embedder via
     /// [`WasmExecutionEngine::set_struct_field_counts`] (the parser does not yet
     /// surface struct type definitions to the engine); empty by default, in
     /// which case any `struct.*` op is a clean trap.  Module-global / constant.
     pub struct_field_counts: Vec<u32>,
+    /// GC bookkeeping (free list, live count, adaptive threshold, profile)
+    /// alongside `gc_heap` — see [`gc::GcState`](crate::gc::GcState).
+    /// Module-global for the same reason `gc_heap` is.
+    pub gc_state: gc::GcState,
 }
 
 /// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
@@ -1413,6 +1424,12 @@ fn execute_branch(
 
     // Jump.
     vm.jump_to(label.target_pc);
+
+    // GC checkpoint (W04): every taken branch is a candidate loop back-edge
+    // (a loop iterates by branching to its own loop label), so this is the
+    // natural "safepoint at back-edges" chokepoint — see gc::maybe_collect.
+    gc::maybe_collect(vm, ctx);
+
     Ok(())
 }
 
@@ -1636,17 +1653,23 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 for slot in fields.iter_mut().rev() {
                     *slot = pop_wasm(vm)?;
                 }
-                let handle = ctx.gc_heap.len() as u32;
-                ctx.gc_heap.push(GcStruct { type_idx: op.type_idx, fields });
+                let obj = GcStruct { type_idx: op.type_idx, fields };
+                let handle = gc::alloc(ctx, obj);
                 push_wasm(vm, WasmValue::Ref(Some(handle)));
             }
 
-            // struct.get <type_idx> <field_idx>: read a field.
+            // struct.get <type_idx> <field_idx>: read a field. A `None` slot
+            // (out-of-range *or* tombstoned by a collection) is the same
+            // clean-trap case — both mean "not a live object".
             0x02 => {
                 let handle = pop_struct_ref(vm, "struct.get")?;
-                let obj = ctx.gc_heap.get(handle as usize).ok_or_else(|| {
-                    VMError::GenericError(format!("struct.get: dangling handle {handle}"))
-                })?;
+                let obj = ctx
+                    .gc_heap
+                    .get(handle as usize)
+                    .and_then(|slot| slot.as_ref())
+                    .ok_or_else(|| {
+                        VMError::GenericError(format!("struct.get: dangling handle {handle}"))
+                    })?;
                 let val = *obj.fields.get(op.field_idx as usize).ok_or_else(|| {
                     VMError::GenericError(format!(
                         "struct.get: field {} out of range for struct with {} field(s)",
@@ -1657,14 +1680,19 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 push_wasm(vm, val);
             }
 
-            // struct.set <type_idx> <field_idx>: write a field.
+            // struct.set <type_idx> <field_idx>: write a field. Same
+            // None-slot clean-trap reasoning as struct.get above.
             0x04 => {
                 // Stack order: ... ref, value (value on top).
                 let val = pop_wasm(vm)?;
                 let handle = pop_struct_ref(vm, "struct.set")?;
-                let obj = ctx.gc_heap.get_mut(handle as usize).ok_or_else(|| {
-                    VMError::GenericError(format!("struct.set: dangling handle {handle}"))
-                })?;
+                let obj = ctx
+                    .gc_heap
+                    .get_mut(handle as usize)
+                    .and_then(|slot| slot.as_mut())
+                    .ok_or_else(|| {
+                        VMError::GenericError(format!("struct.set: dangling handle {handle}"))
+                    })?;
                 let slot = obj.fields.get_mut(op.field_idx as usize).ok_or_else(|| {
                     VMError::GenericError(format!(
                         "struct.set: field {} out of range",
@@ -2867,6 +2895,12 @@ fn call_function(
     ctx: &mut WasmExecutionContext,
     func_index: usize,
 ) -> VMResult<()> {
+    // GC checkpoint (W04): every call/call_indirect (nested or recursive)
+    // routes through this one shared helper, so this single call site is the
+    // "safepoint at calls" chokepoint for both of this crate's independent
+    // dispatch loops — see gc::maybe_collect.
+    gc::maybe_collect(vm, ctx);
+
     let func_type = ctx
         .func_types
         .get(func_index)
@@ -3055,6 +3089,14 @@ pub struct WasmExecutionEngine {
     /// set with [`WasmExecutionEngine::set_struct_field_counts`].  Flows into the
     /// execution context so `struct.new N` knows how many fields to pop.
     struct_field_counts: Vec<u32>,
+    /// GC bookkeeping from the most recently completed [`Self::call_function`]
+    /// (W04). `gc_heap` itself isn't persisted here — it's rebuilt fresh every
+    /// call, same as `struct_field_counts` isn't — but the *counters* (live
+    /// object count, collection/freed/survived history) are written back
+    /// after execution so a caller (or a test) can inspect them via
+    /// [`Self::gc_live_object_count`] / [`Self::gc_profile`] without needing
+    /// access to the ephemeral `WasmExecutionContext` itself.
+    last_gc_state: gc::GcState,
 }
 
 impl WasmExecutionEngine {
@@ -3074,6 +3116,7 @@ impl WasmExecutionEngine {
             func_bodies: config.func_bodies,
             host_functions: config.host_functions,
             struct_field_counts: Vec::new(),
+            last_gc_state: gc::GcState::default(),
         }
     }
 
@@ -3086,6 +3129,22 @@ impl WasmExecutionEngine {
     pub fn set_struct_field_counts(&mut self, counts: Vec<u32>) -> &mut Self {
         self.struct_field_counts = counts;
         self
+    }
+
+    /// Live `gc_heap` object count as of the most recently completed
+    /// [`Self::call_function`] (W04). `gc_heap` itself resets every call, so
+    /// this reflects only that one call's allocation/collection activity,
+    /// not a running total across calls.
+    pub fn gc_live_object_count(&self) -> usize {
+        self.last_gc_state.live_count
+    }
+
+    /// Diagnostic history (collections run, objects freed/survived,
+    /// fragmentation/survival-ratio estimates) from the most recently
+    /// completed [`Self::call_function`] — the same `gc_core::GcProfile`
+    /// type the native-AOT and `vm-core` GC paths use, for consistency.
+    pub fn gc_profile(&self) -> &gc_core::GcProfile {
+        &self.last_gc_state.profile
     }
 
     /// Consume the engine and return the mutated runtime state.
@@ -3185,8 +3244,12 @@ impl WasmExecutionEngine {
             gc_ops,
             // The GC heap starts empty and grows as `struct.new` allocates; it
             // lives for the whole call so a cons built in a callee survives.
+            // Real mark-sweep collection now runs against it (W04) at loop
+            // back-edges and calls, so a long call no longer grows it
+            // without bound.
             gc_heap: Vec::new(),
             struct_field_counts: self.struct_field_counts.clone(),
+            gc_state: gc::GcState::default(),
         };
 
         let code = CodeObject {
@@ -3206,6 +3269,10 @@ impl WasmExecutionEngine {
         // Update globals back.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
+        // gc_heap itself is not persisted (see its own doc comment above);
+        // the counters are, so a caller can inspect this call's GC activity
+        // via gc_live_object_count()/gc_profile() (W04).
+        self.last_gc_state = ctx.gc_state;
 
         // Collect return values.
         let mut results = Vec::new();
@@ -3691,6 +3758,100 @@ mod tests {
         ];
         let mut engine = gc_engine(code, vec![ValueType::I32], vec![2]);
         assert!(engine.call_function(0, &[]).is_err());
+    }
+
+    // ── W04: real GC — end-to-end reclamation through real dispatch ────────
+    //
+    // These drive an actual loop through the real `execute_branch`/`br_if`
+    // dispatch path (not gc.rs's own direct-call unit tests), proving the
+    // *wiring* — that a real, long-running WASM loop crossing the adaptive
+    // threshold is actually collected, not just that the mark/sweep
+    // algorithm is correct in isolation.
+
+    /// A loop allocates 2000 "garbage" objects (each iteration's `struct.new`
+    /// overwrites the previous one's only reference) while a single `kept`
+    /// object, allocated once before the loop, survives throughout. Proves
+    /// both halves at once: `kept`'s field reads back correctly (nothing
+    /// live was wrongly collected) and `gc_live_object_count()` stays far
+    /// below 2001 (the garbage was actually reclaimed mid-run, not just
+    /// leaked into an ever-growing arena — the exact gap W04 closes).
+    #[test]
+    fn end_to_end_loop_reclaims_garbage_and_preserves_kept_object() {
+        const LIMIT: i64 = 2000; // well past gc::INITIAL_THRESHOLD (1024)
+
+        let mut code: Vec<u8> = Vec::new();
+        // kept (local 1) = struct.new(box(999))
+        code.push(0x41);
+        code.extend(wasm_leb128::encode_signed(999));
+        code.extend([0xFB, 0x00, 0x00]); // struct.new 0
+        code.extend([0x21, 0x01]); // local.set 1
+
+        // i (local 0) = 0
+        code.extend([0x41, 0x00, 0x21, 0x00]);
+
+        // loop (empty block type)
+        code.extend([0x03, 0x40]);
+        {
+            // garbage (local 2) = struct.new(box(i)) -- overwritten every
+            // iteration, so the previous garbage object loses its only root.
+            code.extend([0x20, 0x00]); // local.get 0
+            code.extend([0xFB, 0x00, 0x00]); // struct.new 0
+            code.extend([0x21, 0x02]); // local.set 2
+
+            // i = i + 1
+            code.extend([0x20, 0x00, 0x41, 0x01, 0x6A, 0x21, 0x00]);
+
+            // if i < LIMIT: br_if 0 (back to the loop label)
+            code.push(0x20);
+            code.push(0x00); // local.get 0
+            code.push(0x41);
+            code.extend(wasm_leb128::encode_signed(LIMIT));
+            code.push(0x48); // i32.lt_s
+            code.extend([0x0D, 0x00]); // br_if 0
+        }
+        code.push(0x0B); // end (loop)
+
+        // return kept.field0
+        code.extend([0x20, 0x01]); // local.get 1
+        code.extend([0xFB, 0x02, 0x00, 0x00]); // struct.get 0 0
+        code.push(0x0B); // end (function)
+
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![ValueType::I32, ValueType::I32, ValueType::I32],
+            code,
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_struct_field_counts(vec![1]); // one struct type, one field
+
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(999)], "kept object's field survives intact");
+        // The adaptive threshold floors at gc::INITIAL_THRESHOLD (1024, mirroring
+        // FlatHeap's own heuristic verbatim), so with LIMIT=2000 only one full
+        // collection cycle completes before the loop ends — the live count
+        // settles well under half of everything ever allocated, not anywhere
+        // near LIMIT + 1, which is the actual, meaningful proof of reclamation
+        // (an uncollected arena would report exactly 2001 here).
+        assert!(
+            engine.gc_live_object_count() < (LIMIT as usize) / 2,
+            "garbage was reclaimed mid-loop, not left to accumulate to ~{}: got {}",
+            LIMIT + 1,
+            engine.gc_live_object_count()
+        );
+        assert!(engine.gc_profile().total_collections >= 1, "at least one real collection ran");
+        assert!(
+            engine.gc_profile().total_freed as i64 >= LIMIT / 2,
+            "a substantial number of garbage objects were actually freed, not just some: got {}",
+            engine.gc_profile().total_freed
+        );
     }
 
     #[test]
