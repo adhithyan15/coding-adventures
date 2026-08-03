@@ -29,12 +29,31 @@ ruby build.rb --language python      # Only build Python packages
 ruby build.rb --cache-file FILE      # Custom cache file path
 ```
 
+## Metadata Safety
+
+Lua rockspecs are read as raw bytes and decoded as strict UTF-8 before any
+dependency parsing. Malformed metadata fails closed with CLI exit code `2` and
+a stable diagnostic that contains only portable identities:
+
+```text
+METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec encoding=UTF-8
+```
+
+The resolver never inserts replacement characters and never includes the host
+checkout root in this error. A literal U+FFFD character encoded correctly as
+UTF-8 remains valid metadata.
+
 ## Testing
 
 ```bash
 bundle install
 bundle exec rake test
 ```
+
+The `test/test_resolution_utf8.rb` coverage exercises the shared
+language-neutral valid and invalid fixtures, representative malformed sequence
+classes, and the real CLI subprocess. The full Rake suite enforces the
+whole-program coverage threshold.
 
 ## Dependencies
 

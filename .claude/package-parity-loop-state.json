@@ -365,7 +365,7 @@
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-ruby-rockspec-utf8",
       "pr_number": null,
-      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit."
+      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. Pre-rebase validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, and a real 258-Lua-package/382-edge plan. Full-repository validation separately discovered the undeclared Starlark runtime dependency and recurring canonical BUILD parse failures; both have dedicated pending owners below and do not expand this UTF-8 slice."
     },
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
@@ -384,6 +384,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Materialized after merged PR #9632. Elixir reads binaries but its current regex extraction has position-dependent behavior on malformed UTF-8. Add an explicit UTF-8 validity gate before parsing, consume both exact shared fixtures, preserve exact dependency edges, return typed METADATA_INVALID_UTF8 identity, and prove the real CLI exit/stderr contract. Schedule after the direct locale-sensitive Ruby and Haskell boundaries so their references further pin cross-platform behavior."
+    },
+    {
+      "id": "build-tool-ruby-starlark-runtime-closure",
+      "title": "Make the Ruby build tool declare and load its Starlark runtime closure",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while running the real full-repository Lua plan for the Ruby UTF-8 slice. The build tool lazily requires coding_adventures_starlark_interpreter whenever a Starlark BUILD file is present, but its Gemfile declares only progress_bar and test gems; a clean source-tree invocation therefore aborts with LoadError until every Ruby package lib directory is injected through RUBYLIB. Declare a repository-local runtime closure or a supported bootstrap path, exercise it from a clean environment on Windows and Unix, and preserve the tool's zero-network build execution policy."
+    },
+    {
+      "id": "build-tool-ruby-starlark-canonical-build-compatibility",
+      "title": "Make the Ruby Starlark path parse canonical BUILD files without fallback",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-starlark-runtime-closure"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",

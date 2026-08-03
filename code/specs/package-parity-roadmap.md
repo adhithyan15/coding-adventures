@@ -257,6 +257,13 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   and Elixir are now explicit pending children; the post-merge leverage pass
   ranks Ruby first because its locally available toolchain and direct
   locale-sensitive read form the narrowest remaining boundary;
+- close the Ruby build tool's Starlark source-tree execution gaps. The Ruby
+  UTF-8 validation found that a clean real plan cannot load the undeclared
+  `coding_adventures_starlark_interpreter` runtime until repository library
+  paths are injected, after which recurring canonical Elixir, Go, and Rust
+  BUILD suffixes still produce parse warnings and raw-command fallback. Runtime
+  closure and canonical BUILD compatibility are separate pending children so
+  the metadata-decoding slice stays behaviorally narrow;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
