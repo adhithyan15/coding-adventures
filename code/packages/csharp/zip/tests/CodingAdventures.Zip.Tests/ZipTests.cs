@@ -427,28 +427,37 @@ public class ZipTests
 
     // A naive loop that strips one drive prefix per iteration by reassigning
     // `segment = segment[2..]` (a fresh O(remaining-length) copy each time)
-    // costs O(n^2) on a segment made of many chained "<letter>:" prefixes —
-    // a single AddFile call with a few hundred thousand chained prefixes
-    // would then take tens of seconds. This name is well under the ZIP32
-    // 65535-byte name_len cap (so it isn't rejected by that check first) but
-    // still has 50,000 chained prefixes (100,000 characters): an O(n^2)
-    // implementation would make this test time out; an O(n) one finishes
-    // effectively instantly. This doesn't assert a wall-clock bound directly
-    // (flaky under CI load) — xUnit's own default per-test timeout is the
-    // backstop that would catch a quadratic regression.
-    [Fact]
-    public void Security_StripDrivePrefixIsLinearNotQuadratic()
+    // costs O(n^2) on a segment made of many chained "<letter>:" prefixes.
+    // This is well under the ZIP32 65535-byte name_len cap (so it isn't
+    // rejected by that check first, which runs on the *normalized* result,
+    // after this method would already have paid the quadratic cost).
+    //
+    // Sized deliberately, not arbitrarily: a standalone repro of the old
+    // O(n^2) loop took ~27.6s for a ~1.25M-character chained-prefix input.
+    // 400,000 characters (200,000 chained "A:" pairs) extrapolates to
+    // roughly ~10s under that same quadratic scaling — comfortably over this
+    // test's 5-second [Fact(Timeout=...)], so a regression back to the
+    // O(n^2) implementation fails this test, while the current O(n)
+    // implementation finishes in low single-digit milliseconds.
+    // xUnit's Timeout only applies to async tests, so the body runs inside
+    // Task.Run — the underlying work is still plain synchronous CPU-bound
+    // code, this just gives xUnit a Task to apply the timeout to.
+    [Fact(Timeout = 5000)]
+    public async Task Security_StripDrivePrefixIsLinearNotQuadratic()
     {
-        var chainedPrefix = string.Concat(Enumerable.Repeat("A:", 50_000)); // 100,000 chars, all stripped
-        var name = chainedPrefix + "evil.dll";
+        await Task.Run(() =>
+        {
+            var chainedPrefix = string.Concat(Enumerable.Repeat("A:", 200_000)); // 400,000 chars, all stripped
+            var name = chainedPrefix + "evil.dll";
 
-        var writer = new ZipWriter();
-        writer.AddFile(name, "x"u8.ToArray());
-        var archive = writer.Finish();
+            var writer = new ZipWriter();
+            writer.AddFile(name, "x"u8.ToArray());
+            var archive = writer.Finish();
 
-        var entries = ZipArchive.Unzip(archive);
-        Assert.Single(entries);
-        Assert.Equal("evil.dll", entries[0].Name);
+            var entries = ZipArchive.Unzip(archive);
+            Assert.Single(entries);
+            Assert.Equal("evil.dll", entries[0].Name);
+        });
     }
 
     // A directory entry's trailing slash must survive normalization.
@@ -575,5 +584,45 @@ public class ZipTests
         // With a sufficient budget the same archive extracts normally.
         var entries = ZipArchive.Unzip(archive, maxTotalBytes: 1024 * 1024);
         Assert.Equal(data, entries[0].Data);
+    }
+
+    // ZipReader.Read(name) originally did a linear O(n) scan of every
+    // entry's metadata to find one by name (`_meta.FirstOrDefault(m =>
+    // m.Name == name)`). ZipArchive.Unzip calls Read() once per entry, so a
+    // single Unzip() call on an n-entry archive cost O(n) lookups * O(n)
+    // scan each = O(n^2) string comparisons overall — for a perfectly valid,
+    // small (a few hundred KB) archive with tens of thousands of entries,
+    // that's billions of comparisons. This is squarely inside Unzip's own
+    // documented threat model ("untrusted uploads, third-party .zip files"),
+    // so the lookup must be O(1) (a Dictionary), not O(n).
+    //
+    // Entries use compress: false to isolate the read-side lookup complexity
+    // being tested from the writer's DEFLATE pipeline. 40,000 entries keeps
+    // archive construction itself fast (well under a second) while being
+    // large enough that an O(n^2) lookup would take on the order of tens of
+    // seconds — comfortably over this test's timeout — versus low
+    // double-digit milliseconds for the O(1) dictionary lookup.
+    // See the note on Security_StripDrivePrefixIsLinearNotQuadratic above —
+    // xUnit's Timeout requires an async test, so this wraps the same
+    // synchronous CPU-bound work in Task.Run purely to give xUnit a Task to
+    // time out.
+    [Fact(Timeout = 5000)]
+    public async Task Security_UnzipEntryLookupIsLinearNotQuadratic()
+    {
+        await Task.Run(() =>
+        {
+            const int entryCount = 40_000;
+            var writer = new ZipWriter();
+            for (var i = 0; i < entryCount; i++)
+            {
+                writer.AddFile($"f{i}.txt", "x"u8.ToArray(), compress: false);
+            }
+            var archive = writer.Finish();
+
+            var entries = ZipArchive.Unzip(archive);
+            Assert.Equal(entryCount, entries.Count);
+            Assert.Equal("x"u8.ToArray(), entries[0].Data);
+            Assert.Equal("x"u8.ToArray(), entries[^1].Data);
+        });
     }
 }

@@ -1001,8 +1001,21 @@ public sealed class ZipReader
     // Raw archive bytes (kept alive for deferred reads).
     private readonly byte[] _data;
 
-    // Parsed entry metadata from the Central Directory.
+    // Parsed entry metadata from the Central Directory, in Central Directory
+    // order (drives the public Entries list).
     private readonly List<ZipEntryMeta> _meta = [];
+
+    // Same metadata, indexed by name for O(1) Read(name) lookups. A ZIP
+    // archive with n entries is legal up to n = 65535 (ZIP32); doing an O(n)
+    // linear scan of `_meta` inside Read(), and then having ZipArchive.Unzip
+    // call Read() once per entry, would make a single Unzip() call O(n^2) —
+    // ~4.3 billion string comparisons for a perfectly valid, small (a few MB)
+    // 65535-entry archive. That is squarely inside this type's own threat
+    // model ("third-party .zip files"), so the lookup must be O(1) rather
+    // than O(n). Populated with TryAdd so a duplicate name keeps the same
+    // "first one in Central Directory order wins" semantics a linear
+    // FirstOrDefault scan would have had.
+    private readonly Dictionary<string, ZipEntryMeta> _metaByName = [];
 
     // Cached decoded ZipEntry list (names + empty data) exposed to callers.
     private readonly List<ZipEntry> _entries;
@@ -1074,7 +1087,7 @@ public sealed class ZipReader
                 throw new InvalidDataException("zip: CD entry name out of bounds");
 
             var name = Encoding.UTF8.GetString(data, nameStart, nameLen);
-            _meta.Add(new ZipEntryMeta
+            var entryMeta = new ZipEntryMeta
             {
                 Name = name,
                 LocalOffset = localOffset,
@@ -1083,7 +1096,9 @@ public sealed class ZipReader
                 CompressedSize = compressedSize,
                 UncompressedSize = uncompressedSize,
                 IsDirectory = name.EndsWith('/'),
-            });
+            };
+            _meta.Add(entryMeta);
+            _metaByName.TryAdd(name, entryMeta); // first occurrence wins, matching a linear scan
 
             pos = nameEnd + extraLen + commentLen;
         }
@@ -1104,8 +1119,8 @@ public sealed class ZipReader
     /// </summary>
     public byte[] Read(string name)
     {
-        var meta = _meta.FirstOrDefault(m => m.Name == name)
-            ?? throw new InvalidDataException($"zip: entry '{name}' not found");
+        if (!_metaByName.TryGetValue(name, out var meta))
+            throw new InvalidDataException($"zip: entry '{name}' not found");
         return ReadEntry(meta);
     }
 

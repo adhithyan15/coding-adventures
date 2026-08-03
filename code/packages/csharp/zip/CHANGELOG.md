@@ -80,6 +80,17 @@ fixed here, with adversarial regression tests added for each:
     backstop — `if (Path.IsPathRooted(result)) throw ...` — right before
     `NormalizeEntryName` returns, so any *future* refactor that reopens a gap in this logic
     fails loudly and immediately instead of silently reintroducing zip-slip.
+- **`ZipArchive.Unzip` was O(n²) in entry count (separate DoS, caught in the same review
+  pass that confirmed the drive-prefix fix)**: `ZipReader.Read(name)` did a linear scan of
+  every entry's metadata (`_meta.FirstOrDefault(m => m.Name == name)`) to find one by
+  name, and `Unzip` calls `Read` once per entry — O(n) lookups × O(n) scan each = O(n²)
+  string comparisons for one `Unzip()` call. A perfectly valid, small (a few hundred KB)
+  archive with tens of thousands of entries — well inside the ZIP32 65535-entry limit this
+  same PR enforces — would cost billions of comparisons, squarely inside `Unzip`'s own
+  documented threat model ("untrusted uploads, third-party `.zip` files"). Fixed by adding
+  a `Dictionary<string, ZipEntryMeta>` built once in the constructor (`TryAdd`, preserving
+  "first occurrence in Central Directory order wins" on a duplicate name, matching what a
+  linear scan would have done) and having `Read` do an O(1) lookup against it instead.
 - **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,
