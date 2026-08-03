@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card lateral-diffusion-length validation.
+1. Rust Berkeley SPICE MOS model-card drain-resistance validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `LD` values, plus combinations
-     where `L - 2*LD <= 0`, before lowering MOS elements into engine parameters.
-   - Preserve valid zero and positive lateral-diffusion lengths.
+   - Reject negative and non-finite model-card `RD` values before lowering MOS
+     elements into engine parameters.
+   - Preserve zero and positive drain resistances.
 
 ## Completed Slices
 
@@ -4059,12 +4059,18 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Positive model lengths remain accepted.
 
+357. Rust Berkeley SPICE MOS model-card lateral-diffusion-length validation.
+   - Status: completed in PR 9541.
+   - Negative and non-finite model-card `LD` values, plus combinations where
+     `L - 2*LD <= 0`, are rejected before lowering MOS elements.
+   - Valid zero and positive lateral-diffusion lengths remain accepted.
+
 ## Backlog
 
 1. Rust Berkeley SPICE MOS model-card validation follow-ups.
-   - Validate the remaining facade gaps in priority order: drain resistance
-     `RD`, source resistance `RS`, sheet resistance `RSH`, flicker-noise
-     coefficient `KF`, and flicker-noise exponent `AF`.
+   - Validate the remaining facade gaps in priority order: source resistance
+     `RS`, sheet resistance `RSH`, flicker-noise coefficient `KF`, and
+     flicker-noise exponent `AF`.
    - Reuse the finite non-negative contracts and diagnostics already aligned
      across the Rust, Python, and TypeScript engines.
 
