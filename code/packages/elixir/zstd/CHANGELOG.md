@@ -82,6 +82,15 @@ Lesson 96 (FSE codec) and Lesson 95 (FHD checksum-flag bit) for full detail.
   `code/specs/CMP07-zstd.md`, TC-9 is Cross-language / interoperability;
   the old label collided with the spec's numbering.
 
+### Security
+
+- Hardened the new TC-9 tests' temp-file names (`unique_tmp_name/1`): mixes
+  `:crypto.strong_rand_bytes/1` output in alongside the monotonic counter,
+  so a co-resident local user can't pre-guess the path and symlink-race it
+  between `File.write!/2` and the `zstd` CLI's read. Flagged as LOW severity
+  in security review (test-only temp files, no sensitive content); fixed
+  anyway since the change was cheap.
+
 ## [0.1.2] — 2026-07-12
 
 ### Fixed
