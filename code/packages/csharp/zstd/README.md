@@ -14,6 +14,14 @@ This package follows the repository's established CMP07 teaching format. It is
 an educational RFC 8878 subset: it does not decode arbitrary Zstandard streams
 that use compressed literals or custom/repeat FSE tables.
 
+The predefined-FSE sequences codec (table construction, per-sequence field
+order, and the last-sequence state-init special case) is verified against the
+real `zstd` CLI via `dotnet test` (see `Tc9CliInterop` and
+`RepeatingPatternCliInterop` in the test project) — a same-codebase
+round-trip test alone cannot catch a systematic, symmetric protocol
+deviation, since the encoder and decoder would simply agree with each other
+on the wrong convention. See `CHANGELOG.md` and lessons.md Lesson 96.
+
 ## Example
 
 ```csharp

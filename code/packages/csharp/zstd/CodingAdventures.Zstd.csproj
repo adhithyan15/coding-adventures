@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <PackageId>CodingAdventures.Zstd.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Pure C# educational Zstandard codec</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
