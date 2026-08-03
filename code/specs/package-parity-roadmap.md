@@ -122,13 +122,14 @@ The loop must not start by attempting 10,976 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`5ceb7cafcb22ed70e096df281e12d10347113c2a` is collision-clean at 1,235
-normalized implementation identities, 4,383 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 785 singletons, 590
+`479ba6d78c2168ad36f02a1da020d7b91f6e4ef8` is collision-clean at 1,237
+normalized implementation identities, 4,385 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 787 singletons, 592
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The new `websocket-runtime` identity has a native-authority review owner; the
-intervening parser, CI, and curriculum fixes changed no canonical package
-identity.
+The new `websocket-runtime`, `chief-of-staff-daemon-api`, and
+`smart-home-axis-vapix-integration` identities have explicit native-authority
+review owners; the intervening parser, CI, and curriculum fixes changed no
+other canonical package identity.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
@@ -295,6 +296,29 @@ profile, platform-CI evidence, and the guard that deterministic RFC 6455 logic
 stays in `websocket-core`; policy excludes that native-runtime review from
 autonomous selection.
 
+The `479ba6d7` refresh adds `chief-of-staff-daemon-api` and
+`smart-home-axis-vapix-integration`. The Chief daemon API couples bounded JSON
+protocol handling to authenticated host-lifecycle operations and an optional
+concrete WebSocket listener, so its minimum listener, stream, authentication,
+and host-control authority requires a native-runtime review while reusable
+DTO, version, duplicate-field, stable-error, and redaction semantics remain in
+portable injected contracts. The Axis adapter performs mDNS discovery,
+credential-referenced HTTPS, TLS, endpoint policy, runtime authorization, and
+concrete network effects; its bounded VAPIX validation, request planning,
+identity normalization, and stable projection remain portable seams, while the
+residual adapter is a reviewed native-runtime exception. Both review items are
+excluded from autonomous delivery selection.
+
+The `3445da42` refresh adds `chief-of-staff-cli-core` and a Rust
+`semantic-ir-to-c` implementation. The CLI core is zero-capability and keeps
+credentials, sockets, terminal input, and process policy outside an injected
+authenticated client. Its declarative command grammar, conservative defaults,
+typed host/path/hash validation, dispatch records, stable errors, and
+deterministic JSON rendering are portable fixture candidates. A dedicated
+dependency-shaped owner now waits on the service-registry portable contract
+and daemon authority split. The additional SIR implementation fills an
+existing identity slot and creates no new package identity or exception.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -367,7 +391,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   pending child instead of expanding the UTF-8 behavior slice. Merged PR #9648
   completed Ruby with strict byte decoding, typed stable diagnostics, the exact
   shared fixtures, real CLI exit 2, and green Ubuntu, macOS, Windows, fixture,
-  CI-gate, and Ruby CodeQL checks. Haskell and Elixir remain pending;
+  CI-gate, and Ruby CodeQL checks. The post-#9717 leverage pass selects Haskell
+  next because it is the remaining locale-sensitive established-language
+  boundary and will provide a stronger reference for the position-dependent
+  Elixir repair; Elixir remains pending. The Haskell real-package validation
+  also exposed a separate Windows source-hashing boundary: locale-sensitive
+  child-process stdin aborts with GHC `commitBuffer` error `0xc000014b` when
+  hashing non-ASCII package text. That binary-safe hashing repair is logged as
+  a dependent child rather than widening the rockspec metadata slice;
 - close the Ruby build tool's Starlark source-tree execution gaps. The Ruby
   UTF-8 validation found that a clean real plan cannot load the undeclared
   `coding_adventures_starlark_interpreter` runtime until repository library
