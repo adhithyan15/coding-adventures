@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased
+
+### Fixed
+
+- Lua `.rockspec` dependency metadata now follows the shared strict UTF-8
+  contract. Invalid bytes fail closed with the stable
+  `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 without leaking host
+  checkout paths. Version constraints are parsed without introducing manifest
+  self-edges.
+
 ## [0.1.0] — 2026-03-23
 
 ### Added

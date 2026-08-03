@@ -106,10 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `0cbae0ca` after
-merged PR #9553 completed the Swift build-tool identity registry and subsequent
-merges added no implementation package directory. The inventory contains
-1,222 normalized implementation identities across 4,370 established-lane
+working inventory was regenerated on August 2, 2026 from `ec53a3f9` after the
+Perl build-tool branch was rebased onto current `origin/main`. The inventory
+contains 1,224 normalized implementation identities across 4,372 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -117,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 772 | 10,808 |
+| Present in one language | 774 | 10,836 |
 
-The loop must not start by attempting 10,780 singleton ports. It should finish
+The loop must not start by attempting 10,836 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`0cbae0ca3799671ca7db79e92c5f38b957c2c27e` is collision-clean at 1,222
-normalized implementation identities, 4,370 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 772 singletons, 577
+`ec53a3f9e9b2f31deefc43552a4d48658c49f3f4` is collision-clean at 1,224
+normalized implementation identities, 4,372 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 774 singletons, 579
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -178,6 +177,13 @@ multicast, DNS/TCP, LAN HTTP and HEOS TCP execution,
 timeouts, endpoint approval, CLI I/O, authorization, and runtime mutation remain
 native-host responsibilities.
 
+The same refresh added `chief-of-staff-channel-crypto` and
+`venture-browser-qt`. The former has a portable, vector-testable record,
+framing, epoch, and cryptographic core around explicit entropy, persistence,
+and key-custody boundaries. The latter has a reusable deterministic host-bridge
+contract around a Qt/Cairo/C++ native shell. Both now have explicit backlog
+owners; neither is treated as an unclassified blind all-language port.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -201,7 +207,7 @@ The August 2 lane audit is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 983 | 0 | 100% |
+| Rust | 989 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 439 | 0 | 82.2% |
 
@@ -237,10 +243,16 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
   byte fixtures plus real CLI exit-2 coverage. Merged PR #9572 completed
   TypeScript with strict decoding, exact shared-fixture coverage, and green
-  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Ready PR
-  #9603 is the active Lua child: it validates raw rockspec bytes strictly,
-  consumes both shared fixtures, returns the stable repository-relative
-  diagnostic with real CLI exit code 2, and covers malformed Unicode classes;
+  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Merged PR
+  #9603 completed Lua with strict raw-byte validation, both shared fixtures,
+  the stable repository-relative diagnostic, real CLI exit code 2, malformed
+  Unicode coverage, and green Ubuntu, macOS, and Windows checks. The selected
+  Ready-for-review PR #9632 is the Perl child because its raw-byte boundary is
+  the narrowest remaining resolver. Its security gate
+  also discovered that the Perl build tool's `5.026` runtime floor and
+  version-free core-module declarations do not produce an auditable clean
+  dependency floor; that compatibility-policy review is logged as a separate
+  pending child instead of expanding the UTF-8 behavior slice;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
