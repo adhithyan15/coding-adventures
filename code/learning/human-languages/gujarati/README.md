@@ -50,6 +50,9 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gujarati font
 (`../../_fonts/NotoSansGujarati-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gujarati runs use that font while section bookmarks use the lessons'
 Latin romanization.
+The six-chapter build is warning-clean, and its PDF outline preserves readable
+Gujarati in the handwritten chapters alongside generated bookmark-safe
+romanization.
 
 ## Files
 
