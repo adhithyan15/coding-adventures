@@ -33,10 +33,10 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley SPICE MOS model-card width validation parity.
+1. Python and TypeScript Berkeley SPICE MOS model-card length validation parity.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite `W` values with the shared diagnostic.
-   - Preserve positive model-card widths through canonical Level-1 lowering.
+   - Reject zero, negative, and non-finite `L` values with the shared diagnostic.
+   - Preserve positive model-card lengths through canonical Level-1 lowering.
 
 ## Completed Slices
 
@@ -4173,11 +4173,16 @@ the Rust, Python, and TypeScript surfaces together.
      diagnostic.
    - Positive surface potentials lower into canonical Level-1 parameters.
 
+376. Python and TypeScript Berkeley SPICE MOS model-card width validation parity.
+   - Status: completed in PR 9616.
+   - Zero, negative, and non-finite `W` values are rejected with the shared
+     diagnostic while positive widths lower into Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
-   - Apply Rust-aligned domains and diagnostics to already lowered `L`, `IS`,
-     and nominal-temperature fields.
+   - Apply Rust-aligned domains and diagnostics to already lowered `IS` and
+     nominal-temperature fields.
 
 2. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
    - Lower missing canonical resistance, geometry, capacitance, junction, and

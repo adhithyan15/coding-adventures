@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite MOS model-card `L` values before
+  lowering Level-1 default length.
 - Reject zero, negative, and non-finite MOS model-card `W` values before
   lowering Level-1 default width.
 - Reject zero, negative, and non-finite MOS model-card `PHI` values before

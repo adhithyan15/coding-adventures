@@ -1471,6 +1471,20 @@ Xright c d load
     expect(element.params.W).toBeCloseTo(4.0e-6, 15);
   });
 
+  it.each(["0", "-1u", "1e999"])("rejects invalid MOSFET model L=%s", (length) => {
+    expect(() => parseNetlist(`.model nfast NMOS(L=${length})\nM1 d g s b nfast\n`)).toThrow(
+      "MOSFET L must be finite and positive",
+    );
+  });
+
+  it("lowers positive MOSFET model length", () => {
+    const parsed = parseNetlist(".model nfast NMOS(L=2u)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.L).toBeCloseTo(2.0e-6, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
