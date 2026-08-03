@@ -104,19 +104,39 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.22.0 | **Computed string indexes** (LANG-FULL E4). Literal-only `str_len` constants can flow through typed `i64` arithmetic and feed `str_index`. |
 | v0.24.0 | **Literal string comparison** (LANG-FULL E4). Literal-only `str_cmp` lowers to the shared `-1`/`0`/`1` ordering result. |
 | v0.42.0 | **Structural heap ops + name quoting** (LANG-FULL E6d-6). `alloc`→`call i64 @__twig_gc_alloc`, `field_store`/`field_load`→`inttoptr`+`getelementptr i64`+`store`/`load` (a field is at `idx*8`), `is_null`→`icmp eq …, 0`+`zext` — the native backend's word-granular model. `llvm_fn_ident` quotes special-char names (`@"point-x"`, `@"Some?"`). **Twig records run on LLVM** (exit 42). Union `match` on native/LLVM is a documented follow-up (E6d-6b). |
-| (later) | GC, debug info via `!dbg`. |
+| v0.48.0 | **Twig GC completion, Part 2.** `alloc_bytes`/`alloc_array`→`call i64 @__twig_alloc_bytes` (GC-tracked, replacing raw never-freed `@calloc` — a confirmed leak). New `gc_live_bytes` `call_builtin`→`@__twig_gc_live_bytes()`, proving (by an actual running end-to-end test, not by reading C source) that `alloc`/`gc_alloc` already auto-collect under real allocation pressure via `gc-core-capi`'s pre-allocation `should_collect` check. |
+| (later) | Debug info via `!dbg`. |
 
-### Bounds-checked arrays (v0.14.0)
+### Bounds-checked arrays (v0.14.0; GC-tracked since v0.48.0)
 
-An IIR array (LANG-FULL E5) is a single `@calloc` block laid out as a length
-header followed by the elements; the **handle** is a `ptr` to the payload
-(`base + 8`), so element access is a typed `getelementptr <T>` and the length
-lives at `handle − 8`:
+An IIR array (LANG-FULL E5) is a single `@__twig_alloc_bytes`-allocated block
+laid out as a length header followed by the elements; the **handle** is a
+`ptr` to the payload (`base + 8`), so element access is a typed
+`getelementptr <T>` and the length lives at `handle − 8`:
 
 ```
 base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
          └─ 8 bytes ──┘ ▲ handle
 ```
+
+`@__twig_alloc_bytes` returns an i64 handle (`inttoptr`'d to `base`
+immediately, the same convention `alloc`'s own handle uses) rather than the
+`@calloc` this called through v0.47.0 — `@calloc` was never freed or traced,
+a genuine, confirmed leak. `find_header` resolves the `base + 8` interior
+handle back to its enclosing block correctly, so this stays a valid,
+collectible root.
+
+**Known gap (found by security review, not fixed):** the array's block is
+always registered under `__twig_alloc_bytes`'s no-ref `HeapKind`, which is
+only correct for genuinely scalar element types. `array<str>`/`array<any>`/
+`array<symbol>` elements are i64 *handles* to separately GC-managed blocks —
+`llvm_type_for` maps all of these down to the same `"i64"` LLVM type plain
+integers use, so they pass `array_elem_llvm`'s check too, and a
+string/symbol reachable only via such an array element isn't traced as a
+root. Pre-existing (the old `@calloc` block was equally untraced) and
+cross-backend (`aarch64-backend`/`x86_64-backend` share it); tracked
+separately, not attempted here. See `code/specs/AOT00-T1w-llvm-gc-completion.md`
+§5.
 
 Unlike the JVM/CLR managed-array backends (whose runtime bounds-checks every
 element access for free), the native/LLVM target has no such runtime, so each
@@ -128,7 +148,7 @@ static-backend realisation of E5's "out-of-bounds → trap" rule. The element ty
 (`i64`/`double`/`i32`/`float`) comes from the op's `type_hint`; the index is always
 `i64`.
 
-### Byte-tape memory (v0.9.0)
+### Byte-tape memory (v0.9.0; GC-tracked since v0.48.0)
 
 Brainfuck builds an implicit byte tape; `lower_brainfuck_for_aot` (in `lang-aot`)
 rewrites it into the same `alloc_bytes` / `load_byte` / `store_byte` ops the
@@ -136,11 +156,12 @@ native x86_64 backend already uses (LANG76). This crate's lowering:
 
 | IIR op | LLVM emitted | Notes |
 |--------|--------------|-------|
-| `alloc_bytes d <- n` | `%d = call ptr @calloc(i64 n, i64 1)` | zero-filled tape |
+| `alloc_bytes d <- n` | `%r = call i64 @__twig_alloc_bytes(i64 n)` + `%d = inttoptr i64 %r to ptr` | zero-filled, GC-tracked tape |
 | `load_byte d <- base, i` | `getelementptr i8` + `load i8` + `zext i8…i64` | cell → word |
 | `store_byte base, i, v` | `getelementptr i8` + `trunc i64…i8` + `store i8` | word → cell (8-bit wrap) |
 | `call_builtin putchar v` | `trunc i64…i32` + `call i32 @putchar(i32)` | libc; Brainfuck `.` |
 | `call_builtin getchar -> d` | `call i32 @getchar()` + `sext i32…i64` | libc; Brainfuck `,` |
+| `call_builtin gc_live_bytes -> d` | `%d = call i64 @__twig_gc_live_bytes()` | diagnostic (v0.48.0), mirrors aarch64/x86_64-backend |
 
 Byte width lives **only at the tape boundary** (the `zext`/`trunc`); every register
 in between is a uniform `i64`, which is what lets the i64-only stack-slot model

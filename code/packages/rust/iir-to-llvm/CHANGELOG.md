@@ -1,5 +1,62 @@
 # Changelog — iir-to-llvm
 
+## 0.48.0 - 2026-08-03 - Twig GC completion, Part 2: alloc_bytes/alloc_array stop leaking, gc_live_bytes added
+
+A harder verification pass across Twig's GC story found two things on the
+LLVM backend, one confirming a real gap and one correcting an earlier wrong
+claim about a gap that doesn't actually exist:
+
+- **`alloc_bytes` (Brainfuck's byte tape) and `alloc_array` (LANG-FULL E5
+  arrays) now call `@__twig_alloc_bytes`** (`twig-aot/runtime/twig_runtime.c`)
+  instead of raw, never-freed, never-traced `@calloc` — the same GC-tracked
+  allocator `aarch64-backend`/`x86_64-backend` already use for these ops, and
+  the one this runtime's own `str_concat`/`str_slice` helpers already
+  allocate through. Registering the array's block under `__twig_alloc_bytes`'s
+  no-ref `HeapKind` is correct for genuinely scalar element types — but see
+  the security-review finding below: it is *not* correct for every element
+  type this op can be asked to lower, and that gap is left open here, not
+  fixed. Both call sites' i64 handle is recovered as a `ptr` via `inttoptr`, the
+  same convention `field_store`/`field_load` already use for `alloc`'s own
+  handle. `array_get`/`array_set`/`array_len`'s interior-pointer handle model
+  (8 bytes past the length header) is unaffected — `FlatHeap::find_header`
+  resolves an interior address to its enclosing block correctly.
+- **`gc_live_bytes` is now a supported `call_builtin`**, mirroring
+  aarch64/x86_64-backend's identically-named diagnostic builtin — lowers to
+  `@__twig_gc_live_bytes()`. This is what makes real end-to-end verification
+  possible: an earlier sub-agent claimed LLVM-compiled cons cells/records
+  never collect at all, based on finding no explicit safepoint call in
+  `iir-to-llvm`'s own codegen. That claim missed that `lower_alloc`'s
+  `@__twig_gc_alloc` routes through `gc-core-capi`'s `__gc_alloc_kind`, which
+  *already* runs a conservative collection before every allocation once
+  `FlatHeap::should_collect()` fires — a mechanism agnostic to which
+  compiler produced the currently-executing code. New end-to-end test
+  `alloc_on_llvm_auto_collects_under_real_allocation_pressure`
+  (`lang-aot/tests/llvm_gc_completion.rs`) proves this by actually running a
+  loop of 70,000 throwaway allocations (crossing `FlatHeap`'s 1 MiB
+  threshold) through real `clang`-compiled, `gc-core-capi`-linked code, with
+  no explicit `gc_collect` call anywhere — auto-collection or nothing.
+- Tests: `iir-to-llvm/tests/test_backend.rs`'s
+  `alloc_bytes_emits_twig_alloc_bytes_and_declare`/
+  `array_ops_emit_twig_alloc_bytes_trap_and_gep` (renamed from their
+  `_calloc_` predecessors) assert the new call target, the `inttoptr`
+  handle recovery, and the absence of `@calloc`.
+- **Security-review finding, documented not fixed (pre-existing, cross-backend,
+  tracked separately):** `array<str>`/`array<any>`/`array<symbol>` elements
+  are i64 handles to separately GC-managed blocks, but `lower_alloc_array`
+  registers every array under `__twig_alloc_bytes`'s no-ref `HeapKind`
+  regardless of element type — a string/symbol reachable only via such an
+  array element isn't traced as a root and could be collected while the
+  array still holds a dangling handle. Not introduced by this fix (the old
+  `@calloc` block was equally untraced), but this is the first point the
+  array's own block becomes collector-managed, so it's the right place to
+  flag it. `aarch64-backend`/`x86_64-backend` share the identical gap. Fixed
+  the doc comment that previously claimed (incorrectly) that no array
+  element type could ever hold a GC reference.
+- See `code/specs/AOT00-T1w-llvm-gc-completion.md` for the full design
+  rationale, including a real exit-code-truncation bug found while writing
+  the end-to-end proof and a `lang_matrix.rs` test-harness duplicate-symbol
+  bug found by running the full matrix (not just the new test).
+
 ## 0.47.0 - 2026-08-02 - boolean procedure call results
 
 Boolean user-function calls now retain their LLVM `i1` companion value, and

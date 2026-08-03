@@ -331,8 +331,14 @@ const SUPPORTED_OPS: &[&str] = &[
 /// `input_str` — BASIC's string `INPUT A$` (E4-dyn) — lowers to
 /// `@__twig_input_str()`, which reads a whole line and returns an i64 handle to a
 /// `[i64 len][bytes]` heap block (the runtime-string repr `print_str` reads).
+///
+/// `gc_live_bytes` (Twig GC completion round) — mirrors aarch64/x86_64-backend's
+/// identically-named diagnostic builtin — lowers to `@__twig_gc_live_bytes()`,
+/// exposing `FlatHeap::live_bytes` so a Twig program (or an end-to-end test) can
+/// observe the collector's live-byte total directly, rather than assuming it
+/// behaves the same as the native backends from reading source alone.
 const SUPPORTED_BUILTINS: &[&str] =
-    &["print_i64", "putchar", "getchar", "input_i64", "input_str"];
+    &["print_i64", "putchar", "getchar", "input_i64", "input_str", "gc_live_bytes"];
 
 #[derive(Debug, Clone)]
 struct LlvmStringLiteralDef {
@@ -740,6 +746,10 @@ pub fn lower_iir_to_llvm(
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
     let mut used_gc_alloc = false;
+    // Twig GC completion round: `call_builtin "gc_live_bytes"` (a diagnostic,
+    // mirroring aarch64/x86_64-backend's identically-named builtin) lowers to
+    // `@__twig_gc_live_bytes()` from the shared `gc-core-capi` archive.
+    let mut used_gc_live_bytes = false;
     // LANG-FULL E5: any array op needs `@calloc` (the allocation) and `@llvm.trap`
     // (the out-of-bounds trap). `is_array_op` covers alloc_array/array_*.
     let mut used_arrays = false;
@@ -823,6 +833,7 @@ pub fn lower_iir_to_llvm(
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
                         "input_str" => used_input_str = true,
+                        "gc_live_bytes" => used_gc_live_bytes = true,
                         _ => {
                             if let Some(b) = dyn_builtin(name) {
                                 if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
@@ -873,15 +884,34 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare double @pow(double, double)\n");
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
-        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc {
+        || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
+        || used_gc_live_bytes {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
-            out.push_str("declare ptr @calloc(i64, i64)\n");
+            // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
+            // and `alloc_array` (LANG-FULL E5) used to call raw `@calloc`,
+            // which is never freed and never traced — a genuine, permanent
+            // leak, confirmed by investigation to be the one remaining gap
+            // once `alloc`/`gc_alloc` (records/cons cells) were confirmed to
+            // already auto-collect via `__gc_alloc_kind`'s pre-allocation
+            // check. `@__twig_alloc_bytes` (twig_runtime.c, already used by
+            // aarch64/x86_64-backend for the identical ops, and internally by
+            // this same runtime's own string-concat/-slice helpers) routes
+            // through that same GC-tracked allocator instead.
+            out.push_str("declare i64 @__twig_alloc_bytes(i64)\n");
         }
         if used_gc_alloc {
             // E6d-6-LLVM: the GC allocator (twig_gc.c), shared with the native
             // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
             out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
+        }
+        if used_gc_live_bytes {
+            // Twig GC completion round: exposes `FlatHeap::live_bytes` to Twig
+            // source as a diagnostic builtin, mirroring aarch64/x86_64-backend's
+            // identically-named `gc_live_bytes` — lets an end-to-end test prove
+            // `alloc`/`gc_alloc`'s auto-collection genuinely runs on LLVM,
+            // instead of assuming it from reading the allocator's C source.
+            out.push_str("declare i64 @__twig_gc_live_bytes()\n");
         }
         if used_arrays || used_conversions || used_str_index {
             // The trap target — out-of-bounds for arrays (LANG-FULL E5) and
@@ -2494,20 +2524,33 @@ fn emit_real_range_check(operand: &str, state: &mut FnState, out: &mut String) {
 /// Lower `alloc_bytes dest <- size` — allocate a `size`-byte, zero-filled tape.
 ///
 /// ```llvm
-/// %dest = call ptr @calloc(i64 <size>, i64 1)
+/// %raw  = call i64 @__twig_alloc_bytes(i64 <size>)
+/// %dest = inttoptr i64 %raw to ptr
 /// ```
 ///
-/// `calloc` zero-initialises (Brainfuck cells start at 0). `dest` (the tape
-/// base) is bound in `env` as an LLVM `ptr`; it is written exactly once by the
-/// `lower_brainfuck_for_aot` preamble, so it is never a promoted stack slot —
-/// later `load_byte`/`store_byte` read it straight from `env`.
+/// `@__twig_alloc_bytes` (`twig_runtime.c`) zero-initialises, same as the raw
+/// `@calloc` this used to call — but that raw `calloc` was a genuine,
+/// permanent leak (never freed, never traced): confirmed by investigation to
+/// be the one remaining Twig-GC gap on this backend once `alloc`/`gc_alloc`
+/// (records/cons cells) were confirmed to already auto-collect via
+/// `__gc_alloc_kind`'s pre-allocation check. `__twig_alloc_bytes` registers
+/// its blocks under a no-ref `HeapKind` (an empty field map — a Brainfuck
+/// tape holds no GC references, so nothing needs tracing), matching how this
+/// same runtime already allocates strings. Returns an i64 handle, like
+/// `@__twig_gc_alloc`; `inttoptr` recovers the `ptr` `load_byte`/`store_byte`
+/// expect in `env` — same shape `lower_field_store`/`lower_field_load` already
+/// use to turn `alloc`'s i64 handle back into a pointer.
+///
+/// `dest` (the tape base) is bound in `env` as an LLVM `ptr`; it is written
+/// exactly once by the `lower_brainfuck_for_aot` preamble, so it is never a
+/// promoted stack slot — later `load_byte`/`store_byte` read it straight from
+/// `env`.
 ///
 /// The `size` operand is a compile-time constant from `lower_brainfuck_for_aot`
 /// (30000); we emit it verbatim. A hostile hand-built IIR could pass a huge or
-/// negative literal, but that only makes `calloc` return null at runtime (a
-/// crash on first store, not a compile-time or memory-safety defect in this
-/// emitter), so no extra guard is warranted here — exactly the contract the
-/// native `alloc_bytes` lowering already relies on.
+/// negative literal, but `__twig_alloc_bytes` returns `0` (null) for `n <= 0`,
+/// same "crash on first store, not a compile-time or memory-safety defect in
+/// this emitter" contract the native `alloc_bytes` lowering already relies on.
 fn lower_alloc_bytes(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2515,7 +2558,9 @@ fn lower_alloc_bytes(
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "alloc_bytes", state.fn_name)?.to_string();
     let size = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
-    out.push_str(&format!("  %{dest} = call ptr @calloc(i64 {size}, i64 1)\n"));
+    let raw = state.fresh("abraw");
+    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_bytes(i64 {size})\n"));
+    out.push_str(&format!("  %{dest} = inttoptr i64 {raw} to ptr\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
@@ -2841,22 +2886,62 @@ fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIR
 /// ```llvm
 /// %sz    = mul i64 <count>, <elemsize>
 /// %total = add i64 %sz, 8
-/// %base  = call ptr @calloc(i64 %total, i64 1)
+/// %raw   = call i64 @__twig_alloc_bytes(i64 %total)
+/// %base  = inttoptr i64 %raw to ptr
 /// store i64 <count>, ptr %base                 ; length header
 /// %dest  = getelementptr i8, ptr %base, i64 8  ; handle = payload
 /// ```
+///
+/// `@__twig_alloc_bytes` replaces the raw `@calloc` this used to call — a
+/// genuine, permanent leak (never freed, never traced), confirmed by
+/// investigation to be the one remaining Twig-GC gap on this backend once
+/// `alloc`/`gc_alloc` (records/cons cells) were confirmed to already
+/// auto-collect. `dest`'s bounds-checked handle model (a `ptr` 8 bytes into
+/// the block, past the length header) is unchanged — `FlatHeap::find_header`
+/// resolves an *interior* address to its enclosing block, so this offset
+/// pointer stays a valid, collectible root exactly like a base-address one.
+///
+/// **A real, pre-existing correctness gap this fix does *not* close (found
+/// by a security review, not assumed away):** `array_elem_llvm` maps
+/// `llvm_type_for`'s *LLVM* type, not the original IIR type — and
+/// `llvm_type_for` maps several heap-*handle* types (`"str"`, `"any"`,
+/// `"symbol"`, `"ref<Lispy...>"`) down to the same `"i64"` LLVM type plain
+/// integers use, so `array<str>`/`array<any>`/`array<symbol>` elements pass
+/// this function's checks today (`algol-iir-compiler`'s `string array`
+/// feature already emits exactly this shape). Registering the array's block
+/// under `__twig_alloc_bytes`'s no-ref `HeapKind` is only sound for genuinely
+/// scalar elements (`i1`/`i8`/`i16`/`i32`/`i64`/`float`/`double` holding no
+/// reference semantics) — for a heap-handle element type, the collector's
+/// precise tracer never scans the array's payload for the handles stored
+/// inside it, so a string/symbol reachable *only* via an array element (no
+/// separate long-lived reference elsewhere) can be collected while the
+/// array still holds a now-dangling handle. This is **not new** here: the
+/// old `@calloc` block was equally invisible to the collector (calloc'd
+/// memory was never a GC-managed object, so nothing inside it was ever
+/// traced either) — what's new is that this fix is the first point where
+/// the array's *own* block becomes collector-managed, which is exactly the
+/// moment this gap should be closed but isn't yet. The fix is understood
+/// (register such arrays under a **ref-array** `HeapKind` via the already-
+/// exposed `__gc_register_ref_array_kind`/`__twig_gc_register_ref_array_kind`
+/// — `tail_from = 8` to skip this array's own length header and trace every
+/// word after it as a reference — the same primitive McCarthy Lisp's
+/// variable-length ref arrays already use) but is cross-backend (aarch64/
+/// x86_64 share the identical gap, calling the same `__twig_alloc_bytes` for
+/// `alloc_array` with no ref-kind distinction) and out of scope for this
+/// round; tracked separately rather than silently left unmentioned.
 ///
 /// **Trust boundary (size overflow).** `count` is a *compiler-produced* operand
 /// (a constant or a bounded length expression from a frontend), not an
 /// end-user-controlled value, so the size `mul`/`add` is left as plain wrapping
 /// i64 arithmetic. A hostile *hand-built* IIR could pass `count ≈ 2⁶¹` so
-/// `count*elemsize + 8` wraps to a small `calloc` while the stored `len` stays
-/// huge — letting later in-bounds-looking indices overrun the undersized block at
-/// runtime. This is the same trust contract the existing `alloc_bytes` lowering
-/// already relies on (its `size` is likewise unchecked), and the array path is
-/// strictly *safer*: it adds the per-access bounds check `alloc_bytes` lacks. A
-/// future hardening could gate the size on `@llvm.umul.with.overflow.i64` and
-/// branch to the same trap; unneeded for the trusted-frontend threat model.
+/// `count*elemsize + 8` wraps to a small allocation while the stored `len`
+/// stays huge — letting later in-bounds-looking indices overrun the
+/// undersized block at runtime. This is the same trust contract the existing
+/// `alloc_bytes` lowering already relies on (its `size` is likewise
+/// unchecked), and the array path is strictly *safer*: it adds the per-access
+/// bounds check `alloc_bytes` lacks. A future hardening could gate the size
+/// on `@llvm.umul.with.overflow.i64` and branch to the same trap; unneeded
+/// for the trusted-frontend threat model.
 fn lower_alloc_array(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -2871,10 +2956,12 @@ fn lower_alloc_array(
     let count = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     let sz = state.fresh("asz");
     let total = state.fresh("atot");
+    let raw = state.fresh("araw");
     let base = state.fresh("abase");
     out.push_str(&format!("  {sz} = mul i64 {count}, {elem_size}\n"));
     out.push_str(&format!("  {total} = add i64 {sz}, 8\n"));
-    out.push_str(&format!("  {base} = call ptr @calloc(i64 {total}, i64 1)\n"));
+    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_bytes(i64 {total})\n"));
+    out.push_str(&format!("  {base} = inttoptr i64 {raw} to ptr\n"));
     out.push_str(&format!("  store i64 {count}, ptr {base}\n"));
     out.push_str(&format!("  %{dest} = getelementptr i8, ptr {base}, i64 8\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
@@ -3726,6 +3813,19 @@ fn lower_call_builtin(
         "input_str" => {
             let dest = require_dest(instr, "input_str", state.fn_name)?.to_string();
             out.push_str(&format!("  %{dest} = call i64 @__twig_input_str()\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
+            Ok(())
+        }
+        // ── gc_live_bytes() -> v — diagnostic builtin (Twig GC completion) ──
+        //
+        // `@__twig_gc_live_bytes()` (`gc-core-capi`'s `twig_compat`, already
+        // linked for `@__twig_gc_alloc`) returns `FlatHeap::live_bytes` as a
+        // plain i64 — straight into the dest register, no conversion needed.
+        //
+        //   srcs = [Var("gc_live_bytes")], dest = v  →  %v = call i64 @__twig_gc_live_bytes()
+        "gc_live_bytes" => {
+            let dest = require_dest(instr, "gc_live_bytes", state.fn_name)?.to_string();
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_live_bytes()\n"));
             state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }

@@ -3928,11 +3928,22 @@ fn clang_ok() -> bool {
 /// `__print_str` backs the E4 string literal-output foothold. It is not
 /// language-specific: any IIR that references either symbol links it. Linked only
 /// when the emitted `.ll` actually references one of the symbols, so the bare
-/// expression-language programs still link a standalone `.ll`.
+/// expression-language programs still link a standalone `.ll`. Split from the five
+/// `__twig_input_*`/`__twig_str_*` functions below (Twig GC completion round) — they
+/// have no equivalent in `twig_runtime.c`, so this half is always safe to link
+/// alongside it; the other half duplicates `twig_runtime.c`'s own definitions.
 const PRINT_RUNTIME_C: &str =
-    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
+    "#include <stdio.h>\n#include <stdint.h>\n\
 void __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n\
-void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n\
+void __print_str(const char* p,int64_t len){if(len>0){fwrite(p,1,(size_t)len,stdout);}}\n";
+
+/// The standalone `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+/// `__twig_str_eq`/`__twig_str_cmp` substitute for `twig_runtime.c`'s own
+/// definitions of the identical five symbols — used only when `twig_runtime.c`
+/// itself isn't already being linked (see `uses_gc_runtime` in `run_llvm`),
+/// since linking both is a duplicate-symbol error.
+const MISC_IO_RUNTIME_C: &str =
+    "#include <stdio.h>\n#include <stdint.h>\n#include <stdlib.h>\n#include <string.h>\n\
 int64_t __twig_input_i64(void){char buf[64];int i=0;int c;\
 while((c=getchar())!=EOF&&c!='\\n'&&i<63){buf[i++]=(char)c;}buf[i]=0;\
 long long v=0;sscanf(buf,\"%lld\",&v);return (int64_t)v;}\n\
@@ -3989,23 +4000,26 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let exe = dir.path().join("prog");
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
-    // Link the generic I/O runtime iff the program actually uses print or input.
-    if ll.contains("@__print_i64") || ll.contains("@__print_str")
-        || ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
-        || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
-        || ll.contains("@__twig_str_cmp") {
-        let rt_path = dir.path().join("rt.c");
-        std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
-        cmd.arg("-x").arg("c").arg(&rt_path);
-    }
     // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
     // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
-    // E6d-2b). `dynval_runtime.c` implements the tagged-word model and calls the
-    // conservative GC, which now lives in the `gc-core-capi` staticlib (twig_gc.c
-    // was retired in #118b-2b); `twig_runtime.c` supplies any I/O the runtime
-    // itself needs. The two C files come from the crate's runtime dir; the GC
-    // archive (+ its system libs) is supplied by `common::gc_link_args`.
-    if ll.contains("@__dyn_") {
+    // E6d-2b), OR a plain `__twig_gc_alloc`/`__twig_alloc_bytes`/
+    // `__twig_gc_live_bytes` call with no `__dyn_*` alongside it — the shape
+    // introduced by routing `alloc_bytes`/`alloc_array` (Brainfuck's tape /
+    // LANG-FULL E5 arrays, including plain typed-language arrays like
+    // ALGOL's that never touch a `__dyn_*` primitive) through the same
+    // GC-tracked allocator records/cons cells already used (Twig GC
+    // completion round). `dynval_runtime.c` implements the tagged-word
+    // model and calls the conservative GC, which now lives in the
+    // `gc-core-capi` staticlib (twig_gc.c was retired in #118b-2b);
+    // `twig_runtime.c` supplies `__twig_alloc_bytes` itself, *and* its own
+    // `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+    // `__twig_str_eq`/`__twig_str_cmp` — the same five functions
+    // `PRINT_RUNTIME_C` below also defines a simpler standalone version of.
+    let uses_gc_runtime = ll.contains("@__dyn_")
+        || ll.contains("@__twig_gc_alloc")
+        || ll.contains("@__twig_alloc_bytes")
+        || ll.contains("@__twig_gc_live_bytes");
+    if uses_gc_runtime {
         let rt = |name: &str| {
             std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
         };
@@ -4013,6 +4027,29 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
             .arg(rt("dynval_runtime.c"))
             .args(common::gc_link_args())
             .arg(rt("twig_runtime.c"));
+    }
+    // Link the generic print runtime iff the program actually prints — always
+    // safe to add alongside `twig_runtime.c` above, since `PRINT_RUNTIME_C`'s
+    // `__print_i64`/`__print_str` have no equivalent there.
+    if ll.contains("@__print_i64") || ll.contains("@__print_str") {
+        let rt_path = dir.path().join("print_rt.c");
+        std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
+        cmd.arg("-x").arg("c").arg(&rt_path);
+    }
+    // Link the *standalone* input/string-op runtime iff the program needs one
+    // of those five functions AND `twig_runtime.c` isn't already supplying
+    // them above — both define the identical symbols, so linking both is a
+    // duplicate-symbol error (found by investigation: any array/GC program
+    // that *also* prints used to trip this, once `alloc_bytes`/`alloc_array`
+    // started referencing `@__twig_alloc_bytes`).
+    if !uses_gc_runtime
+        && (ll.contains("@__twig_input_i64") || ll.contains("@__twig_input_str")
+            || ll.contains("@__twig_str_concat") || ll.contains("@__twig_str_eq")
+            || ll.contains("@__twig_str_cmp"))
+    {
+        let rt_path = dir.path().join("misc_io_rt.c");
+        std::fs::write(&rt_path, MISC_IO_RUNTIME_C).ok()?;
+        cmd.arg("-x").arg("c").arg(&rt_path);
     }
     let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
     if !built.status.success() {
