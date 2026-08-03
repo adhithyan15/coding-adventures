@@ -4656,9 +4656,8 @@ impl HtmlParser {
                         }));
                     }
                     Token::Eof => {
-                        if !self.is_fragment
-                            && self.has_open_element("body")
-                            && self.has_disallowed_open_element_for_body_end_tag()
+                        if (self.is_fragment || self.has_open_element("body"))
+                            && self.has_disallowed_authored_open_element_for_eof()
                         {
                             self.diagnostics.push(ParserDiagnostic::new(
                                 "eof-with-unclosed-elements",
@@ -8166,28 +8165,16 @@ impl HtmlParser {
 
     fn has_disallowed_open_element_for_body_end_tag(&self) -> bool {
         self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path)
+                .is_some_and(is_disallowed_open_element_for_body_end)
+        })
+    }
+
+    fn has_disallowed_authored_open_element_for_eof(&self) -> bool {
+        self.open_elements.iter().any(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
-                element.namespace.is_some()
-                    || !matches!(
-                        element.name.as_str(),
-                        "dd" | "dt"
-                            | "li"
-                            | "optgroup"
-                            | "option"
-                            | "p"
-                            | "rb"
-                            | "rp"
-                            | "rt"
-                            | "rtc"
-                            | "tbody"
-                            | "td"
-                            | "tfoot"
-                            | "th"
-                            | "thead"
-                            | "tr"
-                            | "body"
-                            | "html"
-                    )
+                !has_fragment_context_marker(element)
+                    && is_disallowed_open_element_for_body_end(element)
             })
         })
     }
@@ -9658,6 +9645,30 @@ fn append_missing_attributes(target: &mut Vec<Attribute>, attributes: Vec<Attrib
             target.push(attribute);
         }
     }
+}
+
+fn is_disallowed_open_element_for_body_end(element: &Element) -> bool {
+    element.namespace.is_some()
+        || !matches!(
+            element.name.as_str(),
+            "dd" | "dt"
+                | "li"
+                | "optgroup"
+                | "option"
+                | "p"
+                | "rb"
+                | "rp"
+                | "rt"
+                | "rtc"
+                | "tbody"
+                | "td"
+                | "tfoot"
+                | "th"
+                | "thead"
+                | "tr"
+                | "body"
+                | "html"
+        )
 }
 
 fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
@@ -33126,6 +33137,36 @@ mod tests {
         for source in ["<!doctype html><p>", "<!doctype html><head>"] {
             let allowed = parse_html_with_diagnostics(source).unwrap();
             assert!(allowed.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+    }
+
+    #[test]
+    fn reports_fragment_eof_with_authored_disallowed_open_elements() {
+        for (context, source) in [
+            ("body", "<div>"),
+            ("html", "<span>"),
+            ("svg path", "<nobr>X"),
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )],
+                "context {context:?}, source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn fragment_eof_ignores_seeded_contexts_and_allowed_open_elements() {
+        for (context, source) in [("div", ""), ("svg path", ""), ("body", "<p>")] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(
+                output.parser_diagnostics.is_empty(),
+                "context {context:?}, source {source:?}"
+            );
         }
     }
 
