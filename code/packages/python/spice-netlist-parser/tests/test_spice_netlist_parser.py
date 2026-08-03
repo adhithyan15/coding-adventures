@@ -1505,6 +1505,25 @@ def test_rejects_non_finite_jfet_temperature_exponent() -> None:
         parse_netlist(".model fast NJF(XTI=1e999)")
 
 
+def test_parse_jfet_energy_gap() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(EG=1.05)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Eg, 1.05)
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_jfet_energy_gap(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET EG must be finite and positive"):
+        parse_netlist(f".model fast NJF(EG={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """
