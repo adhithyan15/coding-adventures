@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 3);
+    assert_eq!(package.host_assets.files.len(), 4);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -109,6 +109,15 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     assert_eq!(
         package.host_assets.files[2].target,
         "test/venture_chrome_interaction_test.dart"
+    );
+    assert_eq!(package.host_assets.files[3].backend, "qt");
+    assert_eq!(
+        package.host_assets.files[3].source,
+        "host/qt/tst_venture_chrome.qml"
+    );
+    assert_eq!(
+        package.host_assets.files[3].target,
+        "test/tst_venture_chrome.qml"
     );
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
@@ -259,6 +268,21 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "Flutter interaction acceptance omits {symbol}"
         );
     }
+
+    let qt_acceptance = read_package_file("host/qt/tst_venture_chrome.qml");
+    for symbol in [
+        "disabled_native_controls_suppress_dispatch",
+        "address_return_crosses_the_mosaic_host_seam",
+        "go_crosses_the_mosaic_host_seam",
+        "keyClick(Qt.Key_Return)",
+        "keyClick(Qt.Key_Space)",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            qt_acceptance.contains(symbol),
+            "Qt interaction acceptance omits {symbol}"
+        );
+    }
 }
 
 #[test]
@@ -298,6 +322,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "cargo \"${bridge_args[@]}\"",
         "libventure_browser_macos.dylib",
         "cmake --build",
+        "qmltestrunner -platform offscreen -style Basic -input test -import .",
         "dotnet build",
         "flutter build",
         "flutter test test/venture_chrome_interaction_test.dart",
@@ -317,6 +342,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "venture_browser_windows.dll",
         "-p:Platform=x64",
         "cmake",
+        "qmltestrunner",
         "dotnet",
         "flutter",
         "venture_chrome_interaction_test.dart",

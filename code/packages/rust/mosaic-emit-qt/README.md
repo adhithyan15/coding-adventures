@@ -32,6 +32,11 @@ string describing the component as a tree of Qt Quick elements.
 takes references to the three IRs and returns a `PipelineEmitResult` with
 the QML source string and the component's PascalCase name.
 
+Part names on native `HostButton` and `HostInput` controls also lower to QML
+`objectName` values. This preserves Mosaic's authored identity for Qt Quick
+interaction tests and host-side native control discovery without duplicating
+the chrome in C++.
+
 ## Output file structure
 
 For a component named `ProfileCard` with slots `display-name: text` and
