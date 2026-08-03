@@ -86,7 +86,7 @@ fn array_read_into_a_variable() {
 #[test]
 fn array_write_then_read_back() {
     match run_ruby("a = [1, 2, 3]\na[0] = 9\nputs a\n") {
-        Some(out) => assert_eq!(out, "[9, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "9\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }

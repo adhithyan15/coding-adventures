@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.33.0 — fix: `puts` on an Array bracket-displayed instead of unpacking
+
+Discovered by the `sir-conformance` cross-backend corpus (0.21.0): real
+Ruby's `Kernel#puts` special-cases an Array argument — each element gets
+its OWN line, RECURSIVELY flattening nested arrays, and an EMPTY array
+prints nothing at all (not even a blank line). `_sir_puts_v` instead
+routed every argument through the general `_sir_fmt` display path, which
+bracket-displays a Seq (`"[1, 2, 3]\n"`) — the same rendering `print`,
+`p`/inspect, and a NESTED array correctly use, just wrongly reused for
+`puts`'s TOP-LEVEL arguments too. Python/JS/Go/Rust already unpacked
+correctly; only C (and, discovered while fixing this, the Ruby backend —
+see `semantic-ir-to-ruby` 0.20.0) had the bug.
+
+Fixed with a new `_sir_puts_one` helper: unpacks a `SIR_SEQ` argument
+recursively (each element re-dispatched through itself), falls through to
+`_sir_fmt` + newline for everything else (`print`, `Hash`, scalars — all
+unaffected). Shares `_sir_fmt`'s existing depth counter/cap
+(`SIR_MAX_FMT_DEPTH`) so a self-referential array (`a[0] = a`) terminates
+instead of recursing forever, the same safety floor every other display
+path in this file already holds.
+
+This is a genuine BEHAVIOR CHANGE for every `puts arr` call site across
+the whole test suite — updated ~30 existing assertions across 9 test
+files to the correct one-per-line (or, for a previously-bracketed nested
+result like `divmod`'s `[q, r]` or `zip`'s array-of-pairs, fully
+recursively flattened) output.
+
+### Added
+
+- `tests/compile_and_run_puts_array_unpack.rs` — 8 dedicated execution-proof
+  tests: flat unpack, empty array (zero lines), recursive flatten across
+  nested levels, a nested-empty-array contributing zero lines, `Hash` NOT
+  unpacked, `print` NOT unpacked, a self-referential array terminating
+  instead of hanging, and multiple Array arguments to one `puts` call each
+  unpacking independently.
+
 ## 0.32.0 — Collections slice 10: Symbol + universal Object/Bool methods
 
 New `_sir_builtin_method_v` dispatch arms:

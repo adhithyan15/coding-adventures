@@ -55,7 +55,7 @@ fn run_ruby(src: &str) -> Option<String> {
 #[test]
 fn hash_keys_and_values_in_insertion_order() {
     match run_ruby("h = {1 => \"a\", 2 => \"b\", 3 => \"c\"}\nputs h.keys\nputs h.values\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n[a, b, c]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\na\nb\nc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -73,7 +73,7 @@ fn hash_fetch_present_and_missing_raises() {
 #[test]
 fn hash_to_a_and_to_h() {
     match run_ruby("h = {1 => 10, 2 => 20}\nputs h.to_a\nputs h.to_h.keys\n") {
-        Some(out) => assert_eq!(out, "[[1, 10], [2, 20]]\n[1, 2]\n"),
+        Some(out) => assert_eq!(out, "1\n10\n2\n20\n1\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -108,8 +108,9 @@ fn hash_delete_removes_and_returns_the_value() {
 
 #[test]
 fn hash_delete_mutates_a_shared_binding() {
+    // An EMPTY array prints nothing at all via `puts` (real Ruby's rule).
     match run_ruby("a = {1 => \"a\"}\nb = a\na.delete(1)\nputs b.keys\n") {
-        Some(out) => assert_eq!(out, "[]\n"),
+        Some(out) => assert_eq!(out, ""),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -250,8 +251,10 @@ mod insert_after_delete {
 
 #[test]
 fn hash_clear_empties_and_returns_the_receiver() {
+    // `h.clear.keys` is an EMPTY array, which `puts` prints as nothing at
+    // all (real Ruby's rule), so only `h.empty?`'s line shows up.
     match run_ruby("h = {1 => \"a\", 2 => \"b\"}\nputs h.clear.keys\nputs h.empty?\n") {
-        Some(out) => assert_eq!(out, "[]\n#t\n"),
+        Some(out) => assert_eq!(out, "#t\n"),
         None => eprintln!("skip: no cc"),
     }
 }

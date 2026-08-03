@@ -341,9 +341,38 @@ fn seq_literal_emits_a_native_ruby_array() {
 
 #[test]
 fn e2e_seq_literal_displays_as_an_array() {
-    // Ruby's `puts` of an array prints the array (`[1, 2, 3]`) — a
-    // convention-independent check (no boolean display involved).
+    // Ruby's `puts` UNPACKS an array, one element per line (real Ruby's
+    // rule; see runtime.rs's `sir_puts_one`) -- a convention-independent
+    // check (no boolean display involved).
     let rb = ruby_to_ruby("puts([1, 2, 3])");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "1\n2\n3"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_puts_on_an_empty_array_prints_nothing_at_all() {
+    let rb = ruby_to_ruby("puts([])\nputs(\"after\")");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "after"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_puts_recursively_flattens_every_level_of_nested_arrays() {
+    let rb = ruby_to_ruby("puts([1, [2, 3], 4])");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "1\n2\n3\n4"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn e2e_print_still_displays_an_array_as_a_single_bracketed_line() {
+    // `print` (unlike `puts`) never unpacks -- matching Ruby's `Kernel#print`.
+    let rb = ruby_to_ruby("print([1, 2, 3])");
     match run_ruby(&rb) {
         Some(out) => assert_eq!(out, "[1, 2, 3]"),
         None => eprintln!("skip: no ruby on PATH"),
@@ -475,7 +504,7 @@ fn seq_set_writes_in_bounds_and_returns_the_value() {
     ]);
     assert!(rb.contains("sir_seq_set(a, 1, 99)"), "SeqSet should use the guarded helper:\n{rb}");
     match run_ruby(&rb) {
-        Some(out) => assert_eq!(out, "[1, 99, 3]"),
+        Some(out) => assert_eq!(out, "1\n99\n3"),
         None => eprintln!("skip: no ruby on PATH"),
     }
 }

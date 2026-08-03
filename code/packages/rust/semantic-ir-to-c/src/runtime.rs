@@ -3218,10 +3218,39 @@ SirValue _sir_print_v(SirValue *xs, int n) {
     for (i = 0; i < n; i++) _sir_fmt(stdout, xs[i]);
     return _sir_nil();
 }
+
+/* `puts`'s ARRAY-UNPACKING rule -- distinct from every OTHER display path
+ * here (`print`, `_sir_fmt`'s general case, `_sir_fmt_seq` nested inside a
+ * larger structure), which all bracket-display a Seq (`[1, 2, 3]`). Real
+ * Ruby's `Kernel#puts` special-cases an Array argument: each element gets
+ * its OWN line, RECURSIVELY flattening nested arrays, and an EMPTY array
+ * prints nothing at all (not even a blank line) -- `puts [1, [2, 3], 4]` ->
+ * "1\n2\n3\n4\n"; `puts []` -> (nothing); `puts [[]]` -> (nothing, the
+ * empty nested array also contributes zero lines). A Hash argument is NOT
+ * unpacked (only Array gets this treatment), so this checks `SIR_SEQ`
+ * specifically, not any container tag. Shares `_sir_fmt`'s depth counter/
+ * cap (`_sir_fmt_depth`/`SIR_MAX_FMT_DEPTH`, just above) so a
+ * self-referential array (`a[0] = a`) terminates instead of recursing
+ * forever, matching the safety floor every other display path here holds. */
+static void _sir_puts_one(FILE *out, SirValue v) {
+    if (v.tag == SIR_SEQ) {
+        int64_t i;
+        if (_sir_fmt_depth > SIR_MAX_FMT_DEPTH) {
+            fputs("[...]\n", out);
+            return;
+        }
+        _sir_fmt_depth++;
+        for (i = 0; i < v.as.seq->len; i++) _sir_puts_one(out, v.as.seq->items[i]);
+        _sir_fmt_depth--;
+        return;
+    }
+    _sir_fmt(out, v);
+    fputc('\n', out);
+}
 SirValue _sir_puts_v(SirValue *xs, int n) {
     int i;
     if (n <= 0) { fputc('\n', stdout); return _sir_nil(); }
-    for (i = 0; i < n; i++) { _sir_fmt(stdout, xs[i]); fputc('\n', stdout); }
+    for (i = 0; i < n; i++) _sir_puts_one(stdout, xs[i]);
     return _sir_nil();
 }
 SirValue _sir_print(int n, ...) { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_print_v(xs, n); if (xs) free(xs); return r; }

@@ -62,6 +62,7 @@ across backends, a separate formatting concern). Current programs:
 | `oop_method` | `class` / `.new` / instance method | `woof` |
 | `while_loop` | `while` + mutable accumulator | `10` |
 | `array_length` | array literal + `.length` | `3` |
+| `puts_array_unpack` | `puts` UNPACKS an Array one element per line, recursively flattening | `1\n2\n3\n4\n5\n6\n7` |
 | `string_length` | `String#length` | `5` |
 | `counter_state` | `@ivar` state across method calls | `2` |
 | `mixin_include` | `module` mixed into a class via `include` | `hi` |
@@ -92,12 +93,6 @@ visible. Currently tracked:
   backend has a runtime `[]`/`[]=` dispatch implementation. Python/JS/Go/
   Rust fail (not skip) at runtime. Needs a `[]`/`[]=` catalog entry on each
   of those four runtimes.
-- **The `puts`-on-an-Array display convention** — `puts [1,2,3]` correctly
-  unpacks to `"1\n2\n3\n"` (real Ruby's rule) on Python/JS/Go/Rust, but the
-  C backend bracket-displays it (`"[1, 2, 3]\n"`) instead — the same
-  rendering `p`/`inspect` correctly use, just wrongly reused for `puts`
-  too. Needs a `puts`-specific Array-unpacking path in the C runtime,
-  distinct from its general display helper.
 - **Collections methods on the Ruby backend** — `semantic-ir-to-ruby`
   rejects EVERY `__method__` dispatch to a built-in Collections method
   across all ten slices; Python/JS/Go/Rust/C all handle the catalog
@@ -113,6 +108,14 @@ Fixed since (now IN the suite):
 - The JS `String#upcase`/`#downcase` rename gap — the JS runtime now aliases
   Ruby method names to their native equivalents before the allowlist check.
   Covered by `string_case`.
+- **The `puts`-on-an-Array display convention** — the C AND Ruby backends
+  each bracket-displayed an Array argument to `puts` (`"[1, 2, 3]\n"`)
+  instead of unpacking it one element per line (real Ruby's rule, which
+  Python/JS/Go/Rust already implemented correctly). Both had their own
+  separate `puts`/`sir_fmt` reimplementation rather than delegating to a
+  native array-aware `puts`, so both needed the identical fix independently
+  (`_sir_puts_one` in the C runtime, `sir_puts_one` in the Ruby runtime).
+  Covered by `puts_array_unpack`.
 
 ## Usage
 

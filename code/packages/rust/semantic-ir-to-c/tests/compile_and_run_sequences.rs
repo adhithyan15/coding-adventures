@@ -117,9 +117,13 @@ fn seq_module(stmts: Vec<Stmt>) -> Module {
 
 #[test]
 fn seq_literal_displays_as_a_bracketed_list() {
-    // `puts([1, 2, 3])` → `[1, 2, 3]`, matching the Go/Rust format.
+    // `puts([1, 2, 3])` UNPACKS one element per line (real Ruby's `puts`-on-
+    // Array rule, matching Go/Rust's `puts` and the `_sir_puts_one` doc
+    // comment in runtime.rs) -- the bracketed `[1, 2, 3]` form is what a
+    // NESTED array (inside a larger printed structure) or `print`/`inspect`
+    // uses, not a top-level `puts` argument.
     match run(&seq_module(vec![puts(seq(vec![ilit(1), ilit(2), ilit(3)]))])) {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -189,7 +193,7 @@ fn seq_set_mutates_the_shared_box() {
         puts(local("a")),
     ]);
     match run(&m) {
-        Some(out) => assert_eq!(out, "[1, 99, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n99\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
