@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 777 | 10,878 |
+| Present in one language | 780 | 10,920 |
 
-The loop must not start by attempting 10,878 singleton ports. It should finish
+The loop must not start by attempting 10,920 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`4a66c66dfde5eb1cf1f39283bf71d2ae6396edca` is collision-clean at 1,228
-normalized implementation identities, 4,376 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 778 singletons, 583
+`29d78677fe65719e0b84e2441e9a568a67e7f4f4` is collision-clean at 1,230
+normalized implementation identities, 4,378 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 780 singletons, 585
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -222,6 +222,26 @@ exceptions. Process spawning, pipes, sockets, key custody, and supervisor
 lifecycle remain native; the host-channel item cannot bypass its primitive
 stack dependency.
 
+The `9b18406d` refresh added `chief-of-staff-service-reconciler`, a zero-
+capability deterministic bridge from the injected service registry to an
+injected supervisor. Desired/live/hash/heartbeat observations, restart policy,
+one-mutation-per-tick planning, CAS transition claims, conflict handling,
+stale-heartbeat classification, and crash convergence are portable fixture
+candidates. Process liveness, spawning and stopping, package hashing, trusted
+clocks, filesystem access, and supervisor authority remain injected or native.
+Its dedicated backlog owner depends on the registry and channel-identifier
+contracts, so it cannot bypass those prerequisites.
+
+The `fbd52e79` refresh added `chief-of-staff-host-control-protocol`, a zero-
+capability authenticated lifecycle protocol over complete secure-host-channel
+frames. `Ready`, `Heartbeat`, and `Terminate` records, role and direction
+enforcement, lifecycle ordering, replay and package-hash mismatch rejection,
+caller-supplied trusted receipt times, and terminal malformed-input behavior
+are portable fixture candidates. Clocks, descriptors, streams, processes,
+filesystems, networks, package verification, and supervisor effects remain
+injected or native. Its dedicated backlog owner depends on the secure-host-
+channel contract and therefore remains dependency-blocked.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -316,7 +336,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   17 rebased exact-head checks passed, skipped, or completed neutrally. The
   refreshed leverage pass selected the now-unblocked canonical BUILD
   compatibility child next because it removes all 44 silent fallbacks using
-  the already-validated Ruby and interpreter toolchains. The current slice now
+  the already-validated Ruby and interpreter toolchains. Merged PR #9677 now
   parses the canonical multiline return shape, preserves loaded-module globals
   and keyword-call structure, injects the normalized v1 context, validates
   structured commands, and fails closed with a root-redacted diagnostic. The
@@ -325,9 +345,30 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   warnings. Validation passes 302 Ruby build-tool runs/614 assertions at
   88.04% line and 71.11% branch coverage, all six downstream Ruby language
   suites, canonical Go test/vet/build, and the valid 37-case/56-file corpus.
-  The comparison separately found Ruby's package identities omit the canonical
-  `programs` segment in dependency edges; that registry migration is logged as
-  a dependent pending child rather than widening this evaluator repair;
+  GitHub's guarded squash auto-complete merged the exact head after 17 terminal
+  checks as `d96d518b0f`. The comparison separately found Ruby's package
+  identities omit the canonical `programs` segment in dependency edges. The
+  dependency/leverage pass selected that now-unblocked registry migration next.
+  The Ruby slice now consumes the complete registry, preserves package/program
+  identities, excludes specification trees, rejects duplicate identities, and
+  honors qualified legacy BUILD dependency comments. Its real 4,776-package
+  plan has unique forward-slash identities; Go, Rust, and Lua package/edge sets
+  exactly match the Go engine at 301/936, 928/2,250, and 258/383. Validation on
+  rebased `29d78677` passes 307 Ruby tests at 89.43% line and 72.55% branch
+  coverage, all shared fixture consumers, the valid 38-case/61-file corpus,
+  Go test/vet/build, dependency and security checks, and the collision-clean
+  1,230-identity inventory without widening the completed evaluator repair;
+- adjudicate the residual Ruby/Go Elixir resolver semantics after canonical
+  identities remove the structural drift. The real 282-package plans differ
+  on eleven Go-only and two Ruby-only edges; the Ruby-only pair corresponds to
+  declared `grammar_tools` program dependencies, so the follow-up must derive
+  language-neutral fixtures from actual Mix metadata instead of assuming that
+  either engine is the oracle. This child depends on the identity migration;
+- bring Go discovery to the complete shared language registry. The full-plan
+  comparison finds the same 4,776 package directories in Ruby and Go, but Go
+  classifies all fourteen Mosaic packages and programs as `unknown`. The
+  dedicated child consumes the existing registry and duplicate-identity
+  fixtures and keeps resolver-semantic work separate;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

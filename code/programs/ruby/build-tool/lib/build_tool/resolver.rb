@@ -853,6 +853,24 @@ module BuildTool
       known
     end
 
+    # parse_build_tool_deps -- Read explicit qualified dependencies from the
+    # selected legacy BUILD file. This comment contract is used when a runnable
+    # program has no ecosystem manifest of its own.
+    def parse_build_tool_deps(package, known_package_names)
+      return [] if package.build_content.empty?
+
+      dependencies = Set.new
+      package.build_content.scan(/^#\s*build-tool:\s*deps\s*=\s*(.+)$/).each do |match|
+        match.first.split(/[\s,]+/).each do |dependency|
+          next if dependency.empty? || dependency == package.name
+          next unless known_package_names.include?(dependency)
+
+          dependencies << dependency
+        end
+      end
+      dependencies.to_a.sort
+    end
+
     # resolve_dependencies -- Parse metadata, build a dependency graph.
     #
     # The graph contains all discovered packages as nodes. Edges represent
@@ -868,6 +886,7 @@ module BuildTool
 
       # Add all packages as nodes first.
       packages.each { |pkg| graph.add_node(pkg.name) }
+      known_package_names = packages.map(&:name).to_set
 
       known_names_by_scope = {}
       packages.each do |pkg|
@@ -893,6 +912,7 @@ module BuildTool
                when "csharp", "fsharp", "dotnet" then parse_dotnet_deps(pkg, known_names)
                else []
                end
+        deps = (deps + parse_build_tool_deps(pkg, known_package_names)).uniq.sort
 
         deps.each do |dep_name|
           # Edge direction: dep -> pkg means "dep must be built before pkg".

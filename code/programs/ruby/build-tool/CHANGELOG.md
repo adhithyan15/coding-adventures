@@ -6,6 +6,13 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Discovery now consumes the canonical language registry, excludes
+  specification fixture trees, preserves `programs` package identities, and
+  fails closed on duplicate qualified identities with root-redacted paths and
+  CLI exit code `2`.
+- Resolution now preserves package/program identities and consumes qualified
+  dependencies from selected legacy BUILD `# build-tool: deps=` comments. The
+  shared identity and dependency fixtures cover canonical and legacy paths.
 - Canonical multiline Starlark `BUILD` files now parse and evaluate without a
   raw-command fallback. The evaluator injects the normalized v1 context,
   supports nested loaded rule functions and keyword arguments, and extracts

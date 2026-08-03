@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "discovery/language-registry",
   "domain": "discovery",
-  "summary": "Every canonical non-host bucket is classified by its exact path component.",
+  "summary": "Every canonical non-host bucket is classified by its exact path component and programs retain their identity segment.",
   "platforms": [
     "darwin",
     "linux",
@@ -54,6 +54,18 @@
         "content_utf8": "echo twig\n"
       },
       {
+        "path": "code/programs/elixir/ircd/BUILD",
+        "content_utf8": "echo elixir program\n"
+      },
+      {
+        "path": "code/programs/go/build-tool/BUILD",
+        "content_utf8": "echo go program\n"
+      },
+      {
+        "path": "code/programs/rust/closurec/BUILD",
+        "content_utf8": "echo rust program\n"
+      },
+      {
         "path": "code/specs/fixtures/scaffold-generator/ocaml-library/BUILD",
         "content_utf8": "echo fixture-only\n"
       }
@@ -98,6 +110,20 @@
           "rel_path": "code/packages/dart/demo-dart"
         },
         {
+          "build_file": "code/programs/elixir/ircd/BUILD",
+          "is_starlark": false,
+          "language": "elixir",
+          "name": "elixir/programs/ircd",
+          "rel_path": "code/programs/elixir/ircd"
+        },
+        {
+          "build_file": "code/programs/go/build-tool/BUILD",
+          "is_starlark": false,
+          "language": "go",
+          "name": "go/programs/build-tool",
+          "rel_path": "code/programs/go/build-tool"
+        },
+        {
           "build_file": "code/packages/java/demo-java/BUILD",
           "is_starlark": false,
           "language": "java",
@@ -124,6 +150,13 @@
           "language": "ocaml",
           "name": "ocaml/demo-ocaml",
           "rel_path": "code/packages/ocaml/demo-ocaml"
+        },
+        {
+          "build_file": "code/programs/rust/closurec/BUILD",
+          "is_starlark": false,
+          "language": "rust",
+          "name": "rust/programs/closurec",
+          "rel_path": "code/programs/rust/closurec"
         },
         {
           "build_file": "code/packages/starlark/demo-starlark/BUILD",

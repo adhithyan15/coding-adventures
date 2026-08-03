@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "resolution/build-deps-comment",
+  "domain": "resolution",
+  "summary": "A legacy BUILD dependency comment preserves a program identity edge.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/conduit/BUILD",
+        "content_utf8": "echo conduit\n"
+      },
+      {
+        "path": "code/programs/lua/conduit-hello/BUILD",
+        "content_utf8": "# build-tool: deps=lua/conduit\necho conduit-hello\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/build-deps-comment",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "lua/conduit",
+          "lua/programs/conduit-hello"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

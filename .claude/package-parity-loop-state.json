@@ -12,22 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "item_id": "build-tool-ruby-starlark-canonical-build-compatibility",
-    "number": 9677,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9677",
-    "branch": "codex/build-tool-ruby-starlark-canonical-compatibility"
+    "number": 9691,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9691",
+    "branch": "codex/build-tool-ruby-language-identity-registry"
   },
   "last_inventory": {
-    "revision": "4a66c66dfde5eb1cf1f39283bf71d2ae6396edca",
+    "revision": "29d78677fe65719e0b84e2441e9a568a67e7f4f4",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1228,
-    "implementation_package_slots": 4376,
+    "implementation_identities": 1230,
+    "implementation_package_slots": 4378,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 778,
-    "singleton_missing_slots": 10892,
-    "rust_singletons": 583,
+    "singleton_packages": 780,
+    "singleton_missing_slots": 10920,
+    "rust_singletons": 585,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -402,20 +401,38 @@
     {
       "id": "build-tool-ruby-starlark-canonical-build-compatibility",
       "title": "Make the Ruby Starlark path parse canonical BUILD files without fallback",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ruby-starlark-runtime-closure"],
       "branch": "codex/build-tool-ruby-starlark-canonical-compatibility",
       "pr_number": 9677,
-      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates. Selected after PR #9660 merged and the collision-clean bfe51311 inventory. The dependency/leverage pass ranked this ahead of the independent Haskell and Elixir UTF-8 slices because the runtime closure directly unblocked it, it removes 44 silent canonical BUILD fallbacks from a supported build-tool implementation, and the Ruby/interpreter toolchain and exact plan baselines are already warm; the Chief service-registry and channel work remain dependency-blocked. Implemented canonical EOF token order, exact keyword operands and binding, defining-module globals, normalized v1 context propagation, strict structured-command extraction, root-redacted fail-closed diagnostics, and the canonical multiline shared fixture. Exact real-plan comparison matches every field for all 9 Elixir, 6 Go, and 29 Rust Starlark records; the 258-package/382-edge Lua plan has zero Starlark warnings. Local validation passes all seven Ruby suites, including 302 build-tool runs/614 assertions with one existing Windows platform skip and 88.04% line/71.11% branch coverage; the 37-case/56-file corpus; Go test/vet/trimpath build; zero-advisory Ruby audit; current dependencies; a collision-clean rebased 4a66c66d inventory of 1,228 identities and 4,376 slots; state, diff, JSON, and credential checks. The exact ten already-owned Lua BUILD_windows debts remain unchanged. Ready PR #9677 opened at exact head 7e3d3a08eb5a800ad748450bf613288e84ed80ec; checks are pending and auto-complete remains disabled until every exact-head check is terminal green or skipped."
+      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates. Selected after PR #9660 merged and the collision-clean bfe51311 inventory. The dependency/leverage pass ranked this ahead of the independent Haskell and Elixir UTF-8 slices because the runtime closure directly unblocked it, it removes 44 silent canonical BUILD fallbacks from a supported build-tool implementation, and the Ruby/interpreter toolchain and exact plan baselines are already warm; the Chief service-registry and channel work remain dependency-blocked. Implemented canonical EOF token order, exact keyword operands and binding, defining-module globals, normalized v1 context propagation, strict structured-command extraction, root-redacted fail-closed diagnostics, and the canonical multiline shared fixture. Exact real-plan comparison matches every field for all 9 Elixir, 6 Go, and 29 Rust Starlark records; the 258-package/382-edge Lua plan has zero Starlark warnings. Local validation passes all seven Ruby suites, including 302 build-tool runs/614 assertions with one existing Windows platform skip and 88.04% line/71.11% branch coverage; the 37-case/56-file corpus; Go test/vet/trimpath build; zero-advisory Ruby audit; current dependencies; a collision-clean rebased 4a66c66d inventory of 1,228 identities and 4,376 slots; state, diff, JSON, and credential checks. The exact ten already-owned Lua BUILD_windows debts remain unchanged. Ready PR #9677 reached 17 terminal exact-head checks at b21e379710501d00afda4852c7f1a64e2db76966: 12 succeeded, four irrelevant CodeQL analyses skipped, and the CodeQL aggregate completed neutrally. GitHub's guarded squash auto-complete merged it on 2026-08-03 as d96d518b0fed03a5e99011555f38558859258d2a."
     },
     {
       "id": "build-tool-ruby-language-identity-registry",
       "title": "Bring Ruby build-tool discovery to the canonical language and identity registry",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-ruby-starlark-canonical-build-compatibility"],
+      "branch": "codex/build-tool-ruby-language-identity-registry",
+      "pr_number": 9691,
+      "notes": "Discovered while proving the 44 canonical Starlark package records against the Go oracle. Ruby and Go agree on package counts and on every affected Starlark record field, but Ruby's dependency-edge identities omit the canonical programs segment: the Go/Ruby set differences are 42/42 for Go and 76/76 for Rust, while Elixir has 21 Go-only and 12 Ruby-only edges plus nine independently missing semantic edges. Lua has the same conduit-hello identity drift and one Go-only edge. Adopt the canonical language and package-identity registry, preserve repository-relative program identities such as go/programs/build-tool, rust/programs/closurec, and elixir/programs/ircd, then consume language-neutral identity and dependency-edge fixtures across canonical and legacy BUILD paths. Keep the separately owned missing semantic dependency edges out of the Starlark evaluator compatibility slice. Selected after PR #9677 merged and the collision-clean fbd52e79 inventory. The dependency/leverage pass ranks this directly unblocked cross-language graph repair ahead of the independent Haskell and Elixir UTF-8 children because it corrects canonical identity and edge semantics across Lua, Elixir, Go, and Rust plans while the Ruby toolchain, exact Go comparisons, and affected fixtures are already warm; all newly classified Chief items remain dependency-blocked. Implemented the complete canonical discovery registry, exact package/program identities, specification-tree exclusion, root-redacted duplicate-identity failure with CLI exit 2, and qualified legacy BUILD dependency comments. On rebased 29d78677, validation passes 307 Ruby runs/632 assertions with one existing Windows platform skip and 89.43% line/72.55% branch coverage; 17 schema and 40 runner tests; the valid 38-case/61-file corpus; 37 TypeScript, 12 Rust, and five Swift shared discovery consumers; Go test/vet/trimpath build; zero-advisory current Ruby dependencies; Security lint; collision-clean 1,230-identity/4,378-slot inventory; JSON, diff, and credential checks. The exact real plans contain 4,776 unique Ruby identities with no backslash paths; Go, Rust, and Lua package and edge sets match Go exactly at 301/936, 928/2,250, and 258/383. The separately logged Elixir semantic delta is 13 set differences, and the build-file gate reproduces only the exact ten already-owned Lua BUILD_windows debts. Ready PR #9691 opened at exact head 122c1894d00893b182f58f1c98b27efc72df9cc6; initial checks are queued and guarded auto-complete remains disabled until every exact-head check is terminal green, skipped, or neutral."
+    },
+    {
+      "id": "build-tool-elixir-resolution-semantic-parity",
+      "title": "Adjudicate Ruby and Go Elixir dependency-resolution semantics",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-language-identity-registry"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while proving the 44 canonical Starlark package records against the Go oracle. Ruby and Go agree on package counts and on every affected Starlark record field, but Ruby's dependency-edge identities omit the canonical programs segment: the Go/Ruby set differences are 42/42 for Go and 76/76 for Rust, while Elixir has 21 Go-only and 12 Ruby-only edges plus nine independently missing semantic edges. Lua has the same conduit-hello identity drift and one Go-only edge. Adopt the canonical language and package-identity registry, preserve repository-relative program identities such as go/programs/build-tool, rust/programs/closurec, and elixir/programs/ircd, then consume language-neutral identity and dependency-edge fixtures across canonical and legacy BUILD paths. Keep the separately owned missing semantic dependency edges out of the Starlark evaluator compatibility slice."
+      "notes": "Discovered after canonical program identities removed the structural edge drift from the real 282-package Elixir plans. Ruby and Go then differed on 13 semantic edges: Go alone reports eleven package edges, while Ruby alone reports the two real grammar_tools program dependencies on grammar_tools and cli_builder; the net edge-count difference is the nine-edge debt already observed during PR #9677. Minimize each manifest form into language-neutral fixtures, adjudicate against actual Mix metadata rather than treating either engine as authoritative, and repair the affected resolver implementations without reopening the canonical identity slice."
+    },
+    {
+      "id": "build-tool-go-language-identity-registry",
+      "title": "Bring Go build-tool discovery to the complete canonical language registry",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discover 4,776 packages, but Go classifies all fourteen Mosaic packages and programs as unknown while Ruby follows the shared canonical registry and preserves mosaic/programs identities. Make Go consume the existing language-registry and duplicate-identity fixtures, include every canonical and retained host bucket, exclude specification fixture trees, and prove a collision-free full plan without widening into the separately owned resolver-semantic edges."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -964,6 +981,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 4a66c66d inventory after PR #9664 added Rust-only chief-of-staff-secure-host-channel. The crate is zero-capability and transport-independent. Define language-neutral fixtures for bounded bootstrap offers and authenticated client hellos, exact D18F frame encoding, host/session/direction/sequence AAD, monotonic send and receive sequencing, malformed-frame rejection before state advance, and terminal close after authentication failure. Expand only after the X3DH/Double-Ratchet/Vault secure-channel primitive contract lands; fresh key generation, key custody, process spawning, pipes, sockets, filesystem access, and supervisor lifecycle remain injected or native."
+    },
+    {
+      "id": "chief-service-reconciler-portable-conformance",
+      "title": "Fixture and expand the portable Chief service reconciler",
+      "status": "pending",
+      "depends_on": ["chief-service-registry-portable-conformance", "chief-channel-crypto-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean fbd52e79 inventory after PR #9672 added Rust-only chief-of-staff-service-reconciler. The zero-capability package deterministically bridges the service registry to an injected supervisor. Define language-neutral fixtures for desired/live/hash/heartbeat observations, restart policy, one-mutation-per-tick planning, CAS transition claims, concurrent edit conflict handling, stale-heartbeat classification, crash convergence, and stable outcomes. Expand only after the registry and channel identifier contracts land; process liveness, spawning and stopping, package hashing, trusted clocks, filesystem access, and supervisor authority remain injected or native."
+    },
+    {
+      "id": "chief-host-control-protocol-portable-conformance",
+      "title": "Fixture and expand the portable Chief host control protocol",
+      "status": "pending",
+      "depends_on": ["chief-secure-host-channel-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean fbd52e79 inventory after PR #9681 added Rust-only chief-of-staff-host-control-protocol. Define language-neutral fixtures for Ready, Heartbeat, and Terminate records; orchestrator/host role and direction enforcement; lifecycle ordering; replay and package-hash mismatch rejection; caller-supplied trusted monotonic receipt times; and terminal failure after malformed or unauthenticated input. The package is zero-capability over complete encrypted frames, but it remains blocked on the secure-host-channel primitive stack; clocks, descriptors, streams, processes, filesystems, networks, package verification, and supervisor effects remain injected or native."
     },
     {
       "id": "venture-browser-qt-portable-bridge-and-native-host",
