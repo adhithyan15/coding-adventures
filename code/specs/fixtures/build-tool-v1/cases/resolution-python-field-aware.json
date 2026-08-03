@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/python-field-aware",
+  "domain": "resolution",
+  "summary": "Python resolution reads PEP 621 project dependencies, normalizes distribution names, and ignores unrelated metadata tables.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/python/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/python/alpha/pyproject.toml",
+        "content_utf8": "[build-system]\nrequires = [\"coding-adventures-gamma\"]\n\n[project]\nname = \"coding-adventures-alpha\"\nversion = \"0.1.0\"\ndescription = \"Mentions coding-adventures-gamma without depending on it.\"\ndependencies = [\n  \"coding_adventures_beta.helper>=0.1\",\n  \"coding-adventures-delta ; python_version >= '3.11'\", # coding-adventures-gamma stays a comment\n]\n\n[project.optional-dependencies]\ndev = [\"coding-adventures-gamma\"]\n\n[tool.demo]\ndependencies = [\"coding-adventures-gamma\"]\n"
+      },
+      {
+        "path": "code/packages/python/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/python/beta-helper/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-beta-helper\"\nversion = \"0.1.0\"\ndependencies = []\n"
+      },
+      {
+        "path": "code/packages/python/delta/BUILD",
+        "content_utf8": "echo build delta\n"
+      },
+      {
+        "path": "code/packages/python/delta/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-delta\"\nversion = \"0.1.0\"\ndependencies = []\n"
+      },
+      {
+        "path": "code/packages/python/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/python/gamma/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-gamma\"\nversion = \"0.1.0\"\ndependencies = []\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "python"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/python-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "python/beta-helper",
+          "python/alpha"
+        ],
+        [
+          "python/delta",
+          "python/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

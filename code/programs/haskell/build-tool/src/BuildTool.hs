@@ -778,6 +778,7 @@ readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
+    | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
 
 readCabalDependencyTokens :: Package -> IO [String]
@@ -827,6 +828,108 @@ stripCabalComment :: String -> String
 stripCabalComment [] = []
 stripCabalComment ('-' : '-' : _) = []
 stripCabalComment (character : rest) = character : stripCabalComment rest
+
+readPythonDependencyTokens :: Package -> IO [String]
+readPythonDependencyTokens pkg = do
+    let pyprojectPath = packagePath pkg </> "pyproject.toml"
+    exists <- doesFileExist pyprojectPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict pyprojectPath
+            pure (pythonDependencyTokens contents)
+
+pythonDependencyTokens :: String -> [String]
+pythonDependencyTokens = nub . mapMaybe pythonDistributionToken . pythonDependencyValues
+
+pythonDependencyValues :: String -> [String]
+pythonDependencyValues = collect False False . lines
+  where
+    collect _ _ [] = []
+    collect inProject inDependencies (rawLine : rest) =
+        let uncommented = stripTomlComment rawLine
+            stripped = trim uncommented
+         in case tomlSectionName stripped of
+                Just sectionName -> collect (sectionName == "project") False rest
+                Nothing
+                    | inDependencies ->
+                        extractQuotedValues uncommented
+                            ++ collect inProject (not (hasUnquotedCharacter ']' uncommented)) rest
+                    | inProject ->
+                        case pythonDependencyArrayRemainder stripped of
+                            Nothing -> collect True False rest
+                            Just remainder ->
+                                extractQuotedValues remainder
+                                    ++ collect True (not (hasUnquotedCharacter ']' remainder)) rest
+                    | otherwise -> collect False False rest
+
+tomlSectionName :: String -> Maybe String
+tomlSectionName stripped
+    | length stripped >= 3
+        && head stripped == '['
+        && last stripped == ']'
+        && take 2 stripped /= "[[" =
+        Just (map toLower (trim (init (tail stripped))))
+    | otherwise = Nothing
+
+pythonDependencyArrayRemainder :: String -> Maybe String
+pythonDependencyArrayRemainder stripped =
+    let (field, assignment) = break (== '=') stripped
+        afterAssignment = drop 1 assignment
+        arrayRemainder = dropWhile (/= '[') afterAssignment
+     in if map toLower (trim field) == "dependencies"
+            && not (null assignment)
+            && not (null arrayRemainder)
+            then Just arrayRemainder
+            else Nothing
+
+pythonDistributionToken :: String -> Maybe String
+pythonDistributionToken value =
+    let name = takeWhile isPythonDistributionCharacter (dropWhile (`elem` [' ', '\t']) value)
+     in if null name then Nothing else Just (normalizePythonDistributionName name)
+
+isPythonDistributionCharacter :: Char -> Bool
+isPythonDistributionCharacter character =
+    isAlphaNum character || character `elem` ['-', '_', '.']
+
+normalizePythonDistributionName :: String -> String
+normalizePythonDistributionName = collapseSeparators False
+  where
+    collapseSeparators _ [] = []
+    collapseSeparators previousWasSeparator (character : rest)
+        | character `elem` ['-', '_', '.'] =
+            if previousWasSeparator
+                then collapseSeparators True rest
+                else '-' : collapseSeparators True rest
+        | otherwise = toLower character : collapseSeparators False rest
+
+stripTomlComment :: String -> String
+stripTomlComment = go Nothing
+  where
+    go _ [] = []
+    go Nothing ('#' : _) = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = character : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : escaped : rest)
+        | quote == '"' = '\\' : escaped : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = character : go Nothing rest
+        | otherwise = character : go (Just quote) rest
+
+hasUnquotedCharacter :: Char -> String -> Bool
+hasUnquotedCharacter target = go Nothing
+  where
+    go _ [] = False
+    go Nothing (character : rest)
+        | character == target = True
+        | character `elem` ['"', '\''] = go (Just character) rest
+        | otherwise = go Nothing rest
+    go (Just quote) ('\\' : _escaped : rest)
+        | quote == '"' = go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = go Nothing rest
+        | otherwise = go (Just quote) rest
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do
@@ -900,7 +1003,10 @@ dependencyTableRemainder line =
             else Nothing
 
 quotedValues :: String -> [String]
-quotedValues = go . stripLuaComment
+quotedValues = extractQuotedValues . stripLuaComment
+
+extractQuotedValues :: String -> [String]
+extractQuotedValues = go
   where
     go [] = []
     go (character : rest)

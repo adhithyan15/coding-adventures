@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9806,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9806",
-    "branch": "codex/build-tool-haskell-remaining-field-aware-manifest-resolution"
+    "number": 9817,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9817",
+    "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution"
   },
   "last_inventory": {
-    "revision": "bd73c3f160c2ccc0640577ae57ff39cc7d3149b3",
+    "revision": "9441f4c74344f5e3fcba0b58e838af81fd512f63",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1245,
-    "implementation_package_slots": 4398,
+    "implementation_identities": 1247,
+    "implementation_package_slots": 4400,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 272,
-    "singleton_packages": 795,
-    "singleton_missing_slots": 11130,
-    "rust_singletons": 600,
+    "singleton_packages": 797,
+    "singleton_missing_slots": 11158,
+    "rust_singletons": 602,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -401,7 +401,7 @@
     {
       "id": "build-tool-haskell-remaining-field-aware-manifest-resolution",
       "title": "Make Haskell Cabal manifest resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-remaining-field-aware-manifest-resolution",
       "pr_number": 9806,
@@ -409,12 +409,21 @@
     },
     {
       "id": "build-tool-haskell-non-cabal-field-aware-manifest-resolution",
-      "title": "Make the remaining non-Cabal Haskell build-tool manifest readers field-aware",
-      "status": "pending",
+      "title": "Make Haskell Python manifest resolution field-aware and name-normalized",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-remaining-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution",
+      "pr_number": 9817,
+      "notes": "Split from the Cabal repair after a complete real-lane oracle comparison showed that whole-manifest tokenization remains reachable across every non-Lua/non-Cabal ecosystem. Selected immediately after guarded PR #9806 merged because Python is the largest affected established lane and its exact failure is already reproduced: both engines discover 488 Python packages; the Haskell engine reports an all-node cycle, while a resolution-only Go plan succeeds. The complete graph comparison has 1,492 Haskell edges versus 1,118 canonical edges, with 383 false edges and nine missing edges. The implementation now parses only authoritative PEP 621 project dependencies, normalizes Python distribution names per PEP 503, and consumes both the existing diamond and a new language-neutral field-boundary fixture. The repaired real lane skips all 488 unchanged packages with zero failures, and its complete 1,118-edge graph matches the Go oracle exactly with zero edges unique to either engine. Final local validation covers 43 corpus cases and 92 validated files, 40 Python runner tests, 19 Haskell build-tool examples plus the seven graph examples, cabal check, Haddock generation, 41/50/54 percent Haskell definition/alternative/expression coverage, and canonical Go test/vet/build. The post-merge 4e9fc62c collision-checked inventory is unchanged at 1,245 identities and 4,398 slots, 173 high-consensus packages with 272 missing slots, 795 singletons, 600 Rust singletons, and zero collisions or unknown buckets; no new identity required classification. The canonical Go build-file validator separately reports existing missing BUILD_windows prerequisite refs in python/sir-runtime-oop and python/swi-prolog-parser; the existing build-file-standalone-integrity item owns that debt, so this resolver-semantic slice does not duplicate or widen it."
+    },
+    {
+      "id": "build-tool-haskell-post-python-field-aware-manifest-resolution",
+      "title": "Make the remaining post-Python Haskell build-tool manifest readers field-aware",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-non-cabal-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Split from the Cabal repair after a complete real-lane oracle comparison showed the current selected slice has exactly 43 Haskell-only false edges, zero missing edges, and one authoritative source: Cabal build-depends fields. The generic whole-manifest reader also remains reachable for Python, Ruby, Go, TypeScript, Dart, Rust/Wasm, Elixir, Perl, Swift, Java/Kotlin, and .NET. Audit each language against the canonical Go edge oracle, add language-neutral field-boundary fixtures, and replace the generic fallback in dependency-shaped ecosystem slices without widening the exact 205-package Cabal cycle repair."
+      "notes": "Narrowed from the non-Cabal umbrella after the leverage audit selected the exact 488-package Python lane. The generic reader remains reachable for Ruby, Go, TypeScript, Dart, Rust/Wasm, Elixir, Perl, Swift, Java/Kotlin, and .NET. After the Python field and distribution-name rules are fixed, compare each remaining real lane with the Go oracle, add language-neutral field-boundary fixtures, and split implementation into dependency-shaped ecosystem slices rather than recreating a broad multi-language PR."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1752,6 +1761,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 5c85a498 inventory after smart-home-synology-surveillance-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS sessions, Vault identity, endpoint policy, explicit logout, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Synology API discovery, response validation, camera-health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "process-shutdown-native-authority-review",
+      "title": "Review the process-shutdown native-authority exception",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 7650dfef inventory after process-shutdown landed as a Rust-only cooperative signal adapter. Its declared proc:signal, native FFI, platform unsafe handlers, process-global exclusivity, and polling thread make the concrete crate a native-runtime boundary rather than an all-language portable target. Review the minimum truthful Unix and Windows authority plus platform-CI evidence, preserve signal-handler safety and restoration guarantees, and keep any reusable injected shutdown-event state machine in an authority-free portable seam. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Python resolver repair."
+    },
+    {
+      "id": "smart-home-unifi-network-native-authority-review",
+      "title": "Review the UniFi Network integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 7650dfef inventory after smart-home-unifi-network-integration landed as a Rust-only production adapter. The crate owns concrete TCP and platform-TLS transport, Vault-referenced API-key authentication, endpoint policy, bounded authenticated HTTPS inspection, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded official-API response validation, stable site/device health projection, request planning, pagination, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Python resolver repair."
     }
   ]
 }

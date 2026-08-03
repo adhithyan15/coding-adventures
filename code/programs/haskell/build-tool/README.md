@@ -39,6 +39,15 @@ shared `resolution-haskell-field-aware` fixture covers both inline and
 multiline dependencies plus representative non-authoritative collisions. The
 complete 205-package Haskell lane matches the Go oracle edge-for-edge.
 
+Python dependency resolution reads only the PEP 621 `[project]` table's
+`dependencies` array. Build-system requirements, optional dependency groups,
+tool tables, package metadata, and comments cannot invent graph edges. Python
+distribution names are lowercased and normalize every run of `-`, `_`, or `.`
+to one hyphen before lookup, so repository packages resolve consistently with
+PEP 503 naming. Shared fixtures cover the canonical diamond, field boundaries,
+version and environment markers, and mixed-separator aliases. The complete
+488-package Python lane matches the Go oracle at 1,118 edges.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

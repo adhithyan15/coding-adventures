@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -169,6 +169,31 @@ resolutionCabalSpec = describe "Cabal resolution conformance" $ do
                     Right
                         [ ["haskell/beta", "haskell/delta", "haskell/gamma"]
                         , ["haskell/alpha"]
+                        ]
+
+resolutionPythonSpec :: Spec
+resolutionPythonSpec = describe "Python resolution conformance" $ do
+    it "preserves the shared canonical dependency diamond" $
+        withFixture "resolution-python-diamond.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "python" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+
+    it "reads only PEP 621 dependencies and normalizes distribution names" $
+        withFixture "resolution-python-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "python" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "python/alpha"
+                    , "python/beta-helper"
+                    , "python/delta"
+                    , "python/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["python/beta-helper", "python/delta", "python/gamma"]
+                        , ["python/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation
