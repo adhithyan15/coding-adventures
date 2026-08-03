@@ -1968,6 +1968,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(saturation_current_density) = params.get("JS") {
+            if !saturation_current_density.is_finite() || *saturation_current_density < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET JS must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
