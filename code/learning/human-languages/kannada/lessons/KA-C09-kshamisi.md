@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C09-kshamisi
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 370
 chapter: 9
 type: word
 headword: ಕ್ಷಮಿಸಿ
@@ -9,19 +12,33 @@ prerequisites: [KA-C08-dayavittu]
 sounds: [kannada-conjunct-kssa, kannada-vowel-sign-i]
 roots: [kshama-sanskrit]
 etymology_hook: "ಕ್ಷಮಿಸಿ kṣamisi ← Sanskrit kṣamā 'patience/forgiveness' + Kannada verb-making -isu — the same trick Kannada uses to borrow Sanskrit nouns as verbs"
-est_minutes: 4
 reviews_of: [KA-C08-dayavittu]
+duration:
+  max_seconds: 245
+requires:
+  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04]
+introduces:
+  knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
+practises:
+  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: polite-repair
+variety: standard-colloquial
 ---
 
 # ಕ್ಷಮಿಸಿ (kṣamisi) — forgive me / sorry
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04] -->
 
 [PAUSE 2s] You already know **ದಯವಿಟ್ಟು**, "please." Kannada's "sorry" reuses
 a trick you'll see everywhere in this language: taking a Sanskrit noun and
 turning it into a working Kannada verb.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[KA-ETYMON-C09-KSHAMISI-01]; assesses=[] -->
 
 - **ಕ್ಷಮಾ** (*kṣamā*) = "**patience, forbearance, forgiveness**" — a Sanskrit
   noun, unchanged.
@@ -35,7 +52,8 @@ turning it into a working Kannada verb.
 So **ಕ್ಷಮಿಸಿ** is simply "**forgive!**" — *kṣamisu* wearing its imperative
 ending.
 
-## The Dravidian family, side by side
+## The word, taken apart: The Dravidian family, side by side
+<!-- hl-knowledge: introduces=[KA-ETYMON-C09-KSHAMISI-02]; assesses=[] -->
 
 Three of the four Dravidian cousins build "sorry" from the very same Sanskrit
 noun, each with its own verb-making suffix and its own imperative shape:
@@ -49,7 +67,8 @@ noun, each with its own verb-making suffix and its own imperative shape:
 - Tamil **மன்னிக்கவும்** *maṉṉi**kkavum*** — its **own** native root *maṉṉi*,
   not Sanskrit at all
 
-## Be honest about how it's used
+## Why it's said this way: about how it's used
+<!-- hl-knowledge: introduces=[KA-PRAGMATICS-C09-KSHAMISI-03]; assesses=[] -->
 
 **ಕ್ಷಮಿಸಿ** is a genuine, everyday way to say "sorry" — not overly formal —
 but in casual conversation you'll also hear the softer **ಕ್ಷಮಿಸಿ ಬಿಡಿ**
@@ -57,6 +76,7 @@ but in casual conversation you'll also hear the softer **ಕ್ಷಮಿಸಿ �
 "**sorry**," which is extremely common in spoken Kannada.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kṣamā" — the Sanskrit noun, patience/forgiveness]
@@ -64,6 +84,7 @@ but in casual conversation you'll also hear the softer **ಕ್ಷಮಿಸಿ �
 - [YOU SAY: contrast — Tamil's maṉṉikkavum uses its own root instead]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
 
 [PAUSE 3s] What is **ಕ್ಷಮಿಸಿ** built from? (**Sanskrit kṣamā** "forgiveness"
 + the verb-making suffix **‑isu** + the imperative **‑i**.) Which cousin

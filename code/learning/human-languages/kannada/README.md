@@ -44,6 +44,22 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/KA-C05-*`](./lessons/)): mātanāḍu, **nānu
   kannaḍa mātanāḍuttēne**, iru, kelasa māḍu, practice. Stem + tense + person; no
   1st-person gender. In the book.
+- **Chapters 6–9 — Case, counting, and courtesy**
+  ([`lessons/KA-C0{6,7,8,9}-*`](./lessons/)): the dative **-ಗೆ**, visible suffix
+  stacking, **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು**, numbers one through ten, **ದಯವಿಟ್ಟು**, and
+  **ಕ್ಷಮಿಸಿ**. In the book from canonical schema-v2 lessons.
+- **Chapters 10–22 — Calendar and everyday domains**
+  ([`lessons/KA-C{10..22}-*`](./lessons/)): days, colours, family, body, seasons,
+  food, months, clock time, age, numbers 11–20, weather, and animals. In the
+  book from canonical schema-v2 lessons.
+- **Chapters 23–31 — Dayparts and greetings**
+  ([`lessons/KA-C{23..31}-*`](./lessons/)): day, night, morning, evening,
+  afternoon, and their register-aware greetings. In the book from canonical
+  schema-v2 lessons.
+
+All thirty later lessons remain below five effective minutes. Their twenty-six
+generated chapters carry the same source hashes Language Ladder recomputes from
+the browser-loaded lesson AST, so app and book cannot drift silently.
 
 ## Book / fonts
 

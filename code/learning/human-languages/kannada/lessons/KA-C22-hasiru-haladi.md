@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C22-hasiru-haladi
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 510
 chapter: 22
 type: word
 headword: ಹಸಿರು, ಹಳದಿ
@@ -9,19 +12,33 @@ prerequisites: [KA-C11-bannagalu, KA-C21-naayi-bekku]
 sounds: [kannada-retroflex-lla, kannada-virama-geminate]
 roots: [proto-dravidian-pac-green, sanskrit-haridra-turmeric]
 etymology_hook: "ಹಸಿರು (hasiru, 'green') ← Old Kannada ಪಸಿರ್ (pasir) ← Proto-Dravidian *pac-, 'green' — the SAME root as Tamil's பச்சை (paccai) and Telugu's పచ్చ (pacca); ಹಳದಿ (haḷadi, 'yellow') appears to be a Sanskrit/Hindi loan built on हरिद्रा (haridrā, 'turmeric'), which traces to हरि (hari, 'yellow, tawny') from Proto-Indo-European *ǵʰelh₃- — the same ancient root already behind Hindi's harā (green) and German's gelb (yellow); note that Hindi itself keeps 'turmeric' (haldi) and 'yellow' (pīlā) as two separate, unrelated words, unlike Kannada/Bengali/Odia which reuse the turmeric-word for the color"
-est_minutes: 4
 reviews_of: [KA-C21-naayi-bekku]
+duration:
+  max_seconds: 299
+requires:
+  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02]
+introduces:
+  knowledge: [KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02]
+practises:
+  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # ಹಸಿರು, ಹಳದಿ — a real Dravidian family, and a borrowed cousin of gelb
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02] -->
 
 [PAUSE 2s] Kannada's green word belongs to a real Dravidian family you'll
 meet again soon. Its yellow word isn't native at all — and it turns out to
 be hiding the very same ancient root this whole arc keeps circling back to.
 
-## ಹಸಿರು — a genuine pan-Dravidian word
+## The word, taken apart: ಹಸಿರು — a genuine pan-Dravidian word
+<!-- hl-knowledge: introduces=[KA-ETYMON-C22-HASIRU-HALADI-01]; assesses=[] -->
 
 **ಹಸಿರು** (**hasiru**, "**green**") comes from **Old Kannada** **ಪಸಿರ್**
 (**pasir**), from **Proto-Dravidian** ***\*pac-***, "**green**" — the
@@ -32,7 +49,8 @@ be hiding the very same ancient root this whole arc keeps circling back to.
 Dravidian word — and this particular root will keep resurfacing as Telugu,
 Malayalam, and Tamil's own green words come up later in this same arc.
 
-## ಹಳದಿ — a turmeric-word loan, and a secret cousin of gelb
+## The word, taken apart: ಹಳದಿ — a turmeric-word loan, and a secret cousin of gelb
+<!-- hl-knowledge: introduces=[KA-ETYMON-C22-HASIRU-HALADI-02]; assesses=[] -->
 
 **ಹಳದಿ** (**haḷadi**, "**yellow**") is **not** Kannada's native turmeric
 word — that's **ಅರಿಶಿನ** (*ariśina*). Instead, *haḷadi* appears to be shaped
@@ -52,6 +70,7 @@ family, Indo-Aryan rather than Dravidian — and that borrowed word still
 lands on the exact same PIE root this arc has been tracing all along.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ಹಸಿರು" — green, a real Dravidian cousin of Tamil paccai and
@@ -61,6 +80,7 @@ lands on the exact same PIE root this arc has been tracing all along.
   Hindi loan built on the turmeric word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-ETYMON-C22-HASIRU-HALADI-01, KA-ETYMON-C22-HASIRU-HALADI-02] -->
 
 [PAUSE 3s] What Proto-Dravidian root gives **ಹಸಿರು** (*hasiru*), and which
 two other Dravidian languages share it? (***\*pac-***, "green" — shared with

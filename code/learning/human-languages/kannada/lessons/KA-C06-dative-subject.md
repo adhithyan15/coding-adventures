@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C06-dative-subject
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 330
 chapter: 6
 type: phrase
 headword: ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು
@@ -10,18 +13,32 @@ prerequisites: [KA-C06-dative-stacking, KA-C05-naanu-kannada-maatanaaduttene]
 sounds: [gemination-tt]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking, wanting all happen TO you rather than being done BY you — so 'I know Kannada' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); gottu is not even a verb but a noun-like word meaning 'known', which is why nothing in the sentence is 'doing' anything"
-est_minutes: 4
 reviews_of: [KA-C06-dative-stacking, KA-C06-dative-ge, KA-C05-naanu-kannada-maatanaaduttene, KA-C03-naanu]
+duration:
+  max_seconds: 285
+requires:
+  knowledge: [KA-GRAMMAR-C06-DATIVE-STACKING-01]
+introduces:
+  knowledge: [KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C06-DATIVE-SUBJECT-03]
+practises:
+  knowledge: [KA-GRAMMAR-C06-DATIVE-STACKING-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C06-DATIVE-SUBJECT-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು — "I know Kannada"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-STACKING-01] -->
 
 [PAUSE 2s] Chapter 5 gave you **ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ** — "**I** speak Kannada."
 Now say "I **know** Kannada." Kannada will not let you use *nānu*.
 
-## The sentence
+## You'll want to know: The sentence
+<!-- hl-knowledge: introduces=[KA-LEX-C06-DATIVE-SUBJECT-01]; assesses=[] -->
 
 > **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು.**
 > *nanage kannaḍa gottu.*
@@ -38,7 +55,8 @@ dative, leaving *kannaḍa* as the unmarked word the sentence is about. And *got
 isn't really a verb doing an action; it's closer to "**[is] known**." So nothing
 in this sentence is *doing* anything at all.
 
-## Why: things that happen *to* you
+## Grammar Lens: Why: things that happen *to* you
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C06-DATIVE-SUBJECT-02]; assesses=[] -->
 
 Kannada separates what you **do** from what **happens to** you. Speaking is an
 action, so Ch. 5 used *nānu*. But knowing, liking, wanting, being hungry — these
@@ -53,7 +71,8 @@ action, so Ch. 5 used *nānu*. But knowing, liking, wanting, being hungry — th
 English keeps one fossil of the same idea: "**methinks**" — where *me* is a
 dative, "it seems **to me**." Kannada made it a rule.
 
-## All four sisters do it
+## Grammar Lens: All four sisters do it
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C06-DATIVE-SUBJECT-03]; assesses=[] -->
 
 | language | "I know [the language]" | the dative |
 |---|---|---|
@@ -67,6 +86,7 @@ suffix** — Kannada's *g* being the softened *k* of the others. The Dravidian
 family showing its bones, exactly as *blanc/bianco/branco* did for Romance.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-STACKING-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*nanage kannaḍa gottu*"]
@@ -75,6 +95,7 @@ family showing its bones, exactly as *blanc/bianco/branco* did for Romance.
 - [YOU SAY: the four cousins — "*-ge · -ukku · -ku · -ikku*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-STACKING-01, KA-LEX-C06-DATIVE-SUBJECT-01, KA-GRAMMAR-C06-DATIVE-SUBJECT-02, KA-GRAMMAR-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 3s] What does **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು** literally say? ("**To-me** Kannada
 **known**.") What has English got that Kannada hasn't? (A nominative "**I**" —

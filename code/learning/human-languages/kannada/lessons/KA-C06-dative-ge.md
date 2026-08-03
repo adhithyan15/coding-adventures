@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C06-dative-ge
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 310
 chapter: 6
 type: word
 headword: -ಗೆ
@@ -10,19 +13,33 @@ prerequisites: [KA-C05-practice, KA-C03-naanu, KA-C02-hesaru]
 sounds: [voiced-g]
 roots: [dravidian-dative-ku]
 etymology_hook: "-ge is Kannada's form of shared Dravidian *-k(k)u: k voiced to g between vowels while doubled -kke kept the hard consonant"
-est_minutes: 4
 reviews_of: [KA-C03-naanu, KA-C02-hesaru, KA-C05-practice]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02]
+practises:
+  knowledge: [KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # -ಗೆ (-ge) — "to, for"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first **case ending**. English puts "to" in **front**, as a
 separate word. Kannada sticks it on the **back** — the biggest structural fact
 about the language, in one suffix.
 
-## Adding it on
+## You'll want to know: Adding it on
+<!-- hl-knowledge: introduces=[KA-LEX-C06-DATIVE-GE-01]; assesses=[] -->
 
 | word | + -ge | meaning |
 |---|---|---|
@@ -37,7 +54,8 @@ And with "I", which reshapes first:
 
 > **ನಾನು** *nānu* ("I") → **ನನಗೆ** *nanage* ("to me")
 
-## The g that was once a k
+## The word, taken apart: The g that was once a k
+<!-- hl-knowledge: introduces=[KA-ETYMON-C06-DATIVE-GE-02]; assesses=[] -->
 
 All four descend from one Proto-Dravidian dative, ***-k(k)u***. Look at what
 became of its *k*:
@@ -56,6 +74,7 @@ geminate preserved the original *k*. The two Kannada shapes are the same suffix
 caught on either side of a sound change.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*hesaru* … *hesarige*"]
@@ -64,6 +83,7 @@ caught on either side of a sound change.
 - [YOU SAY: the family — "*-ukku · -ku · -**ge*** · -ikku"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02] -->
 
 [PAUSE 3s] What does **-ಗೆ** mean? ("**To**" or "**for**.") Where does it go?
 (**On the end** of the noun.) What is "to me"? (**ನನಗೆ** *nanage*.) Why does

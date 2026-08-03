@@ -330,6 +330,244 @@
       "tex": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:50403c9e67a9e065",
+      "lessonIds": [
+        "KA-C06-dative-ge",
+        "KA-C06-dative-stacking",
+        "KA-C06-dative-subject"
+      ],
+      "tex": "kannada/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:d4a6f697bdb7fb98",
+      "lessonIds": [
+        "KA-C07-numbers-1-5",
+        "KA-C07-numbers-6-10"
+      ],
+      "tex": "kannada/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:0dd42921ebc1ff57",
+      "lessonIds": [
+        "KA-C08-dayavittu"
+      ],
+      "tex": "kannada/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:72851113a8be5055",
+      "lessonIds": [
+        "KA-C09-kshamisi"
+      ],
+      "tex": "kannada/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:ed7b58b40b1355d8",
+      "lessonIds": [
+        "KA-C10-vaara"
+      ],
+      "tex": "kannada/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:a577aa338975f386",
+      "lessonIds": [
+        "KA-C11-bannagalu"
+      ],
+      "tex": "kannada/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:1cfe2ba34766cd85",
+      "lessonIds": [
+        "KA-C12-kutumba"
+      ],
+      "tex": "kannada/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:0878d10a7187db28",
+      "lessonIds": [
+        "KA-C13-dehada-bhagagalu"
+      ],
+      "tex": "kannada/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:e6a8916497172741",
+      "lessonIds": [
+        "KA-C14-kaalagalu"
+      ],
+      "tex": "kannada/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d190fb570c076825",
+      "lessonIds": [
+        "KA-C15-niiru-akki"
+      ],
+      "tex": "kannada/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:3f5e4fc9f72d0eb7",
+      "lessonIds": [
+        "KA-C16-tingalugalu"
+      ],
+      "tex": "kannada/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:223e56c5ec67ed1a",
+      "lessonIds": [
+        "KA-C17-madhyaahna-madhyaraatri"
+      ],
+      "tex": "kannada/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:41f497a34f5e25af",
+      "lessonIds": [
+        "KA-C18-gante"
+      ],
+      "tex": "kannada/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:d6aaad7ff154ff8f",
+      "lessonIds": [
+        "KA-C19-vayassu"
+      ],
+      "tex": "kannada/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:ef0879e7a5fd9007",
+      "lessonIds": [
+        "KA-C20-hannondu-ippattu",
+        "KA-C20-havamana"
+      ],
+      "tex": "kannada/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:03d7d39d4493a575",
+      "lessonIds": [
+        "KA-C21-naayi-bekku"
+      ],
+      "tex": "kannada/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:f63f1cfc23b0cb25",
+      "lessonIds": [
+        "KA-C22-hasiru-haladi"
+      ],
+      "tex": "kannada/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:422a48e530cebe57",
+      "lessonIds": [
+        "KA-C23-dina"
+      ],
+      "tex": "kannada/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:34c5748dc853de1e",
+      "lessonIds": [
+        "KA-C24-ratri"
+      ],
+      "tex": "kannada/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:d84a11ad7e7cac19",
+      "lessonIds": [
+        "KA-C25-shubha-ratri"
+      ],
+      "tex": "kannada/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:6c517d5cdb2f5b6a",
+      "lessonIds": [
+        "KA-C26-belagge"
+      ],
+      "tex": "kannada/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:5b610fd79895225e",
+      "lessonIds": [
+        "KA-C27-sanje"
+      ],
+      "tex": "kannada/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:6133ff939c0603ea",
+      "lessonIds": [
+        "KA-C28-aparahna"
+      ],
+      "tex": "kannada/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:65f0071b2ae9fb22",
+      "lessonIds": [
+        "KA-C29-shubhodaya"
+      ],
+      "tex": "kannada/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:aebe084d534a27d6",
+      "lessonIds": [
+        "KA-C30-shubha-sanje"
+      ],
+      "tex": "kannada/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:3c1a2104befa120f",
+      "lessonIds": [
+        "KA-C31-shubha-madhyahna"
+      ],
+      "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:d0addd66aaedf900",
