@@ -199,8 +199,8 @@ repo's standard workflow):
 | — | Bug fix: `Array#sum` ignored a block argument | ✅ merged | #9673 |
 | — | Bug fix: bracket-index (`a[i]`/`a[i] = v`) had no grammar rule at all — new `__method__("[]"/"[]=", …)` dispatch | ✅ merged | #9686 |
 | 8 | Remaining String methods: `capitalize`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`, `bytes`, `split`, `replace`, `sub`, `gsub`, `to_i`, `to_f`, `to_sym`, `swapcase`, `tr`, `each_char` (block) — semantics matched against the Python/TS `sir-runtime-oop` reference catalog | ✅ merged | #9694 |
-| 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | 🚧 this PR | — |
-| 10 | Symbol + Object/Bool generic methods | planned | — |
+| 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | ✅ merged | #9713 |
+| 10 | Symbol + Object/Bool generic methods: `to_s`/`length`/`size`/`upcase`/`downcase`/`inspect`/`empty?`/`to_sym` widen to a Symbol receiver (reusing the slice-1/8 String helpers — `upcase`/`downcase` return a fresh interned Symbol, not a String); universal `Object` methods `nil?`/`equal?`/`itself`/`frozen?`; `TrueClass`/`FalseClass` eager (non-short-circuit) `&`/`\|`/`^` | 🚧 this PR | — |
 | — | Cross-backend conformance corpus for the full collection-method catalog | planned | — |
 
 **Explicitly out of scope for slice 8** (deferred, not silently dropped): Ruby's
@@ -217,6 +217,20 @@ similar size to its predecessors; they are tracked as follow-up work.
 form (only the 0-arg `round` is implemented) — deferred for the same
 "keep the slice reviewable" reason, tracked as follow-up work alongside
 slice 8's deferrals.
+
+**Explicitly out of scope for slice 10**: `respond_to?` (needs a full
+reflective query across BOTH the user-defined method table and the entire
+`is_builtin_method` catalog — a materially larger undertaking than this
+slice's other methods); `dup`/`clone` (shallow-copy semantics for
+Array/Hash, identity for scalars — needs a generic copy helper this v0
+runtime doesn't have yet); generic `to_s`/`inspect`/`==`/`!=` on an
+ARBITRARY receiver (the display-conversion machinery this needs,
+`_sir_fmt`, writes directly to a `FILE*` rather than building a string —
+capturing it into a `SirValue` String needs its own follow-up refactor);
+`freeze`/`tap`/`then`/`yield_self` (identity/pipeline methods with no
+observable effect in a v0 with no mutability-tracking or block-less
+Enumerator return — low value until either lands). All tracked as
+follow-up work, same deferral discipline as slices 8/9.
 
 ## Out of scope (documented)
 

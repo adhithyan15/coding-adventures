@@ -224,6 +224,16 @@ DoS cap needed, since this runtime's integer is a fixed `int64_t`), and the
 BLOCK-taking `times`/`upto`/`downto`/`step` (a zero `step` stride is a
 documented no-op, never a hang); `to_i`/`to_f` widen to accept a numeric
 receiver alongside their slice-8 String forms.
+**Slice 10** (Symbol + universal Object/Bool methods): Symbol widens
+`to_s`/`length`/`size`/`empty?`/`upcase`/`downcase`/`to_sym` from the
+slice-1/8 String helpers (`upcase`/`downcase` re-intern as a fresh Symbol,
+not a String) and adds Symbol-only `inspect` (`:name`); universal `Object`
+methods `nil?`/`equal?`/`itself`/`frozen?` (`equal?` is pointer identity,
+distinct from `==`'s structural equality; `frozen?` is a fixed,
+receiver-TYPE-only answer — no per-object mutability tracking in this v0);
+`TrueClass`/`FalseClass`'s eager (non-short-circuit) `&`/`|`/`^`, reachable
+only via an explicit dot-call (`true.&(x)`) since `&&`/`||` lower to `If`
+and never reach a method dispatch.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

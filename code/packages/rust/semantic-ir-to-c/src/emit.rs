@@ -1785,9 +1785,15 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// Ruby), `zero?`/`positive?`/`negative?`, `floor`/`ceil`/`round` (0-arg
 /// form), `divmod`/`fdiv`, `clamp`/`between?`, `gcd`, `digits`, and the
 /// BLOCK-taking `times`/`upto`/`downto`/`step`; `to_i`/`to_f` widen to accept
-/// a numeric receiver alongside their slice-8 String forms. The dispatcher
-/// raises `NoMethodError` on an unsupported receiver type or a malformed
-/// call (missing/extra args, a non-closure block position), matching Ruby.
+/// a numeric receiver alongside their slice-8 String forms. Slice 10 =
+/// Symbol + universal Object/Bool methods: `to_s`/`length`/`size`/`upcase`/
+/// `downcase`/`empty?`/`to_sym` widen to a Symbol receiver (reusing the
+/// slice-1/8 String helpers; `upcase`/`downcase` re-intern as a fresh
+/// Symbol), `inspect` (Symbol-only, `:name`), universal `nil?`/`equal?`/
+/// `itself`/`frozen?`, and `TrueClass`/`FalseClass`'s eager (non-short-
+/// circuit) `&`/`|`/`^`. The dispatcher raises `NoMethodError` on an
+/// unsupported receiver type or a malformed call (missing/extra args, a
+/// non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1817,6 +1823,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "abs" | "even?" | "odd?" | "zero?" | "positive?" | "negative?" | "pred"
         | "floor" | "ceil" | "round" | "divmod" | "fdiv" | "clamp" | "between?"
         | "gcd" | "digits" | "times" | "upto" | "downto" | "step"
+        // slice 10 — Symbol + universal Object/Bool methods
+        | "inspect" | "nil?" | "equal?" | "itself" | "frozen?" | "&" | "|" | "^"
     )
 }
 
