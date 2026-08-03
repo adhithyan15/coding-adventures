@@ -866,6 +866,23 @@ def test_rejects_invalid_diode_junction_capacitance(
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+@pytest.mark.parametrize("value", ["0", "4n"])
+def test_accepts_valid_diode_transit_time(value: str) -> None:
+    parsed = parse_netlist(f".model clamp D(TT={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Tt == parse_value(value)
+
+
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_diode_transit_time(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode TT must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(TT={value})")
+
+
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
