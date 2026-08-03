@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate positive finite BJT model-card `IS` saturation current.
 - Validate finite, non-negative BJT model-card `TF` and `TR` transit times.
 - Validate BJT model-card `CJC` / `CJC0` / `CBC` base-collector capacitance and
   lower the `CJC0` alias instead of silently dropping it.

@@ -894,6 +894,15 @@ Q1 col base 0 fast
     expect(result.voltage("col")).toBeLessThan(5.0);
   });
 
+  it.each(["0", "-1p", "1e999"])(
+    "rejects invalid BJT saturation current %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(IS=${value})`)).toThrow(
+        "BJT IS must be finite and positive",
+      );
+    },
+  );
+
   it("parses PNP BJT model aliases", () => {
     const parsed = parseNetlist(`
 .model slow PNP(IS=2e-14 BETA_F=80 VT=26m)

@@ -4373,12 +4373,17 @@ the Rust, Python, and TypeScript surfaces together.
      values and lower `CJC0` into the shared engine base-collector capacitance
      field after canonical `CJC` and before legacy `CBC`.
 
+411. Python and TypeScript Berkeley SPICE BJT transit-time validation parity.
+   - Status: completed in PR 9770.
+   - Both parser facades validate finite non-negative `TF` / `TR` values before
+     lowering them into the shared engine BJT transit-time fields.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE BJT model-card alias parity.
-   - Align parser validation and lowering with the shared engine aliases,
-     then audit the remaining directly lowerable BJT fields, continuing with
-     positive finite saturation current `IS` validation after `TF` / `TR`.
+1. Python and TypeScript Berkeley SPICE model-card validation parity.
+   - Complete a fresh parser-to-engine validation audit after the directly
+     lowerable BJT fields, starting with finite non-negative diode `TT` transit
+     time validation.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

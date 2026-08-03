@@ -912,6 +912,14 @@ Q1 col base 0 fast
     assert 0.0 < result.node_voltages["col"] < 5.0
 
 
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_bjt_saturation_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT IS must be finite and positive"
+    ):
+        parse_netlist(f".model fast NPN(IS={value})")
+
+
 def test_parse_pnp_bjt_model_aliases_beta_f() -> None:
     parsed = parse_netlist(
         """
