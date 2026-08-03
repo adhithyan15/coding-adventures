@@ -5522,7 +5522,12 @@ pub fn lower_iir_to_wasm(
     // unconditionally jumping to the full 4 GiB spec ceiling — a caller
     // running untrusted or unbounded-loop input keeps a real backstop
     // instead of relying solely on `wasm-execution`'s own OOM handling.
-    let max_memory_pages = config.max_memory_pages.min(MAX_WASM_MEMORY_PAGES);
+    // `clamp` (not just `.min`): a misconfigured `max_memory_pages: 0` would
+    // otherwise declare `Limits { min: 1, max: Some(0) }` — spec-invalid
+    // (min > max) even though this crate's own encoder and `wasm-execution`
+    // both degrade safely (memory simply never grows). Flooring at 1 keeps
+    // every declared module spec-valid regardless of caller misconfiguration.
+    let max_memory_pages = config.max_memory_pages.clamp(1, MAX_WASM_MEMORY_PAGES);
     let memories: Vec<wasm_types::MemoryType> = if uses_memory
         || uses_print_str
         || !string_data.is_empty()

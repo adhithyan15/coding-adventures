@@ -2296,6 +2296,27 @@ fn max_memory_pages_smaller_than_default_is_honored() {
     assert_eq!(mem.limits.max, Some(2), "a smaller configured cap must be honored, not widened");
 }
 
+/// Round-2 security-review finding: a degenerate `max_memory_pages: 0` must
+/// never produce a spec-invalid `Limits { min: 1, max: Some(0) }` (min > max).
+/// The declared max is floored at 1, matching the always-present `min: 1`.
+#[test]
+fn max_memory_pages_zero_is_floored_to_stay_spec_valid() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: 0, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.min, 1);
+    assert_eq!(
+        mem.limits.max,
+        Some(1),
+        "max_memory_pages: 0 must floor to 1 (== min), never produce min > max"
+    );
+}
+
 /// The companion codegen-shape check: an `alloc_array` module must actually
 /// emit `memory.grow` (0x40) and `memory.size` (0x3F) somewhere in its code —
 /// not just declare a growable memory section. Both opcodes are followed by
