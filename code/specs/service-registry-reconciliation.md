@@ -43,7 +43,8 @@ Time, storage, and process authority remain injected. The runnable
 orchestrator composes this kernel with package verification, the secure host
 channel, the authenticated lifecycle messages defined in
 [`host-control-protocol.md`](host-control-protocol.md), and a concrete OS-process
-supervisor.
+supervisor specified in
+[`process-host-supervisor.md`](process-host-supervisor.md).
 
 ## Authoritative Supervisor Contract
 

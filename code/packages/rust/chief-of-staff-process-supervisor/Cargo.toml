@@ -1,0 +1,26 @@
+[package]
+name = "chief-of-staff-process-supervisor"
+version = "0.1.0"
+edition = "2021"
+description = "Verified OS-process supervision for D18 Chief hosts"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+coding_adventures_uuid = { path = "../uuid" }
+coding_adventures_x3dh = { path = "../x3dh" }
+
+[dev-dependencies]
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[[bin]]
+name = "process-supervisor-test-child"
+path = "src/bin/process_supervisor_test_child.rs"
+test = false

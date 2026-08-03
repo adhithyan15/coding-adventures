@@ -195,11 +195,27 @@ human even in an autonomous deployment.
 
 ### Host Supervisor
 
-The orchestrator is a `Supervisor` (from `supervisor` crate) at the
-root of the OS-process tree. Every host is a `ChildKind::HostProcess`
-child. Strategies and restart policies are defined per-host in the
-agent package's `manifest.json` and copied into the corresponding
-`ChildSpec` at registration time:
+The orchestrator composes the durable service registry and deterministic
+reconciler with the concrete process adapter specified in
+[`process-host-supervisor.md`](process-host-supervisor.md). The adapter is the
+root of the owned OS-process tree: it re-verifies the signed package immediately
+before every spawn, creates one fresh UUID-v7 secure session, and reports
+readiness and heartbeat only after authenticated host-control messages.
+
+Restart policy remains durable registry intent interpreted by the reconciler;
+the process adapter does not invent a second policy engine. Host capability
+manifests are validated before registration and again as part of package
+verification before launch. The runnable orchestrator supplies its trusted
+package keyring, process configuration, monotonic clock, and long-lived X3DH
+identity to the adapter.
+
+The adapter owns and reaps every child it reports. It does not adopt cached
+registry PIDs, invoke a shell, or treat PID existence as authority. Graceful
+shutdown uses an authenticated `Terminate` record followed by a bounded
+hard-kill fallback.
+
+An earlier prototype described this integration through the generic
+`supervisor` crate and a `ChildSpec` like this:
 
 ```rust
 let host_spec = ChildSpec {
@@ -214,16 +230,16 @@ let host_spec = ChildSpec {
 };
 ```
 
-The supervisor's capability-inheritance check (defined in
-`supervisor.md`) ensures the host's manifest is a subset of the
-orchestrator's own. The orchestrator's manifest is broad
+The generic supervisor's capability-inheritance check (defined in
+`supervisor.md`) remains useful for in-process task trees. The orchestrator's
+manifest is broad
 (`supervise`, `proc:fork`, `proc:exec:*`, `vault:admin`,
 `fs:read:./agents/*`) because it spawns processes; hosts have
 narrower manifests appropriate to their job.
 
-When a host crashes, the supervisor's restart strategy decides what
-happens. The orchestrator does not invent its own logic — it consumes
-what `supervisor` provides.
+For D18 host processes, crash recovery is instead driven by the durable service
+registry's `RestartPolicy` through the service reconciler, so restart decisions
+survive orchestrator restarts and are not split across two authorities.
 
 ### Service Registry
 
