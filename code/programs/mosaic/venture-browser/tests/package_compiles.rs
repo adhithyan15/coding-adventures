@@ -380,6 +380,12 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "POSIX BUILD must execute the generated-shell matrix"
     );
     assert!(
+        build.starts_with("#!/bin/sh\n")
+            && !build.contains("BASH_SOURCE")
+            && !build.contains("pipefail"),
+        "POSIX BUILD must remain compatible with the build tool's /bin/sh executor"
+    );
+    assert!(
         build_windows.contains("scripts\\build-all.ps1"),
         "Windows BUILD must execute the generated-shell matrix"
     );
