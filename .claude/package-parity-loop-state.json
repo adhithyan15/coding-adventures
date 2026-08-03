@@ -352,11 +352,11 @@
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
       "title": "Make TypeScript build-tool git-diff tests portable on Windows",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-typescript-windows-gitdiff",
       "pr_number": null,
-      "notes": "Discovered while running the full TypeScript build-tool suite for the strict rockspec UTF-8 slice. On Windows, gitdiff.test.ts hardcodes /bin/sh for two git commits and uses /repo POSIX fake roots for path-mapping tests, producing two spawnSync /bin/sh ENOENT failures plus five empty affected-package sets. The failure is pre-existing and unrelated to metadata decoding. Add platform-native command invocation and temporary-directory path fixtures in a separate small slice, then require the full package suite and coverage on Windows."
+      "notes": "Selected after merged PR #9589 and the collision-clean 3918b1d9 inventory because these seven failures are the sole remaining blocker to a fully green TypeScript build-tool suite on Windows and fixing them strengthens every later parity validation. Keep the slice test-portability-only: replace two /bin/sh-dependent git commits with platform-native process invocation and replace five POSIX-only /repo path fixtures with temporary-directory-native paths, without widening runtime behavior."
     },
     {
       "id": "build-tool-typescript-language-identity-registry",
