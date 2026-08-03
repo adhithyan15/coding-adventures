@@ -1903,10 +1903,20 @@ fn integer_local_still_gets_i64_slot() {
 // LANG-FULL E5 — bounds-checked arrays (static length-prefixed model)
 // ===========================================================================
 
-/// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a length-prefixed
-/// `@__twig_alloc_bytes` block (Twig GC completion round — no longer the raw,
-/// never-freed `@calloc` this used to emit) with an explicit `icmp uge`/
-/// `llvm.trap` bounds check and a typed `getelementptr`+`load`/`store`.
+/// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a
+/// length-prefixed block with an explicit `icmp uge`/`llvm.trap` bounds
+/// check and a typed `getelementptr`+`load`/`store`. A genuinely scalar
+/// element type (`i64` here) allocates via the plain no-ref
+/// `@__twig_alloc_bytes` — no longer the raw, never-freed `@calloc` this
+/// used to emit, but also NOT the reference-tracing
+/// `@__twig_alloc_ref_array_bytes` allocator, since a scalar array holds no
+/// GC handles for the collector to trace. (See
+/// `array_of_str_elements_emits_twig_alloc_ref_array_bytes` below for the
+/// reference-typed-element case, and `lower_alloc_array`'s doc comment /
+/// `AOT00-T7-array-reference-tracing.md` for why the two must stay
+/// distinct — applying the reference-tracing allocator unconditionally was
+/// found by security review to risk silently corrupting a scalar array's
+/// contents during compaction.)
 #[test]
 fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
     let f = IIRFunction::new(
@@ -1927,13 +1937,21 @@ fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
         ],
     );
     let ll = lower(&module_with(f));
-    // Allocation: length-prefixed, GC-tracked block.
+    // Allocation: length-prefixed, GC-tracked, but the plain no-ref
+    // allocator — this instantiation's element type is scalar i64.
     assert!(
         ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
         "__twig_alloc_bytes declared; got:\n{ll}"
     );
     assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
-    assert!(ll.contains("call i64 @__twig_alloc_bytes(i64"), "alloc_array uses __twig_alloc_bytes");
+    assert!(
+        ll.contains("call i64 @__twig_alloc_bytes(i64"),
+        "alloc_array of a scalar element uses __twig_alloc_bytes"
+    );
+    assert!(
+        !ll.contains("call i64 @__twig_alloc_ref_array_bytes"),
+        "a scalar-element array must NOT use the reference-tracing allocator; got:\n{ll}"
+    );
     assert!(
         ll.contains("inttoptr i64 ") && ll.contains(" to ptr"),
         "the i64 handle must be recovered as a ptr for the length store/element GEPs"
@@ -1946,6 +1964,35 @@ fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
     // Typed element access + length header read.
     assert!(ll.contains("getelementptr i64, ptr"), "typed element GEP");
     assert!(ll.contains("store i64"), "array_set stores the element");
+}
+
+/// A `str`-element array (`array<str>`) carries a GC reference in every
+/// element slot, so `alloc_array` must instead allocate via the
+/// reference-tracing `@__twig_alloc_ref_array_bytes` (registers under
+/// `__gc_register_ref_array_kind`, tracing every element slot as a possible
+/// reference) — the precise counterpart to the scalar case proven above.
+#[test]
+fn array_of_str_elements_emits_twig_alloc_ref_array_bytes() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<str>"),
+            IIRInstr::new("array_len", Some("m".into()), vec![Operand::Var("a".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("m".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare i64 @__twig_alloc_ref_array_bytes(i64)"),
+        "__twig_alloc_ref_array_bytes declared; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call i64 @__twig_alloc_ref_array_bytes(i64"),
+        "alloc_array of a str element uses __twig_alloc_ref_array_bytes; got:\n{ll}"
+    );
 }
 
 /// An `f64` array uses `double` element GEPs / loads / stores.

@@ -1,5 +1,50 @@
 # Changelog — iir-to-llvm
 
+## 0.49.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, LLVM, conditional)
+
+Closes the reference-tracing gap `lower_alloc_array`'s own 0.48.0 doc comment
+flagged and deliberately left open: `alloc_array` was registering every
+block under `__twig_alloc_bytes`'s no-ref `HeapKind`, correct only for
+scalar (`i64`/`f64`) elements — a `str`/`any`/`symbol`/`ref<T>` element (e.g.
+`algol-iir-compiler`'s `string array`) is itself a GC reference, and the
+collector's precise tracer never scanned an array's payload for the handles
+stored inside it. A string reachable ONLY via an array element (no other
+live reference) could be collected while the array still held a now-dangling
+handle.
+
+`lower_alloc_array` now picks its allocator **per array**, based on the
+original (pre-erasure) IIR element type: a new `elem_is_gc_reference` helper
+checks whether the element is one of `str`/`any`/`ref<any>`/`symbol`/
+`ref<Lispy...>` (the same set `llvm_type_for` collapses to plain `i64`) and,
+if so, calls the new `@__twig_alloc_ref_array_bytes`
+(`twig-aot/runtime/twig_runtime.c`, registers under
+`__gc_register_ref_array_kind(NULL, 0, 8)`, `tail_from = 8` skipping the
+length header) instead of the plain no-ref `@__twig_alloc_bytes`. A
+genuinely scalar element keeps using `@__twig_alloc_bytes` unchanged.
+
+**Revision note**: an earlier draft applied the new allocator
+unconditionally to every array (any element type) across all three
+backends, reasoning that `FlatHeap::mark_word`'s `find_header` validation
+makes over-tracing "always sound, just conservative." A security review
+caught that this is false against `gc-core::FlatHeap`'s COMPACTING
+collector (`collect_compacting`, exposed as the `gc_collect_compacting`
+builtin on native backends): a scalar element that coincidentally matches
+another live, movable object's address can have that object's post-move
+address silently written into it by `fixup_ref_fields` — genuine data
+corruption, not harmless over-retention. The fix is now conditional and
+LLVM-only; `aarch64-backend`/`x86_64-backend` are unchanged from before this
+round (they keep calling `__twig_alloc_bytes` unconditionally, since the AOT
+specialiser erases the element type before native codegen sees it — see
+`AOT00-T7-array-reference-tracing.md` for the full writeup and the
+native-backend follow-up this leaves open).
+
+Verification: the real regression proof (`gc-core`'s
+`array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`)
+and a real test-harness bug this fix's own verification found
+(`lang_matrix.rs`'s LLVM-linking heuristic missing the new symbol name,
+breaking 24 matrix tests until fixed) both remain valid under the corrected
+design.
+
 ## 0.48.0 - 2026-08-03 - Twig GC completion, Part 2: alloc_bytes/alloc_array stop leaking, gc_live_bytes added
 
 A harder verification pass across Twig's GC story found two things on the
