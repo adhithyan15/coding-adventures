@@ -122,7 +122,7 @@ The loop must not start by attempting 10,962 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`481a30c334ffd060ba804bedee6e2eae8da112be` is collision-clean at 1,233
+`b42d1683d85daa9fd26cb96da3d928612034aa24` is collision-clean at 1,233
 normalized implementation identities, 4,381 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 783 singletons, 588
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -393,7 +393,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   exact `packages` or `programs` boundary, preserves program identities,
   excludes specification and build-artifact trees, and fails closed on a
   duplicate with the shared typed, root-redacted diagnostic and CLI exit 2.
-  On rebased `481a30c3`, independent Go and Ruby real plans match all 4,779
+  On rebased `b42d1683`, independent Go and Ruby real plans match all 4,779
   `(name, language, rel_path)` tuples with zero duplicate or backslash paths,
   all fourteen Mosaic identities canonical, and only the intentional
   `unknown/blog` bucket. Exact-head validation passes gofmt, the full Go suite
