@@ -4213,11 +4213,17 @@ the Rust, Python, and TypeScript surfaces together.
      diagnostic while zero and positive sheet resistances lower into Level-1
      parameters.
 
+383. Python and TypeScript Berkeley SPICE MOS lateral-diffusion parity.
+   - Status: completed in PR 9656.
+   - Non-finite and negative `LD` values, plus values that leave a non-positive
+     effective channel length, are rejected with the shared diagnostic while
+     valid lateral diffusion lengths lower into Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `LD`,
-     `NRD`, `NRS`, `AD`, `AS`, `PD`, `PS`, `CJ`, `CJSW`, `JS`, `PB`, `MJ`,
+   - TypeScript still needs canonical lowering for `NRD`, `NRS`, `AD`, `AS`,
+     `PD`, `PS`, `CJ`, `CJSW`, `JS`, `PB`, `MJ`,
      `MJSW`, `FC`, `KF`, and `AF`; Python already lowers these canonical fields
      but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both

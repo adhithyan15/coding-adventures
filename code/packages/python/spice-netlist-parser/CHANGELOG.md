@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS instance `NRD` values before lowering
+  valid drain diffusion square counts.
 - Reject MOS model-card `LD` values that are non-finite, negative, or leave a
   non-positive effective Level-1 channel length.
 - Reject negative and non-finite MOS model-card `RSH` values before lowering
