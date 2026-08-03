@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Add typed local temperature/PM display settings, ABC days, gas learning
+  offsets, compensated display, LED self-test, and validated correction
+  profiles with native readback verification.
+
 ## 0.2.0
 
 - Add authorized LED-bar mode and brightness plus display-brightness controls.

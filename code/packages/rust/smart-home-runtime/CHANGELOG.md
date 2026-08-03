@@ -7,6 +7,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Keep typed device-configuration and self-test commands non-optimistic until
+  integrations return native confirmation.
+
 - Split command-tool authorization from submission so integrations can perform
   authorized conflict checks before publishing accepted optimistic state.
 

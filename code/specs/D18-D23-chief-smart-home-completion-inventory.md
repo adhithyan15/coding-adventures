@@ -851,14 +851,31 @@ documented `/config` contract without hiding cloud ownership conflicts:
   cloud-conflict tests prove no unauthorized or cloud-rejected PUT reaches the
   monitor.
 
+## Current AirGradient Typed Settings Slice
+
+This slice extends the same authorized `/config` host with documented,
+non-credential settings while keeping configuration values strongly typed:
+
+- D23 now exposes a reusable `device.configuration` capability for temperature
+  unit, PM display standard, automatic CO2 baseline days, gas learning offsets,
+  compensated display, indicator self-test, and correction-profile commands.
+- AirGradient installs a dedicated configuration entity and accepts only the
+  documented `c`/`f`, `ugm3`/`us-aqi`, 0-200 day, and 0-720 hour value ranges.
+- Correction commands validate sensor-specific algorithms and require complete,
+  finite, positive-scale SLR profiles where the native contract requires them.
+- Every persistent setting is read back into confirmed runtime state; LED
+  self-test remains a non-persistent trigger. Cloud-only ownership still stops
+  before command submission or PUT.
+- A real loopback HTTP test proves all seven native setting transfers and
+  readbacks, while malformed correction-profile tests stop before transport.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-1. Extend typed AirGradient local settings with temperature unit, particulate
-   display standard, automatic CO2 baseline days, gas-sensor learning offsets,
-   compensated-value display, LED self-test, and validated correction profiles.
+1. Add AirGradient country and cloud-upload controls only after privacy,
+   telemetry-egress, and operator-consent policy are concrete.
 2. Add AirGradient MQTT broker and custom HTTP routing settings only after
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the

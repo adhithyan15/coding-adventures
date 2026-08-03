@@ -7,6 +7,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add stable local API labels for typed device-configuration commands.
+
 - Added round-trippable local API labels for D23 media playback, volume,
   grouping, and queue command types.
 - Added `lan_tcp` bridge transport projection and request parsing.

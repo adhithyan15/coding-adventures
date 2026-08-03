@@ -344,6 +344,14 @@ impl Capability {
         .with_range(0.0, 100.0, Some(1.0))
     }
 
+    pub fn device_configuration() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.configuration"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
     pub fn sensor_calibration() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.calibration"),
@@ -428,6 +436,7 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::media_queue(),
         Capability::device_indicator(),
         Capability::device_display(),
+        Capability::device_configuration(),
         Capability::sensor_calibration(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
@@ -1305,6 +1314,13 @@ pub enum DeviceControlCommandType {
     SetIndicatorBrightness,
     SetDisplayBrightness,
     CalibrateSensor,
+    SetTemperatureUnit,
+    SetParticulateDisplayStandard,
+    SetAutomaticCo2BaselineDays,
+    SetGasLearningOffsets,
+    SetCompensatedDisplay,
+    TestIndicator,
+    SetCorrectionProfile,
 }
 
 impl CommandType {
@@ -1347,6 +1363,13 @@ impl DeviceControlCommandType {
             }
             Self::SetDisplayBrightness => CapabilityId::trusted("device.display"),
             Self::CalibrateSensor => CapabilityId::trusted("sensor.calibration"),
+            Self::TestIndicator => CapabilityId::trusted("device.indicator"),
+            Self::SetTemperatureUnit
+            | Self::SetParticulateDisplayStandard
+            | Self::SetAutomaticCo2BaselineDays
+            | Self::SetGasLearningOffsets
+            | Self::SetCompensatedDisplay
+            | Self::SetCorrectionProfile => CapabilityId::trusted("device.configuration"),
         }
     }
 }
@@ -1404,7 +1427,10 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
     match command_type {
         CommandType::SetLock => PrivilegeTier::HighRisk,
         CommandType::SetThermostatSetpoint
-        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
             PrivilegeTier::HumanApproval
         }
         CommandType::TurnOn
@@ -4267,7 +4293,7 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 21);
+        assert_eq!(catalog.len(), 22);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
@@ -4279,6 +4305,7 @@ mod tests {
         assert!(ids.contains(&"media.queue"));
         assert!(ids.contains(&"device.indicator"));
         assert!(ids.contains(&"device.display"));
+        assert!(ids.contains(&"device.configuration"));
         assert!(ids.contains(&"sensor.calibration"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
@@ -4329,6 +4356,15 @@ mod tests {
             CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness),
             CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
             CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor),
+            CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit),
+            CommandType::DeviceControl(
+                DeviceControlCommandType::SetParticulateDisplayStandard,
+            ),
+            CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays),
+            CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay),
+            CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
         ];
 
         for command_type in command_types {

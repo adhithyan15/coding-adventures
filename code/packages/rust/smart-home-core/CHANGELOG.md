@@ -7,6 +7,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add a reusable device-configuration capability and typed commands for display
+  standards, baseline/learning settings, self-test, and correction profiles.
+
 ### Added
 
 - Typed media playback, volume, grouping, and queue command operations plus

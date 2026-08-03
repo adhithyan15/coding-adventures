@@ -6469,7 +6469,16 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
         }
         CommandType::RecallScene => return None,
         CommandType::Media(_) => return None,
-        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => return None,
+        CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor
+            | DeviceControlCommandType::SetTemperatureUnit
+            | DeviceControlCommandType::SetParticulateDisplayStandard
+            | DeviceControlCommandType::SetAutomaticCo2BaselineDays
+            | DeviceControlCommandType::SetGasLearningOffsets
+            | DeviceControlCommandType::SetCompensatedDisplay
+            | DeviceControlCommandType::TestIndicator
+            | DeviceControlCommandType::SetCorrectionProfile,
+        ) => return None,
     };
 
     Some(StateSnapshot {

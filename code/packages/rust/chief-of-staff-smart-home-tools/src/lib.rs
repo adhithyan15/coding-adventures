@@ -89727,7 +89727,8 @@ fn json_to_smart_value_for_command(
         | CommandType::Media(MediaCommandType::PlayNext)
         | CommandType::Media(MediaCommandType::PlayPrevious)
         | CommandType::Media(MediaCommandType::ClearQueue)
-        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => Ok(Value::Null),
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
+        | CommandType::DeviceControl(DeviceControlCommandType::TestIndicator) => Ok(Value::Null),
         CommandType::SetBrightness
         | CommandType::Media(MediaCommandType::SetVolume)
         | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
@@ -90158,6 +90159,27 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         )),
         "sensor_calibrate" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::CalibrateSensor,
+        )),
+        "device_set_temperature_unit" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetTemperatureUnit,
+        )),
+        "device_set_particulate_display_standard" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetParticulateDisplayStandard,
+        )),
+        "device_set_automatic_co2_baseline_days" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+        )),
+        "device_set_gas_learning_offsets" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetGasLearningOffsets,
+        )),
+        "device_set_compensated_display" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCompensatedDisplay,
+        )),
+        "device_test_indicator" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::TestIndicator,
+        )),
+        "device_set_correction_profile" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCorrectionProfile,
         )),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
     }
@@ -92546,6 +92568,27 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         }
         CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
             "sensor_calibrate"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit) => {
+            "device_set_temperature_unit"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard) => {
+            "device_set_particulate_display_standard"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays) => {
+            "device_set_automatic_co2_baseline_days"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets) => {
+            "device_set_gas_learning_offsets"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay) => {
+            "device_set_compensated_display"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::TestIndicator) => {
+            "device_test_indicator"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
+            "device_set_correction_profile"
         }
     }
 }
@@ -121468,6 +121511,34 @@ mod tests {
             (
                 "sensor_calibrate",
                 DeviceControlCommandType::CalibrateSensor,
+            ),
+            (
+                "device_set_temperature_unit",
+                DeviceControlCommandType::SetTemperatureUnit,
+            ),
+            (
+                "device_set_particulate_display_standard",
+                DeviceControlCommandType::SetParticulateDisplayStandard,
+            ),
+            (
+                "device_set_automatic_co2_baseline_days",
+                DeviceControlCommandType::SetAutomaticCo2BaselineDays,
+            ),
+            (
+                "device_set_gas_learning_offsets",
+                DeviceControlCommandType::SetGasLearningOffsets,
+            ),
+            (
+                "device_set_compensated_display",
+                DeviceControlCommandType::SetCompensatedDisplay,
+            ),
+            (
+                "device_test_indicator",
+                DeviceControlCommandType::TestIndicator,
+            ),
+            (
+                "device_set_correction_profile",
+                DeviceControlCommandType::SetCorrectionProfile,
             ),
         ];
         for (label, device_command) in commands {

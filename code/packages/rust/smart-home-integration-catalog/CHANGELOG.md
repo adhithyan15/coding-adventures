@@ -1,5 +1,8 @@
 # Changelog
 
+- Record AirGradient's typed non-credential configuration entity and validated
+  correction-profile surface.
+
 - Upgrade AirGradient runtime coverage with authorized local indicator/display
   controls, CO2 calibration, readback verification, and explicit cloud-control
   conflict handling.

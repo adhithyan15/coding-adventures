@@ -6,9 +6,9 @@ use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use serde_json::{Map as JsonMap, Value as JsonValue};
 use smart_home_core::{
-    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
-    CommandResult, CommandType, DeviceControlCommandType, DeviceId, Entity, EntityId, EntityKind,
-    Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
+    CommandResult, CommandType, Device, DeviceControlCommandType, DeviceId, Entity, EntityId,
+    EntityKind, Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
     StateConfidence, StateSnapshot, StateSource, Value, ValueKind,
 };
 use smart_home_discovery::{
@@ -26,7 +26,7 @@ use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "airgradient";
 pub const PROTOCOL_ID: &str = "airgradient_local_api";
 pub const MEASUREMENT_PATH: &str = "/measures/current";
@@ -42,8 +42,13 @@ pub enum AirGradientError {
     Io(String),
     Http(String),
     HttpStatus(u16),
-    ResponseTooLarge { limit: usize },
-    TruncatedBody { expected: usize, actual: usize },
+    ResponseTooLarge {
+        limit: usize,
+    },
+    TruncatedBody {
+        expected: usize,
+        actual: usize,
+    },
     Json(serde_json::Error),
     MissingField(&'static str),
     NoMeasurements,
@@ -246,12 +251,57 @@ impl AirGradientConfigurationControl {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AirGradientTemperatureUnit {
+    Celsius,
+    Fahrenheit,
+}
+
+impl AirGradientTemperatureUnit {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Celsius => "c",
+            Self::Fahrenheit => "f",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AirGradientParticulateDisplayStandard {
+    MicrogramsPerCubicMeter,
+    UsAqi,
+}
+
+impl AirGradientParticulateDisplayStandard {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::MicrogramsPerCubicMeter => "ugm3",
+            Self::UsAqi => "us-aqi",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AirGradientCorrectionProfile {
+    pub algorithm: String,
+    pub intercept: Option<f64>,
+    pub scaling_factor: Option<f64>,
+    pub use_epa_2021: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct AirGradientConfiguration {
     pub control: AirGradientConfigurationControl,
     pub led_bar_mode: String,
     pub led_bar_brightness: u8,
     pub display_brightness: u8,
+    pub temperature_unit: Option<AirGradientTemperatureUnit>,
+    pub particulate_display_standard: Option<AirGradientParticulateDisplayStandard>,
+    pub automatic_co2_baseline_days: Option<u16>,
+    pub tvoc_learning_offset: Option<u16>,
+    pub nox_learning_offset: Option<u16>,
+    pub monitor_display_compensated_values: Option<bool>,
+    pub corrections: BTreeMap<String, AirGradientCorrectionProfile>,
 }
 
 pub fn discovery_record(
@@ -422,6 +472,7 @@ pub struct AirGradientRuntimeIntegration<T> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum AirGradientCommandTarget {
     Indicator,
+    Configuration,
     Co2Sensor,
 }
 
@@ -560,15 +611,15 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
         observed_at_ms: u64,
     ) -> Result<(), AirGradientError> {
         let native_id = stable_component(&snapshot.device_info.serial);
-        let co2_entity_id = EntityId::trusted(format!(
-            "airgradient:{native_id}:sensor:rco2"
-        ));
+        let co2_entity_id = EntityId::trusted(format!("airgradient:{native_id}:sensor:rco2"));
         let mut co2_entity = runtime
             .registry()
             .entity(&co2_entity_id)
             .cloned()
             .ok_or_else(|| AirGradientError::UnknownEntity(co2_entity_id.clone()))?;
-        co2_entity.capabilities.push(Capability::sensor_calibration());
+        co2_entity
+            .capabilities
+            .push(Capability::sensor_calibration());
         runtime.upsert_entity(co2_entity)?;
 
         let indicator_entity_id = EntityId::trusted(format!("airgradient:{native_id}:indicator"));
@@ -592,20 +643,50 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
             ],
         })?;
 
+        let configuration_entity_id =
+            EntityId::trusted(format!("airgradient:{native_id}:configuration"));
+        runtime.upsert_entity(Entity {
+            entity_id: configuration_entity_id.clone(),
+            device_id: installed.device_id.clone(),
+            kind: EntityKind::Input,
+            name: format!("{} configuration", self.client.config.display_name),
+            capabilities: vec![Capability::device_configuration()],
+            state: Some(confirmed_state(
+                configuration_entity_id.clone(),
+                configuration_value(configuration),
+                observed_at_ms,
+            )),
+            metadata: vec![
+                Metadata::new("airgradient.control_surface", "configuration"),
+                Metadata::new(
+                    "airgradient.configuration_control",
+                    configuration.control.as_str(),
+                ),
+            ],
+        })?;
+
         let mut device = runtime
             .registry()
             .device(&installed.device_id)
             .cloned()
-            .ok_or_else(|| AirGradientError::Validation("installed device disappeared".to_string()))?;
+            .ok_or_else(|| {
+                AirGradientError::Validation("installed device disappeared".to_string())
+            })?;
         device.entity_ids.push(indicator_entity_id.clone());
+        device.entity_ids.push(configuration_entity_id.clone());
         device.metadata.push(Metadata::new(
             "airgradient.configuration_control",
             configuration.control.as_str(),
         ));
         runtime.upsert_device(device)?;
         installed.entity_ids.push(indicator_entity_id.clone());
+        installed.entity_ids.push(configuration_entity_id.clone());
         self.command_targets = BTreeMap::from([
             (indicator_entity_id, AirGradientCommandTarget::Indicator),
+            (
+                configuration_entity_id,
+                AirGradientCommandTarget::Configuration,
+            ),
             (co2_entity_id, AirGradientCommandTarget::Co2Sensor),
         ]);
         Ok(())
@@ -661,11 +742,23 @@ struct AirGradientCommandPlan {
     expected: Option<ExpectedConfiguration>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 enum ExpectedConfiguration {
     IndicatorMode(String),
     IndicatorBrightness(u8),
     DisplayBrightness(u8),
+    TemperatureUnit(AirGradientTemperatureUnit),
+    ParticulateDisplayStandard(AirGradientParticulateDisplayStandard),
+    AutomaticCo2BaselineDays(u16),
+    GasLearningOffsets {
+        tvoc: u16,
+        nox: u16,
+    },
+    CompensatedDisplay(bool),
+    CorrectionProfile {
+        sensor: String,
+        profile: AirGradientCorrectionProfile,
+    },
 }
 
 impl ExpectedConfiguration {
@@ -681,6 +774,31 @@ impl ExpectedConfiguration {
             Self::DisplayBrightness(expected) => (
                 configuration.display_brightness == *expected,
                 "displayBrightness",
+            ),
+            Self::TemperatureUnit(expected) => (
+                configuration.temperature_unit == Some(*expected),
+                "temperatureUnit",
+            ),
+            Self::ParticulateDisplayStandard(expected) => (
+                configuration.particulate_display_standard == Some(*expected),
+                "pmStandard",
+            ),
+            Self::AutomaticCo2BaselineDays(expected) => (
+                configuration.automatic_co2_baseline_days == Some(*expected),
+                "abcDays",
+            ),
+            Self::GasLearningOffsets { tvoc, nox } => (
+                configuration.tvoc_learning_offset == Some(*tvoc)
+                    && configuration.nox_learning_offset == Some(*nox),
+                "tvocLearningOffset/noxLearningOffset",
+            ),
+            Self::CompensatedDisplay(expected) => (
+                configuration.monitor_display_compensated_values == Some(*expected),
+                "monitorDisplayCompensatedValues",
+            ),
+            Self::CorrectionProfile { sensor, profile } => (
+                configuration.corrections.get(sensor) == Some(profile),
+                "corrections",
             ),
         };
         if matches {
@@ -704,11 +822,17 @@ fn airgradient_command_plan(
             if target == AirGradientCommandTarget::Indicator =>
         {
             let Value::Text(mode) = &request.arguments else {
-                return invalid_command_arguments(request.command_type, "co2, pm, iaqs, or off text");
+                return invalid_command_arguments(
+                    request.command_type,
+                    "co2, pm, iaqs, or off text",
+                );
             };
             let mode = mode.to_ascii_lowercase();
             if !matches!(mode.as_str(), "co2" | "pm" | "iaqs" | "off") {
-                return invalid_command_arguments(request.command_type, "co2, pm, iaqs, or off text");
+                return invalid_command_arguments(
+                    request.command_type,
+                    "co2, pm, iaqs, or off text",
+                );
             }
             Ok(AirGradientCommandPlan {
                 update: configuration_update("ledBarMode", JsonValue::String(mode.clone())),
@@ -722,10 +846,7 @@ fn airgradient_command_plan(
                 return invalid_command_arguments(request.command_type, "a percentage brightness");
             };
             Ok(AirGradientCommandPlan {
-                update: configuration_update(
-                    "ledBarBrightness",
-                    JsonValue::from(brightness),
-                ),
+                update: configuration_update("ledBarBrightness", JsonValue::from(brightness)),
                 expected: Some(ExpectedConfiguration::IndicatorBrightness(brightness)),
             })
         }
@@ -736,10 +857,7 @@ fn airgradient_command_plan(
                 return invalid_command_arguments(request.command_type, "a percentage brightness");
             };
             Ok(AirGradientCommandPlan {
-                update: configuration_update(
-                    "displayBrightness",
-                    JsonValue::from(brightness),
-                ),
+                update: configuration_update("displayBrightness", JsonValue::from(brightness)),
                 expected: Some(ExpectedConfiguration::DisplayBrightness(brightness)),
             })
         }
@@ -750,11 +868,123 @@ fn airgradient_command_plan(
                 return invalid_command_arguments(request.command_type, "null arguments");
             }
             Ok(AirGradientCommandPlan {
-                update: configuration_update(
-                    "co2CalibrationRequested",
-                    JsonValue::Bool(true),
-                ),
+                update: configuration_update("co2CalibrationRequested", JsonValue::Bool(true)),
                 expected: None,
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let Value::Text(unit) = &request.arguments else {
+                return invalid_command_arguments(request.command_type, "c or f text");
+            };
+            let unit = match unit.to_ascii_lowercase().as_str() {
+                "c" => AirGradientTemperatureUnit::Celsius,
+                "f" => AirGradientTemperatureUnit::Fahrenheit,
+                _ => return invalid_command_arguments(request.command_type, "c or f text"),
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "temperatureUnit",
+                    JsonValue::String(unit.as_str().to_string()),
+                ),
+                expected: Some(ExpectedConfiguration::TemperatureUnit(unit)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let Value::Text(standard) = &request.arguments else {
+                return invalid_command_arguments(request.command_type, "ugm3 or us-aqi text");
+            };
+            let standard = match standard.to_ascii_lowercase().as_str() {
+                "ugm3" => AirGradientParticulateDisplayStandard::MicrogramsPerCubicMeter,
+                "us-aqi" => AirGradientParticulateDisplayStandard::UsAqi,
+                _ => return invalid_command_arguments(request.command_type, "ugm3 or us-aqi text"),
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "pmStandard",
+                    JsonValue::String(standard.as_str().to_string()),
+                ),
+                expected: Some(ExpectedConfiguration::ParticulateDisplayStandard(standard)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let days = bounded_integer_argument(&request.arguments, 0, 200).ok_or({
+                AirGradientError::InvalidCommandArguments {
+                    command_type: request.command_type,
+                    expected: "an integer from 0 through 200",
+                }
+            })? as u16;
+            Ok(AirGradientCommandPlan {
+                update: configuration_update("abcDays", JsonValue::from(days)),
+                expected: Some(ExpectedConfiguration::AutomaticCo2BaselineDays(days)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let fields = value_object(&request.arguments).ok_or({
+                AirGradientError::InvalidCommandArguments {
+                    command_type: request.command_type,
+                    expected: "an object with tvoc and nox integer offsets from 0 through 720",
+                }
+            })?;
+            let tvoc = object_bounded_integer(fields, "tvoc", 0, 720).ok_or({
+                AirGradientError::InvalidCommandArguments {
+                    command_type: request.command_type,
+                    expected: "an object with tvoc and nox integer offsets from 0 through 720",
+                }
+            })? as u16;
+            let nox = object_bounded_integer(fields, "nox", 0, 720).ok_or({
+                AirGradientError::InvalidCommandArguments {
+                    command_type: request.command_type,
+                    expected: "an object with tvoc and nox integer offsets from 0 through 720",
+                }
+            })? as u16;
+            let mut update = JsonMap::new();
+            update.insert("tvocLearningOffset".to_string(), JsonValue::from(tvoc));
+            update.insert("noxLearningOffset".to_string(), JsonValue::from(nox));
+            Ok(AirGradientCommandPlan {
+                update: JsonValue::Object(update),
+                expected: Some(ExpectedConfiguration::GasLearningOffsets { tvoc, nox }),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let Value::Bool(enabled) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a boolean");
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "monitorDisplayCompensatedValues",
+                    JsonValue::Bool(enabled),
+                ),
+                expected: Some(ExpectedConfiguration::CompensatedDisplay(enabled)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::TestIndicator)
+            if target == AirGradientCommandTarget::Indicator =>
+        {
+            if request.arguments != Value::Null {
+                return invalid_command_arguments(request.command_type, "null arguments");
+            }
+            Ok(AirGradientCommandPlan {
+                update: configuration_update("ledBarTestRequested", JsonValue::Bool(true)),
+                expected: None,
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
+            if target == AirGradientCommandTarget::Configuration =>
+        {
+            let (sensor, profile, update) = correction_profile_argument(request)?;
+            Ok(AirGradientCommandPlan {
+                update,
+                expected: Some(ExpectedConfiguration::CorrectionProfile { sensor, profile }),
             })
         }
         CommandType::DeviceControl(_) => invalid_command_arguments(
@@ -775,6 +1005,147 @@ fn invalid_command_arguments<T>(
     })
 }
 
+fn value_object(value: &Value) -> Option<&[(String, Value)]> {
+    match value {
+        Value::Object(fields) => Some(fields),
+        _ => None,
+    }
+}
+
+fn object_value<'a>(fields: &'a [(String, Value)], field: &str) -> Option<&'a Value> {
+    fields
+        .iter()
+        .find_map(|(name, value)| (name == field).then_some(value))
+}
+
+fn bounded_integer_argument(value: &Value, min: i64, max: i64) -> Option<i64> {
+    match value {
+        Value::Integer(value) if (min..=max).contains(value) => Some(*value),
+        _ => None,
+    }
+}
+
+fn object_bounded_integer(
+    fields: &[(String, Value)],
+    field: &str,
+    min: i64,
+    max: i64,
+) -> Option<i64> {
+    bounded_integer_argument(object_value(fields, field)?, min, max)
+}
+
+fn object_number(fields: &[(String, Value)], field: &str) -> Option<f64> {
+    match object_value(fields, field)? {
+        Value::Number(value) if value.is_finite() => Some(*value),
+        Value::Integer(value) => Some(*value as f64),
+        _ => None,
+    }
+}
+
+fn correction_profile_argument(
+    request: &RuntimeCommandToolRequest,
+) -> Result<(String, AirGradientCorrectionProfile, JsonValue), AirGradientError> {
+    let fields = value_object(&request.arguments).ok_or({
+        AirGradientError::InvalidCommandArguments {
+            command_type: request.command_type,
+            expected: "a validated correction-profile object",
+        }
+    })?;
+    let sensor = match object_value(fields, "sensor") {
+        Some(Value::Text(sensor)) if matches!(sensor.as_str(), "pm02" | "atmp" | "rhum") => {
+            sensor.clone()
+        }
+        _ => return invalid_command_arguments(request.command_type, "sensor pm02, atmp, or rhum"),
+    };
+    let algorithm = match object_value(fields, "algorithm") {
+        Some(Value::Text(algorithm)) => algorithm.clone(),
+        _ => return invalid_command_arguments(request.command_type, "a correction algorithm"),
+    };
+    let intercept_value = object_value(fields, "intercept");
+    let intercept = object_number(fields, "intercept");
+    let scaling_factor_value = object_value(fields, "scaling_factor");
+    let scaling_factor = object_number(fields, "scaling_factor");
+    let use_epa_2021 = match object_value(fields, "use_epa_2021") {
+        Some(Value::Bool(value)) => Some(*value),
+        None => None,
+        _ => return invalid_command_arguments(request.command_type, "boolean use_epa_2021"),
+    };
+    let requires_slr = match sensor.as_str() {
+        "pm02" => matches!(
+            algorithm.as_str(),
+            "slr_PMS5003_20240104" | "slr_PMS5003_20231218" | "slr_PMS5003_20231030"
+        ),
+        "atmp" | "rhum" => algorithm == "custom",
+        _ => unreachable!(),
+    };
+    let allowed = match sensor.as_str() {
+        "pm02" => matches!(
+            algorithm.as_str(),
+            "none"
+                | "epa_2021"
+                | "slr_PMS5003_20240104"
+                | "slr_PMS5003_20231218"
+                | "slr_PMS5003_20231030"
+        ),
+        "atmp" | "rhum" => matches!(algorithm.as_str(), "none" | "ag_pms5003t_2024" | "custom"),
+        _ => false,
+    };
+    if (intercept_value.is_some() && intercept.is_none())
+        || (scaling_factor_value.is_some() && scaling_factor.is_none())
+        || !allowed
+        || (requires_slr
+            && (intercept.is_none() || !scaling_factor.is_some_and(|value| value > 0.0)))
+        || (!requires_slr
+            && (intercept.is_some() || scaling_factor.is_some() || use_epa_2021.is_some()))
+        || (sensor != "pm02" && use_epa_2021.is_some())
+    {
+        return invalid_command_arguments(
+            request.command_type,
+            "a valid algorithm and SLR profile",
+        );
+    }
+
+    let use_epa_2021 = if requires_slr && sensor == "pm02" {
+        Some(use_epa_2021.unwrap_or(false))
+    } else {
+        use_epa_2021
+    };
+
+    let profile = AirGradientCorrectionProfile {
+        algorithm: algorithm.clone(),
+        intercept,
+        scaling_factor,
+        use_epa_2021,
+    };
+    let mut profile_json = JsonMap::new();
+    profile_json.insert(
+        "correctionAlgorithm".to_string(),
+        JsonValue::String(algorithm),
+    );
+    if requires_slr {
+        let mut slr = JsonMap::new();
+        slr.insert("intercept".to_string(), JsonValue::from(intercept.unwrap()));
+        slr.insert(
+            "scalingFactor".to_string(),
+            JsonValue::from(scaling_factor.unwrap()),
+        );
+        if sensor == "pm02" {
+            slr.insert(
+                "useEpa2021".to_string(),
+                JsonValue::Bool(use_epa_2021.unwrap_or(false)),
+            );
+        }
+        profile_json.insert("slr".to_string(), JsonValue::Object(slr));
+    }
+    let mut corrections = JsonMap::new();
+    corrections.insert(sensor.clone(), JsonValue::Object(profile_json));
+    Ok((
+        sensor,
+        profile,
+        configuration_update("corrections", JsonValue::Object(corrections)),
+    ))
+}
+
 fn configuration_update(field: &str, value: JsonValue) -> JsonValue {
     let mut update = JsonMap::new();
     update.insert(field.to_string(), value);
@@ -782,7 +1153,7 @@ fn configuration_update(field: &str, value: JsonValue) -> JsonValue {
 }
 
 fn configuration_value(configuration: &AirGradientConfiguration) -> Value {
-    Value::Object(vec![
+    let mut fields = vec![
         (
             "mode".to_string(),
             Value::Text(configuration.led_bar_mode.clone()),
@@ -799,7 +1170,76 @@ fn configuration_value(configuration: &AirGradientConfiguration) -> Value {
             "configuration_control".to_string(),
             Value::Text(configuration.control.as_str().to_string()),
         ),
-    ])
+    ];
+    if let Some(unit) = configuration.temperature_unit {
+        fields.push((
+            "temperature_unit".to_string(),
+            Value::Text(unit.as_str().to_string()),
+        ));
+    }
+    if let Some(standard) = configuration.particulate_display_standard {
+        fields.push((
+            "particulate_display_standard".to_string(),
+            Value::Text(standard.as_str().to_string()),
+        ));
+    }
+    if let Some(days) = configuration.automatic_co2_baseline_days {
+        fields.push((
+            "automatic_co2_baseline_days".to_string(),
+            Value::Integer(i64::from(days)),
+        ));
+    }
+    if let Some(offset) = configuration.tvoc_learning_offset {
+        fields.push((
+            "tvoc_learning_offset".to_string(),
+            Value::Integer(i64::from(offset)),
+        ));
+    }
+    if let Some(offset) = configuration.nox_learning_offset {
+        fields.push((
+            "nox_learning_offset".to_string(),
+            Value::Integer(i64::from(offset)),
+        ));
+    }
+    if let Some(enabled) = configuration.monitor_display_compensated_values {
+        fields.push((
+            "monitor_display_compensated_values".to_string(),
+            Value::Bool(enabled),
+        ));
+    }
+    if !configuration.corrections.is_empty() {
+        fields.push((
+            "corrections".to_string(),
+            Value::Object(
+                configuration
+                    .corrections
+                    .iter()
+                    .map(|(sensor, profile)| {
+                        let mut profile_fields = vec![(
+                            "algorithm".to_string(),
+                            Value::Text(profile.algorithm.clone()),
+                        )];
+                        if let Some(intercept) = profile.intercept {
+                            profile_fields
+                                .push(("intercept".to_string(), Value::Number(intercept)));
+                        }
+                        if let Some(scaling_factor) = profile.scaling_factor {
+                            profile_fields.push((
+                                "scaling_factor".to_string(),
+                                Value::Number(scaling_factor),
+                            ));
+                        }
+                        if let Some(use_epa_2021) = profile.use_epa_2021 {
+                            profile_fields
+                                .push(("use_epa_2021".to_string(), Value::Bool(use_epa_2021)));
+                        }
+                        (sensor.clone(), Value::Object(profile_fields))
+                    })
+                    .collect(),
+            ),
+        ));
+    }
+    Value::Object(fields)
 }
 
 fn authorize_read(
@@ -842,7 +1282,124 @@ fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, Air
         led_bar_mode: required_string(data, "ledBarMode")?.to_ascii_lowercase(),
         led_bar_brightness: required_percentage(data, "ledBarBrightness")?,
         display_brightness: required_percentage(data, "displayBrightness")?,
+        temperature_unit: optional_temperature_unit(data)?,
+        particulate_display_standard: optional_particulate_display_standard(data)?,
+        automatic_co2_baseline_days: optional_bounded_u16(data, "abcDays", 200)?,
+        tvoc_learning_offset: optional_bounded_u16(data, "tvocLearningOffset", 720)?,
+        nox_learning_offset: optional_bounded_u16(data, "noxLearningOffset", 720)?,
+        monitor_display_compensated_values: optional_bool(data, "monitorDisplayCompensatedValues")?,
+        corrections: parse_corrections(data)?,
     })
+}
+
+fn optional_temperature_unit(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<Option<AirGradientTemperatureUnit>, AirGradientError> {
+    let Some(value) = data.get("temperatureUnit") else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    match value.as_str().map(str::to_ascii_lowercase).as_deref() {
+        Some("c") => Ok(Some(AirGradientTemperatureUnit::Celsius)),
+        Some("f") => Ok(Some(AirGradientTemperatureUnit::Fahrenheit)),
+        _ => Err(AirGradientError::Validation(
+            "temperatureUnit must be c or f".to_string(),
+        )),
+    }
+}
+
+fn optional_particulate_display_standard(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<Option<AirGradientParticulateDisplayStandard>, AirGradientError> {
+    let Some(value) = data.get("pmStandard") else {
+        return Ok(None);
+    };
+    match value.as_str().map(str::to_ascii_lowercase).as_deref() {
+        Some("ugm3") => Ok(Some(
+            AirGradientParticulateDisplayStandard::MicrogramsPerCubicMeter,
+        )),
+        Some("us-aqi") => Ok(Some(AirGradientParticulateDisplayStandard::UsAqi)),
+        _ => Err(AirGradientError::Validation(
+            "pmStandard must be ugm3 or us-aqi".to_string(),
+        )),
+    }
+}
+
+fn optional_bounded_u16(
+    data: &JsonMap<String, JsonValue>,
+    field: &'static str,
+    max: u16,
+) -> Result<Option<u16>, AirGradientError> {
+    let Some(value) = data.get(field) else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    value
+        .as_u64()
+        .and_then(|value| u16::try_from(value).ok())
+        .filter(|value| *value <= max)
+        .map(Some)
+        .ok_or_else(|| AirGradientError::Validation(format!("{field} must be from 0 to {max}")))
+}
+
+fn optional_bool(
+    data: &JsonMap<String, JsonValue>,
+    field: &'static str,
+) -> Result<Option<bool>, AirGradientError> {
+    let Some(value) = data.get(field) else {
+        return Ok(None);
+    };
+    if value.is_null() {
+        return Ok(None);
+    }
+    value
+        .as_bool()
+        .map(Some)
+        .ok_or_else(|| AirGradientError::Validation(format!("{field} must be boolean")))
+}
+
+fn parse_corrections(
+    data: &JsonMap<String, JsonValue>,
+) -> Result<BTreeMap<String, AirGradientCorrectionProfile>, AirGradientError> {
+    let Some(corrections) = data.get("corrections") else {
+        return Ok(BTreeMap::new());
+    };
+    if corrections.is_null() {
+        return Ok(BTreeMap::new());
+    }
+    let corrections = corrections
+        .as_object()
+        .ok_or_else(|| AirGradientError::Validation("corrections must be an object".to_string()))?;
+    corrections
+        .iter()
+        .map(|(sensor, value)| {
+            let profile = value.as_object().ok_or_else(|| {
+                AirGradientError::Validation(format!("corrections.{sensor} must be an object"))
+            })?;
+            let algorithm = required_string(profile, "correctionAlgorithm")?;
+            let slr = profile.get("slr").and_then(JsonValue::as_object);
+            let number = |field: &str| {
+                slr.and_then(|slr| slr.get(field))
+                    .and_then(JsonValue::as_f64)
+                    .filter(|value| value.is_finite())
+            };
+            Ok((
+                sensor.clone(),
+                AirGradientCorrectionProfile {
+                    algorithm,
+                    intercept: number("intercept"),
+                    scaling_factor: number("scalingFactor"),
+                    use_epa_2021: slr
+                        .and_then(|slr| slr.get("useEpa2021"))
+                        .and_then(JsonValue::as_bool),
+                },
+            ))
+        })
+        .collect()
 }
 
 fn parse_snapshot(data: &JsonValue) -> Result<AirGradientSnapshot, AirGradientError> {
@@ -976,9 +1533,7 @@ fn required_percentage(
     u8::try_from(value)
         .ok()
         .filter(|value| *value <= 100)
-        .ok_or_else(|| {
-            AirGradientError::Validation(format!("{field} must be between 0 and 100"))
-        })
+        .ok_or_else(|| AirGradientError::Validation(format!("{field} must be between 0 and 100")))
 }
 
 fn measurement_value(measurement: &AirGradientMeasurement) -> Value {
@@ -1222,6 +1777,20 @@ mod tests {
     const CONFIG_LED_35: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":70}"#;
     const CONFIG_DISPLAY_25: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":25}"#;
 
+    fn advanced_config(
+        temperature_unit: &str,
+        pm_standard: &str,
+        abc_days: u16,
+        tvoc_offset: u16,
+        nox_offset: u16,
+        compensated: bool,
+        corrections: &str,
+    ) -> String {
+        format!(
+            r#"{{"configurationControl":"both","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70,"temperatureUnit":"{temperature_unit}","pmStandard":"{pm_standard}","abcDays":{abc_days},"tvocLearningOffset":{tvoc_offset},"noxLearningOffset":{nox_offset},"monitorDisplayCompensatedValues":{compensated},"corrections":{corrections}}}"#
+        )
+    }
+
     fn response(body: &str) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len()).into_bytes()
     }
@@ -1342,7 +1911,7 @@ mod tests {
             .inspect_and_install_authorized(&mut runtime, principal, 5_000)
             .unwrap();
         handle.join().unwrap();
-        assert_eq!(installed.entity_ids.len(), 13);
+        assert_eq!(installed.entity_ids.len(), 14);
         let co2 = runtime
             .registry()
             .entity(&EntityId::trusted(format!(
@@ -1373,6 +1942,15 @@ mod tests {
             .capabilities
             .iter()
             .any(|capability| capability.capability_id.as_str() == "device.display"));
+        let configuration = runtime
+            .registry()
+            .entity(&EntityId::trusted("airgradient:ecda3b1eaaaf:configuration"))
+            .unwrap();
+        assert_eq!(configuration.kind, EntityKind::Input);
+        assert!(configuration
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "device.configuration"));
         assert!(co2
             .capabilities
             .iter()
@@ -1645,6 +2223,143 @@ mod tests {
     }
 
     #[test]
+    fn loopback_authorized_typed_configuration_controls_are_verified() {
+        let raw = r#"{"atmp":{"correctionAlgorithm":"none","slr":null}}"#;
+        let custom = r#"{"atmp":{"correctionAlgorithm":"custom","slr":{"intercept":0.2,"scalingFactor":1.1}}}"#;
+        let initial = advanced_config("c", "ugm3", 8, 12, 12, false, raw);
+        let fahrenheit = advanced_config("f", "ugm3", 8, 12, 12, false, raw);
+        let us_aqi = advanced_config("f", "us-aqi", 8, 12, 12, false, raw);
+        let abc = advanced_config("f", "us-aqi", 30, 12, 12, false, raw);
+        let gas = advanced_config("f", "us-aqi", 30, 24, 48, false, raw);
+        let compensated = advanced_config("f", "us-aqi", 30, 24, 48, true, raw);
+        let corrected = advanced_config("f", "us-aqi", 30, 24, 48, true, custom);
+        let bodies = vec![
+            MEASUREMENTS.to_string(),
+            initial.clone(),
+            initial,
+            "{}".to_string(),
+            fahrenheit.clone(),
+            fahrenheit,
+            "{}".to_string(),
+            us_aqi.clone(),
+            us_aqi,
+            "{}".to_string(),
+            abc.clone(),
+            abc,
+            "{}".to_string(),
+            gas.clone(),
+            gas,
+            "{}".to_string(),
+            compensated.clone(),
+            compensated.clone(),
+            "{}".to_string(),
+            compensated,
+            "{}".to_string(),
+            corrected,
+        ];
+        let (port, requests, handle) =
+            start_server(bodies.iter().map(|body| response(body)).collect());
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:airgradient-settings");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        let configuration = EntityId::trusted("airgradient:ecda3b1eaaaf:configuration");
+        let indicator = EntityId::trusted("airgradient:ecda3b1eaaaf:indicator");
+        let commands = [
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit),
+                Value::Text("f".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetParticulateDisplayStandard),
+                Value::Text("us-aqi".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays),
+                Value::Integer(30),
+            ),
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets),
+                Value::Object(vec![
+                    ("tvoc".to_string(), Value::Integer(24)),
+                    ("nox".to_string(), Value::Integer(48)),
+                ]),
+            ),
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay),
+                Value::Bool(true),
+            ),
+            RuntimeCommandToolRequest::new(
+                indicator,
+                CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
+                Value::Null,
+            ),
+            RuntimeCommandToolRequest::new(
+                configuration.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+                Value::Object(vec![
+                    ("sensor".to_string(), Value::Text("atmp".to_string())),
+                    ("algorithm".to_string(), Value::Text("custom".to_string())),
+                    ("intercept".to_string(), Value::Number(0.2)),
+                    ("scaling_factor".to_string(), Value::Number(1.1)),
+                ]),
+            ),
+        ];
+        for (index, request) in commands.into_iter().enumerate() {
+            integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    request,
+                    6_000 + index as u64,
+                )
+                .unwrap();
+        }
+        let state = runtime
+            .registry()
+            .entity(&configuration)
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert_eq!(state.confidence, StateConfidence::Confirmed);
+        assert!(matches!(
+            &state.value,
+            Value::Object(fields)
+                if fields.contains(&("temperature_unit".to_string(), Value::Text("f".to_string())))
+                    && fields.contains(&("automatic_co2_baseline_days".to_string(), Value::Integer(30)))
+                    && fields.contains(&("monitor_display_compensated_values".to_string(), Value::Bool(true)))
+        ));
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 22);
+        let put_requests = requests
+            .iter()
+            .filter(|request| request.starts_with(&format!("PUT {CONFIGURATION_PATH}")))
+            .collect::<Vec<_>>();
+        assert_eq!(put_requests.len(), 7);
+        assert!(put_requests[0].contains(r#"{"temperatureUnit":"f"}"#));
+        assert!(put_requests[1].contains(r#"{"pmStandard":"us-aqi"}"#));
+        assert!(put_requests[2].contains(r#"{"abcDays":30}"#));
+        assert!(put_requests[3].contains(r#""tvocLearningOffset":24"#));
+        assert!(put_requests[3].contains(r#""noxLearningOffset":48"#));
+        assert!(put_requests[4].contains(r#"{"monitorDisplayCompensatedValues":true}"#));
+        assert!(put_requests[5].contains(r#"{"ledBarTestRequested":true}"#));
+        assert!(put_requests[6].contains(r#""correctionAlgorithm":"custom""#));
+        assert!(put_requests[6].contains(r#""scalingFactor":1.1"#));
+    }
+
+    #[test]
     fn parser_requires_identity_and_known_measurements() {
         let missing_identity: JsonValue = serde_json::from_str(r#"{"rco2":447}"#).unwrap();
         assert!(matches!(
@@ -1685,6 +2400,33 @@ mod tests {
         assert_eq!(configuration.led_bar_brightness, 80);
         assert_eq!(configuration.display_brightness, 70);
 
+        let advanced = advanced_config(
+            "f",
+            "us-aqi",
+            30,
+            24,
+            48,
+            true,
+            r#"{"pm02":{"correctionAlgorithm":"epa_2021","slr":null}}"#,
+        );
+        let configuration = parse_configuration(&serde_json::from_str(&advanced).unwrap()).unwrap();
+        assert_eq!(
+            configuration.temperature_unit,
+            Some(AirGradientTemperatureUnit::Fahrenheit)
+        );
+        assert_eq!(
+            configuration.particulate_display_standard,
+            Some(AirGradientParticulateDisplayStandard::UsAqi)
+        );
+        assert_eq!(configuration.automatic_co2_baseline_days, Some(30));
+        assert_eq!(configuration.tvoc_learning_offset, Some(24));
+        assert_eq!(configuration.nox_learning_offset, Some(48));
+        assert_eq!(configuration.monitor_display_compensated_values, Some(true));
+        assert_eq!(
+            configuration.corrections.get("pm02").unwrap().algorithm,
+            "epa_2021"
+        );
+
         let invalid = serde_json::from_str(
             r#"{"configurationControl":"cloudish","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":101}"#,
         )
@@ -1693,6 +2435,76 @@ mod tests {
             parse_configuration(&invalid),
             Err(AirGradientError::Validation(_))
         ));
+    }
+
+    #[test]
+    fn correction_profiles_reject_invalid_sensor_algorithm_and_slr_shapes() {
+        let targets = BTreeMap::from([(
+            EntityId::trusted("airgradient:test:configuration"),
+            AirGradientCommandTarget::Configuration,
+        )]);
+        for arguments in [
+            Value::Object(vec![
+                ("sensor".to_string(), Value::Text("rco2".to_string())),
+                ("algorithm".to_string(), Value::Text("none".to_string())),
+            ]),
+            Value::Object(vec![
+                ("sensor".to_string(), Value::Text("atmp".to_string())),
+                ("algorithm".to_string(), Value::Text("custom".to_string())),
+                ("intercept".to_string(), Value::Number(0.2)),
+            ]),
+            Value::Object(vec![
+                ("sensor".to_string(), Value::Text("pm02".to_string())),
+                ("algorithm".to_string(), Value::Text("epa_2021".to_string())),
+                ("scaling_factor".to_string(), Value::Number(1.0)),
+            ]),
+            Value::Object(vec![
+                ("sensor".to_string(), Value::Text("pm02".to_string())),
+                ("algorithm".to_string(), Value::Text("none".to_string())),
+                ("intercept".to_string(), Value::Text("zero".to_string())),
+            ]),
+        ] {
+            let request = RuntimeCommandToolRequest::new(
+                EntityId::trusted("airgradient:test:configuration"),
+                CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+                arguments,
+            );
+            assert!(matches!(
+                airgradient_command_plan(&targets, &request),
+                Err(AirGradientError::InvalidCommandArguments { .. })
+            ));
+        }
+    }
+
+    #[test]
+    fn pm_slr_profile_normalizes_omitted_epa_flag_for_readback() {
+        let entity_id = EntityId::trusted("airgradient:test:configuration");
+        let targets =
+            BTreeMap::from([(entity_id.clone(), AirGradientCommandTarget::Configuration)]);
+        let request = RuntimeCommandToolRequest::new(
+            entity_id,
+            CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+            Value::Object(vec![
+                ("sensor".to_string(), Value::Text("pm02".to_string())),
+                (
+                    "algorithm".to_string(),
+                    Value::Text("slr_PMS5003_20240104".to_string()),
+                ),
+                ("intercept".to_string(), Value::Number(1.2)),
+                ("scaling_factor".to_string(), Value::Number(0.8)),
+            ]),
+        );
+
+        let plan = airgradient_command_plan(&targets, &request).unwrap();
+        let ExpectedConfiguration::CorrectionProfile { profile, .. } = plan.expected.unwrap()
+        else {
+            panic!("expected a correction profile readback");
+        };
+        assert_eq!(profile.use_epa_2021, Some(false));
+        assert_eq!(
+            plan.update["corrections"]["pm02"]["slr"]["useEpa2021"],
+            JsonValue::Bool(false)
+        );
     }
 
     #[test]
