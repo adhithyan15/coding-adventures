@@ -22,8 +22,8 @@ The protocol core owns only:
 
 It does not open sockets, resolve DNS, select TLS, generate randomness, run an
 event loop, schedule keepalives, retry connections, or dispatch application
-commands. A later `websocket-runtime` package composes this core with TCP and
-the repository stream/event abstractions.
+commands. [`websocket-runtime.md`](websocket-runtime.md) composes this core
+with TCP and the repository stream/event abstractions.
 
 ```text
 tcp / stream reactor
@@ -182,5 +182,6 @@ The Rust package must cover at least 95 percent of lines and include:
 - close-code/reason validation and close echo construction; and
 - payload-free stable error diagnostics.
 
-Real TCP and browser interoperability tests belong to `websocket-runtime`,
-where connection scheduling and operating-system I/O exist.
+Real TCP and browser-wire interoperability tests belong to
+[`websocket-runtime`](websocket-runtime.md), where connection scheduling and
+operating-system I/O exist.
