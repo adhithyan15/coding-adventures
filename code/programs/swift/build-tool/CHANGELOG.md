@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Decode Lua `.rockspec` metadata as strict UTF-8 before dependency parsing.
+  Invalid bytes now fail closed with `METADATA_INVALID_UTF8`, stable package
+  and repository-relative manifest identity, CLI exit code `2`, and no
+  checkout-path disclosure. Resolver and CLI coverage consume the shared
+  positive and invalid-byte conformance fixtures and require the exact
+  expected edge set.
+
 ## 0.1.0
 
 - Added a full Swift port of the monorepo build tool.

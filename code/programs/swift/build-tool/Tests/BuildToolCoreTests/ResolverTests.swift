@@ -54,7 +54,7 @@ struct ResolverTests {
             """
         )
 
-        let graph = Resolver.resolveDependencies(
+        let graph = try Resolver.resolveDependencies(
             packages: [
                 BuildPackage(name: "swift/trig", path: trigPath, language: "swift"),
                 BuildPackage(name: "swift/arc2d", path: arcPath, language: "swift"),
@@ -63,5 +63,92 @@ struct ResolverTests {
 
         #expect(graph.successors(of: "swift/trig") == ["swift/arc2d"])
         #expect(graph.predecessors(of: "swift/arc2d") == ["swift/trig"])
+    }
+
+    @Test
+    func luaResolutionConsumesSharedUTF8Fixtures() throws {
+        for name in ["resolution-lua-utf8.json", "resolution-lua-invalid-utf8.json"] {
+            let fixture = try loadSharedResolutionFixture(name)
+            let materialized = try materializeSharedResolutionFixture(fixture, label: "resolver_fixture")
+            defer { try? FileManager.default.removeItem(atPath: materialized.root) }
+
+            if fixture.expected.outcome == "ok" {
+                let graph = try Resolver.resolveDependencies(packages: materialized.packages)
+                let actualEdges = graph.edges()
+                    .map { [$0.0, $0.1] }
+                    .sorted { $0.joined(separator: "\0") < $1.joined(separator: "\0") }
+                let expectedEdges = (fixture.expected.result.edges ?? [])
+                    .sorted { $0.joined(separator: "\0") < $1.joined(separator: "\0") }
+                #expect(actualEdges == expectedEdges)
+                continue
+            }
+
+            do {
+                _ = try Resolver.resolveDependencies(packages: materialized.packages)
+                Issue.record("invalid UTF-8 metadata must fail closed")
+            } catch let error as MetadataEncodingError {
+                let diagnostic = try #require(fixture.expected.diagnostics.first)
+                #expect(error.code == diagnostic.code)
+                #expect(error.package == diagnostic.package)
+                #expect(error.manifest == diagnostic.path)
+                #expect(error.encoding == diagnostic.details.encoding)
+                #expect(
+                    error.localizedDescription ==
+                        "\(diagnostic.code): package=\(diagnostic.package) manifest=\(diagnostic.path) encoding=\(diagnostic.details.encoding)"
+                )
+                #expect(!error.localizedDescription.contains(materialized.root))
+            } catch {
+                Issue.record("expected MetadataEncodingError, got \(error)")
+            }
+        }
+    }
+
+    @Test
+    func cliReturnsExitTwoForInvalidUTF8Metadata() throws {
+        let fixture = try loadSharedResolutionFixture("resolution-lua-invalid-utf8.json")
+        let materialized = try materializeSharedResolutionFixture(fixture, label: "resolver_cli")
+        defer { try? FileManager.default.removeItem(atPath: materialized.root) }
+
+        let exitCode = BuildTool.run(
+            arguments: [
+                "--root", materialized.root,
+                "--force",
+                "--dry-run",
+                "--language", "lua",
+            ]
+        )
+
+        #expect(exitCode == 2)
+    }
+
+    @Test
+    func realCLIFailsClosedOnSharedInvalidUTF8Fixture() throws {
+        let fixture = try loadSharedResolutionFixture("resolution-lua-invalid-utf8.json")
+        let materialized = try materializeSharedResolutionFixture(fixture, label: "resolver_real_cli")
+        defer { try? FileManager.default.removeItem(atPath: materialized.root) }
+
+        let process = Process()
+        let stdout = Pipe()
+        let stderr = Pipe()
+        process.executableURL = try buildToolExecutableURL()
+        process.arguments = [
+            "--root", materialized.root,
+            "--force",
+            "--dry-run",
+            "--language", "lua",
+        ]
+        process.standardOutput = stdout
+        process.standardError = stderr
+        try process.run()
+        process.waitUntilExit()
+
+        let diagnostic = try #require(fixture.expected.diagnostics.first)
+        let expected =
+            "\(diagnostic.code): package=\(diagnostic.package) manifest=\(diagnostic.path) encoding=\(diagnostic.details.encoding)\n"
+        let actualStderr = String(decoding: stderr.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+
+        #expect(process.terminationStatus == 2)
+        #expect(actualStderr == expected)
+        #expect(!actualStderr.contains(materialized.root))
     }
 }

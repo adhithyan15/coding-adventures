@@ -15,6 +15,20 @@ This port mirrors the other build-tool implementations in the repo:
 7. Emits and consumes JSON build plans for CI
 8. Validates the CI full-build toolchain contract
 
+## Metadata safety
+
+Lua `.rockspec` files are decoded as strict UTF-8 before dependency parsing.
+Invalid bytes stop resolution, return CLI exit code `2`, and emit a stable
+diagnostic with package and repository-relative manifest identity:
+
+```text
+METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec encoding=UTF-8
+```
+
+The resolver tests consume the language-neutral `resolution/lua-utf8` and
+`resolution/lua-invalid-utf8` fixtures, require the exact success edge set,
+and verify that diagnostics never expose the checkout root.
+
 ## Usage
 
 ```bash
