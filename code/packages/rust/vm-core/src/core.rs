@@ -110,6 +110,21 @@ pub struct VMCore {
     /// `store_mem` with ever-increasing addresses.  Default: 1_000_000.
     pub max_memory_entries: usize,
 
+    /// Aggregate ceiling on live bytes across every `gc_alloc`'d object
+    /// (`FlatHeap::live_bytes`), checked before each allocation alongside
+    /// `max_memory_entries`'s object-*count* cap.
+    ///
+    /// `max_memory_entries` bounds how many objects can be live at once, but
+    /// says nothing about any single object's size — `gc_alloc [<size_bytes>]`
+    /// takes an explicit, IR-controlled byte count, so a handful of
+    /// allocations each requesting gigabytes would pass the count cap
+    /// outright. This is a genuinely separate unit (bytes, not a count) from
+    /// `max_memory_entries`, so it's its own field rather than a derived
+    /// multiple. Default: 64 MiB — generous enough for a legitimate large
+    /// single allocation (e.g. a multi-megabyte byte buffer) while still
+    /// bounding runaway per-allocation requests.
+    pub max_gc_heap_bytes: usize,
+
     /// Optional hard cap on the total number of instructions dispatched per
     /// `execute()` call.
     ///
@@ -232,6 +247,7 @@ impl VMCore {
             profiler_enabled: true,
             max_frames: 512,
             max_memory_entries: 1_000_000,
+            max_gc_heap_bytes: 64 * 1024 * 1024,
             max_instructions: None, // unlimited — trusted code path
             frames: Vec::new(),
             memory: HashMap::new(),
@@ -367,6 +383,7 @@ impl VMCore {
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
+            max_gc_heap_bytes: self.max_gc_heap_bytes,
             // Use saturating_add so that a near-u64::MAX metrics_instrs + a
             // large limit does not overflow (which would panic in debug builds
             // or wrap silently in release builds, disabling the limit).
@@ -443,6 +460,7 @@ impl VMCore {
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
+            max_gc_heap_bytes: self.max_gc_heap_bytes,
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,

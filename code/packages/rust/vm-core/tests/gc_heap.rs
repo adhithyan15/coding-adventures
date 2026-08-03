@@ -189,6 +189,36 @@ fn gc_alloc_is_capped_and_collection_frees_room_under_the_cap() {
     assert!(vm.execute(&mut m, "main", &[]).unwrap().is_some(), "collection must free room under the cap");
 }
 
+/// `gc_alloc` is *also* capped by `max_gc_heap_bytes` — a separate,
+/// security-motivated fix: `max_memory_entries` only bounds the *count* of
+/// live objects, not any single allocation's size, and `gc_alloc`'s size
+/// operand is fully IR-controlled. A handful of allocations each requesting
+/// gigabytes would pass the count cap outright without this. One
+/// over-the-byte-budget request must trap even though it is only the first
+/// (and only) allocation, well under `max_memory_entries`.
+#[test]
+fn gc_alloc_is_capped_by_aggregate_byte_budget_independent_of_object_count() {
+    let f = IIRFunction::new(
+        "main", vec![], "i64",
+        vec![
+            ins("gc_alloc", Some("c"), vec![Operand::Int(1_000)], "ref<bytes>"),
+            ins("ret", None, vec![Operand::Int(1)], "i64"),
+        ],
+    );
+    let mut m = IIRModule::new("gc_heap", "gc_heap");
+    m.add_or_replace(f);
+    let mut vm = VMCore::new();
+    // Plenty of room under the object-count cap (default 1_000_000), but far
+    // less than the requested 1,000 bytes.
+    vm.max_gc_heap_bytes = 100;
+
+    let r = vm.execute(&mut m, "main", &[]);
+    assert!(
+        r.is_err(),
+        "a single allocation exceeding max_gc_heap_bytes must trap even under the object-count cap, got {r:?}"
+    );
+}
+
 /// The headline property: `gc_collect` actually reclaims an unreachable
 /// object while keeping a reachable one. `keep = gc_alloc; { garbage =
 /// gc_alloc } (garbage goes out of scope — nothing roots it); gc_collect;

@@ -75,6 +75,10 @@ pub struct DispatchCtx<'a> {
     /// `io_out` return `VMError::Custom`.  Guards against unbounded HashMap
     /// growth from looping IIR programs.
     pub max_memory_entries: usize,
+    /// Aggregate live-byte ceiling `handle_gc_alloc` enforces against
+    /// `FlatHeap::live_bytes`, alongside `max_memory_entries`'s object-count
+    /// cap. See [`crate::core::VMCore`]'s field of the same name.
+    pub max_gc_heap_bytes: usize,
     /// Optional hard cap on total instructions dispatched.  `None` = unlimited
     /// (safe for trusted code); `Some(N)` returns `VMError::Custom` after N
     /// instructions (sandbox / untrusted-IIR mode).
@@ -1029,16 +1033,33 @@ fn reserve_nil_handle(ctx: &mut DispatchCtx) {
     }
 }
 
-/// `is_null d <- x` — `d = (x is nil)`. The E6d list terminator (`null?`, empty
-/// list) is the `Int(0)` sentinel; every real cons cell is a heap handle ≥ 1
-/// (handle `0` is reserved — see [`reserve_nil_handle`]), so nil-ness is exactly
-/// `x == Int(0)`. Returns a boolean, which a downstream `jmp_if_false` branches on.
+/// `is_null d <- x` — `d = (x is nil)`. The E6d list terminator (`null?`,
+/// empty list) is the `const Int(0) : ref<LispyPair>` sentinel emitted by the
+/// frontend, which `handle_const` yields as plain `Value::Int(0)` (it ignores
+/// `type_hint`); every real cons cell is a `Value::HeapRef` from
+/// `handle_gc_alloc`, a distinct enum variant, so `x == Int(0)` already
+/// separates the two correctly. Nil stored into a field via `gc_field_store`
+/// and read back via `gc_field_load` also round-trips as `Value::Int(0)` —
+/// the tag-based decode (see [`FIELD_TAG_MASK`]) reads its tag as `000`
+/// (plain int), never `111` (heap ref), regardless of the load's type hint.
+///
+/// The `Value::HeapRef(r) if r.is_null()` arm below is therefore defensive,
+/// not currently reachable through any path `dispatch.rs` itself exercises
+/// (nothing here ever constructs or stores a null `HeapRef` — `gc_alloc`
+/// fails outright rather than returning one) — kept so `is_null` stays
+/// correct even if a future caller (a hand-built IIR module, a different
+/// frontend) ever produces one directly.
 fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let x = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         resolve_src(frame, &instr.srcs, 0)?
     };
-    let result = Value::Bool(x == Value::Int(0));
+    let is_null = match &x {
+        Value::Int(0) => true,
+        Value::HeapRef(r) => r.is_null(),
+        _ => false,
+    };
+    let result = Value::Bool(is_null);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, result.clone());
     }
@@ -1066,76 +1087,31 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     Ok(Some(v))
 }
 
-/// `alloc [<size_bytes>] -> dest` — allocate a fixed-size heap object (a cons
-/// cell / record node) on the shared `ctx.arrays` heap, returning its integer
-/// handle.
-///
-/// E6d records/unions/closures build their `(car . cdr)` cells with this op — the
-/// same word-granular heap the native/LLVM (`__twig_gc_alloc`) and structural
-/// (`object[]`) backends use, so the generic VM now runs those dynamic features
-/// too. A field is one 8-byte word, so the element count is `size_bytes / 8`;
-/// with no operand it defaults to 16 bytes = a 2-word `LispyPair`, matching the
-/// native allocator's default. `field_store` / `field_load` then write/read fields
-/// with the identical handle+index model as `array_set` / `array_get` (they route
-/// to those handlers), and this shares the array heap's `max_memory_entries`
-/// aggregate ceiling, so no crafted `alloc` can OOM the process.
-///
-/// Handle `0` is reserved (see [`reserve_nil_handle`]) so no live object is ever
-/// handle `0`; that makes the nil sentinel (`const Int(0)`) distinguishable from
-/// every real cons cell, which is what lets `is_null` (list `null?`) be exact.
-fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let bytes = {
-        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        match instr.srcs.first() {
-            Some(_) => resolve_src(frame, &instr.srcs, 0)?.as_i64().ok_or_else(|| {
-                VMError::Custom("alloc size must be an integer".into())
-            })?,
-            None => 16,
-        }
-    };
-    // A field is one 8-byte word; always at least one word.
-    let count = (bytes / 8).max(1) as usize;
-    // Same aggregate DoS ceiling as `alloc_array`: bound both the number of live
-    // allocations and the running total of elements across them.
-    if ctx.arrays.len() >= ctx.max_memory_entries {
-        return Err(VMError::Custom(format!(
-            "allocation count exceeds the {} allocation cap",
-            ctx.max_memory_entries
-        )));
-    }
-    let live_elems: usize = ctx.arrays.iter().map(|a| a.len()).sum();
-    if live_elems.saturating_add(count) > ctx.max_memory_entries {
-        return Err(VMError::Custom(format!(
-            "alloc of {count} words would exceed the {} total-element cap (live: {live_elems})",
-            ctx.max_memory_entries
-        )));
-    }
-    reserve_nil_handle(ctx);
-    let handle = ctx.arrays.len() as i64;
-    ctx.arrays.push(vec![Value::Int(0); count]);
-    let value = Value::Int(handle);
-    if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
-    }
-    Ok(Some(value))
-}
-
 // ---------------------------------------------------------------------------
-// GC-managed heap objects — `gc_alloc` / `gc_field_load` / `gc_field_store` /
-// `safepoint` / `gc_collect`
+// GC-managed heap objects — `alloc` / `field_load` / `field_store` / `is_null`
+// / `gc_alloc` / `gc_field_load` / `gc_field_store` / `safepoint` / `gc_collect`
 // ---------------------------------------------------------------------------
 //
-// Everything above (`alloc`, `alloc_array`, `field_store`, `field_load`) lives
-// on `ctx.arrays`, a plain Rust bump arena that is never collected. These four
-// ops are the **additive** GC-managed alternative: they allocate on the same
-// `FlatHeap` engine (`ctx.heap`) the native-AOT backends share via
-// `gc-core-capi`, just linked directly as a Rust dependency. A `gc_alloc`'d
-// object's fields are raw 64-bit words — no NaN-boxing — mirroring exactly
-// how the native cons-cell path represents a pair (see aarch64-backend's
-// `alloc` op doc comment): a word is either a nested `Value::HeapRef`'s raw
-// address or a plain `Value::Int`, decoded on load by `instr.type_hint`
-// (`"ref..."` vs. anything else), same convention `gc-core::HeapRef`'s own
-// docs establish ("registers typed `ref<T>`").
+// `alloc`/`field_store`/`field_load` are what Twig's compiler actually emits
+// for E6d records/unions/closures/cons cells (`twig-ir-compiler`,
+// `iir-builtin-lowering::heap`) — they route directly to `handle_gc_alloc`/
+// `handle_gc_field_store`/`handle_gc_field_load` below, allocating on the
+// same shared `FlatHeap` engine (`ctx.heap`) the native-AOT backends use via
+// `gc-core-capi`, just linked directly as a Rust dependency. Only
+// `alloc_array`/`array_get`/`array_set` (E5 arrays) still live on the plain,
+// never-collected `ctx.arrays` bump arena — a deliberate, separate heap, not
+// an oversight (arrays have no analogous "real" collector to reuse yet).
+//
+// A `gc_alloc`'d object's fields are raw 64-bit words — no NaN-boxing at the
+// `FlatHeap` level. A word is either a nested `Value::HeapRef`'s raw address
+// or a plain `Value::Int`, disambiguated by a 3-bit tag carried in the word
+// itself (see `FIELD_TAG_MASK`'s doc comment) rather than `instr.type_hint`
+// — a dynamically-typed lisp field (`ref<any>`) can hold either at the same
+// position, so the hint alone can't tell them apart. `Value::Float`/`Bool`/
+// `Str` have no representation in this tag scheme and are rejected — no
+// Twig lowering pass stores one directly into a record/union/closure field
+// on any backend today, so this is pre-existing unsupported territory, not
+// a regression.
 //
 // Objects here are allocated at kind `0` (opaque/conservative): every payload
 // word is a mark candidate, which is always sound (a look-alike integer that
@@ -1147,13 +1123,17 @@ fn handle_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
 // conservative" invariant.
 
 /// `gc_alloc [<size_bytes>] -> dest` — allocate a GC-managed heap object on
-/// the shared `FlatHeap` collector, returning a `Value::HeapRef`.
+/// the shared `FlatHeap` collector, returning a `Value::HeapRef`. Also the
+/// handler for the `alloc` opcode string Twig's compiler actually emits
+/// (every `alloc` emission site in `twig-ir-compiler`/`iir-builtin-lowering`
+/// passes zero operands with `type_hint = "ref<LispyPair>"`, i.e. always the
+/// no-operand/16-byte default below — a like-for-like swap from the old
+/// never-collected `ctx.arrays`-backed allocator).
 ///
 /// `srcs[0]` is an optional compile-time byte count; defaults to 16 (two
-/// 8-byte words, matching `alloc`'s and the native backends' default pair
-/// size). Traced, reclaimed, and — once a `safepoint` runs a compacting
-/// cycle — relocated by the real collector, unlike `alloc`'s array-heap
-/// objects.
+/// 8-byte words, matching the native backends' default pair size). Traced,
+/// reclaimed, and — once a `safepoint` runs a compacting cycle — relocated
+/// by the real collector.
 fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let bytes = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1167,18 +1147,34 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     if bytes <= 0 {
         return Err(VMError::Custom(format!("gc_alloc size must be positive, got {bytes}")));
     }
-    // Aggregate ceiling on the *count* of live gc_alloc'd objects — the same
-    // pattern handle_alloc/handle_alloc_array enforce against ctx.arrays.len().
-    // This exists specifically so gc_field_load/gc_field_store's bounds check
-    // (FlatHeap::payload_size, O(live object count)) can't be driven
-    // arbitrarily high: without this cap, N allocations followed by M field
-    // accesses against the oldest one would cost O(N*M) wall-clock time while
-    // an instruction budget (max_instructions) only charges O(N+M) — a
-    // quadratic blowup a security review flagged. See
-    // VMCore::gc_object_count's doc comment for the full argument.
+    // Two aggregate ceilings, mirroring the two `handle_alloc`/`handle_alloc_array`
+    // used to enforce against `ctx.arrays.len()`/total element count:
+    //
+    // 1. Live *object count* — so `gc_field_load`/`gc_field_store`'s bounds
+    //    check (`FlatHeap::payload_size`, O(live object count)) can't be
+    //    driven arbitrarily high: without this cap, N allocations followed
+    //    by M field accesses against the oldest one would cost O(N*M)
+    //    wall-clock time while an instruction budget (`max_instructions`)
+    //    only charges O(N+M) — a quadratic blowup a security review flagged.
+    //    See `VMCore::gc_object_count`'s doc comment for the full argument.
+    // 2. Live *byte total* — a security review of this reroute found that,
+    //    unlike `handle_alloc`'s old total-word ceiling, nothing bounded a
+    //    *single* allocation's `bytes` operand: a handful of allocations
+    //    each requesting gigabytes would pass the count cap outright.
+    //    `max_memory_entries` is a count, not naturally a byte quantity (its
+    //    default, 1_000_000, would make an unscaled reuse either far too
+    //    small or an arbitrary multiple), so this is its own dedicated field
+    //    — see `VMCore::max_gc_heap_bytes`.
     if *ctx.gc_object_count >= ctx.max_memory_entries {
         return Err(VMError::Custom(format!(
             "gc_alloc count exceeds the {} live-object cap", ctx.max_memory_entries
+        )));
+    }
+    let live_bytes = ctx.heap.live_bytes();
+    if live_bytes.saturating_add(bytes as usize) > ctx.max_gc_heap_bytes {
+        return Err(VMError::Custom(format!(
+            "gc_alloc of {bytes} bytes would exceed the {}-byte total cap (live: {live_bytes})",
+            ctx.max_gc_heap_bytes
         )));
     }
     let ptr = ctx.heap.alloc(bytes as usize, 0);
@@ -1193,6 +1189,25 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     Ok(Some(value))
 }
 
+/// A dynamically-typed Twig lisp field (`ref<any>` — a cons cell's car/cdr,
+/// which can hold either a nested pair or a plain integer depending on
+/// runtime data) cannot be decoded from `instr.type_hint` alone: the hint
+/// reflects the *static* field type, which for a genuinely polymorphic field
+/// is exactly "could be anything" — not evidence of what a specific word
+/// actually holds. So the raw word itself carries a 3-bit tag in its low
+/// bits, decided at store time from the real `Value` and read back at load
+/// time regardless of what the load's type_hint says — the same shape
+/// `iir-builtin-lowering::dyn_repr`'s NaN-boxing convention uses for the
+/// native/LLVM backends (`n << 3` for an int, low bits `111` for a pointer),
+/// adapted here for vm-core's own, independent `FlatHeap` object layout
+/// (nothing else reads vm-core's heap, so there is no cross-backend layout
+/// constraint to match bit-for-bit). `FlatHeap::alloc` guarantees a
+/// 16-byte-aligned payload — 4 low bits free — so a `HeapRef`'s address
+/// always has its low 3 bits clear, making tag `0b111` unambiguous.
+const FIELD_TAG_BITS: u32 = 3;
+const FIELD_TAG_MASK: i64 = 0b111;
+const FIELD_TAG_HEAP_REF: i64 = 0b111;
+
 /// `gc_field_load dest <- obj, idx` — read the `idx`-th 8-byte word from a
 /// `gc_alloc`'d object's payload.
 ///
@@ -1201,7 +1216,23 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
 /// invalid `HeapRef` — `payload_size` reads `0` for any address that isn't a
 /// live block, and `0 + 8 > 0` fails the check for every index, so a null
 /// dereference traps exactly like an out-of-bounds one, no special-casing
-/// needed.
+/// needed. This bound is only correct because `obj` is always a block's
+/// *base* address — `payload_size` resolves an interior address to the
+/// whole containing block's size, not the remaining bytes to its end, and
+/// no op in this file ever produces an interior `HeapRef` (no pointer
+/// arithmetic on `HeapRef` exists here). A future op that did would need to
+/// re-derive the bound from the block's real start, not reuse this check
+/// as-is.
+///
+/// Decoded purely from the word's own tag bits (see [`FIELD_TAG_MASK`]),
+/// never from `instr.type_hint` — a field's *declared* type ("ref<any>")
+/// doesn't reveal what a specific stored word actually is. Tag `111` →
+/// `HeapRef` (address = word with the tag bits cleared); anything else →
+/// `Int` (value = word arithmetic-shifted right, restoring the sign). A
+/// freshly `gc_alloc`'d object is zero-initialized, which decodes as
+/// `Int(0)` — the same default `alloc`'s old `ctx.arrays`-backed
+/// implementation used. Must mirror [`handle_gc_field_store`]'s encoding
+/// exactly.
 fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let (obj, idx) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1226,10 +1257,10 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     // above) — so this read stays within the allocation `ctx.heap.alloc`
     // returned for `obj`.
     let word = unsafe { std::ptr::read_unaligned((obj.addr() + byte_off) as *const i64) };
-    let value = if instr.type_hint.starts_with("ref") {
-        Value::HeapRef(gc_core::HeapRef::new(word as usize))
+    let value = if word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF {
+        Value::HeapRef(gc_core::HeapRef::new((word & !FIELD_TAG_MASK) as usize))
     } else {
-        Value::Int(word)
+        Value::Int(word >> FIELD_TAG_BITS)
     };
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone());
@@ -1240,14 +1271,20 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
 /// `gc_field_store obj, idx, val` (no dest) — write the `idx`-th 8-byte word
 /// of a `gc_alloc`'d object's payload.
 ///
-/// `val` must be `Value::HeapRef` (stores the raw address and runs the
-/// generational write barrier, [`gc_core::FlatHeap::write_barrier`] — the
+/// `val` must be `Value::HeapRef` (tagged `111`, stores the address with the
+/// generational write barrier run, [`gc_core::FlatHeap::write_barrier`] — the
 /// object graph must stay barrier-correct for `collect_minor` to be sound)
-/// or `Value::Int` (stores the raw word; no barrier needed since it can't
-/// keep a young object alive). Any other `Value` variant is rejected: a raw
-/// 64-bit-word field has no room for a boxed `String`/`f64` without a
-/// NaN-boxing convention this additive path doesn't introduce (the same
-/// limitation the native cons-cell path documents for itself).
+/// or `Value::Int` (tagged `000`, shifted left 3 bits — see
+/// [`FIELD_TAG_MASK`]'s doc comment for why a stored word needs a tag at
+/// all). Shifting costs 3 bits of integer range (values outside
+/// `[i64::MIN >> 3, i64::MAX >> 3]` are rejected rather than silently
+/// truncated) — the same tradeoff `dyn_repr`'s NaN-boxing already accepts
+/// for the native backends' lisp integers, so this is parity, not a new
+/// limitation. `Value::Float`/`Value::Bool`/`Value::Str` are rejected: none
+/// fits this tag scheme without its own boxed heap allocation, and no Twig
+/// lowering pass stores one directly into a record/union/closure field on
+/// any backend today (confirmed by investigation) — pre-existing
+/// unsupported territory, not a regression.
 fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let (obj, idx, val) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1269,8 +1306,35 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
         )));
     }
     let word: i64 = match &val {
-        Value::HeapRef(r) => r.addr() as i64,
-        Value::Int(n) => *n,
+        Value::HeapRef(r) => {
+            // `FlatHeap::alloc` guarantees a 16-byte-aligned payload, so a real
+            // address's low 3 bits are always clear and OR-ing in the tag never
+            // loses address bits (`HeapRef::NULL`, address 0, satisfies this
+            // trivially too). A real runtime check, not `debug_assert!` — this
+            // is a cross-crate invariant vm-core takes on faith from gc-core;
+            // a future gc-core change weakening it must fail loudly here, not
+            // silently corrupt an address in release builds where a
+            // debug-only assert would have compiled out.
+            if r.addr() & (FIELD_TAG_MASK as usize) != 0 {
+                return Err(VMError::Custom(format!(
+                    "gc_field_store: HeapRef address {:#x} is not tag-aligned \
+                     (FlatHeap's 16-byte alignment guarantee must hold)",
+                    r.addr()
+                )));
+            }
+            (r.addr() as i64) | FIELD_TAG_HEAP_REF
+        }
+        Value::Int(n) => {
+            let shifted = n.wrapping_shl(FIELD_TAG_BITS);
+            if shifted >> FIELD_TAG_BITS != *n {
+                return Err(VMError::Custom(format!(
+                    "gc_field_store: integer {n} out of range for a dynamically-typed \
+                     GC field (fits values in [{}, {}])",
+                    i64::MIN >> FIELD_TAG_BITS, i64::MAX >> FIELD_TAG_BITS
+                )));
+            }
+            shifted
+        }
         other => return Err(VMError::Custom(format!(
             "gc_field_store: unsupported value kind {other:?} — only heap refs \
              and integers can be stored in a raw GC field"
@@ -1870,14 +1934,17 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "array_get"    => Some(handle_array_get),
         "array_set"    => Some(handle_array_set),
         // E6d heap objects (records/unions/closures) — a cons cell is a 2-word
-        // object; `field_*` share the `array_*` handle+index model verbatim.
-        "alloc"        => Some(handle_alloc),
-        "field_store"  => Some(handle_array_set),
-        "field_load"   => Some(handle_array_get),
+        // object on the shared, real FlatHeap collector (see the module
+        // comment above handle_gc_alloc); `field_*` share `gc_field_*`'s
+        // handle+index model verbatim.
+        "alloc"        => Some(handle_gc_alloc),
+        "field_store"  => Some(handle_gc_field_store),
+        "field_load"   => Some(handle_gc_field_load),
         "is_null"      => Some(handle_is_null),
-        // GC-managed heap objects (additive; see the module comment above
-        // handle_gc_alloc) — allocate/access on the shared FlatHeap collector
-        // instead of the array-heap bump arena.
+        // Direct GC-op aliases (`gc_alloc`/`gc_field_load`/`gc_field_store`
+        // are the same handlers `alloc`/`field_store`/`field_load` route to
+        // above; kept as distinct opcode strings for IIR that wants to name
+        // the GC ops explicitly, e.g. hand-built test/smoke-test modules).
         "gc_alloc"        => Some(handle_gc_alloc),
         "gc_field_load"   => Some(handle_gc_field_load),
         "gc_field_store"  => Some(handle_gc_field_store),
