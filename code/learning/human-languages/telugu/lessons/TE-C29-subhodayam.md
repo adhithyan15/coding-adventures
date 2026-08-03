@@ -9,7 +9,7 @@ prerequisites: [TE-C26-udayam]
 sounds: [telugu-sha, telugu-conjunct-bha]
 roots: [su-good, sanskrit-udaya-rise]
 etymology_hook: "శుభోదయం (śubhōdayam, 'good morning') = శుభ ('good') + ఉదయం (already met, TE-C26); be honest about sourcing here: one directly-fetched source — a Telugu-learning content blog, the SAME low-authority genre already found overstated for Hindi's सुप्रभात and Kannada's ಶುಭೋದಯ — claims this is OUT OF TREND, displaced by ENGLISH 'good morning,' with children taught the English phrase from preschool; treat this with real skepticism, since a directly-fetched page isn't automatically an authoritative source; the same page also calls a SEPARATE alternative, సుప్రభాతం (suprabhātam, built on ప్రభాత/prabhāta — a genuinely DIFFERENT Sanskrit root from ఉదయ/udaya, NOT the same root as Kannada's ಶುಭೋದಯ, which itself uses udaya) 'archaic'; a third option, ప్రొద్దుటి వందనాలు ('morning greetings,' built on పొద్దు, TE-C26's genuine native competitor), also exists but isn't confirmed common; నమస్కారం is the safer everyday-greeting bet, matching the నమస్కార/नमस्ते pattern already found for Kannada and Hindi"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C26-udayam]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [TE-C07-numbers-1-5]
 sounds: [telugu-inherent-a, retroflex-da, telugu-u-ending]
 roots: [proto-dravidian-numbers]
 etymology_hook: "eight and nine — enimidi, tommidi — you can't derive from Tamil's eṭṭu/oṉpatu; seven ēḍu shows Telugu's ḻ→ḍ"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C07-numbers-1-5]
 ---
 

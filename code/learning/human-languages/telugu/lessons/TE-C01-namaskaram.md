@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [telugu-inherent-a, virama-conjunct, anusvara]
 roots: [namas, kṛ]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

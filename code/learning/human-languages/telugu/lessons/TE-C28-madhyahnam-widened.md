@@ -9,7 +9,7 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C27-sayantram]
 sounds: [telugu-conjunct-dhya, telugu-vowel-sign-aa]
 roots: [sanskrit-madhya-middle]
 etymology_hook: "మధ్యాహ్నం (madhyāhnam) is the SAME word already met in TE-C17 meaning precisely 'noon' ('middle' + 'day') — but a directly-fetched source confirms it also covers 'the time between noon and evening' in modern usage, the same kind of widening already found for Hindi's दोपहर (well-confirmed) and Kannada's మధ్యాహ్న (more thinly hedged); a separate, more precise word for 'later afternoon' specifically, అపరాహ్నం (aparāhnam, from the same classical five-part Sanskrit day division as Kannada's అపరాహ్న), also exists; thin, informal evidence (native-speaker forum discussion, dictionary usage notes) converges on మధ్యాహ్నం winning colloquially while అపరాహ్నం stays the formally precise term — a hedged, KA-C28-style parallel, not a fully settled comparison"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C17-madhyaahnam-ardharaatri, TE-C27-sayantram]
 ---
 

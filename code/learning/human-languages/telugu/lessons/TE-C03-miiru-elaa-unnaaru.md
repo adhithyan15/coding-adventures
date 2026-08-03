@@ -8,7 +8,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TE-C03-elaa, TE-C02-nuvvu-miiru]
 sounds: [double-nn, retroflex]
 roots: [undu-be-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C02-nuvvu-miiru, TE-C03-elaa]
 ---
 

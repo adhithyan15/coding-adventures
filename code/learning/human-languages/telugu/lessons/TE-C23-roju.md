@@ -9,7 +9,7 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri]
 sounds: [telugu-vowel-sign-oo, telugu-ja]
 roots: [persian-roz-day, sanskrit-dinamu]
 etymology_hook: "రోజు (rōju, 'day') is genuinely borrowed from Classical Persian روز (rōz), itself from PIE *lewk- ('bright') — a completely different route and root from Latin diēs/Hindi din/Kannada dina's *dyew- family, though both ultimately trace to 'shining, bright' senses independently; దినము (dinamu) is the Sanskrit tatsama word (same root as Kannada's dina), but here it's the more FORMAL alternate — Telugu's everyday/formal split runs the OPPOSITE way from Kannada's"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C17-madhyaahnam-ardharaatri]
 ---
 

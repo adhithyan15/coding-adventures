@@ -9,7 +9,7 @@ prerequisites: [TE-C15-neellu-biyyam]
 sounds: [telugu-conjunct-shtha, telugu-anusvara]
 roots: [sanskrit-lunisolar-chaitra-system]
 etymology_hook: "Telugu shares the same pan-Indian Sanskritic lunisolar calendar as Kannada and Hindi (Ugadi falls the SAME day, Chaitra Shudda Padyami) — completing a clean split: Tamil and Malayalam built their OWN solar calendars, Kannada and Telugu share the pan-Indian one"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C15-neellu-biyyam]
 ---
 

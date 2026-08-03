@@ -9,7 +9,7 @@ prerequisites: [TE-C16-nelalu]
 sounds: [telugu-conjunct-rdha, telugu-anusvara]
 roots: [sanskrit-madhya-middle, sanskrit-ardha-half]
 etymology_hook: "Telugu's మధ్యాహ్నం (madhyāhnam, noon) matches Kannada's madhya ('middle') root exactly — but its midnight word, అర్ధరాత్రి (ardharātri), switches to a DIFFERENT Sanskrit root, ardha ('half'), echoing Hindi's colloquial 'half night' pattern instead of Kannada's 'middle night'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C16-nelalu]
 ---
 

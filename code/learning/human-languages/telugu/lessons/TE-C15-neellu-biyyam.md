@@ -9,7 +9,7 @@ prerequisites: [TE-C14-rutuvulu]
 sounds: [telugu-geminate-lla, telugu-anusvara]
 roots: [neellu-water-dravidian, biyyam-rice-dravidian]
 etymology_hook: "నీళ్ళు neellu (water) matches Tamil/Kannada's neer/niiru, completing the 3-against-1 pattern against Malayalam's vellam; బియ్యం biyyam (raw rice) is Telugu's own word, unlike Tamil/Kannada/Malayalam's shared ari/arisi/akki"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C14-rutuvulu]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TE-C01-namaskaram, TE-C01-dhanyavadamulu, TE-C01-avunu, TE-C01-ledu, TE-C01-sare]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C01-namaskaram, TE-C01-dhanyavadamulu, TE-C01-avunu, TE-C01-ledu, TE-C01-sare]
 ---
 

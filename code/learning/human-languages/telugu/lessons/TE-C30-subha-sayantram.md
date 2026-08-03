@@ -9,7 +9,7 @@ prerequisites: [TE-C27-sayantram]
 sounds: [telugu-sha, telugu-anusvara]
 roots: [su-good, sanskrit-sayam-evening]
 etymology_hook: "శుభ సాయంత్రం (śubha sāyantram, 'good evening') pairs శుభ with సాయంత్రం (TE-C27's word with the striking distant cognate to Latin sērus/French soir); unlike GREETING-MORNING's శుభోదయం, which rested on ONE dramatic, low-authority source claiming displacement by English, TWO independently fetched sources here agree it's genuinely, commonly used in BOTH formal and informal contexts — a real difference in evidence quality, worth noting explicitly rather than treating every 'good ___' greeting in this arc the same way; నమస్కారం remains confirmed as a time-independent, any-occasion alternative rather than something that has displaced this specific greeting"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C27-sayantram]
 ---
 

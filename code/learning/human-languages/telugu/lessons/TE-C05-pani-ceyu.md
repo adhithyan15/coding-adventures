@@ -8,7 +8,7 @@ concept_tag: TE-VERB-CEYU
 prerequisites: [TE-C05-maatlaadu]
 sounds: [long-e]
 roots: [ceyu-do-dravidian, pani-work-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C05-maatlaadu, TE-C05-undu]
 ---
 
