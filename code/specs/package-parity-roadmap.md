@@ -246,13 +246,17 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Merged PR
   #9603 completed Lua with strict raw-byte validation, both shared fixtures,
   the stable repository-relative diagnostic, real CLI exit code 2, malformed
-  Unicode coverage, and green Ubuntu, macOS, and Windows checks. The selected
-  Ready-for-review PR #9632 is the Perl child because its raw-byte boundary is
-  the narrowest remaining resolver. Its security gate
+  Unicode coverage, and green Ubuntu, macOS, and Windows checks. Merged PR
+  #9632 completed Perl with strict decoding, exact success edges, typed stable
+  diagnostics, real CLI exit 2, malformed-sequence coverage, and green Ubuntu,
+  macOS, Windows, fixture, CI-gate, and CodeQL checks. Its security gate
   also discovered that the Perl build tool's `5.026` runtime floor and
   version-free core-module declarations do not produce an auditable clean
   dependency floor; that compatibility-policy review is logged as a separate
-  pending child instead of expanding the UTF-8 behavior slice;
+  pending child instead of expanding the UTF-8 behavior slice. Ruby, Haskell,
+  and Elixir are now explicit pending children; the post-merge leverage pass
+  ranks Ruby first because its locally available toolchain and direct
+  locale-sensitive read form the narrowest remaining boundary;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
