@@ -4,12 +4,12 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, transient_with_method, AcPoint,
-    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
-    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
-    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
-    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
-    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    ac_sweep, dc_op_with_options, dc_sweep, mosfet_from_model_card, normalize_model_card,
+    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
+    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
+    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
+    MutualInductor, PulseWaveform, PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod,
+    TransientPoint, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -1831,6 +1831,18 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(surface_state_density) = params.get("NSS") {
+            if !surface_state_density.is_finite() || *surface_state_density < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET NSS must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(gate_material_type) = params.get("TPG") {
+            if !matches!(*gate_material_type, -1.0 | 0.0 | 1.0) {
+                return Err(NetlistParseError::new("MOSFET TPG must be -1, 0, or 1"));
+            }
+        }
         if let Some(oxide_thickness) = params.get("TOX") {
             if !oxide_thickness.is_finite() || *oxide_thickness <= 0.0 {
                 return Err(NetlistParseError::new(
@@ -2140,9 +2152,13 @@ fn parse_element_params(
 fn build_mosfet_params(
     model: &ModelCard,
     instance_params: &HashMap<String, f64>,
-) -> MosfetLevel1Params {
+) -> Result<MosfetLevel1Params, NetlistParseError> {
     let mut params = MosfetLevel1Params::default();
-    for (name, value) in model.params.iter().chain(instance_params.iter()) {
+    for (name, value) in &model.params {
+        apply_mosfet_param(&mut params, name, *value);
+    }
+    apply_mosfet_electrostatic_defaults(model, &mut params)?;
+    for (name, value) in instance_params {
         apply_mosfet_param(&mut params, name, *value);
     }
     if !model.params.contains_key("KP") && !instance_params.contains_key("KP") {
@@ -2168,7 +2184,44 @@ fn build_mosfet_params(
     if let Some(value) = instance_params.get("PS") {
         params.source_perimeter = *value;
     }
-    params
+    Ok(params)
+}
+
+fn apply_mosfet_electrostatic_defaults(
+    model: &ModelCard,
+    params: &mut MosfetLevel1Params,
+) -> Result<(), NetlistParseError> {
+    let has_substrate_doping = ["N_SUB", "NSUB", "N"]
+        .iter()
+        .any(|name| model.params.contains_key(*name));
+    if !has_substrate_doping || !model.params.contains_key("TOX") {
+        return Ok(());
+    }
+
+    let mut parameters = Vec::new();
+    for (canonical, aliases) in [
+        ("VT0", &["VT0", "VTO", "VTH"][..]),
+        ("GAMMA", &["GAMMA"][..]),
+        ("PHI", &["PHI"][..]),
+        ("TOX", &["TOX"][..]),
+        ("N_SUB", &["N_SUB", "NSUB", "N"][..]),
+        ("T_NOM", &["T_NOM", "TNOM"][..]),
+        ("NSS", &["NSS"][..]),
+        ("TPG", &["TPG"][..]),
+    ] {
+        if let Some(value) = aliases.iter().find_map(|alias| model.params.get(*alias)) {
+            parameters.push((canonical, *value));
+        }
+    }
+
+    let normalized = normalize_model_card(&model.name, &model.kind, &parameters)
+        .map_err(|error| NetlistParseError::new(error.to_string()))?;
+    let derived = mosfet_from_model_card("M", "d", "g", "s", "b", &normalized)
+        .map_err(|error| NetlistParseError::new(error.to_string()))?;
+    params.vt0 = derived.params.vt0;
+    params.gamma = derived.params.gamma;
+    params.phi = derived.params.phi;
+    Ok(())
 }
 
 fn apply_mosfet_param(params: &mut MosfetLevel1Params, name: &str, value: f64) {
@@ -2520,7 +2573,7 @@ fn parse_element(
                 &fields[3],
                 &fields[4],
                 mosfet_type,
-                build_mosfet_params(model, &instance_params),
+                build_mosfet_params(model, &instance_params)?,
             )))
         }
         'G' => {
