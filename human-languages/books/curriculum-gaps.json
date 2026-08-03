@@ -18,9 +18,9 @@
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 129,
-    "legacySchemaTracks": 7,
-    "mixedSchemaTracks": 13,
+    "lessonChaptersWithoutBooks": 104,
+    "legacySchemaTracks": 6,
+    "mixedSchemaTracks": 14,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -795,9 +795,7 @@
         ],
         "bookChapters": [
           1,
-          2
-        ],
-        "missingBookChapters": [
+          2,
           3,
           4,
           5,
@@ -824,8 +822,9 @@
           26,
           27
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 7
+        "coveragePercent": 100
       },
       {
         "language": "hindi",
@@ -1489,10 +1488,11 @@
       },
       {
         "language": "arabic",
-        "status": "legacy",
+        "status": "mixed",
         "lessonCount": 71,
         "versions": {
-          "1": 71
+          "1": 26,
+          "2": 45
         }
       },
       {
