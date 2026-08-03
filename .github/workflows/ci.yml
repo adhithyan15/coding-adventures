@@ -351,7 +351,7 @@ jobs:
           go-version: '1.23'
 
       - name: Set up Python
-        if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows'
+        if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -360,7 +360,11 @@ jobs:
       - name: Test ADJ Windows Job containment
         if: runner.os == 'Windows'
         shell: pwsh
-        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job
+        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job -k process_tree -k windows_containment -k job_close_root
+
+      - name: Test ADJ POSIX process-group containment
+        if: runner.os == 'macOS'
+        run: python3 -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k posix_process -k process_tree
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
