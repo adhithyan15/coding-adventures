@@ -2017,6 +2017,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(sheet_resistance) = params.get("RSH") {
+            if !sheet_resistance.is_finite() || *sheet_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RSH must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),
