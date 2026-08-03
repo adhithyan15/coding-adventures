@@ -247,8 +247,8 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   #9603 completed Lua with strict raw-byte validation, both shared fixtures,
   the stable repository-relative diagnostic, real CLI exit code 2, malformed
   Unicode coverage, and green Ubuntu, macOS, and Windows checks. The selected
-  Perl child is now in progress because its raw-byte boundary is the narrowest
-  remaining resolver and Perl 5.38 is locally available. Its security gate
+  Ready-for-review PR #9632 is the Perl child because its raw-byte boundary is
+  the narrowest remaining resolver. Its security gate
   also discovered that the Perl build tool's `5.026` runtime floor and
   version-free core-module declarations do not produce an auditable clean
   dependency floor; that compatibility-policy review is logged as a separate
