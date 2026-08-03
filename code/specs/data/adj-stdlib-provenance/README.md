@@ -54,19 +54,21 @@ fixtures are rebuilt entirely offline from retained CAS source bodies:
 
 ```text
 python code/scripts/build_adj_arithmetic_provenance.py
-python code/scripts/build_adj_ratio_provenance.py
-python code/scripts/build_adj_percent_of_provenance.py
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
+python code/scripts/build_adj_percent_of_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
 ```
 
 Each generator checks retained source hashes and expected source spans before
 rebuilding its provenance bundles, IR and transform objects, and CAS linkage.
+Dependent generators require the verified current primitive-arithmetic root hash
+explicitly; they reject malformed hashes and roots with the wrong bundle ID.
 The ratio generator's reviewed one-time bootstrap accepts captured bytes without
 opening the locator; after those exact bytes enter the CAS, ordinary reruns need
 no external file:
 
 ```text
-python code/scripts/build_adj_ratio_provenance.py --captured-source <ratio.html>
-python code/scripts/build_adj_ratio_provenance.py
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --captured-source <ratio.html>
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
 ```
 
 The percent-of bootstrap follows the same offline contract. Six controlled

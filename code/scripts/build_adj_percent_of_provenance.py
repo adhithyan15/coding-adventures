@@ -20,9 +20,6 @@ INPUT_CAPTURED_AT = "2026-08-03T00:30:00Z"
 RAW_HASH = "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e"
 RECEIPT_HASH = "a381508533a090ccf7cfc8cf8169c9d6496fe3dd041ff11dfcd78d13f40cfe27"
 RENDERED_HASH = "ac765615e8da33fba525925ae28f392d3c9343ac7539ea54fd0a103ca18fc718"
-ARITHMETIC_BUNDLE_HASH = (
-    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"
-)
 PERCENT_OF_CLAIM = "adj.math.arithmetic.percent_of"
 QUESTION_CLAIM = "adj.question.arithmetic.percent_of.compute"
 SELECTED_TEXT = b"n% of x items is (n/100)*x."
@@ -307,9 +304,17 @@ def input_claim_payload(item: dict) -> dict:
     return {key: item[key] for key in ("end", "quote", "quote_sha256", "start")}
 
 
-def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
+def build(
+    cas: provenance.Cas,
+    captured_source: Path | None,
+    *,
+    arithmetic_bundle_sha256: str,
+) -> dict[str, str]:
+    arithmetic_bundle_sha256 = provenance._require_hash(
+        arithmetic_bundle_sha256, "arithmetic_bundle_sha256"
+    )
     arithmetic = provenance._json_object(
-        cas, ARITHMETIC_BUNDLE_HASH, "provenance_bundle"
+        cas, arithmetic_bundle_sha256, "provenance_bundle"
     )
     if arithmetic.get("bundle_id") != "adj.math.arithmetic.primitives.v1":
         raise provenance.ProvenanceError("arithmetic dependency bundle ID drifted")
@@ -373,7 +378,7 @@ def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
                 ],
             }
         ],
-        "dependencies": [ARITHMETIC_BUNDLE_HASH],
+        "dependencies": [arithmetic_bundle_sha256],
         "input": {
             key: input_source[key]
             for key in ("raw_source_sha256", "receipt_sha256", "source_ir_sha256")
@@ -440,8 +445,10 @@ def build(cas: provenance.Cas, captured_source: Path | None) -> dict[str, str]:
             (
                 disabled_start,
                 len(query_bytes),
-                "disabled edge-case example deliberately excluded from the "
-                "executable worked query",
+                (
+                    "disabled edge-case example deliberately excluded from the "
+                    "executable worked query"
+                ),
             )
         ],
     )
@@ -500,6 +507,14 @@ def main() -> None:
         type=Path,
         help="reviewed OpenStax HTML bytes for the one-time CAS bootstrap",
     )
+    parser.add_argument(
+        "--arithmetic-bundle-sha256",
+        required=True,
+        type=lambda value: provenance._require_hash(
+            value, "--arithmetic-bundle-sha256"
+        ),
+        help="verified current primitive arithmetic provenance root",
+    )
     args = parser.parse_args()
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
@@ -508,7 +523,13 @@ def main() -> None:
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
     ) as transaction:
-        transaction.commit(build(transaction.cas, args.captured_source))
+        transaction.commit(
+            build(
+                transaction.cas,
+                args.captured_source,
+                arithmetic_bundle_sha256=args.arithmetic_bundle_sha256,
+            )
+        )
 
 
 if __name__ == "__main__":
