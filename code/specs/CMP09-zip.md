@@ -350,6 +350,7 @@ unzip(data: bytes) → {name: str → data: bytes}
 | Lua        | `coding-adventures-zip`      | `coding_adventures.zip`        |
 | Perl       | `CodingAdventures::Zip`      | `CodingAdventures::Zip`        |
 | Swift      | `CodingAdventuresZip`        | `CodingAdventures.Zip`         |
+| F#         | `CodingAdventures.Zip.FSharp`| `CodingAdventures.Zip.FSharp`  |
 | Kotlin     | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
 
 **Dependencies:** each ZIP package depends on the corresponding language's `deflate`
