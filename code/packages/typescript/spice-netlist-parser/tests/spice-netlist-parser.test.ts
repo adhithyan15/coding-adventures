@@ -736,7 +736,7 @@ Rload out 0 500
 
   it("parses diode models into operating-point circuits", () => {
     const parsed = parseNetlist(`
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n RS=3)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -754,6 +754,7 @@ Rload out 0 1k
         ["IBV", 1.0e-6],
         ["CJO", 2.0e-12],
         ["TT", 4.0e-9],
+        ["RS", 3.0],
       ]),
     });
     expect(parsed.circuit.elements()[1]).toMatchObject({
@@ -768,6 +769,7 @@ Rload out 0 1k
       breakdownCurrent: 1.0e-6,
       junctionCapacitance: 2.0e-12,
       transitTime: 4.0e-9,
+      seriesResistance: 3.0,
     });
 
     const result = dcOp(parsed.circuit);
@@ -922,6 +924,24 @@ D1 in out clamp
   it.each(["0", "-1u", "1e999"])("rejects invalid diode IBV %s", (value) => {
     expect(() => parseNetlist(`.model clamp D(IBV=${value})`)).toThrow(
       "diode IBV must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["2.5", 2.5],
+  ])("accepts valid diode RS series resistance %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(RS=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      seriesResistance: expected,
+    });
+  });
+
+  it.each(["-1", "1e999"])("rejects invalid diode RS %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(RS=${value})`)).toThrow(
+      "diode RS must be finite and non-negative",
     );
   });
 
