@@ -8,7 +8,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: []
 sounds: [inherent-a, vowel-sign, vowel-carrier]
 roots: [satya, sri, akala]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

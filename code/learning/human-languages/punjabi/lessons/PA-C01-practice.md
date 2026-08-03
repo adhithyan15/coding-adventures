@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PA-C01-sat-sri-akal, PA-C01-namaste, PA-C01-dhanvaad, PA-C01-shukriya, PA-C01-han-nahin]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C01-sat-sri-akal, PA-C01-namaste, PA-C01-dhanvaad, PA-C01-shukriya, PA-C01-han-nahin]
 ---
 

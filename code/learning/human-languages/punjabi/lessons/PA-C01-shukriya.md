@@ -8,7 +8,7 @@ concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [PA-C01-dhanvaad]
 sounds: [pair-bindi, vowel-sign]
 roots: [shukr]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C01-dhanvaad]
 ---
 
