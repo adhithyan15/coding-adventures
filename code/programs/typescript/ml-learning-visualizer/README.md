@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has twenty-one workbenches that move from one arithmetic update to small
+The app has twenty-two workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -284,6 +284,14 @@ and one closed receipt protocol. The browser recomputes every contribution and
 the `1.35` prediction, but labels external execution as registered until the
 Python orchestrator runs the real programs.
 
+### Rust C ABI
+
+The Rust C ABI workbench keeps the NN03 paper arithmetic visible while one
+versioned function receives caller-owned buffers. Select success or five
+failure probes to see the returned status and whether output memory may change.
+The browser recomputes the committed ABI catalog; the Python validator builds
+and dynamically loads the real shared library.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -441,6 +449,12 @@ NN34 under `code/specs/fixtures/cross-language-consumers-v1` points three native
 language-family consumers at the same NN03 source fixture. Run `python
 code/scripts/validate_cross_language_fixture_consumers.py` to execute their
 fixed commands and compare their bounded JSON receipts.
+
+NN35 under `code/specs/fixtures/neural-learning-rust-cabi-v1` pins the public
+C declarations, version number, status table, ownership rules, paper trace,
+and closed-output failure probes. Run `python
+code/scripts/validate_neural_learning_rust_cabi.py` to build and call the actual
+shared library.
 
 ## Development
 

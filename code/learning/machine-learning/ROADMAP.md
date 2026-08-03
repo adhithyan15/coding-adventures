@@ -65,7 +65,7 @@ trace, and tests.
 - [ ] Cross-language consumers
   - [x] Validate every fixture with the reference implementation.
   - [x] Add thin consumers in representative language families.
-  - [ ] Define a stable Rust C ABI for high-performance execution.
+  - [x] Define a stable Rust C ABI for high-performance execution.
   - [ ] Track native implementation versus Rust-core binding coverage.
 
 ## Loop Rules

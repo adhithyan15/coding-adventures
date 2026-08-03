@@ -86,9 +86,12 @@ import {
 import precisionResidencyDocument from "../../../../specs/fixtures/precision-residency-v1/labs/00-tiny-affine.json";
 import referenceCatalogDocument from "../../../../specs/fixtures/reference-validation-v1/catalog.json";
 import consumerCatalogDocument from "../../../../specs/fixtures/cross-language-consumers-v1/catalog.json";
+import cAbiCatalogDocument from "../../../../specs/fixtures/neural-learning-rust-cabi-v1/catalog.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
+import { RustCAbiWorkbench } from "./RustCAbiWorkbench.js";
+import { cAbiCatalog, parseCAbiCatalog, traceCAbi } from "./rust-c-abi.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { TrainingStabilizersWorkbench } from "./TrainingStabilizersWorkbench.js";
 import { traceTrainingStabilizers } from "./training-stabilizers-lab.js";
@@ -2685,5 +2688,43 @@ describe("cross-language fixture consumers", () => {
     expect(screen.getByLabelText("Selected consumer contract").textContent)
       .toMatch(/Expected receipt from the Rust CLI.*rust-native.*Cargo\.toml.*maximum error.*0/s);
     expect(screen.getByText(/registered commands, not external runtime execution/)).toBeTruthy();
+  });
+});
+
+describe("neural-learning Rust C ABI", () => {
+  it("recomputes the paper trace and maps every deterministic failure status", () => {
+    const success = traceCAbi();
+
+    expect(cAbiCatalog.versionNumber).toBe(0x0001_0000);
+    expect(success.contributions).toEqual([1, 0.25]);
+    expect(success.prediction).toBe(1.35);
+    expect(success.status.symbol).toBe("NEURAL_LEARNING_OK");
+    expect(cAbiCatalog.probes.map((probe) => probe.expectedStatus)).toEqual([1, 2, 3, 5, 7]);
+    expect(traceCAbi("non-finite").outputsWritten).toBe(false);
+  });
+
+  it("fails closed on changed statuses and dishonest arithmetic", () => {
+    expect(() => parseCAbiCatalog({})).toThrow(/unexpected keys/);
+
+    const changedStatus = JSON.parse(JSON.stringify(cAbiCatalogDocument));
+    changedStatus.statuses[1].code = 8;
+    expect(() => parseCAbiCatalog(changedStatus)).toThrow(/wrong identity/);
+
+    const dishonest = JSON.parse(JSON.stringify(cAbiCatalogDocument));
+    dishonest.hand_check.expected_prediction = 99;
+    expect(() => parseCAbiCatalog(dishonest)).toThrow(/dishonest arithmetic/);
+  });
+
+  it("shows success writes and failure output preservation without claiming native browser execution", () => {
+    render(React.createElement(RustCAbiWorkbench));
+    expect(screen.getByRole("heading", { name: "Rust C ABI" })).toBeTruthy();
+    expect(screen.getByText("ABI 0x00010000")).toBeTruthy();
+    expect(screen.getByLabelText("Rust C ABI hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*= 1\.0.*-1\.0 \* -0\.25.*= 0\.25.*1\.35/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect non finite C ABI probe" }));
+    expect(screen.getByLabelText("Selected C ABI trace").textContent)
+      .toMatch(/NEURAL_LEARNING_NON_FINITE.*status 5.*byte-for-byte unchanged/s);
+    expect(screen.getByText(/Python validator dynamically loads the compiled native library/)).toBeTruthy();
   });
 });

@@ -51,13 +51,14 @@ larger network:
 31. [Precision, Quantization, and Buffer Residency, by Hand](./precision-quantization-and-residency-by-hand.md)
 32. [Reference Fixtures: Make Every Expected Answer Earn Your Trust](./reference-fixtures-by-hand.md)
 33. [One Fixture, Three Languages](./one-fixture-three-languages.md)
-34. [Matrix Math](../matrix-math.md)
-35. [Loss Functions](../loss-functions.md)
-36. [Gradient Descent](../gradient-descent.md)
-37. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-38. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-39. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-40. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+34. [A Rust C ABI, by Hand](./rust-c-abi-by-hand.md)
+35. [Matrix Math](../matrix-math.md)
+36. [Loss Functions](../loss-functions.md)
+37. [Gradient Descent](../gradient-descent.md)
+38. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+39. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+40. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+41. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -324,6 +325,12 @@ fixture. Each program recomputes the arithmetic and emits the same bounded JSON
 receipt; the orchestrator rejects command drift, extra output, and dishonest
 results before comparing all three lanes.
 
+NN35 adds `code/specs/fixtures/neural-learning-rust-cabi-v1`, which pins the
+versioned public header, closed status table, caller-owned buffer rules, NN03
+hand calculation, and five failure probes. Its validator dynamically loads the
+compiled Rust shared library and checks that rejected calls leave outputs
+unchanged.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -359,6 +366,7 @@ python code/scripts/validate_backend_parity_labs.py
 python code/scripts/validate_precision_residency_labs.py
 python code/scripts/validate_reference_fixture_catalog.py
 python code/scripts/validate_cross_language_fixture_consumers.py
+python code/scripts/validate_neural_learning_rust_cabi.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -432,6 +440,9 @@ covering all 30 fixture families and 33 lab documents.
 The first NN34 lab computes `2 * 0.5 + (-1) * (-0.25) + 0.1 = 1.35`, then makes
 Go, Ruby, and Rust earn parity by independently reading that same fixture and
 emitting one schema-checked receipt.
+The first NN35 lab moves that exact arithmetic behind a versioned C function,
+returns `[1.0, 0.25]` and `1.35` through caller-owned buffers, and proves five
+failure statuses write no partial answer.
 
 ## How to Study a Model
 

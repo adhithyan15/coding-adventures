@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1256 | 1278 | 98 | 61 | 8 | 1089 |
+| 1285 | 1282 | 99 | 61 | 8 | 1117 |
 
 ## Method
 
@@ -24,10 +24,10 @@ mention provides a complete lesson.
 
 | Priority | Dedicated | Related | Index only | Missing |
 | --- | ---: | ---: | ---: | ---: |
-| P0 | 86 | 25 | 6 | 55 |
-| P1 | 9 | 22 | 0 | 90 |
+| P0 | 86 | 26 | 6 | 55 |
+| P1 | 9 | 21 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 11 | 1 | 792 |
+| P3 | 3 | 11 | 1 | 820 |
 
 ## P0 Backlog
 
@@ -492,8 +492,10 @@ mention provides a complete lesson.
 | `forme-doc-page-shell` | 1 | missing |
 | `forme-style-to-terminal` | 1 | missing |
 | `smart-home-shelly-integration` | 1 | missing |
+| `venture-browser-cairo` | 1 | missing |
 | `venture-browser-core` | 1 | missing |
 | `venture-browser-macos` | 1 | missing |
+| `venture-browser-qt` | 1 | missing |
 | `mosaic-pkg-card-browser` | 0 | missing |
 | `mosaic-pkg-note-editor` | 0 | missing |
 | `mosaic-pkg-note-type-editor` | 0 | missing |
@@ -826,6 +828,7 @@ mention provides a complete lesson.
 | --- | ---: | --- |
 | `board-vm-protocol` | 1 | missing |
 | `board-vm-tcp` | 1 | missing |
+| `chief-of-staff-host-control-protocol` | 1 | missing |
 | `dns-message` | 1 | missing |
 | `embeddable-http-server` | 1 | missing |
 | `embeddable-tcp-server` | 1 | missing |
@@ -839,6 +842,7 @@ mention provides a complete lesson.
 | `lang-refinement-protocol` | 1 | missing |
 | `smart-home-local-http` | 1 | missing |
 | `smart-home-platform-http` | 1 | missing |
+| `smart-home-unifi-network-integration` | 1 | missing |
 | `tcp-reactor` | 1 | missing |
 | `tcp-runtime` | 1 | missing |
 | `tls-platform` | 1 | missing |
@@ -919,7 +923,24 @@ mention provides a complete lesson.
 | `capability-os-sandbox` | 1 | missing |
 | `cfb` | 1 | missing |
 | `cfb-writer` | 1 | missing |
+| `chief-of-staff-channel-endpoints` | 1 | missing |
+| `chief-of-staff-channel-store` | 1 | missing |
+| `chief-of-staff-cli-core` | 1 | missing |
+| `chief-of-staff-daemon` | 1 | missing |
+| `chief-of-staff-daemon-api` | 1 | missing |
+| `chief-of-staff-daemon-config` | 1 | missing |
+| `chief-of-staff-daemon-credential` | 1 | missing |
+| `chief-of-staff-daemon-installer` | 1 | missing |
+| `chief-of-staff-daemon-keyring` | 1 | missing |
+| `chief-of-staff-daemon-policy` | 1 | missing |
+| `chief-of-staff-daemon-runtime` | 1 | missing |
+| `chief-of-staff-daemon-service-files` | 1 | missing |
 | `chief-of-staff-host-runtime` | 1 | missing |
+| `chief-of-staff-orchestrator-core` | 1 | missing |
+| `chief-of-staff-process-supervisor` | 1 | missing |
+| `chief-of-staff-secure-host-channel` | 1 | missing |
+| `chief-of-staff-service-reconciler` | 1 | missing |
+| `chief-of-staff-service-registry` | 1 | missing |
 | `chief-of-staff-smart-home-tools` | 1 | missing |
 | `chief-of-staff-tool-api` | 1 | missing |
 | `chief-of-staff-tool-audit-store` | 1 | missing |
@@ -1144,6 +1165,7 @@ mention provides a complete lesson.
 | `ppt-writer` | 1 | missing |
 | `pptx-writer` | 1 | missing |
 | `presentationml` | 1 | missing |
+| `process-shutdown` | 1 | missing |
 | `prolog-core` | 1 | missing |
 | `protobuf` | 1 | missing |
 | `python-bridge` | 1 | missing |
@@ -1177,6 +1199,8 @@ mention provides a complete lesson.
 | `skill-store` | 1 | missing |
 | `smart-home-airgradient-local-integration` | 1 | missing |
 | `smart-home-automation-runtime` | 1 | missing |
+| `smart-home-axis-vapix-integration` | 1 | missing |
+| `smart-home-blue-iris-integration` | 1 | missing |
 | `smart-home-camera-media` | 1 | missing |
 | `smart-home-capability-cage` | 1 | missing |
 | `smart-home-core` | 1 | missing |
@@ -1184,6 +1208,7 @@ mention provides a complete lesson.
 | `smart-home-discovery` | 1 | missing |
 | `smart-home-discovery-service` | 1 | missing |
 | `smart-home-event-streams` | 1 | missing |
+| `smart-home-frigate-integration` | 1 | missing |
 | `smart-home-fronius-local-integration` | 1 | missing |
 | `smart-home-govee-lan-integration` | 1 | missing |
 | `smart-home-heos-cli-integration` | 1 | missing |
@@ -1207,6 +1232,7 @@ mention provides a complete lesson.
 | `smart-home-runtime` | 1 | missing |
 | `smart-home-runtime-store` | 1 | missing |
 | `smart-home-sonos-upnp-integration` | 1 | missing |
+| `smart-home-synology-surveillance-integration` | 1 | missing |
 | `smart-home-tasmota-local-integration` | 1 | missing |
 | `smart-home-testkit` | 1 | missing |
 | `smart-home-wemo-upnp-integration` | 1 | missing |
@@ -1279,6 +1305,8 @@ mention provides a complete lesson.
 | `wave-physics` | 1 | missing |
 | `weather-agent-e2e` | 1 | missing |
 | `web-core` | 1 | missing |
+| `websocket-core` | 1 | missing |
+| `websocket-runtime` | 1 | missing |
 | `win32-event-loop` | 1 | missing |
 | `wolfram-repl` | 1 | missing |
 | `wolfram-runtime` | 1 | missing |

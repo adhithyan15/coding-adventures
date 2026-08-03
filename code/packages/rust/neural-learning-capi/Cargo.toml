@@ -1,0 +1,9 @@
+[package]
+name = "neural-learning-capi"
+version = "0.1.0"
+edition = "2021"
+description = "Stable allocation-free C ABI for the neural-learning weighted-neuron core"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]

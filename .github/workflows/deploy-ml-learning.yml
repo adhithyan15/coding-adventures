@@ -37,12 +37,15 @@ on:
       - "code/specs/fixtures/precision-residency-v1/**"
       - "code/specs/fixtures/reference-validation-v1/**"
       - "code/specs/fixtures/cross-language-consumers-v1/**"
+      - "code/specs/fixtures/neural-learning-rust-cabi-v1/**"
       - "code/scripts/validate_*_labs.py"
       - "code/scripts/validate_reference_fixture_catalog.py"
       - "code/scripts/validate_cross_language_fixture_consumers.py"
+      - "code/scripts/validate_neural_learning_rust_cabi.py"
       - "code/programs/go/neural-fixture-consumer/**"
       - "code/programs/ruby/neural-fixture-consumer/**"
       - "code/programs/rust/neural-fixture-consumer/**"
+      - "code/packages/rust/neural-learning-capi/**"
       - "code/packages/typescript/cli-builder/**"
       - "code/packages/typescript/directed-graph/**"
       - "code/packages/typescript/state-machine/**"
@@ -94,6 +97,9 @@ jobs:
 
       - name: Validate cross-language neural fixture consumers
         run: python3 code/scripts/validate_cross_language_fixture_consumers.py
+
+      - name: Validate neural-learning Rust C ABI
+        run: python3 code/scripts/validate_neural_learning_rust_cabi.py
 
   build-and-deploy:
     needs: validate-language-consumers

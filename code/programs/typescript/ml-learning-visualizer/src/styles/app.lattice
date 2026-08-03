@@ -783,6 +783,15 @@ button.distribution-card[aria-pressed="true"] {
   overflow-wrap: anywhere;
 }
 
+.workspace--rust-c-abi .consumer-selected > .consumer-command {
+  display: block;
+  margin-top: 11px;
+}
+
+.rust-c-abi-probes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .consumer-receipt {
   display: flex;
   flex-wrap: wrap;
