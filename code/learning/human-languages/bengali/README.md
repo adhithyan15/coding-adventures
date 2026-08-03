@@ -39,11 +39,17 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/BN-C05-*`](./lessons/)): bôlā, **āmi
   bānglā bôli**, thākā (← *sthā* → *stand/stay*), kāj kôrā, practice. The verb
   never changes for gender. In the book.
+- **Chapter 6 — Numbers 1–5** ([`lessons/BN-C06-*`](./lessons/)): *ek, dui, tin,
+  chār, pā̃ch*, the chandrabindu, and the conservative vowel in *dui*. In the
+  book from the same canonical schema-v2 lesson AST and source hash that
+  Language Ladder loads.
 
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 (`../../_fonts/NotoSansBengali-Static.ttf`). `latexmk -xelatex book.tex`.
+Chapter 6 is generated from the canonical lesson; its Bengali-script runs use
+that font while its section bookmarks use authored romanization.
 
 ## Files
 

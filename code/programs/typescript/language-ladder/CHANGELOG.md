@@ -12,7 +12,8 @@
   generated chapter only when the app AST matches the committed book manifest;
   Spanish Chapters 1–6 now verify all 51 migrated lessons this way; Gujarati,
   Marathi, and Punjabi Chapter 6 verify both canonical lessons, while Sanskrit
-  Chapter 6 verifies all three, independently of the book generator.
+  Chapter 6 verifies all three and Bengali Chapter 6 verifies its canonical
+  lesson, independently of the book generator.
 
 ## 0.25.0 — the same syllable in its sister scripts (syllabary, PR 9)
 

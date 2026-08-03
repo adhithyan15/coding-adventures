@@ -78,9 +78,10 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B08 | Complete (#9680) | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B09 | Complete (#9683) | Remove Punjabi's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Gurmukhi, natural page bottoms, explicit static-font shapes, and a shorter running title make the forced six-chapter build warning-free. |
 | HL-B10 | Complete (#9690) | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | All three schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
-| HL-B11 | Complete in this PR | Remove Sanskrit's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes, and shorter running titles make the forced six-chapter build warning-free. |
-| HL-B12 | Next | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The duration audit confirms authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
-| HL-B13 | Queued | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports six missing glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 27 Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B11 | Complete (#9698) | Remove Sanskrit's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes, and shorter running titles make the forced six-chapter build warning-free. |
+| HL-B12 | Complete in this PR | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
+| HL-B13 | Next | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | A forced six-chapter build succeeds but reports six missing glyphs, one overfull box, five underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and three font-shape warnings; the clean-build signal is zero of each. |
+| HL-I01 | Queued | Reduce unified all-books workflow setup time without splitting the single publication bundle. | The exact-merge Sanskrit cleanup run spent seven minutes installing TeX Live, while a redundant PR run remained there beyond eighteen minutes; cache or pre-bake the toolchain and keep all 20 books plus bundle verification in one job. |
 | HL-B14 | Queued | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B16 | Queued | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Portuguese has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
@@ -448,6 +449,33 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   XeLaTeX build reports zero package or LaTeX warnings, missing glyphs,
   overfull boxes, underfull boxes, and duplicate destinations. HL-B12 is next:
   publish Bengali Chapter 6 through the canonical pipeline.
+
+## Findings from HL-B12
+
+- Bengali Chapter 6 now comes from its canonical schema-v2 lesson. The
+  generator manifest and Language Ladder independently combine the same source
+  hash, so the app and downloadable book cannot drift silently.
+- The lesson realizes `SPINE-COUNT-ONE-TO-FIVE` in a 290-second boundary and
+  extends it with Bengali script, chandrabindu nasalization, the conservative
+  vowel in *dui*, the everyday numeral's simplified *dv-* cluster, and the
+  qualified Assamese/Odia/Nepali comparison.
+- HL-I01 records publication latency observed after HL-B11: content drift and
+  Bengali's warning debt remain learner-visible priorities ahead of optimizing
+  a successful but slow single-job TeX setup.
+- The strict data suite passes all 80 tests; Language Ladder passes all 287
+  tests and its production build. The report remains at 1,065 lessons and 20
+  books with zero duration violations and zero unknown prerequisites, while
+  book drift falls to 252 lesson chapters and Bengali becomes the sixth
+  mixed-schema track.
+- The forced letter-size XeLaTeX build is 29 pages. Visual inspection of all
+  three generated pages found shaped Bengali, width-aware numeral and etymology
+  tables, an intact chandrabindu and recall box, and no clipping. The outline
+  retains the authored `ek dui tin chār pā̃ch` bookmark.
+- The generated chapter adds one visually benign underfull-page warning but no
+  new missing glyph, overfull, duplicate-label, bookmark, or font warning. The
+  full build's six missing glyphs, one overfull box, five underfull boxes, four
+  duplicate recap labels, 27 Hyperref warnings, and three font-shape warnings
+  are recorded accurately in HL-B13.
 
 ## Findings from HL-D01C
 
