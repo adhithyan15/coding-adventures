@@ -92562,6 +92562,7 @@ impl BridgeTransportLabel for smart_home_core::BridgeTransport {
     fn as_str(self) -> &'static str {
         match self {
             smart_home_core::BridgeTransport::LanHttp => "lan_http",
+            smart_home_core::BridgeTransport::LanTcp => "lan_tcp",
             smart_home_core::BridgeTransport::LanUdp => "lan_udp",
             smart_home_core::BridgeTransport::Mdns => "mdns",
             smart_home_core::BridgeTransport::Serial => "serial",
@@ -96330,6 +96331,10 @@ mod tests {
         assert_eq!(
             smart_home_core::BridgeTransport::LanUdp.as_str(),
             "lan_udp"
+        );
+        assert_eq!(
+            smart_home_core::BridgeTransport::LanTcp.as_str(),
+            "lan_tcp"
         );
 
         let summary = RegistryTopologySummary {
