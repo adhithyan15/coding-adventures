@@ -178,10 +178,18 @@ after a `pop`/`shift` — the same "iterate a snapshot" convention
 `_sir_seq_iter`'s `ForEach` already uses; **slice 6** (Hash non-block
 methods): `keys`/`values`/`to_a`/`to_h`/`dig`/`merge`/`invert` (all
 non-mutating), plus `delete`/`clear` — the FIRST Hash methods that mutate
-the receiver (`delete` shifts later entries down like `Array#shift`;
-`clear` resets `len` in place like `Array#pop`).  `fetch`/`to_a` widen to
-accept a Hash receiver alongside their Array forms; `dig` is polymorphic
-over Hash/Array from the start.  A
+the receiver (`delete` removes an entry; `clear` resets `len` in place like
+`Array#pop`).  `fetch`/`to_a` widen to accept a Hash receiver alongside
+their Array forms; `dig` is polymorphic over Hash/Array from the start;
+**slice 7** (Hash block methods): `each_key`/`each_value`/`group_by`/
+`partition`, plus `each`/`map`/`select`/`reject`/`sort_by`/`sum` widening to
+accept a Hash receiver (`map`/`sort_by` return an Array, `select`/`reject`
+return a Hash — matching Ruby's `Enumerable`-over-Hash semantics).  Both
+`delete` and `Array#shift` now REALLOCATE a fresh, smaller buffer instead of
+compacting in place — an in-place compact mutates the SAME memory a
+block-taking helper's pointer snapshot points into, silently corrupting an
+in-flight outer iteration; reallocating (like `push` already did) leaves any
+outer snapshot reading unmodified memory, restoring the safe invariant.  A
 wrong-type receiver or argument raises `NoMethodError`; a built-in method not
 lowered yet is still rejected cleanly.
 

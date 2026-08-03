@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.28.0 — Collections slice 7: Hash block methods
+
+No new `Feature`.
+
+- New methods taking a trailing BLOCK argument, called with `(key, value)`
+  (matching `Array#each_with_index`'s existing 2-arg calling precedent):
+  `each_key`/`each_value` (yield one), `group_by` (a fresh Hash mapping each
+  distinct block result to an Array of the `[k, v]` pairs that produced it,
+  growing a group's array via the SAME `_sir_array_push_one` `Array#push`
+  uses), `partition` (`[matching_pairs, non_matching_pairs]`, each a fresh
+  Array). `each`/`map`/`select`/`reject`/`sort_by`/`sum` widen to accept a
+  Hash receiver alongside their existing Array-only forms — `Hash#map`
+  returns an Array (not a re-keyed Hash) and `Hash#sort_by` returns an Array
+  of `[k, v]` pairs, both matching Ruby's `Enumerable` semantics; `select`/
+  `reject` return a fresh Hash (unlike Array's, which return an Array).
+- **Security, applied from the start this time**: every helper here
+  snapshots BOTH `m->len` AND the `entries` pointer into locals once before
+  its loop, exactly the discipline slice 4 had to retrofit (twice) for
+  Array — since slice 6's `delete`/`clear` mutators already existed before
+  these block helpers were added, there was no window where the bug could
+  ship unguarded.
+- **Security fix (found while implementing `Hash#delete`, and it exposed an
+  ALREADY-MERGED bug)**: `delete` and `Array#shift` (slice 4) originally
+  compacted their backing buffer IN PLACE (no reallocation) after removing
+  an entry. That's unsafe against a block-taking helper's pointer snapshot:
+  snapshotting a pointer is only safe against a mutator that REALLOCATES
+  (like `push`) — the snapshot and the new buffer are then different memory,
+  so the OLD one (still valid; this arena never frees) keeps reading exactly
+  what it saw at snapshot time. An in-place compact instead mutates the SAME
+  memory the snapshot points into, silently corrupting an in-flight outer
+  iteration (elements shift under it — some read twice, some skipped).
+  Both `delete` and `Array#shift` now reallocate a fresh, one-smaller buffer
+  instead, closing the gap. Pinned by new tests in both this crate's Hash
+  and (retroactively) Array test suites: `each` deleting/shifting from its
+  own receiver mid-iteration now correctly sees every ORIGINAL element
+  exactly once.
+- **Security fix, round 2 (found by re-review of the round-1 fix)**: the
+  reallocation `delete` gained above introduced a NEW bug — it resized
+  `m->entries` without also updating `m->cap`, the field `_sir_map_put`'s
+  `if (m->len == m->cap)` amortized-growth check relies on (`SirMap`, unlike
+  `SirSeq`, tracks spare capacity). A stale, too-large `cap` after `delete`
+  makes a LATER `put` skip growing and write one past the end of the freshly
+  tightly-sized buffer — a genuine heap out-of-bounds write reachable by
+  entirely ordinary code (`h.delete(k); h[new_key] = v`), not an edge case.
+  `delete` now sets `m->cap = new_len` alongside `m->entries`/`m->len`.
+  Pinned by a new hand-built-IR regression test (bracket-index assignment,
+  `h[k] = v`, has no Ruby source syntax yet — a separate, pre-existing
+  frontend gap, tracked on the backlog) that deletes then inserts twice,
+  crossing the grow-triggering `len == cap` boundary on the second insert.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
+
 ## 0.27.0 — Collections slice 6: Hash non-block methods
 
 No new `Feature`.

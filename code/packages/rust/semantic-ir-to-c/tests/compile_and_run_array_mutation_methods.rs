@@ -238,7 +238,7 @@ fn count_with_block_pushing_to_the_receiver_terminates() {
 fn array_each_shrinking_then_growing_the_receiver_does_not_overread() {
     // Security regression: snapshotting `len` ALONE is not enough -- `push`
     // reallocates its new buffer sized to the CURRENT (live) `s->len`, so a
-    // block that first shrinks the receiver (`pop`/`shift`, in place, no
+    // block that first shrinks the receiver (`pop`, len-only, no
     // reallocation) and THEN pushes produces a buffer smaller than a `len`
     // already snapshotted by an outer iterating helper. Continuing to read
     // via a live `s->items` pointer up to that stale, larger snapshot would
@@ -248,6 +248,25 @@ fn array_each_shrinking_then_growing_the_receiver_does_not_overread() {
     // buffer (`each`'s own snapshot at entry), never the shrunk/regrown one.
     match run_ruby("a = [1, 2, 3, 4, 5]\na.each { |x| a.pop\na.pop\na.push(99)\nputs x }\n") {
         Some(out) => assert_eq!(out, "1\n2\n3\n4\n5\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn each_shifting_the_receiver_does_not_corrupt_an_in_flight_snapshot() {
+    // Security regression (found while implementing Hash#delete, which has
+    // the identical shape): `shift`'s ORIGINAL implementation compacted
+    // `s->items` IN PLACE (no reallocation) -- but a block-taking helper
+    // snapshots the `items` POINTER, not a copy of the data, before its
+    // loop. Snapshotting a pointer is only safe against a mutator that
+    // REALLOCATES (like `push`): the snapshot and the mutator's new buffer
+    // are then different memory. An in-place compact instead mutates the
+    // SAME memory the snapshot points into, silently corrupting an
+    // in-flight outer iteration -- elements shift under it, some get read
+    // twice, some get skipped. `shift` now reallocates too, so `each` must
+    // still see the ORIGINAL 3 elements here, each exactly once.
+    match run_ruby("a = [1, 2, 3]\na.each { |x| a.shift\nputs x }\n") {
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
