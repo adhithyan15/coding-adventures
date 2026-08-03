@@ -2099,6 +2099,35 @@ fn preserves_positive_mosfet_model_saturation_current() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_saturation_current_density() {
+    for saturation_current_density in ["-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model leakage NMOS(JS={saturation_current_density})\nM1 d g s b leakage"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET JS must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_saturation_current_density() {
+    for (saturation_current_density, expected) in [("0", 0.0), ("2p", 2.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model leakage NMOS(JS={saturation_current_density})\nM1 d g s b leakage"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.saturation_current_density, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
