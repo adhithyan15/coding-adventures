@@ -1902,6 +1902,10 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         channel_modulation = params.get("LAMBDA", params.get("LAM"))
         if channel_modulation is not None and not math.isfinite(channel_modulation):
             raise NetlistParseError("MOSFET LAMBDA must be finite")
+        if "GAMMA" in params and (
+            not math.isfinite(params["GAMMA"]) or params["GAMMA"] < 0.0
+        ):
+            raise NetlistParseError("MOSFET GAMMA must be finite and non-negative")
     return ModelCard(name=name, kind=kind, params=params)
 
 

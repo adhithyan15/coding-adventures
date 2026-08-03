@@ -1418,6 +1418,24 @@ Xright c d load
     },
   );
 
+  it.each(["-0.01", "1e999"])("rejects invalid MOSFET model GAMMA=%s", (bodyEffect) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(GAMMA=${bodyEffect})\nM1 d g s b nfast\n`),
+    ).toThrow("MOSFET GAMMA must be finite and non-negative");
+  });
+
+  it.each(["0", "0.45"])("lowers valid MOSFET model GAMMA=%s", (bodyEffect) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(GAMMA=${bodyEffect})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.GAMMA).toBe(Number(bodyEffect));
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
