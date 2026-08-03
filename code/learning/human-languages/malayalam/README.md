@@ -45,6 +45,23 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/ML-C05-*`](./lessons/)): saṁsārikkuka,
   **ñān malayāḷaṁ saṁsārikkunnu**, tāmasikkuka, jōli ceyyuka, practice. The
   *-unnu* present — the verb never changes for person. In the book.
+- **Chapters 6–9 — Case, counting, and courtesy**
+  ([`lessons/ML-C0{6,7,8,9}-*`](./lessons/)): the dative **-ഇക്ക്/-ഇന്**, the
+  dative-subject sentence **എനിക്ക് മലയാളം അറിയാം**, numbers one through ten,
+  **ദയവായി**, and **ക്ഷമിക്കണം**. In the book from canonical schema-v2 lessons.
+- **Chapters 10–22 — Calendar and everyday domains**
+  ([`lessons/ML-C{10..22}-*`](./lessons/)): days, colours, family, body, seasons,
+  food, Malayalam's solar months, clock time, age, numbers 11–20, weather, and
+  animals. In the book from canonical schema-v2 lessons.
+- **Chapters 23–31 — Dayparts and greetings**
+  ([`lessons/ML-C{23..31}-*`](./lessons/)): native and Sanskrit day/night words,
+  morning, evening, afternoon, and their register-aware greetings. In the book
+  from canonical schema-v2 lessons.
+
+All thirty-three later lessons remain below five effective minutes. Their
+twenty-six generated chapters carry the same source hashes Language Ladder
+recomputes from the browser-loaded lesson AST, so app and book cannot drift
+silently.
 
 ## Book / fonts
 

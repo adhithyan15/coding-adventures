@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C11-nirangal
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 390
 chapter: 11
 type: word
 headword: കറുപ്പ് വെള്ള ചുവപ്പ് നീല
@@ -9,18 +12,32 @@ prerequisites: [ML-C10-azhcha]
 sounds: [malayalam-virama-final, malayalam-cha]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "കറുപ്പ്/വെള്ള/ചുവപ്പ് (black/white/red) closely match Tamil's karuppu/vellai/sivappu; നീല (blue) is the same Sanskrit loan as Tamil's nilam"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02]
+practises:
+  knowledge: [ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C10-azhcha]
 ---
 
 # കറുപ്പ്, വെള്ള, ചുവപ്പ്, നീല — the same split as Tamil
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've seen Malayalam and Tamil share day-names almost
 word-for-word. Their colors follow the exact same family pattern.
 
-## Three native colors, matching Tamil closely
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C11-NIRANGAL-01]; assesses=[] -->
 
 - **കറുപ്പ്** (*karuppŭ*) = "**black**" — matches Tamil *karuppu* almost
   exactly.
@@ -31,7 +48,8 @@ word-for-word. Their colors follow the exact same family pattern.
   their opening consonant's sound and their vowel — a looser cousin than
   *karuppŭ*/*karuppu* or *veḷḷa*/*veḷḷai*, which match almost exactly.
 
-## The same borrowed blue
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C11-NIRANGAL-02]; assesses=[] -->
 
 **നീല** (*nīla*) = "**blue**" — the same **Sanskrit** loan Tamil uses
 (*nīlam*), and the same one Hindi uses (*nīlā*). Blue is where Malayalam,
@@ -40,6 +58,7 @@ Malayalam and Tamil otherwise built their own native words for black, white,
 and red.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "karuppŭ, veḷḷa, cuvappŭ" — black, white, red]
@@ -48,6 +67,7 @@ and red.
   cuvappŭ/sivappu"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C11-NIRANGAL-01, ML-CONCEPT-C11-NIRANGAL-02] -->
 
 [PAUSE 3s] Which three Malayalam colors closely match Tamil's own words?
 (**Karuppŭ, veḷḷa, cuvappŭ** — black, white, red.) Which color is a shared

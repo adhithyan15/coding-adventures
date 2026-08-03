@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C14-kaalangal
+spine_node: SPINE-TIME-OF-DAY
+sequence: 420
 chapter: 14
 type: word
 headword: വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം
@@ -9,19 +12,33 @@ prerequisites: [ML-C13-shareera-bhaagangal]
 sounds: [malayalam-chillu-l, malayalam-anusvara]
 roots: [dravidian-venal-mazha, sanskrit-vasantha]
 etymology_hook: "വേനൽ venal (summer heat) and മഴ mazha (rain) are native Dravidian, matching Tamil's kodai/mazhai closely — വസന്തം vasantham (spring) is the same Sanskrit loan Tamil uses too"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02]
+practises:
+  knowledge: [ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C13-shareera-bhaagangal]
 ---
 
 # വസന്തകാലം, വേനൽ, മഴ, ശൈത്യം — the same pattern as Tamil
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam's season words follow the very same recipe as Tamil's
 — native words for what a season *feels like*, plus one shared Sanskrit
 loan for spring.
 
-## The four words
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C14-KAALANGAL-01]; assesses=[] -->
 
 | Malayalam | meaning | source |
 |---|---|---|
@@ -35,7 +52,8 @@ ultimately from Sanskrit **काल** (*kāla*), but assimilated so long ago th
 it functions as ordinary vocabulary, quite unlike a fresher loan like
 *vasantham*.
 
-## Be honest about the real season here too
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C14-KAALANGAL-02]; assesses=[] -->
 
 As with Tamil, Kerala's actual climate is shaped far more by
 **മഴക്കാലം** (*mazhakkaalam*, "the rains" — including Kerala's famous
@@ -44,6 +62,7 @@ aren't a footnote to "summer" or "autumn" — they're their own major season,
 central to daily and agricultural life.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "venal" — summer heat — then "kaalam," season]
@@ -52,6 +71,7 @@ central to daily and agricultural life.
 - [YOU SAY: the shared loanword — "vasanthakaalam," spring, same as Tamil]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02] -->
 
 [PAUSE 3s] Which Malayalam season-words match Tamil's closely, and which is
 shared with Tamil as a Sanskrit loan? (**Venal/mazha** match Tamil's

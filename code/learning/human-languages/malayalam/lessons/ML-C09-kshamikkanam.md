@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C09-kshamikkanam
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 370
 chapter: 9
 type: word
 headword: ക്ഷമിക്കണം
@@ -9,19 +12,33 @@ prerequisites: [ML-C08-dayavayi]
 sounds: [malayalam-conjunct-kssa, malayalam-geminate-kka]
 roots: [kshama-sanskrit]
 etymology_hook: "ക്ഷമിക്കണം kṣamikkaṇaṁ ← Sanskrit kṣama 'forgiveness' + Malayalam verb-making -ikkuka + the SAME necessitative -aṇaṁ noted in ദയവായി's lesson"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03]
+practises:
+  knowledge: [ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: polite
+variety: standard-colloquial
 reviews_of: [ML-C08-dayavayi]
 ---
 
 # ക്ഷമിക്കണം (kṣamikkaṇaṁ) — (you) should forgive / sorry
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already know **ദയവായി** and the necessitative **‑ണം** ending
 mentioned there. Malayalam's "sorry" is that very ending, now carrying a
 forgiveness-verb.
 
-## The word, taken apart
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C09-KSHAMIKKANAM-01]; assesses=[] -->
 
 - **ക്ഷമ** (*kṣama*) = "**forgiveness, patience**" — the Sanskrit noun.
 - **‑ഇക്കുക** (*‑ikkuka*) = a **verb-making suffix**: *kṣama* + *‑ikkuka* →
@@ -34,7 +51,8 @@ forgiveness-verb.
 So **ക്ഷമിക്കണം** leans on obligation to be polite — a very different move
 from a plain imperative.
 
-## The Dravidian family, side by side
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C09-KSHAMIKKANAM-02]; assesses=[] -->
 
 - Malayalam **ക്ഷമിക്കണം** *kṣami**kkaṇaṁ*** — Sanskrit *kṣama* +
   **‑ikkuka** (verb) + **‑aṇaṁ** (necessitative: "must/should")
@@ -45,7 +63,8 @@ from a plain imperative.
 - Tamil **மன்னிக்கவும்** *maṉṉi**kkavum*** — its **own** native root *maṉṉi*,
   not Sanskrit at all
 
-## Be honest about how it's used
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C09-KSHAMIKKANAM-03]; assesses=[] -->
 
 **ക്ഷമിക്കണം** is a genuine, common way to ask forgiveness — but Malayalam
 speakers reach just as often for the plain imperative **ക്ഷമിക്കൂ**
@@ -53,6 +72,7 @@ speakers reach just as often for the plain imperative **ക്ഷമിക്ക
 borrowed English **"sorry."**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kṣama" — the Sanskrit noun, forgiveness]
@@ -61,6 +81,7 @@ borrowed English **"sorry."**
 - [YOU SAY: the plainer version — "kṣamikkū," using the ‑ū ending you know]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
 
 [PAUSE 3s] What does **ക്ഷമിക്കണം** literally say, and why is that polite?
 (**"[You] must forgive"** — the necessitative **‑aṇaṁ** softens an obligation

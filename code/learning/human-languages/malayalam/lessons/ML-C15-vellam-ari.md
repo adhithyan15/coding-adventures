@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C15-vellam-ari
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 430
 chapter: 15
 type: word
 headword: വെള്ളം അരി ചോറ്
@@ -9,22 +12,36 @@ prerequisites: [ML-C14-kaalangal]
 sounds: [malayalam-geminate-lla, malayalam-vowel-sign-oo]
 roots: [vellam-flood-white, ari-rice-dravidian]
 etymology_hook: "വെള്ളം vellam (water) does NOT match Tamil's neer/thanneer — it shares the veL- 'bright/white' root already met in Malayalam's word for silver/Venus, originally meaning 'flood'; അരി ari (rice) DOES match Tamil's arisi closely"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
+practises:
+  knowledge: [ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C14-kaalangal]
 ---
 
 # വെള്ളം, അരി, ചോറ് — a different water-word, the same rice-words
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] For once, Malayalam's everyday word for something basic
 genuinely **doesn't** match Tamil's — even though water is about as basic
 as vocabulary gets.
 
-## വെള്ളം — not the everyday nīr-word
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C15-VELLAM-ARI-01]; assesses=[] -->
 
 **വെള്ളം** (*veḷḷam*) = "**water**" — and notably, this is **not** built on
-*nīr* the way Tamil's *taṇṇīr* is. Instead, *veḷḷam* shares the **വെള്‍**
+*nīr* the way Tamil's *taṇṇīr* is. Instead, *veḷḷam* shares the **വെൾ**
 (*veḷ-*, "**bright, white**") root you already met in *veḷḷi*, "silver/
 Venus," from the colors and days lessons — *veḷḷam* originally meant
 something closer to "**flood, deluge**" before becoming Malayalam's plain,
@@ -33,7 +50,8 @@ it survives inside compounds like **ഇളനീർ** *iḷanīr*, "tender cocon
 water," and **കണ്ണീർ** *kaṇṇīr*, "tears" — it's just not the standalone
 everyday word anymore.)
 
-## അரி, ചോറ് — rice, matching Tamil closely
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C15-VELLAM-ARI-02]; assesses=[] -->
 
 Rice, though, tells the familiar story:
 
@@ -46,6 +64,7 @@ Rice, though, tells the familiar story:
   word, where Tamil more often reaches for *sātam*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "veḷḷam" — water, NOT matching Tamil's neer]
@@ -53,6 +72,7 @@ Rice, though, tells the familiar story:
 - [YOU SAY: "cōṟu" — cooked rice, Malayalam's own word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->
 
 [PAUSE 3s] Does Malayalam's everyday water-word match Tamil's? (**No** —
 *veḷḷam* shares the *veḷ-* "bright/white" root instead, originally meaning

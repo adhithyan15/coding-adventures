@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C29-suprabhaatham
+spine_node: SPINE-TIME-OF-DAY
+sequence: 610
 chapter: 29
 type: phrase
 headword: സുപ്രഭാതം
@@ -9,20 +12,34 @@ prerequisites: [ML-C26-raavile]
 sounds: [malayalam-conjunct-pra, malayalam-anusvara]
 roots: [sanskrit-su-good, sanskrit-prabhata-shine]
 etymology_hook: "സുപ്രഭാതം (suprabhātaṁ, 'good morning') is Malayalam's actual, most common morning greeting — confirmed via two independently-fetched sources: talkpal.ai states it is 'used in both formal and informal situations,' and ling-app.com separately, without prompting, calls it 'the most general greeting' for good morning — genuine two-source corroboration, a stronger evidentiary footing than a single directly-fetched source alone (a distinction this arc has learned to care about, per TE-C29's own 'fetched directly is not the same as authoritative' finding); it's built from the Sanskrit prefix su- ('good') plus പ്രഭാതം (already met, ML-C26, as an alternative Malayalam word for 'morning'), NOT from ശുഭ (ML-C25's 'auspicious,' the word Malayalam's own GREETING-GOODNIGHT is built on) — a genuinely different Sanskrit 'good' morpheme, a bound prefix rather than a standalone adjective; be honest about a striking cross-language structural inversion: this is the exact SAME Sanskrit tatsama word as Telugu's own సుప్రభాతం (TE-C29) — but the two languages give it OPPOSITE roles: it's Malayalam's PRIMARY, most-used morning greeting, while in Telugu it's only a SECONDARY alternative to శుభోదయం (built on a completely different root, udaya, not ప్రభాత/prabhāta)"
-est_minutes: 4
+duration:
+  max_seconds: 282
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C29-SUPRABHAATHAM-01, ML-CONCEPT-C29-SUPRABHAATHAM-02]
+practises:
+  knowledge: [ML-CONCEPT-C29-SUPRABHAATHAM-01, ML-CONCEPT-C29-SUPRABHAATHAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal
+variety: standard-colloquial
 reviews_of: [ML-C26-raavile]
 ---
 
 # സുപ്രഭാതം (suprabhātaṁ) — Malayalam's real "good morning," a familiar word wearing a new hat
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You might expect Malayalam's "good morning" to pair ML-C25's
 "auspicious" word with ML-C26's morning word. It doesn't — Malayalam
 reaches for a completely different Sanskrit "good," and for a word
 you've technically already half-met.
 
-## സുപ്രഭാതം — not built on ശുഭ at all
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C29-SUPRABHAATHAM-01]; assesses=[] -->
 
 **സുപ്രഭാതം** (**suprabhātaṁ**) — "**good morning**" — is
 Malayalam's actual, most common morning greeting: two independently-fetched
@@ -39,7 +56,8 @@ Sanskrit **prefix su-** ("good") fused directly onto **പ്രഭാതം**
 **ശുഭ** is a standalone adjective; **su-** here is a bound prefix
 that only ever attaches to another word.
 
-## A striking structural inversion with Telugu
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C29-SUPRABHAATHAM-02]; assesses=[] -->
 
 Here's the honest cross-language twist: **സുപ്രഭാതം** is the
 **exact same Sanskrit tatsama word** as Telugu's own
@@ -52,6 +70,7 @@ different Sanskrit root (*udaya*, "rise," not *prabhāta*). Same
 borrowed word, opposite roles across two closely related languages.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C29-SUPRABHAATHAM-01, ML-CONCEPT-C29-SUPRABHAATHAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "suprabhātaṁ" — "good morning," su- ("good") + prabhāta
@@ -62,6 +81,7 @@ borrowed word, opposite roles across two closely related languages.
   greeting is Telugu's secondary alternative]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C29-SUPRABHAATHAM-01, ML-CONCEPT-C29-SUPRABHAATHAM-02] -->
 
 [PAUSE 3s] Is സുപ്രഭാതം built on ശുഭ, ML-C25's "auspicious"
 word? (**No** — it's built on the Sanskrit prefix su-, a different

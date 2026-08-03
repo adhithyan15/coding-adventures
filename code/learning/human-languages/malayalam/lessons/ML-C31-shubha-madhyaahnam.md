@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C31-shubha-madhyaahnam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 630
 chapter: 31
 type: phrase
 headword: ശുഭ മധ്യാഹ്നം
@@ -9,20 +12,34 @@ prerequisites: [ML-C17-paathira, ML-C28-uchakazhinju]
 sounds: [malayalam-conjunct-dhya, malayalam-anusvara]
 roots: [sanskrit-shubha-beautiful, sanskrit-madhya-middle]
 etymology_hook: "the formal greeting uses Sanskrit madhyāhna, a synonym of everyday ucha, rather than Malayalam's ucha-plus-passed afternoon phrase"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01]
+practises:
+  knowledge: [ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal
+variety: standard-colloquial
 reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira, ML-C28-uchakazhinju]
 ---
 
 # ശുഭ മധ്യാഹ്നം (śubha madhyāhnaṁ) — formal good afternoon
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Morning broke the pattern entirely. Evening kept the pattern
 but swapped in an unexpected word. This final greeting brings a
 different kind of surprise: a word you haven't met, that turns out to
 connect Malayalam right back to Kannada and Telugu.
 
-## ശുഭ മധ്യാഹ്നം — a genuine synonym you haven't met yet
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01]; assesses=[] -->
 
 **ശുഭ മധ്യാഹ്നം** (**śubha madhyāhnaṁ**) — "**good afternoon**"
 — is confirmed, by a directly-fetched source, as a genuinely **formal**
@@ -41,6 +58,7 @@ And this greeting is **not** built on ML-C28's **ഉച്ചകഴിഞ്ഞ�
 compound (the actual TIME-AFTERNOON phrase already taught) at all.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubha madhyāhnaṁ" — "good afternoon," a formal,
@@ -49,6 +67,7 @@ compound (the actual TIME-AFTERNOON phrase already taught) at all.
   ucca, Malayalam's own "noon" word, just not the one taught first]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-SHUBHA-MADHYAAHNAM-01] -->
 
 [PAUSE 3s] Is ശുഭ മധ്യാഹ്നം built on ML-C28's ഉച്ചകഴിഞ്ഞ്?
 (**No** — it's built on മധ്യാഹ്നം, a genuine Wiktionary-confirmed
