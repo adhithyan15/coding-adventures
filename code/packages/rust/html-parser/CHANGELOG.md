@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Duplicate `html`, `head`, and `body` start tags now emit tree-construction
+  diagnostics while retaining the Standard's attribute-merge recovery for
+  `html` and `body`, closing 28 previously silent malformed corpus cases.
 - Full-document parsing now emits a `missing-doctype` tree-construction
   diagnostic when the initial insertion mode sees a non-whitespace,
   non-comment, non-processing-instruction token before a doctype, closing 783
@@ -325,8 +328,9 @@ documented in this file.
 - Nested `form` start tags are now ignored with a parser diagnostic while an
   outer form remains open, keeping form-associated content in the existing form
   instead of creating nested form DOMs.
-- Duplicate open `html` and `head` start tags now merge missing attributes into
-  the existing shell elements instead of creating nested shell DOMs.
+- Duplicate open `html` start tags merge missing attributes into the existing
+  document element, while duplicate `head` start tags are ignored instead of
+  creating nested shell DOMs.
 - Late `head` start tags after body content has already started are ignored
   with a parser diagnostic.
 - Self-closing flags on non-void HTML start tags are now ignored with a parser

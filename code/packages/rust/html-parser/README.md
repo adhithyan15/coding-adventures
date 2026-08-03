@@ -198,6 +198,9 @@ identify missing diagnostic coverage while DOM output remains independently
 checked. Full-document parsing follows the Standard's initial insertion mode:
 whitespace, comments, and processing instructions may precede a doctype, while
 any other token first emits `missing-doctype` and enters quirks handling.
+Repeated `html`, `head`, and `body` start tags also emit shell diagnostics;
+`html` and `body` retain the Standard's missing-attribute merge behavior while
+a repeated `head` token is ignored.
 
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the

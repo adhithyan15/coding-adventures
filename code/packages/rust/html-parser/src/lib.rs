@@ -4758,6 +4758,7 @@ impl HtmlParser {
             ));
             name = "img".to_string();
         }
+        let body_element_existed_before_start_tag = self.document_has_body_element();
         if name == "body" {
             self.explicit_body_start_seen = true;
         }
@@ -5275,6 +5276,13 @@ impl HtmlParser {
             return;
         }
 
+        if !in_foreign_content && name == "html" && self.has_document_element() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-html-start-tag",
+                "html start tag was recovered against the existing document element",
+            ));
+        }
+
         if !in_foreign_content
             && name == "html"
             && self.merge_attributes_into_open_element("html", &attributes)
@@ -5292,16 +5300,11 @@ impl HtmlParser {
             return;
         }
 
-        if !in_foreign_content
-            && name == "head"
-            && self.has_open_element("head")
-            && !self.current_element_is("head")
-        {
-            return;
-        }
-
         if !in_foreign_content && name == "head" && self.has_open_element("head") {
-            self.merge_attributes_into_open_element("head", &attributes);
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-start-tag",
+                "duplicate head start tag was ignored",
+            ));
             return;
         }
 
@@ -5328,6 +5331,17 @@ impl HtmlParser {
 
         if !in_foreign_content && name == "body" && self.has_open_element("template") {
             return;
+        }
+
+        if !in_foreign_content
+            && name == "body"
+            && body_element_existed_before_start_tag
+            && self.has_open_element("body")
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-body-start-tag",
+                "body start tag was recovered against the existing body element",
+            ));
         }
 
         if !in_foreign_content
@@ -32722,20 +32736,55 @@ mod tests {
     }
 
     #[test]
-    fn merges_duplicate_html_and_head_start_tags_without_nesting() {
-        let document = parse_html(
-            "<html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
+    fn reports_and_recovers_duplicate_html_and_head_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
         )
         .unwrap();
+        let document = output.document;
 
         assert_eq!(html(&document).attribute("lang"), Some("en"));
         assert_eq!(html(&document).attribute("data-app"), Some("venture"));
         assert_eq!(head(&document).attribute("id"), Some("main"));
-        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(head(&document).attribute("data-h"), None);
         assert_eq!(head(&document).children.len(), 1);
         assert_eq!(element(&head(&document).children[0]).name, "title");
         assert_eq!(body(&document).children.len(), 1);
         assert_eq!(element(&body(&document).children[0]).name, "p");
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag",
+                    "html start tag was recovered against the existing document element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-head-start-tag",
+                    "duplicate head start tag was ignored"
+                )
+            ]
+        );
+    }
+
+    #[test]
+    fn reports_and_recovers_duplicate_body_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><body class=first><body data-app=venture class=ignored><p>x",
+        )
+        .unwrap();
+
+        assert_eq!(body(&output.document).attribute("class"), Some("first"));
+        assert_eq!(
+            body(&output.document).attribute("data-app"),
+            Some("venture")
+        );
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-body-start-tag",
+                "body start tag was recovered against the existing body element"
+            )]
+        );
     }
 
     #[test]
