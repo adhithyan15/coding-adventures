@@ -28,6 +28,16 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
+
+    // One test (testDecompressRejectsOversizedMultiBlockExpansion) legitimately
+    // accumulates output close to Zstd.MAX_OUTPUT (256 MB) before the
+    // decompression-bomb guard fires on the block that tips it over — that's
+    // the guard doing its job, not a leak, but it needs real heap to get
+    // there. Gradle's default test-worker heap is too small for that single
+    // test without OOMing before the guard has a chance to run (confirmed
+    // empirically). 2 GB comfortably covers the ~256-400 MB peak (including
+    // ByteBuf's 1.5x growth overshoot) plus JVM/test-framework overhead.
+    maxHeapSize = "2g"
 }
 
 jacoco {

@@ -86,6 +86,22 @@ public final class Zstd {
      */
     private static final int MAX_BLOCK_SIZE = 128 * 1024;
 
+    /**
+     * Decompression-bomb guard: total output across the whole frame is
+     * capped at 256 MB, checked incrementally as output grows — never as a
+     * single check keyed off an untrusted size field.
+     *
+     * <p>The 128 KB {@link #MAX_BLOCK_SIZE} cap on a block's WIRE size does
+     * NOT bound how much output a single Compressed block can produce: LZ77
+     * back-references let a small bitstream expand combinatorially (a match
+     * length up to ~131 KB can be repeated across tens of thousands of
+     * sequences, all packed into one ≤128 KB block). This constant is
+     * therefore checked inside {@link #decompressBlock} at every point the
+     * output grows (each literal run AND each match copy), not only once
+     * per top-level block in {@link #decompress}.</p>
+     */
+    static final int MAX_OUTPUT = 256 * 1024 * 1024;
+
     // ─── LL / ML / OF code tables (RFC 8878 §3.1.1.3) ────────────────────────
     //
     // These tables map a *code number* to a (baseline, extra_bits) pair.
@@ -648,6 +664,73 @@ public final class Zstd {
             bits = Math.max(0, bits - nb);
             if (bits < 24) reload();
             return val;
+        }
+    }
+
+    // ─── Growable primitive byte buffer (decompression output only) ──────────
+    //
+    // The COMPRESS path elsewhere in this file uses List<Byte> for output
+    // accumulation, which is fine there: its size is bounded by the caller-
+    // supplied input already sitting in memory as a byte[] — encoding it
+    // into a List<Byte> of comparable magnitude isn't a NEW amplification
+    // vector.
+    //
+    // The DECOMPRESS path is different: output size is driven by untrusted,
+    // attacker-controlled wire fields (literal lengths, match lengths,
+    // sequence counts), and MAX_OUTPUT exists specifically to bound how much
+    // memory a hostile frame can force us to allocate. But List<Byte> boxes
+    // every byte into a full Byte object — on typical JVMs that's ~16 bytes
+    // of heap (object header + padding) per logical byte, ON TOP OF the
+    // ArrayList's own 4- or 8-byte reference slot. That means the guard,
+    // which compares the LOGICAL byte count against MAX_OUTPUT, would not
+    // fire until REAL heap usage was already many times MAX_OUTPUT — this
+    // was caught empirically: a test exercising the guard at exactly
+    // MAX_OUTPUT (256 MB logical) OOM'd the test JVM before the check could
+    // ever throw, because the backing List<Byte> needed several GB to hold
+    // that many boxed elements. A primitive byte[]-backed buffer keeps real
+    // memory usage directly proportional to the logical size being checked.
+
+    /**
+     * Minimal growable {@code byte} buffer — the decompression-path
+     * equivalent of {@code List<Byte>}, without per-element boxing.
+     */
+    static final class ByteBuf {
+        private byte[] data;
+        private int size;
+
+        ByteBuf() {
+            this.data = new byte[64];
+        }
+
+        /**
+         * Append one byte, growing the backing array (1.5×) if needed.
+         *
+         * @param b the byte to append
+         */
+        void add(byte b) {
+            if (size == data.length) {
+                int newCapacity = data.length + (data.length >> 1);
+                data = Arrays.copyOf(data, Math.max(newCapacity, size + 1));
+            }
+            data[size++] = b;
+        }
+
+        /** @return the number of bytes appended so far */
+        int size() {
+            return size;
+        }
+
+        /**
+         * @param i index, {@code 0 <= i < size()}
+         * @return the byte at index {@code i}
+         */
+        byte get(int i) {
+            return data[i];
+        }
+
+        /** @return a right-sized copy of the appended bytes */
+        byte[] toByteArray() {
+            return Arrays.copyOf(data, size);
         }
     }
 
@@ -1214,7 +1297,7 @@ public final class Zstd {
      * @throws IOException if the block is malformed
      */
     private static void decompressBlock(
-            byte[] data, int blockStart, int blockLen, List<Byte> output)
+            byte[] data, int blockStart, int blockLen, ByteBuf output)
             throws IOException {
 
         // ── Literals section ─────────────────────────────────────────────────
@@ -1230,6 +1313,7 @@ public final class Zstd {
         // ── Sequences count ──────────────────────────────────────────────────
         if (pos >= blockEnd) {
             // Block has only literals, no sequences.
+            checkOutputBudget(output.size(), litDataEnd - litDataStart);
             for (int i = litDataStart; i < litDataEnd; i++) output.add(data[i]);
             return;
         }
@@ -1240,6 +1324,7 @@ public final class Zstd {
 
         if (nSeqs == 0) {
             // No sequences — all content is in literals.
+            checkOutputBudget(output.size(), litDataEnd - litDataStart);
             for (int i = litDataStart; i < litDataEnd; i++) output.add(data[i]);
             return;
         }
@@ -1341,6 +1426,7 @@ public final class Zstd {
                 throw new IOException("literal run " + ll +
                         " overflows literals buffer (pos=" + (litPos - litDataStart) +
                         " len=" + (litDataEnd - litDataStart) + ")");
+            checkOutputBudget(output.size(), ll);
             for (int j = litPos; j < litEnd; j++) output.add(data[j]);
             litPos = litEnd;
 
@@ -1350,6 +1436,12 @@ public final class Zstd {
             if (matchOffset == 0 || matchOffset > output.size())
                 throw new IOException("bad match offset " + matchOffset +
                         " (output len " + output.size() + ")");
+            // Decompression-bomb guard: a single sequence's match length can
+            // be up to ~131 KB (ML code 52), and a ≤128 KB Compressed block
+            // can carry tens of thousands of sequences — MAX_BLOCK_SIZE
+            // bounds the wire size, NOT the expanded output size, so this
+            // must be checked HERE, per match, not just once per block.
+            checkOutputBudget(output.size(), ml);
             int copyStart = output.size() - matchOffset;
             for (int j = 0; j < ml; j++) {
                 output.add(output.get(copyStart + j));
@@ -1357,7 +1449,33 @@ public final class Zstd {
         }
 
         // Any remaining literals after the last sequence.
+        checkOutputBudget(output.size(), litDataEnd - litPos);
         for (int i = litPos; i < litDataEnd; i++) output.add(data[i]);
+    }
+
+    /**
+     * Decompression-bomb guard: throws if adding {@code additional} more
+     * bytes to output (currently {@code currentSize} bytes) would exceed
+     * {@link #MAX_OUTPUT}.
+     *
+     * <p>Checked incrementally at every point output can grow — inside the
+     * per-sequence loop of {@link #decompressBlock}, not only once per
+     * top-level block — because a small Compressed block can expand via
+     * LZ77 back-references far beyond what its wire size (already capped at
+     * {@link #MAX_BLOCK_SIZE}) would suggest.</p>
+     *
+     * @param currentSize the current output size in bytes
+     * @param additional  the number of bytes about to be appended
+     * @throws IOException if the resulting size would exceed {@link #MAX_OUTPUT}
+     */
+    static void checkOutputBudget(int currentSize, int additional) throws IOException {
+        // additional is always derived from bounded wire fields (ll/ml values,
+        // themselves at most ~131070 per RFC 8878's LL/ML code tables), so
+        // currentSize + additional cannot overflow a 32-bit int before this
+        // check fires (MAX_OUTPUT itself is 2^28).
+        if ((long) currentSize + (long) additional > MAX_OUTPUT)
+            throw new IOException("decompressed size exceeds limit of " +
+                    MAX_OUTPUT + " bytes");
     }
 
     // ─── Public API ───────────────────────────────────────────────────────────
@@ -1564,9 +1682,10 @@ public final class Zstd {
         pos += fcsBytes;
 
         // ── Blocks ───────────────────────────────────────────────────────────
-        // Guard against decompression bombs: cap total output at 256 MB.
-        final int MAX_OUTPUT = 256 * 1024 * 1024;
-        List<Byte> output = new ArrayList<>();
+        // Guard against decompression bombs: cap total output at MAX_OUTPUT,
+        // checked incrementally (see decompressBlock() for the Compressed-
+        // block case, where MAX_BLOCK_SIZE alone is not sufficient).
+        ByteBuf output = new ByteBuf();
 
         while (true) {
             if (pos + 3 > data.length)
@@ -1599,9 +1718,7 @@ public final class Zstd {
                     if (pos + bsize > data.length)
                         throw new IOException("raw block truncated: need " + bsize +
                                 " bytes at pos " + pos);
-                    if (output.size() + bsize > MAX_OUTPUT)
-                        throw new IOException("decompressed size exceeds limit of " +
-                                MAX_OUTPUT + " bytes");
+                    checkOutputBudget(output.size(), bsize);
                     for (int i = pos; i < pos + bsize; i++) output.add(data[i]);
                     pos += bsize;
                 }
@@ -1609,9 +1726,7 @@ public final class Zstd {
                     // RLE block: 1 byte repeated bsize times.
                     if (pos >= data.length)
                         throw new IOException("RLE block missing byte");
-                    if (output.size() + bsize > MAX_OUTPUT)
-                        throw new IOException("decompressed size exceeds limit of " +
-                                MAX_OUTPUT + " bytes");
+                    checkOutputBudget(output.size(), bsize);
                     byte rleByte = data[pos++];
                     for (int i = 0; i < bsize; i++) output.add(rleByte);
                 }
@@ -1647,7 +1762,7 @@ public final class Zstd {
             throw new IOException("trailing data after end of frame: " +
                     (data.length - pos) + " unexpected byte(s)");
 
-        return toByteArray(output);
+        return output.toByteArray();
     }
 
     // ─── Utility ─────────────────────────────────────────────────────────────

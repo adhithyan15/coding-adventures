@@ -498,6 +498,100 @@ class ZstdTest {
         }
     }
 
+    // ─── Security: decompression-bomb guard ──────────────────────────────────
+
+    /**
+     * {@code checkOutputBudget} must reject any growth that would push total
+     * output past {@code MAX_OUTPUT}, and must accept growth that stays at
+     * or under it.
+     *
+     * <p>This directly regression-tests a security-review finding: the
+     * top-level {@code MAX_OUTPUT} check in {@link Zstd#decompress} bounds
+     * Raw and RLE blocks (where wire size 1:1 bounds output size), but a
+     * Compressed block's wire size (already capped at 128 KB via
+     * {@code MAX_BLOCK_SIZE}) does NOT bound its expanded output size — a
+     * single LZ77 match can be up to ~131 KB, and a ≤128 KB block can carry
+     * tens of thousands of sequences, so a small malicious frame could
+     * otherwise expand to gigabytes before any check fired. The fix threads
+     * this check into the per-sequence loop of {@code decompressBlock} via
+     * this helper, called before every literal-run append and every match
+     * copy — not just once per top-level block.</p>
+     */
+    @Test
+    void testCheckOutputBudgetRejectsOverflow() {
+        // Exactly at the limit: must be accepted.
+        assertDoesNotThrow(() -> checkOutputBudget(MAX_OUTPUT - 10, 10));
+        // One byte over: must be rejected.
+        IOException ex = assertThrows(IOException.class,
+                () -> checkOutputBudget(MAX_OUTPUT - 10, 11));
+        assertTrue(ex.getMessage().contains("exceeds limit"),
+                "expected a clear decompression-bomb error, got: " + ex.getMessage());
+        // Already-huge currentSize (simulating many prior sequences having
+        // already accumulated close to the limit) plus one more large match.
+        assertThrows(IOException.class,
+                () -> checkOutputBudget(MAX_OUTPUT, 1));
+        // Comfortably under the limit: must be accepted.
+        assertDoesNotThrow(() -> checkOutputBudget(0, 1024));
+    }
+
+    /**
+     * End-to-end: splicing many copies of a legitimate Compressed block into
+     * one frame, so the total EXPANDED output exceeds {@code MAX_OUTPUT},
+     * must be rejected by {@code decompress()} — not allowed to actually
+     * allocate anywhere near 256 MB.
+     *
+     * <p>This is the exact scenario the security-review finding described:
+     * each individual block is small and well-formed (64 KB expanded, tiny
+     * on the wire since it's highly repetitive), so nothing about any single
+     * block looks malicious — the attack is entirely in the CUMULATIVE
+     * total across many blocks in one frame. The pre-fix code never checked
+     * {@code MAX_OUTPUT} for the Compressed-block path at all (only Raw and
+     * RLE), so a frame like this one would have decompressed to completion,
+     * allocating the full expanded size. With the fix, {@code checkOutputBudget}
+     * is consulted (via the shared, cumulative {@code output} list) on every
+     * block, so this must fail with a clear {@code IOException} well before
+     * the full expansion completes.</p>
+     */
+    @Test
+    void testDecompressRejectsOversizedMultiBlockExpansion() throws IOException {
+        // One legitimate 64 KB-expanding Compressed block, built via the
+        // real compress() path (not hand-crafted) so its literals/FSE
+        // sections are guaranteed well-formed.
+        byte[] pattern = "0123456789".getBytes();
+        byte[] block = new byte[64 * 1024];
+        for (int i = 0; i < block.length; i++) block[i] = pattern[i % pattern.length];
+        byte[] legitFrame = compress(block);
+        assertArrayEquals(block, decompress(legitFrame), "sanity: legit frame must round-trip alone");
+
+        // Frame header is fixed at 13 bytes for our own compress() output:
+        // magic(4) + FHD(1) + FCS(8, since compress() always uses FCS_flag=11
+        // Single_Segment=1). What follows is exactly one block: header(3) +
+        // payload, with Last_Block=1 (bit 0 of the header's first byte).
+        final int FRAME_HEADER_LEN = 13;
+        byte[] blockBytes = Arrays.copyOfRange(legitFrame, FRAME_HEADER_LEN, legitFrame.length);
+        assertEquals(1, blockBytes[0] & 1, "sanity: sole block must have Last_Block=1");
+
+        // Splice N copies of that block into one frame: all but the final
+        // copy have Last_Block cleared (bit 0 = 0), only the last retains
+        // Last_Block=1. N * 64 KB comfortably exceeds MAX_OUTPUT (256 MB)
+        // while the FRAME itself stays tiny (N * ~50 bytes on the wire).
+        int n = (MAX_OUTPUT / block.length) + 8; // guarantee we cross the limit
+        java.io.ByteArrayOutputStream spliced = new java.io.ByteArrayOutputStream();
+        spliced.write(legitFrame, 0, FRAME_HEADER_LEN);
+        for (int i = 0; i < n; i++) {
+            byte[] copy = blockBytes.clone();
+            if (i < n - 1) copy[0] = (byte) (copy[0] & ~1); // clear Last_Block
+            spliced.writeBytes(copy);
+        }
+        byte[] maliciousFrame = spliced.toByteArray();
+
+        IOException ex = assertThrows(IOException.class, () -> decompress(maliciousFrame),
+                "a multi-block frame whose CUMULATIVE expansion exceeds MAX_OUTPUT " +
+                        "must be rejected, even though no single block looks oversized");
+        assertTrue(ex.getMessage().contains("exceeds limit"),
+                "expected a decompression-bomb error, got: " + ex.getMessage());
+    }
+
     // ─── Unit: FSE decode table coverage ─────────────────────────────────────
 
     /**
