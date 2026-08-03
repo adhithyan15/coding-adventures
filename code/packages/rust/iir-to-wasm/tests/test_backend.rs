@@ -2228,3 +2228,54 @@ fn input_str_lowers_and_declares_env_import() {
         "encoded module must declare the env.__input_str import"
     );
 }
+
+/// Twig GC completion round (Part 3): a module that bump-allocates (here, a
+/// single `alloc_array`) must declare linear memory with room to actually
+/// grow — the confirmed bug this round fixes was `Limits { min: 1, max:
+/// Some(1) }` hardcoded on every memory-using module, with no `memory.grow`
+/// call anywhere in the emitted bytecode, so any program allocating past the
+/// first 64 KiB page had no path forward. `$__ensure_capacity` (called from
+/// every bump-allocation site) now emits real `memory.grow`; this asserts the
+/// *other* half of the fix — the module's own declared `max` must actually
+/// permit that growth up to the WASM spec's absolute ceiling.
+#[test]
+fn alloc_array_module_declares_growable_memory_not_capped_at_one_page() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.min, 1, "still starts at a single 64 KiB page");
+    assert_eq!(
+        mem.limits.max,
+        Some(65536),
+        "max must allow growth to the WASM spec ceiling, not stay capped at 1 page"
+    );
+    encode_module(&wm).expect("encoding failed");
+}
+
+/// The companion codegen-shape check: an `alloc_array` module must actually
+/// emit `memory.grow` (0x40) and `memory.size` (0x3F) somewhere in its code —
+/// not just declare a growable memory section. Both opcodes are followed by
+/// the reserved memory-index byte `0x00` (this backend only ever declares one
+/// memory), so the two-byte pairs are unambiguous needles.
+#[test]
+fn alloc_array_emits_memory_grow_and_memory_size_opcodes() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let ensure_capacity_code = wm.code.last().expect("$__ensure_capacity body appended").code.as_slice();
+    assert!(
+        ensure_capacity_code.windows(2).any(|w| w == [0x3F, 0x00]),
+        "$__ensure_capacity must call memory.size"
+    );
+    assert!(
+        ensure_capacity_code.windows(2).any(|w| w == [0x40, 0x00]),
+        "$__ensure_capacity must call memory.grow"
+    );
+}

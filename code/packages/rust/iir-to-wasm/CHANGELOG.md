@@ -1,5 +1,31 @@
 # Changelog — iir-to-wasm
 
+## [0.45.0] — 2026-08-03 (linear memory growth — Twig GC completion, Part 3 stage 1)
+
+Fix a confirmed bug found by direct source reading (not assumed): every
+memory-using module hardcoded `Limits { min: 1, max: Some(1) }` — a single
+64 KiB page with no growth path — and `iir-to-wasm` never emitted a
+`memory.grow` instruction anywhere. Any program whose bump-allocated
+strings/E5 arrays outgrew the first page would trap on the very first
+out-of-page write.
+
+- Added a shared, in-module `$__ensure_capacity(needed_end: i64)` helper
+  (emitted once per module, gated by `uses_memory`, appended after
+  `$__str_eq`/`$__str_cmp` if present) that calls the new `memory.grow`
+  encoder when the requested byte offset exceeds the current page count.
+- Wired a call to it into all four bump-allocation sites — `alloc_array`,
+  `str_concat`'s runtime path, `str_slice`'s runtime path, and
+  `call_builtin "input_str"` — before each one writes past the current
+  `__array_bump` offset.
+- Raised the module's declared memory `max` from `1` to `65536` (the WASM
+  spec's absolute page ceiling), matching the ceiling `wasm-execution`'s
+  `LinearMemory::grow` already enforced.
+- New `encode_memory_size()`/`encode_memory_grow()` opcode encoders in
+  `codegen.rs` (0x3F/0x40, both followed by the reserved memory-index byte).
+- See `AOT00-T1x-wasm-linear-memory-growth.md` for the full writeup,
+  including the explicit stage-2 scope (free-list allocator + conservative
+  collector) this round does **not** yet cover.
+
 ## [0.44.0] — 2026-07-31 (boolean array elements)
 
 `array<bool>` now uses full-width i32 cells in linear memory. The four-byte

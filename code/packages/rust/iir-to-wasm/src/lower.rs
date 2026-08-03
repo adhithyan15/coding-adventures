@@ -146,7 +146,7 @@ use wasm_types::{
 use crate::codegen::{
     encode_br, encode_br_table, encode_call, encode_f32_const, encode_f64_const,
     encode_f64_load, encode_f64_store, encode_i32_load, encode_i32_store, encode_i64_load,
-    encode_i64_store,
+    encode_i64_store, encode_memory_grow, encode_memory_size,
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
@@ -1077,6 +1077,13 @@ fn emit_instr(
     // Function index of the in-module `$__str_cmp` helper (present iff the module
     // has a `str_cmp` that can't be folded — see `uses_str_cmp_runtime`).
     str_cmp_fn_idx: Option<u32>,
+    // Function index of the in-module `$__ensure_capacity` helper (present iff
+    // the module uses linear memory — see `uses_memory`). Every bump-allocation
+    // site (`alloc_array`/`str_concat`/`str_slice`/`input_str`) calls it with
+    // the byte offset one past the last byte it's about to write, so linear
+    // memory grows via `memory.grow` instead of silently running off the end
+    // of the module's single declared page.
+    ensure_capacity_fn_idx: Option<u32>,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -1232,6 +1239,28 @@ fn emit_instr(
                         op: "str_concat (missing __array_bump global)".to_string(),
                     }
                 })?;
+
+                // Ensure linear memory can hold the new block (header + both byte
+                // runs) BEFORE any write touches it: needed_end = bump + 4 + la + lb.
+                let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_concat runtime path without $__ensure_capacity helper \
+                             (internal error)"
+                            .to_string(),
+                    }
+                })?;
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_call(ensure_capacity));
 
                 // rd = new = i32.wrap(bump)  — the fresh block's base handle.
                 code.extend(encode_global_get(bump));
@@ -1425,6 +1454,26 @@ fn emit_instr(
                 code.push(BLOCK_EMPTY);
                 code.push(UNREACHABLE);
                 code.push(END);
+
+                // Ensure linear memory can hold the new block (header + the run)
+                // BEFORE any write touches it: needed_end = bump + 4 + (end - start).
+                let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                    IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "str_slice runtime path without $__ensure_capacity helper \
+                             (internal error)"
+                            .to_string(),
+                    }
+                })?;
+                code.extend(encode_global_get(bump));
+                code.extend(encode_i32_const(4));
+                code.extend_from_slice(&push_end);
+                code.extend_from_slice(&push_start);
+                code.push(I32_SUB);
+                code.push(I32_ADD);
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_call(ensure_capacity));
 
                 // rd = new = i32.wrap(bump)  — the fresh block's base handle.
                 code.extend(encode_global_get(bump));
@@ -3215,6 +3264,27 @@ fn emit_instr(
             code.push(I64_ADD);
             code.push(I64_ADD);
             code.extend(encode_global_set(bump));
+            // Ensure linear memory can hold the whole block (header + all
+            // elements) BEFORE the header write below — later `array_set`
+            // stores land inside this same reserved region, so one check
+            // here covers them too. needed_end = handle + 8 + count*elemsize
+            // (rd already holds the pre-bump handle, so reuse it rather than
+            // re-reading the now-updated global).
+            let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                IIRWasmError::UnsupportedOp {
+                    function: fn_name.to_string(),
+                    op: "alloc_array without $__ensure_capacity helper (internal error)"
+                        .to_string(),
+                }
+            })?;
+            code.extend(encode_local_get(rd));
+            code.extend(encode_local_get(count_slot));
+            code.extend(encode_i64_const(elem_size as i64));
+            code.push(I64_MUL);
+            code.extend(encode_i64_const(8));
+            code.push(I64_ADD);
+            code.push(I64_ADD);
+            code.extend(encode_call(ensure_capacity));
             // mem[wrap(handle) + 0] = count   (i64 length header).
             code.extend(encode_local_get(rd));
             code.extend(encode_i32_wrap_i64());
@@ -3416,11 +3486,11 @@ fn emit_instr(
                 // the memory writes, so no `i32.store` here.
                 //   Shape: srcs[0]=Var("input_str"), dest=Some(varname)
                 "input_str" => {
-                    // Cap the line at 256 bytes: the module's linear memory is a
-                    // single fixed 64 KiB page (`min=max=1`), and each block is never
-                    // freed (bump-only), so a large MAX would exhaust the page after a
-                    // few reads. 256 covers a BASIC input line; a longer line is
-                    // truncated (V1 permissive contract).
+                    // Cap the line at 256 bytes — comfortably covers a BASIC input
+                    // line; a longer line is truncated (V1 permissive contract).
+                    // Each block is bump-only (never freed), but linear memory now
+                    // grows via `$__ensure_capacity` below, so repeated reads no
+                    // longer exhaust a fixed single page.
                     const INPUT_STR_MAX: i32 = 256;
                     let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                         function: fn_name.to_string(),
@@ -3435,6 +3505,21 @@ fn emit_instr(
                         function: fn_name.to_string(),
                         op: "call_builtin \"input_str\" (missing __array_bump global)".to_string(),
                     })?;
+                    // Ensure linear memory can hold the whole block (header + MAX
+                    // bytes) BEFORE the host writes into it below:
+                    // needed_end = bump + 4 + MAX.
+                    let ensure_capacity = ensure_capacity_fn_idx.ok_or_else(|| {
+                        IIRWasmError::UnsupportedOp {
+                            function: fn_name.to_string(),
+                            op: "call_builtin \"input_str\" without $__ensure_capacity \
+                                 helper (internal error)"
+                                .to_string(),
+                        }
+                    })?;
+                    code.extend(encode_global_get(bump));
+                    code.extend(encode_i64_const((4 + INPUT_STR_MAX) as i64));
+                    code.push(I64_ADD);
+                    code.extend(encode_call(ensure_capacity));
                     // handle (dest, i32) = wrap(current bump).
                     code.extend(encode_global_get(bump));
                     code.extend(encode_i32_wrap_i64());
@@ -3648,6 +3733,7 @@ fn lower_function(
     pow_fn_idx: Option<u32>,
     str_eq_fn_idx: Option<u32>,
     str_cmp_fn_idx: Option<u32>,
+    ensure_capacity_fn_idx: Option<u32>,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -3768,6 +3854,7 @@ fn lower_function(
                     pow_fn_idx,
                     str_eq_fn_idx,
                     str_cmp_fn_idx,
+                    ensure_capacity_fn_idx,
                 )?;
             }
 
@@ -3840,6 +3927,7 @@ fn lower_function(
                 pow_fn_idx,
                 str_eq_fn_idx,
                 str_cmp_fn_idx,
+                ensure_capacity_fn_idx,
             )?;
         }
     }
@@ -4020,6 +4108,93 @@ fn lay_runtime_str_block(
         .entry(fn_name.to_string())
         .or_default()
         .insert(dest.to_string());
+}
+
+/// Build the self-contained in-module `$__ensure_capacity(needed_end: i64)`
+/// helper — grows linear memory with `memory.grow` whenever a bump-allocation
+/// site (`alloc_array`/`str_concat`/`str_slice`/`input_str`) is about to write
+/// past the currently-committed memory, instead of trapping or silently
+/// corrupting adjacent data. `needed_end` is the byte offset one past the
+/// last byte the caller is about to write.
+///
+/// ```text
+///   current_bytes = i64(memory.size()) * 65536
+///   if needed_end > current_bytes {
+///     delta_bytes = needed_end - current_bytes
+///     delta_pages = (delta_bytes + 65535) / 65536      ;; round up
+///     if i32(memory.grow(i32(delta_pages))) == -1 { unreachable }  ;; OOM
+///   }
+/// ```
+///
+/// Twig GC completion round (Part 3): this closes the confirmed bug where
+/// every bump-allocation site was capped at the module's single declared
+/// 64 KiB page (`Limits { min: 1, max: Some(1) }`) with no growth path at
+/// all — any program allocating more than ~64 KiB of array/string data
+/// would corrupt memory (writes silently landing past the linear memory
+/// `Vec`'s bounds check, per `wasm-execution`'s own bounds-checked
+/// `LinearMemory` — actually a clean trap there, but *only* because the
+/// interpreter bounds-checks; nothing in the emitted bytecode itself ever
+/// asked for more memory). `wasm-execution`'s `LinearMemory::grow`
+/// (already implemented, tested, and generic — this crate is simply the
+/// first to *emit* a `memory.grow` call site) resizes the backing `Vec`
+/// and enforces the same WASM-spec absolute ceiling (65536 pages / 4 GiB)
+/// `memory.grow`'s own return-`-1`-on-failure contract already covers, so
+/// the `unreachable` here is reached only on genuine, spec-legitimate
+/// exhaustion — not a bug in this helper.
+///
+/// Emitted once per module (gated by `uses_memory` — the same condition that
+/// injects the `__array_bump` global and the memory section itself, since
+/// every consumer of linear memory is exactly the set of ops that can need
+/// more of it) and appended after every IIR-defined function (and after
+/// `$__str_eq`/`$__str_cmp`, if present), so its index is
+/// `fn_idx_base + module.functions.len() + uses_str_eq_runtime as u32 +
+/// uses_str_cmp_runtime as u32`. One scratch local (`current_bytes` = local 1)
+/// is declared here; `needed_end` lives in the `FuncType` as local 0.
+fn build_ensure_capacity_helper() -> FunctionBody {
+    const NEEDED_END: u32 = 0;
+    const CURRENT_BYTES: u32 = 1;
+    let mut c: Vec<u8> = Vec::new();
+
+    // current_bytes = i64(memory.size()) * 65536
+    c.extend(encode_memory_size());
+    c.extend(encode_i64_extend_i32_u());
+    c.extend(encode_i64_const(65536));
+    c.push(I64_MUL);
+    c.extend(encode_local_set(CURRENT_BYTES));
+
+    // if needed_end > current_bytes { ... }
+    c.extend(encode_local_get(NEEDED_END));
+    c.extend(encode_local_get(CURRENT_BYTES));
+    c.push(I64_GT_U);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+
+    // delta_pages = i32((needed_end - current_bytes + 65535) / 65536)
+    c.extend(encode_local_get(NEEDED_END));
+    c.extend(encode_local_get(CURRENT_BYTES));
+    c.push(I64_SUB);
+    c.extend(encode_i64_const(65535));
+    c.push(I64_ADD);
+    c.extend(encode_i64_const(65536));
+    c.push(I64_DIV_U);
+    c.extend(encode_i32_wrap_i64());
+
+    // memory.grow returns the *previous* page count, or -1 on failure.
+    c.extend(encode_memory_grow());
+    c.extend(encode_i32_const(-1));
+    c.push(I32_EQ);
+    c.push(IF);
+    c.push(BLOCK_EMPTY);
+    c.push(UNREACHABLE);
+    c.push(END); // end of the OOM-check `if`
+    c.push(END); // end of the `needed_end > current_bytes` `if`
+
+    c.push(END); // function end
+
+    FunctionBody {
+        locals: vec![ValueType::I64], // current_bytes
+        code: c,
+    }
 }
 
 /// Build the self-contained in-module `$__str_eq(a: i32, b: i32) -> i32` helper.
@@ -4916,6 +5091,24 @@ pub fn lower_iir_to_wasm(
         None
     };
 
+    // The `$__ensure_capacity` helper (Twig GC completion round, Part 3) is
+    // appended right after `$__str_eq`/`$__str_cmp` (in that order, whichever
+    // are present) — gated on the same `uses_memory` condition that already
+    // triggers linear memory + the `__array_bump` global, since every
+    // bump-allocation site (`alloc_array`/`str_concat`/`str_slice`/
+    // `input_str`) needs to call it before writing past the current bump
+    // position.
+    let ensure_capacity_fn_idx: Option<u32> = if uses_memory {
+        Some(
+            fn_idx_base
+                + module.functions.len() as u32
+                + u32::from(uses_str_eq_runtime)
+                + u32::from(uses_str_cmp_runtime),
+        )
+    } else {
+        None
+    };
+
     // ── Step 4: Lower each function ──────────────────────────────────────────
 
     let mut types: Vec<FuncType> = Vec::new();
@@ -5228,7 +5421,7 @@ pub fn lower_iir_to_wasm(
             input_i64_fn_idx, input_str_fn_idx,
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
-            pow_fn_idx, str_eq_fn_idx, str_cmp_fn_idx,
+            pow_fn_idx, str_eq_fn_idx, str_cmp_fn_idx, ensure_capacity_fn_idx,
         )?;
         code.push(body);
     }
@@ -5261,6 +5454,20 @@ pub fn lower_iir_to_wasm(
         code.push(build_str_cmp_helper());
     }
 
+    // Append the `$__ensure_capacity` helper directly after `$__str_eq`/
+    // `$__str_cmp` (matching `ensure_capacity_fn_idx`, computed above with the
+    // same ordering). One `i64` param (`needed_end`), no results — see
+    // `build_ensure_capacity_helper`'s doc comment for what it does.
+    if ensure_capacity_fn_idx.is_some() {
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType {
+            params: vec![ValueType::I64],
+            results: vec![],
+        });
+        functions.push(type_idx);
+        code.push(build_ensure_capacity_helper());
+    }
+
     // ── Step 5: Assemble WasmModule ──────────────────────────────────────────
 
     // If the module uses $LispyPair, register the struct type.
@@ -5270,19 +5477,30 @@ pub fn lower_iir_to_wasm(
         vec![]
     };
 
-    // Brainfuck tape: a single 1-page linear memory.  Each WASM memory page is
-    // 64 KiB = 65,536 bytes, comfortably larger than Brainfuck's default 30,000
-    // -cell tape.  The memory is module-defined (not imported); a future
+    // Linear memory starts at a single 64 KiB page — enough for the
+    // Brainfuck tape's default 30,000 cells, small literal-string data
+    // segments, etc. — and is module-defined (not imported); a future
     // extension can add an `import` variant if the host wants to provide
-    // the buffer.  Modules that don't use `load_mem`/`store_mem` get no
-    // memory section, preserving binary compatibility with the existing
-    // non-BF callers (Twig, BASIC, Oct, Nib, Lispy).
+    // the buffer. Modules that don't use `load_mem`/`store_mem`/dynamic
+    // string-and-array allocation get no memory section, preserving binary
+    // compatibility with the existing non-memory callers.
+    //
+    // `max` was previously hardcoded to `Some(1)` — the exact bug this round
+    // (Twig GC completion, Part 3) fixes: any bump-allocation
+    // (`alloc_array`/`str_concat`/`str_slice`/`input_str`) that outgrew the
+    // single page had nowhere to grow into. `$__ensure_capacity` now emits
+    // real `memory.grow` calls at every one of those sites, so the declared
+    // `max` must allow growth up to the WASM spec's absolute ceiling (65536
+    // pages / 4 GiB) — `memory.grow`'s own return-`-1`-on-failure contract,
+    // already implemented and enforced generically by `wasm-execution`'s
+    // `LinearMemory::grow`, is what actually stops a runaway allocation.
+    const WASM_MAX_PAGES: u32 = 65536;
     let memories: Vec<wasm_types::MemoryType> = if uses_memory
         || uses_print_str
         || !string_data.is_empty()
     {
         vec![wasm_types::MemoryType {
-            limits: wasm_types::Limits { min: 1, max: Some(1) },
+            limits: wasm_types::Limits { min: 1, max: Some(WASM_MAX_PAGES) },
         }]
     } else {
         vec![]

@@ -113,6 +113,17 @@ through a deprecated intermediate.
   + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
   header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
   surface**: every `str_*` op now has a runtime path over promoted operands.
+- **Growable linear memory (v0.45.0 — Twig GC completion, Part 3 stage 1)**:
+  every bump-allocation site (`alloc_array`, runtime `str_concat`, runtime
+  `str_slice`, `call_builtin "input_str"`) calls a shared, in-module
+  `$__ensure_capacity(needed_end: i64)` helper before writing, which emits a
+  real `memory.grow` when the requested offset would exceed the module's
+  current page count. The declared memory's `max` is `65536` pages (the WASM
+  spec ceiling), not the old hardcoded single page — so a program whose
+  string/array data crosses 64 KiB now grows memory and keeps running instead
+  of trapping on the first out-of-page write. Reclamation (a free-list
+  allocator + a conservative collector over this same linear memory) is a
+  separate, larger follow-up — see `AOT00-T1x-wasm-linear-memory-growth.md`.
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
