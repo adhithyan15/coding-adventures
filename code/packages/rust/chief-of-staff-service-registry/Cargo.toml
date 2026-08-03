@@ -1,0 +1,14 @@
+[package]
+name = "chief-of-staff-service-registry"
+version = "0.1.0"
+edition = "2021"
+description = "Durable host intent and observation registry for the D18 Chief orchestrator"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+coding-adventures-json-value = { path = "../json-value" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }
