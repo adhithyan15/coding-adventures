@@ -59,7 +59,12 @@
   `zstd` isn't on `PATH`. This is the class of test that actually proves
   wire-format conformance — a same-codebase round-trip test can never catch
   a systematic, symmetric protocol deviation, since both sides of the
-  comparison are wrong in the identical way.
+  comparison are wrong in the identical way. Temp files use `os.tmpname()`'s
+  own atomically-reserved path directly (no derived/concatenated filenames,
+  which would reintroduce a symlink race), and shell arguments are quoted
+  with a real POSIX single-quote escaper rather than Lua's `%q` (which is
+  Lua-source quoting, not shell quoting) — findings from this change's own
+  security review.
 
 ## [0.1.1] - 2026-04-27
 

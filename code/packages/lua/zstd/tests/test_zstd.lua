@@ -377,6 +377,22 @@ describe("CodingAdventures.Zstd", function()
             return c == 0
         end
 
+        -- shell_quote wraps a string in single quotes for safe POSIX shell
+        -- argument passing, escaping any embedded single quote as '\''.
+        --
+        -- NOTE: Lua's `%q` string.format specifier produces a *Lua
+        -- source-literal* escape (safe for load()), NOT POSIX shell quoting
+        -- — it does not escape `$`, backticks, or other shell-active
+        -- characters inside double quotes. Every path built in this test
+        -- file comes exclusively from os.tmpname() (never external or
+        -- untrusted input), so this wasn't currently exploitable either
+        -- way — but using real shell quoting here, rather than relying on
+        -- %q, keeps that true even if this helper is ever reused with a
+        -- filename or corpus derived from less trusted input.
+        local function shell_quote(s)
+            return "'" .. s:gsub("'", "'\\''") .. "'"
+        end
+
         local zstd_available = shell_ok("zstd --version >/dev/null 2>&1")
 
         -- read_file/write_file: binary-safe whole-file I/O, used to shuttle
@@ -432,12 +448,20 @@ describe("CodingAdventures.Zstd", function()
             local text = build_interop_corpus()
             local compressed = zstd.compress(text)
 
-            local in_path  = os.tmpname() .. ".zst"
+            -- Use os.tmpname()'s own paths directly (no derived/concatenated
+            -- filenames): os.tmpname() atomically reserves the path it
+            -- returns, but a path built by appending a suffix to it (e.g.
+            -- `os.tmpname() .. ".zst"`) is never itself atomically reserved
+            -- and would be vulnerable to a symlink race on a shared temp
+            -- directory. The `zstd` CLI doesn't require a `.zst` extension
+            -- when an explicit `-o` output path is given.
+            local in_path  = os.tmpname()
             local out_path = os.tmpname()
             write_file(in_path, compressed)
 
             local ok = shell_ok(string.format(
-                "zstd -d -f -q -o %q %q 2>/dev/null", out_path, in_path))
+                "zstd -d -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
             local result = ok and read_file(out_path) or nil
 
             os.remove(in_path)
@@ -458,11 +482,12 @@ describe("CodingAdventures.Zstd", function()
             local text = build_interop_corpus()
 
             local in_path  = os.tmpname()
-            local out_path = os.tmpname() .. ".zst"
+            local out_path = os.tmpname()
             write_file(in_path, text)
 
             local ok = shell_ok(string.format(
-                "zstd -f -q -o %q %q 2>/dev/null", out_path, in_path))
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
             local cli_compressed = ok and read_file(out_path) or nil
 
             os.remove(in_path)
@@ -501,11 +526,12 @@ describe("CodingAdventures.Zstd", function()
 
             -- ours -> CLI
             local compressed = zstd.compress(text)
-            local in_path  = os.tmpname() .. ".zst"
+            local in_path  = os.tmpname()
             local out_path = os.tmpname()
             write_file(in_path, compressed)
             local ok1 = shell_ok(string.format(
-                "zstd -d -f -q -o %q %q 2>/dev/null", out_path, in_path))
+                "zstd -d -f -q -o %s %s 2>/dev/null",
+                shell_quote(out_path), shell_quote(in_path)))
             local result1 = ok1 and read_file(out_path) or nil
             os.remove(in_path)
             os.remove(out_path)
@@ -514,10 +540,11 @@ describe("CodingAdventures.Zstd", function()
 
             -- CLI -> ours
             local plain_path = os.tmpname()
-            local cli_zst    = os.tmpname() .. ".zst"
+            local cli_zst    = os.tmpname()
             write_file(plain_path, text)
             local ok2 = shell_ok(string.format(
-                "zstd -f -q -o %q %q 2>/dev/null", cli_zst, plain_path))
+                "zstd -f -q -o %s %s 2>/dev/null",
+                shell_quote(cli_zst), shell_quote(plain_path)))
             local cli_bytes = ok2 and read_file(cli_zst) or nil
             os.remove(plain_path)
             os.remove(cli_zst)
