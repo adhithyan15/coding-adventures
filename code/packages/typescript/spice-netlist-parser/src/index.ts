@@ -1241,6 +1241,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode FC must be finite and in [0, 1)");
   }
+  const diodeTemperatureExponent = params.get("XTI");
+  if (
+    kind === "D" &&
+    diodeTemperatureExponent !== undefined &&
+    !Number.isFinite(diodeTemperatureExponent)
+  ) {
+    throw new NetlistParseError("diode XTI must be finite");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1830,6 +1838,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       junctionPotential: model.params.get("VJ") ?? model.params.get("PB") ?? 1.0,
       gradingCoefficient: model.params.get("M") ?? model.params.get("MJ") ?? 0.5,
       forwardBiasDepletionCoefficient: model.params.get("FC") ?? 0.5,
+      saturationCurrentTemperatureExponent: model.params.get("XTI") ?? 3.0,
       seriesResistance: model.params.get("RS") ?? 0.0,
     };
   }
