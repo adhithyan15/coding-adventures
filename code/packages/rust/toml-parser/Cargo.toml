@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-toml-parser"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "TOML parser — parses TOML source text into an AST using the grammar-driven parser and the toml.grammar file"
 

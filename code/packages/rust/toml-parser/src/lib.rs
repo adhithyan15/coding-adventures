@@ -1,6 +1,7 @@
 //! TOML parser backed by compiled parser grammar.
 
-use coding_adventures_toml_lexer::tokenize_toml;
+use coding_adventures_toml_lexer::create_toml_lexer;
+use core::fmt::{self, Display, Formatter};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
@@ -46,17 +47,48 @@ mod _grammar;
 /// thousands of levels past the cap (see this crate's tests).
 const MAX_RULE_DEPTH: usize = 165;
 
-pub fn create_toml_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_toml(source);
+/// Stable payload-blind failure from TOML tokenization or parsing.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TomlParseError {
+    /// The source could not be tokenized as TOML.
+    Lexical,
+    /// The token stream did not satisfy the TOML grammar.
+    Syntax,
+}
+
+impl Display for TomlParseError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Lexical => "TOML tokenization failed",
+            Self::Syntax => "TOML parsing failed",
+        })
+    }
+}
+
+impl std::error::Error for TomlParseError {}
+
+/// Create a depth-capped TOML parser without panicking on lexical failure.
+pub fn try_create_toml_parser(source: &str) -> Result<GrammarParser, TomlParseError> {
+    let tokens = create_toml_lexer(source)
+        .tokenize()
+        .map_err(|_| TomlParseError::Lexical)?;
     let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
+    Ok(GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH))
+}
+
+pub fn create_toml_parser(source: &str) -> GrammarParser {
+    try_create_toml_parser(source).unwrap_or_else(|error| panic!("{error}"))
+}
+
+/// Parse TOML into a grammar AST without panicking on malformed input.
+pub fn try_parse_toml(source: &str) -> Result<GrammarASTNode, TomlParseError> {
+    try_create_toml_parser(source)?
+        .parse()
+        .map_err(|_| TomlParseError::Syntax)
 }
 
 pub fn parse_toml(source: &str) -> GrammarASTNode {
-    let mut parser = create_toml_parser(source);
-    parser
-        .parse()
-        .unwrap_or_else(|e| panic!("TOML parse failed: {e}"))
+    try_parse_toml(source).unwrap_or_else(|error| panic!("{error}"))
 }
 
 #[cfg(test)]
@@ -121,6 +153,34 @@ mod tests {
         assert!(has_keyval, "Expected 'keyval' rule in AST");
         assert!(has_key, "Expected 'key' rule in AST");
         assert!(has_value, "Expected 'value' rule in AST");
+    }
+
+    #[test]
+    fn fallible_api_distinguishes_lexical_and_syntax_errors_without_source_echo() {
+        let lexical_source = "secret = \"unterminated";
+        let lexical = try_parse_toml(lexical_source).unwrap_err();
+        assert_eq!(lexical, TomlParseError::Lexical);
+        assert_eq!(lexical.to_string(), "TOML tokenization failed");
+        assert!(!lexical.to_string().contains("secret"));
+
+        let syntax_source = "secret =";
+        let syntax = try_parse_toml(syntax_source).unwrap_err();
+        assert_eq!(syntax, TomlParseError::Syntax);
+        assert_eq!(syntax.to_string(), "TOML parsing failed");
+        assert!(!syntax.to_string().contains("secret"));
+    }
+
+    #[test]
+    fn fallible_factory_and_parser_preserve_valid_ast_shape_and_depth_cap() {
+        let ast = try_create_toml_parser("[server]\nport = 8080")
+            .unwrap()
+            .parse()
+            .unwrap();
+        assert_document_root(&ast);
+        assert_eq!(
+            try_parse_toml(&nested_array_source(5000)),
+            Err(TomlParseError::Syntax)
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -530,4 +590,3 @@ role = \"user\"
         assert!(try_parse(&nested_inline_table_source(10)).is_ok());
     }
 }
-
