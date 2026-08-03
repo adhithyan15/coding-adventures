@@ -640,7 +640,7 @@
     {
       "language": "telugu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:6cb5796cbafe9026",
+      "sourceHash": "fnv1a64:a0d2c6d28e4fa358",
       "lessonIds": [
         "TE-C06-dative-ku",
         "TE-C06-dative-subject"
@@ -669,7 +669,7 @@
     {
       "language": "telugu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:a59621bd41d42067",
+      "sourceHash": "fnv1a64:012d9dd03b6465c1",
       "lessonIds": [
         "TE-C09-kshaminchandi"
       ],
@@ -696,7 +696,7 @@
     {
       "language": "telugu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:21fe8857abf3df9c",
+      "sourceHash": "fnv1a64:54fc86cc71a291ff",
       "lessonIds": [
         "TE-C12-kutumbam"
       ],
@@ -705,7 +705,7 @@
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:83368e6f6cac4154",
+      "sourceHash": "fnv1a64:1debf26c0657eade",
       "lessonIds": [
         "TE-C13-sharira-bhagalu"
       ],
@@ -723,7 +723,7 @@
     {
       "language": "telugu",
       "chapter": 15,
-      "sourceHash": "fnv1a64:a75d12dfcd736972",
+      "sourceHash": "fnv1a64:54bde29911714c6e",
       "lessonIds": [
         "TE-C15-neellu-biyyam"
       ],
@@ -732,7 +732,7 @@
     {
       "language": "telugu",
       "chapter": 16,
-      "sourceHash": "fnv1a64:8f0932ccb64f8552",
+      "sourceHash": "fnv1a64:a9b000a2c411482d",
       "lessonIds": [
         "TE-C16-nelalu"
       ],

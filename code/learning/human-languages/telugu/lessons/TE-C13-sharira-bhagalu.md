@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TE-C12-kutumbam]
 ---
 
-# తల, చెయ్యి — head shared outright, hand shared in disguise
+# తల, చెయ్యి — head and hand
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02] -->
