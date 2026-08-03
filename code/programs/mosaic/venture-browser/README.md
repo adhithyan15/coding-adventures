@@ -56,6 +56,12 @@ recreating the surrounding chrome in backend-specific UI code.
   Its direct generated-app gate edits the Mosaic-emitted address field, drives
   Back and Forward with native key input, scrolls the real painted item, and
   activates a live HTML link through Qt hover and pointer events.
+- The Flutter project receives a package-owned `MosaicHost` adapter that loads
+  the shared Rust/Cairo bridge through Dart FFI, hydrates the generated native
+  controls from `BrowserHostController`, and mounts live RGBA page pixels as a
+  `RawImage`. Pointer wheel, hover, and tap input stay in Flutter's native
+  element tree while navigation and browser state remain in the shared Rust
+  session.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
@@ -100,9 +106,11 @@ interaction gate against their shared generated renderer, covering disabled
 controls, address editing, Return, Go, and host-driven prop refresh. The
 HTML/Web Component gate drives each target's real host runtime, including
 disabled dispatch suppression, node-slot mounting, Return, Go, and
-`mosaic-host-ready` refresh. The Flutter gate additionally pumps the emitted `MosaicApp`
-with a recording host and drives the generated native controls, including
-disabled buttons, address editing, Return, Go, and host-driven prop refresh.
+`mosaic-host-ready` refresh. The Flutter gate builds the shared Rust/Cairo
+bridge and pumps the emitted `MosaicApp` against deterministic HTTP pages. It
+requires live page pixels and drives the generated address field, Back/Forward
+controls, pointer scrolling, link hover projection, and link activation
+through the package-owned FFI host.
 The Qt gate runs the same chrome contract through Qt Quick Test against the
 emitted part-backed native controls and a recording `mosaicHost` seam as a
 fast emitter-contract test. On Linux and macOS with Qt and CMake available,
@@ -142,6 +150,10 @@ interaction gate required. Other workspace test environments may skip that one n
 launch test when CMake or Qt6 is unavailable; the package matrix does not.
 Repository CI provisions those Qt6 dependencies on its Linux Venture lane so
 the generated project build and direct launch are mandatory there.
+
+On Flutter-capable macOS and Linux hosts, the matrix builds the same Cairo page
+bridge, copies it beside the generated Flutter project, runs the live widget
+interaction gate, and then builds the native Flutter runner for that host.
 
 The macOS and Windows Rust package tests are the authoritative direct-launch
 gates. Each test builds its platform bridge in an isolated temporary target

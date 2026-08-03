@@ -119,7 +119,9 @@ helpers.
 Flutter's native button and text-field contracts. Project shells expose a
 `MosaicApp(mosaicHost: ...)` injection seam so direct widget acceptance can
 drive those controls and verify host response hydration against the exact
-generated component.
+generated component. Hosts can also register a prop-change handler; native
+surface interactions use it to ask the generated shell to reproject current
+Mosaic props without creating a backend-specific state store.
 
 ## What works in v0.1 / what's deferred
 

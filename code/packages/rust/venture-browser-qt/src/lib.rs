@@ -434,6 +434,109 @@ mod ffi {
             drop(CString::from_raw(value));
         }
     }
+
+    // Flutter and Qt both consume the same Cairo RGBA bridge. Keep a
+    // backend-named ABI for each generated host while sharing the exact Rust
+    // browser implementation above.
+    #[no_mangle]
+    pub extern "C" fn venture_browser_flutter_new(
+        start_url: *const c_char,
+        width: f64,
+        height: f64,
+    ) -> *mut QtBrowserHost {
+        venture_browser_qt_new(start_url, width, height)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_free(host: *mut QtBrowserHost) {
+        unsafe { venture_browser_qt_free(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_apply_props(
+        host: *mut QtBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_apply_props(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_handle_event(
+        host: *mut QtBrowserHost,
+        name: *const c_char,
+        value: *const c_char,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_handle_event(host, name, value) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_scroll(
+        host: *mut QtBrowserHost,
+        delta_y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_scroll(host, delta_y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_activate_link(
+        host: *mut QtBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_activate_link(host, x, y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_update_hover(
+        host: *mut QtBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_update_hover(host, x, y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_scroll_metrics(
+        host: *mut QtBrowserHost,
+        offset_y: *mut f64,
+        viewport_height: *mut f64,
+        content_height: *mut f64,
+        max_offset_y: *mut f64,
+    ) -> u8 {
+        unsafe {
+            venture_browser_qt_scroll_metrics(
+                host,
+                offset_y,
+                viewport_height,
+                content_height,
+                max_offset_y,
+            )
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_resize(
+        host: *mut QtBrowserHost,
+        width: f64,
+        height: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_resize(host, width, height) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_render_rgba(
+        host: *mut QtBrowserHost,
+        output: *mut u8,
+        capacity: usize,
+        width: *mut u32,
+        height: *mut u32,
+    ) -> usize {
+        unsafe { venture_browser_qt_render_rgba(host, output, capacity, width, height) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_flutter_string_free(value: *mut c_char) {
+        unsafe { venture_browser_qt_string_free(value) }
+    }
 }
 
 fn finite_positive_or(value: f64, fallback: f64) -> f64 {

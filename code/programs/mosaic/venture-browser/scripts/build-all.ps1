@@ -281,9 +281,42 @@ if ($isWindows -and (Test-Command "dotnet")) {
 
 $flutterPlatform = if ($isMacOS) { "macos" } elseif ($isWindows) { "windows" } elseif ($isLinux) { "linux" } else { $null }
 if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
+    Write-Host "==> Building Venture Flutter native bridge"
+    $flutterBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $flutterBridgeProfile = "debug"
+    if ($Release) {
+        $flutterBridgeArgs += "--release"
+        $flutterBridgeProfile = "release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $flutterBridgeArgs
+    } finally {
+        Pop-Location
+    }
+    $flutterBridgeSource = if ($isWindows) {
+        "venture_browser_qt.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_qt.dylib"
+    } else {
+        "libventure_browser_qt.so"
+    }
+    $flutterBridgeName = if ($isWindows) {
+        "venture_browser_flutter.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_flutter.dylib"
+    } else {
+        "libventure_browser_flutter.so"
+    }
+    $flutterBridgePath = Join-Path $outputRoot "flutter/$flutterBridgeName"
+    Copy-Item -Force `
+        (Join-Path $rustWorkspace "target/$flutterBridgeProfile/$flutterBridgeSource") `
+        $flutterBridgePath
     Write-Host "==> Building flutter ($flutterPlatform)"
     Push-Location (Join-Path $outputRoot "flutter")
+    $previousFlutterLibrary = $env:VENTURE_BROWSER_FLUTTER_LIBRARY
     try {
+        $env:VENTURE_BROWSER_FLUTTER_LIBRARY = $flutterBridgePath
         Invoke-Checked -Command "flutter" -Arguments @("pub", "get")
         Invoke-Checked -Command "flutter" -Arguments @("analyze", "lib")
         Invoke-Checked -Command "flutter" -Arguments @("test", "test/venture_chrome_interaction_test.dart")
@@ -292,6 +325,7 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
         }
         Invoke-Checked -Command "flutter" -Arguments @("build", $flutterPlatform)
     } finally {
+        $env:VENTURE_BROWSER_FLUTTER_LIBRARY = $previousFlutterLibrary
         Pop-Location
     }
 } elseif ($null -eq $flutterPlatform) {

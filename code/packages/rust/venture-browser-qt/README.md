@@ -6,6 +6,10 @@ browser chrome; this library projects the shared `BrowserHostController`
 through a C ABI and renders the retained page to RGBA pixels with Cairo for a
 `QQuickPaintedItem` host surface.
 
+The crate also exports Flutter-named wrappers over that exact controller and
+Cairo session. Venture's Dart FFI host uses those wrappers to consume RGBA
+frames and native input without introducing a second browser implementation.
+
 The package-owned C++ adapter dynamically loads this library, registers the
 surface as a QML type, and forwards generated Mosaic events and native surface
 input to the same Rust session. Its direct-launch test emits and builds the
