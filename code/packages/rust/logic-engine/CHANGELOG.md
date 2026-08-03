@@ -11,9 +11,12 @@
 - The plain `f64` result for this case now uses `f64::sqrt()` instead of `powf(0.5)`, so it can
   never disagree in the last bit with the correctly-rounded `BigDouble` companion computed
   alongside it.
-- Ordering is safety-load-bearing: the companion is only computed after the existing
-  `result.is_finite()` guard, so a negative base (which would make `BigDouble::sqrt` panic) is
-  already routed to a clean `Err` before this code runs — regression-tested explicitly.
+- Safety-critical: `BigDouble::sqrt` panics on a negative operand. The `result.is_finite()` guard
+  alone does **not** exclude every negative base — an exact rational whose magnitude underflows
+  the `f64` path rounds to `-0.0`, and IEEE-754 `powf(-0.0, 0.5) == +0.0` (finite!), so a
+  since-security-reviewed fix checks the *exact* sidecar's own sign explicitly before promoting,
+  skipping the companion (never a panic) for a negative base — regression-tested with an
+  underflowed-negative-exact-base case that reaches this code without one.
 - No contagion this rung: further arithmetic on a sqrt's result does not carry its `Real`
   companion forward (ADJ-NUMERIC-SUBSTRATE §8's scoped, additive design, not the full §5 tower).
 

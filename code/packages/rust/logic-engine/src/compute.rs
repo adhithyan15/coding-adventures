@@ -1005,20 +1005,30 @@ fn eval(
                 // exponent's exact sidecar, which is always `None` here: `ExactRational::
                 // from_integer_f64` is integer-only, and both `\sqrt{x}` and `\sqrt[n]{x}` lower
                 // their exponent to exactly this literal (adj-lang's LaTeX-root lowering), so an
-                // exact-sidecar check would simply never fire. Safe by construction: `result` is
-                // already finite-checked just above, so a negative base — which would make
-                // `BigDouble::sqrt` *panic* — can never reach here (f64 `powf`/`sqrt` of a
-                // negative base is `NaN`, already routed to `Err` above).
+                // exact-sidecar check would simply never fire.
+                //
+                // The `result.is_finite()` guard just above is NOT sufficient on its own to keep
+                // a negative base out of `BigDouble::sqrt` (which panics on one): an exact
+                // rational whose magnitude underflows the `f64` path can round to `-0.0`, and
+                // IEEE-754 `powf(-0.0, 0.5) == +0.0` — finite and non-negative — while the exact
+                // sidecar still faithfully carries the true negative sign (e.g. `(-0.5)^2001`
+                // underflows `result` to `-0.0` but keeps its exact sign). So this checks the
+                // EXACT sidecar's own sign explicitly and skips the companion (never a panic) for
+                // a negative base, exactly like every other not-applicable case already yields
+                // `None`.
                 let real = if exponent == 0.5 {
-                    exact_l.as_ref().map(|base_exact| {
+                    exact_l.as_ref().and_then(|base_exact| {
+                        if base_exact.numerator().is_negative() {
+                            return None;
+                        }
                         let prec = kb.real_precision_bits();
                         let mode = RoundingMode::HalfEven;
                         let promoted = BigDouble::from_rational(base_exact.as_ratio(), prec, mode);
-                        RealCompanion {
+                        Some(RealCompanion {
                             value: ApproxReal(promoted.sqrt(prec, mode)),
                             source: base_exact.clone(),
                             mode,
-                        }
+                        })
                     })
                 } else {
                     None
@@ -2350,6 +2360,35 @@ mod tests {
         )
         .unwrap_err();
         assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }));
+    }
+
+    #[test]
+    fn sqrt_of_an_underflowed_negative_exact_base_does_not_panic() {
+        // A negative EXACT base can still reach here even though the f64 finiteness guard
+        // above passed: `powf(-0.0, 0.5) == +0.0` (finite!) under IEEE-754, not NaN, once the
+        // true magnitude has underflowed f64 to negative zero — while the exact rational
+        // sidecar still faithfully carries the true negative sign. `BigDouble::sqrt` PANICS on
+        // a negative operand, so the exact sidecar's OWN sign must be checked explicitly rather
+        // than trusting the f64 finiteness check alone (security-reviewed regression).
+        //
+        // Build an exact value of magnitude 1/2^2048 (far below f64's smallest subnormal,
+        // 2^-1074, so its f64 companion underflows to zero) via repeated squaring — only 11
+        // nesting levels, well under MAX_EVAL_DEPTH — then flip its sign with one more Mul.
+        let mut magnitude = frac(1, 2);
+        for _ in 0..11 {
+            magnitude = ComputeExpr::Bin(ComputeOp::Mul, Box::new(magnitude.clone()), Box::new(magnitude));
+        }
+        let negative_underflowed =
+            ComputeExpr::Bin(ComputeOp::Mul, Box::new(magnitude), Box::new(ComputeExpr::Lit(-1.0)));
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Pow,
+            Box::new(negative_underflowed),
+            Box::new(ComputeExpr::Lit(0.5)),
+        );
+        // Must not panic — and since the true base is negative, no real companion is produced
+        // (the same "not applicable" `None` every other non-square-root case already yields).
+        let d = compute("r", &expr, &kb_with(vec![])).unwrap();
+        assert!(real_companion_of(&d).is_none());
     }
 
     #[test]
