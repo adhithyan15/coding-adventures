@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9572,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "6384e2cf4e5a812f1b8fc9782c661bf5ade9bdd9",
+    "revision": "6141793a9c29cd1177b3b201565e4f8537e77585",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1222,
@@ -343,11 +343,11 @@
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
       "title": "Make the TypeScript build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": "codex/build-tool-typescript-rockspec-utf8",
       "pr_number": 9572,
-      "notes": "Ready-for-review PR #9572 is the sole active parity PR. Materialized from the remaining-engine UTF-8 umbrella after merged PR #9553. TypeScript's replacement decoder could not distinguish malformed rockspec bytes from valid replacement characters. The implementation now consumes the exact shared positive and invalid-byte fixtures, requires the exact edge set, rejects malformed bytes before parsing with typed METADATA_INVALID_UTF8 package and repository-relative manifest identity, accepts valid literal U+FFFD, and returns exit 2 through a real tsx CLI subprocess. Rebased validation on origin/main 6384e2cf passed 47 resolver tests, 266 unaffected package tests, 85.40% resolver line coverage, esbuild production bundling, 17 schema and 40 runner tests, the valid 36-case/55-file corpus, a 258-package Lua dry run, a 4,770-record/7,623-edge full plan, collision-clean 1,222-identity/4,370-slot parity inventory, JSON/diff/secret checks, and zero npm advisories. The full Windows suite separately reproduces seven pre-existing gitdiff portability failures, now logged as its own pending child; BUILD validation reproduces only the same 10 owned Lua BUILD_windows debt items."
+      "notes": "Merged PR #9572 at 6141793a9c29cd1177b3b201565e4f8537e77585 on 2026-08-02 after both detection runs, both fixture-consumer runs, both Ubuntu builds, macOS, Windows, and JavaScript/TypeScript CodeQL passed; irrelevant CodeQL languages skipped and the aggregate CodeQL check was neutral. TypeScript now consumes the exact shared positive and invalid-byte fixtures, requires the exact edge set, rejects malformed bytes before parsing with typed METADATA_INVALID_UTF8 package and repository-relative manifest identity, accepts valid literal U+FFFD, and returns exit 2 through a real tsx CLI subprocess. Final validation passed 47 resolver tests, 266 unaffected package tests, 85.40% resolver line coverage, esbuild production bundling, 17 schema and 40 runner tests, the valid 36-case/55-file corpus, a 258-package Lua dry run, a 4,770-record/7,623-edge full plan, collision-clean 1,222-identity/4,370-slot parity inventory, JSON/diff/secret checks, and zero npm advisories. The full local Windows suite separately reproduces seven pre-existing gitdiff portability failures, logged as its own pending child; BUILD validation reproduced only the same 10 owned Lua BUILD_windows debt items."
     },
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
