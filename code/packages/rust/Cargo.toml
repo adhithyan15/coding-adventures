@@ -761,6 +761,7 @@ members = [
     "chief-of-staff-process-supervisor",
     "chief-of-staff-orchestrator-core",
     "chief-of-staff-daemon-api",
+    "chief-of-staff-daemon-runtime",
     "chief-of-staff-cli-core",
     "chief-of-staff-tool-api",
     "chief-of-staff-host-runtime",

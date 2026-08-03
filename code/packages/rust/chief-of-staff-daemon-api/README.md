@@ -15,6 +15,10 @@ constructs typed host-lifecycle requests, checks response versions and IDs, and
 retains stable remote error codes without exposing remote details through its
 diagnostic display.
 
+`DaemonApi::reconcile_once` is the local scheduler boundary. It runs convergence
+through the same serialized control plane as authenticated requests without
+pretending that the daemon process is a remote session.
+
 ## Validation
 
 ```sh
