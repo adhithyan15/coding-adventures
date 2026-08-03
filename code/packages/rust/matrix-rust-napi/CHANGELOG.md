@@ -3,6 +3,12 @@
 All notable changes to `matrix-rust-napi` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [unreleased] - shared CPU graph helper
+
+The Node-free graph planner/executor now lives in `matrix-cpu`; this N-API
+binding re-exports and calls that shared helper while keeping host-specific
+symbols at the outer edge.
+
 ## [0.5.0] — 2026-05-18
 
 ### Fixed — CRITICAL: class constructors stored as stale `napi_value` instead of persistent `napi_ref`

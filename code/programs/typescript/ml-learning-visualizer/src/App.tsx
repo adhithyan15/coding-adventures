@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { BackwardOptimizerLoweringWorkbench } from "./BackwardOptimizerLoweringWorkbench.js";
+import { BackendParityWorkbench } from "./BackendParityWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
@@ -182,7 +183,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -442,6 +443,13 @@ export function App() {
             >
               Train Lowering
             </button>
+            <button
+              className={workbench === "backend-parity" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("backend-parity")}
+            >
+              Backend Parity
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -474,6 +482,8 @@ export function App() {
               <>graph meaning {"->"} <strong>NeuralIR schedule</strong> {"->"} MatrixIR fusion</>
             ) : workbench === "training-lowering" ? (
               <>saved values {"->"} <strong>backward IR</strong> {"->"} optimizer IR</>
+            ) : workbench === "backend-parity" ? (
+              <>same graph {"->"} <strong>CPU · Rust · WebGPU</strong> {"->"} equal output</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -513,6 +523,8 @@ export function App() {
         <ForwardLoweringWorkbench />
       ) : workbench === "training-lowering" ? (
         <BackwardOptimizerLoweringWorkbench />
+      ) : workbench === "backend-parity" ? (
+        <BackendParityWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

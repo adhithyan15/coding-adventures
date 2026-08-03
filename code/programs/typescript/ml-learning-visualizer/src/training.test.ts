@@ -1,12 +1,21 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import React from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { transpileLatticeInBrowser } from "@coding-adventures/lattice-transpiler/src/browser.js";
+import { AsyncTypeScriptMatrixBackend } from "@coding-adventures/neural-graph-vm";
 import { activate } from "./activation.js";
 import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { AutoencoderWorkbench } from "./AutoencoderWorkbench.js";
 import { traceTwoNumberAutoencoder } from "./autoencoder-lab.js";
 import { BackwardOptimizerLoweringWorkbench } from "./BackwardOptimizerLoweringWorkbench.js";
+import { BackendParityWorkbench } from "./BackendParityWorkbench.js";
+import {
+  BACKEND_PARITY_FIXTURE,
+  normalizeBackendParityFixture,
+  probeWebGpuBackendParity,
+  runBackendParityWithAsyncBackend,
+  traceBackendParity,
+} from "./backend-parity-lab.js";
 import {
   compileBackwardTrainingIr,
   compileMatrixTrainingIr,
@@ -2374,5 +2383,79 @@ describe("backward and optimizer lowering", () => {
     fireEvent.click(screen.getByRole("button", { name: "Continue a persistent buffer" }));
     expect(screen.getByLabelText("Backward optimizer execution parity").textContent)
       .toMatch(/3 before \+ 2.*grad_w = 5.*5 \/ 1.*applied = 5.*w_next = 0/s);
+  });
+});
+
+describe("CPU Rust and accelerated backend parity", () => {
+  it("runs the production scalar and TypeScript matrix paths against the fixture", () => {
+    const trace = traceBackendParity();
+    expect(trace.products).toEqual([2, 4, 6]);
+    expect(trace.lanes.map((lane) => lane.id)).toEqual([
+      "scalar_cpu",
+      "typescript_matrix_cpu",
+      "rust_matrix_cpu",
+      "webgpu_accelerated",
+    ]);
+    expect(trace.lanes.every((lane) => lane.outputs.join(",") === "3,5,7")).toBe(true);
+    expect(trace.lanes.every((lane) => lane.maxAbsoluteError === 0)).toBe(true);
+    expect(trace.lanes[0]!.evidence).toBe("executed-production");
+    expect(trace.lanes[2]!.evidence).toBe("validated-native-fixture");
+    expect(trace.lanes[3]!.evidence).toBe("deterministic-oracle");
+    expect(trace.maxAbsoluteError).toBe(0);
+  });
+
+  it("executes the same plan through the async backend contract", async () => {
+    const result = await runBackendParityWithAsyncBackend(
+      new AsyncTypeScriptMatrixBackend(),
+    );
+    expect(result.status).toBe("executed");
+    if (result.status === "executed") {
+      expect(result.outputs).toEqual([3, 5, 7]);
+      expect(result.maxAbsoluteError).toBe(0);
+      expect(result.withinTolerance).toBe(true);
+    }
+  });
+
+  it("validates and freezes the bundled language-neutral fixture", () => {
+    expect(BACKEND_PARITY_FIXTURE.scenario.outputs).toEqual([3, 5, 7]);
+    expect(Object.isFrozen(BACKEND_PARITY_FIXTURE)).toBe(true);
+    expect(Object.isFrozen(BACKEND_PARITY_FIXTURE.lanes[0])).toBe(true);
+    expect(() => normalizeBackendParityFixture({})).toThrow(/unexpected fields/);
+    expect(() => normalizeBackendParityFixture({
+      ...BACKEND_PARITY_FIXTURE,
+      surprise: true,
+    })).toThrow(/unexpected fields/);
+  });
+
+  it("opens lane details and reports an honest browser accelerator status", async () => {
+    render(React.createElement(BackendParityWorkbench));
+    expect(screen.getByRole("heading", { name: "Backend parity laboratory" })).toBeTruthy();
+    const handTable = screen.getByRole("table", { name: "Hand calculated dense layer rows" });
+    const parityTable = screen.getByRole("table", { name: "CPU Rust and accelerator outputs" });
+    expect(within(handTable).getAllByRole("cell")).toHaveLength(12);
+    expect(within(parityTable).getAllByRole("cell")).toHaveLength(20);
+    expect(screen.getByLabelText("Selected backend detail").textContent)
+      .toMatch(/Rust matrix CPU core.*MatMul X by W.*rust:x,W,B buffers.*native fixture proof/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect WebGPU accelerator" }));
+    expect(screen.getByLabelText("Selected backend detail").textContent)
+      .toMatch(/WebGPU accelerator.*scale on device.*device:x,product,bias,y.*oracle until probed/s);
+    fireEvent.click(screen.getByRole("button", { name: "Run WebGPU probe" }));
+    expect(await screen.findByText("unavailable")).toBeTruthy();
+    expect(screen.getByText("This browser does not expose WebGPU.")).toBeTruthy();
+  });
+
+  it("reports unavailable when WebGPU exists without a usable adapter", async () => {
+    vi.stubGlobal("navigator", {
+      gpu: { requestAdapter: async () => null },
+    });
+    try {
+      await expect(probeWebGpuBackendParity()).resolves.toEqual({
+        status: "unavailable",
+        message: "No WebGPU adapter was available.",
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

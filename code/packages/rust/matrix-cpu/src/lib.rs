@@ -20,6 +20,7 @@
 //! - [`register`] — convenience wrapper that wires a `CpuExecutor` into
 //!   a `LocalTransport` and registers it with a [`matrix_runtime::Runtime`].
 //! - [`profile`] — a default `BackendProfile` for CPU executors.
+//! - [`run_graph_on_cpu`] — Node-free Graph planning and byte-buffer execution.
 //! - Internal modules: `buffers`, `eval`, `dispatch`.
 //!
 //! ## Zero dependencies
@@ -33,10 +34,12 @@ mod buffers;
 mod calibrate;
 mod dispatch;
 mod eval;
+mod graph_execution;
 mod specialised_table;
 mod specialiser;
 
 pub use calibrate::calibrate;
+pub use graph_execution::run_graph_on_cpu;
 pub use specialised_table::{SpecialisedKernelFn, SpecialisedTable};
 pub use specialiser::{build_specialised_kernel, specialiser, CpuSpecialiser};
 

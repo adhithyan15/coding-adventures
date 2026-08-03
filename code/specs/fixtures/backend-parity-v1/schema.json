@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/backend-parity-v1.schema.json",
+  "title": "CPU, Rust core, and accelerated backend parity lab V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "absolute_tolerance", "graph", "scenario", "lanes"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "dense-backend-parity" },
+    "title": { "$ref": "#/$defs/text" },
+    "question": { "$ref": "#/$defs/text" },
+    "absolute_tolerance": { "const": 0.000001 },
+    "graph": { "$ref": "#/$defs/graph" },
+    "scenario": { "$ref": "#/$defs/scenario" },
+    "lanes": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/lane" }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "text": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "shape": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "integer", "minimum": 1, "maximum": 8 }
+    },
+    "numbers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": { "type": "number" }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["equation", "dtype", "input_shape", "weight_shape", "bias_shape", "output_shape", "weight", "bias", "matrix_ir_file"],
+      "properties": {
+        "equation": { "const": "y = XW + B" },
+        "dtype": { "const": "f32" },
+        "input_shape": { "$ref": "#/$defs/shape" },
+        "weight_shape": { "$ref": "#/$defs/shape" },
+        "bias_shape": { "$ref": "#/$defs/shape" },
+        "output_shape": { "$ref": "#/$defs/shape" },
+        "weight": { "$ref": "#/$defs/numbers" },
+        "bias": { "$ref": "#/$defs/numbers" },
+        "matrix_ir_file": { "const": "../matrix-ir/00-dense-batch.graph.json" }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["products", "outputs"],
+      "properties": {
+        "products": { "$ref": "#/$defs/numbers" },
+        "outputs": { "$ref": "#/$defs/numbers" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "inputs", "input_payload_file", "expected_payload_file", "expected"],
+      "properties": {
+        "id": { "const": "three_row_dense" },
+        "inputs": { "$ref": "#/$defs/numbers" },
+        "input_payload_file": { "const": "../payloads/00-input-x.f32le.hex" },
+        "expected_payload_file": { "const": "../payloads/00-expected-output.f32le.hex" },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "runtime", "precision", "availability", "steps", "residency", "expected_outputs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "title": { "$ref": "#/$defs/text" },
+        "runtime": { "$ref": "#/$defs/text" },
+        "precision": { "enum": ["binary64", "f32"] },
+        "availability": { "enum": ["required", "required-in-native-test", "optional-runtime-probe"] },
+        "steps": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "residency": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "expected_outputs": { "$ref": "#/$defs/numbers" }
+      }
+    }
+  }
+}

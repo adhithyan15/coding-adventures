@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has seventeen workbenches that move from one arithmetic update to small
+The app has eighteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -247,6 +247,17 @@ state. The optimizer applies an explicit divisor, updates `w`, and leaves the
 buffer populated. A fresh finite-difference route audits only the current batch
 contribution.
 
+### Backend parity lab
+
+The Backend Parity workbench holds one dense batch and graph contract fixed
+while four execution lanes expose their different mechanics. The production
+scalar graph and TypeScript matrix plan execute in the browser; a
+Node-free Rust helper is checked against the same `f32` payload bytes in its
+native test; and a button requests a real WebGPU adapter and dispatches the
+same multiply-plus-bias graph when hardware support exists. The output table
+keeps binary64 versus `f32`, host versus device residency, and live versus
+fixture evidence separate, including honest unavailable and error states.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -385,6 +396,11 @@ NN30 under `code/specs/fixtures/backward-optimizer-lowering-v1` pins saved
 forward values, six backward instructions, four optimizer instructions, ten
 matrix-training operations, stable row reduction, explicit mean divisors,
 non-clearing optimizer steps, and numerical gradient audits.
+
+NN31 under `code/specs/fixtures/backend-parity-v1` pins one canonical MatrixIR
+graph, lowercase little-endian `f32` payloads, scalar and TypeScript CPU traces,
+Rust execution-helper parity, and the expected output for an optional live
+WebGPU dispatch.
 
 ## Development
 

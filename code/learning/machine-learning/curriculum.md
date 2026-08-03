@@ -100,6 +100,13 @@ Scaling is its own curriculum rather than a final switch:
 Each step needs a correctness oracle and a benchmark. A GPU label without a
 real-hardware execution test is not evidence of acceleration.
 
+NN31 establishes the bridge for one forward pass before persistent buffers or
+reduced precision are introduced: one graph contract and byte oracle connect
+the scalar and TypeScript CPU lanes, a Node-free Rust execution helper, and an
+optional live WebGPU dispatch. Buffer residency and evidence provenance stay
+visible so later performance experiments can change mechanics without changing
+the mathematical contract.
+
 ## Corpus Rule
 
 Every new curriculum unit should contribute all of the following:

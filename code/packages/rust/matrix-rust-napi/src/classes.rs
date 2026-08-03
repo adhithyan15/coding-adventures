@@ -61,7 +61,7 @@ use node_bridge::{
     str_from_js, str_to_js, throw_error, undefined, vec_buf_from_js, vec_buf_to_js, NAPI_OK,
 };
 
-use crate::exec::run_graph_on_cpu;
+use matrix_cpu::run_graph_on_cpu;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECURITY: type-tag discriminator for napi_wrap'd payloads.

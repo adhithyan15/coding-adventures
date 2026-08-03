@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1251 | 1187 | 98 | 60 | 8 | 1085 |
+| 1252 | 1195 | 98 | 61 | 8 | 1085 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 10 | 1 | 788 |
+| P3 | 2 | 11 | 1 | 788 |
 
 ## P0 Backlog
 
@@ -640,7 +640,6 @@ mention provides a complete lesson.
 | `intel8080-simulator` | 1 | missing |
 | `ir-to-riscv-compiler` | 1 | missing |
 | `manchester-baby-simulator` | 1 | missing |
-| `matrix-cpu` | 1 | missing |
 | `mips-r2000-simulator` | 1 | missing |
 | `mos6502-simulator` | 1 | missing |
 | `motorola-68000-simulator` | 1 | missing |
@@ -1183,6 +1182,7 @@ mention provides a complete lesson.
 | `smart-home-discovery` | 1 | missing |
 | `smart-home-discovery-service` | 1 | missing |
 | `smart-home-event-streams` | 1 | missing |
+| `smart-home-fronius-local-integration` | 1 | missing |
 | `smart-home-govee-lan-integration` | 1 | missing |
 | `smart-home-home-assistant-dashboard-migration` | 1 | missing |
 | `smart-home-home-assistant-definitions` | 1 | missing |
