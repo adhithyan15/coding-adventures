@@ -441,6 +441,49 @@ internal fun buildEncodeTable(norm: ShortArray, accLog: Int): Pair<Array<FseEe>,
     return Pair(ee, st)
 }
 
+// ─── Growable byte buffer (decompression output) ─────────────────────────────
+//
+// The decompression path (`decompress`/`decompressBlock`) needs a growable
+// byte sink that supports appending AND random-access reads of bytes already
+// written (a match copy reads from earlier in the same buffer it's writing
+// to). `ArrayList<Byte>` looks like the obvious fit but is a security-relevant
+// mistake here: the JVM boxes every element into a `java.lang.Byte` object
+// (an object header plus a reference in the backing `Object[]`), which costs
+// roughly 20-30x the nominal byte count. `MAX_DECOMPRESSED_SIZE` counts
+// *logical* bytes — with `ArrayList<Byte>`, a decompression that stays just
+// under that 256 MB logical cap could force several GB of actual JVM heap
+// allocation, defeating the cap's whole purpose (the process can be pushed
+// into `OutOfMemoryError`/GC thrashing well before the logical check ever
+// fires). A raw `ByteArray` with manual doubling growth stores one byte per
+// byte, so the logical-size cap and the real memory footprint track each
+// other 1:1.
+internal class GrowableByteBuffer(initialCapacity: Int = 64) {
+    private var array = ByteArray(initialCapacity)
+
+    /** Number of bytes written so far — also the next write position. */
+    var size: Int = 0
+        private set
+
+    private fun ensureCapacity(extra: Int) {
+        val needed = size + extra
+        if (needed <= array.size) return
+        var newCap = if (array.size == 0) 64 else array.size
+        while (newCap < needed) newCap *= 2
+        array = array.copyOf(newCap)
+    }
+
+    fun add(b: Byte) {
+        ensureCapacity(1)
+        array[size] = b
+        size++
+    }
+
+    /** Read a byte already written at [index] (used by match copies). */
+    operator fun get(index: Int): Byte = array[index]
+
+    fun toByteArray(): ByteArray = array.copyOf(size)
+}
+
 // ─── Reverse bit-writer ───────────────────────────────────────────────────────
 //
 // ZStd's sequence bitstream is written *backwards* relative to the data flow:
@@ -1023,7 +1066,7 @@ private fun compressBlock(block: ByteArray): ByteArray? {
  * Reads the literals section, sequences section, and applies the sequences
  * to the output buffer to reconstruct the original data.
  */
-private fun decompressBlock(data: ByteArray, output: ArrayList<Byte>) {
+private fun decompressBlock(data: ByteArray, output: GrowableByteBuffer) {
     // Every place below that grows `output` re-checks this bound: a
     // Compressed block's *sequences* (not just its on-wire byte count) are
     // what can blow up the output size, so the guard has to live at the
@@ -1343,7 +1386,7 @@ object Zstd {
         // Guard against decompression bombs: cap total output (see
         // MAX_DECOMPRESSED_SIZE doc comment for why Compressed blocks need
         // their own incremental check inside decompressBlock, not just here).
-        val output = ArrayList<Byte>()
+        val output = GrowableByteBuffer()
 
         while (true) {
             if (pos + 3 > data.size) throw IOException("truncated block header")
@@ -1375,7 +1418,7 @@ object Zstd {
                     if (pos + bsize > data.size) {
                         throw IOException("raw block truncated: need $bsize bytes at pos $pos")
                     }
-                    if (output.size + bsize > MAX_DECOMPRESSED_SIZE) {
+                    if (output.size.toLong() + bsize > MAX_DECOMPRESSED_SIZE) {
                         throw IOException("decompressed size exceeds limit of $MAX_DECOMPRESSED_SIZE bytes")
                     }
                     for (k in pos until pos + bsize) output.add(data[k])
@@ -1384,7 +1427,7 @@ object Zstd {
                 1 -> {
                     // RLE block: 1 byte repeated `bsize` times.
                     if (pos >= data.size) throw IOException("RLE block missing byte")
-                    if (output.size + bsize > MAX_DECOMPRESSED_SIZE) {
+                    if (output.size.toLong() + bsize > MAX_DECOMPRESSED_SIZE) {
                         throw IOException("decompressed size exceeds limit of $MAX_DECOMPRESSED_SIZE bytes")
                     }
                     val rleByte = data[pos]
