@@ -56,6 +56,7 @@ fn emits_parser_order_and_exact_byte_hashes() {
     assert_eq!(formulas[0]["formula"], "total");
     assert_eq!(formulas[0]["parameters"], serde_json::json!(["a", "b"]));
     assert_eq!(formulas[0]["step_count"], 0);
+    assert!(formulas[0].get("preconditions").is_none());
     assert_eq!(formulas[1]["formula"], "scaled");
     assert_eq!(formulas[1]["step_count"], 1);
 
@@ -75,6 +76,46 @@ fn emits_parser_order_and_exact_byte_hashes() {
         &source[formulas[1]["body"]["start"].as_u64().unwrap() as usize
             ..formulas[1]["body"]["end"].as_u64().unwrap() as usize],
         "doubled / 10"
+    );
+}
+
+#[test]
+fn guarded_formula_emits_v2_with_exact_precondition_bytes() {
+    let dir = scratch("preconditions");
+    let path = dir.join("guarded.adj");
+    let source = concat!(
+        "formulabook guarded {\n",
+        "  formula divide(a, b) = a / b\n",
+        "    requires nonzero(b)\n",
+        "    source \"division domain\" trust authoritative\n",
+        "}\n",
+    );
+    fs::write(&path, source).unwrap();
+
+    let output = inventory(&path);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(value["parser_contract"], "adj-lang/formula_source_map/v2");
+    assert_eq!(value["schema_version"], 2);
+    let condition = &value["formulas"][0]["preconditions"][0];
+    assert_eq!(condition["predicate"], "nonzero");
+    for field in [&condition["declaration"], &condition["arguments"][0]] {
+        let start = field["start"].as_u64().unwrap() as usize;
+        let end = field["end"].as_u64().unwrap() as usize;
+        assert_eq!(
+            field["sha256"],
+            coding_adventures_sha256::sha256_hex(&source.as_bytes()[start..end])
+        );
+    }
+    let declaration = &condition["declaration"];
+    assert_eq!(
+        &source[declaration["start"].as_u64().unwrap() as usize
+            ..declaration["end"].as_u64().unwrap() as usize],
+        "nonzero(b)"
     );
 }
 

@@ -110,12 +110,18 @@ pub enum DerivationOrigin {
         clause_id: PredicateContributionClauseId,
         /// The valued slot whose observation was compared.
         slot: String,
+        /// The winning observed fact, when the slot came directly from input.
+        observation_fact_id: Option<FactId>,
         /// The comparison operator (`>=`, `<=`, `>`, `<`, `==`).
         op: CmpOp,
         /// The right-hand threshold the clause was written against.
         threshold: f64,
+        /// Exact threshold identity when the evaluator retained one.
+        threshold_exact: Option<crate::compute::ExactRational>,
         /// The observed numeric value read from the valued fact `slot(V)`.
         observed: f64,
+        /// Exact observation identity when the input carried one.
+        observed_exact: Option<crate::compute::ExactRational>,
         /// log(LR) applied because the predicate held. Inline.
         logit_delta: f64,
     },
@@ -299,7 +305,10 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
             // provenance carried inline on the step. They contribute no
             // probabilistic propositional variable to WMC, so they add no
             // FactId here.
-            DerivationOrigin::FromPredicateContribution { .. } => {}
+            DerivationOrigin::FromPredicateContribution {
+                observation_fact_id,
+                ..
+            } => facts.extend(observation_fact_id.iter().copied()),
         }
     }
     facts.sort();

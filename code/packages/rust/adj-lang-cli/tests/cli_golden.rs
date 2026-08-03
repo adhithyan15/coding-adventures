@@ -41,6 +41,32 @@ fn single_hypothesis_emits_cited_proof_dag() {
 }
 
 #[test]
+fn precision_lost_derived_value_is_explicit_and_not_labeled_exact() {
+    let (ok, s) = run(
+        "adjcli_precision_loss.adj",
+        r#"
+formulabook formulas {
+    formula sine(x) = latex "$\sin(x)$"
+        source "sine definition" trust authoritative
+}
+let narrowed = sine(1e-400)
+"#,
+    );
+
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"name\":\"narrowed\""), "{s}");
+    assert!(s.contains("\"precision_loss\":true"), "{s}");
+    let narrowed = s
+        .split("\"name\":\"narrowed\"")
+        .nth(1)
+        .expect("narrowed binding")
+        .split("}")
+        .next()
+        .unwrap();
+    assert!(!narrowed.contains("\"exact\""), "{s}");
+}
+
+#[test]
 fn two_hypothesis_differential_ranks_and_decides() {
     // bacterial gets a strong observed LR, viral does not → bacterial leads.
     let (ok, s) = run(
@@ -146,14 +172,23 @@ fn let_derived_value_reports_its_inferred_dimension() {
          ? speed\n",
     );
     assert!(ok, "CLI exited non-zero: {s}");
-    assert!(s.contains("\"derived\":["), "expected a derived section: {s}");
+    assert!(
+        s.contains("\"derived\":["),
+        "expected a derived section: {s}"
+    );
     assert!(s.contains("\"name\":\"speed\""), "{s}");
     assert!(s.contains("\"value\":80"), "{s}");
-    assert!(s.contains("\"dim\":\"km/h\""), "expected inferred km/h: {s}");
+    assert!(
+        s.contains("\"dim\":\"km/h\""),
+        "expected inferred km/h: {s}"
+    );
     // Exact integer arithmetic is preserved alongside the f64.
     // NUM-5: the exact value is an arbitrary-precision BigRational, so num/den are emitted as
     // JSON strings (they can exceed JSON's safe integer range) rather than bare numbers.
-    assert!(s.contains("\"exact\":{\"num\":\"80\",\"den\":\"1\"}"), "{s}");
+    assert!(
+        s.contains("\"exact\":{\"num\":\"80\",\"den\":\"1\"}"),
+        "{s}"
+    );
 }
 
 #[test]
@@ -200,7 +235,10 @@ fn programs_without_a_let_omit_the_derived_section() {
          observe symptom(pressure)\n? acs\n",
     );
     assert!(ok, "CLI exited non-zero: {s}");
-    assert!(!s.contains("\"derived\""), "no let ⇒ no derived section: {s}");
+    assert!(
+        !s.contains("\"derived\""),
+        "no let ⇒ no derived section: {s}"
+    );
 }
 
 #[test]

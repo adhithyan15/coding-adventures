@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.36.0] - 2026-08-03 - formula-domain abstentions and inventory v2
+
+- `adj-lang-cli` emits `formula_abstentions` for failed or unresolved formula preconditions,
+  including the withheld binding, nested formula identity, predicate result, and provenance.
+- Sensitive runs redact consumed fact terms as well as guard values and details while retaining
+  non-sensitive fact identity and provenance metadata.
+- `adj-formula-inventory` emits `adj-lang/formula_source_map/v2` only when a source contains
+  preconditions, with exact declaration and argument byte spans and hashes. Unguarded sources
+  retain byte-identical v1 output.
+- Formula audit identity includes preconditions when present, preventing guard bytes from being
+  dropped between parser inventory and execution evidence.
+- Derived JSON exposes `"precision_loss":true` and suppresses a misleading exact sidecar when an
+  authored exact value narrowed before reaching the output boundary.
+- Human explanations label precision loss, and formula audit results expose the marker while
+  withholding a misleading exact rational and retaining exact literals in the trusted plan IR.
+
 ## [0.35.0] - 2026-08-02 - NUM-7c: adj-verify rechecks the sqrt Real companion
 
 - No CLI code changes — `adj-verify` already walks every `DerivationNode` generically via

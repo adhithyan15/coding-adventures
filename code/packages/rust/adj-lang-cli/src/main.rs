@@ -33,8 +33,8 @@ use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
 use adj_lang::{
-    compile_with_imports, decide, run_state_machine, ImportLimits, LoweredRangeLookup,
-    LoweredStateMachine, StateMachineOutcome, StateMachineRun, YieldValue,
+    compile_with_imports, decide, run_state_machine, FormulaAbstention, ImportLimits,
+    LoweredRangeLookup, LoweredStateMachine, StateMachineOutcome, StateMachineRun, YieldValue,
 };
 use adj_lang_cli::{esc, payload, query_echo, sensitive_input, FsProvider};
 use logic_core::{atom, compound, var, LogicVar, Term};
@@ -42,7 +42,7 @@ use logic_engine::govern::Standing;
 use logic_engine::{
     enumerate_all, enumerate_governing, numeric_exact_magnitude, DerivationOrigin,
     DifferentialDecision, Fact, GovernStatus, GovernedResult, KnowledgeBase, LRAggregateResult,
-    Proof, Provenance, TrustTier,
+    LrAggregateWarning, Proof, Provenance, TrustTier,
 };
 
 mod explain;
@@ -70,6 +70,17 @@ fn jnum(x: f64) -> String {
     }
 }
 
+fn exact_operand_json(name: &str, exact: &Option<logic_engine::compute::ExactRational>) -> String {
+    exact.as_ref().map_or_else(String::new, |value| {
+        format!(
+            ",\"{}_exact\":{{\"num\":\"{}\",\"den\":\"{}\"}}",
+            name,
+            value.numerator(),
+            value.denominator()
+        )
+    })
+}
+
 /// Render a derived value's `"value"` field, **exact-first** (ADJ-EXACT-NUMBERS NX-4).
 ///
 /// When a computation stayed inside exact rational arithmetic (NX-3) *and* the result has a
@@ -82,9 +93,11 @@ fn jnum(x: f64) -> String {
 /// remain a JSON number literal, so the field's type is unchanged for every existing consumer;
 /// only its precision grows for values that were previously truncated.
 fn value_json(d: &logic_engine::compute::Derived) -> String {
-    if let Some(exact) = &d.exact {
-        if let Some(s) = exact.to_exact_decimal_string() {
-            return s;
+    if !d.precision_loss {
+        if let Some(exact) = &d.exact {
+            if let Some(s) = exact.to_exact_decimal_string() {
+                return s;
+            }
         }
     }
     jnum(d.value)
@@ -314,13 +327,18 @@ fn derived_json(kb: &KnowledgeBase) -> String {
             // numerator/denominator can exceed JSON's safe integer range — emit them as
             // **strings** so no precision is lost at the boundary (the whole point of the exact
             // channel). `BigInteger`'s `Display` is the plain decimal form.
-            let exact = match &d.exact {
-                Some(r) => format!(
+            let exact = match (&d.exact, d.precision_loss) {
+                (Some(r), false) => format!(
                     ",\"exact\":{{\"num\":\"{}\",\"den\":\"{}\"}}",
                     r.numerator(),
                     r.denominator()
                 ),
-                None => String::new(),
+                _ => String::new(),
+            };
+            let precision_loss = if d.precision_loss {
+                ",\"precision_loss\":true"
+            } else {
+                ""
             };
             // A value produced by APPLYING a provenanced `formula`
             // (ADJ-FORMULA-LIBRARIES rung-0) carries the formula's cited
@@ -338,17 +356,83 @@ fn derived_json(kb: &KnowledgeBase) -> String {
             // and here is the observed fact behind each operand."
             let derivation = format!(",\"derivation\":{}", derivation_tree_json(&d.tree, kb));
             format!(
-                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}{}}}",
+                "{{\"name\":\"{}\",\"value\":{},\"dim\":\"{}\"{}{}{}{}}}",
                 esc(&d.name),
                 value_json(d),
                 esc(&d.dim.tag()),
                 exact,
+                precision_loss,
                 provenance,
                 derivation
             )
         })
         .collect();
     format!("[{}]", objs.join(","))
+}
+
+/// Render valid formula applications that declined to publish a value because
+/// a declared domain requirement failed or could not be resolved. The formula's
+/// provenance remains attached, while sensitive operand details follow the same
+/// redaction switch as query echoes.
+fn formula_abstention_json(abstention: &FormulaAbstention, kb: &KnowledgeBase) -> String {
+    let reason = if abstention.actual.is_some() {
+        "precondition_failed"
+    } else {
+        "precondition_unresolved"
+    };
+    let actual = if sensitive_input() {
+        "\"[redacted]\"".to_string()
+    } else {
+        abstention
+            .actual
+            .map(jnum)
+            .unwrap_or_else(|| "null".to_string())
+    };
+    let detail = match (&abstention.detail, sensitive_input()) {
+        (Some(_), true) => ",\"detail\":\"[redacted]\"".to_string(),
+        (Some(value), false) => format!(",\"detail\":\"{}\"", esc(value)),
+        (None, _) => String::new(),
+    };
+    let parameter = abstention
+        .parameter
+        .as_ref()
+        .map(|value| format!("\"{}\"", esc(value)))
+        .unwrap_or_else(|| "null".to_string());
+    format!(
+        "{{\"name\":\"{}\",\"formula\":\"{}\",\"outcome\":\"abstained\",\"reason\":\"{}\",\"precondition\":{{\"index\":{},\"predicate\":\"{}\",\"parameter\":{},\"actual\":{}{}}},\"inputs\":{},{}}}",
+        esc(&abstention.name),
+        esc(&abstention.formula),
+        reason,
+        abstention.precondition_index,
+        esc(&abstention.predicate),
+        parameter,
+        actual,
+        detail,
+        formula_input_citations_json(&abstention.fact_ids, kb),
+        prov(&abstention.provenance),
+    )
+}
+
+fn formula_input_citations_json(ids: &[logic_engine::FactId], kb: &KnowledgeBase) -> String {
+    let redact = sensitive_input();
+    let inputs = ids
+        .iter()
+        .filter_map(|id| kb.fact(*id))
+        .map(|fact| {
+            let term = if redact {
+                "[redacted]".to_string()
+            } else {
+                fact.term.to_string()
+            };
+            format!(
+                "{{\"fact_id\":{},\"term\":\"{}\",{}}}",
+                fact.id.0,
+                esc(&term),
+                prov(&fact.provenance)
+            )
+        })
+        .collect::<Vec<_>>();
+    format!("[{}]", inputs.join(","))
 }
 
 fn trust(t: &TrustTier) -> &'static str {
@@ -605,19 +689,28 @@ fn trace_steps_json(proof: &Proof, kb: &KnowledgeBase) -> String {
             DerivationOrigin::FromPredicateContribution {
                 clause_id,
                 slot,
+                observation_fact_id,
                 op,
                 threshold,
+                threshold_exact,
                 observed,
+                observed_exact,
                 logit_delta,
             } => {
                 format!(
-                    "\"kind\":\"predicate\",{head},\"clause_id\":{},\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{},\"observed\":{},\"logit_delta\":{}",
+                    "\"kind\":\"predicate\",{head},\"clause_id\":{},\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{}{},\"observed\":{}{},\"logit_delta\":{},\"observation\":{}",
                     clause_id.0,
                     esc(slot),
                     esc(op.symbol()),
                     jnum(*threshold),
+                    exact_operand_json("threshold", threshold_exact),
                     jnum(*observed),
-                    jnum(*logit_delta)
+                    exact_operand_json("observed", observed_exact),
+                    jnum(*logit_delta),
+                    observation_fact_id.map_or_else(
+                        || "[]".to_string(),
+                        |id| fact_citations_json(&[id], kb)
+                    )
                 )
             }
         };
@@ -742,9 +835,12 @@ fn proof_json(
                 DerivationOrigin::FromPredicateContribution {
                     clause_id,
                     slot,
+                    observation_fact_id,
                     op,
                     threshold,
+                    threshold_exact,
                     observed,
+                    observed_exact,
                     logit_delta,
                 } => {
                     let pv = predicates
@@ -756,12 +852,18 @@ fn proof_json(
                                 .to_string()
                         });
                     steps.push(format!(
-                        "{{\"kind\":\"predicate\",\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{},\"observed\":{},\"logit\":{},{}}}",
+                        "{{\"kind\":\"predicate\",\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{}{},\"observed\":{}{},\"logit\":{},\"observation\":{},{}}}",
                         esc(slot),
                         esc(op.symbol()),
                         jnum(*threshold),
+                        exact_operand_json("threshold", threshold_exact),
                         jnum(*observed),
+                        exact_operand_json("observed", observed_exact),
                         jnum(*logit_delta),
+                        observation_fact_id.map_or_else(
+                            || "[]".to_string(),
+                            |id| fact_citations_json(&[id], kb)
+                        ),
                         pv
                     ));
                 }
@@ -770,6 +872,42 @@ fn proof_json(
         }
     }
     format!("[{}]", steps.join(","))
+}
+
+fn aggregate_warnings_json(warnings: &[LrAggregateWarning]) -> String {
+    let items = warnings
+        .iter()
+        .map(|warning| match warning {
+            LrAggregateWarning::NoPriorDeclared { conclusion } => format!(
+                "{{\"type\":\"no_prior_declared\",\"conclusion\":\"{}\"}}",
+                esc(&format!("{conclusion}"))
+            ),
+            LrAggregateWarning::NoContributionsActive { conclusion } => format!(
+                "{{\"type\":\"no_contributions_active\",\"conclusion\":\"{}\"}}",
+                esc(&format!("{conclusion}"))
+            ),
+            LrAggregateWarning::DegenerateContribution { clause_id } => format!(
+                "{{\"type\":\"degenerate_contribution\",\"clause_id\":\"{}\"}}",
+                esc(&format!("{clause_id:?}"))
+            ),
+            LrAggregateWarning::PredicatePrecisionLoss { clause_id, slot } => format!(
+                "{{\"type\":\"predicate_precision_loss\",\"clause_id\":\"{}\",\"slot\":\"{}\"}}",
+                esc(&format!("{clause_id:?}")),
+                esc(slot)
+            ),
+            LrAggregateWarning::PredicateEvaluationError {
+                clause_id,
+                slot,
+                detail,
+            } => format!(
+                "{{\"type\":\"predicate_evaluation_error\",\"clause_id\":\"{}\",\"slot\":\"{}\",\"detail\":\"{}\"}}",
+                esc(&format!("{clause_id:?}")),
+                esc(slot),
+                esc(detail)
+            ),
+        })
+        .collect::<Vec<_>>();
+    format!("[{}]", items.join(","))
 }
 
 /// Map the constraint-engine outcomes to `(status atom, certificate JSON)` pairs
@@ -954,13 +1092,22 @@ fn main() -> ExitCode {
     let mut ranked: Vec<String> = Vec::new();
     for r in &diff.ranked {
         let proof = proof_json(&r.hypothesis, &lowered.kb, &r.result, &certs);
+        let warnings = if r.result.warnings.is_empty() {
+            String::new()
+        } else {
+            format!(
+                ",\"warnings\":{}",
+                aggregate_warnings_json(&r.result.warnings)
+            )
+        };
         ranked.push(format!(
-            "{{\"hypothesis\":\"{}\",\"posterior\":{},\"posterior_logit\":{},\"normalized_share\":{},\"proof\":{}}}",
+            "{{\"hypothesis\":\"{}\",\"posterior\":{},\"posterior_logit\":{},\"normalized_share\":{},\"proof\":{}{}}}",
             esc(&format!("{}", r.hypothesis)),
             jnum(r.posterior),
             jnum(r.posterior_logit),
             jnum(r.normalized_share),
-            proof
+            proof,
+            warnings
         ));
     }
 
@@ -975,6 +1122,16 @@ fn main() -> ExitCode {
                 jnum(*margin_logit)
             )
         }
+        DifferentialDecision::Indeterminate {
+            leader,
+            posterior,
+            reason,
+        } => format!(
+            "{{\"type\":\"indeterminate\",\"leader\":\"{}\",\"posterior\":{},\"reason\":\"{}\"}}",
+            esc(&format!("{}", leader)),
+            jnum(*posterior),
+            esc(reason)
+        ),
         DifferentialDecision::Kickback {
             leader, runner_up, margin_posterior, margin_logit, reason, ..
         } => format!(
@@ -1075,6 +1232,18 @@ fn main() -> ExitCode {
         format!(",\"derived\":{}", derived)
     };
 
+    let formula_abstentions_section = if lowered.formula_abstentions.is_empty() {
+        String::new()
+    } else {
+        let abstentions = lowered
+            .formula_abstentions
+            .iter()
+            .map(|abstention| formula_abstention_json(abstention, &lowered.kb))
+            .collect::<Vec<_>>()
+            .join(",");
+        format!(",\"formula_abstentions\":[{abstentions}]")
+    };
+
     // ADJ-STATEMACHINE RS-3c: the state-machine run section — each machine's typed
     // outcome, its ordered provenanced steps, and the machine's own citation.
     // Omitted (empty string) when the program declared no `statemachine`, so every
@@ -1112,13 +1281,19 @@ fn main() -> ExitCode {
             .collect();
         println!(
             "{}",
-            explain::explain(&lowered.kb, &diff, &state_machine_runs, &argument_chains)
+            explain::explain(
+                &lowered.kb,
+                &diff,
+                &lowered.formula_abstentions,
+                &state_machine_runs,
+                &argument_chains,
+            )
         );
         return ExitCode::SUCCESS;
     }
 
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}{}{}{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
@@ -1129,6 +1304,7 @@ fn main() -> ExitCode {
         governing_section,
         lookup_section,
         derived_section,
+        formula_abstentions_section,
         state_machines_section
     );
     ExitCode::SUCCESS
@@ -1196,6 +1372,21 @@ fn state_machine_outcome_json(outcome: &StateMachineOutcome, kb: &KnowledgeBase)
         StateMachineOutcome::Stuck { state } => {
             format!("{{\"type\":\"stuck\",\"state\":\"{}\"}}", esc(state))
         }
+        StateMachineOutcome::PrecisionLoss { state, guard } => format!(
+            "{{\"type\":\"precision_loss\",\"state\":\"{}\",\"guard\":\"{}\"}}",
+            esc(state),
+            esc(guard)
+        ),
+        StateMachineOutcome::ComputationError {
+            state,
+            phase,
+            detail,
+        } => format!(
+            "{{\"type\":\"computation_error\",\"state\":\"{}\",\"phase\":\"{}\",\"detail\":\"{}\"}}",
+            esc(state),
+            esc(phase),
+            esc(detail)
+        ),
     }
 }
 

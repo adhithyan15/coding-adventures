@@ -105,6 +105,10 @@ pub enum AdapterError {
     /// LaTeX parsed successfully, but used math outside the ADJ arithmetic /
     /// constraint subset this surface can lower faithfully.
     UnsupportedLatexMath { source: String, detail: String },
+    /// A native arithmetic expression exceeded the construction-depth budget.
+    /// The adapter enforces this while folding operator spines so rejecting an
+    /// adversarial input never leaves a recursively dropped, unbounded AST.
+    ExpressionTooDeep { limit: usize },
 }
 
 /// Adapt the root `program` node.
@@ -289,7 +293,7 @@ fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
             .iter()
             .find_map(|c| match c {
                 ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
-                    Some(parse_finite(&t.value, t.type_, "predicate").map(ExprAst::Lit))
+                    Some(parse_expr_numlit(&t.value, t.type_, "predicate").map(ExprAst::ExactLit))
                 }
                 _ => None,
             })
@@ -925,7 +929,8 @@ fn adapt_formulabook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
-    // formula_decl = "formula" IDENT LPAREN [ formula_params ] RPAREN EQUALS expr { annotation }
+    // formula_decl = "formula" IDENT LPAREN [ formula_params ] RPAREN
+    //                formula_body [ formula_requires ] { annotation }
     //
     // The name is the first Name token that isn't the `formula` keyword (the
     // parameter Name tokens live INSIDE the nested `formula_params` node, so they
@@ -991,6 +996,45 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
         position: "body expr",
     })?;
     let body = adapt_expr(expr_node)?;
+    // Preserve precondition and argument order exactly. Predicate semantics and
+    // arity are deliberately a lowering concern.
+    let mut preconditions = Vec::new();
+    if let Some(requires) = first_named_child(node, "formula_requires") {
+        for child in &requires.children {
+            let ASTNodeOrToken::Node(precondition) = child else {
+                continue;
+            };
+            if precondition.rule_name != "formula_precondition" {
+                continue;
+            }
+            let predicate = precondition
+                .children
+                .iter()
+                .find_map(|child| match child {
+                    ASTNodeOrToken::Token(token) if token.type_ == TokenType::Name => {
+                        Some(token.value.clone())
+                    }
+                    _ => None,
+                })
+                .ok_or(AdapterError::MissingChild {
+                    rule: "formula_precondition".into(),
+                    position: "predicate name",
+                })?;
+            let arguments = precondition
+                .children
+                .iter()
+                .filter_map(|child| match child {
+                    ASTNodeOrToken::Node(expr) if expr.rule_name == "expr" => Some(expr),
+                    _ => None,
+                })
+                .map(adapt_expr)
+                .collect::<Result<Vec<_>, _>>()?;
+            preconditions.push(crate::ast::FormulaPrecondition {
+                predicate,
+                arguments,
+            });
+        }
+    }
     // Same provenance envelope as every grounded clause (`{ annotation }`).
     let annotations = collect_annotations(node)?;
     Ok(FormulaDef {
@@ -998,6 +1042,7 @@ fn adapt_formula(node: &GrammarASTNode) -> Result<FormulaDef, AdapterError> {
         params,
         steps,
         body,
+        preconditions,
         annotations,
     })
 }
@@ -1525,6 +1570,7 @@ fn expr_ast_to_term(e: &ExprAst) -> Term {
             args: args.iter().map(expr_ast_to_term).collect(),
         },
         ExprAst::Lit(x) => Term::Num(NumLit::Int(*x as i64)),
+        ExprAst::ExactLit(x) => Term::Num(x.clone()),
         other => Term::Atom(format!("{other:?}")),
     }
 }
@@ -1614,6 +1660,44 @@ fn adapt_term_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     fold_binary(node, "term_expr", "factor", adapt_factor)
 }
 
+const MAX_ADAPTED_EXPR_DEPTH: usize = 96;
+
+fn adapted_expr_depth(expr: &ExprAst) -> Result<usize, AdapterError> {
+    let mut maximum = 0;
+    let mut pending = vec![(expr, 1_usize)];
+    while let Some((node, depth)) = pending.pop() {
+        if depth > MAX_ADAPTED_EXPR_DEPTH {
+            return Err(AdapterError::ExpressionTooDeep {
+                limit: MAX_ADAPTED_EXPR_DEPTH,
+            });
+        }
+        maximum = maximum.max(depth);
+        let next = depth + 1;
+        match node {
+            ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+                pending.push((right, next));
+                pending.push((left, next));
+            }
+            ExprAst::Abs(inner)
+            | ExprAst::Floor(inner)
+            | ExprAst::Ceil(inner)
+            | ExprAst::Round(inner)
+            | ExprAst::RoundTo(inner, _)
+            | ExprAst::ToScientific(inner, _)
+            | ExprAst::ToPercent(inner, _)
+            | ExprAst::ToCurrency(inner, _, _)
+            | ExprAst::Trunc(inner)
+            | ExprAst::Sign(inner)
+            | ExprAst::Call(_, inner) => pending.push((inner, next)),
+            ExprAst::Apply(_, arguments) => {
+                pending.extend(arguments.iter().rev().map(|argument| (argument, next)));
+            }
+            ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {}
+        }
+    }
+    Ok(maximum)
+}
+
 /// Shared left-fold for the two binary-precedence levels: walk the
 /// node's children in source order, building `Bin(op, acc, rhs)` as each
 /// `(operator-token, operand)` pair appears. The operands are child
@@ -1625,14 +1709,28 @@ fn fold_binary(
     adapt_operand: fn(&GrammarASTNode) -> Result<ExprAst, AdapterError>,
 ) -> Result<ExprAst, AdapterError> {
     let mut acc: Option<ExprAst> = None;
+    let mut acc_depth = 0_usize;
     let mut pending_op: Option<ArithOp> = None;
     for c in &node.children {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == operand_rule => {
                 let operand = adapt_operand(n)?;
+                let operand_depth = adapted_expr_depth(&operand)?;
                 acc = Some(match (acc.take(), pending_op.take()) {
-                    (None, _) => operand,
-                    (Some(lhs), Some(op)) => ExprAst::Bin(op, Box::new(lhs), Box::new(operand)),
+                    (None, _) => {
+                        acc_depth = operand_depth;
+                        operand
+                    }
+                    (Some(lhs), Some(op)) => {
+                        let combined_depth = 1 + acc_depth.max(operand_depth);
+                        if combined_depth > MAX_ADAPTED_EXPR_DEPTH {
+                            return Err(AdapterError::ExpressionTooDeep {
+                                limit: MAX_ADAPTED_EXPR_DEPTH,
+                            });
+                        }
+                        acc_depth = combined_depth;
+                        ExprAst::Bin(op, Box::new(lhs), Box::new(operand))
+                    }
                     (Some(lhs), None) => lhs, // defensive: two operands, no op
                 });
             }
@@ -1701,7 +1799,9 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
             if t.type_ == TokenType::Number {
-                return Ok(ExprAst::Lit(parse_finite(&t.value, t.type_, "factor")?));
+                return Ok(ExprAst::ExactLit(parse_expr_numlit(
+                    &t.value, t.type_, "factor",
+                )?));
             }
             if t.type_ == TokenType::Name {
                 return Ok(ExprAst::Ref(t.value.clone()));
@@ -3164,20 +3264,20 @@ fn trust_tier_from_node(node: &GrammarASTNode) -> Result<TrustTierName, AdapterE
 // Helpers
 // ---------------------------------------------------------------------------
 
-/// Parse a NUMBER lexeme to `f64`, rejecting non-finite values. Rust's
-/// `f64::from_str` accepts overflowing literals like `1e400` (→ `inf`);
-/// an infinite or NaN threshold is meaningless in a rulebook, so we
-/// reject it here with an accurate diagnostic rather than letting it
-/// silently flow downstream.
-fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterError> {
-    match raw.parse::<f64>() {
-        Ok(x) if x.is_finite() => Ok(x),
-        _ => Err(AdapterError::BadToken {
+/// Parse a native arithmetic literal without discarding its decimal identity,
+/// while retaining the compute surface's historical finite-`f64` range gate.
+/// Underflow is allowed so a guarded application can diagnose the narrowing.
+fn parse_expr_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
+    let value = parse_numlit(raw, kind, rule)?;
+    if value.to_f64_lossy().is_finite() {
+        Ok(value)
+    } else {
+        Err(AdapterError::BadToken {
             rule: rule.to_string(),
             kind,
             value: raw.to_string(),
             reason: "not a finite f64",
-        }),
+        })
     }
 }
 
@@ -3223,9 +3323,10 @@ const MAX_NUMBER_TOKEN_SCALE: i64 = 4096;
 /// reject a hostile payload, never a real constant. (`BigDecimal::from_str` also enforces its own
 /// `MAX_SCALE`; these caps are the tighter, adj-lang-specific layer.)
 ///
-/// This replaces the old `f64` parse at the two **ground-term** sites (a table cell and a
-/// valued-fact argument). Compute leaves (`ExprAst::Lit`) still take an `f64` via `parse_finite`,
-/// because the compute layer is inherently `f64`.
+/// This replaces the old `f64` parse at ground-term sites and native arithmetic
+/// leaves. An [`ExprAst::ExactLit`] retains the source value until lowering; the
+/// compute layer still carries `f64`, so guarded calls reject value-changing
+/// narrowing before evaluation.
 fn parse_numlit(raw: &str, kind: TokenType, rule: &str) -> Result<NumLit, AdapterError> {
     // Reject an over-long token FIRST — before either the `i64` scan or the O(digits²) BigDecimal
     // parse — so no oversized mantissa can force superlinear work on any path. (A legitimate small
@@ -3531,7 +3632,7 @@ mod tests {
                     Evidence::Predicate { lhs, op, rhs } => {
                         assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "gross_income"));
                         assert_eq!(op, CmpOp::Ge);
-                        assert!(matches!(rhs, ExprAst::Lit(v) if v == 14600.0));
+                        assert!(matches!(rhs, ExprAst::ExactLit(NumLit::Int(14600))));
                     }
                     other => panic!("expected predicate evidence, got {other:?}"),
                 }
@@ -3557,7 +3658,7 @@ mod tests {
                     ..
                 } => {
                     assert_eq!(op, *expected, "operator {sym}");
-                    assert!(matches!(rhs, ExprAst::Lit(v) if v == 18.0));
+                    assert!(matches!(rhs, ExprAst::ExactLit(NumLit::Int(18))));
                     assert!(matches!(lhs, ExprAst::Ref(ref s) if s == "age"));
                 }
                 other => panic!("expected predicate Contributes for {sym}, got {other:?}"),

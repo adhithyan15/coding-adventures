@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
+import copy
 import ctypes
 import hashlib
 import html
@@ -894,11 +895,15 @@ def _validate_formula_inventory_value(
         "source_size",
     }:
         raise ProvenanceError("formula parser inventory has unknown or missing fields")
+    contract = (value.get("parser_contract"), value.get("schema_version"))
     if (
         value["kind"] != "formula_parser_inventory"
-        or value["parser_contract"] != "adj-lang/formula_source_map/v1"
+        or contract
+        not in {
+            ("adj-lang/formula_source_map/v1", 1),
+            ("adj-lang/formula_source_map/v2", 2),
+        }
         or not _is_integer(value["schema_version"])
-        or value["schema_version"] != 1
         or value["scope"] != "source_file"
         or _require_hash(
             value["source_sha256"], "formula parser inventory source_sha256"
@@ -915,15 +920,23 @@ def _validate_formula_inventory_value(
         raise ProvenanceError("formula parser inventory formulas must be an array")
     previous_end = 0
     seen_names: set[str] = set()
+    guarded = False
     for index, formula in enumerate(formulas):
         prefix = f"formula parser inventory formulas[{index}]"
-        if not isinstance(formula, dict) or set(formula) != {
+        base_fields = {
             "body",
             "declaration",
             "formula",
             "formulabook",
             "parameters",
             "step_count",
+        }
+        allowed_fields = base_fields | (
+            {"preconditions"} if contract[1] == 2 else set()
+        )
+        if not isinstance(formula, dict) or frozenset(formula) not in {
+            frozenset(base_fields),
+            frozenset(allowed_fields),
         }:
             raise ProvenanceError(f"{prefix} has unknown or missing fields")
         formula_name = _require_nonempty(formula["formula"], f"{prefix}.formula")
@@ -971,6 +984,86 @@ def _validate_formula_inventory_value(
                 f"{prefix} body/declaration containment or parser order disagrees"
             )
         previous_end = declaration_end
+        preconditions = formula.get("preconditions", [])
+        if not isinstance(preconditions, list):
+            raise ProvenanceError(f"{prefix}.preconditions must be an array")
+        if "preconditions" in formula and not preconditions:
+            raise ProvenanceError(
+                f"{prefix}.preconditions must not be empty when present"
+            )
+        guarded = guarded or bool(preconditions)
+        previous_precondition_end = body_end
+        for precondition_index, precondition in enumerate(preconditions):
+            condition_prefix = (
+                f"{prefix}.preconditions[{precondition_index}]"
+            )
+            if not isinstance(precondition, dict) or set(precondition) != {
+                "arguments",
+                "declaration",
+                "predicate",
+            }:
+                raise ProvenanceError(
+                    f"{condition_prefix} has unknown or missing fields"
+                )
+            _require_nonempty(
+                precondition["predicate"], f"{condition_prefix}.predicate"
+            )
+            declaration = precondition["declaration"]
+            if not isinstance(declaration, dict) or set(declaration) != {
+                "end",
+                "sha256",
+                "start",
+            }:
+                raise ProvenanceError(
+                    f"{condition_prefix}.declaration has the wrong schema"
+                )
+            condition_start = declaration["start"]
+            condition_end = declaration["end"]
+            if (
+                not _is_integer(condition_start)
+                or not _is_integer(condition_end)
+                or condition_start < previous_precondition_end
+                or condition_end <= condition_start
+                or condition_end > declaration_end
+                or _require_hash(
+                    declaration["sha256"],
+                    f"{condition_prefix}.declaration.sha256",
+                )
+                != sha256_bytes(source[condition_start:condition_end])
+            ):
+                raise ProvenanceError(
+                    f"{condition_prefix}.declaration byte span disagrees"
+                )
+            arguments = precondition["arguments"]
+            if not isinstance(arguments, list):
+                raise ProvenanceError(f"{condition_prefix}.arguments must be an array")
+            for argument_index, argument in enumerate(arguments):
+                argument_prefix = (
+                    f"{condition_prefix}.arguments[{argument_index}]"
+                )
+                if not isinstance(argument, dict) or set(argument) != {
+                    "end",
+                    "sha256",
+                    "start",
+                }:
+                    raise ProvenanceError(f"{argument_prefix} has the wrong schema")
+                argument_start = argument["start"]
+                argument_end = argument["end"]
+                if (
+                    not _is_integer(argument_start)
+                    or not _is_integer(argument_end)
+                    or argument_start < condition_start
+                    or argument_end <= argument_start
+                    or argument_end > condition_end
+                    or _require_hash(
+                        argument["sha256"], f"{argument_prefix}.sha256"
+                    )
+                    != sha256_bytes(source[argument_start:argument_end])
+                ):
+                    raise ProvenanceError(f"{argument_prefix} byte span disagrees")
+            previous_precondition_end = condition_end
+    if contract[1] == 2 and not guarded:
+        raise ProvenanceError("formula parser inventory v2 must contain a precondition")
 
 
 def put_formula_parser_inventory(
@@ -2864,13 +2957,17 @@ def _formula_reference(
     identity: Any,
     formula_bundles: list[tuple[str, dict[str, Any]]],
 ) -> tuple[dict[str, Any], set[str]]:
-    if not isinstance(identity, dict) or set(identity) != {
+    base_fields = {
         "body",
         "declaration",
         "formulabook",
         "name",
         "parameters",
         "source_sha256",
+    }
+    if not isinstance(identity, dict) or frozenset(identity) not in {
+        frozenset(base_fields),
+        frozenset(base_fields | {"preconditions"}),
     }:
         raise ProvenanceError("formula audit export identity has the wrong schema")
     source_hash = _require_hash(identity["source_sha256"], "formula identity source")
@@ -2887,6 +2984,8 @@ def _formula_reference(
                 and formula["formulabook"] == identity["formulabook"]
                 and formula["formula"] == identity["name"]
                 and formula["parameters"] == identity["parameters"]
+                and formula.get("preconditions", [])
+                == identity.get("preconditions", [])
             ):
                 matches.append((bundle_hash, bundle, inventory_hash, formula))
     if len(matches) != 1:
@@ -2913,6 +3012,8 @@ def _formula_reference(
         "source_ir_sha256": source_ir_hash,
         "source_sha256": source_hash,
     }
+    if identity.get("preconditions"):
+        reference["preconditions"] = identity["preconditions"]
     return reference, {
         bundle_hash,
         inventory_hash,
@@ -3074,6 +3175,15 @@ def _normalized_formula_evidence(
     legacy_input_references: bool = False,
 ) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
     by_source, formula_bundles = _execution_graph(cas, query_bundle)
+    for _bundle_hash, bundle in formula_bundles:
+        inventory = _json_object(
+            cas, bundle["formula_inventory_sha256"], "formula_parser_inventory"
+        )
+        if any(formula.get("preconditions") for formula in inventory["formulas"]):
+            raise ProvenanceError(
+                "guarded formula execution evidence requires a versioned "
+                "precondition witness contract"
+            )
     imports: list[dict[str, Any]] = []
     import_links: set[str] = set()
     for item in audit["imports"]:
@@ -3252,6 +3362,8 @@ def _normalized_formula_evidence(
             "parameters": formula["parameters"],
             "source_sha256": inventory["source_sha256"],
         }
+        if formula.get("preconditions"):
+            identity["preconditions"] = formula["preconditions"]
         reference, _links = _formula_reference(cas, identity, formula_bundles)
         if reference["bundle_sha256"] != direct_bundle_hash or reference["inventory_sha256"] != inventory_hash:
             raise ProvenanceError("direct parser export resolves outside its formula bundle")
@@ -3315,6 +3427,25 @@ def _validate_formula_execution_evidence(
     audit = _materialize_formula_audit(cas, query_bundle, audit_command)
     expected = _normalized_formula_evidence(cas, query_bundle, audit)
 
+    def legacy_v1_projection(
+        items: list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]],
+    ) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
+        """Project additive audit fields away for immutable pre-extension v1 bytes."""
+
+        def project_plan(expression: dict[str, Any]) -> None:
+            if expression.get("kind") == "exact_literal":
+                expression.pop("exact_rational", None)
+                expression["kind"] = "literal"
+            for key in ("left", "right", "expression"):
+                child = expression.get(key)
+                if isinstance(child, dict):
+                    project_plan(child)
+
+        projected = copy.deepcopy(items)
+        for derivation, _derivation_links, _witness, _witness_links in projected:
+            project_plan(derivation["plan"]["expression"])
+        return projected
+
     def expected_hashes(
         items: list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]],
     ) -> tuple[list[str], list[str]]:
@@ -3330,20 +3461,29 @@ def _validate_formula_execution_evidence(
             witnesses.append(sha256_bytes(canonical_json_bytes(normalized_witness)))
         return derivations, witnesses
 
-    expected_derivations, expected_witnesses = expected_hashes(expected)
-    if (
-        sorted(expected_derivations) != stored_derivations
-        or sorted(expected_witnesses) != stored_witnesses
-    ) and allow_migration_input_references:
-        expected = _normalized_formula_evidence(
+    candidates = [expected, legacy_v1_projection(expected)]
+    if allow_migration_input_references:
+        legacy_inputs = _normalized_formula_evidence(
             cas, query_bundle, audit, legacy_input_references=True
         )
-        expected_derivations, expected_witnesses = expected_hashes(expected)
-    if (
-        sorted(expected_derivations) != stored_derivations
-        or sorted(expected_witnesses) != stored_witnesses
-    ):
+        candidates.extend((legacy_inputs, legacy_v1_projection(legacy_inputs)))
+
+    selected = None
+    expected_derivations: list[str] = []
+    expected_witnesses: list[str] = []
+    for candidate in candidates:
+        candidate_derivations, candidate_witnesses = expected_hashes(candidate)
+        if (
+            sorted(candidate_derivations) == stored_derivations
+            and sorted(candidate_witnesses) == stored_witnesses
+        ):
+            selected = candidate
+            expected_derivations = candidate_derivations
+            expected_witnesses = candidate_witnesses
+            break
+    if selected is None:
         raise ProvenanceError("stored formula evidence set disagrees with replay")
+    expected = selected
 
     expected_links: set[str] = set()
     for (

@@ -3994,6 +3994,107 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     inventory, provenance.sha256_bytes(source), source
                 )
 
+    def test_formula_inventory_v2_binds_precondition_bytes(self) -> None:
+        source = (
+            b"formulabook guarded {\n"
+            b'  formula divide(a, b) = a / b requires nonzero(b) source "s" trust authoritative\n'
+            b"}\n"
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "guarded.adj"
+            path.write_bytes(source)
+            inventory = provenance._run_formula_inventory(
+                self.formula_inventory_command(), path
+            )
+            provenance._validate_formula_inventory_value(
+                inventory, provenance.sha256_bytes(source), source
+            )
+            self.assertEqual(inventory["schema_version"], 2)
+            self.assertEqual(
+                inventory["parser_contract"], "adj-lang/formula_source_map/v2"
+            )
+            condition = inventory["formulas"][0]["preconditions"][0]
+            self.assertEqual(condition["predicate"], "nonzero")
+            tampered = deepcopy(inventory)
+            tampered["formulas"][0]["preconditions"][0]["declaration"][
+                "sha256"
+            ] = "0" * 64
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "preconditions\\[0\\].declaration byte span disagrees",
+            ):
+                provenance._validate_formula_inventory_value(
+                    tampered, provenance.sha256_bytes(source), source
+                )
+
+            empty = deepcopy(inventory)
+            empty["formulas"][0]["preconditions"] = []
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "preconditions must not be empty when present",
+            ):
+                provenance._validate_formula_inventory_value(
+                    empty, provenance.sha256_bytes(source), source
+                )
+
+    def test_guarded_formula_execution_evidence_fails_closed_until_v2_witness(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas = provenance.Cas(Path(directory) / "cas")
+            inventory_hash = cas.put_json(
+                {
+                    "formulas": [
+                        {
+                            "body": {"end": 2, "sha256": "1" * 64, "start": 1},
+                            "declaration": {
+                                "end": 3,
+                                "sha256": "2" * 64,
+                                "start": 0,
+                            },
+                            "formula": "guarded",
+                            "formulabook": "demo",
+                            "parameters": ["x"],
+                            "preconditions": [
+                                {
+                                    "arguments": [
+                                        {"end": 2, "sha256": "3" * 64, "start": 1}
+                                    ],
+                                    "declaration": {
+                                        "end": 3,
+                                        "sha256": "4" * 64,
+                                        "start": 0,
+                                    },
+                                    "predicate": "nonzero",
+                                }
+                            ],
+                            "step_count": 0,
+                        }
+                    ],
+                    "kind": "formula_parser_inventory",
+                    "parser_contract": "adj-lang/formula_source_map/v2",
+                    "schema_version": 2,
+                    "scope": "source_file",
+                    "source_sha256": "5" * 64,
+                    "source_size": 3,
+                },
+                kind="formula_parser_inventory",
+                label="guarded fixture inventory",
+            )
+            formula_bundle = {
+                "formula_inventory_sha256": inventory_hash,
+            }
+            with (
+                mock.patch.object(
+                    provenance,
+                    "_execution_graph",
+                    return_value=({}, [("6" * 64, formula_bundle)]),
+                ),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "guarded formula execution evidence requires",
+                ),
+            ):
+                provenance._normalized_formula_evidence(cas, {}, {})
+
     def test_formula_execution_replay_requires_the_audit_binary(self) -> None:
         cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
         manifest_path = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST

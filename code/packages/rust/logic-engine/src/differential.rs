@@ -52,7 +52,7 @@
 
 use logic_core::Term;
 
-use crate::lr_aggregate::{lr_aggregate, LRAggregateResult};
+use crate::lr_aggregate::{lr_aggregate, LRAggregateResult, LrAggregateWarning};
 use crate::KnowledgeBase;
 use crate::UncertaintyMarkerId;
 
@@ -88,6 +88,13 @@ pub enum DifferentialDecision {
         posterior: f64,
         margin_posterior: f64,
         margin_logit: f64,
+    },
+    /// A numeric predicate could not be evaluated without narrowing an exact
+    /// source. The ranking remains visible for audit, but it is not actionable.
+    Indeterminate {
+        leader: Term,
+        posterior: f64,
+        reason: String,
     },
     /// The leader's worst-case band and the runner-up's best-case band
     /// cross — an open uncertainty (or an exact tie) could flip the
@@ -191,6 +198,33 @@ pub fn differential(hypotheses: &[Term], kb: &KnowledgeBase) -> Differential {
 
     // Single hypothesis: nothing to compare against — determinate by
     // construction, infinite margin.
+    let predicate_failure_reason = ranked.iter().find_map(|ranked| {
+        ranked
+            .result
+            .warnings
+            .iter()
+            .find_map(|warning| match warning {
+                LrAggregateWarning::PredicatePrecisionLoss { .. } => {
+                    Some("a predicate depends on a precision-lost numeric value".to_string())
+                }
+                LrAggregateWarning::PredicateEvaluationError { detail, .. } => Some(format!(
+                    "a predicate threshold could not be evaluated: {detail}"
+                )),
+                _ => None,
+            })
+    });
+    if let Some(reason) = predicate_failure_reason {
+        let leader = &ranked[0];
+        return Differential {
+            decision: DifferentialDecision::Indeterminate {
+                leader: leader.hypothesis.clone(),
+                posterior: leader.posterior,
+                reason,
+            },
+            ranked,
+        };
+    }
+
     if ranked.len() == 1 {
         let leader = &ranked[0];
         return Differential {
@@ -260,7 +294,10 @@ pub fn differential(hypotheses: &[Term], kb: &KnowledgeBase) -> Differential {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lr_aggregate::{ContributionClause, PriorClause, UncertaintyMarker};
+    use crate::compute::{compute, ComputeExpr, ComputeOp};
+    use crate::lr_aggregate::{
+        CmpOp, ContributionClause, PredicateContributionClause, PriorClause, UncertaintyMarker,
+    };
     use crate::{Fact, KnowledgeBase};
     use logic_core::{atom, compound};
 
@@ -387,6 +424,63 @@ mod tests {
             }
             other => panic!("expected Determinate, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn predicate_precision_warning_makes_single_hypothesis_indeterminate() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("decision"), 0.10))
+            .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("decision"),
+            "measurement",
+            CmpOp::Ge,
+            0.0,
+            1e6,
+        ));
+        let measurement = compute("measurement", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(measurement);
+
+        let diff = differential(&[atom("decision")], &kb);
+        assert!(matches!(
+            diff.decision,
+            DifferentialDecision::Indeterminate { .. }
+        ));
+    }
+
+    #[test]
+    fn predicate_threshold_error_makes_single_hypothesis_indeterminate() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(atom("decision"), 0.10))
+            .unwrap();
+        kb.add_fact(Fact::certain(compound(
+            "measurement",
+            vec![logic_core::int(5)],
+        )));
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr_expr(
+            atom("decision"),
+            "measurement",
+            CmpOp::Ge,
+            ComputeExpr::Bin(
+                ComputeOp::Div,
+                Box::new(ComputeExpr::Lit(1.0)),
+                Box::new(ComputeExpr::Lit(0.0)),
+            ),
+            1e6,
+        ));
+
+        let diff = differential(&[atom("decision")], &kb);
+        assert!(matches!(
+            diff.decision,
+            DifferentialDecision::Indeterminate { .. }
+        ));
+        assert!(diff.ranked[0]
+            .result
+            .warnings
+            .iter()
+            .any(|warning| matches!(warning, LrAggregateWarning::PredicateEvaluationError { .. })));
     }
 
     /// No hypotheses → Empty.

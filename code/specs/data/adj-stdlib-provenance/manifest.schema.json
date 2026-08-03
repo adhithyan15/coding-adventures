@@ -264,6 +264,16 @@
         {
           "additionalProperties": false,
           "properties": {
+            "exact_rational": { "$ref": "#/$defs/formula_rational" },
+            "f64_bits": { "$ref": "#/$defs/f64_bits" },
+            "kind": { "const": "exact_literal" }
+          },
+          "required": ["exact_rational", "f64_bits", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
             "kind": { "const": "reference" },
             "name": { "minLength": 1, "type": "string" }
           },
@@ -379,6 +389,7 @@
         "formulabook": { "minLength": 1, "type": "string" },
         "inventory_sha256": { "$ref": "#/$defs/hash" },
         "parameters": { "items": { "minLength": 1, "type": "string" }, "type": "array" },
+        "preconditions": { "items": { "$ref": "#/$defs/formula_precondition" }, "minItems": 1, "type": "array" },
         "snapshot_sha256": { "$ref": "#/$defs/hash" },
         "source_ir_sha256": { "$ref": "#/$defs/hash" },
         "source_sha256": { "$ref": "#/$defs/hash" }
@@ -404,6 +415,26 @@
     "formula_rounding_mode": { "enum": ["down", "up", "floor", "ceiling", "half_up", "half_down", "half_even"] },
     "formula_parser_inventory": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "parser_contract": { "const": "adj-lang/formula_source_map/v1" } }, "required": ["parser_contract"] },
+          "then": {
+            "properties": {
+              "formulas": { "items": { "not": { "required": ["preconditions"] } } },
+              "schema_version": { "const": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "parser_contract": { "const": "adj-lang/formula_source_map/v2" } }, "required": ["parser_contract"] },
+          "then": {
+            "properties": {
+              "formulas": { "contains": { "required": ["preconditions"] } },
+              "schema_version": { "const": 2 }
+            }
+          }
+        }
+      ],
       "properties": {
         "formulas": {
           "items": {
@@ -414,6 +445,7 @@
               "formula": { "minLength": 1, "type": "string" },
               "formulabook": { "minLength": 1, "type": "string" },
               "parameters": { "items": { "minLength": 1, "type": "string" }, "type": "array" },
+              "preconditions": { "items": { "$ref": "#/$defs/formula_precondition" }, "minItems": 1, "type": "array" },
               "step_count": { "minimum": 0, "type": "integer" }
             },
             "required": ["body", "declaration", "formula", "formulabook", "parameters", "step_count"],
@@ -422,13 +454,23 @@
           "type": "array"
         },
         "kind": { "const": "formula_parser_inventory" },
-        "parser_contract": { "const": "adj-lang/formula_source_map/v1" },
-        "schema_version": { "const": 1 },
+        "parser_contract": { "enum": ["adj-lang/formula_source_map/v1", "adj-lang/formula_source_map/v2"] },
+        "schema_version": { "enum": [1, 2] },
         "scope": { "const": "source_file" },
         "source_sha256": { "$ref": "#/$defs/hash" },
         "source_size": { "maximum": 67108864, "minimum": 0, "type": "integer" }
       },
       "required": ["formulas", "kind", "parser_contract", "schema_version", "scope", "source_sha256", "source_size"],
+      "type": "object"
+    },
+    "formula_precondition": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": { "items": { "$ref": "#/$defs/formula_span" }, "type": "array" },
+        "declaration": { "$ref": "#/$defs/formula_span" },
+        "predicate": { "minLength": 1, "type": "string" }
+      },
+      "required": ["arguments", "declaration", "predicate"],
       "type": "object"
     },
     "formula_span": {

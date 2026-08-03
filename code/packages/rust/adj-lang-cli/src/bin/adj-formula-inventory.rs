@@ -24,7 +24,16 @@ struct Formula<'a> {
     formula: &'a str,
     formulabook: &'a str,
     parameters: &'a [String],
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    preconditions: Vec<Precondition<'a>>,
     step_count: usize,
+}
+
+#[derive(Serialize)]
+struct Precondition<'a> {
+    arguments: Vec<Span>,
+    declaration: Span,
+    predicate: &'a str,
 }
 
 #[derive(Serialize)]
@@ -116,6 +125,7 @@ fn run() -> Result<(), Failure> {
     let inventory = adj_lang::formula_source_map(text)
         .map_err(|error| Failure::Input(format!("formula source map failed: {error:?}")))?;
 
+    let guarded = inventory.iter().any(|item| !item.preconditions.is_empty());
     let formulas = inventory
         .iter()
         .map(|item| Formula {
@@ -124,14 +134,32 @@ fn run() -> Result<(), Failure> {
             formula: &item.formula.name,
             formulabook: &item.formulabook,
             parameters: &item.formula.params,
+            preconditions: item
+                .preconditions
+                .iter()
+                .map(|precondition| Precondition {
+                    arguments: precondition
+                        .argument_spans
+                        .iter()
+                        .copied()
+                        .map(|value| span(&source, value))
+                        .collect(),
+                    declaration: span(&source, precondition.declaration_span),
+                    predicate: &precondition.precondition.predicate,
+                })
+                .collect(),
             step_count: item.formula.steps.len(),
         })
         .collect();
     let output = Inventory {
         formulas,
         kind: "formula_parser_inventory",
-        parser_contract: "adj-lang/formula_source_map/v1",
-        schema_version: 1,
+        parser_contract: if guarded {
+            "adj-lang/formula_source_map/v2"
+        } else {
+            "adj-lang/formula_source_map/v1"
+        },
+        schema_version: if guarded { 2 } else { 1 },
         scope: "source_file",
         source_sha256: sha256_hex(&source),
         source_size: source.len(),

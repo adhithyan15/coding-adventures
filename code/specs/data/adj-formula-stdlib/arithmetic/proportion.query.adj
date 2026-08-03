@@ -21,11 +21,10 @@ observe third_term(4)
 ? fourth_proportional(first_term, second_term, third_term)
 
 % ----------------------------------------------------------------------------
-% Honest edge case — a degenerate proportion 0/b = c/x has NO finite fourth
-% proportional (the rule of three would divide by zero). The formula makes no
-% special claim here; it applies the cited `quotient`, which REFUSES to divide by
-% zero. The engine returns a DivisionByZero error rather than inventing a value —
-% honest abstention, not a fabricated answer. (Uncomment to see it.)
+% Honest edge case — every supplied term must be nonzero for `a/b = c/x` and
+% its solved form to share a valid domain. The formula checks those requirements
+% before evaluating its body and returns a structured `precondition_failed`
+% abstention rather than inventing a value. (Uncomment to see it.)
 % ----------------------------------------------------------------------------
 % observe first_term(0)
 % ? fourth_proportional(first_term, second_term, third_term)
