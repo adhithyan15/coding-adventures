@@ -1062,6 +1062,24 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["2e-18", 2.0e-18],
+  ])("lowers valid diode KF flicker-noise coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(KF=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      flickerNoiseCoefficient: expected,
+    });
+  });
+
+  it.each(["-1e-18", "1e999"])("rejects invalid diode KF %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(KF=${value})`)).toThrow(
+      "diode KF must be finite and non-negative",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

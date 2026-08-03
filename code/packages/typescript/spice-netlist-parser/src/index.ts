@@ -1257,6 +1257,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode EG must be finite and positive");
   }
+  const diodeFlickerNoiseCoefficient = params.get("KF");
+  if (
+    kind === "D" &&
+    diodeFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(diodeFlickerNoiseCoefficient) || diodeFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("diode KF must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1849,6 +1857,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       saturationCurrentTemperatureExponent: model.params.get("XTI") ?? 3.0,
       energyGapElectronVolts: model.params.get("EG") ?? 1.11,
       seriesResistance: model.params.get("RS") ?? 0.0,
+      flickerNoiseCoefficient: model.params.get("KF") ?? 0.0,
     };
   }
   if (prefix === "Q") {

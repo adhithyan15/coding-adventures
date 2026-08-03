@@ -1016,6 +1016,25 @@ def test_rejects_invalid_diode_energy_gap(value: str) -> None:
         parse_netlist(f".model clamp D(EG={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2e-18", 2e-18)])
+def test_lowers_valid_diode_flicker_noise_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(KF={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Kf == expected
+
+
+@pytest.mark.parametrize("value", ["-1e-18", "1e999"])
+def test_rejects_invalid_diode_flicker_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode KF must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(KF={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """
