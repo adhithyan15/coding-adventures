@@ -1370,6 +1370,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "RD",
     "RS",
     "RSH",
+    "NRD",
     "IS",
     "N_SUB",
     "T_NOM",
@@ -1594,6 +1595,11 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "NMOS" or "PMOS"`,
       );
     }
+    const instanceParams = parseElementParams(fields.slice(6), "MOSFET");
+    const drainSquares = instanceParams.get("NRD");
+    if (drainSquares !== undefined && (!Number.isFinite(drainSquares) || drainSquares < 0.0)) {
+      throw new NetlistParseError("MOSFET NRD must be finite and non-negative");
+    }
     return mosfet(
       name,
       fields[1],
@@ -1601,7 +1607,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[3],
       fields[4],
       model.kind,
-      mosfetParams(model, parseElementParams(fields.slice(6), "MOSFET")),
+      mosfetParams(model, instanceParams),
     );
   }
   if (prefix === "G") {

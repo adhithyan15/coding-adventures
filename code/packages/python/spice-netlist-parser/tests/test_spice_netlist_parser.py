@@ -959,6 +959,28 @@ Mp out gate vdd vdd pfast W=3u L=250n
     assert isclose(mosfet.model.model.params.L, 250.0e-9)
 
 
+@pytest.mark.parametrize("drain_squares", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_instance_drain_squares(drain_squares: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET NRD must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast NRD={drain_squares}\n"
+        )
+
+
+@pytest.mark.parametrize(("drain_squares", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_lowers_valid_mosfet_instance_drain_squares(
+    drain_squares: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast NRD={drain_squares}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert expected == mosfet.model.model.params.NRD
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
