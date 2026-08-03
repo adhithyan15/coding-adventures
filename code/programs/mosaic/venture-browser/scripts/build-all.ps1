@@ -336,7 +336,10 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
 
 $javaMajor = $null
 if (Test-Command "java") {
-    $javaVersion = (& java -version 2>&1 | Out-String)
+    # java writes its version to stderr. Windows PowerShell turns redirected native
+    # stderr into ErrorRecord objects, which become terminating errors under the
+    # script-wide ErrorActionPreference=Stop before Compose can be built.
+    $javaVersion = (& cmd.exe /d /c "java -version 2>&1" | Out-String)
     if ($javaVersion -match 'version "([0-9]+)') {
         $javaMajor = [int]$Matches[1]
     }

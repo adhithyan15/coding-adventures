@@ -480,6 +480,10 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         powershell.contains("venture-browser-windows") && powershell.contains("xaml_project_build"),
         "Windows matrix must run the primary Windows direct-launch gate"
     );
+    assert!(
+        powershell.contains("cmd.exe /d /c \"java -version 2>&1\""),
+        "Windows matrix must capture Java's stderr without turning it into a terminating error"
+    );
     let backends = [
         "react",
         "electron",
