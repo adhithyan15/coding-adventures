@@ -648,6 +648,20 @@ the real lexer token stream) that bounds parse-tree depth so deep nesting cannot
 overflow the stack, and a bounded worker thread with `catch_unwind` plus
 session-rebuild so a panic becomes a clean `Err` rather than a crash.
 
+A security audit found and directly reproduced a further, independent
+vector neither cap above closes: `a = a * a` / `a = a + a` (`Set`),
+repeated even a handful of times, doubles the bound value's node count
+and/or nesting depth every step — `MAX_INPUT_LEN`/`MAX_STATEMENT_TOKENS`
+bound *source-text* size, not the size of a value already sitting bound in
+the environment before it gets combined with itself again. This is closed
+in the shared `symbolic-vm` crate itself (`handlers::assign_handler`'s
+`MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH` checks, run before every
+`Assign` durably binds) — `WolframBackend::handler_for` checks the W-5
+builtin table first but has no entry for `Assign`, so `Set`/`SetDelayed`
+always fall through to that same shared handler with no bypass, and are
+protected automatically. See `symbolic-vm`'s own README/changelog for the
+full mechanism.
+
 ## Where it fits
 
 - **W-1** spec + grammar, **W-2** `wolfram-lexer`, **W-3** `wolfram-parser`

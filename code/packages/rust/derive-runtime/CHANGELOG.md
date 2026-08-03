@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.2.1] - 2026-08-02
+
+### Fixed
+
+- **CRITICAL — self-referential reassignment DoS, shared fix (no bypass
+  here).** A security audit found and directly reproduced (built and ran
+  the real `derive-repl` binary, source ~250 bytes) an unbounded
+  value-growth denial-of-service in `symbolic-vm`'s shared
+  `handlers::assign_handler`: `a := a * a` / `a := a + a`, repeated even a
+  handful of times, doubles the bound value's node count and/or nesting
+  depth every step, reaching millions of nodes within ~15 steps and
+  hanging/OOMing the process. Fixed at the shared choke point
+  (`symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH`,
+  see that crate's own changelog for the full mechanism, including a
+  second independent growth axis found while writing this crate's own
+  `a := a + a` regression test — that shape hits the shared `Add`
+  handler's own flatten-then-left-associate canonicalization and needs a
+  *depth* cap, not just the node-count cap, or it reproduces a genuine
+  uncatchable native stack overflow rather than a clean error). Verified
+  this crate's own `:=` lowers straight to `symbolic_ir::ASSIGN`
+  (`lower.rs`) and evaluates through the shared `vm.eval` (`eval_source`'s
+  per-statement loop) — no crate-specific bypass, so no code change was
+  needed here, just proof of coverage. Added regression tests reproducing
+  the exact audited scenario end-to-end through a real `DeriveSession` as
+  a multi-line worksheet (both the node-count-tripping `a := a * a` shape
+  and the depth-tripping `a := a + a` shape), plus a non-false-positive
+  check that a handful of self-multiplications under the caps still
+  evaluates correctly. The worker-thread `catch_unwind` this crate already
+  had in place correctly converts the new panic into a clean `Err` and
+  rebuilds the session, exactly as it does for the existing malformed-
+  assign-lhs case.
+
 ## [0.2.0] - 2026-07-14
 
 ### Added

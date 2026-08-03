@@ -1442,6 +1442,177 @@ fn if_handler(_simplify: bool) -> Handler {
 // Assign / Define — binding forms
 // ---------------------------------------------------------------------------
 
+/// Maximum total `IRNode` count a value may have before `assign_handler`
+/// will durably bind it into the environment via `:=`/`=`.
+///
+/// # Why this exists — self-referential reassignment doubles a value's size
+///
+/// A self-referential reassignment like `a := a * a` or `a := a + a`,
+/// repeated even a handful of times, clones the *entire current value* of
+/// `a` into **both** operand positions of the new node. When the value
+/// can't be numerically collapsed (e.g. it started from free symbols, as in
+/// `a := x + y`), the clone survives structurally and the total node count
+/// roughly **doubles on every step**. Measured directly against this crate
+/// (`a := x + y;` seed, then `a := a * a;` repeated — the `SymbolicBackend`,
+/// same as every reference backend below):
+///
+/// ```text
+/// step:   1   2   3   4   5    6    7    8    9     10    11    12     13     14
+/// nodes: 10  22  46  94  190  382  766  1534  3070  6142  12286  24574  49150  98302
+/// ```
+///
+/// This is architecturally different from — and NOT caught by — either of
+/// this repo's other two DoS guards:
+///
+/// - **Deep *nesting*** (`((((…))))`) is bounded by each frontend's parser
+///   `MAX_RULE_DEPTH`.
+/// - **Long flat *chains*** (`1+1+1+…`) are bounded by source-size guards
+///   like `MAX_STATEMENT_TOKENS`/`MAX_INPUT_LEN`.
+///
+/// Both of those bound the *source text*. This attack needs only a
+/// constant, tiny amount of *additional* source per step (one more
+/// `a := a * a;`, ~15 bytes) to *double* the bound *value*'s size — so a
+/// few hundred bytes of source reaches millions of nodes within a couple
+/// dozen more steps. Neither guard above ever inspects the size of an
+/// already-bound value before it is combined with itself again, which is
+/// exactly the gap this cap closes.
+///
+/// # Why 100,000
+///
+/// 100,000 sits just above the measured series above: an attacker trips
+/// this cap on the 15th self-multiplication step (98,302 nodes at step 14,
+/// the next doubling clears 100,000) — long before a session's memory is
+/// meaningfully impacted — while comfortably clearing any legitimate CAS
+/// value a user would construct in a single assignment by hand: an
+/// expanded polynomial with a few hundred terms, or an explicit literal
+/// list/matrix with a few thousand elements, tops out at a few thousand
+/// nodes — an order of magnitude or more below this cap.
+pub const MAX_BOUND_VALUE_NODES: usize = 100_000;
+
+/// Count the total number of [`IRNode`]s in `node`, stopping as soon as the
+/// running count exceeds `cap`.
+///
+/// Returns `Some(count)` (the exact total) when the tree's node count is at
+/// or under `cap`; returns `None` as soon as the count is certain to exceed
+/// it, without walking the remainder of the (potentially still-large) tree.
+///
+/// Uses an explicit heap-allocated work stack rather than native recursion,
+/// so counting can never itself overflow the stack no matter how deep
+/// `node` already is — mirrors `axiom-to-semantic-ir`'s
+/// `measure_depth_iterative`/`drop_iterative` iterative-walk idiom, applied
+/// here to total node count rather than depth. `cap` is always far below
+/// `usize::MAX` (see [`MAX_BOUND_VALUE_NODES`]), so the running count can
+/// never itself overflow — the early `return None` fires long before that
+/// could matter.
+///
+/// `pub` (not just crate-private) so that a consuming runtime with its own
+/// bypass of `assign_handler` — see `axiom-runtime::eval::eval_assignment`,
+/// which binds directly through `Backend::bind` rather than routing
+/// `Assign` through this handler — can apply the *identical* budget check
+/// at its own bind call site, rather than hand-rolling a second, possibly
+/// divergent, node-counting walk.
+pub fn count_nodes_within_cap(node: &IRNode, cap: usize) -> Option<usize> {
+    let mut stack: Vec<&IRNode> = vec![node];
+    let mut count: usize = 0;
+    while let Some(current) = stack.pop() {
+        count += 1;
+        if count > cap {
+            return None;
+        }
+        if let IRNode::Apply(apply) = current {
+            stack.push(&apply.head);
+            for arg in &apply.args {
+                stack.push(arg);
+            }
+        }
+    }
+    Some(count)
+}
+
+/// Maximum nesting depth a value may have before `assign_handler` will
+/// durably bind it into the environment via `:=`/`=`.
+///
+/// # Why this exists — a SEPARATE growth axis from `MAX_BOUND_VALUE_NODES`
+///
+/// `a := a * a` grows a value's *node count* exponentially while its
+/// *depth* only grows linearly (each step clones the whole prior value
+/// whole into one more `Mul` wrapper) — `MAX_BOUND_VALUE_NODES` alone
+/// catches that shape fine. But `a := a + a` hits this crate's own `Add`
+/// handler's flatten-then-left-associate canonicalization (Phase 47,
+/// `flatten_add_leaves` below): every step gathers the operands' leaves
+/// into one flat list and rebuilds a *left-associated chain whose depth
+/// equals its leaf count*. Because leaf count doubles every step (same
+/// mechanism as the node-count case), **depth doubles too** — and unlike
+/// node count, a too-deep value is dangerous *before* `MAX_BOUND_VALUE_
+/// NODES` ever gets a chance to reject it: `VM::eval_symbol` natively
+/// re-walks (via a recursive `self.eval` call) a symbol's *entire* bound
+/// value on every lookup (this is intentional — see its own "self-loop
+/// guard" comment — a bound value can itself reference other symbols that
+/// may have been updated since). Looking up a sufficiently deep bound
+/// value therefore recurses natively to a depth proportional to the
+/// value's own depth, and can overflow the native call stack — an
+/// uncatchable process abort, not a catchable `panic!`, and critically
+/// this happens *inside* the recursive `vm.eval(rhs)` call for the *next*
+/// statement that looks the name up, i.e. **before** this handler's own
+/// node-count check on the *current* statement's result ever runs.
+/// Confirmed by direct reproduction against this crate: `a := x + y;`
+/// then `a := a + a;` repeated aborts the process with a genuine native
+/// stack overflow well before `MAX_BOUND_VALUE_NODES` alone would trip.
+///
+/// Capping *depth* at bind time (in addition to node count) closes this:
+/// a value deep enough to be dangerous on a later lookup is rejected
+/// before it can ever become durably reachable, so no subsequent lookup
+/// can ever walk it.
+///
+/// # Why 128
+///
+/// Reuses this repo's own already-established, empirically-derived
+/// native-recursion safety threshold (`parser::DEFAULT_MAX_RULE_DEPTH`,
+/// documented there as sitting safely below the ~192–224-frame point at
+/// which *fat* recursive frames have been observed to overflow a 2 MiB
+/// stack in this repo's own CI history) rather than inventing a new,
+/// unvetted number. 128 is comfortably deep enough for any legitimately
+/// *parsed* expression to begin with (parser-level `MAX_RULE_DEPTH` caps
+/// already bound source-level nesting to the same figure), and small
+/// enough that re-walking a value at exactly this depth — via
+/// `eval_symbol`'s recursive re-evaluation, plus whatever additional
+/// native frames a consuming runtime's own AST-walking interpreter (e.g.
+/// `axiom-runtime`) layers on top of that — stays safely within bounds
+/// even on a default-sized thread stack, well before reaching a dedicated
+/// large worker-thread stack's much larger headroom.
+pub const MAX_BOUND_VALUE_DEPTH: usize = 128;
+
+/// Measure `node`'s nesting depth iteratively, stopping as soon as it's
+/// certain to exceed `cap`.
+///
+/// Returns `Some(depth)` (the exact maximum depth, root = depth 0) when
+/// `node`'s depth is at or under `cap`; returns `None` as soon as the
+/// depth is certain to exceed it.
+///
+/// Uses an explicit heap-allocated work stack rather than native
+/// recursion, for the same reason as [`count_nodes_within_cap`] — mirrors
+/// `axiom-to-semantic-ir::measure_depth_iterative`'s idiom exactly, just
+/// applied as a pre-bind check here. `pub` for the same reason as
+/// [`count_nodes_within_cap`]: `axiom-runtime`'s own `assign_handler`
+/// bypass needs the identical check.
+pub fn depth_within_cap(node: &IRNode, cap: usize) -> Option<usize> {
+    let mut stack: Vec<(&IRNode, usize)> = vec![(node, 0)];
+    let mut max_depth: usize = 0;
+    while let Some((current, depth)) = stack.pop() {
+        if depth > cap {
+            return None;
+        }
+        max_depth = max_depth.max(depth);
+        if let IRNode::Apply(apply) = current {
+            stack.push((&apply.head, depth + 1));
+            for arg in &apply.args {
+                stack.push((arg, depth + 1));
+            }
+        }
+    }
+    Some(max_depth)
+}
+
 fn assign_handler(_simplify: bool) -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         let (lhs, rhs) = match binary_args(&expr) {
@@ -1453,6 +1624,28 @@ fn assign_handler(_simplify: bool) -> Handler {
             _ => panic!("Assign lhs must be a symbol, got {lhs}"),
         };
         let value = vm.eval(rhs);
+        // See `MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH` doc comments:
+        // self-referential reassignment (`a := a * a` / `a := a + a`,
+        // repeated) doubles the bound value's node count AND/OR nesting
+        // depth on every step, along two independent axes. Reject BEFORE
+        // binding — once bound, the oversized value is durably reachable
+        // and can feed into further self-combination (node-count growth)
+        // or be natively re-walked on the next lookup (depth-driven native
+        // stack overflow).
+        if count_nodes_within_cap(&value, MAX_BOUND_VALUE_NODES).is_none() {
+            panic!(
+                "Assign target '{name}' would bind a value exceeding \
+                 {MAX_BOUND_VALUE_NODES} nodes — rejecting to prevent unbounded growth \
+                 from self-referential reassignment (e.g. repeated '{name} := {name} * {name}')"
+            );
+        }
+        if depth_within_cap(&value, MAX_BOUND_VALUE_DEPTH).is_none() {
+            panic!(
+                "Assign target '{name}' would bind a value nested deeper than \
+                 {MAX_BOUND_VALUE_DEPTH} levels — rejecting to prevent unbounded growth \
+                 from self-referential reassignment (e.g. repeated '{name} := {name} + {name}')"
+            );
+        }
         vm.backend.bind(&name, value.clone());
         value
     })

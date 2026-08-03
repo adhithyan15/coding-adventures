@@ -328,6 +328,83 @@ mod tests {
             .starts_with("Incorrect syntax at line 1, column "));
     }
 
+    // --- Self-referential-reassignment DoS guard (a security audit's
+    // finding, shared with every consumer of `symbolic-vm`'s
+    // `assign_handler` -- see `symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`
+    // / `MAX_BOUND_VALUE_DEPTH`'s own doc comments) -- `a: a * a` /
+    // `a: a + a`, repeated even a handful of times, doubles the bound
+    // value's node count and/or nesting depth every step, reaching millions
+    // of nodes from a few hundred bytes of source. `macsyma-runtime` lowers
+    // its own `:` assignment straight to `symbolic_ir::ASSIGN` and evaluates
+    // through the shared `vm.eval`, so it is protected by the same
+    // choke-point fix with no crate-specific bypass work needed. Unlike the
+    // other CAS-family runtimes, `macsyma-runtime`'s own `eval_source` has
+    // no `catch_unwind` boundary of its own -- this crate (`macsyma-wasm`)
+    // is where that boundary actually lives for Macsyma's real deployed
+    // surface (`catch_parser_panics`, above), so these regression tests
+    // exercise it here.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn self_referential_multiplication_is_rejected_cleanly() {
+        // The exact audited scenario, as `$`-terminated Macsyma statements
+        // (`program = { statement }` accepts many in one call): `a: x + y`
+        // then `a: a * a` repeated. 30 repetitions is far past the real
+        // trip point (~15th step) -- without the guard this reaches
+        // billions of nodes; with it, a clean JSON error in well under a
+        // second.
+        let mut src = String::from("a: x + y$ ");
+        for _ in 0..30 {
+            src.push_str("a: a * a$ ");
+        }
+        assert!(src.len() < 500, "source should stay tiny: {} bytes", src.len());
+
+        let mut session = MacsymaWasmSession::new();
+        let payload = json(&session.eval_json(&src));
+        assert_eq!(payload["ok"], false);
+        let message = payload["error"]["message"].as_str().unwrap();
+        assert!(message.contains("nodes"), "expected a node-count rejection, got {message:?}");
+
+        // `catch_parser_panics` must leave the session usable afterward.
+        let recovered = json(&session.eval_json("2 + 2;"));
+        assert_eq!(recovered["results"][0]["output_macsyma"], "4");
+    }
+
+    #[test]
+    fn self_referential_addition_is_rejected_cleanly() {
+        // Same attack shape via the audit's other named example, `a: a +
+        // a`. This one trips the DEPTH guard, not the node-count guard --
+        // `Add`'s own flatten-then-left-associate canonicalization rebuilds
+        // a chain whose depth equals its leaf count, and leaf count doubles
+        // too. Without a depth guard this reproduces a genuine, uncatchable
+        // native stack overflow on a later statement's symbol lookup, not
+        // merely a slow hang.
+        let mut src = String::from("a: x + y$ ");
+        for _ in 0..30 {
+            src.push_str("a: a + a$ ");
+        }
+
+        let mut session = MacsymaWasmSession::new();
+        let payload = json(&session.eval_json(&src));
+        assert_eq!(payload["ok"], false);
+        let message = payload["error"]["message"].as_str().unwrap();
+        assert!(message.contains("levels"), "expected a nesting-depth rejection, got {message:?}");
+
+        let recovered = json(&session.eval_json("2 + 2;"));
+        assert_eq!(recovered["results"][0]["output_macsyma"], "4");
+    }
+
+    #[test]
+    fn a_handful_of_self_multiplications_under_the_cap_still_evaluate_correctly() {
+        // Non-false-positive check: a FEW self-referential reassignments,
+        // comfortably under the caps, must still evaluate normally.
+        let mut session = MacsymaWasmSession::new();
+        session.eval_json("a: 2$ a: a * a$ a: a * a$"); // 2 -> 4 -> 16
+        let payload = json(&session.eval_json("a;"));
+        assert_eq!(payload["ok"], true);
+        assert_eq!(payload["results"][0]["output_macsyma"], "16");
+    }
+
     #[test]
     fn reports_help_queries_as_json_visible_output() {
         let payload = json(&eval_source_json("? solve"));

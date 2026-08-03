@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-maple-runtime"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Maple runtime — lowers Maple syntax to symbolic-ir and evaluates via symbolic-vm (MP-4)"
 license = "MIT"

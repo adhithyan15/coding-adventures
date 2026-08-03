@@ -1,5 +1,76 @@
 # Changelog
 
+## [0.1.1] - 2026-08-02
+
+### Fixed
+
+- **CRITICAL — self-referential reassignment DoS, own bypass of
+  `symbolic-vm`'s shared fix.** A security audit directly reproduced (built
+  and ran the real `axiom` binary) an unbounded value-growth
+  denial-of-service: a self-referential reassignment like `a := a * a` or
+  `a := a + a`, repeated even a handful of times — all inside ONE
+  parenthesised `;`-block (`( a := x + y; a := a * a; ... )`, ~250 bytes) —
+  clones the entire current value of `a` into both operand positions of
+  the new node every step, roughly doubling total node count (and/or
+  nesting depth) each time, hanging/OOMing the process within ~15 steps.
+  `symbolic-vm`'s own `handlers::assign_handler` was fixed with a shared
+  choke-point guard (see that crate's changelog, `MAX_BOUND_VALUE_NODES`/
+  `MAX_BOUND_VALUE_DEPTH`) — but this crate's plain `NAME ASSIGN expr`
+  assignment (`eval::eval_assignment`) does **not** route through it: it
+  evaluates the right-hand side via this crate's own `eval_expr` walker
+  and binds directly through `Backend::bind`, bypassing the shared handler
+  entirely (this crate is an eager AST-walking interpreter, not a
+  lower-then-`VM::eval`-once pipeline, unlike every other CAS-family
+  runtime here — see `eval`'s own module doc comment). Confirmed this
+  bypass is real for BOTH plain assignment and this crate's own iterative
+  arithmetic folding (`eval_binary_chain` still hands each fold step to
+  the shared `symbolic_vm::VM::eval`, so `+`/`*` here hit the identical
+  shared `Add`/`Mul` handlers and are equally exposed).
+- Fixed by applying the identical two checks —
+  `symbolic_vm::handlers::count_nodes_within_cap`/`depth_within_cap`
+  against `MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH` — at this
+  crate's own bind site in `eval_assignment`, immediately before
+  `ctx.vm.backend.bind(...)`. On trip: a clean `Err(EvalError)` through
+  this crate's existing `Result`-based error channel (more direct than a
+  `panic!` + `catch_unwind` round-trip, since `eval_assignment` already
+  returns `Result` for other validation failures such as a `:`-declared
+  domain mismatch) — no architecture change, no new panic path.
+- Added regression tests reproducing the exact audited scenario end-to-end
+  through a real `AxiomSession`, for both `a := a * a` (trips the
+  node-count cap) and `a := a + a` (trips the depth cap — the `Add`
+  flatten-then-left-associate canonicalization this crate shares with
+  every other consumer of `symbolic-vm`'s `add_handler` makes this shape
+  independently dangerous, see `symbolic-vm`'s own changelog), plus a
+  non-false-positive check that a handful of self-multiplications under
+  the caps still evaluates correctly. All three prove the session remains
+  usable afterward.
+- **Secondary fix (review-caught while auditing this incident): display
+  formatting now runs inside the guarded worker thread.**
+  `AxiomSession::eval_to_output`'s success arm used to call
+  `format_value(&value)`/`print_axiom` (both native-recursive) AFTER the
+  worker thread — the one with the enlarged, bounded stack — had already
+  been joined, so a pathologically deep (but under the new node/depth
+  caps) result value's own *printing* recursion ran on the caller's
+  default-size stack, contradicting this module's own doc comment
+  claiming ALL untrusted-input-touching code runs inside the enlarged-
+  stack/`catch_unwind` boundary. Moved the `format_value` call inside the
+  worker closure, before it's joined — no behavior change, same output,
+  just computed on the safe stack.
+- **Secondary fix (LOW severity, addressed since straightforward once
+  found): `eval_binary_chain`'s O(N²) domain-inference cost.**
+  `domains::is_polynomial_over_integers` is a structural, whole-tree walk;
+  the fold loop was calling it (via `AxiomValue::inferred`) on the
+  *accumulator* at every one of N fold steps, and the accumulator grows by
+  one term each step — O(N) work × N steps = O(N²) total for one N-term
+  flat arithmetic chain, despite this crate's own doc comment claiming the
+  iterative fold design "sidesteps the DoS vector by construction" (true
+  only for native-recursion stack depth, not total CPU work). Every
+  intermediate accumulator's inferred domain was discarded anyway — only
+  `.node` ever fed the next fold step — so `eval_binary_chain` now carries
+  a bare `IRNode` through the loop and infers the domain exactly once, on
+  the final result. No behavior change (same final `AxiomValue` for every
+  existing test), now O(N) total instead of O(N²).
+
 ## [0.1.0] - 2026-07-28
 
 ### Added

@@ -154,7 +154,7 @@ callers that don't need a persistent session.
 ## Robustness
 
 `feed`/`eval_to_output` are the trust boundary for arbitrary Axiom source —
-**four** independent recursion/panic vectors are closed, not three:
+**five** independent recursion/panic/growth vectors are closed, not four:
 
 1. **Deeply nested source** (`((((…))))`) — already rejected by
    `axiom-parser`'s own `MAX_RULE_DEPTH`.
@@ -174,7 +174,26 @@ callers that don't need a persistent session.
    incident this was added to close in review (this crate used to delegate
    function calls to `symbolic_vm`'s own uncapped mechanism, and a genuine
    native stack overflow is not catchable by `catch_unwind` at all).
-4. **Unwinding panics** from the reused shared handler table run inside
+4. **Unbounded self-referential-reassignment growth** — `a := a * a` or
+   `a := a + a`, repeated even a handful of times (all inside ONE
+   parenthesised `;`-block, `( a := x + y; a := a * a; ... )`, ~250 bytes),
+   clones the current value of `a` into both operand positions of the new
+   node every step, roughly *doubling* its node count (`a := a * a`) and/or
+   nesting depth (`a := a + a`, which additionally hits the shared `Add`
+   handler's flatten-then-left-associate canonicalization) on every step —
+   a *fourth*, independent vector: none of the first three bound the size
+   of a value already sitting bound in the environment before it gets
+   combined with itself again. Closed by applying `symbolic_vm::handlers::
+   count_nodes_within_cap`/`depth_within_cap` (against `MAX_BOUND_VALUE_
+   NODES`/`MAX_BOUND_VALUE_DEPTH`) at this crate's own `eval_assignment`
+   bind site — this crate's plain assignment binds directly through
+   `Backend::bind` rather than through `symbolic-vm`'s shared
+   `assign_handler` the way every other CAS-family runtime here does (see
+   `eval`'s own module doc comment), so it needed this fix applied at its
+   own bypass point, not just at the shared choke point. See
+   `symbolic-vm`'s own README/changelog for the full mechanism and why two
+   independent budgets (node count *and* depth) are both necessary.
+5. **Unwinding panics** from the reused shared handler table run inside
    `catch_unwind` on a worker thread with a large bounded stack; the session
    (VM environment, declared-domain table, *and* function table) is rebuilt
    afterward rather than left corrupted. This is a narrower guarantee than
@@ -198,4 +217,8 @@ correctness delegated to the shared engine; `:=`/`==`/`if`/block evaluation
 disclosed function-body restriction; the `MAX_CALL_DEPTH` guard (both on a
 generously-sized worker-thread stack, confirming the cap — not the stack —
 is what trips, and on a deliberately small one, confirming the cap trips
-*before* any native overflow risk); and all four robustness guards.
+*before* any native overflow risk); the self-referential-reassignment
+growth guard (both `a := a * a` and `a := a + a`, reproducing the exact
+audited scenario, plus a non-false-positive check that a handful of
+self-multiplications under the caps still evaluates correctly); and all
+five robustness guards.

@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-reduce-runtime"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Reduce runtime — lowers Reduce syntax to symbolic-ir and evaluates via symbolic-vm (R-4)"
 license = "MIT"

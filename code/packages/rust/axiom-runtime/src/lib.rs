@@ -263,11 +263,18 @@ impl AxiomSession {
 
         // Guards 2-3 + panics: run entirely on a worker thread with a large
         // bounded stack, inside `catch_unwind`, so that EVERY step touching
-        // untrusted `src` -- lexing for the token-count guard, parsing, and
-        // evaluation -- is covered by the same panic boundary (Guard 2 used
-        // to run on the caller's own thread, outside `catch_unwind`; moved
-        // in here so a hypothetical future lexer panic can never escape
-        // uncaught either).
+        // untrusted `src` -- lexing for the token-count guard, parsing,
+        // evaluation, AND display formatting -- is covered by the same
+        // panic boundary and the same enlarged stack (Guard 2 used to run
+        // on the caller's own thread, outside `catch_unwind`; moved in here
+        // so a hypothetical future lexer panic can never escape uncaught
+        // either. `format_value`/`print_axiom` used to run AFTER the worker
+        // was joined, back on the caller's own default-size stack -- a
+        // review-caught gap: a pathologically deep, but under the node/
+        // depth caps above, result value could defeat this module's own
+        // stack-size guarantee purely by being *printed* rather than
+        // evaluated. Formatting the value here, before the thread is
+        // joined, closes that gap).
         let vm = &mut self.vm;
         let declared = &mut self.declared_domains;
         let functions = &mut self.functions;
@@ -278,7 +285,8 @@ impl AxiomSession {
                 .spawn_scoped(scope, || {
                     catch_unwind(AssertUnwindSafe(|| {
                         check_statement_token_count(&src_owned)?;
-                        eval_source(vm, declared, functions, &src_owned)
+                        let value = eval_source(vm, declared, functions, &src_owned)?;
+                        Ok::<String, String>(format_value(&value))
                     }))
                 })
                 .expect("failed to spawn axiom evaluation thread")
@@ -286,9 +294,8 @@ impl AxiomSession {
         });
 
         match outcome {
-            Ok(Ok(Ok(value))) => {
+            Ok(Ok(Ok(text))) => {
                 self.output_index += 1;
-                let text = format_value(&value);
                 Ok(Output {
                     index: self.output_index,
                     text,
@@ -769,6 +776,81 @@ mod tests {
             assert!(s.feed("loop(1)").is_err());
         });
         handle.join().expect("must not crash the worker thread");
+    }
+
+    // --- Self-referential-reassignment DoS guard (see crate::eval's own
+    // `eval_assignment`, and `symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`/
+    // `MAX_BOUND_VALUE_DEPTH`'s own doc comments) -- a security audit found
+    // that `a := a * a` / `a := a + a`, repeated even a handful of times
+    // inside ONE parenthesised `;`-block (`axiom.grammar`'s `group = LPAREN
+    // expr { SEMI expr } RPAREN`), doubles the bound value's node count
+    // and/or nesting depth every step, reaching millions of nodes from a
+    // ~250-byte program. Axiom's own plain assignment binds directly
+    // through `Backend::bind` rather than through `symbolic_vm`'s shared
+    // `assign_handler`, so this crate needed its OWN copy of the guard at
+    // its own bind site -- these tests reproduce the exact reported
+    // scenario end-to-end through a real `AxiomSession`.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn self_referential_multiplication_inside_one_block_is_rejected_cleanly() {
+        // The exact audited scenario: `( a := x + y; a := a * a; a := a *
+        // a; ... )`, all inside ONE `feed` call. 30 repetitions is far past
+        // the real trip point (~15th step) -- without the guard this
+        // reaches billions of nodes; with it, a clean `Err` in well under a
+        // second, and the session remains usable afterward.
+        let mut src = String::from("(a := x + y");
+        for _ in 0..30 {
+            src.push_str("; a := a * a");
+        }
+        src.push(')');
+        assert!(src.len() < 500, "source should stay tiny: {} bytes", src.len());
+
+        let mut s = AxiomSession::new();
+        let err = s.feed(&src).unwrap_err();
+        assert!(err.contains("nodes"), "expected a node-count rejection, got {err:?}");
+        // The session must remain usable afterward -- a clean `Err` does
+        // not rebuild the session (only a caught panic does; see
+        // `session_survives_a_rejected_deep_recursion_and_keeps_working`
+        // above for the identical pattern with the call-depth guard).
+        assert_eq!(s.feed("2 + 2").unwrap(), "(1) 4 : PositiveInteger\n");
+    }
+
+    #[test]
+    fn self_referential_addition_inside_one_block_is_rejected_cleanly() {
+        // Same attack shape via the audit's other named example, `a := a +
+        // a`. This one trips the DEPTH guard, not the node-count guard --
+        // `Add`'s own flatten-then-left-associate canonicalization
+        // (Phase 47, shared via `symbolic_vm`) rebuilds a chain whose depth
+        // equals its leaf count, and leaf count doubles too. Without a
+        // depth guard this reproduces a genuine, uncatchable native stack
+        // overflow (not merely a slow hang) on a later statement's symbol
+        // lookup -- see `MAX_BOUND_VALUE_DEPTH`'s own doc comment in
+        // `symbolic-vm` for the full mechanism.
+        let mut src = String::from("(a := x + y");
+        for _ in 0..30 {
+            src.push_str("; a := a + a");
+        }
+        src.push(')');
+
+        let mut s = AxiomSession::new();
+        let err = s.feed(&src).unwrap_err();
+        assert!(
+            err.contains("levels"),
+            "expected a nesting-depth rejection, got {err:?}"
+        );
+        assert_eq!(s.feed("2 + 2").unwrap(), "(1) 4 : PositiveInteger\n");
+    }
+
+    #[test]
+    fn a_handful_of_self_multiplications_under_the_cap_still_evaluate_correctly() {
+        // Non-false-positive check: a FEW self-referential reassignments,
+        // comfortably under the caps, must still evaluate normally and
+        // produce the mathematically correct result -- the guard must trip
+        // on VALUE SIZE, not merely on a variable referencing itself.
+        let mut s = AxiomSession::new();
+        s.feed("(a := 2; a := a * a; a := a * a)").unwrap(); // 2 -> 4 -> 16
+        assert_eq!(s.feed("a").unwrap(), "(2) 16 : PositiveInteger\n");
     }
 
     // --- Robustness guards ---------------------------------------------------

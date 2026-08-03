@@ -80,8 +80,8 @@ callers that don't need a persistent session.
 ## Robustness
 
 `feed`/`eval_to_outputs` are the trust boundary for arbitrary Derive source.
-Two independent deep-recursion vectors are closed (see the crate doc
-comment for the full rationale):
+Three independent deep-recursion/growth vectors are closed (see the crate
+doc comment for the full rationale):
 
 1. **Deeply nested source** (`((((…))))`) — already rejected by
    `derive-parser`'s own `MAX_RULE_DEPTH`.
@@ -89,10 +89,23 @@ comment for the full rationale):
    lowered tree — grammar repetitions aren't bounded by `MAX_RULE_DEPTH`, so
    `MAX_STATEMENT_TOKENS` (measured against the real lexer token stream)
    closes this separately.
+3. **Unbounded self-referential-reassignment growth** — `a := a * a` / `a
+   := a + a`, repeated even a handful of times, doubles the bound value's
+   node count and/or nesting depth every step (a security audit's
+   finding). Neither guard above bounds the size of a value already
+   sitting in the environment before it gets combined with itself again.
+   This one is closed in the shared `symbolic-vm` crate itself
+   (`handlers::assign_handler`'s `MAX_BOUND_VALUE_NODES`/
+   `MAX_BOUND_VALUE_DEPTH` checks, run before every `:=` durably binds) —
+   this crate's own `:=` lowers straight to `symbolic_ir::ASSIGN` and
+   evaluates through that same shared handler with no bypass, so it is
+   protected automatically; see `symbolic-vm`'s own README/changelog for
+   the full mechanism.
 
 Evaluation itself runs on a worker thread with a large bounded stack inside
-`catch_unwind`, so a reused-handler panic (e.g. a malformed `Assign` LHS)
-becomes a clean `Err` and the session is rebuilt rather than left corrupted.
+`catch_unwind`, so a reused-handler panic (e.g. a malformed `Assign` LHS,
+or the new self-referential-reassignment guard tripping) becomes a clean
+`Err` and the session is rebuilt rather than left corrupted.
 
 ## Tests
 
@@ -102,5 +115,6 @@ cargo test -p coding-adventures-derive-runtime
 
 Unit tests for every `lower`/`printer` construct, plus end-to-end session
 tests: arithmetic, persistent assignment/user-defined functions, `DIF`/`INT`/`IF`
-wiring through the shared handler table, the two robustness guards, and
+wiring through the shared handler table, all three robustness guards
+(including the exact audited self-referential-reassignment scenario), and
 panic recovery.
