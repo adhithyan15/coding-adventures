@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ctypes
 import importlib
 import json
 import multiprocessing
@@ -8,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from copy import deepcopy
 from pathlib import Path
@@ -41,6 +43,39 @@ def acquire_cas_lock_with_alternate_temp(
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
+    def process_is_alive(self, pid: int) -> bool:
+        if os.name == "nt":
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.OpenProcess.argtypes = [
+                ctypes.c_ulong,
+                ctypes.c_int,
+                ctypes.c_ulong,
+            ]
+            kernel32.OpenProcess.restype = ctypes.c_void_p
+            kernel32.WaitForSingleObject.argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+            kernel32.WaitForSingleObject.restype = ctypes.c_ulong
+            kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
+            handle = kernel32.OpenProcess(0x00100000, False, pid)
+            if not handle:
+                return False
+            try:
+                return kernel32.WaitForSingleObject(handle, 0) == 0x00000102
+            finally:
+                kernel32.CloseHandle(handle)
+        try:
+            os.kill(pid, 0)
+        except OSError:
+            return False
+        return True
+
+    def assert_process_exits(self, pid: int, *, timeout: float = 3) -> None:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if not self.process_is_alive(pid):
+                return
+            time.sleep(0.05)
+        self.fail(f"process {pid} remained alive")
+
     def rust_binary_command(self, name: str) -> list[str]:
         suffix = ".exe" if os.name == "nt" else ""
         binary = Path(__file__).resolve().parents[2] / f"packages/rust/target/debug/{name}{suffix}"
@@ -575,6 +610,99 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 ),
             ):
                 provenance._run_formula_inventory(command, source)
+
+    def test_json_command_timeout_kills_descendant_pipe_holders(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            pid_path = Path(directory) / "child.pid"
+            child = (
+                "import os, pathlib, time; "
+                f"pathlib.Path({str(pid_path)!r}).write_text(str(os.getpid())); "
+                "time.sleep(30)"
+            )
+            parent = (
+                "import pathlib, subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
+                f"p = pathlib.Path({str(pid_path)!r}); "
+                "deadline = time.monotonic() + 5; "
+                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\"); "
+                "time.sleep(30)"
+            )
+            started = time.monotonic()
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "timed out after 1 second"
+            ):
+                provenance._run_json_command(
+                    [sys.executable, "-c", parent],
+                    [],
+                    label="descendant timeout fixture",
+                    timeout_seconds=1,
+                    drain_timeout_seconds=2,
+                )
+
+            self.assertTrue(pid_path.exists(), "descendant never reached readiness")
+            self.assertLess(time.monotonic() - started, 8)
+            self.assert_process_exits(int(pid_path.read_text()))
+
+    def test_json_command_parent_exit_kills_descendant_pipe_holders(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            pid_path = Path(directory) / "child.pid"
+            child = (
+                "import os, pathlib, time; "
+                f"pathlib.Path({str(pid_path)!r}).write_text(str(os.getpid())); "
+                "time.sleep(30)"
+            )
+            parent = (
+                "import pathlib, subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
+                f"p = pathlib.Path({str(pid_path)!r}); "
+                "deadline = time.monotonic() + 5; "
+                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\")"
+            )
+            started = time.monotonic()
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "did not emit UTF-8 JSON"
+            ):
+                provenance._run_json_command(
+                    [sys.executable, "-c", parent],
+                    [],
+                    label="parent exit fixture",
+                    timeout_seconds=5,
+                    drain_timeout_seconds=2,
+                )
+
+            self.assertTrue(pid_path.exists(), "descendant never reached readiness")
+            self.assertLess(time.monotonic() - started, 4)
+            self.assert_process_exits(int(pid_path.read_text()))
+
+    @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
+    def test_json_command_assigns_job_before_process_execution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "process-started"
+            command = (
+                "import pathlib, sys; "
+                f"pathlib.Path({str(marker)!r}).write_text('started'); "
+                "sys.stdout.buffer.write(b'{}\\n')"
+            )
+            original_assign = provenance._WindowsKillJob.assign
+            execution_before_assignment: list[bool] = []
+
+            def delayed_assign(job: object, process: subprocess.Popen[bytes]) -> None:
+                time.sleep(0.2)
+                execution_before_assignment.append(marker.exists())
+                original_assign(job, process)
+
+            with mock.patch.object(
+                provenance._WindowsKillJob, "assign", delayed_assign
+            ):
+                result = provenance._run_json_command(
+                    [sys.executable, "-c", command], [], label="suspended fixture"
+                )
+
+            self.assertEqual(result, {})
+            self.assertEqual(execution_before_assignment, [False])
+            self.assertTrue(marker.exists())
 
     def test_one_broad_input_claim_cannot_ground_two_formulas(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

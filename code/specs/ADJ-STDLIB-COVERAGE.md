@@ -327,6 +327,12 @@ option mapping, or judge/evaluation failure.
      between all inventoried formula roots and witnessed query dependencies. These
      are six replay examples, not a universal proof over every input; boundary,
      exceptional, and property-based execution coverage remains backlog work.
+13d. **Complete:** every trusted parser/audit subprocess bound applies to its
+     complete process tree and to pipe-drain joins, so a timed-out descendant cannot
+     keep provenance verification alive indefinitely.
+13e. **Backlog:** allow verified execution inputs to resolve from the complete bundle
+     closure, not only the root query bundle, while retaining the owning bundle and
+     source identities in each normalized input reference.
 
 ### Wave 2: complete K-8 foundations
 

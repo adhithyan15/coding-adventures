@@ -10,15 +10,18 @@ flat hash directory consumed by ``adj-verify``.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import hashlib
 import html
 import json
 import os
 import re
+import signal
 import stat
 import subprocess
 import tempfile
 import threading
+import time
 import xml.etree.ElementTree as ET
 from collections.abc import Iterable, Sequence
 from datetime import datetime
@@ -889,22 +892,243 @@ def _validate_formula_inventory(
     return value
 
 
+class _WindowsKillJob:
+    """Own a Windows process tree until verification has drained its output."""
+
+    def __init__(self) -> None:
+        class LargeInteger(ctypes.Structure):
+            _fields_ = [("quad_part", ctypes.c_longlong)]
+
+        class BasicLimitInformation(ctypes.Structure):
+            _fields_ = [
+                ("per_process_user_time_limit", LargeInteger),
+                ("per_job_user_time_limit", LargeInteger),
+                ("limit_flags", ctypes.c_ulong),
+                ("minimum_working_set_size", ctypes.c_size_t),
+                ("maximum_working_set_size", ctypes.c_size_t),
+                ("active_process_limit", ctypes.c_ulong),
+                ("affinity", ctypes.c_size_t),
+                ("priority_class", ctypes.c_ulong),
+                ("scheduling_class", ctypes.c_ulong),
+            ]
+
+        class IoCounters(ctypes.Structure):
+            _fields_ = [
+                ("read_operation_count", ctypes.c_ulonglong),
+                ("write_operation_count", ctypes.c_ulonglong),
+                ("other_operation_count", ctypes.c_ulonglong),
+                ("read_transfer_count", ctypes.c_ulonglong),
+                ("write_transfer_count", ctypes.c_ulonglong),
+                ("other_transfer_count", ctypes.c_ulonglong),
+            ]
+
+        class ExtendedLimitInformation(ctypes.Structure):
+            _fields_ = [
+                ("basic_limit_information", BasicLimitInformation),
+                ("io_info", IoCounters),
+                ("process_memory_limit", ctypes.c_size_t),
+                ("job_memory_limit", ctypes.c_size_t),
+                ("peak_process_memory_used", ctypes.c_size_t),
+                ("peak_job_memory_used", ctypes.c_size_t),
+            ]
+
+        self._kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        self._kernel32.CreateJobObjectW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p]
+        self._kernel32.CreateJobObjectW.restype = ctypes.c_void_p
+        self._kernel32.SetInformationJobObject.argtypes = [
+            ctypes.c_void_p,
+            ctypes.c_int,
+            ctypes.c_void_p,
+            ctypes.c_ulong,
+        ]
+        self._kernel32.SetInformationJobObject.restype = ctypes.c_int
+        self._kernel32.AssignProcessToJobObject.argtypes = [
+            ctypes.c_void_p,
+            ctypes.c_void_p,
+        ]
+        self._kernel32.AssignProcessToJobObject.restype = ctypes.c_int
+        self._kernel32.TerminateJobObject.argtypes = [ctypes.c_void_p, ctypes.c_uint]
+        self._kernel32.TerminateJobObject.restype = ctypes.c_int
+        self._kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
+        self._kernel32.CloseHandle.restype = ctypes.c_int
+
+        handle = self._kernel32.CreateJobObjectW(None, None)
+        if not handle:
+            raise ctypes.WinError(ctypes.get_last_error())
+        self._handle: int | None = handle
+        limits = ExtendedLimitInformation()
+        limits.basic_limit_information.limit_flags = 0x00002000
+        if not self._kernel32.SetInformationJobObject(
+            handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
+        ):
+            error = ctypes.WinError(ctypes.get_last_error())
+            self.close()
+            raise error
+
+    def assign(self, process: subprocess.Popen[bytes]) -> None:
+        if self._handle is None or not self._kernel32.AssignProcessToJobObject(
+            self._handle, int(process._handle)  # type: ignore[attr-defined]
+        ):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+    def resume(self, process: subprocess.Popen[bytes]) -> None:
+        class ThreadEntry(ctypes.Structure):
+            _fields_ = [
+                ("size", ctypes.c_ulong),
+                ("usage", ctypes.c_ulong),
+                ("thread_id", ctypes.c_ulong),
+                ("owner_process_id", ctypes.c_ulong),
+                ("base_priority", ctypes.c_long),
+                ("priority_delta", ctypes.c_long),
+                ("flags", ctypes.c_ulong),
+            ]
+
+        self._kernel32.CreateToolhelp32Snapshot.argtypes = [
+            ctypes.c_ulong,
+            ctypes.c_ulong,
+        ]
+        self._kernel32.CreateToolhelp32Snapshot.restype = ctypes.c_void_p
+        self._kernel32.Thread32First.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ThreadEntry),
+        ]
+        self._kernel32.Thread32First.restype = ctypes.c_int
+        self._kernel32.Thread32Next.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ThreadEntry),
+        ]
+        self._kernel32.Thread32Next.restype = ctypes.c_int
+        self._kernel32.OpenThread.argtypes = [
+            ctypes.c_ulong,
+            ctypes.c_int,
+            ctypes.c_ulong,
+        ]
+        self._kernel32.OpenThread.restype = ctypes.c_void_p
+        self._kernel32.ResumeThread.argtypes = [ctypes.c_void_p]
+        self._kernel32.ResumeThread.restype = ctypes.c_ulong
+
+        snapshot = self._kernel32.CreateToolhelp32Snapshot(0x00000004, 0)
+        if snapshot == ctypes.c_void_p(-1).value:
+            raise ctypes.WinError(ctypes.get_last_error())
+        try:
+            entry = ThreadEntry()
+            entry.size = ctypes.sizeof(entry)
+            found = self._kernel32.Thread32First(snapshot, ctypes.byref(entry))
+            while found:
+                if entry.owner_process_id == process.pid:
+                    thread = self._kernel32.OpenThread(0x0002, False, entry.thread_id)
+                    if not thread:
+                        raise ctypes.WinError(ctypes.get_last_error())
+                    try:
+                        if self._kernel32.ResumeThread(thread) == 0xFFFFFFFF:
+                            raise ctypes.WinError(ctypes.get_last_error())
+                    finally:
+                        self._kernel32.CloseHandle(thread)
+                    return
+                found = self._kernel32.Thread32Next(snapshot, ctypes.byref(entry))
+        finally:
+            self._kernel32.CloseHandle(snapshot)
+        raise OSError(f"suspended process {process.pid} has no primary thread")
+
+    def terminate(self) -> None:
+        if self._handle is not None:
+            self._kernel32.TerminateJobObject(self._handle, 1)
+
+    def close(self) -> None:
+        if self._handle is not None:
+            self._kernel32.CloseHandle(self._handle)
+            self._handle = None
+
+
+def _terminate_process_tree(
+    process: subprocess.Popen[bytes], windows_job: _WindowsKillJob | None
+) -> None:
+    if os.name == "nt":
+        if windows_job is not None:
+            windows_job.terminate()
+        else:
+            try:
+                subprocess.run(
+                    ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                    check=False,
+                    creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                    stderr=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    timeout=5,
+                )
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    if process.poll() is None:
+        process.kill()
+
+
 def _run_json_command(
-    command: Sequence[str], arguments: Sequence[str], *, label: str
+    command: Sequence[str],
+    arguments: Sequence[str],
+    *,
+    label: str,
+    timeout_seconds: float = 60,
+    drain_timeout_seconds: float = 5,
 ) -> dict[str, Any]:
     if not command:
         raise ProvenanceError(f"{label} command must not be empty")
+    if timeout_seconds <= 0 or drain_timeout_seconds <= 0:
+        raise ProvenanceError(f"{label} timeout bounds must be positive")
+    windows_job: _WindowsKillJob | None = None
+    if os.name == "nt":
+        try:
+            windows_job = _WindowsKillJob()
+        except OSError as error:
+            raise ProvenanceError(f"{label} failed to create process job: {error}") from error
+    popen_options: dict[str, Any] = {}
+    if os.name == "nt":
+        popen_options["creationflags"] = getattr(
+            subprocess, "CREATE_NEW_PROCESS_GROUP", 0
+        ) | getattr(subprocess, "CREATE_NO_WINDOW", 0) | 0x00000004
+    else:
+        popen_options["start_new_session"] = True
     try:
         process = subprocess.Popen(
             [*command, *arguments],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            **popen_options,
         )
     except OSError as error:
+        if windows_job is not None:
+            windows_job.close()
         raise ProvenanceError(f"{label} failed to run: {error}") from error
+    if windows_job is not None:
+        try:
+            windows_job.assign(process)
+            windows_job.resume(process)
+        except OSError as error:
+            try:
+                _terminate_process_tree(process, windows_job)
+                try:
+                    process.wait(timeout=drain_timeout_seconds)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+            finally:
+                windows_job.close()
+                process.stdout.close()
+                process.stderr.close()
+            raise ProvenanceError(
+                f"{label} failed to contain process tree: {error}"
+            ) from error
     stdout = bytearray()
     stderr = bytearray()
     overflow = threading.Event()
+    termination_lock = threading.Lock()
+
+    def terminate() -> None:
+        with termination_lock:
+            _terminate_process_tree(process, windows_job)
 
     def drain(stream: Any, output: bytearray, limit: int) -> None:
         while True:
@@ -915,7 +1139,7 @@ def _run_json_command(
             output.extend(chunk[:remaining])
             if len(chunk) > remaining:
                 overflow.set()
-                process.kill()
+                terminate()
                 return
 
     threads = (
@@ -930,17 +1154,38 @@ def _run_json_command(
     )
     for thread in threads:
         thread.start()
+    timeout_error: subprocess.TimeoutExpired | None = None
+    returncode: int | None = None
     try:
-        returncode = process.wait(timeout=60)
+        returncode = process.wait(timeout=timeout_seconds)
     except subprocess.TimeoutExpired as error:
-        process.kill()
-        process.wait()
-        raise ProvenanceError(f"{label} timed out after 60 seconds") from error
+        timeout_error = error
+        terminate()
+        try:
+            returncode = process.wait(timeout=drain_timeout_seconds)
+        except subprocess.TimeoutExpired:
+            terminate()
     finally:
+        with termination_lock:
+            if windows_job is not None:
+                windows_job.close()
+        drain_deadline = time.monotonic() + drain_timeout_seconds
         for thread in threads:
-            thread.join()
-        process.stdout.close()
-        process.stderr.close()
+            thread.join(timeout=max(0, drain_deadline - time.monotonic()))
+        stuck_drains = [thread for thread in threads if thread.is_alive()]
+        if stuck_drains:
+            terminate()
+        final_drain_deadline = time.monotonic() + 1
+        for thread in stuck_drains:
+            thread.join(timeout=max(0, final_drain_deadline - time.monotonic()))
+    if any(thread.is_alive() for thread in threads):
+        raise ProvenanceError(f"{label} output pipes did not close within bounds")
+    process.stdout.close()
+    process.stderr.close()
+    if timeout_error is not None:
+        raise ProvenanceError(
+            f"{label} timed out after {timeout_seconds:g} seconds"
+        ) from timeout_error
     if overflow.is_set():
         raise ProvenanceError(f"{label} output exceeds byte limit")
     if returncode != 0:
