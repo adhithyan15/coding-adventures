@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.32.0 — Collections slice 10: Symbol + universal Object/Bool methods
+
+New `_sir_builtin_method_v` dispatch arms:
+
+- **Symbol** widens `to_s`/`length`/`size`/`empty?`/`upcase`/`downcase`/
+  `to_sym` to accept a `SIR_SYM` receiver, REUSING the same String helpers
+  slice 1/8 already built (a Symbol's name is stored the identical way a
+  String's is). `upcase`/`downcase` are the one exception: they re-intern
+  the result as a fresh SYMBOL, not a String (`:foo.upcase == :FOO`).
+  `inspect` (`:name`) is Symbol-specific — no String equivalent.
+- **Universal `Object` methods**: `nil?`, `equal?` (Ruby's object-IDENTITY
+  comparison — pointer identity for every heap-boxed type, distinct from
+  `==`'s structural/value equality, which this slice doesn't touch),
+  `itself`, `frozen?` (a fixed, receiver-TYPE-only answer — this v0 runtime
+  has no per-object mutability tracking, so it reports the Ruby-always-
+  frozen primitives (`nil`/bool/Integer/Float/Symbol) as frozen and
+  everything else as not).
+- **`TrueClass`/`FalseClass`**: eager (non-short-circuit) `&`/`|`/`^`.
+  Distinct from `&&`/`||`, which the frontend lowers to `If` and never
+  reaches a method dispatch at all — these are only reached via an
+  EXPLICIT dot-call (`true.&(x)`), and coerce their argument by Ruby
+  truthiness (`0`/`""` are truthy, unlike Python), not by C's `int` rules.
+
+`code/specs/sir-collection-methods.md`'s "C backend lane" table is updated;
+slice 9 marked merged (#9713), this PR is slice 10. Deferred (documented,
+tracked as follow-up, same discipline as slices 8/9): `respond_to?`
+(needs a full reflective query across the user-method table AND the
+entire `is_builtin_method` catalog), `dup`/`clone` (needs a generic copy
+helper), generic `to_s`/`inspect`/`==`/`!=` on an arbitrary receiver
+(needs `_sir_fmt`'s `FILE*`-writing display machinery refactored to build
+a `SirValue` String instead), `freeze`/`tap`/`then`/`yield_self`
+(low-value with no mutability-tracking or block-less Enumerator return in
+this v0).
+
+### Added
+
+- `tests/compile_and_run_symbol_object_methods.rs` — 11 execution-proof
+  tests (real `cc` compile+run): every new Symbol/Object/Bool method, the
+  Symbol-vs-String return-type distinction for `upcase`/`downcase`, and
+  `equal?`'s pointer-identity-vs-structural-equality distinction (two
+  separately-built arrays with equal content are NOT `equal?`; the same
+  array through an alias IS).
+- `collection_symbol_slice10_methods_route_to_the_builtin_dispatcher` — an
+  emit-shape test mirroring the prior slices' dispatcher-routing tests.
+
 ## 0.31.0 — Collections slice 9: Numeric methods
 
 ### Fixed (CI — Linux link failure)

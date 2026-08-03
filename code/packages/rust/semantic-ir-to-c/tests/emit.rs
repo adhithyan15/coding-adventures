@@ -334,6 +334,27 @@ fn collection_string_query_passes_its_argument() {
 }
 
 #[test]
+fn collection_symbol_slice10_methods_route_to_the_builtin_dispatcher() {
+    // Collections slice 10: a Symbol receiver's 0-arg method (`inspect`)
+    // routes to the runtime dispatcher, same shape as the String/Array/Hash/
+    // Numeric slices; the receiver is a quoted `_sir_sym(...)` literal.
+    let m = lower_ruby("puts :hello.inspect");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "a slice-10 Symbol method dispatches through the runtime dispatcher\n{src}"
+    );
+    assert!(
+        src.contains("\"inspect\""),
+        "the method name is a quoted C string literal\n{src}"
+    );
+    assert!(
+        src.contains("_sir_sym(\"hello\")"),
+        "the Symbol receiver is a quoted C string literal\n{src}"
+    );
+}
+
+#[test]
 fn collection_numeric_slice9_methods_route_to_the_builtin_dispatcher() {
     // Collections slice 9: a 2-arg Numeric method (`clamp`) routes to the
     // runtime dispatcher and carries both arguments through, same shape as

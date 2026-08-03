@@ -2675,6 +2675,63 @@ static SirValue _sir_num_step(SirValue recv, SirValue limit, SirValue stride, Si
     return recv;
 }
 
+/* ---- Collections slice 10: Symbol + Object/Bool generic methods -------------
+ *
+ * Symbol's `to_s`/`length`/`size`/`upcase`/`downcase`/`empty?` reuse the
+ * SAME helpers slice 1/8 built for String (a `SIR_SYM`'s name is stored the
+ * identical way a `SIR_STR`'s is, `.as.s`) — only the WRAPPING differs:
+ * `upcase`/`downcase` re-intern the result as a fresh Symbol (Ruby:
+ * `:foo.upcase == :FOO`, a Symbol, not a String), everything else returns
+ * the same type String's arm does. `inspect` is Symbol-specific (prefixes
+ * `:`, no String equivalent). `to_sym` is the identity (already a Symbol). */
+
+static SirValue _sir_sym_inspect(const char *name) {
+    return _sir_str(_sir_cat(":", name));
+}
+
+/* `equal?` -- Ruby's OBJECT-IDENTITY comparison (`a.equal?(b)`), distinct
+ * from `==`'s structural/value equality (`_sir_value_eq`, unaffected by this
+ * slice). For a heap-boxed type (String/Symbol/Array/Hash/Pair/Closure/
+ * Instance) identity IS pointer identity -- two SEPARATELY built values with
+ * equal content are NOT `equal?`, only two handles to the SAME allocation
+ * are (`x = [1]; y = [1]; x.equal?(y)` is false; `y = x; x.equal?(y)` is
+ * true). For a scalar (nil/bool/int/float) Ruby has no separate identity
+ * from value, so this compares by value -- which for a `SIR_SYM` also
+ * reduces to pointer identity, since symbols are interned (`_sir_intern`
+ * hands back the SAME pointer for the same name). */
+static SirValue _sir_object_equal_p(SirValue a, SirValue b) {
+    if (a.tag != b.tag) return _sir_bool(0);
+    switch (a.tag) {
+        case SIR_NIL:      return _sir_bool(1);
+        case SIR_BOOL:     return _sir_bool(a.as.b == b.as.b);
+        case SIR_INT:      return _sir_bool(a.as.i == b.as.i);
+        case SIR_FLOAT:    return _sir_bool(a.as.f == b.as.f);
+        case SIR_STR:      /* fallthrough */
+        case SIR_SYM:      return _sir_bool(a.as.s == b.as.s);
+        case SIR_PAIR:     return _sir_bool(a.as.pair == b.as.pair);
+        case SIR_CLOSURE:  return _sir_bool(a.as.clo == b.as.clo);
+        case SIR_SEQ:      return _sir_bool(a.as.seq == b.as.seq);
+        case SIR_MAP:      return _sir_bool(a.as.map == b.as.map);
+        case SIR_ERROR:    return _sir_bool(a.as.err == b.as.err);
+        case SIR_INSTANCE: return _sir_bool(a.as.inst == b.as.inst);
+        default:           return _sir_bool(0);  /* SIR_MISSING: never user-observed */
+    }
+}
+
+/* `frozen?` -- v0 has no mutability tracking, so this reports the
+ * ALWAYS-immutable primitives as frozen (matching Ruby: small Integers,
+ * Symbols, `true`/`false`/`nil`, and Floats are unconditionally frozen) and
+ * everything else (String/Array/Hash/Instance, all mutable in this runtime)
+ * as not — a fixed, receiver-type-only answer, not a real per-object flag. */
+static SirValue _sir_object_frozen_p(SirValue v) {
+    switch (v.tag) {
+        case SIR_NIL: case SIR_BOOL: case SIR_INT: case SIR_FLOAT: case SIR_SYM:
+            return _sir_bool(1);
+        default:
+            return _sir_bool(0);
+    }
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -2691,22 +2748,30 @@ static SirValue _sir_num_step(SirValue recv, SirValue limit, SirValue stride, Si
  * wraps this to collect/free the varargs, exactly like `_sir_plus`. */
 static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, SirValue *args) {
     if (strcmp(m, "length") == 0 || strcmp(m, "size") == 0) {
-        if (recv.tag == SIR_STR) return _sir_int((int64_t)strlen(recv.as.s));
+        if (recv.tag == SIR_STR || recv.tag == SIR_SYM) return _sir_int((int64_t)strlen(recv.as.s));
         if (recv.tag == SIR_SEQ) return _sir_int(recv.as.seq->len);
         if (recv.tag == SIR_MAP) return _sir_int(recv.as.map->len);
     } else if (strcmp(m, "upcase") == 0) {
         if (recv.tag == SIR_STR) return _sir_str(_sir_str_upcase(recv.as.s));
+        /* Symbol#upcase re-interns the result as a fresh SYMBOL, not a
+           String (Ruby: `:foo.upcase == :FOO`) -- the one arm here that
+           can't just widen the String helper's return type. */
+        if (recv.tag == SIR_SYM) return _sir_sym(_sir_str_upcase(recv.as.s));
     } else if (strcmp(m, "downcase") == 0) {
         if (recv.tag == SIR_STR) return _sir_str(_sir_str_downcase(recv.as.s));
+        if (recv.tag == SIR_SYM) return _sir_sym(_sir_str_downcase(recv.as.s));
     } else if (strcmp(m, "reverse") == 0) {
         if (recv.tag == SIR_STR) return _sir_str(_sir_str_reverse(recv.as.s));
         if (recv.tag == SIR_SEQ) return _sir_array_reverse(recv.as.seq);
     } else if (strcmp(m, "empty?") == 0) {
-        if (recv.tag == SIR_STR) return _sir_bool(recv.as.s[0] == '\0');
+        if (recv.tag == SIR_STR || recv.tag == SIR_SYM) return _sir_bool(recv.as.s[0] == '\0');
         if (recv.tag == SIR_SEQ) return _sir_bool(recv.as.seq->len == 0);
         if (recv.tag == SIR_MAP) return _sir_bool(recv.as.map->len == 0);
     } else if (strcmp(m, "to_s") == 0) {
         if (recv.tag == SIR_STR) return recv;  /* String#to_s is the string itself */
+        if (recv.tag == SIR_SYM) return _sir_str(recv.as.s);  /* Symbol#to_s -- the bare name, no `:` */
+    } else if (strcmp(m, "inspect") == 0) {
+        if (recv.tag == SIR_SYM) return _sir_sym_inspect(recv.as.s);
     }
     /* Collections slice 3: 0-arg Array query/transform methods. */
     else if (strcmp(m, "count") == 0) {
@@ -2956,6 +3021,7 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (_sir_is_num(recv)) return _sir_to_f(recv);
     } else if (strcmp(m, "to_sym") == 0) {
         if (recv.tag == SIR_STR) return _sir_sym(recv.as.s);
+        if (recv.tag == SIR_SYM) return recv;  /* Symbol#to_sym is the identity */
     } else if (strcmp(m, "tr") == 0) {
         if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
             return _sir_str(_sir_str_tr(recv.as.s, args[0].as.s, args[1].as.s));
@@ -3030,6 +3096,29 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (_sir_is_num(recv) && argc == 3 && _sir_is_num(args[0]) && _sir_is_num(args[1])
             && args[2].tag == SIR_CLOSURE)
             return _sir_num_step(recv, args[0], args[1], args[2]);
+    }
+    /* Collections slice 10: universal Object methods + Bool operators. */
+    else if (strcmp(m, "nil?") == 0) {
+        return _sir_bool(recv.tag == SIR_NIL);
+    } else if (strcmp(m, "equal?") == 0) {
+        if (argc == 1) return _sir_object_equal_p(recv, args[0]);
+    } else if (strcmp(m, "itself") == 0) {
+        if (argc == 0) return recv;
+    } else if (strcmp(m, "frozen?") == 0) {
+        if (argc == 0) return _sir_object_frozen_p(recv);
+    } else if (strcmp(m, "&") == 0) {
+        /* TrueClass/FalseClass#& -- EAGER (both operands are already-computed
+           SirValues by the time a __method__ dispatch reaches here), Ruby-
+           truthiness-coercing logical AND. Distinct from the SHORT-CIRCUITING
+           `&&`, which the frontend lowers to `If`, never to a method call. */
+        if (recv.tag == SIR_BOOL && argc == 1)
+            return _sir_bool(_sir_truthy(recv) && _sir_truthy(args[0]));
+    } else if (strcmp(m, "|") == 0) {
+        if (recv.tag == SIR_BOOL && argc == 1)
+            return _sir_bool(_sir_truthy(recv) || _sir_truthy(args[0]));
+    } else if (strcmp(m, "^") == 0) {
+        if (recv.tag == SIR_BOOL && argc == 1)
+            return _sir_bool(_sir_truthy(recv) != _sir_truthy(args[0]));
     }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));
