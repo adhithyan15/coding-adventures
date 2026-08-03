@@ -8,7 +8,7 @@ concept_tag: SA-VERB-VAD
 prerequisites: [SA-C03-aham]
 sounds: [inherent-a, long-aa]
 roots: [vad-speak]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

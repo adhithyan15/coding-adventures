@@ -36,6 +36,14 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/SA-C05-*`](./lessons/)): vadāmi (the
   **dual** *vadāvaḥ*), **ahaṁ saṁskṛtaṁ vadāmi**, vasāmi (← *vas* → *was*),
   karomi (← √kṛ), practice. In the book.
+- **Chapter 6 — Numbers 1–5** ([`lessons/SA-C06-*`](./lessons/)): the gendered
+  forms first, then an east-west sound-law map, then *pañca* in *Punjab*,
+  *pentagon*, and the qualified history of *punch*—three prerequisite-ordered
+  micro-lessons.
+
+Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
+its one-source book publication remains explicitly tracked in the shared
+backlog.
 
 ## Book / fonts
 

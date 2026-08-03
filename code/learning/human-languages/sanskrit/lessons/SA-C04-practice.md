@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [SA-C04-gacchami, SA-C04-punar-darshanaya, SA-C04-shvah]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C04-gacchami, SA-C04-punah, SA-C04-punar-darshanaya, SA-C04-shvah]
 ---
 

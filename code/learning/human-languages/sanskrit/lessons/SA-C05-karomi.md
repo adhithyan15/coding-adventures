@@ -8,7 +8,7 @@ concept_tag: SA-VERB-KR
 prerequisites: [SA-C05-vadami]
 sounds: [inherent-a, long-o]
 roots: [kr-do]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C05-vadami, SA-C05-vasami]
 ---
 

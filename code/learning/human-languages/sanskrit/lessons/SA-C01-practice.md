@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [SA-C01-namaste, SA-C01-namaskara, SA-C01-dhanyavada, SA-C01-svagatam, SA-C01-am-na]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C01-namaste, SA-C01-namaskara, SA-C01-dhanyavada, SA-C01-svagatam, SA-C01-am-na]
 ---
 

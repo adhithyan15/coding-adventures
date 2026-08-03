@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Punjabi duration
-tranche: 20 registered tracks, 983 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the Sanskrit duration
+tranche: 20 registered tracks, 985 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -51,7 +51,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01B | Complete in the Marathi duration PR | Remove all eight sub-five-minute violations from the Marathi track. | The report measures zero Marathi violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
 | HL-D01C | Complete in the Gujarati duration PR | Remove all nine sub-five-minute violations from the Gujarati track. | The report measures zero Gujarati violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
 | HL-D01D | Complete in the Punjabi duration PR | Remove all ten sub-five-minute violations from the Punjabi track. | The report measures zero Punjabi violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
-| HL-D01E | Next | Remove all ten sub-five-minute violations from the Sanskrit track. | Sanskrit is now the smallest remaining track-sized set; nine lessons need honest budgets and the 513-second numbers lesson needs a careful multi-part split. |
+| HL-D01E | Complete in the Sanskrit duration PR | Remove all ten sub-five-minute violations from the Sanskrit track. | The report measures zero Sanskrit violations; the 513-second anchor lesson is now three prerequisite-ordered micro-lessons. |
+| HL-D01F | Next | Remove all eleven sub-five-minute violations from the Bengali track. | Bengali is now the smallest remaining track-sized set, and all eleven already compute below five minutes; this is a bounded declared-budget correction. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -60,6 +61,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B07 | Queued | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B08 | Queued | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B09 | Queued | Remove Punjabi's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B10 | Queued | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
+| HL-B11 | Queued | Remove Sanskrit's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports three overfull boxes, six underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -208,6 +211,29 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Sanskrit's ten violations are now the smallest remaining track-sized set.
   Nine are declaration-only; its 513-second numbers lesson will require a more
   careful split than the three preceding tranches, so HL-D01E is next.
+
+## Findings from HL-D01E
+
+- Sanskrit now has zero duration violations. The repository snapshot contains
+  985 lessons and 435 violations overall, down from 445 before this tranche;
+  unknown prerequisites remain at zero.
+- Nine lessons already computed between 107 and 186 seconds and only needed
+  honest four-minute declared budgets. The anchor numbers lesson computed at
+  513 seconds and required two new support lessons rather than one.
+- Chapter 6 is now a 232-second forms/grammar core, a 240-second east-west
+  cognate and sound-law lesson, and a 180-second *pañca* travel lesson. The dual,
+  gendered daughter forms, PIE outcomes, Grimm's law, analogy, and qualified
+  lexical histories remain complete and prerequisite-ordered in Language Ladder.
+- Sanskrit Chapter 6 has canonical lessons but is not in the current
+  five-chapter PDF. HL-B10 records its one-source migration and generation work
+  rather than adding another manual copy.
+- A forced build of the unchanged five-chapter book succeeds with no missing
+  glyphs, but exposes three overfull boxes, six underfull boxes, four duplicate
+  practice labels, and 28 Unicode bookmark warnings. HL-B11 records that
+  pre-existing publication hygiene debt separately.
+- Bengali's eleven violations are now the smallest remaining track-sized set.
+  All eleven already compute below 300 seconds (maximum 290), so HL-D01F is a
+  bounded honest-budget correction with no content split required.
 
 ## Completed foundations
 

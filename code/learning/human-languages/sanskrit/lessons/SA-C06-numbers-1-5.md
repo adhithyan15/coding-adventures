@@ -8,8 +8,8 @@ concept_tag: SA-NUMBERS-1-5
 prerequisites: [SA-C01-namaskara]
 sounds: [inherent-a, visarga, long-aa]
 roots: [pie-oyko, pie-dwoh, pie-treyes, pie-kwetwores, pie-penkwe]
-etymology_hook: "these five are among the best-preserved words in Indo-European: pañca ← PIE *pénkʷe is the same word as Latin quinque, Greek pente and English FIVE, and catur ← *kʷetwóres is quattuor and FOUR — with PIE *kʷ kept as qu- in Latin, merged into k and then palatalised to c- in Indo-Iranian, and turned into hw- in Germanic (what, who)"
-est_minutes: 6
+etymology_hook: "Learn the five Sanskrit stems and their gendered forms first; the next two short lessons trace their Indo-European cousins and pancha's travels"
+est_minutes: 3
 reviews_of: [SA-C01-namaskara]
 ---
 
@@ -45,83 +45,23 @@ these words again in Hindi, Marathi, Bengali, Gujarati or Punjabi, they will
 mostly descend from the **neuter** forms — *trī́ṇi* and *catvā́ri*, not *tráyaḥ*
 and *catvā́raḥ*. Keep that column in view; the daughter lessons depend on it.
 
-## They are the English numbers
+## What comes next
 
-Line them up:
-
-| Sanskrit | Latin | English |
-|---|---|---|
-| *éka-* | *ūnus* | **one** |
-| *dvá-* | *duo* | **two** |
-| *tri-* | *trēs* | **three** |
-| *catúr-* | *quattuor* | **four** |
-| *páñca* | *quīnque* | **five** |
-
-These aren't borrowings in any direction. Sanskrit, Latin and English are three
-branches of one family, and numbers are among the **most stubbornly preserved**
-words a language has — you can hear the relationship four thousand years later.
-
-(One caveat on the first row: *éka-* and *ūnus*/*one* are built from the **same
-root with different suffixes** — \**oy-ko-* against \**óynos* — so they are
-relatives rather than the same word. The other four rows *are* the same word.)
-
-## The kʷ that went three ways
-
-**Four** shows it best. PIE had a sound written \**kʷ*, a *k* said with rounded
-lips, and \**kʷetwóres* is "four":
-
-| branch | outcome | example |
-|---|---|---|
-| **Latin** | kept it as *qu-* | ***qu**attuor* |
-| **Indo-Iranian** | merged \**kʷ* into *k*, then **palatalised** it before front vowels | ***c**atvāri* (*c* = "ch") |
-| **Germanic** | turned it into *hw-* | **wh**at, **wh**o |
-
-So Sanskrit's *c-* isn't a random substitution: \**kʷ* fell together with plain
-*k*, and *k* then softened to *c* in front of *e*-like vowels. Same change that
-gives *pañca* its *ñc*.
-
-**A warning about *five*, because the obvious guess is wrong.** *Five* also comes
-from \**pénkʷe*, but its **f-** has nothing to do with the \**kʷ*. That *f* is
-from the initial \**p*, turned into *f* by **Grimm's law**, the sound shift that
-also gave *pater* → *father* and *pēs* → *foot*.
-
-And English **four** is irregular: by rule it should have begun *hw-* like
-*what*. It has *f-* because it was pulled into line with *five*, its neighbour in
-the counting sequence. Numbers influence their neighbours.
-
-## पञ्च is hiding in words you know
-
-*Pañca* has travelled further than any of the others:
-
-- **Punjab** — from Persian *panj-āb*, "**five waters**," the land of five
-  rivers. Persian *panj* is an **Iranian cousin** of *pañca*, from the same PIE
-  root — Indo-Iranian split into an Indic branch and an Iranian one, and this is
-  each branch's version of the same word.
-- **punch**, the drink — most accounts trace it to Hindi *pāṁch* ← *pañca*, for
-  its **five** ingredients. (Not everyone accepts this — there's a rival
-  derivation from *puncheon*, a cask — but it is the usual story.)
-- **Pentagon**, **pentathlon** — Greek *pente*, the same word again.
-
-So a Sanskrit numeral is sitting inside a place-name spanning India and Pakistan,
-an English punchbowl, and an American office building.
+These five forms point in two directions. The next lesson lines them up with
+Latin and English and explains the sound laws. A final short lesson follows
+*pañca* into *Punjab*, *pentagon*, and the qualified history of *punch*.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "eka, dva, tri, catur, pañca"]
-- [YOU SAY: the English line — "one, two, three, four, five"]
-- [YOU SAY: the *kʷ* three ways — "**qu**attuor … **c**atvāri … **wh**at"]
-- [YOU SAY: "**pañc**a → **Panj**ab, five rivers"]
+- [YOU SAY: the exactly-two category — dual]
+- [YOU SAY: the daughter-language column — neuter]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Give one to five in Sanskrit. (*Eka, dva, tri, catur, pañca*.) Why
 does "two" look unusual? (Sanskrit has a **dual** — a form for exactly two.)
 Which column will the modern languages mostly descend from? (**The neuter** —
-*trī́ṇi*, *catvā́ri*.) Are these borrowed from Latin? (**No** — Sanskrit, Latin
-and English are **cousins**.) What happened to PIE \**kʷ*? (Latin kept ***qu-***,
-Indo-Iranian merged it into *k* and **palatalised** it to ***c-***, Germanic made
-it ***hw-*** — *what*, *who*.) So where does the **f** of *five* come from?
-(**Not** from the \**kʷ* — from the initial \**p*, by **Grimm's law**, as in
-*pater* → *father*.) What does *Punjab* mean? ("**Five waters**".) Next: what
-these five became once Sanskrit wore down.
+*trī́ṇi*, *catvā́ri*.) Which number barely changes across gender in this table?
+(*Pañca*.) Next: connect the Sanskrit forms west to Latin and English.

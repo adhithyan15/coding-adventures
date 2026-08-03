@@ -34,8 +34,10 @@ where a word needs them.
   → ahaṁ saṁskṛtaṁ vadāmi (I speak Sanskrit; *saṁskṛta* = "perfected"; sandhi) →
   vasāmi (← *vas* → English **was**; the locative *-e*) → karomi (← √kṛ, the root
   of *namaskāra/karma/Sanskrit*) → practice.
-- **Ch. 6 — Numbers 1–5** (`SA-C06-numbers-1-5`): *eka, dva, tri, catur, pañca*
-  — deliberately the **anchor chapter for the whole Indo-Aryan group**, since
+- **Ch. 6 — Numbers 1–5** (`SA-C06-numbers-1-5` →
+  `SA-C06-number-cognates` → `SA-C06-pancha-travels`): *eka, dva, tri, catur,
+  pañca* form the **anchor chapter for the whole Indo-Aryan group**, now divided
+  into three prerequisite-ordered sub-five-minute lessons. These stems are
   these stems are simultaneously the **source** of every modern Indic number and
   the **cousins** of the English ones. Gives masculine **and neuter** forms
   (*ekam, dve, **trī́ṇi**, **catvā́ri***) because the modern languages mostly
@@ -54,7 +56,7 @@ where a word needs them.
 
 | Chapter | Theme |
 |---|---|
-| 6 | The eight cases, one at a time (nominative, accusative…); numbers *eka–daśa* (1–10), cognate with Latin/Greek |
+| 6 continuation | Numbers 6–10, then the eight cases one at a time (nominative, accusative…) |
 | 7+ | The declensions and the root-and-affix system; the dual deepened; sandhi — always tracing roots east and west |
 
 Note: Sanskrit's showpiece features — the **dual number**, three genders, eight
