@@ -6,6 +6,8 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Normalize Git-diff package roots to repository-relative forward-slash paths
+  and make the Git integration fixtures shell-independent on Windows.
 - Emit build-plan package `rel_path` values with portable forward slashes on
   Windows, backed by the shared plan fixture and a real CLI subprocess test.
 - Classify languages only from the canonical package/program bucket, preserve
