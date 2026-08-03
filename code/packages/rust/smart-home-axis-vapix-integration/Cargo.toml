@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-axis-vapix-integration"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Authenticated Axis VAPIX discovery and inspection for the smart-home runtime"
+description = "Authenticated Axis VAPIX discovery, inspection, and bounded PTZ control"
 license = "MIT"
 
 [dependencies]
