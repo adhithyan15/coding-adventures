@@ -12,6 +12,71 @@
       "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "french",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:bb8682839ab17ed4",
+      "lessonIds": [
+        "FR-C17-tete",
+        "FR-C17-main"
+      ],
+      "tex": "french/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:52b8d81257884801",
+      "lessonIds": [
+        "FR-C18-oui",
+        "FR-C18-non"
+      ],
+      "tex": "french/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:bed21c4a10769e2e",
+      "lessonIds": [
+        "FR-C19-sil-vous-plait"
+      ],
+      "tex": "french/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:aaf2e4df4218e86b",
+      "lessonIds": [
+        "FR-C20-je-suis-desole"
+      ],
+      "tex": "french/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:5a4d6c65cd441e86",
+      "lessonIds": [
+        "FR-C21-le-temps"
+      ],
+      "tex": "french/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:023629163e002b64",
+      "lessonIds": [
+        "FR-C22-chien-chat"
+      ],
+      "tex": "french/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:cb3845fade53c6da",
+      "lessonIds": [
+        "FR-C23-vert-jaune"
+      ],
+      "tex": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:388a6950ab136cc1",

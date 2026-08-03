@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: FR-C17-tete
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 620
 chapter: 17
 type: word
 headword: la tête
@@ -9,22 +12,37 @@ prerequisites: [FR-C01-le-la]
 sounds: [vowel-e-grave, accent-marks]
 roots: [latin-testa]
 etymology_hook: "tête does NOT come from Latin caput 'head' — it comes from testa, 'earthenware pot, shell'; Roman soldiers' slang for the skull replaced the proper word entirely, and the circumflex marks the s that testa lost (teste → tête)"
-est_minutes: 4
+duration:
+  max_seconds: 287
+requires:
+  knowledge: []
+introduces:
+  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
+practises:
+  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [FR-C01-le-la, FR-W01-accents]
 ---
 
 # la tête — "the head"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The first body part, and one of the best etymologies in French. The
 word for *head* is not the Latin word for head.
 
-## The word
+## You'll want to know: The word
+<!-- hl-knowledge: introduces=[FR-LEX-TETE-02]; assesses=[] -->
 
 > **la tête** — the head. Feminine, so **la**.
 
-## Latin had a perfectly good word, and French threw it away
+## The word, taken apart: Latin had a perfectly good word
+<!-- hl-knowledge: introduces=[FR-ETYMON-TETE-03]; assesses=[] -->
 
 Latin's word for "head" was ***caput***. You can see it surviving all over
 Europe:
@@ -46,7 +64,8 @@ What French does *not* use it for is the thing on your shoulders.
 **Tête** comes from Latin ***testa***: an **earthenware pot**, a shell, a
 potsherd.
 
-## Why a pot?
+## Why it's said this way: Why a pot?
+<!-- hl-knowledge: introduces=[FR-CULTURE-TETE-04]; assesses=[] -->
 
 Soldiers' slang. Roman troops called the skull a *testa* the way English speakers
 say someone got hit on the **noggin** — a noggin being a small mug. It was a
@@ -59,7 +78,8 @@ hurts."
 *Testa* is still visible in English **test** — which began as the shallow pot an
 alchemist used to assay metals.
 
-## The circumflex is a receipt
+## Sounds you'll need: The circumflex is a receipt
+<!-- hl-knowledge: introduces=[FR-SOUND-TETE-05]; assesses=[] -->
 
 Look at the accent: **tê**te. Chapter W01 taught what a circumflex records — a
 letter that used to be there, almost always an **s**.
@@ -71,6 +91,7 @@ That is why English, which borrowed from Old French *before* the *s* fell,
 still has it in **test**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "la tête"]
@@ -79,6 +100,7 @@ still has it in **test**.
 - [YOU SAY: the receipt — "te**s**te → tê-te"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05] -->
 
 [PAUSE 3s] Say "the head." (*La tête* — feminine.) Does it come from Latin
 *caput*? (**No** — from ***testa***, an **earthenware pot**.) Why a pot? (Roman

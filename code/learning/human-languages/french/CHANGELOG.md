@@ -1,5 +1,19 @@
 # Changelog
 
+## Canonical Chapters 17–23 — 2026-08-03
+
+- Migrated the nine lessons in Chapters 17–23 to schema version 2 with typed
+  blocks, explicit shared-spine concepts, prerequisite-closed knowledge atoms,
+  and honest sub-five-minute duration contracts.
+- Generated seven LaTeX chapters from those canonical lessons and added
+  independent Language Ladder source-hash and lesson-count assertions, so the
+  app and downloadable book now consume one source of truth through Chapter 23.
+- Expanded the book from 79 to 98 pages. A forced XeLaTeX build has no missing
+  glyphs, duplicate destinations, LaTeX warnings, or leaked generator metadata;
+  all 98 rendered pages and the 25-entry outline were inspected.
+- Recorded the unchanged baseline of sixteen overfull boxes, nine underfull
+  boxes, and six Hyperref warnings for the focused HL-B19 cleanup tranche.
+
 ## Sub-five-minute remediation — 2026-08-02
 
 - Corrected twenty-two declared five- or six-minute estimates whose lesson
