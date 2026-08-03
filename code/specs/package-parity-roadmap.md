@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 781 | 10,934 |
+| Present in one language | 783 | 10,962 |
 
-The loop must not start by attempting 10,934 singleton ports. It should finish
+The loop must not start by attempting 10,962 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`9ad8105f384d692196e93221fe6b5c619754dd84` is collision-clean at 1,231
-normalized implementation identities, 4,379 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 781 singletons, 586
+`481a30c334ffd060ba804bedee6e2eae8da112be` is collision-clean at 1,233
+normalized implementation identities, 4,381 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 783 singletons, 588
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -251,6 +251,18 @@ belong to the service-reconciler, host-control, and secure-channel backlog
 owners. A dedicated dependency-blocked review now owns the native-lane
 exceptions; the parity loop must not manufacture unsafe process-control ports.
 
+The `481a30c3` refresh adds `chief-of-staff-orchestrator-core` and
+`venture-browser-cairo`. The Chief core is a zero-capability, transport-
+independent coordinator over injected storage, supervision, authorization,
+and monotonic time. Stable host lifecycle, bounded reconciliation, health,
+clock regression, safe deregistration, authorize-before-mutate channel wiring,
+idempotency, and payload-blind errors now have a dependency-shaped portable
+owner. The Cairo crate centralizes a native RGBA renderer and unsafe Qt,
+Flutter, and Compose C ABIs around `venture-browser-core`; its reusable event,
+navigation, scrolling, hover, link, and projection behavior joins the existing
+Venture bridge owner, while Cairo rendering, pointers, buffers, dynamic
+libraries, and toolkit launch remain native exceptions.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -376,13 +388,21 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   declared `grammar_tools` program dependencies, so the follow-up must derive
   language-neutral fixtures from actual Mix metadata instead of assuming that
   either engine is the oracle. This child depends on the identity migration;
-- bring Go discovery to the complete shared language registry. The full-plan
-  comparison finds the same 4,776 package directories in Ruby and Go, but Go
-  classifies all fourteen Mosaic packages and programs as `unknown`. The
-  dedicated child consumes the existing registry and duplicate-identity
-  fixtures and keeps resolver-semantic work separate. The `9ad8105f` leverage
-  pass selected this unblocked repository-wide primitive ahead of independent
-  semantic, UTF-8, and leaf-package work;
+- bring Go discovery to the complete shared language registry. The selected
+  implementation recognizes every canonical and retained bucket only at an
+  exact `packages` or `programs` boundary, preserves program identities,
+  excludes specification and build-artifact trees, and fails closed on a
+  duplicate with the shared typed, root-redacted diagnostic and CLI exit 2.
+  On rebased `481a30c3`, independent Go and Ruby real plans match all 4,779
+  `(name, language, rel_path)` tuples with zero duplicate or backslash paths,
+  all fourteen Mosaic identities canonical, and only the intentional
+  `unknown/blog` bucket. Exact-head validation passes gofmt, the full Go suite
+  at 73.6% aggregate and 93.9% discovery coverage, vet, race, trimpath build,
+  module verification, zero-reachable-vulnerability govulncheck, the 17+40
+  conformance suites, and the valid 38-case/61-file corpus. The committed Go-
+  lane dry-run selects 13 of 301 packages and skips 288. The full validator
+  separately reproduces the owned 73-gap BUILD debt gate: 12 Python, 3 Swift,
+  and 58 TypeScript. Resolver-semantic work remains a separate child;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
