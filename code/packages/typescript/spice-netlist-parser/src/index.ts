@@ -18,7 +18,9 @@ import {
   inductorWithInitialCurrent,
   jfet,
   mosfet,
+  mosfetFromModelCard,
   mutualInductor,
+  normalizeModelCard,
   resistor,
   transmissionLine,
   vccs,
@@ -1163,6 +1165,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET TOX must be finite and positive");
   }
+  const surfaceMobility = params.get("U0") ?? params.get("UO");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfaceMobility !== undefined &&
+    (!Number.isFinite(surfaceMobility) || surfaceMobility < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET U0 must be finite and non-negative");
+  }
   return {
     name: fields[1],
     kind,
@@ -1206,18 +1216,28 @@ const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
   ["NSUB", "N_SUB"],
   ["N", "N_SUB"],
   ["TNOM", "T_NOM"],
+  ["UO", "U0"],
 ]);
 
 function mosfetParams(
-  modelParams: ReadonlyMap<string, number>,
+  model: ModelCard,
   instanceParams: ReadonlyMap<string, number>,
 ): Partial<MosfetLevel1Params> {
+  const modelParams = model.params;
   const params: Record<string, number> = {};
   for (const [name, value] of [...modelParams, ...instanceParams]) {
     const key = MOSFET_PARAM_ALIASES.get(name) ?? (name as keyof MosfetLevel1Params);
     if (isMosfetParam(key)) {
       params[key] = value;
     }
+  }
+  if (!modelParams.has("KP") && !instanceParams.has("KP") && modelParams.has("TOX")) {
+    const derivationParams: Record<string, number> = { TOX: modelParams.get("TOX")! };
+    if (params.U0 !== undefined) {
+      derivationParams.U0 = params.U0;
+    }
+    const normalized = normalizeModelCard(model.name, model.kind, derivationParams);
+    params.KP = mosfetFromModelCard("M", "d", "g", "s", "b", normalized).params.KP;
   }
   return params;
 }
@@ -1232,6 +1252,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "W",
     "L",
     "TOX",
+    "U0",
     "IS",
     "N_SUB",
     "T_NOM",
@@ -1463,7 +1484,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[3],
       fields[4],
       model.kind,
-      mosfetParams(model.params, parseElementParams(fields.slice(6), "MOSFET")),
+      mosfetParams(model, parseElementParams(fields.slice(6), "MOSFET")),
     );
   }
   if (prefix === "G") {

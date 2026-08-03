@@ -1409,6 +1409,33 @@ def test_lowers_mosfet_model_oxide_thickness() -> None:
     assert isclose(mosfet.model.model.params.TOX, 7.0e-9)
 
 
+@pytest.mark.parametrize("surface_mobility", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_surface_mobility(surface_mobility: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET U0 must be finite and non-negative",
+    ):
+        parse_netlist(f".model nfast NMOS(U0={surface_mobility})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["U0", "UO"])
+def test_lowers_mosfet_model_surface_mobility_and_derives_kp(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=450 TOX=12n)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.U0 == 450.0
+    assert isclose(mosfet.model.model.params.KP, 1.294924875e-4)
+
+
+def test_explicit_mosfet_model_kp_overrides_mobility_derivation() -> None:
+    parsed = parse_netlist(".model nfast NMOS(U0=450 TOX=12n KP=123u)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.KP, 123.0e-6)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

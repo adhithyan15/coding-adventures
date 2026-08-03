@@ -1325,6 +1325,36 @@ Xright c d load
     expect(element.params.TOX).toBeCloseTo(7.0e-9, 15);
   });
 
+  it.each(["-1", "1e999"])("rejects invalid MOSFET model U0=%s", (surfaceMobility) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(U0=${surfaceMobility})\nM1 d g s b nfast\n`),
+    ).toThrow("MOSFET U0 must be finite and non-negative");
+  });
+
+  it.each(["U0", "UO"])(
+    "lowers MOSFET model surface-mobility alias %s and derives KP",
+    (alias) => {
+      const parsed = parseNetlist(`.model nfast NMOS(${alias}=450 TOX=12n)\nM1 d g s b nfast\n`);
+      const element = parsed.circuit.elements()[0];
+      expect(element.kind).toBe("mosfet");
+      if (element.kind !== "mosfet") {
+        throw new Error("unexpected element kind");
+      }
+      expect(element.params.U0).toBe(450.0);
+      expect(element.params.KP).toBeCloseTo(1.294924875e-4, 15);
+    },
+  );
+
+  it("preserves explicit MOSFET model KP over mobility derivation", () => {
+    const parsed = parseNetlist(".model nfast NMOS(U0=450 TOX=12n KP=123u)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.KP).toBeCloseTo(123.0e-6, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
