@@ -16,6 +16,7 @@ private final class VentureNativeLibrary {
     UnsafeMutableRawPointer?, UnsafePointer<CChar>?
   ) -> UInt8
   typealias ActivateLink = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
+  typealias UpdateHover = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias Resize = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias Render = @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> UInt8
   typealias StringFree = @convention(c) (UnsafeMutablePointer<CChar>?) -> Void
@@ -28,6 +29,7 @@ private final class VentureNativeLibrary {
   let scroll: Scroll
   let scrollCommand: ScrollCommand
   let activateLink: ActivateLink
+  let updateHover: UpdateHover
   let resize: Resize
   let render: Render
   let stringFree: StringFree
@@ -58,6 +60,7 @@ private final class VentureNativeLibrary {
         "venture_browser_macos_scroll_command", as: ScrollCommand.self
       ),
       let activateLink = symbol("venture_browser_macos_activate_link", as: ActivateLink.self),
+      let updateHover = symbol("venture_browser_macos_update_hover", as: UpdateHover.self),
       let resize = symbol("venture_browser_macos_resize", as: Resize.self),
       let render = symbol("venture_browser_macos_render", as: Render.self),
       let stringFree = symbol("venture_browser_string_free", as: StringFree.self)
@@ -74,6 +77,7 @@ private final class VentureNativeLibrary {
     self.scroll = scroll
     self.scrollCommand = scrollCommand
     self.activateLink = activateLink
+    self.updateHover = updateHover
     self.resize = resize
     self.render = render
     self.stringFree = stringFree
@@ -104,6 +108,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var lastSurfaceHistoryEvent: String?
   private var lastSurfaceFocusState: String?
   private var lastSurfacePointerPoint: NSPoint?
+  private var lastSurfaceHoverState: String?
   private var surfaceResizeBaseline: NSSize?
   private var lastSurfaceResizeSize: NSSize?
   private var surfaceRenderBaseline: CGSize?
@@ -695,7 +700,23 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         to: markerPath)
       return
     }
-    guard performNativeSurfaceClick(at: NSPoint(x: 32, y: 26)) else {
+    let linkURL = ProcessInfo.processInfo.environment["VENTURE_BROWSER_INTERACTION_LINK_URL"] ?? ""
+    let point = NSPoint(x: 32, y: 26)
+    let hoverProps = applyProps()?["props"] as? NSDictionary
+    guard performNativeSurfaceHover(at: point),
+      lastSurfaceHoverState == "pointing-hand",
+      (applyProps()?["props"] as? NSDictionary)?["status-text"] as? String == linkURL
+    else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "statusText": hoverProps?["status-text"] as? String ?? "",
+          "error": "native link hover did not project status and pointing-hand cursor",
+        ],
+        to: markerPath)
+      return
+    }
+    guard performNativeSurfaceClick(at: point) else {
       writeInteractionResult(
         [
           "backend": "swiftui", "status": "error",
@@ -912,7 +933,8 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "failureAddress": failureURL,
           "surfaceWheel": "scroll", "surfaceFocus": "native",
           "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
-          "surfacePointer": "link", "surfaceResize": "native-reflow",
+          "surfacePointer": "link", "surfaceHover": "status-and-cursor",
+          "surfaceResize": "native-reflow",
           "surfaceRepaint": "resized-frame",
           "reloadTitle": "Venture reload acceptance", "homeAddress": startURL,
           "targetAddress": targetURL, "linkAddress": linkURL,
@@ -1079,6 +1101,17 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return true
   }
 
+  private func performNativeSurfaceHover(at point: NSPoint) -> Bool {
+    guard let contentView, let window = contentView.window else { return false }
+    NSApp.activate(ignoringOtherApps: true)
+    let location = contentView.convert(point, to: nil)
+    guard let event = primaryMouseEvent(type: .mouseMoved, at: location, in: window) else {
+      return false
+    }
+    contentView.mouseMoved(with: event)
+    return lastSurfaceHoverState == "pointing-hand"
+  }
+
   private func performNativeSurfaceResize() -> Bool {
     guard let contentView, let window = contentView.window else { return false }
     let baseline = contentView.bounds.size
@@ -1186,6 +1219,16 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     propsChangedHandler?()
   }
 
+  fileprivate func updateHover(at point: NSPoint?) -> Bool {
+    guard let native, let browser else { return false }
+    let x = point.map { Double($0.x) } ?? .nan
+    let y = point.map { Double($0.y) } ?? .nan
+    let isLink = native.updateHover(browser, x, y) != 0
+    lastSurfaceHoverState = isLink ? "pointing-hand" : "arrow"
+    propsChangedHandler?()
+    return isLink
+  }
+
   fileprivate func resize(width: Double, height: Double) {
     guard let native, let browser else { return }
     if native.resize(browser, width, height) != 0 {
@@ -1196,6 +1239,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
 private final class VentureContentView: NSView {
   private weak var host: MosaicHost?
+  private var hoverTrackingArea: NSTrackingArea?
 
   init(host: MosaicHost) {
     self.host = host
@@ -1235,6 +1279,33 @@ private final class VentureContentView: NSView {
   override func viewDidMoveToWindow() {
     super.viewDidMoveToWindow()
     renderPage()
+  }
+
+  override func updateTrackingAreas() {
+    super.updateTrackingAreas()
+    if let hoverTrackingArea {
+      removeTrackingArea(hoverTrackingArea)
+    }
+    let area = NSTrackingArea(
+      rect: .zero,
+      options: [.mouseMoved, .mouseEnteredAndExited, .activeInKeyWindow, .inVisibleRect],
+      owner: self,
+      userInfo: nil)
+    hoverTrackingArea = area
+    addTrackingArea(area)
+  }
+
+  override func mouseMoved(with event: NSEvent) {
+    if host?.updateHover(at: convert(event.locationInWindow, from: nil)) == true {
+      NSCursor.pointingHand.set()
+    } else {
+      NSCursor.arrow.set()
+    }
+  }
+
+  override func mouseExited(with event: NSEvent) {
+    _ = host?.updateHover(at: nil)
+    NSCursor.arrow.set()
   }
 
   override func scrollWheel(with event: NSEvent) {

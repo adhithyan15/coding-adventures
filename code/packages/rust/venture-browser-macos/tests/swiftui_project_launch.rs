@@ -266,6 +266,7 @@ fn package_owned_swiftui_project_launches_renders_and_interacts() {
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
     assert!(interaction.contains("\"surfaceHistory\":\"back-forward\""));
     assert!(interaction.contains("\"surfacePointer\":\"link\""));
+    assert!(interaction.contains("\"surfaceHover\":\"status-and-cursor\""));
     assert!(interaction.contains("\"surfaceResize\":\"native-reflow\""));
     assert!(interaction.contains("\"surfaceRepaint\":\"resized-frame\""));
     assert!(interaction.contains("\"reloadTitle\":\"Venture reload acceptance\""));

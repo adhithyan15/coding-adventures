@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add non-mutating shared-session link hover lookup for native status and
+  cursor projection.
 - Add retained-document reflow so native surface resizes recompute layout,
   paint, links, image placement, and scroll bounds without refetching HTML.
 - Add host-neutral keyboard-scroll commands so native SwiftUI and WinUI page

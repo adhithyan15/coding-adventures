@@ -404,6 +404,7 @@ pub struct MacBrowserHost {
     width: f64,
     height: f64,
     status_text: String,
+    hovered_link_url: Option<String>,
 }
 
 #[cfg(target_vendor = "apple")]
@@ -433,15 +434,22 @@ impl MacBrowserHost {
             width,
             height,
             status_text: "Ready".to_string(),
+            hovered_link_url: None,
         })
     }
 
     pub fn props(&self) -> BrowserChromeProps {
-        self.chrome
-            .props(&self.session, self.status_text.clone(), false)
+        self.chrome.props(
+            &self.session,
+            self.hovered_link_url
+                .clone()
+                .unwrap_or_else(|| self.status_text.clone()),
+            false,
+        )
     }
 
     pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+        self.hovered_link_url = None;
         let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
             return Ok(false);
         };
@@ -468,6 +476,7 @@ impl MacBrowserHost {
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
+        self.hovered_link_url = None;
         let Some(viewport) = self.session.viewport_mut() else {
             return false;
         };
@@ -477,6 +486,7 @@ impl MacBrowserHost {
     }
 
     pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
+        self.hovered_link_url = None;
         let Some(viewport) = self.session.viewport_mut() else {
             return false;
         };
@@ -486,6 +496,7 @@ impl MacBrowserHost {
     }
 
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
+        self.hovered_link_url = None;
         let changed = activate_link_at(
             &mut self.session,
             x,
@@ -501,10 +512,20 @@ impl MacBrowserHost {
         Ok(changed)
     }
 
+    pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
+        self.hovered_link_url = if x.is_finite() && y.is_finite() {
+            self.session.hovered_link_url(x, y).map(str::to_owned)
+        } else {
+            None
+        };
+        self.hovered_link_url.is_some()
+    }
+
     /// Reflow the retained page for a new logical content-surface size.
     /// The HTML document and navigation history stay in the shared session;
     /// only layout, paint, image placement, and scroll bounds are recomputed.
     pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        self.hovered_link_url = None;
         let width = finite_positive_or(width, self.width);
         let height = finite_positive_or(height, self.height);
         if self.width == width && self.height == height {
@@ -699,6 +720,20 @@ mod mosaic_ffi {
             host.as_mut()
                 .and_then(|host| host.activate_link(x, y).ok())
                 .unwrap_or(false) as u8
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_update_hover(
+        host: *mut MacBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.update_hover(x, y) as u8)
+                .unwrap_or(0)
         }))
         .unwrap_or(0)
     }
@@ -1175,6 +1210,11 @@ mod tests {
         .expect("Mosaic host should load the initial page");
 
         assert_eq!(host.props().page_title, "Start");
+        let link = host.session.viewport().unwrap().page().paint.links[0].clone();
+        assert!(host.update_hover(link.x + link.width / 2.0, link.y + link.height / 2.0));
+        assert_eq!(host.props().status_text, "http://example.test/next.html");
+        assert!(!host.update_hover(f64::NAN, f64::NAN));
+        assert_eq!(host.props().status_text, "Ready");
         host.handle_event(BrowserChromeEvent::AddressChange(
             "http://example.test/next.html".into(),
         ))

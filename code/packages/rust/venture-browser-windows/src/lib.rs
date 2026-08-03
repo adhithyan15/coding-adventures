@@ -88,6 +88,7 @@ pub struct WindowsBrowserHost {
     width: f64,
     height: f64,
     status_text: String,
+    hovered_link_url: Option<String>,
 }
 
 impl WindowsBrowserHost {
@@ -123,15 +124,22 @@ impl WindowsBrowserHost {
             width,
             height,
             status_text: "Ready".to_string(),
+            hovered_link_url: None,
         })
     }
 
     pub fn props(&self) -> BrowserChromeProps {
-        self.chrome
-            .props(&self.session, self.status_text.clone(), false)
+        self.chrome.props(
+            &self.session,
+            self.hovered_link_url
+                .clone()
+                .unwrap_or_else(|| self.status_text.clone()),
+            false,
+        )
     }
 
     pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
+        self.hovered_link_url = None;
         let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
             return Ok(false);
         };
@@ -158,6 +166,7 @@ impl WindowsBrowserHost {
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
+        self.hovered_link_url = None;
         let Some(viewport) = self.session.viewport_mut() else {
             return false;
         };
@@ -167,6 +176,7 @@ impl WindowsBrowserHost {
     }
 
     pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
+        self.hovered_link_url = None;
         let Some(viewport) = self.session.viewport_mut() else {
             return false;
         };
@@ -176,6 +186,7 @@ impl WindowsBrowserHost {
     }
 
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
+        self.hovered_link_url = None;
         let changed = activate_link(
             &mut self.session,
             x,
@@ -191,8 +202,18 @@ impl WindowsBrowserHost {
         Ok(changed)
     }
 
+    pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
+        self.hovered_link_url = if x.is_finite() && y.is_finite() {
+            self.session.hovered_link_url(x, y).map(str::to_owned)
+        } else {
+            None
+        };
+        self.hovered_link_url.is_some()
+    }
+
     /// Reflow the retained page for a new logical content-surface size.
     pub fn resize(&mut self, width: f64, height: f64) -> bool {
+        self.hovered_link_url = None;
         let width = finite_positive_or(width, self.width);
         let height = finite_positive_or(height, self.height);
         if self.width == width && self.height == height {
@@ -392,6 +413,20 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_update_hover(
+        host: *mut WindowsBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.update_hover(x, y) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_windows_resize(
         host: *mut WindowsBrowserHost,
         width: f64,
@@ -488,6 +523,11 @@ mod tests {
         .expect("initial page loads");
 
         assert_eq!(host.props().page_title, "Home");
+        let link = host.session.viewport().unwrap().page().paint.links[0].clone();
+        assert!(host.update_hover(link.x + link.width / 2.0, link.y + link.height / 2.0));
+        assert_eq!(host.props().status_text, "http://example.test/next");
+        assert!(!host.update_hover(f64::NAN, f64::NAN));
+        assert_eq!(host.props().status_text, "Ready");
         host.handle_event(BrowserChromeEvent::AddressChange(
             "http://example.test/next".to_string(),
         ))

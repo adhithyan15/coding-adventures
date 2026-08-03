@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Project shared link-hover URLs into Mosaic status and drive the generated
+  WinUI surface's native hand cursor, with direct app acceptance.
 - Extend the generated WinUI interaction gate through native Enter input
   in the Mosaic-authored address field after the existing Go-button path.
 - Require the generated WinUI interaction gate to verify programmatic focus on

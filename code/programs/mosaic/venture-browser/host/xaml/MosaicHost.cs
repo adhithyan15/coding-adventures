@@ -432,6 +432,18 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!contentSurface.RunHoverAcceptance(linkUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        statusText = component.StatusText,
+                        error = "native link hover did not project status and hand cursor",
+                    });
+                    return;
+                }
+
                 if (!contentSurface.RunPointerAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
@@ -566,6 +578,7 @@ public static class MosaicHost
                     surfaceKeyboard = "document-end",
                     surfaceHistory = "back-forward",
                     surfacePointer = "link",
+                    surfaceHover = "status-and-cursor",
                     surfaceResize = "native-reflow",
                     surfaceRepaint = "resized-frame",
                     reloadTitle = "Venture reload acceptance",
@@ -769,6 +782,7 @@ public static class MosaicHost
         private double acceptedResizeHeight;
         private uint acceptedRenderBaselineWidth;
         private uint acceptedRenderBaselineHeight;
+        private bool hoverUsesHandCursor;
 
         internal VentureContentSurface(VentureChrome component)
         {
@@ -782,6 +796,8 @@ public static class MosaicHost
             SizeChanged += OnSizeChanged;
             KeyDown += OnKeyDown;
             PointerPressed += OnPointerPressed;
+            PointerMoved += OnPointerMoved;
+            PointerExited += OnPointerExited;
             PointerWheelChanged += OnPointerWheelChanged;
             PointerReleased += OnPointerReleased;
         }
@@ -856,6 +872,19 @@ public static class MosaicHost
             Focus(FocusState.Pointer);
         }
 
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            _ = UpdateHoverAt(e.GetCurrentPoint(image).Position);
+        }
+
+        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            _ = Native.UpdateHover(browser, double.NaN, double.NaN);
+            hoverUsesHandCursor = false;
+            ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+            _ = ApplyProps(component);
+        }
+
         private void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             var shift = (InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift)
@@ -906,6 +935,14 @@ public static class MosaicHost
             return HandleKey(VirtualKey.Home, false, false, out var changed)
                 && changed
                 && ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
+        }
+
+        internal bool RunHoverAcceptance(string linkUrl)
+        {
+            _ = Focus(FocusState.Programmatic);
+            return UpdateHoverAt(new Windows.Foundation.Point(32, 26))
+                && hoverUsesHandCursor
+                && string.Equals(component.StatusText, linkUrl, StringComparison.Ordinal);
         }
 
         internal async System.Threading.Tasks.Task<bool> RunResizeAcceptance()
@@ -1013,6 +1050,22 @@ public static class MosaicHost
             _ = ApplyProps(component);
             return true;
         }
+
+        private bool UpdateHoverAt(Windows.Foundation.Point point)
+        {
+            if (pixelWidth == 0 || pixelHeight == 0 || ActualWidth <= 0 || ActualHeight <= 0)
+            {
+                return false;
+            }
+            var x = point.X * pixelWidth / ActualWidth;
+            var y = point.Y * pixelHeight / ActualHeight;
+            var isLink = Native.UpdateHover(browser, x, y) != 0;
+            hoverUsesHandCursor = isLink;
+            ProtectedCursor = InputSystemCursor.Create(
+                isLink ? InputSystemCursorShape.Hand : InputSystemCursorShape.Arrow);
+            _ = ApplyProps(component);
+            return isLink;
+        }
     }
 
     private static void ReportAcceptanceIfRequested()
@@ -1076,6 +1129,10 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_activate_link",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte ActivateLink(IntPtr browser, double x, double y);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_update_hover",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte UpdateHover(IntPtr browser, double x, double y);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_resize",
             CallingConvention = CallingConvention.Cdecl)]

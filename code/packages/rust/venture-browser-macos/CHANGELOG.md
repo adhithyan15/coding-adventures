@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Project shared link-hover URLs into Mosaic status and drive the generated
+  SwiftUI surface's native pointing-hand cursor, with direct app acceptance.
 - Extend the generated SwiftUI interaction gate through a native Return event
   in the Mosaic-authored address field after the existing Go-button path.
 - Require the generated SwiftUI interaction gate to verify that the hosted

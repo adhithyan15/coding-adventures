@@ -116,8 +116,10 @@ shared Rust viewport. Before surface input begins, each host must prove that
 focus moved from generated chrome into the real native content surface. From
 that scrolled state, each host must return to
 document start, activate a real HTML link through the native surface pointer
-path, and observe the shared Rust session reproject the linked address and
-title into the generated chrome. The gates then use Command-Left/Right or
+path, first requiring shared link hit-testing to project its URL into Mosaic's
+status slot and select the native pointing-hand cursor, and then observe the
+shared Rust session reproject the linked address and title into the generated
+chrome. The gates then use Command-Left/Right or
 Alt-Left/Right to traverse that shared history in both directions before they
 resize the real native content surface and require the production
 adapter to reflow that retained shared session and produce a successful native
