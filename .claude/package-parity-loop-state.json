@@ -11,18 +11,22 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9756,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9756",
+    "branch": "codex/build-tool-haskell-binary-safe-hashing"
+  },
   "last_inventory": {
-    "revision": "8eafdc14104374f82c01539e551f82bcbccc1a1d",
+    "revision": "93c0a7b60a2da3e81e8da9fd33e9919e3492cfd3",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1239,
-    "implementation_package_slots": 4387,
+    "implementation_identities": 1240,
+    "implementation_package_slots": 4388,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 789,
-    "singleton_missing_slots": 11046,
-    "rust_singletons": 594,
+    "singleton_packages": 790,
+    "singleton_missing_slots": 11060,
+    "rust_singletons": 595,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -379,11 +383,11 @@
     {
       "id": "build-tool-haskell-binary-safe-source-hashing",
       "title": "Make Haskell build-tool source hashing binary-safe on Windows",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-haskell-binary-safe-hashing",
-      "pr_number": null,
-      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic while preserving graph semantics and valid UTF-8 Git blob identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding. Selected immediately after PR #9742 merged because it is the newly unblocked direct child, the exact Windows failure and real two-package downstream are already minimized, and repairing the supported Haskell engine's deterministic cache boundary has higher immediate leverage than switching toolchains to the independent Elixir UTF-8 slice. The implementation now reads package sources and manifests as strict bytes, normalizes relative paths to portable UTF-8, writes the exact framed payload to git hash-object through binary pipes, and falls back to a deterministic byte fold if Git is unavailable. A fixed digest fixture covers UTF-8, NUL, and malformed bytes, while the actual lua/logic_gates -> lua/arithmetic closure exits 0 with built=0, skipped=2, failed=0. Local validation passes 12 focused build-tool examples and all 19 Haskell graph/build-tool examples, GHC -Wall -Werror build, Cabal check, Cabal bounds review, package Haddock generation, 39% whole-engine expression coverage with both Git and fallback hash paths ticked, 57 shared conformance tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible versions beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, and the changed-diff credential scan is clean. The full 258-package Lua lane now gets past hashing and exposes a separate field-aware resolver cycle item recorded as the dependent next owner rather than widening this byte-boundary slice."
+      "pr_number": 9756,
+      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic while preserving graph semantics and valid UTF-8 Git blob identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding. Selected immediately after PR #9742 merged because it is the newly unblocked direct child, the exact Windows failure and real two-package downstream are already minimized, and repairing the supported Haskell engine's deterministic cache boundary has higher immediate leverage than switching toolchains to the independent Elixir UTF-8 slice. The implementation now reads package sources and manifests as strict bytes, normalizes relative paths to portable UTF-8, writes the exact framed payload to git hash-object through binary pipes, and falls back to a deterministic byte fold if Git is unavailable. A fixed digest fixture covers UTF-8, NUL, and malformed bytes, while the actual lua/logic_gates -> lua/arithmetic closure exits 0 with built=0, skipped=2, failed=0. Local validation passes 12 focused build-tool examples and all 19 Haskell graph/build-tool examples, GHC -Wall -Werror build, Cabal check, Cabal bounds review, package Haddock generation, 39% whole-engine expression coverage with both Git and fallback hash paths ticked, 57 shared conformance tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible versions beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, and the changed-diff credential scan is clean. The full 258-package Lua lane now gets past hashing and exposes a separate field-aware resolver cycle item recorded as the dependent next owner rather than widening this byte-boundary slice. Ready PR #9756 opened after two conflict-free rebases, a collision-clean 93c0a7b6 inventory, and exact-head reruns of all scoped build-tool, shared-conformance, canonical-Go, state, diff, and security gates."
     },
     {
       "id": "build-tool-haskell-field-aware-manifest-resolution",
