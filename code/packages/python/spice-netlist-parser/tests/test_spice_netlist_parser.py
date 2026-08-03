@@ -1436,6 +1436,25 @@ def test_explicit_mosfet_model_kp_overrides_mobility_derivation() -> None:
     assert isclose(mosfet.model.model.params.KP, 123.0e-6)
 
 
+@pytest.mark.parametrize("transconductance", ["0", "-1u", "1e999"])
+def test_rejects_invalid_explicit_mosfet_model_transconductance(
+    transconductance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET KP must be finite and positive",
+    ):
+        parse_netlist(f".model nfast NMOS(KP={transconductance})\nM1 d g s b nfast\n")
+
+
+def test_preserves_positive_explicit_mosfet_model_transconductance() -> None:
+    parsed = parse_netlist(".model nfast NMOS(KP=175u)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.KP, 175.0e-6)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

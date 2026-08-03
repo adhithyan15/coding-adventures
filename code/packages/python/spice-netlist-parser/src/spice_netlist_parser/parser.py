@@ -1891,6 +1891,8 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         mobility = params.get("U0", params.get("UO"))
         if mobility is not None and (not math.isfinite(mobility) or mobility < 0.0):
             raise NetlistParseError("MOSFET U0 must be finite and non-negative")
+        if "KP" in params and (not math.isfinite(params["KP"]) or params["KP"] <= 0.0):
+            raise NetlistParseError("MOSFET KP must be finite and positive")
     return ModelCard(name=name, kind=kind, params=params)
 
 
