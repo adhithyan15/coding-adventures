@@ -39,6 +39,15 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "^",
     "~",
     "<<",
+    // `c<<` -- the C frontend's OWN `<<` (bitwise left shift), a distinct SIR
+    // name from Ruby's own polymorphic `<<` operator (Array push/String
+    // concat/saturating-Integer-shift, both share the bare `"<<"` name at
+    // the SIR level; see `semantic-ir-to-c`'s CHANGELOG for the collision
+    // this rename fixes). Ruby's native `<<` already does the mathematically
+    // correct arbitrary-precision left shift for ANY Integer operand, so
+    // `c<<` renders identically to `<<` here -- no new runtime behavior
+    // needed, just accepting the renamed builtin.
+    "c<<",
     ">>",
     "u>>",
     // Truncating division / remainder (SIR27 milestone 6) — distinct from the
@@ -1456,7 +1465,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         "|" => format!("({} | {})", arg(&a, 0), arg(&a, 1)),
         "^" => format!("({} ^ {})", arg(&a, 0), arg(&a, 1)),
         "~" => format!("(~{})", arg(&a, 0)),
-        "<<" => format!("({} << {})", arg(&a, 0), arg(&a, 1)),
+        "<<" | "c<<" => format!("({} << {})", arg(&a, 0), arg(&a, 1)),
         // Both `>>` and the unsigned `u>>` render the same: a Ruby unsigned
         // value is a masked non-negative Integer, so `>>` is already logical
         // there (the distinction only matters for the C backend's signed int64).

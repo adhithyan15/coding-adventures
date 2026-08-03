@@ -2366,7 +2366,13 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "|" => ("_sir_bor", 2),
         "^" => ("_sir_bxor", 2),
         "~" => ("_sir_bnot", 1),
-        "<<" => ("_sir_shl", 2),
+        // `c<<` -- the C frontend's OWN bitwise left shift, DISTINCT from
+        // Ruby's `<<` (Array push/String concat/saturating-Integer-shift),
+        // which shares the SAME bare `"<<"` name at the SIR level and is
+        // handled by `variadic_helper` above (checked BEFORE this table, so
+        // an unrenamed `"<<"` here would be dead code shadowed by Ruby's
+        // entry -- exactly the bug this rename fixes; see the CHANGELOG).
+        "c<<" => ("_sir_shl", 2),
         ">>" => ("_sir_shr", 2),
         "u>>" => ("_sir_lshr", 2),
         // Milestone 6 truncating division / remainder (signed + unsigned).

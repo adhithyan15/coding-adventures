@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.36.2 — fix: `<<` builtin name collided between C's bitwise shift and Ruby's operator
+
+`variadic_helper`'s `"<<" => "_sir_shift_left"` entry (added when Ruby's
+polymorphic `<<` operator landed in 0.36.0) is checked BEFORE
+`fixed_helper`'s `"<<" => ("_sir_shl", 2)` entry (C's raw bitwise left
+shift, pre-existing from `c-to-semantic-ir`'s own milestone-6 shift
+lowering) — so `fixed_helper`'s entry was silently DEAD CODE for the name
+`"<<"`. Every C program's `<<` was actually getting Ruby's
+saturate-instead-of-grow-a-bignum Integer-shift semantics, not a raw bit
+shift. Caught by `c-to-semantic-ir`'s `three_way_conformance` test: a
+uint64 value needing the bit pattern `0x8000000000000000` (one past
+`INT64_MAX`, unrepresentable without saturating) got silently clamped,
+corrupting a later logical-right-shift read.
+
+Fixed at the source: `c-to-semantic-ir` now lowers its OWN `<<` to a
+distinct `c<<` builtin name (mirroring the pre-existing `>>`/`u>>`
+signed/unsigned split), so `fixed_helper`'s `"<<"` key is renamed to
+`"c<<"` here too — `variadic_helper`'s `"<<"` entry is UNCHANGED and
+still correctly means Ruby's operator. The rarely-reached
+`_sir_builtin_dispatch` closure-lookup table (`Scope::Builtin` VarRef,
+e.g. a hypothetical `arr.reduce(:<<)`) gained the same split: `"<<"` now
+calls `_sir_shift_left_v` (Ruby semantics, matching `variadic_helper`)
+and a new `"c<<"` entry calls `_sir_shl` (C semantics) — previously it
+only had the C mapping under the bare name, which would have been wrong
+for a Ruby-sourced `<<` closure reference.
+
+`semantic-ir-to-c` 0.36.1 -> 0.36.2.
+
 ## 0.36.1 — execution proof for dotted/chained bracket-index writes
 
 No runtime code changed: `_sir_builtin_method_v`'s existing `"[]="` arm

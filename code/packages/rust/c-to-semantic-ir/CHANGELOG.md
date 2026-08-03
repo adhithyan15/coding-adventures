@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+### Fixed — `<<` lowered to a SIR builtin name that collided with Ruby's `<<`
+
+`ruby-to-semantic-ir` gained a polymorphic `<<` operator (Array push /
+String concat / saturating-Integer-shift), lowered to the SAME bare
+`BuiltinCall("<<", ...)` name this crate already used for C's raw bitwise
+left shift. `semantic-ir-to-c`'s emit-time dispatch had to pick ONE
+meaning for that shared name and picked Ruby's — so a C program's `<<`
+silently got Ruby's saturating semantics instead of a raw bit-shift.
+Caught by `three_way_conformance`'s "uint64 logical right shift of a
+high-bit value" case: `uint64_t x = 1; uint64_t y = x << 63;` needs the
+true bit pattern `0x8000000000000000`, which isn't representable without
+saturating, so it silently clamped to `INT64_MAX` and the subsequent
+`y >> 32` read back the wrong high word (`2147483647` instead of the
+correct `2147483648`).
+
+Fixed by lowering C's `<<` to a distinct `c<<` builtin name instead
+(mirroring the existing `>>`/`u>>` signed/unsigned split, which never had
+this collision — Ruby doesn't implement `>>` at all). `semantic-ir-to-c`
+and `semantic-ir-to-ruby` both updated to recognize `c<<` alongside `<<`;
+see their own CHANGELOGs.
+
+`>>`/`u>>` were never affected (Ruby has no `>>` operator), so this only
+touches `<<`.
+
 ### Fixed (CI — Linux link failure)
 
 - Three C-compiling test helpers (`tests/three_way_conformance.rs`'s two,
