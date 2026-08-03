@@ -20,6 +20,11 @@ recreating the surrounding chrome in backend-specific UI code.
 - Emits carry Back, Forward, Home, Reload, address edits, and Navigate.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
+- `venture-browser-core::BrowserHostController` owns the native-host state
+  machine around that reducer: load status, transactional synchronization,
+  scrolling, native scrollbar offsets, link activation, and hover projection
+  are shared by the macOS and Windows bridges. Platform crates supply only
+  their text/page composition and final paint backends.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

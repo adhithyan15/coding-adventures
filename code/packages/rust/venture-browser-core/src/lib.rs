@@ -577,6 +577,167 @@ impl BrowserChromeController {
     }
 }
 
+/// Shared host state behind Venture's native Mosaic adapters.
+///
+/// Platform crates remain responsible for constructing their native text and
+/// paint pipeline. This controller owns the behavior that must not drift
+/// between those adapters: Mosaic event reduction, transactional status and
+/// chrome synchronization, scrolling, absolute scrollbar projection, link
+/// activation, and hover status.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserHostController {
+    session: BrowserSession,
+    chrome: BrowserChromeController,
+    status_text: String,
+    hovered_link_url: Option<String>,
+}
+
+impl BrowserHostController {
+    pub fn new(session: BrowserSession) -> Self {
+        let chrome = BrowserChromeController::new(&session);
+        Self {
+            session,
+            chrome,
+            status_text: "Ready".to_string(),
+            hovered_link_url: None,
+        }
+    }
+
+    pub fn session(&self) -> &BrowserSession {
+        &self.session
+    }
+
+    /// Mutable session access for the platform-owned reflow and paint seam.
+    pub fn session_mut(&mut self) -> &mut BrowserSession {
+        &mut self.session
+    }
+
+    pub fn props(&self) -> BrowserChromeProps {
+        self.chrome.props(
+            &self.session,
+            self.hovered_link_url
+                .clone()
+                .unwrap_or_else(|| self.status_text.clone()),
+            false,
+        )
+    }
+
+    /// Reduce a Mosaic event and execute any resulting navigation through the
+    /// platform's native page-composition pipeline.
+    pub fn handle_event<F>(
+        &mut self,
+        event: BrowserChromeEvent,
+        execute: F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
+        self.hovered_link_url = None;
+        let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
+            return Ok(false);
+        };
+        self.execute_navigation(navigation, execute)
+    }
+
+    pub fn scroll_by(&mut self, delta_y: f64) -> bool {
+        self.hovered_link_url = None;
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_by(delta_y);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
+        self.hovered_link_url = None;
+        let Some(viewport) = self.session.viewport_mut() else {
+            return false;
+        };
+        let before = viewport.scroll_state().offset_y();
+        viewport.scroll_command(command);
+        viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn scroll_metrics(&self) -> Option<BrowserScrollMetrics> {
+        self.session.scroll_metrics()
+    }
+
+    pub fn scroll_to(&mut self, offset_y: f64) -> bool {
+        self.hovered_link_url = None;
+        let before = self
+            .session
+            .scroll_metrics()
+            .map(|metrics| metrics.offset_y);
+        let after = self.session.set_scroll_offset_y(offset_y);
+        before
+            .zip(after)
+            .is_some_and(|(before, after)| before != after)
+    }
+
+    /// Activate the shared-session link under a native surface coordinate and
+    /// execute it through the same platform navigation closure as chrome.
+    pub fn activate_link<F>(
+        &mut self,
+        viewport_x: f64,
+        viewport_y: f64,
+        execute: F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
+        self.hovered_link_url = None;
+        let Some(url) = self
+            .session
+            .hovered_link_url(viewport_x, viewport_y)
+            .map(str::to_owned)
+        else {
+            return Ok(false);
+        };
+        self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+    }
+
+    pub fn update_hover(&mut self, viewport_x: f64, viewport_y: f64) -> bool {
+        self.hovered_link_url = if viewport_x.is_finite() && viewport_y.is_finite() {
+            self.session
+                .hovered_link_url(viewport_x, viewport_y)
+                .map(str::to_owned)
+        } else {
+            None
+        };
+        self.hovered_link_url.is_some()
+    }
+
+    /// Clear transient hover projection before a platform-owned resize.
+    pub fn clear_hover(&mut self) {
+        self.hovered_link_url = None;
+    }
+
+    fn execute_navigation<F>(
+        &mut self,
+        navigation: BrowserNavigation,
+        execute: F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
+        self.status_text = "Loading".to_string();
+        match execute(&mut self.session, navigation) {
+            Ok(changed) => {
+                if changed {
+                    self.chrome.synchronize(&self.session);
+                }
+                self.status_text = "Ready".to_string();
+                Ok(changed)
+            }
+            Err(error) => {
+                self.status_text = format!("Load failed: {error}");
+                Err(error)
+            }
+        }
+    }
+}
+
 /// Host-neutral browser state spanning navigation, loading, and the viewport.
 ///
 /// Navigation is transactional: a failed page load leaves both history and the
@@ -1059,6 +1220,77 @@ mod tests {
             events.map(|event| event.mosaic_name()),
             VENTURE_CHROME_EVENT_NAMES
         );
+    }
+
+    #[test]
+    fn shared_host_controller_keeps_native_adapter_behavior_in_one_state_machine() {
+        let home_url = "http://example.test/";
+        let next_url = "http://example.test/next";
+        let fetcher = |url: &str| match url {
+            "http://example.test/" => Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<title>Home</title><p><a href='/next'>Next</a></p>".to_vec(),
+            )),
+            "http://example.test/next" => Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                format!(
+                    "<title>Next</title>{}",
+                    (0..40)
+                        .map(|index| format!("<p>Scrollable row {index}</p>"))
+                        .collect::<String>()
+                )
+                .into_bytes(),
+            )),
+            _ => Err("offline".to_string()),
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 80.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(home_url, 40.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .expect("home should load");
+        let mut host = BrowserHostController::new(session);
+
+        assert_eq!(host.props().page_title, "Home");
+        let link = host.session().viewport().unwrap().page().paint.links[0].clone();
+        assert!(host.update_hover(link.x + 1.0, link.y + 1.0));
+        assert_eq!(host.props().status_text, next_url);
+        assert!(host
+            .activate_link(link.x + 1.0, link.y + 1.0, |session, navigation| {
+                Ok(session.execute(navigation, &pipeline, &fetcher)?.is_some())
+            })
+            .expect("link should load"));
+        assert_eq!(host.props().page_title, "Next");
+        assert_eq!(host.props().address, next_url);
+        assert!(host.scroll_by(40.0));
+        assert!(host.scroll_metrics().unwrap().offset_y > 0.0);
+
+        assert!(!host
+            .handle_event(
+                BrowserChromeEvent::AddressChange("http://missing.test/".into()),
+                |_, _| unreachable!("address edits do not execute navigation"),
+            )
+            .unwrap());
+        let error = host
+            .handle_event(BrowserChromeEvent::Navigate, |session, navigation| {
+                Ok(session.execute(navigation, &pipeline, &fetcher)?.is_some())
+            })
+            .expect_err("missing page should fail transactionally");
+        assert!(matches!(error, BrowserLoadError::Fetch { .. }));
+        assert_eq!(host.session().history().current_url(), Some(next_url));
+        assert_eq!(host.props().address, "http://missing.test/");
+        assert!(host.props().status_text.starts_with("Load failed:"));
     }
 
     #[test]

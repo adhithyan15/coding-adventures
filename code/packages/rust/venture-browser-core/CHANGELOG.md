@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a host-neutral `BrowserHostController` that keeps Mosaic event handling,
+  transactional chrome/status synchronization, scrolling, link activation,
+  and hover projection identical across native platform adapters.
 - Add target-neutral `BrowserScrollMetrics` and shared-session absolute offset
   control for generated native scrollbar projection.
 - Add non-mutating shared-session link hover lookup for native status and

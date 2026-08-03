@@ -9,7 +9,7 @@ use html_to_paint::HtmlPaintViewport;
 use layout_text_measure_native::NativeMeasurer;
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
-    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse,
+    BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse, BrowserHostController,
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
     BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher,
 };
@@ -45,33 +45,6 @@ where
     Ok(session.execute(navigation, &pipeline, fetcher)?.is_some())
 }
 
-fn activate_link<F>(
-    session: &mut BrowserSession,
-    x: f64,
-    y: f64,
-    width: f64,
-    height: f64,
-    fetcher: &F,
-) -> Result<bool, BrowserLoadError>
-where
-    F: BrowserResourceFetcher,
-{
-    let theme = mosaic_html_theme();
-    let measurer = NativeMeasurer::new();
-    let shaper = NativeShaper::new();
-    let metrics = NativeMetrics::new();
-    let resolver = NativeResolver::new();
-    let pipeline = BrowserPagePipeline::new(
-        &theme,
-        HtmlPaintViewport::new(width, height, 1.0),
-        &measurer,
-        &shaper,
-        &metrics,
-        &resolver,
-    );
-    Ok(session.activate_link(x, y, &pipeline, fetcher)?.is_some())
-}
-
 struct OwnedFetcher(Box<dyn BrowserResourceFetcher>);
 
 impl BrowserResourceFetcher for OwnedFetcher {
@@ -82,13 +55,10 @@ impl BrowserResourceFetcher for OwnedFetcher {
 
 /// One browser session shared by generated chrome and the Direct2D surface.
 pub struct WindowsBrowserHost {
-    session: BrowserSession,
-    chrome: BrowserChromeController,
+    controller: BrowserHostController,
     fetcher: OwnedFetcher,
     width: f64,
     height: f64,
-    status_text: String,
-    hovered_link_url: Option<String>,
 }
 
 impl WindowsBrowserHost {
@@ -116,120 +86,59 @@ impl WindowsBrowserHost {
             height,
             &fetcher,
         )?;
-        let chrome = BrowserChromeController::new(&session);
         Ok(Self {
-            session,
-            chrome,
+            controller: BrowserHostController::new(session),
             fetcher,
             width,
             height,
-            status_text: "Ready".to_string(),
-            hovered_link_url: None,
         })
     }
 
     pub fn props(&self) -> BrowserChromeProps {
-        self.chrome.props(
-            &self.session,
-            self.hovered_link_url
-                .clone()
-                .unwrap_or_else(|| self.status_text.clone()),
-            false,
-        )
+        self.controller.props()
     }
 
     pub fn handle_event(&mut self, event: BrowserChromeEvent) -> Result<bool, BrowserLoadError> {
-        self.hovered_link_url = None;
-        let Some(navigation) = self.chrome.handle_event(event, &self.session, false) else {
-            return Ok(false);
-        };
-        self.status_text = "Loading".to_string();
-        match execute_navigation(
-            &mut self.session,
-            navigation,
-            self.width,
-            self.height,
-            &self.fetcher,
-        ) {
-            Ok(changed) => {
-                if changed {
-                    self.chrome.synchronize(&self.session);
-                }
-                self.status_text = "Ready".to_string();
-                Ok(changed)
-            }
-            Err(error) => {
-                self.status_text = format!("Load failed: {error}");
-                Err(error)
-            }
-        }
+        let width = self.width;
+        let height = self.height;
+        let fetcher = &self.fetcher;
+        self.controller.handle_event(event, |session, navigation| {
+            execute_navigation(session, navigation, width, height, fetcher)
+        })
     }
 
     pub fn scroll_by(&mut self, delta_y: f64) -> bool {
-        self.hovered_link_url = None;
-        let Some(viewport) = self.session.viewport_mut() else {
-            return false;
-        };
-        let before = viewport.scroll_state().offset_y();
-        viewport.scroll_by(delta_y);
-        viewport.scroll_state().offset_y() != before
+        self.controller.scroll_by(delta_y)
     }
 
     pub fn scroll_command(&mut self, command: BrowserScrollCommand) -> bool {
-        self.hovered_link_url = None;
-        let Some(viewport) = self.session.viewport_mut() else {
-            return false;
-        };
-        let before = viewport.scroll_state().offset_y();
-        viewport.scroll_command(command);
-        viewport.scroll_state().offset_y() != before
+        self.controller.scroll_command(command)
     }
 
     pub fn scroll_metrics(&self) -> Option<BrowserScrollMetrics> {
-        self.session.scroll_metrics()
+        self.controller.scroll_metrics()
     }
 
     pub fn scroll_to(&mut self, offset_y: f64) -> bool {
-        self.hovered_link_url = None;
-        let before = self
-            .session
-            .scroll_metrics()
-            .map(|metrics| metrics.offset_y);
-        let after = self.session.set_scroll_offset_y(offset_y);
-        before
-            .zip(after)
-            .is_some_and(|(before, after)| before != after)
+        self.controller.scroll_to(offset_y)
     }
 
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
-        self.hovered_link_url = None;
-        let changed = activate_link(
-            &mut self.session,
-            x,
-            y,
-            self.width,
-            self.height,
-            &self.fetcher,
-        )?;
-        if changed {
-            self.chrome.synchronize(&self.session);
-            self.status_text = "Ready".to_string();
-        }
-        Ok(changed)
+        let width = self.width;
+        let height = self.height;
+        let fetcher = &self.fetcher;
+        self.controller.activate_link(x, y, |session, navigation| {
+            execute_navigation(session, navigation, width, height, fetcher)
+        })
     }
 
     pub fn update_hover(&mut self, x: f64, y: f64) -> bool {
-        self.hovered_link_url = if x.is_finite() && y.is_finite() {
-            self.session.hovered_link_url(x, y).map(str::to_owned)
-        } else {
-            None
-        };
-        self.hovered_link_url.is_some()
+        self.controller.update_hover(x, y)
     }
 
     /// Reflow the retained page for a new logical content-surface size.
     pub fn resize(&mut self, width: f64, height: f64) -> bool {
-        self.hovered_link_url = None;
+        self.controller.clear_hover();
         let width = finite_positive_or(width, self.width);
         let height = finite_positive_or(height, self.height);
         if self.width == width && self.height == height {
@@ -250,7 +159,8 @@ impl WindowsBrowserHost {
             &resolver,
         );
         let reflowed = self
-            .session
+            .controller
+            .session_mut()
             .reflow(&pipeline, &self.fetcher, height)
             .is_some();
         self.width = width;
@@ -260,7 +170,7 @@ impl WindowsBrowserHost {
 
     #[cfg(target_os = "windows")]
     fn render_bgra(&self) -> Option<(u32, u32, Vec<u8>)> {
-        let scene = self.session.viewport()?.viewport_scene();
+        let scene = self.controller.session().viewport()?.viewport_scene();
         let mut pixels = paint_vm_direct2d::render(&scene);
         for pixel in pixels.data.chunks_exact_mut(4) {
             pixel.swap(0, 2);
@@ -581,7 +491,15 @@ mod tests {
         .expect("initial page loads");
 
         assert_eq!(host.props().page_title, "Home");
-        let link = host.session.viewport().unwrap().page().paint.links[0].clone();
+        let link = host
+            .controller
+            .session()
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .links[0]
+            .clone();
         assert!(host.update_hover(link.x + link.width / 2.0, link.y + link.height / 2.0));
         assert_eq!(host.props().status_text, "http://example.test/next");
         assert!(!host.update_hover(f64::NAN, f64::NAN));
@@ -658,11 +576,20 @@ mod tests {
         );
 
         assert_eq!(
-            host.session.viewport().unwrap().viewport_scene().width,
+            host.controller
+                .session()
+                .viewport()
+                .unwrap()
+                .viewport_scene()
+                .width,
             320.0
         );
         assert!(host.resize(144.0, 96.0));
-        let viewport = host.session.viewport().expect("viewport remains loaded");
+        let viewport = host
+            .controller
+            .session()
+            .viewport()
+            .expect("viewport remains loaded");
         assert_eq!(viewport.viewport_scene().width, 144.0);
         assert_eq!(viewport.viewport_scene().height, 96.0);
         assert_eq!(fetches.get(), 1, "resize must not refetch page HTML");
