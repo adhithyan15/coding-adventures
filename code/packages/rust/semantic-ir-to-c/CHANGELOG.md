@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.30.0 — Collections slice 8: remaining String methods
+
+New `_sir_builtin_method_v` dispatch arms (all guarded on `recv.tag ==
+SIR_STR`, matching every prior slice's polymorphism discipline): `capitalize`,
+`swapcase`, `strip`/`lstrip`/`rstrip`, `chomp` (no-arg and 1-arg literal-
+separator forms), `chars`/`bytes`/`each_char` (block), `split` (no-arg
+whitespace-run form and 1-arg literal-separator form), `replace`, `sub`/`gsub`
+(literal, non-regex), `to_i`/`to_f`, `to_sym`, `tr`. Semantics are matched
+against the Python/TS `sir-runtime-oop` reference catalog — this cascade's
+cross-backend golden source — not always byte-for-byte true Ruby; see
+`code/specs/sir-collection-methods.md`'s new "C backend lane" addendum for
+the full slice cascade history and this slice's documented scope cuts
+(char-set methods `count`/`delete`/`squeeze`, padding methods `ljust`/
+`rjust`/`center`, and the `*`/`+` String operators — the last because Ruby
+binary operators have no `__method__` lowering path at all yet, same
+pre-existing gap as `<<` for `Array#push`).
+
+Two safety properties worth calling out:
+
+- **`chars`/`bytes`/`each_char` are genuinely distinct**, not the same byte
+  loop under two names: `chars`/`each_char` are UTF-8-CHARACTER-aware (a
+  multi-byte sequence is one element), `bytes` returns the raw byte values.
+  A malformed/truncated UTF-8 lead byte falls back to a 1-byte step rather
+  than over-reading past the string's NUL terminator.
+- **`sub`/`gsub` treat an empty search pattern as a no-op** (the receiver
+  comes back unchanged) rather than Python's convention of inserting the
+  replacement between every character. A zero-length match would otherwise
+  need explicit forward-progress handling to avoid an infinite scan; this
+  keeps the helper provably terminating on any input without it — a
+  DoS-safety floor consistent with this backend's other "never hang on
+  adversarial input" guards (the flatten depth+budget cap, the
+  `_sir_value_eq`/`_sir_fmt` cycle caps).
+
+### Added
+
+- `tests/compile_and_run_string_methods_slice8.rs` — 17 execution-proof
+  tests (real `cc` compile+run): every new method, the UTF-8-vs-byte
+  `chars`/`bytes` distinction on a multi-byte character, and the
+  empty-pattern `sub`/`gsub` no-op guard.
+- `collection_string_slice8_methods_route_to_the_builtin_dispatcher` — an
+  emit-shape test mirroring slice 1/2's dispatcher-routing tests.
+
+### Changed
+
+- `builtin_method_dispatch_is_rejected` (a pre-existing test asserting an
+  unsupported method name is cleanly rejected) used `strip` as its example —
+  now supported by this slice, so it would have started passing for the
+  wrong reason. Repointed to `ljust`, one of this slice's explicitly
+  deferred methods.
+
 ## 0.29.0 — bracket-index read/write (`recv[k]` / `recv[k] = v`)
 
 New dispatch arms for `"[]"` (read) and `"[]="` (write) in

@@ -1776,9 +1776,13 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// `recv.[](k)`/`recv.[]=(k, v)`) dispatch on the RECEIVER's actual runtime
 /// tag (Array vs Hash) — never a compile-time guess from the index's
 /// syntactic shape, so a Hash with a non-string key (e.g. an int or symbol
-/// key) can never be mis-routed. The dispatcher raises `NoMethodError` on
-/// an unsupported receiver type or a malformed call (missing/extra args, a
-/// non-closure block position), matching Ruby.
+/// key) can never be mis-routed. Slice 8 = the remaining String methods:
+/// `capitalize`/`swapcase`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/
+/// `bytes`/`each_char` (UTF-8-character-aware, not byte-naive), `split`,
+/// `replace`/`sub`/`gsub`, `to_i`/`to_f`/`to_sym`, `tr` — semantics matched
+/// against the Python/TS `sir-runtime-oop` reference catalog. The dispatcher
+/// raises `NoMethodError` on an unsupported receiver type or a malformed
+/// call (missing/extra args, a non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1800,6 +1804,10 @@ fn is_builtin_method(name: &str) -> bool {
         | "each_key" | "each_value" | "group_by" | "partition"
         // bracket-index read/write
         | "[]" | "[]="
+        // slice 8 — remaining String methods
+        | "capitalize" | "swapcase" | "strip" | "lstrip" | "rstrip" | "chomp"
+        | "chars" | "bytes" | "each_char" | "split" | "replace" | "sub" | "gsub"
+        | "to_i" | "to_f" | "to_sym" | "tr"
     )
 }
 

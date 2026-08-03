@@ -143,17 +143,20 @@ fn string_literals_are_trigraph_safe() {
 
 #[test]
 fn builtin_method_dispatch_is_rejected() {
-    // A built-in method NOT in the Collections slice yet (`strip`) lowers to a
-    // `__method__` dispatch the module never registers via `__def_method__`, so
-    // the allowlist rejects it cleanly (rather than emitting a call that
-    // `NoMethodError`s at runtime).  (`length`/`upcase`/… ARE lowered now — see
+    // A built-in method NOT in the Collections slice yet (`ljust` — one of
+    // slice 8's explicitly-deferred padding methods, see that slice's
+    // CHANGELOG/spec-addendum entry) lowers to a `__method__` dispatch the
+    // module never registers via `__def_method__`, so the allowlist rejects
+    // it cleanly (rather than emitting a call that `NoMethodError`s at
+    // runtime).  (`length`/`upcase`/`strip`/… ARE lowered now — see
     // `collection_string_methods_route_to_the_builtin_dispatcher` and the
-    // `compile_and_run_string_methods` execution proof.)
-    let m = lower_ruby("puts \"hi\".strip");
+    // `compile_and_run_string_methods`/`compile_and_run_string_methods_slice8`
+    // execution proofs.)
+    let m = lower_ruby("puts \"hi\".ljust(5)");
     let err = compile(&m).expect_err("rejects a not-yet-lowered built-in method dispatch");
     assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     assert!(
-        err.message.contains("strip"),
+        err.message.contains("ljust"),
         "names the built-in method: {}",
         err.message
     );
@@ -327,6 +330,27 @@ fn collection_string_query_passes_its_argument() {
     assert!(
         src.contains(", 1, _sir_str(\"ell\"))"),
         "the dispatcher is passed argc=1 and the quoted substring argument\n{src}"
+    );
+}
+
+#[test]
+fn collection_string_slice8_methods_route_to_the_builtin_dispatcher() {
+    // Collections slice 8: a 1-arg String method (`sub`, taking a pattern and
+    // a replacement) routes to the runtime dispatcher and carries both
+    // arguments through, same shape as slice 1/2's String methods.
+    let m = lower_ruby("puts \"aaa\".sub(\"a\", \"b\")");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "a slice-8 String method dispatches through the runtime dispatcher\n{src}"
+    );
+    assert!(
+        src.contains("\"sub\""),
+        "the method name is a quoted C string literal\n{src}"
+    );
+    assert!(
+        src.contains(", 2, _sir_str(\"a\"), _sir_str(\"b\"))"),
+        "the dispatcher is passed argc=2 and both quoted string arguments\n{src}"
     );
 }
 

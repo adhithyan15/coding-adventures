@@ -2136,6 +2136,293 @@ static SirValue _sir_hash_sum(SirMap *m, SirValue block) {
     return acc;
 }
 
+/* ---- Collections slice 8: remaining String methods --------------------------
+ *
+ * Semantics matched against the Python/TS `sir-runtime-oop` reference catalog
+ * (the cross-backend golden source this cascade's runtimes agree against),
+ * not always byte-for-byte true Ruby -- e.g. `split(sep)` keeps trailing
+ * empty fields like Python's `str.split`, not Ruby's drop-trailing-empties
+ * rule. No `<ctype.h>` locale dependency (matches slice 1's ASCII-only case
+ * mapping): whitespace/case checks are hand-rolled ASCII tests. */
+
+static int _sir_is_ascii_ws(char c) {
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v';
+}
+
+static char *_sir_str_capitalize(const char *s) {
+    size_t n = strlen(s), i;
+    char *p = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) {
+        char c = s[i];
+        if (i == 0) p[i] = (c >= 'a' && c <= 'z') ? (char)(c - 32) : c;
+        else        p[i] = (c >= 'A' && c <= 'Z') ? (char)(c + 32) : c;
+    }
+    p[n] = '\0';
+    return p;
+}
+
+static char *_sir_str_swapcase(const char *s) {
+    size_t n = strlen(s), i;
+    char *p = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) {
+        char c = s[i];
+        if (c >= 'a' && c <= 'z')      p[i] = (char)(c - 32);
+        else if (c >= 'A' && c <= 'Z') p[i] = (char)(c + 32);
+        else                           p[i] = c;
+    }
+    p[n] = '\0';
+    return p;
+}
+
+/* `strip`/`lstrip`/`rstrip` -- trim ASCII whitespace from either/both ends. */
+static char *_sir_str_strip_range(const char *s, int left, int right) {
+    size_t n = strlen(s);
+    size_t start = 0, end = n;
+    if (left)  while (start < end && _sir_is_ascii_ws(s[start])) start++;
+    if (right) while (end > start && _sir_is_ascii_ws(s[end - 1])) end--;
+    {
+        size_t len = end - start;
+        char *p = (char *)_sir_alloc(len + 1);
+        memcpy(p, s + start, len);
+        p[len] = '\0';
+        return p;
+    }
+}
+
+/* `chomp([sep])` -- no-arg form removes ONE trailing "\r\n", else one
+ * trailing "\n" or "\r"; the 1-arg form removes a trailing LITERAL `sep`
+ * only when the string actually ends with it. `sep == NULL` selects the
+ * no-arg form. */
+static char *_sir_str_chomp(const char *s, const char *sep) {
+    size_t n = strlen(s);
+    size_t cut = n;
+    if (sep) {
+        size_t sl = strlen(sep);
+        if (sl > 0 && n >= sl && strcmp(s + n - sl, sep) == 0) cut = n - sl;
+    } else if (n >= 2 && s[n - 2] == '\r' && s[n - 1] == '\n') {
+        cut = n - 2;
+    } else if (n >= 1 && (s[n - 1] == '\n' || s[n - 1] == '\r')) {
+        cut = n - 1;
+    }
+    {
+        char *p = (char *)_sir_alloc(cut + 1);
+        memcpy(p, s, cut);
+        p[cut] = '\0';
+        return p;
+    }
+}
+
+/* UTF-8 lead-byte sequence length (1-4), so `chars`/`each_char` split by
+ * CHARACTER rather than byte -- unlike `bytes` below. Falls back to 1 on a
+ * malformed or truncated sequence so a hostile/invalid byte string still
+ * terminates in O(n), never over-reading past the NUL. */
+static int _sir_utf8_char_len(const char *s) {
+    unsigned char c = (unsigned char)s[0];
+    int n, i;
+    if (c < 0x80)             n = 1;
+    else if ((c & 0xE0) == 0xC0) n = 2;
+    else if ((c & 0xF0) == 0xE0) n = 3;
+    else if ((c & 0xF8) == 0xF0) n = 4;
+    else                       n = 1;
+    for (i = 1; i < n; i++) {
+        if (s[i] == '\0' || ((unsigned char)s[i] & 0xC0) != 0x80) return 1;
+    }
+    return n;
+}
+
+/* `chars` -- allocates `strlen(s)` slots (the worst case: every byte is its
+ * own 1-byte character) and fills the actual (smaller, for multi-byte input)
+ * count. */
+static SirValue _sir_str_chars(const char *s) {
+    size_t n = strlen(s), i = 0;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * n) : NULL;
+    int64_t k = 0;
+    while (i < n) {
+        int len = _sir_utf8_char_len(s + i);
+        char *buf = (char *)_sir_alloc((size_t)len + 1);
+        memcpy(buf, s + i, (size_t)len);
+        buf[len] = '\0';
+        r->items[k++] = _sir_str(buf);
+        i += (size_t)len;
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+
+/* `bytes` -- the RAW byte values (0-255) as an Array of Integers, matching
+ * the Python/TS reference (`list(recv.encode("utf-8"))`). */
+static SirValue _sir_str_bytes(const char *s) {
+    size_t n = strlen(s), i;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * n) : NULL;
+    for (i = 0; i < n; i++) r->items[i] = _sir_int((int64_t)(unsigned char)s[i]);
+    r->len = (int64_t)n;
+    return _sir_seq_wrap(r);
+}
+
+/* `each_char { |c| .. }` -- UTF-8-aware like `chars`; returns the (immutable,
+ * so unaliased) receiver, matching `Array#each`'s return-the-receiver rule. */
+static SirValue _sir_str_each_char(const char *s, SirValue block) {
+    size_t n = strlen(s), i = 0;
+    while (i < n) {
+        int len = _sir_utf8_char_len(s + i);
+        char *buf = (char *)_sir_alloc((size_t)len + 1);
+        memcpy(buf, s + i, (size_t)len);
+        buf[len] = '\0';
+        _sir_apply(block, 1, _sir_str(buf));
+        i += (size_t)len;
+    }
+    return _sir_str(s);
+}
+
+/* `split` -- no-arg splits on RUNS of ASCII whitespace, dropping leading and
+ * trailing empty fields (awk-style, matching Python's `str.split()`); with a
+ * String separator, splits on LITERAL occurrences of it, KEEPING empty
+ * fields between consecutive separators (matching Python's `str.split(sep)`
+ * -- the chosen cross-backend reference, not Ruby's drop-trailing-empties
+ * rule; see the file-header note above). An empty separator returns a
+ * single-element Array of the whole string -- a documented degenerate case
+ * that sidesteps a zero-length-match infinite loop. */
+static SirValue _sir_str_split_ws(const char *s) {
+    size_t n = strlen(s), i = 0;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * n) : NULL;
+    int64_t k = 0;
+    while (i < n) {
+        size_t start, len;
+        char *buf;
+        while (i < n && _sir_is_ascii_ws(s[i])) i++;
+        if (i >= n) break;
+        start = i;
+        while (i < n && !_sir_is_ascii_ws(s[i])) i++;
+        len = i - start;
+        buf = (char *)_sir_alloc(len + 1);
+        memcpy(buf, s + start, len);
+        buf[len] = '\0';
+        r->items[k++] = _sir_str(buf);
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+static SirValue _sir_str_split_sep(const char *s, const char *sep) {
+    size_t sl = strlen(s), pl = strlen(sep);
+    SirSeq *r;
+    int64_t k = 0;
+    const char *p;
+    if (pl == 0) return _sir_seq_lit(1, _sir_str(_sir_dup(s)));
+    r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    /* Worst case (`sep` is a single char, every char is a separator): sl+1
+       fields -- a safe, tight upper bound since pl >= 1 here. */
+    r->items = (SirValue *)_sir_alloc(sizeof(SirValue) * (sl + 1));
+    p = s;
+    for (;;) {
+        const char *hit = strstr(p, sep);
+        size_t len = hit ? (size_t)(hit - p) : strlen(p);
+        char *buf = (char *)_sir_alloc(len + 1);
+        memcpy(buf, p, len);
+        buf[len] = '\0';
+        r->items[k++] = _sir_str(buf);
+        if (!hit) break;
+        p = hit + pl;
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+
+/* `sub`/`gsub` -- literal (non-regex) first-occurrence / all-occurrences
+ * replacement, matching the Python/TS reference (`str.replace`, no
+ * back-reference expansion). `max_repl < 0` means unlimited (bounded
+ * naturally: at most `strlen(s)/strlen(pat)` occurrences exist). An EMPTY
+ * pattern is treated as "no match" -- the original string comes back
+ * unchanged -- rather than Python's convention of inserting `repl` between
+ * every character: that would need special-cased forward-progress handling
+ * to avoid a zero-length-match infinite scan, and this keeps the helper
+ * provably terminating on any input without it. */
+static char *_sir_str_replace_n(const char *s, const char *pat, const char *repl, int64_t max_repl) {
+    size_t pl = strlen(pat), rl = strlen(repl);
+    int64_t count = 0;
+    const char *p;
+    if (pl == 0) return _sir_dup(s);
+    p = s;
+    while (max_repl < 0 || count < max_repl) {
+        const char *hit = strstr(p, pat);
+        if (!hit) break;
+        count++;
+        p = hit + pl;
+    }
+    if (count == 0) return _sir_dup(s);
+    {
+        size_t sl = strlen(s);
+        size_t out_len = sl - (size_t)count * pl + (size_t)count * rl;
+        char *out = (char *)_sir_alloc(out_len + 1);
+        char *w = out;
+        const char *r = s;
+        int64_t done = 0;
+        while (done < count) {
+            const char *hit = strstr(r, pat);
+            size_t pre = (size_t)(hit - r);
+            memcpy(w, r, pre); w += pre;
+            memcpy(w, repl, rl); w += rl;
+            r = hit + pl;
+            done++;
+        }
+        {
+            size_t rest = strlen(r);
+            memcpy(w, r, rest); w += rest;
+        }
+        *w = '\0';
+        return out;
+    }
+}
+
+/* `to_i`/`to_f` -- parse a LEADING numeric prefix (optional whitespace, sign,
+ * digits), matching Ruby's never-raise `String#to_i`/`#to_f`: an
+ * unparseable string yields `0`/`0.0` rather than an exception. `strtoll`/
+ * `strtod` already implement exactly this "longest valid prefix, ignore the
+ * rest" scan; only the "no digits at all" case needs an explicit check. */
+static int64_t _sir_str_to_i(const char *s) {
+    char *end;
+    long long v = strtoll(s, &end, 10);
+    return (end == s) ? 0 : (int64_t)v;
+}
+static double _sir_str_to_f(const char *s) {
+    char *end;
+    double v = strtod(s, &end);
+    return (end == s) ? 0.0 : v;
+}
+
+/* `tr(from, to)` -- Ruby character-translation: each char of `recv` present
+ * in `from` is replaced by the char at the SAME position in `to`; a shorter
+ * `to` repeats its LAST char for extra `from` positions; an EMPTY `to`
+ * deletes matching chars; a `from` char repeated later wins (last mapping).
+ * The char-RANGE (`"a-z"`) and NEGATION (`"^abc"`) forms are a documented
+ * follow-up -- literal-set-only, same scope precedent as `sub`/`gsub`. */
+static char *_sir_str_tr(const char *s, const char *from, const char *to) {
+    size_t n = strlen(s), fl = strlen(from), tl = strlen(to), i;
+    /* has[c]: 0 = passthrough, 1 = translate via table[c], 2 = delete. */
+    unsigned char has[256];
+    char table[256];
+    char *out;
+    size_t w = 0;
+    memset(has, 0, sizeof(has));
+    for (i = 0; i < fl; i++) {
+        unsigned char c = (unsigned char)from[i];
+        if (tl == 0) { has[c] = 2; continue; }
+        table[c] = (i < tl) ? to[i] : to[tl - 1];
+        has[c] = 1;
+    }
+    out = (char *)_sir_alloc(n + 1);
+    for (i = 0; i < n; i++) {
+        unsigned char c = (unsigned char)s[i];
+        if (has[c] == 1)      out[w++] = table[c];
+        else if (has[c] == 2) { /* delete: emit nothing */ }
+        else                   out[w++] = (char)c;
+    }
+    out[w] = '\0';
+    return out;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -2365,6 +2652,52 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             return p ? _sir_int((int64_t)(p - recv.as.s)) : _sir_nil();
         }
         if (recv.tag == SIR_SEQ && argc >= 1) return _sir_array_index(recv.as.seq, args[0]);
+    }
+    /* Collections slice 8: remaining String methods. */
+    else if (strcmp(m, "capitalize") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_capitalize(recv.as.s));
+    } else if (strcmp(m, "swapcase") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_swapcase(recv.as.s));
+    } else if (strcmp(m, "strip") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_strip_range(recv.as.s, 1, 1));
+    } else if (strcmp(m, "lstrip") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_strip_range(recv.as.s, 1, 0));
+    } else if (strcmp(m, "rstrip") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_strip_range(recv.as.s, 0, 1));
+    } else if (strcmp(m, "chomp") == 0) {
+        if (recv.tag == SIR_STR) {
+            const char *sep = (argc >= 1 && args[0].tag == SIR_STR) ? args[0].as.s : NULL;
+            return _sir_str(_sir_str_chomp(recv.as.s, sep));
+        }
+    } else if (strcmp(m, "chars") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str_chars(recv.as.s);
+    } else if (strcmp(m, "bytes") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str_bytes(recv.as.s);
+    } else if (strcmp(m, "each_char") == 0) {
+        if (recv.tag == SIR_STR && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_str_each_char(recv.as.s, args[0]);
+    } else if (strcmp(m, "split") == 0) {
+        if (recv.tag == SIR_STR) {
+            if (argc == 0) return _sir_str_split_ws(recv.as.s);
+            if (argc >= 1 && args[0].tag == SIR_STR) return _sir_str_split_sep(recv.as.s, args[0].as.s);
+        }
+    } else if (strcmp(m, "replace") == 0) {
+        if (recv.tag == SIR_STR && argc == 1 && args[0].tag == SIR_STR) return args[0];
+    } else if (strcmp(m, "sub") == 0) {
+        if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
+            return _sir_str(_sir_str_replace_n(recv.as.s, args[0].as.s, args[1].as.s, 1));
+    } else if (strcmp(m, "gsub") == 0) {
+        if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
+            return _sir_str(_sir_str_replace_n(recv.as.s, args[0].as.s, args[1].as.s, -1));
+    } else if (strcmp(m, "to_i") == 0) {
+        if (recv.tag == SIR_STR) return _sir_int(_sir_str_to_i(recv.as.s));
+    } else if (strcmp(m, "to_f") == 0) {
+        if (recv.tag == SIR_STR) return _sir_float(_sir_str_to_f(recv.as.s));
+    } else if (strcmp(m, "to_sym") == 0) {
+        if (recv.tag == SIR_STR) return _sir_sym(recv.as.s);
+    } else if (strcmp(m, "tr") == 0) {
+        if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
+            return _sir_str(_sir_str_tr(recv.as.s, args[0].as.s, args[1].as.s));
     }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));
