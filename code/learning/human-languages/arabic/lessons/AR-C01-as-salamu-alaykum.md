@@ -8,7 +8,7 @@ concept_tag: GREETING-FORMAL
 prerequisites: [AR-C01-salam, AR-C01-al]
 sounds: [ayn, ya, kaf]
 roots: [s-l-m]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C01-salam, AR-C01-al, AR-C01-marhaba]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [AR-C08-al-jumua-as-sabt]
 sounds: [hamza-variants, feminine-alif-hamza-ending, arabic-rtl]
 roots: [sawad-black, bayad-white]
 etymology_hook: "أسود aswad / سوداء sawdaa' (black) and أبيض abyad / بيضاء baydaa' (white) share ONE grammatical template — masc. أ...   fem. ...اء — that Arabic reserves for colors and physical traits"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C08-al-jumua-as-sabt, AR-C07-asif]
 ---
 

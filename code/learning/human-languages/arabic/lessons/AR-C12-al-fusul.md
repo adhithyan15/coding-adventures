@@ -9,7 +9,7 @@ prerequisites: [AR-C11-yad]
 sounds: [ayn-sound, hamza-final, arabic-rtl]
 roots: [rabii-spring, sayf-summer, khariif-autumn, shitaa-winter]
 etymology_hook: "ربيع rabii' 'spring' is also the name of two Islamic calendar months (Rabi' al-Awwal, Rabi' al-Thani) — the season-word and the month-names share one root, a reminder that the lunar Islamic calendar and the solar seasons are two separate systems"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C11-yad]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C02-ismii, AR-C02-maa-ismuka, AR-C02-tasharrafna]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C02-ism, AR-C02-ii-my, AR-C02-ismii, AR-C02-anta-anti, AR-C02-maa, AR-C02-maa-ismuka, AR-C02-tasharrafna]
 ---
 

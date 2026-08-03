@@ -3,16 +3,16 @@ id: AR-W02-joining-sin-lam
 chapter: 1
 type: writing
 headword: "س، ل"
-gloss: the big idea — letters JOIN and change shape by position — taught on sin (s) and lam (l), plus the لا ligature
+gloss: letters change shape by position, taught gently on sin and lam
 romanization: "sīn, lām"
-prerequisites: [AR-W01-direction-and-alif]
+prerequisites: [AR-W01-abjad-short-vowels]
 sounds: [arabic-sin, arabic-lam]
 roots: [phoenician-shin, phoenician-lamed]
-est_minutes: 5
-reviews_of: [AR-W01-direction-and-alif, AR-C01-salam, AR-C01-as-salamu-alaykum]
+est_minutes: 4
+reviews_of: [AR-W01-abjad-short-vowels, AR-W01-direction-and-alif, AR-C01-salam, AR-C01-as-salamu-alaykum]
 ---
 
-# س and ل — how Arabic letters hold hands
+# س and ل — four shapes, one letter
 
 ## Warm-up
 
@@ -60,23 +60,11 @@ trails below the line. Break it apart — *teeth, then trailing bowl*:
 teeth. (Remember the "tooth" name; next lesson its cousin **shīn** ش will be the
 *same* teeth with **three dots** added on top.)
 
-## Joining them — the لا you will need
-
-Now watch two letters hold hands. Write **lām** then **alif** and they fuse into
-one obligatory **ligature**, **لا** — a slanted stroke crossing the upright.
-Every Arabic hand writes *lām-alif* this way; you cannot leave them apart. And
-**سل** (*sīn* reaching into *lām*) is the first joined pair of *سلام* — the
-teeth flow straight into the tall hook.
-
-- **سل** = *sīn* (initial, reaching left) + *lām*.
-- **لا** = *lām* + *alif* — the fixed ligature.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "same letter, four coats — isolated, initial, medial, final"]
 - [YOU WRITE: **ل** (tall upright + base bowl), then **س** (three teeth + bowl)]
-- [YOU WRITE: the join **سل**, then the ligature **لا** — "lām and alif always fuse"]
 - [YOU SAY: "*sīn* from *shin*, tooth; *lām* from *lāmed*, cousin of **L**"]
 
 ## Wrap-up Recall
@@ -84,6 +72,5 @@ teeth flow straight into the tall hook.
 [PAUSE 3s] How many shapes can one Arabic letter wear, and what decides which?
 (Up to **four** — its **position** in the joined run.) What Phoenician word names
 **sīn**, and what does the shape look like? (**shin** — a **tooth**; and *sīn* is
-a row of teeth.) When *lām* meets *alif*, what happens? (They **must** fuse into
-the ligature **لا**.) You can now write three of the four letters in *سلām* — one
-to go.
+a row of teeth.) Which feature changes between the four coats? (**The connectors
+at the edges; the core skeleton remains.**)

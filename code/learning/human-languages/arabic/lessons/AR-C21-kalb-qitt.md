@@ -9,7 +9,7 @@ prerequisites: [AR-C20-ahada-ashar-ishrun]
 sounds: [arabic-qaf, arabic-geminate-tt]
 roots: [semitic-kalb-dog, afroasiatic-qitt-cat]
 etymology_hook: "كلب (kalb, 'dog') is Proto-Semitic *kalb-, cousin of Hebrew's own כֶּלֶב (kelev) — a solid, well-attested root, no mystery here; قط (qiṭṭ, 'cat/tomcat') is widely compared to the same ancient Afro-Asiatic root behind Latin's cattus (and so Spanish's gato, French's chat, German's Katze) — some linguists argue for a shared ancestor, though the exact relationship and even the direction of borrowing are still genuinely debated"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [AR-C20-ahada-ashar-ishrun]
 ---
 

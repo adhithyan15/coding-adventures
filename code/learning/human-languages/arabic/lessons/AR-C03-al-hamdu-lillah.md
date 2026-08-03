@@ -10,7 +10,7 @@ prerequisites: [AR-C03-bi-khayr, AR-C01-al]
 sounds: [rtl-known-letters, deep-h]
 roots: [h-m-d]
 etymology_hook: "root ḥ-m-d 'to praise' also produces the name Muḥammad ('the much-praised one') and Aḥmad — the commonest given name on earth and the commonest phrase in the language, from three shared consonants; lillāh = li- ('to') + allāh (al- + ilāh, 'the god'), cousin of Hebrew El/Elohim"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C03-bi-khayr, AR-C01-al, AR-C01-salam, AR-C02-ism]
 ---
 

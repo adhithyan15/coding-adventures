@@ -9,7 +9,7 @@ prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [arabic-rtl, ayn-sound, teh-marbuta]
 roots: [jamaa-gather, sabt-semitic]
 etymology_hook: "as-sabt is a Semitic COUSIN of Hebrew shabbat (same family, shared root) — unlike Latin's Sabbatum, which BORROWED the word across a language-family line"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C08-al-ahad-al-khamis]
 ---
 

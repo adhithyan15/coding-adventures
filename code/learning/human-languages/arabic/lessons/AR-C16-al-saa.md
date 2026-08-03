@@ -9,7 +9,7 @@ prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl]
 sounds: [arabic-ain, teh-marbuta]
 roots: [aramaic-shaata-hour]
 etymology_hook: "ساعة (sāʿa, 'hour') is a loanword from Aramaic شָׁעְתָא/ܫܳܥܬܳܐ (šāʿəṯā) — the same Semitic root behind Hebrew's שָׁעָה (šāʿā), borrowed into Arabic long before Islam; ساعة does triple duty for 'hour,' 'clock,' and 'a while, a moment'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C15-ad-duhr-muntasaf-al-layl]
 ---
 

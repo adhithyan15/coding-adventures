@@ -8,7 +8,7 @@ romanization: "hāʾ, tāʾ marbūṭa"
 prerequisites: [AR-W10-ayn]
 sounds: [arabic-ha-light, arabic-ta-marbuta]
 roots: [phoenician-he]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-W10-ayn, AR-W04-dots-family-nun-ta, AR-C02-anta-anti]
 ---
 

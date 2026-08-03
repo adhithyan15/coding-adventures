@@ -8,7 +8,7 @@ concept_tag: GREETING-MORNING
 prerequisites: [AR-C01-al]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C01-al, AR-C01-salam]
 ---
 

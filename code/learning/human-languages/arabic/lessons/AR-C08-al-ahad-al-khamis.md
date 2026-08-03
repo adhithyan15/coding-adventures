@@ -9,7 +9,7 @@ prerequisites: [AR-C07-asif]
 sounds: [arabic-rtl, hamza-variants, definite-article-al]
 roots: [ahad-wahid, ithnayn, thalatha, arbaa, khamsa]
 etymology_hook: "Arabic weekdays are literally ordinal numbers — al-aḥad 'the first,' al-ithnayn 'the second' — a genuinely different system from Rome's planet-week"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C07-asif]
 ---
 

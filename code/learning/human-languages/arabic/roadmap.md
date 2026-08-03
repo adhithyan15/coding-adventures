@@ -59,21 +59,24 @@ word lessons — never as a gated reading course.
   **ق** *qāf* and **ى** *alif maqṣūra* are beyond the writing track's letter set,
   so they are read, not drawn.)
 
-- **Ch. 1 — Writing set** (`AR-W01`–`AR-W03`, `writing` type): the
+- **Ch. 1 — Writing set** (`AR-W01-*`–`AR-W03-*`, six `writing` lessons): the
   "break-it-apart-and-draw-it" companion to the greetings, rendered by the
   language-ladder app (parallel to the Cyrillic `RU-W*` set). Right-to-
-  left and *abjad* taught first, then the cursive four-coats rule, dots-as-a-piece,
-  and the assembly of a whole word — **سلام** — from *sīn/lām/alif/mīm*. Ties the
-  Arabic letters back to their Phoenician ancestors (*ʾālep/bēt/mem* = **A/B/M**).
+  left and *alif* come first, followed by the *abjad*'s hidden short vowels; the
+  cursive four-coats rule comes before joined **سل/لا**; and dots-as-a-piece
+  comes before the assembly of a whole word — **سلام** — from
+  *sīn/lām/alif/mīm*. Ties the Arabic letters back to their Phoenician ancestors
+  (*ʾālep/bēt/mem* = **A/B/M**).
 
-- **Ch. 2 — Writing set** (`AR-W04`–`AR-W06`, `writing` type): the writing
+- **Ch. 2 — Writing set** (`AR-W04`–`AR-W06-*`, four `writing` lessons): the writing
   companion to the self-introduction words. Completes the **bowl-skeleton
   dots-family** as a truth-table (ب/ن/ت/ث — one-below/one-above/two/three, + ي
   two-below), teaches **ي** (*yāʾ*: consonant *y*, long vowel *ī*, and the "-ī my"
   suffix) and assembles **اسم → اسمي** ("name" → "my name") from already-known
   letters, then pays off Ch. 1's *abjad* idea with the **ḥarakāt** (short-vowel
-  marks) and the **hamza** — the showpiece being that a single *fatḥa*/*kasra*
-  flips **أنتَ** ("you," m.) to **أنتِ** ("you," f.).
+  marks) — the showpiece being that a single *fatḥa*/*kasra* flips **أنتَ**
+  ("you," m.) to **أنتِ** ("you," f.). Hamza then follows as its own consonant
+  sign, including its familiar *alif* seat.
 
 - **Ch. 3 — Writing set** (`AR-W07`–`AR-W09`, `writing` type): builds toward the
   reply *bi-khayr* ("well"). Introduces a **second dots-family** — the
