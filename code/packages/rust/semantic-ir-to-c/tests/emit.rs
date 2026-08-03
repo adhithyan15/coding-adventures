@@ -331,6 +331,39 @@ fn collection_string_query_passes_its_argument() {
 }
 
 #[test]
+fn collection_array_methods_route_to_the_builtin_dispatcher() {
+    // Collections slice 3: a `__method__` dispatch to a 0-arg Array method
+    // (`sort`) that is NOT a user-defined method routes to
+    // `_sir_builtin_method`, same as the slice-1 String methods.
+    let m = lower_ruby("puts [3, 1, 2].sort");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "a built-in Array method dispatches through the runtime dispatcher\n{src}"
+    );
+    assert!(
+        src.contains("\"sort\""),
+        "the method name is a quoted C string literal\n{src}"
+    );
+}
+
+#[test]
+fn collection_array_reverse_shares_the_slice1_string_name() {
+    // `reverse` is allowlisted once (slice 1, for String) and its runtime arm
+    // widens to accept `SIR_SEQ` in slice 3 — the allowlist itself does not
+    // change, so this just confirms an Array receiver still dispatches (not
+    // rejected as an unknown-for-this-receiver-type name at compile time; the
+    // receiver-type check happens at RUNTIME, matching every other polymorphic
+    // built-in here).
+    let m = lower_ruby("puts [1, 2, 3].reverse");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "an Array `reverse` dispatches through the runtime dispatcher, not rejected at compile time\n{src}"
+    );
+}
+
+#[test]
 fn sanitize_ident_maps_into_c() {
     assert_eq!(sanitize_ident("foo"), "foo");
     assert_eq!(sanitize_ident("foo_bar1"), "foo_bar1");

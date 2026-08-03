@@ -152,8 +152,15 @@ implementation.  Covered so far — **slice 1** (0-arity String): `length`/`size
 `upcase`, `downcase`, `reverse`, `empty?`, `to_s` (`length`/`size`/`empty?`
 polymorphic over String/Array/Hash); **slice 2** (1-arg String queries):
 `include?`, `start_with?`, `end_with?` → bool and `index` → Int/nil (the argument
-a String).  A wrong-type receiver or argument raises `NoMethodError`; a built-in
-method not lowered yet is still rejected cleanly.
+a String); **slice 3** (0-arg Array query/transform methods): `count`, `first`,
+`last`, `sort`, `min`, `max`, `sum`, `uniq`, `compact`, `flatten`, `to_a`, and
+`reverse` widens to accept an Array alongside its slice-1 String form — each
+returns a **fresh** sequence (or scalar), never mutating the receiver;
+ordering/equality reuse the runtime's own `<`/`>`/`==` (`_sir_lt`/`_sir_gt`/
+`_sir_value_eq`), and `flatten` shares the same recursion-depth cap as
+`_sir_fmt`/`_sir_value_eq` so a self-referential array (`a[0] = a`) terminates
+instead of overflowing the stack.  A wrong-type receiver or argument raises
+`NoMethodError`; a built-in method not lowered yet is still rejected cleanly.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

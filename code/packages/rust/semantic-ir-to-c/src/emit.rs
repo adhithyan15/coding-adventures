@@ -1758,8 +1758,11 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// than deferring it to a later Collections batch).  Slice 1 = 0-arity String
 /// methods (`length`/`size`/`empty?` polymorphic over String/Array/Hash); slice 2
 /// = 1-arg String queries (`include?`/`start_with?`/`end_with?`/`index`, the arg
-/// a String).  The dispatcher raises `NoMethodError` on an unsupported receiver
-/// type, matching Ruby.
+/// a String); slice 3 = 0-arg Array query/transform methods (`count`/`first`/
+/// `last`/`sort`/`min`/`max`/`sum`/`uniq`/`compact`/`flatten`/`to_a`; `reverse`
+/// widens to accept an Array receiver too, alongside its slice-1 String arm).
+/// The dispatcher raises `NoMethodError` on an unsupported receiver type,
+/// matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1767,6 +1770,9 @@ fn is_builtin_method(name: &str) -> bool {
         "length" | "size" | "upcase" | "downcase" | "reverse" | "empty?" | "to_s"
         // slice 2 — 1-arg String queries (the arg is a String)
         | "include?" | "start_with?" | "end_with?" | "index"
+        // slice 3 — 0-arg Array query/transform methods
+        | "count" | "first" | "last" | "sort" | "min" | "max" | "sum" | "uniq"
+        | "compact" | "flatten" | "to_a"
     )
 }
 

@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.24.0 — Collections slice 3: 0-arg Array query/transform methods
+
+Third Collections slice — the first to cover **Array** (`SIR_SEQ`) receivers
+beyond the polymorphic `length`/`size`/`empty?` from slice 1. No new `Feature`.
+
+- New 0-arg methods on `is_builtin_method`/`_sir_builtin_method`: `count`,
+  `first`, `last`, `sort`, `min`, `max`, `sum`, `uniq`, `compact`, `flatten`,
+  `to_a`. `reverse` (already allowlisted for String in slice 1) gains a
+  `SIR_SEQ` arm. `count` is polymorphic over Array/Hash, mirroring slice 1's
+  `length`/`size`.
+- Each returns a **fresh** sequence (or scalar) — the receiver's backing array
+  is never mutated, unlike `SeqSet`. `sort`/`min`/`max` reuse `_sir_lt`/
+  `_sir_gt` (the same comparators `<`/`>` use); `uniq` reuses `_sir_value_eq`
+  (structural, so nested-array elements dedup correctly); `sum` reuses
+  `_sir_plus_v`'s existing int/float promotion, defaulting the accumulator to
+  `0` (Ruby's `Array#sum` default). `first`/`last`/`min`/`max` return `nil` on
+  an empty array (matching Ruby); `sum` returns `0`.
+- `flatten` recursively unwraps nested arrays fully (Ruby's default, no depth
+  limit in the *language* semantics). It shares `SIR_MAX_EQ_DEPTH` — the same
+  depth cap `_sir_value_eq`/`_sir_fmt` use — to bound recursion depth on a
+  self-referential array (`a[0] = a`, constructible via `SeqSet`). Security
+  review caught that depth ALONE is not enough here (unlike those two
+  functions, `flatten` recurses into every element of every nested array, so
+  a self-referential array whose elements ALL point back to itself — e.g.
+  `a=[1,2]; a[0]=a; a[1]=a` — fans out ~branching^depth calls, which at a
+  500-deep cap is astronomically more work, overflows the `int64_t` element
+  count well before the cap, and would under-allocate the output buffer for
+  the writes actually performed): both the count and fill passes now ALSO
+  thread a shared total-work budget (`SIR_MAX_FLATTEN_NODES`, decremented once
+  per node visited, leaf or container), so total calls across the whole
+  traversal are bounded regardless of fan-out, not just depth. The two passes
+  share the same starting budget and traversal order, so they still agree on
+  the exact element count. Two-pass count-then-fill avoids a growable buffer.
+- A wrong-type receiver (e.g. `"str".sort`) still raises `NoMethodError` via
+  the existing fallthrough — no new guard needed, since every new arm only
+  matches on `SIR_SEQ`.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
+
 ## 0.23.1 — fix: cyclic-map/seq display + equality no longer overflow the stack on Windows
 
 Fixes `cyclic_map_does_not_stack_overflow` (and the sibling cyclic-sequence

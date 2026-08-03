@@ -1422,6 +1422,157 @@ SirValue _sir_call_class_method(const char *cls, const char *method, int argc, .
     return r;
 }
 
+/* ---- Collections slice 3: 0-arg Array query/transform methods --------------
+ *
+ * Non-mutating queries/transforms over a `SIR_SEQ` receiver — each returns a
+ * FRESH sequence (or scalar); the receiver's backing array is never touched
+ * (unlike `SeqSet`).  Ordering/equality reuse `_sir_lt`/`_sir_gt`/`_sir_value_eq`
+ * — the SAME comparators `<`/`>`/`==` use — so `sort`/`min`/`max`/`uniq` agree
+ * with the rest of the runtime instead of inventing a second notion of
+ * "less"/"equal". */
+
+static SirValue _sir_seq_wrap(SirSeq *s) {
+    SirValue v; v.tag = SIR_SEQ; v.as.seq = s;
+    return v;
+}
+
+static SirValue _sir_array_reverse(SirSeq *s) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = s->len;
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    for (int64_t i = 0; i < s->len; i++) r->items[i] = s->items[s->len - 1 - i];
+    return _sir_seq_wrap(r);
+}
+
+/* Insertion sort via `_sir_lt` — O(n^2), fine for the v0 collection sizes this
+ * runtime targets (matches the rest of this backend's "correctness over
+ * micro-perf" v0 stance; see the sir-bench findings). */
+static SirValue _sir_array_sort(SirSeq *s) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = s->len;
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    for (int64_t i = 0; i < s->len; i++) r->items[i] = s->items[i];
+    for (int64_t i = 1; i < r->len; i++) {
+        SirValue key = r->items[i];
+        int64_t j = i - 1;
+        while (j >= 0 && _sir_truthy(_sir_lt(key, r->items[j]))) {
+            r->items[j + 1] = r->items[j];
+            j--;
+        }
+        r->items[j + 1] = key;
+    }
+    return _sir_seq_wrap(r);
+}
+
+static SirValue _sir_array_min(SirSeq *s) {
+    if (s->len == 0) return _sir_nil();
+    SirValue best = s->items[0];
+    for (int64_t i = 1; i < s->len; i++) {
+        if (_sir_truthy(_sir_lt(s->items[i], best))) best = s->items[i];
+    }
+    return best;
+}
+static SirValue _sir_array_max(SirSeq *s) {
+    if (s->len == 0) return _sir_nil();
+    SirValue best = s->items[0];
+    for (int64_t i = 1; i < s->len; i++) {
+        if (_sir_truthy(_sir_gt(s->items[i], best))) best = s->items[i];
+    }
+    return best;
+}
+/* Ruby `Array#sum` defaults the accumulator to integer 0; `_sir_plus_v`'s
+ * existing int/float promotion (the same rule `+` uses) carries a float
+ * element through, so `[1, 2.5].sum` promotes correctly. */
+static SirValue _sir_array_sum(SirSeq *s) {
+    SirValue acc = _sir_int(0);
+    for (int64_t i = 0; i < s->len; i++) {
+        SirValue pair[2];
+        pair[0] = acc;
+        pair[1] = s->items[i];
+        acc = _sir_plus_v(pair, 2);
+    }
+    return acc;
+}
+/* First-occurrence order preserved (matches Ruby); dedup via `_sir_value_eq`
+ * (structural, so `[[1], [1]].uniq` collapses to one `[1]`) — O(n^2), same
+ * trade-off as `sort` above. Over-allocates to `s->len` (a safe upper bound on
+ * the unique count) rather than a second exact-size pass. */
+static SirValue _sir_array_uniq(SirSeq *s) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    int64_t k = 0;
+    for (int64_t i = 0; i < s->len; i++) {
+        int dup = 0;
+        for (int64_t j = 0; j < k; j++) {
+            if (_sir_value_eq(s->items[i], r->items[j])) { dup = 1; break; }
+        }
+        if (!dup) r->items[k++] = s->items[i];
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+static SirValue _sir_array_compact(SirSeq *s) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    int64_t k = 0;
+    for (int64_t i = 0; i < s->len; i++) {
+        if (s->items[i].tag != SIR_NIL) r->items[k++] = s->items[i];
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+
+/* `flatten` is a recursive aggregate walk over a structure a `SeqSet` can make
+ * self-referential (`a[0] = a`).  A DEPTH cap alone (`SIR_MAX_EQ_DEPTH`, as
+ * `_sir_value_eq`/`_sir_fmt` use) is NOT enough here: those two only ever
+ * recurse into a FIXED small arity (a pair's two sides, or one seq/map
+ * paired element-for-element against another of the SAME length), so depth
+ * bounds their total work too. `flatten` instead recurses into EVERY element
+ * of EVERY nested array, so a self-referential array with two or more
+ * elements that all point back to itself (`a=[1,2]; a[0]=a; a[1]=a`) fans out
+ * ~branching^depth calls — with depth capped at 500 that is astronomically
+ * more work than the cap was sized for, and the resulting count can overflow
+ * `int64_t`, in turn under-allocating `_sir_array_flatten`'s output buffer
+ * for the (enormous) number of writes `_sir_flatten_fill` actually performs.
+ *
+ * So `flatten` ALSO threads a total-work `budget`, decremented once per call
+ * — leaf or container — BEFORE it looks at `depth`/`tag`. Once the budget
+ * runs out, the current node is treated as opaque (same as a past-depth-cap
+ * node), so no more calls are spawned from it. That bounds the TOTAL number
+ * of calls across the whole traversal to `SIR_MAX_FLATTEN_NODES`, regardless
+ * of fan-out — unlike the depth cap alone, which only bounds one AXIS of the
+ * traversal. The count and fill passes decrement from the SAME starting
+ * budget in the SAME traversal order, so they agree on exactly which nodes
+ * are opaque and produce a matching element count and write count. */
+#define SIR_MAX_FLATTEN_NODES 1000000
+static int64_t _sir_flatten_count(SirValue v, int depth, int64_t *budget) {
+    (*budget)--;
+    if (*budget < 0 || v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) return 1;
+    int64_t n = 0;
+    for (int64_t i = 0; i < v.as.seq->len; i++) {
+        n += _sir_flatten_count(v.as.seq->items[i], depth + 1, budget);
+    }
+    return n;
+}
+static void _sir_flatten_fill(SirValue v, int depth, int64_t *budget, SirValue *out, int64_t *idx) {
+    (*budget)--;
+    if (*budget < 0 || v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) { out[(*idx)++] = v; return; }
+    for (int64_t i = 0; i < v.as.seq->len; i++) {
+        _sir_flatten_fill(v.as.seq->items[i], depth + 1, budget, out, idx);
+    }
+}
+static SirValue _sir_array_flatten(SirValue recv) {
+    int64_t count_budget = SIR_MAX_FLATTEN_NODES;
+    int64_t n = _sir_flatten_count(recv, 0, &count_budget);
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    int64_t idx = 0;
+    int64_t fill_budget = SIR_MAX_FLATTEN_NODES;
+    _sir_flatten_fill(recv, 0, &fill_budget, r->items, &idx);
+    return _sir_seq_wrap(r);
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -1447,12 +1598,41 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_STR) return _sir_str(_sir_str_downcase(recv.as.s));
     } else if (strcmp(m, "reverse") == 0) {
         if (recv.tag == SIR_STR) return _sir_str(_sir_str_reverse(recv.as.s));
+        if (recv.tag == SIR_SEQ) return _sir_array_reverse(recv.as.seq);
     } else if (strcmp(m, "empty?") == 0) {
         if (recv.tag == SIR_STR) return _sir_bool(recv.as.s[0] == '\0');
         if (recv.tag == SIR_SEQ) return _sir_bool(recv.as.seq->len == 0);
         if (recv.tag == SIR_MAP) return _sir_bool(recv.as.map->len == 0);
     } else if (strcmp(m, "to_s") == 0) {
         if (recv.tag == SIR_STR) return recv;  /* String#to_s is the string itself */
+    }
+    /* Collections slice 3: 0-arg Array query/transform methods. */
+    else if (strcmp(m, "count") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_int(recv.as.seq->len);
+        if (recv.tag == SIR_MAP) return _sir_int(recv.as.map->len);
+    } else if (strcmp(m, "first") == 0) {
+        if (recv.tag == SIR_SEQ) return recv.as.seq->len > 0 ? recv.as.seq->items[0] : _sir_nil();
+    } else if (strcmp(m, "last") == 0) {
+        if (recv.tag == SIR_SEQ) {
+            int64_t n = recv.as.seq->len;
+            return n > 0 ? recv.as.seq->items[n - 1] : _sir_nil();
+        }
+    } else if (strcmp(m, "sort") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_sort(recv.as.seq);
+    } else if (strcmp(m, "min") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_min(recv.as.seq);
+    } else if (strcmp(m, "max") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_max(recv.as.seq);
+    } else if (strcmp(m, "sum") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_sum(recv.as.seq);
+    } else if (strcmp(m, "uniq") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_uniq(recv.as.seq);
+    } else if (strcmp(m, "compact") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_compact(recv.as.seq);
+    } else if (strcmp(m, "flatten") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_flatten(recv);
+    } else if (strcmp(m, "to_a") == 0) {
+        if (recv.tag == SIR_SEQ) return recv;  /* Array#to_a is the array itself */
     }
     /* Collections slice 2: 1-arg String queries (arg is a String). */
     else if (strcmp(m, "include?") == 0) {
