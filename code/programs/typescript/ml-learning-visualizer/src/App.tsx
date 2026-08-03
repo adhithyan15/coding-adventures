@@ -4,6 +4,7 @@ import { AttentionWorkbench } from "./AttentionWorkbench.js";
 import { BackwardOptimizerLoweringWorkbench } from "./BackwardOptimizerLoweringWorkbench.js";
 import { BackendParityWorkbench } from "./BackendParityWorkbench.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { CrossLanguageConsumerWorkbench } from "./CrossLanguageConsumerWorkbench.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
 import { ForwardLoweringWorkbench } from "./ForwardLoweringWorkbench.js";
@@ -185,7 +186,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation" | "language-consumers"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -324,6 +325,8 @@ export function App() {
                 ? "Representation and movement are separate choices"
               : workbench === "reference-validation"
                 ? "Every stored answer needs an independent witness"
+              : workbench === "language-consumers"
+                ? "One fixture can cross language boundaries"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -472,6 +475,13 @@ export function App() {
             >
               Reference Catalog
             </button>
+            <button
+              className={workbench === "language-consumers" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("language-consumers")}
+            >
+              Language Consumers
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -510,6 +520,8 @@ export function App() {
               <>number grid + <strong>buffer placement</strong> {"->"} accuracy + transfers</>
             ) : workbench === "reference-validation" ? (
               <>catalog {"->"} <strong>inspect registrations</strong> {"->"} CLI evidence</>
+            ) : workbench === "language-consumers" ? (
+              <>one fixture {"->"} <strong>registered CLI contracts</strong> {"->"} expected receipts</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -555,6 +567,8 @@ export function App() {
         <PrecisionResidencyWorkbench />
       ) : workbench === "reference-validation" ? (
         <ReferenceValidationWorkbench />
+      ) : workbench === "language-consumers" ? (
+        <CrossLanguageConsumerWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

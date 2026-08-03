@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/cross-language-consumers-v1.json",
+  "title": "Cross-language neural fixture consumers v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "source_fixture", "protocol", "hand_check", "lanes"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "weighted-neuron-language-consumers" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "source_fixture": { "const": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json" },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "success_exit_code", "steps", "receipt_keys"],
+      "properties": {
+        "command": { "const": "python code/scripts/validate_cross_language_fixture_consumers.py" },
+        "success_exit_code": { "const": 0 },
+        "steps": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "receipt_keys": {
+          "const": [
+            "schema_version",
+            "lane_id",
+            "fixture_id",
+            "row",
+            "contributions",
+            "bias",
+            "preactivation",
+            "prediction",
+            "maximum_absolute_error",
+            "passes"
+          ]
+        }
+      }
+    },
+    "hand_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "weights", "contributions", "bias", "preactivation", "activation", "prediction", "absolute_tolerance"],
+      "properties": {
+        "input": { "const": [2.0, -1.0] },
+        "weights": { "const": [0.5, -0.25] },
+        "contributions": { "const": [1.0, 0.25] },
+        "bias": { "const": 0.1 },
+        "preactivation": { "const": 1.35 },
+        "activation": { "const": "identity" },
+        "prediction": { "const": 1.35 },
+        "absolute_tolerance": { "const": 0.000001 }
+      }
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "const": {
+            "id": "go-native",
+            "language": "Go",
+            "family": "compiled-garbage-collected",
+            "execution": "native",
+            "working_directory": "code/programs/go/neural-fixture-consumer",
+            "command": ["go", "run", ".", "--fixture", "{fixture}"],
+            "source": "code/programs/go/neural-fixture-consumer/main.go"
+          }
+        },
+        {
+          "const": {
+            "id": "ruby-native",
+            "language": "Ruby",
+            "family": "dynamic-interpreted",
+            "execution": "native",
+            "working_directory": ".",
+            "command": ["ruby", "code/programs/ruby/neural-fixture-consumer/main.rb", "--fixture", "{fixture}"],
+            "source": "code/programs/ruby/neural-fixture-consumer/main.rb"
+          }
+        },
+        {
+          "const": {
+            "id": "rust-native",
+            "language": "Rust",
+            "family": "systems-native",
+            "execution": "native",
+            "working_directory": ".",
+            "command": ["cargo", "run", "--quiet", "--manifest-path", "code/programs/rust/neural-fixture-consumer/Cargo.toml", "--", "--fixture", "{fixture}"],
+            "source": "code/programs/rust/neural-fixture-consumer/src/main.rs"
+          }
+        }
+      ],
+      "items": false
+    }
+  }
+}

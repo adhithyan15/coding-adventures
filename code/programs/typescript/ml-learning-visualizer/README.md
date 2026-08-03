@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has twenty workbenches that move from one arithmetic update to small
+The app has twenty-one workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -276,6 +276,14 @@ lab count, and oracle. The browser labels those mappings as registered; the
 Python command and CI are the only surfaces that execute all reference
 validators and may claim the complete 33-lab gate passed.
 
+### Language consumers
+
+The Language Consumers workbench keeps one NN03 weighted-neuron row fixed while
+Go, Ruby, and Rust reveal their native source, runtime family, exact command,
+and one closed receipt protocol. The browser recomputes every contribution and
+the `1.35` prediction, but labels external execution as registered until the
+Python orchestrator runs the real programs.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -428,6 +436,11 @@ NN33 under `code/specs/fixtures/reference-validation-v1` pins the complete
 NN03-NN32 mapping: 30 unique specs, fixture roots, Python validators, and 33 lab
 documents. Run `python code/scripts/validate_reference_fixture_catalog.py` to
 execute the whole reference gate without a shell.
+
+NN34 under `code/specs/fixtures/cross-language-consumers-v1` points three native
+language-family consumers at the same NN03 source fixture. Run `python
+code/scripts/validate_cross_language_fixture_consumers.py` to execute their
+fixed commands and compare their bounded JSON receipts.
 
 ## Development
 

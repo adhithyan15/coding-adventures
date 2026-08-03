@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1255 | 1239 | 98 | 61 | 8 | 1088 |
+| 1256 | 1278 | 98 | 61 | 8 | 1089 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 11 | 1 | 791 |
+| P3 | 2 | 11 | 1 | 792 |
 
 ## P0 Backlog
 
@@ -522,6 +522,7 @@ mention provides a complete lesson.
 | Concept | Languages | Status |
 | --- | ---: | --- |
 | `caesar-cipher-native` | 1 | missing |
+| `chief-of-staff-channel-crypto` | 1 | missing |
 | `md5-c` | 1 | missing |
 | `md5-native-jni` | 1 | missing |
 | `sha1-native` | 1 | missing |
