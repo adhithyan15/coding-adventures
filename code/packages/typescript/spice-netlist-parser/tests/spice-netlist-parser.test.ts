@@ -976,6 +976,35 @@ D1 in out clamp
     );
   });
 
+  it.each(["M", "MJ"])("lowers diode %s grading coefficient alias", (parameter) => {
+    const parsed = parseNetlist(`.model clamp D(${parameter}=0.4)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      gradingCoefficient: 0.4,
+    });
+  });
+
+  it("prefers canonical diode M over MJ", () => {
+    const parsed = parseNetlist(`.model clamp D(MJ=0.4 M=0.3)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      gradingCoefficient: 0.3,
+    });
+  });
+
+  it.each([
+    ["M", "-0.1"],
+    ["M", "1e999"],
+    ["MJ", "-0.1"],
+    ["MJ", "1e999"],
+  ])("rejects invalid diode %s grading coefficient %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode M must be finite and non-negative",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

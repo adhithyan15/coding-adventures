@@ -936,6 +936,34 @@ def test_rejects_invalid_diode_junction_potential(
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+def test_lowers_diode_grading_coefficient_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.4)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.4
+
+
+def test_diode_grading_coefficient_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(MJ=0.4 M=0.3)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.3
+
+
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_diode_grading_coefficient(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode M must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """
