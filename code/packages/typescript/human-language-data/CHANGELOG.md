@@ -13,6 +13,8 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   only half of the script-rendering configuration is present.
 - Generate Marathi Chapter 6 from its two strict canonical lessons and expose the
   same ordered source hash to Language Ladder.
+- Generate Gujarati Chapter 6 from its two strict canonical lessons, preserving
+  Gujarati-script runs and bookmark-safe romanization from the shared AST.
 
 ### Added — block-boundary knowledge closure
 

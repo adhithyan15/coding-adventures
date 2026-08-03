@@ -40,14 +40,16 @@ root, script taught inline, a publishable LaTeX book.
   counting lesson followed by a prerequisite-ordered history of why *be*
   continues Sanskrit *dvé* and why *traṇ* regained an *r* after Prakrit lost it.
 
-Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
-its one-source book publication remains explicitly tracked in the shared
-backlog.
+Chapters 1–6 are in the book. Chapter 6 is generated from the same canonical
+schema-v2 lesson AST and source hashes that Language Ladder loads, while the
+first five chapters retain their authored long-form narrative during migration.
 
 ## Book / fonts
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Gujarati font
 (`../../_fonts/NotoSansGujarati-Static.ttf`). `latexmk -xelatex book.tex`.
+Generated Gujarati runs use that font while section bookmarks use the lessons'
+Latin romanization.
 
 ## Files
 
