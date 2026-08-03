@@ -94,9 +94,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B21 | Complete (#9779) | Remove German's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B22 | Complete (#9803) | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B23 | Complete (#9815) | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | The forced 95-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings. |
-| HL-B24 | Complete in this PR | Publish Kannada Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
-| HL-B25 | Next | Remove Kannada's LaTeX layout, duplicate-label, bookmark, and font warnings. | The expanded 96-page build has zero missing glyphs but reports nine overfull boxes, ten underfull boxes, four duplicate practice labels, 106 Hyperref warnings, and nine font warnings; the clean-build signal is zero of each. |
-| HL-B26 | Queued | Publish Malayalam Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Malayalam PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
+| HL-B24 | Complete (#9823) | Publish Kannada Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
+| HL-B25 | Complete in this PR | Remove Kannada's LaTeX layout, duplicate-label, bookmark, and font warnings. | The forced 96-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings. |
+| HL-B26 | Next | Publish Malayalam Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Malayalam PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
 | HL-B27 | Queued | Remove Malayalam's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports seven overfull boxes, eight underfull boxes, four duplicate practice labels, 28 Hyperref warnings, and undefined bold/italic Malayalam font shapes; the clean-build signal is zero of each. |
 | HL-B28 | Queued | Publish Arabic Chapters 3–27 and its writing companions from canonical lessons rather than hand-copying another twenty-five book chapters. | The Arabic PDF stops after Chapter 2 while canonical app content continues through Chapter 27 and sixteen dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
 | HL-B29 | Queued | Remove Arabic's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, one duplicate practice label, 14 Hyperref warnings, and undefined bold/italic Arabic font shapes; the clean-build signal is zero of each. |
@@ -784,6 +784,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The unified publication gate builds all twenty books successfully, while the
   data package passes 84 tests and Language Ladder passes 385 tests plus its
   production build.
+
+## Findings from HL-B25
+
+- Explicit regular, bold, italic, and bold-italic faces cover every script used
+  by Kannada comparisons without changing the vendored glyph source. Bookmark
+  fallbacks retain readable Unicode while omitting presentation-only font
+  commands.
+- The five handwritten recap labels are unique, and shorter visible or running
+  titles preserve transliteration and etymology in the lesson body without
+  overflowing page headers or PDF bookmarks.
+- Narrow canonical copy edits keep the complete teaching content while giving
+  long multilingual lines natural breakpoints. The generated chapter hashes
+  continue to be reproduced independently by the data package and Language
+  Ladder.
+- Natural page bottoms and the final line-break fixes make the forced 96-page
+  build completely clean: zero missing glyphs, overfull or underfull boxes,
+  duplicate destinations, Hyperref warnings, LaTeX warnings, and font warnings.
+- All 96 rendered pages were inspected again after cleanup. The 33 top-level
+  chapter bookmarks, 93 total outline entries, metadata, and generator-leak
+  checks remain intact, with no clipping, collision, or accidental blank page.
+- HL-B26 is next: publish Malayalam Chapters 6–31 from canonical lessons before
+  addressing that expanded book's bounded warning cleanup in HL-B27.
 
 ## Findings from HL-D01C
 

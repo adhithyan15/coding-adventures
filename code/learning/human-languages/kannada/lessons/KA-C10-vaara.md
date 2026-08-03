@@ -28,7 +28,7 @@ register: neutral
 variety: standard-colloquial
 ---
 
-# ಸೋಮವಾರ to ಭಾನುವಾರ — Kannada's fully Sanskritic week
+# ಸೋಮವಾರ to ಭಾನುವಾರ — the Sanskrit week
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
