@@ -319,6 +319,17 @@ dependency-shaped owner now waits on the service-registry portable contract
 and daemon authority split. The additional SIR implementation fills an
 existing identity slot and creates no new package identity or exception.
 
+The `8eafdc14` refresh adds `chief-of-staff-daemon-runtime`, a concrete
+authenticated listener and reconciliation scheduler with declared
+`net:listen`, `time:read`, and `time:sleep` authority. Its continuous serving,
+interruptible waiting, and stop-on-failure behavior remain a reviewed native
+runtime exception; bounded tick ordering stays available as an injected
+portable seam. The dedicated review is excluded from autonomous delivery.
+The same refresh merged Haskell strict rockspec decoding and directly unlocks
+the selected binary-safe source-hashing child, which is ranked ahead of the
+independent Elixir decoder because its exact Windows failure and real Lua
+downstream are already minimized and it closes the Haskell cache boundary.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
