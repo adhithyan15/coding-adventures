@@ -2412,6 +2412,32 @@ fn preserves_positive_mosfet_model_nominal_temperature_aliases() {
 }
 
 #[test]
+fn rejects_unsupported_mosfet_model_levels() {
+    for level in ["0", "2", "1.000000000002", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model level NMOS(LEVEL={level})\nM1 d g s b level"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("only MOS LEVEL=1 model cards are supported"));
+    }
+}
+
+#[test]
+fn preserves_supported_and_implicit_mosfet_model_level_one() {
+    for parameters in ["LEVEL=1", "LEVEL=1.0000000000005", ""] {
+        let parsed = parse_netlist(&format!(
+            ".model level NMOS({parameters})\nM1 d g s b level"
+        ))
+        .unwrap();
+
+        assert!(matches!(parsed.circuit.elements()[0], Element::Mosfet(_)));
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
