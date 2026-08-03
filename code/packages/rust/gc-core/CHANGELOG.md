@@ -1,5 +1,25 @@
 # Changelog — gc-core
 
+## 0.25.0 — 2026-08-02 — remove the dead `GcCore`/`GcAdapter` facade
+
+- **Removed `gc_core`, `adapter`, `root_set`, and `write_barrier` modules** —
+  the `GcCore`/`GcAdapter` facade over a separate, standalone
+  `garbage-collector` crate (a synthetic-address `HashMap<usize, Box<dyn
+  HeapObject>>` heap model) was **100% dead code**: nothing outside its own
+  crate (not `vm-core`, despite the removed doc comments' claims, not any
+  other crate) referenced `GcCore` or `GcAdapter`, and its `write_barrier`
+  method was a literal no-op. Dropped the now-unused `garbage-collector`
+  path dependency entirely.
+- Rewrote `lib.rs`'s and `flat_heap.rs`'s crate/module doc comments, and
+  `README.md`, to describe what the crate actually is: `FlatHeap`, the one
+  real collector, shared directly by both the native-AOT path (via
+  `gc-core-capi`'s C ABI) and — as of the following `vm-core` integration —
+  the bytecode interpreter, rather than each carrying its own engine.
+- Corrected `README.md`'s precision-ladder section, which had gone stale:
+  moving/compacting and incremental collection were listed as "planned" long
+  after both actually shipped (AOT00-T3, AOT00-T4).
+- No behavior change to `FlatHeap` itself in this release.
+
 ## 0.24.0 — 2026-07-29 — `FlatHeap::kind_of` — object-class accessor (AOT00-T6)
 
 - **`FlatHeap::kind_of(addr) -> u16`** — the kind id of the live heap object containing payload

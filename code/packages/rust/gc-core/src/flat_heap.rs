@@ -1,27 +1,31 @@
-//! # `flat_heap` — a real-memory mark-and-sweep heap for native consumers
+//! # `flat_heap` — the one real collector `gc-core` ships
 //!
-//! `gc-core`'s primary collector ([`crate::gc_core::GcCore`] over the
-//! `garbage-collector` crate) models the heap as a `HashMap<usize, Box<dyn
-//! HeapObject>>` with *synthetic* addresses.  That is exactly right for the
-//! **interpreters** (`vm-core`, `jit-core`): a running Rust interpreter always
-//! knows the static type of every slot, so a boxed trait object per heap value
-//! costs nothing conceptually and buys reflection-free tracing.
+//! `alloc(n)` returns a **real machine pointer** to `n` contiguous bytes that a
+//! consumer reads and writes directly at byte offsets (the IIR `field_load`/
+//! `field_store` ops), with no map indirection and no `Box<dyn>`. A McCarthy-Lisp
+//! cons cell, a boxed integer, a closure record — all are just `alloc(16)`
+//! returning a pointer the caller dereferences directly.
 //!
-//! It is the **wrong** model for **native-AOT** output.  There the heap must be
-//! *flat*: `alloc(n)` returns a **real machine pointer** to `n` contiguous bytes
-//! that compiled code reads and writes directly at byte offsets (the IIR
-//! `field_load`/`field_store` ops), with no map indirection and no `Box<dyn>`.
-//! A McCarthy-Lisp cons cell, a boxed integer, a closure record — all are just
-//! `alloc(16)` returning a pointer the generated machine code dereferences.
+//! This module is that flat representation, a first-class **generic** algorithm
+//! (see `AOT00-T1-precise-gc.md` §3.1) shared by every consumer that needs a real
+//! collector, native or interpreted alike:
 //!
-//! This module is that flat representation, lifted into `gc-core` as a
-//! first-class **generic** algorithm (see `AOT00-T1-precise-gc.md` §3.1 and
-//! `LANG16-gc-core.md`).  It is the collector the native-AOT / LLVM / WASM
-//! columns link through the C ABI (`gc-core-capi`), and it supersedes the
-//! Twig-specific `twig-aot/runtime/twig_gc.c` — same flat model (32-byte header,
-//! 16-byte-aligned payload, intrusive free list, mark/sweep), but now one
-//! generic Rust collector every native consumer shares rather than a hand-written
-//! C fork.
+//! - **Native-AOT / LLVM / WASM** link through the C ABI (`gc-core-capi`), where
+//!   it supersedes the Twig-specific `twig-aot/runtime/twig_gc.c` — same flat
+//!   model (32-byte header, 16-byte-aligned payload, intrusive free list,
+//!   mark/sweep), but one generic Rust collector every native consumer shares
+//!   rather than a hand-written C fork.
+//! - **`vm-core`** (the bytecode interpreter) depends on this crate directly as a
+//!   Rust library — no C ABI needed, since it's already Rust — allocating
+//!   GC-managed objects through the same `FlatHeap` and rooting them precisely
+//!   from its own register/global/local storage (see `vm-core`'s `Value::HeapRef`
+//!   and its `safepoint` opcode handler).
+//!
+//! An earlier, `HashMap<usize, Box<dyn HeapObject>>`-based design (`GcCore` over
+//! the standalone `garbage-collector` crate) explored a synthetic-address model
+//! aimed at interpreters specifically. It was never wired into any real
+//! consumer and has been removed in favor of `vm-core` sharing this collector
+//! directly, the same way the native-AOT backends do.
 //!
 //! ## Memory layout
 //!
