@@ -45143,9 +45143,9 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "heos",
             "HEOS",
-            "Local Denon and Marantz HEOS CLI player discovery and read-only inspection.",
+            "Local Denon and Marantz HEOS CLI player discovery, inspection, and change events.",
             IntegrationCategory::CameraMedia,
-            ConnectivityClass::LocalPolling,
+            ConnectivityClass::LocalPush,
             ImplementationStatus::FirstPartyRuntime,
             2,
             "heos",
@@ -45166,7 +45166,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::TestSimulator,
         ])
         .with_notes(&[
-            "Current runtime support is read-only; account access, media commands, grouping, queues, and change-event subscriptions remain separate work.",
+            "Current runtime support is read-only; account access and authorized media, grouping, and queue commands remain separate work.",
         ]),
         media_entry(
             "cast",
@@ -81114,7 +81114,7 @@ mod tests {
     }
 
     #[test]
-    fn heos_entry_exposes_ssdp_and_read_only_tcp_player_runtime() {
+    fn heos_entry_exposes_ssdp_and_read_only_tcp_push_runtime() {
         let catalog = first_party_catalog();
         let heos = find_entry(&catalog, &IntegrationId::trusted("heos")).unwrap();
 
@@ -81122,7 +81122,7 @@ mod tests {
             heos.implementation_status,
             ImplementationStatus::FirstPartyRuntime
         );
-        assert_eq!(heos.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(heos.connectivity, ConnectivityClass::LocalPush);
         assert_eq!(heos.auth_modes, vec![AuthMode::None]);
         assert_eq!(
             heos.supported_protocols,

@@ -5,6 +5,8 @@
 
 ## Unreleased
 
+- Upgraded HEOS CLI runtime coverage from polling-only inspection to local
+  push through authorized, bounded change-event subscriptions.
 - Added first-party HEOS CLI runtime coverage for SSDP/manual discovery and
   read-only player identity, playback, volume, mute, and media inspection.
 - Added a reusable TCP primitive family for bounded local stream protocols.
