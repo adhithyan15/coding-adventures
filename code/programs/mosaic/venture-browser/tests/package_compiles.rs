@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 4);
+    assert_eq!(package.host_assets.files.len(), 5);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -118,6 +118,15 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     assert_eq!(
         package.host_assets.files[3].target,
         "test/tst_venture_chrome.qml"
+    );
+    assert_eq!(package.host_assets.files[4].backend, "compose");
+    assert_eq!(
+        package.host_assets.files[4].source,
+        "host/compose/VentureChromeInteractionTest.kt"
+    );
+    assert_eq!(
+        package.host_assets.files[4].target,
+        "src/test/kotlin/VentureChromeInteractionTest.kt"
     );
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
@@ -283,6 +292,22 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "Qt interaction acceptance omits {symbol}"
         );
     }
+
+    let compose_acceptance =
+        read_package_file("host/compose/VentureChromeInteractionTest.kt");
+    for symbol in [
+        "MosaicApp(host)",
+        "disabledNativeControlsSuppressMosaicDispatch",
+        "addressReturnAndGoCrossTheMosaicHostSeam",
+        "performTextReplacement(\"http://venture.test/next\")",
+        "performImeAction()",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            compose_acceptance.contains(symbol),
+            "Compose interaction acceptance omits {symbol}"
+        );
+    }
 }
 
 #[test]
@@ -326,7 +351,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "dotnet build",
         "flutter build",
         "flutter test test/venture_chrome_interaction_test.dart",
-        "gradle --no-daemon build",
+        "gradle --no-daemon test build",
         "--strict",
     ] {
         assert!(shell.contains(required), "POSIX build omits {required}");
@@ -347,6 +372,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "flutter",
         "venture_chrome_interaction_test.dart",
         "gradle",
+        "@(\"--no-daemon\", \"test\", \"build\")",
         "$Strict",
     ] {
         assert!(

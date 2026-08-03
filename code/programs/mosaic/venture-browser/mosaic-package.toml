@@ -13,6 +13,7 @@ files = [
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
   { backend = "flutter", source = "host/flutter/venture_chrome_interaction_test.dart", target = "test/venture_chrome_interaction_test.dart" },
   { backend = "qt", source = "host/qt/tst_venture_chrome.qml", target = "test/tst_venture_chrome.qml" },
+  { backend = "compose", source = "host/compose/VentureChromeInteractionTest.kt", target = "src/test/kotlin/VentureChromeInteractionTest.kt" },
 ]
 
 [kernel]

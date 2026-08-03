@@ -1172,6 +1172,8 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
             "}}\n\n",
             "dependencies {{\n",
             "    implementation(compose.desktop.currentOs)\n",
+            "    testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:{compose_version}\")\n",
+            "    testImplementation(kotlin(\"test\"))\n",
             "}}\n\n",
             "kotlin {{\n",
             "    jvmToolchain(21)\n",
@@ -1210,6 +1212,16 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "import androidx.compose.ui.window.application\n\n",
             "fun main() = application {{\n",
             "    val mosaicHost = remember {{ MosaicComposeHostBridge.load() }}\n",
+            "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
+            "        MosaicApp(mosaicHost)\n",
+            "    }}\n",
+            "}}\n\n",
+            "interface MosaicComposeHost {{\n",
+            "    fun props(): Map<String, Any?>?\n",
+            "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>?\n",
+            "}}\n\n",
+            "@Composable\n",
+            "fun MosaicApp(mosaicHost: MosaicComposeHost?) {{\n",
             "    var hostProps by remember {{ mutableStateOf<Map<String, Any?>>(emptyMap()) }}\n",
             "    fun applyMosaicResponse(response: Map<String, Any?>?) {{\n",
             "        if (response == null) return\n",
@@ -1222,15 +1234,13 @@ fn build_compose_main_kt(component_name: &str, slots: &[SlotDecl]) -> String {
             "    LaunchedEffect(mosaicHost) {{\n",
             "        applyMosaicResponse(mosaicHost?.props())\n",
             "    }}\n",
-            "    Window(onCloseRequest = ::exitApplication, title = \"{}\") {{\n",
-            "        MaterialTheme {{\n",
+            "    MaterialTheme {{\n",
             "{root}\n",
-            "        }}\n",
             "    }}\n",
             "}}\n\n",
-            "private class MosaicComposeHostBridge(private val instance: Any) {{\n",
-            "    fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
-            "    fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
+            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {{\n",
+            "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
+            "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
             "    private fun invokeMap(methodName: String, vararg args: Any): Map<String, Any?>? = runCatching {{\n",
             "        val method = instance.javaClass.methods.firstOrNull {{ method ->\n",
             "            method.name == methodName && method.parameterCount == args.size\n",
@@ -4510,11 +4520,18 @@ version = "1"
         assert!(gradle.contains("id(\"org.jetbrains.compose\") version \"1.11.1\""));
         assert!(gradle.contains("id(\"org.jetbrains.kotlin.plugin.compose\") version \"2.3.21\""));
         assert!(gradle.contains("kotlin(\"jvm\") version \"2.3.21\""));
+        assert!(gradle.contains(
+            "testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:1.11.1\")"
+        ));
+        assert!(gradle.contains("testImplementation(kotlin(\"test\"))"));
         assert!(gradle.contains("mainClass = \"MainKt\""));
         assert!(gradle.contains("packageName = \"mosaic_pkg_grid\""));
         let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt");
         assert!(main_kt.contains("fun main() = application"));
         assert!(main_kt.contains("Window(onCloseRequest = ::exitApplication, title = \"Grid\")"));
+        assert!(main_kt.contains("interface MosaicComposeHost"));
+        assert!(main_kt.contains("fun MosaicApp(mosaicHost: MosaicComposeHost?)"));
+        assert!(main_kt.contains("MosaicApp(mosaicHost)"));
         assert!(main_kt.contains("MosaicComposeHostBridge.load()"));
         assert!(main_kt.contains("var hostProps by remember"));
         assert!(main_kt.contains("applyMosaicResponse(mosaicHost?.props())"));
