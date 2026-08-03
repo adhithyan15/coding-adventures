@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `FC` depletion coefficient.
 - Validate and lower JFET model-card `PB` / `VJ` junction potential.
 - Validate and lower JFET model-card `AF` flicker-noise exponent.
 - Validate and lower JFET model-card `KF` flicker-noise coefficient.

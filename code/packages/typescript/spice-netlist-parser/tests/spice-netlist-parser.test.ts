@@ -1482,6 +1482,30 @@ J1 drain gate source fast
     }
   });
 
+  it.each([
+    ["0", 0.0],
+    ["0.6", 0.6],
+  ])("parses JFET forward-bias depletion coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(FC=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      forwardBiasDepletionCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid JFET forward-bias depletion coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(FC=${value})`)).toThrow(
+        "JFET FC must be finite and in [0, 1)",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
