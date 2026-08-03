@@ -1029,4 +1029,5 @@ members = [
   "chief-of-staff-cli",
   "chief-of-staff-skill-parser",
   "chief-of-staff-skill-runtime",
+  "chief-of-staff-agent-stdio-protocol",
 ]

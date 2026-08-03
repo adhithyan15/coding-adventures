@@ -1,0 +1,11 @@
+[package]
+name = "chief-of-staff-agent-stdio-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded JSON-lines protocol for D18 Level 4 any-language agents"
+license = "MIT"
+
+[dependencies]
+coding-adventures-json-parser = { path = "../json-parser" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }

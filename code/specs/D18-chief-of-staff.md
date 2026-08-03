@@ -175,6 +175,36 @@ the non-empty text response, and only then acknowledges the input. Model and
 publication failures leave the channel cursor unchanged so recovery can replay
 the message.
 
+### Level 4 any-language stdio contract
+
+A Level 4 agent needs no SDK. The trusted host writes one UTF-8 JSON object per
+LF-terminated stdin line and accepts one JSON object per LF- or CRLF-terminated
+stdout line. The v1 host record is:
+
+```text
+{ protocol: "chief-agent-stdio-v1", kind: "message",
+  message_id: string, channel_id: string,
+  sequence: string, timestamp_ns: string,
+  content_type: string, payload_b64: string }
+```
+
+The agent returns exactly:
+
+```text
+{ protocol: "chief-agent-stdio-v1", kind: "response",
+  input_message_id: string,
+  content_type: string, payload_b64: string }
+```
+
+The response must correlate to the one input currently in flight. Sequence and
+timestamp are canonical unsigned decimal strings; payloads are canonical padded
+base64. Identifiers and content types use the channel bounds, decoded payloads
+are limited to 64 MiB, and encoded lines are limited to 90 MiB. Duplicate or
+unknown fields, malformed JSON/base64, wrong versions or kinds, oversized data,
+and correlation mismatches fail before output publication or input
+acknowledgement. Nonzero process exit and EOF before a valid response likewise
+leave the input cursor unchanged for recovery.
+
 ---
 
 ## Key Concepts
