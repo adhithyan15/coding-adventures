@@ -30,10 +30,9 @@
  *
  * ## Language inference
  *
- * We infer the language from the directory path. If the path contains
- * "packages/python/X" or "programs/python/X", the language is "python".
- * Similarly for "ruby", "go", "rust", "typescript", and "elixir". The
- * package name is "{language}/{dir-name}".
+ * We infer the language only from the exact bucket immediately below
+ * `packages` or `programs`. Programs retain a `programs` identity segment so
+ * they cannot collide with a package that has the same language and basename.
  */
 
 import * as fs from "node:fs";
@@ -67,7 +66,39 @@ export const SKIP_DIRS: ReadonlySet<string> = new Set([
   "build",
   "target",
   ".claude",
+  "specs",
   "Pods",
+  ".dart_tool",
+  ".build",
+  ".gradle",
+  "gradle-build",
+]);
+
+/** Canonical repository buckets accepted by build-tool discovery. */
+export const DISCOVERY_LANGUAGES: ReadonlySet<string> = new Set([
+  "csharp",
+  "dart",
+  "elixir",
+  "fsharp",
+  "go",
+  "haskell",
+  "java",
+  "kotlin",
+  "lua",
+  "perl",
+  "python",
+  "ruby",
+  "rust",
+  "swift",
+  "typescript",
+  "c",
+  "cpp",
+  "ocaml",
+  "wasm",
+  "mosaic",
+  "twig",
+  "starlark",
+  "dotnet",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -80,19 +111,37 @@ export const SKIP_DIRS: ReadonlySet<string> = new Set([
  * Think of this as a "build target" -- it's a directory with source code
  * and a BUILD file that tells us how to build it.
  *
- * @property name - A qualified name like "python/logic-gates" or "ruby/arithmetic".
- *                  The format is always "{language}/{directory-name}".
+ * @property name - A qualified name like "python/logic-gates" or
+ *                  "go/programs/build-tool".
  * @property path - Absolute path to the package directory on disk.
  * @property buildCommands - Lines from the BUILD file (commands to execute).
  *                           Blank lines and comments are stripped out.
- * @property language - Inferred language: "python", "ruby", "go", "rust",
- *                      "typescript", "elixir", or "unknown".
+ * @property language - The canonical package/program bucket, or "unknown".
  */
 export interface Package {
   name: string;
   path: string;
   buildCommands: string[];
   language: string;
+}
+
+/** Two or more directories that normalize to one graph identity. */
+export class DuplicatePackageIdentityError extends Error {
+  readonly code = "DUPLICATE_PACKAGE_IDENTITY";
+  readonly package: string;
+  readonly paths: string[];
+
+  constructor(
+    packageName: string,
+    paths: string[],
+  ) {
+    super(
+      `DUPLICATE_PACKAGE_IDENTITY: package=${packageName} paths=${paths.join(",")}`,
+    );
+    this.name = "DuplicatePackageIdentityError";
+    this.package = packageName;
+    this.paths = paths;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -130,10 +179,9 @@ export function readLines(filepath: string): string[] {
 /**
  * Infer the programming language from the directory path.
  *
- * We look for known language directory names in the path components.
- * The pattern we look for is a parent directory named "python", "ruby",
- * "go", "rust", "typescript", or "elixir" that sits under "packages" or
- * "programs".
+ * The sole discriminator is the exact component immediately below a
+ * `packages` or `programs` component. Canonical-looking words later in the
+ * path do not change the result.
  *
  * For example:
  * - "/repo/code/packages/python/logic-gates" -> "python"
@@ -152,25 +200,12 @@ export function inferLanguage(dirPath: string): string {
   // cross-platform plan files or test fixtures).
   const parts = dirPath.split(/[/\\]/);
 
-  const knownLanguages = [
-    "python",
-    "ruby",
-    "go",
-    "rust",
-    "typescript",
-    "elixir",
-    "lua",
-    "perl",
-    "swift",
-    "haskell",
-    "wasm",
-    "csharp",
-    "fsharp",
-    "dotnet",
-  ];
-  for (const lang of knownLanguages) {
-    if (parts.includes(lang)) {
-      return lang;
+  for (let index = 0; index < parts.length; index += 1) {
+    if (parts[index] === "packages" || parts[index] === "programs") {
+      const bucket = parts[index + 1];
+      return bucket !== undefined && DISCOVERY_LANGUAGES.has(bucket)
+        ? bucket
+        : "unknown";
     }
   }
 
@@ -189,7 +224,35 @@ export function inferLanguage(dirPath: string): string {
  * @returns A qualified name string.
  */
 export function inferPackageName(dirPath: string, language: string): string {
-  return `${language}/${path.basename(dirPath)}`;
+  const parts = dirPath.split(/[/\\]/);
+  const isProgram = parts.some((part, index) =>
+    part === "programs" && index + 1 < parts.length
+  );
+  const kind = isProgram ? "programs/" : "";
+  return `${language}/${kind}${path.basename(dirPath)}`;
+}
+
+function repositoryPackagePath(root: string, packagePath: string): string {
+  const normalizedPath = packagePath.replaceAll("\\", "/");
+  const parts = normalizedPath.split("/").filter(Boolean);
+  let canonicalStart: number | null = null;
+  for (let index = 0; index < parts.length - 1; index += 1) {
+    if (
+      parts[index] === "code" &&
+      (parts[index + 1] === "packages" || parts[index + 1] === "programs")
+    ) {
+      canonicalStart = index;
+    }
+  }
+  if (canonicalStart !== null) {
+    return parts.slice(canonicalStart).join("/");
+  }
+
+  const relative = path.relative(root, packagePath).replaceAll("\\", "/");
+  if (relative !== "" && !relative.startsWith("../")) {
+    return relative;
+  }
+  return path.basename(packagePath);
 }
 
 /**
@@ -239,7 +302,7 @@ export function getBuildFile(
     }
   }
 
-  if (platform === "win32") {
+  if (platform === "win32" || platform === "windows") {
     const windowsBuild = path.join(directory, "BUILD_windows");
     if (fs.existsSync(windowsBuild)) {
       return windowsBuild;
@@ -302,7 +365,27 @@ export function discoverPackages(
   // Sort by name for deterministic output. This ensures that the build
   // order is the same regardless of filesystem ordering (which can vary
   // between operating systems and filesystems).
-  packages.sort((a, b) => a.name.localeCompare(b.name));
+  packages.sort((a, b) =>
+    a.name.localeCompare(b.name) || a.path.localeCompare(b.path)
+  );
+
+  for (let index = 0; index < packages.length;) {
+    let end = index + 1;
+    while (
+      end < packages.length &&
+      packages[end].name === packages[index].name
+    ) {
+      end += 1;
+    }
+    if (end - index > 1) {
+      const paths = packages
+        .slice(index, end)
+        .map((pkg) => repositoryPackagePath(root, pkg.path))
+        .sort((left, right) => left.localeCompare(right));
+      throw new DuplicatePackageIdentityError(packages[index].name, paths);
+    }
+    index = end;
+  }
 
   return packages;
 }

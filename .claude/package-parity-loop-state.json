@@ -368,6 +368,15 @@
       "notes": "Selected after merged PR #9572 and the collision-clean 6141793a inventory because the dependency is satisfied and real full-plan identity corruption affects every downstream graph consumer. The engine emits 4,770 package records but only 4,383 unique names, including 655 unknown-language records and 217 duplicate identity groups; common C, C++, Dart, Java, and Kotlin packages collapse together under unknown/<basename>. Consume the shared discovery language-registry and duplicate-identity fixtures, classify exact package/program lane boundaries, preserve package versus program identity, exclude spec fixtures, and fail closed on residual duplicate qualified names. This outranks the local-only Windows gitdiff fixture debt and the next single-engine UTF-8 child on dependency leverage."
     },
     {
+      "id": "build-tool-typescript-windows-plan-rel-path-portability",
+      "title": "Emit portable TypeScript build-plan package paths on Windows",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-language-identity-registry"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real full-repository plan validation for the TypeScript language/identity-registry slice. On Windows, package rel_path values are emitted with backslashes because index.ts serializes path.relative directly, while the language-neutral canonical path contract requires forward slashes. Keep this separate from discovery identity: add a cross-platform plan fixture and real CLI coverage, normalize only repository-relative serialized paths, and preserve absolute destination option handling for its separately owned file-option concerns."
+    },
+    {
       "id": "build-tool-go-rockspec-utf8-conformance",
       "title": "Make the Go build tool enforce strict UTF-8 rockspec metadata",
       "status": "merged",

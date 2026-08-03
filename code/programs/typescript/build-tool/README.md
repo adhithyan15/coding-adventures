@@ -6,6 +6,13 @@ An incremental, parallel monorepo build tool implemented in TypeScript. This is 
 
 The build tool discovers packages in the monorepo by walking the directory tree looking for BUILD files, resolves inter-package dependencies by parsing language-specific metadata files, and executes builds in parallel topological order.
 
+Discovery classifies only the exact bucket immediately below `code/packages`
+or `code/programs`. It recognizes every established and emerging implementation
+lane plus the repository's execution, domain, build-language, and shared .NET
+host buckets. Program identities use `language/programs/name`, specification
+fixtures are excluded, and residual duplicate qualified names fail closed with
+the portable `DUPLICATE_PACKAGE_IDENTITY` diagnostic and CLI exit code 2.
+
 ## How it fits in the stack
 
 This is one of several build tool implementations in the monorepo (Python, Ruby, Go, Rust, Elixir, TypeScript). All implementations share the same architecture and produce identical results. The Go implementation is the primary one used in CI; the others serve as educational implementations demonstrating the same concepts in different languages.
@@ -92,6 +99,9 @@ npx vitest run --coverage
 
 - **Zero runtime dependencies**: Only uses Node.js built-in modules (`node:fs`, `node:path`, `node:crypto`, `node:child_process`, `node:os`, `node:util`).
 - **Portable metadata diagnostics**: Strict-decoding failures use repository-relative paths and never expose checkout-specific host paths.
+- **Collision-safe discovery**: Canonical package/program identities are unique;
+  duplicate diagnostics contain sorted repository-relative paths and never
+  expose the checkout root.
 - **Inline directed graph**: Rather than importing an external graph library, the resolver includes a minimal DirectedGraph implementation.
 - **ESM-only**: Uses ES modules throughout (`"type": "module"` in package.json).
 - **Literate programming**: All source files include extensive comments explaining concepts, algorithms, and design decisions.
