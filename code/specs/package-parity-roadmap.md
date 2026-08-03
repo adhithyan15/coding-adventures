@@ -226,13 +226,13 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
   succeeds across 4,765 packages and 7,100 edges;
-- bring the remaining Swift, TypeScript, Lua, Perl, Ruby, Elixir, and Haskell
+- bring the remaining TypeScript, Lua, Perl, Ruby, Elixir, and Haskell
   build-tool resolvers to the shared strict-UTF-8 rockspec contract.
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
   is tracked separately from the Python full-scan blocker. Merged PR #9504
   completed the Go operational-oracle child, and merged PR #9510 completed
-  Rust. The next dependency-shaped child is the Swift engine, whose failed
-  UTF-8 decode currently becomes an empty Lua dependency list;
+  Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
+  byte fixtures plus real CLI exit-2 coverage;
 - make Swift build-tool file options recognize Windows drive-letter absolute
   paths. The UTF-8 validation run discovered that `--emit-plan` reaches
   resolution but then joins an absolute Windows path under the repository;
@@ -240,8 +240,8 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
 - align Swift build-tool discovery with the canonical language and identity
   registry. Its full release plan currently emits 4,768 entries but only 4,594
   unique names, including 143 duplicate identity groups and 397 `unknown`
-  entries; consume the shared registry and duplicate-identity fixtures in a
-  separate post-UTF-8 slice;
+  entries. This is the selected post-UTF-8 child; consume the shared registry
+  and duplicate-identity fixtures without widening into file-option handling;
 - merged PR #9521 makes the Rust build tool reject resolver self-edges with a
   stable diagnostic and preserves distinct package/program identities for
   `elixir/grammar_tools`;

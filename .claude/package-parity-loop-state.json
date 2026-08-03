@@ -379,11 +379,11 @@
     {
       "id": "build-tool-swift-language-identity-registry",
       "title": "Bring Swift build-tool discovery to the canonical language and identity registry",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-swift-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-language-identity-registry",
       "pr_number": null,
-      "notes": "Discovered by the full-repository release-plan audit in the Swift UTF-8 slice and refreshed after rebasing onto 613717e2. The Swift engine emits 4,768 package entries but only 4,594 unique names: 143 identity groups contain 317 entries, and 397 entries across 228 names are classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding."
+      "notes": "Selected after merged PR #9537 and the collision-clean 80612eb7 inventory because the dependency is now satisfied and the last real Swift full plan measured broad identity corruption: 4,768 package entries but only 4,594 unique names, with 143 identity groups containing 317 entries and 397 entries across 228 names classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding and Windows file-option handling."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
