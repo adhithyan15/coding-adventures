@@ -244,6 +244,9 @@ increasing big-endian `u64` per direction. Length-prefixing variable fields
 prevents concatenation ambiguity. Including direction in AAD prevents an
 attacker from replaying a child's request as if it came from the
 orchestrator. Sequence exhaustion closes the channel rather than wrapping.
+Although the host record reserves a `u64`, V1 closes at the underlying Double
+Ratchet's `u32` message-counter limit; later versions may use the remaining wire
+range only if the cryptographic primitive can do so without an inner wrap.
 
 The Double Ratchet's internal counters and DH ratchet steps are managed by
 `vault-secure-channel`; this spec does not override them.
@@ -647,7 +650,7 @@ Rust implementation, matching the existing vault crates.
 // Channel handle (used by both orchestrator and child sides)
 // ─────────────────────────────────────────────────────────────────
 
-pub struct OrchestratorBootstrap { /* OIK + per-spawn OSPK */ }
+pub struct OrchestratorBootstrap<'a> { /* borrowed OIK + per-spawn OSPK */ }
 pub struct ChildBootstrap { /* per-spawn CIK */ }
 pub struct BootstrapOffer(Vec<u8>);
 pub struct ClientHello(Vec<u8>);
@@ -656,8 +659,8 @@ pub struct SecureHostChannel {
     /* opaque ratchet, role, host/session identity, and counters */
 }
 
-impl OrchestratorBootstrap {
-    pub fn new(identity: IdentityKeyPair, host: HostId, session: SessionId)
+impl<'a> OrchestratorBootstrap<'a> {
+    pub fn new(identity: &'a IdentityKeyPair, host: HostId, session: SessionId)
         -> Result<Self, ChannelError>;
     pub fn offer(&self) -> Result<BootstrapOffer, ChannelError>;
     pub fn accept(self, hello: &ClientHello)
