@@ -22,7 +22,7 @@ exact upstream commits used for the latest completed audit.
 ## Prioritized Queue
 
 The 2026-08-03 upstream audit at WPT
-`8a26b31d60d0f1831bb1711b7587ac125b8d2bf0` and html5lib-tests
+`a73cf1e91a6a95e4c5c39494d8fbfdab0b38cae1` and html5lib-tests
 `224991ec10db04f056a89eed8b0bd8695fd2950e` covered all 1,934 WPT
 tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
