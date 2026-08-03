@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C12-kudumbam
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 400
 chapter: 12
 type: word
 headword: അച്ഛൻ അമ്മ ചേട്ടൻ അനിയൻ ചേച്ചി അനിയത്തി
@@ -9,20 +12,34 @@ prerequisites: [ML-C11-nirangal]
 sounds: [malayalam-chillu-n, malayalam-geminate-tta]
 roots: [dravidian-age-graded-siblings]
 etymology_hook: "അച്ഛൻ achan/അമ്മ amma and ചേട്ടൻ/അനിയൻ/ചേച്ചി/അനിയത്തി look less like Tamil's set than Kannada/Telugu's do — but the age-before-gender sibling system still holds"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02]
+practises:
+  knowledge: [ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C11-nirangal]
 ---
 
 # അച്ഛൻ, അമ്മ, and four sibling words — Malayalam's own set
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam and Tamil share a great deal of their vocabulary — but
 family words are where Malayalam goes its own way further than you might
 expect, while still keeping the family's signature age-first sibling
 system.
 
-## Parents
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C12-KUDUMBAM-01]; assesses=[] -->
 
 - **അച്ഛൻ** (*acchan*) = "**father**" — a different form from Tamil's
   *appā*; **this word's own deeper origin is less settled** than the simple
@@ -30,7 +47,8 @@ system.
 - **അമ്മ** (*amma*) = "**mother**" — matches the family's shared *amma*
   pattern closely.
 
-## Four sibling words, age before gender — again
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C12-KUDUMBAM-02]; assesses=[] -->
 
 | Malayalam | meaning |
 |---|---|
@@ -47,6 +65,7 @@ the same signature pattern you've now seen across all four Dravidian
 languages, even where the specific words diverge.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "acchan, amma" — father, mother]
@@ -54,6 +73,7 @@ languages, even where the specific words diverge.
 - [YOU SAY: "cēcci, aniyatti" — older/younger sister]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
 [PAUSE 3s] Do Malayalam's sibling words closely match Tamil's? (**No** —
 Malayalam built its own distinct set (cēṭṭan/aniyan/cēcci/aniyatti), unlike

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C06-dative-subject
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 330
 chapter: 6
 type: phrase
 headword: എനിക്ക് മലയാളം അറിയാം
@@ -10,18 +13,32 @@ prerequisites: [ML-C06-dative-ikku, ML-C05-njaan-malayalam-samsaarikkunnu]
 sounds: [gemination-kk, retroflex-l]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking and wanting happen TO you rather than being done BY you — so 'I know Malayalam' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); aṟiyām is aṟiy- 'know' + the able-to ending -ām, so it is literally 'is knowable'; the same construction runs through Tamil, Telugu and Kannada with cousin suffixes"
-est_minutes: 4
+duration:
+  max_seconds: 294
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03]
+practises:
+  knowledge: [ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C06-dative-ikku, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C03-njaan]
 ---
 
 # എനിക്ക് മലയാളം അറിയാം — "I know Malayalam"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Chapter 5 gave you **ഞാൻ മലയാളം സംസാരിക്കുന്നു** — "**I** speak
 Malayalam." Now say "I **know** Malayalam." Malayalam will not let you use *ñān*.
 
-## The sentence
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-SUBJECT-01]; assesses=[] -->
 
 > **എനിക്ക് മലയാളം അറിയാം.**
 > *enikku malayāḷam aṟiyām.*
@@ -37,7 +54,8 @@ Malayalam." Now say "I **know** Malayalam." Malayalam will not let you use *ñā
 dative, and the sentence is now about the **language**. Malayalam isn't saying you
 perform an act of knowing — it's saying the language is knowable **to you**.
 
-## Why: things that happen *to* you
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-SUBJECT-02]; assesses=[] -->
 
 Malayalam separates what you **do** from what **happens to** you. Speaking is an
 action, so Ch. 5 used *ñān*. But knowing, liking, wanting, being hungry — these
@@ -52,7 +70,8 @@ action, so Ch. 5 used *ñān*. But knowing, liking, wanting, being hungry — th
 English preserves one fossil of exactly this: "**methinks**" — *me* is a dative,
 "it seems **to me**." Malayalam made it the rule.
 
-## All four sisters do it
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-SUBJECT-03]; assesses=[] -->
 
 | language | "I know [the language]" | the dative |
 |---|---|---|
@@ -67,6 +86,7 @@ shows. One construction, four languages, four visibly related suffixes: the
 Dravidian family showing its bones, as *blanc/bianco/branco* did for Romance.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*enikku malayāḷam aṟiyām*"]
@@ -75,6 +95,7 @@ Dravidian family showing its bones, as *blanc/bianco/branco* did for Romance.
 - [YOU SAY: the four cousins — "*-ikku · -ukku · -ku · -ge*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-CONCEPT-C06-DATIVE-SUBJECT-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03] -->
 
 [PAUSE 3s] What does **എനിക്ക് മലയാളം അറിയാം** literally say? ("**To-me** Malayalam
 **is-knowable**.") What has English got that Malayalam hasn't? (A nominative

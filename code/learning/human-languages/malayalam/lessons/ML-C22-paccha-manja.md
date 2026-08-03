@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C22-paccha-manja
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 520
 chapter: 22
 type: word
 headword: പച്ച, മഞ്ഞ
@@ -9,27 +12,42 @@ prerequisites: [ML-C11-nirangal, ML-C21-naaya-poocha]
 sounds: [malayalam-chillu-l, malayalam-virama-geminate]
 roots: [proto-dravidian-pac-green, dravidian-mancal-turmeric]
 etymology_hook: "പച്ച (paccha, 'green') ← Proto-Dravidian *pac-, matching Tamil's பச்சை (paccai) almost exactly; മഞ്ഞ (mañña, 'yellow') is a doublet of മഞ്ഞൾ (maññaḷ, 'turmeric'), from a SEPARATE native Dravidian root matching Tamil's மஞ்சள் (mañcaḷ) — unlike Telugu, where green and yellow are doublets of ONE root, Malayalam's green and yellow are two independent native Dravidian word-families that happen to sit side by side"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02]
+practises:
+  knowledge: [ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C21-naaya-poocha]
 ---
 
 # പച്ച, മഞ്ഞ — matching Tamil twice over, by two different routes
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Telugu's green and yellow turned out to be one word wearing two
 faces. Malayalam's green and yellow are a different story again — two
 completely separate native words, each one matching Tamil closely, just not
 matching *each other*.
 
-## പച്ച — the familiar pan-Dravidian green
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C22-PACCHA-MANJA-01]; assesses=[] -->
 
 **പച്ച** (**paccha**, "**green**") comes from **Proto-Dravidian** ***\*pac-***
 — matching **Tamil**'s **பச்சை** (*paccai*) almost exactly, and the same
 root already seen in Kannada's *hasiru* and Telugu's *pacca*. No surprises
 here; this is the familiar family from the last two lessons.
 
-## മഞ്ഞ — a separate native root, matching Tamil's manjal-family
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C22-PACCHA-MANJA-02]; assesses=[] -->
 
 **മഞ്ഞ** (**mañña**, "**yellow**") is a **doublet** of **മഞ്ഞൾ**
 (**maññaḷ**, "**turmeric**") — but this is a **completely different**
@@ -43,6 +61,7 @@ single pattern holds across all three languages — the honest answer is that
 each solved "green vs. yellow" its own way.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "പച്ച" — green, matching Tamil paccai]
@@ -52,6 +71,7 @@ each solved "green vs. yellow" its own way.
   unlike Telugu's pacca/pasupu]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C22-PACCHA-MANJA-01, ML-CONCEPT-C22-PACCHA-MANJA-02] -->
 
 [PAUSE 3s] Does **മഞ്ഞ** (*mañña*, "yellow") share a root with **പച്ച**
 (*paccha*, "green")? (**No** — they are two separate native Dravidian

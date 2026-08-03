@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C10-azhcha
+spine_node: SPINE-TIME-OF-DAY
+sequence: 380
 chapter: 10
 type: word
 headword: തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ
@@ -9,19 +12,33 @@ prerequisites: [ML-C09-kshamikkanam]
 sounds: [malayalam-zha, malayalam-nya]
 roots: [dravidian-native-planet-words, sanskrit-planet-words]
 etymology_hook: "Malayalam's week-word ആഴ്ച āzhcha and several planet-names (thiṅkaḷ, veḷḷi, ñāyar) are near-identical to Tamil's — the two split apart only centuries ago"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02]
+practises:
+  knowledge: [ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C09-kshamikkanam]
 ---
 
 # തിങ്കൾ to ഞായർ — the week Malayalam shares with Tamil
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam and Tamil are close cousins — they were once, long ago,
 the same language — and nowhere does that show more clearly than in the
 words for the days of the week.
 
-## The pattern: [planet] + ആഴ്ച, "day/week"
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C10-AZHCHA-01]; assesses=[] -->
 
 | Malayalam | planet-word | meaning | compare Tamil |
 |---|---|---|---|
@@ -33,7 +50,8 @@ words for the days of the week.
 | **ശനിയാഴ്ച** | *śani* | **Saturn** | Sanskrit **Śani**, same as Tamil *saṉi* |
 | **ഞായറാഴ്ച** | *ñāyar* | "**Sun**" | *ñāyiṟu* — the same root |
 
-## Be honest about the family resemblance
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C10-AZHCHA-02]; assesses=[] -->
 
 This is the closest family match you'll see across this whole course:
 **thiṅkaḷ/thiṅgaḷ**, **veḷḷi/veḷḷi**, and **ñāyar/ñāyiṟu** are essentially
@@ -48,6 +66,7 @@ Malayalam mixes **native** planet-words (Moon, Mars, Venus, Sun) with
 the same shared ancestor language.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "thiṅkaḷ" — moon — then "āzhcha," day/week]
@@ -57,6 +76,7 @@ the same shared ancestor language.
   Saturn]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02] -->
 
 [PAUSE 3s] Why do Malayalam and Tamil's day-names look so alike? (**They were
 the same language until roughly a thousand years ago.**) Which planet-names

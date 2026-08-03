@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C26-raavile
+spine_node: SPINE-TIME-OF-DAY
+sequence: 580
 chapter: 26
 type: word
 headword: രാവിലെ
@@ -9,19 +12,33 @@ prerequisites: [ML-C24-native-night-words]
 sounds: [malayalam-vowel-sign-e, malayalam-virama-va]
 roots: [proto-dravidian-cira-darkness, sanskrit-prabhata-shine]
 etymology_hook: "രാവിലെ (rāvile, 'morning') is, per Wiktionary, a compound of രാവ് (rāvŭ) + -il + -e; രാവ് is confirmed cognate with Tamil ரா/இரவு and shares its Proto-Dravidian *cira ('darkness') root with ഇരവ് (iravŭ), already met in ML-C24 as a literary register synonym for 'night' — a cognate doublet, not literally the same word — meaning Malayalam's everyday 'morning' word is, transparently, built from NIGHT plus locative suffixes, not from light or rising; hedge the exact semantic mechanism (why 'at night' shifted to mean 'morning') since no source spells out the intermediate step, but the morphological composition itself is Wiktionary-confirmed; two alternatives exist too: പ്രഭാതം (prabhātaṁ), a Sanskrit tatsama sharing its root, prabhāta ('shine, become bright'), with Telugu's own సుప్రభాతం (TE-C29) — a genuine cross-language callback within this very arc — and പുലർച്ച (pulaṟcca), native Dravidian but with a thinner, less certain etymology (a Starling-database entry links it to a 'subsist/live' sense that may or may not be the same root as 'dawn,' so treat that connection as unconfirmed, not settled)"
-est_minutes: 4
+duration:
+  max_seconds: 299
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C26-RAAVILE-01, ML-CONCEPT-C26-RAAVILE-02, ML-CONCEPT-C26-RAAVILE-03]
+practises:
+  knowledge: [ML-CONCEPT-C26-RAAVILE-01, ML-CONCEPT-C26-RAAVILE-02, ML-CONCEPT-C26-RAAVILE-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C24-native-night-words, ML-C24-rathri]
 ---
 
 # രാവിലെ (rāvile) — "morning," built from "night"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Kannada's morning word means "the shining." Telugu's means
 "rise." Malayalam's most common morning word means something stranger
 on its face: night.
 
-## രാവിലെ — night, plus place, somehow becomes morning
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C26-RAAVILE-01]; assesses=[] -->
 
 **രാവിലെ** (**rāvile**) — "**morning**" — is, per Wiktionary, a
 compound: **രാവ്** (*rāvŭ*) plus the suffixes **-il** and **-e**.
@@ -36,7 +53,8 @@ plus locative-ish suffixes — not from light, dawn, or rising, the
 strategies Kannada's **ಬೆಳಗ್ಗೆ** ("the shining") and Telugu's
 **ఉదయం** (Sanskrit "rise") both reach for instead.
 
-## Be honest: the compound is confirmed, the exact shift isn't explained
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C26-RAAVILE-02]; assesses=[] -->
 
 No source spells out **why** "at/in the night" came to mean
 "morning" specifically — it's a plausible semantic path (perhaps
@@ -46,7 +64,8 @@ confirmed (Wiktionary is explicit about the rāvŭ+il+e breakdown); treat
 the **semantic mechanism** as a reasonable but unconfirmed inference,
 not a settled fact.
 
-## Two alternatives — one with a striking callback, one thinly sourced
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C26-RAAVILE-03]; assesses=[] -->
 
 Malayalam keeps two other words for "morning" too. **പ്രഭാതം**
 (*prabhātaṁ*) is a Sanskrit **tatsama** sharing its root — **prabhāta**,
@@ -59,6 +78,7 @@ which may or may not be the same root behind its "dawn" sense — treat
 that specific connection as unconfirmed, not settled.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C26-RAAVILE-01, ML-CONCEPT-C26-RAAVILE-02, ML-CONCEPT-C26-RAAVILE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rāvile" — "morning," built from rāvŭ ("night") + locative
@@ -68,6 +88,7 @@ that specific connection as unconfirmed, not settled.
 - [YOU SAY: prabhātaṁ — same Sanskrit root as Telugu's suprabhātam]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C26-RAAVILE-01, ML-CONCEPT-C26-RAAVILE-02, ML-CONCEPT-C26-RAAVILE-03] -->
 
 [PAUSE 3s] What is രാവിലെ literally built from? (**രാവ്** —
 "night" — plus locative suffixes -il/-e; a cognate doublet, same

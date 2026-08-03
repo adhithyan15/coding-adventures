@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C07-numbers-6-10
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 350
 chapter: 7
 type: word
 headword: ആറ് ഏഴ് എട്ട് ഒമ്പത് പത്ത്
@@ -9,18 +12,32 @@ prerequisites: [ML-C07-numbers-1-5]
 sounds: [malayalam-inherent-a, chandrakkala, zha-llla]
 roots: [proto-dravidian-numbers]
 etymology_hook: "seven ēḻu keeps the rare ḻ that Kannada hardened to ḷ and Telugu to ḍ — Malayalam and Tamil alone preserve it"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03]
+practises:
+  knowledge: [ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C07-numbers-1-5, ML-C01-namaskaram]
 ---
 
 # ആറ്, ഏഴ്, എട്ട്, ഒമ്പത്, പത്ത് — six to ten
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam holds onto a Tamil sound the other cousins let go — and
 you'll hear it in seven.
 
-## The five
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-6-10-01]; assesses=[] -->
 
 | | numeral | word | said |
 |---|---|---|---|
@@ -30,7 +47,8 @@ you'll hear it in seven.
 | 9 | **൯** | **ഒമ്പത്** | *ompatu* |
 | 10 | **൰** | **പത്ത്** | *pattu* |
 
-## Seven keeps the rare sound
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-6-10-02]; assesses=[] -->
 
 Watch **seven** travel across the three sister scripts:
 
@@ -48,7 +66,8 @@ letters ഴ *ḻ* and ള *ḷ* are worth keeping apart.) Six (*āṟu*), eight 
 and ten (*pattu*) are likewise almost letter-for-letter Tamil: this is the
 closest of all the cousin-columns.
 
-## Nine, written with an m
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-6-10-03]; assesses=[] -->
 
 **Nine** comes, exactly as in Tamil, from the old *oṉ* ("one") + *patu* ("ten")
 — one short of ten. But before the *p*, the *n* shifts to an **m**: so the
@@ -56,6 +75,7 @@ underlying *oṉpatu* is both **written ഒമ്പത്** and **said *ompatu*
 "onpatu" fast and you'll do it yourself). Kannada does the same in *ombattu*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āṟu, ēḻu, eṭṭu, onpatu, pattu"]
@@ -63,6 +83,7 @@ underlying *oṉpatu* is both **written ഒമ്പത്** and **said *ompatu*
 - [YOU SAY: nine taken apart — "oṉ + patu → ompatu", one short of ten]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 3s] Count six to ten in Malayalam. (*Āṟu, ēḻu, eṭṭu, onpatu, pattu*.)
 Which sister languages keep Tamil's rare **ḻ** in *seven*, and which hardened it?

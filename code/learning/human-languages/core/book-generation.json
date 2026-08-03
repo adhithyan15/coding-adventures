@@ -16,6 +16,14 @@
       { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
       { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "malayalam-comparisons": [
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
     ]
   },
   "targets": [
@@ -800,6 +808,214 @@
       "label": "ch:ka-good-afternoon",
       "output": "kannada/book/chapters/ch31-good-afternoon.tex",
       "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ml-dative-case",
+      "output": "malayalam/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ml-numbers-one-to-ten",
+      "output": "malayalam/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ml-please",
+      "output": "malayalam/book/chapters/ch08-please.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ml-sorry",
+      "output": "malayalam/book/chapters/ch09-sorry.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ml-days-of-the-week",
+      "output": "malayalam/book/chapters/ch10-days.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:ml-core-colours",
+      "output": "malayalam/book/chapters/ch11-colours.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ml-family",
+      "output": "malayalam/book/chapters/ch12-family.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:ml-head-and-hand",
+      "output": "malayalam/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ml-seasons",
+      "output": "malayalam/book/chapters/ch14-seasons.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ml-water-and-rice",
+      "output": "malayalam/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:ml-traditional-months",
+      "output": "malayalam/book/chapters/ch16-months.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ml-noon-and-midnight",
+      "output": "malayalam/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ml-telling-time",
+      "output": "malayalam/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ml-asking-age",
+      "output": "malayalam/book/chapters/ch19-age.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ml-numbers-and-weather",
+      "output": "malayalam/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ml-dog-and-cat",
+      "output": "malayalam/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ml-green-and-yellow",
+      "output": "malayalam/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ml-day",
+      "output": "malayalam/book/chapters/ch23-day.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ml-night",
+      "output": "malayalam/book/chapters/ch24-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ml-good-night",
+      "output": "malayalam/book/chapters/ch25-good-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ml-morning",
+      "output": "malayalam/book/chapters/ch26-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ml-evening",
+      "output": "malayalam/book/chapters/ch27-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ml-afternoon",
+      "output": "malayalam/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ml-good-morning",
+      "output": "malayalam/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ml-good-evening",
+      "output": "malayalam/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ml-good-afternoon",
+      "output": "malayalam/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
     },
     {
       "language": "bengali",
