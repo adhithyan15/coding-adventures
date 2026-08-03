@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Fragment parsing now reports the in-body EOF parse error for authored
+  disallowed open elements while excluding synthetic context-shell nodes,
+  closing 54 previously silent malformed corpus cases without changing DOM
+  recovery or diagnostics for empty contexts.
 - Rejected `frameset` start tags after an explicit body or body-incompatible
   content now report the Standard's in-body parse error without changing DOM
   recovery, closing 39 previously silent malformed corpus cases.
