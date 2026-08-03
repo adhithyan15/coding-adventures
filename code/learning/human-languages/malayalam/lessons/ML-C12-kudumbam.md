@@ -9,7 +9,7 @@ prerequisites: [ML-C11-nirangal]
 sounds: [malayalam-chillu-n, malayalam-geminate-tta]
 roots: [dravidian-age-graded-siblings]
 etymology_hook: "അച്ഛൻ achan/അമ്മ amma and ചേട്ടൻ/അനിയൻ/ചേച്ചി/അനിയത്തി look less like Tamil's set than Kannada/Telugu's do — but the age-before-gender sibling system still holds"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C11-nirangal]
 ---
 

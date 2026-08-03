@@ -9,7 +9,7 @@ prerequisites: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-hna]
 roots: [sanskrit-shubha-beautiful, sanskrit-saya-end]
 etymology_hook: "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ, 'good evening') is confirmed real by a directly-fetched source (preply.com), used 'from late afternoon until sunset' — built on ശുഭ (ML-C25, already verified PIE *ḱewbʰ- root, shared with Hindi/Kannada/Telugu) plus സായാഹ്നം (sāyāhnaṁ, 'evening, eventide'); be honest about a genuine surprise: this is NOT built on ML-C27's native വൈകുന്നേരം at all — സായാഹ്നം is a SEPARATE word, a Sanskrit tatsama that Wiktionary's own part-of-speech label calls 'poetic' (a real, citable register signal, not an unverifiable blog claim, that this greeting likely skews formal/literary); a Sanskrit dictionary page confirms സായാഹ്നം is a karmadhāraya compound of साय ('end') + अह्न ('day'), and Wiktionary's own separate साय entry directly confirms साय traces to PIE *seh₁- ('long, lasting'), explicitly listing सायम् (sāyam, TE-C27's own root), Latin sērus, and Gothic seiþus as cognates — meaning സായാഹ്നം's root and Telugu's TE-C27 సాయంత్రం (built on sāyam) share a genuinely, properly-verified common PIE ancestor, not just a plausible guess; a claim that ordinary Malayalis rarely say this phrase, favoring നമസ്കാരം instead, could NOT be independently verified (the pages making that claim returned 403 errors) — so it is deliberately NOT asserted here, only the Wiktionary 'poetic' register label, which IS independently verifiable"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 ---
 

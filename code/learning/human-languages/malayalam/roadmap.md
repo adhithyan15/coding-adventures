@@ -11,6 +11,11 @@ Tamil-like native core and its heavy Sanskrit overlay. The Malayalam script is
 taught **inline**, never as a gated reading course; grammar is introduced piece
 by piece, on the first word that needs it.
 
+Coverage note: canonical lessons now continue through Chapter 31, while the
+narrative sequence below is complete only through Chapter 6. `HL-M04` tracks
+bringing this roadmap and the session map up to the canonical prerequisite
+order; `HL-B26` tracks publishing Chapters 6–31 from the same source.
+
 ## Authored
 
 - **Ch. 1 — Greetings**: namaskāram → nandi → athe → illa → śari → practice.

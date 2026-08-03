@@ -9,7 +9,7 @@ prerequisites: [ML-C19-vayassu]
 sounds: [malayalam-virama-final, malayalam-vowel-sign-i]
 roots: [dravidian-pathu-ten, dravidian-iru-two]
 etymology_hook: "പതിനൊന്ന്-പത്തൊമ്പത് (11-19) echo പത്ത് (pathu, 'ten') + a digit — ഇരുപത് (irupathu, 'twenty') is transparently 'two-tens', ഇരു (iru, an older word for 'two') + പത്ത് (pathu, 'ten') — matching Tamil's own irupathu almost exactly, both languages keeping this compound visibly transparent where Telugu's has worn down further"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C19-vayassu]
 ---
 

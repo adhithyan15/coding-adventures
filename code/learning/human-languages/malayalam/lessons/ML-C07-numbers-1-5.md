@@ -9,7 +9,7 @@ prerequisites: [ML-C01-namaskaram]
 sounds: [malayalam-inherent-a, chandrakkala, gemination]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Malayalam split from Tamil ~1000 years ago — its numbers are the family's closest, and even ONE agrees (onnu ↔ oṉṟu)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C01-namaskaram]
 ---
 

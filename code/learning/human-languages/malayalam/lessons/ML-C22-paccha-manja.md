@@ -9,7 +9,7 @@ prerequisites: [ML-C11-nirangal, ML-C21-naaya-poocha]
 sounds: [malayalam-chillu-l, malayalam-virama-geminate]
 roots: [proto-dravidian-pac-green, dravidian-mancal-turmeric]
 etymology_hook: "പച്ച (paccha, 'green') ← Proto-Dravidian *pac-, matching Tamil's பச்சை (paccai) almost exactly; മഞ്ഞ (mañña, 'yellow') is a doublet of മഞ്ഞൾ (maññaḷ, 'turmeric'), from a SEPARATE native Dravidian root matching Tamil's மஞ்சள் (mañcaḷ) — unlike Telugu, where green and yellow are doublets of ONE root, Malayalam's green and yellow are two independent native Dravidian word-families that happen to sit side by side"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C21-naaya-poocha]
 ---
 

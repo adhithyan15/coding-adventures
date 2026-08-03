@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [ML-C03-sukhamaano, ML-C03-sukham, ML-C03-saaramilla]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C03-engane, ML-C03-sukhamaano, ML-C03-njaan, ML-C03-sukham, ML-C03-saaramilla]
 ---
 

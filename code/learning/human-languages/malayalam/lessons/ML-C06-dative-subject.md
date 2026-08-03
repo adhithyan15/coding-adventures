@@ -10,7 +10,7 @@ prerequisites: [ML-C06-dative-ikku, ML-C05-njaan-malayalam-samsaarikkunnu]
 sounds: [gemination-kk, retroflex-l]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking and wanting happen TO you rather than being done BY you — so 'I know Malayalam' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); aṟiyām is aṟiy- 'know' + the able-to ending -ām, so it is literally 'is knowable'; the same construction runs through Tamil, Telugu and Kannada with cousin suffixes"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C06-dative-ikku, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C03-njaan]
 ---
 

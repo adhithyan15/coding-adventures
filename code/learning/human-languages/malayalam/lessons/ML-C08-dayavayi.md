@@ -9,7 +9,7 @@ prerequisites: [ML-C01-athe]
 sounds: [malayalam-vowel-sign-aa, malayalam-vowel-sign-i, malayalam-va]
 roots: [daya-compassion]
 etymology_hook: "ദയവായി = 'as a compassion' — Malayalam asks please with daya, like Tamil, Kannada, Telugu, Arabic faḍl and Hindi kṛpā"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C01-athe]
 ---
 

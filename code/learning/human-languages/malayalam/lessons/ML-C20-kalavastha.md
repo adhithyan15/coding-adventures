@@ -9,7 +9,7 @@ prerequisites: [ML-C18-mani]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-stha]
 roots: [sanskrit-kaala-time, sanskrit-avastha-state]
 etymology_hook: "കാലാവസ്ഥ (kālāvastha, 'weather') is a Sanskrit compound literally meaning 'state of TIME' — കാലം (kālam, 'time') + അവസ്ഥ (avastha, 'state, condition') — echoing Spanish's tiempo (which means BOTH 'time' and 'weather' in one word) but built as a compound rather than a single polysemous word"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C18-mani]
 ---
 

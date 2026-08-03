@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [ML-C01-namaskaram, ML-C01-nandi, ML-C01-athe, ML-C01-illa, ML-C01-sari]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C01-namaskaram, ML-C01-nandi, ML-C01-athe, ML-C01-illa, ML-C01-sari]
 ---
 

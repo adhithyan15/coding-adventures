@@ -9,7 +9,7 @@ prerequisites: [ML-C08-dayavayi]
 sounds: [malayalam-conjunct-kssa, malayalam-geminate-kka]
 roots: [kshama-sanskrit]
 etymology_hook: "ക്ഷമിക്കണം kṣamikkaṇaṁ ← Sanskrit kṣama 'forgiveness' + Malayalam verb-making -ikkuka + the SAME necessitative -aṇaṁ noted in ദയവായി's lesson"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C08-dayavayi]
 ---
 

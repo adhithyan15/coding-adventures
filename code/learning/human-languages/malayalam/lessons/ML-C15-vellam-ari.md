@@ -9,7 +9,7 @@ prerequisites: [ML-C14-kaalangal]
 sounds: [malayalam-geminate-lla, malayalam-vowel-sign-oo]
 roots: [vellam-flood-white, ari-rice-dravidian]
 etymology_hook: "വെള്ളം vellam (water) does NOT match Tamil's neer/thanneer — it shares the veL- 'bright/white' root already met in Malayalam's word for silver/Venus, originally meaning 'flood'; അരി ari (rice) DOES match Tamil's arisi closely"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C14-kaalangal]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [ML-C07-numbers-1-5]
 sounds: [malayalam-inherent-a, chandrakkala, zha-llla]
 roots: [proto-dravidian-numbers]
 etymology_hook: "seven ēḻu keeps the rare ḻ that Kannada hardened to ḷ and Telugu to ḍ — Malayalam and Tamil alone preserve it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C07-numbers-1-5, ML-C01-namaskaram]
 ---
 
