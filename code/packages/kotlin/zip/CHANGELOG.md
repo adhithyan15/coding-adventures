@@ -20,6 +20,30 @@
   file("gradle-build")` before the `plugins` block, avoiding the known
   `build/` vs `BUILD` case-insensitive filesystem collision.
 
+### Security
+
+- Hardened `ZipReader` against a crafted/malicious Central Directory (which is
+  unauthenticated — no signature covers it). Every offset/size field parsed
+  from the CD or EOCD (`local_offset`, `compressed_size`, `uncompressed_size`,
+  `cd_offset`, `cd_size`) is a logically-unsigned 32-bit wire value that
+  `readU32` reinterprets as a signed Kotlin `Int` with no prior validation.
+  Without checks, a crafted archive could make these values negative or
+  cause 32-bit `Int` arithmetic to overflow past a `data.size` bounds check,
+  reaching `ByteArray` indexing/allocation and throwing an uncaught
+  `ArrayIndexOutOfBoundsException` / `NegativeArraySizeException` /
+  `IllegalArgumentException` instead of the documented `IOException` (JVM
+  array bounds checking means this was never memory-unsafe, but it broke the
+  API's error-handling contract and is a DoS/availability risk for callers
+  that only catch `IOException`, per the KDoc). Fixed by:
+  - Rejecting negative `cd_offset`/`cd_size` and computing the CD bounds
+    check in `Long` before comparing against `data.size`.
+  - Requiring the full 46-byte fixed Central Directory record to be present
+    (not just its 4-byte signature) before reading any other field.
+  - Rejecting negative `local_offset`/`compressed_size`/`uncompressed_size`
+    in `readEntry()`, and validating the Local Header offset and the
+    computed data range in `Long` before slicing `data`.
+  - Added TC-SEC01..05 regression tests covering each of the above.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

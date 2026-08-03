@@ -952,12 +952,19 @@ class ZipReader(private val data: ByteArray) {
             ?: throw IOException("zip: no End of Central Directory record found")
 
         // Read EOCD fields: cd_size at +12, cd_offset at +16.
+        // These are logically *unsigned* 32-bit wire fields, but readU32() reinterprets
+        // them as signed Kotlin Int — a crafted archive can set the high bit to make
+        // either value negative. Reject negative values and do the bounds arithmetic in
+        // Long so a near-Int.MAX_VALUE sum can't silently wrap around and slip past the
+        // check (a wrapped Int sum could come out <= data.size even though the "real"
+        // unsigned CD region lies far outside the buffer).
         val cdOffset = readU32(data, eocdOffset + 16)
         val cdSize = readU32(data, eocdOffset + 12)
+        val cdEnd = cdOffset.toLong() + cdSize.toLong()
 
-        if (cdOffset + cdSize > data.size) {
+        if (cdOffset < 0 || cdSize < 0 || cdEnd > data.size) {
             throw IOException(
-                "zip: Central Directory [$cdOffset, ${cdOffset + cdSize}) out of bounds (file size ${data.size})"
+                "zip: Central Directory [$cdOffset, $cdEnd) out of bounds (file size ${data.size})"
             )
         }
 
@@ -967,6 +974,14 @@ class ZipReader(private val data: ByteArray) {
         while (pos + 4 <= cdOffset + cdSize) {
             val sig = readU32(data, pos)
             if (sig != CD_SIG) break  // end of CD or padding
+
+            // The loop guard above only proves 4 bytes (the signature) are available.
+            // The fixed-size portion of a CD record is 46 bytes — require all of it to
+            // be present (and within the declared CD region) before reading any other
+            // field, otherwise a truncated/malicious record can read past `data`.
+            if (pos + 46 > cdEnd || pos + 46 > data.size) {
+                throw IOException("zip: truncated Central Directory record at offset $pos")
+            }
 
             val method = readU16(data, pos + 10).toShort()
             val crc = readU32(data, pos + 16)
@@ -1023,7 +1038,27 @@ class ZipReader(private val data: ByteArray) {
     private fun readEntry(m: ZipEntryMeta): ByteArray {
         if (m.isDirectory) return ByteArray(0)
 
+        // `local_offset`, `compressed_size`, and `uncompressed_size` are all read
+        // straight from the (unauthenticated) Central Directory — they are logically
+        // unsigned 32-bit wire fields but come back as signed Kotlin Int. Reject
+        // negative values up front so a crafted 0xFFFFFFFF-style field can't reach
+        // array indexing / allocation below as -1 and trigger an uncaught
+        // ArrayIndexOutOfBoundsException / NegativeArraySizeException instead of the
+        // documented IOException.
+        if (m.localOffset < 0 || m.compressedSize < 0 || m.uncompressedSize < 0) {
+            throw IOException(
+                "zip: entry '${m.name}' has an invalid negative offset/size " +
+                "(local_offset=${m.localOffset}, compressed_size=${m.compressedSize}, " +
+                "uncompressed_size=${m.uncompressedSize})"
+            )
+        }
+
         val lhOff = m.localOffset
+
+        // The 30-byte fixed Local File Header must fit before we read any field of it.
+        if (lhOff.toLong() + 30 > data.size) {
+            throw IOException("zip: entry '${m.name}' local header offset $lhOff out of bounds")
+        }
 
         // Reject encrypted entries (GP flag bit 0 = 1).
         val localFlags = readU16(data, lhOff + 6)
@@ -1033,16 +1068,21 @@ class ZipReader(private val data: ByteArray) {
 
         // The Local Header name_len and extra_len can differ from the CD header,
         // so we must re-read them to find the actual start of the file data.
+        // Compute the data range in Long first: lhOff/compressedSize are both
+        // attacker-controlled, and plain Int arithmetic could wrap around and slip
+        // past a `dataEnd > data.size` check performed in 32-bit space.
         val lhNameLen = readU16(data, lhOff + 26)
         val lhExtraLen = readU16(data, lhOff + 28)
-        val dataStart = lhOff + 30 + lhNameLen + lhExtraLen
-        val dataEnd = dataStart + m.compressedSize
+        val dataStartL = lhOff.toLong() + 30 + lhNameLen + lhExtraLen
+        val dataEndL = dataStartL + m.compressedSize
 
-        if (dataEnd > data.size) {
+        if (dataEndL > data.size) {
             throw IOException(
-                "zip: entry '${m.name}' data [$dataStart, $dataEnd) out of bounds"
+                "zip: entry '${m.name}' data [$dataStartL, $dataEndL) out of bounds"
             )
         }
+        val dataStart = dataStartL.toInt()
+        val dataEnd = dataEndL.toInt()
 
         val compressed = data.copyOfRange(dataStart, dataEnd)
 
@@ -1056,6 +1096,7 @@ class ZipReader(private val data: ByteArray) {
         }
 
         // Trim to declared uncompressed size (guards against decompressor over-read).
+        // m.uncompressedSize was validated non-negative above.
         val trimmed = if (decompressed.size > m.uncompressedSize) {
             decompressed.copyOf(m.uncompressedSize)
         } else {

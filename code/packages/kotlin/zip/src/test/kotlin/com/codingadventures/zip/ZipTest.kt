@@ -16,7 +16,10 @@
  *   TC-11  Nested paths
  *   TC-12  Empty archive
  *
- * Additional unit tests cover CRC-32, DEFLATE internals, and ZipArchive helpers.
+ * Additional unit tests cover CRC-32, DEFLATE internals, and ZipArchive helpers,
+ * plus TC-SEC01..05 which harden against crafted Central Directory fields
+ * (negative/overflowing offsets and sizes, truncated records) raising a clean
+ * IOException instead of an uncaught runtime exception.
  */
 package com.codingadventures.zip
 
@@ -352,5 +355,100 @@ class ZipTest {
         val dt = dosDt(1980, 1, 1, 0, 0, 0)
         assertEquals(33, dt ushr 16)    // date field
         assertEquals(0, dt and 0xFFFF)  // time field
+    }
+
+    // =========================================================================
+    // Malformed-archive hardening: crafted Central Directory fields must raise
+    // IOException, not an uncaught ArrayIndexOutOfBoundsException /
+    // NegativeArraySizeException / IllegalArgumentException. The Central
+    // Directory is unauthenticated (no signature over it), so every offset/size
+    // field in it must be treated as attacker-controlled input.
+    // =========================================================================
+
+    // A single Stored ("f.txt" -> "test") entry has a fixed, easy-to-compute layout:
+    //   Local Header: 30 fixed + 5 (name) = 35 bytes; data "test" = 4 bytes -> CD starts at 39.
+    //   CD record:    46 fixed + 5 (name) = 51 bytes -> CD field offsets below are relative to 39.
+    private fun malformedSingleFileArchive(): ByteArray {
+        val w = ZipWriter()
+        w.addFile("f.txt", "test".toByteArray(), compress = false)
+        return w.finish()
+    }
+
+    private val cdStart = 39                 // Local Header (35) + data (4)
+    private val cdCompressedSizeOff = cdStart + 20
+    private val cdUncompressedSizeOff = cdStart + 24
+    private val cdLocalOffsetOff = cdStart + 42
+
+    private fun setU32(bytes: ByteArray, offset: Int, value: Int) {
+        bytes[offset] = (value and 0xFF).toByte()
+        bytes[offset + 1] = ((value ushr 8) and 0xFF).toByte()
+        bytes[offset + 2] = ((value ushr 16) and 0xFF).toByte()
+        bytes[offset + 3] = ((value ushr 24) and 0xFF).toByte()
+    }
+
+    @Test
+    fun `TC-SEC01 negative local_offset in Central Directory raises IOException`() {
+        val archive = malformedSingleFileArchive()
+        // 0xFFFFFFFF is a plausible-looking large *unsigned* offset that decodes to -1
+        // as a signed Int — must not reach array indexing unchecked.
+        setU32(archive, cdLocalOffsetOff, -1)
+
+        val ex = assertThrows<IOException> {
+            ZipReader(archive).read("f.txt")
+        }
+        assertTrue(ex.message?.contains("invalid negative") == true, "got: ${ex.message}")
+    }
+
+    @Test
+    fun `TC-SEC02 negative compressed_size in Central Directory raises IOException`() {
+        val archive = malformedSingleFileArchive()
+        setU32(archive, cdCompressedSizeOff, -1)
+
+        val ex = assertThrows<IOException> {
+            ZipReader(archive).read("f.txt")
+        }
+        assertTrue(ex.message?.contains("invalid negative") == true, "got: ${ex.message}")
+    }
+
+    @Test
+    fun `TC-SEC03 negative uncompressed_size in Central Directory raises IOException`() {
+        val archive = malformedSingleFileArchive()
+        setU32(archive, cdUncompressedSizeOff, -1)
+
+        val ex = assertThrows<IOException> {
+            ZipReader(archive).read("f.txt")
+        }
+        assertTrue(ex.message?.contains("invalid negative") == true, "got: ${ex.message}")
+    }
+
+    @Test
+    fun `TC-SEC04 huge cd_size in EOCD raises IOException instead of overflowing`() {
+        val archive = malformedSingleFileArchive()
+        // EOCD is the last 22 bytes; cd_size is at EOCD offset +12.
+        val eocdOffset = archive.size - 22
+        // A value near Int.MAX_VALUE that, added to a small cd_offset using naive
+        // 32-bit Int arithmetic, could wrap around and slip past a `sum > data.size`
+        // bounds check. The fix validates in Long, so this must be rejected cleanly.
+        setU32(archive, eocdOffset + 12, Int.MAX_VALUE - 4)
+
+        val ex = assertThrows<IOException> {
+            ZipReader(archive)
+        }
+        assertTrue(ex.message?.contains("out of bounds") == true, "got: ${ex.message}")
+    }
+
+    @Test
+    fun `TC-SEC05 truncated Central Directory record raises IOException`() {
+        // Build an archive whose EOCD claims a cd_size far too small to hold a full
+        // 46-byte fixed CD record, but which still starts with a valid signature —
+        // i.e. the record is truncated mid-header rather than absent entirely.
+        val archive = malformedSingleFileArchive()
+        val eocdOffset = archive.size - 22
+        setU32(archive, eocdOffset + 12, 10) // cd_size = 10 (< 46-byte fixed header)
+
+        val ex = assertThrows<IOException> {
+            ZipReader(archive)
+        }
+        assertTrue(ex.message?.contains("truncated") == true, "got: ${ex.message}")
     }
 }
