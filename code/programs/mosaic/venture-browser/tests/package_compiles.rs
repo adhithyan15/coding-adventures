@@ -203,6 +203,26 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     ] {
         assert!(host.contains(symbol), "XAML host omits {symbol}");
     }
+    let hover_acceptance = host
+        .split("internal bool RunHoverAcceptance(string linkUrl)")
+        .nth(1)
+        .and_then(|source| source.split("internal async").next())
+        .expect("extract WinUI hover acceptance");
+    assert!(
+        hover_acceptance.contains("HandleKey(VirtualKey.Home")
+            && hover_acceptance.contains("UpdateHoverAt"),
+        "WinUI must reset the shared viewport before checking the top-of-document link"
+    );
+    let pointer_acceptance = host
+        .split("internal bool RunPointerAcceptance()")
+        .nth(1)
+        .and_then(|source| source.split("internal bool RunHoverAcceptance").next())
+        .expect("extract WinUI pointer acceptance");
+    assert!(
+        pointer_acceptance.contains("ActivateSurfacePoint")
+            && !pointer_acceptance.contains("HandleKey(VirtualKey.Home"),
+        "WinUI click acceptance must reuse the viewport position established by hover"
+    );
     let swift_host = read_package_file("host/swiftui/MosaicHost.swift");
     let xaml_host = read_package_file("host/xaml/MosaicHost.cs");
     for command in venture_browser_core::VENTURE_SCROLL_COMMAND_NAMES {

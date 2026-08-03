@@ -1029,15 +1029,15 @@ public static class MosaicHost
         internal bool RunPointerAcceptance()
         {
             _ = Focus(FocusState.Programmatic);
-            return HandleKey(VirtualKey.Home, false, false, out var changed)
-                && changed
-                && ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
+            return ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
         }
 
         internal bool RunHoverAcceptance(string linkUrl)
         {
             _ = Focus(FocusState.Programmatic);
-            return UpdateHoverAt(new Windows.Foundation.Point(32, 26))
+            return HandleKey(VirtualKey.Home, false, false, out var changed)
+                && changed
+                && UpdateHoverAt(new Windows.Foundation.Point(32, 26))
                 && hoverUsesHandCursor
                 && string.Equals(component.StatusText, linkUrl, StringComparison.Ordinal);
         }

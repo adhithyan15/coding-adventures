@@ -14,13 +14,14 @@ use std::{cell::RefCell, rc::Rc};
 use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession,
+    BrowserScrollCommand, BrowserSession,
 };
 use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, WindowEvent};
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, HttpBrowserFetcher,
+    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserScrollMetrics,
+    HttpBrowserFetcher,
 };
 
 pub const VERSION: &str = "0.1.0";
