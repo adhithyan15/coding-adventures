@@ -20,6 +20,9 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Generate Sanskrit Chapter 6 from its three strict canonical lessons,
   preserving Devanagari forms, comparison tables, and romanized bookmarks from
   the shared AST.
+- Generate Bengali Chapter 6 from its strict canonical lesson, preserving the
+  Bengali numeral forms, *dui* history, and bookmark-safe romanization from the
+  shared AST.
 
 ### Added — block-boundary knowledge closure
 

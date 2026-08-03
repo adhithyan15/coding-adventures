@@ -19,6 +19,7 @@ describe("generated book source hashes", () => {
   });
 
   it.each([
+    ["bengali", 1],
     ["gujarati", 2],
     ["marathi", 2],
     ["punjabi", 2],

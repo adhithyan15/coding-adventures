@@ -44,6 +44,15 @@
       "output": "spanish/book/chapters/ch06-first-verbs.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "bengali/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "title": "Numbers One to Five",

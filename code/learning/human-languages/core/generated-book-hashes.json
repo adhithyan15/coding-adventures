@@ -3,6 +3,15 @@
   "algorithm": "fnv1a64",
   "chapters": [
     {
+      "language": "bengali",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:28baeae54e13a2dc",
+      "lessonIds": [
+        "BN-C06-numbers-1-5"
+      ],
+      "tex": "bengali/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:388a6950ab136cc1",
