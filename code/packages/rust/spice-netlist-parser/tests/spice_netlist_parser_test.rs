@@ -2234,6 +2234,35 @@ fn preserves_non_negative_mosfet_model_drain_resistance() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_source_resistances() {
+    for resistance in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model parasitic NMOS(RS={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET RS must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_source_resistance() {
+    for (resistance, expected) in [("0", 0.0), ("20", 20.0)] {
+        let parsed = parse_netlist(&format!(
+            ".model parasitic NMOS(RS={resistance})\nM1 d g s b parasitic"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.source_resistance, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
