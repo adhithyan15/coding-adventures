@@ -488,7 +488,7 @@ config level — it is a runtime-only concept.
        mark as Running
      else:
        mark as Stopped
-       if restart_policy is Permanent or Transient:
+       if restart_policy is Always, or OnFailure after a failed exit:
          relaunch the host (same flow as a fresh launch)
 
 4. Start the audit log writer (a dedicated actor that appends to
