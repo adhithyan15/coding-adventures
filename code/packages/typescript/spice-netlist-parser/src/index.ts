@@ -1292,6 +1292,21 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET CJSW must be finite and non-negative");
   }
+  for (const [name, canonical] of [
+    ["CBS", "CBS"],
+    ["CJS", "CBS"],
+    ["CBD", "CBD"],
+    ["CJD", "CBD"],
+  ] as const) {
+    const capacitance = params.get(name);
+    if (
+      (kind === "NMOS" || kind === "PMOS") &&
+      capacitance !== undefined &&
+      (!Number.isFinite(capacitance) || capacitance < 0.0)
+    ) {
+      throw new NetlistParseError(`MOSFET ${canonical} must be finite and non-negative`);
+    }
+  }
   const junctionCurrent = params.get("JS");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1404,6 +1419,8 @@ const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
   ["N", "N_SUB"],
   ["TNOM", "T_NOM"],
   ["UO", "U0"],
+  ["CJS", "CBS"],
+  ["CJD", "CBD"],
 ]);
 
 function mosfetParams(

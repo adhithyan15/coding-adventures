@@ -4303,13 +4303,17 @@ the Rust, Python, and TypeScript surfaces together.
      shared diagnostic while zero and positive flicker-noise coefficients
      lower into Level-1 parameters.
 
+398. Python and TypeScript Berkeley SPICE MOS flicker-noise exponent parity.
+   - Status: completed in PR 9718.
+   - Negative and non-finite model-card `AF` values are rejected with the
+     shared diagnostic while zero and positive flicker-noise exponents lower
+     into Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `AF`; Python already lowers
-     this canonical field but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both
-     facades after the canonical-field slices.
+     facades.
 
 2. Python and TypeScript Berkeley SPICE MOS electrostatic-default parity.
    - Validate and consume `NSS` / `TPG`, then derive `VT0`, `GAMMA`, and `PHI`
