@@ -2152,6 +2152,30 @@ fn preserves_positive_mosfet_model_width() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_lengths() {
+    for length in ["0", "-1u", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS(L={length})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET L must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_length() {
+    let parsed = parse_netlist(".model geometry NMOS(L=180n)\nM1 d g s b geometry").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.l, 180.0e-9);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"

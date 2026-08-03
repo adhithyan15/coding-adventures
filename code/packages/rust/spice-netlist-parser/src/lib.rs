@@ -1982,6 +1982,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(length) = params.get("L") {
+            if !length.is_finite() || *length <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET L must be finite and positive",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

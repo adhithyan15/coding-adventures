@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card width validation.
+1. Rust Berkeley SPICE MOS model-card length validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite model-card `W` values before
+   - Reject zero, negative, and non-finite model-card `L` values before
      lowering MOS elements into engine parameters.
-   - Preserve positive model widths.
+   - Preserve positive model lengths.
 
 ## Completed Slices
 
@@ -4046,6 +4046,12 @@ the Rust, Python, and TypeScript surfaces together.
    - Negative and non-finite model-card `JS` values are rejected before
      lowering MOS elements into engine parameters.
    - Zero and positive saturation-current densities remain accepted.
+
+355. Rust Berkeley SPICE MOS model-card width validation.
+   - Status: completed in PR 9533.
+   - Zero, negative, and non-finite model-card `W` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive model widths remain accepted.
 
 ## Backlog
 
