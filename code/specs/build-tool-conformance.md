@@ -298,6 +298,13 @@ MUST:
 - report malformed metadata with stable diagnostics instead of silently
   inventing a partial graph.
 
+For Cabal manifests, dependency candidates come only from each
+`build-depends:` field and its indented comma-separated continuation lines.
+Resolvers ignore Cabal comments, package identity and descriptive metadata,
+source directories, compiler options, and every other field. A new stanza may
+introduce another `build-depends:` field; reaching a sibling field or stanza
+ends the current field before scanning continues.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,

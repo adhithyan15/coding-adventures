@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/haskell-field-aware",
+  "domain": "resolution",
+  "summary": "Cabal resolution reads every build-depends field without treating descriptive metadata or comments as edges.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/haskell/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/haskell/alpha/alpha.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-alpha\nversion: 0.1.0\nsynopsis: Explains coding-adventures-gamma without depending on it\ndescription: The coding-adventures-gamma name here is documentation only.\n\nlibrary\n  exposed-modules: Alpha\n  build-depends: base >=4.14, coding-adventures-beta ==0.1.*\n  ghc-options: -Wall -- coding-adventures-gamma is still not a dependency\n\nexecutable alpha-tool\n  main-is: Main.hs\n  build-depends:\n      base >=4.14\n    , coding-adventures-delta ==0.1.* -- coding-adventures-gamma stays a comment\n  default-language: Haskell2010\n"
+      },
+      {
+        "path": "code/packages/haskell/beta/BUILD",
+        "content_utf8": "echo build beta\n"
+      },
+      {
+        "path": "code/packages/haskell/beta/beta.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-beta\nversion: 0.1.0\n"
+      },
+      {
+        "path": "code/packages/haskell/delta/BUILD",
+        "content_utf8": "echo build delta\n"
+      },
+      {
+        "path": "code/packages/haskell/delta/delta.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-delta\nversion: 0.1.0\n"
+      },
+      {
+        "path": "code/packages/haskell/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/haskell/gamma/gamma.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-gamma\nversion: 0.1.0\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "haskell"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/haskell-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "haskell/beta",
+          "haskell/alpha"
+        ],
+        [
+          "haskell/delta",
+          "haskell/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

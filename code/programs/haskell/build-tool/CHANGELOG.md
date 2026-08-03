@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
 - Shared Lua resolution fixtures for authoritative dependency tables, genuine
   cycles, selected BUILD dependency metadata, qualified program identities,
   and package/program alias precedence.
+- Shared Cabal resolution coverage for inline and multiline `build-depends`
+  fields plus misleading package names in metadata, options, and comments.
 
 ### Changed
 
@@ -30,6 +32,8 @@ All notable changes to this package will be documented in this file.
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over
   same-basename program aliases.
+- Resolve Haskell package edges only from Cabal `build-depends` fields across
+  stanzas, ignoring comments and every non-authoritative manifest field.
 
 ## [0.1.0] - 2026-04-05
 

@@ -2062,3 +2062,14 @@ Three independent, compounding bugs were found by comparing against the real RFC
 - This bug class is NOT Java-specific — reproduced identically against the Rust reference (`code/packages/rust/zstd`) with the same minimal repro. Every other language port's `compress()` output is very likely equally non-conformant to real zstd for any input producing more than a handful of LZ77 sequences. Flagged as a follow-up task rather than fixed in this PR (scope: `java/zstd` only) — see the spawned task for cross-language remediation.
 
 Fixed in `java/zstd`: `code/packages/java/zstd/src/main/java/com/codingadventures/zstd/Zstd.java` (`buildDecodeTable`, `buildEncodeTable`, `encodeSequencesSection`, `decompressBlock`, new `fseInitState` method). Verified against the real `zstd` CLI across an 82-case fuzz corpus (varying periodic patterns, semi-random run-length data, pure random data, and prose at multiple repeat counts) in both directions, plus the two dedicated JUnit interop tests (`tc9CliInterop`, `rtCliInteropHighSequenceCount`).
+
+## Adding shared build-tool fixtures must update the pinned corpus-summary tests
+
+Adding three valid conformance cases changed `validate-corpus` from 38 to 41,
+but the fixture-specific validation command still passed because it reports the
+new count rather than asserting it. CI later failed two
+`test_build_tool_conformance_runner.py` assertions that deliberately pin the
+checked-in corpus size. Whenever a shared case is added or removed, update both
+the direct `validate_corpus` summary assertion and the CLI machine-readable
+summary assertion, then run the full conformance-runner test module—not only
+`build_tool_conformance.py validate-corpus`.
