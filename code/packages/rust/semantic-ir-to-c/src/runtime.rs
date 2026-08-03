@@ -1522,29 +1522,54 @@ static SirValue _sir_array_compact(SirSeq *s) {
     return _sir_seq_wrap(r);
 }
 
-/* `flatten` is a recursive aggregate walk, so it shares `SIR_MAX_EQ_DEPTH` —
- * the same "smallest common C stack" cap `_sir_value_eq`/`_sir_fmt` use — to
- * stay sound on a self-referential array (`a[0] = a`, constructible via
- * `SeqSet`).  Past the cap an element is taken AS-IS rather than recursed into
- * (matching the assumed-equal / ellipsis choice those functions make at their
- * cap), so a cyclic input still terminates rather than stack-overflowing. */
-static int64_t _sir_flatten_count(SirValue v, int depth) {
-    if (v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) return 1;
+/* `flatten` is a recursive aggregate walk over a structure a `SeqSet` can make
+ * self-referential (`a[0] = a`).  A DEPTH cap alone (`SIR_MAX_EQ_DEPTH`, as
+ * `_sir_value_eq`/`_sir_fmt` use) is NOT enough here: those two only ever
+ * recurse into a FIXED small arity (a pair's two sides, or one seq/map
+ * paired element-for-element against another of the SAME length), so depth
+ * bounds their total work too. `flatten` instead recurses into EVERY element
+ * of EVERY nested array, so a self-referential array with two or more
+ * elements that all point back to itself (`a=[1,2]; a[0]=a; a[1]=a`) fans out
+ * ~branching^depth calls — with depth capped at 500 that is astronomically
+ * more work than the cap was sized for, and the resulting count can overflow
+ * `int64_t`, in turn under-allocating `_sir_array_flatten`'s output buffer
+ * for the (enormous) number of writes `_sir_flatten_fill` actually performs.
+ *
+ * So `flatten` ALSO threads a total-work `budget`, decremented once per call
+ * — leaf or container — BEFORE it looks at `depth`/`tag`. Once the budget
+ * runs out, the current node is treated as opaque (same as a past-depth-cap
+ * node), so no more calls are spawned from it. That bounds the TOTAL number
+ * of calls across the whole traversal to `SIR_MAX_FLATTEN_NODES`, regardless
+ * of fan-out — unlike the depth cap alone, which only bounds one AXIS of the
+ * traversal. The count and fill passes decrement from the SAME starting
+ * budget in the SAME traversal order, so they agree on exactly which nodes
+ * are opaque and produce a matching element count and write count. */
+#define SIR_MAX_FLATTEN_NODES 1000000
+static int64_t _sir_flatten_count(SirValue v, int depth, int64_t *budget) {
+    (*budget)--;
+    if (*budget < 0 || v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) return 1;
     int64_t n = 0;
-    for (int64_t i = 0; i < v.as.seq->len; i++) n += _sir_flatten_count(v.as.seq->items[i], depth + 1);
+    for (int64_t i = 0; i < v.as.seq->len; i++) {
+        n += _sir_flatten_count(v.as.seq->items[i], depth + 1, budget);
+    }
     return n;
 }
-static void _sir_flatten_fill(SirValue v, int depth, SirValue *out, int64_t *idx) {
-    if (v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) { out[(*idx)++] = v; return; }
-    for (int64_t i = 0; i < v.as.seq->len; i++) _sir_flatten_fill(v.as.seq->items[i], depth + 1, out, idx);
+static void _sir_flatten_fill(SirValue v, int depth, int64_t *budget, SirValue *out, int64_t *idx) {
+    (*budget)--;
+    if (*budget < 0 || v.tag != SIR_SEQ || depth > SIR_MAX_EQ_DEPTH) { out[(*idx)++] = v; return; }
+    for (int64_t i = 0; i < v.as.seq->len; i++) {
+        _sir_flatten_fill(v.as.seq->items[i], depth + 1, budget, out, idx);
+    }
 }
 static SirValue _sir_array_flatten(SirValue recv) {
-    int64_t n = _sir_flatten_count(recv, 0);
+    int64_t count_budget = SIR_MAX_FLATTEN_NODES;
+    int64_t n = _sir_flatten_count(recv, 0, &count_budget);
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->len = n;
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     int64_t idx = 0;
-    _sir_flatten_fill(recv, 0, r->items, &idx);
+    int64_t fill_budget = SIR_MAX_FLATTEN_NODES;
+    _sir_flatten_fill(recv, 0, &fill_budget, r->items, &idx);
     return _sir_seq_wrap(r);
 }
 

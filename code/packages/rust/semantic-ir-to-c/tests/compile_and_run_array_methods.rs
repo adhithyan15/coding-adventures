@@ -236,15 +236,21 @@ mod cyclic {
         Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
     }
 
-    #[test]
-    fn array_flatten_on_a_cyclic_array_terminates() {
-        // A self-referential array (`a[0] = a`, constructible via the existing
-        // mutable `SeqSet`) must not stack-overflow `flatten` — the recursion
-        // shares `SIR_MAX_EQ_DEPTH` with `_sir_value_eq`/`_sir_fmt`. The exact
-        // shape past the cap is unspecified, so `flatten`'s result is computed
-        // but deliberately not printed — only that the process reaches and
-        // prints past it (exit 0) is asserted.
-        let m = Module {
+    /// A `main` module: `a = [1, 2]`, then `sets` (each an index to point back
+    /// at `a` itself), then `a.flatten`, then `puts "ok"`. Shared by both the
+    /// linear (one self-pointing element) and branching (every element
+    /// self-pointing) cyclic-flatten proofs below.
+    fn cyclic_flatten_module(sets: &[i64]) -> Module {
+        let mut stmts = vec![let_("a", Expr::SeqLit { items: vec![ilit(1), ilit(2)], span: s() })];
+        for &i in sets {
+            stmts.push(Stmt::SeqSet { seq: local("a"), index: ilit(i), value: local("a"), span: s() });
+        }
+        stmts.push(let_(
+            "b",
+            bc("__method__", vec![local("a"), Expr::StrLit { value: "flatten".into(), span: s() }]),
+        ));
+        stmts.push(puts(Expr::StrLit { value: "ok".into(), span: s() }));
+        Module {
             name: "arrcycprog".into(),
             manifest: FeatureManifest::from_features(&[
                 Feature::Sequences,
@@ -258,22 +264,7 @@ mod cyclic {
                 params: vec![],
                 return_type: None,
                 captures: vec![],
-                body: Block {
-                    stmts: vec![
-                        let_("a", Expr::SeqLit { items: vec![ilit(1), ilit(2)], span: s() }),
-                        Stmt::SeqSet { seq: local("a"), index: ilit(0), value: local("a"), span: s() },
-                        let_(
-                            "b",
-                            bc(
-                                "__method__",
-                                vec![local("a"), Expr::StrLit { value: "flatten".into(), span: s() }],
-                            ),
-                        ),
-                        puts(Expr::StrLit { value: "ok".into(), span: s() }),
-                    ],
-                    value: Expr::NilLit { span: s() },
-                    span: s(),
-                },
+                body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
                 effects: EffectSet::PURE,
                 metadata: Metadata::new(),
                 span: s(),
@@ -281,8 +272,36 @@ mod cyclic {
             globals: vec![],
             metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
             span: s(),
-        };
-        match run(&m) {
+        }
+    }
+
+    #[test]
+    fn array_flatten_on_a_linearly_cyclic_array_terminates() {
+        // `a = [1, 2]; a[0] = a` — ONE element points back to `a`, the other
+        // (`2`) is a plain leaf. `flatten`'s recursion has a fixed fan-out of
+        // 1 down the cyclic branch, so this is bounded by the DEPTH cap alone.
+        // The exact shape past the cap is unspecified, so `flatten`'s result
+        // is computed but deliberately not printed — only that the process
+        // reaches and prints past it (exit 0) is asserted.
+        match run(&cyclic_flatten_module(&[0])) {
+            Some(out) => assert_eq!(out, "ok\n"),
+            None => eprintln!("skip: no cc"),
+        }
+    }
+
+    #[test]
+    fn array_flatten_on_a_branching_cyclic_array_terminates() {
+        // `a = [1, 2]; a[0] = a; a[1] = a` — BOTH elements point back to `a`,
+        // so naive recursion fans out ~2^depth calls; with the depth cap at
+        // 500 that is astronomically more work than a depth-only guard could
+        // ever finish (and would overflow the `int64_t` element count well
+        // before the cap, under-allocating the output buffer). This is
+        // exactly the gap a depth-only cap leaves open — `flatten` must ALSO
+        // cap total nodes visited, independent of depth, for this to
+        // terminate promptly. Asserts only that the process completes
+        // (exit 0) in reasonable time; the flattened shape past the budget
+        // is unspecified.
+        match run(&cyclic_flatten_module(&[0, 1])) {
             Some(out) => assert_eq!(out, "ok\n"),
             None => eprintln!("skip: no cc"),
         }

@@ -18,11 +18,21 @@ beyond the polymorphic `length`/`size`/`empty?` from slice 1. No new `Feature`.
   `0` (Ruby's `Array#sum` default). `first`/`last`/`min`/`max` return `nil` on
   an empty array (matching Ruby); `sum` returns `0`.
 - `flatten` recursively unwraps nested arrays fully (Ruby's default, no depth
-  limit in the *language* semantics) but the **implementation** shares
-  `SIR_MAX_EQ_DEPTH` — the same cap `_sir_value_eq`/`_sir_fmt` use — so a
-  self-referential array (`a[0] = a`, constructible via `SeqSet`) terminates
-  (an element past the cap is taken as-is) instead of a stack-overflow DoS.
-  Two-pass count-then-fill avoids a growable buffer.
+  limit in the *language* semantics). It shares `SIR_MAX_EQ_DEPTH` — the same
+  depth cap `_sir_value_eq`/`_sir_fmt` use — to bound recursion depth on a
+  self-referential array (`a[0] = a`, constructible via `SeqSet`). Security
+  review caught that depth ALONE is not enough here (unlike those two
+  functions, `flatten` recurses into every element of every nested array, so
+  a self-referential array whose elements ALL point back to itself — e.g.
+  `a=[1,2]; a[0]=a; a[1]=a` — fans out ~branching^depth calls, which at a
+  500-deep cap is astronomically more work, overflows the `int64_t` element
+  count well before the cap, and would under-allocate the output buffer for
+  the writes actually performed): both the count and fill passes now ALSO
+  thread a shared total-work budget (`SIR_MAX_FLATTEN_NODES`, decremented once
+  per node visited, leaf or container), so total calls across the whole
+  traversal are bounded regardless of fan-out, not just depth. The two passes
+  share the same starting budget and traversal order, so they still agree on
+  the exact element count. Two-pass count-then-fill avoids a growable buffer.
 - A wrong-type receiver (e.g. `"str".sort`) still raises `NoMethodError` via
   the existing fallthrough — no new guard needed, since every new arm only
   matches on `SIR_SEQ`.
