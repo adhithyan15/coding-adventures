@@ -2,6 +2,44 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.7.0] - 2026-08-03
+
+### Fixed — bracket-index (`a[i]` / `a[i] = v`) had no grammar rule at all
+
+Reads only "worked" by accident, and only as a bare assignment RHS: `x =
+g[1]` silently split into TWO statements (`x = g`, then a dangling,
+unparsed `[1]`) instead of being one statement that reads element `1` of
+`g`. An earlier probe wrongly concluded this "worked" by checking whether
+the generated C source *contained* the string `_sir_seq_index` — that
+helper is emitted as boilerplate runtime in every generated file regardless
+of whether it's actually called, so the check always passed. Dumping the
+actual AST showed the true (broken) parse shape. Writes failed to parse at
+all: `a[0] = 9` raised "Unexpected token: =", since no rule existed for
+`[...]` on an assignment's left-hand side.
+
+Fixed by adding two new grammar rules:
+
+- `index_suffix = LBRACKET expression RBRACKET` — a new postfix repetition
+  alternative in `factor` (alongside `dot_call`/`scope_resolution`), so
+  `recv[expr]` parses anywhere a postfix chain can appear, including
+  chained reads like `a[i][j]`.
+- `index_assignment = NAME index_suffix EQUALS expression` — a new
+  top-level `statement` alternative (checked before the ordinary
+  `assignment` rule), covering `name[expr] = value`.
+
+v0 scope: `index_assignment`'s left-hand side is a bare `NAME` receiver
+only — no dotted (`obj.arr[i] = v`) or chained (`a[i][j] = v`) receivers.
+Reads have no such limit (`index_suffix` composes through `factor`'s
+existing postfix repetition).
+
+### Added
+
+- `test_bracket_index_read_parses_as_one_statement`,
+  `test_bracket_index_read_in_call_argument_position`,
+  `test_bracket_index_chains`, `test_bracket_index_write_parses`,
+  `test_bracket_index_write_is_not_confused_with_plain_assignment` — parse-
+  shape regression tests for the fix above.
+
 ## [0.6.0] - 2026-08-03
 
 ### Fixed — bare comparison/logical statement mis-parsed as a paren-less call

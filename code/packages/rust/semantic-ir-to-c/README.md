@@ -191,7 +191,13 @@ block-taking helper's pointer snapshot points into, silently corrupting an
 in-flight outer iteration; reallocating (like `push` already did) leaves any
 outer snapshot reading unmodified memory, restoring the safe invariant.  A
 wrong-type receiver or argument raises `NoMethodError`; a built-in method not
-lowered yet is still rejected cleanly.
+lowered yet is still rejected cleanly.  **Bracket-index** (`recv[k]` /
+`recv[k] = v`, Ruby's `[]`/`[]=`) rides the same `__method__` dispatch:
+`"[]"`/`"[]="` branch on the RECEIVER's actual `SIR_SEQ`/`SIR_MAP` tag at
+runtime and delegate to the existing index/get and set helpers — never a
+compile-time guess from the index's syntactic shape, so a Hash with a
+non-string key (an int or symbol key) can never be mis-routed to the Array
+path.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

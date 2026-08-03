@@ -5109,5 +5109,101 @@ mod tests {
             );
         }
     }
+
+    // -------------------------------------------------------------------
+    // Bug fix: bracket-index read/write (`a[i]`, `a[i] = v`) had no grammar
+    // rule at all. Reads only "worked" as a bare assignment RHS by accident
+    // (`x = g[1]` silently split into TWO statements: `x = g` then a
+    // dangling `[1]`, discovered via an AST-dump probe after an earlier,
+    // WRONG belief -- based on a substring-search probe -- that it worked
+    // correctly). Writes (`a[i] = v`) failed to parse at all ("Unexpected
+    // token: ="). Fixed by adding `index_suffix = LBRACKET expression
+    // RBRACKET` as a new postfix repetition in `factor` (covers reads,
+    // including chained `a[i][j]`), and `index_assignment = NAME
+    // index_suffix EQUALS expression` as a new statement alternative (v0
+    // scope: bare NAME receiver only, no dotted/chained LHS).
+    // -------------------------------------------------------------------
+
+    /// Recursively search for a node with the given `rule_name` anywhere in
+    /// the tree (depth-first, not just direct children) -- unlike
+    /// `count_statements`/`find_def_statement` above, which only look at
+    /// direct children of a known parent shape.
+    fn tree_contains_rule(node: &GrammarASTNode, rule: &str) -> bool {
+        if node.rule_name == rule {
+            return true;
+        }
+        node.children.iter().any(|c| match c {
+            ASTNodeOrToken::Node(n) => tree_contains_rule(n, rule),
+            ASTNodeOrToken::Token(_) => false,
+        })
+    }
+
+    #[test]
+    fn test_bracket_index_read_parses_as_one_statement() {
+        // Before the fix, `x = g[1]` silently split into TWO statements
+        // (`x = g`, then a dangling, unparsed `[1]`). It must now be ONE.
+        let ast = parse_ruby("x = g[1]\n");
+        assert_program_root(&ast);
+        assert_eq!(
+            count_statements(&ast),
+            1,
+            "`x = g[1]` must parse as exactly one statement, not split at `[`"
+        );
+        assert!(
+            tree_contains_rule(&ast, "index_suffix"),
+            "expected an `index_suffix` node somewhere in the tree"
+        );
+    }
+
+    #[test]
+    fn test_bracket_index_read_in_call_argument_position() {
+        // `puts(a[1])` and the no-paren form `puts a[1]` must both parse as
+        // one statement with an `index_suffix` inside the call argument.
+        for src in ["puts(a[1])\n", "puts a[1]\n"] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+            assert_eq!(count_statements(&ast), 1, "`{src}` should be one statement");
+            assert!(
+                tree_contains_rule(&ast, "index_suffix"),
+                "`{src}` should contain an `index_suffix` node"
+            );
+        }
+    }
+
+    #[test]
+    fn test_bracket_index_chains() {
+        // `a[1][0]` -- `factor`'s postfix repetition applies `index_suffix`
+        // more than once, so a chained read parses as one statement too.
+        let ast = parse_ruby("puts a[1][0]\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        assert!(tree_contains_rule(&ast, "index_suffix"));
+    }
+
+    #[test]
+    fn test_bracket_index_write_parses() {
+        // `a[0] = 9` failed to parse at all before the fix ("Unexpected
+        // token: ="). It must now parse as one `index_assignment` statement.
+        for src in ["a[0] = 9\n", "h[\"b\"] = 2\n", "h[2] = \"b\"\n", "h[:sym] = 1\n"] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+            assert_eq!(count_statements(&ast), 1, "`{src}` should be one statement");
+            assert!(
+                tree_contains_rule(&ast, "index_assignment"),
+                "`{src}` should contain an `index_assignment` node"
+            );
+        }
+    }
+
+    #[test]
+    fn test_bracket_index_write_is_not_confused_with_plain_assignment() {
+        // A plain assignment (`x = 1`) must NOT be mis-routed through the new
+        // `index_assignment` alternative -- it has no `[` at all, so the
+        // grammar's ordinary `assignment` rule must still handle it.
+        let ast = parse_ruby("x = 1\n");
+        assert_program_root(&ast);
+        assert_eq!(count_statements(&ast), 1);
+        assert!(!tree_contains_rule(&ast, "index_assignment"));
+    }
 }
 

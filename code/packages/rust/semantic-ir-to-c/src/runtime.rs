@@ -2326,6 +2326,23 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
     } else if (strcmp(m, "invert") == 0) {
         if (recv.tag == SIR_MAP && argc == 0) return _sir_hash_invert(recv.as.map);
     }
+    /* Bug fix — `recv[k]` / `recv[k] = v` (Ruby's `[]`/`[]=`, real method
+       syntax: `recv.[](k)` / `recv.[]=(k, v)`). The frontend used to guess
+       Array-vs-Hash from the INDEX's syntactic shape at compile time (a
+       heuristic that mis-typed a real, common case: a Hash with a
+       non-string key, e.g. `h[2] = "b"` on an int-keyed Hash, routed to
+       Array's `_sir_seq_set` regardless of the receiver's actual type,
+       which EXITS on a non-sequence). Routing through the SAME `__method__`
+       dispatch every other built-in uses instead checks the RECEIVER's
+       ACTUAL tag here, at runtime — genuinely polymorphic, so it can never
+       mis-route regardless of the index's type. */
+    else if (strcmp(m, "[]") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1) return _sir_seq_index(recv, args[0]);
+        if (recv.tag == SIR_MAP && argc == 1) return _sir_map_get(recv, args[0]);
+    } else if (strcmp(m, "[]=") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 2) return _sir_seq_set(recv, args[0], args[1]);
+        if (recv.tag == SIR_MAP && argc == 2) return _sir_map_set(recv, args[0], args[1]);
+    }
     /* Collections slice 2: 1-arg String queries (arg is a String); slice 4
        widens `include?`/`index` to accept an Array receiver too. */
     else if (strcmp(m, "include?") == 0) {

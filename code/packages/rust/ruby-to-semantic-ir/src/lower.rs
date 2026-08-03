@@ -1071,6 +1071,7 @@ impl Lowerer {
     fn lower_statement_inner(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         match node.rule_name.as_str() {
             "assignment" => self.lower_assignment(node),
+            "index_assignment" => self.lower_index_assignment(node),
             "rightward_assignment" => self.lower_rightward_assignment(node),
             // Phase 23b (FC) — `defined?(x)` in statement position (the
             // grammar lists `defined_expression` in the statement
@@ -9545,10 +9546,126 @@ impl Lowerer {
                 } else if sub.rule_name == "scope_resolution" {
                     // Phase 15d (FC) — `::Name` step.
                     recv = self.fold_one_scope_resolution(recv, sub)?;
+                } else if sub.rule_name == "index_suffix" {
+                    // Bug fix — `[expr]` postfix, e.g. `arr[i]` / `h[k]`.
+                    recv = self.fold_one_index_suffix(recv, sub)?;
                 }
             }
         }
         Ok(recv)
+    }
+
+    /// Lower a single `index_suffix` step (`[expr]`). Grammar shape:
+    ///     index_suffix = LBRACKET expression RBRACKET ;
+    ///
+    /// `[]` is REAL Ruby method syntax (`recv[k]` is sugar for
+    /// `recv.[](k)`) — so rather than guessing between `Expr::SeqIndex`
+    /// (Array) and `Expr::MapGet` (Hash) from the INDEX's syntactic shape
+    /// (a heuristic `python-to-semantic-ir` uses for the same ambiguity,
+    /// and this frontend's first draft copied — reverted after it mis-typed
+    /// a REAL, common case: a Hash with a non-string key, e.g.
+    /// `h[2] = "b"` on an int-keyed Hash, routes on the KEY's shape alone,
+    /// not the RECEIVER's actual runtime type), this lowers to the SAME
+    /// `__method__` envelope every other built-in/user method call already
+    /// uses. The runtime dispatcher then checks the RECEIVER's ACTUAL tag
+    /// (Array vs Hash) — genuinely polymorphic, not a guess, so it can
+    /// never mis-route regardless of the index's type.
+    fn fold_one_index_suffix(
+        &mut self,
+        base: Expr,
+        node: &GrammarASTNode,
+    ) -> Result<Expr, RubyLowerError> {
+        let expr_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_suffix missing index expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let index = self.lower_expression(expr_node)?;
+        let span = self.span_of(node);
+        self.features_used.insert(Feature::Strings);
+        Ok(Expr::BuiltinCall {
+            name: "__method__".to_string(),
+            args: vec![
+                base,
+                Expr::StrLit {
+                    value: "[]".to_string(),
+                    span: span.clone(),
+                },
+                index,
+            ],
+            effects: EffectSet::PURE,
+            span,
+        })
+    }
+
+    /// Lower an `index_assignment` statement (`recv[expr] = value`).
+    /// Grammar shape:
+    ///     index_assignment = NAME index_suffix EQUALS expression ;
+    ///
+    /// `recv[k] = v` is sugar for `recv.[]=(k, v)` — lowered to the SAME
+    /// `__method__` envelope `fold_one_index_suffix` uses for reads (see
+    /// its own doc comment for why this reuses method dispatch instead of
+    /// a compile-time Array-vs-Hash guess). v0 scope: a bare `NAME`
+    /// receiver only (`a[i] = v`, `h[k] = v`) — a dotted/chained receiver
+    /// (`obj.data[i] = v`) isn't covered (the grammar rule itself doesn't
+    /// admit one, so that shape falls through to a clean parse error
+    /// rather than a silent misparse).
+    fn lower_index_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
+        let (name, name_span) = self.expect_first_name_token(node)?;
+        let index_suffix_node =
+            self.find_node_child(node, "index_suffix")
+                .ok_or_else(|| RubyLowerError {
+                    message: "index_assignment missing index_suffix".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+        let index_expr_node = self
+            .find_node_child(index_suffix_node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_assignment's index_suffix missing expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let index = self.lower_expression(index_expr_node)?;
+        let value_node = self
+            .find_node_child(node, "expression")
+            .ok_or_else(|| RubyLowerError {
+                message: "index_assignment missing RHS expression".to_string(),
+                line: node.start_line.unwrap_or(0),
+                column: node.start_column.unwrap_or(0),
+            })?;
+        let value = self.lower_expression(value_node)?;
+        let span = self.span_of(node);
+        let scope = if self.current_params.contains(&name) {
+            Scope::Param
+        } else {
+            Scope::Local
+        };
+        let receiver = Expr::VarRef {
+            name,
+            scope,
+            span: name_span,
+        };
+        self.features_used.insert(Feature::Strings);
+        Ok(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: vec![
+                    receiver,
+                    Expr::StrLit {
+                        value: "[]=".to_string(),
+                        span: span.clone(),
+                    },
+                    index,
+                    value,
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        })
     }
 
     /// Lower a single `scope_resolution` step (`::Name`).  Grammar shape

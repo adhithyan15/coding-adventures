@@ -1,6 +1,6 @@
 [package]
 name = "ruby-to-semantic-ir"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2021"
 description = "Ruby AST → narrow-waist Semantic IR. Phase 5 of the Ruby parser project — first frontend for the ruby-parser → SIR pipeline."
 

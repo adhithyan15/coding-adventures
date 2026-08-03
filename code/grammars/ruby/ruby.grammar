@@ -25,7 +25,7 @@
 # than PUTS, TRUE, FALSE, NIL as token types.
 
 program      = { statement } ;
-statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
+statement    = endless_def_statement | def_statement | class_statement | module_statement | if_statement | unless_statement | while_statement | until_statement | case_statement | begin_statement | return_statement | break_statement | next_statement | redo_statement | retry_statement | yield_statement | alias_statement | undef_statement | multi_assignment | modifier_statement | rightward_assignment | index_assignment | assignment | defined_expression | method_with_block | method_call | method_call_no_paren | expression_stmt ;
 # Phase 6r — multiple assignment `a, b = 1, 2`.
 #
 # Placed BEFORE `modifier_statement` and `assignment` so the multi-LHS
@@ -470,6 +470,19 @@ ensure_clause   = "ensure" { !"end" statement } ;
 # on Op tokens (Plus/Minus/Star/Slash) and the two Name-typed
 # logicals (`||`/`&&`) to avoid colliding with comparison ops which
 # the lexer fuses directly.
+# Bug fix — bracket-index WRITE (`recv[expr] = value`) had NO grammar
+# support at all (not even the narrow "assignment RHS only" support the read
+# side accidentally had): `assignment`'s LHS is a bare `NAME`, so `h[4] = "d"`
+# hit a hard parse error ("Unexpected token: =") the moment the parser saw
+# `[` where an assignment operator was expected. Placed BEFORE `assignment`
+# so the bracket form wins — `assignment` itself fails to match cleanly on
+# `NAME [` anyway (no assignment operator follows a bare `NAME` there), so
+# this ordering doesn't shadow anything. v0 scope: a single bracket on a
+# bare NAME receiver (`a[i] = v`, `h[k] = v`) — a dotted/chained receiver
+# (`obj.data[i] = v`) or nested brackets on the LHS (`a[i][j] = v`) are NOT
+# covered by this rule (falls through to a clean parse-error, not a silent
+# misparse); can be widened later if needed.
+index_assignment = NAME index_suffix EQUALS expression ;
 assignment   = NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "%=" | "**=" | "<<=" | ">>=" | "&=" | "|=" | "^=" | "||=" | "&&=" ) expression ;
 # Phase 7e — Ruby 3.0 rightward (single-line) assignment `expr => var`.
 #
@@ -808,7 +821,19 @@ term         = factor { ( STAR | SLASH ) factor } ;
 # a `call_arg`/`LPAREN`), so it parses as bare-`super` then the enclosing
 # `sum` applies `+ 1` to the produced value.
 super_expr   = "super" [ super_args ] ;
-factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution } ;
+# Bug fix — bracket-index READ (`recv[expr]`) had no general postfix
+# production at all: `factor`'s postfix repetition only admitted `dot_call`/
+# `scope_resolution`, so `[...]` after a receiver was NEVER recognized as an
+# index — `array_literal`'s OWN leading `LBRACKET` would instead grab it as
+# an unrelated, freestanding array literal (a SEPARATE statement wherever a
+# statement boundary was reachable, e.g. `puts g[1]` silently became
+# `puts(g)` plus a discarded `[1]`; a hard parse error everywhere a fresh
+# statement wasn't reachable, e.g. `puts(g[1])` as a call argument). Adding
+# `index_suffix` alongside `dot_call`/`scope_resolution` here closes that
+# gap uniformly for every expression position — chained forms like
+# `a[0][1]` or `h[k].foo` fall out for free from the SAME repetition.
+index_suffix = LBRACKET expression RBRACKET ;
+factor       = ( defined_expression | lambda_literal | super_expr | method_call | NUMBER | STRING | NAME | ( !"end" !"rescue" !"ensure" !"else" !"elsif" !"when" !"then" !"in" !"do" KEYWORD ) | symbol_literal | array_literal | hash_literal | LPAREN expression RPAREN | unary_minus ) { dot_call | scope_resolution | index_suffix } ;
 # Phase 6w — arrow-lambda literal `->(params){body}` / `->{body}`.
 #
 # Ruby 1.9+ shorthand for creating a `Proc`/`Lambda`.  The parameter

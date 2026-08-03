@@ -2,6 +2,47 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.8.0 — lower bracket-index read/write through `__method__` dispatch
+
+`ruby-parser` 0.7.0 adds real grammar rules for `recv[k]` (read,
+`index_suffix`) and `recv[k] = v` (write, `index_assignment`) — previously
+neither had a grammar rule at all (see that crate's CHANGELOG). This
+release adds the corresponding lowering:
+
+- `recv[k]` → `BuiltinCall("__method__", [recv, StrLit("[]"), k])`
+- `recv[k] = v` → `ExprStmt(BuiltinCall("__method__", [recv, StrLit("[]="), k, v]))`
+
+Both ride the SAME narrow-waist `__method__` dispatch every other
+Collections built-in uses (`.map`, `.each`, …) — no new IR node, no new
+`Feature`. This routes the Array-vs-Hash decision to the BACKEND, at
+RUNTIME, based on the receiver's actual tag.
+
+An earlier version of this lowering used a compile-time heuristic instead
+(mirroring `python-to-semantic-ir`'s documented convention: a string-
+literal-key index lowers to `Feature::Maps`/`Expr::MapGet`/`Stmt::MapSet`,
+any other index lowers to `Feature::Sequences`/`Expr::SeqIndex`/
+`Stmt::SeqSet`). That heuristic mis-routes a Hash write whose key isn't a
+string literal — `h[2] = "b"` on an int-keyed Hash, or `h[:sym] = 1` on a
+symbol-keyed Hash — to the Array path regardless of `h`'s actual type,
+which crashes at runtime (`_sir_seq_set` exits on a non-sequence receiver).
+Both are common, legitimate Ruby. The `__method__` design was chosen
+specifically because it cannot mis-route: the C backend's
+`_sir_builtin_method_v` checks `recv.tag` itself, so the index's syntactic
+shape is irrelevant to which path runs.
+
+v0 scope carries over from `ruby-parser`: `index_assignment`'s left-hand
+side must be a bare local/param `NAME` — no dotted or chained receivers.
+
+### Added
+
+- `bracket_index_read_lowers_to_method_dispatch`,
+  `bracket_index_write_lowers_to_method_dispatch`,
+  `bracket_index_write_with_non_string_key_is_not_a_seq_set`,
+  `chained_bracket_index_read_nests_method_dispatch`,
+  `bracket_index_read_and_write_pass_sir_validator` — lowering-shape and
+  validator regression tests, including the non-string-key case that
+  motivated the design above.
+
 ## 0.7.1 — regression tests for a `ruby-parser` grammar fix
 
 No behavior change in this crate — the actual fix (a bare comparison/logical
