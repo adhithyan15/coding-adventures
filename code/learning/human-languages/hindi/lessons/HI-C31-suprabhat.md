@@ -9,7 +9,7 @@ prerequisites: [HI-C28-subah]
 sounds: [devanagari-conjunct-pra, devanagari-bha]
 roots: [su-good, prabhata-dawn-sanskrit]
 etymology_hook: "सुप्रभात (suprabhāt, 'good morning') = सु ('good') + प्रभात (prabhāta, native Sanskrit 'dawn, daybreak,' from प्रभा/prabhā, 'light, splendour,' itself from भा, 'to shine,' + preverb प्र-, 'forth' + suffix -त) — a COMPLETELY DIFFERENT root from सुबह (subah, HI-C28's Persian/Arabic loan for the everyday noun 'morning'); be honest about its actual register, though: sources describe सुप्रभात as skewing FORMAL and WRITTEN (speeches, radio, greeting-card/WhatsApp-forward culture) rather than casual spoken Hindi, where नमस्ते commonly covers mornings too — this is a genuine formal/everyday split, though there's no strong evidence सुप्रभात itself is being routinely code-switched to English the way some sources (thinly) suggested for other languages' night greetings in this arc"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [HI-C28-subah]
 ---
 

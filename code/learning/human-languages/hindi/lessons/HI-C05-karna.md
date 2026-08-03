@@ -8,7 +8,7 @@ concept_tag: HI-VERB-KARNA
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [kr-do]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C05-bolna, HI-C05-rahna]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-short-i, devanagari-na]
 roots: [sanskrit-dina, pie-dyew-shine]
 etymology_hook: "दिन (din, 'day') ← Sanskrit दिन (dina) ← Proto-Indo-Iranian *dinám ← a SUFFIXED formation on Proto-Indo-European *dyew-/*dyēws- ('to shine, sky') — the same ultimate root as Latin's diēs (*dyēws-, same root at a different ablaut grade), but a SEPARATE derivational branch: din patterns with Lithuanian diena and Proto-Slavic *dьnь, not directly with diēs; Sanskrit's own द्यु (dyu) and दिव् (div) are the unsuffixed root-nouns, actually closer, more direct cousins of diēs than din itself is"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C17-dopahar-aadhi-raat]
 ---
 

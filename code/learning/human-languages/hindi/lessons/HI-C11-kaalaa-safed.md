@@ -9,7 +9,7 @@ prerequisites: [HI-C10-shanivaar-ravivaar]
 sounds: [devanagari-long-aa, nukta-f]
 roots: [kala-sanskrit, safed-persian]
 etymology_hook: "काला kālā 'black' is traditionally linked to काल kāla, Sanskrit for 'time' and 'death' — the same word underlies Kali and Yama's title Kaala, though whether the two senses truly share one root is still debated; सफ़ेद safed is a Persian loan"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C10-shanivaar-ravivaar]
 ---
 

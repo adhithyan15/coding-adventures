@@ -9,7 +9,7 @@ prerequisites: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
 roots: [do-two, pahar-traditional-watch]
 etymology_hook: "दोपहर (dopahar) is the SAME word already met in HI-C17 meaning precisely 'noon' ('two pahars,' a traditional ~3-hour Indian time-unit, counted from sunrise) — but in modern everyday Hindi, its meaning has genuinely WIDENED: दोपहर now covers the whole afternoon stretch, roughly noon through late afternoon (a meeting 'दोपहर में,' 'in the dopahar,' could mean anywhere from 1pm to 4pm), not just the precise midday instant its etymology points to"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [HI-C02-mera-naam-hai, HI-C02-aapka-naam-kya-hai, HI-C02-khushi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C02-naam, HI-C02-meraa, HI-C02-hai, HI-C02-mera-naam-hai, HI-C02-aap-tum, HI-C02-kya, HI-C02-aapka-naam-kya-hai, HI-C02-khushi]
 ---
 

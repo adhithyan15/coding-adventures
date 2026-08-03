@@ -9,7 +9,7 @@ prerequisites: [HI-C14-ritu]
 sounds: [devanagari-long-ii, retroflex-tta]
 roots: [paaniiya-sanskrit-drink, roti-uncertain]
 etymology_hook: "पानी paanii doesn't come from Sanskrit's ancient water-words (ap, jala) — it's from पानीय paaniiya, 'the drinkable thing,' from पा paa 'to drink' — water named for what you DO with it, not what it IS"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C14-ritu]
 ---
 

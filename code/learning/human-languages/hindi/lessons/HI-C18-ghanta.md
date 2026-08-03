@@ -9,7 +9,7 @@ prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-anusvara, devanagari-conjunct-none]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "घंटा (ghanṭā, 'hour') comes from Sanskrit घण्टा (ghaṇṭā), 'bell, gong' — the SAME word Hindi still uses for an actual bell, because clocks and towns once marked the hour by striking one; telling time uses बजना (bajnā), 'to strike/toll,' the same imagery"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C17-dopahar-aadhi-raat]
 ---
 

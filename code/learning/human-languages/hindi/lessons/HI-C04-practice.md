@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [HI-C04-phir-milenge, HI-C04-kal-milte-hain, HI-C04-chalta-hun]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C01-alvida, HI-C04-phir, HI-C04-milenge, HI-C04-phir-milenge, HI-C04-kal-milte-hain, HI-C04-chalta-hun]
 ---
 

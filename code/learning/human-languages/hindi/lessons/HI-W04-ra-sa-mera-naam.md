@@ -3,22 +3,21 @@ id: HI-W04-ra-sa-mera-naam
 chapter: 2
 type: writing
 headword: "र, स"
-gloss: "र (ra) and स (sa) — your first spineless letter — and hand-writing मेरा नाम"
+gloss: "र (ra) and स (sa), including your first spineless letter and a carefully qualified distant cousin"
 romanization: "ra, sa"
-prerequisites: [HI-W03-matras-naam, HI-W01-shirorekha-na-ma]
+prerequisites: [HI-W03-preposed-i, HI-W01-na-ma]
 sounds: [devanagari-spine, devanagari-matra]
 roots: [sanskrit-sa, greek-sigma]
 etymology_hook: "Greek SIGMA and Latin S descend from the Phoenician letter šin — and on the leading (though not universally accepted) account, Brahmi, Devanagari's ancestor, came from the same Semitic family by way of Aramaic; if that is right, स and S are very distant cousins that stopped looking alike thousands of years ago"
-est_minutes: 5
-reviews_of: [HI-W03-matras-naam, HI-C02-meraa, HI-C02-mera-naam-hai]
+est_minutes: 4
+reviews_of: [HI-W03-preposed-i, HI-W03-matras-naam, HI-C02-meraa, HI-C02-mera-naam-hai]
 ---
 
-# र and स — and writing "my name"
+# र and स — a spineless letter and a possible cousin
 
 ## Warm-up
 
-[PAUSE 2s] Two more letters, and then you can hand-write a whole phrase from
-Chapter 2.
+[PAUSE 2s] Two more letters put every consonant in "my name" within reach.
 
 ## र — "ra", your first spineless letter
 
@@ -62,33 +61,11 @@ So: if the mainstream account holds, स and S share a great-great-grandparent s
 three thousand years back, with no family resemblance left at all. Say "probably
 cousins," not "cousins."
 
-## Write the phrase
-
-You now have every piece of *merā nām* — "my name" (Chapter 2):
-
-| | |
-|---|---|
-| **मेरा** | म + े + र + ा — *merā*, "my" |
-| **नाम** | न + ा + म — *nām*, "name" |
-
-> **मेरा नाम**
-
-Two words, so **two bars**. Modern Hindi separates words with an ordinary space,
-exactly like English — and because the shirorekhā is drawn over each word, the
-space shows up as a **break in the line**. The gap in the bar is the *result* of
-the space, not a substitute for it.
-
-(Worth knowing why that needs saying: classical Sanskrit manuscripts often ran
-words together with no spaces at all, so the bar really was continuous across a
-whole line. Modern Hindi doesn't do that.)
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU WRITE: र — "shoulder, downstroke, bar" — **no spine**]
 - [YOU WRITE: स — "curl, body, spine, bar"]
-- [YOU WRITE: **मेरा** — four pieces, one bar]
-- [YOU WRITE: **मेरा नाम** — two words, **two separate bars**]
 - [YOU SAY: the probable cousins — "Σ · S from *šin* … and **probably** स too"]
 
 ## Wrap-up Recall
@@ -98,7 +75,5 @@ right-hand spine** — just a shoulder and a downstroke.) Is it the only spinele
 letter? (**No** — **द** is one too, and there are a few others.) Draw **स** — four pieces? (Curl, body,
 spine, bar.) Which English letter might स be related to, and how sure are we?
 (**S** — certainly *šin* → Σ → S going west; the eastern leg through Aramaic to
-**Brahmi** is the **leading view, not settled**.) Write **मेरा नाम** — how many
-bars, and why? (**Two** — Hindi uses an ordinary **space**, and the bar breaks
-because of it.) Next: the mark that
-kills a vowel, and you'll write *namaste*.
+**Brahmi** is the **leading view, not settled**.) Next: assemble those letters
+into "my name" and let the word boundary break the head-line.

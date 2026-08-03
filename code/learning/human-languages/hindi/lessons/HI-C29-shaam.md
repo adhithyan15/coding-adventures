@@ -9,7 +9,7 @@ prerequisites: [HI-C28-subah]
 sounds: [hindi-sha, hindi-anusvara]
 roots: [persian-sham-evening]
 etymology_hook: "शाम (shaam, 'evening') is, like सुबह last lesson, a genuine Persian loanword — from Persian شام (šām) ← Proto-Iranian *xšáfnyah ← Proto-Indo-Iranian *kšápā ('night'); be careful here: it LOOKS like it should connect to Sanskrit श्यामा (śyāmā, 'dark, night-colored'), and the resemblance is tempting, but these are NOT related — two separate roots that happened to converge on similar sounds and meanings, a genuine false cognate, not a shared one"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [HI-C28-subah]
 ---
 

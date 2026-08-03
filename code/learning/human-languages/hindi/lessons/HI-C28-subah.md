@@ -9,7 +9,7 @@ prerequisites: [HI-C25-din, HI-C26-raat]
 sounds: [hindi-ba, hindi-ha]
 roots: [arabic-sbh-dawn]
 etymology_hook: "सुबह (subah, 'morning') is genuinely borrowed — Persian صبح (subh) ← Arabic صبح (ṣubḥ), from the triliteral root ص-ب-ح (ṣ-b-ḥ, 'dawn, to become morning') — the SAME Arabic root already met in this course's Arabic arc, inside تصبح على خير (tuṣbiḥ ʿalā khayr, 'good night,' literally 'may you wake into goodness,' AR-C27); unlike दिन/din and रात/raat (both Sanskrit tatsama, HI-C25/26), Hindi's everyday word for 'morning' isn't Sanskrit at all — a genuine break from the pattern the last two lessons set"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [HI-C25-din, HI-C26-raat]
 ---
 

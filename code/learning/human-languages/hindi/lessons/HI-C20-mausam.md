@@ -5,12 +5,12 @@ type: phrase
 headword: मौसम
 gloss: weather — the SAME root as English "monsoon"; rain has TWO words that sound alike but are NOT related, a real false-friend trap
 concept_tag: HI-WEATHER
-prerequisites: [HI-C19-umr]
+prerequisites: [HI-C19-age-grammar]
 sounds: [devanagari-vowel-sign-au, devanagari-conjunct-rsha]
 roots: [arabic-mawsim-season, sanskrit-varsha-rain, persian-baarish-rain]
 etymology_hook: "मौसम (mausam, 'weather') is ANOTHER Arabic loan via Persian (mawsim, 'season'), like umr — and the SAME root as English 'monsoon' (via Portuguese/Dutch traders, 1580s, not the later British Raj); be careful, though: बारिश (baarish, 'rain,' from Persian bāriš) and वर्षा (varṣā, native Sanskrit 'rain,' PIE cousin of Greek hérsē 'dew') sound alike but are flagged by dictionaries as PROBABLY unrelated — a likely false-friend trap, not a confirmed doublet"
-est_minutes: 6
-reviews_of: [HI-C19-umr]
+est_minutes: 4
+reviews_of: [HI-C19-age-grammar, HI-C19-umr]
 ---
 
 # मौसम — another Perso-Arabic loan, and a false-friend trap

@@ -9,7 +9,7 @@ prerequisites: [HI-C26-raat]
 sounds: [devanagari-sha, devanagari-bha]
 roots: [sanskrit-shubh-shine, sanskrit-ratri]
 etymology_hook: "शुभ रात्रि (śubh rātri), 'good night,' literally 'auspicious night' — रात्रि here is the FORMAL, literary Sanskrit-derived (tatsama) doublet of the everyday, eroded रात (rāt, tadbhava) from last lesson; शुभ ('auspicious, good') comes from Sanskrit root शुभ् (śubh), 'to be beautiful, splendid,' from a well-sourced PIE root *ḱewbʰ- ('to be beautiful') — a further, more speculative link to *(s)kewh₁-/*ḱew- ('to shine') has also been proposed, but that deeper connection, not *ḱewbʰ- itself, is the genuinely uncertain part"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C26-raat]
 ---
 
