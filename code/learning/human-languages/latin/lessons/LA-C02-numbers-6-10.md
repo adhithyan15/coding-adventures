@@ -9,7 +9,7 @@ prerequisites: [LA-C02-numbers-1-5]
 sounds: [macron-long-vowel, x-as-ks, c-as-k]
 roots: [sex, septem, octo, novem, decem]
 etymology_hook: "September–December still count 7–10 — Rome's year began in March, so the month names ended up two places short"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C02-numbers-1-5, LA-C01-salve]
 ---
 

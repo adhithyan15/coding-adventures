@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [macron-long-vowel, v-as-w]
 roots: [salvus, salvere]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [LA-C07-pater-mater]
 sounds: [macron-long-vowel]
 roots: [pie-bhrater, pie-swesor]
 etymology_hook: "frater and English brother are cousins via PIE *bhreh2ter (Grimm's Law bh→b); soror and English sister are cousins via PIE *swesor, NOT soror turning into sister — Latin simplified sw- to s-, Germanic kept it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C07-pater-mater]
 ---
 

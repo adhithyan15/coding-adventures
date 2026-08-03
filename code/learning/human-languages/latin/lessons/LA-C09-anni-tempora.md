@@ -9,7 +9,7 @@ prerequisites: [LA-C08-manus, LA-C08-caput]
 sounds: [macron-long-vowel, ae-diphthong]
 roots: [ver-latin, aestas-latin, autumnus-latin, hiems-latin]
 etymology_hook: "vēr, aestās, autumnus, hiems are Latin's own four season-nouns — but Spanish/French didn't always keep the plain nouns; for spring and winter, they built new words from ADJECTIVE phrases instead (prīma vēra 'first spring,' hībernum tempus 'wintry time')"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C08-manus, LA-C08-caput]
 ---
 

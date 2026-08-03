@@ -9,7 +9,7 @@ prerequisites: [LA-C06-niger-albus]
 sounds: [ae-diphthong, macron-long-vowel]
 roots: [pie-rewdh, caeruleus-latin]
 etymology_hook: "ruber is a rock-solid PIE-rooted red, ancestor of BOTH Spanish rojo (via russus) and French rouge (via rubeus) — but Latin's closest word for 'blue', caeruleus, was never a clean single color the way ruber was"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C06-niger-albus]
 ---
 

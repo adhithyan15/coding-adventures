@@ -9,7 +9,7 @@ prerequisites: [LA-C01-gratias]
 sounds: [h-aspirated, nihil-two-syllables]
 roots: [nihil-latin, est-latin]
 etymology_hook: "Classical Latin has no single fixed reply to grātiās agō the way modern languages do; nihil est ('it's nothing,' from nihil, 'nothing,' ← ne + hīlum, 'not [even] a tiny bit') is the phrase modern conversational-Latin communities reach for — the words themselves are genuinely classical, but no surviving text shows this exact phrase used specifically as a reply to thanks, so treat it as a well-grounded modern convention, not an ancient one"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-gratias]
 ---
 

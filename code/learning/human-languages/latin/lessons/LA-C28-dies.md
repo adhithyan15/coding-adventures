@@ -9,7 +9,7 @@ prerequisites: [LA-C05-dies-lunae-veneris, LA-C12-medius-dies-nox]
 sounds: [macron-long-vowel, diphthong-ie]
 roots: [dies-latin]
 etymology_hook: "diēs ('day') is the same word already hiding inside diēs Lūnae ('Monday') and medius diēs ('noon') — its derivative diurnum ('daytime, daily') gives English diurnal and, via French jour/journée/jornel, journal and journey; a SIBLING derivative, diārium ('daily allowance'), gives English diary directly, a separate path from diurnum; a genuine PIE root (*dyēws-, 'to shine, sky') also connects diēs to deus ('god') and Jupiter"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C05-dies-lunae-veneris, LA-C12-medius-dies-nox]
 ---
 

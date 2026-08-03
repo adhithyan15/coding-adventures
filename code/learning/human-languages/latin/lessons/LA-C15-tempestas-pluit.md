@@ -2,18 +2,18 @@
 id: LA-C15-tempestas-pluit
 chapter: 15
 type: phrase
-headword: tempestās, pluit
-gloss: "storm/weather" and "it rains" — tempestās is a DERIVATIVE of tempus that specialized for weather in Classical Latin, while tempus itself meant only "time"; later, WITHIN LATIN ITSELF (before Spanish/French/Italian split apart), tempus re-widened to also mean "weather," while tempestās narrowed further to just "storm" and survives in Spanish as its own separate word, tempestad
+headword: tempestās
+gloss: weather or storm — a derivative of tempus that specialized for weather in Classical Latin, while tempus itself meant only time; later tempus widened to weather and tempestās narrowed to storm
 concept_tag: LA-WEATHER
 prerequisites: [LA-C14-annos-natus]
-sounds: [macron-long-vowel, impersonal-verb-3rd-singular]
-roots: [tempus-latin, tempestas-latin, calor-latin, sol-latin, pluere-latin]
-etymology_hook: "tempestās ('weather, storm') is a DERIVATIVE noun built on tempus ('time') that specialized in Classical Latin to mean weather/storm specifically — but Latin ITSELF later re-widened tempus to also mean 'weather' (shared by French temps, Italian tempo too, not a Spanish-only innovation), while tempestās narrowed to just 'storm' and survives in Spanish as its own word, tempestad; pluit ('it rains'), calor, and sol are the direct sources of Spanish's llueve/calor/sol"
-est_minutes: 6
+sounds: [macron-long-vowel]
+roots: [tempus-latin, tempestas-latin]
+etymology_hook: "tempestās ('weather, storm') is a derivative noun built on tempus ('time') that specialized in Classical Latin; later tempus itself widened to also mean weather, while tempestās narrowed to storm and survives as Spanish tempestad"
+est_minutes: 4
 reviews_of: [LA-C14-annos-natus]
 ---
 
-# tempestās, pluit — one Latin word widened, its own derivative narrowed
+# tempestās — one Latin word widened, its own derivative narrowed
 
 ## Warm-up
 
@@ -41,29 +41,12 @@ Meanwhile *tempestās* kept going too, narrowing further to mean specifically
 **tempestad** ("storm, tempest"), sitting right alongside *tiempo*. So it's
 one word (*tempus*) widening back out, not two words fusing into one.
 
-## pluit — Latin's own impersonal "it rains"
-
-Latin states weather with **dedicated impersonal verbs**, no subject at all:
-**pluit** ("**it rains**"), **ningit** ("it snows"), **tonat** ("it thunders").
-**pluit** is the direct ancestor of Spanish's **llueve** — the same **pl- →
-ll-** shift you've now met repeatedly (*clāmāre → llamar*, *clāvem → llave*,
-*flamma → llama*, *plovere → llover*). Latin's impersonal-verb pattern for
-weather is actually closer to English's own "it **rains**" than to Spanish's
-*hacer*-based "**hace** calor" — Spanish only kept the dedicated-verb pattern
-for rain, and invented the *hacer* periphrasis fresh for heat, cold, and sun.
-
-## calor and sol — carried straight through, unchanged
-
-**calor** ("heat") and **sol** ("sun") are the exact same words in Latin and
-Spanish — no sound change at all, just carried straight through.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "tempestās" — weather/storm, a derivative of tempus, "time,"
   narrowed today to Spanish's "tempestad"]
-- [YOU SAY: "pluit" — it rains, ancestor of Spanish's llueve]
-- [YOU SAY: "calor," "sol" — unchanged in both languages]
+- [YOU SAY: "tempus" — time, later widened inside Latin to weather too]
 
 ## Wrap-up Recall
 
@@ -72,8 +55,4 @@ Spanish — no sound change at all, just carried straight through.
 while *tempus* stayed strictly "time.") Did Spanish merge these two words back
 together? (**No** — *tempus* itself re-widened to cover "weather" already
 within Latin's own history, shared by French/Italian too; *tempestās* kept
-narrowing and survives separately as Spanish *tempestad*.) How does Latin
-state "it rains," and what does it become in Spanish? (**pluit** → *llueve*,
-via the same *pl- → ll-* shift as *llamar*.) Does Latin's weather grammar look
-more like Spanish's *hacer* pattern or English's dedicated verbs? (**English's**
-— Latin uses dedicated impersonal verbs like *pluit*, *ningit*, *tonat*.)
+narrowing and survives separately as Spanish *tempestad*.)

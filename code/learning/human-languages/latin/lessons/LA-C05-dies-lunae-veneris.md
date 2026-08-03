@@ -9,7 +9,7 @@ prerequisites: [LA-C02-numbers-6-10]
 sounds: [macron-long-vowel, ae-diphthong]
 roots: [dies-latin, planet-gods]
 etymology_hook: "Latin's own week names are the FULL 'diēs [planet]' phrase that Spanish and French later wore down to lunes/lundi, martes/mardi…"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C02-numbers-6-10]
 ---
 

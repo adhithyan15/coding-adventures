@@ -9,7 +9,7 @@ prerequisites: [LA-C25-cras-te-videbo]
 sounds: [macron-long-vowel]
 roots: [manus-good-latin-archaic]
 etymology_hook: "māne ('morning, early,' an indeclinable neuter noun/adverb — it never changes form) is the same word already hiding inside dē māne ('in the morning,' Chapter 25), the phrase French demain/Italian domani/Catalan demà independently rebuilt 'tomorrow' from — while Spanish mañana, per that same lesson, was built directly on māne alone, without the dē- (Vulgar Latin *maneāna); it derives from mānus, an archaic Latin adjective meaning 'good' — a COMPLETELY DIFFERENT word from the common manus ('hand'), despite the near-identical spelling (mānus has a long ā, manus a short a) — sharing that mānus root with mātūrus ('ripe, timely, early'), itself the source of English mature, and with mātūtīnus ('of the morning,' tied to Matūta, the Roman dawn goddess), the source, via Old French matines/matin, of English matins AND matinee — the same root splitting into 'morning prayers' and 'afternoon show' in English, a genuine semantic drift"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C25-cras-te-videbo]
 ---
 

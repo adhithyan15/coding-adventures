@@ -9,7 +9,7 @@ prerequisites: [LA-C12-medius-dies-nox]
 sounds: [macron-long-vowel, h-aspirate]
 roots: [hora-greek]
 etymology_hook: "hōra, borrowed from Greek hṓrā ('a season, a time of day'), is the source of Spanish hora, French heure, German's later-borrowed Uhr, and English hour — but the Roman hōra itself wasn't a fixed 60 minutes: it was 1/12 of THAT DAY'S sunrise-to-sunset span, so it stretched and shrank with the seasons"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C12-medius-dies-nox]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [LA-C13-hora]
 sounds: [macron-long-vowel, accusative-duration]
 roots: [nascor-natus-born, annus-latin]
 etymology_hook: "vīgintī annōs nātus sum, 'I am twenty years [having been] born' — Classical Latin's age construction used nātus ('born') + the ACCUSATIVE of duration, not habēre ('have'); the Romance 'I HAVE my years' pattern (Spanish tengo, French j'ai) is a LATER Vulgar Latin innovation, not inherited from Classical Latin itself"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C13-hora]
 ---
 

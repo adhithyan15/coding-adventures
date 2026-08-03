@@ -5,12 +5,12 @@ type: phrase
 headword: bonum vesperum
 gloss: "good evening" — a modern, pedagogical phrase (not classically attested), but unlike bonum māne, this one CAN show the real Accusative-of-Exclamation grammar again, since vesper is masculine, not neuter
 concept_tag: GREETING-EVENING
-prerequisites: [LA-C33-vesper, LA-C30-bonam-noctem, LA-C32-bonum-mane]
+prerequisites: [LA-C33-vesper-afterlives, LA-C30-bonam-noctem, LA-C32-bonum-mane]
 sounds: [macron-none-short-vowel, accusative-am-em]
 roots: [bonus-latin, vesper-latin]
 etymology_hook: "bonum vesperum, 'good evening,' is a modern, pedagogical phrase — like bonam noctem and bonum māne, not attested as a fixed Roman greeting in any surviving classical text; but unlike bonum māne (where the grammar point was invisible, since māne is neuter), this one CAN show real grammar again: vesper is MASCULINE, and Latin masculine nouns DO distinguish nominative (vesper) from accusative (vesperum) — so bonum vesperum genuinely demonstrates the same Accusative-of-Exclamation rule as bonam noctem, just with a different gender's endings; a separate feminine noun, vespera, gives the alternate bonam vesperam, agreeing the SAME WAY bonam noctem does — the adjective bonam matches bonam exactly — but the noun endings themselves differ, since vespera is 1st declension (accusative -am) while nox is 3rd declension (accusative -em, noctem, NOT -am)"
-est_minutes: 6
-reviews_of: [LA-C33-vesper, LA-C30-bonam-noctem, LA-C32-bonum-mane]
+est_minutes: 4
+reviews_of: [LA-C33-vesper-afterlives, LA-C33-vesper, LA-C30-bonam-noctem, LA-C32-bonum-mane]
 ---
 
 # bonum vesperum — the accusative rule returns, this time visibly

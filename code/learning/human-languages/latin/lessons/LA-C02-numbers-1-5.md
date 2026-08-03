@@ -9,7 +9,7 @@ prerequisites: [LA-C01-salve]
 sounds: [macron-long-vowel, qu-as-kw, v-as-w]
 roots: [unus, duo, tres, quattuor, quinque]
 etymology_hook: "the ancestors the Spanish and French tracks point back to — quattuor is the source of both quatre and cuatro"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-salve]
 ---
 

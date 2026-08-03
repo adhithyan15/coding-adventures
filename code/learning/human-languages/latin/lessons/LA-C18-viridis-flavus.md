@@ -9,7 +9,7 @@ prerequisites: [LA-C17-canis-feles-cattus]
 sounds: [macron-long-vowel, consonant-v]
 roots: [latin-virere-flourish, pie-bhleh3w-shine]
 etymology_hook: "viridis ('green'), from virēre, 'to flourish,' is the direct source of Spanish's verde; flāvus ('yellow, golden, blond'), from PIE *bhleh₃w-, is Latin's OWN real word for yellow — but Spanish/Portuguese reinvented amarillo/amarelo from 'bitter,' while French's jaune, Italian's giallo, and Romanian's galben ALL independently converge on a different shared Latin word instead, galbinus, 'light GREEN,' not yellow at all; flavus survives mainly in Roman names like Flavius"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C17-canis-feles-cattus]
 ---
 

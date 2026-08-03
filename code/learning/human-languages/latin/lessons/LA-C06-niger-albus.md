@@ -9,7 +9,7 @@ prerequisites: [LA-C05-saturni-solis]
 sounds: [macron-long-vowel]
 roots: [niger-latin, albus-latin, ater-latin, candidus-latin]
 etymology_hook: "niger and albus each had a brightness-twin — ater 'dull black' vs niger 'gleaming black', albus 'dull white' vs candidus 'shining white' — a distinction Romance mostly dropped"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C05-saturni-solis, LA-C05-dies-lunae-veneris]
 ---
 

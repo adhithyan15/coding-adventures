@@ -5,12 +5,12 @@ type: word
 headword: quōmodo
 gloss: "how, in what way" — the genuine classical word behind Italian come, Spanish cómo, and French comment, which went one step further and double-marked "manner"
 concept_tag: QUESTION-HOW
-prerequisites: [LA-C19-quid-agis]
+prerequisites: [LA-C19-valeo-family]
 sounds: [macron-long-vowel, qu-kw-sound]
 roots: [quo-latin, modus-latin, mens-latin]
 etymology_hook: "quōmodo, 'how, in what way,' is a genuine classical word — a univerbation of quō (ablative of quis/quid, 'what') + modō (ablative of modus, 'manner, measure'), literally 'by what manner,' attested in Cicero and Seneca; it's the direct source of Italian come and Spanish cómo, but French's comment went one step further, with comme (← quōmodo) picking up its own French -ment suffix (← mēns, 'mind,' the same suffix in rapidement) — one well-attested account has it double-marking 'manner' rather than carrying it once, though the exact historical mechanism has more than one proposal"
-est_minutes: 6
-reviews_of: [LA-C19-quid-agis]
+est_minutes: 4
+reviews_of: [LA-C19-valeo-family, LA-C19-quid-agis]
 ---
 
 # quōmodo — the real word behind "how," in three Romance languages at once
