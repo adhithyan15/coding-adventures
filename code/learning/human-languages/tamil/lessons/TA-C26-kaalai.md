@@ -5,12 +5,12 @@ type: word
 headword: காலை
 gloss: morning (kālai) — Wiktionary itself HEDGES the etymology ("possibly from Sanskrit काल्य/kālya"), not a confirmed Dravidian root; genuinely uncertain, unlike Kannada's confidently-native or Telugu's confidently-Sanskrit morning-words; பகல் (already met, TA-C17, "daytime") is Wiktionary's own listed coordinate term; அதிகாலை ("early dawn") is a transparent ati-+kālai compound
 concept_tag: TIME-MORNING
-prerequisites: [TA-C17-nanpakal-nalliravu, TA-C24-iravu]
+prerequisites: [TA-C17-transparent-middle-synonyms, TA-C24-night-register-darkness]
 sounds: [tamil-vowel-sign-ai, tamil-long-aa]
 roots: [uncertain-etymology, sanskrit-kalya-time-possible]
 etymology_hook: "காலை (kālai, 'morning') has a genuinely UNCERTAIN etymology — Wiktionary itself hedges with 'possibly from Sanskrit काल्य (kālya),' not a confident claim, and separately notes கால் (kāl) has SIX distinct etymologies, one of which ('time,' from Sanskrit काल/kāla) may or may not be what காலை derives from as an accusative-type form; be honest that this is genuinely less settled than Kannada's ಬೆಳಗ್ಗೆ (confidently native) or Telugu's ఉదయం (confidently Sanskrit tatsama) — don't manufacture false confidence where the primary source itself hedges; Wiktionary lists பகல் (already met, TA-C17, 'daytime') as a coordinate term; அதிகாலை ('early dawn') is a transparent compound of ati- ('excessive, very') + kālai, per the Tamil Lexicon (DDSA, University of Madras)"
-est_minutes: 6
-reviews_of: [TA-C17-nanpakal-nalliravu, TA-C24-iravu]
+est_minutes: 4
+reviews_of: [TA-C17-transparent-middle-synonyms, TA-C24-night-register-darkness, TA-C17-nanpakal-nalliravu, TA-C24-iravu]
 ---
 
 # காலை (kālai) — "morning," an honestly uncertain etymology

@@ -5,11 +5,11 @@ type: practice
 headword: (recap)
 gloss: Chapter 1 recap + the Tamil farewell
 concept_tag: REVIEW
-prerequisites: [TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari]
+prerequisites: [TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-aam, TA-C01-illai, TA-C01-sari]
 sounds: []
 roots: []
-est_minutes: 5
-reviews_of: [TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari]
+est_minutes: 4
+reviews_of: [TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari]
 ---
 
 # Chapter 1 — recap, and how Tamil says goodbye

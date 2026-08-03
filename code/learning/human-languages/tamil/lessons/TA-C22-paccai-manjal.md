@@ -9,7 +9,7 @@ prerequisites: [TA-C11-nirangal, TA-C21-naay-poonai]
 sounds: [tamil-double-lla, pulli-virama]
 roots: [proto-dravidian-pac-green, dravidian-mancal-turmeric]
 etymology_hook: "பச்சை (paccai, 'green') ← Proto-Dravidian *pac-, the same root as Kannada's hasiru, Telugu's pacca, and Malayalam's paccha; மஞ்சள் (mañcaḷ, 'yellow, turmeric') is a SEPARATE native Dravidian root, matching Malayalam's മഞ്ഞ/മഞ്ഞൾ (mañña/maññaḷ) closely — modern comparative Dravidian linguistics treats it as inherited (cognates in Kannada, Kodava, Tulu), though one older Tamil dictionary source floats a Sanskrit derivation via मञ्जिष्ठा (mañjiṣṭha, a red-dye plant name) that the semantic mismatch makes unlikely; the Tamil Lexicon additionally records பசுப்பு (pacuppu, 'greenish yellow'), a genuine doublet of paccai from the *pac- root — a rarer word, but one that means Tamil quietly holds BOTH of this arc's Dravidian patterns (Telugu's one-root-doublet AND Malayalam's two-separate-roots) inside itself"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C21-naay-poonai]
 ---
 

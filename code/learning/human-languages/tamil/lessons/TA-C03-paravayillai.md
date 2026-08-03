@@ -5,11 +5,11 @@ type: phrase
 headword: பரவாயில்லை
 gloss: it's okay / no problem / you're welcome
 concept_tag: COURTESY-YOUREWELCOME
-prerequisites: [TA-C01-illai, TA-C01-nandri]
+prerequisites: [TA-C01-illai, TA-C01-nandri-family-register]
 sounds: [illai-negative]
 roots: [illai-not-dravidian]
 est_minutes: 4
-reviews_of: [TA-C01-illai, TA-C01-nandri]
+reviews_of: [TA-C01-illai, TA-C01-nandri-family-register, TA-C01-nandri]
 ---
 
 # பரவாயில்லை (paravāyillai) — "no problem"

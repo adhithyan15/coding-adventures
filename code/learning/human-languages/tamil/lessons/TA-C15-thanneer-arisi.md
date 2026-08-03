@@ -9,7 +9,7 @@ prerequisites: [TA-C14-kaalangal]
 sounds: [tamil-retroflex-nna-double, tamil-vowel-sign-ii]
 roots: [thann-cool-nir-water, arisi-rice-dravidian]
 etymology_hook: "அரிசி arisi (uncooked rice) may be the ULTIMATE source of the English word 'rice' itself, via Greek oryza — a widely cited hypothesis, though etymologists don't all agree on the exact chain"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C14-kaalangal]
 ---
 

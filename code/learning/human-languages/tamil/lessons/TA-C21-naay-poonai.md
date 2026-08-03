@@ -9,7 +9,7 @@ prerequisites: [TA-C20-pathinondru-irupathu]
 sounds: [tamil-vowel-sign-ai, tamil-final-y]
 roots: [dravidian-naay-dog, dravidian-punai-cat]
 etymology_hook: "நாய் (nāy, 'dog') is a solid, undisputed native Proto-Dravidian root — the SAME root behind Kannada's naayi and Malayalam's naaya — closing this whole arc's dog-word theme on solid ground, the honest opposite of Spanish's perro, English's dog, and Hindi's kuttā, all genuine unsolved mysteries; பூனை (pūnai, 'cat') is Tamil's everyday word, matching Malayalam closely but genuinely different from Kannada's bekku and Telugu's pilli — Tamil itself even keeps rarer alternate cat-words (பில்லி, வெருகு) echoing those other roots"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C20-pathinondru-irupathu]
 ---
 

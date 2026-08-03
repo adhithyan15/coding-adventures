@@ -8,7 +8,7 @@ concept_tag: TA-VERB-SEY
 prerequisites: [TA-C05-pesu]
 sounds: [long-e, ai-sign]
 roots: [sey-do-dravidian, velai-work-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C05-vaazh]
 ---
 

@@ -5,12 +5,12 @@ type: word
 headword: ஆறு ஏழு எட்டு ஒன்பது பத்து
 gloss: six to ten — and the number that carries Tamil's own letter
 concept_tag: TA-NUMBERS-6-10
-prerequisites: [TA-C07-numbers-1-5]
+prerequisites: [TA-C07-numbers-1-5-family]
 sounds: [tamil-inherent-a, pulli-virama, tamil-zha-llla]
 roots: [proto-dravidian-numbers]
 etymology_hook: "seven ஏழு ēḻu carries ழ — the letter and sound in the name Tamiḻ itself; and nine is oṉ (one) + patu (ten)"
-est_minutes: 5
-reviews_of: [TA-C07-numbers-1-5, TA-C01-vanakkam]
+est_minutes: 4
+reviews_of: [TA-C07-numbers-1-5-family, TA-C07-numbers-1-5, TA-C01-vanakkam]
 ---
 
 # ஆறு, ஏழு, எட்டு, ஒன்பது, பத்து — six to ten
@@ -55,17 +55,6 @@ And ten itself is **பத்து** (*pattu*). Say *oṉpatu* then *pattu* and
 nine leaning on ten. That is a common Dravidian habit — nine described as
 one-away-from-ten rather than named outright.
 
-## The family, still together (mostly)
-
-Six, seven and ten stay clear cousins across the Dravidian languages — Tamil
-*āṟu*, Kannada *āru*, Malayalam *āṟu*; Tamil *ēḻu*, Kannada *ēḷu*, Malayalam
-*ēḻu*. Ten is a nice one to watch: Tamil **pattu**, Malayalam **pattu**, but
-Kannada softens the *p‑* to *h‑* → **hattu** — a regular Kannada sound-shift
-you'll see again (Tamil *pāl* "milk" ↔ Kannada *hālu*). Tamil and Malayalam even
-keep **eight** and **nine** nearly identical (*eṭṭu*, *oṉpatu* / *onpatu*); it's
-**Telugu** that wanders off there (*enimidi*, *tommidi*) — so those two are the
-least reliable as family-wide cousins.
-
 ## Guided Practice
 
 [PAUSE 1s]
@@ -79,6 +68,5 @@ least reliable as family-wide cousins.
 [PAUSE 3s] Count six to ten in Tamil. (*Āṟu, ēḻu, eṭṭu, oṉpatu, pattu*.) Which
 number is written with **ழ**, and where else does that letter appear? (**Seven**,
 *ēḻu* — the same letter that ends *Tamiḻ*.) How is **nine** built? (*Oṉ* "one" +
-*patu* "ten" → *oṉpatu*, one short of ten.) What happens to Tamil *pattu* when you
-cross into Kannada? (The *p‑* softens to *h‑*: *hattu*.) Next chapter builds on
-these to ask *how many?* and *how old are you?*
+*patu* "ten" → *oṉpatu*, one short of ten.) Next: follow these forms across the
+family and hear Kannada *p* soften to *h*.

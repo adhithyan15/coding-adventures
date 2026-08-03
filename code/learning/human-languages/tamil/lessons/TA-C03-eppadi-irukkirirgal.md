@@ -8,7 +8,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [TA-C03-eppadi, TA-C02-nii-niingal]
 sounds: [retroflex-kk, iir-gal]
 roots: [iru-be]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C02-nii-niingal, TA-C03-eppadi]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [tamil-inherent-a, pulli-virama, retroflex-n]
 roots: [vaṇaṅku]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 
@@ -54,40 +54,17 @@ That last point is the whole personality of Tamil: it is an old language proud
 of its own word-stock, and it often keeps a home-grown word where its
 neighbours reached for Sanskrit.
 
-## Across the family — the same idea, five ways
-
-Watch "hello" split the Dravidian family in two:
-
-| Language | "Hello" | Source |
-|---|---|---|
-| **Tamil** | *vaṇakkam* (வணக்கம்) | **native Dravidian** (*vaṇaṅku*, "to bow") |
-| Kannada | *namaskāra* (ನಮಸ್ಕಾರ) | Sanskrit |
-| Telugu | *namaskāram* (నమస్కారం) | Sanskrit |
-| Malayalam | *namaskāram* (നമസ്കാരം) | Sanskrit |
-| Hindi | *namaste* (नमस्ते) | Sanskrit |
-| English | *hello* | Germanic hailing-call |
-
-Four of the five borrowed the Sanskrit *namas-* ("bow"); Tamil alone kept its
-own. Same gesture, same meaning — different loyalties.
-
-## Why it's said this way
-
-*vaṇakkam* is said with the palms pressed together, a small bow of the head —
-the gesture *is* the word. It works as **hello and goodbye**, at any time of
-day, to almost anyone, and it is respectful without being stiff. In Tamil
-cinema and formal speech you'll hear the fuller **வணக்கம்!** ring out as a
-one-word salutation to a whole room.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: read it left to right — va · ṇa · k · ka · m → "vaṇakkam"]
 - [YOU SAY: what the *puḷḷi* dot on க் does (kills its vowel: ka → k)]
-- [YOU SAY: "vaṇakkam," with a small bow — you are offering respect]
+- [YOU SAY: "vaṇaṅku — to bow; vaṇakkam — an act of reverence"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Read **வணக்கம்**. What verb is it built from, and what does that
 verb mean? (*vaṇaṅku*, "to bow / pay homage.") What does a **puḷḷi** do to a
-consonant? (Removes its built-in *a*.) Which Dravidian language kept a native
-word for "hello" while its neighbours borrowed Sanskrit? (Tamil.)
+consonant? (Removes its built-in *a*.) Is the root borrowed from Sanskrit?
+(**No** — it is native Tamil.) Next: compare that native greeting across the
+family and learn where it fits.

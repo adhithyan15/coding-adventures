@@ -59,30 +59,35 @@ The **first handwriting track for any Dravidian language**. Until now
 nothing for Tamil, Telugu, Kannada or Malayalam — so four tracks had vocabulary
 through Chapter 6 and no way to learn to read it. `tamil.json` is new here.
 
-Lessons follow **book order**, taking the letters the Chapter 1 words actually
-need, and rise one piece at a time:
+Lessons follow dependency order, taking the letters the Chapter 1 words
+actually need. The original four topics are now eight sub-five-minute steps:
 
-- **`TA-W01`** — **வ, க**. Opens on the question the whole script answers: *why
+- **`TA-W01-curves-va-ka`** — **why Tamil is round**. Opens on the question the whole script answers: *why
   is Tamil round?* The usual account is **palm leaves**: incised with a stylus,
   where a straight stroke along the grain can **split the leaf**, so strokes bend
   into curves. The lesson gives that as the standard explanation *rather than a
   settled fact* — earliest Tamil-Brahmi is angular, the rounding arrived later
   via Vaṭṭeḻuttu, and Devanagari used the same leaves without going round. The
-  durable point is that **the tool leaves fingerprints on the letters**. Then the
-  **abugida** principle (க is *ka*, not *k*), and the fact that **one letter க
+  durable point is that **the tool leaves fingerprints on the letters**.
+- **`TA-W01-abugida-va-ka`** — **வ, க** and the **abugida** principle (க is *ka*, not *k*), plus the fact that **one letter க
   spells k, g and h**, decided by position — which is why Tamil needs 18
   consonant letters where Devanagari needs 33.
-- **`TA-W02`** — **ம, ண**, and the **retroflex**: ண is said with the tongue
+- **`TA-W02-ma-retroflex-na`** — **ம, ண**, and the **retroflex**: ண is said with the tongue
   curled back, a sound English lacks and cannot hear at first. Introduces the
-  three-n table (**ந** dental · **ன** alveolar · **ண** retroflex) without yet
-  drawing the other two.
-- **`TA-W03`** — the **puḷḷi** ் ("the dot"), which removes the inherent vowel —
+  physical tongue position before comparing the full set.
+- **`TA-W02-three-ns`** — the three-n map: **ந** dental · **ன** alveolar · **ண**
+  retroflex, without yet drawing the other two.
+- **`TA-W03-pulli-vanakkam`** — the **puḷḷi** ் ("the dot"), which removes the inherent vowel —
   and the sharp divergence from Devanagari: Tamil does **not fuse** the bare
   consonant into a conjunct. Both letters keep their shape and the dot stays
   visible, which is why Tamil's whole character set is ~247 where Devanagari has
-  hundreds of ligatures. **Assembles வணக்கம்** — the first word of the course.
-- **`TA-W04`** — **ந, ன, ற** and the first vowel sign **ி**, completing the
-  three n's. **Assembles நன்றி**, and shows why the three n's earn their keep:
+  hundreds of ligatures.
+- **`TA-W03-write-vanakkam`** — assembles **வணக்கம்**, the first whole written
+  word, and holds its doubled consonant.
+- **`TA-W04-vowel-signs-nandri`** — **ந, ன, ற**, completing the letter bodies
+  needed for the second whole word.
+- **`TA-W04-i-sign-write-nandri`** — introduces the first vowel sign **ி**,
+  assembles **நன்றி**, and shows why the three n's earn their keep:
   **ன் + ற** is said together as *ndr* — one instance of the general rule that a
   **nasal voices the stop after it** (ந்த *nd* · ண்ட *ṇḍ* · ன்ற *ndr*), so each
   n produces its own cluster and the spelling tells you which. It is also why

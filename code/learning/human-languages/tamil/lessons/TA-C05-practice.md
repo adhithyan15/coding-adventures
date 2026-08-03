@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C05-naan-tamizh-pesugiren, TA-C05-vaazh, TA-C05-velai-sey, TA-C03-naan]
 ---
 

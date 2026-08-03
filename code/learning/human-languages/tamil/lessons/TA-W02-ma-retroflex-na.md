@@ -3,14 +3,14 @@ id: TA-W02-ma-retroflex-na
 chapter: 1
 type: writing
 headword: "ம, ண"
-gloss: two more letters — and the retroflex sound English speakers have to be told about
+gloss: write ம and retroflex ண while training the tongue to curl back
 romanization: "ma, ṇa"
-prerequisites: [TA-W01-curves-va-ka]
+prerequisites: [TA-W01-abugida-va-ka]
 sounds: [retroflex-n]
 roots: []
 etymology_hook: "ண is a RETROFLEX n, made with the tongue curled back to the roof of the mouth — a sound English does not have and cannot hear at first; Tamil writes it with its own letter because words genuinely differ by it, which is why the script needs three separate n-letters"
-est_minutes: 5
-reviews_of: [TA-W01-curves-va-ka]
+est_minutes: 4
+reviews_of: [TA-W01-abugida-va-ka, TA-W01-curves-va-ka]
 ---
 
 # ம and ண — a loop, and a curled tongue
@@ -58,39 +58,17 @@ otherwise unrelated to each other. It's one of the features that makes South Asi
 a *linguistic area*: neighbouring languages that borrowed a sound from each other
 rather than inheriting it.
 
-## Tamil writes three different n's
-
-This is worth seeing now even though you'll only draw one of them today:
-
-| letter | sound | tongue |
-|---|---|---|
-| **ந** | *na* | against the **teeth** (dental) |
-| **ன** | *ṉa* | on the **ridge** behind the teeth (alveolar) |
-| **ண** | *ṇa* | **curled back** to the roof (retroflex) |
-
-Three letters, three positions, moving backwards through the mouth. English
-spells all three with one letter and hears them as the same sound.
-
-You'll draw ந and ன in Lesson 4, where the word for "thank you" needs them. Keep
-one thing in view until then: **ண is ன with one extra arch.** Both letters open
-the same way — top bar, loop — and both finish with the same straight vertical.
-The difference sits in the middle: **ன has one arch, ண has two.** Learn the pair
-together and neither is hard.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU WRITE: ம — "left upright, bottom, **right** arch"]
 - [YOU WRITE: ண — "top bar, left loop, **two** arches, straight vertical"]
 - [YOU SAY: plain *n*, then curl the tongue back — **ṇ**]
-- [YOU SAY: the three positions — "teeth … ridge … **curled back**"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Draw **ம** — which side is the upright on? (**The left**; the
 arch closes it on the right.) Draw **ண** — what makes it *not* ன? (**One extra arch**: ண has **two** arches where ன has one. Both end in the same straight vertical.) What does the dot in **ṇ** mean? (**Retroflex** — the tongue curls
 **back** to the roof of the mouth.) Why can't you hear it yet? (**English has no
-such sound**; the ear learns it after the hand.) How many n-letters does Tamil
-have, and what separates them? (**Three** — ந dental, ன alveolar, ண retroflex,
-moving backwards through the mouth.) Next: the dot that kills a vowel — and your
-first whole word.
+such sound**; the ear learns it after the hand.) Next: place Tamil's three n's
+along one backward walk through the mouth.

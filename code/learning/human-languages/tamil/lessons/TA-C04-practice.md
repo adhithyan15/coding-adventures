@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C04-poy-varugiren, TA-C04-naalai, TA-C04-mindum-sandippom]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C04-po, TA-C04-poy-varugiren, TA-C04-naalai, TA-C04-mindum-sandippom]
 ---
 
