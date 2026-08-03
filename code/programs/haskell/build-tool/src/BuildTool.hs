@@ -454,7 +454,15 @@ supportedLanguages =
     ]
 
 inferPackageName :: FilePath -> String
-inferPackageName path = inferLanguage path ++ "/" ++ takeFileName path
+inferPackageName path =
+    let language = inferLanguage path
+        components = map (map toLower) (splitDirectories (normalise path))
+        isProgram =
+            any
+                (\(parent, child) -> parent == "programs" && child == language)
+                (zip components (drop 1 components))
+        identityPrefix = if isProgram then language ++ "/programs/" else language ++ "/"
+     in identityPrefix ++ takeFileName path
 
 getBuildFile :: FilePath -> IO (Maybe FilePath)
 getBuildFile directory = do
@@ -514,10 +522,12 @@ filterByLanguage requested
 resolveDependencies :: [Package] -> IO DG.DirectedGraph
 resolveDependencies packages = do
     aliasScopes <- buildAliasScopes packages
+    let knownPackageNames = Set.fromList (map packageName packages)
     dependencyPairs <-
         forM packages $ \pkg -> do
-            deps <- resolvePackageDeps aliasScopes pkg
-            pure (pkg, deps)
+            manifestDeps <- resolvePackageDeps aliasScopes pkg
+            buildDeps <- readBuildToolDeps knownPackageNames pkg
+            pure (pkg, sort (nub (manifestDeps ++ buildDeps)))
     pure $
         foldl
             (\graph (pkg, deps) ->
@@ -539,10 +549,21 @@ buildAliasScopes packages =
         let scopeMap = Map.findWithDefault Map.empty scope scopes
         let updatedScope =
                 foldl
-                    (\aliasMap alias -> Map.insert alias (packageName pkg) aliasMap)
+                    (\aliasMap alias ->
+                        Map.insertWith preferPackageIdentity alias (packageName pkg) aliasMap
+                    )
                     scopeMap
                     aliases
         pure (Map.insert scope updatedScope scopes)
+
+    preferPackageIdentity newIdentity existingIdentity
+        | isProgramIdentity existingIdentity && not (isProgramIdentity newIdentity) = newIdentity
+        | otherwise = existingIdentity
+
+    isProgramIdentity identity =
+        case wordsBy (== '/') identity of
+            _language : "programs" : _name -> True
+            _ -> False
 
 dependencyScope :: String -> String
 dependencyScope language
@@ -721,8 +742,45 @@ resolvePackageDeps aliasScopes pkg = do
             ]
         )
 
+readBuildToolDeps :: Set String -> Package -> IO [String]
+readBuildToolDeps knownPackageNames pkg = do
+    contents <- readFileStrict (packageBuildFile pkg)
+    pure
+        ( sort
+            ( nub
+                [ dependency
+                | line <- lines contents
+                , dependency <- parseBuildToolDependencyLine line
+                , dependency /= packageName pkg
+                , dependency `Set.member` knownPackageNames
+                ]
+            )
+        )
+
+parseBuildToolDependencyLine :: String -> [String]
+parseBuildToolDependencyLine line =
+    case trim line of
+        '#' : comment ->
+            let directive = trim comment
+                marker = "build-tool:"
+                lowered = map toLower directive
+             in if marker `isPrefixOf` lowered
+                    then
+                        let assignment = drop (length marker) directive
+                            (field, rest) = break (== '=') assignment
+                         in if map toLower (trim field) == "deps" && not (null rest)
+                                then wordsBy (`elem` ", \t") (drop 1 rest)
+                                else []
+                    else []
+        _ -> []
+
 readManifestTokens :: Package -> IO [String]
-readManifestTokens pkg = do
+readManifestTokens pkg
+    | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | otherwise = readGenericManifestTokens pkg
+
+readGenericManifestTokens :: Package -> IO [String]
+readGenericManifestTokens pkg = do
     let manifestCandidates =
             [ "pyproject.toml"
             , "package.json"
@@ -748,11 +806,86 @@ readManifestTokens pkg = do
     existingFiles <- filterM doesFileExist rootFiles
     fmap (nub . concat) $
         forM existingFiles $ \path -> do
-            contents <-
-                if map toLower (takeExtension path) == ".rockspec"
-                    then readRockspecUtf8 pkg path
-                    else readFileStrict path
+            contents <- readFileStrict path
             pure (tokenize contents)
+
+readLuaDependencyTokens :: Package -> IO [String]
+readLuaDependencyTokens pkg = do
+    entries <- listDirectory (packagePath pkg)
+    let rockspecPaths =
+            sort
+                [ packagePath pkg </> entry
+                | entry <- entries
+                , map toLower (takeExtension entry) == ".rockspec"
+                ]
+    fmap (nub . concat) $
+        forM rockspecPaths $ \path -> do
+            contents <- readRockspecUtf8 pkg path
+            pure (concatMap tokenize (luaDependencyValues contents))
+
+luaDependencyValues :: String -> [String]
+luaDependencyValues = collect False . lines
+  where
+    collect _ [] = []
+    collect inside (line : rest)
+        | inside =
+            quotedValues line
+                ++ if closesTable line then [] else collect True rest
+        | otherwise =
+            case dependencyTableRemainder line of
+                Nothing -> collect False rest
+                Just remainder ->
+                    quotedValues remainder
+                        ++ if closesTable remainder then [] else collect True rest
+
+dependencyTableRemainder :: String -> Maybe String
+dependencyTableRemainder line =
+    let uncommented = stripLuaComment line
+        (field, assignment) = break (== '=') uncommented
+        afterAssignment = drop 1 assignment
+        afterOpeningBrace = drop 1 (dropWhile (/= '{') afterAssignment)
+     in if map toLower (trim field) == "dependencies"
+            && not (null assignment)
+            && '{' `elem` afterAssignment
+            then Just afterOpeningBrace
+            else Nothing
+
+quotedValues :: String -> [String]
+quotedValues = go . stripLuaComment
+  where
+    go [] = []
+    go (character : rest)
+        | character `elem` ['"', '\''] =
+            let (value, remaining) = takeQuoted character rest
+             in value : go remaining
+        | otherwise = go rest
+
+    takeQuoted _ [] = ([], [])
+    takeQuoted quote ('\\' : escaped : rest) =
+        let (value, remaining) = takeQuoted quote rest
+         in ('\\' : escaped : value, remaining)
+    takeQuoted quote (character : rest)
+        | character == quote = ([], rest)
+        | otherwise =
+            let (value, remaining) = takeQuoted quote rest
+             in (character : value, remaining)
+
+closesTable :: String -> Bool
+closesTable = elem '}' . stripLuaComment
+
+stripLuaComment :: String -> String
+stripLuaComment = go Nothing
+  where
+    go _ [] = []
+    go Nothing ('-' : '-' : _) = []
+    go quoteState ('\\' : escaped : rest) =
+        '\\' : escaped : go quoteState rest
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = character : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) (character : rest)
+        | character == quote = character : go Nothing rest
+        | otherwise = character : go (Just quote) rest
 
 readRockspecUtf8 :: Package -> FilePath -> IO String
 readRockspecUtf8 pkg path = do

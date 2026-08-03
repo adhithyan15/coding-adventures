@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-keyring",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads only the explicitly configured public-key files needed to verify signed Chief agent packages."
+    }
+  ],
+  "justification": "Loads bounded public Ed25519 verification keys from validated operator-configured paths without environment, network, process, clock, random, or secret-store access."
+}

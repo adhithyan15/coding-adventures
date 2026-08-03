@@ -79,7 +79,7 @@
     {
       "language": "german",
       "chapter": 17,
-      "sourceHash": "fnv1a64:fdbd2e7e24d5d6f2",
+      "sourceHash": "fnv1a64:a529d960c10eae9c",
       "lessonIds": [
         "GE-C17-kopf",
         "GE-C17-kopf-haupt",
@@ -109,7 +109,7 @@
     {
       "language": "german",
       "chapter": 20,
-      "sourceHash": "fnv1a64:7f75baaef49241c0",
+      "sourceHash": "fnv1a64:2949289880ce15c7",
       "lessonIds": [
         "GE-C20-entschuldigung"
       ],
