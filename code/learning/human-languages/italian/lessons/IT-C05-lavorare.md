@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C05-lavorare
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 300
 chapter: 5
 type: word
 headword: lavorare
@@ -9,24 +12,38 @@ prerequisites: [IT-C05-parlare]
 sounds: [r-tap, vowel-a-open]
 roots: [laborare-latin]
 etymology_hook: "lavorare ← Latin labōrāre 'to labour' → English labor, laboratory, elaborate, collaborate"
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
+introduces:
+  knowledge: [IT-SOUND-LAVORARE-02, IT-ETYMON-LAVORARE-03, IT-GRAMMAR-LAVORARE-04]
+practises:
+  knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-SOUND-LAVORARE-02, IT-ETYMON-LAVORARE-03, IT-GRAMMAR-LAVORARE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C05-abitare]
 ---
-
 # lavorare — "to work," the honest kind
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A third **-are** verb — and a satisfying twist. Where Spanish and
 French built their word for "work" out of **torture**, **Italian took a different
 road entirely**: *lavorare*, from plain Latin *"to labour."*
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-LAVORARE-02]; assesses=[] -->
 
 - **lavorare** = *la-vo-RA-reh*: clean vowels, tapped *r*. (The *v* is a real
   *v*, unlike Spanish.)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-LAVORARE-03]; assesses=[] -->
 
 **lavorare** comes from Latin **labōrāre**, *"to labour, to work, to strive"* —
 from **labor**, "toil, effort." No torture device here; just honest labour. The
@@ -48,12 +65,14 @@ it as *labour*. A single glance at three verbs, and you see two Roman attitudes 
 a day's work.
 
 ## Grammar Lens: same -are template
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-LAVORARE-04]; assesses=[] -->
 
 | (io) lavoro · (tu) lavori · (lui/lei) lavora | (-o / -i / -a) |
 
 > **Lavoro a Milano.** — "I work in Milan."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-SOUND-LAVORARE-02, IT-ETYMON-LAVORARE-03, IT-GRAMMAR-LAVORARE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lavorare" — *la-vo-RA-reh*]
@@ -62,6 +81,7 @@ a day's work.
   (torture)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-SOUND-LAVORARE-02, IT-ETYMON-LAVORARE-03, IT-GRAMMAR-LAVORARE-04] -->
 
 [PAUSE 3s] What Latin word is *lavorare* from, and its English cousins?
 (*labōrāre* — labor, laboratory, elaborate.) How does its root differ from Spanish

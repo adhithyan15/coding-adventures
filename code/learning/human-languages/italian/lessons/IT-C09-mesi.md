@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C09-mesi
+spine_node: SPINE-TIME-OF-DAY
+sequence: 390
 chapter: 9
 type: word
 headword: i mesi
@@ -9,13 +12,25 @@ prerequisites: [IT-C06-numeri-6-10, IT-C07-giorni-1]
 sounds: [double-gg, c-before-i]
 roots: [latin-months, roman-gods]
 etymology_hook: "Italy kept the months closest to Latin: gennaio←Januarius, marzo←Mars (= martedì!), settembre–dicembre = the Latin 7–10 you learned as numbers"
-est_minutes: 4
+duration:
+  max_seconds: 188
+requires:
+  knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03]
+introduces:
+  knowledge: [IT-ETYMON-MESI-02]
+practises:
+  knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-MESI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C06-numeri-6-10, IT-C07-giorni-1]
 ---
-
 # i mesi — Rome's own months
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Sitting next to Rome, Italian kept the month names **closest to Latin**
 of all the sisters — the same procession of gods and Caesars, barely worn. And two
@@ -23,6 +38,7 @@ things you know pay off: *marzo* is the war-god of *martedì*, and *settembre–
 dicembre* are the Latin numbers 7–10.
 
 ## The months, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-MESI-02]; assesses=[] -->
 
 | Italian | ← Latin | who / what | Spanish twin |
 |---|---|---|---|
@@ -49,6 +65,7 @@ keep the doubled/assimilated look (*ottobre*, like *otto*). And two payoffs land
   and shifted the count.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-MESI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "gennaio, febbraio, marzo … novembre, dicembre"]
@@ -56,6 +73,7 @@ keep the doubled/assimilated look (*ottobre*, like *otto*). And two payoffs land
 - [YOU SAY: "settembre = 7, dicembre = 10"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-MESI-02] -->
 
 [PAUSE 3s] Which god links *marzo* and *martedì*? (**Mars**.) Why is *dicembre*
 Latin for "ten"? (The Roman year began in March.) Which two months honour real

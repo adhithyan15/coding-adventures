@@ -44,6 +44,118 @@
       "output": "spanish/book/chapters/ch06-first-verbs.tex"
     },
     {
+      "language": "italian",
+      "chapter": 2,
+      "title": "How Are You?",
+      "label": "ch:it-how-are-you",
+      "output": "italian/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:it-introductions",
+      "output": "italian/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:it-farewells",
+      "output": "italian/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:it-first-verbs",
+      "output": "italian/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:it-numbers-one-to-ten",
+      "output": "italian/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 7,
+      "title": "Days of the Week",
+      "label": "ch:it-days-of-the-week",
+      "output": "italian/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 8,
+      "title": "Telling Time",
+      "label": "ch:it-telling-time",
+      "output": "italian/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:it-months-and-seasons",
+      "output": "italian/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:it-family",
+      "output": "italian/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 11,
+      "title": "Bread, Water, and Wine",
+      "label": "ch:it-bread-water-wine",
+      "output": "italian/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:it-numbers-eleven-to-twenty",
+      "output": "italian/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:it-colours",
+      "output": "italian/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 14,
+      "title": "Having and Telling Your Age",
+      "label": "ch:it-having-and-age",
+      "output": "italian/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 15,
+      "title": "Two Italian Pasts",
+      "label": "ch:it-two-pasts",
+      "output": "italian/book/chapters/ch15-two-pasts.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 16,
+      "title": "Being, Going, and the Past with Essere",
+      "label": "ch:it-essere-andare-past",
+      "output": "italian/book/chapters/ch16-essere-andare-past.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:it-head-and-hand",
+      "output": "italian/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",

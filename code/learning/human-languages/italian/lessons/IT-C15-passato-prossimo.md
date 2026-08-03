@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C15-passato-prossimo
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 510
 chapter: 15
 type: word
 headword: ho parlato
@@ -9,18 +12,31 @@ prerequisites: [IT-C14-avere, IT-C05-parlare]
 sounds: [silent-h, double-t]
 roots: [latin-habere-participle]
 etymology_hook: "ho parlato was once literally 'I HAVE [a thing] spoken' — Latin habeō litterās scriptās, a possessive with the participle as an ADJECTIVE agreeing with the object; the agreement survives when the object comes first (le ho viste), a fossil of the lost meaning"
-est_minutes: 4
+duration:
+  max_seconds: 245
+requires:
+  knowledge: [IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
+introduces:
+  knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
+practises:
+  knowledge: [IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C14-avere, IT-C05-parlare, IT-C05-lavorare]
 ---
-
 # ho parlato — the past built from "have"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Italy's everyday past tense, and you already own both halves: **avere**
 from last chapter, and Chapter 5's verbs.
 
-## The recipe
+## Grammar Lens: the compound-past recipe
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-PASSATO-PROSSIMO-02]; assesses=[] -->
 
 > **avere** (conjugated) + **past participle**
 
@@ -46,7 +62,8 @@ Note **parlato** keeps the *-t-* that French wore away: Italian *parlato*, Frenc
 *parlé*, both from Latin ***-ātum***. Italian is the more conservative sister —
 the same pattern as Chapter 11's *acqua* against French *eau*.
 
-## The buried possessive
+## The word, taken apart: the buried possessive
+<!-- hl-knowledge: introduces=[IT-ETYMON-PASSATO-PROSSIMO-03]; assesses=[] -->
 
 Latin could say:
 
@@ -65,6 +82,7 @@ still agrees with it, exactly as an adjective would:
 That *-e* is a Latin adjective ending, still agreeing after two thousand years.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ho parlato, hai parlato, ha parlato, abbiamo parlato, hanno parlato"]
@@ -73,6 +91,7 @@ That *-e* is a Latin adjective ending, still agreeing after two thousand years.
 - [YOU SAY: the old meaning — "I **have** a thing **spoken**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03] -->
 
 [PAUSE 3s] What two pieces make the *passato prossimo*? (**Avere** + the **past
 participle**.) What is *parlare*'s participle? (**Parlato** ← *-ātum*.) What did

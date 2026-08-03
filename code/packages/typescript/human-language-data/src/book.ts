@@ -45,7 +45,11 @@ function escapeLatexCharacter(character: string): string {
     "]": "{]}",
     "←": "$\\leftarrow$",
     "→": "$\\to$",
+    "↔": "$\\leftrightarrow$",
     "≈": "$\\approx$",
+    "ṓ": "\\'{\\={o}}",
+    "₁": "\\textsubscript{1}",
+    "ʰ": "\\textsuperscript{h}",
   };
   return escaped[character] ?? character;
 }

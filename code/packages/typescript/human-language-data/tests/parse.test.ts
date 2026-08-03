@@ -104,6 +104,17 @@ describe("parseLesson", () => {
     ]);
   });
 
+  it("recognizes scoped taken-apart headings as etymology blocks", () => {
+    const parsed = parseBodyBlocks([
+      "## The phrase, taken apart",
+      "A phrase history.",
+      "",
+      "## The four seasons, taken apart",
+      "Four word histories.",
+    ].join("\n"));
+    expect(parsed.blocks.map((block) => block.type)).toEqual(["etymology", "etymology"]);
+  });
+
   it("parses block-boundary knowledge without rendering the directive", () => {
     const parsed = parseBodyBlocks([
       "## Guided Practice",

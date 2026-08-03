@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C04-arrivederci
+spine_node: SPINE-TAKE-LEAVE
+sequence: 230
 chapter: 4
 type: word
 headword: arrivederci
@@ -9,13 +12,25 @@ prerequisites: []
 sounds: [r-tap, soft-c]
 roots: [re-videre-latin]
 etymology_hook: "arrivederci = a + ri(re-) + vedere 'see' + ci 'us' — 'to our seeing-again', twin of au revoir / auf Wiedersehen"
-est_minutes: 4
+duration:
+  max_seconds: 239
+requires:
+  knowledge: []
+introduces:
+  knowledge: [IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03]
+practises:
+  knowledge: [IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C02-practice]
 ---
-
 # arrivederci — "goodbye," i.e. "until we meet again"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can open a conversation in Italian and ask how someone is. Now,
 close it. The standard goodbye is **arrivederci** — and, like its French and
@@ -23,11 +38,13 @@ German cousins, it doesn't say "goodbye" at all. It says **"until we see each
 other again."**
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-ARRIVEDERCI-02]; assesses=[] -->
 
 - **arrivederci** = *ar-ree-veh-**DER**-chee*: a tapped double *r*, and the final
   *-ci* is soft (*chee*, Italian *c* before *i*). Stress the *-der-*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-ARRIVEDERCI-03]; assesses=[] -->
 
 Break it into four pieces you can almost read straight off:
 
@@ -56,6 +73,7 @@ Three languages, one gesture: part by pointing at the reunion, not the parting.
 exact twin of Spanish *adiós*; but for everyday partings it's *arrivederci*.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "arrivederci" — *ar-ree-veh-DER-chee*]
@@ -63,6 +81,7 @@ exact twin of Spanish *adiós*; but for everyday partings it's *arrivederci*.)
 - [YOU SAY: "vedere" then English "video, vision" — the *see* root]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-ARRIVEDERCI-02, IT-ETYMON-ARRIVEDERCI-03] -->
 
 [PAUSE 3s] What does *arrivederci* literally promise? ("Until we see each other
 again.") What French and German goodbyes share that exact idea? (*au revoir*,

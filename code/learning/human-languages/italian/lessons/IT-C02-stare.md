@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C02-stare
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 120
 chapter: 2
 type: word
 headword: stare
@@ -9,24 +12,38 @@ prerequisites: []
 sounds: [st-clean]
 roots: [stare-latin]
 etymology_hook: "stare ← Latin stāre 'to stand' — the SAME verb as Spanish estar; come stai? = 'how do you stand?'"
-est_minutes: 4
+duration:
+  max_seconds: 214
+requires:
+  knowledge: []
+introduces:
+  knowledge: [IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04]
+practises:
+  knowledge: [IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C02-come]
 ---
-
 # stare — "to be," the standing kind (Spanish's estar, undressed)
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Like Spanish, Italian has **two** verbs for "to be" — **essere**
 (identity) and **stare** (state). "How are you?" runs on **stare**. And if you
 did the Spanish track, this is *estar* with its front *e* taken off.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-STARE-02]; assesses=[] -->
 
 - `st-clean` — Italian, unlike Spanish, is happy to start a word with *st-*: no
   propping *e*. **stare** = *STAH-reh*, clean *st*, final *-e* sounded.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-STARE-03]; assesses=[] -->
 
 **stare** comes straight from Latin **stāre**, *"to stand."* Spanish grew the
 same verb into **estar** (with a propping *e-*); Italian kept it bare as
@@ -39,6 +56,7 @@ That **stā-** root stands behind a wall of English words: **stay**, **stand**,
 stand?"** — the very same picture as Spanish *¿Cómo estás?*.
 
 ## Grammar Lens: essere vs stare, and the two forms you need
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-STARE-04]; assesses=[] -->
 
 | verb | from | job |
 |---|---|---|
@@ -51,6 +69,7 @@ For this chapter, just two forms of *stare*:
 - **sta** — "you are" (formal, *Lei*) / "he/she is"
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "stare" — *STAH-reh*, clean *st*]
@@ -58,6 +77,7 @@ For this chapter, just two forms of *stare*:
 - [YOU SAY: Italian *stare* = Spanish *estar*, same Latin *stāre* "to stand"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-STARE-02, IT-ETYMON-STARE-03, IT-GRAMMAR-STARE-04] -->
 
 [PAUSE 3s] What Latin verb is *stare*, and which Spanish verb is its twin?
 ("To stand," *stāre* — Spanish *estar*.) Which Italian be-verb is for how you

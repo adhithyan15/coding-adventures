@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C13-rosso-blu
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 480
 chapter: 13
 type: word
 headword: rosso, blu
@@ -9,18 +12,31 @@ prerequisites: [IT-C13-nero-bianco]
 sounds: [double-s, final-stress-u]
 roots: [pie-rewdh, germanic-blao, arabic-lazaward]
 etymology_hook: "rosso ← russus ← PIE *h₁rewdʰ-, cousin of English red and German rot; blu is a SECOND Germanic loan, while azzurro ← Arabic lāzaward 'lapis lazuli' → English azure — the colour Italy's teams are named for"
-est_minutes: 4
+duration:
+  max_seconds: 229
+requires:
+  knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04]
+introduces:
+  knowledge: [IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05]
+practises:
+  knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C13-nero-bianco, IT-C12-numeri-17-20]
 ---
-
 # rosso, blu — and the blue Italy plays in
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One very old word, one more Germanic loan — and a third blue that came
 all the way from Persia by way of Arabic.
 
-## rosso — very old indeed
+## The word, taken apart: rosso
+<!-- hl-knowledge: introduces=[IT-ETYMON-ROSSO-BLU-02]; assesses=[] -->
 
 **rosso** ← Latin ***russus*** ("red"), from PIE ***h₁rewdʰ-***. That root is one
 of the oldest colour words we can reconstruct:
@@ -35,13 +51,15 @@ of the oldest colour words we can reconstruct:
 *Rosso* and *red* are **cousins**, not borrowings — separated for millennia.
 Note the **double s**: hold it. *Roso* and *rosso* are different words.
 
-## blu — the second Germanic loan
+## The word, taken apart: blu
+<!-- hl-knowledge: introduces=[IT-ETYMON-ROSSO-BLU-03]; assesses=[] -->
 
 **blu** ← Germanic ***blāo***, exactly like French *bleu*. Chapter pattern
 confirmed: **bianco** and **blu**, Italian's white and blue, are both **Germanic
 imports**.
 
-## azzurro — the Arabic blue
+## The word, taken apart: azzurro
+<!-- hl-knowledge: introduces=[IT-ETYMON-ROSSO-BLU-04]; assesses=[] -->
 
 Italian has a second blue, and it's the famous one: **azzurro**, from Arabic
 ***lāzaward*** ("lapis lazuli"), itself from Persian ***lāžward***. The initial
@@ -52,7 +70,8 @@ English **azure**.
 Italy's national teams are **gli Azzurri**, "the blue ones" — named, at the end of
 a very long chain, after a **blue stone mined in Afghanistan**.
 
-## The chapter in one table
+## What you've built: the colour paths
+<!-- hl-knowledge: introduces=[IT-NOTICE-ROSSO-BLU-05]; assesses=[] -->
 
 | Italian | source |
 |---|---|
@@ -63,6 +82,7 @@ a very long chain, after a **blue stone mined in Afghanistan**.
 | **azzurro** | **Arabic** *lāzaward* |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rosso, blu, azzurro"]
@@ -71,6 +91,7 @@ a very long chain, after a **blue stone mined in Afghanistan**.
 - [YOU SAY: "gli Azzurri" — and think of the stone]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05] -->
 
 [PAUSE 3s] Is *rosso* related to English *red* by borrowing or descent?
 (**Descent** — PIE ***h₁rewdʰ-***.) Which two Italian colours are Germanic loans?

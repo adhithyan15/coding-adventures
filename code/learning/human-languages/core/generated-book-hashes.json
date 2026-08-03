@@ -22,6 +22,183 @@
       "tex": "gujarati/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "italian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:03633dd64e873a05",
+      "lessonIds": [
+        "IT-C02-prego",
+        "IT-C02-come",
+        "IT-C02-stare",
+        "IT-C02-come-stai",
+        "IT-C02-come-sta",
+        "IT-C02-come-va",
+        "IT-C02-cosi-cosi",
+        "IT-C02-practice"
+      ],
+      "tex": "italian/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:aa27c60a3d656001",
+      "lessonIds": [
+        "IT-C03-io",
+        "IT-C03-mi-chiamo",
+        "IT-C03-come-ti-chiami",
+        "IT-C03-piacere",
+        "IT-C03-practice"
+      ],
+      "tex": "italian/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:ca5f394581f1d56b",
+      "lessonIds": [
+        "IT-C04-arrivederci",
+        "IT-C04-a-domani",
+        "IT-C04-a-presto",
+        "IT-C04-a-piu-tardi",
+        "IT-C04-practice"
+      ],
+      "tex": "italian/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:fc48d491a87398dc",
+      "lessonIds": [
+        "IT-C05-parlare",
+        "IT-C05-abitare",
+        "IT-C05-lavorare",
+        "IT-C05-parlo-italiano",
+        "IT-C05-practice"
+      ],
+      "tex": "italian/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:23d44140d0f55101",
+      "lessonIds": [
+        "IT-C06-numeri-1-5",
+        "IT-C06-numeri-6-10"
+      ],
+      "tex": "italian/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:e411e61a0e42f98e",
+      "lessonIds": [
+        "IT-C07-giorni-1",
+        "IT-C07-giorni-2"
+      ],
+      "tex": "italian/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:8c6f2fefca515e70",
+      "lessonIds": [
+        "IT-C08-ora",
+        "IT-C08-mezzogiorno-mezzanotte"
+      ],
+      "tex": "italian/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:d030a0fa85b5678f",
+      "lessonIds": [
+        "IT-C09-mesi",
+        "IT-C09-stagioni"
+      ],
+      "tex": "italian/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:c6b580550c4c7454",
+      "lessonIds": [
+        "IT-C10-genitori",
+        "IT-C10-fratello-sorella"
+      ],
+      "tex": "italian/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:0ba39a1b7b3a0899",
+      "lessonIds": [
+        "IT-C11-pane",
+        "IT-C11-acqua-vino"
+      ],
+      "tex": "italian/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e2431531c5358324",
+      "lessonIds": [
+        "IT-C12-numeri-11-16",
+        "IT-C12-numeri-17-20"
+      ],
+      "tex": "italian/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:d158e4e3576da88e",
+      "lessonIds": [
+        "IT-C13-nero-bianco",
+        "IT-C13-rosso-blu"
+      ],
+      "tex": "italian/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:62fcc73207804a51",
+      "lessonIds": [
+        "IT-C14-avere",
+        "IT-C14-eta"
+      ],
+      "tex": "italian/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:9dfc5c16142e4a8d",
+      "lessonIds": [
+        "IT-C15-passato-prossimo",
+        "IT-C15-passato-remoto"
+      ],
+      "tex": "italian/book/chapters/ch15-two-pasts.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:46629a0359aec030",
+      "lessonIds": [
+        "IT-C16-essere",
+        "IT-C16-essere-stato",
+        "IT-C16-andare",
+        "IT-C16-passato-prossimo-essere"
+      ],
+      "tex": "italian/book/chapters/ch16-essere-andare-past.tex"
+    },
+    {
+      "language": "italian",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:28edfc484982a197",
+      "lessonIds": [
+        "IT-C17-testa",
+        "IT-C17-mano"
+      ],
+      "tex": "italian/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:d0addd66aaedf900",

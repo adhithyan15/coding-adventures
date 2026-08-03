@@ -50,7 +50,7 @@ function classifyBlock(title: string): LessonBlockType {
   if (normalized.startsWith("you'll want to know")) return "input";
   if (normalized.startsWith("sounds you'll need")) return "pronunciation";
   if (normalized.startsWith("script")) return "script";
-  if (normalized.startsWith("the word, taken apart")) return "etymology";
+  if (normalized.includes("taken apart")) return "etymology";
   if (normalized.startsWith("why it's said this way")) return "culture-pragmatics";
   if (
     normalized.startsWith("grammar lens") ||

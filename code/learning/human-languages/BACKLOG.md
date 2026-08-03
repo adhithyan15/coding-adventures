@@ -81,9 +81,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B11 | Complete (#9698) | Remove Sanskrit's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes, and shorter running titles make the forced six-chapter build warning-free. |
 | HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
 | HL-B13 | Complete (#9711) | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
-| HL-I01 | Complete in this PR | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
-| HL-B14 | Next | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
-| HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
+| HL-I01 | Complete (#9715) | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
+| HL-B14 | Complete in this PR | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
+| HL-B15 | Next | Remove Italian's LaTeX layout and Unicode bookmark warnings. | The expanded 104-page build has zero missing glyphs or duplicate destinations but reports four overfull boxes, ten underfull boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B16 | Queued | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Portuguese has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B17 | Queued | Remove Portuguese's LaTeX layout warnings. | A forced build succeeds with no missing glyphs, overfull boxes, duplicate labels, or Hyperref warnings, but reports three underfull boxes; the clean-build signal is zero. |
 | HL-B18 | Queued | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The French PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
@@ -516,8 +516,36 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   RTL support, and Latin Modern before compiling any book.
 - The workflow remains one job with one setup, one dynamically discovered
   20-book loop, one verified artifact, and one `main`-only Pages publication.
+  The exact merged-main run installed the focused toolchain in 87 seconds,
+  built all books in 93 seconds, verified the bundle, and published Pages.
   HL-B14 is next: close the learner-visible Italian app/book drift through the
   same canonical generation path.
+
+## Findings from HL-B14
+
+- Italian Chapters 2–17 now comprise 49 strict schema-v2 micro-lessons with
+  explicit shared-spine anchors, prerequisite-closed knowledge atoms, typed
+  teaching blocks, and authored skill, mode, strand, register, variety, and
+  duration contracts. Chapter 1 remains readable legacy content, so the track
+  is intentionally mixed while one-source migration proceeds incrementally.
+- All 49 migrated lessons remain below five minutes. `IT-C17-mano` is the
+  tightest at 298 computed seconds; curriculum validation reports zero duration
+  violations and zero unknown or misordered prerequisites.
+- Sixteen deterministic generation targets now publish Chapters 2–17 from the
+  same lesson AST loaded by Language Ladder. Their manifest covers all 49
+  lessons, and app tests independently reproduce every chapter hash and lesson
+  count. Repository-wide missing book chapters fall from 252 to 236.
+- The generic renderer recognizes scoped “taken apart” headings and emits
+  portable TeX for the scholarly symbols `↔`, `ṓ`, `₁`, and `ʰ`, preserving the
+  app's precise Unicode while avoiding font-dependent gaps in generated PDFs.
+- A forced XeLaTeX build produces a 104-page book with zero missing glyphs,
+  duplicate destinations, or leaked generator metadata. All 104 rendered pages
+  were inspected; the cover, three-page contents, chapter openings, callouts,
+  dense tables, and final recall are unclipped, and the PDF outline contains
+  Preface, pronunciation, and all seventeen chapter destinations.
+- Four overfull boxes, ten underfull boxes, and the three pre-existing Chapter
+  1 Hyperref warnings remain. HL-B15 is next and now records the expanded,
+  measured clean-build debt rather than the old 13-page baseline.
 
 ## Findings from HL-D01C
 

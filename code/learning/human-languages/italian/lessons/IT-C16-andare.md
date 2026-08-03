@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C16-andare
+spine_node: SPINE-ASK-LOCATION
+sequence: 550
 chapter: 16
 type: word
 headword: andare
@@ -9,19 +12,32 @@ prerequisites: [IT-C16-essere-stato, IT-C02-come-va]
 sounds: [double-consonant, open-a]
 roots: [latin-vadere, disputed-ambitare]
 etymology_hook: "vado/vai/va/vanno continue Latin vadere, while andare/andiamo/andate/andato probably continue a different root"
-est_minutes: 4
+duration:
+  max_seconds: 195
+requires:
+  knowledge: [IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-COME-VA-02]
+introduces:
+  knowledge: [IT-LEX-ANDARE-02]
+practises:
+  knowledge: [IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-COME-VA-02, IT-LEX-ANDARE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C16-essere-stato, IT-C02-come-va]
 ---
-
 # andare — “to go,” on two stems
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Chapter 2 gave you **Come va?**, “How’s it going?” The **va** inside
 it belongs to **andare**, “to go.” Learn the whole verb before using it to build
 the past.
 
-## The forms
+## You'll want to know: the forms
+<!-- hl-knowledge: introduces=[IT-LEX-ANDARE-02]; assesses=[] -->
 
 | | |
 |---|---|
@@ -46,6 +62,7 @@ Spanish shows the same kind of seam in *voy* beside *andar*. The comparison is
 a memory aid; the Italian forms above are the only ones you need here.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-COME-VA-02, IT-LEX-ANDARE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: “vado, vai, va”]
@@ -56,6 +73,7 @@ a memory aid; the Italian forms above are the only ones you need here.
 [REPEAT x2] “Vado, vai, va — andiamo, andate, vanno.”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-COME-VA-02, IT-LEX-ANDARE-02] -->
 
 [PAUSE 3s] Give the six present forms. (**Vado, vai, va, andiamo, andate,
 vanno**.) Which plural form belongs to the *vad-* side? (**Vanno**.) What is the

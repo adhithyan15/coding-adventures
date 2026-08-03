@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C14-avere
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 490
 chapter: 14
 type: word
 headword: avere
@@ -9,18 +12,31 @@ prerequisites: [IT-C13-rosso-blu, IT-C05-parlare]
 sounds: [silent-h, double-n]
 roots: [latin-habere]
 etymology_hook: "avere ← habēre (→ habit/inhabit/exhibit/prohibit). Italian dropped the Latin h everywhere EXCEPT here: ho/hai/ha/hanno keep a silent h purely to distinguish them from o 'or', ai 'to the', a 'to', anno 'YEAR' — spelling doing a job sound can't"
-est_minutes: 4
+duration:
+  max_seconds: 219
+requires:
+  knowledge: [IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
+introduces:
+  knowledge: [IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04]
+practises:
+  knowledge: [IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C13-rosso-blu, IT-C05-parlare, IT-C11-acqua-vino]
 ---
-
 # avere — "to have"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Italian's workhorse verb — and the home of the language's **only
 silent letter**, which is there for a reason worth knowing.
 
-## The forms
+## You'll want to know: the forms
+<!-- hl-knowledge: introduces=[IT-LEX-AVERE-02]; assesses=[] -->
 
 | | | |
 |---|---|---|
@@ -31,7 +47,8 @@ silent letter**, which is there for a reason worth knowing.
 Look at which forms carry an **h**: *ho, hai, ha, hanno*. And which don't:
 *abbiamo, avete*.
 
-## The silent h, and why it survives
+## Grammar Lens: why silent h survives
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-AVERE-03]; assesses=[] -->
 
 Italian threw the Latin **h** away almost completely — it is never pronounced,
 and *uomo* (← *homō*) and *erba* (← *herba*) simply dropped it.
@@ -50,7 +67,8 @@ the sound, and is kept **only so your eye can tell the words apart**. Spelling
 doing a job pronunciation can't — hold onto *hanno* vs *anno*; it comes back in
 the next lesson.
 
-## The root
+## The word, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-AVERE-04]; assesses=[] -->
 
 **avere** ← Latin ***habēre***, the same source as French *avoir*. English took
 it as a whole family: **habit** (what you have regularly), **inhabit**,
@@ -60,6 +78,7 @@ Note *abbiamo* — the **bb** is the old *habē-* resurfacing in the *noi* form,
 while *ho* wore down to a single vowel.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ho, hai, ha, abbiamo, avete, hanno"]
@@ -68,6 +87,7 @@ while *ho* wore down to a single vowel.
 - [YOU SAY: "Abbiamo pane e vino" — Ch. 11's food]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05, IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04, IT-LEX-AVERE-02, IT-GRAMMAR-AVERE-03, IT-ETYMON-AVERE-04] -->
 
 [PAUSE 3s] Give the six forms. (*Ho, hai, ha, abbiamo, avete, hanno*.) Which
 carry an **h**? (*Ho, hai, ha, hanno*.) Is it pronounced? (**No** — never.) Then
