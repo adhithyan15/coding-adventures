@@ -26,8 +26,9 @@
     }
   ],
   "dependencies": [
-    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"
+    "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390"
   ],
+  "formula_inventory_sha256": "22ab9d1016defb58cbac982b482a50064a641d3c75de3c5e024cf38426681ba0",
   "input": {
     "raw_source_sha256": "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834",
     "receipt_sha256": "bb1025df0f28f7cbef1ca7df75d03177b97d33548791cf5adb6602fdc6634c95",

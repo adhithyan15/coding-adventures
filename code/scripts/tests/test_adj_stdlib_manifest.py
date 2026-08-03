@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -76,6 +77,25 @@ class AdjStdlibManifestTests(unittest.TestCase):
 
     def test_accepts_a_source_labeled_seed_objective(self) -> None:
         self.assertEqual(self.validate(valid_manifest(self.library)), [])
+
+    def test_provenance_loader_forwards_formula_inventory_command(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            command = ["trusted-parser"]
+            with mock.patch.object(
+                manifest_module.adj_stdlib_provenance,
+                "_validate_repository_unlocked",
+                side_effect=manifest_module.adj_stdlib_provenance.ProvenanceError(
+                    "injected replay stop"
+                ),
+            ) as validate:
+                bundles, errors = manifest_module.load_provenance_bundles(root, command)
+
+        self.assertEqual(bundles, {})
+        self.assertEqual(errors, ["provenance CAS: injected replay stop"])
+        self.assertEqual(
+            validate.call_args.kwargs["formula_inventory_command"], command
+        )
 
     def test_rejects_duplicate_ids_and_unknown_prerequisites(self) -> None:
         value = valid_manifest(self.library)

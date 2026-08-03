@@ -109,8 +109,12 @@ jobs:
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
-          python3 code/scripts/adj_stdlib_report.py --format json --fail-on-unreferenced-tests > /tmp/adj-stdlib-report.json
-          python3 code/scripts/adj_stdlib_manifest.py --validate-json-schema > /tmp/adj-stdlib-manifest.json
+          python3 code/scripts/adj_stdlib_report.py --format json --fail-on-unreferenced-tests \
+            --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
+            > /tmp/adj-stdlib-report.json
+          python3 code/scripts/adj_stdlib_manifest.py --validate-json-schema \
+            --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
+            > /tmp/adj-stdlib-manifest.json
           python3 code/scripts/adj_stdlib_provenance.py verify \
             --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
             > /tmp/adj-stdlib-provenance.json

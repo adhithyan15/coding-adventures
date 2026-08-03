@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
 from unittest import mock
 
@@ -16,8 +17,10 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+arithmetic_builder = importlib.import_module("build_adj_arithmetic_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
 percent_of_builder = importlib.import_module("build_adj_percent_of_provenance")
+formula_inventory_migration = importlib.import_module("migrate_adj_formula_inventories")
 
 
 def acquire_cas_lock_and_exit(cas_root: str, ready: object) -> None:
@@ -336,6 +339,77 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(len(matches), 1, f"expected one registered {bundle_id} root")
         return matches[0]
 
+    def remove_formula_inventories_from_closure(
+        self, cas_root: Path, manifest_path: Path
+    ) -> dict[str, str]:
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        current = formula_inventory_migration._registered_roots(cas, manifest_path)
+
+        def store(bundle: dict[str, object], label: str) -> str:
+            return cas.put_json(
+                bundle,
+                kind="provenance_bundle",
+                label=label,
+                links=provenance._bundle_declared_links(bundle),
+            )
+
+        arithmetic_id = "adj.math.arithmetic.primitives.v1"
+        arithmetic = provenance._json_object(
+            cas, current[arithmetic_id], "provenance_bundle"
+        )
+        arithmetic.pop("formula_inventory_sha256")
+        old_roots = {
+            arithmetic_id: store(arithmetic, "pre-inventory arithmetic bundle")
+        }
+
+        for bundle_id in (
+            "adj.math.arithmetic.ratio.v1",
+            "adj.math.arithmetic.percent_of.v1",
+        ):
+            bundle = provenance._json_object(
+                cas, current[bundle_id], "provenance_bundle"
+            )
+            bundle.pop("formula_inventory_sha256")
+            bundle["dependencies"] = [old_roots[arithmetic_id]]
+            if bundle_id == "adj.math.arithmetic.ratio.v1":
+                bundle["clauses"][0]["resolution"]["bundle_sha256"] = old_roots[
+                    arithmetic_id
+                ]
+            old_roots[bundle_id] = store(bundle, f"pre-inventory {bundle_id} bundle")
+
+        query_dependencies = {
+            "adj.math.arithmetic.percent_of.query.v1": (
+                "adj.math.arithmetic.percent_of.v1"
+            ),
+            "adj.math.arithmetic.primitives.query.v1": arithmetic_id,
+            "adj.math.arithmetic.ratio.query.v1": "adj.math.arithmetic.ratio.v1",
+        }
+        for bundle_id, dependency_id in query_dependencies.items():
+            bundle = provenance._json_object(
+                cas, current[bundle_id], "provenance_bundle"
+            )
+            bundle["dependencies"] = [old_roots[dependency_id]]
+            old_roots[bundle_id] = store(bundle, f"pre-inventory {bundle_id} bundle")
+
+        final_roots = {
+            bundle_id: old_roots.get(bundle_id, digest)
+            for bundle_id, digest in current.items()
+        }
+        manifest["bundle_hashes"] = sorted(final_roots.values())
+        reachable = provenance._reachable(cas, manifest["bundle_hashes"])
+        for digest in sorted(set(cas.index) - reachable):
+            cas.object_path(digest).unlink()
+        cas.index = {
+            digest: record
+            for digest, record in cas.index.items()
+            if digest in reachable
+        }
+        cas.write_index()
+        manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+        return old_roots
+
     def replace_bundle(
         self, cas_root: Path, manifest_path: Path, mutate: object
     ) -> None:
@@ -512,6 +586,159 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     self.formula_inventory_command(),
                 )
 
+    def test_formula_inventory_migration_replaces_the_complete_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = formula_inventory_migration.REPO_ROOT
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / provenance.DEFAULT_ROOT.parent,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic",
+                arithmetic_copy,
+            )
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            schema_path = workspace / provenance.DEFAULT_SCHEMA
+            old_roots = self.remove_formula_inventories_from_closure(
+                cas_root, manifest_path
+            )
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            formula_command = self.formula_inventory_command()
+            original_roots = (
+                arithmetic_builder.REPO_ROOT,
+                ratio_builder.REPO_ROOT,
+                percent_of_builder.REPO_ROOT,
+            )
+            arithmetic_builder.REPO_ROOT = workspace
+            ratio_builder.REPO_ROOT = workspace
+            percent_of_builder.REPO_ROOT = workspace
+            try:
+                result = formula_inventory_migration.migrate(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace,
+                    formula_inventory_command=formula_command,
+                )
+                rerun = formula_inventory_migration.migrate(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace,
+                    formula_inventory_command=formula_command,
+                )
+            finally:
+                (
+                    arithmetic_builder.REPO_ROOT,
+                    ratio_builder.REPO_ROOT,
+                    percent_of_builder.REPO_ROOT,
+                ) = original_roots
+
+            cas.load()
+            new_roots = formula_inventory_migration._registered_roots(
+                cas, manifest_path
+            )
+            self.assertEqual(
+                set(result["replacements"]), formula_inventory_migration.ROOT_IDS
+            )
+            self.assertEqual(
+                result["pruned_sha256s"],
+                sorted(
+                    old_roots[bundle_id]
+                    for bundle_id in formula_inventory_migration.ROOT_IDS
+                ),
+            )
+            self.assertTrue(
+                all(
+                    old_roots[key] != new_roots[key]
+                    for key in formula_inventory_migration.ROOT_IDS
+                )
+            )
+            self.assertEqual(rerun["pruned_sha256s"], [])
+            self.assertTrue(
+                all(
+                    replacement["expected_old_sha256"] == replacement["new_sha256"]
+                    for replacement in rerun["replacements"].values()
+                )
+            )
+
+            formula_names = {
+                "adj.math.arithmetic.percent_of.v1": ["percent_of"],
+                "adj.math.arithmetic.primitives.v1": [
+                    "sum",
+                    "difference",
+                    "product",
+                    "quotient",
+                ],
+                "adj.math.arithmetic.ratio.v1": ["ratio"],
+            }
+            for bundle_id, digest in new_roots.items():
+                bundle = provenance._json_object(cas, digest, "provenance_bundle")
+                if bundle_id in formula_names:
+                    inventory = provenance._json_object(
+                        cas,
+                        bundle["formula_inventory_sha256"],
+                        "formula_parser_inventory",
+                    )
+                    self.assertEqual(
+                        [item["formula"] for item in inventory["formulas"]],
+                        formula_names[bundle_id],
+                    )
+                else:
+                    self.assertNotIn("formula_inventory_sha256", bundle)
+
+            arithmetic_hash = new_roots["adj.math.arithmetic.primitives.v1"]
+            for bundle_id in (
+                "adj.math.arithmetic.percent_of.v1",
+                "adj.math.arithmetic.ratio.v1",
+            ):
+                bundle = provenance._json_object(
+                    cas, new_roots[bundle_id], "provenance_bundle"
+                )
+                self.assertEqual(bundle["dependencies"], [arithmetic_hash])
+            ratio = provenance._json_object(
+                cas,
+                new_roots["adj.math.arithmetic.ratio.v1"],
+                "provenance_bundle",
+            )
+            self.assertEqual(
+                ratio["clauses"][0]["resolution"]["bundle_sha256"],
+                arithmetic_hash,
+            )
+            query_dependencies = {
+                "adj.math.arithmetic.percent_of.query.v1": (
+                    "adj.math.arithmetic.percent_of.v1"
+                ),
+                "adj.math.arithmetic.primitives.query.v1": (
+                    "adj.math.arithmetic.primitives.v1"
+                ),
+                "adj.math.arithmetic.ratio.query.v1": ("adj.math.arithmetic.ratio.v1"),
+            }
+            for query_id, dependency_id in query_dependencies.items():
+                query = provenance._json_object(
+                    cas, new_roots[query_id], "provenance_bundle"
+                )
+                self.assertEqual(query["dependencies"], [new_roots[dependency_id]])
+            self.assertTrue(
+                provenance.validate_repository(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace_root=workspace,
+                    formula_inventory_command=formula_command,
+                )["valid"]
+            )
+
     def test_committed_json_schema_accepts_a_complete_bundle_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -652,7 +879,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 )["valid"]
             )
 
-    def test_root_replacement_preserves_old_root_reachable_as_dependency(self) -> None:
+    def test_root_replacement_rejects_an_unmigrated_same_id_dependency(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             cas_root, manifest_path, hashes = self.build_repository(root)
@@ -675,12 +902,17 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 )
                 transaction.commit({"test.consumer.v1": consumer_hash})
 
-            with provenance.BundleRootReplacementTransaction(
-                cas_root,
-                manifest_path,
-                expected_manifest_id="test.provenance.v1",
-                workspace_root=root,
-            ) as transaction:
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            with (
+                self.assertRaisesRegex(provenance.ProvenanceError, "resolves to both"),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
                 changed = provenance._json_object(
                     transaction.cas, hashes["bundle"], "provenance_bundle"
                 )
@@ -691,7 +923,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     label="replacement fixture bundle",
                     links=provenance._bundle_declared_links(changed),
                 )
-                result = transaction.replace_roots(
+                transaction.replace_roots(
                     {
                         "test.arithmetic.v1": {
                             "expected_old_sha256": hashes["bundle"],
@@ -700,12 +932,13 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     }
                 )
 
-            self.assertEqual(
-                result["bundle_hashes"], sorted([changed_hash, consumer_hash])
-            )
-            self.assertEqual(result["pruned_sha256s"], [])
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
             self.assertTrue(
                 provenance.Cas(cas_root).object_path(hashes["bundle"]).exists()
+            )
+            self.assertFalse(
+                provenance.Cas(cas_root).object_path(changed_hash).exists()
             )
 
     def test_root_replacement_updates_multiple_roots_in_one_compare_and_swap(
@@ -1281,6 +1514,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 manifest_path,
                 "adj.math.arithmetic.primitives.v1",
             )
+            formula_command = self.formula_inventory_command()
             original_root = ratio_builder.REPO_ROOT
             ratio_builder.REPO_ROOT = workspace
             try:
@@ -1290,12 +1524,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     expected_manifest_id="adj.stdlib.provenance.v1",
                     schema_path=workspace / provenance.DEFAULT_SCHEMA,
                     workspace_root=workspace,
+                    formula_inventory_command=formula_command,
                 ) as transaction:
                     transaction.commit(
                         ratio_builder.build(
                             transaction.cas,
                             None,
                             arithmetic_bundle_sha256=arithmetic_hash,
+                            formula_inventory_command=formula_command,
                         )
                     )
             finally:
@@ -1392,6 +1628,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 manifest_path,
                 workspace / provenance.DEFAULT_SCHEMA,
                 workspace_root=workspace,
+                formula_inventory_command=formula_command,
             )
             self.assertEqual(without_ratio["bundles"], len(non_ratio_roots))
 
@@ -1403,12 +1640,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     expected_manifest_id="adj.stdlib.provenance.v1",
                     schema_path=workspace / provenance.DEFAULT_SCHEMA,
                     workspace_root=workspace,
+                    formula_inventory_command=formula_command,
                 ) as transaction:
                     transaction.commit(
                         ratio_builder.build(
                             transaction.cas,
                             captured_source,
                             arithmetic_bundle_sha256=arithmetic_hash,
+                            formula_inventory_command=formula_command,
                         )
                     )
             finally:
@@ -1447,6 +1686,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 manifest_path,
                 "adj.math.arithmetic.primitives.v1",
             )
+            formula_command = self.formula_inventory_command()
             original_root = percent_of_builder.REPO_ROOT
 
             def register(captured_source: Path | None) -> None:
@@ -1458,12 +1698,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                         expected_manifest_id="adj.stdlib.provenance.v1",
                         schema_path=workspace / provenance.DEFAULT_SCHEMA,
                         workspace_root=workspace,
+                        formula_inventory_command=formula_command,
                     ) as transaction:
                         transaction.commit(
                             percent_of_builder.build(
                                 transaction.cas,
                                 captured_source,
                                 arithmetic_bundle_sha256=arithmetic_hash,
+                                formula_inventory_command=formula_command,
                             )
                         )
                 finally:
@@ -1583,6 +1825,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 manifest_path,
                 workspace / provenance.DEFAULT_SCHEMA,
                 workspace_root=workspace,
+                formula_inventory_command=formula_command,
             )
 
             register(captured_source)
@@ -1603,6 +1846,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         wrong_hash = next(
             digest for digest in manifest["bundle_hashes"] if digest != arithmetic_hash
         )
+        formula_command = self.formula_inventory_command()
         raw_source_hash = next(
             digest
             for digest, record in cas.index.items()
@@ -1615,7 +1859,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 self.subTest(builder=builder.__name__, failure="absent hash"),
                 self.assertRaises(TypeError),
             ):
-                builder.build(cas, None)
+                builder.build(
+                    cas,
+                    None,
+                    formula_inventory_command=formula_command,
+                )
             with (
                 self.subTest(builder=builder.__name__, failure="malformed hash"),
                 self.assertRaisesRegex(provenance.ProvenanceError, "lowercase SHA-256"),
@@ -1624,6 +1872,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas,
                     None,
                     arithmetic_bundle_sha256="not-a-sha256",
+                    formula_inventory_command=formula_command,
                 )
             with (
                 self.subTest(builder=builder.__name__, failure="wrong bundle"),
@@ -1636,6 +1885,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas,
                     None,
                     arithmetic_bundle_sha256=wrong_hash,
+                    formula_inventory_command=formula_command,
                 )
             with (
                 self.subTest(builder=builder.__name__, failure="missing object"),
@@ -1647,6 +1897,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas,
                     None,
                     arithmetic_bundle_sha256="0" * 64,
+                    formula_inventory_command=formula_command,
                 )
             with (
                 self.subTest(builder=builder.__name__, failure="non-bundle object"),
@@ -1658,6 +1909,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas,
                     None,
                     arithmetic_bundle_sha256=raw_source_hash,
+                    formula_inventory_command=formula_command,
                 )
 
     def test_dependent_generator_clis_require_the_dependency_hash(self) -> None:
@@ -1722,15 +1974,18 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ratio_builder.REPO_ROOT = workspace
             percent_of_builder.REPO_ROOT = workspace
             try:
+                formula_command = self.formula_inventory_command()
                 ratio_roots = ratio_builder.build(
                     cas,
                     None,
                     arithmetic_bundle_sha256=alternate_hash,
+                    formula_inventory_command=formula_command,
                 )
                 percent_roots = percent_of_builder.build(
                     cas,
                     None,
                     arithmetic_bundle_sha256=alternate_hash,
+                    formula_inventory_command=formula_command,
                 )
             finally:
                 ratio_builder.REPO_ROOT = original_ratio_root
@@ -2554,12 +2809,49 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     ):
                         provenance.validate_repository(cas_root, manifest_path, schema)
 
+    def test_transitive_graph_rejects_two_digests_for_one_bundle_id(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            original = provenance._json_object(
+                cas, hashes["bundle"], "provenance_bundle"
+            )
+            alternate = deepcopy(original)
+            alternate["clauses"][0]["resolution"]["reason"] = (
+                "alternate digest with the same claimed bundle identity"
+            )
+            alternate_hash = cas.put_json(
+                alternate,
+                kind="provenance_bundle",
+                label="alternate same-ID root",
+                links=provenance._bundle_declared_links(alternate),
+            )
+            consumer = deepcopy(original)
+            consumer["bundle_id"] = "test.consumer.v1"
+            consumer["dependencies"] = [hashes["bundle"]]
+            consumer_hash = cas.put_json(
+                consumer,
+                kind="provenance_bundle",
+                label="consumer retaining historical root",
+                links=provenance._bundle_declared_links(consumer),
+            )
+            cas.write_index()
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["bundle_hashes"] = sorted([alternate_hash, consumer_hash])
+            manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+
+            with self.assertRaisesRegex(provenance.ProvenanceError, "resolves to both"):
+                provenance.validate_repository(cas_root, manifest_path)
+
     def test_dependency_resolution_names_an_exported_claim(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             cas_root, manifest_path, hashes = self.build_repository(root)
 
             def mutate(bundle: dict[str, object], _cas: provenance.Cas) -> None:
+                bundle["bundle_id"] = "test.consumer.v1"
                 bundle["dependencies"] = [hashes["bundle"]]
                 bundle["clauses"][0]["resolution"] = {
                     "bundle_sha256": hashes["bundle"],

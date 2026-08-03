@@ -53,22 +53,25 @@ The arithmetic primitive, ratio, and percent-of roots and their worked-query
 fixtures are rebuilt entirely offline from retained CAS source bodies:
 
 ```text
-python code/scripts/build_adj_arithmetic_provenance.py
-python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
-python code/scripts/build_adj_percent_of_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
+python code/scripts/migrate_adj_formula_inventories.py --formula-inventory-binary <adj-formula-inventory-binary>
+python code/scripts/build_adj_arithmetic_provenance.py --formula-inventory-binary <adj-formula-inventory-binary>
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary>
+python code/scripts/build_adj_percent_of_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary>
 ```
 
 Each generator checks retained source hashes and expected source spans before
 rebuilding its provenance bundles, IR and transform objects, and CAS linkage.
 Dependent generators require the verified current primitive-arithmetic root hash
-explicitly; they reject malformed hashes and roots with the wrong bundle ID.
+explicitly; they reject malformed hashes and roots with the wrong bundle ID. The
+migration command replays the trusted parser against each formula-bearing input
+and compare-and-swaps all six formula and query roots as one dependency closure.
 The ratio generator's reviewed one-time bootstrap accepts captured bytes without
 opening the locator; after those exact bytes enter the CAS, ordinary reruns need
 no external file:
 
 ```text
-python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --captured-source <ratio.html>
-python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256>
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary> --captured-source <ratio.html>
+python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary>
 ```
 
 The percent-of bootstrap follows the same offline contract. Six controlled

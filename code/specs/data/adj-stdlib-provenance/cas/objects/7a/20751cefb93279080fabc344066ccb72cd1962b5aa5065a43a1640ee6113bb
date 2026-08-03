@@ -14,7 +14,7 @@
       "quote": "The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.",
       "quote_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
       "resolution": {
-        "bundle_sha256": "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0",
+        "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
         "claim_id": "adj.math.arithmetic.quotient",
         "kind": "dependency"
       },
@@ -24,8 +24,9 @@
     }
   ],
   "dependencies": [
-    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"
+    "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390"
   ],
+  "formula_inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
   "input": {
     "raw_source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
     "receipt_sha256": "ee4d40abf20282162cadb2972f85b76dda8feac8362e5b35baef2f4f777f915c",

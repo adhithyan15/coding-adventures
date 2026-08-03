@@ -205,7 +205,10 @@ def _summary(rows: list[dict[str, Any]]) -> dict[str, int]:
     }
 
 
-def build_report(root: Path) -> dict[str, Any]:
+def build_report(
+    root: Path,
+    formula_inventory_command: list[str] | None = None,
+) -> dict[str, Any]:
     """Build a deterministic structural report from the checked-out repository."""
 
     root = root.resolve()
@@ -223,6 +226,7 @@ def build_report(root: Path) -> dict[str, Any]:
                 manifest_path,
                 root / adj_stdlib_provenance.DEFAULT_SCHEMA,
                 workspace_root=root,
+                formula_inventory_command=formula_inventory_command,
             )
             provenance_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             cas = adj_stdlib_provenance.Cas(cas_root)
@@ -427,10 +431,14 @@ def main() -> int:
     parser.add_argument("--fail-on-unreferenced-tests", action="store_true")
     parser.add_argument("--fail-on-missing-source-envelope", action="store_true")
     parser.add_argument("--require-byte-pins", action="store_true")
+    parser.add_argument("--formula-inventory-binary", type=Path, required=True)
     args = parser.parse_args()
 
     root = args.root.resolve()
-    report = build_report(root)
+    report = build_report(
+        root,
+        formula_inventory_command=[str(args.formula_inventory_binary.resolve())],
+    )
     output = (
         json.dumps(report, indent=2, sort_keys=True) + "\n"
         if args.format == "json"
