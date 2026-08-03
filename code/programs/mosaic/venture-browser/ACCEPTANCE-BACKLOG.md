@@ -5,6 +5,10 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 CI regression — required gate event isolation.** Keep the protected
+  `CI gate` context exclusive to pull-request workflows. Branch and main push
+  workflows publish `CI push gate` so a fast push build cannot auto-complete a
+  PR while required macOS or Windows acceptance is still running.
 - [x] **P0 architecture — shared native host controller.** Move Mosaic event
   reduction, status/chrome synchronization, scrolling, scrollbar projection,
   link activation, and hover state into one host-neutral Rust controller used

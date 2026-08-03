@@ -883,12 +883,15 @@ jobs:
   # individual label cannot be required by branch protection: a PR that does
   # not produce that label would have the check "expected" forever and never
   # merge. Requiring THIS job instead gives branch protection one stable
-  # context (`CI gate`) that passes only when every required job succeeded —
-  # or was legitimately skipped (e.g. an empty build matrix when nothing
-  # relevant changed). `if: always()` makes the gate itself run even when a
+  # pull-request context (`CI gate`) that passes only when every required job
+  # succeeded — or was legitimately skipped (e.g. an empty build matrix when
+  # nothing relevant changed). Push workflows deliberately publish `CI push
+  # gate` instead: using the protected context for both events lets a faster
+  # branch push satisfy protection while the pull-request macOS/Windows matrix
+  # is still running. `if: always()` makes the gate itself run even when a
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
-    name: CI gate
+    name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
     needs: [detect, phy00-phy01-fixture-consumers, build]
     if: always()
     runs-on: ubuntu-latest

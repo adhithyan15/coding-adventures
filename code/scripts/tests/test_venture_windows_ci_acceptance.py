@@ -147,6 +147,15 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("cargo test -p venture-browser-macos", workflow)
 
+    def test_required_gate_is_exclusive_to_pull_request_runs(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn(
+            "name: ${{ github.event_name == 'pull_request' && 'CI gate' "
+            "|| 'CI push gate' }}",
+            workflow,
+        )
+        self.assertNotIn("\n    name: CI gate\n", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
