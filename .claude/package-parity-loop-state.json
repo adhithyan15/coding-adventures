@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9603,
   "last_inventory": {
     "revision": "5042eadeb84f9f992634a160590938e4453dba2d",
     "schema_version": 3,
@@ -338,16 +338,16 @@
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, and TypeScript were remediated in merged PRs #9504, #9510, #9537, and #9572. Five engines remain: Lua and Perl accept malformed bytes, Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity. The Lua engine is materialized as the next pending child because its raw byte-string boundary is narrow and its local toolchain is available."
+      "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, and TypeScript were remediated in merged PRs #9504, #9510, #9537, and #9572. PR #9603 is the active Lua remediation. Four engines remain after it: Perl accepts malformed bytes, Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity."
     },
     {
       "id": "build-tool-lua-engine-rockspec-utf8-conformance",
       "title": "Make the Lua build tool enforce strict UTF-8 rockspec metadata",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-lua-rockspec-utf8",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9592 and the collision-clean 5042eade inventory as the highest-leverage unblocked engine child: the shared fixtures and four reference remediations are already merged, Lua's raw byte-string parser boundary is narrow, and Lua 5.4 plus LuaRocks are locally available. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, validate raw rockspec bytes before pattern parsing, preserve the exact success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and exercise the real Lua CLI exit contract without disclosing the checkout root."
+      "pr_number": 9603,
+      "notes": "Ready-for-review PR #9603 opened from codex/build-tool-lua-rockspec-utf8 after rebasing onto f52f1000c. The resolver validates raw rockspec bytes as strict UTF-8 before pattern parsing, preserves the exact shared-fixture success edge, throws typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, accepts literal U+FFFD, rejects overlong, truncated, surrogate, bad-continuation, and out-of-range sequences, and maps the real CLI failure to exit 2 without disclosing the checkout root. Validation: 61 Lua tests; 56.88% resolver and 44.93% aggregate LuaCov coverage including dependencies; changed-file luacheck and all-file luac syntax clean; real 4,770-package/258-Lua-package dry run with eight levels; 57 conformance tests plus 52 subtests; valid 37-case/56-file corpus; collision-clean 1,222-identity/4,370-slot inventory; diff and secret-pattern scans clean. The build-file validator reports only the exact 10 already-backlogged Lua BUILD_windows sibling-install debts, and whole-package lint reports only 11 pre-existing warnings in untouched files."
     },
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
