@@ -1,5 +1,8 @@
 # Changelog
 
+- Record capability-probed Reolink preset recall and bounded PTZ movement over
+  the authenticated local CGI runtime.
+
 - Upgrade Reolink with capability-probed recording state and authorized,
   readback-verified recording enable/disable over the authenticated CGI host.
 

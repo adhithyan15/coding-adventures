@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Added capability-probed `GetPtzPreset` support, authorized preset recall, and
+  direction/speed movement bounded to five seconds with an explicit native
+  `Stop` command and real loopback HTTP proof.
+
 ## 0.2.0
 
 - Added capability-probed Reolink `GetRecV20` state and D23-authorized

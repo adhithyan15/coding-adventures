@@ -1,5 +1,8 @@
 # Changelog
 
+- Keep camera PTZ preset and bounded-movement commands non-optimistic until a
+  native integration completes the physical operation.
+
 - Support explicit device-control commands in runtime policy and optimistic
   state handling while keeping sensor calibration non-optimistic.
 

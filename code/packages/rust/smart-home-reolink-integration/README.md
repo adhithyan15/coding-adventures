@@ -9,14 +9,17 @@ local HTTP/HTTPS CGI API:
 - normalized camera-channel and motion-sensor entities;
 - capability-probed `GetRecV20` state plus authorized `SetRecV20` recording
   enable/disable with exact readback verification; and
+- capability-probed `GetPtzPreset` support plus authorized preset recall and
+  direction/speed movement that always sends `Stop` within five seconds; and
 - D23 read authorization before credentials or network I/O are used.
 
 Credentials are zeroized after use and are represented in D23 only by a
 `VaultRef`. Session tokens are redacted and never enter normalized state.
 
-This slice controls whether supported channels record, but it does not claim
-recording search/download, RTSP media transfer, PTZ control, webhook events, or
-ONVIF PullPoint events. Those remain separate transport/runtime work.
+This package does not infer a current PTZ position where firmware offers no
+portable readback. Recording search/download, RTSP media transfer, autonomous
+guard/patrol behavior, webhook events, and ONVIF PullPoint events remain
+separate transport/runtime work.
 
 Set `REOLINK_USERNAME`, `REOLINK_PASSWORD`, and `REOLINK_CREDENTIAL_REF`, then
 run `cargo run -p smart-home-reolink-integration -- inspect <base-url>` to emit

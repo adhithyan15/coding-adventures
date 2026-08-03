@@ -360,6 +360,14 @@ impl Capability {
         )
     }
 
+    pub fn camera_ptz() -> Self {
+        Self::new(
+            CapabilityId::trusted("camera.ptz"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
     pub fn sensor_calibration() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.calibration"),
@@ -446,6 +454,7 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::device_display(),
         Capability::device_configuration(),
         Capability::camera_recording(),
+        Capability::camera_ptz(),
         Capability::sensor_calibration(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
@@ -1331,6 +1340,8 @@ pub enum DeviceControlCommandType {
     TestIndicator,
     SetCorrectionProfile,
     SetCameraRecording,
+    RecallCameraPtzPreset,
+    MoveCameraPtz,
 }
 
 impl CommandType {
@@ -1381,6 +1392,9 @@ impl DeviceControlCommandType {
             | Self::SetCompensatedDisplay
             | Self::SetCorrectionProfile => CapabilityId::trusted("device.configuration"),
             Self::SetCameraRecording => CapabilityId::trusted("camera.recording"),
+            Self::RecallCameraPtzPreset | Self::MoveCameraPtz => {
+                CapabilityId::trusted("camera.ptz")
+            }
         }
     }
 }
@@ -1442,7 +1456,9 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
         | CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
         | CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
         | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
-        | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording)
+        | CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset)
+        | CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => {
             PrivilegeTier::HumanApproval
         }
         CommandType::TurnOn
@@ -4305,7 +4321,7 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 23);
+        assert_eq!(catalog.len(), 24);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
@@ -4319,6 +4335,7 @@ mod tests {
         assert!(ids.contains(&"device.display"));
         assert!(ids.contains(&"device.configuration"));
         assert!(ids.contains(&"camera.recording"));
+        assert!(ids.contains(&"camera.ptz"));
         assert!(ids.contains(&"sensor.calibration"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
@@ -4379,6 +4396,8 @@ mod tests {
             CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
             CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
             CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording),
+            CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset),
+            CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
         ];
 
         for command_type in command_types {

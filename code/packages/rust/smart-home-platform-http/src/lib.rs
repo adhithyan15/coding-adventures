@@ -10305,6 +10305,10 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
             "camera_set_recording"
         }
+        CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset) => {
+            "camera_recall_ptz_preset"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => "camera_move_ptz",
     }
 }
 
@@ -10363,6 +10367,12 @@ fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> 
         )),
         "camera_set_recording" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCameraRecording,
+        )),
+        "camera_recall_ptz_preset" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::RecallCameraPtzPreset,
+        )),
+        "camera_move_ptz" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::MoveCameraPtz,
         )),
         other => Err(ApiError::bad_request(format!(
             "unsupported command_type `{other}`"
@@ -13893,6 +13903,11 @@ mod tests {
                 "camera_set_recording",
                 DeviceControlCommandType::SetCameraRecording,
             ),
+            (
+                "camera_recall_ptz_preset",
+                DeviceControlCommandType::RecallCameraPtzPreset,
+            ),
+            ("camera_move_ptz", DeviceControlCommandType::MoveCameraPtz),
         ];
         for (label, device_command) in commands {
             let command = CommandType::DeviceControl(device_command);

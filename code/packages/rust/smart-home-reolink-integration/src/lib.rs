@@ -7,9 +7,9 @@ use http1::{parse_response_head, Http1ParseError};
 use http_core::BodyKind;
 use serde_json::{json, Value as JsonValue};
 use smart_home_core::{
-    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
-    CommandResult, CommandType, DeviceControlCommandType, DeviceId, Entity, EntityId, EntityKind,
-    Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
+    CommandResult, CommandType, Device, DeviceControlCommandType, DeviceId, Entity, EntityId,
+    EntityKind, Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
     StateConfidence, StateSnapshot, StateSource, Value, ValueKind, VaultRef,
 };
 use smart_home_discovery::{
@@ -20,14 +20,18 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
+use std::thread;
 use std::time::Duration;
 use tls_platform::{default_connector, TlsConfig, TlsConnector};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "reolink";
 pub const PROTOCOL_ID: &str = "reolink_cgi";
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+pub const MIN_PTZ_SPEED: u32 = 1;
+pub const MAX_PTZ_SPEED: u32 = 64;
+pub const MAX_PTZ_DURATION_MS: u64 = 5_000;
 
 #[derive(Debug)]
 pub enum ReolinkError {
@@ -232,6 +236,42 @@ pub struct ReolinkChannelStatus {
     pub sleeping: bool,
     pub motion: Option<bool>,
     pub recording_enabled: Option<bool>,
+    pub ptz_presets: Option<Vec<ReolinkPtzPreset>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReolinkPtzPreset {
+    pub id: u32,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ReolinkPtzDirection {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+impl ReolinkPtzDirection {
+    fn from_label(label: &str) -> Option<Self> {
+        match label {
+            "left" => Some(Self::Left),
+            "right" => Some(Self::Right),
+            "up" => Some(Self::Up),
+            "down" => Some(Self::Down),
+            _ => None,
+        }
+    }
+
+    fn operation(self) -> &'static str {
+        match self {
+            Self::Left => "Left",
+            Self::Right => "Right",
+            Self::Up => "Up",
+            Self::Down => "Down",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -405,6 +445,16 @@ impl<T: ReolinkTransport> ReolinkClient<T> {
                 Err(ReolinkError::Api { .. }) => None,
                 Err(error) => return Err(error),
             };
+            let value = self.command(
+                "GetPtzPreset",
+                Some(session),
+                json!({"channel": channel.channel}),
+            );
+            channel.ptz_presets = match value {
+                Ok(value) => Some(parse_ptz_presets(&value)?),
+                Err(ReolinkError::Api { .. }) => None,
+                Err(error) => return Err(error),
+            };
         }
         Ok(ReolinkSnapshot { device, channels })
     }
@@ -447,6 +497,65 @@ impl<T: ReolinkTransport> ReolinkClient<T> {
                 actual: confirmed,
             });
         }
+        Ok(())
+    }
+
+    pub fn recall_ptz_preset(
+        &mut self,
+        channel: u32,
+        preset_id: u32,
+        speed: u32,
+    ) -> Result<(), ReolinkError> {
+        let session = self.login()?;
+        let result = self.command(
+            "PtzCtrl",
+            Some(&session),
+            json!({"channel": channel, "id": preset_id, "op": "ToPos", "speed": speed}),
+        );
+        let logout = self.logout(&session);
+        match (result, logout) {
+            (Ok(_), Ok(())) => Ok(()),
+            (Err(error), _) => Err(error),
+            (Ok(_), Err(error)) => Err(error),
+        }
+    }
+
+    pub fn move_ptz_bounded(
+        &mut self,
+        channel: u32,
+        direction: ReolinkPtzDirection,
+        speed: u32,
+        duration_ms: u64,
+    ) -> Result<(), ReolinkError> {
+        let session = self.login()?;
+        let result = self.move_ptz_session(&session, channel, direction, speed, duration_ms);
+        let logout = self.logout(&session);
+        match (result, logout) {
+            (Ok(()), Ok(())) => Ok(()),
+            (Err(error), _) => Err(error),
+            (Ok(()), Err(error)) => Err(error),
+        }
+    }
+
+    fn move_ptz_session(
+        &mut self,
+        session: &ReolinkSession,
+        channel: u32,
+        direction: ReolinkPtzDirection,
+        speed: u32,
+        duration_ms: u64,
+    ) -> Result<(), ReolinkError> {
+        self.command(
+            "PtzCtrl",
+            Some(session),
+            json!({"channel": channel, "op": direction.operation(), "speed": speed}),
+        )?;
+        thread::sleep(Duration::from_millis(duration_ms));
+        self.command(
+            "PtzCtrl",
+            Some(session),
+            json!({"channel": channel, "op": "Stop", "speed": speed}),
+        )?;
         Ok(())
     }
 
@@ -513,12 +622,20 @@ pub struct InstalledReolinkDevice {
     pub device_ids: Vec<DeviceId>,
     pub camera_entity_ids: Vec<EntityId>,
     pub recording_entity_ids: Vec<EntityId>,
+    pub ptz_entity_ids: Vec<EntityId>,
     pub motion_entity_ids: Vec<EntityId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ReolinkPtzSupport {
+    channel: u32,
+    preset_ids: Vec<u32>,
 }
 
 pub struct ReolinkRuntimeIntegration<T> {
     client: ReolinkClient<T>,
     recording_channels: BTreeMap<EntityId, u32>,
+    ptz_channels: BTreeMap<EntityId, ReolinkPtzSupport>,
 }
 
 impl<T: ReolinkTransport> ReolinkRuntimeIntegration<T> {
@@ -526,6 +643,7 @@ impl<T: ReolinkTransport> ReolinkRuntimeIntegration<T> {
         Self {
             client,
             recording_channels: BTreeMap::new(),
+            ptz_channels: BTreeMap::new(),
         }
     }
 
@@ -564,6 +682,21 @@ impl<T: ReolinkTransport> ReolinkRuntimeIntegration<T> {
                 )
             })
             .collect();
+        self.ptz_channels = snapshot
+            .channels
+            .iter()
+            .filter_map(|channel| {
+                channel.ptz_presets.as_ref().map(|presets| {
+                    (
+                        camera_entity_id(&snapshot.device.serial, channel.channel),
+                        ReolinkPtzSupport {
+                            channel: channel.channel,
+                            preset_ids: presets.iter().map(|preset| preset.id).collect(),
+                        },
+                    )
+                })
+            })
+            .collect();
         Ok(installed)
     }
 
@@ -574,38 +707,84 @@ impl<T: ReolinkTransport> ReolinkRuntimeIntegration<T> {
         request: RuntimeCommandToolRequest,
         now_ms: u64,
     ) -> Result<CommandResult, ReolinkError> {
-        let channel = self
-            .recording_channels
-            .get(&request.entity_id)
-            .copied()
-            .ok_or_else(|| ReolinkError::UnknownEntity(request.entity_id.clone()))?;
-        if request.command_type
-            != CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording)
-        {
-            return Err(ReolinkError::UnsupportedCommand(request.command_type));
+        match request.command_type {
+            CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
+                let channel = self
+                    .recording_channels
+                    .get(&request.entity_id)
+                    .copied()
+                    .ok_or_else(|| ReolinkError::UnknownEntity(request.entity_id.clone()))?;
+                let Value::Bool(enabled) = request.arguments else {
+                    return invalid_command_arguments(
+                        request.command_type,
+                        "a recording-enabled boolean",
+                    );
+                };
+                let entity_id = request.entity_id.clone();
+                let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
+                let mut result = runtime.submit_command(command, now_ms)?;
+                self.client.set_recording_and_verify(channel, enabled)?;
+                let mut entity = runtime
+                    .registry()
+                    .entity(&entity_id)
+                    .cloned()
+                    .ok_or_else(|| ReolinkError::UnknownEntity(entity_id.clone()))?;
+                entity.state = Some(confirmed_recording_state(
+                    entity_id,
+                    entity.state,
+                    enabled,
+                    now_ms,
+                ));
+                runtime.upsert_entity(entity)?;
+                result.message = Some(format!(
+                    "Reolink confirmed channel {channel} recording {}",
+                    if enabled { "enabled" } else { "disabled" }
+                ));
+                Ok(result)
+            }
+            CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset) => {
+                let support = self
+                    .ptz_channels
+                    .get(&request.entity_id)
+                    .cloned()
+                    .ok_or_else(|| ReolinkError::UnknownEntity(request.entity_id.clone()))?;
+                let (preset_id, speed) = ptz_preset_arguments(&request)?;
+                if !support.preset_ids.contains(&preset_id) {
+                    return invalid_command_arguments(
+                        request.command_type,
+                        "an object with a probed preset_id and speed from 1 through 64",
+                    );
+                }
+                let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
+                let mut result = runtime.submit_command(command, now_ms)?;
+                self.client
+                    .recall_ptz_preset(support.channel, preset_id, speed)?;
+                result.message = Some(format!(
+                    "Reolink channel {} accepted PTZ preset {preset_id}",
+                    support.channel
+                ));
+                Ok(result)
+            }
+            CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz) => {
+                let support = self
+                    .ptz_channels
+                    .get(&request.entity_id)
+                    .cloned()
+                    .ok_or_else(|| ReolinkError::UnknownEntity(request.entity_id.clone()))?;
+                let (direction, speed, duration_ms) = ptz_move_arguments(&request)?;
+                let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
+                let mut result = runtime.submit_command(command, now_ms)?;
+                self.client
+                    .move_ptz_bounded(support.channel, direction, speed, duration_ms)?;
+                result.message = Some(format!(
+                    "Reolink channel {} completed bounded PTZ {} movement",
+                    support.channel,
+                    direction.operation().to_ascii_lowercase()
+                ));
+                Ok(result)
+            }
+            command_type => Err(ReolinkError::UnsupportedCommand(command_type)),
         }
-        let Value::Bool(enabled) = request.arguments else {
-            return Err(ReolinkError::InvalidCommandArguments {
-                command_type: request.command_type,
-                expected: "a recording-enabled boolean",
-            });
-        };
-        let entity_id = request.entity_id.clone();
-        let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
-        let mut result = runtime.submit_command(command, now_ms)?;
-        self.client.set_recording_and_verify(channel, enabled)?;
-        let mut entity = runtime
-            .registry()
-            .entity(&entity_id)
-            .cloned()
-            .ok_or_else(|| ReolinkError::UnknownEntity(entity_id.clone()))?;
-        entity.state = Some(confirmed_recording_state(entity_id, entity.state, enabled, now_ms));
-        runtime.upsert_entity(entity)?;
-        result.message = Some(format!(
-            "Reolink confirmed channel {channel} recording {}",
-            if enabled { "enabled" } else { "disabled" }
-        ));
-        Ok(result)
     }
 }
 
@@ -668,6 +847,7 @@ pub fn install_snapshot(
         device_ids: Vec::new(),
         camera_entity_ids: Vec::new(),
         recording_entity_ids: Vec::new(),
+        ptz_entity_ids: Vec::new(),
         motion_entity_ids: Vec::new(),
     };
     for channel in &snapshot.channels {
@@ -709,6 +889,10 @@ pub fn install_snapshot(
         if channel.recording_enabled.is_some() {
             camera_capabilities.push(Capability::camera_recording());
             installed.recording_entity_ids.push(camera_id.clone());
+        }
+        if channel.ptz_presets.is_some() {
+            camera_capabilities.push(Capability::camera_ptz());
+            installed.ptz_entity_ids.push(camera_id.clone());
         }
         runtime.upsert_entity(Entity {
             entity_id: camera_id.clone(),
@@ -844,6 +1028,7 @@ fn parse_channels(value: &JsonValue) -> Result<Vec<ReolinkChannelStatus>, Reolin
                 sleeping: boolean(status.get("sleep")).unwrap_or(false),
                 motion: None,
                 recording_enabled: None,
+                ptz_presets: None,
             })
         })
         .collect()
@@ -858,6 +1043,35 @@ fn parse_recording_enabled(value: &JsonValue) -> Result<bool, ReolinkError> {
         command: "GetRecV20",
         field: "value.Rec.enable",
     })
+}
+
+fn parse_ptz_presets(value: &JsonValue) -> Result<Vec<ReolinkPtzPreset>, ReolinkError> {
+    let presets =
+        value
+            .get("PtzPreset")
+            .and_then(JsonValue::as_array)
+            .ok_or(ReolinkError::MissingField {
+                command: "GetPtzPreset",
+                field: "value.PtzPreset",
+            })?;
+    presets
+        .iter()
+        .filter(|preset| boolean(preset.get("enable")).unwrap_or(false))
+        .map(|preset| {
+            let id = preset
+                .get("id")
+                .and_then(JsonValue::as_u64)
+                .and_then(|id| u32::try_from(id).ok())
+                .ok_or(ReolinkError::MissingField {
+                    command: "GetPtzPreset",
+                    field: "value.PtzPreset[].id",
+                })?;
+            Ok(ReolinkPtzPreset {
+                id,
+                name: text(preset, "name").unwrap_or_else(|| format!("Preset {id}")),
+            })
+        })
+        .collect()
 }
 
 fn boolean(value: Option<&JsonValue>) -> Option<bool> {
@@ -899,7 +1113,98 @@ fn channel_state(channel: &ReolinkChannelStatus) -> Value {
             Value::Bool(recording_enabled),
         ));
     }
+    if let Some(presets) = &channel.ptz_presets {
+        fields.push((
+            "ptz_presets".to_string(),
+            Value::Array(
+                presets
+                    .iter()
+                    .map(|preset| {
+                        Value::Object(vec![
+                            ("id".to_string(), Value::Integer(i64::from(preset.id))),
+                            ("name".to_string(), Value::Text(preset.name.clone())),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ));
+    }
     Value::Object(fields)
+}
+
+fn ptz_preset_arguments(request: &RuntimeCommandToolRequest) -> Result<(u32, u32), ReolinkError> {
+    let preset_id = object_u32(&request.arguments, "preset_id");
+    let speed = object_u32(&request.arguments, "speed");
+    match (preset_id, speed) {
+        (Some(preset_id), Some(speed)) if (MIN_PTZ_SPEED..=MAX_PTZ_SPEED).contains(&speed) => {
+            Ok((preset_id, speed))
+        }
+        _ => invalid_command_arguments(
+            request.command_type,
+            "an object with a probed preset_id and speed from 1 through 64",
+        ),
+    }
+}
+
+fn ptz_move_arguments(
+    request: &RuntimeCommandToolRequest,
+) -> Result<(ReolinkPtzDirection, u32, u64), ReolinkError> {
+    let direction =
+        object_text(&request.arguments, "direction").and_then(ReolinkPtzDirection::from_label);
+    let speed = object_u32(&request.arguments, "speed");
+    let duration_ms = object_u64(&request.arguments, "duration_ms");
+    match (direction, speed, duration_ms) {
+        (Some(direction), Some(speed), Some(duration_ms))
+            if (MIN_PTZ_SPEED..=MAX_PTZ_SPEED).contains(&speed)
+                && (1..=MAX_PTZ_DURATION_MS).contains(&duration_ms) =>
+        {
+            Ok((direction, speed, duration_ms))
+        }
+        _ => invalid_command_arguments(
+            request.command_type,
+            "an object with direction left/right/up/down, speed 1 through 64, and duration_ms 1 through 5000",
+        ),
+    }
+}
+
+fn object_field<'a>(value: &'a Value, field: &str) -> Option<&'a Value> {
+    let Value::Object(fields) = value else {
+        return None;
+    };
+    fields
+        .iter()
+        .find_map(|(name, value)| (name == field).then_some(value))
+}
+
+fn object_u32(value: &Value, field: &str) -> Option<u32> {
+    let Value::Integer(value) = object_field(value, field)? else {
+        return None;
+    };
+    u32::try_from(*value).ok()
+}
+
+fn object_u64(value: &Value, field: &str) -> Option<u64> {
+    let Value::Integer(value) = object_field(value, field)? else {
+        return None;
+    };
+    u64::try_from(*value).ok()
+}
+
+fn object_text<'a>(value: &'a Value, field: &str) -> Option<&'a str> {
+    let Value::Text(value) = object_field(value, field)? else {
+        return None;
+    };
+    Some(value.as_str())
+}
+
+fn invalid_command_arguments<T>(
+    command_type: CommandType,
+    expected: &'static str,
+) -> Result<T, ReolinkError> {
+    Err(ReolinkError::InvalidCommandArguments {
+        command_type,
+        expected,
+    })
 }
 
 fn camera_entity_id(serial: &str, channel: u32) -> EntityId {
@@ -1161,7 +1466,7 @@ mod tests {
     }
 
     #[test]
-    fn real_http_inspection_and_authorized_recording_control_are_verified() {
+    fn real_http_inspection_recording_and_bounded_ptz_controls_are_verified() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let address = listener.local_addr().unwrap();
         let captured = Arc::new(Mutex::new(Vec::new()));
@@ -1173,10 +1478,18 @@ mod tests {
                 json!([{"cmd":"GetChannelstatus","code":0,"value":{"status":[{"channel":0,"name":"Porch","online":1,"sleep":0},{"channel":1,"name":"Garage","online":0,"sleep":0}]}}]),
                 json!([{"cmd":"GetMdState","code":0,"value":{"state":1}}]),
                 json!([{"cmd":"GetRecV20","code":0,"value":{"Rec":{"enable":0}}}]),
+                json!([{"cmd":"GetPtzPreset","code":0,"value":{"PtzPreset":[{"enable":1,"id":2,"name":"Driveway"},{"enable":0,"id":3,"name":"Disabled"}]}}]),
                 json!([{"cmd":"Logout","code":0,"value":{}}]),
                 json!([{"cmd":"Login","code":0,"value":{"Token":{"name":"token456","leaseTime":3600}}}]),
                 json!([{"cmd":"SetRecV20","code":0,"value":{"rspCode":200}}]),
                 json!([{"cmd":"GetRecV20","code":0,"value":{"Rec":{"enable":1}}}]),
+                json!([{"cmd":"Logout","code":0,"value":{}}]),
+                json!([{"cmd":"Login","code":0,"value":{"Token":{"name":"token789","leaseTime":3600}}}]),
+                json!([{"cmd":"PtzCtrl","code":0,"value":{"rspCode":200}}]),
+                json!([{"cmd":"Logout","code":0,"value":{}}]),
+                json!([{"cmd":"Login","code":0,"value":{"Token":{"name":"tokenmove","leaseTime":3600}}}]),
+                json!([{"cmd":"PtzCtrl","code":0,"value":{"rspCode":200}}]),
+                json!([{"cmd":"PtzCtrl","code":0,"value":{"rspCode":200}}]),
                 json!([{"cmd":"Logout","code":0,"value":{}}]),
             ];
             for response_value in responses {
@@ -1244,19 +1557,112 @@ mod tests {
             ),
             Err(ReolinkError::Runtime(_))
         ));
-        let result = integration
-            .dispatch_command_authorized(&mut runtime, principal, request, 6_000)
+        let denied_move = RuntimeCommandToolRequest::new(
+            installed.ptz_entity_ids[0].clone(),
+            CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
+            Value::Object(vec![
+                ("direction".to_string(), Value::Text("right".to_string())),
+                ("speed".to_string(), Value::Integer(16)),
+                ("duration_ms".to_string(), Value::Integer(1)),
+            ]),
+        );
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:reolink-denied"),
+                denied_move,
+                5_600,
+            ),
+            Err(ReolinkError::Runtime(_))
+        ));
+        let invalid_move = RuntimeCommandToolRequest::new(
+            installed.ptz_entity_ids[0].clone(),
+            CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
+            Value::Object(vec![
+                ("direction".to_string(), Value::Text("left".to_string())),
+                ("speed".to_string(), Value::Integer(16)),
+                ("duration_ms".to_string(), Value::Integer(5_001)),
+            ]),
+        );
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal.clone(),
+                invalid_move,
+                5_750,
+            ),
+            Err(ReolinkError::InvalidCommandArguments { .. })
+        ));
+        let unknown_preset = RuntimeCommandToolRequest::new(
+            installed.ptz_entity_ids[0].clone(),
+            CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset),
+            Value::Object(vec![
+                ("preset_id".to_string(), Value::Integer(99)),
+                ("speed".to_string(), Value::Integer(32)),
+            ]),
+        );
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                principal.clone(),
+                unknown_preset,
+                5_800,
+            ),
+            Err(ReolinkError::InvalidCommandArguments { .. })
+        ));
+        let recording_result = integration
+            .dispatch_command_authorized(&mut runtime, principal.clone(), request, 6_000)
+            .unwrap();
+        let preset_result = integration
+            .dispatch_command_authorized(
+                &mut runtime,
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    installed.ptz_entity_ids[0].clone(),
+                    CommandType::DeviceControl(DeviceControlCommandType::RecallCameraPtzPreset),
+                    Value::Object(vec![
+                        ("preset_id".to_string(), Value::Integer(2)),
+                        ("speed".to_string(), Value::Integer(32)),
+                    ]),
+                ),
+                6_500,
+            )
+            .unwrap();
+        let move_result = integration
+            .dispatch_command_authorized(
+                &mut runtime,
+                principal,
+                RuntimeCommandToolRequest::new(
+                    installed.ptz_entity_ids[0].clone(),
+                    CommandType::DeviceControl(DeviceControlCommandType::MoveCameraPtz),
+                    Value::Object(vec![
+                        ("direction".to_string(), Value::Text("left".to_string())),
+                        ("speed".to_string(), Value::Integer(16)),
+                        ("duration_ms".to_string(), Value::Integer(1)),
+                    ]),
+                ),
+                7_000,
+            )
             .unwrap();
         handle.join().unwrap();
 
         assert_eq!(installed.device_ids.len(), 2);
         assert_eq!(installed.camera_entity_ids.len(), 2);
         assert_eq!(installed.recording_entity_ids.len(), 1);
+        assert_eq!(installed.ptz_entity_ids.len(), 1);
         assert_eq!(installed.motion_entity_ids.len(), 1);
-        assert!(result
+        assert!(recording_result
             .message
             .as_deref()
             .is_some_and(|message| message.contains("recording enabled")));
+        assert!(preset_result
+            .message
+            .as_deref()
+            .is_some_and(|message| message.contains("preset 2")));
+        assert!(move_result
+            .message
+            .as_deref()
+            .is_some_and(|message| message.contains("bounded PTZ left")));
         assert_eq!(
             runtime
                 .registry()
@@ -1276,6 +1682,13 @@ mod tests {
                 if fields.iter().any(|(field, value)|
                     field == "recording_enabled" && *value == Value::Bool(true))
         ));
+        assert!(matches!(
+            camera_state,
+            Value::Object(fields)
+                if fields.iter().any(|(field, value)|
+                    field == "ptz_presets"
+                        && matches!(value, Value::Array(presets) if presets.len() == 1))
+        ));
         let bridge = runtime.registry().bridge(&installed.bridge_id).unwrap();
         assert_eq!(
             bridge.auth_ref.as_ref().unwrap().as_str(),
@@ -1286,7 +1699,7 @@ mod tests {
         assert!(!serialized_runtime.contains("token123"));
 
         let requests = captured.lock().unwrap();
-        assert_eq!(requests.len(), 10);
+        assert_eq!(requests.len(), 18);
         let request_text = requests
             .iter()
             .map(|request| String::from_utf8_lossy(request).to_string())
@@ -1297,11 +1710,20 @@ mod tests {
         assert!(request_text[3].contains("cmd=GetMdState&token=token123"));
         assert!(request_text[4].contains("cmd=GetRecV20&token=token123"));
         assert!(request_text[4].contains("\"channel\":0"));
-        assert!(request_text[5].contains("cmd=Logout&token=token123"));
-        assert!(request_text[7].contains("cmd=SetRecV20&token=token456"));
-        assert!(request_text[7].contains("\"Rec\":{\"channel\":0,\"enable\":1}"));
-        assert!(request_text[8].contains("cmd=GetRecV20&token=token456"));
-        assert!(request_text[9].contains("cmd=Logout&token=token456"));
+        assert!(request_text[5].contains("cmd=GetPtzPreset&token=token123"));
+        assert!(request_text[6].contains("cmd=Logout&token=token123"));
+        assert!(request_text[8].contains("cmd=SetRecV20&token=token456"));
+        assert!(request_text[8].contains("\"Rec\":{\"channel\":0,\"enable\":1}"));
+        assert!(request_text[9].contains("cmd=GetRecV20&token=token456"));
+        assert!(request_text[10].contains("cmd=Logout&token=token456"));
+        assert!(request_text[12].contains("cmd=PtzCtrl&token=token789"));
+        assert!(request_text[12].contains("\"channel\":0,\"id\":2,\"op\":\"ToPos\",\"speed\":32"));
+        assert!(request_text[13].contains("cmd=Logout&token=token789"));
+        assert!(request_text[15].contains("cmd=PtzCtrl&token=tokenmove"));
+        assert!(request_text[15].contains("\"channel\":0,\"op\":\"Left\",\"speed\":16"));
+        assert!(request_text[16].contains("cmd=PtzCtrl&token=tokenmove"));
+        assert!(request_text[16].contains("\"channel\":0,\"op\":\"Stop\",\"speed\":16"));
+        assert!(request_text[17].contains("cmd=Logout&token=tokenmove"));
     }
 
     #[derive(Debug)]
@@ -1367,6 +1789,7 @@ mod tests {
                 sleeping: false,
                 motion: Some(false),
                 recording_enabled: Some(true),
+                ptz_presets: None,
             }],
         };
         let record = discovery_record(&config, &snapshot, 9_000).unwrap();
