@@ -1,0 +1,10 @@
+[package]
+name = "chief-of-staff-secure-host-channel"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded authenticated host-channel bootstrap and wire protocol for D18 Chief"
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_secure_channel = { path = "../vault-secure-channel" }
+coding_adventures_x3dh = { path = "../x3dh" }
