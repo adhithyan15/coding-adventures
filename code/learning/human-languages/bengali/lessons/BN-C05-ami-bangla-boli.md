@@ -8,7 +8,7 @@ concept_tag: BN-WORD-BANGLA
 prerequisites: [BN-C05-bola, BN-C03-ami]
 sounds: [anusvara, long-aa]
 roots: [banga]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C05-bola, BN-C03-ami]
 ---
 

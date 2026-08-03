@@ -8,7 +8,7 @@ concept_tag: BN-VERB-KORA
 prerequisites: [BN-C05-bola]
 sounds: [long-aa, o-inherent]
 roots: [kr-do, karya-work]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C05-bola, BN-C05-thaka]
 ---
 

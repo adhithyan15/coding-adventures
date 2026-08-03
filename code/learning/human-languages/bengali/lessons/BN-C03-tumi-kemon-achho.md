@@ -8,7 +8,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [BN-C03-kemon, BN-C02-tumi-apni]
 sounds: [chh-conjunct, o-ending]
 roots: [aachha-be]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C02-tumi-apni, BN-C03-kemon]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [BN-C03-tumi-kemon-achho, BN-C03-bhalo, BN-C03-kono-bepar-na]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN-C03-kono-bepar-na]
 ---
 

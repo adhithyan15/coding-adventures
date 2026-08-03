@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [BN-C01-nomoshkar, BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha, BN-C01-ashi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C01-nomoshkar, BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha, BN-C01-ashi]
 ---
 

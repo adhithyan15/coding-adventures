@@ -8,7 +8,7 @@ concept_tag: FAREWELL
 prerequisites: [BN-C01-achchha]
 sounds: [s-to-sh, i-sign-before]
 roots: [asa-come]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C01-hyan-na]
 ---
 
