@@ -109,7 +109,7 @@ pub trait ChiefControlPlane {
     fn deregister_host(&mut self, host_name: &HostName) -> Result<(), ControlPlaneError>;
 }
 
-impl<S, A> ChiefControlPlane for OrchestratorCore<'_, S, A>
+impl<S, A> ChiefControlPlane for OrchestratorCore<S, A>
 where
     S: HostSupervisor,
     A: ChannelWiringAuthorizer,
@@ -1336,6 +1336,13 @@ mod tests {
         }
     }
 
+    #[test]
+    fn owned_process_core_satisfies_threaded_daemon_handler_bounds() {
+        fn assert_control_plane<C: ChiefControlPlane + Send + 'static>() {}
+        type OwnedCore = chief_of_staff_orchestrator_core::ProcessOrchestratorCore<NoopWiring>;
+        assert_control_plane::<OwnedCore>();
+    }
+
     #[derive(Clone)]
     struct TestAuthorizer {
         accept_credential: bool,
@@ -1391,9 +1398,7 @@ mod tests {
         }
     }
 
-    fn core<'a>(
-        backend: &'a InMemoryStorageBackend,
-    ) -> OrchestratorCore<'a, FakeSupervisor, NoopWiring> {
+    fn core(backend: Arc<InMemoryStorageBackend>) -> OrchestratorCore<FakeSupervisor, NoopWiring> {
         OrchestratorCore::new(
             backend,
             FakeSupervisor::default(),
@@ -1419,11 +1424,11 @@ mod tests {
 
     #[test]
     fn authenticated_host_lifecycle_round_trips_all_core_operations() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let authorizer = TestAuthorizer::allowing();
         let operations = Arc::clone(&authorizer.operations);
         let seen = Arc::clone(&authorizer.seen_credentials);
-        let api = DaemonApi::new(core(&backend), authorizer);
+        let api = DaemonApi::new(core(Arc::clone(&backend)), authorizer);
         let mut session = DaemonSession::default();
 
         let authenticated = authenticate(&api, &mut session);
@@ -1503,10 +1508,10 @@ mod tests {
 
     #[test]
     fn requests_require_authentication_and_each_authorization_decision() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let mut denied = TestAuthorizer::allowing();
         denied.allow_operation = false;
-        let api = DaemonApi::new(core(&backend), denied);
+        let api = DaemonApi::new(core(Arc::clone(&backend)), denied);
         let mut session = DaemonSession::default();
 
         let unauthenticated = api.handle_text(&mut session, &request("1", "list_hosts", "{}"));
@@ -1515,10 +1520,10 @@ mod tests {
         let forbidden = api.handle_text(&mut session, &request("2", "list_hosts", "{}"));
         assert!(forbidden.contains(r#""code":"forbidden""#));
 
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let mut failed = TestAuthorizer::allowing();
         failed.fail_authorize = true;
-        let api = DaemonApi::new(core(&backend), failed);
+        let api = DaemonApi::new(core(Arc::clone(&backend)), failed);
         let mut session = DaemonSession::default();
         authenticate(&api, &mut session);
         let internal = api.handle_text(&mut session, &request("3", "list_hosts", "{}"));
@@ -1527,10 +1532,10 @@ mod tests {
 
     #[test]
     fn authentication_is_bounded_connection_local_and_never_echoed() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let mut authorizer = TestAuthorizer::allowing();
         authorizer.accept_credential = false;
-        let api = DaemonApi::new(core(&backend), authorizer);
+        let api = DaemonApi::new(core(Arc::clone(&backend)), authorizer);
         let mut first = DaemonSession::default();
         let failed = api.handle_text(
             &mut first,
@@ -1540,8 +1545,8 @@ mod tests {
         assert!(!failed.contains("do-not-echo"));
         assert!(!first.is_authenticated());
 
-        let backend = InMemoryStorageBackend::new();
-        let api = DaemonApi::new(core(&backend), TestAuthorizer::allowing());
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let api = DaemonApi::new(core(Arc::clone(&backend)), TestAuthorizer::allowing());
         let mut first = DaemonSession::default();
         authenticate(&api, &mut first);
         let repeated = authenticate(&api, &mut first);
@@ -1568,8 +1573,8 @@ mod tests {
 
     #[test]
     fn untrusted_json_and_envelopes_are_strictly_bounded() {
-        let backend = InMemoryStorageBackend::new();
-        let api = DaemonApi::new(core(&backend), TestAuthorizer::allowing());
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let api = DaemonApi::new(core(Arc::clone(&backend)), TestAuthorizer::allowing());
         let cases = [
             "not json".to_string(),
             "[]".to_string(),
@@ -1603,8 +1608,8 @@ mod tests {
 
     #[test]
     fn parameter_validation_and_control_plane_errors_are_stable() {
-        let backend = InMemoryStorageBackend::new();
-        let api = DaemonApi::new(core(&backend), TestAuthorizer::allowing());
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let api = DaemonApi::new(core(Arc::clone(&backend)), TestAuthorizer::allowing());
         let mut session = DaemonSession::default();
         authenticate(&api, &mut session);
 
@@ -1644,8 +1649,8 @@ mod tests {
 
     #[test]
     fn websocket_events_are_text_only_and_control_events_are_runtime_owned() {
-        let backend = InMemoryStorageBackend::new();
-        let api = DaemonApi::new(core(&backend), TestAuthorizer::allowing());
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let api = DaemonApi::new(core(Arc::clone(&backend)), TestAuthorizer::allowing());
         let mut session = DaemonSession::default();
         assert!(
             api.handle(&mut session, MessageEvent::Binary(vec![1, 2]))

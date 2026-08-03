@@ -7,3 +7,4 @@
 - Bind the protocol to `chief-of-staff-orchestrator-core` and the repository WebSocket runtime.
 - Preserve separate durable and authoritative health evidence with precision-safe JSON encoding.
 - Add a typed blocking WebSocket client with strict response-ID and envelope validation.
+- Accept the owned lifetime-free orchestrator core at the threaded daemon boundary.

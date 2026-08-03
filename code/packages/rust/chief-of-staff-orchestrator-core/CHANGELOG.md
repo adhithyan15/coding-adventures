@@ -7,3 +7,4 @@
 - Add authorized durable channel-definition create, load, and destroy operations.
 - Preserve separate durable intent and authoritative process health evidence.
 - Reject monotonic clock regression without advancing failed reconciliation state.
+- Own the shared storage handle and production trust resources so the complete core is `Send + 'static` for daemon composition.
