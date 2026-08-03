@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C02-en-peyar, TA-C02-ungal-peyar-enna, TA-C02-magizhcci]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C02-peyar, TA-C02-en, TA-C02-en-peyar, TA-C02-nii-niingal, TA-C02-enna, TA-C02-ungal-peyar-enna, TA-C02-magizhcci]
 ---
 

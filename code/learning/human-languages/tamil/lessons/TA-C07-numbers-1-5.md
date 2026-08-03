@@ -9,7 +9,7 @@ prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-inherent-a, pulli-virama, alveolar-rra, retroflex-nn]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Tamil's numbers are native Dravidian, not borrowed — and 2–5 stay visibly cousin across Tamil, Kannada, Telugu, Malayalam"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C01-vanakkam]
 ---
 
@@ -40,49 +40,16 @@ and **ன** (the *n*-family), **ற** the hard *r* inside *mūṉṟu*, and the 
 dot that stacks *ன்ற* into the single cluster you hear in **ஒன்று** and
 **மூன்று**.
 
-## Where they come from — the family stays together
-
-Hindi's numbers are **Sanskrit worn smooth** (*eka → ek*). Tamil's are not
-borrowed at all: they are **native Dravidian**, the same instinct that kept
-*vaṇakkam* where the north reached for *namaste*. And because they're the
-family's own, they stay visibly **cousin** across the four Dravidian languages:
-
-| | Tamil | Kannada | Telugu | Malayalam |
-|---|---|---|---|---|
-| 2 | *iraṇṭu* | *eraḍu* | *reṇḍu* | *raṇṭu* |
-| 3 | *mūṉṟu* | *mūru* | *mūḍu* | *mūnnu* |
-| 4 | *nāṉku* | *nālku* | *nālugu* | *nālu* |
-| 5 | *aintu* | *aidu* | *aidu* | *añcu* |
-
-Read down any column and you can see one word wearing four regional coats —
-*iraṇṭu / eraḍu / reṇḍu / raṇṭu* is unmistakably **one** number, four ways.
-That shared skeleton is the whole reason learning one Dravidian language gives
-you a running start on the next.
-
-**One** is the odd one out. Tamil *oṉṟu*, Kannada *ondu* and Malayalam *onnu*
-are cousins (from an old *oṉ-*), but **Telugu** breaks ranks with *okaṭi* — a
-different formation entirely. A useful thing to know early: the family agrees
-on 2–5 far more tidily than on 1.
-
-## A sound to notice
-
-**ஏ**... not yet — that's next lesson. For now, the one to feel is the cluster
-**ன்ற** in *oṉṟu* and *mūṉṟu*: an alveolar *n* running straight into the hard
-*ṟ*, said almost as a single knock — *on-ru*, *muun-ru*. It's a very Tamil
-sound, and the puḷḷi dot on **ன்** is what tells you the two letters fuse.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "oṉṟu, iraṇṭu, mūṉṟu, nāṉku, aintu"]
-- [YOU SAY: the cousins — "iraṇṭu … eraḍu … reṇḍu … raṇṭu": one number, four coats]
 - [YOU SAY: read the digits aloud — ௧ ௨ ௩ ௪ ௫]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Count to five in Tamil. (*Oṉṟu, iraṇṭu, mūṉṟu, nāṉku, aintu*.) Are
 Tamil's numbers borrowed from Sanskrit, like Hindi's? (**No** — they're native
-Dravidian.) Which number does **Telugu** form differently from its cousins?
-(**One** — *okaṭi*, where Tamil/Kannada/Malayalam share *oṉṟu / ondu / onnu*.)
-What does the puḷḷi on **ன்** do inside *oṉṟu*? (Fuses *ன்* + *ற* into one
-cluster.) Next: six to ten.
+Dravidian.) Which two writing systems sit side by side? (Spelled-out **words**
+and Tamil's own **numerals**.) Next: compare these native forms across the
+family.

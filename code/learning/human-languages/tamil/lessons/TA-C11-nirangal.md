@@ -9,7 +9,7 @@ prerequisites: [TA-C10-vaara-kizhamai]
 sounds: [tamil-double-lla, pulli-virama]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "கருப்பு, வெள்ளை, சிவப்பு (black/white/red) are Tamil's OWN native words; நீலம் (blue) is a Sanskrit loan — the same 'blue arrives late' pattern Latin's caeruleus showed"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C10-vaara-kizhamai]
 ---
 

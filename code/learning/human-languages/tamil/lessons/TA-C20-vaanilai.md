@@ -5,12 +5,12 @@ type: word
 headword: வானிலை
 gloss: weather — most likely a NATIVE Dravidian compound, unlike Kannada/Telugu/Malayalam's Sanskrit compounds: vaanam ("sky") + nilai ("state, standing")
 concept_tag: TA-WEATHER
-prerequisites: [TA-C18-mani]
+prerequisites: [TA-C18-mani-homophone-time]
 sounds: [tamil-vowel-sign-ai, tamil-compound-word]
 roots: [dravidian-vaanam-sky, dravidian-nilai-state]
 etymology_hook: "வானிலை (vāṉilai, 'weather') most likely breaks from Kannada/Telugu/Malayalam's Sanskrit compounds entirely — வானம் (vāṉam, 'sky,' likely native Dravidian, with confirmed cognates in Kannada ಬಾನು/bānu and Telugu వాన/vāna, distinct from the Sanskrit sky word ākāśa) + நிலை (nilai, 'state, standing,' from நில் nil, 'to stand,' a core native Dravidian verb) — literally 'the state/standing of the sky'"
-est_minutes: 6
-reviews_of: [TA-C18-mani]
+est_minutes: 4
+reviews_of: [TA-C18-mani-homophone-time, TA-C18-mani]
 ---
 
 # வானிலை — "the standing of the sky," most likely all native

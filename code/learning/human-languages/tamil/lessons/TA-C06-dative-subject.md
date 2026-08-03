@@ -6,12 +6,12 @@ headword: எனக்குத் தமிழ் தெரியும்
 gloss: "'I know Tamil' — built with no subject, because knowing happens TO you"
 romanization: enakkut tamiḻ teriyum
 concept_tag: TA-DATIVE-SUBJECT
-prerequisites: [TA-C06-dative-ukku, TA-C05-naan-tamizh-pesugiren]
+prerequisites: [TA-C06-dative-stacking, TA-C05-naan-tamizh-pesugiren]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative: knowing, liking, wanting and being cold all happen TO you rather than being done BY you — so 'I know Tamil' has no nominative 'I' at all, the person sitting in the dative instead (a 'dative subject'), and the same construction runs through Telugu, Kannada and Malayalam"
-est_minutes: 5
-reviews_of: [TA-C06-dative-ukku, TA-C05-naan-tamizh-pesugiren, TA-C03-naan]
+est_minutes: 4
+reviews_of: [TA-C06-dative-stacking, TA-C06-dative-ukku, TA-C05-naan-tamizh-pesugiren, TA-C03-naan]
 ---
 
 # எனக்குத் தமிழ் தெரியும் — "I know Tamil"
@@ -65,26 +65,12 @@ person in the **dative**.
 English does this occasionally and archaically — "**methinks**" is exactly it
 (*me* is dative: "it seems **to me**"). Tamil made it a rule.
 
-## All four sisters do it
-
-| language | "I know [the language]" | the dative |
-|---|---|---|
-| Tamil | *enakku tamiḻ teriyum* | **-ukku** |
-| Telugu | *nāku telugu vaccu* | **-ku** |
-| Kannada | *nanage kannaḍa gottu* | **-ge** |
-| Malayalam | *enikku malayāḷam aṟiyām* | **-ikku** |
-
-Four languages, one construction, and four suffixes that are visibly the **same
-suffix** — *-ukku / -ku / -ge / -ikku*. This is the Dravidian family showing its
-bones, exactly as *blanc/bianco/branco* did for Romance.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "*enakku tamiḻ teriyum*"]
 - [YOU SAY: the contrast — "*nāṉ tamiḻ pēsugiṟēṉ*" (I speak) … "*enakku tamiḻ teriyum*" (known to me)]
 - [YOU SAY: the literal — "to-me Tamil is-known"]
-- [YOU SAY: the four cousins — "*-ukku · -ku · -ge · -ikku*"]
 
 ## Wrap-up Recall
 
@@ -93,5 +79,5 @@ bones, exactly as *blanc/bianco/branco* did for Romance.
 "**I**" — *nāṉ* is replaced by the dative *enakku*.) Why does Tamil use the dative
 here? (Because knowing
 **happens to** you; you don't **do** it.) Which English word preserves the same
-idea? (**Methinks** — "it seems **to me**".) Do the sister languages agree? (**Yes**
-— all four, with cousin suffixes *-ukku/-ku/-ge/-ikku*.)
+idea? (**Methinks** — "it seems **to me**".) Next: watch all four Dravidian
+sisters use the same experiencer shape.

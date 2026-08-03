@@ -9,7 +9,7 @@ prerequisites: [TA-C13-udal-uruppugal]
 sounds: [tamil-vowel-sign-ai, tamil-retroflex-lla]
 roots: [dravidian-kodai-mazhai-kulir, sanskrit-vasantha]
 etymology_hook: "கோடை kodai (summer heat) and குளிர் kulir (cold) are native Tamil words; வசந்தம் vasantham (spring) is a Sanskrit loan — but the season that actually shapes life in Tamil Nadu is மழைக்காலம், the RAINS, not any of the four Western ones"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C13-udal-uruppugal]
 ---
 

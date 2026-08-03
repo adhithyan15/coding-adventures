@@ -8,7 +8,7 @@ concept_tag: TA-WORD-TAMIZH
 prerequisites: [TA-C05-pesu, TA-C03-naan]
 sounds: [zh-retroflex]
 roots: [tamizh]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C05-pesu, TA-C03-naan]
 ---
 

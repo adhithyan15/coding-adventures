@@ -5,11 +5,11 @@ type: word
 headword: ஆம்
 gloss: yes (ām)
 concept_tag: RESPONSE-YES
-prerequisites: [TA-C01-vanakkam]
+prerequisites: [TA-C01-vanakkam-family-register]
 sounds: [independent-vowel-aa, matra-vs-independent]
 roots: [ām]
 est_minutes: 3
-reviews_of: [TA-C01-vanakkam, TA-C01-nandri]
+reviews_of: [TA-C01-vanakkam-family-register, TA-C01-vanakkam, TA-C01-nandri]
 ---
 
 # ஆம் (ām) — "yes"

@@ -5,12 +5,12 @@ type: phrase
 headword: மன்னிக்கவும்
 gloss: please forgive (maṉṉikkavum — a formal/written polite request, from மன்னி maṉṉi "to forgive")
 concept_tag: COURTESY-SORRY
-prerequisites: [TA-C08-tayavuseytu]
+prerequisites: [TA-C08-please-register]
 sounds: [tamil-double-nnna, pulli-virama]
 roots: [manni-tamil]
 etymology_hook: "மன்னிக்கவும் maṉṉikkavum is built on மன்னி maṉṉi 'to forgive' — Tamil's OWN native word, unlike its Dravidian cousins' Sanskrit kṣamā"
-est_minutes: 5
-reviews_of: [TA-C08-tayavuseytu]
+est_minutes: 4
+reviews_of: [TA-C08-please-register, TA-C08-tayavuseytu]
 ---
 
 # மன்னிக்கவும் (maṉṉikkavum) — please forgive
@@ -51,22 +51,6 @@ Where "please" showed the whole family sharing one Sanskrit-derived idea
 (*daya*), "sorry" shows the opposite: Tamil kept its own word while its
 cousins borrowed the same Sanskrit one.
 
-## Be honest about register
-
-**மன்னிக்கவும்** leans formal — the kind of "please forgive" you'd read on a
-notice or offer in a considered apology. Everyday spoken Tamil often reaches
-for something shorter and more local depending on region, or simply borrows
-the English word "sorry." (This is one for a Tamil speaker to sharpen further
-— regional colloquial Tamil varies more than a single lesson can capture.)
-
-## Sound & structure point
-
-Notice **ன்னி**: the alveolar **ன** (*ṉ* — a third "n," distinct from dental
-ந and retroflex ண) is silenced by the **புள்ளி** (*puḷḷi*, virama dot) and
-then **doubled** before the vowel — the same gemination-by-repetition device
-you saw building numbers, here holding the *ṉ* consonant twice across the
-syllable boundary.
-
 ## Guided Practice
 
 [PAUSE 1s]
@@ -80,6 +64,5 @@ syllable boundary.
 (**"Please forgive"** — *maṉṉi* "to forgive" + *‑kkavum*, a formal request
 ending.) What's different about Tamil's forgiveness-word compared to Kannada,
 Telugu, and Malayalam? (**It's Tamil's own native root** — the other three
-borrow Sanskrit *kṣamā* instead.) Is மன்னிக்கவும் the everyday spoken word?
-(**Not necessarily** — it leans formal/written; everyday speech varies by
-region or may just borrow English "sorry.")
+borrow Sanskrit *kṣamā* instead.) Next: place the word in its real register and
+read the doubled alveolar n.

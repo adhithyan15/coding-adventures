@@ -3,17 +3,17 @@ id: TA-W03-pulli-vanakkam
 chapter: 1
 type: writing
 headword: "்"
-gloss: "the puḷḷi — a dot that kills the vowel — and writing வணக்கம், the first word of the course"
+gloss: "the puḷḷi — a visible dot that removes the inherent vowel without creating a conjunct"
 romanization: "puḷḷi"
-prerequisites: [TA-W02-ma-retroflex-na, TA-W01-curves-va-ka]
+prerequisites: [TA-W02-three-ns, TA-W01-abugida-va-ka]
 sounds: [pulli, gemination-kk, final-m]
 roots: [tamil-pulli]
 etymology_hook: "the puḷḷi ் is literally 'the dot', and where Devanagari's virama makes two consonants FUSE into a conjunct, Tamil's dot simply sits there — both letters keep their full shape, which is why Tamil has ~247 characters to Devanagari's many hundreds of ligatures"
-est_minutes: 5
-reviews_of: [TA-W02-ma-retroflex-na, TA-C01-vanakkam]
+est_minutes: 4
+reviews_of: [TA-W02-three-ns, TA-W02-ma-retroflex-na, TA-C01-vanakkam]
 ---
 
-# ் — the dot, and வணக்கம்
+# ் — the dot that leaves both letters visible
 
 ## Warm-up
 
@@ -63,37 +63,11 @@ ligature shapes on top of its letters, each to be learned or at least recognised
 words** — **க்ஷ** *kṣa* and **ஸ்ரீ** *śrī*. They sit outside the 18 native
 consonants and outside the 247.)
 
-Tamil traded a smaller alphabet for slightly longer words, and the trade shows
-up every time you write a doubled consonant.
-
-## Now write வணக்கம்
-
-You have all four letters and the dot. Build it left to right:
-
-| piece | | |
-|---|---|---|
-| **வ** | *va* | Lesson 1 |
-| **ண** | *ṇa* | Lesson 2 |
-| **க்** | *k* — க with the dot | this lesson |
-| **க** | *ka* | Lesson 1 |
-| **ம்** | *m* — ம with the dot | this lesson |
-
-> **வ · ண · க் · க · ம் → வணக்கம்**
-
-Two things to hear as you write it. The **க்க** in the middle is a **doubled**
-consonant — hold it, *vaṇak-kam*, not *vaṇakam*; Tamil distinguishes single from
-double consonants and it changes words. And the final **ம்** is a bare *m* with
-no vowel after it, which is why the word ends closed rather than trailing off.
-
-That is the first word of your course, written by hand.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU WRITE: க் — "க, then the dot above"]
 - [YOU WRITE: க்க — two full letters, dot intact, **no fusing**]
-- [YOU WRITE: **வணக்கம்** — five pieces, left to right]
-- [YOU SAY: the doubling — "vaṇa**k-k**am"]
 
 ## Wrap-up Recall
 
@@ -101,6 +75,5 @@ That is the first word of your course, written by hand.
 **inherent vowel**; *puḷḷi* is simply "**the dot**".) What does Devanagari do
 that Tamil doesn't? (**Fuses** the letters into a **conjunct** — Tamil keeps both
 shapes and the dot.) What does Tamil get in exchange? (A **much smaller
-character set** — 247, with **almost** no ligatures: only the borrowed க்ஷ and ஸ்ரீ.) Write **வணக்கம்**.
-What's special about the middle? (**க்க** — a **doubled** consonant, held:
-*vaṇak-kam*.) Next: the vowel signs, and "thank you."
+character set** — 247, with **almost** no ligatures: only the borrowed க்ஷ and
+ஸ்ரீ.) Next: assemble that visible dot into **வணக்கம்**.

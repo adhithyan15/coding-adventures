@@ -5,11 +5,11 @@ type: word
 headword: நன்றி
 gloss: thank you (naṉṟi — "goodness, gratitude")
 concept_tag: COURTESY-THANKS
-prerequisites: [TA-C01-vanakkam]
+prerequisites: [TA-C01-vanakkam-family-register]
 sounds: [dental-vs-alveolar-vs-retroflex-n, matra-i]
 roots: [nal]
-est_minutes: 5
-reviews_of: [TA-C01-vanakkam]
+est_minutes: 4
+reviews_of: [TA-C01-vanakkam-family-register, TA-C01-vanakkam]
 ---
 
 # நன்றி (naṉṟi) — "thank you," literally "goodness"
@@ -60,39 +60,17 @@ they **change meaning** — so learning to hear them is learning to read. Don't
 drill the whole set now; just know the differences are real and will return
 word by word.
 
-## Across the family — the same idea, five ways
-
-| Language | "Thanks" | Note |
-|---|---|---|
-| **Tamil** | *naṉṟi* (நன்றி) | native (*nal*, "good") |
-| Malayalam | *nandi* (നന്ദി) | the **same** Dravidian word as Tamil *naṉṟi* |
-| Kannada | *dhanyavāda* (ಧನ್ಯವಾದ) | Sanskrit (*dhanya* + *vāda*) |
-| Telugu | *dhanyavādamulu* (ధన్యవాదములు) | Sanskrit |
-| Hindi | *dhanyavād* / *shukriyā* | Sanskrit / Perso-Arabic |
-
-Malayalam, Tamil's closest sister, kept the native *nandi*; Kannada and Telugu
-took the Sanskrit *dhanyavāda*. The family splits the same way it did over
-"hello."
-
-## Why it's said this way
-
-Spoken *naṉṟi* is a touch formal — in warm, everyday Tamil people often thank
-with a smile, a nod, or *romba nandri* ("many thanks"), and among close family
-saying it can even feel oddly stiff, as if you were treating kin like
-strangers. Warmth is assumed; the explicit word is for when you want to mark
-the gratitude.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: na · ṉ · ṟi → "naṉṟi"]
 - [YOU SAY: the three *n*'s — ந (teeth), ன (ridge), ண (curled back)]
-- [YOU SAY: "romba naṉṟi" — "many thanks"]
+- [YOU SAY: "nal — good; naṉṟi — the good you did"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Read **நன்றி**. What does it literally mean, and from what root?
 ("Goodness," from *nal* "good.") How many distinct *n*-sounds does Tamil write,
 and what tells them apart? (Three — dental, alveolar, retroflex — by tongue
-position.) Which language shares Tamil's native word for thanks? (Malayalam,
-*nandi*.)
+position.) Next: compare the gratitude word across the family and choose its
+register.

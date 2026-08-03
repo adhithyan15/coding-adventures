@@ -9,7 +9,7 @@ prerequisites: [TA-C15-thanneer-arisi]
 sounds: [tamil-vowel-sign-ai, tamil-retroflex-lla]
 roots: [tamil-solar-calendar-nakshatra]
 etymology_hook: "The Tamil solar calendar's twelve months are named for nakshatras (lunar-mansion star groups) the MOON sits near on the full-moon day within that month — a THIRD calendar system, alongside the Gregorian and the pan-Indian Hindu lunisolar calendar, still governing Tamil New Year and Pongal today"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C15-thanneer-arisi]
 ---
 

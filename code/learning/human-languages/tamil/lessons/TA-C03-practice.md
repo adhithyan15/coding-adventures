@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TA-C03-eppadi-irukkirirgal, TA-C03-nalam, TA-C03-paravayillai]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C03-eppadi, TA-C03-eppadi-irukkirirgal, TA-C03-naan, TA-C03-nalam, TA-C03-paravayillai]
 ---
 

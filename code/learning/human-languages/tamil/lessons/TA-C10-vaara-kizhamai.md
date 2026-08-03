@@ -5,12 +5,12 @@ type: word
 headword: திங்கள் செவ்வாய் புதன் வியாழன் வெள்ளி சனி ஞாயிறு
 gloss: the seven weekdays — a mix of Tamil's OWN planet-words and Sanskrit borrowings
 concept_tag: TA-DAYS-WEEK
-prerequisites: [TA-C09-mannikkavum]
+prerequisites: [TA-C09-sorry-register]
 sounds: [tamil-alveolar-rra, pulli-virama, tamil-nya]
 roots: [dravidian-native-planet-words, sanskrit-planet-words]
 etymology_hook: "Tamil names its week with கிழமை kizhamai 'day' — a native Dravidian word, not Sanskrit vāra — and four of its seven planet-names (moon, Mars, Venus, sun) are Tamil's own, not borrowed"
-est_minutes: 6
-reviews_of: [TA-C09-mannikkavum]
+est_minutes: 4
+reviews_of: [TA-C09-sorry-register, TA-C09-mannikkavum]
 ---
 
 # திங்கள் to ஞாயிறு — the week, home-grown and borrowed together

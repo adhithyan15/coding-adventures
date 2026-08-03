@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Hindi duration
-tranche: 20 registered tracks, 1,025 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the Tamil duration
+tranche: 20 registered tracks, 1,045 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -62,7 +62,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01M | Complete in the Malayalam duration PR | Remove all thirty-seven sub-five-minute violations from the Malayalam track. | The report measures zero Malayalam violations; four new prerequisite-ordered micro-lessons separate vocabulary from etymology, register, and cross-language comparison. |
 | HL-D01N | Complete in the Arabic duration PR | Remove all thirty-nine sub-five-minute violations from the Arabic track. | The report measures zero Arabic violations; four new prerequisite-ordered writing steps preserve the abjad, joining, whole-word assembly, and hamza content. |
 | HL-D01O | Complete in the Hindi duration PR | Remove all forty sub-five-minute violations from the Hindi track. | The report measures zero Hindi violations; thirteen new prerequisite-ordered lessons preserve its script, etymology, grammar, and register depth. |
-| HL-D01P | Next | Remove all forty-two sub-five-minute violations from the Tamil track. | Tamil is now the smallest remaining set: twenty-two declaration-only lessons and twenty genuinely computed violations, with a 441-second maximum. |
+| HL-D01P | Complete in this PR | Remove all forty-two sub-five-minute violations from the Tamil track. | The report measures zero Tamil violations; twenty new prerequisite-ordered lessons preserve its script, etymology, grammar, register, and source-evidence depth. |
+| HL-D01Q | Next | Remove all forty-three sub-five-minute violations from the Latin track. | Latin is now the smallest remaining set: thirty-seven declaration-only lessons and six genuinely computed violations, with a 370-second maximum. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -93,12 +94,15 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B29 | Queued | Remove Arabic's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, one duplicate practice label, 14 Hyperref warnings, and undefined bold/italic Arabic font shapes; the clean-build signal is zero of each. |
 | HL-B30 | Queued | Publish Hindi Chapters 6–33 and its writing companions from canonical lessons rather than hand-copying another twenty-eight book chapters. | The Hindi PDF stops after Chapter 5 while canonical app content continues through Chapter 33 and eleven dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
 | HL-B31 | Queued | Remove Hindi's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports two overfull boxes, five underfull boxes, three duplicate practice labels, 29 Hyperref warnings, undefined bold/italic Devanagari font shapes, and a visibly colliding final-page running header; the clean-build signal is zero of each. |
+| HL-B32 | Queued | Publish Tamil Chapters 6–31 and its writing companions from canonical lessons rather than hand-copying another twenty-six book chapters. | The Tamil PDF stops after Chapter 5 while canonical app content continues through Chapter 31 and eight dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
+| HL-B33 | Queued | Remove Tamil's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports six overfull boxes, six underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and undefined bold/italic Tamil font shapes; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the new register support step, needs a scheduled place. |
 | HL-M03 | Queued | Extend Kannada's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the new stacking support step, needs a scheduled place. |
 | HL-M04 | Queued | Extend Malayalam's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the four new support steps, needs a scheduled place. |
 | HL-M05 | Queued | Reconcile Arabic's roadmap and authoritative session map with canonical Chapters 1–27 and the sixteen-step writing sequence. | The roadmap details only Chapters 1–4 and still calls Chapter 5+ planned; the session map stops at Chapter 2 even though prerequisite-ordered canonical lessons continue through Chapter 27. |
 | HL-M06 | Queued | Reconcile Hindi's roadmap and authoritative session map with canonical Chapters 1–33 and the eleven-step writing sequence. | The roadmap details only Chapters 1–6 and still calls Chapter 6 planned; the session map stops at Chapter 5 even though prerequisite-ordered canonical lessons continue through Chapter 33. |
+| HL-M07 | Queued | Reconcile Tamil's roadmap and authoritative session map with canonical Chapters 1–31 and the eight-step writing sequence. | The roadmap details only Chapters 1–6 and still calls Chapter 7+ planned; the session map stops at Chapter 5 even though prerequisite-ordered canonical lessons continue through Chapter 31. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
@@ -515,6 +519,36 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Tamil's forty-two violations are now the smallest remaining set. Twenty-two
   are declaration-only and twenty genuinely compute above the limit, with a
   441-second maximum, so HL-D01P is next.
+
+## Findings from HL-D01P
+
+- Tamil now has zero duration violations. The corpus grows from 1,025 to 1,045
+  lessons and drops from 140 to 98 violations overall; unknown prerequisites
+  remain at zero.
+- Twenty-two lessons already computed between 107 and 285 seconds and needed
+  only honest four-minute declared budgets. Twenty genuinely long lessons are
+  now prerequisite-ordered pairs, adding focused script, etymology, grammar,
+  register, family-comparison, and source-evidence steps without discarding the
+  original depth.
+- The forty rewritten or new split steps compute between 127 and 296 seconds.
+  `TA-W02-ma-retroflex-na` at 296 seconds and `TA-C06-dative-subject` at 294 are
+  the tightest remaining Tamil lessons and should be watched during copy edits.
+- The Tamil PDF builds successfully at 29 pages with no missing glyphs, but it
+  contains only Chapters 1–5 while canonical lessons continue through Chapter
+  31 alongside eight writing steps. HL-B32 records the schema-v2 migration and
+  generated publication work for the missing content.
+- The build reports six overfull boxes, six underfull boxes, four duplicate
+  practice labels, 27 Hyperref warnings, and undefined bold/italic Tamil font
+  shapes. Visual inspection of the cover, middle, and final pages finds no
+  additional clipping or collision. HL-B33 records that pre-existing
+  clean-build debt.
+- The roadmap details only Chapters 1–6 and still labels Chapter 7+ as planned;
+  the authoritative session map stops at Chapter 5. HL-M07 records the
+  progression-metadata reconciliation through Chapter 31 and the expanded
+  writing sequence.
+- Latin's forty-three violations are now the smallest remaining set.
+  Thirty-seven are declaration-only and six genuinely compute above the limit,
+  with a 370-second maximum, so HL-D01Q is next.
 
 ## Completed foundations
 

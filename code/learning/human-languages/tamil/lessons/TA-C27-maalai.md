@@ -9,7 +9,7 @@ prerequisites: [TA-C26-kaalai]
 sounds: [tamil-vowel-sign-aa, tamil-vowel-sign-ai]
 roots: [proto-dravidian-maal, proto-dravidian-maal-darkness-possible]
 etymology_hook: "மாலை (mālai, 'evening') is a genuine HOMONYM, not one word with two meanings: Wiktionary lists it under TWO entirely separate etymologies. Etymology 1 is 'மாலை' meaning 'garland, wreath, necklace' — traced to Old Tamil, and compared to Sanskrit माला (mālā) with the note 'probably borrowed FROM Dravidian languages' (a reverse-direction loan, Dravidian-into-Sanskrit, a genuine contrast with this project's usual Sanskrit-into-Dravidian pattern). Etymology 2 is the completely separate 'மாலை' meaning 'evening' — also from Old Tamil, but compared instead to மால் (māl), which Wiktionary traces to Proto-Dravidian *mā/*māl and glosses with several senses including 'கருமை' ('blackness, darkness'), plus 'illusion/confusion' and, as a proper noun, the Hindu deity Vishnu; be honest that Wiktionary's etymology for the 'evening' sense only says 'compare māl,' not an explicit 'evening derives specifically from the darkness sense' claim — a natural, plausible connection (evening = growing dark), but not spelled out with full certainty by the source itself; still, this is confidently NATIVE Dravidian vocabulary, a genuine contrast with TA-C26's uncertain காலை"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C26-kaalai]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [TA-C11-nirangal]
 sounds: [tamil-double-nna-retroflex, pulli-virama]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "அப்பா appā/அம்மா ammā (native, baby-talk-type words found worldwide) are just the start — Tamil has FOUR sibling words, split by the sibling's AGE relative to you, not just their gender"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C11-nirangal]
 ---
 

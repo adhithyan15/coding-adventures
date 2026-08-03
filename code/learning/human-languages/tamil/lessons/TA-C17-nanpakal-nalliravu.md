@@ -9,7 +9,7 @@ prerequisites: [TA-C16-thamizh-maadangal]
 sounds: [tamil-retroflex-lla, tamil-vowel-sign-u]
 roots: [tamil-nal-middle-proto-dravidian, tamil-naTu-middle]
 etymology_hook: "நண்பகல் (naṇpakal, noon) and நள்ளிரவு (naḷḷiravu, midnight) both trace to நள் (naḷ, 'middle'), a documented Proto-Dravidian root that survives today mainly in literary compounds like நள்ளிருள் ('thick darkness') — but Tamil ALSO keeps fully transparent synonyms, நடுப்பகல்/நடு இரவு, built directly on நடு (naṭu), the everyday colloquial word for 'middle'"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TA-C16-thamizh-maadangal]
 ---
 
@@ -42,37 +42,17 @@ with **பகல்** (*pakal*, "**daytime**") — but here it surfaces as
 following ப. Same root, two different faces, depending on what it's fused
 to.
 
-## The genuinely interesting part: Tamil ALSO kept the transparent version
-
-Here's what makes Tamil's case different from the Latin *medius diēs*
-story you saw earlier — where **different daughter languages** (Spanish,
-French, English) each inherited **one** fate for the phrase. Tamil kept
-**both fates in the very same language**, as living synonyms:
-
-- **நடுப்பகல்** (*naṭuppakal*) — dictionary-listed as a synonym of
-  *naṇpakal* — built directly on **நடு** (*naṭu*, "**middle**"), a word
-  every Tamil speaker still uses today (as in *naḍuvē*, "in the middle").
-- **நடு இரவு** (*naṭu iravu*) — the fully transparent synonym of
-  *naḷḷiravu*, again built directly on *naṭu*.
-
-So Tamil didn't have to choose between "erode it" and "keep it
-transparent" the way Latin's daughters did — it simply kept **both**,
-side by side, as everyday synonyms.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "naḷ" — an old word for "middle" — then "naḷḷiravu," midnight]
 - [YOU SAY: "naṇpakal" — noon, the same naḷ root, resurfacing as naṇ-]
-- [YOU SAY: the everyday synonyms — "naṭuppakal," "naṭu iravu," built on
-  naṭu, the "middle" word you already know]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] What old Proto-Dravidian root do நண்பகல் and நள்ளிரவு both trace
 back to, and what does it mean? (**நள்** *naḷ*, "middle" — surviving mainly
-in literary compounds like *naḷḷiruḷ*, "thick darkness.") What fully
-transparent, everyday synonyms does Tamil ALSO keep for the same meanings?
-(**நடுப்பகல்** and **நடு இரவு**, built on the everyday word **நடு**,
-"middle.") Does Tamil reach for a Sanskrit word here, the way Kannada and
-Telugu do? (**No** — every piece here is native Tamil.)
+in literary compounds like *naḷḷiruḷ*, "thick darkness.") Why does it surface
+as **naṇ-** in *naṇpakal*? (A sandhi change before following **p**.) Does Tamil
+reach for Sanskrit here? (**No**.) Next: meet the transparent *naṭu* synonyms
+Tamil kept beside these older compounds.

@@ -3,7 +3,7 @@ id: TA-C06-dative-ukku
 chapter: 6
 type: word
 headword: -உக்கு
-gloss: "the dative suffix -ukku, 'to / for' — and the idea of stacking"
+gloss: "the dative suffix -ukku, 'to / for,' including its two surface forms and irregular enakku"
 romanization: -ukku
 concept_tag: TA-CASE-DATIVE
 prerequisites: [TA-C05-practice, TA-C03-naan, TA-C02-peyar]
@@ -42,33 +42,12 @@ constantly:
 The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns don't
 — they just take the ending.
 
-## Why this matters
-
-Look at what the suffix does, and what it **doesn't** do:
-
-| | Tamil **-ukku** | a Latin ending like **-īs** |
-|---|---|---|
-| pins down the case? | **yes** — dative, always | **no** — *-īs* is dative **or** ablative |
-| carries number? | **no** — a separate suffix does | yes — plural, baked in |
-| carries declension class? | **no** | yes — 1st/2nd only |
-| can you see the seam? | **yes**: *peyar* + *ukku* | no — it's one fused lump |
-
-Tamil **stacks**. Each suffix means **one** thing and sits in a fixed order, so a
-long Tamil word can be read like a train of carriages — you can point at each
-piece. Latin **fuses**: *-īs* is case *and* plural *and* declension all at once,
-indivisible — and it doesn't even settle *which* case, since dative and ablative
-share the form. Tamil's *-ukku* is never ambiguous.
-
-This is what "**agglutinative**" means, and it's why Tamil words get long without
-getting hard: they're built, not memorised.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "*peyar* … *peyarukku*"]
 - [YOU SAY: "*nāṉ* … *enakku*" — "I" … "to me"]
 - [YOU SAY: "*vēlaikku*" — "for work," from Ch. 5's வேலை]
-- [YOU SAY: the principle — "one suffix, one meaning, visible seam"]
 
 ## Wrap-up Recall
 
@@ -76,7 +55,5 @@ getting hard: they're built, not memorised.
 (**On the end** of the noun — Tamil adds, it doesn't put a word in front.) What is
 "to me"? (**எனக்கு** *enakku* — the pronoun's body changes to *en-* first.) Why does
 the suffix show up as *-ukku* and *-kku*? (**One case, two shapes**, chosen by the
-noun's ending.) What's the difference from a Latin case ending? (Latin **fuses**
-case+number+declension into one lump — and *-īs* doesn't even fix *which* case;
-Tamil's suffix carries **one** meaning, unambiguously, with the **seam visible**.)
-Next: the sentence where Tamil puts "I" in the dative — and has no subject at all.
+noun's ending.) Next: compare that visible one-purpose suffix with a fused Latin
+ending.

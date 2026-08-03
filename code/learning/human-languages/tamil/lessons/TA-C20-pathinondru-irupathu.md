@@ -5,12 +5,12 @@ type: word
 headword: பதினொன்று — இருபது
 gloss: 11-20 — additive "ten-echo" compounds for the teens, then இருபது (20), transparently "two-tens" — closing out the arc: all four Dravidian languages build twenty compositionally, unlike Sanskrit, Latin, or Arabic's opaque special words
 concept_tag: TA-NUM-11-20
-prerequisites: [TA-C19-vayathu]
+prerequisites: [TA-C19-age-register-grammar]
 sounds: [tamil-vowel-sign-o, tamil-rra-letter]
 roots: [dravidian-pathu-ten, dravidian-iru-two]
 etymology_hook: "பதினொன்று-பத்தொன்பது (11-19) echo பத்து (pathu, 'ten') + a digit — இருபது (irupathu, 'twenty') is transparently 'two-tens', இரு (iru, an older word for 'two') + பத்து (pathu, 'ten'), matching Malayalam's own irupathu almost exactly — closing the arc: all four Dravidian languages build twenty compositionally, where Sanskrit/Latin/Arabic each have their own opaque, non-compositional special word"
-est_minutes: 6
-reviews_of: [TA-C19-vayathu]
+est_minutes: 4
+reviews_of: [TA-C19-age-register-grammar, TA-C19-vayathu]
 ---
 
 # பதினொன்று, இருபது — Dravidian's shared, transparent twenty

@@ -9,7 +9,7 @@ prerequisites: [TA-C01-aam]
 sounds: [tamil-vowel-sign-u, pulli-virama, tamil-vowel-sign-e]
 roots: [daya-compassion]
 etymology_hook: "தயவுசெய்து = 'do the kindness' — Tamil asks please by naming daya 'compassion', like Arabic faḍl and Hindi kṛpā"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TA-C01-aam]
 ---
 
@@ -50,31 +50,11 @@ light verb "do / place / become":
 
 One idea, four scripts. Learn one and you can almost read the others.
 
-## Be honest about how it's used
-
-Here is the honest part. A standalone "please" word is more **emphatic and
-formal** in Tamil than in English. In ordinary speech, politeness usually lives
-**in the verb** — the respectful command ending **‑உங்கள்** (*-uṅgaḷ*):
-**உட்காருங்கள்** (*uṭkāruṅgaḷ*) "please sit," **சொல்லுங்கள்** (*sollungaḷ*) "please
-tell me." That *-uṅgaḷ* already carries the "please."
-
-So reach for **தயவுசெய்து** when you want to be markedly, warmly polite —
-"*please*, do me the kindness" — and lean on the **‑உங்கள்** verb ending for
-everyday courtesy.
-
-## Sound & structure point
-
-Notice the join in **செய்து**: **செ** is *ca* wearing the **‑ெ** sign for *e*,
-then **ய்** is *ya* shut off by the **புள்ளி** (*puḷḷi*, the virama dot) — a bare
-consonant *y* — before **து** *tu*. That dot, silencing a vowel, is the same tool
-you met building the numbers.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "tayavu" — the kindness — then "seytu," having done]
 - [YOU SAY: the whole phrase — "tayavu seytu" = please, do the kindness]
-- [YOU SAY: the everyday way — the verb ending: "uṭkāruṅgaḷ" = please sit]
 
 ## Wrap-up Recall
 
@@ -82,5 +62,5 @@ you met building the numbers.
 What do its two pieces mean? ("**Kindness**" *tayavu* + "**having done**" *seytu*
 — *do the kindness*.) Which languages ask the same way? (**Kannada, Telugu,
 Malayalam** with *daya*, and further off **Arabic** *faḍl* and **Hindi** *kṛpā*.)
-And what carries "please" in ordinary speech? (**The verb ending ‑உங்கள்**
-*-uṅgaḷ*.)
+Next: decide when the standalone phrase is natural and when the verb carries
+the courtesy.
