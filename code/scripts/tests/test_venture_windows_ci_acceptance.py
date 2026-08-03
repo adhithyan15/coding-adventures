@@ -109,6 +109,14 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             "&& runner.os == 'Linux'",
             workflow,
         )
+        self.assertEqual(
+            workflow.count(
+                "needs.detect.outputs.needs_java == 'true' || "
+                "needs.detect.outputs.needs_kotlin == 'true' || "
+                "needs.detect.outputs.needs_venture_windows == 'true'"
+            ),
+            3,
+        )
         self.assertIn("cargo test -p venture-browser-windows", workflow)
         self.assertIn("cargo test -p venture-browser-macos", workflow)
 
