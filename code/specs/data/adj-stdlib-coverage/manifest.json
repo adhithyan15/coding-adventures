@@ -69,8 +69,8 @@
       "prerequisites": [],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": ["08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0", "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86", "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac", "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f", "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e"],
-      "provenance_bundle_hashes": ["586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390"],
+      "source_cas_hashes": ["08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0", "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86", "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde", "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba", "63e118f5118b72c600775183b2f0645ef23cb1e1e39e9891037f3f652e8261ac", "d0bb4594d21393cd5134bda3072635f25e4016fa3116178d724870737ac5895f", "fd9f9b6ebae2f4be91595aed7f9e0e6efa6ac534edf6f0f21f0a1f40e187588e"],
+      "provenance_bundle_hashes": ["586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390", "c3a1cb800a0ea738c180641b0d45c96cfa514944a52c1663a90ddf05bfbcfe47"],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
@@ -131,10 +131,13 @@
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/percent-of.adj"],
       "modalities": ["text"],
       "source_cas_hashes": [
-        "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834",
-        "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e"
+        "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
+        "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e",
+        "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+        "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834"
       ],
       "provenance_bundle_hashes": [
+        "7eb59fd419a46be7820e53dabe7b88d7cea2874e03d54ffc0c296b6892cf5b33",
         "a548a44417fb48afcd04834675860c432a11fbc96b31ab79521a5db8910a1eeb"
       ],
       "benchmark_paths": [],
@@ -181,8 +184,8 @@
       "prerequisites": ["adj.math.arithmetic.primitives"],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/ratio.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": ["8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf", "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"],
-      "provenance_bundle_hashes": ["7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb"],
+      "source_cas_hashes": ["192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7", "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7", "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf", "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"],
+      "provenance_bundle_hashes": ["0918daec5a4b37ad555a966a8a7eb370ed6c53e46574fa142ad12e3aa083d9db", "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb"],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },

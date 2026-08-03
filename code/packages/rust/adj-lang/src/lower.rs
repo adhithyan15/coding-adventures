@@ -1905,6 +1905,16 @@ fn annotations_to_provenance(annotations: &[Annotation]) -> Result<Provenance, L
     Ok(prov)
 }
 
+/// Lower only a formula's provenance envelope, without registering or executing it.
+///
+/// Audit tooling uses this to join a parser-backed formula declaration to the
+/// exact provenance object retained by the computation plan. It deliberately
+/// shares the lowerer's validation path instead of reproducing annotation rules.
+pub(crate) fn formula_provenance(fd: &FormulaDef) -> Result<Provenance, LowerError> {
+    validate_formula(fd)?;
+    annotations_to_provenance(&fd.annotations)
+}
+
 // ---------------------------------------------------------------------------
 // Formula libraries (ADJ-FORMULA-LIBRARIES rung-0)
 // ---------------------------------------------------------------------------

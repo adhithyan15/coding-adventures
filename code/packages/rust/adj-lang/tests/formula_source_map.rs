@@ -140,6 +140,32 @@ fn malformed_input_returns_an_error() {
 }
 
 #[test]
+fn program_map_uses_parser_spans_for_imports_and_ordinary_queries() {
+    let src = "import \"math/formulas.adj\"\n\
+? lookup bands lower = 5 mode range give label\n\
+? ratio(numerator, denominator)\n";
+
+    let mapped = adj_lang::program_source_map(src).expect("valid source map");
+
+    assert_eq!(mapped.imports.len(), 1);
+    assert_eq!(mapped.imports[0].literal, "math/formulas.adj");
+    assert_eq!(
+        span_text!(src, mapped.imports[0].declaration_span),
+        "import \"math/formulas.adj\""
+    );
+    assert_eq!(mapped.queries.len(), 1, "lookup queries are a distinct IR");
+    assert_eq!(
+        span_text!(src, mapped.queries[0].declaration_span),
+        "? ratio(numerator, denominator)"
+    );
+    assert!(matches!(
+        &mapped.queries[0].conclusion,
+        adj_lang::ast::Term::Compound { functor, args }
+            if functor == "ratio" && args.len() == 2
+    ));
+}
+
+#[test]
 fn rulebook_contained_formulabook_is_mapped_like_the_lowerer_maps_it() {
     let src = "rulebook outer {\n\
     formulabook nested {\n\

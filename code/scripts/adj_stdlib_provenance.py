@@ -32,7 +32,9 @@ DEFAULT_SCHEMA = Path("code/specs/data/adj-stdlib-provenance/manifest.schema.jso
 MAX_OBJECT_BYTES = 64 * 1024 * 1024
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 OBJECT_KINDS = {
+    "execution_witness",
     "fetch_receipt",
+    "formula_derivation",
     "formula_parser_inventory",
     "input_receipt",
     "provenance_bundle",
@@ -762,6 +764,7 @@ def _validate_formula_inventory_value(
     if not isinstance(formulas, list):
         raise ProvenanceError("formula parser inventory formulas must be an array")
     previous_end = 0
+    seen_names: set[str] = set()
     for index, formula in enumerate(formulas):
         prefix = f"formula parser inventory formulas[{index}]"
         if not isinstance(formula, dict) or set(formula) != {
@@ -773,7 +776,12 @@ def _validate_formula_inventory_value(
             "step_count",
         }:
             raise ProvenanceError(f"{prefix} has unknown or missing fields")
-        _require_nonempty(formula["formula"], f"{prefix}.formula")
+        formula_name = _require_nonempty(formula["formula"], f"{prefix}.formula")
+        if formula_name in seen_names:
+            raise ProvenanceError(
+                f"formula parser inventory repeats formula name {formula_name}"
+            )
+        seen_names.add(formula_name)
         _require_nonempty(formula["formulabook"], f"{prefix}.formulabook")
         parameters = formula["parameters"]
         if not isinstance(parameters, list) or any(
@@ -879,6 +887,558 @@ def _validate_formula_inventory(
             )
         selected_claims.add(enclosing[0])
     return value
+
+
+def _run_json_command(
+    command: Sequence[str], arguments: Sequence[str], *, label: str
+) -> dict[str, Any]:
+    if not command:
+        raise ProvenanceError(f"{label} command must not be empty")
+    try:
+        process = subprocess.Popen(
+            [*command, *arguments],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except OSError as error:
+        raise ProvenanceError(f"{label} failed to run: {error}") from error
+    stdout = bytearray()
+    stderr = bytearray()
+    overflow = threading.Event()
+
+    def drain(stream: Any, output: bytearray, limit: int) -> None:
+        while True:
+            chunk = stream.read(65536)
+            if not chunk:
+                return
+            remaining = limit - len(output)
+            output.extend(chunk[:remaining])
+            if len(chunk) > remaining:
+                overflow.set()
+                process.kill()
+                return
+
+    threads = (
+        threading.Thread(
+            target=drain,
+            args=(process.stdout, stdout, MAX_OBJECT_BYTES),
+            daemon=True,
+        ),
+        threading.Thread(
+            target=drain, args=(process.stderr, stderr, 4096), daemon=True
+        ),
+    )
+    for thread in threads:
+        thread.start()
+    try:
+        returncode = process.wait(timeout=60)
+    except subprocess.TimeoutExpired as error:
+        process.kill()
+        process.wait()
+        raise ProvenanceError(f"{label} timed out after 60 seconds") from error
+    finally:
+        for thread in threads:
+            thread.join()
+        process.stdout.close()
+        process.stderr.close()
+    if overflow.is_set():
+        raise ProvenanceError(f"{label} output exceeds byte limit")
+    if returncode != 0:
+        detail = bytes(stderr).decode("utf-8", errors="replace").strip()
+        raise ProvenanceError(f"{label} exited {returncode}: {detail}")
+    try:
+        value = json.loads(bytes(stdout).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ProvenanceError(f"{label} did not emit UTF-8 JSON") from error
+    if not isinstance(value, dict):
+        raise ProvenanceError(f"{label} output must be an object")
+    if bytes(stdout) != canonical_json_bytes(value):
+        raise ProvenanceError(f"{label} output is not canonical JSON")
+    return value
+
+
+def _bundle_closure(cas: Cas, root: dict[str, Any]) -> list[tuple[str | None, dict[str, Any]]]:
+    closure: list[tuple[str | None, dict[str, Any]]] = [(None, root)]
+    seen: set[str] = set()
+    pending = list(root["dependencies"])
+    while pending:
+        digest = pending.pop()
+        if digest in seen:
+            continue
+        seen.add(digest)
+        bundle = _json_object(cas, digest, "provenance_bundle")
+        closure.append((digest, bundle))
+        pending.extend(bundle["dependencies"])
+    return closure
+
+
+def _direct_formula_inventory(
+    cas: Cas, query_bundle: dict[str, Any]
+) -> tuple[str, str, dict[str, Any]]:
+    dependencies = query_bundle.get("dependencies")
+    if not isinstance(dependencies, list) or len(dependencies) != 1:
+        raise ProvenanceError("execution witness requires exactly one formula dependency")
+    bundle_hash = _require_hash(dependencies[0], "execution witness formula bundle")
+    bundle = _json_object(cas, bundle_hash, "provenance_bundle")
+    inventory_hash = _require_hash(
+        bundle.get("formula_inventory_sha256"),
+        "execution witness formula inventory",
+    )
+    inventory = _json_object(cas, inventory_hash, "formula_parser_inventory")
+    return bundle_hash, inventory_hash, inventory
+
+
+def _materialize_formula_audit(
+    cas: Cas,
+    query_bundle: dict[str, Any],
+    audit_command: Sequence[str],
+) -> dict[str, Any]:
+    with tempfile.TemporaryDirectory(prefix="adj-formula-audit-") as directory:
+        root = Path(directory)
+        snapshots = root / "snapshots"
+        _ensure_real_directory(snapshots)
+        for _digest, bundle in _bundle_closure(cas, query_bundle):
+            library = PurePosixPath(bundle["library"])
+            if (
+                library.is_absolute()
+                or ".." in library.parts
+                or library.as_posix() != bundle["library"]
+                or not library.parts
+                or library.parts[0] != "code"
+            ):
+                raise ProvenanceError("formula audit library path escapes workspace")
+            source_hash = _require_hash(
+                bundle["input"]["raw_source_sha256"], "formula audit input source"
+            )
+            destination = root / Path(*library.parts)
+            _write_exclusive(destination, _read_regular_file(cas.object_path(source_hash)))
+            for clause in bundle["clauses"]:
+                snapshot_hash = _require_hash(
+                    clause["snapshot_sha256"], "formula audit snapshot"
+                )
+                _write_exclusive(
+                    snapshots / snapshot_hash,
+                    _read_regular_file(cas.object_path(snapshot_hash)),
+                )
+        query_path = root / Path(*PurePosixPath(query_bundle["library"]).parts)
+        audit = _run_json_command(
+            audit_command,
+            ["--snapshots", os.fspath(snapshots), os.fspath(query_path)],
+            label="formula audit",
+        )
+    if set(audit) != {
+        "contract",
+        "derivations",
+        "imports",
+        "kind",
+        "root_source_sha256",
+        "schema_version",
+    } or (
+        audit["contract"] != "adj-lang/formula_audit/v1"
+        or audit["kind"] != "formula_execution_audit"
+        or audit["schema_version"] != 1
+        or audit["root_source_sha256"]
+        != query_bundle["input"]["raw_source_sha256"]
+        or not isinstance(audit["derivations"], list)
+        or not isinstance(audit["imports"], list)
+    ):
+        raise ProvenanceError("formula audit contract or query binding disagrees")
+    return audit
+
+
+def _enclosing_claim(
+    cas: Cas, source_hash: str, source_ir_hash: str, span: dict[str, Any], label: str
+) -> tuple[str, dict[str, Any]]:
+    ir = _validate_source_ir(cas, source_ir_hash, source_hash)
+    matches = [
+        (claim_id, claim)
+        for claim_id, claim in _claims_by_id(ir).items()
+        if claim["start"] <= span.get("start", -1)
+        and span.get("end", -1) <= claim["end"]
+    ]
+    if len(matches) != 1:
+        raise ProvenanceError(f"{label} must be enclosed by exactly one IR claim")
+    return matches[0]
+
+
+def _execution_graph(
+    cas: Cas, query_bundle: dict[str, Any]
+) -> tuple[dict[str, tuple[str | None, dict[str, Any]]], list[tuple[str, dict[str, Any]]]]:
+    by_source: dict[str, tuple[str | None, dict[str, Any]]] = {}
+    formula_bundles: list[tuple[str, dict[str, Any]]] = []
+    for digest, bundle in _bundle_closure(cas, query_bundle):
+        source_hash = _require_hash(
+            bundle["input"]["raw_source_sha256"], "execution graph source"
+        )
+        if source_hash in by_source:
+            raise ProvenanceError("execution graph repeats one program source")
+        by_source[source_hash] = (digest, bundle)
+        if digest is not None and "formula_inventory_sha256" in bundle:
+            formula_bundles.append((digest, bundle))
+    return by_source, formula_bundles
+
+
+def _formula_reference(
+    cas: Cas,
+    identity: Any,
+    formula_bundles: list[tuple[str, dict[str, Any]]],
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(identity, dict) or set(identity) != {
+        "body",
+        "declaration",
+        "formulabook",
+        "name",
+        "parameters",
+        "source_sha256",
+    }:
+        raise ProvenanceError("formula audit export identity has the wrong schema")
+    source_hash = _require_hash(identity["source_sha256"], "formula identity source")
+    matches: list[tuple[str, dict[str, Any], str, dict[str, Any]]] = []
+    for bundle_hash, bundle in formula_bundles:
+        if bundle["input"]["raw_source_sha256"] != source_hash:
+            continue
+        inventory_hash = bundle["formula_inventory_sha256"]
+        inventory = _json_object(cas, inventory_hash, "formula_parser_inventory")
+        for formula in inventory["formulas"]:
+            if (
+                formula["body"] == identity["body"]
+                and formula["declaration"] == identity["declaration"]
+                and formula["formulabook"] == identity["formulabook"]
+                and formula["formula"] == identity["name"]
+                and formula["parameters"] == identity["parameters"]
+            ):
+                matches.append((bundle_hash, bundle, inventory_hash, formula))
+    if len(matches) != 1:
+        raise ProvenanceError("formula audit identity must resolve to exactly one export")
+    bundle_hash, bundle, inventory_hash, _formula = matches[0]
+    source_ir_hash = bundle["input"]["source_ir_sha256"]
+    claim_id, _claim = _enclosing_claim(
+        cas, source_hash, source_ir_hash, identity["declaration"], "formula declaration"
+    )
+    clauses = [clause for clause in bundle["clauses"] if clause["claim_id"] == claim_id]
+    if len(clauses) != 1:
+        raise ProvenanceError("formula export must resolve to exactly one bundle clause")
+    clause = clauses[0]
+    reference = {
+        "body": identity["body"],
+        "bundle_sha256": bundle_hash,
+        "claim_id": claim_id,
+        "declaration": identity["declaration"],
+        "formula": identity["name"],
+        "formulabook": identity["formulabook"],
+        "inventory_sha256": inventory_hash,
+        "parameters": identity["parameters"],
+        "snapshot_sha256": clause["snapshot_sha256"],
+        "source_ir_sha256": source_ir_hash,
+        "source_sha256": source_hash,
+    }
+    return reference, {
+        bundle_hash,
+        inventory_hash,
+        source_hash,
+        source_ir_hash,
+        clause["snapshot_sha256"],
+        clause["source_ir_sha256"],
+    }
+
+
+def _question_reference(
+    cas: Cas, query_bundle: dict[str, Any], question: Any
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(question, dict) or set(question) != {
+        "declaration",
+        "name",
+        "source_sha256",
+    }:
+        raise ProvenanceError("formula audit question has the wrong schema")
+    source_hash = query_bundle["input"]["raw_source_sha256"]
+    source_ir_hash = query_bundle["input"]["source_ir_sha256"]
+    if question["source_sha256"] != source_hash:
+        raise ProvenanceError("formula audit question names the wrong source")
+    claim_id, _claim = _enclosing_claim(
+        cas,
+        source_hash,
+        source_ir_hash,
+        question["declaration"],
+        "formula question",
+    )
+    return {
+        **question,
+        "claim_id": claim_id,
+        "source_ir_sha256": source_ir_hash,
+    }, {source_hash, source_ir_hash}
+
+
+def _input_reference(
+    query_bundle: dict[str, Any], identity: Any
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(identity, dict) or set(identity) != {"provenance", "term"}:
+        raise ProvenanceError("formula audit input identity has the wrong schema")
+    provenance = identity["provenance"]
+    quote = provenance.get("quote") if isinstance(provenance, dict) else None
+    if not isinstance(quote, dict):
+        raise ProvenanceError("formula audit input has no byte quote identity")
+    matches = [
+        clause
+        for clause in query_bundle["clauses"]
+        if clause["snapshot_sha256"] == quote.get("snapshot_sha256")
+        and clause["start"] == quote.get("byte_offset")
+        and clause["end"] - clause["start"] == quote.get("byte_len")
+        and clause["quote_sha256"] == quote.get("text_sha256")
+    ]
+    if len(matches) != 1:
+        raise ProvenanceError("formula audit input must resolve to exactly one query claim")
+    clause = matches[0]
+    return {
+        "claim_id": clause["claim_id"],
+        "identity": identity,
+        "source_ir_sha256": clause["source_ir_sha256"],
+    }, {clause["snapshot_sha256"], clause["source_ir_sha256"]}
+
+
+def _normalized_formula_evidence(
+    cas: Cas, query_bundle: dict[str, Any], audit: dict[str, Any]
+) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
+    by_source, formula_bundles = _execution_graph(cas, query_bundle)
+    imports: list[dict[str, Any]] = []
+    import_links: set[str] = set()
+    for item in audit["imports"]:
+        if not isinstance(item, dict) or set(item) != {
+            "declaration",
+            "imported_source_sha256",
+            "importer_source_sha256",
+            "literal",
+        }:
+            raise ProvenanceError("formula audit import has the wrong schema")
+        importer = by_source.get(item["importer_source_sha256"])
+        imported = by_source.get(item["imported_source_sha256"])
+        if importer is None or imported is None or imported[0] is None:
+            raise ProvenanceError("formula audit import escapes the CAS bundle graph")
+        importer_ir = importer[1]["input"]["source_ir_sha256"]
+        claim_id, _claim = _enclosing_claim(
+            cas,
+            item["importer_source_sha256"],
+            importer_ir,
+            item["declaration"],
+            "formula import",
+        )
+        imports.append(
+            {
+                **item,
+                "claim_id": claim_id,
+                "imported_bundle_sha256": imported[0],
+                "importer_source_ir_sha256": importer_ir,
+            }
+        )
+        import_links.update(
+            {
+                item["importer_source_sha256"],
+                importer_ir,
+                item["imported_source_sha256"],
+                imported[1]["input"]["source_ir_sha256"],
+                imported[0],
+            }
+        )
+    imports.sort(key=lambda item: (item["importer_source_sha256"], item["declaration"]["start"]))
+
+    normalized = []
+    seen_exports: set[bytes] = set()
+    for item in audit["derivations"]:
+        if not isinstance(item, dict) or set(item) != {
+            "export",
+            "formula_sequence",
+            "inputs",
+            "plan",
+            "question",
+            "result",
+            "tree",
+            "verification",
+        }:
+            raise ProvenanceError("formula audit derivation has the wrong schema")
+        export, export_links = _formula_reference(cas, item["export"], formula_bundles)
+        export_key = canonical_json_bytes(export)
+        if export_key in seen_exports:
+            raise ProvenanceError("formula audit repeats one export derivation")
+        seen_exports.add(export_key)
+        sequence = []
+        sequence_links: set[str] = set()
+        for identity in item["formula_sequence"]:
+            reference, links = _formula_reference(cas, identity, formula_bundles)
+            sequence.append(reference)
+            sequence_links.update(links)
+        if not sequence or sequence[0] != export:
+            raise ProvenanceError("formula audit sequence does not begin with its export")
+        question, question_links = _question_reference(cas, query_bundle, item["question"])
+        inputs = []
+        input_links: set[str] = set()
+        for identity in item["inputs"]:
+            reference, links = _input_reference(query_bundle, identity)
+            inputs.append(reference)
+            input_links.update(links)
+        verification = item["verification"]
+        if (
+            not isinstance(verification, dict)
+            or verification.get("fully_verified") is not True
+            or verification.get("passed") is not True
+        ):
+            raise ProvenanceError("formula audit computation is not fully verified")
+        formula_checks = verification.get("formula_quotes")
+        input_checks = verification.get("input_quotes")
+        if not isinstance(formula_checks, list) or not isinstance(input_checks, list):
+            raise ProvenanceError("formula audit verification lists are malformed")
+        normalized_formula_checks = []
+        for check in formula_checks:
+            if not isinstance(check, dict) or set(check) != {
+                "identity",
+                "provenance",
+                "quote",
+            }:
+                raise ProvenanceError("formula audit formula quote has the wrong schema")
+            reference, links = _formula_reference(cas, check["identity"], formula_bundles)
+            if check["quote"].get("status") != "verified":
+                raise ProvenanceError("formula audit formula quote is not verified")
+            normalized_formula_checks.append(
+                {
+                    "identity": reference,
+                    "provenance": check["provenance"],
+                    "quote": check["quote"],
+                }
+            )
+            sequence_links.update(links)
+        normalized_input_checks = []
+        for check in input_checks:
+            if not isinstance(check, dict) or set(check) != {"identity", "quote"}:
+                raise ProvenanceError("formula audit input quote has the wrong schema")
+            reference, links = _input_reference(query_bundle, check["identity"])
+            if check["quote"].get("status") != "verified":
+                raise ProvenanceError("formula audit input quote is not verified")
+            normalized_input_checks.append({"identity": reference, "quote": check["quote"]})
+            input_links.update(links)
+        if [check["identity"] for check in normalized_formula_checks] != sequence:
+            raise ProvenanceError("formula audit formula statuses disagree with its sequence")
+        if [check["identity"] for check in normalized_input_checks] != inputs:
+            raise ProvenanceError("formula audit input statuses disagree with consumed inputs")
+        derivation = {
+            "contract": "adj-lang/formula_derivation/v1",
+            "export": export,
+            "formula_sequence": sequence,
+            "imports": imports,
+            "kind": "formula_derivation",
+            "plan": item["plan"],
+            "question": question,
+            "schema_version": 1,
+        }
+        derivation_links = export_links | sequence_links | import_links | question_links
+        witness = {
+            "contract": "adj-lang/formula_execution/v1",
+            "export": export,
+            "formula_sequence": sequence,
+            "inputs": inputs,
+            "kind": "execution_witness",
+            "question": question,
+            "result": item["result"],
+            "schema_version": 1,
+            "tree": item["tree"],
+            "verification": {
+                **verification,
+                "formula_quotes": normalized_formula_checks,
+                "input_quotes": normalized_input_checks,
+            },
+        }
+        witness_links = sequence_links | question_links | input_links
+        normalized.append((derivation, derivation_links, witness, witness_links))
+    direct_bundle_hash, inventory_hash, inventory = _direct_formula_inventory(cas, query_bundle)
+    direct_refs = []
+    for formula in inventory["formulas"]:
+        identity = {
+            "body": formula["body"],
+            "declaration": formula["declaration"],
+            "formulabook": formula["formulabook"],
+            "name": formula["formula"],
+            "parameters": formula["parameters"],
+            "source_sha256": inventory["source_sha256"],
+        }
+        reference, _links = _formula_reference(cas, identity, formula_bundles)
+        if reference["bundle_sha256"] != direct_bundle_hash or reference["inventory_sha256"] != inventory_hash:
+            raise ProvenanceError("direct parser export resolves outside its formula bundle")
+        direct_refs.append(canonical_json_bytes(reference))
+    if sorted(direct_refs) != sorted(seen_exports):
+        raise ProvenanceError("parsed exports and replayed derivations disagree")
+    return normalized
+
+
+def put_formula_execution_evidence(
+    cas: Cas,
+    query_bundle: dict[str, Any],
+    audit_command: Sequence[str],
+    *,
+    label: str,
+) -> tuple[list[str], list[str]]:
+    audit = _materialize_formula_audit(cas, query_bundle, audit_command)
+    derivation_hashes: list[str] = []
+    witness_hashes: list[str] = []
+    for derivation, derivation_links, witness, witness_links in _normalized_formula_evidence(
+        cas, query_bundle, audit
+    ):
+        derivation_hash = cas.put_json(
+            derivation,
+            kind="formula_derivation",
+            label=f"{label} {derivation['export']['formula']} derivation",
+            links=derivation_links,
+        )
+        witness["formula_derivation_sha256"] = derivation_hash
+        witness_hash = cas.put_json(
+            witness,
+            kind="execution_witness",
+            label=f"{label} {derivation['export']['formula']} witness",
+            links=witness_links | {derivation_hash},
+        )
+        derivation_hashes.append(derivation_hash)
+        witness_hashes.append(witness_hash)
+    return sorted(derivation_hashes), sorted(witness_hashes)
+
+
+def _validate_formula_execution_evidence(
+    cas: Cas,
+    query_bundle: dict[str, Any],
+    audit_command: Sequence[str] | None,
+) -> set[str]:
+    if audit_command is None:
+        raise ProvenanceError("formula evidence replay requires --formula-audit-binary")
+    stored_derivations = query_bundle.get("formula_derivation_sha256s")
+    stored_witnesses = query_bundle.get("execution_witness_sha256s")
+    if (
+        not isinstance(stored_derivations, list)
+        or stored_derivations != sorted(set(stored_derivations))
+        or not stored_derivations
+        or not isinstance(stored_witnesses, list)
+        or stored_witnesses != sorted(set(stored_witnesses))
+        or not stored_witnesses
+    ):
+        raise ProvenanceError("formula evidence hashes must be non-empty sorted unique arrays")
+    audit = _materialize_formula_audit(cas, query_bundle, audit_command)
+    expected = _normalized_formula_evidence(cas, query_bundle, audit)
+    expected_derivations: list[str] = []
+    expected_witnesses: list[str] = []
+    expected_links: set[str] = set()
+    for derivation, derivation_links, witness, witness_links in expected:
+        derivation_hash = sha256_bytes(canonical_json_bytes(derivation))
+        expected_derivations.append(derivation_hash)
+        stored_derivation = _json_object(cas, derivation_hash, "formula_derivation")
+        if stored_derivation != derivation or cas.index[derivation_hash]["links"] != sorted(derivation_links):
+            raise ProvenanceError("stored formula derivation disagrees with replay")
+        witness["formula_derivation_sha256"] = derivation_hash
+        witness_hash = sha256_bytes(canonical_json_bytes(witness))
+        expected_witnesses.append(witness_hash)
+        stored_witness = _json_object(cas, witness_hash, "execution_witness")
+        if stored_witness != witness or cas.index[witness_hash]["links"] != sorted(
+            witness_links | {derivation_hash}
+        ):
+            raise ProvenanceError("stored execution witness disagrees with replay")
+        expected_links.update((derivation_hash, witness_hash))
+    if sorted(expected_derivations) != stored_derivations or sorted(expected_witnesses) != stored_witnesses:
+        raise ProvenanceError("stored formula evidence set disagrees with replay")
+    return expected_links
 
 
 def _registered_manifest(
@@ -1127,6 +1687,8 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         schema_path: Path | None = None,
         workspace_root: Path | None = None,
         formula_inventory_command: Sequence[str] | None = None,
+        formula_audit_command: Sequence[str] | None = None,
+        allow_unwitnessed_baseline: bool = False,
     ) -> None:
         super().__init__(cas_root, blocking=False)
         self.manifest_path = manifest_path
@@ -1134,6 +1696,8 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         self.schema_path = schema_path
         self.workspace_root = workspace_root
         self.formula_inventory_command = formula_inventory_command
+        self.formula_audit_command = formula_audit_command
+        self.allow_unwitnessed_baseline = allow_unwitnessed_baseline
         self._baseline_manifest = b""
 
     def __enter__(self):
@@ -1145,6 +1709,8 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 self.schema_path,
                 workspace_root=self.workspace_root,
                 formula_inventory_command=self.formula_inventory_command,
+                formula_audit_command=self.formula_audit_command,
+                _allow_unwitnessed=self.allow_unwitnessed_baseline,
             )
             self._baseline_manifest = _read_regular_file(self.manifest_path)
             return self
@@ -1170,6 +1736,7 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 self.schema_path,
                 workspace_root=self.workspace_root,
                 formula_inventory_command=self.formula_inventory_command,
+                formula_audit_command=self.formula_audit_command,
             )
         except Exception:
             self._rollback()
@@ -1293,6 +1860,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                     self.schema_path,
                     workspace_root=self.workspace_root or self.manifest_path.parent,
                     formula_inventory_command=self.formula_inventory_command,
+                    formula_audit_command=self.formula_audit_command,
                     _allow_unreferenced=True,
                 )
             reachable = _reachable(self.cas, registered)
@@ -1317,6 +1885,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                 self.schema_path,
                 workspace_root=self.workspace_root,
                 formula_inventory_command=self.formula_inventory_command,
+                formula_audit_command=self.formula_audit_command,
             )
         except Exception:
             self._rollback()
@@ -1449,7 +2018,9 @@ def _validate_cas_schemas(schema_path: Path, cas: Cas) -> None:
     schema = json.loads(_read_regular_file(schema_path).decode("utf-8"))
     definitions = schema.get("$defs", {})
     schema_kinds = {
+        "execution_witness",
         "fetch_receipt",
+        "formula_derivation",
         "formula_parser_inventory",
         "input_receipt",
         "provenance_bundle",
@@ -1734,6 +2305,7 @@ def _validate_bundle(
     bundle_ids: dict[str, str],
     bundle_inputs: dict[str, str],
     formula_inventory_command: Sequence[str] | None,
+    formula_audit_command: Sequence[str] | None,
 ) -> None:
     if digest in validated:
         return
@@ -1750,9 +2322,13 @@ def _validate_bundle(
         "library",
         "sources",
     }
-    if set(bundle) not in (
-        required_fields,
-        required_fields | {"formula_inventory_sha256"},
+    optional_fields = {
+        "execution_witness_sha256s",
+        "formula_derivation_sha256s",
+        "formula_inventory_sha256",
+    }
+    if not required_fields <= set(bundle) or not set(bundle) <= (
+        required_fields | optional_fields
     ):
         raise ProvenanceError(f"bundle {digest} has unknown or missing fields")
     if bundle["kind"] != "provenance_bundle":
@@ -1780,6 +2356,7 @@ def _validate_bundle(
             bundle_ids=bundle_ids,
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         )
     sources = bundle["sources"]
     if not isinstance(sources, list) or not sources:
@@ -2003,6 +2580,20 @@ def _validate_bundle(
             raise ProvenanceError(f"{prefix}.resolution kind is unsupported")
         expected_links.update((snapshot, ir_hash))
         snapshots.add(snapshot)
+    evidence_fields = {
+        "execution_witness_sha256s",
+        "formula_derivation_sha256s",
+    }
+    if evidence_fields & set(bundle):
+        if not evidence_fields <= set(bundle):
+            raise ProvenanceError(
+                f"bundle {digest} must bind derivations and witnesses together"
+            )
+        expected_links.update(
+            _validate_formula_execution_evidence(
+                cas, bundle, formula_audit_command
+            )
+        )
     if cas.index[digest]["links"] != sorted(expected_links):
         raise ProvenanceError(
             f"bundle {digest} CAS links disagree with its payload graph"
@@ -2018,7 +2609,9 @@ def _validate_repository_unlocked(
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
     formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
     _allow_unreferenced: bool = False,
+    _allow_unwitnessed: bool = False,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -2066,7 +2659,30 @@ def _validate_repository_unlocked(
             bundle_ids=bundle_ids,
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         )
+    if not _allow_unwitnessed:
+        inventoried = {
+            digest
+            for digest in validated
+            if "formula_inventory_sha256"
+            in _json_object(cas, digest, "provenance_bundle")
+        }
+        witnessed = {
+            _json_object(cas, digest, "provenance_bundle")["dependencies"][0]
+            for digest in validated
+            if "execution_witness_sha256s"
+            in _json_object(cas, digest, "provenance_bundle")
+        }
+        if inventoried != witnessed:
+            missing = sorted(inventoried - witnessed)
+            extra = sorted(witnessed - inventoried)
+            raise ProvenanceError(
+                "formula execution witness coverage disagrees; missing="
+                + ",".join(missing)
+                + " extra="
+                + ",".join(extra)
+            )
     effective_workspace_root = workspace_root or manifest_path.parent
     for repo_path, expected_hash in sorted(bundle_inputs.items()):
         input_bytes = _read_regular_file(
@@ -2095,6 +2711,7 @@ def validate_repository(
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
     formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
         return _validate_repository_unlocked(
@@ -2103,6 +2720,7 @@ def validate_repository(
             schema_path,
             workspace_root=workspace_root,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         )
 
 
@@ -2113,6 +2731,7 @@ def project_snapshots(
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
     formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
         result = _validate_repository_unlocked(
@@ -2121,6 +2740,7 @@ def project_snapshots(
             schema_path,
             workspace_root=workspace_root,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         )
         cas = Cas(cas_root)
         cas.load()
@@ -2163,6 +2783,8 @@ def _resolve(root: Path, value: Path) -> Path:
 
 def _bundle_declared_links(bundle: dict[str, Any]) -> list[str]:
     links = set(bundle.get("dependencies", []))
+    links.update(bundle.get("execution_witness_sha256s", []))
+    links.update(bundle.get("formula_derivation_sha256s", []))
     if bundle.get("formula_inventory_sha256") is not None:
         links.add(bundle["formula_inventory_sha256"])
     for source in bundle.get("sources", []):
@@ -2198,6 +2820,7 @@ def main() -> int:
     verify_parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     verify_parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     verify_parser.add_argument("--formula-inventory-binary", type=Path)
+    verify_parser.add_argument("--formula-audit-binary", type=Path)
 
     project_parser = subparsers.add_parser("project")
     project_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
@@ -2205,6 +2828,7 @@ def main() -> int:
     project_parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     project_parser.add_argument("--output", type=Path, required=True)
     project_parser.add_argument("--formula-inventory-binary", type=Path)
+    project_parser.add_argument("--formula-audit-binary", type=Path)
 
     capture_parser = subparsers.add_parser("capture")
     capture_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
@@ -2268,6 +2892,11 @@ def main() -> int:
                     if args.formula_inventory_binary is not None
                     else None
                 ),
+                formula_audit_command=(
+                    [os.fspath(_resolve(repo_root, args.formula_audit_binary))]
+                    if args.formula_audit_binary is not None
+                    else None
+                ),
             )
         elif args.command == "project":
             result = project_snapshots(
@@ -2279,6 +2908,11 @@ def main() -> int:
                 formula_inventory_command=(
                     [os.fspath(_resolve(repo_root, args.formula_inventory_binary))]
                     if args.formula_inventory_binary is not None
+                    else None
+                ),
+                formula_audit_command=(
+                    [os.fspath(_resolve(repo_root, args.formula_audit_binary))]
+                    if args.formula_audit_binary is not None
                     else None
                 ),
             )

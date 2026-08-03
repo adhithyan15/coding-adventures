@@ -65,21 +65,15 @@
       "claims": [
         {
           "claim_id": "adj.question.arithmetic.ratio.compute",
-          "end": 669,
-          "quote": "? ratio(numerator, denominator)",
-          "quote_sha256": "4fa4bb1e52b3711b06a3f46f4fcfd6e3b0cecd2b6013f5866c8673a717823b82",
+          "end": 685,
+          "quote": "? ratio(numerator, denominator)  % expect 0.75\n",
+          "quote_sha256": "53add9e12b870c1a6f0dc0d7061a9ad1865f20b1b3ba7768a910bf702deb5929",
           "start": 638
         }
       ],
       "disposition": "represented",
-      "end": 669,
-      "start": 638
-    },
-    {
-      "disposition": "discarded",
       "end": 685,
-      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
-      "start": 669
+      "start": 638
     }
   ],
   "source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",

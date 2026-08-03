@@ -1,0 +1,343 @@
+{
+  "contract": "adj-lang/formula_execution/v1",
+  "export": {
+    "body": {
+      "end": 3355,
+      "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+      "start": 3323
+    },
+    "bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+    "claim_id": "adj.math.arithmetic.ratio",
+    "declaration": {
+      "end": 3866,
+      "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+      "start": 3283
+    },
+    "formula": "ratio",
+    "formulabook": "ratios",
+    "inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
+    "parameters": [
+      "numerator",
+      "denominator"
+    ],
+    "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+    "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+    "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"
+  },
+  "formula_derivation_sha256": "f21fbb006f6011cc44237d99917614623ff1e78b1401adba09732ef4f4d90c3e",
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 3355,
+        "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+        "start": 3323
+      },
+      "bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+      "claim_id": "adj.math.arithmetic.ratio",
+      "declaration": {
+        "end": 3866,
+        "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+        "start": 3283
+      },
+      "formula": "ratio",
+      "formulabook": "ratios",
+      "inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
+      "parameters": [
+        "numerator",
+        "denominator"
+      ],
+      "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+      "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+      "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"
+    },
+    {
+      "body": {
+        "end": 5327,
+        "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+        "start": 5309
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.quotient",
+      "declaration": {
+        "end": 5753,
+        "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+        "start": 5271
+      },
+      "formula": "quotient",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "dividend",
+        "divisor"
+      ],
+      "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "inputs": [
+    {
+      "claim_id": "adj.input.arithmetic.ratio.numerator",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+          "quote": {
+            "byte_len": 15,
+            "byte_offset": 0,
+            "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+            "text_sha256": "fc0649511a55c34d4982b3cf6339ccebf09c855608fbcdb1f6ba9fecec5c6a15"
+          },
+          "source": "ratio input fixture",
+          "trust": "authoritative"
+        },
+        "term": "numerator(3)"
+      },
+      "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
+    },
+    {
+      "claim_id": "adj.input.arithmetic.ratio.denominator",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+          "quote": {
+            "byte_len": 17,
+            "byte_offset": 16,
+            "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+            "text_sha256": "0fe3fd93a2e09b50888a3e3bf9a3e3b27bb6dde869f323469f005092bf20e4f8"
+          },
+          "source": "ratio input fixture",
+          "trust": "authoritative"
+        },
+        "term": "denominator(4)"
+      },
+      "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
+    }
+  ],
+  "kind": "execution_witness",
+  "question": {
+    "claim_id": "adj.question.arithmetic.ratio.compute",
+    "declaration": {
+      "end": 669,
+      "sha256": "4fa4bb1e52b3711b06a3f46f4fcfd6e3b0cecd2b6013f5866c8673a717823b82",
+      "start": 638
+    },
+    "name": "ratio",
+    "source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+    "source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7"
+  },
+  "result": {
+    "dimension": "scalar",
+    "exact_rational": {
+      "denominator": "4",
+      "numerator": "3"
+    },
+    "f64_bits": "3fe8000000000000"
+  },
+  "schema_version": 1,
+  "tree": {
+    "f64_bits": "3fe8000000000000",
+    "kind": "operation",
+    "operands": [
+      {
+        "f64_bits": "4008000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+            "quote": {
+              "byte_len": 15,
+              "byte_offset": 0,
+              "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+              "text_sha256": "fc0649511a55c34d4982b3cf6339ccebf09c855608fbcdb1f6ba9fecec5c6a15"
+            },
+            "source": "ratio input fixture",
+            "trust": "authoritative"
+          },
+          "term": "numerator(3)"
+        },
+        "kind": "leaf",
+        "slot": "numerator"
+      },
+      {
+        "f64_bits": "4010000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+            "quote": {
+              "byte_len": 17,
+              "byte_offset": 16,
+              "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+              "text_sha256": "0fe3fd93a2e09b50888a3e3bf9a3e3b27bb6dde869f323469f005092bf20e4f8"
+            },
+            "source": "ratio input fixture",
+            "trust": "authoritative"
+          },
+          "term": "denominator(4)"
+        },
+        "kind": "leaf",
+        "slot": "denominator"
+      }
+    ],
+    "operator": "/"
+  },
+  "verification": {
+    "computation": {
+      "reason": null,
+      "recomputed_f64_bits": null,
+      "recorded_f64_bits": null,
+      "status": "rechecked"
+    },
+    "formula_quotes": [
+      {
+        "identity": {
+          "body": {
+            "end": 3355,
+            "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+            "start": 3323
+          },
+          "bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+          "claim_id": "adj.math.arithmetic.ratio",
+          "declaration": {
+            "end": 3866,
+            "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+            "start": 3283
+          },
+          "formula": "ratio",
+          "formulabook": "ratios",
+          "inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
+          "parameters": [
+            "numerator",
+            "denominator"
+          ],
+          "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+          "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+          "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"
+        },
+        "provenance": {
+          "corroborations": [],
+          "locator": "https://mathworld.wolfram.com/Ratio.html",
+          "quote": {
+            "byte_len": 154,
+            "byte_offset": 0,
+            "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+            "text_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73"
+          },
+          "source": "The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.",
+          "trust": "authoritative"
+        },
+        "quote": {
+          "byte_len": 154,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      },
+      {
+        "identity": {
+          "body": {
+            "end": 5327,
+            "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+            "start": 5309
+          },
+          "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+          "claim_id": "adj.math.arithmetic.quotient",
+          "declaration": {
+            "end": 5753,
+            "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+            "start": 5271
+          },
+          "formula": "quotient",
+          "formulabook": "elementary_arithmetic",
+          "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+          "parameters": [
+            "dividend",
+            "divisor"
+          ],
+          "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+          "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+          "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+        },
+        "provenance": {
+          "corroborations": [],
+          "locator": "https://mathworld.wolfram.com/Quotient.html",
+          "quote": {
+            "byte_len": 108,
+            "byte_offset": 0,
+            "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+            "text_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29"
+          },
+          "source": "The term \"quotient\" is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.",
+          "trust": "authoritative"
+        },
+        "quote": {
+          "byte_len": 108,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "fully_verified": true,
+    "input_quotes": [
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.ratio.numerator",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+              "quote": {
+                "byte_len": 15,
+                "byte_offset": 0,
+                "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+                "text_sha256": "fc0649511a55c34d4982b3cf6339ccebf09c855608fbcdb1f6ba9fecec5c6a15"
+              },
+              "source": "ratio input fixture",
+              "trust": "authoritative"
+            },
+            "term": "numerator(3)"
+          },
+          "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
+        },
+        "quote": {
+          "byte_len": 15,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      },
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.ratio.denominator",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+              "quote": {
+                "byte_len": 17,
+                "byte_offset": 16,
+                "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+                "text_sha256": "0fe3fd93a2e09b50888a3e3bf9a3e3b27bb6dde869f323469f005092bf20e4f8"
+              },
+              "source": "ratio input fixture",
+              "trust": "authoritative"
+            },
+            "term": "denominator(4)"
+          },
+          "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
+        },
+        "quote": {
+          "byte_len": 17,
+          "byte_offset": 16,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "is_query_answer": true,
+    "passed": true
+  }
+}

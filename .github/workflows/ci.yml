@@ -88,6 +88,7 @@ jobs:
         run: |
           python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-inventory
+          cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-audit
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
@@ -111,12 +112,15 @@ jobs:
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
           python3 code/scripts/adj_stdlib_report.py --format json --fail-on-unreferenced-tests \
             --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
+            --formula-audit-binary code/packages/rust/target/debug/adj-formula-audit \
             > /tmp/adj-stdlib-report.json
           python3 code/scripts/adj_stdlib_manifest.py --validate-json-schema \
             --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
+            --formula-audit-binary code/packages/rust/target/debug/adj-formula-audit \
             > /tmp/adj-stdlib-manifest.json
           python3 code/scripts/adj_stdlib_provenance.py verify \
             --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
+            --formula-audit-binary code/packages/rust/target/debug/adj-formula-audit \
             > /tmp/adj-stdlib-provenance.json
           (cd code/programs/go/capability-cage-generator && go test ./...)
           (cd code/packages/go/ca-capability-analyzer && go test ./...)

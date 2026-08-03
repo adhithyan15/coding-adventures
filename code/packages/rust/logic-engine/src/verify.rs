@@ -129,6 +129,8 @@ pub struct InputQuoteVerification {
 pub struct DerivedVerification {
     pub name: String,
     pub computation: ComputationStatus,
+    /// Exact source identities checked by `formula_quotes`, in matching order.
+    pub formula_sources: Vec<Provenance>,
     pub formula_quotes: Vec<QuoteStatus>,
     pub input_quotes: Vec<InputQuoteVerification>,
     pub is_query_answer: bool,
@@ -747,6 +749,7 @@ pub fn verify_derived(
     DerivedVerification {
         name: derived.name.clone(),
         computation,
+        formula_sources,
         formula_quotes,
         input_quotes,
         is_query_answer: derived

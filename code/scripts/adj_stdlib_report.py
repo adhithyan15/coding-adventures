@@ -208,6 +208,7 @@ def _summary(rows: list[dict[str, Any]]) -> dict[str, int]:
 def build_report(
     root: Path,
     formula_inventory_command: list[str] | None = None,
+    formula_audit_command: list[str] | None = None,
 ) -> dict[str, Any]:
     """Build a deterministic structural report from the checked-out repository."""
 
@@ -227,6 +228,7 @@ def build_report(
                 root / adj_stdlib_provenance.DEFAULT_SCHEMA,
                 workspace_root=root,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
             provenance_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             cas = adj_stdlib_provenance.Cas(cas_root)
@@ -432,12 +434,14 @@ def main() -> int:
     parser.add_argument("--fail-on-missing-source-envelope", action="store_true")
     parser.add_argument("--require-byte-pins", action="store_true")
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    parser.add_argument("--formula-audit-binary", type=Path, required=True)
     args = parser.parse_args()
 
     root = args.root.resolve()
     report = build_report(
         root,
         formula_inventory_command=[str(args.formula_inventory_binary.resolve())],
+        formula_audit_command=[str(args.formula_audit_binary.resolve())],
     )
     output = (
         json.dumps(report, indent=2, sort_keys=True) + "\n"

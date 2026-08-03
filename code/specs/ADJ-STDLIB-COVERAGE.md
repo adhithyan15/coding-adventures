@@ -300,8 +300,9 @@ option mapping, or judge/evaluation failure.
 9. Add executable formula preconditions or domain guards before migrating
    `proportion.adj`; `a/b=c/x` requires nonzero `a`, `b`, and `c`, while the
    current formula fails closed only on its final divisor.
-10. Add first-class derivation objects and execute every exported formula before
-    migrating `average.adj`; prose cannot prove its `N=2` and `N=3` specializations.
+10. Use the first-class derivation and execution-witness contract to execute every
+    exported formula before migrating `average.adj`; prose cannot prove its `N=2`
+    and `N=3` specializations.
 11. Replace `powers.adj`'s `Cube.html` locator, which describes the geometric
     solid, and ground both exported formulas in stable, domain-correct bytes.
 12. Revisit `simple-interest.adj` with its variable/unit context, explicit
@@ -312,12 +313,20 @@ option mapping, or judge/evaluation failure.
      linked CAS input on every verification. Output is bounded while streaming, and
      each formula requires its own enclosing input-IR claim. The isolated bridge is
      schema-checked and consumed only through an explicit parser command.
-13b. **In progress:** dependent provenance builders require an explicit verified
+13b. **Complete:** dependent provenance builders require an explicit verified
      primitive-root hash. The arithmetic, ratio, and percent-of formula roots now
      store replayed parser inventories, and one compare-and-swap migration rebuilds
-     their complete six-root formula/query dependency closure. Next add
-     `formula_derivation` and execution-witness objects and enforce set equality across
-     parsed exports, replayed derivations, and fully verified query executions.
+     their complete six-root formula/query dependency closure.
+13c. **Complete for the six reviewed arithmetic examples:** each query root stores
+     first-class `formula_derivation` and `execution_witness` CAS objects. The audit
+     binary emits a purpose-built computation plan, nested formula sequence, exact
+     rational and IEEE-754 result identities, input facts, and verifier statuses.
+     CAS validation reconstructs the import closure from exact stored bytes, replays
+     the audit, binds formulas and questions back to parser-backed input-IR claims,
+     binds consumed facts to byte-pinned query clauses, and requires set equality
+     between all inventoried formula roots and witnessed query dependencies. These
+     are six replay examples, not a universal proof over every input; boundary,
+     exceptional, and property-based execution coverage remains backlog work.
 
 ### Wave 2: complete K-8 foundations
 

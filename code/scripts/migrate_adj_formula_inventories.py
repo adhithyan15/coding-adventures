@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replay parser inventories and replace the complete arithmetic root closure."""
+"""Replay parser and execution evidence for the complete arithmetic closure."""
 
 from __future__ import annotations
 
@@ -45,6 +45,7 @@ def migrate(
     workspace_root: Path,
     *,
     formula_inventory_command: Sequence[str],
+    formula_audit_command: Sequence[str],
 ) -> dict[str, object]:
     with provenance.BundleRootReplacementTransaction(
         cas_root,
@@ -53,6 +54,8 @@ def migrate(
         schema_path=schema_path,
         workspace_root=workspace_root,
         formula_inventory_command=formula_inventory_command,
+        formula_audit_command=formula_audit_command,
+        allow_unwitnessed_baseline=True,
     ) as transaction:
         old_roots = _registered_roots(transaction.cas, manifest_path)
         missing = sorted(ROOT_IDS - set(old_roots))
@@ -64,6 +67,7 @@ def migrate(
         new_roots = arithmetic_builder.build(
             transaction.cas,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         )
         arithmetic_hash = new_roots["adj.math.arithmetic.primitives.v1"]
         new_roots.update(
@@ -72,6 +76,7 @@ def migrate(
                 None,
                 arithmetic_bundle_sha256=arithmetic_hash,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
         )
         new_roots.update(
@@ -80,6 +85,7 @@ def migrate(
                 None,
                 arithmetic_bundle_sha256=arithmetic_hash,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
         )
         if set(new_roots) != ROOT_IDS:
@@ -104,6 +110,7 @@ def migrate(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    parser.add_argument("--formula-audit-binary", type=Path, required=True)
     args = parser.parse_args()
     result = migrate(
         REPO_ROOT / provenance.DEFAULT_ROOT,
@@ -111,6 +118,7 @@ def main() -> None:
         REPO_ROOT / provenance.DEFAULT_SCHEMA,
         REPO_ROOT,
         formula_inventory_command=[str(args.formula_inventory_binary.resolve())],
+        formula_audit_command=[str(args.formula_audit_binary.resolve())],
     )
     print(provenance.canonical_json_bytes(result).decode("utf-8"), end="")
 

@@ -20,6 +20,10 @@ path = "src/bin/adj-verify.rs"
 name = "adj-formula-inventory"
 path = "src/bin/adj-formula-inventory.rs"
 
+[[bin]]
+name = "adj-formula-audit"
+path = "src/bin/adj-formula-audit.rs"
+
 [dependencies]
 adj-lang = { path = "../adj-lang" }
 adj-constraint-solver = { path = "../adj-constraint-solver" }

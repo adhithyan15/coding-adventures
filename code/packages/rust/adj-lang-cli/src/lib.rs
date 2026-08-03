@@ -22,6 +22,8 @@ use std::path::{Path, PathBuf};
 
 use adj_lang::ImportProvider;
 
+pub mod formula_audit;
+
 /// JSON-escape a string body.
 pub fn esc(s: &str) -> String {
     let mut o = String::with_capacity(s.len() + 2);
@@ -175,4 +177,3 @@ impl ImportProvider for FsProvider {
         fs::read_to_string(canonical).map_err(|e| format!("{canonical}: {e}"))
     }
 }
-

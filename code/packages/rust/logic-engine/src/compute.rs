@@ -631,6 +631,18 @@ pub(crate) struct ComputationPlan {
     pub is_query_answer: bool,
 }
 
+/// Immutable view of the compiler-owned computation plan retained by the KB.
+///
+/// The result artifact repeats some of these fields for display, but an audit
+/// must replay this separately stored plan rather than trusting that testimony.
+#[derive(Debug, Clone, Copy)]
+pub struct ComputationPlanRef<'a> {
+    pub expr: &'a ComputeExpr,
+    pub formula_sources: &'a [crate::Provenance],
+    pub is_query_answer: bool,
+    pub scope: ComputationScope,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Derived {
     /// Assigned by [`KnowledgeBase::add_derived`](crate::KnowledgeBase::add_derived).

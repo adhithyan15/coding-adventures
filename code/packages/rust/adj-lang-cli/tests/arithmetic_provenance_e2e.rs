@@ -228,6 +228,40 @@ fn ratio_bundle_reuses_quotient_and_fully_verifies_its_query() {
         "{output}"
     );
 
+    let audit = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .current_dir(&root)
+        .arg("--snapshots")
+        .arg(&snapshots)
+        .arg(program)
+        .output()
+        .expect("run formula audit for ratio");
+    assert!(
+        audit.status.success(),
+        "formula audit failed: {}",
+        String::from_utf8_lossy(&audit.stderr)
+    );
+    let audit_json: serde_json::Value =
+        serde_json::from_slice(&audit.stdout).expect("formula audit JSON");
+    let derivation = &audit_json["derivations"][0];
+    assert_eq!(derivation["verification"]["fully_verified"], true);
+    assert_eq!(derivation["formula_sequence"][0]["name"], "ratio");
+    assert_eq!(derivation["formula_sequence"][1]["name"], "quotient");
+    assert_eq!(
+        derivation["verification"]["formula_quotes"][0]["quote"]["status"],
+        "verified"
+    );
+    assert_eq!(
+        derivation["verification"]["input_quotes"][0]["quote"]["status"],
+        "verified"
+    );
+    assert_eq!(
+        derivation["verification"]["formula_quotes"][0]["provenance"]["quote"]["snapshot_sha256"]
+            .as_str()
+            .expect("formula snapshot identity")
+            .len(),
+        64
+    );
+
     std::fs::remove_dir_all(snapshots).expect("remove projected snapshots");
 }
 

@@ -829,6 +829,8 @@ fn a_computed_answer_rechecks_math_formula_and_input_quotes() {
     let report = verify_derived(&derived, &kb, &snapshots);
 
     assert_eq!(report.computation, ComputationStatus::ReChecked);
+    assert_eq!(report.formula_sources.len(), report.formula_quotes.len());
+    assert_eq!(report.formula_sources[0].source, "computed-answer fixture");
     assert_eq!(report.formula_quotes.len(), 1);
     assert_eq!(report.input_quotes.len(), 2);
     assert!(report.passed());

@@ -59,13 +59,20 @@ def _safe_repo_path(value: str) -> bool:
 
 
 def discover_library_evidence(
-    root: Path, formula_inventory_command: Sequence[str] | None = None
+    root: Path,
+    formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, dict[str, Any]]:
     report = adj_stdlib_report.build_report(
         root,
         formula_inventory_command=(
             list(formula_inventory_command)
             if formula_inventory_command is not None
+            else None
+        ),
+        formula_audit_command=(
+            list(formula_audit_command)
+            if formula_audit_command is not None
             else None
         ),
     )
@@ -75,6 +82,7 @@ def discover_library_evidence(
 def load_provenance_bundles(
     root: Path,
     formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
 ) -> tuple[dict[str, dict[str, Any]], list[str]]:
     """Load only bundles already proven by the offline CAS verifier."""
 
@@ -89,6 +97,7 @@ def load_provenance_bundles(
                 schema_path,
                 workspace_root=root,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
             manifest = _load_json(manifest_path)
             cas = adj_stdlib_provenance.Cas(cas_root)
@@ -229,13 +238,14 @@ def validate_manifest(
     library_evidence: dict[str, dict[str, Any]] | None = None,
     provenance_bundles: dict[str, dict[str, Any]] | None = None,
     formula_inventory_command: Sequence[str] | None = None,
+    formula_audit_command: Sequence[str] | None = None,
 ) -> list[str]:
     """Return stable validation errors; an empty list means valid."""
 
     errors: list[str] = []
     if provenance_bundles is None:
         provenance_bundles, provenance_errors = load_provenance_bundles(
-            root, formula_inventory_command
+            root, formula_inventory_command, formula_audit_command
         )
         errors.extend(provenance_errors)
     if not isinstance(manifest, dict):
@@ -265,7 +275,9 @@ def validate_manifest(
         errors.append("objectives must be an array")
         objectives = []
     if library_evidence is None:
-        library_evidence = discover_library_evidence(root, formula_inventory_command)
+        library_evidence = discover_library_evidence(
+            root, formula_inventory_command, formula_audit_command
+        )
 
     objective_ids: list[str] = []
     prerequisites: dict[str, list[str]] = {}
@@ -357,12 +369,19 @@ def validate_manifest(
                     errors.append(
                         f"{prefix} references an unverified provenance bundle: {bundle_hash}"
                     )
-                elif bundle["library"] not in paths:
+                else:
+                    bundle_library = bundle["library"]
+                    objective_library = (
+                        bundle_library.removesuffix(".query.adj") + ".adj"
+                        if bundle_library.endswith(".query.adj")
+                        else bundle_library
+                    )
+                if bundle is not None and objective_library not in paths:
                     errors.append(
                         f"{prefix} bundle {bundle_hash} belongs to unlisted library: "
                         f"{bundle['library']}"
                     )
-                else:
+                elif bundle is not None:
                     resolved_bundles.append(bundle)
         if resolved_bundles:
             bundle_sources = {
@@ -376,7 +395,14 @@ def validate_manifest(
                 )
         status = item.get("status")
         if isinstance(status, dict) and status.get("provenance") == "fully_verified":
-            bundle_libraries = {bundle["library"] for bundle in resolved_bundles}
+            bundle_libraries = {
+                (
+                    bundle["library"].removesuffix(".query.adj") + ".adj"
+                    if bundle["library"].endswith(".query.adj")
+                    else bundle["library"]
+                )
+                for bundle in resolved_bundles
+            }
             expected_libraries = set(paths) if isinstance(paths, list) else set()
             if bundle_libraries != expected_libraries:
                 errors.append(
@@ -440,6 +466,7 @@ def main() -> int:
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--validate-json-schema", action="store_true")
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    parser.add_argument("--formula-audit-binary", type=Path, required=True)
     args = parser.parse_args()
 
     root = args.root.resolve()
@@ -450,8 +477,9 @@ def main() -> int:
     manifest = _load_json(manifest_path)
     schema = _load_json(schema_path)
     formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
+    formula_audit_command = [str(args.formula_audit_binary.resolve())]
     provenance_bundles, provenance_errors = load_provenance_bundles(
-        root, formula_inventory_command
+        root, formula_inventory_command, formula_audit_command
     )
     errors = [
         *validate_manifest(
@@ -459,6 +487,7 @@ def main() -> int:
             manifest,
             provenance_bundles=provenance_bundles,
             formula_inventory_command=formula_inventory_command,
+            formula_audit_command=formula_audit_command,
         ),
         *provenance_errors,
     ]

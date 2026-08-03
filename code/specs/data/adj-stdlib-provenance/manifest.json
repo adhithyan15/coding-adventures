@@ -1,12 +1,12 @@
 {
   "algorithm": "sha256",
   "bundle_hashes": [
-    "12061d3a78d9888f17f49c3d6fb536f6dc9ba5f6b4e9efdc99c407c555aa6567",
+    "0918daec5a4b37ad555a966a8a7eb370ed6c53e46574fa142ad12e3aa083d9db",
     "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
     "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+    "7eb59fd419a46be7820e53dabe7b88d7cea2874e03d54ffc0c296b6892cf5b33",
     "a548a44417fb48afcd04834675860c432a11fbc96b31ab79521a5db8910a1eeb",
-    "c80e82a996996d862de3e144e8819fecaff90db92aee031e33bc36da6e9db745",
-    "f14a35de18eae984c0e0ecc820d461e9ded93fb47a5cb2bfea0153e9cfe71e9f"
+    "c3a1cb800a0ea738c180641b0d45c96cfa514944a52c1663a90ddf05bfbcfe47"
   ],
   "manifest_id": "adj.stdlib.provenance.v1",
   "schema_version": 1

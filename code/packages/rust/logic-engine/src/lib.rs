@@ -54,8 +54,9 @@ use logic_core::{unify, LogicVar, Number, Substitution, Term};
 /// `bignum-core` directly (NUM-6a).
 pub use bignum_core::RoundingMode;
 pub use compute::{
-    compute, recheck_narrowing, recheck_narrowings, ComputationId, ComputationScope, ComputeError,
-    ComputeExpr, ComputeOp, DerivationNode, Derived, NarrowingCheck, RoundSpec,
+    compute, recheck_narrowing, recheck_narrowings, ComputationId, ComputationPlanRef,
+    ComputationScope, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived,
+    NarrowingCheck, RoundSpec,
 };
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
@@ -985,6 +986,25 @@ impl KnowledgeBase {
         &self.derived
     }
 
+    /// Return the separately retained compiler plan for this exact KB artifact.
+    pub fn computation_plan_for(
+        &self,
+        derived: &crate::compute::Derived,
+    ) -> Option<crate::compute::ComputationPlanRef<'_>> {
+        let id = derived.computation_id?;
+        let stored = self.derived.get(id.0)?;
+        if !std::ptr::eq(stored, derived) {
+            return None;
+        }
+        let plan = self.computation_plans.get(id.0)?;
+        Some(crate::compute::ComputationPlanRef {
+            expr: &plan.expr,
+            formula_sources: &plan.formula_sources,
+            is_query_answer: plan.is_query_answer,
+            scope: plan.scope,
+        })
+    }
+
     pub(crate) fn computation_scope(&self) -> crate::compute::ComputationScope {
         crate::compute::ComputationScope {
             fact_limit: self.next_fact_id,
@@ -1493,6 +1513,25 @@ mod tests {
         kb.add_derived(a2);
         assert_eq!(kb.derived_bindings().len(), 3);
         assert_eq!(kb.derived_for("a").unwrap().value, 9.0);
+    }
+
+    #[test]
+    fn computation_plan_view_only_accepts_the_exact_stored_artifact() {
+        let mut kb = KnowledgeBase::new();
+        let derived = compute::compute("answer", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+        kb.add_derived(derived);
+
+        let stored = &kb.derived_bindings()[0];
+        let plan = kb
+            .computation_plan_for(stored)
+            .expect("stored artifact has a plan");
+        assert_eq!(plan.expr, &compute::ComputeExpr::Lit(7.0));
+        assert_eq!(plan.scope.fact_limit, 0);
+        assert_eq!(plan.scope.derived_limit, 0);
+
+        let clone = stored.clone();
+        assert!(kb.computation_plan_for(&clone).is_none());
     }
 
     #[test]
