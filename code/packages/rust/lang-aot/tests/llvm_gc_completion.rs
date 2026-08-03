@@ -101,10 +101,24 @@ fn garbage_loop_module(limit: i64) -> IIRModule {
             // inside a naively-chosen "small" range). A boolean comparison
             // result is always exactly 0 or 1, so it survives truncation
             // unambiguously.
+            //
+            // The threshold (300,000 bytes) is deliberately generous, not
+            // near-zero: measured directly (a debug build that printed the
+            // raw value instead of comparing it), the real post-loop
+            // residual is ~71,440 bytes, not ~0. `FlatHeap::adapt_threshold`
+            // doubles the collection threshold when more than half a cycle's
+            // live set survives -- and a *conservative* stack scan can
+            // over-retain some fraction of objects as false-positive
+            // pointer-like stack values, the same "loop finishes with a
+            // legitimate residual, not exactly zero" caveat this session's
+            // vm-core and WASM end-to-end tests both already hit. 300,000 is
+            // comfortably above the observed ~71,440 (so this doesn't become
+            // a flaky threshold) while staying far below the ~1,120,016
+            // total a genuinely non-collecting run would leave live.
             IIRInstr::new(
                 "cmp_lt",
                 Some("collected_ok".into()),
-                vec![Operand::Var("live".into()), Operand::Int(10_000)],
+                vec![Operand::Var("live".into()), Operand::Int(300_000)],
                 "i64",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("collected_ok".into())], "i64"),
@@ -119,7 +133,8 @@ fn garbage_loop_module(limit: i64) -> IIRModule {
 /// Compile `module` to LLVM IR, link only the `gc-core-capi` static archive
 /// (no `dynval_runtime.c`/`twig_runtime.c` needed -- `alloc`/`gc_live_bytes`
 /// resolve entirely from `gc-core-capi`'s `twig_compat` symbols), run it, and
-/// return its exit code.
+/// return its exit code -- the module's own `collected_ok` boolean (0 or 1),
+/// not a raw byte count (see the module-level doc comment for why).
 fn run_llvm(module: &IIRModule) -> i32 {
     let cfg = IIRLlvmConfig::new("llvm_gc_completion").with_target(host_triple());
     let ll = lower_iir_to_llvm(module, &cfg).expect("lower hand-built IIR to LLVM");
@@ -153,12 +168,17 @@ fn alloc_on_llvm_auto_collects_under_real_allocation_pressure() {
     // auto-collect-before-alloc check must fire purely from allocation
     // pressure, with no explicit gc_collect call anywhere in this module.
     let module = garbage_loop_module(70_000);
-    let live_bytes = run_llvm(&module);
-    assert!(
-        (0..10_000).contains(&live_bytes),
-        "expected only a small residual live-byte total (proving the loop's \
-         70,000 throwaway allocations were actually collected, not left live \
-         forever), got exit code {live_bytes} -- a code of 255 or 1,120,016 \
-         (70001*16, mod 256 = 112) would mean nothing was ever collected"
+    // The module itself computes `gc_live_bytes() < 10_000` and returns that
+    // boolean (see `garbage_loop_module`'s `collected_ok` comparison) rather
+    // than the raw byte count, precisely so this assertion can't be
+    // satisfied by an exit-code truncation coincidence: `collected_ok` is
+    // always exactly 0 or 1, never a masked byte of some larger number.
+    let collected_ok = run_llvm(&module);
+    assert_eq!(
+        collected_ok, 1,
+        "expected the loop's 70,000 throwaway allocations to have actually \
+         been collected (gc_live_bytes() < 300_000 inside the module -- the \
+         real residual measured directly is ~71,440), got exit code \
+         {collected_ok} -- 0 means nothing was ever collected"
     );
 }

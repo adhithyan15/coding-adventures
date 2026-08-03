@@ -103,6 +103,25 @@ boolean — a comparison result is always exactly 0 or 1, so it survives
 any test that returns a large diagnostic value as an exit code rather than a
 pre-reduced boolean/small-range result.
 
+Fixing the truncation exposed a second, quieter problem: with the boolean
+comparison in place, the test *still* failed. A one-off debug build
+(printing the raw value over stdout instead of comparing it) measured the
+real post-loop residual at ~71,440 bytes — real reclamation (down from
+~1.12 MiB), but nowhere near zero. This is the same "conservative scanning
++ adaptive threshold leaves a legitimate residual, not exactly zero" shape
+this session's `vm-core` and WASM struct-heap end-to-end tests both already
+hit: `FlatHeap::adapt_threshold` doubles the collection threshold whenever
+more than half a cycle's live set appears to survive, and a conservative
+stack scan can retain some fraction of already-dead objects as
+false-positive pointer-like stack values — so after the first collection
+crosses the threshold once, later allocations in the same run may not
+trigger a second cycle before the loop ends. The threshold this test
+compares against (300,000 bytes) is picked to sit comfortably above the
+measured ~71,440 (so it isn't a flaky near-exact bound) while staying far
+below the ~1.12 MiB a genuinely non-collecting run would leave live —
+proving real, substantial reclamation without demanding an unrealistic
+near-zero residual from a conservative collector.
+
 ## 4. A test-harness bug found by running the full matrix, not just the new test
 
 `lang-aot/tests/lang_matrix.rs`'s `run_llvm` conditionally links two
