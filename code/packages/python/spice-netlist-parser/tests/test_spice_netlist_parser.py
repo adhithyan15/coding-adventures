@@ -1571,6 +1571,23 @@ def test_lowers_positive_mosfet_model_saturation_current() -> None:
     assert isclose(mosfet.model.model.params.IS, 2.0e-15)
 
 
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+@pytest.mark.parametrize("temperature", ["0", "-1", "1e999"])
+def test_rejects_invalid_mosfet_model_nominal_temperature(
+    alias: str, temperature: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET TNOM must be finite and positive"):
+        parse_netlist(f".model nfast NMOS({alias}={temperature})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("alias", ["TNOM", "T_NOM"])
+def test_lowers_positive_mosfet_model_nominal_temperature(alias: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=325)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert mosfet.model.model.params.T_NOM == 325.0
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

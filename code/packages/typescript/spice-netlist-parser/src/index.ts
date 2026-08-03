@@ -1237,6 +1237,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET IS must be finite and positive");
   }
+  const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    nominalTemperature !== undefined &&
+    (!Number.isFinite(nominalTemperature) || nominalTemperature <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET TNOM must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,

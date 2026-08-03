@@ -1502,6 +1502,19 @@ Xright c d load
     expect(element.params.IS).toBeCloseTo(2.0e-15, 20);
   });
 
+  it.each(["TNOM", "T_NOM"])("validates MOSFET model nominal-temperature alias %s", (alias) => {
+    for (const temperature of ["0", "-1", "1e999"]) {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(${alias}=${temperature})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET TNOM must be finite and positive");
+    }
+    const parsed = parseNetlist(`.model nfast NMOS(${alias}=325)\nM1 d g s b nfast\n`);
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.T_NOM).toBe(325);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
