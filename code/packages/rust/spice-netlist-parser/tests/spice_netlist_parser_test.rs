@@ -2350,6 +2350,37 @@ fn preserves_non_negative_mosfet_model_flicker_noise_exponent() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_substrate_doping() {
+    for alias in ["N_SUB", "NSUB", "N"] {
+        for doping in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model substrate NMOS({alias}={doping})\nM1 d g s b substrate"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET N_SUB must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_substrate_doping_aliases() {
+    for alias in ["N_SUB", "NSUB", "N"] {
+        let parsed = parse_netlist(&format!(
+            ".model substrate NMOS({alias}=1.6)\nM1 d g s b substrate"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.n_sub, 1.6);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
