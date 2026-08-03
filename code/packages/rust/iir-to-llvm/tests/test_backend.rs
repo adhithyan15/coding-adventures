@@ -1541,9 +1541,11 @@ fn symbol_typed_const_validates_and_lowers() {
 // 8. LLVM05 — byte-tape memory + Brainfuck I/O (LANG-MATRIX LM-L Brainfuck)
 // ===========================================================================
 
-/// `alloc_bytes dest <- size` lowers to a zero-filling `@calloc` and declares it.
+/// `alloc_bytes dest <- size` lowers to a zero-filling, GC-tracked
+/// `@__twig_alloc_bytes` call (Twig GC completion round — no longer the raw,
+/// never-freed `@calloc` this used to emit) and declares it.
 #[test]
-fn alloc_bytes_emits_calloc_and_declare() {
+fn alloc_bytes_emits_twig_alloc_bytes_and_declare() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1556,10 +1558,18 @@ fn alloc_bytes_emits_calloc_and_declare() {
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared once; got:\n{ll}");
     assert!(
-        ll.contains("%t = call ptr @calloc(i64 30000, i64 1)"),
-        "alloc_bytes → zero-filled calloc; got:\n{ll}"
+        ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
+        "__twig_alloc_bytes declared once; got:\n{ll}"
+    );
+    assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
+    assert!(
+        ll.contains("call i64 @__twig_alloc_bytes(i64 30000)"),
+        "alloc_bytes → GC-tracked __twig_alloc_bytes; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("%t = inttoptr i64 ") && ll.contains(" to ptr"),
+        "the i64 handle must be recovered as a ptr for load_byte/store_byte; got:\n{ll}"
     );
 }
 
@@ -1894,10 +1904,11 @@ fn integer_local_still_gets_i64_slot() {
 // ===========================================================================
 
 /// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a length-prefixed
-/// `@calloc` block with an explicit `icmp uge`/`llvm.trap` bounds check and a
-/// typed `getelementptr`+`load`/`store`.
+/// `@__twig_alloc_bytes` block (Twig GC completion round — no longer the raw,
+/// never-freed `@calloc` this used to emit) with an explicit `icmp uge`/
+/// `llvm.trap` bounds check and a typed `getelementptr`+`load`/`store`.
 #[test]
-fn array_ops_emit_calloc_trap_and_gep() {
+fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1916,9 +1927,17 @@ fn array_ops_emit_calloc_trap_and_gep() {
         ],
     );
     let ll = lower(&module_with(f));
-    // Allocation: length-prefixed calloc block.
-    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared; got:\n{ll}");
-    assert!(ll.contains("call ptr @calloc(i64"), "alloc_array uses calloc");
+    // Allocation: length-prefixed, GC-tracked block.
+    assert!(
+        ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
+        "__twig_alloc_bytes declared; got:\n{ll}"
+    );
+    assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
+    assert!(ll.contains("call i64 @__twig_alloc_bytes(i64"), "alloc_array uses __twig_alloc_bytes");
+    assert!(
+        ll.contains("inttoptr i64 ") && ll.contains(" to ptr"),
+        "the i64 handle must be recovered as a ptr for the length store/element GEPs"
+    );
     // Trap infra + explicit unsigned bounds check (catches negative + >= len).
     assert!(ll.contains("declare void @llvm.trap()"), "llvm.trap declared");
     assert!(ll.contains("icmp uge i64"), "explicit bounds compare");
