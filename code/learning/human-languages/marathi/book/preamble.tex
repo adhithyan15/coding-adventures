@@ -30,7 +30,13 @@
 % Vendored Devanagari font (../../_fonts/ from <lang>/book/); \mr{...} = inline
 % Marathi snippet. Rendered font-only via Script=Devanagari (no polyglossia
 % Marathi module needed).
-\newfontfamily\marathifont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\marathifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
 \newcommand{\mr}[1]{{\marathifont #1}}
 
 \hypersetup{
@@ -39,6 +45,14 @@
   pdfsubject={Etymology-driven Marathi curriculum},
   pdfkeywords={Marathi, Sanskrit, Devanagari, language learning}
 }
+\pdfstringdefDisableCommands{%
+  \def\mr#1{#1}% Keep Devanagari text while dropping font-only presentation.
+  \def\marathifont{}%
+}
+
+% Lesson callouts are deliberately kept together when they fit. Let short pages
+% end naturally instead of stretching their vertical glue around those boxes.
+\raggedbottom
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
