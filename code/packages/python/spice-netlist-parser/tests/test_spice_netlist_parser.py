@@ -1376,6 +1376,22 @@ M1 d g s b nfast W
         )
 
 
+@pytest.mark.parametrize("level", ["0", "2", "1.000000000002", "1e999"])
+def test_rejects_unsupported_mosfet_model_levels(level: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="only MOS LEVEL=1 model cards are supported",
+    ):
+        parse_netlist(f".model nfast NMOS(LEVEL={level})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("parameters", ["LEVEL=1", "LEVEL=1.0000000000005", ""])
+def test_preserves_supported_and_implicit_mosfet_model_level_one(parameters: str) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({parameters})\nM1 d g s b nfast\n")
+
+    assert isinstance(parsed.circuit.elements[0], Mosfet)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

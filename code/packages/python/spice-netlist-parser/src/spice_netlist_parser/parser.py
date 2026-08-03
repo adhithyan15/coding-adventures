@@ -1878,7 +1878,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         params_text = " ".join(fields[3:]).strip()
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
-    return ModelCard(name=name, kind=kind, params=_parse_model_params(params_text))
+    params = _parse_model_params(params_text)
+    if kind in {"NMOS", "PMOS"} and "LEVEL" in params:
+        level = params["LEVEL"]
+        if not math.isfinite(level) or abs(level - 1.0) > 1.0e-12:
+            raise NetlistParseError("only MOS LEVEL=1 model cards are supported")
+    return ModelCard(name=name, kind=kind, params=params)
 
 
 def _parse_model_params(params_text: str) -> dict[str, float]:

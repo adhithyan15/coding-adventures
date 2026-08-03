@@ -33,12 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
+1. Python and TypeScript Berkeley SPICE MOS model-card level validation parity.
    - Status: current PR completion candidate.
-   - Validate `NSS` and `TPG` before lowering MOS elements into engine
-     parameters.
-   - Reuse shared engine semantics for `N_SUB` / `TOX` derived `VT0`, `GAMMA`,
-     and `PHI` defaults instead of silently dropping supported inputs.
+   - Reject non-finite and non-Level-1 model-card `LEVEL` values with the same
+     tolerance and diagnostic already used by Rust and the shared engines.
+   - Preserve explicit `LEVEL=1` model cards and cards that omit `LEVEL`.
 
 ## Completed Slices
 
@@ -4114,20 +4113,30 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Explicit `LEVEL=1` model cards and cards that omit `LEVEL` remain accepted.
 
+366. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
+   - Status: completed in PR 9577.
+   - `NSS` and `TPG` values are validated before lowering MOS elements.
+   - `N_SUB` / `TOX` derived `VT0`, `GAMMA`, and `PHI` defaults reuse shared
+     engine semantics instead of silently dropping supported inputs.
+
+367. Rust Berkeley SPICE MOS model-card supported-parameter and lowering audit.
+   - Status: completed during post-PR 9577 reconciliation.
+   - Every shared Level-1 alias is now validated and either directly lowered or
+     handled by the shared electrostatic-default path.
+   - No remaining Rust netlist-facade model-card gap was confirmed.
+
 ## Backlog
 
-1. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
-   - Validate `NSS` and `TPG` before lowering MOS elements into engine
-     parameters.
-   - Reuse shared engine semantics for `N_SUB` / `TOX` derived `VT0`, `GAMMA`,
-     and `PHI` defaults instead of silently dropping supported inputs.
+1. Python and TypeScript Berkeley SPICE MOS model-card level validation parity.
+   - Reject non-finite and non-Level-1 model-card `LEVEL` values with the same
+     tolerance and diagnostic already used by Rust and the shared engines.
+   - Preserve explicit `LEVEL=1` model cards and cards that omit `LEVEL`.
 
-2. Rust Berkeley SPICE MOS model-card validation audit.
-   - Re-audit supported model-card parameters after the electrostatic-default
-     facade gap lands, recording any newly confirmed gaps here before selecting
-     another slice.
-   - Reuse contracts and diagnostics already aligned across the Rust, Python,
-     and TypeScript engines whenever the missing behavior is facade-only.
+2. Python and TypeScript Berkeley SPICE Level-1 model-card lowering parity.
+   - Audit and close supported parameter, alias, validation, and derived-default
+     gaps against the completed Rust facade and shared engines.
+   - Keep each follow-up slice small while preserving identical diagnostics and
+     lowering semantics across all three languages.
 
 3. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
