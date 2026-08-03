@@ -76,10 +76,15 @@ different reason for the same look.)
 ## The word, taken apart: manus
 <!-- hl-knowledge: introduces=[IT-ETYMON-MANO-04]; assesses=[] -->
 
-Latin *manus* is inside a great many English words — *manual*, *manuscript*,
-*manufacture* ("made by hand"), *maintain* ("hold in the hand"). English took
-**manage** specifically from Italian ***maneggiare***, which meant to **handle a
-horse**. Every modern manager is, etymologically, working in a riding school.
+Latin *manus* is inside many English words:
+
+- *manual* and *manuscript*
+- *manufacture* ("made by hand")
+- *maintain* ("hold in the hand")
+
+English took **manage** specifically from Italian ***maneggiare***, which meant
+to **handle a horse**. Every modern manager is, etymologically, working in a
+riding school.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-TESTA-02, IT-ETYMON-TESTA-03, IT-ETYMON-TESTA-04, IT-LEX-MANO-02, IT-GRAMMAR-MANO-03, IT-ETYMON-MANO-04] -->

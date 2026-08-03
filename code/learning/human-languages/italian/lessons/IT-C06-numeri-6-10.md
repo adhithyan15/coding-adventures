@@ -13,7 +13,7 @@ sounds: [double-tt, c-before-i]
 roots: [sex-septem-octo-latin]
 etymology_hook: "sette/otto/nove/dieci ← septem/octō/novem/decem → settembre/ottobre/novembre/dicembre (= Spanish siete/ocho/nueve/diez)"
 duration:
-  max_seconds: 218
+  max_seconds: 214
 requires:
   knowledge: [IT-SOUND-NUMERI-1-5-02, IT-ETYMON-NUMERI-1-5-03, IT-GRAMMAR-NUMERI-1-5-04]
 introduces:
@@ -32,9 +32,9 @@ reviews_of: [IT-C06-numeri-1-5]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The rest of the count — and, like Spanish and French, Italian hides the
-same calendar fact: **settembre–dicembre are Latin for 7, 8, 9, 10.** Italian even
-keeps the old Latin double consonants that show it.
+[PAUSE 2s] The rest of the count hides a calendar fact:
+**settembre–dicembre are Latin for 7, 8, 9, 10.** Italian even keeps the old
+Latin double consonants that show it.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[IT-SOUND-NUMERI-6-10-02]; assesses=[] -->

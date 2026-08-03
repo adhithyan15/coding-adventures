@@ -13,7 +13,7 @@ sounds: [d-single, r-tap]
 roots: [pater-latin, mater-latin]
 etymology_hook: "padre/madre sit closest of the sisters to Latin pater/mater; padre is the very word English borrowed as 'padre'; genitori 'parents' ← genitor 'begetter' (→ genital, progenitor, genesis)"
 duration:
-  max_seconds: 182
+  max_seconds: 181
 requires:
   knowledge: [IT-ETYMON-STAGIONI-02]
 introduces:
@@ -57,9 +57,9 @@ birth to" is everywhere in English: **genital, progenitor, genesis, generate,
 genus, gene**. So *i genitori* are literally "the begetters." (Beware the **false
 friend**: Italian *parenti* means **relatives** in general, *not* "parents"!)
 
-The Latin-through-English adjective family still comes from *pater/māter*:
-**pat**ernal, **mat**ernal — the same roots as French *père/mère* and, by Grimm's
-law, English *father/mother*.
+The Latin-through-English adjectives still come from *pater/māter*:
+**paternal** and **maternal** — the same roots as French *père/mère* and, by
+Grimm's law, English *father/mother*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-STAGIONI-02, IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03] -->

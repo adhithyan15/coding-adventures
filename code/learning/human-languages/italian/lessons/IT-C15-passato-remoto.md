@@ -13,7 +13,7 @@ sounds: [final-stress-o]
 roots: [latin-perfect]
 etymology_hook: "parlò ← Vulgar Latin perfect *parabolāvit, the same inheritance as Spanish habló and Portuguese falou — but in Italian its survival is GEOGRAPHIC: everyday speech in Sicily and much of the south, literature-only in the north"
 duration:
-  max_seconds: 264
+  max_seconds: 263
 requires:
   knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
 introduces:
@@ -104,7 +104,7 @@ holding half the country.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05] -->
 
-[PAUSE 3s] What is *parlò* descended from? (Vulgar Latin **\*parabolāvit**.) What decides
+[PAUSE 3s] What is the ancestor of *parlò*? (**\*parabolāvit**.) What decides
 whether it sounds normal or bookish? (**Where in Italy you are** — everyday in the
 south, literary in the north.) Which languages kept this tense fully alive?
 (**Spanish** and **Portuguese**.) Which lost it entirely from speech?

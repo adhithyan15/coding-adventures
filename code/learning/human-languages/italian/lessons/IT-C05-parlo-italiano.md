@@ -13,7 +13,7 @@ sounds: [ia-glide, vowel-a-open]
 roots: [italia-latin]
 etymology_hook: "italiano ← Italia, the ancient name of the peninsula (perhaps Oscan víteliú, 'land of calves')"
 duration:
-  max_seconds: 213
+  max_seconds: 212
 requires:
   knowledge: [IT-SOUND-PARLARE-02, IT-ETYMON-PARLARE-03, IT-GRAMMAR-PARLARE-04]
 introduces:
@@ -63,7 +63,7 @@ This closes the **pronoun-rule circle** you've watched across five languages:
 
 | | pronoun | why |
 |---|---|---|
-| **Spanish** *hablo* / **Italian** *parlo* | **dropped** | endings are distinct |
+| Spanish / Italian | **dropped** | *hablo/parlo*: distinct endings |
 | **French** *je parle* | kept | endings are silent |
 | **German** *ich lerne* | kept | grammar needs an overt subject |
 

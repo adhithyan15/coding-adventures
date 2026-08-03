@@ -13,7 +13,7 @@ sounds: [r-tap, vowel-a-open]
 roots: [parabolare-latin]
 etymology_hook: "parlare ← Late Latin parabolāre 'to tell parables' (← parabola) → English parable, parole; = French parler"
 duration:
-  max_seconds: 219
+  max_seconds: 217
 requires:
   knowledge: [IT-SOUND-IO-02, IT-ETYMON-IO-03, IT-GRAMMAR-IO-04, IT-SOUND-COME-02, IT-ETYMON-COME-03]
 introduces:
@@ -32,9 +32,11 @@ reviews_of: [IT-C03-practice, IT-C04-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Until now you've assembled fixed phrases. **parlare** ("to speak") is
-your first real **verb** — and the model for Italian's biggest family, the
-**-are** verbs. Learn this one pattern and you drive thousands.
+[PAUSE 2s]
+
+Until now you've assembled fixed phrases. **parlare** ("to speak") is
+your first real **verb** and the model for Italian's largest **-are** family.
+Learn this pattern and you drive thousands.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[IT-SOUND-PARLARE-02]; assesses=[] -->
