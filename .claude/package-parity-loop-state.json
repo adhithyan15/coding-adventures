@@ -11,7 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-ruby-engine-rockspec-utf8-conformance",
+    "number": 9648,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9648",
+    "branch": "codex/build-tool-ruby-rockspec-utf8"
+  },
   "last_inventory": {
     "revision": "816bd31f41bd21ce5bda30c1dfaac8b8b5102de0",
     "schema_version": 3,
@@ -361,10 +366,10 @@
     {
       "id": "build-tool-ruby-engine-rockspec-utf8-conformance",
       "title": "Make the Ruby build tool enforce strict UTF-8 rockspec metadata",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-ruby-rockspec-utf8",
-      "pr_number": null,
+      "pr_number": 9648,
       "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. After conflict-free rebases through 816bd31f, exact-head validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, a real 258-Lua-package/382-edge plan, and the collision-clean inventory. Full-repository validation separately discovered the undeclared Starlark runtime dependency and 44 canonical BUILD parse fallbacks; both have dedicated pending owners below and do not expand this UTF-8 slice."
     },
     {

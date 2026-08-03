@@ -262,10 +262,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   also discovered that the Perl build tool's `5.026` runtime floor and
   version-free core-module declarations do not produce an auditable clean
   dependency floor; that compatibility-policy review is logged as a separate
-  pending child instead of expanding the UTF-8 behavior slice. Ruby, Haskell,
-  and Elixir are now explicit pending children; the post-merge leverage pass
-  ranks Ruby first because its locally available toolchain and direct
-  locale-sensitive read form the narrowest remaining boundary;
+  pending child instead of expanding the UTF-8 behavior slice. Ready-for-review
+  PR #9648 owns the Ruby child with strict byte decoding, typed stable
+  diagnostics, the exact shared fixtures, and real CLI exit 2. Haskell and
+  Elixir remain pending until that sole active parity PR merges;
 - close the Ruby build tool's Starlark source-tree execution gaps. The Ruby
   UTF-8 validation found that a clean real plan cannot load the undeclared
   `coding_adventures_starlark_interpreter` runtime until repository library
