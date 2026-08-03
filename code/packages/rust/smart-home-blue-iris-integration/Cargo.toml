@@ -1,0 +1,19 @@
+[package]
+name = "smart-home-blue-iris-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Authenticated local Blue Iris NVR inspection"
+license = "MIT"
+
+[dependencies]
+coding_adventures_md5 = { path = "../md5" }
+coding_adventures_zeroize = { path = "../zeroize" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-local-http = { path = "../smart-home-local-http" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tls-platform = { path = "../tls-platform" }
+url-parser = { path = "../url-parser" }
