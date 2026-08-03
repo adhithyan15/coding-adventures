@@ -143,9 +143,9 @@ Bits 7–6:  Frame_Content_Size_Flag
            10 → FCS is 4 bytes
            11 → FCS is 8 bytes
 Bits 5:    Single_Segment_Flag — if 1, no Window_Descriptor; FCS always present
-Bit  4:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
+Bit  4:    Unused_bit (must be 0)
 Bit  3:    Reserved (must be 0)
-Bit  2:    Reserved (must be 0)
+Bit  2:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
 Bits 1–0:  Dictionary_ID_Flag
            00 → no dictionary ID
            01 → 1-byte dict ID
