@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate positive finite diode model-card `IBV` breakdown current.
 - Validate positive finite diode model-card `BV` breakdown voltage.
 - Validate positive finite diode model-card `N` emission coefficient.
 - Validate finite, non-negative diode model-card `TT` transit time.

@@ -874,6 +874,23 @@ def test_rejects_invalid_diode_breakdown_voltage(value: str) -> None:
         parse_netlist(f".model clamp D(BV={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("1u", 1.0e-6), ("2m", 2.0e-3)])
+def test_accepts_valid_diode_breakdown_current(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(IBV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.IBV
+
+
+@pytest.mark.parametrize("value", ["0", "-1u", "1e999"])
+def test_rejects_invalid_diode_breakdown_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode IBV must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(IBV={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """

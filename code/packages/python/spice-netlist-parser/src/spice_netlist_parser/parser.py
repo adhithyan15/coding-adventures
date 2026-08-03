@@ -1939,6 +1939,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(breakdown_voltage) or breakdown_voltage <= 0.0
         ):
             raise NetlistParseError("diode BV must be finite and positive")
+        breakdown_current = params.get("IBV")
+        if breakdown_current is not None and (
+            not math.isfinite(breakdown_current) or breakdown_current <= 0.0
+        ):
+            raise NetlistParseError("diode IBV must be finite and positive")
         junction_capacitance = next(
             (params[name] for name in ("CJO", "CJ", "CJ0") if name in params),
             None,
