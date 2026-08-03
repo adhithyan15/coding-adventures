@@ -185,3 +185,23 @@ The Rust package must cover at least 95 percent of lines and include:
 Real TCP and browser-wire interoperability tests belong to
 [`websocket-runtime`](websocket-runtime.md), where connection scheduling and
 operating-system I/O exist.
+
+## Language-Neutral Fixture Contract
+
+The versioned executable oracle lives at
+`code/specs/fixtures/websocket-core-v1/`. Its closed Draft 2020-12 schema and
+bounded case document cover all seven portable API families: accept-key
+derivation, client request construction, client response validation, server
+request acceptance, frame encoding, incremental frame decoding, and message
+assembly.
+
+HTTP heads are JSON strings with explicit CRLF sequences. Arbitrary bytes,
+frame payloads, mask keys, nonces, and wire records use lowercase,
+byte-aligned hexadecimal. Successful cases assert exact consumed offsets,
+wire bytes, frames, events, control replies, and terminal state. Adversarial
+cases assert canonical typed error codes and payload-free diagnostics.
+
+Every implementation must consume the same fixture records. It may add
+language-local tests but must not translate the shared expected values into a
+second oracle. The fixtures intentionally have no socket, DNS, TLS, clock,
+randomness, event-loop, retry, or application-dispatch operations.

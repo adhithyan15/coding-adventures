@@ -267,12 +267,15 @@ The `3258981f` refresh adds `websocket-core`. Its spec, empty capability
 manifest, and implementation all define a bounded, transport-independent RFC
 6455 state machine: handshake validation, accept derivation, frame masking and
 canonical lengths, incremental decoding, fragmentation, UTF-8, ping/pong, and
-close semantics are portable. A selected first child now materializes the
-language-neutral fixture oracle and validates Rust as its first consumer. A
-second dependency-blocked child expands the core through every established
-lane after shared HTTP framing and the Java/Kotlin/Dart HTTP prerequisites
-land. Sockets, DNS, TLS, clocks, random mask-key generation, event loops,
-retries, and application dispatch remain native runtime-adapter concerns.
+close semantics are portable. The selected first child now provides a closed
+Draft 2020-12 schema and 39 shared cases across all seven API families, with
+Rust consuming the fixture records directly as the reference implementation.
+The package passes its 23 unit tests, 7 shared-fixture tests, package-local
+format/lint/docs gates, and 99.81% line coverage. A second dependency-blocked
+child expands the core through every established lane after shared HTTP
+framing and the Java/Kotlin/Dart HTTP prerequisites land. Sockets, DNS, TLS,
+clocks, random mask-key generation, event loops, retries, and application
+dispatch remain native runtime-adapter concerns.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
