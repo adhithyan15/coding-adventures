@@ -928,6 +928,7 @@ members = [
     "smart-home-lifx-lan-integration",
     "smart-home-kasa-lan-integration",
     "smart-home-reolink-integration",
+    "smart-home-axis-vapix-integration",
     "smart-home-roku-ecp-integration",
     "smart-home-sonos-upnp-integration",
     "smart-home-heos-cli-integration",

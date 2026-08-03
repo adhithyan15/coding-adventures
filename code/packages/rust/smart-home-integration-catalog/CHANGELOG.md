@@ -1,5 +1,6 @@
 # Changelog
 
+- Add the first-party Axis VAPIX mDNS and authenticated inspection runtime.
 - Record capability-probed Reolink preset recall and bounded PTZ movement over
   the authenticated local CGI runtime.
 
