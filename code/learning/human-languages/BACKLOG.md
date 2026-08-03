@@ -86,9 +86,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B15 | Complete (#9735) | Remove Italian's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B16 | Complete (#9744) | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Fifty schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B17 | Complete (#9748) | Remove Portuguese's LaTeX layout warnings. | The forced 105-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
-| HL-B18 | Complete in this PR | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | Nine schema-v2 lessons now generate seven chapters whose source hashes are independently verified against the Language Ladder corpus. |
-| HL-B19 | Next | Remove French's LaTeX layout and Unicode bookmark warnings. | The expanded forced 98-page build has no missing glyphs or duplicate destinations but retains sixteen overfull boxes, nine underfull boxes, and six Hyperref warnings; the clean-build signal is zero of each. |
-| HL-B20 | Queued | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The German PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
+| HL-B18 | Complete (#9752) | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | Nine schema-v2 lessons now generate seven chapters whose source hashes are independently verified against the Language Ladder corpus. |
+| HL-B19 | Complete in this PR | Remove French's LaTeX layout and Unicode bookmark warnings. | The forced 98-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
+| HL-B20 | Next | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The German PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
 | HL-B21 | Queued | Remove German's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports seventeen overfull boxes, eleven underfull boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B22 | Queued | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Telugu PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
 | HL-B23 | Queued | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports four overfull boxes, three underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and a font-shape substitution warning; the clean-build signal is zero of each. |
@@ -634,6 +634,23 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The expanded book retains the exact pre-existing warning baseline: sixteen
   overfull boxes, nine underfull boxes, and six Hyperref warnings. HL-B19 is
   next and records cleanup against the full 98-page artifact.
+
+## Findings from HL-B19
+
+- French now uses `\raggedbottom`, making intentionally short micro-lesson
+  pages explicit and removing nine underfull vertical boxes without padding or
+  stretching learner content.
+- Six concise optional section titles keep legacy running headers inside the
+  text block, while two prose-only Chapter 12 titles provide clean PDF
+  bookmarks without changing the visible mathematical arrows.
+- Three internal source paths can now break naturally. Five dense legacy tables
+  use a flexible final column, preserving every comparison while removing
+  horizontal overflow, and one pronominal-verb explanation has clearer sentence
+  boundaries for the same grammatical rule.
+- A forced XeLaTeX build produces 98 pages with zero missing glyphs, overfull or
+  underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings.
+- HL-B20 is next: close the seven-chapter German app/book gap before its measured
+  presentation-cleanup follow-up.
 
 ## Findings from HL-D01C
 
