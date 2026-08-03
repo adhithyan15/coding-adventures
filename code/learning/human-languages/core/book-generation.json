@@ -492,7 +492,7 @@
     {
       "language": "telugu",
       "chapter": 20,
-      "title": "Numbers Eleven to Twenty and Weather",
+      "title": "Numbers 11–20 and Weather",
       "label": "ch:te-numbers-and-weather",
       "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
       "scriptSet": "telugu-comparisons"

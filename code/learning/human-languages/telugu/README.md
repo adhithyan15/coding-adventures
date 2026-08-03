@@ -56,7 +56,10 @@ book.
 
 The book compiles with XeLaTeX using the **vendored** Noto Sans Telugu font
 (`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+and in CI, no system-font dependency. A forced build produces 95 visually
+inspected pages with zero missing glyphs, layout warnings, duplicate
+destinations, bookmark warnings, or font warnings.
+`latexmk -xelatex book.tex`.
 
 ## Files
 

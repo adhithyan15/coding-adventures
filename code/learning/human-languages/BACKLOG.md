@@ -83,7 +83,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
 | HL-B13 | Complete (#9711) | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
 | HL-I01 | Complete (#9715) | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
-| HL-I02 | Queued | Update the human-language data package beyond the vulnerable PostCSS 8.5.19 transitive development dependency. | A clean install reports GHSA-fxqj-rqcc-2cmp through Vitest/Vite; PostCSS 8.5.25 is available, but this development-only moderate finding ranks behind HL-B23's reader-facing Telugu publication cleanup. |
+| HL-I02 | Queued | Update the human-language data package beyond the vulnerable PostCSS 8.5.19 transitive development dependency. | A clean install reports GHSA-fxqj-rqcc-2cmp through Vitest/Vite; PostCSS 8.5.25 is available, but this development-only moderate finding remains behind reader-facing book and app gaps. |
 | HL-B14 | Complete (#9728) | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B15 | Complete (#9735) | Remove Italian's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B16 | Complete (#9744) | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Fifty schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
@@ -92,9 +92,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B19 | Complete (#9761) | Remove French's LaTeX layout and Unicode bookmark warnings. | The forced 98-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B20 | Complete (#9765) | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | Ten schema-v2 lessons now generate seven chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B21 | Complete (#9779) | Remove German's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
-| HL-B22 | Complete in this PR | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
-| HL-B23 | Next | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | The expanded forced build has no missing glyphs or underfull horizontal boxes but reports eleven overfull boxes, nine underfull vertical boxes, four duplicate practice labels, 104 Hyperref warnings, and nine font warnings; visual inspection found no clipping, but the clean-build signal is zero of each. |
-| HL-B24 | Queued | Publish Kannada Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Kannada PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
+| HL-B22 | Complete (#9803) | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
+| HL-B23 | Complete in this PR | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | The forced 95-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings. |
+| HL-B24 | Next | Publish Kannada Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Kannada PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
 | HL-B25 | Queued | Remove Kannada's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports four overfull boxes, five underfull boxes, four duplicate practice labels, 30 Hyperref warnings, and undefined bold/italic Kannada font shapes; the clean-build signal is zero of each. |
 | HL-B26 | Queued | Publish Malayalam Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Malayalam PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
 | HL-B27 | Queued | Remove Malayalam's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports seven overfull boxes, eight underfull boxes, four duplicate practice labels, 28 Hyperref warnings, and undefined bold/italic Malayalam font shapes; the clean-build signal is zero of each. |
@@ -730,7 +730,30 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - A clean data-package install surfaced the moderate, development-only
   GHSA-fxqj-rqcc-2cmp advisory through Vitest, Vite, and PostCSS 8.5.19. A
   non-breaking 8.5.25 resolution is available; HL-I02 records the lockfile
-  maintenance, behind the reader-facing Telugu build cleanup in HL-B23.
+  maintenance behind the remaining reader-facing book and app gaps.
+
+## Findings from HL-B23
+
+- Explicit regular, bold, italic, and bold-italic faces for every vendored
+  comparison font remove nine substitution warnings while keeping Telugu,
+  Tamil, Kannada, Malayalam, Devanagari, and Arabic-script examples available.
+- Bookmark-safe definitions preserve the visible script while removing font
+  presentation commands from PDF strings. All 104 Hyperref warnings disappear,
+  and the outline retains Preface, the script reference, and Chapters 1–31.
+- Five legacy practice sections now have chapter-specific labels. `\raggedbottom`
+  makes natural micro-lesson page endings explicit, removing four duplicate
+  destinations and nine underfull vertical boxes without adding filler.
+- Concise visible headings, one responsive table, a three-part month list, and
+  a shorter Chapter 20 title remove eleven overfull lines while preserving every
+  vocabulary item, grammar explanation, comparison, and etymology in the body.
+- Full-page review caught a long Section 4.4 running header touching its page
+  number even after the build log was clean. A prose-only running title fixes
+  that collision while retaining the complete Telugu heading in the lesson.
+- A forced XeLaTeX build produces 95 pages with zero missing glyphs, overfull or
+  underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings,
+  or font warnings. All pages were rendered and inspected; metadata, 33
+  top-level bookmarks, 93 total outline entries, and generator-leak checks pass.
+- HL-B24 is next: publish Kannada Chapters 6–31 from canonical lessons.
 
 ## Findings from HL-D01C
 

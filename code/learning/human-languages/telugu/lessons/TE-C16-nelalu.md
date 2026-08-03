@@ -40,10 +40,14 @@ building its own.
 ## You'll want to know: The twelve months
 <!-- hl-knowledge: introduces=[TE-LEX-C16-NELALU-01]; assesses=[] -->
 
-**చైత్రం, వైశాఖం, జ్యేష్ఠం, ఆషాఢం, శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం,
-మార్గశిరం, పుష్యం, మాఘం, ఫాల్గుణం** (*Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ,
-Āṣāḍhaṁ, Śrāvaṇaṁ, Bhādrapadaṁ, Āśvayujaṁ, Kārtīkaṁ, Mārgaśiraṁ, Puṣyaṁ,
-Māghaṁ, Phālguṇaṁ*).
+The year runs in three four-month groups:
+
+- **చైత్రం, వైశాఖం, జ్యేష్ఠం, ఆషాఢం** — *Caitraṁ, Vaiśākhaṁ, Jyēṣṭhaṁ,
+  Āṣāḍhaṁ*.
+- **శ్రావణం, భాద్రపదం, ఆశ్వయుజం, కార్తీకం** — *Śrāvaṇaṁ, Bhādrapadaṁ,
+  Āśvayujaṁ, Kārtīkaṁ*.
+- **మార్గశిరం, పుష్యం, మాఘం, ఫాల్గుణం** — *Mārgaśiraṁ, Puṣyaṁ, Māghaṁ,
+  Phālguṇaṁ*.
 
 ## The word, taken apart - The whole Dravidian family, in one honest picture
 <!-- hl-knowledge: introduces=[TE-ETYMON-C16-NELALU-02]; assesses=[] -->

@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TE-C08-dayachesi]
 ---
 
-# క్షమించండి (kṣamin̄caṇḍi) — please forgive / sorry
+# క్షమించండి — sorry
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04] -->

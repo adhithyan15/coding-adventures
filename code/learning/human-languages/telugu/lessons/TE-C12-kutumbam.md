@@ -33,8 +33,8 @@ reviews_of: [TE-C11-rangulu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C11-RANGULU-01, TE-ETYMON-C11-RANGULU-02] -->
 
-[PAUSE 2s] Telugu shares the Dravidian family's age-first sibling system —
-but its words for "father" and "younger sister" go their own way.
+[PAUSE 2s] Telugu also sorts siblings by relative age. Its words for "father"
+and "younger sister," though, go their own way.
 
 ## You'll want to know: Parents — one matches, one is Telugu's own
 <!-- hl-knowledge: introduces=[TE-LEX-C12-KUTUMBAM-01]; assesses=[] -->
