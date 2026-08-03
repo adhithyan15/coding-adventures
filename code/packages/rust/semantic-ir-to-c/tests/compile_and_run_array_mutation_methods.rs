@@ -65,7 +65,7 @@ fn run_ruby(src: &str) -> Option<String> {
 #[test]
 fn push_appends_one_or_more_and_returns_the_receiver() {
     match run_ruby("a = [1, 2]\nputs a.push(3)\nputs a\na.push(4, 5)\nputs a\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n[1, 2, 3]\n[1, 2, 3, 4, 5]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n1\n2\n3\n1\n2\n3\n4\n5\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -76,7 +76,7 @@ fn push_mutates_a_shared_binding() {
     // through) sees the appended element -- the same shared-box semantics
     // `SeqSet` already has.
     match run_ruby("a = [1]\nb = a\na.push(2)\nputs b\n") {
-        Some(out) => assert_eq!(out, "[1, 2]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -84,7 +84,7 @@ fn push_mutates_a_shared_binding() {
 #[test]
 fn pop_removes_and_returns_the_last_element() {
     match run_ruby("a = [1, 2, 3]\nputs a.pop\nputs a\n") {
-        Some(out) => assert_eq!(out, "3\n[1, 2]\n"),
+        Some(out) => assert_eq!(out, "3\n1\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -100,7 +100,7 @@ fn pop_on_empty_is_nil() {
 #[test]
 fn shift_removes_and_returns_the_first_element_and_shifts_the_rest() {
     match run_ruby("a = [1, 2, 3]\nputs a.shift\nputs a\n") {
-        Some(out) => assert_eq!(out, "1\n[2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -118,7 +118,7 @@ fn push_pop_shift_interleaved() {
     match run_ruby(
         "a = [1, 2]\na.push(3)\nputs a.shift\na.push(4)\nputs a.pop\nputs a\n",
     ) {
-        Some(out) => assert_eq!(out, "1\n4\n[2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n4\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -154,7 +154,7 @@ fn array_fetch_negative_index_counts_from_the_end() {
 #[test]
 fn array_values_at_multiple_indices() {
     match run_ruby("puts [10, 20, 30, 40].values_at(0, 2, 9, -1)\n") {
-        Some(out) => assert_eq!(out, "[10, 30, nil, 40]\n"),
+        Some(out) => assert_eq!(out, "10\n30\nnil\n40\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -164,7 +164,7 @@ fn array_rotate_default_and_explicit_and_negative() {
     match run_ruby(
         "puts [1, 2, 3, 4].rotate\nputs [1, 2, 3, 4].rotate(2)\nputs [1, 2, 3, 4].rotate(-1)\n",
     ) {
-        Some(out) => assert_eq!(out, "[2, 3, 4, 1]\n[3, 4, 1, 2]\n[4, 1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "2\n3\n4\n1\n3\n4\n1\n2\n4\n1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -172,15 +172,19 @@ fn array_rotate_default_and_explicit_and_negative() {
 #[test]
 fn array_rotate_does_not_mutate_the_receiver() {
     match run_ruby("a = [1, 2, 3]\na.rotate\nputs a\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
 
 #[test]
 fn array_zip_pads_shorter_others_with_nil() {
+    // NOTE: `puts` recursively flattens EVERY level of Array nesting (real
+    // Ruby's rule; see runtime.rs's `_sir_puts_one`), so this is fully
+    // unpacked to scalars, not just the outer `[[1,4], [2,5], [3,nil]]`
+    // level.
     match run_ruby("puts [1, 2, 3].zip([4, 5])\n") {
-        Some(out) => assert_eq!(out, "[[1, 4], [2, 5], [3, nil]]\n"),
+        Some(out) => assert_eq!(out, "1\n4\n2\n5\n3\nnil\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -188,7 +192,7 @@ fn array_zip_pads_shorter_others_with_nil() {
 #[test]
 fn array_zip_multiple_others() {
     match run_ruby("puts [1, 2].zip([10, 20], [100, 200])\n") {
-        Some(out) => assert_eq!(out, "[[1, 10, 100], [2, 20, 200]]\n"),
+        Some(out) => assert_eq!(out, "1\n10\n100\n2\n20\n200\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -217,7 +221,7 @@ fn array_map_pushing_to_the_receiver_does_not_overrun_its_output_buffer() {
     // must reflect only the ORIGINAL 3 elements, and the process must not
     // crash (a heap overflow would corrupt or crash under most allocators).
     match run_ruby("a = [1, 2, 3]\nb = a.map { |x| a.push(x)\nx * 10 }\nputs b\n") {
-        Some(out) => assert_eq!(out, "[10, 20, 30]\n"),
+        Some(out) => assert_eq!(out, "10\n20\n30\n"),
         None => eprintln!("skip: no cc"),
     }
 }

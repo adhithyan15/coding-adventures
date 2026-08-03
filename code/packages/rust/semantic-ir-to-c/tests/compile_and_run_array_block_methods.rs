@@ -63,8 +63,11 @@ fn run_ruby(src: &str) -> Option<String> {
 
 #[test]
 fn each_runs_the_block_and_returns_the_receiver() {
+    // `each` returns the receiver `[1, 2, 3]`, and the outer `puts` UNPACKS
+    // that array one element per line (real Ruby's `puts`-on-Array rule; see
+    // the runtime.rs `_sir_puts_one` doc comment), not the bracket form.
     match run_ruby("puts [1, 2, 3].each { |x| puts x * 10 }\n") {
-        Some(out) => assert_eq!(out, "10\n20\n30\n[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "10\n20\n30\n1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -72,7 +75,7 @@ fn each_runs_the_block_and_returns_the_receiver() {
 #[test]
 fn map_transforms_every_element() {
     match run_ruby("puts [1, 2, 3].map { |x| x * x }\n") {
-        Some(out) => assert_eq!(out, "[1, 4, 9]\n"),
+        Some(out) => assert_eq!(out, "1\n4\n9\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -93,7 +96,7 @@ fn select_and_reject_are_complementary() {
         "puts [1, 2, 3, 4, 5].select { |x| r = x > 2\nr }\n\
          puts [1, 2, 3, 4, 5].reject { |x| r = x > 2\nr }\n",
     ) {
-        Some(out) => assert_eq!(out, "[3, 4, 5]\n[1, 2]\n"),
+        Some(out) => assert_eq!(out, "3\n4\n5\n1\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -114,7 +117,7 @@ fn any_all_none_predicates() {
 fn sort_by_orders_by_the_computed_key() {
     // Sort strings by length, not lexicographically.
     match run_ruby("puts [\"ccc\", \"a\", \"bb\"].sort_by { |x| x.length }\n") {
-        Some(out) => assert_eq!(out, "[a, bb, ccc]\n"),
+        Some(out) => assert_eq!(out, "a\nbb\nccc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -174,7 +177,7 @@ fn block_methods_chain_and_close_over_an_outer_local() {
     match run_ruby(
         "factor = 10\nputs [1, 2, 3].map { |x| x * factor }.select { |x| r = x > 15\nr }\n",
     ) {
-        Some(out) => assert_eq!(out, "[20, 30]\n"),
+        Some(out) => assert_eq!(out, "20\n30\n"),
         None => eprintln!("skip: no cc"),
     }
 }

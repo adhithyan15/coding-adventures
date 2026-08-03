@@ -2,6 +2,18 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.22.0] - `puts`-on-Array gap closed
+
+Adds `puts_array_unpack`, proving `puts [1, 2, 3]` / `puts [4, [5, 6], 7]`
+now agree across ALL SIX backends (including `ruby`, since `puts` is a
+core builtin, not a Collections method) — real Ruby's `Kernel#puts` rule:
+unpack one element per line, recursively flattening nested arrays. This
+closes the gap the 0.21.0 corpus batch discovered and documented (the C
+backend bracket-displayed an Array argument instead); fixing it also
+surfaced the IDENTICAL bug independently in the Ruby backend's own
+`sir_puts` reimplementation, fixed alongside (`semantic-ir-to-c` 0.33.0,
+`semantic-ir-to-ruby` 0.20.0).
+
 ## [0.21.0] - Collections cascade corpus + Linux link fix
 
 Adds six new corpus programs proving the C-backend Collections slices

@@ -208,11 +208,31 @@ def sir_fmt_float_c(value, precision, kind)
   end
 end
 
+# `puts`'s ARRAY-UNPACKING rule -- distinct from `sir_fmt`'s general case
+# (`v.to_s`, which bracket-displays an Array, e.g. `"[1, 2, 3]"`), and from
+# `print` below, which never unpacks. Real Ruby's `Kernel#puts` special-cases
+# an Array argument: each element gets its OWN line, RECURSIVELY flattening
+# nested arrays, and an EMPTY array prints nothing at all (not even a blank
+# line) -- `puts [1, [2, 3], 4]` -> "1\n2\n3\n4\n"; `puts []` -> (nothing).
+# A Hash argument is NOT unpacked (only Array), so this checks `Array`
+# specifically. No depth cap is needed here (unlike the C backend's
+# `_sir_puts_one`): a self-referential array would raise Ruby's own
+# `SystemStackError` on infinite recursion -- safe, since this runs under a
+# real Ruby VM with its own stack-overflow protection, not raw C recursion.
+def sir_puts_one(x)
+  if x.is_a?(Array)
+    x.each { |e| sir_puts_one(e) }
+  else
+    STDOUT.write(sir_fmt(x))
+    STDOUT.write("\n")
+  end
+end
+
 def sir_puts(*xs)
   if xs.empty?
     STDOUT.write("\n")
   else
-    xs.each { |x| STDOUT.write(sir_fmt(x)); STDOUT.write("\n") }
+    xs.each { |x| sir_puts_one(x) }
   end
   nil
 end
