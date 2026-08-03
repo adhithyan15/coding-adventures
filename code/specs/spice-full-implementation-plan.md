@@ -4409,17 +4409,23 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine diode series-resistance field.
 
 418. Python and TypeScript Berkeley SPICE diode junction-potential parity.
-   - Status: completed in this diode junction-potential parity slice.
+   - Status: completed in PR 9816.
    - Both parser facades validate positive finite `VJ` / `PB` values and lower
      them into the shared engine diode junction-potential field with canonical
      `VJ` precedence.
 
+419. Python and TypeScript Berkeley SPICE diode grading-coefficient parity.
+   - Status: completed in this diode grading-coefficient parity slice.
+   - Both parser facades validate finite non-negative `M` / `MJ` values and
+     lower them into the shared engine diode grading-coefficient field with
+     canonical `M` precedence.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited diode model-card lowering surfaces with grading
-     coefficient `M` / `MJ` and depletion coefficient `FC`, followed by `XTI`,
-     `EG`, `KF`, and `AF` validation and lowering parity.
+   - Continue the audited diode model-card lowering surfaces with depletion
+     coefficient `FC`, followed by `XTI`, `EG`, `KF`, and `AF` validation and
+     lowering parity.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
