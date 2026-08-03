@@ -1749,11 +1749,27 @@ static SirValue _sir_array_pop(SirSeq *s) {
     s->len--;
     return v;
 }
+/* SECURITY FIX (found while implementing Hash#delete, slice 7 — see that
+ * function's own note): `shift` must NOT compact `s->items` IN PLACE. A
+ * block-taking helper (slice 5) that snapshots `s->items` as a POINTER
+ * before its loop is only safe against a LATER `push` because `push`
+ * reallocates a fresh buffer and leaves the old one untouched; the snapshot
+ * and the live array are then *different* memory. An in-place shift instead
+ * mutates the SAME memory the snapshot POINTS INTO, so the outer helper's
+ * "frozen" view silently corrupts too (elements shift under it, some read
+ * twice, some never read) — this was a live bug in the very first version
+ * of this function (merged in slice 4, before any helper called into it
+ * from inside a block's iteration). Reallocating a fresh, smaller buffer —
+ * exactly like `push` growing one — restores the safe invariant: any
+ * pointer snapshotted before this call keeps pointing at unmodified memory. */
 static SirValue _sir_array_shift(SirSeq *s) {
     if (s->len == 0) return _sir_nil();
     SirValue v = s->items[0];
-    for (int64_t i = 1; i < s->len; i++) s->items[i - 1] = s->items[i];
-    s->len--;
+    int64_t new_len = s->len - 1;
+    SirValue *ni = (new_len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)new_len) : NULL;
+    for (int64_t i = 0; i < new_len; i++) ni[i] = s->items[i + 1];
+    s->items = ni;
+    s->len = new_len;
     return v;
 }
 static SirValue _sir_array_include(SirSeq *s, SirValue needle) {
@@ -1901,18 +1917,33 @@ static SirValue _sir_hash_merge(SirMap *m, SirValue other) {
     return _sir_map_wrap(r);
 }
 /* `delete(k)` — the FIRST Hash method that mutates the receiver: removes the
- * entry (shifting later entries down by one, matching `Array#shift`'s
- * in-place style — no reallocation) and returns its value, or nil if `k`
- * wasn't present. No block-taking Hash helper exists yet (slice 7), so no
- * mid-iteration mutation is reachable here — but slice 7 must apply the
- * same len+entries-pointer snapshot discipline slice 4 established for
- * Array once it lands. */
+ * entry and returns its value, or nil if `k` wasn't present.
+ *
+ * SECURITY: reallocates a fresh, one-smaller `entries` buffer rather than
+ * compacting `m->entries` IN PLACE (`Array#shift`'s ORIGINAL shape, and a
+ * real bug there — see that function's own note, fixed alongside this one).
+ * A block-taking helper (slice 7, below) snapshots `m->entries` as a POINTER
+ * before its loop; that snapshot is only safe against a mutator that
+ * REALLOCATES (the mutator's new buffer and the snapshot's old one are then
+ * different memory — the old one, still valid in this never-freeing arena,
+ * keeps reading exactly what it saw at snapshot time). An in-place compact
+ * instead mutates the SAME memory the snapshot points into, silently
+ * corrupting an in-flight outer iteration (entries shift under it — some
+ * read twice, some skipped). Reallocating avoids that entirely. */
 static SirValue _sir_hash_delete(SirMap *m, SirValue key) {
     int64_t at = _sir_map_find(m, key);
     if (at < 0) return _sir_nil();
     SirValue v = m->entries[at].val;
-    for (int64_t i = at + 1; i < m->len; i++) m->entries[i - 1] = m->entries[i];
-    m->len--;
+    int64_t new_len = m->len - 1;
+    struct SirMapEntry *ne =
+        (new_len > 0) ? (struct SirMapEntry *)_sir_alloc(sizeof(struct SirMapEntry) * (size_t)new_len) : NULL;
+    int64_t j = 0;
+    for (int64_t i = 0; i < m->len; i++) {
+        if (i == at) continue;
+        ne[j++] = m->entries[i];
+    }
+    m->entries = ne;
+    m->len = new_len;
     return v;
 }
 /* `clear` — removes every entry IN PLACE (just resets `len`; the backing
@@ -1929,6 +1960,150 @@ static SirValue _sir_hash_invert(SirMap *m) {
     SirMap *r = _sir_map_new(m->len);
     for (int64_t i = 0; i < m->len; i++) _sir_map_put(r, m->entries[i].val, m->entries[i].key);
     return _sir_map_wrap(r);
+}
+
+/* ---- Collections slice 7: Hash block methods -------------------------------
+ *
+ * SECURITY: exactly the discipline slice 4 established for Array (and had to
+ * retrofit there, twice, after security review) — applied HERE FROM THE
+ * START since slice 6's `delete`/`clear` mutators already exist by the time
+ * these block-taking helpers are added. Every helper snapshots BOTH `m->len`
+ * AND the `entries` pointer into locals ONCE, before its loop, and reads
+ * only through those locals — never `m->len`/`m->entries` directly — so a
+ * block that calls `delete`/`clear` on the SAME map it's iterating can't
+ * read past a buffer `delete`'s in-place shift (or a future growing
+ * mutator) has since invalidated. Each block is called with TWO arguments,
+ * `(key, value)` — matching `Array#each_with_index`'s existing 2-arg
+ * precedent — regardless of how many params the Ruby block declares (extra
+ * args a 1-param block doesn't bind are simply unused, the same block-arity
+ * flexibility Ruby itself has). */
+
+static SirValue _sir_hash_each(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, entries[i].key, entries[i].val);
+    return _sir_map_wrap(m);  /* Hash#each returns the receiver */
+}
+static SirValue _sir_hash_each_key(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, entries[i].key);
+    return _sir_map_wrap(m);
+}
+static SirValue _sir_hash_each_value(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, entries[i].val);
+    return _sir_map_wrap(m);
+}
+/* `map` returns an ARRAY of the block's results (matching Ruby's
+ * `Enumerable#map` over a Hash — NOT a re-keyed Hash). */
+static SirValue _sir_hash_map(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+    return _sir_seq_wrap(r);
+}
+/* Shared by `select` (keep_if_truthy=1) / `reject` (keep_if_truthy=0) — both
+ * return a FRESH HASH (unlike `Array#select`/`reject`, which return an
+ * Array), matching Ruby's `Hash#select`/`Hash#reject`. */
+static SirValue _sir_hash_filter(SirMap *m, SirValue block, int keep_if_truthy) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirMap *r = _sir_map_new(n);
+    for (int64_t i = 0; i < n; i++) {
+        int truthy = _sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val));
+        if (truthy == keep_if_truthy) _sir_map_put(r, entries[i].key, entries[i].val);
+    }
+    return _sir_map_wrap(r);
+}
+/* Schwartzian transform over `[k, v]` PAIRS (mirrors `Array#sort_by`).
+ * Returns an ARRAY of `[k, v]` pairs sorted by the block's key — Ruby's
+ * `Hash#sort_by` (via `Enumerable`) always returns an Array, not a re-sorted
+ * Hash (Hash order isn't independently `<=>`-able). */
+static SirValue _sir_hash_sort_by(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirValue *keys = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    SirValue *pairs = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    for (int64_t i = 0; i < n; i++) {
+        keys[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        pairs[i] = _sir_seq_lit(2, entries[i].key, entries[i].val);
+    }
+    for (int64_t i = 1; i < n; i++) {
+        SirValue key = keys[i], val = pairs[i];
+        int64_t j = i - 1;
+        while (j >= 0 && _sir_truthy(_sir_lt(key, keys[j]))) {
+            keys[j + 1] = keys[j];
+            pairs[j + 1] = pairs[j];
+            j--;
+        }
+        keys[j + 1] = key;
+        pairs[j + 1] = val;
+    }
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = n;
+    r->items = pairs;
+    return _sir_seq_wrap(r);
+}
+/* `group_by` — a FRESH Hash mapping each distinct block result to an ARRAY
+ * of the `[k, v]` pairs that produced it, in first-encountered group order
+ * (matching Ruby). A group's value array must GROW across multiple matching
+ * entries (unlike a plain `_sir_map_put`, which overwrites), so an existing
+ * group is appended to via `_sir_array_push_one` (the SAME growth helper
+ * `Array#push` uses); a new group starts as a fresh 1-element array. */
+static SirValue _sir_hash_group_by(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirMap *r = _sir_map_new(0);
+    for (int64_t i = 0; i < n; i++) {
+        SirValue key = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
+        int64_t at = _sir_map_find(r, key);
+        if (at >= 0) {
+            _sir_array_push_one(r->entries[at].val.as.seq, pair);
+        } else {
+            _sir_map_put(r, key, _sir_seq_lit(1, pair));
+        }
+    }
+    return _sir_map_wrap(r);
+}
+/* `partition` — `[matching_pairs, non_matching_pairs]`, each a fresh Array
+ * of `[k, v]` pairs (mirrors `Enumerable#partition` over a Hash's pairs). */
+static SirValue _sir_hash_partition(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirSeq *yes = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    SirSeq *no = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    yes->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    no->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    int64_t ny = 0, nn = 0;
+    for (int64_t i = 0; i < n; i++) {
+        SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
+        if (_sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val))) yes->items[ny++] = pair;
+        else no->items[nn++] = pair;
+    }
+    yes->len = ny;
+    no->len = nn;
+    return _sir_seq_lit(2, _sir_seq_wrap(yes), _sir_seq_wrap(no));
+}
+/* `sum { |k, v| ... }` — sums the block's return value over every entry,
+ * starting the accumulator at integer `0` (mirrors `Array#sum`'s default,
+ * reusing the SAME `_sir_plus_v` int/float promotion `+` uses). */
+static SirValue _sir_hash_sum(SirMap *m, SirValue block) {
+    int64_t n = m->len;
+    struct SirMapEntry *entries = m->entries;
+    SirValue acc = _sir_int(0);
+    for (int64_t i = 0; i < n; i++) {
+        SirValue pair[2];
+        pair[0] = acc;
+        pair[1] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        acc = _sir_plus_v(pair, 2);
+    }
+    return acc;
 }
 
 /* ---- Collections slice 1: built-in String methods --------------------------
@@ -2004,6 +2179,8 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ) return _sir_array_max(recv.as.seq);
     } else if (strcmp(m, "sum") == 0) {
         if (recv.tag == SIR_SEQ) return _sir_array_sum(recv.as.seq);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_sum(recv.as.map, args[0]);
     } else if (strcmp(m, "uniq") == 0) {
         if (recv.tag == SIR_SEQ) return _sir_array_uniq(recv.as.seq);
     } else if (strcmp(m, "compact") == 0) {
@@ -2022,15 +2199,23 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
     else if (strcmp(m, "each") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_each(recv.as.seq, args[0]);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_each(recv.as.map, args[0]);
     } else if (strcmp(m, "map") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_map(recv.as.seq, args[0]);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_map(recv.as.map, args[0]);
     } else if (strcmp(m, "select") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_filter(recv.as.seq, args[0], 1);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_filter(recv.as.map, args[0], 1);
     } else if (strcmp(m, "reject") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_filter(recv.as.seq, args[0], 0);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_filter(recv.as.map, args[0], 0);
     } else if (strcmp(m, "any?") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_any(recv.as.seq, args[0]);
@@ -2043,12 +2228,28 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
     } else if (strcmp(m, "sort_by") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_sort_by(recv.as.seq, args[0]);
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_sort_by(recv.as.map, args[0]);
     } else if (strcmp(m, "each_with_index") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_array_each_with_index(recv.as.seq, args[0]);
     } else if (strcmp(m, "reduce") == 0 || strcmp(m, "inject") == 0) {
         if (recv.tag == SIR_SEQ && argc >= 1 && argc <= 2 && args[argc - 1].tag == SIR_CLOSURE)
             return _sir_array_reduce(recv.as.seq, argc, args);
+    }
+    /* Collections slice 7: Hash block methods. */
+    else if (strcmp(m, "each_key") == 0) {
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_each_key(recv.as.map, args[0]);
+    } else if (strcmp(m, "each_value") == 0) {
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_each_value(recv.as.map, args[0]);
+    } else if (strcmp(m, "group_by") == 0) {
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_group_by(recv.as.map, args[0]);
+    } else if (strcmp(m, "partition") == 0) {
+        if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_hash_partition(recv.as.map, args[0]);
     }
     /* Collections slice 4: Array mutation + 1-arg query methods. */
     else if (strcmp(m, "push") == 0) {

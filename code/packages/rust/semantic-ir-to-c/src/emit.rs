@@ -1769,9 +1769,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// receiver alongside their slice-2 String arms); slice 6 = Hash non-block
 /// methods (`keys`/`values`/`to_h`/`dig`/`merge`/`delete`/`clear`/`invert`;
 /// `fetch`/`to_a` widen to accept a Hash receiver alongside their Array
-/// forms). The dispatcher raises `NoMethodError` on an unsupported receiver
-/// type or a malformed call (missing/extra args, a non-closure block
-/// position), matching Ruby.
+/// forms); slice 7 = Hash methods taking a trailing BLOCK argument
+/// (`each_key`/`each_value`/`group_by`/`partition`; `each`/`map`/`select`/
+/// `reject`/`sort_by`/`sum` widen to accept a Hash receiver alongside their
+/// slice-3/5 Array forms). The dispatcher raises `NoMethodError` on an
+/// unsupported receiver type or a malformed call (missing/extra args, a
+/// non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1789,6 +1792,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "push" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
         // slice 6 — Hash non-block methods
         | "keys" | "values" | "to_h" | "dig" | "merge" | "delete" | "clear" | "invert"
+        // slice 7 — Hash block methods
+        | "each_key" | "each_value" | "group_by" | "partition"
     )
 }
 
