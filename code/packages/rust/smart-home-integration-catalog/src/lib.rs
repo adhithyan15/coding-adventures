@@ -45221,7 +45221,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "axis_vapix",
             "Axis VAPIX",
-            "Authenticated local Axis camera and NVR discovery, inspection, and bounded PTZ control.",
+            "Challenge-authenticated local Axis camera and NVR discovery, inspection, and bounded PTZ control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45243,7 +45243,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Supervision,
         ])
         .with_notes(&[
-            "Production inspection requires HTTPS Basic authentication; plain HTTP is accepted only for loopback transport tests.",
+            "Production inspection requires certificate-verifying HTTPS and selects advertised Basic or Digest authentication; plain HTTP is accepted only for loopback transport tests.",
             "Camera 1 PTZ is capability-probed, human-approved, queue-aware, and bounded with an explicit native stop.",
             "Event streaming, snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
         ]),
@@ -81180,6 +81180,10 @@ mod tests {
         assert!(axis
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
+        assert!(axis
+            .notes
+            .iter()
+            .any(|note| note.contains("Basic or Digest")));
         assert!(!axis
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));

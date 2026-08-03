@@ -1,0 +1,11 @@
+[package]
+name = "http-digest-auth"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 7616 HTTP Digest challenge parsing and authorization"
+license = "MIT"
+
+[dependencies]
+coding_adventures_md5 = { path = "../md5" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_zeroize = { path = "../zeroize" }

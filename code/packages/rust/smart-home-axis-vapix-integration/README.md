@@ -9,8 +9,13 @@ The package:
   advertisements through the shared mDNS runtime;
 - requires credential-free HTTPS origins for production, with plain HTTP
   permitted only for loopback transport tests;
-- represents credentials as a `VaultRef` in request plans and materializes the
-  Basic authorization value only inside the bounded transport;
+- represents credentials as a `VaultRef` in request plans, probes without an
+  authorization header, and selects a supported Basic or Digest challenge;
+- prefers SHA-256 Digest over MD5 when a device advertises multiple supported
+  challenges, uses CSPRNG-backed client nonces, maintains an in-memory nonce
+  count, and retries once when the device returns a fresh or stale challenge;
+- materializes Basic and Digest authorization values only inside the bounded
+  transport, with credentials and derived response values in zeroizing memory;
 - calls the authenticated Basic Device Information and API Discovery JSON CGIs;
 - probes the documented PTZ command inventory, current position, server presets,
   native speed control, and `CtlQueueing` mode before advertising `camera.ptz`;
@@ -26,7 +31,7 @@ The package:
 - preserves confirmed position from inspection instead of inventing optimistic
   orientation after movement.
 
-The first production slice intentionally targets VAPIX camera 1. Event
+The production path intentionally targets VAPIX camera 1. Event
 streaming, snapshots, media transfer, multi-channel enumeration, and advanced
 zoom/guard-tour control remain separate slices with additional host or
 capability prerequisites.

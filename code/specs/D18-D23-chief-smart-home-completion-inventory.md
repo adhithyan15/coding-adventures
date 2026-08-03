@@ -1085,6 +1085,28 @@ documented API 2.0 contract:
   exact path-prefixed login, version, and monitor requests plus transport-private
   credential and JWT handling.
 
+## Current Axis HTTP Digest Authentication Slice
+
+This slice closes the reusable HTTP Digest prerequisite and wires it into the
+existing Axis VAPIX production transport:
+
+- `http-digest-auth` parses bounded RFC 7616 challenges and builds zeroizing
+  MD5, MD5-sess, SHA-256, and SHA-256-sess authorization values for `qop=auth`
+  or the legacy no-`qop` form.
+- Duplicate, oversized, malformed, unsupported-algorithm, `auth-int`-only,
+  unsupported-charset, `userhash=true`, and header-injection inputs fail closed.
+- The Axis transport now follows the documented unauthenticated-request then
+  `401 WWW-Authenticate` flow, prefers supported SHA-256 Digest over MD5 and
+  Basic, and keeps the selected challenge and nonce count only in transport
+  memory.
+- Digest client nonces come from the OS CSPRNG. Credentials, A1 material,
+  derived responses, Basic values, Digest values, and encoded request bytes are
+  zeroized and never enter request plans, debug output, or normalized state.
+- Authentication is retried at most once per request. A real loopback exchange
+  proves the exact unauthenticated probe, authenticated retry, preemptive nonce
+  count, and `stale=true` nonce refresh while production TLS remains
+  certificate-verifying.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1164,36 +1186,34 @@ and then by prerequisite readiness:
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
 29. Add Axis event streaming only after the existing WebSocket protocol core has
-   a concrete authenticated host, digest or short-lived session-token lifecycle,
-   and subscription supervision.
+   a concrete authenticated host using the completed Digest primitive or a
+   short-lived session token, plus subscription supervision.
 30. Add Axis snapshots and media transfer only through the camera-media lease and
    a concrete media executor.
-31. Add reusable HTTP Digest authentication before supporting Axis devices that
-   cannot expose the preferred HTTPS Basic-auth path.
-32. Enumerate Axis video sources/channels before extending PTZ beyond the current
+31. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
-33. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+32. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-34. Add Reolink snapshot, recording search/download, and playback operations only
+33. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-35. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+34. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-36. Add Reolink push events only after a concrete webhook or event-stream host
+35. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-37. Add authenticated KLAP/Tapo devices and other broader-device families only
+36. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-38. Add ONVIF PullPoint events once a concrete event host and subscription
+37. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-39. Add RTSP media transfer and recording once concrete media transfer and
+38. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-40. Add a production Matter commissioning, secure-session, and network host only
+39. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-41. Add a Thread border-router host only after an actual host transport exists.
-42. Add a production Zigbee coordinator, join, and security host only after
+40. Add a Thread border-router host only after an actual host transport exists.
+41. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-43. Add production Z-Wave inclusion and S2 only after concrete host transport
+42. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition
