@@ -1005,6 +1005,27 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["0.6", 0.6],
+  ])("lowers valid diode FC depletion coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(FC=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      forwardBiasDepletionCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid diode FC depletion coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model clamp D(FC=${value})`)).toThrow(
+        "diode FC must be finite and in [0, 1)",
+      );
+    },
+  );
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)
