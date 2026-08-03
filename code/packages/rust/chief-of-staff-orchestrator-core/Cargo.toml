@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-orchestrator-core"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-independent runnable orchestration core for D18 Chief"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
+chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
+chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+coding_adventures_x3dh = { path = "../x3dh" }
+storage-core = { path = "../storage-core" }
