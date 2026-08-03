@@ -1379,6 +1379,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET FC must be finite and in [0, 1)");
   }
+  const jfetSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetSaturationCurrent !== undefined &&
+    (!Number.isFinite(jfetSaturationCurrent) || jfetSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET IS must be finite and positive");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1970,6 +1978,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("AF") ?? 1.0,
       model.params.get("PB") ?? model.params.get("VJ") ?? 1.0,
       model.params.get("FC") ?? 0.5,
+      model.params.get("IS") ?? 1.0e-14,
     );
   }
   if (prefix === "M") {

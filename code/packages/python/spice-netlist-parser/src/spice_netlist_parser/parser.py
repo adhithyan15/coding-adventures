@@ -1339,6 +1339,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Af=model.params.get("AF", 1.0),
             Pb=model.params.get("PB", model.params.get("VJ", 1.0)),
             Fc=model.params.get("FC", 0.5),
+            Is=model.params.get("IS", 1.0e-14),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2099,6 +2100,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or depletion_coefficient >= 1.0
         ):
             raise NetlistParseError("JFET FC must be finite and in [0, 1)")
+        saturation_current = params.get("IS")
+        if saturation_current is not None and (
+            not math.isfinite(saturation_current) or saturation_current <= 0.0
+        ):
+            raise NetlistParseError("JFET IS must be finite and positive")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

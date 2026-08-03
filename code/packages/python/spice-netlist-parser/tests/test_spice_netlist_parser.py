@@ -1467,6 +1467,25 @@ def test_rejects_invalid_jfet_forward_bias_depletion_coefficient(value: str) -> 
         parse_netlist(f".model fast NJF(FC={value})")
 
 
+def test_parse_jfet_gate_saturation_current() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(IS=2p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Is, 2.0e-12)
+
+
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_saturation_current(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET IS must be finite and positive"):
+        parse_netlist(f".model fast NJF(IS={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

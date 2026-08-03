@@ -4462,15 +4462,20 @@ the Rust, Python, and TypeScript surfaces together.
      junction-potential field.
 
 428. Python and TypeScript Berkeley SPICE JFET depletion-coefficient parity.
-   - Status: completed in this JFET depletion-coefficient parity slice.
+   - Status: completed in PR 9842.
    - Both parser facades validate finite `FC` values in `[0, 1)` and lower
      them into the shared engine JFET forward-bias depletion field.
+
+429. Python and TypeScript Berkeley SPICE JFET gate-current parity.
+   - Status: completed in this JFET gate-current parity slice.
+   - Both parser facades validate positive finite `IS` values and lower them
+     into the shared engine JFET gate saturation-current field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited JFET model-card gaps, beginning with `IS`, then `XTI`,
-     `EG`, `B`, `NLEV`, `GDSNOI`, `RD`, `RS`,
+   - Continue the audited JFET model-card gaps, beginning with `XTI`, then `EG`,
+     `B`, `NLEV`, `GDSNOI`, `RD`, `RS`,
      `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.
