@@ -4477,15 +4477,23 @@ the Rust, Python, and TypeScript surfaces together.
      shared engine JFET gate-current temperature-exponent field.
 
 431. Python and TypeScript Berkeley SPICE JFET energy-gap parity.
-   - Status: completed in this JFET energy-gap parity slice.
+   - Status: completed in PR 9851.
    - Both parser facades validate positive finite `EG` values and lower them
      into the shared engine JFET bandgap-voltage field.
+
+432. Python and TypeScript Berkeley SPICE JFET noise-level parity.
+   - Status: implemented in this JFET noise-level parity slice.
+   - Both parser facades validate `NLEV` as a finite integer greater than or
+     equal to 1 and lower it into the shared engine noise-equation-level field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited JFET model-card gaps, beginning with `B`, then `NLEV`,
-     `GDSNOI`, `RD`, `RS`,
+   - Resolve the JFET `B` policy before lowering it: all three parser facades
+     currently use `B` as a legacy beta alias, while the engine model uses `B`
+     for Parker-Skellern doping-tail shaping. Do not assign one card value to
+     both fields silently.
+   - Continue the unambiguous audited JFET gaps with `GDSNOI`, `RD`, `RS`,
      `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.
