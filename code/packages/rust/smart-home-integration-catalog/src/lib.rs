@@ -45438,15 +45438,38 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
             "tuya",
         ),
-        energy_entry(
+        base_entry(
             "enphase_envoy",
             "Enphase Envoy",
-            "Local solar and energy telemetry integration.",
+            "Authenticated local Enphase IQ Gateway meter inventory and aggregate energy telemetry.",
+            IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             4,
             "enphase_envoy",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::LocalToken])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "enphase_iq_gateway_local_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Production inspection uses a pre-generated Vault-backed bearer token over HTTPS; plain HTTP is loopback-test-only.",
+            "Caller-supplied trust roots preserve certificate verification for IQ Gateways that use self-signed certificates.",
+            "Cloud token renewal, legacy authentication, inverter serials, live battery or relay topology, and controls remain separate policy-specific work.",
+        ]),
         base_entry(
             "fronius",
             "Fronius",
@@ -81454,6 +81477,43 @@ mod tests {
             PrimitiveFamily::CommandMapping,
         ] {
             assert!(tasmota.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn enphase_entry_exposes_authenticated_local_meter_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let enphase =
+            find_entry(&catalog, &IntegrationId::trusted("enphase_envoy")).unwrap();
+
+        assert_eq!(
+            enphase.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(enphase.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(enphase.auth_modes, vec![AuthMode::LocalToken]);
+        assert_eq!(
+            enphase.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "enphase_iq_gateway_local_api".to_string()
+            )]
+        );
+        assert_eq!(
+            enphase.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(
+            enphase.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        for primitive in [
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(enphase.required_primitives.contains(&primitive));
         }
     }
 

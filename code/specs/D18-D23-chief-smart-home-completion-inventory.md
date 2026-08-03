@@ -1038,6 +1038,28 @@ local health host over Ubiquiti's official integration API:
   requests, bounded pagination, API-key header materialization, and the absence
   of Vault references from wire traffic.
 
+## Current Enphase IQ Gateway Inspection Slice
+
+This slice promotes the cataloged Enphase Envoy entry to an authenticated local
+energy-telemetry host using Enphase's documented IQ Gateway API:
+
+- Explicit local HTTPS configuration, a known gateway serial, and a Vault-backed
+  pre-generated access token target only `/ivp/meters` and
+  `/ivp/meters/readings`. Plain HTTP remains loopback-test-only.
+- D23 authorizes `smart_home.read` before credentials or network I/O. The
+  bearer token remains in zeroizing transport memory and is materialized only
+  while encoding the `Authorization` header.
+- Meter inventory and readings are bounded, duplicate native EIDs are rejected,
+  and every reading must match exactly one advertised meter before runtime
+  state can change.
+- Confirmed sensor entities expose aggregate delivered and received energy,
+  demand, active/apparent/reactive power, power factor, voltage, current,
+  frequency, phase shape, and native meter health. Disabled meters map offline;
+  non-normal status or status flags map degraded.
+- Production TLS remains certificate-verifying and supports caller-supplied
+  trust roots for gateway certificates. A real loopback test proves both exact
+  bearer-authenticated requests and that Vault references never reach the wire.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1049,78 +1071,94 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Add UniFi Network connected-client inspection only after privacy, presence,
+4. Automate Enphase access-token acquisition or renewal only after Enphase
+   account authentication, cloud-session handling, operator consent, and
+   Vault-leased credential policy are concrete; the current host accepts a
+   pre-generated token.
+5. Add automatic Enphase IQ Gateway discovery only if Enphase documents a
+   stable LAN advertisement; the current production path uses explicit local
+   HTTPS endpoint and gateway-serial configuration.
+6. Add Enphase per-inverter production inspection only after device-identifier
+   privacy, purpose, and retention policy are concrete because the native
+   response exposes every microinverter serial number.
+7. Add Enphase live battery, relay, generator, grid, and system-topology state
+   only after the normalized energy topology and retention semantics are
+   concrete.
+8. Add Enphase relay, grid-services, or configuration controls only with
+   operation-specific D23 contracts, explicit safety approval, bounded native
+   semantics, and readable postcondition verification.
+9. Add UniFi Network connected-client inspection only after privacy, presence,
    identifier-retention, and operator-purpose policy are concrete.
-5. Add UniFi Network latest device statistics only after metrics schema,
+10. Add UniFi Network latest device statistics only after metrics schema,
    retention, and bounded polling-load policy are concrete.
-6. Add remote UniFi Site Manager inspection only after telemetry-egress,
+11. Add remote UniFi Site Manager inspection only after telemetry-egress,
    destination, and operator-consent policy are concrete; keep the current host
    local-only.
-7. Add UniFi Network push or change events only after a concrete authenticated
+12. Add UniFi Network push or change events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-8. Add UniFi adoption, guest authorization, port actions, or configuration
+13. Add UniFi adoption, guest authorization, port actions, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    keys, bounded semantics, and readable postcondition verification.
-9. Add Synology Surveillance Station OTP and remembered-device authentication
+14. Add Synology Surveillance Station OTP and remembered-device authentication
    only after an interactive challenge lifecycle and Vault-leased device-token
    policy are concrete.
-10. Add Synology Surveillance Station events only after a concrete authenticated
+15. Add Synology Surveillance Station events only after a concrete authenticated
    event host and supervised subscription lifecycle exist.
-11. Add Synology Surveillance Station snapshots, recordings, export, and
+16. Add Synology Surveillance Station snapshots, recordings, export, and
    playback only through the camera-media lease and a concrete executor.
-12. Add Synology Surveillance Station PTZ, external recording, or configuration
+17. Add Synology Surveillance Station PTZ, external recording, or configuration
    mutations only with operation-specific D23 contracts, least-privilege API
    checks, bounded semantics, and readable postcondition verification.
-13. Add Frigate event and review push only after a concrete authenticated event
+18. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-14. Add Frigate snapshots, recordings, export, and playback only through the
+19. Add Frigate snapshots, recordings, export, and playback only through the
    camera-media lease and a concrete executor.
-15. Add Frigate commands or configuration mutations only with operation-specific
+20. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-16. Add Blue Iris snapshots, alert/clip search, export, and playback only through
+21. Add Blue Iris snapshots, alert/clip search, export, and playback only through
    the camera-media lease and a concrete media executor.
-17. Add broader Blue Iris `camconfig` or administrative mutations only with
+22. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-18. Add automatic Blue Iris discovery only if the server exposes a documented,
+23. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-19. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+24. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-20. Add Axis event streaming only after the existing WebSocket protocol core has
+25. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host, digest or short-lived session-token lifecycle,
    and subscription supervision.
-21. Add Axis snapshots and media transfer only through the camera-media lease and
+26. Add Axis snapshots and media transfer only through the camera-media lease and
    a concrete media executor.
-22. Add reusable HTTP Digest authentication before supporting Axis devices that
+27. Add reusable HTTP Digest authentication before supporting Axis devices that
    cannot expose the preferred HTTPS Basic-auth path.
-23. Enumerate Axis video sources/channels before extending PTZ beyond the current
+28. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
-24. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+29. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-25. Add Reolink snapshot, recording search/download, and playback operations only
+30. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-26. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+31. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-27. Add Reolink push events only after a concrete webhook or event-stream host
+32. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-28. Add authenticated KLAP/Tapo devices and other broader-device families only
+33. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-29. Add ONVIF PullPoint events once a concrete event host and subscription
+34. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-30. Add RTSP media transfer and recording once concrete media transfer and
+35. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-31. Add a production Matter commissioning, secure-session, and network host only
+36. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-32. Add a Thread border-router host only after an actual host transport exists.
-33. Add a production Zigbee coordinator, join, and security host only after
+37. Add a Thread border-router host only after an actual host transport exists.
+38. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-34. Add production Z-Wave inclusion and S2 only after concrete host transport
+39. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition
