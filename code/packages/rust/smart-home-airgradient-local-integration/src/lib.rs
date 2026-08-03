@@ -7,9 +7,9 @@ use http_core::BodyKind;
 use serde_json::{Map as JsonMap, Value as JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
-    DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId, Metadata, ProtocolFamily,
-    ProtocolIdentifier, SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value,
-    ValueKind,
+    CommandResult, CommandType, DeviceControlCommandType, DeviceId, Entity, EntityId, EntityKind,
+    Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
+    StateConfidence, StateSnapshot, StateSource, Value, ValueKind,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
@@ -18,18 +18,19 @@ use smart_home_local_http::{
     LocalHttpEndpoint, LocalHttpError, LocalHttpMethod, LocalHttpRequestPlan,
     LocalHttpRequestTemplate, LocalHttpScheme,
 };
-use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
-use std::collections::BTreeSet;
+use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::time::Duration;
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 pub const INTEGRATION_ID: &str = "airgradient";
 pub const PROTOCOL_ID: &str = "airgradient_local_api";
 pub const MEASUREMENT_PATH: &str = "/measures/current";
+pub const CONFIGURATION_PATH: &str = "/config";
 pub const DEFAULT_PORT: u16 = 80;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
 
@@ -46,6 +47,14 @@ pub enum AirGradientError {
     Json(serde_json::Error),
     MissingField(&'static str),
     NoMeasurements,
+    UnknownEntity(EntityId),
+    UnsupportedCommand(CommandType),
+    InvalidCommandArguments {
+        command_type: CommandType,
+        expected: &'static str,
+    },
+    CloudConfigurationConflict,
+    VerificationFailed(&'static str),
     Runtime(RuntimeError),
 }
 
@@ -75,6 +84,25 @@ impl fmt::Display for AirGradientError {
             }
             Self::NoMeasurements => {
                 formatter.write_str("AirGradient response contains no numeric measurements")
+            }
+            Self::UnknownEntity(entity_id) => {
+                write!(formatter, "unknown AirGradient entity {entity_id}")
+            }
+            Self::UnsupportedCommand(command_type) => {
+                write!(formatter, "unsupported AirGradient command {command_type:?}")
+            }
+            Self::InvalidCommandArguments {
+                command_type,
+                expected,
+            } => write!(
+                formatter,
+                "invalid arguments for AirGradient command {command_type:?}; expected {expected}"
+            ),
+            Self::CloudConfigurationConflict => formatter.write_str(
+                "AirGradient configurationControl=cloud rejects local configuration; changing it to local requires a factory reset"
+            ),
+            Self::VerificationFailed(field) => {
+                write!(formatter, "AirGradient did not confirm updated {field}")
             }
             Self::Runtime(error) => error.fmt(formatter),
         }
@@ -201,6 +229,31 @@ pub struct AirGradientSnapshot {
     pub measurements: Vec<AirGradientMeasurement>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AirGradientConfigurationControl {
+    Local,
+    Both,
+    Cloud,
+}
+
+impl AirGradientConfigurationControl {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Local => "local",
+            Self::Both => "both",
+            Self::Cloud => "cloud",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AirGradientConfiguration {
+    pub control: AirGradientConfigurationControl,
+    pub led_bar_mode: String,
+    pub led_bar_brightness: u8,
+    pub display_brightness: u8,
+}
+
 pub fn discovery_record(
     config: &AirGradientConfig,
     snapshot: &AirGradientSnapshot,
@@ -299,6 +352,10 @@ impl<T: AirGradientTransport> AirGradientClient<T> {
         &self.transport
     }
 
+    pub fn transport_mut(&mut self) -> &mut T {
+        &mut self.transport
+    }
+
     pub fn inspect(&mut self) -> Result<AirGradientSnapshot, AirGradientError> {
         let data = self.request_json(MEASUREMENT_PATH)?;
         let snapshot = parse_snapshot(&data)?;
@@ -313,6 +370,21 @@ impl<T: AirGradientTransport> AirGradientClient<T> {
             ));
         }
         Ok(snapshot)
+    }
+
+    pub fn configuration(&mut self) -> Result<AirGradientConfiguration, AirGradientError> {
+        parse_configuration(&self.request_json(CONFIGURATION_PATH)?)
+    }
+
+    pub fn update_configuration(&mut self, update: &JsonValue) -> Result<(), AirGradientError> {
+        let template = LocalHttpRequestTemplate::new(LocalHttpMethod::Put, CONFIGURATION_PATH)?
+            .with_accept("application/json")
+            .with_content_type("application/json")
+            .with_timeout_ms(duration_ms(self.config.timeout));
+        let body = serde_json::to_vec(update)?;
+        self.transport
+            .execute(&template.plan(&self.endpoint, body)?)?;
+        Ok(())
     }
 
     fn request_json(&mut self, path: &str) -> Result<JsonValue, AirGradientError> {
@@ -344,11 +416,29 @@ pub struct InstalledAirGradientDevice {
 
 pub struct AirGradientRuntimeIntegration<T> {
     client: AirGradientClient<T>,
+    command_targets: BTreeMap<EntityId, AirGradientCommandTarget>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AirGradientCommandTarget {
+    Indicator,
+    Co2Sensor,
 }
 
 impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
     pub fn new(client: AirGradientClient<T>) -> Self {
-        Self { client }
+        Self {
+            client,
+            command_targets: BTreeMap::new(),
+        }
+    }
+
+    pub fn transport(&self) -> &T {
+        self.client.transport()
+    }
+
+    pub fn transport_mut(&mut self) -> &mut T {
+        self.client.transport_mut()
     }
 
     pub fn inspect_and_install_authorized(
@@ -359,7 +449,16 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
     ) -> Result<InstalledAirGradientDevice, AirGradientError> {
         authorize_read(runtime, principal_id, observed_at_ms)?;
         let snapshot = self.client.inspect()?;
-        self.install_snapshot(runtime, &snapshot, observed_at_ms)
+        let configuration = self.client.configuration()?;
+        let mut installed = self.install_snapshot(runtime, &snapshot, observed_at_ms)?;
+        self.install_control_surface(
+            runtime,
+            &snapshot,
+            &configuration,
+            &mut installed,
+            observed_at_ms,
+        )?;
+        Ok(installed)
     }
 
     pub fn install_snapshot(
@@ -451,6 +550,256 @@ impl<T: AirGradientTransport> AirGradientRuntimeIntegration<T> {
             entity_ids,
         })
     }
+
+    fn install_control_surface(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        snapshot: &AirGradientSnapshot,
+        configuration: &AirGradientConfiguration,
+        installed: &mut InstalledAirGradientDevice,
+        observed_at_ms: u64,
+    ) -> Result<(), AirGradientError> {
+        let native_id = stable_component(&snapshot.device_info.serial);
+        let co2_entity_id = EntityId::trusted(format!(
+            "airgradient:{native_id}:sensor:rco2"
+        ));
+        let mut co2_entity = runtime
+            .registry()
+            .entity(&co2_entity_id)
+            .cloned()
+            .ok_or_else(|| AirGradientError::UnknownEntity(co2_entity_id.clone()))?;
+        co2_entity.capabilities.push(Capability::sensor_calibration());
+        runtime.upsert_entity(co2_entity)?;
+
+        let indicator_entity_id = EntityId::trusted(format!("airgradient:{native_id}:indicator"));
+        runtime.upsert_entity(Entity {
+            entity_id: indicator_entity_id.clone(),
+            device_id: installed.device_id.clone(),
+            kind: EntityKind::Light,
+            name: format!("{} indicator and display", self.client.config.display_name),
+            capabilities: vec![Capability::device_indicator(), Capability::device_display()],
+            state: Some(confirmed_state(
+                indicator_entity_id.clone(),
+                configuration_value(configuration),
+                observed_at_ms,
+            )),
+            metadata: vec![
+                Metadata::new("airgradient.control_surface", "indicator_display"),
+                Metadata::new(
+                    "airgradient.configuration_control",
+                    configuration.control.as_str(),
+                ),
+            ],
+        })?;
+
+        let mut device = runtime
+            .registry()
+            .device(&installed.device_id)
+            .cloned()
+            .ok_or_else(|| AirGradientError::Validation("installed device disappeared".to_string()))?;
+        device.entity_ids.push(indicator_entity_id.clone());
+        device.metadata.push(Metadata::new(
+            "airgradient.configuration_control",
+            configuration.control.as_str(),
+        ));
+        runtime.upsert_device(device)?;
+        installed.entity_ids.push(indicator_entity_id.clone());
+        self.command_targets = BTreeMap::from([
+            (indicator_entity_id, AirGradientCommandTarget::Indicator),
+            (co2_entity_id, AirGradientCommandTarget::Co2Sensor),
+        ]);
+        Ok(())
+    }
+
+    pub fn dispatch_command_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<CommandResult, AirGradientError> {
+        let plan = airgradient_command_plan(&self.command_targets, &request)?;
+        let target_entity_id = request.entity_id.clone();
+        let command = runtime.authorize_command_tool(principal_id, request, now_ms)?;
+        let configuration = self.client.configuration()?;
+        if configuration.control == AirGradientConfigurationControl::Cloud {
+            return Err(AirGradientError::CloudConfigurationConflict);
+        }
+        let mut result = runtime.submit_command(command, now_ms)?;
+        self.client.update_configuration(&plan.update)?;
+        if let Some(expected) = plan.expected {
+            let confirmed = self.client.configuration()?;
+            expected.verify(&confirmed)?;
+            let mut entity = runtime
+                .registry()
+                .entity(&target_entity_id)
+                .cloned()
+                .ok_or_else(|| AirGradientError::UnknownEntity(target_entity_id.clone()))?;
+            entity.state = Some(confirmed_state(
+                target_entity_id,
+                configuration_value(&confirmed),
+                now_ms,
+            ));
+            runtime.upsert_entity(entity)?;
+        }
+        result.message = Some(match configuration.control {
+            AirGradientConfigurationControl::Local => {
+                "AirGradient confirmed the local control request".to_string()
+            }
+            AirGradientConfigurationControl::Both => {
+                "AirGradient confirmed the local request, but cloud configuration may overwrite it while configurationControl=both".to_string()
+            }
+            AirGradientConfigurationControl::Cloud => unreachable!(),
+        });
+        Ok(result)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct AirGradientCommandPlan {
+    update: JsonValue,
+    expected: Option<ExpectedConfiguration>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum ExpectedConfiguration {
+    IndicatorMode(String),
+    IndicatorBrightness(u8),
+    DisplayBrightness(u8),
+}
+
+impl ExpectedConfiguration {
+    fn verify(&self, configuration: &AirGradientConfiguration) -> Result<(), AirGradientError> {
+        let (matches, field) = match self {
+            Self::IndicatorMode(expected) => {
+                (configuration.led_bar_mode == *expected, "ledBarMode")
+            }
+            Self::IndicatorBrightness(expected) => (
+                configuration.led_bar_brightness == *expected,
+                "ledBarBrightness",
+            ),
+            Self::DisplayBrightness(expected) => (
+                configuration.display_brightness == *expected,
+                "displayBrightness",
+            ),
+        };
+        if matches {
+            Ok(())
+        } else {
+            Err(AirGradientError::VerificationFailed(field))
+        }
+    }
+}
+
+fn airgradient_command_plan(
+    targets: &BTreeMap<EntityId, AirGradientCommandTarget>,
+    request: &RuntimeCommandToolRequest,
+) -> Result<AirGradientCommandPlan, AirGradientError> {
+    let target = targets
+        .get(&request.entity_id)
+        .copied()
+        .ok_or_else(|| AirGradientError::UnknownEntity(request.entity_id.clone()))?;
+    match request.command_type {
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode)
+            if target == AirGradientCommandTarget::Indicator =>
+        {
+            let Value::Text(mode) = &request.arguments else {
+                return invalid_command_arguments(request.command_type, "co2, pm, iaqs, or off text");
+            };
+            let mode = mode.to_ascii_lowercase();
+            if !matches!(mode.as_str(), "co2" | "pm" | "iaqs" | "off") {
+                return invalid_command_arguments(request.command_type, "co2, pm, iaqs, or off text");
+            }
+            Ok(AirGradientCommandPlan {
+                update: configuration_update("ledBarMode", JsonValue::String(mode.clone())),
+                expected: Some(ExpectedConfiguration::IndicatorMode(mode)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
+            if target == AirGradientCommandTarget::Indicator =>
+        {
+            let Value::Percentage(brightness) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a percentage brightness");
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "ledBarBrightness",
+                    JsonValue::from(brightness),
+                ),
+                expected: Some(ExpectedConfiguration::IndicatorBrightness(brightness)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness)
+            if target == AirGradientCommandTarget::Indicator =>
+        {
+            let Value::Percentage(brightness) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a percentage brightness");
+            };
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "displayBrightness",
+                    JsonValue::from(brightness),
+                ),
+                expected: Some(ExpectedConfiguration::DisplayBrightness(brightness)),
+            })
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
+            if target == AirGradientCommandTarget::Co2Sensor =>
+        {
+            if request.arguments != Value::Null {
+                return invalid_command_arguments(request.command_type, "null arguments");
+            }
+            Ok(AirGradientCommandPlan {
+                update: configuration_update(
+                    "co2CalibrationRequested",
+                    JsonValue::Bool(true),
+                ),
+                expected: None,
+            })
+        }
+        CommandType::DeviceControl(_) => invalid_command_arguments(
+            request.command_type,
+            "an AirGradient entity that advertises the command capability",
+        ),
+        command_type => Err(AirGradientError::UnsupportedCommand(command_type)),
+    }
+}
+
+fn invalid_command_arguments<T>(
+    command_type: CommandType,
+    expected: &'static str,
+) -> Result<T, AirGradientError> {
+    Err(AirGradientError::InvalidCommandArguments {
+        command_type,
+        expected,
+    })
+}
+
+fn configuration_update(field: &str, value: JsonValue) -> JsonValue {
+    let mut update = JsonMap::new();
+    update.insert(field.to_string(), value);
+    JsonValue::Object(update)
+}
+
+fn configuration_value(configuration: &AirGradientConfiguration) -> Value {
+    Value::Object(vec![
+        (
+            "mode".to_string(),
+            Value::Text(configuration.led_bar_mode.clone()),
+        ),
+        (
+            "indicator_brightness".to_string(),
+            Value::Percentage(configuration.led_bar_brightness),
+        ),
+        (
+            "display_brightness".to_string(),
+            Value::Percentage(configuration.display_brightness),
+        ),
+        (
+            "configuration_control".to_string(),
+            Value::Text(configuration.control.as_str().to_string()),
+        ),
+    ])
 }
 
 fn authorize_read(
@@ -469,6 +818,31 @@ fn authorize_read(
             missing_capabilities: decision.missing_capabilities,
         }))
     }
+}
+
+fn parse_configuration(data: &JsonValue) -> Result<AirGradientConfiguration, AirGradientError> {
+    let data = data
+        .as_object()
+        .ok_or(AirGradientError::MissingField("configuration object"))?;
+    let control = match required_string(data, "configurationControl")?
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "local" => AirGradientConfigurationControl::Local,
+        "both" => AirGradientConfigurationControl::Both,
+        "cloud" => AirGradientConfigurationControl::Cloud,
+        _ => {
+            return Err(AirGradientError::Validation(
+                "configurationControl must be local, both, or cloud".to_string(),
+            ))
+        }
+    };
+    Ok(AirGradientConfiguration {
+        control,
+        led_bar_mode: required_string(data, "ledBarMode")?.to_ascii_lowercase(),
+        led_bar_brightness: required_percentage(data, "ledBarBrightness")?,
+        display_brightness: required_percentage(data, "displayBrightness")?,
+    })
 }
 
 fn parse_snapshot(data: &JsonValue) -> Result<AirGradientSnapshot, AirGradientError> {
@@ -589,6 +963,22 @@ fn required_string(
         .filter(|value| !value.trim().is_empty())
         .map(str::to_string)
         .ok_or(AirGradientError::MissingField(field))
+}
+
+fn required_percentage(
+    value: &JsonMap<String, JsonValue>,
+    field: &'static str,
+) -> Result<u8, AirGradientError> {
+    let value = value
+        .get(field)
+        .and_then(JsonValue::as_u64)
+        .ok_or(AirGradientError::MissingField(field))?;
+    u8::try_from(value)
+        .ok()
+        .filter(|value| *value <= 100)
+        .ok_or_else(|| {
+            AirGradientError::Validation(format!("{field} must be between 0 and 100"))
+        })
 }
 
 fn measurement_value(measurement: &AirGradientMeasurement) -> Value {
@@ -826,6 +1216,11 @@ mod tests {
     use std::thread;
 
     const MEASUREMENTS: &str = r#"{"wifi":-46,"serialno":"ecda3b1eaaaf","rco2":447,"pm01":3,"pm02":7,"pm10":8,"pm003Count":442,"atmp":25.87,"atmpCompensated":24.47,"rhum":43,"rhumCompensated":49,"tvocIndex":100,"tvocRaw":33051,"noxIndex":1,"noxRaw":16307,"boot":6,"firmware":"3.1.3","model":"I-9PSL"}"#;
+    const CONFIG_BOTH: &str = r#"{"configurationControl":"both","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_CLOUD: &str = r#"{"configurationControl":"cloud","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_MODE_PM: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":80,"displayBrightness":70}"#;
+    const CONFIG_LED_35: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":70}"#;
+    const CONFIG_DISPLAY_25: &str = r#"{"configurationControl":"both","ledBarMode":"pm","ledBarBrightness":35,"displayBrightness":25}"#;
 
     fn response(body: &str) -> Vec<u8> {
         format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len()).into_bytes()
@@ -852,7 +1247,7 @@ mod tests {
                         break;
                     }
                     bytes.extend_from_slice(&buffer[..read]);
-                    if bytes.windows(4).any(|window| window == b"\r\n\r\n") {
+                    if request_complete(&bytes) {
                         break;
                     }
                 }
@@ -864,6 +1259,22 @@ mod tests {
             }
         });
         (port, requests, handle)
+    }
+
+    fn request_complete(bytes: &[u8]) -> bool {
+        let Some(header_end) = bytes.windows(4).position(|window| window == b"\r\n\r\n") else {
+            return false;
+        };
+        let headers = String::from_utf8_lossy(&bytes[..header_end]);
+        let content_length = headers
+            .lines()
+            .find_map(|line| {
+                let (name, value) = line.split_once(':')?;
+                name.eq_ignore_ascii_case("content-length")
+                    .then(|| value.trim().parse::<usize>().ok())?
+            })
+            .unwrap_or(0);
+        bytes.len() >= header_end + 4 + content_length
     }
 
     fn config(port: u16) -> AirGradientConfig {
@@ -880,7 +1291,7 @@ mod tests {
             CapabilityGrant::for_all_smart_home(
                 CapabilityGrantId::trusted("grant:airgradient-test"),
                 principal.clone(),
-                PrivilegeTier::LowRisk,
+                PrivilegeTier::HumanApproval,
                 "test",
                 1_000,
             )
@@ -919,7 +1330,8 @@ mod tests {
 
     #[test]
     fn real_tcp_inspection_installs_environmental_sensors() {
-        let (port, requests, handle) = start_server(vec![response(MEASUREMENTS)]);
+        let (port, requests, handle) =
+            start_server(vec![response(MEASUREMENTS), response(CONFIG_BOTH)]);
         let client =
             AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
         let mut integration = AirGradientRuntimeIntegration::new(client);
@@ -930,7 +1342,7 @@ mod tests {
             .inspect_and_install_authorized(&mut runtime, principal, 5_000)
             .unwrap();
         handle.join().unwrap();
-        assert_eq!(installed.entity_ids.len(), 12);
+        assert_eq!(installed.entity_ids.len(), 13);
         let co2 = runtime
             .registry()
             .entity(&EntityId::trusted(format!(
@@ -948,9 +1360,27 @@ mod tests {
         assert_eq!(device.manufacturer, "AirGradient");
         assert_eq!(device.model, "I-9PSL");
         assert_eq!(device.serial.as_deref(), Some("ecda3b1eaaaf"));
+        assert!(device
+            .metadata
+            .iter()
+            .any(|item| item.key == "airgradient.configuration_control" && item.value == "both"));
+        let indicator = runtime
+            .registry()
+            .entity(&EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"))
+            .unwrap();
+        assert_eq!(indicator.kind, EntityKind::Light);
+        assert!(indicator
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "device.display"));
+        assert!(co2
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "sensor.calibration"));
         let requests = requests.lock().unwrap();
-        assert_eq!(requests.len(), 1);
+        assert_eq!(requests.len(), 2);
         assert!(requests[0].contains(&format!("GET {MEASUREMENT_PATH} HTTP/1.1")));
+        assert!(requests[1].contains(&format!("GET {CONFIGURATION_PATH} HTTP/1.1")));
     }
 
     #[derive(Debug)]
@@ -969,6 +1399,34 @@ mod tests {
     impl AirGradientTransport for StaticTransport {
         fn execute(&mut self, _plan: &LocalHttpRequestPlan) -> Result<Vec<u8>, AirGradientError> {
             Ok(self.0.clone())
+        }
+    }
+
+    #[derive(Debug)]
+    struct SequenceTransport {
+        responses: Vec<Vec<u8>>,
+        calls: usize,
+    }
+
+    impl SequenceTransport {
+        fn new(responses: &[&str]) -> Self {
+            Self {
+                responses: responses
+                    .iter()
+                    .rev()
+                    .map(|response| response.as_bytes().to_vec())
+                    .collect(),
+                calls: 0,
+            }
+        }
+    }
+
+    impl AirGradientTransport for SequenceTransport {
+        fn execute(&mut self, _plan: &LocalHttpRequestPlan) -> Result<Vec<u8>, AirGradientError> {
+            self.calls += 1;
+            self.responses
+                .pop()
+                .ok_or_else(|| AirGradientError::Io("unexpected transport call".to_string()))
         }
     }
 
@@ -1011,6 +1469,182 @@ mod tests {
     }
 
     #[test]
+    fn denied_device_control_reaches_no_additional_transport() {
+        let client = AirGradientClient::new(
+            AirGradientConfig::new(
+                BridgeId::trusted("airgradient.command-denied"),
+                "http://127.0.0.1",
+            )
+            .unwrap(),
+            SequenceTransport::new(&[MEASUREMENTS, CONFIG_BOTH]),
+        )
+        .unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let installer = AgentId::trusted("agent:airgradient-installer");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &installer);
+        integration
+            .inspect_and_install_authorized(&mut runtime, installer, 5_000)
+            .unwrap();
+
+        let request = RuntimeCommandToolRequest::new(
+            EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"),
+            CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
+            Value::Percentage(25),
+        );
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:airgradient-denied"),
+                request,
+                6_000,
+            ),
+            Err(AirGradientError::Runtime(_))
+        ));
+        assert_eq!(integration.transport().calls, 2);
+    }
+
+    #[test]
+    fn cloud_control_conflict_stops_before_local_put() {
+        let client = AirGradientClient::new(
+            AirGradientConfig::new(
+                BridgeId::trusted("airgradient.cloud-conflict"),
+                "http://127.0.0.1",
+            )
+            .unwrap(),
+            SequenceTransport::new(&[MEASUREMENTS, CONFIG_BOTH, CONFIG_CLOUD]),
+        )
+        .unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:airgradient-cloud-conflict");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        let original_state = runtime
+            .registry()
+            .entity(&EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"))
+            .unwrap()
+            .state
+            .clone();
+        let request = RuntimeCommandToolRequest::new(
+            EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"),
+            CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode),
+            Value::Text("off".to_string()),
+        );
+        assert!(matches!(
+            integration.dispatch_command_authorized(&mut runtime, principal, request, 6_000),
+            Err(AirGradientError::CloudConfigurationConflict)
+        ));
+        assert_eq!(integration.transport().calls, 3);
+        assert_eq!(
+            runtime
+                .registry()
+                .entity(&EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"))
+                .unwrap()
+                .state,
+            original_state
+        );
+        assert_eq!(runtime.optimistic_state_count(), 0);
+    }
+
+    #[test]
+    fn loopback_authorized_indicator_display_and_calibration_controls() {
+        let payloads = [
+            MEASUREMENTS,
+            CONFIG_BOTH,
+            CONFIG_BOTH,
+            "{}",
+            CONFIG_MODE_PM,
+            CONFIG_MODE_PM,
+            "{}",
+            CONFIG_LED_35,
+            CONFIG_LED_35,
+            "{}",
+            CONFIG_DISPLAY_25,
+            CONFIG_DISPLAY_25,
+            "{}",
+        ]
+        .into_iter()
+        .map(response)
+        .collect();
+        let (port, requests, handle) = start_server(payloads);
+        let client =
+            AirGradientClient::new(config(port), AirGradientLanTransport::default()).unwrap();
+        let mut integration = AirGradientRuntimeIntegration::new(client);
+        let principal = AgentId::trusted("agent:airgradient-control");
+        let mut runtime = SmartHomeRuntime::new();
+        grant(&mut runtime, &principal);
+        integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 5_000)
+            .unwrap();
+        let indicator = EntityId::trusted("airgradient:ecda3b1eaaaf:indicator");
+        let co2 = EntityId::trusted("airgradient:ecda3b1eaaaf:sensor:rco2");
+        let commands = [
+            RuntimeCommandToolRequest::new(
+                indicator.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode),
+                Value::Text("pm".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                indicator.clone(),
+                CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness),
+                Value::Percentage(35),
+            ),
+            RuntimeCommandToolRequest::new(
+                indicator,
+                CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
+                Value::Percentage(25),
+            ),
+            RuntimeCommandToolRequest::new(
+                co2,
+                CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor),
+                Value::Null,
+            ),
+        ];
+        for (index, request) in commands.into_iter().enumerate() {
+            let result = integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    request,
+                    6_000 + index as u64,
+                )
+                .unwrap();
+            assert!(result
+                .message
+                .as_deref()
+                .is_some_and(|message| message.contains("cloud configuration may overwrite")));
+        }
+        let indicator_state = runtime
+            .registry()
+            .entity(&EntityId::trusted("airgradient:ecda3b1eaaaf:indicator"))
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert_eq!(indicator_state.confidence, StateConfidence::Confirmed);
+        assert!(matches!(
+            &indicator_state.value,
+            Value::Object(fields)
+                if fields.contains(&("display_brightness".to_string(), Value::Percentage(25)))
+        ));
+        handle.join().unwrap();
+        let requests = requests.lock().unwrap();
+        assert_eq!(requests.len(), 13);
+        let put_requests = requests
+            .iter()
+            .filter(|request| request.starts_with(&format!("PUT {CONFIGURATION_PATH}")))
+            .collect::<Vec<_>>();
+        assert_eq!(put_requests.len(), 4);
+        assert!(put_requests[0].contains(r#"{"ledBarMode":"pm"}"#));
+        assert!(put_requests[1].contains(r#"{"ledBarBrightness":35}"#));
+        assert!(put_requests[2].contains(r#"{"displayBrightness":25}"#));
+        assert!(put_requests[3].contains(r#"{"co2CalibrationRequested":true}"#));
+    }
+
+    #[test]
     fn parser_requires_identity_and_known_measurements() {
         let missing_identity: JsonValue = serde_json::from_str(r#"{"rco2":447}"#).unwrap();
         assert!(matches!(
@@ -1040,6 +1674,25 @@ mod tests {
             .measurements
             .iter()
             .any(|measurement| measurement.id == "tvocRaw"));
+    }
+
+    #[test]
+    fn parser_validates_configuration_control_and_percentages() {
+        let configuration =
+            parse_configuration(&serde_json::from_str(CONFIG_BOTH).unwrap()).unwrap();
+        assert_eq!(configuration.control, AirGradientConfigurationControl::Both);
+        assert_eq!(configuration.led_bar_mode, "co2");
+        assert_eq!(configuration.led_bar_brightness, 80);
+        assert_eq!(configuration.display_brightness, 70);
+
+        let invalid = serde_json::from_str(
+            r#"{"configurationControl":"cloudish","ledBarMode":"co2","ledBarBrightness":80,"displayBrightness":101}"#,
+        )
+        .unwrap();
+        assert!(matches!(
+            parse_configuration(&invalid),
+            Err(AirGradientError::Validation(_))
+        ));
     }
 
     #[test]

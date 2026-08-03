@@ -45368,15 +45368,15 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "airgradient",
             "AirGradient",
-            "Local AirGradient monitor identity and environmental telemetry.",
+            "Local AirGradient monitor telemetry, indicator/display control, and CO2 calibration.",
             IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
-            3,
+            4,
             "airgradient",
         )
-        .with_capabilities(&["smart_home.read"])
-        .with_entities(&[EntityKind::Sensor])
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
+        .with_entities(&[EntityKind::Sensor, EntityKind::Light])
         .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
         .with_protocols(vec![ProtocolFamily::Vendor(
@@ -45388,12 +45388,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Mdns,
             PrimitiveFamily::LocalHttp,
             PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::Supervision,
             PrimitiveFamily::TestSimulator,
         ])
         .with_notes(&[
-            "Current runtime support is read-only; local configuration, LED/display control, and CO2 calibration remain separate authorized work.",
+            "Cloud-only configuration is rejected locally; dual local/cloud control returns an explicit overwrite warning.",
+            "Advanced AirGradient configuration fields remain separate typed work, especially credential-bearing MQTT settings and correction profiles.",
         ]),
         energy_entry(
             "tesla_powerwall",
@@ -81245,7 +81247,7 @@ mod tests {
     }
 
     #[test]
-    fn airgradient_entry_exposes_read_only_local_environmental_runtime() {
+    fn airgradient_entry_exposes_authorized_local_environmental_runtime() {
         let catalog = first_party_catalog();
         let airgradient = find_entry(&catalog, &IntegrationId::trusted("airgradient")).unwrap();
 
@@ -81261,12 +81263,16 @@ mod tests {
         );
         assert_eq!(
             airgradient.required_capabilities,
-            vec![CapabilityId::trusted("smart_home.read")]
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.device")
+            ]
         );
         for primitive in [
             PrimitiveFamily::Mdns,
             PrimitiveFamily::LocalHttp,
             PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::TestSimulator,
         ] {

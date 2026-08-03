@@ -1,5 +1,8 @@
 # Changelog
 
+- Expose device indicator/display and sensor calibration command labels through
+  the local smart-home API contract.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased

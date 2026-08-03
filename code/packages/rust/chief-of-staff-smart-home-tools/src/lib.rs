@@ -25,7 +25,8 @@ use smart_home_core::{
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
-    DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health,
+    DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId,
+    Health,
     IntegrationCatalogSummary, IntegrationId, MediaCommandType, Metadata, PrivilegeTier,
     ProtocolFamily,
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope,
@@ -89725,8 +89726,12 @@ fn json_to_smart_value_for_command(
         | CommandType::RecallScene
         | CommandType::Media(MediaCommandType::PlayNext)
         | CommandType::Media(MediaCommandType::PlayPrevious)
-        | CommandType::Media(MediaCommandType::ClearQueue) => Ok(Value::Null),
-        CommandType::SetBrightness | CommandType::Media(MediaCommandType::SetVolume) => {
+        | CommandType::Media(MediaCommandType::ClearQueue)
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => Ok(Value::Null),
+        CommandType::SetBrightness
+        | CommandType::Media(MediaCommandType::SetVolume)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
             match json_to_smart_value(value)? {
                 Value::Integer(value) if (0..=100).contains(&value) => {
                     Ok(Value::Percentage(value as u8))
@@ -89739,7 +89744,8 @@ fn json_to_smart_value_for_command(
         | CommandType::SetColorTemperature
         | CommandType::SetLock
         | CommandType::SetThermostatSetpoint
-        | CommandType::Media(_) => json_to_smart_value(value),
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => json_to_smart_value(value),
     }
 }
 
@@ -90141,6 +90147,18 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
         "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
         "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
+        "device_set_indicator_mode" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorMode,
+        )),
+        "device_set_indicator_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorBrightness,
+        )),
+        "device_set_display_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetDisplayBrightness,
+        )),
+        "sensor_calibrate" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor,
+        )),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
     }
 }
@@ -92517,6 +92535,18 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
         CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
         CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode) => {
+            "device_set_indicator_mode"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness) => {
+            "device_set_indicator_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            "device_set_display_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+            "sensor_calibrate"
+        }
     }
 }
 
@@ -121415,6 +121445,33 @@ mod tests {
         ];
         for (label, media_command) in commands {
             let command = CommandType::Media(media_command);
+            assert_eq!(parse_command_type(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
+    }
+
+    #[test]
+    fn device_control_command_labels_round_trip_through_the_chief_boundary() {
+        let commands = [
+            (
+                "device_set_indicator_mode",
+                DeviceControlCommandType::SetIndicatorMode,
+            ),
+            (
+                "device_set_indicator_brightness",
+                DeviceControlCommandType::SetIndicatorBrightness,
+            ),
+            (
+                "device_set_display_brightness",
+                DeviceControlCommandType::SetDisplayBrightness,
+            ),
+            (
+                "sensor_calibrate",
+                DeviceControlCommandType::CalibrateSensor,
+            ),
+        ];
+        for (label, device_command) in commands {
+            let command = CommandType::DeviceControl(device_command);
             assert_eq!(parse_command_type(label).unwrap(), command);
             assert_eq!(command_type_label(command), label);
         }

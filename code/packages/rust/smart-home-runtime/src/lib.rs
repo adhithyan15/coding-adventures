@@ -13,7 +13,8 @@ use smart_home_core::{
     AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
-    DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId, Health,
+    DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, Entity,
+    EntityId, EventId, Health,
     IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
     MediaCommandType, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
     VaultRef,
@@ -5827,6 +5828,16 @@ impl SmartHomeRuntime {
         request: RuntimeCommandToolRequest,
         now_ms: u64,
     ) -> Result<CommandResult, RuntimeError> {
+        let command = self.authorize_command_tool(principal_id, request, now_ms)?;
+        self.submit_command(command, now_ms)
+    }
+
+    pub fn authorize_command_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<DeviceCommand, RuntimeError> {
         let tool = SmartHomeTool::Command;
         let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
         if !decision.missing_capabilities.is_empty() {
@@ -5856,8 +5867,24 @@ impl SmartHomeRuntime {
             .collect();
         let command = request.into_command(command_id, principal_id.as_str(), correlation_id)?;
         let authorization = CommandAuthorization::new(principal_id, grants);
-
-        self.submit_authorized_command(&authorization, command, now_ms)
+        let decision = AuthorizationDecision::for_command(
+            authorization.principal_id.clone(),
+            &command,
+            authorization.grants.iter(),
+            now_ms,
+        );
+        let missing_capabilities = decision.missing_capabilities.clone();
+        self.registry.record_authorization_decision(decision);
+        if !missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedCommand {
+                command_id: command.command_id.clone(),
+                principal_id: authorization.principal_id,
+                required_tier: command.required_tier,
+                missing_capabilities,
+            });
+        }
+        self.command_bridge_id(&command)?;
+        Ok(command)
     }
 
     pub fn submit_command(
@@ -5865,6 +5892,27 @@ impl SmartHomeRuntime {
         command: DeviceCommand,
         now_ms: u64,
     ) -> Result<CommandResult, RuntimeError> {
+        let bridge_id = self.command_bridge_id(&command)?;
+
+        if let Some(snapshot) = optimistic_snapshot_for_command(&command, now_ms) {
+            self.registry.apply_state_snapshot(snapshot.clone())?;
+            self.optimistic_states
+                .insert(command.entity_id.clone(), snapshot);
+        }
+
+        let result = CommandResult {
+            command_id: command.command_id,
+            status: CommandStatus::Accepted,
+            bridge_id,
+            correlation_id: command.correlation_id,
+            message: Some("accepted for integration dispatch".to_string()),
+        };
+        self.event_bus
+            .publish(RuntimeEvent::CommandResult(result.clone()));
+        Ok(result)
+    }
+
+    fn command_bridge_id(&self, command: &DeviceCommand) -> Result<BridgeId, RuntimeError> {
         let entity = self
             .registry
             .entity(&command.entity_id)
@@ -5876,24 +5924,8 @@ impl SmartHomeRuntime {
             .cloned()
             .ok_or_else(|| RuntimeError::UnknownDevice(entity.device_id.clone()))?;
 
-        validate_command_capabilities(&entity, &command)?;
-
-        if let Some(snapshot) = optimistic_snapshot_for_command(&command, now_ms) {
-            self.registry.apply_state_snapshot(snapshot.clone())?;
-            self.optimistic_states
-                .insert(command.entity_id.clone(), snapshot);
-        }
-
-        let result = CommandResult {
-            command_id: command.command_id,
-            status: CommandStatus::Accepted,
-            bridge_id: device.bridge_id,
-            correlation_id: command.correlation_id,
-            message: Some("accepted for integration dispatch".to_string()),
-        };
-        self.event_bus
-            .publish(RuntimeEvent::CommandResult(result.clone()));
-        Ok(result)
+        validate_command_capabilities(&entity, command)?;
+        Ok(device.bridge_id)
     }
 
     pub fn submit_authorized_command(
@@ -6343,7 +6375,8 @@ fn command_for_desired_state(
         | CommandType::SetColorTemperature
         | CommandType::SetLock
         | CommandType::SetThermostatSetpoint
-        | CommandType::Media(_) => desired.value.clone(),
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => desired.value.clone(),
         CommandType::RecallScene => Value::Null,
     };
     let command_id = CommandId::trusted(format!(
@@ -6428,9 +6461,15 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
         | CommandType::Media(MediaCommandType::SetPlaybackState)
         | CommandType::Media(MediaCommandType::SetVolume)
         | CommandType::Media(MediaCommandType::SetMute)
-        | CommandType::Media(MediaCommandType::SetGroup) => command.arguments.clone(),
+        | CommandType::Media(MediaCommandType::SetGroup)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            command.arguments.clone()
+        }
         CommandType::RecallScene => return None,
         CommandType::Media(_) => return None,
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => return None,
     };
 
     Some(StateSnapshot {

@@ -1,5 +1,9 @@
 # Changelog
 
+- Upgrade AirGradient runtime coverage with authorized local indicator/display
+  controls, CO2 calibration, readback verification, and explicit cloud-control
+  conflict handling.
+
 - Add first-party AirGradient local environmental telemetry coverage and the
   environmental telemetry primitive.
 

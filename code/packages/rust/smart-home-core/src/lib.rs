@@ -327,6 +327,31 @@ impl Capability {
         )
     }
 
+    pub fn device_indicator() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.indicator"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn device_display() -> Self {
+        Self::new(
+            CapabilityId::trusted("device.display"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
+    pub fn sensor_calibration() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.calibration"),
+            CapabilityMode::Command,
+            ValueKind::Null,
+        )
+    }
+
     pub fn sensor_occupancy() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.occupancy"),
@@ -401,6 +426,9 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::media_volume(),
         Capability::media_grouping(),
         Capability::media_queue(),
+        Capability::device_indicator(),
+        Capability::device_display(),
+        Capability::sensor_calibration(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
         Capability::sensor_temperature(),
@@ -1254,6 +1282,7 @@ pub enum CommandType {
     SetLock,
     SetThermostatSetpoint,
     Media(MediaCommandType),
+    DeviceControl(DeviceControlCommandType),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -1270,6 +1299,14 @@ pub enum MediaCommandType {
     MoveQueueItem,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DeviceControlCommandType {
+    SetIndicatorMode,
+    SetIndicatorBrightness,
+    SetDisplayBrightness,
+    CalibrateSensor,
+}
+
 impl CommandType {
     pub fn canonical_capability_id(self) -> Option<CapabilityId> {
         match self {
@@ -1281,6 +1318,7 @@ impl CommandType {
             Self::SetLock => Some(CapabilityId::trusted("lock.state")),
             Self::SetThermostatSetpoint => Some(CapabilityId::trusted("climate.setpoint")),
             Self::Media(command) => Some(command.canonical_capability_id()),
+            Self::DeviceControl(command) => Some(command.canonical_capability_id()),
         }
     }
 }
@@ -1297,6 +1335,18 @@ impl MediaCommandType {
             | Self::PlayQueueItem
             | Self::RemoveQueueItem
             | Self::MoveQueueItem => CapabilityId::trusted("media.queue"),
+        }
+    }
+}
+
+impl DeviceControlCommandType {
+    pub fn canonical_capability_id(self) -> CapabilityId {
+        match self {
+            Self::SetIndicatorMode | Self::SetIndicatorBrightness => {
+                CapabilityId::trusted("device.indicator")
+            }
+            Self::SetDisplayBrightness => CapabilityId::trusted("device.display"),
+            Self::CalibrateSensor => CapabilityId::trusted("sensor.calibration"),
         }
     }
 }
@@ -1353,14 +1403,18 @@ impl DeviceCommand {
 pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
     match command_type {
         CommandType::SetLock => PrivilegeTier::HighRisk,
-        CommandType::SetThermostatSetpoint => PrivilegeTier::HumanApproval,
+        CommandType::SetThermostatSetpoint
+        | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+            PrivilegeTier::HumanApproval
+        }
         CommandType::TurnOn
         | CommandType::TurnOff
         | CommandType::SetBrightness
         | CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::RecallScene
-        | CommandType::Media(_) => PrivilegeTier::LowRisk,
+        | CommandType::Media(_)
+        | CommandType::DeviceControl(_) => PrivilegeTier::LowRisk,
     }
 }
 
@@ -3918,6 +3972,18 @@ mod tests {
             tier_for_command(CommandType::SetThermostatSetpoint),
             PrivilegeTier::HumanApproval
         );
+        assert_eq!(
+            tier_for_command(CommandType::DeviceControl(
+                DeviceControlCommandType::CalibrateSensor
+            )),
+            PrivilegeTier::HumanApproval
+        );
+        assert_eq!(
+            tier_for_command(CommandType::DeviceControl(
+                DeviceControlCommandType::SetDisplayBrightness
+            )),
+            PrivilegeTier::LowRisk
+        );
     }
 
     #[test]
@@ -4201,7 +4267,7 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 18);
+        assert_eq!(catalog.len(), 21);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
@@ -4211,6 +4277,9 @@ mod tests {
         assert!(ids.contains(&"media.volume"));
         assert!(ids.contains(&"media.grouping"));
         assert!(ids.contains(&"media.queue"));
+        assert!(ids.contains(&"device.indicator"));
+        assert!(ids.contains(&"device.display"));
+        assert!(ids.contains(&"sensor.calibration"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
         assert!(ids.contains(&"sensor.humidity"));
@@ -4256,6 +4325,10 @@ mod tests {
             CommandType::Media(MediaCommandType::PlayQueueItem),
             CommandType::Media(MediaCommandType::RemoveQueueItem),
             CommandType::Media(MediaCommandType::MoveQueueItem),
+            CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode),
+            CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness),
+            CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness),
+            CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor),
         ];
 
         for command_type in command_types {
