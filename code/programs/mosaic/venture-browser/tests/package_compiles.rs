@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 2);
+    assert_eq!(package.host_assets.files.len(), 4);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -101,6 +101,24 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "host/xaml/MosaicHost.cs"
     );
     assert_eq!(package.host_assets.files[1].target, "MosaicHost.cs");
+    assert_eq!(package.host_assets.files[2].backend, "flutter");
+    assert_eq!(
+        package.host_assets.files[2].source,
+        "host/flutter/venture_chrome_interaction_test.dart"
+    );
+    assert_eq!(
+        package.host_assets.files[2].target,
+        "test/venture_chrome_interaction_test.dart"
+    );
+    assert_eq!(package.host_assets.files[3].backend, "qt");
+    assert_eq!(
+        package.host_assets.files[3].source,
+        "host/qt/tst_venture_chrome.qml"
+    );
+    assert_eq!(
+        package.host_assets.files[3].target,
+        "test/tst_venture_chrome.qml"
+    );
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -109,6 +127,8 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_render",
         "venture_browser_macos_scroll",
         "venture_browser_macos_scroll_command",
+        "venture_browser_macos_scroll_metrics",
+        "venture_browser_macos_scroll_to",
         "venture_browser_macos_activate_link",
         "venture_browser_macos_update_hover",
         "venture_browser_macos_resize",
@@ -122,6 +142,9 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "focusNativeSurface",
         "\"surfaceFocus\": \"native\"",
         "\"surfaceWheel\": \"scroll\"",
+        "\"surfaceScrollbar\": \"native-projection\"",
+        "NSScroller",
+        "runScrollbarAcceptance",
         "performNativeSurfaceClick",
         "lastSurfaceHistoryEvent",
         "\"surfaceHistory\": \"back-forward\"",
@@ -152,6 +175,8 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_windows_render_bgra",
         "venture_browser_windows_scroll",
         "venture_browser_windows_scroll_command",
+        "venture_browser_windows_scroll_metrics",
+        "venture_browser_windows_scroll_to",
         "venture_browser_windows_activate_link",
         "venture_browser_windows_update_hover",
         "venture_browser_windows_resize",
@@ -170,6 +195,9 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "RunWheelAcceptance",
         "ScrollByWheelDelta",
         "surfaceWheel = \"scroll\"",
+        "surfaceScrollbar = \"native-projection\"",
+        "RunScrollbarAcceptance",
+        "ScrollBar",
         "RunHistoryKeyboardAcceptance",
         "surfaceHistory = \"back-forward\"",
         "surfaceHover = \"status-and-cursor\"",
@@ -193,6 +221,26 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     ] {
         assert!(host.contains(symbol), "XAML host omits {symbol}");
     }
+    let hover_acceptance = host
+        .split("internal bool RunHoverAcceptance(string linkUrl)")
+        .nth(1)
+        .and_then(|source| source.split("internal async").next())
+        .expect("extract WinUI hover acceptance");
+    assert!(
+        hover_acceptance.contains("HandleKey(VirtualKey.Home")
+            && hover_acceptance.contains("UpdateHoverAt"),
+        "WinUI must reset the shared viewport before checking the top-of-document link"
+    );
+    let pointer_acceptance = host
+        .split("internal bool RunPointerAcceptance()")
+        .nth(1)
+        .and_then(|source| source.split("internal bool RunHoverAcceptance").next())
+        .expect("extract WinUI pointer acceptance");
+    assert!(
+        pointer_acceptance.contains("ActivateSurfacePoint")
+            && !pointer_acceptance.contains("HandleKey(VirtualKey.Home"),
+        "WinUI click acceptance must reuse the viewport position established by hover"
+    );
     let swift_host = read_package_file("host/swiftui/MosaicHost.swift");
     let xaml_host = read_package_file("host/xaml/MosaicHost.cs");
     for command in venture_browser_core::VENTURE_SCROLL_COMMAND_NAMES {
@@ -203,6 +251,36 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         assert!(
             xaml_host.contains(command),
             "XAML host omits shared scroll command {command}"
+        );
+    }
+
+    let flutter_acceptance =
+        read_package_file("host/flutter/venture_chrome_interaction_test.dart");
+    for symbol in [
+        "MosaicApp(mosaicHost: host)",
+        "disabled native controls suppress Mosaic dispatch",
+        "address edit, Return, and Go cross the Mosaic host seam",
+        "tester.testTextInput.receiveAction(TextInputAction.done)",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            flutter_acceptance.contains(symbol),
+            "Flutter interaction acceptance omits {symbol}"
+        );
+    }
+
+    let qt_acceptance = read_package_file("host/qt/tst_venture_chrome.qml");
+    for symbol in [
+        "disabled_native_controls_suppress_dispatch",
+        "address_return_crosses_the_mosaic_host_seam",
+        "go_crosses_the_mosaic_host_seam",
+        "keyClick(Qt.Key_Return)",
+        "keyClick(Qt.Key_Space)",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            qt_acceptance.contains(symbol),
+            "Qt interaction acceptance omits {symbol}"
         );
     }
 }
@@ -244,8 +322,10 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "cargo \"${bridge_args[@]}\"",
         "libventure_browser_macos.dylib",
         "cmake --build",
+        "qmltestrunner -platform offscreen -style Basic -input test -import .",
         "dotnet build",
         "flutter build",
+        "flutter test test/venture_chrome_interaction_test.dart",
         "gradle --no-daemon build",
         "--strict",
     ] {
@@ -262,8 +342,10 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "venture_browser_windows.dll",
         "-p:Platform=x64",
         "cmake",
+        "qmltestrunner",
         "dotnet",
         "flutter",
+        "venture_chrome_interaction_test.dart",
         "gradle",
         "$Strict",
     ] {

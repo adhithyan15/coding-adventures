@@ -16,8 +16,9 @@ French.
 - **Ch. 1 — Greetings**: olá → bom/boa → **o/a** (gender) → dia → **bom dia** →
   tarde/boa tarde → noite/boa noite → obrigado/obrigada → practice.
 - **Ch. 2 — "Tudo bem?"**: de nada (← *nāta*) → como (← *quōmodo*) → **tudo**
-  (← *tōtus* "whole") → tudo bem? / como vai? (*ir*, go) / como está? (*estar*,
-  stand) → mais ou menos → practice. **Authored** — the verb-free *Tudo bem?* is
+  (← *tōtus* "whole") → verb-free **tudo bem?** → **como vai? / como está?**
+  (*ir*, go / *estar*, stand) → mais ou menos → casual practice → formal
+  practice. **Authored** — the verb-free *Tudo bem?* is
   the distinctive Portuguese move; reordered ahead of introductions, register
   você/o senhor inline.
 - **Ch. 4 — Farewells**: adeus (← *a Deus* "to God"; twin of *adiós/adieu/addio*)
@@ -112,7 +113,8 @@ French.
   Italian, but ***falei* never vacated the plain-past slot** — with no vacancy, the
   new construction drifted into an **iterative** job instead. Same parts, same era,
   different outcome, because of what was already in the way. (This is a very common English-speaker error in Portuguese.) **Authored.**
-- **Ch. 16 — *ser*, and *ser* against *estar***: ***ser*** (`PT-C16-ser`) — **two
+- **Ch. 16 — *ser*, and *ser* against *estar***: ***ser*** (`PT-C16-ser`) → its
+  suppletive roots (`PT-C16-ser-roots`) — **two
   Latin verbs, three stems**: *sou/é/são* and *era* ← ***esse***, the preterite
   *fui* ← ***fuī*** (*esse*'s **own** ancient perfect, already suppletive in
   Latin; PIE \**bʰuH-*, the root of English **be** and German **bin**), and the
@@ -123,7 +125,8 @@ French.
   shared **Iberian** inheritance (Spanish does the same, ES-C14), so *ir*'s
   preterite costs the learner **nothing**, which is why this chapter closes the
   set without the motion-verb lesson FR and GE needed → ***ser* vs *estar***
-  (`PT-C16-ser-vs-estar`): the split learners actually struggle with, with
+  (`PT-C16-ser-vs-estar`) → adjective meaning shifts
+  (`PT-C16-ser-estar-meaning`): the split learners actually struggle with, with
   *estar*'s forms finally named after fourteen chapters of hearing *Como
   **está**?* (Ch. 2). *Sedēre* "to **sit**" against *stāre* "to **stand**" is
   taught honestly as a **mnemonic, not the cause** — the essence sense comes from
@@ -137,7 +140,8 @@ French.
   \**h₁es-* is the root Latin's *esse* came from too: cousins, not descent). Both lessons strike through ***vós***, teaching *vocês são / vocês
   estão* as the living 2pl. **Authored.**
 - **Ch. 17 — The body: the head that stayed a head, and the *n* that dissolved**:
-  ***a cabeça*** (`PT-C17-cabeca`) — the one that **kept** the Latin word, ←
+  ***a cabeça*** (`PT-C17-cabeca`) → the *caput* doublet map
+  (`PT-C17-cabeca-caput`) — the one that **kept** the Latin word, ←
   Late Latin *capitia* ← ***caput***, where French and Italian replaced it with a
   **pot** (*tête*, *testa*) and German with a **cup** (*Kopf*), independently.
   The five-way table is the point: *cabeça*/*cabeza* still call the head a head;

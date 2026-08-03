@@ -20,8 +20,9 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   included.)
 - **Ch. 3 — "Comment ça va ?"**: merci (← *mercēs* "reward") → de rien (← *rem*
   "thing" → "nothing"; twin of Spanish *de nada*) → **aller** ("to go," the
-  state-verb — vs Spanish *estar* "to stand") → comment ça va / allez-vous /
-  vas-tu → comme ci, comme ça → practice. **Authored** — the deliberate mirror of
+  state-verb — vs Spanish *estar* "to stand") → neutral **comment ça va** →
+  explicit **vas-tu / allez-vous** register and liaison → comme ci, comme ça →
+  practice. **Authored** — the deliberate mirror of
   Spanish Ch. 4.
 - **Ch. 4 — Farewells**: au revoir (← "à le revoir", *voir* ← *vidēre*; the
   "see-again" goodbye, twin of German *auf Wiedersehen*) → à plus tard (*tard* ←
@@ -108,7 +109,7 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   let a "have" compound push the inherited simple past out of speech, while
   **Spanish and Portuguese kept theirs**. **Authored.**
 - **Ch. 16 — *être*, and the other compound past**: ***être*** (`FR-C16-etre`) —
-  the most irregular verb in the language, and **suppletive across three stems**:
+  the six present forms → its root map (`FR-C16-etre-roots`), **suppletive across three stems**:
   *es-* for the present **and the infinitive** (*suis/es/est*, *être* ←
   \**essere*, all from Latin ***esse***), *fu-* for the passé simple (*je fus* ←
   the old perfect ***fuī***), and ***ét-*** for **every form beginning *ét-***
@@ -122,8 +123,10 @@ compared, every Spanish form supplied in full (no prior Spanish assumed).
   (*aller, venir, naître, mourir*) plus **all pronominal verbs** take *être*, and
   the participle **agrees with the subject** (*elle est allé**e***) — with the
   caveats the bare rule hides (*courir/marcher* take *avoir*; *monter/sortir*
-  switch when transitive; and **pronominals follow *avoir*'s** preceding-direct-
-  object agreement, *elle s'est lavé**e*** but *elle s'est lav**é** les mains*).
+  switch when transitive) → dedicated pronominal agreement
+  (`FR-C16-pronominal-past`), where **pronominals follow *avoir*'s**
+  preceding-direct-object agreement, *elle s'est lavé**e*** but *elle s'est
+  lav**é** les mains*.
   This closes Ch.15's open
   half — and both agreement rules turn out to be **one** rule, because the
   participle was an **adjective**: under *avoir* it described the object, under

@@ -9,7 +9,7 @@ prerequisites: [FR-C13-noir-blanc]
 sounds: [uvular-r, vowel-eu]
 roots: [pie-rewdh, germanic-blao]
 etymology_hook: "rouge ← Latin rubeus, from the PIE root that also gave English red/ruby/rust — so rouge and red are cousins; bleu is a SECOND Germanic loan (*blāo), and English borrowed it back from French"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C13-noir-blanc, FR-C12-nombres-17-20]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [PT-C15-preterito-perfeito, PT-C14-ter]
 sounds: [nasal-am, participle-ado]
 roots: [latin-tenere-participle]
 etymology_hook: "Portuguese built the same have+participle machine as French and Italian, then gave it a DIFFERENT job: tenho falado means 'I have been speaking (repeatedly, lately)', not 'I spoke' — because the simple past falei never vacated the slot"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C15-preterito-perfeito, PT-C14-ter, PT-C05-falar]
 ---
 

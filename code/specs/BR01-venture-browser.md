@@ -116,14 +116,18 @@ complete.
    `status-text` slot, and let the generated SwiftUI and WinUI content surfaces
    select their native pointing-hand cursor. Gate the same behavior through
    direct generated-app interaction tests on macOS and Windows.
-2. **P1 — native scrollbar projection.** Expose the shared viewport offset and
+2. **P1 — native scrollbar projection (completed).** Expose the shared viewport offset and
    extent as target-neutral state, then bind generated native scrollbars to the
    same Mosaic-hosted content surface without recreating browser chrome in
    AppKit or Win32.
-3. **P2 — remaining generated-host interaction gates.** Promote the existing
-   build/host-object checks for Qt, Flutter, Compose, and the web-family shells
-   to direct interaction acceptance where their provisioned CI toolchains can
-   launch them.
+3. **P2 — remaining generated-host interaction gates (Flutter and Qt completed).**
+   Flutter now hydrates the emitted shell through an injected Mosaic host and
+   directly drives native disabled controls, address editing, Return, Go, and
+   host-response refresh. Qt Quick now exercises the same contract through
+   part-backed native controls and a package-owned QML test. Promote the
+   remaining Compose and web-family build/host-object checks to direct
+   interaction acceptance where their provisioned CI toolchains can launch
+   them.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

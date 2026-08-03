@@ -9,7 +9,7 @@ prerequisites: [PT-C06-numeros-6-10, PT-C07-dias-1]
 sounds: [nasal-none, open-e]
 roots: [latin-months, roman-gods]
 etymology_hook: "janeiro←Januarius (Janus), março←Mars, julho←Julius Caesar; setembro–dezembro still mean Latin 7–10 (the numbers you learned)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C06-numeros-6-10, PT-C07-dias-1]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [FR-C11-pain]
 sounds: [o-eau, nasal-in]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "eau ← aqua — worn down so far almost nothing is left (aqua→eue→eau, just 'oh'); vin ← vīnum → wine, vine, vinegar, vintage; French drank the vowels out of aqua"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C11-pain, FR-C10-parents]
 ---
 

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Reject negative and non-finite Level-1 MOS model-card `KF` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `RSH` values before
+  lowering netlist elements into the engine.
+- Reject negative and non-finite Level-1 MOS model-card `RS` values before
+  lowering netlist elements into the engine.
 - Reject negative and non-finite Level-1 MOS model-card `RD` values before
   lowering netlist elements into the engine.
 - Reject invalid Level-1 MOS model-card `LD` values that are negative,

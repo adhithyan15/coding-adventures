@@ -1122,7 +1122,7 @@ pub fn from_pipeline(
         writeln!(out, "    signal mosaicEvent(var event)").unwrap();
         writeln!(
             out,
-            "    onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)"
+            "    onMosaicEvent: function(event) {{ applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null) }}"
         )
         .unwrap();
         for e in &interface.emits {
@@ -1218,16 +1218,19 @@ fn emit_mosaic_event_handler(emit: &EmitDecl) -> Result<String, PipelineEmitErro
     let handler_name = qml_signal_handler_name(&signal_name);
 
     let mut fields = vec![format!("\"event\": \"{}\"", escape_qml_string(&emit.name))];
+    let mut params = Vec::with_capacity(emit.params.len());
     for param in &emit.params {
         let field = to_camel_case_first_lower(&param.name);
         validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeEmitName)?;
+        params.push(field.clone());
         fields.push(format!("\"{field}\": {field}"));
     }
 
     let mut out = String::new();
     writeln!(
         out,
-        "    {handler_name}: mosaicEvent({{ {} }})",
+        "    {handler_name}: function({}) {{ mosaicEvent({{ {} }}) }}",
+        params.join(", "),
         fields.join(", ")
     )
     .unwrap();
@@ -1866,6 +1869,15 @@ fn emit_host_input_qml(
     };
     writeln!(out, "{pad}{control_tag} {{").unwrap();
 
+    if let Some(part) = node.part_name.as_deref() {
+        writeln!(
+            out,
+            "{inner_pad}objectName: \"{}\"",
+            escape_qml_string(part)
+        )
+        .unwrap();
+    }
+
     // When the input is a styled cell's editor (it sits inside a styled
     // `Box [cell]` whose text style is in scope), fill the cell and adopt
     // its alignment / colour / font so the in-place editor matches the
@@ -2004,6 +2016,15 @@ fn emit_host_button_qml(
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     writeln!(out, "{pad}Button {{").unwrap();
+
+    if let Some(part) = node.part_name.as_deref() {
+        writeln!(
+            out,
+            "{inner_pad}objectName: \"{}\"",
+            escape_qml_string(part)
+        )
+        .unwrap();
+    }
 
     // text: <slot or literal> — sourced from the `label` prop.
     if let Some(line) = build_label_attribute(node) {
@@ -3919,14 +3940,14 @@ mod tests {
         assert!(
             result
                 .output
-                .contains("onNavigate: mosaicEvent({ \"event\": \"onNavigate\" })"),
+                .contains("onNavigate: function() { mosaicEvent({ \"event\": \"onNavigate\" }) }"),
             "missing generic navigate Mosaic event in:\n{}",
             result.output
         );
         assert!(
-            result
-                .output
-                .contains("onEditCommit: mosaicEvent({ \"event\": \"onEditCommit\" })"),
+            result.output.contains(
+                "onEditCommit: function() { mosaicEvent({ \"event\": \"onEditCommit\" }) }"
+            ),
             "missing generic editCommit Mosaic event in:\n{}",
             result.output
         );
@@ -3960,7 +3981,7 @@ mod tests {
         );
         assert!(
             result.output.contains(
-                "onSelect: mosaicEvent({ \"event\": \"onSelect\", \"startRow\": startRow, \"startCol\": startCol })"
+                "onSelect: function(startRow, startCol) { mosaicEvent({ \"event\": \"onSelect\", \"startRow\": startRow, \"startCol\": startCol }) }"
             ),
             "expected payload to flow into generic Mosaic event, got:\n{}",
             result.output
@@ -3989,7 +4010,7 @@ mod tests {
             .contains("signal userClickedHere(real eventRow)"));
         assert!(result
             .output
-            .contains("onUserClickedHere: mosaicEvent({ \"event\": \"onUserClickedHere\", \"eventRow\": eventRow })"));
+            .contains("onUserClickedHere: function(eventRow) { mosaicEvent({ \"event\": \"onUserClickedHere\", \"eventRow\": eventRow }) }"));
     }
 
     // -------- Test 7: Row → RowLayout, Column → ColumnLayout --------
@@ -4395,7 +4416,7 @@ mod tests {
             component_name: "X".to_string(),
             root: LayoutNode {
                 tag: "HostInput".to_string(),
-                part_name: None,
+                part_name: Some("address-input".to_string()),
                 props: vec![
                     LayoutProp {
                         name: "value".to_string(),
@@ -4413,6 +4434,11 @@ mod tests {
         assert!(
             result.output.contains("TextInput {"),
             "missing TextInput in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("objectName: \"address-input\""),
+            "missing part-backed object name in:\n{}",
             result.output
         );
         assert!(
@@ -5104,6 +5130,11 @@ mod tests {
             },
         };
         let result = from_pipeline(&m, &l, &style).unwrap();
+        assert!(
+            result.output.contains("objectName: \"danger\""),
+            "missing part-backed object name in:\n{}",
+            result.output
+        );
         assert!(
             result.output.contains("palette.buttonText: \"#ffffff\""),
             "missing foreground style in:\n{}",
@@ -7686,7 +7717,7 @@ mod tests {
         );
         assert!(
             out.contains(
-                "onMosaicEvent: applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null)"
+                "onMosaicEvent: function(event) { applyMosaicResponse(mosaicHost ? mosaicHost.handleEvent(event) : null) }"
             ),
             "mosaicEvent should round-trip through the optional host:\n{out}"
         );

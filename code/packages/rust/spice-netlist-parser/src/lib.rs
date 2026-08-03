@@ -2010,6 +2010,27 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(source_resistance) = params.get("RS") {
+            if !source_resistance.is_finite() || *source_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RS must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(sheet_resistance) = params.get("RSH") {
+            if !sheet_resistance.is_finite() || *sheet_resistance < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET RSH must be finite and non-negative",
+                ));
+            }
+        }
+        if let Some(flicker_noise_coefficient) = params.get("KF") {
+            if !flicker_noise_coefficient.is_finite() || *flicker_noise_coefficient < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET KF must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

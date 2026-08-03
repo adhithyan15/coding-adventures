@@ -7,7 +7,7 @@ gloss: the three accents on e (aigu, grave, circonflexe) — and the circumflex'
 prerequisites: [FR-C01-bien, FR-C03-comment-ca-va]
 sounds: [vowel-e-acute, vowel-e-grave]
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C02-enchante, FR-C03-comme-ci-comme-ca]
 ---
 

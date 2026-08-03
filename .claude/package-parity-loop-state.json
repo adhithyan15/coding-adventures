@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9537,
+  "active_pr": 9553,
   "last_inventory": {
-    "revision": "613717e22fe7b65c37eebb35a84a5b440a55ddb1",
+    "revision": "0455cea8e0c0ddc078040ea109ea59dbaf8403fa",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1219,
-    "implementation_package_slots": 4367,
+    "implementation_identities": 1222,
+    "implementation_package_slots": 4370,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 770,
-    "singleton_missing_slots": 10780,
-    "rust_singletons": 575,
+    "singleton_packages": 772,
+    "singleton_missing_slots": 10808,
+    "rust_singletons": 577,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -361,11 +361,11 @@
     {
       "id": "build-tool-swift-rockspec-utf8-conformance",
       "title": "Make the Swift build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-swift-rockspec-utf8",
       "pr_number": 9537,
-      "notes": "Ready PR #9537. Selected after merged PR #9527 because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The implementation decodes Lua rockspec bytes strictly before parsing, propagates a typed METADATA_INVALID_UTF8 error with package and repository-relative manifest identity, writes a platform-stable diagnostic without the checkout root, and returns CLI exit 2. Shared positive and invalid-byte fixtures require the exact success edge set and are exercised through the resolver, CLI entry point, and a real subprocess. Exact-base validation on 613717e2 passed 22 Swift tests, production build, measured 39.74% overall and 42.94% resolver line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, a 258-package/382-edge Lua plan, a 4,768-package/7,458-edge full plan, collision-clean 1,220-identity parity inventory, JSON/diff/secret checks, and an exact 10-to-10 Lua BUILD_windows debt comparison with untouched main. The full-plan audit separately logged Swift absolute file-option and language/identity-registry children, and the post-rebase inventory logged the new HomeWizard portable telemetry core. TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate encoding children."
+      "notes": "Merged PR #9537 at 80612eb7ba39d864c5ffa27f2cb3ae78e92705c1 on 2026-08-02 after all applicable fixture-consumer, detection, Ubuntu, macOS, Windows, and Swift CodeQL checks passed. The implementation decodes Lua rockspec bytes strictly before parsing, propagates a typed METADATA_INVALID_UTF8 error with package and repository-relative manifest identity, writes a platform-stable diagnostic without the checkout root, and returns CLI exit 2. Shared positive and invalid-byte fixtures require the exact success edge set and are exercised through the resolver, CLI entry point, and a real subprocess. Exact-base validation on 613717e2 passed 22 Swift tests, production build, measured 39.74% overall and 42.94% resolver line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, a 258-package/382-edge Lua plan, a 4,768-package/7,458-edge full plan, collision-clean 1,220-identity parity inventory, JSON/diff/secret checks, and an exact 10-to-10 Lua BUILD_windows debt comparison with untouched main. The first macOS check exposed that SwiftPM can relocate its test bundle; the smallest follow-up made the real CLI locator use the bundle executable plus package-local scratch fallback, after which all 22 tests and the macOS matrix passed. The full-plan audit separately logged Swift absolute file-option and language/identity-registry children, and the post-rebase inventory logged the new HomeWizard portable telemetry core. TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate encoding children."
     },
     {
       "id": "build-tool-swift-windows-absolute-file-options",
@@ -379,11 +379,11 @@
     {
       "id": "build-tool-swift-language-identity-registry",
       "title": "Bring Swift build-tool discovery to the canonical language and identity registry",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-swift-rockspec-utf8-conformance"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered by the full-repository release-plan audit in the Swift UTF-8 slice and refreshed after rebasing onto 613717e2. The Swift engine emits 4,768 package entries but only 4,594 unique names: 143 identity groups contain 317 entries, and 397 entries across 228 names are classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding."
+      "branch": "codex/build-tool-swift-language-identity-registry",
+      "pr_number": 9553,
+      "notes": "Ready-for-review PR #9553 opened from the sole active parity branch after exact-base validation. Selected after merged PR #9537 and the collision-clean 80612eb7 inventory because the dependency is now satisfied and the prior real Swift full plan measured broad identity corruption: 4,768 package entries but only 4,594 unique names, with 143 identity groups containing 317 entries and 397 entries across 228 names classified as unknown. The implementation consumes the shared discovery-language-registry and discovery-duplicate-identity fixtures, recognizes established, emerging, execution-target, domain, and build-language buckets only at the exact packages/programs boundary, preserves package/program identities, excludes spec fixtures, and fails closed on residual duplicate qualified names. Exact-base validation on 0455cea8 passes 25 Swift tests, release build, 55.56% overall and 91.33% Discovery.swift line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, and a real 4,768-package/7,471-edge full plan with 4,768 unique identities, zero duplicate groups, and only intentional unknown/blog. The refreshed inventory is collision-clean at 1,222 identities and 4,370 slots with 172 high-consensus packages, 271 high-consensus gaps, 772 singletons, 10,808 singleton gaps, 577 Rust singletons, and zero collisions/unknown buckets. Security validation found zero external Swift dependencies and zero secret-like diff hits; diff checks pass. Build-file validation reproduces only the same 10 separately owned Lua BUILD_windows debt items. Repository Swift formatting has no checked-in configuration and strict recursive lint still reports broad pre-existing violations, so this slice does not reformat the engine. The rebase also logged the new AirGradient portable telemetry core as pending without changing selection. Keep this separate from metadata decoding and Windows file-option handling."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
@@ -1214,6 +1214,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered after merged PR #9526 added the Rust-only HomeWizard Energy API v1 host. Share bounded device-information and measurement response validation, API-version checks, device and external-meter normalization, units, stable identities and errors, deterministic sensor projection, and language-neutral telemetry fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, endpoint authorization, trusted time, console I/O, and runtime mutation are excluded native-host responsibilities."
+    },
+    {
+      "id": "smart-home-heos-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable HEOS read-only protocol core",
+      "status": "pending",
+      "depends_on": ["smart-home-media-entity-command-contract"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #9539 added the Rust-only HEOS CLI integration. Share bounded HEOS response-envelope and command-result validation, player inventory, now-playing, volume, and mute normalization, stable identities and errors, deterministic read-only media projection, HEOS escaping, and language-neutral protocol fixtures. SSDP multicast, DNS/TCP, endpoint authorization, trusted time, console I/O, account access, playback and grouping commands, subscriptions, and runtime mutation are excluded native-host responsibilities."
+    },
+    {
+      "id": "smart-home-airgradient-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable AirGradient local telemetry core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #9548 added the Rust-only AirGradient local monitor integration. Share bounded /measures/current JSON validation, firmware/model/sensor normalization, environmental measurement identities and units, stable errors, deterministic read-only sensor projection, and language-neutral telemetry fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, endpoint authorization, trusted time, console I/O, and runtime mutation are excluded native-host responsibilities."
     },
     {
       "id": "smart-home-reolink-portable-core-extraction-and-conformance",

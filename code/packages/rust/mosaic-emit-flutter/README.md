@@ -115,6 +115,12 @@ optional `MosaicHost` props map. This is the composition seam used by Venture's
 browser content surface; scalar props remain normalized by the existing typed
 helpers.
 
+`HostButton.disabled`, `HostInput.read-only`, and `HostInput.onCommit` lower to
+Flutter's native button and text-field contracts. Project shells expose a
+`MosaicApp(mosaicHost: ...)` injection seam so direct widget acceptance can
+drive those controls and verify host response hydration against the exact
+generated component.
+
 ## What works in v0.1 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:

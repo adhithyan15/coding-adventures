@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PT-C01-ola, PT-C01-bom-dia, PT-C01-tarde, PT-C01-noite, PT-C01-obrigado]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C01-ola, PT-C01-bom, PT-C01-o-a, PT-C01-dia, PT-C01-bom-dia, PT-C01-tarde, PT-C01-noite, PT-C01-obrigado]
 ---
 

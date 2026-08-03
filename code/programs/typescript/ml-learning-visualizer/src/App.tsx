@@ -13,6 +13,7 @@ import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { PrecisionResidencyWorkbench } from "./PrecisionResidencyWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -183,7 +184,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -316,6 +317,10 @@ export function App() {
                 ? "One graph, two executable IRs"
               : workbench === "training-lowering"
                 ? "Reverse and update become schedules"
+              : workbench === "backend-parity"
+                ? "One graph can cross execution engines"
+              : workbench === "precision-residency"
+                ? "Representation and movement are separate choices"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -450,6 +455,13 @@ export function App() {
             >
               Backend Parity
             </button>
+            <button
+              className={workbench === "precision-residency" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("precision-residency")}
+            >
+              Precision + Residency
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -484,6 +496,8 @@ export function App() {
               <>saved values {"->"} <strong>backward IR</strong> {"->"} optimizer IR</>
             ) : workbench === "backend-parity" ? (
               <>same graph {"->"} <strong>CPU · Rust · WebGPU</strong> {"->"} equal output</>
+            ) : workbench === "precision-residency" ? (
+              <>number grid + <strong>buffer placement</strong> {"->"} accuracy + transfers</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -525,6 +539,8 @@ export function App() {
         <BackwardOptimizerLoweringWorkbench />
       ) : workbench === "backend-parity" ? (
         <BackendParityWorkbench />
+      ) : workbench === "precision-residency" ? (
+        <PrecisionResidencyWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

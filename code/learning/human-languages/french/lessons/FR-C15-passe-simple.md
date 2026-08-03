@@ -9,7 +9,7 @@ prerequisites: [FR-C15-passe-compose]
 sounds: [silent-endings]
 roots: [latin-perfect]
 etymology_hook: "il parla ← Vulgar Latin perfect *parabolāvit — the DIRECT inheritance, exactly what Spanish habló and Portuguese falou still are in everyday speech; French, German and Italian all let a compound past push this simple past out of conversation and into literature"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C15-passe-compose, FR-C05-parler]
 ---
 

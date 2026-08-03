@@ -156,15 +156,19 @@ else
   skip_backend swiftui "swift is not installed"
 fi
 
-if has_command cmake; then
+if has_command cmake && has_command qmltestrunner; then
   echo "==> Building qt"
   if has_command qt-cmake; then
     (cd "$output_root/qt" && qt-cmake -S . -B build && cmake --build build)
   else
     (cd "$output_root/qt" && cmake -S . -B build && cmake --build build)
   fi
-else
+  echo "==> Testing qt interactions"
+  (cd "$output_root/qt" && qmltestrunner -platform offscreen -style Basic -input test -import .)
+elif ! has_command cmake; then
   skip_backend qt "cmake is not installed"
+else
+  skip_backend qt "qmltestrunner is not installed"
 fi
 
 case "$host_os" in
@@ -194,6 +198,7 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
     cd "$output_root/flutter"
     flutter pub get
     flutter analyze lib
+    flutter test test/venture_chrome_interaction_test.dart
     if [[ ! -d "$flutter_platform" ]]; then
       flutter create "--platforms=$flutter_platform" .
     fi

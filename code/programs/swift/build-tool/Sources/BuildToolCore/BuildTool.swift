@@ -23,6 +23,9 @@ public enum BuildTool {
         } catch let error as MetadataEncodingError {
             FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
             return 2
+        } catch let error as DuplicatePackageIdentityError {
+            FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
+            return 2
         } catch {
             fputs("Error: \(error.localizedDescription)\n", stderr)
             return 1
@@ -76,7 +79,7 @@ public enum BuildTool {
             throw BuildToolError.io("\(codeRoot) does not exist.")
         }
 
-        var packages = Discovery.discoverPackages(root: codeRoot)
+        var packages = try Discovery.discoverPackages(root: codeRoot)
         packages = evaluateStarlarkPackages(packages: packages, repoRoot: repoRoot)
 
         if options.language != "all" {

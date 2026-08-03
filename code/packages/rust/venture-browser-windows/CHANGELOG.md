@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bind a generated-host WinUI `ScrollBar` to shared Rust viewport metrics and
+  absolute offset control, with direct app acceptance.
 - Project shared link-hover URLs into Mosaic status and drive the generated
   WinUI surface's native hand cursor, with direct app acceptance.
 - Extend the generated WinUI interaction gate through native Enter input

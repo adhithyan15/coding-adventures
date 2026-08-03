@@ -188,6 +188,26 @@ pub struct ScrollState {
     content_height: f64,
 }
 
+/// Target-neutral scroll geometry projected into native host surfaces.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct BrowserScrollMetrics {
+    pub offset_y: f64,
+    pub viewport_height: f64,
+    pub content_height: f64,
+    pub max_offset_y: f64,
+}
+
+impl From<&ScrollState> for BrowserScrollMetrics {
+    fn from(scroll: &ScrollState) -> Self {
+        Self {
+            offset_y: scroll.offset_y(),
+            viewport_height: scroll.viewport_height(),
+            content_height: scroll.content_height(),
+            max_offset_y: scroll.max_offset_y(),
+        }
+    }
+}
+
 impl ScrollState {
     pub fn new(viewport_height: f64, content_height: f64) -> Self {
         Self {
@@ -595,6 +615,18 @@ impl BrowserSession {
         self.viewport
             .as_mut()
             .map_or(0.0, |viewport| viewport.resize(self.viewport_height))
+    }
+
+    pub fn scroll_metrics(&self) -> Option<BrowserScrollMetrics> {
+        self.viewport
+            .as_ref()
+            .map(|viewport| BrowserScrollMetrics::from(viewport.scroll_state()))
+    }
+
+    pub fn set_scroll_offset_y(&mut self, offset_y: f64) -> Option<f64> {
+        self.viewport
+            .as_mut()
+            .map(|viewport| viewport.set_scroll_offset_y(offset_y))
     }
 
     /// Resolve the link under a viewport coordinate without mutating browser
@@ -1186,6 +1218,15 @@ mod tests {
         assert_eq!(scroll.scroll_by(-20.0), 0.0);
         assert_eq!(scroll.set_offset_y(75.0), 75.0);
         assert_eq!(scroll.scroll_by(200.0), 160.0);
+        assert_eq!(
+            BrowserScrollMetrics::from(&scroll),
+            BrowserScrollMetrics {
+                offset_y: 160.0,
+                viewport_height: 100.0,
+                content_height: 260.0,
+                max_offset_y: 160.0,
+            }
+        );
         assert_eq!(scroll.scroll_by(f64::NAN), 160.0);
 
         assert_eq!(scroll.set_dimensions(120.0, 80.0), 0.0);

@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - part-backed native control identity
+
+`HostButton` and `HostInput` now project their Mosaic part names through QML
+`objectName`, giving generated Qt shells a stable native interaction seam.
+Generated Mosaic event handlers now declare formal JavaScript parameters,
+removing Qt 6.11's deprecated implicit signal-parameter injection.
+
 ### Added - host-owned surface composition
 
 `HostSurface ( content: slot: ... )` now lowers to a styled Qt Quick

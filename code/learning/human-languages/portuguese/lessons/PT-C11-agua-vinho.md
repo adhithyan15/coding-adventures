@@ -9,7 +9,7 @@ prerequisites: [PT-C11-pao]
 sounds: [nasal-none, nh-palatal]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "água kept aqua's body (where French wore it to eau); vinho ← vīnum, with Portuguese's signature -nh- (= Spanish ñ, French/Italian gn) → wine/vine/vinegar"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C11-pao, PT-C10-pais]
 ---
 

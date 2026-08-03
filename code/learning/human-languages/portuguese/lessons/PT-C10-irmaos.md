@@ -9,7 +9,7 @@ prerequisites: [PT-C10-pais]
 sounds: [nasal-ao, nasal-a]
 roots: [germanus-latin]
 etymology_hook: "the Iberian surprise: irmão/irmã come NOT from frater but from Latin germanus 'genuine, of the same parents' (frater germanus 'full brother') — the same word as 'germane' and the people-name 'German'; Spanish did the identical swap (hermano/hermana)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C10-pais, PT-C09-estacoes]
 ---
 

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add target-neutral `BrowserScrollMetrics` and shared-session absolute offset
+  control for generated native scrollbar projection.
 - Add non-mutating shared-session link hover lookup for native status and
   cursor projection.
 - Add retained-document reflow so native surface resizes recompute layout,

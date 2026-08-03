@@ -9,7 +9,7 @@ prerequisites: [FR-C06-nombres-6-10, FR-C07-jours-1]
 sounds: [nasal-an, silent-final]
 roots: [latin-months, roman-gods]
 etymology_hook: "the French months are Roman gods and emperors: janvier←Janus, mars←Mars (= mardi!); septembre–décembre still mean Latin 7–10 — not because Julius/Augustus added months, but because January/February were added centuries earlier"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C06-nombres-6-10, FR-C07-jours-1]
 ---
 

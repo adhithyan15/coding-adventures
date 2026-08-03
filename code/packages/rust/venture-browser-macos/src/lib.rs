@@ -20,7 +20,8 @@ use window_core::{ElementState, Key, NamedKey, PointerButton, WindowError, Windo
 
 #[cfg(target_vendor = "apple")]
 use venture_browser_core::{
-    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, HttpBrowserFetcher,
+    BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserScrollMetrics,
+    HttpBrowserFetcher,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -495,6 +496,22 @@ impl MacBrowserHost {
         viewport.scroll_state().offset_y() != before
     }
 
+    pub fn scroll_metrics(&self) -> Option<BrowserScrollMetrics> {
+        self.session.scroll_metrics()
+    }
+
+    pub fn scroll_to(&mut self, offset_y: f64) -> bool {
+        self.hovered_link_url = None;
+        let before = self
+            .session
+            .scroll_metrics()
+            .map(|metrics| metrics.offset_y);
+        let after = self.session.set_scroll_offset_y(offset_y);
+        before
+            .zip(after)
+            .is_some_and(|(before, after)| before != after)
+    }
+
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
         self.hovered_link_url = None;
         let changed = activate_link_at(
@@ -733,6 +750,48 @@ mod mosaic_ffi {
         catch_unwind(AssertUnwindSafe(|| {
             host.as_mut()
                 .map(|host| host.update_hover(x, y) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_scroll_metrics(
+        host: *mut MacBrowserHost,
+        offset_y: *mut f64,
+        viewport_height: *mut f64,
+        content_height: *mut f64,
+        max_offset_y: *mut f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            let Some(metrics) = host.as_ref().and_then(MacBrowserHost::scroll_metrics) else {
+                return 0;
+            };
+            if !offset_y.is_null() {
+                *offset_y = metrics.offset_y;
+            }
+            if !viewport_height.is_null() {
+                *viewport_height = metrics.viewport_height;
+            }
+            if !content_height.is_null() {
+                *content_height = metrics.content_height;
+            }
+            if !max_offset_y.is_null() {
+                *max_offset_y = metrics.max_offset_y;
+            }
+            1
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_macos_scroll_to(
+        host: *mut MacBrowserHost,
+        offset_y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.scroll_to(offset_y) as u8)
                 .unwrap_or(0)
         }))
         .unwrap_or(0)
@@ -1267,6 +1326,16 @@ mod tests {
             Box::new(fetcher),
         )
         .expect("Mosaic host should load the initial page");
+
+        let metrics = host
+            .scroll_metrics()
+            .expect("scroll metrics should project");
+        assert!(metrics.max_offset_y > 0.0);
+        assert!(host.scroll_to(metrics.max_offset_y / 2.0));
+        assert_eq!(
+            host.scroll_metrics().unwrap().offset_y,
+            metrics.max_offset_y / 2.0
+        );
 
         assert_eq!(
             host.session.viewport().unwrap().viewport_scene().width,

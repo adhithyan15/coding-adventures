@@ -4,6 +4,18 @@
 
 ### Added
 
+- Add direct generated Qt Quick interaction acceptance for host hydration,
+  disabled controls, address editing, Return, Go, and response refresh, using
+  Mosaic part names as native QML object identities.
+- Repair cross-platform acceptance discovered after native scrollbar
+  projection: keep the scroll-metrics type import Apple-only, and reset the
+  WinUI viewport to document start before hover/click link acceptance.
+- Add direct generated Flutter interaction acceptance through an injectable
+  Mosaic host, covering initial prop hydration, disabled controls, address
+  editing, native Return submission, Go dispatch, and host response refresh.
+- Add shared viewport-metric projection and native NSScroller/WinUI ScrollBar
+  bindings inside the generated HostSurface adapters, including direct app
+  interaction acceptance.
 - Add shared-link hover acceptance for generated SwiftUI and WinUI surfaces:
   the Rust session resolves the URL, Mosaic's status slot displays it, and each
   native host selects its platform pointing-hand cursor.

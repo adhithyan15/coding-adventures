@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bind a generated-host `NSScroller` to shared Rust viewport metrics and
+  absolute offset control, with direct app acceptance.
 - Project shared link-hover URLs into Mosaic status and drive the generated
   SwiftUI surface's native pointing-hand cursor, with direct app acceptance.
 - Extend the generated SwiftUI interaction gate through a native Return event

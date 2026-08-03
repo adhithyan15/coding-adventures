@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has eighteen workbenches that move from one arithmetic update to small
+The app has nineteen workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -258,6 +258,15 @@ same multiply-plus-bias graph when hardware support exists. The output table
 keeps binary64 versus `f32`, host versus device residency, and live versus
 fixture evidence separate, including honest unavailable and error states.
 
+### Precision and residency lab
+
+The Precision + Residency workbench keeps `y = x * 2` fixed while binary32,
+binary16, and symmetric int8 place two close inputs on progressively coarser
+number grids. Every encoded input, accumulator, output, and absolute error stays
+visible. A separate binary32 transfer baseline contrasts eager copies with
+resident buffers as the learner changes the repeat count; the view reports byte
+counts without presenting them as a timing benchmark.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -401,6 +410,10 @@ NN31 under `code/specs/fixtures/backend-parity-v1` pins one canonical MatrixIR
 graph, lowercase little-endian `f32` payloads, scalar and TypeScript CPU traces,
 Rust execution-helper parity, and the expected output for an optional live
 WebGPU dispatch.
+
+NN32 under `code/specs/fixtures/precision-residency-v1` pins exact binary32 and
+binary16 payloads, symmetric int8 bytes and scales with ties-to-even rounding,
+and a binary32 eager-versus-resident transfer baseline.
 
 ## Development
 

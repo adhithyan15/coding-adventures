@@ -11,6 +11,8 @@ exports = ["VentureChrome"]
 files = [
   { backend = "swiftui", source = "host/swiftui/MosaicHost.swift", target = "Sources/App/MosaicHost.swift" },
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
+  { backend = "flutter", source = "host/flutter/venture_chrome_interaction_test.dart", target = "test/venture_chrome_interaction_test.dart" },
+  { backend = "qt", source = "host/qt/tst_venture_chrome.qml", target = "test/tst_venture_chrome.qml" },
 ]
 
 [kernel]

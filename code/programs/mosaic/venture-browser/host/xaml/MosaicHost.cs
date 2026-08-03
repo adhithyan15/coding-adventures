@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Automation.Provider;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -421,6 +422,17 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!contentSurface.RunScrollbarAcceptance())
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native scrollbar did not project shared viewport geometry",
+                    });
+                    return;
+                }
+
                 if (!contentSurface.RunKeyboardAcceptance())
                 {
                     WriteInteractionResult(markerPath, new
@@ -575,6 +587,7 @@ public static class MosaicHost
                     failureAddress = failureUrl,
                     surfaceFocus = "native",
                     surfaceWheel = "scroll",
+                    surfaceScrollbar = "native-projection",
                     surfaceKeyboard = "document-end",
                     surfaceHistory = "back-forward",
                     surfacePointer = "link",
@@ -775,6 +788,7 @@ public static class MosaicHost
     {
         private readonly VentureChrome component;
         private readonly Image image;
+        private readonly ScrollBar verticalScrollBar;
         private WriteableBitmap? bitmap;
         private uint pixelWidth;
         private uint pixelHeight;
@@ -783,15 +797,35 @@ public static class MosaicHost
         private uint acceptedRenderBaselineWidth;
         private uint acceptedRenderBaselineHeight;
         private bool hoverUsesHandCursor;
+        private bool updatingScrollBar;
 
         internal VentureContentSurface(VentureChrome component)
         {
             this.component = component;
             Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 255, 255));
             image = new Image { Stretch = Stretch.Fill };
+            verticalScrollBar = new ScrollBar
+            {
+                Orientation = Orientation.Vertical,
+                Minimum = 0,
+                SmallChange = 40,
+            };
+            var contentGrid = new Grid();
+            contentGrid.ColumnDefinitions.Add(new ColumnDefinition
+            {
+                Width = new GridLength(1, GridUnitType.Star),
+            });
+            contentGrid.ColumnDefinitions.Add(new ColumnDefinition
+            {
+                Width = GridLength.Auto,
+            });
+            Grid.SetColumn(image, 0);
+            Grid.SetColumn(verticalScrollBar, 1);
+            contentGrid.Children.Add(image);
+            contentGrid.Children.Add(verticalScrollBar);
             HorizontalContentAlignment = HorizontalAlignment.Stretch;
             VerticalContentAlignment = VerticalAlignment.Stretch;
-            Content = image;
+            Content = contentGrid;
             IsTabStop = true;
             SizeChanged += OnSizeChanged;
             KeyDown += OnKeyDown;
@@ -800,6 +834,7 @@ public static class MosaicHost
             PointerExited += OnPointerExited;
             PointerWheelChanged += OnPointerWheelChanged;
             PointerReleased += OnPointerReleased;
+            verticalScrollBar.ValueChanged += OnScrollBarValueChanged;
         }
 
         internal void Refresh()
@@ -840,6 +875,7 @@ public static class MosaicHost
             }
             ReportAcceptancePhase("bitmap-copied");
             bitmap.Invalidate();
+            UpdateScrollBar();
             ReportAcceptancePhase("bitmap-invalidated");
             ReportAcceptanceIfRequested();
         }
@@ -913,6 +949,25 @@ public static class MosaicHost
             return ScrollByWheelDelta(-120);
         }
 
+        internal bool RunScrollbarAcceptance()
+        {
+            UpdateScrollBar();
+            if (verticalScrollBar.Visibility != Visibility.Visible
+                || verticalScrollBar.Maximum <= 0
+                || verticalScrollBar.ViewportSize <= 0)
+            {
+                return false;
+            }
+            verticalScrollBar.Value = verticalScrollBar.Maximum * 0.5;
+            return Native.ScrollMetrics(
+                    browser,
+                    out var offsetY,
+                    out _,
+                    out _,
+                    out var maxOffsetY) != 0
+                && Math.Abs(offsetY - maxOffsetY * 0.5) < 0.5;
+        }
+
         internal bool RunHistoryKeyboardAcceptance(VirtualKey key)
         {
             _ = Focus(FocusState.Programmatic);
@@ -929,18 +984,60 @@ public static class MosaicHost
             return true;
         }
 
+        private void OnScrollBarValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (updatingScrollBar || browser == IntPtr.Zero)
+            {
+                return;
+            }
+            if (Native.ScrollTo(browser, e.NewValue) != 0)
+            {
+                Refresh();
+            }
+        }
+
+        private void UpdateScrollBar()
+        {
+            if (browser == IntPtr.Zero
+                || Native.ScrollMetrics(
+                    browser,
+                    out var offsetY,
+                    out var viewportHeight,
+                    out _,
+                    out var maxOffsetY) == 0)
+            {
+                verticalScrollBar.Visibility = Visibility.Collapsed;
+                return;
+            }
+            updatingScrollBar = true;
+            try
+            {
+                verticalScrollBar.Visibility = maxOffsetY > 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+                verticalScrollBar.Maximum = maxOffsetY;
+                verticalScrollBar.ViewportSize = viewportHeight;
+                verticalScrollBar.LargeChange = viewportHeight * 0.9;
+                verticalScrollBar.Value = Math.Min(offsetY, maxOffsetY);
+            }
+            finally
+            {
+                updatingScrollBar = false;
+            }
+        }
+
         internal bool RunPointerAcceptance()
         {
             _ = Focus(FocusState.Programmatic);
-            return HandleKey(VirtualKey.Home, false, false, out var changed)
-                && changed
-                && ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
+            return ActivateSurfacePoint(new Windows.Foundation.Point(32, 26));
         }
 
         internal bool RunHoverAcceptance(string linkUrl)
         {
             _ = Focus(FocusState.Programmatic);
-            return UpdateHoverAt(new Windows.Foundation.Point(32, 26))
+            return HandleKey(VirtualKey.Home, false, false, out var changed)
+                && changed
+                && UpdateHoverAt(new Windows.Foundation.Point(32, 26))
                 && hoverUsesHandCursor
                 && string.Equals(component.StatusText, linkUrl, StringComparison.Ordinal);
         }
@@ -1133,6 +1230,19 @@ public static class MosaicHost
         [DllImport(Library, EntryPoint = "venture_browser_windows_update_hover",
             CallingConvention = CallingConvention.Cdecl)]
         internal static extern byte UpdateHover(IntPtr browser, double x, double y);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_scroll_metrics",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ScrollMetrics(
+            IntPtr browser,
+            out double offsetY,
+            out double viewportHeight,
+            out double contentHeight,
+            out double maxOffsetY);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_scroll_to",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte ScrollTo(IntPtr browser, double offsetY);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_resize",
             CallingConvention = CallingConvention.Cdecl)]

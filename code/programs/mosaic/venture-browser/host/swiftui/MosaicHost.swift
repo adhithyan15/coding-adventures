@@ -15,6 +15,11 @@ private final class VentureNativeLibrary {
   typealias ScrollCommand = @convention(c) (
     UnsafeMutableRawPointer?, UnsafePointer<CChar>?
   ) -> UInt8
+  typealias ScrollMetrics = @convention(c) (
+    UnsafeMutableRawPointer?, UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?,
+    UnsafeMutablePointer<Double>?, UnsafeMutablePointer<Double>?
+  ) -> UInt8
+  typealias ScrollTo = @convention(c) (UnsafeMutableRawPointer?, Double) -> UInt8
   typealias ActivateLink = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias UpdateHover = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
   typealias Resize = @convention(c) (UnsafeMutableRawPointer?, Double, Double) -> UInt8
@@ -28,6 +33,8 @@ private final class VentureNativeLibrary {
   let handleEvent: HandleEvent
   let scroll: Scroll
   let scrollCommand: ScrollCommand
+  let scrollMetrics: ScrollMetrics
+  let scrollTo: ScrollTo
   let activateLink: ActivateLink
   let updateHover: UpdateHover
   let resize: Resize
@@ -59,6 +66,10 @@ private final class VentureNativeLibrary {
       let scrollCommand = symbol(
         "venture_browser_macos_scroll_command", as: ScrollCommand.self
       ),
+      let scrollMetrics = symbol(
+        "venture_browser_macos_scroll_metrics", as: ScrollMetrics.self
+      ),
+      let scrollTo = symbol("venture_browser_macos_scroll_to", as: ScrollTo.self),
       let activateLink = symbol("venture_browser_macos_activate_link", as: ActivateLink.self),
       let updateHover = symbol("venture_browser_macos_update_hover", as: UpdateHover.self),
       let resize = symbol("venture_browser_macos_resize", as: Resize.self),
@@ -76,6 +87,8 @@ private final class VentureNativeLibrary {
     self.handleEvent = handleEvent
     self.scroll = scroll
     self.scrollCommand = scrollCommand
+    self.scrollMetrics = scrollMetrics
+    self.scrollTo = scrollTo
     self.activateLink = activateLink
     self.updateHover = updateHover
     self.resize = resize
@@ -95,6 +108,13 @@ private final class VentureNativeLibrary {
   }
 }
 
+private struct VentureScrollMetrics {
+  let offsetY: Double
+  let viewportHeight: Double
+  let contentHeight: Double
+  let maxOffsetY: Double
+}
+
 @objc(MosaicHost)
 final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private let native: VentureNativeLibrary?
@@ -105,6 +125,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private var interactionAcceptanceStarted = false
   private var lastSurfaceWheelDelta: Double?
   private var lastSurfaceKeyboardCommand: String?
+  private var lastSurfaceScrollbarState: String?
   private var lastSurfaceHistoryEvent: String?
   private var lastSurfaceFocusState: String?
   private var lastSurfacePointerPoint: NSPoint?
@@ -646,6 +667,17 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         to: markerPath)
       return
     }
+    guard contentView?.runScrollbarAcceptance() == true,
+      lastSurfaceScrollbarState == "native-projection"
+    else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "native scroller did not project shared viewport geometry",
+        ],
+        to: markerPath)
+      return
+    }
     guard performNativeSurfaceKey(keyCode: 119) else {
       writeInteractionResult(
         [
@@ -932,6 +964,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
           "failedNavigation": "transaction-retained", "failureStatus": statusText,
           "failureAddress": failureURL,
           "surfaceWheel": "scroll", "surfaceFocus": "native",
+          "surfaceScrollbar": "native-projection",
           "surfaceKeyboard": "document-end", "surfaceHistory": "back-forward",
           "surfacePointer": "link", "surfaceHover": "status-and-cursor",
           "surfaceResize": "native-reflow",
@@ -1204,6 +1237,31 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     contentView?.renderPage()
   }
 
+  fileprivate func scrollMetrics() -> VentureScrollMetrics? {
+    guard let native, let browser else { return nil }
+    var offsetY = 0.0
+    var viewportHeight = 0.0
+    var contentHeight = 0.0
+    var maxOffsetY = 0.0
+    guard native.scrollMetrics(
+      browser, &offsetY, &viewportHeight, &contentHeight, &maxOffsetY) != 0
+    else { return nil }
+    return VentureScrollMetrics(
+      offsetY: offsetY,
+      viewportHeight: viewportHeight,
+      contentHeight: contentHeight,
+      maxOffsetY: maxOffsetY)
+  }
+
+  fileprivate func scroll(to offsetY: Double) -> Bool {
+    guard let native, let browser, native.scrollTo(browser, offsetY) != 0 else {
+      return false
+    }
+    lastSurfaceScrollbarState = "native-projection"
+    contentView?.renderPage()
+    return true
+  }
+
   fileprivate func navigateHistory(eventName: String) {
     lastSurfaceHistoryEvent = eventName
     _ = handleEvent([:], name: eventName as NSString)
@@ -1240,11 +1298,19 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 private final class VentureContentView: NSView {
   private weak var host: MosaicHost?
   private var hoverTrackingArea: NSTrackingArea?
+  private lazy var verticalScroller: NSScroller = {
+    let scroller = NSScroller(frame: .zero)
+    scroller.scrollerStyle = .legacy
+    scroller.target = self
+    scroller.action = #selector(verticalScrollerChanged(_:))
+    return scroller
+  }()
 
   init(host: MosaicHost) {
     self.host = host
     super.init(frame: NSRect(x: 0, y: 0, width: 1024, height: 640))
     wantsLayer = true
+    addSubview(verticalScroller)
   }
 
   required init?(coder: NSCoder) {
@@ -1265,6 +1331,10 @@ private final class VentureContentView: NSView {
   override func layout() {
     super.layout()
     guard let layer = layer as? CAMetalLayer else { return }
+    let scrollerWidth = NSScroller.scrollerWidth(for: .regular, scrollerStyle: .legacy)
+    verticalScroller.frame = NSRect(
+      x: max(0, bounds.width - scrollerWidth), y: 0,
+      width: scrollerWidth, height: bounds.height)
     layer.contentsScale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 1
     if bounds.width > 0, bounds.height > 0 {
       host?.resize(width: bounds.width, height: bounds.height)
@@ -1274,6 +1344,39 @@ private final class VentureContentView: NSView {
       height: max(1, bounds.height * layer.contentsScale)
     )
     renderPage()
+  }
+
+  @objc private func verticalScrollerChanged(_ sender: NSScroller) {
+    guard let metrics = host?.scrollMetrics(), metrics.maxOffsetY > 0 else { return }
+    if host?.scroll(to: sender.doubleValue * metrics.maxOffsetY) == true {
+      updateScroller()
+    }
+  }
+
+  fileprivate func runScrollbarAcceptance() -> Bool {
+    updateScroller()
+    guard !verticalScroller.isHidden,
+      verticalScroller.knobProportion > 0,
+      verticalScroller.knobProportion < 1,
+      let metrics = host?.scrollMetrics(), metrics.maxOffsetY > 0
+    else { return false }
+    verticalScroller.doubleValue = 0.5
+    verticalScrollerChanged(verticalScroller)
+    guard let updated = host?.scrollMetrics() else { return false }
+    return abs(updated.offsetY - metrics.maxOffsetY * 0.5) < 0.5
+  }
+
+  private func updateScroller() {
+    guard let metrics = host?.scrollMetrics() else {
+      verticalScroller.isHidden = true
+      return
+    }
+    let scrollable = metrics.maxOffsetY > 0 && metrics.contentHeight > 0
+    verticalScroller.isHidden = !scrollable
+    verticalScroller.knobProportion = scrollable
+      ? min(1, metrics.viewportHeight / metrics.contentHeight)
+      : 1
+    verticalScroller.doubleValue = scrollable ? metrics.offsetY / metrics.maxOffsetY : 0
   }
 
   override func viewDidMoveToWindow() {
@@ -1378,5 +1481,6 @@ private final class VentureContentView: NSView {
       height: max(1, bounds.height * scale)
     )
     host?.render(layer: layer)
+    updateScroller()
   }
 }

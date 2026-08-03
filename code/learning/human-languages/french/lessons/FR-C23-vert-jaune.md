@@ -9,7 +9,7 @@ prerequisites: [FR-C22-chien-chat]
 sounds: [nasal-en, diphthong-au]
 roots: [latin-viridis-vireo, latin-galbinus-shine]
 etymology_hook: "vert ← Latin viridis, the standard source of 'green' across nearly every Romance language (Spanish verde, Italian verde, Portuguese verde); jaune ← Latin galbinus, literally 'yellow-GREEN' — an extended form of galbus, usually traced to PIE *ghel-, 'to shine,' the same root claimed for German's gelb — though modern Latin scholarship treats galbus's origin as genuinely unknown, so treat jaune/gelb as probable, not certain, cousins"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [FR-C22-chien-chat]
 ---
 

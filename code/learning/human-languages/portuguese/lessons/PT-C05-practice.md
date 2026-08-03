@@ -8,7 +8,7 @@ concept_tag: CH5-PRACTICE
 prerequisites: [PT-C05-falar, PT-C05-morar, PT-C05-trabalhar, PT-C05-falo-portugues]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C05-falar, PT-C05-morar, PT-C05-trabalhar, PT-C05-falo-portugues, PT-C03-practice]
 ---
 

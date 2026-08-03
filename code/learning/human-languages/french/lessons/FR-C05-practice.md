@@ -8,7 +8,7 @@ concept_tag: CH5-PRACTICE
 prerequisites: [FR-C05-parler, FR-C05-habiter, FR-C05-travailler, FR-C05-je-parle-francais]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C05-parler, FR-C05-habiter, FR-C05-travailler, FR-C05-je-parle-francais, FR-C03-practice]
 ---
 
