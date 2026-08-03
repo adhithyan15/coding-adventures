@@ -1541,6 +1541,19 @@ def test_lowers_positive_mosfet_model_width() -> None:
     assert isclose(mosfet.model.model.params.W, 4.0e-6)
 
 
+@pytest.mark.parametrize("length", ["0", "-1u", "1e999"])
+def test_rejects_invalid_mosfet_model_length(length: str) -> None:
+    with pytest.raises(NetlistParseError, match="MOSFET L must be finite and positive"):
+        parse_netlist(f".model nfast NMOS(L={length})\nM1 d g s b nfast\n")
+
+
+def test_lowers_positive_mosfet_model_length() -> None:
+    parsed = parse_netlist(".model nfast NMOS(L=2u)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.L, 2.0e-6)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
