@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C27-sayantram
+spine_node: SPINE-TIME-OF-DAY
+sequence: 550
 chapter: 27
 type: word
 headword: సాయంత్రం
@@ -9,19 +12,33 @@ prerequisites: [TE-C26-udayam]
 sounds: [telugu-anusvara, telugu-conjunct-tra]
 roots: [sanskrit-sayam-evening]
 etymology_hook: "సాయంత్రం (sāyantram, 'evening') is a Sanskrit tatsama — from సాయం (sāyam, 'in the evening') plus a Sanskrit '-tana' suffix that turns time-adverbs into adjectives (cf. divātana, 'of the day'; sanātana, 'eternal'); సాయం itself, per Wiktionary, traces to PIE *seh₁- ('long, lasting') — and Wiktionary explicitly states this root is 'distantly related to Latin sērus,' independently confirmed on sērus's own Wiktionary page (Proto-Italic *sēros ← PIE *seh₁-, 'to be long, lasting, slow'); sērus is already established in this course as the root of French soir and Italian sera (LA-C33-vesper) — meaning Telugu's everyday evening word and the Romance family's everyday evening word are genuine, if very distant, cognates, one route through Sanskrit tatsama borrowing, one through Vulgar Latin erosion"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02]
+introduces:
+  knowledge: [TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02]
+practises:
+  knowledge: [TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C26-udayam]
 ---
 
 # సాయంత్రం (sāyantram) — a distant cousin of French "soir"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->
 
 [PAUSE 2s] This lesson's word for "evening" reaches back to a PIE root
 you've technically already met — in a completely different language,
 on a completely different continent's language family.
 
-## సాయంత్రం — Sanskrit, built from "evening" plus a time-suffix
+## The word, taken apart - సాయంత్రం — Sanskrit, built from "evening" plus a time-suffix
+<!-- hl-knowledge: introduces=[TE-ETYMON-C27-SAYANTRAM-01]; assesses=[] -->
 
 **సాయంత్రం** (**sāyantram**) — "**evening**" — is a Sanskrit
 **tatsama**: from **సాయం** (*sāyam*, "**in the evening**") plus a
@@ -29,7 +46,8 @@ Sanskrit **-tana** suffix that turns time-adverbs into adjectives — the
 same suffix pattern behind Sanskrit **divātana** ("of the day") and
 **sanātana** ("eternal, lasting").
 
-## A genuine distant cousin: the same PIE root as Latin's sērus
+## The word, taken apart - A genuine distant cousin: the same PIE root as Latin's sērus
+<!-- hl-knowledge: introduces=[TE-ETYMON-C27-SAYANTRAM-02]; assesses=[] -->
 
 Here's the striking part, checked directly against primary sources
 rather than assumed: **సాయం** itself traces to **Proto-Indo-European**
@@ -46,6 +64,7 @@ and Italian, both ultimately the same Proto-Indo-European idea of
 something "long, lasting" stretching into "late in the day."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "sāyantram" — "evening," sāyam + the -tana time-suffix]
@@ -54,6 +73,7 @@ something "long, lasting" stretching into "late in the day."
   and Italian sera, via Latin sērus]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C27-SAYANTRAM-01, TE-ETYMON-C27-SAYANTRAM-02] -->
 
 [PAUSE 3s] What is సాయంత్రం built from? (**సాయం**, "in the evening," +
 a Sanskrit "-tana" time-adjective suffix.) What PIE root does సాయం trace

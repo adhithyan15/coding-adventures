@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C23-roju
+spine_node: SPINE-TIME-OF-DAY
+sequence: 510
 chapter: 23
 type: word
 headword: రోజు
@@ -9,18 +12,32 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri]
 sounds: [telugu-vowel-sign-oo, telugu-ja]
 roots: [persian-roz-day, sanskrit-dinamu]
 etymology_hook: "రోజు (rōju, 'day') is genuinely borrowed from Classical Persian روز (rōz), itself from PIE *lewk- ('bright') — a completely different route and root from Latin diēs/Hindi din/Kannada dina's *dyew- family, though both ultimately trace to 'shining, bright' senses independently; దినము (dinamu) is the Sanskrit tatsama word (same root as Kannada's dina), but here it's the more FORMAL alternate — Telugu's everyday/formal split runs the OPPOSITE way from Kannada's"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03]
+introduces:
+  knowledge: [TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02]
+practises:
+  knowledge: [TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C17-madhyaahnam-ardharaatri]
 ---
 
 # రోజు (rōju) — "day," a genuine Persian surprise
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03] -->
 
 [PAUSE 2s] You might expect Telugu's word for "day" to be Sanskrit, like
 Kannada's *dina*, or native Dravidian. It's neither — it's Persian.
 
-## రోజు — a genuine Persian loanword
+## The word, taken apart - రోజు — a genuine Persian loanword
+<!-- hl-knowledge: introduces=[TE-ETYMON-C23-ROJU-01]; assesses=[] -->
 
 **రోజు** (**rōju**) — "**day**" — is Telugu's everyday, ordinary word for
 "a day." Here's the real surprise: it's **borrowed from Classical
@@ -32,7 +49,8 @@ Latin's *diēs*, Hindi's *din*, and Kannada's *dina*. Both roots
 independently mean something like "shining, bright" — but they are **not**
 cousins; this is convergent meaning, not shared ancestry.
 
-## దినము — Sanskrit tatsama, but the FORMAL alternate here
+## Why it's said this way: దినము — Sanskrit tatsama, but the FORMAL alternate here
+<!-- hl-knowledge: introduces=[TE-PRAGMATICS-C23-ROJU-02]; assesses=[] -->
 
 Telugu also has **దినము** (**dinamu**) — the same Sanskrit **tatsama**
 word as Kannada's *dina*. But here's the honest twist: unlike Kannada,
@@ -42,6 +60,7 @@ Telugu's formal/everyday split runs the **opposite direction** from
 Kannada's.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rōju" — "day," a genuine Persian loanword]
@@ -51,6 +70,7 @@ Kannada's.
   Kannada's plain dina]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02] -->
 
 [PAUSE 3s] What language does Telugu's everyday **రోజు** (*rōju*) come
 from? (**Persian** — *rōz*.) Is Persian *rōz*'s PIE root the same as

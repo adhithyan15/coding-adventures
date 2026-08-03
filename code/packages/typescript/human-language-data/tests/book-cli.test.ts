@@ -85,6 +85,45 @@ describe("canonical book generator filesystem shell", () => {
     expect(() => generatedBookOutputs(root)).toThrow(/unsafe generated book output/);
   });
 
+  it("resolves reusable script sets for cross-script comparison chapters", () => {
+    const root = fixture();
+    const lesson = join(root, "test", "lessons", "hello.md");
+    writeFileSync(lesson, readFileSync(lesson, "utf8").replaceAll("hello", "తెలుగు தமிழ்"));
+    writeFileSync(
+      join(root, "core", "book-generation.json"),
+      `${JSON.stringify({
+        version: 1,
+        scriptSets: {
+          comparisons: [
+            { unicodeScript: "Telugu", scriptCommand: "te" },
+            { unicodeScript: "Tamil", scriptCommand: "ta" },
+          ],
+        },
+        targets: [{
+          language: "test",
+          chapter: 1,
+          title: "Hello",
+          label: "ch:hello",
+          output: "test/book/chapters/ch01-first.tex",
+          scriptSet: "comparisons",
+        }],
+      })}\n`,
+    );
+
+    const chapter = generatedBookOutputs(root).get("test/book/chapters/ch01-first.tex");
+    expect(chapter).toContain("\\te{తెలుగు} \\ta{தமிழ்}");
+  });
+
+  it("fails closed on an unknown reusable script set", () => {
+    const root = fixture();
+    const config = join(root, "core", "book-generation.json");
+    writeFileSync(
+      config,
+      readFileSync(config, "utf8").replace('"output":"test/book/chapters/ch01-first.tex"', '"output":"test/book/chapters/ch01-first.tex","scriptSet":"missing"'),
+    );
+    expect(() => generatedBookOutputs(root)).toThrow(/unknown scriptSet 'missing'/);
+  });
+
   it("rejects an empty generation config and unsupported CLI modes", () => {
     const root = fixture();
     writeFileSync(

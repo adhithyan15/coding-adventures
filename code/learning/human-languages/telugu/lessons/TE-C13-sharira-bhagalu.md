@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C13-sharira-bhagalu
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 400
 chapter: 13
 type: word
 headword: తల చెయ్యి
@@ -9,19 +12,33 @@ prerequisites: [TE-C12-kutumbam]
 sounds: [telugu-geminate-yya]
 roots: [dravidian-tala-kay]
 etymology_hook: "చెయ్యి ceyyi (hand) LOOKS unrelated to Tamil/Kannada/Malayalam's kai — but it's the same Proto-Dravidian root *kay-, reshaped by Telugu's own regular k-to-c sound change"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02]
+introduces:
+  knowledge: [TE-LEX-C13-SHARIRA-BHAGALU-01]
+practises:
+  knowledge: [TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02, TE-LEX-C13-SHARIRA-BHAGALU-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C12-kutumbam]
 ---
 
 # తల, చెయ్యి — head shared outright, hand shared in disguise
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02] -->
 
 [PAUSE 2s] Head matches its cousins plainly. Hand looks, at first glance,
 like Telugu went its own way — but look closer, and it's the same word
 after all, just heavily reshaped.
 
-## The words
+## You'll want to know: The words
+<!-- hl-knowledge: introduces=[TE-LEX-C13-SHARIRA-BHAGALU-01]; assesses=[] -->
 
 - **తల** (*tala*) = "**head**" — native Dravidian, matching Tamil *talai*,
   Malayalam *thala*, and Kannada *tale* closely and plainly.
@@ -37,6 +54,7 @@ in sound than its cousins have, thanks to a sound change that reshaped many
 Telugu words the same way.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02, TE-LEX-C13-SHARIRA-BHAGALU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tala" — head, matching its cousins plainly]
@@ -44,6 +62,7 @@ Telugu words the same way.
 - [YOU SAY: the lesson — looks different, is actually the same word]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02, TE-LEX-C13-SHARIRA-BHAGALU-01] -->
 
 [PAUSE 3s] Does Telugu's word for "head" match its cousins? (**Yes** —
 *tala*, like Tamil/Malayalam/Kannada.) Is its word for "hand," *ceyyi*, truly
