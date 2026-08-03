@@ -21,6 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
+    "tsx": "^4.23.5",
     "vitest": "^4.1.0"
   }
 }

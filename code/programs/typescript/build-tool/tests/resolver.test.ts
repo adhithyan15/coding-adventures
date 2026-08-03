@@ -15,12 +15,15 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
   DirectedGraph,
+  MetadataEncodingError,
   resolveDependencies,
   buildKnownNames,
 } from "../src/resolver.js";
-import type { Package } from "../src/discovery.js";
+import { discoverPackages, type Package } from "../src/discovery.js";
 
 // ---------------------------------------------------------------------------
 // Test helpers
@@ -45,6 +48,63 @@ function makePkg(
   language: string,
 ): Package {
   return { name, path: pkgPath, buildCommands: ["echo test"], language };
+}
+
+interface SharedResolutionFixture {
+  workspace: {
+    files: Array<{
+      path: string;
+      content_utf8?: string;
+      content_base64?: string;
+    }>;
+  };
+  expected: {
+    outcome: "ok" | "error";
+    result: { edges?: string[][] };
+    diagnostics: Array<{
+      code: string;
+      path: string;
+      package: string;
+      details: { encoding: string };
+    }>;
+  };
+  limits: { wall_time_ms: number };
+}
+
+const packageRoot = fileURLToPath(new URL("..", import.meta.url));
+const sharedFixtureRoot = fileURLToPath(
+  new URL("../../../../specs/fixtures/build-tool-v1/cases/", import.meta.url),
+);
+
+function loadSharedResolutionFixture(name: string): SharedResolutionFixture {
+  return JSON.parse(
+    fs.readFileSync(path.join(sharedFixtureRoot, name), "utf-8"),
+  ) as SharedResolutionFixture;
+}
+
+function materializeSharedResolutionFixture(
+  fixture: SharedResolutionFixture,
+): { root: string; packages: Package[] } {
+  const root = makeTempDir();
+  fs.mkdirSync(path.join(root, ".git"));
+  for (const file of fixture.workspace.files) {
+    const destination = path.join(root, ...file.path.split("/"));
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    const content = file.content_base64 === undefined
+      ? Buffer.from(file.content_utf8 ?? "", "utf-8")
+      : Buffer.from(file.content_base64, "base64");
+    fs.writeFileSync(destination, content);
+  }
+  return {
+    root,
+    packages: discoverPackages(path.join(root, "code")),
+  };
+}
+
+function graphEdges(graph: DirectedGraph): string[][] {
+  return graph.nodes()
+    .flatMap((from) => graph.successors(from).map((to) => [from, to]))
+    .sort((left, right) => left.join("\0").localeCompare(right.join("\0")));
 }
 
 // ---------------------------------------------------------------------------
@@ -334,6 +394,93 @@ describe("resolveDependencies", () => {
 
   afterEach(() => {
     rmDir(tmpDir);
+  });
+
+  it.each([
+    "resolution-lua-utf8.json",
+    "resolution-lua-invalid-utf8.json",
+  ])("consumes shared Lua UTF-8 fixture %s", (fixtureName) => {
+    const fixture = loadSharedResolutionFixture(fixtureName);
+    const materialized = materializeSharedResolutionFixture(fixture);
+    try {
+      if (fixture.expected.outcome === "ok") {
+        expect(graphEdges(resolveDependencies(materialized.packages))).toEqual(
+          (fixture.expected.result.edges ?? []).sort((left, right) =>
+            left.join("\0").localeCompare(right.join("\0"))
+          ),
+        );
+        return;
+      }
+
+      const diagnostic = fixture.expected.diagnostics[0];
+      let caught: unknown;
+      try {
+        resolveDependencies(materialized.packages);
+      } catch (error) {
+        caught = error;
+      }
+      expect(caught).toBeInstanceOf(MetadataEncodingError);
+      const encodingError = caught as MetadataEncodingError;
+      expect(encodingError.code).toBe(diagnostic.code);
+      expect(encodingError.package).toBe(diagnostic.package);
+      expect(encodingError.manifest).toBe(diagnostic.path);
+      expect(encodingError.encoding).toBe(diagnostic.details.encoding);
+      expect(encodingError.message).toBe(
+        `${diagnostic.code}: package=${diagnostic.package} manifest=${diagnostic.path} encoding=${diagnostic.details.encoding}`,
+      );
+      expect(encodingError.message).not.toContain(materialized.root);
+    } finally {
+      rmDir(materialized.root);
+    }
+  });
+
+  it("accepts a valid literal replacement character in Lua metadata", () => {
+    const pkgDir = path.join(tmpDir, "code", "packages", "lua", "pkg");
+    writeFile(path.join(pkgDir, "BUILD"), "echo building\n");
+    writeFile(
+      path.join(pkgDir, "coding-adventures-pkg-0.1.0-1.rockspec"),
+      "package = \"coding-adventures-pkg\"\n-- valid literal: \uFFFD\ndependencies = {\n  \"lua >= 5.4\",\n}\n",
+    );
+
+    const graph = resolveDependencies(discoverPackages(path.join(tmpDir, "code")));
+    expect(graphEdges(graph)).toEqual([]);
+  });
+
+  it("real CLI returns exit 2 and the stable diagnostic for invalid UTF-8", () => {
+    const fixture = loadSharedResolutionFixture(
+      "resolution-lua-invalid-utf8.json",
+    );
+    const materialized = materializeSharedResolutionFixture(fixture);
+    try {
+      const tsxCli = path.join(packageRoot, "node_modules", "tsx", "dist", "cli.mjs");
+      const entrypoint = path.join(packageRoot, "src", "index.ts");
+      const result = spawnSync(
+        process.execPath,
+        [
+          tsxCli,
+          entrypoint,
+          "--root",
+          materialized.root,
+          "--force",
+          "--dry-run",
+          "--language",
+          "lua",
+        ],
+        {
+          encoding: "utf-8",
+          timeout: fixture.limits.wall_time_ms,
+        },
+      );
+      const diagnostic = fixture.expected.diagnostics[0];
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(2);
+      expect(result.stderr).toBe(
+        `${diagnostic.code}: package=${diagnostic.package} manifest=${diagnostic.path} encoding=${diagnostic.details.encoding}\n`,
+      );
+      expect(result.stderr).not.toContain(materialized.root);
+    } finally {
+      rmDir(materialized.root);
+    }
   });
 
   it("should resolve Python dependencies from pyproject.toml", () => {

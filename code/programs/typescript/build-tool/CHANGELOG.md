@@ -2,6 +2,15 @@
 
 All notable changes to the TypeScript build tool will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Decode Lua rockspec metadata as strict UTF-8 and fail closed with the portable
+  `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 for malformed input.
+- Consume the shared positive and invalid UTF-8 resolver fixtures, including a
+  real CLI subprocess test and a regression guard for valid literal U+FFFD text.
+
 ## [1.1.0] - 2026-03-22
 
 ### Added

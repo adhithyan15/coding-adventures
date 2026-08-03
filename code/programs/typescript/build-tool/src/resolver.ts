@@ -58,6 +58,30 @@ import * as fs from "node:fs";
 import * as nodePath from "node:path";
 import type { Package } from "./discovery.js";
 
+/** Stable diagnostic for metadata that is not valid UTF-8. */
+export class MetadataEncodingError extends Error {
+  readonly code: string;
+  readonly package: string;
+  readonly manifest: string;
+  readonly encoding: string;
+
+  constructor(
+    code: string,
+    packageName: string,
+    manifest: string,
+    encoding: string,
+  ) {
+    super(
+      `${code}: package=${packageName} manifest=${manifest} encoding=${encoding}`,
+    );
+    this.name = "MetadataEncodingError";
+    this.code = code;
+    this.package = packageName;
+    this.manifest = manifest;
+    this.encoding = encoding;
+  }
+}
+
 // ===========================================================================
 // DirectedGraph -- Inline Minimal Implementation
 // ===========================================================================
@@ -694,12 +718,28 @@ function parseLuaDeps(
     return [];
   }
 
-  const rockspecFile = entries.find((e) => e.endsWith(".rockspec"));
+  const rockspecFile = entries.filter((e) => e.endsWith(".rockspec")).sort()[0];
   if (!rockspecFile) {
     return [];
   }
 
-  const text = fs.readFileSync(nodePath.join(pkg.path, rockspecFile), "utf-8");
+  const rockspecPath = nodePath.join(pkg.path, rockspecFile);
+  let text: string;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(
+      fs.readFileSync(rockspecPath),
+    );
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new MetadataEncodingError(
+        "METADATA_INVALID_UTF8",
+        pkg.name,
+        repositoryManifestPath(rockspecPath),
+        "UTF-8",
+      );
+    }
+    throw error;
+  }
   const internalDeps: string[] = [];
 
   // Strategy: scan line by line for the dependencies block,
@@ -737,6 +777,23 @@ function parseLuaDeps(
   }
 
   return internalDeps;
+}
+
+/** Return a stable repository-relative metadata path without host details. */
+function repositoryManifestPath(manifestPath: string): string {
+  const parts = manifestPath.replaceAll("\\", "/").split("/");
+  let canonicalStart = -1;
+  for (let index = 0; index < parts.length - 1; index += 1) {
+    if (
+      parts[index] === "code"
+      && (parts[index + 1] === "packages" || parts[index + 1] === "programs")
+    ) {
+      canonicalStart = index;
+    }
+  }
+  return canonicalStart >= 0
+    ? parts.slice(canonicalStart).join("/")
+    : nodePath.basename(manifestPath);
 }
 
 // ===========================================================================

@@ -25,7 +25,8 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 
 ## Supported languages
 
-The resolver can parse dependencies for all 6 languages in the monorepo:
+The resolver parses package-manager metadata for the established monorepo lanes,
+including:
 
 - **Python**: `pyproject.toml` (`coding-adventures-*` prefix)
 - **Ruby**: `.gemspec` (`coding_adventures_*` prefix)
@@ -33,6 +34,14 @@ The resolver can parse dependencies for all 6 languages in the monorepo:
 - **TypeScript**: `package.json` (`@coding-adventures/*` scoped names)
 - **Rust**: `Cargo.toml` (crate names with path dependencies)
 - **Elixir**: `mix.exs` (`coding_adventures_*` atom names)
+- **Lua**: `.rockspec` files (`coding-adventures-*` rock names)
+- **Perl**: `Makefile.PL` / `cpanfile` package references
+- **Haskell**: Cabal package dependencies
+- **.NET**: C# and F# project references
+
+Lua rockspecs are decoded as strict UTF-8. Malformed metadata fails closed with
+the stable `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2; a valid
+literal U+FFFD replacement character remains valid UTF-8.
 
 ## Platform-specific BUILD files
 
@@ -69,8 +78,8 @@ npx tsx src/index.ts --language python
 ## Development
 
 ```bash
-# Install dependencies
-npm install
+# Install pinned development dependencies
+npm ci
 
 # Run tests
 npx vitest run
@@ -82,6 +91,7 @@ npx vitest run --coverage
 ## Design decisions
 
 - **Zero runtime dependencies**: Only uses Node.js built-in modules (`node:fs`, `node:path`, `node:crypto`, `node:child_process`, `node:os`, `node:util`).
+- **Portable metadata diagnostics**: Strict-decoding failures use repository-relative paths and never expose checkout-specific host paths.
 - **Inline directed graph**: Rather than importing an external graph library, the resolver includes a minimal DirectedGraph implementation.
 - **ESM-only**: Uses ES modules throughout (`"type": "module"` in package.json).
 - **Literate programming**: All source files include extensive comments explaining concepts, algorithms, and design decisions.
