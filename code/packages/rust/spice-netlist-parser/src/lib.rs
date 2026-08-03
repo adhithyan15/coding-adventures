@@ -1824,6 +1824,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
     }
     let params = parse_model_params(params_text)?;
     if matches!(kind.as_str(), "NMOS" | "PMOS") {
+        if let Some(level) = params.get("LEVEL") {
+            if !level.is_finite() || (*level - 1.0).abs() > 1.0e-12 {
+                return Err(NetlistParseError::new(
+                    "only MOS LEVEL=1 model cards are supported",
+                ));
+            }
+        }
         if let Some(oxide_thickness) = params.get("TOX") {
             if !oxide_thickness.is_finite() || *oxide_thickness <= 0.0 {
                 return Err(NetlistParseError::new(
