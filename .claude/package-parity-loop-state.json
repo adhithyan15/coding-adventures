@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9553,
   "last_inventory": {
     "revision": "0455cea8e0c0ddc078040ea109ea59dbaf8403fa",
     "schema_version": 3,
@@ -379,11 +379,11 @@
     {
       "id": "build-tool-swift-language-identity-registry",
       "title": "Bring Swift build-tool discovery to the canonical language and identity registry",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-swift-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-swift-language-identity-registry",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9537 and the collision-clean 80612eb7 inventory because the dependency is now satisfied and the prior real Swift full plan measured broad identity corruption: 4,768 package entries but only 4,594 unique names, with 143 identity groups containing 317 entries and 397 entries across 228 names classified as unknown. The implementation consumes the shared discovery-language-registry and discovery-duplicate-identity fixtures, recognizes established, emerging, execution-target, domain, and build-language buckets only at the exact packages/programs boundary, preserves package/program identities, excludes spec fixtures, and fails closed on residual duplicate qualified names. Exact-base validation on 0455cea8 passes 25 Swift tests, release build, 55.56% overall and 91.33% Discovery.swift line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, and a real 4,768-package/7,471-edge full plan with 4,768 unique identities, zero duplicate groups, and only intentional unknown/blog. The refreshed inventory is collision-clean at 1,222 identities and 4,370 slots with 172 high-consensus packages, 271 high-consensus gaps, 772 singletons, 10,808 singleton gaps, 577 Rust singletons, and zero collisions/unknown buckets. Security validation found zero external Swift dependencies and zero secret-like diff hits; diff checks pass. Build-file validation reproduces only the same 10 separately owned Lua BUILD_windows debt items. Repository Swift formatting has no checked-in configuration and strict recursive lint still reports broad pre-existing violations, so this slice does not reformat the engine. The rebase also logged the new AirGradient portable telemetry core as pending without changing selection. Keep this separate from metadata decoding and Windows file-option handling."
+      "pr_number": 9553,
+      "notes": "Ready-for-review PR #9553 opened from the sole active parity branch after exact-base validation. Selected after merged PR #9537 and the collision-clean 80612eb7 inventory because the dependency is now satisfied and the prior real Swift full plan measured broad identity corruption: 4,768 package entries but only 4,594 unique names, with 143 identity groups containing 317 entries and 397 entries across 228 names classified as unknown. The implementation consumes the shared discovery-language-registry and discovery-duplicate-identity fixtures, recognizes established, emerging, execution-target, domain, and build-language buckets only at the exact packages/programs boundary, preserves package/program identities, excludes spec fixtures, and fails closed on residual duplicate qualified names. Exact-base validation on 0455cea8 passes 25 Swift tests, release build, 55.56% overall and 91.33% Discovery.swift line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, and a real 4,768-package/7,471-edge full plan with 4,768 unique identities, zero duplicate groups, and only intentional unknown/blog. The refreshed inventory is collision-clean at 1,222 identities and 4,370 slots with 172 high-consensus packages, 271 high-consensus gaps, 772 singletons, 10,808 singleton gaps, 577 Rust singletons, and zero collisions/unknown buckets. Security validation found zero external Swift dependencies and zero secret-like diff hits; diff checks pass. Build-file validation reproduces only the same 10 separately owned Lua BUILD_windows debt items. Repository Swift formatting has no checked-in configuration and strict recursive lint still reports broad pre-existing violations, so this slice does not reformat the engine. The rebase also logged the new AirGradient portable telemetry core as pending without changing selection. Keep this separate from metadata decoding and Windows file-option handling."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
