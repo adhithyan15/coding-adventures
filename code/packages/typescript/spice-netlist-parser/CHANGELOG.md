@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `AF` values and lower valid
+  flicker-noise exponents instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `KF` values and lower valid
   flicker-noise coefficients instead of silently dropping them.
 - Reject MOS model-card `FC` values outside `[0, 1)` or non-finite values and
