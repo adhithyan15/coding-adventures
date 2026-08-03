@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 780 | 10,920 |
+| Present in one language | 781 | 10,934 |
 
-The loop must not start by attempting 10,920 singleton ports. It should finish
+The loop must not start by attempting 10,934 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`29d78677fe65719e0b84e2441e9a568a67e7f4f4` is collision-clean at 1,230
-normalized implementation identities, 4,378 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 780 singletons, 585
+`9ad8105f384d692196e93221fe6b5c619754dd84` is collision-clean at 1,231
+normalized implementation identities, 4,379 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 781 singletons, 586
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -242,6 +242,15 @@ filesystems, networks, package verification, and supervisor effects remain
 injected or native. Its dedicated backlog owner depends on the secure-host-
 channel contract and therefore remains dependency-blocked.
 
+The `9ad8105f` refresh added `chief-of-staff-process-supervisor`. This crate is
+the concrete native authority behind the portable reconciler and host-control
+contracts: it reads and re-verifies signed package files, spawns, signals, owns,
+and reaps child processes, transports bootstrap records over pipes, and samples
+and sleeps against monotonic time. Its deterministic protocol seams already
+belong to the service-reconciler, host-control, and secure-channel backlog
+owners. A dedicated dependency-blocked review now owns the native-lane
+exceptions; the parity loop must not manufacture unsafe process-control ports.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -357,7 +366,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   rebased `29d78677` passes 307 Ruby tests at 89.43% line and 72.55% branch
   coverage, all shared fixture consumers, the valid 38-case/61-file corpus,
   Go test/vet/build, dependency and security checks, and the collision-clean
-  1,230-identity inventory without widening the completed evaluator repair;
+  1,230-identity inventory without widening the completed evaluator repair.
+  Guarded squash auto-completion merged PR #9691 as `9ad8105f38` after all 17
+  exact-head checks were terminal: twelve succeeded, four skipped, and one
+  completed neutrally;
 - adjudicate the residual Ruby/Go Elixir resolver semantics after canonical
   identities remove the structural drift. The real 282-package plans differ
   on eleven Go-only and two Ruby-only edges; the Ruby-only pair corresponds to
@@ -368,7 +380,9 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   comparison finds the same 4,776 package directories in Ruby and Go, but Go
   classifies all fourteen Mosaic packages and programs as `unknown`. The
   dedicated child consumes the existing registry and duplicate-identity
-  fixtures and keeps resolver-semantic work separate;
+  fixtures and keeps resolver-semantic work separate. The `9ad8105f` leverage
+  pass selected this unblocked repository-wide primitive ahead of independent
+  semantic, UTF-8, and leaf-package work;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

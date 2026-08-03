@@ -11,22 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9691,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9691",
-    "branch": "codex/build-tool-ruby-language-identity-registry"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "29d78677fe65719e0b84e2441e9a568a67e7f4f4",
+    "revision": "9ad8105f384d692196e93221fe6b5c619754dd84",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1230,
-    "implementation_package_slots": 4378,
+    "implementation_identities": 1231,
+    "implementation_package_slots": 4379,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 780,
-    "singleton_missing_slots": 10920,
-    "rust_singletons": 585,
+    "singleton_packages": 781,
+    "singleton_missing_slots": 10934,
+    "rust_singletons": 586,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -410,11 +406,11 @@
     {
       "id": "build-tool-ruby-language-identity-registry",
       "title": "Bring Ruby build-tool discovery to the canonical language and identity registry",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ruby-starlark-canonical-build-compatibility"],
       "branch": "codex/build-tool-ruby-language-identity-registry",
       "pr_number": 9691,
-      "notes": "Discovered while proving the 44 canonical Starlark package records against the Go oracle. Ruby and Go agree on package counts and on every affected Starlark record field, but Ruby's dependency-edge identities omit the canonical programs segment: the Go/Ruby set differences are 42/42 for Go and 76/76 for Rust, while Elixir has 21 Go-only and 12 Ruby-only edges plus nine independently missing semantic edges. Lua has the same conduit-hello identity drift and one Go-only edge. Adopt the canonical language and package-identity registry, preserve repository-relative program identities such as go/programs/build-tool, rust/programs/closurec, and elixir/programs/ircd, then consume language-neutral identity and dependency-edge fixtures across canonical and legacy BUILD paths. Keep the separately owned missing semantic dependency edges out of the Starlark evaluator compatibility slice. Selected after PR #9677 merged and the collision-clean fbd52e79 inventory. The dependency/leverage pass ranks this directly unblocked cross-language graph repair ahead of the independent Haskell and Elixir UTF-8 children because it corrects canonical identity and edge semantics across Lua, Elixir, Go, and Rust plans while the Ruby toolchain, exact Go comparisons, and affected fixtures are already warm; all newly classified Chief items remain dependency-blocked. Implemented the complete canonical discovery registry, exact package/program identities, specification-tree exclusion, root-redacted duplicate-identity failure with CLI exit 2, and qualified legacy BUILD dependency comments. On rebased 29d78677, validation passes 307 Ruby runs/632 assertions with one existing Windows platform skip and 89.43% line/72.55% branch coverage; 17 schema and 40 runner tests; the valid 38-case/61-file corpus; 37 TypeScript, 12 Rust, and five Swift shared discovery consumers; Go test/vet/trimpath build; zero-advisory current Ruby dependencies; Security lint; collision-clean 1,230-identity/4,378-slot inventory; JSON, diff, and credential checks. The exact real plans contain 4,776 unique Ruby identities with no backslash paths; Go, Rust, and Lua package and edge sets match Go exactly at 301/936, 928/2,250, and 258/383. The separately logged Elixir semantic delta is 13 set differences, and the build-file gate reproduces only the exact ten already-owned Lua BUILD_windows debts. Ready PR #9691 opened at exact head 122c1894d00893b182f58f1c98b27efc72df9cc6; initial checks are queued and guarded auto-complete remains disabled until every exact-head check is terminal green, skipped, or neutral."
+      "notes": "Discovered while proving the 44 canonical Starlark package records against the Go oracle. Ruby and Go agree on package counts and on every affected Starlark record field, but Ruby's dependency-edge identities omit the canonical programs segment: the Go/Ruby set differences are 42/42 for Go and 76/76 for Rust, while Elixir has 21 Go-only and 12 Ruby-only edges plus nine independently missing semantic edges. Lua has the same conduit-hello identity drift and one Go-only edge. Adopt the canonical language and package-identity registry, preserve repository-relative program identities such as go/programs/build-tool, rust/programs/closurec, and elixir/programs/ircd, then consume language-neutral identity and dependency-edge fixtures across canonical and legacy BUILD paths. Keep the separately owned missing semantic dependency edges out of the Starlark evaluator compatibility slice. Selected after PR #9677 merged and the collision-clean fbd52e79 inventory. The dependency/leverage pass ranks this directly unblocked cross-language graph repair ahead of the independent Haskell and Elixir UTF-8 children because it corrects canonical identity and edge semantics across Lua, Elixir, Go, and Rust plans while the Ruby toolchain, exact Go comparisons, and affected fixtures are already warm; all newly classified Chief items remain dependency-blocked. Implemented the complete canonical discovery registry, exact package/program identities, specification-tree exclusion, root-redacted duplicate-identity failure with CLI exit 2, and qualified legacy BUILD dependency comments. On rebased 29d78677, validation passes 307 Ruby runs/632 assertions with one existing Windows platform skip and 89.43% line/72.55% branch coverage; 17 schema and 40 runner tests; the valid 38-case/61-file corpus; 37 TypeScript, 12 Rust, and five Swift shared discovery consumers; Go test/vet/trimpath build; zero-advisory current Ruby dependencies; Security lint; collision-clean 1,230-identity/4,378-slot inventory; JSON, diff, and credential checks. The exact real plans contain 4,776 unique Ruby identities with no backslash paths; Go, Rust, and Lua package and edge sets match Go exactly at 301/936, 928/2,250, and 258/383. The separately logged Elixir semantic delta is 13 set differences, and the build-file gate reproduces only the exact ten already-owned Lua BUILD_windows debts. Ready PR #9691 opened at exact head 122c1894d00893b182f58f1c98b27efc72df9cc6. Guarded squash auto-completion merged exact head 5a499cdfe11a741bc11c5f0f1cfaf937f0e6c069 as 9ad8105f384d692196e93221fe6b5c619754dd84 after all 17 checks were terminal: twelve succeeded, four skipped, and one completed neutrally."
     },
     {
       "id": "build-tool-elixir-resolution-semantic-parity",
@@ -428,11 +424,11 @@
     {
       "id": "build-tool-go-language-identity-registry",
       "title": "Bring Go build-tool discovery to the complete canonical language registry",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-fixtures"],
-      "branch": null,
+      "branch": "codex/build-tool-go-language-identity-registry",
       "pr_number": null,
-      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discover 4,776 packages, but Go classifies all fourteen Mosaic packages and programs as unknown while Ruby follows the shared canonical registry and preserves mosaic/programs identities. Make Go consume the existing language-registry and duplicate-identity fixtures, include every canonical and retained host bucket, exclude specification fixture trees, and prove a collision-free full plan without widening into the separately owned resolver-semantic edges."
+      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discover 4,776 packages, but Go classifies all fourteen Mosaic packages and programs as unknown while Ruby follows the shared canonical registry and preserves mosaic/programs identities. Make Go consume the existing language-registry and duplicate-identity fixtures, include every canonical and retained host bucket, exclude specification fixture trees, and prove a collision-free full plan without widening into the separately owned resolver-semantic edges. Selected after PR #9691 merged and the collision-clean 9ad8105f inventory. The dependency/leverage pass ranks this unblocked, shared-fixture-backed repository discovery repair ahead of the independent Elixir semantic, Haskell/Elixir UTF-8, and leaf-package items because every downstream Go build plan depends on correct canonical identities; the newly classified Chief process supervisor is native authority and dependency-blocked."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -1599,6 +1595,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Keep both emerging until package/scaffold/build-tool maturity and applicability are explicit."
+    },
+    {
+      "id": "chief-process-supervisor-native-authority-review",
+      "title": "Review the Chief process supervisor native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-service-reconciler-portable-conformance", "chief-host-control-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 9ad8105f inventory after PR #9687 added Rust-only chief-of-staff-process-supervisor. The crate is explicitly the concrete OS-process authority: it re-verifies package files, executes and signals child processes, owns pipes and reaping, reads and sleeps against monotonic time, and performs secure bootstrap over portable dependency contracts. Review and record native-lane exceptions after the service-reconciler and host-control protocol cores are fixture-complete; do not create unsafe all-language process-control ports."
     }
   ]
 }
