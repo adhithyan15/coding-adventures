@@ -931,21 +931,25 @@ Qp col base emit slow
 def test_parse_bjt_forward_beta_alias_with_canonical_precedence() -> None:
     parsed = parse_netlist(
         """
-.model fast NPN(BF=120 BETA=90 BETA_F=80)
+.model fast NPN(BF=120 BETA=90 BETA_F=80 HFE=70)
 Q1 col base emit fast
 .model slow PNP(BETA=75)
 Q2 col base emit slow
+.model legacy NPN(HFE=65)
+Q3 col base emit legacy
 """
     )
 
-    first, second = parsed.circuit.elements
+    first, second, third = parsed.circuit.elements
     assert isinstance(first, BJT)
     assert isinstance(second, BJT)
+    assert isinstance(third, BJT)
     assert first.beta_f == 120.0
     assert second.beta_f == 75.0
+    assert third.beta_f == 65.0
 
 
-@pytest.mark.parametrize("parameter", ["BF", "BETA", "BETA_F"])
+@pytest.mark.parametrize("parameter", ["BF", "BETA", "BETA_F", "HFE"])
 @pytest.mark.parametrize("value", ["0", "-1", "1e999"])
 def test_rejects_invalid_bjt_forward_beta(parameter: str, value: str) -> None:
     with pytest.raises(NetlistParseError, match="BJT BF must be finite and positive"):

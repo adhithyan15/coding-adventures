@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower the BJT model-card `HFE` forward-beta alias.
 - Validate BJT model-card `BF` / `BETA` / `BETA_F` forward beta and lower the
   `BETA` alias instead of silently dropping it.
 - Validate diode model-card `CJO` / `CJ` / `CJ0` junction capacitance and
