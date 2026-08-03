@@ -2,6 +2,28 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## 0.9.1 — lower a dotted/chained bracket-index write receiver
+
+`ruby-parser` 0.8.1 widens `index_assignment`'s grammar to admit a
+receiver postfix chain (`index_write_receiver_postfix` — `dot_call` /
+`scope_resolution` / `index_suffix`) before the mandatory write-target
+`index_suffix`. This release adds the matching lowering: for each
+`index_write_receiver_postfix` child, unwrap its single
+`dot_call`/`scope_resolution`/`index_suffix` grandchild and fold it into
+the running `receiver` expression via the SAME `fold_one_dot_call`/
+`fold_one_scope_resolution`/`fold_one_index_suffix` helpers
+`apply_dot_chain` already uses for READ postfix chains — so
+`obj.data[0] = v` folds `.data` identically to how a plain `obj.data`
+read would, then dispatches `[]=` on THAT (rather than the bare `obj`
+receiver), and `a[0][1] = v` folds the first `[0]` as a receiver-side
+READ (`__method__("[]", a, 0)`) before dispatching `[]=` on its result.
+
+New tests: `chained_bracket_index_write_uses_the_inner_bracket_as_receiver`,
+`dotted_bracket_index_write_folds_the_dot_call_as_receiver`,
+`chained_and_dotted_bracket_index_write_pass_sir_validator`.
+
+`ruby-to-semantic-ir` 0.9.0 -> 0.9.1.
+
 ## 0.9.0 — lower `<<` (Ruby's shift operator)
 
 `ruby-parser` 0.8.0 adds the `shift` grammar rule for `<<` (see that

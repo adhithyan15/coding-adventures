@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.36.1 — execution proof for dotted/chained bracket-index writes
+
+No runtime code changed: `_sir_builtin_method_v`'s existing `"[]="` arm
+already dispatches on the receiver's ACTUAL runtime tag (Array vs Hash vs
+whatever an arbitrary receiver EXPRESSION evaluates to), so it already
+handled `obj.data[0] = v` and `a[0][1] = v` correctly the moment
+`ruby-to-semantic-ir` 0.9.1 started emitting the right nested `__method__`
+calls for those receiver shapes — no C-side change needed. This release
+just adds the execution proof: `chained_bracket_write_on_a_nested_array`,
+`dotted_receiver_write_through_an_oop_method_call`,
+`dotted_receiver_write_through_a_hash_value_persists`, and a regression
+check (`single_bracket_write_on_a_bare_name_receiver_is_unaffected`) that
+the original v0-scoped shape still runs identically.
+
+Along the way, discovered (and filed as its own follow-up, NOT fixed
+here) that `ClassName.new` never invokes `initialize` in this backend —
+`_sir_new_instance` only allocates a bare instance; already documented
+in-code as a deferred "later slice" (`emit.rs`), just not previously
+tracked as an explicit backlog item. Worked around in this PR's own
+OOP-dot-call test by using a method that returns a literal rather than an
+ivar, so the test proves the RECEIVER-CHAIN dispatch is correct
+independent of that separate gap.
+
 ## 0.36.0 — `<<`, Ruby's shift operator
 
 `ruby-to-semantic-ir` 0.9.0 lowers `<<` to a top-level `BuiltinCall("<<",

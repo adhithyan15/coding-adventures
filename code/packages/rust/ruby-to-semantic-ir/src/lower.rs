@@ -9658,18 +9658,62 @@ impl Lowerer {
 
     /// Lower an `index_assignment` statement (`recv[expr] = value`).
     /// Grammar shape:
-    ///     index_assignment = NAME index_suffix EQUALS expression ;
+    ///     index_write_receiver_postfix = dot_call | scope_resolution | index_suffix ;
+    ///     index_assignment = NAME { index_write_receiver_postfix &index_write_receiver_postfix } index_suffix EQUALS expression ;
     ///
     /// `recv[k] = v` is sugar for `recv.[]=(k, v)` — lowered to the SAME
     /// `__method__` envelope `fold_one_index_suffix` uses for reads (see
     /// its own doc comment for why this reuses method dispatch instead of
-    /// a compile-time Array-vs-Hash guess). v0 scope: a bare `NAME`
-    /// receiver only (`a[i] = v`, `h[k] = v`) — a dotted/chained receiver
-    /// (`obj.data[i] = v`) isn't covered (the grammar rule itself doesn't
-    /// admit one, so that shape falls through to a clean parse error
-    /// rather than a silent misparse).
+    /// a compile-time Array-vs-Hash guess).
+    ///
+    /// Originally v0-scoped to a bare `NAME` receiver only; widened to a
+    /// dotted/chained receiver (`obj.data[i] = v`, `a[i][j] = v`) via the
+    /// grammar's `index_write_receiver_postfix` repetition (see that
+    /// rule's own doc comment for how the lookahead tells the RECEIVER's
+    /// postfixes apart from the FINAL write-target bracket). Each
+    /// `index_write_receiver_postfix` child here wraps exactly one
+    /// `dot_call`/`scope_resolution`/`index_suffix` grandchild — unwrapped
+    /// and folded via the SAME `fold_one_dot_call`/`fold_one_scope_
+    /// resolution`/`fold_one_index_suffix` helpers `apply_dot_chain` uses
+    /// for READ postfix chains, so a receiver like `obj.data` here lowers
+    /// identically to how `obj.data` would lower as a plain read
+    /// expression, just consumed as an intermediate `receiver` rather
+    /// than the statement's final value.
     fn lower_index_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         let (name, name_span) = self.expect_first_name_token(node)?;
+        let scope = if self.current_params.contains(&name) {
+            Scope::Param
+        } else {
+            Scope::Local
+        };
+        let mut receiver = Expr::VarRef {
+            name,
+            scope,
+            span: name_span,
+        };
+        for child in &node.children {
+            let ASTNodeOrToken::Node(sub) = child else { continue };
+            if sub.rule_name != "index_write_receiver_postfix" {
+                continue;
+            }
+            let inner = self.first_node_child(sub).ok_or_else(|| RubyLowerError {
+                message: "index_write_receiver_postfix had no inner postfix".to_string(),
+                line: sub.start_line.unwrap_or(0),
+                column: sub.start_column.unwrap_or(0),
+            })?;
+            receiver = match inner.rule_name.as_str() {
+                "dot_call" => self.fold_one_dot_call(receiver, inner)?,
+                "scope_resolution" => self.fold_one_scope_resolution(receiver, inner)?,
+                "index_suffix" => self.fold_one_index_suffix(receiver, inner)?,
+                other => {
+                    return Err(RubyLowerError {
+                        message: format!("unexpected index_write_receiver_postfix shape `{other}`"),
+                        line: inner.start_line.unwrap_or(0),
+                        column: inner.start_column.unwrap_or(0),
+                    });
+                }
+            };
+        }
         let index_suffix_node =
             self.find_node_child(node, "index_suffix")
                 .ok_or_else(|| RubyLowerError {
@@ -9694,16 +9738,6 @@ impl Lowerer {
             })?;
         let value = self.lower_expression(value_node)?;
         let span = self.span_of(node);
-        let scope = if self.current_params.contains(&name) {
-            Scope::Param
-        } else {
-            Scope::Local
-        };
-        let receiver = Expr::VarRef {
-            name,
-            scope,
-            span: name_span,
-        };
         self.features_used.insert(Feature::Strings);
         Ok(Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
