@@ -4,6 +4,9 @@
 
 ### Fixed
 
+- Isolate the branch-protection `CI gate` to pull-request workflows so push CI
+  cannot auto-complete Venture changes before required macOS and Windows
+  acceptance builds finish.
 - Keep the authoritative POSIX `BUILD` wrapper compatible with the repository
   build tool's `/bin/sh` executor instead of requiring Bash `pipefail` syntax.
 
