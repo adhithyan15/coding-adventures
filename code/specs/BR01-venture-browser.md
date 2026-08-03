@@ -103,8 +103,31 @@ reflows the retained render tree, image placement, link regions, and scroll
 bounds without refetching the HTML document. Direct launch acceptance now
 builds and starts the emitted SwiftUI and WinUI applications, loads each
 package-owned native bridge, and requires a rendered host-surface readiness
-signal. Direct UI interaction acceptance plus the remaining platform hosts
-still remain before the browser shell is complete.
+signal. Direct UI interaction acceptance covers navigation, history, failure
+retention, focus, pointer activation, wheel and keyboard scrolling, resize,
+and repaint on those two primary platforms. The prioritized gaps below and
+the remaining generated platform hosts still keep the browser shell from being
+complete.
+
+### Prioritized Browser Completion Backlog
+
+1. **P0 — link-hover status and cursor acceptance (completed).** Resolve the hovered link
+   through `BrowserSession`, project its URL through the existing Mosaic
+   `status-text` slot, and let the generated SwiftUI and WinUI content surfaces
+   select their native pointing-hand cursor. Gate the same behavior through
+   direct generated-app interaction tests on macOS and Windows.
+2. **P1 — native scrollbar projection.** Expose the shared viewport offset and
+   extent as target-neutral state, then bind generated native scrollbars to the
+   same Mosaic-hosted content surface without recreating browser chrome in
+   AppKit or Win32.
+3. **P2 — remaining generated-host interaction gates.** Promote the existing
+   build/host-object checks for Qt, Flutter, Compose, and the web-family shells
+   to direct interaction acceptance where their provisioned CI toolchains can
+   launch them.
+
+These are browser-wiring and acceptance items. They do not relax the exact
+zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
+not imply complete browser conformance.
 
 ## Where It Fits
 

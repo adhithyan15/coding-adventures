@@ -597,6 +597,15 @@ impl BrowserSession {
             .map_or(0.0, |viewport| viewport.resize(self.viewport_height))
     }
 
+    /// Resolve the link under a viewport coordinate without mutating browser
+    /// state. Native hosts use this for hover status and cursor selection.
+    pub fn hovered_link_url(&self, viewport_x: f64, viewport_y: f64) -> Option<&str> {
+        self.viewport
+            .as_ref()?
+            .hit_test_link(viewport_x, viewport_y)
+            .map(|link| link.url.as_str())
+    }
+
     /// Recompose the retained document for a new layout viewport without
     /// refetching or reparsing the page. Inline image resources continue to use
     /// the browser-owned fetch seam, and failures remain recoverable paint
@@ -673,10 +682,8 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let Some(url) = self
-            .viewport
-            .as_ref()
-            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
-            .map(|link| link.url.clone())
+            .hovered_link_url(viewport_x, viewport_y)
+            .map(str::to_owned)
         else {
             return Ok(None);
         };
