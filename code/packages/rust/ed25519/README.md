@@ -20,6 +20,10 @@ let signature = sign(b"hello, world", &secret_key);
 assert!(verify(b"hello, world", &signature, &public_key));
 ```
 
+`verify` rejects non-canonical and small-order public-key and signature points.
+Trust-boundary code can additionally require canonical non-identity keys in the
+prime-order subgroup with `is_valid_public_key` before retaining an external key.
+
 ## Dependencies
 
 - `coding_adventures_sha512` — our from-scratch SHA-512 implementation

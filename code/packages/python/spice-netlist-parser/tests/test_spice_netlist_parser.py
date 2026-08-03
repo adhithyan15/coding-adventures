@@ -842,6 +842,38 @@ def test_rejects_invalid_diode_thermal_voltage(parameter: str, value: str) -> No
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("2", 2.0)])
+def test_accepts_valid_diode_emission_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(N={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.N
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_emission_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode N must be finite and positive"):
+        parse_netlist(f".model clamp D(N={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("5.5", 5.5)])
+def test_accepts_valid_diode_breakdown_voltage(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(BV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.BV
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "1e999"])
+def test_rejects_invalid_diode_breakdown_voltage(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="diode BV must be finite and positive"):
+        parse_netlist(f".model clamp D(BV={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """
@@ -864,6 +896,23 @@ def test_rejects_invalid_diode_junction_capacitance(
         NetlistParseError, match="diode CJO must be finite and non-negative"
     ):
         parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize("value", ["0", "4n"])
+def test_accepts_valid_diode_transit_time(value: str) -> None:
+    parsed = parse_netlist(f".model clamp D(TT={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Tt == parse_value(value)
+
+
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_diode_transit_time(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode TT must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(TT={value})")
 
 
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
@@ -910,6 +959,14 @@ Q1 col base 0 fast
     result = dc_op(parsed.circuit)
     assert result.converged
     assert 0.0 < result.node_voltages["col"] < 5.0
+
+
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_bjt_saturation_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT IS must be finite and positive"
+    ):
+        parse_netlist(f".model fast NPN(IS={value})")
 
 
 def test_parse_pnp_bjt_model_aliases_beta_f() -> None:
@@ -1006,6 +1063,58 @@ def test_rejects_invalid_bjt_base_emitter_capacitance(
         NetlistParseError, match="BJT CJE must be finite and non-negative"
     ):
         parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_parse_bjt_base_collector_capacitance_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(CJC=2p CJC0=3p CBC=4p)
+Q1 col base emit fast
+.model slow PNP(CJC0=5p)
+Q2 col base emit slow
+"""
+    )
+
+    first, second = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert first.Cjc == 2.0e-12
+    assert second.Cjc == 5.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["CJC", "CJC0", "CBC"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_bjt_base_collector_capacitance(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="BJT CJC must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+@pytest.mark.parametrize("parameter", ["TF", "TR"])
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_bjt_transit_time(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"BJT {parameter} must be finite and non-negative",
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_preserves_valid_bjt_transit_times() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(TF=4n TR=5n)
+Q1 col base emit fast
+"""
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Tf == 4.0e-9
+    assert transistor.Tr == 5.0e-9
 
 
 def test_parse_jfet_model_into_operating_point_circuit() -> None:

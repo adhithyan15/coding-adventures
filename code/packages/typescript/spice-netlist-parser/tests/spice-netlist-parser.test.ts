@@ -825,6 +825,24 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["4n", 4.0e-9],
+  ])("accepts valid diode TT transit time %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(TT=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      transitTime: expected,
+    });
+  });
+
+  it.each(["-1n", "1e999"])("rejects invalid diode TT transit time %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(TT=${value})`)).toThrow(
+      "diode TT must be finite and non-negative",
+    );
+  });
+
   it("parses the diode V_T thermal-voltage alias", () => {
     const parsed = parseNetlist(`
 .model clamp D(V_T=27m)
@@ -847,6 +865,45 @@ D1 in out clamp
   ])("rejects invalid diode %s thermal voltage %s", (parameter, value) => {
     expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
       "diode VT must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["0.5", 0.5],
+    ["2", 2.0],
+  ])("accepts valid diode N emission coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(N=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      emissionCoefficient: expected,
+    });
+  });
+
+  it.each(["0", "-1", "1e999"])(
+    "rejects invalid diode N emission coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model clamp D(N=${value})`)).toThrow(
+        "diode N must be finite and positive",
+      );
+    },
+  );
+
+  it.each([
+    ["1", 1.0],
+    ["5.5", 5.5],
+  ])("accepts valid diode BV breakdown voltage %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(BV=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      breakdownVoltage: expected,
+    });
+  });
+
+  it.each(["0", "-1", "1e999"])("rejects invalid diode BV %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(BV=${value})`)).toThrow(
+      "diode BV must be finite and positive",
     );
   });
 
@@ -893,6 +950,15 @@ Q1 col base 0 fast
     expect(result.voltage("col")).toBeGreaterThan(0.0);
     expect(result.voltage("col")).toBeLessThan(5.0);
   });
+
+  it.each(["0", "-1p", "1e999"])(
+    "rejects invalid BJT saturation current %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(IS=${value})`)).toThrow(
+        "BJT IS must be finite and positive",
+      );
+    },
+  );
 
   it("parses PNP BJT model aliases", () => {
     const parsed = parseNetlist(`
@@ -1018,6 +1084,61 @@ Q2 col base emit slow
     expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
       "BJT CJE must be finite and non-negative",
     );
+  });
+
+  it("parses the BJT CJC0 capacitance alias with canonical precedence", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(CJC=2p CJC0=3p CBC=4p)
+Q1 col base emit fast
+.model slow PNP(CJC0=5p)
+Q2 col base emit slow
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseCollectorCapacitance: 2.0e-12,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "bjt",
+      baseCollectorCapacitance: 5.0e-12,
+    });
+  });
+
+  it.each([
+    ["CJC", "-1p"],
+    ["CJC", "1e999"],
+    ["CJC0", "-1p"],
+    ["CJC0", "1e999"],
+    ["CBC", "-1p"],
+    ["CBC", "1e999"],
+  ])("rejects invalid BJT %s base-collector capacitance %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      "BJT CJC must be finite and non-negative",
+    );
+  });
+
+  it.each([
+    ["TF", "-1n"],
+    ["TF", "1e999"],
+    ["TR", "-1n"],
+    ["TR", "1e999"],
+  ])("rejects invalid BJT %s transit time %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      `BJT ${parameter} must be finite and non-negative`,
+    );
+  });
+
+  it("preserves valid BJT transit times", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(TF=4n TR=5n)
+Q1 col base emit fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardTransitTime: 4.0e-9,
+      reverseTransitTime: 5.0e-9,
+    });
   });
 
   it("parses JFET models into operating-point circuits", () => {

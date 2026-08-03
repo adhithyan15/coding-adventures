@@ -1301,7 +1301,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Cje=model.params.get(
                 "CJE", model.params.get("CJE0", model.params.get("CBE", 0.0))
             ),
-            Cjc=model.params.get("CJC", model.params.get("CBC", 0.0)),
+            Cjc=model.params.get(
+                "CJC", model.params.get("CJC0", model.params.get("CBC", 0.0))
+            ),
             Tf=model.params.get("TF", 0.0),
             Tr=model.params.get("TR", 0.0),
         )
@@ -1927,6 +1929,16 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(thermal_voltage) or thermal_voltage <= 0.0
         ):
             raise NetlistParseError("diode VT must be finite and positive")
+        emission_coefficient = params.get("N")
+        if emission_coefficient is not None and (
+            not math.isfinite(emission_coefficient) or emission_coefficient <= 0.0
+        ):
+            raise NetlistParseError("diode N must be finite and positive")
+        breakdown_voltage = params.get("BV")
+        if breakdown_voltage is not None and (
+            not math.isfinite(breakdown_voltage) or breakdown_voltage <= 0.0
+        ):
+            raise NetlistParseError("diode BV must be finite and positive")
         junction_capacitance = next(
             (params[name] for name in ("CJO", "CJ", "CJ0") if name in params),
             None,
@@ -1935,7 +1947,17 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(junction_capacitance) or junction_capacitance < 0.0
         ):
             raise NetlistParseError("diode CJO must be finite and non-negative")
+        transit_time = params.get("TT")
+        if transit_time is not None and (
+            not math.isfinite(transit_time) or transit_time < 0.0
+        ):
+            raise NetlistParseError("diode TT must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
+        saturation_current = params.get("IS")
+        if saturation_current is not None and (
+            not math.isfinite(saturation_current) or saturation_current <= 0.0
+        ):
+            raise NetlistParseError("BJT IS must be finite and positive")
         forward_beta = next(
             (
                 params[name]
@@ -1962,6 +1984,23 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or base_emitter_capacitance < 0.0
         ):
             raise NetlistParseError("BJT CJE must be finite and non-negative")
+        base_collector_capacitance = next(
+            (params[name] for name in ("CJC", "CJC0", "CBC") if name in params),
+            None,
+        )
+        if base_collector_capacitance is not None and (
+            not math.isfinite(base_collector_capacitance)
+            or base_collector_capacitance < 0.0
+        ):
+            raise NetlistParseError("BJT CJC must be finite and non-negative")
+        for parameter_name in ("TF", "TR"):
+            transit_time = params.get(parameter_name)
+            if transit_time is not None and (
+                not math.isfinite(transit_time) or transit_time < 0.0
+            ):
+                raise NetlistParseError(
+                    f"BJT {parameter_name} must be finite and non-negative"
+                )
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

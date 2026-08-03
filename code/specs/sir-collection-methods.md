@@ -200,23 +200,28 @@ repo's standard workflow):
 | — | Bug fix: bracket-index (`a[i]`/`a[i] = v`) had no grammar rule at all — new `__method__("[]"/"[]=", …)` dispatch | ✅ merged | #9686 |
 | 8 | Remaining String methods: `capitalize`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`, `bytes`, `split`, `replace`, `sub`, `gsub`, `to_i`, `to_f`, `to_sym`, `swapcase`, `tr`, `each_char` (block) — semantics matched against the Python/TS `sir-runtime-oop` reference catalog | ✅ merged | #9694 |
 | 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | ✅ merged | #9713 |
-| 10 | Symbol + Object/Bool generic methods: `to_s`/`length`/`size`/`upcase`/`downcase`/`inspect`/`empty?`/`to_sym` widen to a Symbol receiver (reusing the slice-1/8 String helpers — `upcase`/`downcase` return a fresh interned Symbol, not a String); universal `Object` methods `nil?`/`equal?`/`itself`/`frozen?`; `TrueClass`/`FalseClass` eager (non-short-circuit) `&`/`\|`/`^` | 🚧 this PR | — |
-| — | Cross-backend conformance corpus for the full collection-method catalog | planned | — |
+| 10 | Symbol + Object/Bool generic methods: `to_s`/`length`/`size`/`upcase`/`downcase`/`inspect`/`empty?`/`to_sym` widen to a Symbol receiver (reusing the slice-1/8 String helpers — `upcase`/`downcase` return a fresh interned Symbol, not a String); universal `Object` methods `nil?`/`equal?`/`itself`/`frozen?`; `TrueClass`/`FalseClass` eager (non-short-circuit) `&`/`\|`/`^` | ✅ merged | #9726 |
+| — | Cross-backend conformance corpus for the full collection-method catalog | ✅ merged | #9733 |
+| — | Bug fix: `puts` on an Array bracket-displayed instead of unpacking (C AND Ruby backends) | ✅ merged | #9772 |
+| — | Follow-up: `round(ndigits)`, the multi-digit form deferred by slice 9 | ✅ merged | — |
+| — | Follow-up: String char-set methods (`count`/`delete`/`squeeze`) + padding methods (`ljust`/`rjust`/`center`), deferred by slice 8 | ✅ merged | — |
 
-**Explicitly out of scope for slice 8** (deferred, not silently dropped): Ruby's
-char-set String methods (`count`/`delete`/`squeeze` taking a character-set string),
-padding methods (`ljust`/`rjust`/`center`), and the `*`/`+` String operators.
-`*`/`+` in particular are Ruby *binary operators*, not dot-calls — the Ruby
-frontend has no lowering path for them at all yet (same pre-existing gap as `<<`
-for `Array#push`; see the "Ruby frontend: add `<<` as a binary operator" backlog
-item), so there is nothing for a C dispatch arm to receive regardless. The
-char-set and padding methods are deferred to keep this slice reviewable at a
-similar size to its predecessors; they are tracked as follow-up work.
+**Slice 8's char-set/padding deferral is now closed**: `count(charset, ...)`,
+`delete(charset, ...)`, `squeeze(charset=nil)`, and `ljust`/`rjust`/
+`center(width, pad=" ")` were originally deferred to keep slice 8 reviewable
+at a similar size to its predecessors, then implemented as their own
+follow-up — see the table above. The `*`/`+` String operators remain
+deferred: they are Ruby *binary operators*, not dot-calls, and the Ruby
+frontend has no lowering path for them at all yet (same pre-existing gap as
+`<<` for `Array#push`; see the "Ruby frontend: add `<<` as a binary
+operator" backlog item), so there is nothing for a C dispatch arm to
+receive regardless.
 
-**Explicitly out of scope for slice 9**: the multi-digit `round(ndigits)`
-form (only the 0-arg `round` is implemented) — deferred for the same
-"keep the slice reviewable" reason, tracked as follow-up work alongside
-slice 8's deferrals.
+**Slice 9's `round(ndigits)` deferral is now closed**: the multi-digit form
+(`Integer#round(-2)`, `Float#round(2)`, etc.) was originally deferred to
+keep slice 9 reviewable at a similar size to its predecessors, then
+implemented as its own follow-up once the rest of the batch landed — see
+the table above.
 
 **Explicitly out of scope for slice 10**: `respond_to?` (needs a full
 reflective query across BOTH the user-defined method table and the entire

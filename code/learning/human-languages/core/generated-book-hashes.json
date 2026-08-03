@@ -77,6 +77,72 @@
       "tex": "french/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "german",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:a529d960c10eae9c",
+      "lessonIds": [
+        "GE-C17-kopf",
+        "GE-C17-kopf-haupt",
+        "GE-C17-hand"
+      ],
+      "tex": "german/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:0fd5b6c217dea39e",
+      "lessonIds": [
+        "GE-C18-ja",
+        "GE-C18-nein"
+      ],
+      "tex": "german/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:56d533c514140e42",
+      "lessonIds": [
+        "GE-C19-bitte-requests"
+      ],
+      "tex": "german/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:2949289880ce15c7",
+      "lessonIds": [
+        "GE-C20-entschuldigung"
+      ],
+      "tex": "german/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e773a690ba617e60",
+      "lessonIds": [
+        "GE-C21-das-wetter"
+      ],
+      "tex": "german/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:d7f81c59cce27f45",
+      "lessonIds": [
+        "GE-C22-hund-katze"
+      ],
+      "tex": "german/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+      "lessonIds": [
+        "GE-C23-gruen-gelb"
+      ],
+      "tex": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
       "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:388a6950ab136cc1",
@@ -570,6 +636,244 @@
         "ES-C06-practice"
       ],
       "tex": "spanish/book/chapters/ch06-first-verbs.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:6cb5796cbafe9026",
+      "lessonIds": [
+        "TE-C06-dative-ku",
+        "TE-C06-dative-subject"
+      ],
+      "tex": "telugu/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:b740fb498ae7b163",
+      "lessonIds": [
+        "TE-C07-numbers-1-5",
+        "TE-C07-numbers-6-10"
+      ],
+      "tex": "telugu/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:88acff6378f254ad",
+      "lessonIds": [
+        "TE-C08-dayachesi"
+      ],
+      "tex": "telugu/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:a59621bd41d42067",
+      "lessonIds": [
+        "TE-C09-kshaminchandi"
+      ],
+      "tex": "telugu/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:10ee7dfe843f7b1a",
+      "lessonIds": [
+        "TE-C10-vaaram"
+      ],
+      "tex": "telugu/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:6edc3d8566fd18eb",
+      "lessonIds": [
+        "TE-C11-rangulu"
+      ],
+      "tex": "telugu/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:21fe8857abf3df9c",
+      "lessonIds": [
+        "TE-C12-kutumbam"
+      ],
+      "tex": "telugu/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:83368e6f6cac4154",
+      "lessonIds": [
+        "TE-C13-sharira-bhagalu"
+      ],
+      "tex": "telugu/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:ae3ab53969658ce4",
+      "lessonIds": [
+        "TE-C14-rutuvulu"
+      ],
+      "tex": "telugu/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:a75d12dfcd736972",
+      "lessonIds": [
+        "TE-C15-neellu-biyyam"
+      ],
+      "tex": "telugu/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:8f0932ccb64f8552",
+      "lessonIds": [
+        "TE-C16-nelalu"
+      ],
+      "tex": "telugu/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:36b5b3c7a6c8324c",
+      "lessonIds": [
+        "TE-C17-madhyaahnam-ardharaatri"
+      ],
+      "tex": "telugu/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:c703d071cc0d8e4b",
+      "lessonIds": [
+        "TE-C18-ganta"
+      ],
+      "tex": "telugu/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:ecd0a47d80ab2c07",
+      "lessonIds": [
+        "TE-C19-vayasu"
+      ],
+      "tex": "telugu/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:a7a00722b8910236",
+      "lessonIds": [
+        "TE-C20-padakondu-iravai",
+        "TE-C20-vatavaranam"
+      ],
+      "tex": "telugu/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:ac18c5895e380bad",
+      "lessonIds": [
+        "TE-C21-kukka-pilli"
+      ],
+      "tex": "telugu/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:07cbedbaa5b02653",
+      "lessonIds": [
+        "TE-C22-pacha-pasupu"
+      ],
+      "tex": "telugu/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:60f8859a49057808",
+      "lessonIds": [
+        "TE-C23-roju"
+      ],
+      "tex": "telugu/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:1d1695f2caa824c8",
+      "lessonIds": [
+        "TE-C24-ratri"
+      ],
+      "tex": "telugu/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:889282df4447ea86",
+      "lessonIds": [
+        "TE-C25-shubha-ratri"
+      ],
+      "tex": "telugu/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:3874dddb892a5b58",
+      "lessonIds": [
+        "TE-C26-udayam"
+      ],
+      "tex": "telugu/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:504bda7b4b84a05c",
+      "lessonIds": [
+        "TE-C27-sayantram"
+      ],
+      "tex": "telugu/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:7a9b4182b27fd1c7",
+      "lessonIds": [
+        "TE-C28-madhyahnam-widened"
+      ],
+      "tex": "telugu/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:2a0449c46a95b7f2",
+      "lessonIds": [
+        "TE-C29-subhodayam"
+      ],
+      "tex": "telugu/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:7adf548d83a059ec",
+      "lessonIds": [
+        "TE-C30-subha-sayantram"
+      ],
+      "tex": "telugu/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:a513a10b0723cd15",
+      "lessonIds": [
+        "TE-C31-subha-madhyahnam",
+        "TE-C31-subha-madhyahnam-register"
+      ],
+      "tex": "telugu/book/chapters/ch31-good-afternoon.tex"
     }
   ]
 }

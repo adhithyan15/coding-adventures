@@ -4361,12 +4361,50 @@ the Rust, Python, and TypeScript surfaces together.
    - Both parser facades validate positive finite `VT` / `V_T` values and
      lower `V_T` into the shared engine BJT thermal-voltage field.
 
+409. Python and TypeScript Berkeley SPICE BJT base-emitter capacitance alias parity.
+   - Status: completed in PR 9760.
+   - Both parser facades validate finite non-negative `CJE` / `CJE0` / `CBE`
+     values and lower `CJE0` into the shared engine base-emitter capacitance
+     field after canonical `CJE` and before legacy `CBE`.
+
+410. Python and TypeScript Berkeley SPICE BJT base-collector capacitance alias parity.
+   - Status: completed in PR 9763.
+   - Both parser facades validate finite non-negative `CJC` / `CJC0` / `CBC`
+     values and lower `CJC0` into the shared engine base-collector capacitance
+     field after canonical `CJC` and before legacy `CBC`.
+
+411. Python and TypeScript Berkeley SPICE BJT transit-time validation parity.
+   - Status: completed in PR 9770.
+   - Both parser facades validate finite non-negative `TF` / `TR` values before
+     lowering them into the shared engine BJT transit-time fields.
+
+412. Python and TypeScript Berkeley SPICE BJT saturation-current validation parity.
+   - Status: completed in PR 9778.
+   - Both parser facades validate positive finite `IS` values before lowering
+     them into the shared engine BJT saturation-current field.
+
+413. Python and TypeScript Berkeley SPICE diode transit-time validation parity.
+   - Status: completed in PR 9785.
+   - Both parser facades validate finite non-negative `TT` values before
+     lowering them into the shared engine diode transit-time field.
+
+414. Python and TypeScript Berkeley SPICE diode emission-coefficient validation parity.
+   - Status: completed in PR 9799.
+   - Both parser facades validate positive finite `N` values before lowering
+     them into the shared engine diode emission-coefficient field.
+
+415. Python and TypeScript Berkeley SPICE diode breakdown-voltage validation parity.
+   - Status: completed in this diode breakdown-voltage validation slice.
+   - Both parser facades validate positive finite `BV` values before lowering
+     them into the shared engine diode breakdown-voltage field.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE BJT model-card alias parity.
-   - Align parser validation and lowering with the shared engine aliases,
-     continuing with `CJC0` as a base-collector capacitance alias for `CJC`
-     after `CJE0`.
+1. Python and TypeScript Berkeley SPICE model-card validation parity.
+   - Continue the parser-to-engine validation audit with positive finite diode
+     breakdown current `IBV`.
+   - Audit remaining directly lowerable diode fields before moving to model
+     parameters that require new parser-to-engine lowering surfaces.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

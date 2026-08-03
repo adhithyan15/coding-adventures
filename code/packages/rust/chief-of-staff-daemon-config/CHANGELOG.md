@@ -6,3 +6,6 @@
 - Reject duplicate, missing, unknown, ill-typed, and unsafe configuration.
 - Require loopback-only binding and validate all timeout and path invariants.
 - Resolve explicit home-relative paths without consulting process environment.
+- Require explicit daemon port, state root, credential path, and host executable
+  composition settings.
+- Bound secure-bootstrap and graceful-stop deadlines to five minutes.

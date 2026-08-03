@@ -111,7 +111,7 @@ fn floor_ceil_round_on_an_integer_are_identity() {
 #[test]
 fn divmod_floors_the_quotient_and_signs_the_remainder_like_the_divisor() {
     match run_ruby("puts 7.divmod(3)\nputs((-7).divmod(3))\n") {
-        Some(out) => assert_eq!(out, "[2, 1]\n[-3, 2]\n"),
+        Some(out) => assert_eq!(out, "2\n1\n-3\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -201,7 +201,7 @@ fn floor_ceil_round_saturate_on_non_finite_or_out_of_range_floats() {
 #[test]
 fn digits_returns_least_significant_digit_first() {
     match run_ruby("puts 123.digits\nputs 0.digits\n") {
-        Some(out) => assert_eq!(out, "[3, 2, 1]\n[0]\n"),
+        Some(out) => assert_eq!(out, "3\n2\n1\n0\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -257,7 +257,7 @@ fn divmod_by_negative_one_does_not_overflow_on_int64_min() {
     // ITSELF, not just an intermediate product. Special-cased since it
     // divides evenly.
     match run_ruby("x = -9223372036854775807 - 1\nputs(x.divmod(-1))\n") {
-        Some(out) => assert_eq!(out, "[-9223372036854775808, 0]\n"),
+        Some(out) => assert_eq!(out, "-9223372036854775808\n0\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -270,7 +270,7 @@ fn divmod_near_int64_min_does_not_overflow_computing_the_remainder() {
     // even though the final remainder (1) fits trivially. Fixed by adjusting
     // the TRUNCATING remainder (`a % b`) directly instead of multiplying.
     match run_ruby("x = -9223372036854775807 - 1\nputs(x.divmod(3))\n") {
-        Some(out) => assert_eq!(out, "[-3074457345618258603, 1]\n"),
+        Some(out) => assert_eq!(out, "-3074457345618258603\n1\n"),
         None => eprintln!("skip: no cc"),
     }
 }

@@ -101,6 +101,57 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "french", chapter)).toBe("synced");
   });
 
+  it.each([
+    [17, 3],
+    [18, 2],
+    [19, 1],
+    [20, 1],
+    [21, 1],
+    [22, 1],
+    [23, 1],
+  ])("matches the browser-loaded German Chapter %i AST across %i lessons", (chapter, count) => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("german", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "german", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "german", chapter)).toBe("synced");
+  });
+
+  it.each([
+    [6, 2],
+    [7, 2],
+    [8, 1],
+    [9, 1],
+    [10, 1],
+    [11, 1],
+    [12, 1],
+    [13, 1],
+    [14, 1],
+    [15, 1],
+    [16, 1],
+    [17, 1],
+    [18, 1],
+    [19, 1],
+    [20, 2],
+    [21, 1],
+    [22, 1],
+    [23, 1],
+    [24, 1],
+    [25, 1],
+    [26, 1],
+    [27, 1],
+    [28, 1],
+    [29, 1],
+    [30, 1],
+    [31, 2],
+  ])("matches the browser-loaded Telugu Chapter %i AST across %i lessons", (chapter, count) => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("telugu", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "telugu", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "telugu", chapter)).toBe("synced");
+  });
+
   it("reports a generated chapter stale when one canonical lesson changes", () => {
     const lessons = loadLessons();
     const changed = lessons.map((lesson) =>

@@ -969,6 +969,53 @@ that its documented JSON interface can verify:
   loopback tests prove denied and malformed requests stop before transport,
   recording readback, preset recall, bounded movement, Stop, and logout.
 
+## Current Frigate Inspection Slice
+
+This slice adds a first-party authenticated local Frigate NVR health host while
+keeping session and media boundaries explicit:
+
+- Explicit local HTTPS configuration and Vault-backed credentials feed the
+  documented `/api/login` flow. The JWT cookie exists only inside zeroizing
+  transport memory, never enters request plans or normalized state, and each
+  successful inspection ends at `/api/logout`.
+- D23 authorizes `smart_home.read` before credentials or network I/O. The host
+  then reads only `/api/version` and role-filtered `/api/stats`; it deliberately
+  avoids the broader configuration response even though Frigate redacts known
+  credential fields there.
+- Confirmed camera entities expose processing and detection FPS, detection
+  enablement, native connection quality, expected FPS, and recent reconnect and
+  stall counts. Native unusable/stopped processing maps offline, while poor or
+  recently unstable connections map degraded.
+- Production requires Frigate's authenticated HTTPS origin. Plain HTTP remains
+  loopback-test-only, and an exact protocol test proves login-body isolation,
+  cookie-only authenticated reads, bounded parsing, and redirecting logout.
+
+## Current Synology Surveillance Station Inspection Slice
+
+This slice adds a first-party authenticated local Synology NVR health host while
+preserving the device's advertised Web API boundary:
+
+- Explicit local HTTPS configuration and Vault-backed credentials first query
+  `SYNO.API.Info`. Advertised paths are constrained to the same `/webapi`
+  origin, and authentication, package-info, and camera APIs must expose the
+  versions needed by this host before any login begins.
+- D23 authorizes `smart_home.read` before credentials or transport I/O. The host
+  opens an isolated SID-format `SurveillanceStation` session with SynoToken
+  support, reads only package information and a bounded, privilege-filtered
+  camera list, and explicitly logs out.
+- Credentials, login bodies, SID values, and SynoToken values stay in zeroizing
+  transport memory and never enter request plans, normalized state, metadata,
+  or debug output. OTP and remembered-device flows are intentionally outside
+  this non-interactive username/password slice.
+- Confirmed camera entities expose the documented native status, channel,
+  vendor, and model. Normal and ready states map online, transitional states
+  map degraded, and connection, authorization, stream, storage, disabled, or
+  missing-video states map offline.
+- Production requires an authenticated HTTPS origin. Plain HTTP remains
+  loopback-test-only, and an exact protocol test proves API discovery, login
+  payload isolation, role-filtered reads, session-token confinement, and
+  logout.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -980,49 +1027,66 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Add Blue Iris snapshots, alert/clip search, export, and playback only through
+4. Add Synology Surveillance Station OTP and remembered-device authentication
+   only after an interactive challenge lifecycle and Vault-leased device-token
+   policy are concrete.
+5. Add Synology Surveillance Station events only after a concrete authenticated
+   event host and supervised subscription lifecycle exist.
+6. Add Synology Surveillance Station snapshots, recordings, export, and
+   playback only through the camera-media lease and a concrete executor.
+7. Add Synology Surveillance Station PTZ, external recording, or configuration
+   mutations only with operation-specific D23 contracts, least-privilege API
+   checks, bounded semantics, and readable postcondition verification.
+8. Add Frigate event and review push only after a concrete authenticated event
+   or WebSocket host and supervised subscription lifecycle exist.
+9. Add Frigate snapshots, recordings, export, and playback only through the
+   camera-media lease and a concrete executor.
+10. Add Frigate commands or configuration mutations only with operation-specific
+   D23 contracts, least-privilege role checks, and readable postcondition
+   verification.
+11. Add Blue Iris snapshots, alert/clip search, export, and playback only through
    the camera-media lease and a concrete media executor.
-5. Add broader Blue Iris `camconfig` or administrative mutations only with
+12. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-6. Add automatic Blue Iris discovery only if the server exposes a documented,
+13. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-7. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+14. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-8. Add Axis event streaming only after the existing WebSocket protocol core has
+15. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host, digest or short-lived session-token lifecycle,
    and subscription supervision.
-9. Add Axis snapshots and media transfer only through the camera-media lease and
+16. Add Axis snapshots and media transfer only through the camera-media lease and
    a concrete media executor.
-10. Add reusable HTTP Digest authentication before supporting Axis devices that
+17. Add reusable HTTP Digest authentication before supporting Axis devices that
    cannot expose the preferred HTTPS Basic-auth path.
-11. Enumerate Axis video sources/channels before extending PTZ beyond the current
+18. Enumerate Axis video sources/channels before extending PTZ beyond the current
    capability-probed VAPIX camera 1 boundary.
-12. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+19. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
    only when each operation has a specific capability probe and readable state.
-13. Add Reolink snapshot, recording search/download, and playback operations only
+20. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-14. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+21. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-15. Add Reolink push events only after a concrete webhook or event-stream host
+22. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-16. Add authenticated KLAP/Tapo devices and other broader-device families only
+23. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-17. Add ONVIF PullPoint events once a concrete event host and subscription
+24. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-18. Add RTSP media transfer and recording once concrete media transfer and
+25. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-19. Add a production Matter commissioning, secure-session, and network host only
+26. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-20. Add a Thread border-router host only after an actual host transport exists.
-21. Add a production Zigbee coordinator, join, and security host only after
+27. Add a Thread border-router host only after an actual host transport exists.
+28. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-22. Add production Z-Wave inclusion and S2 only after concrete host transport
+29. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition

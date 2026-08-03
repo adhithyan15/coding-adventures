@@ -1,5 +1,39 @@
 # Changelog
 
+## Warning-free 104-page book (2026-08-03)
+
+- Made intentionally short micro-lesson pages explicit with `\raggedbottom`,
+  removing eleven underfull vertical boxes without padding learner content.
+- Added concise running titles and a prose-only Chapter 12 bookmark, made the
+  Chapter 10 practice path breakable, and reflowed three dense explanations.
+- Replaced rigid legacy comparison tables with bounded paragraph columns while
+  preserving every vocabulary, grammar, register, and etymology comparison.
+- Shortened only the visible `Entschuldigung` heading and reflowed the canonical
+  `Kopf` recall; regenerated hashes keep the book and Language Ladder on the
+  same source while the full explanations remain intact.
+- A forced XeLaTeX build produces 104 pages with zero missing glyphs, overfull
+  or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX
+  warnings. All 104 rendered pages were inspected, and the outline retains the
+  Preface, pronunciation reference, and all twenty-three chapters.
+
+## Canonical Chapters 17–23 (2026-08-03)
+
+- Migrated the ten lessons in Chapters 17–23 to schema version 2 with typed
+  blocks, explicit shared-spine concepts, prerequisite-closed knowledge atoms,
+  and honest sub-five-minute duration contracts.
+- Repaired the missing shared-spine step between yes/no and sorry: a new
+  164-second `bitte` lesson assembles only previously learned words into
+  **Wasser, bitte**, while `Entschuldigung` moves from Chapter 19 to Chapter 20.
+- Generated seven LaTeX chapters from those canonical lessons and added
+  independent Language Ladder source-hash and lesson-count assertions, so the
+  app and downloadable book now consume one source of truth through Chapter 23.
+- Expanded the book from 84 to 104 pages. A forced XeLaTeX build has no missing
+  glyphs, duplicate destinations, LaTeX warnings, or leaked generator metadata;
+  all 104 rendered pages and the complete outline were inspected.
+- Recorded eighteen overfull boxes, one underfull horizontal box, eleven
+  underfull vertical boxes, and three Hyperref warnings for the focused HL-B21
+  cleanup tranche.
+
 ## Sub-five-minute lesson remediation (2026-08-02)
 
 - All twenty-seven German duration violations are resolved. Twenty-two lessons

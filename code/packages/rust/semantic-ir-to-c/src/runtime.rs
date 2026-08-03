@@ -2423,6 +2423,162 @@ static char *_sir_str_tr(const char *s, const char *from, const char *to) {
     return out;
 }
 
+/* Forward declaration -- defined below in the Numeric-methods section (it's
+   the shared saturating float->int64 cast every `floor`/`ceil`/`round`
+   there also uses); the padding-width extractor just below needs it too. */
+static int64_t _sir_f64_to_i64_saturating(double f);
+
+/* Deferred-from-slice-8: char-set methods (`count`/`delete`/`squeeze`) and
+ * padding methods (`ljust`/`rjust`/`center`). Semantics matched against the
+ * Python/TS `sir-runtime-oop` reference catalog, same discipline as every
+ * other String method in this file. Each `charset` argument is treated
+ * LITERALLY as the set of characters it contains -- Ruby's char-RANGE
+ * (`"a-z"`) and NEGATION (`"^abc"`) forms are a documented follow-up, the
+ * same literal-only scope precedent `tr`/`sub`/`gsub` already use above.
+ * Multiple charset arguments INTERSECT (Ruby's rule). This runtime is
+ * byte-oriented throughout (matching `bytes`/`length`), so "characters"
+ * below means bytes -- fits a flat 256-entry membership table, no `<ctype.h>`
+ * locale surprises. */
+
+/* Computes, for each byte value, whether it appears in EVERY `argc` String
+   argument (the charset intersection) -- non-String arguments are ignored
+   (matching the reference's `isinstance(a, str)` filter), and ZERO String
+   arguments yields an all-empty set (Ruby's `count`/`delete` need at least
+   one charset; `squeeze`'s no-charset case is handled separately below,
+   NOT via an all-empty set, since "in no set" must mean "squeeze nothing"
+   there, not "squeeze everything"). */
+static void _sir_charset_membership(int argc, SirValue *args, unsigned char *in_set /* [256] */) {
+    /* `int`, not `unsigned char` -- a `count`/`delete`/`squeeze` call with
+       more than 255 String charset arguments would wrap an `unsigned char`
+       counter modulo 256, silently under-counting the intersection for a
+       byte present in all of them (wrong answer, not a memory-safety bug,
+       but avoided outright since the extra stack is negligible). */
+    int counts[256];
+    int nsets = 0, i, c;
+    memset(counts, 0, sizeof(counts));
+    for (i = 0; i < argc; i++) {
+        unsigned char seen[256];
+        const char *p;
+        if (args[i].tag != SIR_STR) continue;
+        memset(seen, 0, sizeof(seen));
+        for (p = args[i].as.s; *p; p++) seen[(unsigned char)*p] = 1;
+        for (c = 0; c < 256; c++) if (seen[c]) counts[c]++;
+        nsets++;
+    }
+    for (c = 0; c < 256; c++) in_set[c] = (nsets > 0 && counts[c] == nsets) ? 1 : 0;
+}
+
+static SirValue _sir_str_count_charset(const char *s, int argc, SirValue *args) {
+    unsigned char in_set[256];
+    int64_t n = 0;
+    const char *p;
+    _sir_charset_membership(argc, args, in_set);
+    for (p = s; *p; p++) if (in_set[(unsigned char)*p]) n++;
+    return _sir_int(n);
+}
+
+static char *_sir_str_delete_charset(const char *s, int argc, SirValue *args) {
+    unsigned char in_set[256];
+    size_t n = strlen(s), w = 0, i;
+    char *out = (char *)_sir_alloc(n + 1);
+    _sir_charset_membership(argc, args, in_set);
+    for (i = 0; i < n; i++) {
+        unsigned char c = (unsigned char)s[i];
+        if (!in_set[c]) out[w++] = (char)c;
+    }
+    out[w] = '\0';
+    return out;
+}
+
+/* `squeeze(charset=nil)` -- collapse consecutive runs. With NO charset
+   argument, collapses runs of ANY char (every `argc == 0` call); with one+
+   charset arguments, only runs of chars in the (intersected) set collapse.
+   The `has_set` flag -- not `_sir_charset_membership`'s own empty-set
+   result -- distinguishes these, since a truly empty intersection (e.g.
+   two disjoint charset arguments) must squeeze NOTHING, while no charset
+   at all must squeeze EVERYTHING; both look identical downstream unless
+   kept as separate cases. */
+static char *_sir_str_squeeze(const char *s, int argc, SirValue *args) {
+    unsigned char in_set[256];
+    int has_set = argc > 0;
+    size_t n = strlen(s), w = 0, i;
+    char *out = (char *)_sir_alloc(n + 1);
+    if (has_set) _sir_charset_membership(argc, args, in_set);
+    for (i = 0; i < n; i++) {
+        unsigned char c = (unsigned char)s[i];
+        int in_this_set = has_set ? in_set[c] : 1;
+        if (w > 0 && (unsigned char)out[w - 1] == c && in_this_set) continue;
+        out[w++] = (char)c;
+    }
+    out[w] = '\0';
+    return out;
+}
+
+/* Extracts a `ljust`/`rjust`/`center` width argument as a plain `int64_t`,
+   the same UB-avoidance discipline `round(ndigits)` would need for its own
+   numeric argument: never a bare `(int64_t)v.as.f` cast (UB for a
+   non-finite/out-of-range Float), routed through the shared saturating
+   helper instead. */
+static int64_t _sir_str_width_arg(SirValue v) {
+    if (v.tag == SIR_INT) return v.as.i;
+    if (v.tag == SIR_FLOAT) return _sir_f64_to_i64_saturating(v.as.f);
+    return 0;
+}
+
+/* Builds a FRESH buffer of exactly `n` bytes by repeating `pad` cyclically
+   (truncating the final repeat); `n <= 0` returns `""`. The current caller
+   (`_sir_str_justify`) already guarantees a non-empty `pad`, but `pl == 0`
+   is guarded here too, self-contained, rather than trusted purely by
+   caller discipline -- an empty `pad` would otherwise divide by zero. */
+static char *_sir_str_pad_buf(const char *pad, int64_t n) {
+    size_t pl, i;
+    char *out;
+    if (n <= 0) return _sir_dup("");
+    pl = strlen(pad);
+    if (pl == 0) { pad = " "; pl = 1; }
+    out = (char *)_sir_alloc((size_t)n + 1);
+    for (i = 0; i < (size_t)n; i++) out[i] = pad[i % pl];
+    out[n] = '\0';
+    return out;
+}
+
+/* SIR_MAX_PAD_LEN mirrors the Python/TS reference's `_MAX_REPEAT_LEN`: a
+   deficit above this is CLAMPED, not rejected, so a hostile width (e.g.
+   `"".ljust(10**18)`) cannot exhaust memory -- `_sir_alloc` itself only
+   guards against a FAILED allocation (aborts cleanly), not a succeeding
+   multi-gigabyte one, so the cap has to happen here, before the alloc. */
+#define SIR_MAX_PAD_LEN 100000000
+
+/* `ljust`/`rjust`/`center(width, pad=" ")` -- pad `s` to `width` bytes using
+   `pad` repeated cyclically; `width <= len(s)` is a no-op. `center` puts
+   any odd leftover pad byte on the RIGHT (Ruby's rule -- the opposite of
+   Python's single-char-only `str.center`). `mode`: 0 = ljust, 1 = rjust,
+   2 = center. The `width <= 0` short-circuit below is load-bearing, not
+   just an optimization: `width` can be `INT64_MIN` (a saturated hostile
+   Float argument), and `width - (int64_t)len` on that value is
+   signed-overflow UB -- returning before ever computing the subtraction
+   sidesteps it entirely (any non-positive width means "no padding needed"
+   regardless, so the short-circuit is also semantically correct, not just
+   a safety patch). */
+static char *_sir_str_justify(const char *s, int64_t width, const char *pad, int mode) {
+    size_t len;
+    int64_t deficit, left, right;
+    char *lp, *rp, *mid;
+    if (width <= 0) return _sir_dup(s);
+    len = strlen(s);
+    deficit = width - (int64_t)len;
+    if (deficit > SIR_MAX_PAD_LEN) deficit = SIR_MAX_PAD_LEN;
+    if (deficit <= 0) return _sir_dup(s);
+    if (mode == 0) return _sir_cat(s, _sir_str_pad_buf(pad, deficit));
+    if (mode == 1) return _sir_cat(_sir_str_pad_buf(pad, deficit), s);
+    left = deficit / 2;
+    right = deficit - left;
+    lp = _sir_str_pad_buf(pad, left);
+    mid = _sir_cat(lp, s);
+    rp = _sir_str_pad_buf(pad, right);
+    return _sir_cat(mid, rp);
+}
+
 /* ---- Collections slice 9: Numeric methods ------------------------------------
  *
  * `Integer`/`Float` methods. Semantics matched against the Python/TS
@@ -2557,6 +2713,107 @@ static SirValue _sir_num_fdiv(SirValue recv, SirValue divisor) {
  * `INT64_MIN`'s magnitude, which does not fit back in an `int64_t`). */
 static uint64_t _sir_i64_abs_u(int64_t n) {
     return (n < 0) ? (uint64_t)0 - (uint64_t)n : (uint64_t)n;
+}
+
+/* Extracts a `round(ndigits)` argument as a plain `int64_t`, WITHOUT going
+ * through `_sir_as_int`'s bare `(int64_t)v.as.f` cast (UB for a non-finite
+ * or out-of-range Float -- see `_sir_f64_to_i64_saturating`'s doc comment
+ * above). A hostile NaN/Infinity argument saturates to 0/`INT64_MAX`/
+ * `INT64_MIN` instead, each of which the bounds checks in
+ * `_sir_num_round_ndigits` below turn into a safe, harmless outcome. */
+static int64_t _sir_round_ndigits_arg(SirValue v) {
+    if (v.tag == SIR_INT) return v.as.i;
+    if (v.tag == SIR_FLOAT) return _sir_f64_to_i64_saturating(v.as.f);
+    return 0;
+}
+
+/* Ten-to-the-`k` as a `uint64_t`. Every caller below only ever passes `k` in
+   `0..=18` (each checks a "dwarfs the value" bound first), so this never
+   approaches `UINT64_MAX` (~1.8e19) -- the largest value returned is 10^18,
+   comfortably inside both `uint64_t` and `int64_t` range. */
+static uint64_t _sir_pow10_u(int k) {
+    uint64_t r = 1;
+    while (k-- > 0) r *= 10;
+    return r;
+}
+
+/* `round(ndigits)` -- the multi-digit form. Ruby dispatches on BOTH the
+ * receiver's own type and the sign of `ndigits`:
+ *
+ *   Integer, ndigits >= 0  -> receiver unchanged (already exact at any
+ *                             decimal place an Integer could round to)
+ *   Integer, ndigits <  0  -> round to the nearest 10^(-ndigits), e.g.
+ *                             1234.round(-2) == 1200
+ *   Float,   ndigits >  0  -> round to `ndigits` decimal places, stays a
+ *                             Float, e.g. 3.14159.round(2) == 3.14
+ *   Float,   ndigits <= 0  -> round to the nearest 10^(-ndigits) and
+ *                             CONVERT to an Integer, e.g.
+ *                             1234.5.round(-2) == 1200 (Integer, not Float)
+ *
+ * Magnitude caps keep every path inside `int64_t`/`double` range without a
+ * bignum, mirroring `_sir_num_digits`'s "no separate DoS cap needed"
+ * reasoning:
+ *   - Integer negative-`ndigits` path: `|recv|` is always < 10^19 (an
+ *     `int64_t` magnitude has at most 19 decimal digits), so once the
+ *     rounding place reaches 10^19 the result is unconditionally 0 --
+ *     capped at `-ndigits >= 19` rather than computed per-receiver, and
+ *     kept to a `factor` of at most 10^18 so a carry from rounding up
+ *     (e.g. `9223372036854775807.round(-1)`, which would need one MORE
+ *     digit than `int64_t` holds) is caught by the explicit saturating
+ *     check below rather than silently wrapping.
+ *   - Float paths (either sign of `ndigits`): capped at the ~17
+ *     significant decimal digits a `double` can actually represent --
+ *     beyond that, rounding is meaningless (the receiver is already exact
+ *     at that many digits, or precision was lost upstream of this call),
+ *     so the receiver is returned unchanged / dwarfed to 0 rather than
+ *     manufacturing false precision or calling `pow()` with a wild
+ *     exponent.
+ */
+static SirValue _sir_num_round_ndigits(SirValue recv, int64_t ndigits) {
+    if (recv.tag == SIR_INT) {
+        uint64_t k, factor, mag, q, rem, result;
+        int neg;
+        if (ndigits >= 0) return recv;
+        k = _sir_i64_abs_u(ndigits);
+        if (k >= 19) return _sir_int(0);
+        factor = _sir_pow10_u((int)k);
+        mag = _sir_i64_abs_u(recv.as.i);
+        q = mag / factor;
+        rem = mag % factor;
+        if (rem >= factor - rem) q += 1;  /* half-away-from-zero; no `rem*2` overflow */
+        result = q * factor;
+        neg = recv.as.i < 0;
+        if (neg) {
+            if (result >= (uint64_t)INT64_MAX + 1u) return _sir_int(INT64_MIN);
+            return _sir_int(-(int64_t)result);
+        }
+        if (result > (uint64_t)INT64_MAX) return _sir_int(INT64_MAX);
+        return _sir_int((int64_t)result);
+    }
+    if (recv.tag == SIR_FLOAT) {
+        double f = recv.as.f, factor, scaled, r;
+        if (ndigits > 0) {
+            if (ndigits > 17) return recv;
+            factor = pow(10.0, (double)ndigits);
+            scaled = f * factor;
+            r = (scaled >= 0.0) ? floor(scaled + 0.5) : ceil(scaled - 0.5);
+            return _sir_float(r / factor);
+        }
+        {
+            /* `-ndigits` is signed-overflow UB when `ndigits == INT64_MIN`
+               (reachable: `_sir_round_ndigits_arg` saturates a hostile
+               huge-negative Float ndigits argument to exactly INT64_MIN) --
+               the SAME hazard the Integer branch above avoids via
+               `_sir_i64_abs_u` instead of a bare unary `-`. */
+            uint64_t k = _sir_i64_abs_u(ndigits);
+            if (k > 18) return _sir_int(0);
+            factor = pow(10.0, (double)(int)k);
+            scaled = f / factor;
+            r = (scaled >= 0.0) ? floor(scaled + 0.5) : ceil(scaled - 0.5);
+            return _sir_int(_sir_f64_to_i64_saturating(r * factor));
+        }
+    }
+    return recv;
 }
 
 static SirValue _sir_num_gcd(SirValue recv, SirValue other) {
@@ -2798,6 +3055,9 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             }
         }
         if (recv.tag == SIR_MAP && argc == 0) return _sir_int(recv.as.map->len);
+        /* Deferred-from-slice-8: String#count(charset, ...) -- how many
+           chars of `recv` lie in the (intersected) char-set argument(s). */
+        if (recv.tag == SIR_STR && argc >= 1) return _sir_str_count_charset(recv.as.s, argc, args);
     } else if (strcmp(m, "first") == 0) {
         if (recv.tag == SIR_SEQ) return recv.as.seq->len > 0 ? recv.as.seq->items[0] : _sir_nil();
     } else if (strcmp(m, "last") == 0) {
@@ -2925,6 +3185,10 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_MAP && argc >= 1) return _sir_hash_merge(recv.as.map, args[0]);
     } else if (strcmp(m, "delete") == 0) {
         if (recv.tag == SIR_MAP && argc == 1) return _sir_hash_delete(recv.as.map, args[0]);
+        /* Deferred-from-slice-8: String#delete(charset, ...) -- remove
+           every char in the (intersected) char-set argument(s). */
+        if (recv.tag == SIR_STR && argc >= 1)
+            return _sir_str(_sir_str_delete_charset(recv.as.s, argc, args));
     } else if (strcmp(m, "clear") == 0) {
         if (recv.tag == SIR_MAP && argc == 0) return _sir_hash_clear(recv.as.map);
     } else if (strcmp(m, "invert") == 0) {
@@ -3026,6 +3290,26 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
             return _sir_str(_sir_str_tr(recv.as.s, args[0].as.s, args[1].as.s));
     }
+    /* Deferred-from-slice-8: char-set methods (`count`/`delete`/`squeeze`)
+     * and padding methods (`ljust`/`rjust`/`center`). `count`/`delete`
+     * share their names with slice 3/6's Array#count and Hash#delete --
+     * merged into THOSE existing `else if` arms below (a SECOND `else if`
+     * on the same method name in this if/else-if chain would be dead code:
+     * the first match wins regardless of whether its body returns, so a
+     * later arm for the same `strcmp` never runs). `squeeze` has no
+     * existing arm, so it gets its own. */
+    else if (strcmp(m, "squeeze") == 0) {
+        if (recv.tag == SIR_STR) return _sir_str(_sir_str_squeeze(recv.as.s, argc, args));
+    } else if (strcmp(m, "ljust") == 0 || strcmp(m, "rjust") == 0 || strcmp(m, "center") == 0) {
+        if (recv.tag == SIR_STR && argc >= 1 && _sir_is_num(args[0])) {
+            int64_t width = _sir_str_width_arg(args[0]);
+            const char *pad = (argc > 1 && args[1].tag == SIR_STR && args[1].as.s[0] != '\0')
+                                   ? args[1].as.s
+                                   : " ";
+            int mode = (strcmp(m, "ljust") == 0) ? 0 : (strcmp(m, "rjust") == 0) ? 1 : 2;
+            return _sir_str(_sir_str_justify(recv.as.s, width, pad, mode));
+        }
+    }
     /* Collections slice 9: Numeric methods. */
     else if (strcmp(m, "abs") == 0) {
         /* Same `-INT64_MIN` hazard `_sir_i64_abs_u`'s doc comment describes
@@ -3061,6 +3345,8 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (_sir_is_num(recv)) return _sir_num_ceil(recv);
     } else if (strcmp(m, "round") == 0) {
         if (_sir_is_num(recv) && argc == 0) return _sir_num_round(recv);
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_round_ndigits(recv, _sir_round_ndigits_arg(args[0]));
     } else if (strcmp(m, "divmod") == 0) {
         if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
             return _sir_num_divmod(recv, args[0]);
@@ -3218,10 +3504,39 @@ SirValue _sir_print_v(SirValue *xs, int n) {
     for (i = 0; i < n; i++) _sir_fmt(stdout, xs[i]);
     return _sir_nil();
 }
+
+/* `puts`'s ARRAY-UNPACKING rule -- distinct from every OTHER display path
+ * here (`print`, `_sir_fmt`'s general case, `_sir_fmt_seq` nested inside a
+ * larger structure), which all bracket-display a Seq (`[1, 2, 3]`). Real
+ * Ruby's `Kernel#puts` special-cases an Array argument: each element gets
+ * its OWN line, RECURSIVELY flattening nested arrays, and an EMPTY array
+ * prints nothing at all (not even a blank line) -- `puts [1, [2, 3], 4]` ->
+ * "1\n2\n3\n4\n"; `puts []` -> (nothing); `puts [[]]` -> (nothing, the
+ * empty nested array also contributes zero lines). A Hash argument is NOT
+ * unpacked (only Array gets this treatment), so this checks `SIR_SEQ`
+ * specifically, not any container tag. Shares `_sir_fmt`'s depth counter/
+ * cap (`_sir_fmt_depth`/`SIR_MAX_FMT_DEPTH`, just above) so a
+ * self-referential array (`a[0] = a`) terminates instead of recursing
+ * forever, matching the safety floor every other display path here holds. */
+static void _sir_puts_one(FILE *out, SirValue v) {
+    if (v.tag == SIR_SEQ) {
+        int64_t i;
+        if (_sir_fmt_depth > SIR_MAX_FMT_DEPTH) {
+            fputs("[...]\n", out);
+            return;
+        }
+        _sir_fmt_depth++;
+        for (i = 0; i < v.as.seq->len; i++) _sir_puts_one(out, v.as.seq->items[i]);
+        _sir_fmt_depth--;
+        return;
+    }
+    _sir_fmt(out, v);
+    fputc('\n', out);
+}
 SirValue _sir_puts_v(SirValue *xs, int n) {
     int i;
     if (n <= 0) { fputc('\n', stdout); return _sir_nil(); }
-    for (i = 0; i < n; i++) { _sir_fmt(stdout, xs[i]); fputc('\n', stdout); }
+    for (i = 0; i < n; i++) _sir_puts_one(stdout, xs[i]);
     return _sir_nil();
 }
 SirValue _sir_print(int n, ...) { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_print_v(xs, n); if (xs) free(xs); return r; }

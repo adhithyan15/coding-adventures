@@ -1,5 +1,15 @@
 {
   "version": 1,
+  "scriptSets": {
+    "telugu-comparisons": [
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ]
+  },
   "targets": [
     {
       "language": "spanish",
@@ -317,6 +327,263 @@
       "title": "Green and Yellow",
       "label": "ch:fr-green-and-yellow",
       "output": "french/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:ge-head-and-hand",
+      "output": "german/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:ge-yes-and-no",
+      "output": "german/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:ge-please",
+      "output": "german/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:ge-sorry",
+      "output": "german/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:ge-weather",
+      "output": "german/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:ge-dog-and-cat",
+      "output": "german/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:ge-green-and-yellow",
+      "output": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:te-dative-case",
+      "output": "telugu/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:te-numbers-one-to-ten",
+      "output": "telugu/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:te-please",
+      "output": "telugu/book/chapters/ch08-please.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:te-sorry",
+      "output": "telugu/book/chapters/ch09-sorry.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:te-days-of-the-week",
+      "output": "telugu/book/chapters/ch10-days.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:te-core-colours",
+      "output": "telugu/book/chapters/ch11-colours.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:te-family",
+      "output": "telugu/book/chapters/ch12-family.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:te-head-and-hand",
+      "output": "telugu/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:te-seasons",
+      "output": "telugu/book/chapters/ch14-seasons.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:te-water-and-rice",
+      "output": "telugu/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:te-traditional-months",
+      "output": "telugu/book/chapters/ch16-months.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:te-noon-and-midnight",
+      "output": "telugu/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:te-telling-time",
+      "output": "telugu/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:te-asking-age",
+      "output": "telugu/book/chapters/ch19-age.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty and Weather",
+      "label": "ch:te-numbers-and-weather",
+      "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:te-dog-and-cat",
+      "output": "telugu/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:te-green-and-yellow",
+      "output": "telugu/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:te-day",
+      "output": "telugu/book/chapters/ch23-day.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:te-night",
+      "output": "telugu/book/chapters/ch24-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:te-good-night",
+      "output": "telugu/book/chapters/ch25-good-night.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:te-morning",
+      "output": "telugu/book/chapters/ch26-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:te-evening",
+      "output": "telugu/book/chapters/ch27-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:te-afternoon",
+      "output": "telugu/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:te-good-morning",
+      "output": "telugu/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:te-good-evening",
+      "output": "telugu/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:te-good-afternoon",
+      "output": "telugu/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "telugu-comparisons"
     },
     {
       "language": "bengali",
