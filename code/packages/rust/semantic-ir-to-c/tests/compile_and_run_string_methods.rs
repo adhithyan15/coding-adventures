@@ -33,7 +33,14 @@ fn run_ruby(src: &str) -> Option<String> {
     let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
     let art = semantic_ir_to_c::compile(&module).expect("C compile (no panic)");
     let dir = std::env::temp_dir();
-    let stem = format!("sirc_strm_{}_{}", std::process::id(), src.len());
+    // Hash the full source, not just its length -- two tests with equal-length
+    // sources run as parallel threads in the SAME process (cargo test's
+    // default), so a length-keyed stem collides and one test's compile/run
+    // clobbers the other's temp file (a real, hit-in-CI flake).
+    use std::hash::{Hash, Hasher};
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    src.hash(&mut hasher);
+    let stem = format!("sirc_strm_{}_{}", std::process::id(), hasher.finish());
     let cpath = dir.join(format!("{stem}.c"));
     let exe = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
     std::fs::write(&cpath, &art.source).expect("write .c");
