@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `CGD` and `CGD0` gate-drain capacitance
+  parameters instead of silently dropping them.
 - Validate and lower JFET model-card `CGS` and `CGS0` gate-source capacitance
   parameters instead of silently dropping them.
 - Validate MOS model-card `NSS` and `TPG` process parameters and derive missing

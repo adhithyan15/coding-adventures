@@ -4320,11 +4320,16 @@ the Rust, Python, and TypeScript surfaces together.
      normalizer to derive missing `KP`, `VT0`, `GAMMA`, and `PHI` values from
      process parameters while preserving explicit model and instance values.
 
+401. Python and TypeScript Berkeley SPICE JFET gate-source capacitance parity.
+   - Status: completed in PR 9731.
+   - Both parser facades validate non-negative finite `CGS` / `CGS0` values
+     and lower them into the shared engine gate-source capacitance field.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE JFET remaining parameter-lowering parity.
-   - Validate and lower `CGD` / `CGD0` gate-drain capacitance instead of
-     silently dropping the shared engine parameter.
+1. Python and TypeScript Berkeley SPICE diode model-card alias parity.
+   - Align parser validation and lowering with the shared engine aliases,
+     starting with `JS` as the diode saturation-current alias for `IS`.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

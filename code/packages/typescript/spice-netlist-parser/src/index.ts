@@ -1158,6 +1158,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET CGS must be finite and non-negative");
   }
+  const gateDrainCapacitance = params.get("CGD") ?? params.get("CGD0");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    gateDrainCapacitance !== undefined &&
+    (!Number.isFinite(gateDrainCapacitance) || gateDrainCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("JFET CGD must be finite and non-negative");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1724,6 +1732,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("VTO") ?? (polarity === "NJF" ? -2.0 : 2.0),
       model.params.get("LAMBDA") ?? 0.0,
       model.params.get("CGS") ?? model.params.get("CGS0") ?? 0.0,
+      model.params.get("CGD") ?? model.params.get("CGD0") ?? 0.0,
     );
   }
   if (prefix === "M") {
