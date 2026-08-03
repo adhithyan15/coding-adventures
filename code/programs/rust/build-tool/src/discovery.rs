@@ -32,13 +32,46 @@
 //
 // # Language inference
 //
-// We infer a package's language from its directory path. If the path contains
-// "python", "ruby", "go", or "rust" as a component under "packages" or
-// "programs", that is the language. The package name is "{language}/{dirname}",
-// e.g., "python/logic-gates" or "go/directed-graph".
+// We infer a package's language from its directory path using the canonical
+// package-parity bucket registry plus the shared `dotnet` program host bucket.
+// The package name is "{language}/{dirname}", e.g., "python/logic-gates" or
+// "go/directed-graph".
 
+use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
+
+const DUPLICATE_PACKAGE_IDENTITY: &str = "DUPLICATE_PACKAGE_IDENTITY";
+
+/// Canonical repository buckets understood by package discovery.
+///
+/// The parity denominator is defined in `package_parity_report.py`. Discovery
+/// additionally retains `dotnet` for programs hosted by the shared .NET engine.
+pub const DISCOVERY_LANGUAGES: &[&str] = &[
+    "csharp",
+    "dart",
+    "elixir",
+    "fsharp",
+    "go",
+    "haskell",
+    "java",
+    "kotlin",
+    "lua",
+    "perl",
+    "python",
+    "ruby",
+    "rust",
+    "swift",
+    "typescript",
+    "c",
+    "cpp",
+    "ocaml",
+    "wasm",
+    "mosaic",
+    "twig",
+    "starlark",
+    "dotnet",
+];
 
 // ---------------------------------------------------------------------------
 // Data types
@@ -55,9 +88,31 @@ pub struct Package {
     pub path: PathBuf,
     /// Lines from the BUILD file (commands to execute).
     pub build_commands: Vec<String>,
-    /// Inferred language: "python", "ruby", "go", "rust", or "unknown".
+    /// Inferred canonical discovery language, or "unknown".
     pub language: String,
 }
+
+/// Two or more package directories that normalize to one graph identity.
+#[derive(Debug, Eq, PartialEq)]
+pub struct DuplicatePackageIdentityError {
+    pub code: String,
+    pub package: String,
+    pub paths: Vec<String>,
+}
+
+impl fmt::Display for DuplicatePackageIdentityError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "{}: package={} paths={}",
+            self.code,
+            self.package,
+            self.paths.join(",")
+        )
+    }
+}
+
+impl std::error::Error for DuplicatePackageIdentityError {}
 
 // ---------------------------------------------------------------------------
 // Skip list
@@ -83,7 +138,12 @@ const SKIP_DIRS: &[&str] = &[
     "build",
     "target",
     ".claude",
+    "specs",
     "Pods",
+    ".dart_tool",
+    ".build",
+    ".gradle",
+    "gradle-build",
 ];
 
 // ---------------------------------------------------------------------------
@@ -109,37 +169,51 @@ pub fn read_lines(path: &Path) -> Vec<String> {
 }
 
 /// Inspects the directory path to determine the programming language.
-/// We look for known language names ("python", "ruby", "go", "rust")
-/// as path components. For example, "/repo/code/packages/python/logic-gates"
-/// yields "python".
+/// We look for canonical language names as exact path components. For example,
+/// "/repo/code/packages/python/logic-gates" yields "python".
 fn infer_language(path: &Path) -> String {
     // Convert path to forward-slash form for consistent splitting across platforms.
     let path_str = path.to_string_lossy().replace('\\', "/");
     let parts: Vec<&str> = path_str.split('/').collect();
 
-    for lang in &[
-        "python",
-        "ruby",
-        "go",
-        "rust",
-        "typescript",
-        "elixir",
-        "lua",
-        "perl",
-        "swift",
-        "haskell",
-        "wasm",
-        "csharp",
-        "fsharp",
-        "dotnet",
-    ] {
-        for part in &parts {
-            if part == lang {
-                return lang.to_string();
-            }
+    for pair in parts.windows(2) {
+        if pair[0] == "packages" || pair[0] == "programs" {
+            return if DISCOVERY_LANGUAGES.contains(&pair[1]) {
+                pair[1].to_string()
+            } else {
+                "unknown".to_string()
+            };
         }
     }
     "unknown".to_string()
+}
+
+fn repository_package_path(root: &Path, path: &Path) -> String {
+    let parts: Vec<String> = path
+        .components()
+        .map(|component| component.as_os_str().to_string_lossy().into_owned())
+        .collect();
+    let mut canonical_start = None;
+    for index in 0..parts.len().saturating_sub(1) {
+        if parts[index] == "code"
+            && (parts[index + 1] == "packages" || parts[index + 1] == "programs")
+        {
+            canonical_start = Some(index);
+        }
+    }
+    if let Some(index) = canonical_start {
+        return parts[index..].join("/");
+    }
+
+    path.strip_prefix(root)
+        .ok()
+        .map(|relative| relative.to_string_lossy().replace('\\', "/"))
+        .filter(|relative| !relative.is_empty())
+        .or_else(|| {
+            path.file_name()
+                .map(|name| name.to_string_lossy().into_owned())
+        })
+        .unwrap_or_default()
 }
 
 /// Builds a qualified package name from the language and directory path.
@@ -295,11 +369,32 @@ fn walk_dirs(directory: &Path, packages: &mut Vec<Package>) {
 ///
 /// This is the main entry point for the discovery module. The root
 /// parameter should typically be the "code/" directory inside the repo.
-pub fn discover_packages(root: &Path) -> Vec<Package> {
+pub fn discover_packages(root: &Path) -> Result<Vec<Package>, DuplicatePackageIdentityError> {
     let mut packages = Vec::new();
     walk_dirs(root, &mut packages);
-    packages.sort_by(|a, b| a.name.cmp(&b.name));
-    packages
+    packages.sort_by(|a, b| a.name.cmp(&b.name).then(a.path.cmp(&b.path)));
+
+    let mut index = 0;
+    while index < packages.len() {
+        let mut end = index + 1;
+        while end < packages.len() && packages[end].name == packages[index].name {
+            end += 1;
+        }
+        if end - index > 1 {
+            let paths = packages[index..end]
+                .iter()
+                .map(|package| repository_package_path(root, &package.path))
+                .collect();
+            return Err(DuplicatePackageIdentityError {
+                code: DUPLICATE_PACKAGE_IDENTITY.to_string(),
+                package: packages[index].name.clone(),
+                paths,
+            });
+        }
+        index = end;
+    }
+
+    Ok(packages)
 }
 
 // ---------------------------------------------------------------------------
@@ -309,7 +404,81 @@ pub fn discover_packages(root: &Path) -> Vec<Package> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde::Deserialize;
     use std::fs;
+
+    #[derive(Deserialize)]
+    struct DiscoveryFixture {
+        workspace: FixtureWorkspace,
+        expected: ExpectedDiscovery,
+    }
+
+    #[derive(Deserialize)]
+    struct FixtureWorkspace {
+        files: Vec<FixtureFile>,
+    }
+
+    #[derive(Deserialize)]
+    struct FixtureFile {
+        path: String,
+        content_utf8: String,
+    }
+
+    #[derive(Deserialize)]
+    struct ExpectedDiscovery {
+        result: ExpectedResult,
+        diagnostics: Vec<ExpectedDiagnostic>,
+    }
+
+    #[derive(Deserialize)]
+    struct ExpectedResult {
+        #[serde(default)]
+        packages: Vec<ExpectedPackage>,
+    }
+
+    #[derive(Deserialize)]
+    struct ExpectedPackage {
+        language: String,
+        name: String,
+        rel_path: String,
+    }
+
+    #[derive(Deserialize)]
+    struct ExpectedDiagnostic {
+        code: String,
+        path: String,
+        package: String,
+        details: ExpectedDiagnosticDetails,
+    }
+
+    #[derive(Deserialize)]
+    struct ExpectedDiagnosticDetails {
+        paths: Vec<String>,
+    }
+
+    fn load_discovery_fixture(name: &str) -> DiscoveryFixture {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../specs/fixtures/build-tool-v1/cases")
+            .join(name);
+        let data = fs::read(&path)
+            .unwrap_or_else(|error| panic!("read shared fixture {}: {error}", path.display()));
+        serde_json::from_slice(&data)
+            .unwrap_or_else(|error| panic!("decode shared fixture {}: {error}", path.display()))
+    }
+
+    fn materialize_discovery_fixture(fixture: &DiscoveryFixture, case_name: &str) -> PathBuf {
+        let root = std::env::temp_dir().join(format!(
+            "build_tool_rust_discovery_{case_name}_{}",
+            std::process::id()
+        ));
+        let _ = fs::remove_dir_all(&root);
+        for file in &fixture.workspace.files {
+            let path = root.join(Path::new(&file.path));
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(path, &file.content_utf8).unwrap();
+        }
+        root
+    }
 
     #[test]
     fn test_infer_language() {
@@ -339,6 +508,58 @@ mod tests {
             infer_package_name(path, "elixir"),
             "elixir/programs/grammar_tools"
         );
+    }
+
+    #[test]
+    fn test_language_registry_conformance_fixture() {
+        let fixture = load_discovery_fixture("discovery-language-registry.json");
+        let root = materialize_discovery_fixture(&fixture, "language_registry");
+        let packages = discover_packages(&root.join("code"))
+            .expect("the canonical language registry fixture must discover");
+        let actual: Vec<(String, String, String)> = packages
+            .iter()
+            .map(|package| {
+                (
+                    package.name.clone(),
+                    package.language.clone(),
+                    package
+                        .path
+                        .strip_prefix(&root)
+                        .unwrap()
+                        .to_string_lossy()
+                        .replace('\\', "/"),
+                )
+            })
+            .collect();
+        let expected: Vec<(String, String, String)> = fixture
+            .expected
+            .result
+            .packages
+            .iter()
+            .map(|package| {
+                (
+                    package.name.clone(),
+                    package.language.clone(),
+                    package.rel_path.clone(),
+                )
+            })
+            .collect();
+        assert_eq!(actual, expected);
+        let _ = fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn test_duplicate_identity_conformance_fixture() {
+        let fixture = load_discovery_fixture("discovery-duplicate-identity.json");
+        let root = materialize_discovery_fixture(&fixture, "duplicate_identity");
+        let error = discover_packages(&root.join("code"))
+            .expect_err("duplicate qualified identities must fail closed");
+        let diagnostic = &fixture.expected.diagnostics[0];
+        assert_eq!(error.code, diagnostic.code);
+        assert_eq!(error.package, diagnostic.package);
+        assert_eq!(error.paths[0], diagnostic.path);
+        assert_eq!(error.paths, diagnostic.details.paths);
+        let _ = fs::remove_dir_all(root);
     }
 
     #[test]
@@ -392,7 +613,7 @@ mod tests {
         fs::create_dir_all(&git_dir).unwrap();
         fs::write(git_dir.join("BUILD"), "nope").unwrap();
 
-        let packages = discover_packages(&dir);
+        let packages = discover_packages(&dir).expect("fixture identities are unique");
         assert_eq!(packages.len(), 2);
         assert_eq!(packages[0].name, "go/directed-graph");
         assert_eq!(packages[1].name, "python/logic-gates");

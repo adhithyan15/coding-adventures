@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "id": "discovery/language-registry",
+  "domain": "discovery",
+  "summary": "Every canonical non-host bucket is classified by its exact path component.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "discovery"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/c/demo-c/BUILD",
+        "content_utf8": "echo c\n"
+      },
+      {
+        "path": "code/packages/cpp/demo-cpp/BUILD",
+        "content_utf8": "echo cpp\n"
+      },
+      {
+        "path": "code/packages/custom/go/BUILD",
+        "content_utf8": "echo exact-bucket-only\n"
+      },
+      {
+        "path": "code/packages/dart/demo-dart/BUILD",
+        "content_utf8": "echo dart\n"
+      },
+      {
+        "path": "code/packages/java/demo-java/BUILD",
+        "content_utf8": "echo java\n"
+      },
+      {
+        "path": "code/packages/kotlin/demo-kotlin/BUILD",
+        "content_utf8": "echo kotlin\n"
+      },
+      {
+        "path": "code/packages/mosaic/demo-mosaic/BUILD",
+        "content_utf8": "echo mosaic\n"
+      },
+      {
+        "path": "code/packages/ocaml/demo-ocaml/BUILD",
+        "content_utf8": "echo ocaml\n"
+      },
+      {
+        "path": "code/packages/starlark/demo-starlark/BUILD",
+        "content_utf8": "echo starlark\n"
+      },
+      {
+        "path": "code/packages/twig/demo-twig/BUILD",
+        "content_utf8": "echo twig\n"
+      },
+      {
+        "path": "code/specs/fixtures/scaffold-generator/ocaml-library/BUILD",
+        "content_utf8": "echo fixture-only\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "discovery",
+    "options": {
+      "code_root": "code",
+      "platform": "linux"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "discovery/language-registry",
+    "domain": "discovery",
+    "outcome": "ok",
+    "result": {
+      "packages": [
+        {
+          "build_file": "code/packages/c/demo-c/BUILD",
+          "is_starlark": false,
+          "language": "c",
+          "name": "c/demo-c",
+          "rel_path": "code/packages/c/demo-c"
+        },
+        {
+          "build_file": "code/packages/cpp/demo-cpp/BUILD",
+          "is_starlark": false,
+          "language": "cpp",
+          "name": "cpp/demo-cpp",
+          "rel_path": "code/packages/cpp/demo-cpp"
+        },
+        {
+          "build_file": "code/packages/dart/demo-dart/BUILD",
+          "is_starlark": false,
+          "language": "dart",
+          "name": "dart/demo-dart",
+          "rel_path": "code/packages/dart/demo-dart"
+        },
+        {
+          "build_file": "code/packages/java/demo-java/BUILD",
+          "is_starlark": false,
+          "language": "java",
+          "name": "java/demo-java",
+          "rel_path": "code/packages/java/demo-java"
+        },
+        {
+          "build_file": "code/packages/kotlin/demo-kotlin/BUILD",
+          "is_starlark": false,
+          "language": "kotlin",
+          "name": "kotlin/demo-kotlin",
+          "rel_path": "code/packages/kotlin/demo-kotlin"
+        },
+        {
+          "build_file": "code/packages/mosaic/demo-mosaic/BUILD",
+          "is_starlark": false,
+          "language": "mosaic",
+          "name": "mosaic/demo-mosaic",
+          "rel_path": "code/packages/mosaic/demo-mosaic"
+        },
+        {
+          "build_file": "code/packages/ocaml/demo-ocaml/BUILD",
+          "is_starlark": false,
+          "language": "ocaml",
+          "name": "ocaml/demo-ocaml",
+          "rel_path": "code/packages/ocaml/demo-ocaml"
+        },
+        {
+          "build_file": "code/packages/starlark/demo-starlark/BUILD",
+          "is_starlark": false,
+          "language": "starlark",
+          "name": "starlark/demo-starlark",
+          "rel_path": "code/packages/starlark/demo-starlark"
+        },
+        {
+          "build_file": "code/packages/twig/demo-twig/BUILD",
+          "is_starlark": false,
+          "language": "twig",
+          "name": "twig/demo-twig",
+          "rel_path": "code/packages/twig/demo-twig"
+        },
+        {
+          "build_file": "code/packages/custom/go/BUILD",
+          "is_starlark": false,
+          "language": "unknown",
+          "name": "unknown/go",
+          "rel_path": "code/packages/custom/go"
+        }
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

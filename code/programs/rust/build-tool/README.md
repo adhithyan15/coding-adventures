@@ -4,7 +4,7 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 ## What it does
 
-This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
+This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, and programs retain a `programs` identity segment so a library and program with the same basename stay distinct. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
 ## Building
 
@@ -52,7 +52,7 @@ The release binary is at `target/release/build-tool` (or `build-tool.exe` on Win
 | `--force` | false | Rebuild everything regardless of cache |
 | `--dry-run` | false | Show what would build without executing |
 | `--jobs` | CPU count | Maximum parallel build jobs |
-| `--language` | all | Filter to one supported implementation language or use `all` |
+| `--language` | all | Filter to one canonical discovery language or use `all` |
 | `--cache-file` | .build-cache.json | Path to the build cache file |
 
 ## Architecture
@@ -99,7 +99,19 @@ This is equivalent to the Go implementation's goroutine + semaphore pattern, but
 cargo test -- --nocapture
 ```
 
-## Metadata diagnostics
+## Discovery and metadata diagnostics
+
+Discovery rejects any residual qualified-name collision before dependency
+resolution. The diagnostic contains the shared identity and sorted
+repository-relative paths without exposing the checkout root:
+
+```text
+DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,code/packages/beta/demo
+```
+
+The shared `discovery/language-registry` fixture covers the canonical buckets
+that were previously omitted, while `discovery/duplicate-identity` verifies
+the stable CLI exit-code-2 failure path.
 
 Lua `.rockspec` metadata is decoded as strict UTF-8 before dependency parsing.
 Invalid bytes stop resolution, return exit code `2`, and emit a stable diagnostic
