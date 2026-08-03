@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Expose read-only trusted public-key lookup for daemon composition and audits.
 - Add a canonical deny-all Deno launch plan shared by package generation,
   verification, and process activation.
 - Route subprocess host RPC calls through profile-gated D18D handlers in Rust.
