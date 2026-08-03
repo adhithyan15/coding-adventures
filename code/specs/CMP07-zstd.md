@@ -60,7 +60,19 @@ Analogy — Huffman vs FSE:
 FSE encoding:
 1. Build a **normalised frequency table** for the symbols (lit lengths, match lengths,
    offsets). Normalised counts sum to a power of 2 (the table size = 2^AccuracyLog).
-2. Build a **spread table** — each symbol occupies `table_size / count[sym]` slots.
+2. Build a **spread table** — each symbol occupies `count[sym]` slots, assigned by a
+   **single pass** over symbols in ascending order `0..maxSymbolValue`: for each symbol,
+   place its full count immediately (step = `(table_size>>1) + (table_size>>3) + 3`,
+   skipping any slot already claimed by a probability−1 symbol). This is
+   `FSE_buildDTable_internal`'s low-probability branch in the reference C implementation —
+   there is **no** "handle count>1 symbols first, then count==1 symbols" second pass; a
+   fabricated two-pass split of that shape produces a different (but internally
+   self-consistent) table layout that is silently non-conformant with real zstd. This bug
+   shape — passing a language port's own round-trip tests while producing wire-incompatible
+   output — was found independently in three ports; see lessons.md Lesson 96 for the full
+   derivation and the exact per-sequence field order (peek LL/ML/OF → read extras OF, ML,
+   LL → update states LL, ML, OF, skipping the update entirely for the last sequence in a
+   block).
 3. Encode backwards: each symbol takes the current state, looks up which new state to
    transition to, and emits the difference as bits.
 
@@ -143,9 +155,14 @@ Bits 7–6:  Frame_Content_Size_Flag
            10 → FCS is 4 bytes
            11 → FCS is 8 bytes
 Bits 5:    Single_Segment_Flag — if 1, no Window_Descriptor; FCS always present
-Bit  4:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
-Bit  3:    Reserved (must be 0)
-Bit  2:    Reserved (must be 0)
+Bit  4:    Unused_bit (must be 0)
+Bit  3:    Reserved_bit (must be 0)
+Bit  2:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
+           (NOT bit 4 — verified empirically against the real `zstd` CLI:
+           `zstd -c` emits FHD 0x24/checksum-on by default, `zstd -c
+           --no-check` emits 0x20/checksum-off, differing at bit 2. Several
+           language ports in this repo had this bit position wrong; see
+           lessons.md Lesson 95.)
 Bits 1–0:  Dictionary_ID_Flag
            00 → no dictionary ID
            01 → 1-byte dict ID
