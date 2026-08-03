@@ -220,8 +220,8 @@ if ! has_command gradle; then
 elif [[ -z "$java_major" || "$java_major" -lt 21 ]]; then
   skip_backend compose "JDK 21 or newer is not installed"
 else
-  echo "==> Building compose"
-  (cd "$output_root/compose" && gradle --no-daemon build)
+  echo "==> Testing and building compose"
+  (cd "$output_root/compose" && gradle --no-daemon test build)
 fi
 
 echo "Built or checked $((${#backends[@]} - ${#skipped[@]} - ${#deferred[@]})) of ${#backends[@]} Venture backend projects."

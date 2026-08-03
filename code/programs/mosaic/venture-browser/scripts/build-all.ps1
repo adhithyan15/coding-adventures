@@ -245,10 +245,10 @@ if (-not (Test-Command "gradle")) {
 } elseif ($null -eq $javaMajor -or $javaMajor -lt 21) {
     Skip-Backend -Backend "compose" -Reason "JDK 21 or newer is not installed"
 } else {
-    Write-Host "==> Building compose"
+    Write-Host "==> Testing and building compose"
     Push-Location (Join-Path $outputRoot "compose")
     try {
-        Invoke-Checked -Command "gradle" -Arguments @("--no-daemon", "build")
+        Invoke-Checked -Command "gradle" -Arguments @("--no-daemon", "test", "build")
     } finally {
         Pop-Location
     }

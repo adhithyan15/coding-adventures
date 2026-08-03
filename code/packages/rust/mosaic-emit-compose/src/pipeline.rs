@@ -127,6 +127,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
+    writeln!(out, "import androidx.compose.ui.platform.testTag").unwrap();
     writeln!(out, "import androidx.compose.ui.graphics.Color").unwrap();
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
@@ -1962,10 +1963,8 @@ fn emit_host_input(
         .unwrap();
     }
 
-    if let Some(style) = &style {
-        if !style.modifier.is_empty() {
-            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
-        }
+    if let Some(modifier) = host_control_modifier_expr(node, style.as_ref()) {
+        writeln!(out, "{inner}modifier = {modifier},").unwrap();
     }
     if let Some(text_style) = input_text.text_style_expr() {
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
@@ -2034,17 +2033,19 @@ fn emit_host_button(
         Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
         _ => "\"\"".to_string(),
     };
+    let enabled_expr = disabled_prop_enabled_expr(node)?;
+    let modifier_expr = host_control_modifier_expr(node, style.as_ref());
 
     let mut out = String::new();
-    if style
-        .as_ref()
-        .map(|s| !s.modifier.is_empty())
-        .unwrap_or(false)
-    {
-        let style = style.as_ref().unwrap();
+    if enabled_expr.is_some() || modifier_expr.is_some() {
         writeln!(out, "{pad}Button(").unwrap();
         writeln!(out, "{inner}onClick = {{ {on_click} }},").unwrap();
-        writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        if let Some(enabled) = enabled_expr {
+            writeln!(out, "{inner}enabled = {enabled},").unwrap();
+        }
+        if let Some(modifier) = modifier_expr {
+            writeln!(out, "{inner}modifier = {modifier},").unwrap();
+        }
         writeln!(out, "{pad}) {{").unwrap();
     } else {
         writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
@@ -2052,6 +2053,17 @@ fn emit_host_button(
     writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+fn host_control_modifier_expr(node: &LayoutNode, style: Option<&ComposeStyle>) -> Option<String> {
+    let mut modifier = String::from("Modifier");
+    if let Some(style) = style {
+        modifier.push_str(&style.modifier);
+    }
+    if let Some(part) = &node.part_name {
+        write!(modifier, ".testTag(\"{}\")", escape_kotlin_string(part)).unwrap();
+    }
+    (modifier != "Modifier").then_some(modifier)
 }
 
 fn host_button_single_payload_expr(
@@ -3220,6 +3232,63 @@ mod tests {
             "expected dispatch(BarEvent.Click), got:\n{out}"
         );
         assert!(out.contains("Text(text = \"Go\")"));
+    }
+
+    #[test]
+    fn host_button_projects_disabled_slot_and_part_to_native_control() {
+        let m = component(
+            "Bar",
+            vec![slot("navigation-disabled", SlotType::Bool, true)],
+            vec![emit_decl("onClick", vec![])],
+        );
+        let l = layout(
+            "Bar",
+            styled_node(
+                "HostButton",
+                "go-button",
+                vec![
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Go".into()),
+                    },
+                    slot_prop("disabled", "navigation-disabled"),
+                    LayoutProp {
+                        name: "onClick".into(),
+                        value: LayoutPropValue::EmitRef("onClick".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("enabled = navigationDisabled != true,"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains("modifier = Modifier.testTag(\"go-button\"),"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("import androidx.compose.ui.platform.testTag"));
+    }
+
+    #[test]
+    fn host_input_projects_part_to_native_control_test_tag() {
+        let m = component("Bar", vec![slot("address", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "Bar",
+            styled_node(
+                "HostInput",
+                "address-input",
+                vec![slot_prop("value", "address")],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(
+            out.contains("modifier = Modifier.testTag(\"address-input\"),"),
+            "got:\n{out}"
+        );
     }
 
     #[test]
