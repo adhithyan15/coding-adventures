@@ -54,8 +54,9 @@ mod _lexer_grammar;
 mod _parser_grammar;
 
 use lexer::grammar_lexer::GrammarLexer;
+use lexer::token::{Token, TokenType};
 use logic_engine::Differential;
-use parser::grammar_parser::{GrammarParseError, GrammarParser};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
 pub use ast::{Annotation, Define, DefineKind, OptDir, Program, RelOp, Statement, Term as AstTerm};
@@ -77,6 +78,39 @@ pub enum CompileError {
     Parse(GrammarParseError),
     Adapt(AdapterError),
     Lower(LowerError),
+}
+
+/// A half-open UTF-8 byte range in the exact source passed to [`parse`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SourceSpan {
+    pub start: usize,
+    pub end: usize,
+}
+
+/// One formula as both the real typed AST and its exact source-byte envelope.
+///
+/// This is the parser-backed bridge used by provenance tooling. It avoids
+/// rediscovering formulas with regular expressions and pairs each typed formula
+/// with the parse-tree node that supplied its source envelope.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaSource {
+    pub formulabook: String,
+    pub formula: ast::FormulaDef,
+    pub declaration_span: SourceSpan,
+    pub body_span: SourceSpan,
+}
+
+/// Failure to construct a trustworthy formula source map.
+#[derive(Debug)]
+pub enum FormulaSourceMapError {
+    Compile(CompileError),
+    Inconsistent(String),
+}
+
+impl From<CompileError> for FormulaSourceMapError {
+    fn from(error: CompileError) -> Self {
+        Self::Compile(error)
+    }
 }
 
 /// Recursion-depth cap for the adj-lang [`GrammarParser`] — see
@@ -129,9 +163,7 @@ pub enum CompileError {
 /// past any hand-written adj-lang program's real nesting.
 const MAX_RULE_DEPTH: usize = 90;
 
-/// Tokenize + parse + adapt: produce a typed [`Program`] from
-/// source text.
-pub fn parse(src: &str) -> Result<Program, CompileError> {
+fn parse_grammar_ast(src: &str) -> Result<GrammarASTNode, CompileError> {
     let token_grammar = _lexer_grammar::token_grammar();
     let mut grammar_lexer = GrammarLexer::new(src, &token_grammar);
     let tokens = grammar_lexer
@@ -140,8 +172,260 @@ pub fn parse(src: &str) -> Result<Program, CompileError> {
     let parser_grammar = _parser_grammar::parser_grammar();
     let mut grammar_parser =
         GrammarParser::new(tokens, parser_grammar).with_max_depth(MAX_RULE_DEPTH);
-    let ast = grammar_parser.parse().map_err(CompileError::Parse)?;
-    adapt_program(&ast).map_err(CompileError::Adapt)
+    grammar_parser.parse().map_err(CompileError::Parse)
+}
+
+/// Tokenize + parse + adapt: produce a typed [`Program`] from source text.
+pub fn parse(src: &str) -> Result<Program, CompileError> {
+    let tree = parse_grammar_ast(src)?;
+    adapt_program(&tree).map_err(CompileError::Adapt)
+}
+
+/// Parse one source and inventory every formula with exact UTF-8 byte spans.
+///
+/// The returned body span names only the final executable expression. For a
+/// multi-step formula it excludes the preceding `let` steps. Declaration spans
+/// include the formula's provenance annotations because those bytes are part of
+/// the authored claim. This inventory does not resolve imports, lower formulas,
+/// or prove that an external source expression is equivalent to the body; those
+/// remain separate validation stages.
+pub fn formula_source_map(src: &str) -> Result<Vec<FormulaSource>, FormulaSourceMapError> {
+    let tree = parse_grammar_ast(src)?;
+    let program = adapt_program(&tree).map_err(CompileError::Adapt)?;
+    let locator = SourceLocator::new(src);
+    let parsed_books = collect_nodes(&tree, "formulabook_decl");
+    let mut typed_books = Vec::new();
+    collect_typed_formulabooks(&program.statements, &mut typed_books);
+    if parsed_books.len() != typed_books.len() {
+        return Err(FormulaSourceMapError::Inconsistent(format!(
+            "parser found {} formulabooks but adapter produced {}",
+            parsed_books.len(),
+            typed_books.len()
+        )));
+    }
+
+    let mut inventory = Vec::new();
+    for (book_node, (book_name, formulas)) in parsed_books.into_iter().zip(typed_books) {
+        let parsed_name = direct_identifier_after(book_node, "formulabook").ok_or_else(|| {
+            FormulaSourceMapError::Inconsistent("formulabook name is absent".into())
+        })?;
+        if parsed_name != book_name {
+            return Err(FormulaSourceMapError::Inconsistent(format!(
+                "formulabook parse tree names {parsed_name} but adapter produced {book_name}"
+            )));
+        }
+        let formula_nodes = collect_nodes(book_node, "formula_decl");
+        if formula_nodes.len() != formulas.len() {
+            return Err(FormulaSourceMapError::Inconsistent(format!(
+                "formulabook {book_name} has {} parsed formulas but {} adapted formulas",
+                formula_nodes.len(),
+                formulas.len()
+            )));
+        }
+        for (formula_node, formula) in formula_nodes.into_iter().zip(formulas) {
+            let parsed_name =
+                direct_identifier_after(formula_node, "formula").ok_or_else(|| {
+                    FormulaSourceMapError::Inconsistent("formula name is absent".into())
+                })?;
+            if parsed_name != formula.name {
+                return Err(FormulaSourceMapError::Inconsistent(format!(
+                    "formula parse tree names {parsed_name} but adapter produced {}",
+                    formula.name
+                )));
+            }
+            let body_node = direct_child(formula_node, "formula_body")
+                .and_then(|body| direct_child(body, "expr"))
+                .ok_or_else(|| {
+                    FormulaSourceMapError::Inconsistent(format!(
+                        "formula {} has no final body expression",
+                        formula.name
+                    ))
+                })?;
+            inventory.push(FormulaSource {
+                formulabook: book_name.clone(),
+                formula: formula.clone(),
+                declaration_span: locator.node_span(formula_node)?,
+                body_span: locator.node_span(body_node)?,
+            });
+        }
+    }
+    Ok(inventory)
+}
+
+fn collect_nodes<'a>(node: &'a GrammarASTNode, rule_name: &str) -> Vec<&'a GrammarASTNode> {
+    let mut found = Vec::new();
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(child) = child {
+            if child.rule_name == rule_name {
+                found.push(child);
+            } else {
+                found.extend(collect_nodes(child, rule_name));
+            }
+        }
+    }
+    found
+}
+
+fn collect_typed_formulabooks<'a>(
+    statements: &'a [ast::Statement],
+    found: &mut Vec<(&'a String, &'a Vec<ast::FormulaDef>)>,
+) {
+    for statement in statements {
+        match statement {
+            ast::Statement::Formulabook { name, formulas, .. } => found.push((name, formulas)),
+            ast::Statement::Rulebook { statements, .. } => {
+                collect_typed_formulabooks(statements, found);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn direct_child<'a>(node: &'a GrammarASTNode, rule_name: &str) -> Option<&'a GrammarASTNode> {
+    node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Node(child) if child.rule_name == rule_name => Some(child),
+        _ => None,
+    })
+}
+
+fn direct_identifier_after<'a>(node: &'a GrammarASTNode, keyword: &str) -> Option<&'a str> {
+    node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token)
+            if token.type_ == TokenType::Name && token.value != keyword =>
+        {
+            Some(token.value.as_str())
+        }
+        _ => None,
+    })
+}
+
+fn first_token(node: &GrammarASTNode) -> Option<&Token> {
+    node.children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) => Some(token),
+        ASTNodeOrToken::Node(child) => first_token(child),
+    })
+}
+
+fn last_token(node: &GrammarASTNode) -> Option<&Token> {
+    node.children.iter().rev().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) => Some(token),
+        ASTNodeOrToken::Node(child) => last_token(child),
+    })
+}
+
+struct SourceLocator<'a> {
+    src: &'a str,
+    line_starts: Vec<usize>,
+}
+
+impl<'a> SourceLocator<'a> {
+    fn new(src: &'a str) -> Self {
+        let mut line_starts = vec![0];
+        line_starts.extend(src.match_indices('\n').map(|(offset, _)| offset + 1));
+        Self { src, line_starts }
+    }
+
+    fn node_span(&self, node: &GrammarASTNode) -> Result<SourceSpan, FormulaSourceMapError> {
+        let first = first_token(node).ok_or_else(|| {
+            FormulaSourceMapError::Inconsistent(format!("{} has no first token", node.rule_name))
+        })?;
+        let last = last_token(node).ok_or_else(|| {
+            FormulaSourceMapError::Inconsistent(format!("{} has no last token", node.rule_name))
+        })?;
+        let start = self.token_start(first)?;
+        let end = self.token_end(last)?;
+        if start >= end || end > self.src.len() {
+            return Err(FormulaSourceMapError::Inconsistent(format!(
+                "{} has invalid byte span {start}..{end}",
+                node.rule_name
+            )));
+        }
+        Ok(SourceSpan { start, end })
+    }
+
+    fn token_start(&self, token: &Token) -> Result<usize, FormulaSourceMapError> {
+        let line_index = token.line.checked_sub(1).ok_or_else(|| {
+            FormulaSourceMapError::Inconsistent("token line must be one-based".into())
+        })?;
+        let line_start = *self.line_starts.get(line_index).ok_or_else(|| {
+            FormulaSourceMapError::Inconsistent(format!(
+                "token line {} is outside the source",
+                token.line
+            ))
+        })?;
+        let line_end = self
+            .line_starts
+            .get(line_index + 1)
+            .map_or(self.src.len(), |next| next - 1);
+        let line = &self.src[line_start..line_end];
+        let column_offset = if token.column == 1 {
+            0
+        } else {
+            line.char_indices()
+                .nth(token.column - 1)
+                .map(|(offset, _)| offset)
+                .ok_or_else(|| {
+                    FormulaSourceMapError::Inconsistent(format!(
+                        "token column {} is outside source line {}",
+                        token.column, token.line
+                    ))
+                })?
+        };
+        Ok(line_start + column_offset)
+    }
+
+    fn token_end(&self, token: &Token) -> Result<usize, FormulaSourceMapError> {
+        let start = self.token_start(token)?;
+        let suffix = &self.src[start..];
+        let is_string = token.type_ == TokenType::String
+            || token
+                .type_name
+                .as_deref()
+                .is_some_and(|name| name.ends_with("STRING"));
+        if is_string {
+            return self.quoted_token_end(start);
+        }
+        if !suffix.starts_with(&token.value) {
+            return Err(FormulaSourceMapError::Inconsistent(format!(
+                "token {:?} does not match source byte {}",
+                token.value, start
+            )));
+        }
+        Ok(start + token.value.len())
+    }
+
+    fn quoted_token_end(&self, start: usize) -> Result<usize, FormulaSourceMapError> {
+        let suffix = &self.src[start..];
+        let quote = suffix
+            .chars()
+            .next()
+            .filter(|value| matches!(value, '\'' | '"'));
+        let Some(quote) = quote else {
+            return Err(FormulaSourceMapError::Inconsistent(format!(
+                "string token at byte {start} lacks a quote"
+            )));
+        };
+        let delimiter = if suffix.starts_with(&quote.to_string().repeat(3)) {
+            quote.to_string().repeat(3)
+        } else {
+            quote.to_string()
+        };
+        let mut escaped = false;
+        let mut cursor = delimiter.len();
+        while cursor < suffix.len() {
+            if !escaped && suffix[cursor..].starts_with(&delimiter) {
+                return Ok(start + cursor + delimiter.len());
+            }
+            let character = suffix[cursor..].chars().next().ok_or_else(|| {
+                FormulaSourceMapError::Inconsistent("string token ended unexpectedly".into())
+            })?;
+            cursor += character.len_utf8();
+            escaped = delimiter.len() == 1 && character == '\\' && !escaped;
+        }
+        Err(FormulaSourceMapError::Inconsistent(format!(
+            "string token at byte {start} is unterminated"
+        )))
+    }
 }
 
 /// Top-level convenience: source text → lowered program (KB +

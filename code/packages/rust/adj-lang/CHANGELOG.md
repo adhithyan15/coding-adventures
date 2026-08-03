@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.70.0] - 2026-08-02 - parser-backed formula source maps
+
+- `formula_source_map` inventories every parsed formulabook entry in source order and returns
+  the real typed `FormulaDef` beside exact half-open UTF-8 byte spans for its declaration and
+  final executable body.
+- The mapper pairs generic grammar-tree nodes with typed adapter output and fails closed on
+  formula-boundary, order, count, or name disagreement, so provenance tooling never falls back
+  to regex discovery.
+- Span recovery handles Unicode prefixes, multi-step formula bodies, and escaped quoted math
+  without normalizing or re-encoding the caller's bytes.
+
 ## [0.69.0] - 2026-08-02 - byte-grounded observed inputs
 
 - `observe` declarations now accept the standard provenance annotations, including exact
