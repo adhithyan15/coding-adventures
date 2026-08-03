@@ -326,6 +326,13 @@ pub struct ReconcileReport {
 }
 
 impl ReconcileReport {
+    /// Construct the report produced by reconciling an empty registry.
+    pub fn empty() -> Self {
+        Self {
+            outcomes: Vec::new(),
+        }
+    }
+
     /// Borrow every per-host outcome in registry order.
     pub fn outcomes(&self) -> &[HostReconcileOutcome] {
         &self.outcomes
@@ -899,6 +906,11 @@ mod tests {
     use storage_core::InMemoryStorageBackend;
 
     const NOW: u64 = 1_000;
+
+    #[test]
+    fn empty_report_has_no_outcomes() {
+        assert!(ReconcileReport::empty().outcomes().is_empty());
+    }
 
     #[derive(Clone, Debug, PartialEq, Eq)]
     struct FakeError(&'static str);

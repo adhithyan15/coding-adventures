@@ -215,6 +215,24 @@ impl<C, A> DaemonApi<C, A> {
     }
 }
 
+impl<C, A> DaemonApi<C, A>
+where
+    C: ChiefControlPlane,
+{
+    /// Run one local reconciliation tick through the same serialized control
+    /// plane used by authenticated WebSocket requests.
+    ///
+    /// This is the scheduler boundary for the outer daemon runtime. It does not
+    /// authenticate a remote session because it is invoked only by the process
+    /// that already owns the control plane.
+    pub fn reconcile_once(&self) -> Result<ReconcileReport, ControlPlaneError> {
+        self.control_plane
+            .lock()
+            .map_err(|_| ControlPlaneError::Internal)?
+            .reconcile_once()
+    }
+}
+
 /// Local API ownership failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DaemonApiError {
@@ -1694,6 +1712,12 @@ mod tests {
         fn deregister_host(&mut self, _host_name: &HostName) -> Result<(), ControlPlaneError> {
             Err(ControlPlaneError::Internal)
         }
+    }
+
+    #[test]
+    fn local_scheduler_reconciliation_uses_the_serialized_control_plane() {
+        let api = DaemonApi::new(EmptyControlPlane, TestAuthorizer::allowing());
+        assert_eq!(api.reconcile_once(), Err(ControlPlaneError::Internal));
     }
 
     #[cfg(any(

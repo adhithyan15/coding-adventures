@@ -8,3 +8,4 @@
 - Preserve separate durable and authoritative health evidence with precision-safe JSON encoding.
 - Add a typed blocking WebSocket client with strict response-ID and envelope validation.
 - Accept the owned lifetime-free orchestrator core at the threaded daemon boundary.
+- Add a local serialized reconciliation boundary for the fail-closed daemon scheduler.
