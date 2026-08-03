@@ -1021,4 +1021,5 @@ members = [
   "task-wasm",
   "chief-of-staff-daemon-credential",
   "chief-of-staff-daemon",
+  "chief-of-staff-daemon-service-files",
 ]

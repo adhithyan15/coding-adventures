@@ -1985,6 +1985,15 @@ $ chief-of-staff doctor
   ✗ Email Reader host: Deno process crashed 2m ago (host restarting...)
 ```
 
+The installation boundary is split deliberately. The pure
+`chief-of-staff-daemon-service-files` package validates explicit absolute daemon
+and configuration paths and renders deterministic, owner-only definitions for
+the three user-scoped supervisors. A later `install-daemon` CLI owns directory
+creation, atomic writes, and shell-free native registration. The rendered
+definitions use `RunAtLoad` plus unsuccessful-exit `KeepAlive` on launchd,
+`Type=simple` plus `Restart=on-failure` under systemd, and a least-privilege,
+single-instance logon task with bounded failure restarts on Windows.
+
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 
 TOML is used because the repo already has a TOML lexer and parser (spec F03).
