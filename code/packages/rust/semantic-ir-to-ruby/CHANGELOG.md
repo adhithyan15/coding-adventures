@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.20.0 — fix: `puts` on an Array bracket-displayed instead of unpacking
+
+The same bug independently discovered and fixed in `semantic-ir-to-c`
+0.33.0, found here while verifying that fix against `sir-conformance`:
+this backend's hand-rolled `sir_puts` called `sir_fmt(x)` for each
+argument, whose `else v.to_s` branch bracket-displays an Array (real
+Ruby's `Array#to_s`/`#inspect` both do this) — but real `Kernel#puts`
+does NOT use `to_s` for an Array argument; it unpacks one element per
+line, recursively flattening nested arrays, printing nothing at all for
+an empty array. Despite this backend emitting code that runs under a
+REAL Ruby interpreter, its own `sir_puts` reimplementation never
+delegated to native `puts`, so it never got this behavior for free.
+
+Fixed with a new `sir_puts_one` helper mirroring the C fix's
+`_sir_puts_one`: unpacks an `Array` argument recursively, falls through
+to `sir_fmt` + a newline for everything else. No depth cap is needed
+(unlike the C fix) — a self-referential array would raise Ruby's own
+`SystemStackError` on infinite recursion, which is safe under a real
+Ruby VM's stack-overflow protection, unlike raw C recursion.
+
+### Added
+
+- Three new `e2e_*` tests in `tests/emit_tests.rs`: empty array prints
+  nothing, recursive flattening across nested levels, `print` still
+  bracket-displays (unaffected — only `puts` unpacks).
+
+### Changed
+
+- `e2e_seq_literal_displays_as_an_array` and
+  `seq_set_writes_in_bounds_and_returns_the_value` updated to the correct
+  unpacked expected output.
+
 ## 0.19.0 — `fmt_float`: C-printf-faithful float formatting
 
 One builtin, for the C frontend's faithful `printf` (SIR27 milestone 10).

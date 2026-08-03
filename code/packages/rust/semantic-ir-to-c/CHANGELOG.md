@@ -1,5 +1,84 @@
 # Changelog
 
+## 0.34.0 — `Numeric#round(ndigits)`, the multi-digit form
+
+`round` previously only accepted the 0-arg form (Collections slice 9). This
+widens the `_sir_builtin_method_v` dispatch arm to also accept a single
+`ndigits` argument, matching real Ruby's full dispatch:
+
+- **Integer, `ndigits >= 0`** — receiver unchanged (already exact at any
+  decimal place an Integer could round to).
+- **Integer, `ndigits < 0`** — rounds to the nearest `10^(-ndigits)`,
+  half-away-from-zero (Ruby's tie rule), e.g. `1234.round(-2) == 1200`,
+  `1250.round(-2) == 1300`.
+- **Float, `ndigits > 0`** — rounds to `ndigits` decimal places, stays a
+  Float, e.g. `3.14159.round(2) == 3.14`.
+- **Float, `ndigits <= 0`** — rounds to the nearest `10^(-ndigits)` and
+  CONVERTS to an Integer, e.g. `1234.5.round(-2) == 1200` (an Integer, not
+  a Float) — matching real Ruby's actual return-type split, confirmed
+  against a live `ruby -e` interpreter for every case in the test suite,
+  not hand-derived.
+
+Three overflow/UB hazards addressed, continuing this backend's established
+saturate-rather-than-wrap-or-UB discipline:
+
+- The `ndigits` argument itself is extracted through a new
+  `_sir_round_ndigits_arg` rather than the generic `_sir_as_int`, whose
+  bare `(int64_t)v.as.f` cast is UB for a non-finite/out-of-range Float
+  argument (the same class of hazard `to_i` was fixed for in slice 9).
+- The Integer negative-`ndigits` path computes the rounded magnitude in
+  `uint64_t` and does an explicit saturating check before narrowing back
+  to `int64_t` — a round-up carry can need ONE MORE digit than `int64_t`
+  holds (e.g. `9223372036854775807.round(-1)` would need
+  `9223372036854775810`), so this saturates at `INT64_MAX`/`INT64_MIN`
+  rather than silently wrapping.
+- Every path is capped ("dwarfs the value" for Integers past 19 decimal
+  digits, "beyond `double`'s ~17 significant digits" for Floats) to a
+  bound proven safe by construction, rather than depending on incidental
+  floating-point behavior (e.g. `0 * Infinity == NaN`) for correctness.
+- (Security review) The Float branch's negative-`ndigits` arm originally
+  computed `int64_t k = -ndigits` directly — signed-overflow UB when
+  `ndigits == INT64_MIN`, reachable because `_sir_round_ndigits_arg`
+  saturates a hostile huge-negative Float ndigits argument to exactly that
+  value (e.g. `3.14.round(-1.0e300)`). Fixed to reuse `_sir_i64_abs_u`,
+  the same overflow-safe magnitude helper the Integer branch already used.
+
+## 0.33.0 — fix: `puts` on an Array bracket-displayed instead of unpacking
+
+Discovered by the `sir-conformance` cross-backend corpus (0.21.0): real
+Ruby's `Kernel#puts` special-cases an Array argument — each element gets
+its OWN line, RECURSIVELY flattening nested arrays, and an EMPTY array
+prints nothing at all (not even a blank line). `_sir_puts_v` instead
+routed every argument through the general `_sir_fmt` display path, which
+bracket-displays a Seq (`"[1, 2, 3]\n"`) — the same rendering `print`,
+`p`/inspect, and a NESTED array correctly use, just wrongly reused for
+`puts`'s TOP-LEVEL arguments too. Python/JS/Go/Rust already unpacked
+correctly; only C (and, discovered while fixing this, the Ruby backend —
+see `semantic-ir-to-ruby` 0.20.0) had the bug.
+
+Fixed with a new `_sir_puts_one` helper: unpacks a `SIR_SEQ` argument
+recursively (each element re-dispatched through itself), falls through to
+`_sir_fmt` + newline for everything else (`print`, `Hash`, scalars — all
+unaffected). Shares `_sir_fmt`'s existing depth counter/cap
+(`SIR_MAX_FMT_DEPTH`) so a self-referential array (`a[0] = a`) terminates
+instead of recursing forever, the same safety floor every other display
+path in this file already holds.
+
+This is a genuine BEHAVIOR CHANGE for every `puts arr` call site across
+the whole test suite — updated ~30 existing assertions across 9 test
+files to the correct one-per-line (or, for a previously-bracketed nested
+result like `divmod`'s `[q, r]` or `zip`'s array-of-pairs, fully
+recursively flattened) output.
+
+### Added
+
+- `tests/compile_and_run_puts_array_unpack.rs` — 8 dedicated execution-proof
+  tests: flat unpack, empty array (zero lines), recursive flatten across
+  nested levels, a nested-empty-array contributing zero lines, `Hash` NOT
+  unpacked, `print` NOT unpacked, a self-referential array terminating
+  instead of hanging, and multiple Array arguments to one `puts` call each
+  unpacking independently.
+
 ## 0.32.0 — Collections slice 10: Symbol + universal Object/Bool methods
 
 New `_sir_builtin_method_v` dispatch arms:

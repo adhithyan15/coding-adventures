@@ -62,12 +62,43 @@ instance FromJSON ResolutionFixture where
             <*> (result .:? "edges" .!= [])
 
 resolutionUtf8Spec :: Spec
-resolutionUtf8Spec = describe "Lua rockspec UTF-8 conformance" $ do
+resolutionUtf8Spec = describe "Lua resolution conformance" $ do
     it "consumes the shared valid fixture and resolves only the exact edge" $
         withFixture "resolution-lua-utf8.json" $ \root fixture -> do
             graph <- resolveFixture root
             graphEdges graph `shouldBe` fixtureExpectedEdges fixture
             DG.nodes graph `shouldBe` ["lua/other", "lua/pkg"]
+
+    it "ignores aliases outside the authoritative dependencies table" $
+        withFixture "resolution-lua-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixture root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.independentGroups graph
+                `shouldBe` Right [["lua/beta", "lua/gamma"], ["lua/alpha"]]
+
+    it "preserves genuine dependency cycles as graph errors" $
+        withFixture "resolution-lua-cycle.json" $ \root fixture -> do
+            graph <- resolveFixture root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.independentGroups graph `shouldBe` Left DG.CycleError
+
+    it "merges selected BUILD dependency comments without collapsing program identity" $
+        withFixture "resolution-build-deps-comment.json" $ \root fixture -> do
+            graph <- resolveFixture root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe` ["lua/conduit", "lua/programs/conduit-hello"]
+
+    it "prefers a package alias over a same-basename program alias" $
+        withFixture "resolution-lua-program-package.json" $ \root fixture -> do
+            graph <- resolveFixture root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "lua/consumer"
+                    , "lua/grammar_tools"
+                    , "lua/programs/grammar-tools"
+                    ]
 
     it "consumes the shared invalid fixture as a typed stable error" $
         withFixture "resolution-lua-invalid-utf8.json" $ \root _ -> do

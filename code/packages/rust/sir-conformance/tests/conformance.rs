@@ -77,6 +77,18 @@ const CORPUS: &[Program] = &[
         ruby: "a = [10, 20, 30]\nputs a.length\n",
         expected: "3",
     },
+    // `puts` on an Array UNPACKS it one element per line, recursively
+    // flattening nested arrays (real Ruby's `Kernel#puts` rule) — a
+    // core/always-available builtin, not a Collections method, so this
+    // exercises `puts` itself, not method dispatch. Previously the C and
+    // Ruby backends each bracket-displayed an Array argument instead
+    // (their own separate reimplementations of `puts`/`sir_fmt`, neither
+    // delegating to a native array-aware `puts`); both fixed together.
+    Program {
+        name: "puts_array_unpack",
+        ruby: "puts [1, 2, 3]\nputs [4, [5, 6], 7]\n",
+        expected: "1\n2\n3\n4\n5\n6\n7",
+    },
     // String `.length` (a method on a String receiver). NOTE: `.upcase` /
     // `.downcase` are deliberately excluded for now — they expose a real
     // JavaScript-backend gap: that backend translates Ruby method names to

@@ -63,7 +63,7 @@ fn hash_each_yields_key_and_value_and_returns_the_receiver() {
     // (String interpolation isn't accepted by the C backend yet -- a
     // separate, pre-existing gap -- so key/value print on their own lines.)
     match run_ruby("h = {1 => \"a\", 2 => \"b\"}\nputs h.each { |k, v| puts k\nputs v }.keys\n") {
-        Some(out) => assert_eq!(out, "1\na\n2\nb\n[1, 2]\n"),
+        Some(out) => assert_eq!(out, "1\na\n2\nb\n1\n2\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -81,7 +81,7 @@ fn hash_each_key_and_each_value() {
 #[test]
 fn hash_map_returns_an_array_not_a_hash() {
     match run_ruby("h = {1 => 10, 2 => 20}\nputs h.map { |k, v| k + v }\n") {
-        Some(out) => assert_eq!(out, "[11, 22]\n"),
+        Some(out) => assert_eq!(out, "11\n22\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -98,8 +98,10 @@ fn hash_select_and_reject_return_hashes() {
 
 #[test]
 fn hash_sort_by_returns_an_array_of_pairs() {
+    // `puts` recursively flattens EVERY level of Array nesting (real Ruby's
+    // rule; see runtime.rs's `_sir_puts_one`).
     match run_ruby("h = {3 => \"c\", 1 => \"a\", 2 => \"b\"}\nputs h.sort_by { |k, v| k }\n") {
-        Some(out) => assert_eq!(out, "[[1, a], [2, b], [3, c]]\n"),
+        Some(out) => assert_eq!(out, "1\na\n2\nb\n3\nc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -111,7 +113,7 @@ fn hash_group_by_groups_pairs_by_the_block_result() {
     match run_ruby(
         "h = {1 => \"a\", 2 => \"b\", 3 => \"c\", 4 => \"d\"}\ng = h.group_by { |k, v| r = k > 2\nr }\nputs g.fetch(true)\nputs g.fetch(false)\n",
     ) {
-        Some(out) => assert_eq!(out, "[[3, c], [4, d]]\n[[1, a], [2, b]]\n"),
+        Some(out) => assert_eq!(out, "3\nc\n4\nd\n1\na\n2\nb\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -121,7 +123,7 @@ fn hash_partition_splits_into_matching_and_non_matching() {
     match run_ruby(
         "h = {1 => \"a\", 2 => \"b\", 3 => \"c\"}\np = h.partition { |k, v| r = k > 1\nr }\nputs p\n",
     ) {
-        Some(out) => assert_eq!(out, "[[[2, b], [3, c]], [[1, a]]]\n"),
+        Some(out) => assert_eq!(out, "2\nb\n3\nc\n1\na\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -138,7 +140,7 @@ fn hash_sum_with_block() {
 fn hash_block_methods_chain() {
     // `map` returns an Array, so an Array built-in dispatches on it.
     match run_ruby("h = {1 => 10, 2 => 20}\nputs h.map { |k, v| v }.sort.reverse\n") {
-        Some(out) => assert_eq!(out, "[20, 10]\n"),
+        Some(out) => assert_eq!(out, "20\n10\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -150,10 +152,12 @@ fn each_deleting_from_the_receiver_terminates_and_does_not_overread() {
     // does not observe the shrink mid-iteration, and (2) does not read past
     // the entries buffer as `delete` shifts entries down. `each` must still
     // see the ORIGINAL 3 keys/values.
+    // `puts h.keys` on an empty Array prints NOTHING at all (not even a
+    // blank line) -- real Ruby's rule (see runtime.rs's `_sir_puts_one`).
     match run_ruby(
         "h = {1 => \"a\", 2 => \"b\", 3 => \"c\"}\nh.each { |k, v| h.delete(k)\nputs k\nputs v }\nputs h.keys\n",
     ) {
-        Some(out) => assert_eq!(out, "1\na\n2\nb\n3\nc\n[]\n"),
+        Some(out) => assert_eq!(out, "1\na\n2\nb\n3\nc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -165,7 +169,7 @@ fn map_clearing_the_receiver_does_not_overrun_its_output_buffer() {
     // clears the SAME receiver mid-loop, `map`'s snapshot must still see the
     // ORIGINAL 3 entries (not 0), and the process must not crash.
     match run_ruby("h = {1 => 10, 2 => 20, 3 => 30}\nb = h.map { |k, v| h.clear\nv }\nputs b\n") {
-        Some(out) => assert_eq!(out, "[10, 20, 30]\n"),
+        Some(out) => assert_eq!(out, "10\n20\n30\n"),
         None => eprintln!("skip: no cc"),
     }
 }

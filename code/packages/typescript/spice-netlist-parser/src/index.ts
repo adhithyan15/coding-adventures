@@ -1175,11 +1175,27 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode CJO must be finite and non-negative");
   }
+  const diodeTransitTime = params.get("TT");
+  if (
+    kind === "D" &&
+    diodeTransitTime !== undefined &&
+    (!Number.isFinite(diodeTransitTime) || diodeTransitTime < 0.0)
+  ) {
+    throw new NetlistParseError("diode TT must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
     params.get("BETA_F") ??
     params.get("HFE");
+  const bjtSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtSaturationCurrent !== undefined &&
+    (!Number.isFinite(bjtSaturationCurrent) || bjtSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT IS must be finite and positive");
+  }
   if (
     (kind === "NPN" || kind === "PNP") &&
     bjtForwardBeta !== undefined &&
@@ -1203,6 +1219,25 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     (!Number.isFinite(bjtBaseEmitterCapacitance) || bjtBaseEmitterCapacitance < 0.0)
   ) {
     throw new NetlistParseError("BJT CJE must be finite and non-negative");
+  }
+  const bjtBaseCollectorCapacitance =
+    params.get("CJC") ?? params.get("CJC0") ?? params.get("CBC");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtBaseCollectorCapacitance !== undefined &&
+    (!Number.isFinite(bjtBaseCollectorCapacitance) || bjtBaseCollectorCapacitance < 0.0)
+  ) {
+    throw new NetlistParseError("BJT CJC must be finite and non-negative");
+  }
+  for (const name of ["TF", "TR"] as const) {
+    const transitTime = params.get(name);
+    if (
+      (kind === "NPN" || kind === "PNP") &&
+      transitTime !== undefined &&
+      (!Number.isFinite(transitTime) || transitTime < 0.0)
+    ) {
+      throw new NetlistParseError(`BJT ${name} must be finite and non-negative`);
+    }
   }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
@@ -1764,7 +1799,10 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         model.params.get("CJE0") ??
         model.params.get("CBE") ??
         0.0,
-      model.params.get("CJC") ?? model.params.get("CBC") ?? 0.0,
+      model.params.get("CJC") ??
+        model.params.get("CJC0") ??
+        model.params.get("CBC") ??
+        0.0,
       model.params.get("TF") ?? 0.0,
       model.params.get("TR") ?? 0.0,
     );

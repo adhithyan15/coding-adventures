@@ -351,6 +351,7 @@ unzip(data: bytes) → {name: str → data: bytes}
 | Perl       | `CodingAdventures::Zip`      | `CodingAdventures::Zip`        |
 | Swift      | `CodingAdventuresZip`        | `CodingAdventures.Zip`         |
 | Haskell    | `zip`                        | `Zip`                          |
+| Kotlin     | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
 
 **Dependencies:** each ZIP package depends on the corresponding language's `deflate`
 (CMP05) package for the DEFLATE codec. The CRC-32 implementation is inlined (no separate

@@ -90,7 +90,7 @@ fn chomp_default_and_with_separator() {
 #[test]
 fn chars_and_bytes() {
     match run_ruby("puts \"ab\".chars\nputs \"ab\".bytes\n") {
-        Some(out) => assert_eq!(out, "[a, b]\n[97, 98]\n"),
+        Some(out) => assert_eq!(out, "a\nb\n97\n98\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -106,7 +106,7 @@ fn each_char_yields_every_character_in_order() {
 #[test]
 fn split_no_arg_splits_on_whitespace_runs() {
     match run_ruby("puts \"  a  b c  \".split\n") {
-        Some(out) => assert_eq!(out, "[a, b, c]\n"),
+        Some(out) => assert_eq!(out, "a\nb\nc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -114,7 +114,7 @@ fn split_no_arg_splits_on_whitespace_runs() {
 #[test]
 fn split_with_separator() {
     match run_ruby("puts \"a,b,c\".split(\",\")\n") {
-        Some(out) => assert_eq!(out, "[a, b, c]\n"),
+        Some(out) => assert_eq!(out, "a\nb\nc\n"),
         None => eprintln!("skip: no cc"),
     }
 }
