@@ -7,6 +7,7 @@ module BuildTool
     , defaultConfig
     , discoverPackages
     , findRepoRoot
+    , hashPackage
     , inferLanguage
     , parseArgs
     , renderMetadataEncodingError
@@ -14,9 +15,10 @@ module BuildTool
     , runWithArgs
     ) where
 
-import Control.Exception (Exception, catch, evaluate, throwIO)
+import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as BS8
 import Data.Char (isAlphaNum, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
@@ -43,6 +45,7 @@ import System.FilePath
     ( (</>)
     , addTrailingPathSeparator
     , isAbsolute
+    , isPathSeparator
     , makeRelative
     , normalise
     , splitDirectories
@@ -50,9 +53,16 @@ import System.FilePath
     , takeExtension
     , takeFileName
     )
-import System.IO (hPutStrLn, stderr)
+import System.IO (hClose, hPutStrLn, hSetBinaryMode, stderr)
 import qualified System.Info as SystemInfo
-import System.Process (CreateProcess(..), proc, readCreateProcessWithExitCode)
+import System.Process
+    ( CreateProcess(..)
+    , StdStream(CreatePipe)
+    , createProcess
+    , proc
+    , readCreateProcessWithExitCode
+    , waitForProcess
+    )
 import Text.Read (readMaybe)
 
 versionString :: String
@@ -798,10 +808,14 @@ hashPackage pkg = do
     files <- packageRelevantFiles pkg
     filePayloads <-
         forM files $ \path -> do
-            contents <- readFileStrict path
-            let relative = makeRelative (packagePath pkg) path
-            pure (relative ++ "\n" ++ contents ++ "\n")
-    hashString (concat filePayloads)
+            contents <- BS.readFile path
+            let relative = normalizeRelativePath (makeRelative (packagePath pkg) path)
+            let relativeBytes = TextEncoding.encodeUtf8 (Text.pack relative)
+            pure (BS.concat [relativeBytes, BS8.pack "\n", contents, BS8.pack "\n"])
+    hashBytes (BS.concat filePayloads)
+
+normalizeRelativePath :: FilePath -> FilePath
+normalizeRelativePath = map (\character -> if isPathSeparator character then '/' else character)
 
 packageRelevantFiles :: Package -> IO [FilePath]
 packageRelevantFiles pkg = do
@@ -882,13 +896,45 @@ hashDependencyClosure graph packageHashes pkgName =
             | dep <- DG.transitivePredecessors pkgName graph
             ]
 
-hashString :: String -> IO String
-hashString payload = do
-    (exitCode, stdoutText, _) <- readCreateProcessWithExitCode (proc "git" ["hash-object", "--stdin"]) payload
+hashBytes :: BS.ByteString -> IO String
+hashBytes payload = do
+    result <- try (hashBytesWithGit payload) :: IO (Either IOException (ExitCode, String))
     pure $
-        case exitCode of
-            ExitSuccess -> trim stdoutText
-            ExitFailure _ -> fallbackHash payload
+        case result of
+            Right (ExitSuccess, digest) -> digest
+            _ -> fallbackHashBytes payload
+
+hashBytesWithGit :: BS.ByteString -> IO (ExitCode, String)
+hashBytesWithGit payload = do
+    (maybeInput, maybeOutput, maybeError, processHandle) <-
+        createProcess
+            (proc "git" ["hash-object", "--stdin"])
+                { std_in = CreatePipe
+                , std_out = CreatePipe
+                , std_err = CreatePipe
+                }
+    case (maybeInput, maybeOutput, maybeError) of
+        (Just inputHandle, Just outputHandle, Just errorHandle) -> do
+            hSetBinaryMode inputHandle True
+            hSetBinaryMode outputHandle True
+            hSetBinaryMode errorHandle True
+            BS.hPut inputHandle payload
+            hClose inputHandle
+            output <- BS.hGetContents outputHandle
+            errorOutput <- BS.hGetContents errorHandle
+            exitCode <- waitForProcess processHandle
+            _ <- evaluate (BS.length output + BS.length errorOutput)
+            hClose outputHandle
+            hClose errorHandle
+            pure (exitCode, trim (BS8.unpack output))
+        _ -> fail "git hash-object did not create binary pipes"
+
+fallbackHashBytes :: BS.ByteString -> String
+fallbackHashBytes =
+    show
+        . BS.foldl'
+            (\acc byte -> (acc * 16777619 + fromIntegral byte) `mod` 2147483647)
+            (2166136261 :: Int)
 
 fallbackHash :: String -> String
 fallbackHash =

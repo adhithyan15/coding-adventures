@@ -329,6 +329,11 @@ The same refresh merged Haskell strict rockspec decoding and directly unlocks
 the selected binary-safe source-hashing child, which is ranked ahead of the
 independent Elixir decoder because its exact Windows failure and real Lua
 downstream are already minimized and it closes the Haskell cache boundary.
+That hashing repair lets the exact `lua/logic_gates` to `lua/arithmetic`
+closure dry-run successfully. The full 258-package Lua lane then reaches a
+separate all-node cycle failure in Haskell's whole-manifest token resolver; a
+dependent field-aware resolution owner will distinguish genuine cycles from
+false alias matches and compare the exact edge set with the Go oracle.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
