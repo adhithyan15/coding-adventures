@@ -270,6 +270,37 @@ impl ClipRect {
 struct RenderState {
     clip: ClipRect,
     opacity: f64,
+    offset_x: f64,
+    offset_y: f64,
+}
+
+#[cfg(not(any(
+    target_os = "linux",
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd"
+)))]
+impl RenderState {
+    fn translated(self, transform: [f64; 6]) -> Result<Self, PaintRenderError> {
+        let [xx, yx, xy, yy, x0, y0] = transform;
+        let is_translation = (xx - 1.0).abs() <= f64::EPSILON
+            && yx.abs() <= f64::EPSILON
+            && xy.abs() <= f64::EPSILON
+            && (yy - 1.0).abs() <= f64::EPSILON
+            && x0.is_finite()
+            && y0.is_finite();
+        if !is_translation {
+            return Err(render_failed(
+                "Cairo smoke renderer only supports group and layer translations",
+            ));
+        }
+        Ok(Self {
+            offset_x: self.offset_x + x0,
+            offset_y: self.offset_y + y0,
+            ..self
+        })
+    }
 }
 
 pub struct CairoPaintBackend;
@@ -323,7 +354,7 @@ pub fn descriptor() -> PaintBackendDescriptor {
         image: SupportLevel::Degraded,
         clip: SupportLevel::Supported,
         group: SupportLevel::Supported,
-        group_transform: SupportLevel::Unsupported,
+        group_transform: SupportLevel::Degraded,
         group_opacity: SupportLevel::Degraded,
         layer: SupportLevel::Degraded,
         layer_opacity: SupportLevel::Degraded,
@@ -402,6 +433,8 @@ fn render_software(scene: &PaintScene) -> Result<PixelContainer, PaintRenderErro
     let state = RenderState {
         clip: ClipRect::full(width, height),
         opacity: 1.0,
+        offset_x: 0.0,
+        offset_y: 0.0,
     };
     for instruction in &scene.instructions {
         surface.render_instruction(instruction, state, &gradients)?;
@@ -1123,6 +1156,31 @@ impl SoftwarePaint {
             }
         }
     }
+
+    fn translated(self, offset_x: f64, offset_y: f64) -> Self {
+        match self {
+            Self::Solid(_) => self,
+            Self::Linear {
+                x1,
+                y1,
+                x2,
+                y2,
+                stops,
+            } => Self::Linear {
+                x1: x1 + offset_x,
+                y1: y1 + offset_y,
+                x2: x2 + offset_x,
+                y2: y2 + offset_y,
+                stops,
+            },
+            Self::Radial { cx, cy, r, stops } => Self::Radial {
+                cx: cx + offset_x,
+                cy: cy + offset_y,
+                r,
+                stops,
+            },
+        }
+    }
 }
 
 #[cfg(not(any(
@@ -1168,11 +1226,10 @@ impl SoftwareSurface {
             PaintInstruction::Rect(rect) => self.render_rect(rect, state, gradients),
             PaintInstruction::Line(line) => {
                 if let Some(paint) = software_paint(&line.stroke, state.opacity, gradients)? {
+                    let paint = paint.translated(state.offset_x, state.offset_y);
                     self.render_line_paint(
-                        line.x1,
-                        line.y1,
-                        line.x2,
-                        line.y2,
+                        (line.x1, line.y1),
+                        (line.x2, line.y2),
                         &paint,
                         line.stroke_width.unwrap_or(1.0),
                         state,
@@ -1200,7 +1257,15 @@ impl SoftwareSurface {
     ) -> Result<(), PaintRenderError> {
         if let Some(fill) = &rect.fill {
             if let Some(paint) = software_paint(fill, state.opacity, gradients)? {
-                self.fill_rect_paint(rect.x, rect.y, rect.width, rect.height, &paint, state.clip);
+                let paint = paint.translated(state.offset_x, state.offset_y);
+                self.fill_rect_paint(
+                    rect.x + state.offset_x,
+                    rect.y + state.offset_y,
+                    rect.width,
+                    rect.height,
+                    &paint,
+                    state.clip,
+                );
             }
         }
 
@@ -1208,12 +1273,15 @@ impl SoftwareSurface {
             let Some(paint) = software_paint(stroke, state.opacity, gradients)? else {
                 return Ok(());
             };
+            let paint = paint.translated(state.offset_x, state.offset_y);
             let width = rect.stroke_width.unwrap_or(1.0);
             self.stroke_rect_paint(
-                rect.x,
-                rect.y,
-                rect.width,
-                rect.height,
+                (
+                    rect.x + state.offset_x,
+                    rect.y + state.offset_y,
+                    rect.width,
+                    rect.height,
+                ),
                 width,
                 &paint,
                 state,
@@ -1233,10 +1301,12 @@ impl SoftwareSurface {
             return Ok(());
         }
 
-        let x0 = (ellipse.cx - ellipse.rx).floor() as i32;
-        let y0 = (ellipse.cy - ellipse.ry).floor() as i32;
-        let x1 = (ellipse.cx + ellipse.rx).ceil() as i32;
-        let y1 = (ellipse.cy + ellipse.ry).ceil() as i32;
+        let cx = ellipse.cx + state.offset_x;
+        let cy = ellipse.cy + state.offset_y;
+        let x0 = (cx - ellipse.rx).floor() as i32;
+        let y0 = (cy - ellipse.ry).floor() as i32;
+        let x1 = (cx + ellipse.rx).ceil() as i32;
+        let y1 = (cy + ellipse.ry).ceil() as i32;
         let stroke_width = ellipse.stroke_width.unwrap_or(1.0).max(1.0);
         let stroke_band = (stroke_width / ellipse.rx.max(ellipse.ry)).max(0.01);
         let fill = ellipse
@@ -1244,18 +1314,20 @@ impl SoftwareSurface {
             .as_deref()
             .map(|fill| software_paint(fill, state.opacity, gradients))
             .transpose()?
-            .flatten();
+            .flatten()
+            .map(|paint| paint.translated(state.offset_x, state.offset_y));
         let stroke = ellipse
             .stroke
             .as_deref()
             .map(|stroke| software_paint(stroke, state.opacity, gradients))
             .transpose()?
-            .flatten();
+            .flatten()
+            .map(|paint| paint.translated(state.offset_x, state.offset_y));
 
         for y in y0..y1 {
             for x in x0..x1 {
-                let nx = (x as f64 + 0.5 - ellipse.cx) / ellipse.rx;
-                let ny = (y as f64 + 0.5 - ellipse.cy) / ellipse.ry;
+                let nx = (x as f64 + 0.5 - cx) / ellipse.rx;
+                let ny = (y as f64 + 0.5 - cy) / ellipse.ry;
                 let distance = nx * nx + ny * ny;
                 if let Some(fill) = &fill {
                     if distance <= 1.0 {
@@ -1304,13 +1376,15 @@ impl SoftwareSurface {
             .as_deref()
             .map(|stroke| software_paint(stroke, state.opacity, gradients))
             .transpose()?
-            .flatten();
+            .flatten()
+            .map(|paint| paint.translated(state.offset_x, state.offset_y));
         let fill = path
             .fill
             .as_deref()
             .map(|fill| software_paint(fill, state.opacity, gradients))
             .transpose()?
-            .flatten();
+            .flatten()
+            .map(|paint| paint.translated(state.offset_x, state.offset_y));
 
         let mut first = None::<(f64, f64)>;
         let mut cursor = None::<(f64, f64)>;
@@ -1321,16 +1395,14 @@ impl SoftwareSurface {
                 PathCommand::MoveTo { x, y } => {
                     first = Some((x, y));
                     cursor = Some((x, y));
-                    points.push((x, y));
+                    points.push((x + state.offset_x, y + state.offset_y));
                 }
                 PathCommand::LineTo { x, y } => {
                     if let Some((x0, y0)) = cursor {
                         if let Some(paint) = &stroke {
                             self.render_line_paint(
-                                x0,
-                                y0,
-                                x,
-                                y,
+                                (x0, y0),
+                                (x, y),
                                 paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
@@ -1338,16 +1410,14 @@ impl SoftwareSurface {
                         }
                     }
                     cursor = Some((x, y));
-                    points.push((x, y));
+                    points.push((x + state.offset_x, y + state.offset_y));
                 }
                 PathCommand::Close => {
                     if let (Some((x0, y0)), Some((x1, y1))) = (cursor, first) {
                         if let Some(paint) = &stroke {
                             self.render_line_paint(
-                                x0,
-                                y0,
-                                x1,
-                                y1,
+                                (x0, y0),
+                                (x1, y1),
                                 paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
@@ -1359,10 +1429,8 @@ impl SoftwareSurface {
                     if let Some((x0, y0)) = cursor {
                         if let Some(paint) = &stroke {
                             self.render_line_paint(
-                                x0,
-                                y0,
-                                x,
-                                y,
+                                (x0, y0),
+                                (x, y),
                                 paint,
                                 path.stroke_width.unwrap_or(1.0),
                                 state,
@@ -1370,7 +1438,7 @@ impl SoftwareSurface {
                         }
                     }
                     cursor = Some((x, y));
-                    points.push((x, y));
+                    points.push((x + state.offset_x, y + state.offset_y));
                 }
                 PathCommand::ArcTo { .. } => unreachable!("ArcTo rejected before path lowering"),
             }
@@ -1401,8 +1469,8 @@ impl SoftwareSurface {
         for (index, ch) in text.text.chars().enumerate() {
             if !ch.is_whitespace() {
                 self.fill_rect(
-                    x + index as f64 * char_width,
-                    top,
+                    x + index as f64 * char_width + state.offset_x,
+                    top + state.offset_y,
                     (char_width * 0.7).max(1.0),
                     text.font_size.max(1.0),
                     color,
@@ -1423,8 +1491,8 @@ impl SoftwareSurface {
         for GlyphPosition { glyph_id, x, y } in &run.glyphs {
             if *glyph_id != 0 {
                 self.fill_rect(
-                    *x,
-                    *y - run.font_size,
+                    *x + state.offset_x,
+                    *y - run.font_size + state.offset_y,
                     (run.font_size * 0.55).max(1.0),
                     run.font_size.max(1.0),
                     color,
@@ -1441,15 +1509,13 @@ impl SoftwareSurface {
         state: RenderState,
         gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
-        if group.transform.is_some() {
-            return Err(render_failed(
-                "Cairo smoke renderer does not implement group transforms yet",
-            ));
-        }
-        let state = RenderState {
+        let mut state = RenderState {
             opacity: state.opacity * group.opacity.unwrap_or(1.0).clamp(0.0, 1.0),
             ..state
         };
+        if let Some(transform) = group.transform {
+            state = state.translated(transform)?;
+        }
         for child in &group.children {
             self.render_instruction(child, state, gradients)?;
         }
@@ -1462,11 +1528,6 @@ impl SoftwareSurface {
         state: RenderState,
         gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
-        if layer.transform.is_some() {
-            return Err(render_failed(
-                "Cairo smoke renderer does not implement layer transforms yet",
-            ));
-        }
         if layer
             .filters
             .as_ref()
@@ -1481,10 +1542,13 @@ impl SoftwareSurface {
                 "Cairo smoke renderer does not implement layer blend modes yet",
             ));
         }
-        let state = RenderState {
+        let mut state = RenderState {
             opacity: state.opacity * layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0),
             ..state
         };
+        if let Some(transform) = layer.transform {
+            state = state.translated(transform)?;
+        }
         for child in &layer.children {
             self.render_instruction(child, state, gradients)?;
         }
@@ -1498,10 +1562,10 @@ impl SoftwareSurface {
         gradients: &HashMap<String, PaintGradient>,
     ) -> Result<(), PaintRenderError> {
         let clip_rect = ClipRect {
-            x0: clip.x.floor() as i32,
-            y0: clip.y.floor() as i32,
-            x1: (clip.x + clip.width).ceil() as i32,
-            y1: (clip.y + clip.height).ceil() as i32,
+            x0: (clip.x + state.offset_x).floor() as i32,
+            y0: (clip.y + state.offset_y).floor() as i32,
+            x1: (clip.x + state.offset_x + clip.width).ceil() as i32,
+            y1: (clip.y + state.offset_y + clip.height).ceil() as i32,
         };
         let state = RenderState {
             clip: state.clip.intersect(clip_rect),
@@ -1528,15 +1592,17 @@ impl SoftwareSurface {
         }
 
         let opacity = state.opacity * image.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
-        let x0 = image.x.floor() as i32;
-        let y0 = image.y.floor() as i32;
-        let x1 = (image.x + image.width).ceil() as i32;
-        let y1 = (image.y + image.height).ceil() as i32;
+        let image_x = image.x + state.offset_x;
+        let image_y = image.y + state.offset_y;
+        let x0 = image_x.floor() as i32;
+        let y0 = image_y.floor() as i32;
+        let x1 = (image_x + image.width).ceil() as i32;
+        let y1 = (image_y + image.height).ceil() as i32;
 
         for y in y0..y1 {
             for x in x0..x1 {
-                let u = ((x as f64 - image.x) / image.width).clamp(0.0, 1.0);
-                let v = ((y as f64 - image.y) / image.height).clamp(0.0, 1.0);
+                let u = ((x as f64 - image_x) / image.width).clamp(0.0, 1.0);
+                let v = ((y as f64 - image_y) / image.height).clamp(0.0, 1.0);
                 let sx = (u * (src.width.saturating_sub(1)) as f64).round() as u32;
                 let sy = (v * (src.height.saturating_sub(1)) as f64).round() as u32;
                 let (r, g, b, a) = src.pixel_at(sx, sy);
@@ -1576,14 +1642,12 @@ impl SoftwareSurface {
 
     fn stroke_rect_paint(
         &mut self,
-        x: f64,
-        y: f64,
-        width: f64,
-        height: f64,
+        rect: (f64, f64, f64, f64),
         stroke_width: f64,
         paint: &SoftwarePaint,
         state: RenderState,
     ) {
+        let (x, y, width, height) = rect;
         let stroke_width = stroke_width.max(1.0);
         self.fill_rect_paint(x, y, width, stroke_width, paint, state.clip);
         self.fill_rect_paint(
@@ -1607,10 +1671,8 @@ impl SoftwareSurface {
 
     fn render_line_paint(
         &mut self,
-        x0: f64,
-        y0: f64,
-        x1: f64,
-        y1: f64,
+        start: (f64, f64),
+        end: (f64, f64),
         paint: &SoftwarePaint,
         stroke_width: f64,
         state: RenderState,
@@ -1618,6 +1680,12 @@ impl SoftwareSurface {
         if paint.is_transparent() {
             return;
         }
+        let (x0, y0) = start;
+        let (x1, y1) = end;
+        let x0 = x0 + state.offset_x;
+        let y0 = y0 + state.offset_y;
+        let x1 = x1 + state.offset_x;
+        let y1 = y1 + state.offset_y;
         let dx = x1 - x0;
         let dy = y1 - y0;
         let steps = dx.abs().max(dy.abs()).ceil().max(1.0) as i32;
@@ -1778,8 +1846,8 @@ fn parse_css_channel(s: &str) -> u8 {
 mod tests {
     use super::*;
     use paint_instructions::{
-        GradientKind, GradientStop, PaintBase, PaintClip, PaintGradient, PaintInstruction,
-        PaintRect, PaintText, TextAlign,
+        GradientKind, GradientStop, PaintBase, PaintClip, PaintGradient, PaintGroup,
+        PaintInstruction, PaintRect, PaintText, TextAlign,
     };
     use paint_vm_runtime::{
         PaintBackendPreference, PaintBackendRegistry, PaintFeature, PaintRenderOptions,
@@ -1827,6 +1895,25 @@ mod tests {
 
         assert_eq!(pixels.pixel_at(3, 3), (255, 0, 0, 255));
         assert_eq!(pixels.pixel_at(0, 0), (0, 0, 0, 0));
+    }
+
+    #[test]
+    fn renders_translated_viewport_groups() {
+        let mut scene = transparent_scene(6.0, 4.0);
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                2.0, 1.0, 2.0, 2.0, "#ff0000",
+            ))],
+            transform: Some([1.0, 0.0, 0.0, 1.0, -2.0, 0.0]),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene).expect("translated viewport group renders");
+
+        assert_eq!(pixels.pixel_at(0, 1), (255, 0, 0, 255));
+        assert_eq!(pixels.pixel_at(1, 2), (255, 0, 0, 255));
+        assert_eq!(pixels.pixel_at(2, 1), (0, 0, 0, 0));
     }
 
     #[test]

@@ -823,9 +823,9 @@ jobs:
             throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
           }
           Set-Location code/packages/rust
-          cargo test -p venture-browser-windows
+          cargo test -p paint-vm-cairo -p venture-browser-qt -p venture-browser-windows
           if ($LASTEXITCODE -ne 0) {
-            throw "Venture Windows bridge tests failed with exit code $LASTEXITCODE"
+            throw "Venture Windows render and bridge tests failed with exit code $LASTEXITCODE"
           }
           Set-Location ..\..\programs\mosaic\venture-browser
           cargo test

@@ -117,7 +117,11 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             ),
             3,
         )
-        self.assertIn("cargo test -p venture-browser-windows", workflow)
+        self.assertIn(
+            "cargo test -p paint-vm-cairo -p venture-browser-qt "
+            "-p venture-browser-windows",
+            workflow,
+        )
         self.assertIn(
             "Set-Location ..\\..\\programs\\mosaic\\venture-browser",
             workflow,
