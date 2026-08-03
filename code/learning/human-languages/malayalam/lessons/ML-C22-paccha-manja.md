@@ -49,9 +49,9 @@ here; this is the familiar family from the last two lessons.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C22-PACCHA-MANJA-02]; assesses=[] -->
 
-**മഞ്ഞ** (**mañña**, "**yellow**") is a **doublet** of **മഞ്ഞൾ**
-(**maññaḷ**, "**turmeric**") — but this is a **completely different**
-Dravidian root from *pac-*, matching **Tamil**'s own turmeric/yellow pair,
+**മഞ്ഞ** (*mañña*, "yellow") and **മഞ്ഞൾ** (*maññaḷ*, "turmeric") are a
+native **doublet pair**. This is a **completely different** Dravidian root
+from *pac-*, matching **Tamil**'s own turmeric/yellow pair,
 **மஞ்சள்** (*mañcaḷ*), closely. So here's the honest
 shape of this arc so far: Kannada split green and yellow into two unrelated
 families (native vs. Sanskrit loan); Telugu kept them as doublets of the

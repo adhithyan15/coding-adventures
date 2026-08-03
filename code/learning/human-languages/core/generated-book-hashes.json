@@ -626,7 +626,7 @@
     {
       "language": "malayalam",
       "chapter": 12,
-      "sourceHash": "fnv1a64:2217e46400958a60",
+      "sourceHash": "fnv1a64:e42ba8156c6e3d9a",
       "lessonIds": [
         "ML-C12-kudumbam"
       ],
@@ -699,7 +699,7 @@
     {
       "language": "malayalam",
       "chapter": 20,
-      "sourceHash": "fnv1a64:ff43af581284ce6c",
+      "sourceHash": "fnv1a64:f974ebaac51f7c0e",
       "lessonIds": [
         "ML-C20-pathinonnu-irupathu",
         "ML-C20-kalavastha"
@@ -718,7 +718,7 @@
     {
       "language": "malayalam",
       "chapter": 22,
-      "sourceHash": "fnv1a64:d73a4752e9a4a0c2",
+      "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
       "lessonIds": [
         "ML-C22-paccha-manja"
       ],
