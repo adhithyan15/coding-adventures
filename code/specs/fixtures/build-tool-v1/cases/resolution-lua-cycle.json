@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "resolution/lua-cycle",
+  "domain": "resolution",
+  "summary": "A genuine Lua dependency cycle remains visible to graph scheduling.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution",
+    "graph"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/alpha/BUILD",
+        "content_utf8": "echo \"building alpha\"\n"
+      },
+      {
+        "path": "code/packages/lua/alpha/coding-adventures-alpha-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-alpha\"\nversion = \"0.1.0-1\"\ndependencies = { \"coding-adventures-beta >= 0.1.0\" }\n"
+      },
+      {
+        "path": "code/packages/lua/beta/BUILD",
+        "content_utf8": "echo \"building beta\"\n"
+      },
+      {
+        "path": "code/packages/lua/beta/coding-adventures-beta-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-beta\"\nversion = \"0.1.0-1\"\ndependencies = { \"coding-adventures-alpha >= 0.1.0\" }\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/lua-cycle",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "lua/alpha",
+          "lua/beta"
+        ],
+        [
+          "lua/beta",
+          "lua/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

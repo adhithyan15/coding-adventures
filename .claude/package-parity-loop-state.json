@@ -11,22 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9756,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9756",
-    "branch": "codex/build-tool-haskell-binary-safe-hashing"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "93c0a7b60a2da3e81e8da9fd33e9919e3492cfd3",
+    "revision": "81e7f0e68c8879b8b3e26c8c1203d5e2a4e809fb",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1240,
-    "implementation_package_slots": 4388,
+    "implementation_identities": 1243,
+    "implementation_package_slots": 4391,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 790,
-    "singleton_missing_slots": 11060,
-    "rust_singletons": 595,
+    "singleton_packages": 793,
+    "singleton_missing_slots": 11102,
+    "rust_singletons": 598,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -383,20 +379,29 @@
     {
       "id": "build-tool-haskell-binary-safe-source-hashing",
       "title": "Make Haskell build-tool source hashing binary-safe on Windows",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-haskell-binary-safe-hashing",
       "pr_number": 9756,
-      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic while preserving graph semantics and valid UTF-8 Git blob identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding. Selected immediately after PR #9742 merged because it is the newly unblocked direct child, the exact Windows failure and real two-package downstream are already minimized, and repairing the supported Haskell engine's deterministic cache boundary has higher immediate leverage than switching toolchains to the independent Elixir UTF-8 slice. The implementation now reads package sources and manifests as strict bytes, normalizes relative paths to portable UTF-8, writes the exact framed payload to git hash-object through binary pipes, and falls back to a deterministic byte fold if Git is unavailable. A fixed digest fixture covers UTF-8, NUL, and malformed bytes, while the actual lua/logic_gates -> lua/arithmetic closure exits 0 with built=0, skipped=2, failed=0. Local validation passes 12 focused build-tool examples and all 19 Haskell graph/build-tool examples, GHC -Wall -Werror build, Cabal check, Cabal bounds review, package Haddock generation, 39% whole-engine expression coverage with both Git and fallback hash paths ticked, 57 shared conformance tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible versions beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, and the changed-diff credential scan is clean. The full 258-package Lua lane now gets past hashing and exposes a separate field-aware resolver cycle item recorded as the dependent next owner rather than widening this byte-boundary slice. Ready PR #9756 opened after two conflict-free rebases, a collision-clean 93c0a7b6 inventory, and exact-head reruns of all scoped build-tool, shared-conformance, canonical-Go, state, diff, and security gates. Ubuntu CI showed that an empty PATH invokes POSIX's default executable search, so the fallback test now uses the scoped temporary package directory as a nonempty Git-free PATH; the production hash path was already passing, and the corrected test passes locally on Windows."
+      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic while preserving graph semantics and valid UTF-8 Git blob identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding. Selected immediately after PR #9742 merged because it is the newly unblocked direct child, the exact Windows failure and real two-package downstream are already minimized, and repairing the supported Haskell engine's deterministic cache boundary has higher immediate leverage than switching toolchains to the independent Elixir UTF-8 slice. The implementation now reads package sources and manifests as strict bytes, normalizes relative paths to portable UTF-8, writes the exact framed payload to git hash-object through binary pipes, and falls back to a deterministic byte fold if Git is unavailable. A fixed digest fixture covers UTF-8, NUL, and malformed bytes, while the actual lua/logic_gates -> lua/arithmetic closure exits 0 with built=0, skipped=2, failed=0. Local validation passes 12 focused build-tool examples and all 19 Haskell graph/build-tool examples, GHC -Wall -Werror build, Cabal check, Cabal bounds review, package Haddock generation, 39% whole-engine expression coverage with both Git and fallback hash paths ticked, 57 shared conformance tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible versions beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, and the changed-diff credential scan is clean. The full 258-package Lua lane now gets past hashing and exposes a separate field-aware resolver cycle item recorded as the dependent next owner rather than widening this byte-boundary slice. Ready PR #9756 opened after two conflict-free rebases, a collision-clean 93c0a7b6 inventory, and exact-head reruns of all scoped build-tool, shared-conformance, canonical-Go, state, diff, and security gates. Ubuntu CI showed that an empty PATH invokes POSIX's default executable search, so the fallback test now uses the scoped temporary package directory as a nonempty Git-free PATH; the production hash path was already passing, and the corrected test passes locally on Windows. Guarded squash auto-completion merged exact head a3c2fa9b14 as e509d21997 on 2026-08-03 after all 16 exact-head checks were terminal: eleven succeeded and five irrelevant CodeQL analyzers skipped."
     },
     {
       "id": "build-tool-haskell-field-aware-manifest-resolution",
-      "title": "Make Haskell manifest resolution field-aware and acyclic",
-      "status": "pending",
+      "title": "Make Haskell Lua manifest resolution field-aware and acyclic",
+      "status": "in-progress",
       "depends_on": ["build-tool-haskell-binary-safe-source-hashing"],
+      "branch": "codex/build-tool-haskell-field-aware-manifest-resolution",
+      "pr_number": null,
+      "notes": "Discovered after the binary-safe hashing repair let the Haskell engine traverse the full real Lua lane. The exact lua/logic_gates -> lua/arithmetic closure resolves and dry-runs, but the 258-package lane reaches graph scheduling and marks every package failed with the generic cycle-detected diagnostic. Adjudicate genuine cycles versus aliases found by whole-manifest tokenization, minimize the responsible records into language-neutral resolution fixtures, parse only authoritative dependency fields, preserve canonical identities and valid cycles-as-errors, compare the complete edge set with the Go oracle, and keep this semantic repair separate from byte hashing. Selected after PR #9756 merged because it is the newly unblocked direct child and the exact full-lane failure is already reproduced: focused Haskell graph/build-tool validation passes 19 examples, while the real 258-package Lua dry run exits 1 with built=0, skipped=0, failed=258. The post-merge collision-checked 853643f4 inventory has 1,242 identities and 4,390 implementation slots across 15 established lanes, 172 high-consensus packages with 271 missing slots, 792 singletons with 11,088 missing slots, 597 Rust singletons, and zero collisions or unknown buckets. The implementation now extracts only quoted values in authoritative Lua dependencies tables, ignores package/source/description/comment aliases, preserves genuine cycles, merges selected BUILD dependency comments, retains language/programs/name identities, and gives package aliases precedence over same-basename program aliases. Five shared resolution fixtures pass, the corrected real 258-package Lua lane exits 0 with all 258 packages would-build, and its complete graph exactly matches the Go oracle at 383 edges with zero differences. Exact-head validation passes the 16-example changed Haskell build-tool suite under GHC -Wall -Werror and all 23 Haskell build-tool, directed-graph, and graph examples without warning promotion; the repository-wide -Wall -Werror advisory remains blocked only by pre-existing partial-pattern warnings in graph/test/GraphSpec.hs from main. The 41 language-neutral conformance cases; canonical Go test, vet, and trimpath build; canonical Go validation of 205 Haskell packages and 44 Starlark BUILD files; Cabal check; focused package Haddock generation with existing documentation/link warnings only; and 34% top-level, 39% alternative, and 43% expression coverage all pass. Cabal outdated reports only containers 0.8 and time 1.16.0.1 beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable. After two conflict-free rebases, the exact 81e7f0e6 working-tree parity report is collision-clean at 1,243 identities and 4,391 slots; the new smart-home-frigate-integration singleton is classified under an excluded native-authority review. State and dependency transitions are valid, git diff --check is clean, and the changed-diff credential scan has no matches."
+    },
+    {
+      "id": "build-tool-haskell-remaining-field-aware-manifest-resolution",
+      "title": "Make the remaining Haskell build-tool manifest readers field-aware",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered after the binary-safe hashing repair let the Haskell engine traverse the full real Lua lane. The exact lua/logic_gates -> lua/arithmetic closure resolves and dry-runs, but the 258-package lane reaches graph scheduling and marks every package failed with the generic cycle-detected diagnostic. Adjudicate genuine cycles versus aliases found by whole-manifest tokenization, minimize the responsible records into language-neutral resolution fixtures, parse only authoritative dependency fields, preserve canonical identities and valid cycles-as-errors, compare the complete edge set with the Go oracle, and keep this semantic repair separate from byte hashing."
+      "notes": "Discovered while validating the Lua field-aware resolver slice. The repaired Lua lane is acyclic and exactly matches the Go oracle, but a real --language haskell --force --dry-run --validate-build-files run still reaches graph scheduling and marks all 205 Haskell packages failed because the generic non-Lua whole-manifest tokenizer remains active. Add authoritative field/section readers for the remaining advertised ecosystems in dependency-shaped slices, consume their existing language-neutral resolution fixtures, preserve program/package identity and BUILD metadata semantics, and compare each complete edge set with the Go oracle instead of widening the Lua-specific repair."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1707,6 +1712,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 45e01cc2 inventory after smart-home-blue-iris-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP/TLS transport, credential challenge-response, Vault-referenced authentication, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Blue Iris JSON validation, stable camera/server projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-frigate-native-authority-review",
+      "title": "Review the Frigate integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 7eb07ead inventory after smart-home-frigate-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS login, bounded JWT-cookie handling, Vault identity, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Frigate response validation, health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
     }
   ]
 }

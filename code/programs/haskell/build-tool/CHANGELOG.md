@@ -11,6 +11,9 @@ All notable changes to this package will be documented in this file.
   checks, literal U+FFFD coverage, and front-door exit-code validation.
 - An exact package-hash regression covering non-ASCII UTF-8, NUL, and malformed
   source bytes against a fixed Git blob digest.
+- Shared Lua resolution fixtures for authoritative dependency tables, genuine
+  cycles, selected BUILD dependency metadata, qualified program identities,
+  and package/program alias precedence.
 
 ### Changed
 
@@ -23,6 +26,10 @@ All notable changes to this package will be documented in this file.
   locale-sensitive text handles.
 - Exercise the Haskell build tool from `BUILD_windows` whenever Cabal is
   available instead of unconditionally skipping the package.
+- Resolve Lua edges only from quoted values in the rockspec `dependencies`
+  table, merge qualified `# build-tool: deps=` entries from the selected BUILD
+  file, preserve program identity segments, and prefer package aliases over
+  same-basename program aliases.
 
 ## [0.1.0] - 2026-04-05
 

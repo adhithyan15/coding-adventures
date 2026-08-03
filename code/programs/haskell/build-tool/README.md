@@ -22,6 +22,15 @@ The package tests consume the shared `resolution/lua-utf8` and
 `resolution/lua-invalid-utf8` fixtures, cover representative malformed UTF-8
 classes, and distinguish a valid literal U+FFFD from a decoder replacement.
 
+Lua dependency resolution reads quoted package requirements only from the
+authoritative `dependencies = { ... }` table. Package declarations,
+descriptions, source metadata, comments, and unrelated strings cannot invent
+graph edges. Selected `# build-tool: deps=` metadata is merged separately,
+program identities retain the `language/programs/name` segment, and a package
+alias wins over a same-basename program alias. Shared fixtures cover the
+field-aware boundary, genuine cycles, legacy BUILD dependencies, and
+package/program alias collisions.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

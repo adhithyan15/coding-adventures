@@ -325,21 +325,30 @@ authenticated listener and reconciliation scheduler with declared
 interruptible waiting, and stop-on-failure behavior remain a reviewed native
 runtime exception; bounded tick ordering stays available as an injected
 portable seam. The dedicated review is excluded from autonomous delivery.
-The same refresh merged Haskell strict rockspec decoding and directly unlocks
-the selected binary-safe source-hashing child, which is ranked ahead of the
-independent Elixir decoder because its exact Windows failure and real Lua
-downstream are already minimized and it closes the Haskell cache boundary.
-That hashing repair lets the exact `lua/logic_gates` to `lua/arithmetic`
-closure dry-run successfully. The full 258-package Lua lane then reaches a
-separate all-node cycle failure in Haskell's whole-manifest token resolver; a
-dependent field-aware resolution owner will distinguish genuine cycles from
-false alias matches and compare the exact edge set with the Go oracle.
-After rebasing this slice onto `93c0a7b6`, the collision-checked inventory has
-1,240 identities and 4,388 implementation slots across 15 established lanes,
-with zero collisions or unknown buckets. Its sole new singleton,
+The same refresh merged Haskell strict rockspec decoding and directly unlocked
+the binary-safe source-hashing child. PR #9756 completed that cache-boundary
+repair and lets the exact `lua/logic_gates` to `lua/arithmetic` closure dry-run
+successfully. The full 258-package Lua lane then reaches a separate all-node
+cycle failure in Haskell's whole-manifest token resolver. The selected direct
+child now repairs the Lua reader: it distinguishes genuine cycles from false
+alias matches, parses only authoritative rockspec dependency fields, preserves
+BUILD-declared program edges and identities, and compares the exact edge set
+with the Go oracle. Validation of that narrow repair exposed the same generic
+token-reader debt in the remaining ecosystem readers: the real 205-package
+Haskell lane still reports an all-node cycle. A dependent backlog owner now
+carries those non-Lua manifest readers instead of widening this slice. The
+post-rebase `81e7f0e6` collision-checked inventory has 1,243
+identities and 4,391 implementation slots across 15 established lanes, with
+172 high-consensus packages and 271 missing slots, 793 singleton packages and
+11,102 missing slots, 598 Rust singletons, and zero collisions or unknown
+buckets. The previously discovered singleton,
 `smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR
 adapter; the state backlog records an excluded native-authority review instead
-of treating that host integration as an all-language portability gap.
+of treating that host integration as an all-language portability gap. The new
+`smart-home-frigate-integration` singleton likewise owns concrete TCP/TLS,
+authenticated HTTPS, JWT cookies, Vault identity, and runtime authorization;
+it has an excluded native-authority review rather than a fabricated portable
+lane gap.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
