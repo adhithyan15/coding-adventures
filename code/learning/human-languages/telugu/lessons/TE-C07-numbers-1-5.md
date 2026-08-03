@@ -9,7 +9,7 @@ prerequisites: [TE-C01-namaskaram]
 sounds: [telugu-inherent-a, retroflex-series, telugu-u-ending]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Telugu shares the family's 2–5 (iraṇṭu ↔ reṇḍu) but strikes out alone on ONE — okaṭi, not oṉṟu/ondu/onnu"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C01-namaskaram]
 ---
 

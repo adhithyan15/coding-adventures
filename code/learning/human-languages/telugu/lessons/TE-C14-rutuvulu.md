@@ -9,7 +9,7 @@ prerequisites: [TE-C13-sharira-bhagalu]
 sounds: [telugu-vocalic-r, telugu-anusvara]
 roots: [dravidian-vesavi-vaana, sanskrit-vasanta-rutu]
 etymology_hook: "వేసవి vesavi (summer) is native Dravidian, cousin of Kannada's besige — వసంత ఋతువు vasanta rutuvu (spring) borrows both vasanta AND rutu from Sanskrit, like Kannada, not just Tamil/Malayalam's single vasantham loan"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C13-sharira-bhagalu]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [TE-C19-vayasu]
 sounds: [telugu-vowel-sign-ai, telugu-geminate-none]
 roots: [dravidian-padi-ten, dravidian-rendu-two]
 etymology_hook: "పదకొండు-పందొమ్మిది (11-19) echo పది (padi, 'ten') + a digit — ఇరవై (iravai, 'twenty') most likely continues the same pan-Dravidian *iru-/*renḍu ('two') + *pad- ('ten') pattern as Kannada's transparent ippattu, but centuries of erosion have worn iravai down further, so it doesn't visibly split into 'two' + 'ten' on the surface the way Kannada's does today"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C19-vayasu]
 ---
 

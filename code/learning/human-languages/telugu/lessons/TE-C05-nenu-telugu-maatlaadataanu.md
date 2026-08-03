@@ -8,7 +8,7 @@ concept_tag: TE-WORD-TELUGU
 prerequisites: [TE-C05-maatlaadu, TE-C03-nenu]
 sounds: [long-u]
 roots: [telugu]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C05-maatlaadu, TE-C03-nenu]
 ---
 

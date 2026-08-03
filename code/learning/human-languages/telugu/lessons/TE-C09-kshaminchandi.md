@@ -9,7 +9,7 @@ prerequisites: [TE-C08-dayachesi]
 sounds: [telugu-conjunct-kssa, telugu-anusvara]
 roots: [kshama-sanskrit]
 etymology_hook: "క్షమించండి kṣamin̄caṇḍi ← Sanskrit kṣamā 'forgiveness' + Telugu verb-making -in̄cu + the SAME respectful -aṇḍi ending from దయచేసి...ండి"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C08-dayachesi]
 ---
 

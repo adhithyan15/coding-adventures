@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the German duration
-tranche: 20 registered tracks, 1,002 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the Telugu duration
+tranche: 20 registered tracks, 1,003 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -57,7 +57,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01H | Complete in the Portuguese duration PR | Remove all twenty-three sub-five-minute violations from the Portuguese track. | The report measures zero Portuguese violations; five new prerequisite-ordered micro-lessons preserve the register, suppletion, grammar-choice, and etymology content from the five computed violations. |
 | HL-D01I | Complete in the French duration PR | Remove all twenty-five sub-five-minute violations from the French track. | The report measures zero French violations; three new prerequisite-ordered micro-lessons preserve register, suppletion, and pronominal-agreement depth. |
 | HL-D01J | Complete in the German duration PR | Remove all twenty-seven sub-five-minute violations from the German track. | The report measures zero German violations; five new prerequisite-ordered micro-lessons preserve register, practice, areal-history, agreement, and etymology depth. |
-| HL-D01K | Next | Remove all thirty-six sub-five-minute violations from the Telugu track. | Telugu is now the smallest remaining set: thirty-five declaration-only lessons and one genuinely computed violation, with a 360-second maximum. |
+| HL-D01K | Complete in the Telugu duration PR | Remove all thirty-six sub-five-minute violations from the Telugu track. | The report measures zero Telugu violations; one new prerequisite-ordered micro-lesson separates phrase formation from register and source-evidence judgment. |
+| HL-D01L | Next | Remove all thirty-seven sub-five-minute violations from the Kannada track. | Kannada is now the smallest remaining set: thirty-six declaration-only lessons and one genuinely computed violation, with a 360-second maximum. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -78,7 +79,10 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B19 | Queued | Remove French's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports sixteen overfull boxes, nine underfull boxes, and six Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B20 | Queued | Publish German Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The German PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
 | HL-B21 | Queued | Remove German's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports seventeen overfull boxes, eleven underfull boxes, and three Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B22 | Queued | Publish Telugu Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | The Telugu PDF reaches Chapter 5 while canonical app content continues through Chapter 31; schema-v2 migration plus generation should close that drift safely. |
+| HL-B23 | Queued | Remove Telugu's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports four overfull boxes, three underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and a font-shape substitution warning; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
+| HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson, including the new register support step, needs a scheduled place. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
@@ -361,6 +365,31 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Telugu's thirty-six violations are now the smallest remaining set.
   Thirty-five are declaration-only and one genuinely computes above the limit,
   with a 360-second maximum, so HL-D01K is next.
+
+## Findings from HL-D01K
+
+- Telugu now has zero duration violations. The corpus grows from 1,002 to 1,003
+  lessons and drops from 329 to 293 violations overall; unknown prerequisites
+  remain at zero.
+- Thirty-five lessons needed only honest declared-budget corrections. The one
+  genuinely long lesson is now a prerequisite-ordered pair: build
+  **శుభ మధ్యాహ్నం** from the widened “noon” word → distinguish the two-source
+  formal-register claim from the one-source lower-frequency claim.
+- The two Chapter 31 steps compute to 152 and 193 seconds.
+  `TE-C06-dative-subject` at 285 seconds and `TE-C29-subhodayam` at 279 are the
+  tightest remaining Telugu lessons and should be watched during copy edits.
+- The Telugu PDF builds successfully at 29 pages through Chapter 5 while
+  canonical lessons continue through Chapter 31. HL-B22 records the schema-v2
+  migration and generated publication work for Chapters 6–31.
+- The build has no missing glyphs, but reports four overfull boxes, three
+  underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and a
+  font-shape substitution warning. HL-B23 records that pre-existing clean-build
+  debt.
+- The roadmap narrative stops at Chapter 6 and the authoritative session map at
+  Chapter 5. HL-M02 records the progression-metadata work through Chapter 31.
+- Kannada's thirty-seven violations are now the smallest remaining set.
+  Thirty-six are declaration-only and one genuinely computes above the limit,
+  with a 360-second maximum, so HL-D01L is next.
 
 ## Completed foundations
 

@@ -9,7 +9,7 @@ prerequisites: [TE-C26-udayam]
 sounds: [telugu-anusvara, telugu-conjunct-tra]
 roots: [sanskrit-sayam-evening]
 etymology_hook: "సాయంత్రం (sāyantram, 'evening') is a Sanskrit tatsama — from సాయం (sāyam, 'in the evening') plus a Sanskrit '-tana' suffix that turns time-adverbs into adjectives (cf. divātana, 'of the day'; sanātana, 'eternal'); సాయం itself, per Wiktionary, traces to PIE *seh₁- ('long, lasting') — and Wiktionary explicitly states this root is 'distantly related to Latin sērus,' independently confirmed on sērus's own Wiktionary page (Proto-Italic *sēros ← PIE *seh₁-, 'to be long, lasting, slow'); sērus is already established in this course as the root of French soir and Italian sera (LA-C33-vesper) — meaning Telugu's everyday evening word and the Romance family's everyday evening word are genuine, if very distant, cognates, one route through Sanskrit tatsama borrowing, one through Vulgar Latin erosion"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C26-udayam]
 ---
 

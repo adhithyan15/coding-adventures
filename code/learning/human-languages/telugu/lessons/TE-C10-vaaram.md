@@ -9,7 +9,7 @@ prerequisites: [TE-C09-kshaminchandi]
 sounds: [telugu-anusvara, telugu-conjunct-kra]
 roots: [sanskrit-planet-words]
 etymology_hook: "Telugu's week is Sanskritic like Hindi's, but Sunday is Ādivāram — 'the FIRST day' (Sanskrit ādi 'beginning'), not a sun-name at all"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C09-kshaminchandi]
 ---
 

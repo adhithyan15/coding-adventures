@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TE-C04-velli-vastaanu, TE-C04-reepu-kaluddaam, TE-C04-malli-kaluddaam]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C04-vellu, TE-C04-velli-vastaanu, TE-C04-reepu-kaluddaam, TE-C04-malli-kaluddaam]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TE-C05-maatlaadu, TE-C05-nenu-telugu-maatlaadataanu, TE-C05-undu, TE-C05-pani-ceyu]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C05-maatlaadu, TE-C05-nenu-telugu-maatlaadataanu, TE-C05-undu, TE-C05-pani-ceyu, TE-C03-nenu]
 ---
 

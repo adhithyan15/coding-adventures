@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TE-C03-miiru-elaa-unnaaru, TE-C03-baagaa, TE-C03-paravaaledu]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa, TE-C03-paravaaledu]
 ---
 

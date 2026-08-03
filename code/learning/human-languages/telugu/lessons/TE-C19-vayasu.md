@@ -9,7 +9,7 @@ prerequisites: [TE-C18-ganta]
 sounds: [telugu-anusvara, telugu-vowel-sandhi]
 roots: [sanskrit-vayas-vigor-age]
 etymology_hook: "వయస్సు (vayasu, 'age') is the same Sanskrit वयस् (vayas, 'vigor, age') as Kannada's vayassu — PIE cousin of Latin vīs — and Telugu asks it the same simple, verbless way: 'నీ వయసెంత?' (nī vayasenta?, 'your age how-much?'), where వయస్సు+ఎంత fuse into vayas-enta by regular vowel sandhi"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C18-ganta]
 ---
 

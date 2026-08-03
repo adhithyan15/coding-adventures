@@ -9,7 +9,7 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri]
 sounds: [telugu-anusvara, telugu-retroflex-tta]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "గంట (ganṭa, 'hour') is the same Sanskrit ghaṇṭā ('bell') word as Kannada's gaṇṭe and Hindi's ghanṭā — Telugu completes a clean 3-way match on this concept, contrasting with Tamil's most-likely-native maṇi (Malayalam's cognate mani, interestingly, traces to a DIFFERENT Sanskrit word, maṇi 'gem,' per its own dictionaries)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C17-madhyaahnam-ardharaatri]
 ---
 

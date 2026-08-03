@@ -9,7 +9,7 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 sounds: [telugu-conjunct-tra, telugu-vowel-sign-i]
 roots: [sanskrit-ratri, telugu-native-reyi-maapu]
 etymology_hook: "రాత్రి (rātri, 'night') is a Sanskrit tatsama word, already hiding inside అర్ధరాత్రి (ardharātri, 'midnight'), and — unlike rōju's genuine Persian surprise last lesson — it really is Telugu's everyday word for night; genuine native Telugu words exist too — రేయి (rēyi, most sources treat it as inherited Dravidian, though some grammars link it to rātri itself), మాపు (māpu, whose primary sense is actually 'evening/dusk,' as in రేపుమాపు, 'morning and evening'), and ఇరులు (irulu, cognate with Kannada's ಇರುಳು/iruḷu, primarily 'darkness') — a messier, three-way version of Kannada's cleaner two-word replacement story, not a tidy mirror of it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [TE-C24-ratri]
 sounds: [telugu-sha, telugu-bha]
 roots: [sanskrit-shubha-beautiful, sanskrit-ratri]
 etymology_hook: "శుభ రాత్రి (śubha rātri), 'good night,' literally 'auspicious night' — both pieces Sanskrit tatsama: రాత్రి (already met last lesson) plus శుభ (śubha, 'auspicious,' from root śubh, 'to be beautiful,' PIE *ḱewbʰ-); some sources describe modern Telugu speakers often code-switching to English 'good night' in casual conversation instead of saying śubha rātri aloud — though this same code-switching pattern for farewells plausibly shows up across other South Asian languages too, so it's honestly unclear whether this is Telugu-specific or just where the available sources happened to comment on it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C24-ratri]
 ---
 

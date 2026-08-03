@@ -9,7 +9,7 @@ prerequisites: [TE-C11-rangulu]
 sounds: [telugu-retroflex-dda, telugu-geminate-nna]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "నాన్న naanna (father) and చెల్లి chelli (younger sister) are Telugu's OWN forms, unlike Tamil/Kannada's appa/tangi — but the age-before-gender sibling system is the same across the family"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C11-rangulu]
 ---
 

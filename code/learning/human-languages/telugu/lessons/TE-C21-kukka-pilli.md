@@ -9,7 +9,7 @@ prerequisites: [TE-C20-padakondu-iravai]
 sounds: [telugu-geminate-kk, telugu-geminate-ll]
 roots: [uncertain-kukka, dravidian-pillu-cat]
 etymology_hook: "కుక్క (kukka, 'dog') genuinely breaks from Kannada/Malayalam/Tamil's shared naayi root — debated between an onomatopoeic origin (imitating a bark) and a Sanskrit loan (कुक्कुर, kukkura); పిల్లి (pilli, 'cat') is Proto-Dravidian *pillV, and most likely closes this WHOLE arc's cat-word loop — the probable Dravidian source Sanskrit borrowed as बिडाल (biḍāla), giving Hindi's बिल्ली (billī)"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C20-padakondu-iravai]
 ---
 

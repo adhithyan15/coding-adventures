@@ -9,7 +9,7 @@ prerequisites: [TE-C10-vaaram]
 sounds: [telugu-anusvara, telugu-short-vowels]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "నలుపు/తెలుపు/ఎరుపు (black/white/red) are native Dravidian, matching a pattern across all four languages — నీలం (blue) closes the set as the one shared Sanskrit loan, everywhere"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C10-vaaram]
 ---
 

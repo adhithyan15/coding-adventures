@@ -9,7 +9,7 @@ prerequisites: [TE-C11-rangulu, TE-C21-kukka-pilli]
 sounds: [telugu-short-vowels, telugu-virama-geminate]
 roots: [proto-dravidian-pac-green]
 etymology_hook: "పచ్చ (pacca, 'green') and పసుపు (pasupu, 'yellow, turmeric') are both descendants of the SAME Proto-Dravidian root, *pac- — true doublets of each other, not two separate word families; పచ్చ also shares that root with Tamil's பச்சை (paccai) and Kannada's ಹಸಿರು (hasiru), while Tamil's பசுப்பு (pacuppu) is a direct cognate of పసుపు itself"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C21-kukka-pilli]
 ---
 

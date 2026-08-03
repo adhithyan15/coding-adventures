@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [TE-C02-naa-peru, TE-C02-mii-peru-emiti, TE-C02-santosham]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C02-peru, TE-C02-naa, TE-C02-naa-peru, TE-C02-nuvvu-miiru, TE-C02-emiti, TE-C02-mii-peru-emiti, TE-C02-santosham]
 ---
 

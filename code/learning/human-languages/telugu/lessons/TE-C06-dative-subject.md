@@ -10,7 +10,7 @@ prerequisites: [TE-C06-dative-ku, TE-C05-nenu-telugu-maatlaadataanu]
 sounds: [gemination-cc]
 roots: [dravidian-dative-ku]
 etymology_hook: "Telugu says knowing a language literally as 'to me it COMES' (vaccu, the verb already taught for 'come') — the experiencer goes in the dative because knowing happens TO you; the same dative-subject construction runs through Tamil, Kannada and Malayalam"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C06-dative-ku, TE-C05-nenu-telugu-maatlaadataanu, TE-C04-vellu]
 ---
 

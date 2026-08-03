@@ -9,7 +9,7 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 sounds: [telugu-anusvara, telugu-da]
 roots: [sanskrit-udaya-rise]
 etymology_hook: "ఉదయం (udayam, 'morning') is a Sanskrit tatsama — from ఉదయ (udaya, 'rise, appearance') + Telugu's own -ము (-mu) suffix — and it's genuinely Telugu's most common, general everyday word for 'morning'; be honest, though: it doesn't have the field entirely to itself — పొద్దు/పొద్దున (poddu/podduna), genuine Proto-Dravidian vocabulary cognate with Tamil pozhudu and Kannada hottu, does real everyday work too, and వేకువ (vēkuva, 'dawn, early morning') is labeled colloquial, not archaic; be honest also about the contrast with Kannada: Kannada has this exact Sanskrit root (udaya), but only inside its GREETING, ಶುಭೋದಯ (śubhōdaya) — Kannada's everyday morning noun is the unrelated native ಬೆಳಗ್ಗೆ; Telugu's ఉదయం, by contrast, covers BOTH the everyday-noun and greeting-root jobs at once — no such twist here, unlike the Persian-loan surprise already found for Telugu's 'day' word (rōju, TE-C23)"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [TE-C18-ganta]
 sounds: [telugu-anusvara, telugu-compound-word]
 roots: [sanskrit-vata-wind, sanskrit-avarana-covering]
 etymology_hook: "వాతావరణం (vātāvaraṇam, 'weather, atmosphere') is a PURE Sanskrit compound — వాత (vāta, 'wind, air') + ఆవరణ (āvaraṇa, 'covering, layer') — literally 'the covering of air,' unlike Kannada's Persian+Sanskrit hybrid havāmāna for the same concept"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C18-ganta]
 ---
 

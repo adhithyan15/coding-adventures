@@ -9,7 +9,7 @@ prerequisites: [TE-C01-avunu]
 sounds: [telugu-vowel-sign-ee, telugu-vowel-sign-i, telugu-ca]
 roots: [daya-compassion]
 etymology_hook: "దయచేసి = 'having done compassion' — Telugu asks please with daya, like Tamil, Kannada, Arabic faḍl and Hindi kṛpā"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [TE-C01-avunu]
 ---
 
