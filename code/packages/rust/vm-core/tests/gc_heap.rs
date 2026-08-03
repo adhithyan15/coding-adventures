@@ -149,6 +149,46 @@ fn gc_field_store_rejects_unsupported_value_kinds() {
     assert!(r.is_err(), "storing a Str into a raw GC field must trap, got {r:?}");
 }
 
+/// `gc_alloc` is capped by `max_memory_entries`, exactly like `alloc_array` —
+/// a security-motivated fix: `gc_field_load`/`gc_field_store`'s bounds check
+/// (`FlatHeap::payload_size`) is O(live object count), so an uncapped live
+/// count would let a program spend O(N*M) wall-clock time on N allocations +
+/// M field accesses against the oldest one while an instruction budget only
+/// charges O(N+M). Also proves the cap's counter tracks *live* objects, not
+/// lifetime allocations: after a collection frees enough garbage, allocation
+/// resumes under the same cap.
+#[test]
+fn gc_alloc_is_capped_and_collection_frees_room_under_the_cap() {
+    let f = IIRFunction::new(
+        "main", vec![], "i64",
+        vec![
+            ins("gc_alloc", Some("c"), vec![], "ref<pair>"),
+            ins("ret", None, vec![Operand::Int(1)], "i64"),
+        ],
+    );
+    let mut m = IIRModule::new("gc_heap", "gc_heap");
+    m.add_or_replace(f);
+    let mut vm = VMCore::new();
+    vm.max_memory_entries = 2;
+
+    // First two allocations succeed (cap is 2).
+    assert!(vm.execute(&mut m, "main", &[]).unwrap().is_some());
+    assert!(vm.execute(&mut m, "main", &[]).unwrap().is_some());
+    // The third exceeds the cap and must trap, not silently grow past it.
+    assert!(vm.execute(&mut m, "main", &[]).is_err(), "gc_alloc must respect max_memory_entries");
+
+    // Collect: every prior allocation is unrooted (each ran in its own
+    // execute() call, whose root frame is gone once execute() returns), so
+    // all of them are reclaimed and the live count drops back to 0.
+    let collect_fn = IIRFunction::new("main", vec![], "i64", vec![ins("gc_collect", None, vec![], "void")]);
+    let mut cm = IIRModule::new("gc_heap", "gc_heap");
+    cm.add_or_replace(collect_fn);
+    vm.execute(&mut cm, "main", &[]).unwrap();
+
+    // Allocation succeeds again now that the cap has room.
+    assert!(vm.execute(&mut m, "main", &[]).unwrap().is_some(), "collection must free room under the cap");
+}
+
 /// The headline property: `gc_collect` actually reclaims an unreachable
 /// object while keeping a reachable one. `keep = gc_alloc; { garbage =
 /// gc_alloc } (garbage goes out of scope — nothing roots it); gc_collect;

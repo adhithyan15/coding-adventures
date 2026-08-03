@@ -1,5 +1,25 @@
 # Changelog — vm-core
 
+## [0.21.1] — 2026-08-02 (security fix: cap live `gc_alloc` count to bound `gc_field_load`/`gc_field_store` cost)
+
+A security review of the 0.20.0/0.21.0 GC work found that `gc_field_load`/
+`gc_field_store`'s bounds check (`FlatHeap::payload_size`) is O(live object
+count) — it walks the block list, the same cost `FlatHeap::kind_of`'s own
+docs already flag as unsuitable for a hot per-instruction loop. Without a
+cap on live `gc_alloc`'d objects, a program allocating N objects then
+performing M field accesses against the oldest one could cost O(N·M)
+wall-clock time while an instruction budget (`max_instructions`, vm-core's
+existing sandbox-mode guard) only charges O(N+M) — a quadratic blowup
+defeating the budget's intended linear bound.
+
+Fixed by adding `VMCore::gc_object_count` — an O(1)-maintained live count
+(incremented on `gc_alloc`, decremented by each collection's `freed` count;
+a compacted survivor is not freed, so it stays counted) — and enforcing
+`max_memory_entries` against it in `handle_gc_alloc`, exactly mirroring the
+aggregate ceiling `handle_alloc`/`handle_alloc_array` already enforce
+against `ctx.arrays.len()`. New test
+`gc_alloc_is_capped_and_collection_frees_room_under_the_cap`.
+
 ## [0.21.0] — 2026-08-02 (`safepoint` upgrades to automatic compaction via the shared `should_compact` policy)
 
 `safepoint`'s paced collection now also relocates objects (`collect_compacting`

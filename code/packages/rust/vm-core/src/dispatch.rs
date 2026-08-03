@@ -64,6 +64,10 @@ pub struct DispatchCtx<'a> {
     /// The shared GC engine `gc_alloc`'d objects live on. See
     /// [`crate::core::VMCore`]'s `heap` field.
     pub heap: &'a mut gc_core::FlatHeap,
+    /// Live count of `gc_alloc`'d objects — the aggregate-cap input
+    /// `handle_gc_alloc` enforces against `max_memory_entries`. See
+    /// [`crate::core::VMCore`]'s `gc_object_count` field for why this exists.
+    pub gc_object_count: &'a mut usize,
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
@@ -1163,10 +1167,25 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     if bytes <= 0 {
         return Err(VMError::Custom(format!("gc_alloc size must be positive, got {bytes}")));
     }
+    // Aggregate ceiling on the *count* of live gc_alloc'd objects — the same
+    // pattern handle_alloc/handle_alloc_array enforce against ctx.arrays.len().
+    // This exists specifically so gc_field_load/gc_field_store's bounds check
+    // (FlatHeap::payload_size, O(live object count)) can't be driven
+    // arbitrarily high: without this cap, N allocations followed by M field
+    // accesses against the oldest one would cost O(N*M) wall-clock time while
+    // an instruction budget (max_instructions) only charges O(N+M) — a
+    // quadratic blowup a security review flagged. See
+    // VMCore::gc_object_count's doc comment for the full argument.
+    if *ctx.gc_object_count >= ctx.max_memory_entries {
+        return Err(VMError::Custom(format!(
+            "gc_alloc count exceeds the {} live-object cap", ctx.max_memory_entries
+        )));
+    }
     let ptr = ctx.heap.alloc(bytes as usize, 0);
     if ptr.is_null() {
         return Err(VMError::Custom("gc_alloc: allocation failed".into()));
     }
+    *ctx.gc_object_count += 1;
     let value = Value::HeapRef(gc_core::HeapRef::new(ptr as usize));
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone());
@@ -1325,9 +1344,12 @@ fn collect_now(ctx: &mut DispatchCtx) {
     // Value::HeapRef owned by frames/globals/memory/arrays, all reachable
     // through `ctx` for the duration of this call, so they stay valid and
     // exclusively-writable across the collection.
-    unsafe {
-        ctx.heap.collect_mixed(&roots, &[]);
-    }
+    let stats = unsafe { ctx.heap.collect_mixed(&roots, &[]) };
+    // Keep gc_object_count (the aggregate-cap input for handle_gc_alloc)
+    // accurate: a relocated survivor under a future compacting collect is
+    // not `freed`, so it correctly stays counted; only genuinely-dead
+    // objects decrement it.
+    *ctx.gc_object_count = ctx.gc_object_count.saturating_sub(stats.freed);
 }
 
 /// Collect on `ctx.heap` only if its threshold says a collection is due —
@@ -1351,13 +1373,16 @@ fn run_safepoint(ctx: &mut DispatchCtx) {
     // SAFETY: same argument as `collect_now` — every address is the interior
     // field of a live Value::HeapRef reachable through `ctx` for the
     // duration of this call.
-    unsafe {
+    let stats = unsafe {
         if ctx.heap.should_compact() {
-            ctx.heap.collect_compacting(&roots, &[]);
+            ctx.heap.collect_compacting(&roots, &[])
         } else {
-            ctx.heap.collect_mixed(&roots, &[]);
+            ctx.heap.collect_mixed(&roots, &[])
         }
-    }
+    };
+    // See collect_now's identical comment: only genuinely-dead objects
+    // decrement the aggregate-cap counter; a compacted survivor stays counted.
+    *ctx.gc_object_count = ctx.gc_object_count.saturating_sub(stats.freed);
 }
 
 /// `safepoint` (no operands, no dest) — a **paced** collection point: only

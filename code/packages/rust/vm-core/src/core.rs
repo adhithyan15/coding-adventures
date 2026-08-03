@@ -160,6 +160,28 @@ pub struct VMCore {
     /// exactly where every reference lives.
     heap: gc_core::FlatHeap,
 
+    /// Live count of `gc_alloc`'d objects — incremented on `gc_alloc`,
+    /// decremented by each collection's `freed` count (a relocated survivor
+    /// under compaction is not freed, so it correctly stays counted).
+    ///
+    /// This is a **security-relevant cap input**, not just a metric:
+    /// `gc_field_load`/`gc_field_store` bounds-check against
+    /// `FlatHeap::payload_size`, which is O(live object count) (it walks the
+    /// block list — the same cost `kind_of`'s own docs already flag as
+    /// unsuitable for a hot per-instruction loop). Without a cap on how many
+    /// objects can be live at once, a program could allocate N objects then
+    /// perform M field accesses against the oldest one for O(N·M) wall-clock
+    /// work while an instruction budget (`max_instructions`) only charges
+    /// O(N+M) — a quadratic blowup that defeats the budget's intended linear
+    /// bound. `handle_gc_alloc` enforces `max_memory_entries` against this
+    /// counter before allocating, exactly mirroring the aggregate ceiling
+    /// `handle_alloc`/`handle_alloc_array` already enforce against
+    /// `ctx.arrays.len()`. Tracked in O(1) precisely *because* `FlatHeap`
+    /// itself doesn't expose an O(1) live-object counter (only `live_bytes`,
+    /// which bounds total payload size, not object *count* — the actual
+    /// driver of `payload_size`'s O(n) cost).
+    gc_object_count: usize,
+
     /// JIT handler registry.  When a `call` instruction names a function
     /// listed here, the handler is called instead of the interpreter.
     jit_handlers: JitHandlerMap,
@@ -216,6 +238,7 @@ impl VMCore {
             globals: HashMap::new(),
             arrays: Vec::new(),
             heap: gc_core::FlatHeap::new(),
+            gc_object_count: 0,
             jit_handlers: HashMap::new(),
             extra_opcodes: HashMap::new(),
             builtins: BuiltinRegistry::new(),
@@ -340,6 +363,7 @@ impl VMCore {
             globals: &mut self.globals,
             arrays: &mut self.arrays,
             heap: &mut self.heap,
+            gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
@@ -415,6 +439,7 @@ impl VMCore {
             globals: &mut self.globals,
             arrays: &mut self.arrays,
             heap: &mut self.heap,
+            gc_object_count: &mut self.gc_object_count,
             u8_wrap: self.u8_wrap,
             max_frames: self.max_frames,
             max_memory_entries: self.max_memory_entries,
