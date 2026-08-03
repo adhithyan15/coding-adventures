@@ -12,9 +12,9 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 980,
+    "totalLessons": 981,
     "authoredBooks": 20,
-    "durationViolations": 472,
+    "durationViolations": 464,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
@@ -4665,135 +4665,6 @@
         ]
       },
       {
-        "lessonId": "MR-C01-namaskar",
-        "language": "marathi",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 171,
-        "effectiveSeconds": 300,
-        "wordCount": 236,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 126,
-        "effectiveSeconds": 300,
-        "wordCount": 193,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 4,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 161,
-        "effectiveSeconds": 300,
-        "wordCount": 195,
-        "promptCount": 4,
-        "repeatCueCount": 1,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C03-practice",
-        "language": "marathi",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 140,
-        "effectiveSeconds": 300,
-        "wordCount": 166,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "chapter": 4,
-        "declaredSeconds": 300,
-        "computedSeconds": 130,
-        "effectiveSeconds": 300,
-        "wordCount": 165,
-        "promptCount": 1,
-        "repeatCueCount": 4,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C05-mi-marathi-bolto",
-        "language": "marathi",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 133,
-        "effectiveSeconds": 300,
-        "wordCount": 202,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C05-practice",
-        "language": "marathi",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 126,
-        "effectiveSeconds": 300,
-        "wordCount": 190,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "MR-C06-numbers-1-5",
-        "language": "marathi",
-        "chapter": 6,
-        "declaredSeconds": 300,
-        "computedSeconds": 321,
-        "effectiveSeconds": 321,
-        "wordCount": 482,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
         "lessonId": "PT-C01-practice",
         "language": "portuguese",
         "chapter": 1,
@@ -9232,9 +9103,9 @@
       {
         "language": "marathi",
         "status": "legacy",
-        "lessonCount": 34,
+        "lessonCount": 35,
         "versions": {
-          "1": 34
+          "1": 35
         }
       },
       {
