@@ -66,7 +66,7 @@ formulabook percentages {
     % share of the old amount, expressed per hundred. Composes `difference` and
     % `quotient` from arithmetic.adj.
     formula percent_change(old_amount, new_amount) = quotient(difference(new_amount, old_amount), old_amount) * 100
-        source "Percentage change is the difference between the final and initial value of a quantity, divided by the initial value, expressed as a percentage."
-        locator "https://mathworld.wolfram.com/PercentageChange.html"
+        source "Computing the Percent Change: %CHG = (EST final year - EST initial year) / EST initial year * 100."
+        locator "https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/percchg.pdf"
         trust authoritative
 }

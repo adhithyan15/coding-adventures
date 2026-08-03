@@ -308,8 +308,14 @@ option mapping, or judge/evaluation failure.
 7i. **Complete:** expose that parser inventory as canonical JSON with the exact input,
     declaration, and final-body SHA-256s so CAS tooling can consume a stable byte-level
     boundary without serializing `f64` AST literals as if they preserved source exactness.
-8. Replace the dead MathWorld `PercentageChange` locator before migrating
-   `percent.adj`; a source returning 404 cannot ground that clause.
+8. **Complete for source replacement:** `percent.adj` now cites the U.S. Census
+   Bureau `Percent Changes` PDF, verified reachable on 2026-08-03 instead of the
+   former MathWorld 404. Its displayed initial-to-final formula supports the
+   ordinary nonzero-baseline computation composed from `difference` and `quotient`.
+   This does not claim byte provenance or complete domain semantics: deterministic
+   PDF decomposition, explicit zero/negative-baseline policy review,
+   repository-input IR, parser inventory, derivations, witnesses, and CAS
+   registration remain part of the Wave 1 migration.
 9. Add executable formula preconditions or domain guards before migrating
    `proportion.adj`; `a/b=c/x` requires nonzero `a`, `b`, and `c`, while the
    current formula fails closed only on its final divisor.

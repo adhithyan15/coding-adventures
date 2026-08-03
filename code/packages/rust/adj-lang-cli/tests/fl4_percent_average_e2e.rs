@@ -99,8 +99,8 @@ fn percent_change_composes_difference_and_quotient() {
         "percent_change(200, 250) = 25: {s}"
     );
     assert!(
-        s.contains("mathworld.wolfram.com/PercentageChange.html"),
-        "primary cites the percentage-change definition: {s}"
+        s.contains("www2.census.gov/programs-surveys/acs/tech_docs/accuracy/percchg.pdf"),
+        "primary cites the Census Bureau percentage-change definition: {s}"
     );
     assert!(
         s.contains("mathworld.wolfram.com/Difference.html"),
