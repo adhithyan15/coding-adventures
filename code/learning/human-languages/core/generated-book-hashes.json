@@ -23,6 +23,16 @@
       "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "punjabi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:f165e75f6db9bbe5",
+      "lessonIds": [
+        "PA-C06-numbers-1-5",
+        "PA-C06-panj-convergence"
+      ],
+      "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:ad881fd61b3c4d60",

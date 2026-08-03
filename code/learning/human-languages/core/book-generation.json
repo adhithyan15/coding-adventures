@@ -60,6 +60,15 @@
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 6,
+      "title": "Numbers One to Five",
+      "label": "ch:numbers-one-to-five",
+      "output": "punjabi/book/chapters/ch06-numbers-1-5.tex",
+      "unicodeScript": "Gurmukhi",
+      "scriptCommand": "pa"
     }
   ]
 }

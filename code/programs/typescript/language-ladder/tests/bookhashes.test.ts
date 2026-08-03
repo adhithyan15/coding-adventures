@@ -18,7 +18,7 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "spanish", chapter)).toBe("synced");
   });
 
-  it.each(["gujarati", "marathi"])(
+  it.each(["gujarati", "marathi", "punjabi"])(
     "matches the browser-loaded %s Chapter 6 AST across both lessons",
     (language) => {
       const lessons = loadLessons();

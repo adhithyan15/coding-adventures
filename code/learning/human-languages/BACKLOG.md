@@ -74,9 +74,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
 | HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
-| HL-B07 | Complete in this PR | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | Canonical recap labels, main-font punctuation, bookmark-safe Gujarati, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
-| HL-B08 | Next | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
-| HL-B09 | Queued | Remove Punjabi's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B07 | Complete (#9675) | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | Canonical recap labels, main-font punctuation, bookmark-safe Gujarati, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
+| HL-B08 | Complete in this PR | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
+| HL-B09 | Next | Remove Punjabi's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, four duplicate practice labels, 28 Hyperref warnings, and three font-shape warnings; the clean-build signal is zero of each. |
 | HL-B10 | Queued | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B11 | Queued | Remove Sanskrit's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports three overfull boxes, six underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B12 | Queued | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The duration audit confirms authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -363,6 +363,29 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   zero package or LaTeX warnings, missing glyphs, overfull boxes, underfull
   boxes, and duplicate destinations. HL-B08 is next: publish Punjabi Chapter 6
   through the same canonical pipeline.
+
+## Findings from HL-B08
+
+- Punjabi Chapter 6 now comes from its two canonical schema-v2 lessons. The
+  generator manifest and Language Ladder independently combine the same ordered
+  lesson hashes, so the app and downloadable book cannot drift silently.
+- Both lessons realize `SPINE-COUNT-ONE-TO-FIVE` while retaining Punjabi's
+  Gurmukhi top-line clue, addak/tippi distinction, Chapter 5 five-rivers
+  callback, and the independent Punjabi/Persian paths to *panj*.
+- The strict knowledge gate confirms every prompt against its block and
+  prerequisite frontier. The corpus report now has 1,065 lessons, 20 books,
+  zero duration violations, zero unknown prerequisites, and 254 lesson chapters
+  without book chapters. Punjabi joins Spanish, Marathi, and Gujarati as the
+  fourth mixed-schema track.
+- The forced letter-size XeLaTeX build is 30 pages. Visual inspection of all
+  four generated pages found shaped Gurmukhi, width-aware comparison tables,
+  intact callouts, a complete spaced-recall close, and no clipping. The PDF
+  outline retains the romanized `ikk do tinn chār panj` and `panj · panj`
+  section bookmarks.
+- The generated chapter adds no new missing-glyph, overfull, underfull,
+  duplicate-label, bookmark, or font warning. The audit did expose three
+  pre-existing font-shape warnings omitted from the earlier inventory; HL-B09
+  now includes those alongside the handwritten chapters' other warning debt.
 
 ## Findings from HL-D01C
 
