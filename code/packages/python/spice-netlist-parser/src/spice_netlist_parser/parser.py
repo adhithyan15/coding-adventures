@@ -1265,7 +1265,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             name,
             fields[1],
             fields[2],
-            Is=model.params.get("IS", 1e-15),
+            Is=model.params.get("IS", model.params.get("JS", 1e-15)),
             Vt=model.params.get("VT", 0.02585),
             N=model.params.get("N", 1.0),
             BV=model.params.get("BV"),
@@ -1907,6 +1907,12 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
     params = _parse_model_params(params_text)
+    if kind == "D":
+        saturation_current = params.get("IS", params.get("JS"))
+        if saturation_current is not None and (
+            not math.isfinite(saturation_current) or saturation_current <= 0.0
+        ):
+            raise NetlistParseError("diode IS must be finite and positive")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

@@ -796,6 +796,30 @@ Rload out 0 1k
     assert 0.0 < result.node_voltages["out"] < 0.7
 
 
+def test_parse_diode_saturation_current_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(JS=2p)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Is == 2.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["IS", "JS"])
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_diode_saturation_current(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode IS must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

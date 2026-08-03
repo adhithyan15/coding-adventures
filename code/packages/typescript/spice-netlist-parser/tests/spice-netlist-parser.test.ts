@@ -775,6 +775,31 @@ Rload out 0 1k
     expect(result.voltage("out")).toBeLessThan(0.7);
   });
 
+  it("parses the diode JS saturation-current alias", () => {
+    const parsed = parseNetlist(`
+.model clamp D(JS=2p)
+D1 in out clamp
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      saturationCurrent: 2.0e-12,
+    });
+  });
+
+  it.each([
+    ["IS", "0"],
+    ["IS", "-1p"],
+    ["IS", "1e999"],
+    ["JS", "0"],
+    ["JS", "-1p"],
+    ["JS", "1e999"],
+  ])("rejects invalid diode %s saturation current %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode IS must be finite and positive",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)
