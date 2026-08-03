@@ -61,13 +61,13 @@ import (
 // =========================================================================
 
 type XargsOptions struct {
-	NullDelimiter  bool   // -0: items separated by NUL
-	Delimiter      string // -d: custom delimiter
-	MaxArgs        int    // -n: max args per command invocation
-	ReplaceStr     string // -I: replacement string
-	Verbose        bool   // -t: print command before executing
-	NoRunIfEmpty   bool   // -r: don't run if input is empty
-	MaxProcs       int    // -P: max parallel processes
+	NullDelimiter bool   // -0: items separated by NUL
+	Delimiter     string // -d: custom delimiter
+	MaxArgs       int    // -n: max args per command invocation
+	ReplaceStr    string // -I: replacement string
+	Verbose       bool   // -t: print command before executing
+	NoRunIfEmpty  bool   // -r: don't run if input is empty
+	MaxProcs      int    // -P: max parallel processes
 }
 
 // =========================================================================
@@ -161,6 +161,17 @@ func xargsBatchItems(items []string, maxArgs int) [][]string {
 
 type xargsExecFunc func(name string, args []string, stdout, stderr io.Writer) int
 
+type xargsLockedWriter struct {
+	mu     *sync.Mutex
+	writer io.Writer
+}
+
+func (w xargsLockedWriter) Write(p []byte) (int, error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return w.writer.Write(p)
+}
+
 // xargsRealExec executes a real system command.
 func xargsRealExec(name string, args []string, stdout, stderr io.Writer) int {
 	cmd := exec.Command(name, args...)
@@ -224,8 +235,11 @@ func xargsExecute(cmdParts []string, items []string, opts XargsOptions,
 	if opts.MaxProcs > 1 {
 		// Parallel execution.
 		var mu sync.Mutex
+		var outputMu sync.Mutex
 		var wg sync.WaitGroup
 		sem := make(chan struct{}, opts.MaxProcs)
+		parallelStdout := xargsLockedWriter{mu: &outputMu, writer: stdout}
+		parallelStderr := xargsLockedWriter{mu: &outputMu, writer: stderr}
 
 		for _, batch := range batches {
 			wg.Add(1)
@@ -236,11 +250,9 @@ func xargsExecute(cmdParts []string, items []string, opts XargsOptions,
 
 				args := append(append([]string{}, initialArgs...), b...)
 				if opts.Verbose {
-					mu.Lock()
-					fmt.Fprintf(stderr, "%s %s\n", cmdName, strings.Join(args, " "))
-					mu.Unlock()
+					fmt.Fprintf(parallelStderr, "%s %s\n", cmdName, strings.Join(args, " "))
 				}
-				rc := execFn(cmdName, args, stdout, stderr)
+				rc := execFn(cmdName, args, parallelStdout, parallelStderr)
 				if rc != 0 {
 					mu.Lock()
 					exitCode = rc
