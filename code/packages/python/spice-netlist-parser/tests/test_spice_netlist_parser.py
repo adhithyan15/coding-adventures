@@ -1547,6 +1547,28 @@ def test_rejects_invalid_jfet_noise_equation_level(value: str) -> None:
         parse_netlist(f".model fast NJF(NLEV={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_parse_jfet_channel_noise_coefficient(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(GDSNOI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Gdsnoi == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_channel_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET GDSNOI must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(GDSNOI={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

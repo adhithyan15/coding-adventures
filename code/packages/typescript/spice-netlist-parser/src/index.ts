@@ -1415,6 +1415,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
       "JFET NLEV must be a finite integer greater than or equal to 1",
     );
   }
+  const jfetChannelNoiseCoefficient = params.get("GDSNOI");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetChannelNoiseCoefficient !== undefined &&
+    (!Number.isFinite(jfetChannelNoiseCoefficient) ||
+      jfetChannelNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("JFET GDSNOI must be finite and non-negative");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -2011,6 +2020,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("EG") ?? 1.11,
       1.0,
       model.params.get("NLEV") ?? 1.0,
+      model.params.get("GDSNOI") ?? 1.0,
     );
   }
   if (prefix === "M") {
