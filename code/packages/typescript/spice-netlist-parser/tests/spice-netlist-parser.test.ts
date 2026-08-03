@@ -1025,6 +1025,26 @@ Mp out gate vdd vdd pfast W=3u L=250n
     expect(element.params.AS).toBeCloseTo(expected, 15);
   });
 
+  it.each(["-1u", "1e999"])(
+    "rejects invalid MOSFET instance PD=%s",
+    (drainPerimeter) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS\nM1 d g s b nfast PD=${drainPerimeter}\n`),
+      ).toThrow("MOSFET PD must be finite and non-negative");
+    },
+  );
+
+  it.each([
+    ["0", 0.0],
+    ["6u", 6.0e-6],
+  ])("lowers valid MOSFET instance PD=%s", (drainPerimeter, expected) => {
+    const parsed = parseNetlist(`.model nfast NMOS\nM1 d g s b nfast PD=${drainPerimeter}\n`);
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.PD).toBeCloseTo(expected, 15);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
