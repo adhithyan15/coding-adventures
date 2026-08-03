@@ -118,8 +118,14 @@ contract. A strict catalog links NN03 through NN32 to 30 fixture roots, 30
 independent Python reference validators, and 33 lab documents. One fail-closed
 command checks the roster before running every validator, while the browser
 separates a registered mapping from evidence that Python actually executed it.
-Representative non-Python consumers come next and must earn parity from the
-same JSON rather than copying Python output.
+
+NN34 gives that contract its first representative non-Python consumers. Go,
+Ruby, and Rust independently read the same NN03 weighted-neuron fixture,
+recompute its hand-sized arithmetic, and emit one closed JSON receipt. A bounded
+shell-free orchestrator checks all three native lanes, while the browser keeps
+registered commands distinct from evidence that an external process ran. The
+next cross-language tranche can therefore define a stable Rust C ABI without
+confusing a native reference baseline with a core binding.
 
 ## Corpus Rule
 

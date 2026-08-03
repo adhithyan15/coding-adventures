@@ -29,6 +29,12 @@ import {
   traceTinyDecoderTraining,
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { CrossLanguageConsumerWorkbench } from "./CrossLanguageConsumerWorkbench.js";
+import {
+  consumerCatalog,
+  parseConsumerCatalog,
+  traceLanguageConsumer,
+} from "./cross-language-consumers.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
 import {
@@ -79,6 +85,7 @@ import {
 } from "./precision-residency-lab.js";
 import precisionResidencyDocument from "../../../../specs/fixtures/precision-residency-v1/labs/00-tiny-affine.json";
 import referenceCatalogDocument from "../../../../specs/fixtures/reference-validation-v1/catalog.json";
+import consumerCatalogDocument from "../../../../specs/fixtures/cross-language-consumers-v1/catalog.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -2636,5 +2643,47 @@ describe("reference fixture catalog", () => {
     expect(screen.getByLabelText("Selected fixture-family contract").textContent)
       .toMatch(/NN32.*precision-residency.*precision-residency-v1.*validate_precision_residency_labs\.py/s);
     expect(screen.getByText(/Each family is labeled registered, not executed/)).toBeTruthy();
+  });
+});
+
+describe("cross-language fixture consumers", () => {
+  it("keeps one hand calculation fixed across three native language families", () => {
+    const trace = traceLanguageConsumer("ruby-native");
+
+    expect(consumerCatalog.lanes.map((lane) => lane.id)).toEqual([
+      "go-native",
+      "ruby-native",
+      "rust-native",
+    ]);
+    expect(trace.contributions).toEqual([1, 0.25]);
+    expect(trace.preactivation).toBe(1.35);
+    expect(trace.prediction).toBe(1.35);
+    expect(trace.maximumAbsoluteError).toBe(0);
+    expect(trace.passes).toBe(true);
+  });
+
+  it("fails closed on malformed lanes and dishonest hand arithmetic", () => {
+    expect(() => parseConsumerCatalog({})).toThrow(/unexpected keys/);
+
+    const changedCommand = JSON.parse(JSON.stringify(consumerCatalogDocument));
+    changedCommand.lanes[0].command = ["go", "run", "unsafe.go"];
+    expect(() => parseConsumerCatalog(changedCommand)).toThrow(/wrong values/);
+
+    const dishonest = JSON.parse(JSON.stringify(consumerCatalogDocument));
+    dishonest.hand_check.contributions[1] = -0.25;
+    expect(() => parseConsumerCatalog(dishonest)).toThrow(/dishonest arithmetic/);
+  });
+
+  it("switches runtime details without pretending the browser executed them", () => {
+    render(React.createElement(CrossLanguageConsumerWorkbench));
+    expect(screen.getByRole("heading", { name: "Language consumers" })).toBeTruthy();
+    expect(screen.getByText("3 native lanes")).toBeTruthy();
+    expect(screen.getByLabelText("Weighted-neuron hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*= 1\.0.*-1\.0 \* -0\.25.*= 0\.25.*identity\(1\.35\).*1\.35/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect Rust native consumer" }));
+    expect(screen.getByLabelText("Selected consumer contract").textContent)
+      .toMatch(/Expected receipt from the Rust CLI.*rust-native.*Cargo\.toml.*maximum error.*0/s);
+    expect(screen.getByText(/registered commands, not external runtime execution/)).toBeTruthy();
   });
 });
