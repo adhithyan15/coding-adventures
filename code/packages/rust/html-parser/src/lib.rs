@@ -7342,8 +7342,18 @@ impl HtmlParser {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "menuitem")
         }) else {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-menuitem-end-tag",
+                "end tag `</menuitem>` did not match the current open element",
+            ));
             return;
         };
+        if index + 1 < self.open_elements.len() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-menuitem-end-tag",
+                "end tag `</menuitem>` did not match the current open element",
+            ));
+        }
         if self
             .open_elements
             .iter()
@@ -33307,6 +33317,29 @@ mod tests {
                 "end tag `</font>` could not close a formatting element across table scope"
             )]
         );
+    }
+
+    #[test]
+    fn reports_menuitem_end_tags_without_a_matching_current_element() {
+        for source in [
+            "<!DOCTYPE html><menuitem><asdf></menuitem>x",
+            "<!DOCTYPE html></menuitem>",
+            "<!DOCTYPE html><html></menuitem>",
+            "<!DOCTYPE html><head></menuitem>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-menuitem-end-tag",
+                    "end tag `</menuitem>` did not match the current open element"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let matching = parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
     }
 
     #[test]
