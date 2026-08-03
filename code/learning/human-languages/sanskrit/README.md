@@ -52,6 +52,10 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 Generated Devanagari runs use that font while section bookmarks use the
 lessons' Latin romanization.
 
+The forced six-chapter build is warning-free: chapter-qualified recap anchors,
+bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes,
+and concise running titles keep the downloadable PDF and its outline clean.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
