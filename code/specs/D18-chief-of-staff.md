@@ -156,6 +156,18 @@ repository-owned model-facing tool contract and built-in tool catalog.
 **Used by:** Future agent packages (email reader, email responder, calendar, finance,
 health, browser agents), CLI interface, mobile clients
 
+### Level 1 `SKILL.md` contract
+
+A Level 1 agent is a CommonMark document with one H1 title, a descriptive first
+paragraph, and a `## Capabilities needed` list. Each capability is written as
+`category:action:target`, optionally followed by ` | justification`; `- none`
+declares an explicit empty profile. The title and paragraph provide zero-config
+identity defaults. Optional `---` frontmatter may override `agent`, `description`,
+`privilege_tier`, `reads`, `writes`, and `restart_policy`; unknown or duplicate
+keys fail closed. The parser emits the schema-v1 `agent_manifest.json` shape and
+sorted, deduplicated Deno permission arguments. Time and standard-stream
+capabilities remain manifest declarations but do not widen Deno OS permissions.
+
 ---
 
 ## Key Concepts

@@ -1,0 +1,12 @@
+[package]
+name = "chief-of-staff-skill-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Fail-closed Level 1 SKILL.md parser and agent manifest generator"
+license = "MIT"
+
+[dependencies]
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
+commonmark-parser = { path = "../commonmark-parser" }
+document-ast = { path = "../document-ast" }
