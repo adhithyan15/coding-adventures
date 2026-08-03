@@ -230,3 +230,53 @@ fn ratio_bundle_reuses_quotient_and_fully_verifies_its_query() {
 
     std::fs::remove_dir_all(snapshots).expect("remove projected snapshots");
 }
+
+#[test]
+fn percent_of_bundle_composes_product_and_quotient_with_full_provenance() {
+    let root = repo_root();
+    let snapshots =
+        std::env::temp_dir().join(format!("adj_percent_of_provenance_{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&snapshots);
+    assert_eq!(
+        project_bundle_snapshots(&root, &snapshots, "adj.math.arithmetic.percent_of.query.v1"),
+        6
+    );
+
+    let program = "code/specs/data/adj-formula-stdlib/arithmetic/percent-of.query.adj";
+    let execution = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .current_dir(&root)
+        .arg(program)
+        .output()
+        .expect("run percent-of query");
+    let answers = String::from_utf8(execution.stdout).expect("UTF-8 query output");
+    assert!(execution.status.success(), "execution failed: {answers}");
+    let answer_json: serde_json::Value = serde_json::from_str(&answers).expect("JSON query output");
+    assert_eq!(answer_json["derived"][0]["name"], "percent_of", "{answers}");
+    assert_eq!(answer_json["derived"][0]["value"], 10, "{answers}");
+    assert!(answers.contains("openstax.org/books/contemporary-mathematics"));
+    assert!(answers.contains("mathworld.wolfram.com/Product.html"));
+    assert!(answers.contains("mathworld.wolfram.com/Quotient.html"));
+
+    let verification = Command::new(env!("CARGO_BIN_EXE_adj-verify"))
+        .current_dir(&root)
+        .arg("--snapshots")
+        .arg(&snapshots)
+        .arg(program)
+        .output()
+        .expect("run adj-verify for percent-of");
+    let output = String::from_utf8(verification.stdout).expect("UTF-8 verifier output");
+    assert!(
+        verification.status.success(),
+        "verification failed: {output}"
+    );
+    let verified: serde_json::Value =
+        serde_json::from_str(&output).expect("JSON verification output");
+    assert_eq!(verified["fully_verified"], true, "{output}");
+    assert_eq!(verified["totals"]["quotes_verified"], 5, "{output}");
+    assert_eq!(
+        verified["totals"]["query_computations_fully_verified"], 1,
+        "{output}"
+    );
+
+    std::fs::remove_dir_all(snapshots).expect("remove projected snapshots");
+}

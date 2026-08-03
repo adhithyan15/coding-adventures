@@ -52,18 +52,19 @@ The 2026-08-02 `origin/main` inventory contains:
 | Collection | Content libraries | Executable clauses | Source envelopes | Test references | Byte-pinned libraries |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Facts | 141 | 142 | 141 | 141 | 0 |
-| Formulas | 155 | 387 | 155 | 155 | 0 |
+| Formulas | 155 | 387 | 155 | 155 | 3 |
 | Medical recall | 63 | 634 | 60 | 63 | 0 |
-| **Total** | **359** | **1,163** | **356** | **359** | **0** |
+| **Total** | **359** | **1,163** | **356** | **359** | **3** |
 
 This is a strong executable base. Every content library is named by a validation
 test. Of 359 libraries, 356 have at least one complete
 `source`/`locator`/`trust` envelope per grounded clause. Three flagged medical
 libraries are incomplete: `anemia-edges.adj` has two relations without locators,
 while `endocrine-edges.adj` and `iem-edges.adj` each have one. The corpus is not
-yet fully byte-verifiable: none of the 359 content libraries has a
-`quote ... at ... snapshot <sha256>` pin, so `adj-verify` cannot confirm the
-source bytes from a content-addressed snapshot.
+yet fully byte-verifiable: 3 of 359 content libraries now have resolvable
+`quote ... at ... snapshot <sha256>` pins and pass the full CAS verifier. The
+remaining 356 still require migration before `adj-verify` can confirm their
+source bytes from content-addressed snapshots.
 
 The content distribution is also skewed:
 
@@ -81,8 +82,8 @@ These gaps block every defensible coverage claim, independent of subject.
 
 ### 4.1 Source bytes are not pinned
 
-All shipped libraries have source labels, but zero have committed content hashes,
-byte offsets, and resolvable CAS snapshots. The migration must:
+All shipped libraries have source labels, but 356 still lack committed content
+hashes, byte offsets, and resolvable CAS snapshots. Each migration must:
 
 1. fetch the source as bytes and store it by SHA-256;
 2. record media type, retrieval time, canonical locator, and fetch receipt;
@@ -114,9 +115,10 @@ to internal objectives. It records:
 
 The validator rejects duplicate IDs, missing or cyclic prerequisites, unsafe or
 unknown library paths, unknown coverage roots, and status claims stronger than
-the structural evidence. It deliberately reports the seed as `source_labeled`,
-`unmapped`, and without held-out benchmarks. The external roots are `declared`,
-not falsely presented as fetched or byte-pinned.
+the structural evidence. Migrated objectives can report `fully_verified`; the
+remaining seed is `source_labeled`, `unmapped`, and without held-out benchmarks.
+The external roots are `declared`, not falsely presented as fetched or
+byte-pinned.
 
 The remaining gap is large and explicit: 349 of 359 content libraries still
 need reviewed objective mappings. The standards indexes must enter the CAS
@@ -248,8 +250,8 @@ option mapping, or judge/evaluation failure.
    a formula-only query can become `fully_verified`.
 1. **In progress:** migrate the ten arithmetic libraries first because every
    later layer imports them. The four-clause `arithmetic.adj` primitive root,
-   the composed `ratio.adj` root, and both worked queries are now fully
-   byte-verified end to end.
+   the composed `ratio.adj` and `percent-of.adj` roots, and all three worked
+   query roots are now fully byte-verified end to end.
 2. Store source bytes and fetch receipts in the CAS.
 3. Add byte offsets and snapshot hashes to every grounded clause.
 4. Recursively decompose source dependencies with discarded-byte accounting.
@@ -277,6 +279,8 @@ option mapping, or judge/evaluation failure.
 7e. **Complete:** scope native snapshot projection to a named bundle and its
     recursive dependency closure so adding an unrelated manifest root cannot
     perturb an already verified consumer.
+7f. **Complete:** add a strict MathML-to-infix transform so formula bytes embedded
+    in publisher markup can become readable citations without invented symbols.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 

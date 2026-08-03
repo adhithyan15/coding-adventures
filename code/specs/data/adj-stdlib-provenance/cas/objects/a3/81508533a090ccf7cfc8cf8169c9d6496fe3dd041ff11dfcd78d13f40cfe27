@@ -1,0 +1,16 @@
+{
+  "body_sha256": "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e",
+  "body_size": 666580,
+  "final_locator": "https://openstax.org/books/contemporary-mathematics/pages/3-4-rational-numbers",
+  "headers": {
+    "content-length": "666580",
+    "content-type": "text/html",
+    "etag": "\"4ce59604c29ad47a8b0016aebe8d5e49\"",
+    "last-modified": "Mon, 15 Jun 2026 17:33:45 GMT"
+  },
+  "kind": "fetch_receipt",
+  "locator": "https://openstax.org/books/contemporary-mathematics/pages/3-4-rational-numbers",
+  "media_type": "text/html",
+  "retrieved_at": "2026-08-03T00:19:10Z",
+  "status": 200
+}

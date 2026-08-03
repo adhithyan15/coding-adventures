@@ -1,0 +1,33 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 395628,
+      "reason": "publisher markup and textbook context outside the selected formal percent-of rule",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.percent_of",
+          "end": 397353,
+          "quote": "<p id=\"para-00213\"><span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mi>n</mi><mo>%</mo></mrow><annotation-xml encoding=\"MathML-Content\"><mi>n</mi><mo>%</mo></annotation-xml></semantics></math></span> of <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mi>x</mi></mrow><annotation-xml encoding=\"MathML-Content\"><mi>x</mi></annotation-xml></semantics></math></span> items is <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mfrac><mi>n</mi><mrow><mn>100</mn></mrow></mfrac><mo>\u00d7</mo><mi>x</mi></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mfrac><mi>n</mi><mrow><mn>100</mn></mrow></mfrac><mo>\u00d7</mo><mi>x</mi></mrow></annotation-xml></semantics></math></span>. The <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mi>x</mi></mrow><annotation-xml encoding=\"MathML-Content\"><mi>x</mi></annotation-xml></semantics></math></span> is referred to as the <strong>total</strong>, the <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mi>n</mi></mrow><annotation-xml encoding=\"MathML-Content\"><mi>n</mi></annotation-xml></semantics></math></span> is referred to as the <strong>percent</strong> or <strong>percentage</strong>, and the value obtained from <span class=\"os-math-in-para\"><math display=\"inline\"><semantics><mrow><mrow><mfrac><mi>n</mi><mrow><mn>100</mn></mrow></mfrac><mo>\u00d7</mo><mi>x</mi></mrow></mrow><annotation-xml encoding=\"MathML-Content\"><mrow><mfrac><mi>n</mi><mrow><mn>100</mn></mrow></mfrac><mo>\u00d7</mo><mi>x</mi></mrow></annotation-xml></semantics></math></span> is the <strong>part</strong> of the total and is also referred to as the <strong>percentage of the total</strong>.</p>",
+          "quote_sha256": "7c273c4e9214ced84babdfb376497ccd2e02d046d0f6a570fc12972cdd5c9203",
+          "start": 395628
+        }
+      ],
+      "disposition": "represented",
+      "end": 397353,
+      "start": 395628
+    },
+    {
+      "disposition": "discarded",
+      "end": 666580,
+      "reason": "publisher markup and textbook context outside the selected formal percent-of rule",
+      "start": 397353
+    }
+  ],
+  "source_sha256": "89ebca7f93281cae7d8791cb6dfc65ff4ff289268fc5d7f03d41bb10adeb4e5e",
+  "source_size": 666580
+}

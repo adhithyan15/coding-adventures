@@ -97,7 +97,7 @@
     "operation": {
       "additionalProperties": false,
       "properties": {
-        "operation": { "enum": ["copy", "html_entity_decode"] },
+        "operation": { "enum": ["copy", "html_entity_decode", "mathml_to_infix"] },
         "result_end": { "minimum": 1, "type": "integer" },
         "result_start": { "minimum": 0, "type": "integer" },
         "source_end": { "minimum": 1, "type": "integer" },

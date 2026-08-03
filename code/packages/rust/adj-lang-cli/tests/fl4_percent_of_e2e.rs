@@ -1,9 +1,9 @@
 //! End-to-end tests for ADJ-FORMULA-LIBRARIES FL-4 — the `percent-of.adj`
 //! elementary library — driven through the built CLI binary against the SHIPPED
 //! stdlib. Proves the FL-4 invariant: the library COMPOSES the cited
-//! `arithmetic.adj` `product` primitive (it re-derives no arithmetic), computes
-//! the exact value on the CPU, and carries BOTH its own citation and the
-//! primitive's as corroboration. `percent_of(whole, rate) = (whole·rate)/100` —
+//! `arithmetic.adj` `product` and `quotient` primitives, computes the exact value
+//! on the CPU, and carries its own citation plus both primitive corroborations.
+//! `percent_of(whole, rate) = (rate/100)·whole` —
 //! the inverse of `percent`.
 
 use std::path::{Path, PathBuf};
@@ -45,11 +45,11 @@ fn with_lib(dir: &Path) {
 }
 
 // ---------------------------------------------------------------------------
-// percent_of — (whole·rate)/100, composing the cited product primitive.
+// percent_of — (rate/100)·whole, composing both cited primitives.
 // ---------------------------------------------------------------------------
 
 #[test]
-fn percent_of_composes_product_and_carries_both_citations() {
+fn percent_of_composes_both_primitives_and_carries_all_citations() {
     let dir = scratch("po");
     with_lib(&dir);
     std::fs::write(
@@ -64,22 +64,29 @@ fn percent_of_composes_product_and_carries_both_citations() {
     let (ok, s) = run(&dir.join("case.adj"));
     assert!(ok, "CLI exited non-zero: {s}");
     assert!(!s.contains("\"error\""), "no compile error: {s}");
-    // 20% of 50 → (50 * 20) / 100 = 10, via the product primitive on the CPU.
+    // 20% of 50 → (20 / 100) * 50 = 10, via both primitives on the CPU.
     assert!(
         s.contains("\"name\":\"percent_of\"") && s.contains("\"value\":10"),
         "percent_of(50, 20) = 10: {s}"
     );
     // Exact integer 10/1 — no f64 round-trip.
-    assert!(s.contains("\"num\":\"10\"") && s.contains("\"den\":\"1\""), "exact value 10/1: {s}");
+    assert!(
+        s.contains("\"num\":\"10\"") && s.contains("\"den\":\"1\""),
+        "exact value 10/1: {s}"
+    );
     // The primary cites the percent definition.
     assert!(
-        s.contains("mathworld.wolfram.com/Percent.html"),
+        s.contains("openstax.org/books/contemporary-mathematics"),
         "primary cites the percent definition: {s}"
     );
     // The composed primitive appears as corroboration.
     assert!(
         s.contains("mathworld.wolfram.com/Product.html"),
         "corroboration cites the product primitive it composed: {s}"
+    );
+    assert!(
+        s.contains("mathworld.wolfram.com/Quotient.html"),
+        "corroboration cites the quotient primitive it composed: {s}"
     );
 }
 
@@ -88,7 +95,7 @@ fn percent_of_composes_product_and_carries_both_citations() {
 // ---------------------------------------------------------------------------
 
 #[test]
-fn the_derivation_tree_names_the_division_over_the_product() {
+fn the_derivation_tree_names_the_product_over_the_rate_conversion() {
     let dir = scratch("tree");
     with_lib(&dir);
     std::fs::write(
@@ -102,10 +109,13 @@ fn the_derivation_tree_names_the_division_over_the_product() {
 
     let (ok, s) = run(&dir.join("case.adj"));
     assert!(ok, "CLI exited non-zero: {s}");
-    // Outer op is the /100 division; the inner op is the product (50*20 = 1000).
-    assert!(
-        s.contains("\"node\":\"op\"") && s.contains("\"op\":\"/\"") && s.contains("\"op\":\"*\""),
-        "the derivation names the division over the product: {s}"
+    // Outer op is multiplication; its first operand converts 20/100 to 0.2.
+    let output: serde_json::Value = serde_json::from_str(&s).expect("JSON output");
+    let derivation = &output["derived"][0]["derivation"];
+    assert_eq!(derivation["op"], "*", "outer operation is product: {s}");
+    assert_eq!(
+        derivation["operands"][0]["op"], "/",
+        "rate conversion is the product's first operand: {s}"
     );
     assert!(
         s.contains("\"slot\":\"whole\"") && s.contains("\"slot\":\"rate\""),
