@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has nineteen workbenches that move from one arithmetic update to small
+The app has twenty workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -267,6 +267,15 @@ visible. A separate binary32 transfer baseline contrasts eager copies with
 resident buffers as the learner changes the repeat count; the view reports byte
 counts without presenting them as a timing benchmark.
 
+### Reference fixture catalog
+
+The Reference Catalog workbench loads the strict NN03-NN32 registry and
+recomputes its paper-sized tolerance example. Filter nine curriculum tracks,
+open any of 30 families, and inspect its exact spec, fixture root, validator,
+lab count, and oracle. The browser labels those mappings as registered; the
+Python command and CI are the only surfaces that execute all reference
+validators and may claim the complete 33-lab gate passed.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -414,6 +423,11 @@ WebGPU dispatch.
 NN32 under `code/specs/fixtures/precision-residency-v1` pins exact binary32 and
 binary16 payloads, symmetric int8 bytes and scales with ties-to-even rounding,
 and a binary32 eager-versus-resident transfer baseline.
+
+NN33 under `code/specs/fixtures/reference-validation-v1` pins the complete
+NN03-NN32 mapping: 30 unique specs, fixture roots, Python validators, and 33 lab
+documents. Run `python code/scripts/validate_reference_fixture_catalog.py` to
+execute the whole reference gate without a shell.
 
 ## Development
 

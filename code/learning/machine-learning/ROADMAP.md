@@ -63,7 +63,7 @@ trace, and tests.
   - [x] CPU, Rust core, and accelerated-backend parity.
   - [x] Precision, quantization, and buffer-residency experiments.
 - [ ] Cross-language consumers
-  - [ ] Validate every fixture with the reference implementation.
+  - [x] Validate every fixture with the reference implementation.
   - [ ] Add thin consumers in representative language families.
   - [ ] Define a stable Rust C ABI for high-performance execution.
   - [ ] Track native implementation versus Rust-core binding coverage.
