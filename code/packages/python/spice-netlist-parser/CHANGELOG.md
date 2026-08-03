@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `JS` values before lowering
+  valid junction saturation-current densities.
 - Reject negative and non-finite MOS model-card `CJSW` values before lowering
   valid sidewall-junction capacitance densities.
 - Reject negative and non-finite MOS model-card `CJ` values before lowering

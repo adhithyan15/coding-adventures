@@ -4261,11 +4261,17 @@ the Rust, Python, and TypeScript surfaces together.
      shared diagnostic while zero and positive bottom-junction capacitance
      densities lower into Level-1 parameters.
 
+391. Python and TypeScript Berkeley SPICE MOS sidewall-capacitance parity.
+   - Status: completed in PR 9693.
+   - Negative and non-finite model-card `CJSW` values are rejected with the
+     shared diagnostic while zero and positive sidewall-junction capacitance
+     densities lower into Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `CJSW`, `JS`, `PB`, `MJ`,
-     `MJSW`, `FC`, `KF`, and `AF`; Python already lowers these canonical fields
+   - TypeScript still needs canonical lowering for `JS`, `PB`, `MJ`, `MJSW`,
+     `FC`, `KF`, and `AF`; Python already lowers these canonical fields
      but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both
      facades after the canonical-field slices.

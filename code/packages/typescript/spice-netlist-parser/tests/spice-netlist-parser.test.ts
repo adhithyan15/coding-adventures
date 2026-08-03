@@ -1743,6 +1743,25 @@ Xright c d load
     expect(element.params.CJSW).toBeCloseTo(expected, 15);
   });
 
+  it.each(["-1p", "1e999"])("rejects invalid MOSFET model JS=%s", (junctionCurrent) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(JS=${junctionCurrent})\nM1 d g s b nfast\n`),
+    ).toThrow("MOSFET JS must be finite and non-negative");
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["4p", 4.0e-12],
+  ])("lowers valid MOSFET model JS=%s", (junctionCurrent, expected) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(JS=${junctionCurrent})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.JS).toBeCloseTo(expected, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
