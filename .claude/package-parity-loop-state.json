@@ -359,6 +359,15 @@
       "notes": "Selected after merged PR #9603 and the collision-clean 51797a6f inventory. The four-engine leverage pass ranked Perl first because its raw-byte rockspec reader is the narrowest remaining boundary, Perl 5.38 is locally available, and the shared valid/invalid fixtures plus five merged reference implementations pin the exact contract. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 cases, preserve the success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and test the real CLI exit contract without leaking the checkout root. Keep Ruby and Haskell locale-sensitive decoding and Elixir's position-dependent decoding as separate later children."
     },
     {
+      "id": "build-tool-perl-runtime-security-floor",
+      "title": "Define audited Perl and core-module security floors for the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Perl rockspec UTF-8 security validation. CPAN::Audit 20260622.001 with database 20260726.001 cannot give the unconstrained cpanfile a clean dependency result: the declared Perl 5.26.0 and version-free core modules span historical Perl, PathTools, File-Path, and direct-distribution advisories, while core-module queries are grouped under the Perl distribution and need supported-toolchain review rather than blanket exclusions. Audit the exact Ubuntu, macOS, and Windows Perl/core versions, raise minimum safe runtime and module floors where portable, record only evidence-backed non-applicable exceptions, and add CI/toolchain contract tests. Keep this compatibility-policy decision separate from strict rockspec decoding."
+    },
+    {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
       "title": "Make the TypeScript build tool enforce strict UTF-8 rockspec metadata",
       "status": "merged",

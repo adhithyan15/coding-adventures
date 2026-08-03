@@ -12,6 +12,7 @@
 # `cpanm --installdeps` will skip these because they are bundled with Perl.
 requires 'perl', '5.026';
 requires 'Digest::SHA';
+requires 'Encode';
 requires 'JSON::PP', '2.00';
 requires 'File::Find';
 requires 'File::Spec';

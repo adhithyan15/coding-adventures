@@ -48,12 +48,40 @@ package CodingAdventures::BuildTool::Resolver;
 
 use strict;
 use warnings;
+use Encode qw(decode FB_CROAK);
 use File::Spec ();
 use File::Basename ();
 use File::Find ();
 use Scalar::Util qw(blessed);
 
 our $VERSION = '0.01';
+
+# ===========================================================================
+# MetadataEncodingError -- Stable failure for malformed package metadata
+# ===========================================================================
+
+package CodingAdventures::BuildTool::MetadataEncodingError;
+
+use overload '""' => 'as_string', fallback => 1;
+
+sub new {
+    my ($class, %args) = @_;
+    return bless {
+        code     => 'METADATA_INVALID_UTF8',
+        package  => $args{package},
+        manifest => $args{manifest},
+        encoding => 'UTF-8',
+    }, $class;
+}
+
+sub as_string {
+    my ($self) = @_;
+    return join ' ',
+        $self->{code} . ':',
+        "package=$self->{package}",
+        "manifest=$self->{manifest}",
+        "encoding=$self->{encoding}";
+}
 
 # ===========================================================================
 # DirectedGraph -- Inline graph implementation
@@ -641,12 +669,14 @@ sub _parse_lua_deps {
     closedir $dh;
     return () unless $rockspec;
 
-    my $text = _slurp($rockspec) // return ();
+    my $text = _slurp_utf8_metadata($pkg, $rockspec) // return ();
 
     my @deps;
-    while ($text =~ /"(coding-adventures-[^"]+)"/g) {
+    while ($text =~ /"(coding-adventures-[A-Za-z0-9-]+)/g) {
         my $dep = lc $1;
-        push @deps, $known_ref->{$dep} if exists $known_ref->{$dep};
+        next unless exists $known_ref->{$dep};
+        next if $known_ref->{$dep} eq $pkg->{name};
+        push @deps, $known_ref->{$dep};
     }
     return @deps;
 }
@@ -750,6 +780,43 @@ sub _slurp {
     my $content = <$fh>;
     close $fh;
     return $content;
+}
+
+# _slurp_utf8_metadata -- Strictly decode a package metadata file as UTF-8.
+#
+# Package manifests are portable repository data. Decoding with FB_CROAK
+# rejects malformed byte sequences instead of silently replacing them. The
+# thrown object carries only stable package and repository-relative identities
+# so callers never expose a host-specific absolute path.
+sub _slurp_utf8_metadata {
+    my ($pkg, $path) = @_;
+    return unless defined $path && -f $path;
+
+    open(my $fh, '<:raw', $path) or return;
+    local $/;
+    my $bytes = <$fh>;
+    close $fh;
+
+    my $text;
+    my $decoded = eval {
+        $text = decode('UTF-8', $bytes, FB_CROAK);
+        1;
+    };
+    if (!$decoded) {
+        die CodingAdventures::BuildTool::MetadataEncodingError->new(
+            package  => $pkg->{name},
+            manifest => _repository_relative_manifest($path),
+        );
+    }
+    return $text;
+}
+
+sub _repository_relative_manifest {
+    my ($path) = @_;
+    my $normalized = File::Spec->canonpath($path);
+    $normalized =~ s{\\}{/}g;
+    return $1 if $normalized =~ m{(?:^|/)(code/(?:packages|programs)/.+)\z};
+    return File::Basename::basename($normalized);
 }
 
 1;

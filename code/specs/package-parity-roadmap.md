@@ -242,7 +242,11 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   the stable repository-relative diagnostic, real CLI exit code 2, malformed
   Unicode coverage, and green Ubuntu, macOS, and Windows checks. The selected
   Perl child is now in progress because its raw-byte boundary is the narrowest
-  remaining resolver and Perl 5.38 is locally available;
+  remaining resolver and Perl 5.38 is locally available. Its security gate
+  also discovered that the Perl build tool's `5.026` runtime floor and
+  version-free core-module declarations do not produce an auditable clean
+  dependency floor; that compatibility-policy review is logged as a separate
+  pending child instead of expanding the UTF-8 behavior slice;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
