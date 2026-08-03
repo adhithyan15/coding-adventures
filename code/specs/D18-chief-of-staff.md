@@ -1999,6 +1999,10 @@ registration retries, preserves conflicting files, and invokes an explicit
 absolute native supervisor executable through tokenized arguments without a
 shell. Installation plans are reviewable before mutation and cannot be applied
 on a different operating system.
+`chief-of-staff-cli` is the concrete operator composition root. Its
+`install-daemon` action resolves the sibling daemon and default configuration,
+then invokes that installer; authenticated lifecycle commands load the local
+credential outside argv and connect only to the configured loopback API.
 
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 
