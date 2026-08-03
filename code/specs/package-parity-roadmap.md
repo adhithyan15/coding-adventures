@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 783 | 10,962 |
+| Present in one language | 784 | 10,976 |
 
-The loop must not start by attempting 10,962 singleton ports. It should finish
+The loop must not start by attempting 10,976 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`b42d1683d85daa9fd26cb96da3d928612034aa24` is collision-clean at 1,233
-normalized implementation identities, 4,381 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 783 singletons, 588
+`3258981ff15dab492786783787a4403d54bb3888` is collision-clean at 1,234
+normalized implementation identities, 4,382 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 784 singletons, 589
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -262,6 +262,17 @@ Flutter, and Compose C ABIs around `venture-browser-core`; its reusable event,
 navigation, scrolling, hover, link, and projection behavior joins the existing
 Venture bridge owner, while Cairo rendering, pointers, buffers, dynamic
 libraries, and toolkit launch remain native exceptions.
+
+The `3258981f` refresh adds `websocket-core`. Its spec, empty capability
+manifest, and implementation all define a bounded, transport-independent RFC
+6455 state machine: handshake validation, accept derivation, frame masking and
+canonical lengths, incremental decoding, fragmentation, UTF-8, ping/pong, and
+close semantics are portable. A selected first child now materializes the
+language-neutral fixture oracle and validates Rust as its first consumer. A
+second dependency-blocked child expands the core through every established
+lane after shared HTTP framing and the Java/Kotlin/Dart HTTP prerequisites
+land. Sockets, DNS, TLS, clocks, random mask-key generation, event loops,
+retries, and application dispatch remain native runtime-adapter concerns.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
@@ -402,7 +413,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   conformance suites, and the valid 38-case/61-file corpus. The committed Go-
   lane dry-run selects 13 of 301 packages and skips 288. The full validator
   separately reproduces the owned 73-gap BUILD debt gate: 12 Python, 3 Swift,
-  and 58 TypeScript. Resolver-semantic work remains a separate child;
+  and 58 TypeScript. Resolver-semantic work remains a separate child. Guarded
+  squash auto-completion merged PR #9703 as `3258981ff1` after all 17 exact-
+  head checks were terminal: twelve succeeded, four skipped, and one completed
+  neutrally;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
