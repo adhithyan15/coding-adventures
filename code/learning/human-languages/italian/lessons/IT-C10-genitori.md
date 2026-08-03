@@ -9,7 +9,7 @@ prerequisites: [IT-C09-stagioni, IT-C01-ciao]
 sounds: [d-single, r-tap]
 roots: [pater-latin, mater-latin]
 etymology_hook: "padre/madre sit closest of the sisters to Latin pater/mater; padre is the very word English borrowed as 'padre'; genitori 'parents' ← genitor 'begetter' (→ genital, progenitor, genesis)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C09-stagioni, IT-C01-ciao]
 ---
 

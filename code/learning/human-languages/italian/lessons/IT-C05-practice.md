@@ -8,7 +8,7 @@ concept_tag: CH5-PRACTICE
 prerequisites: [IT-C05-parlare, IT-C05-abitare, IT-C05-lavorare, IT-C05-parlo-italiano]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C05-parlare, IT-C05-abitare, IT-C05-lavorare, IT-C05-parlo-italiano, IT-C03-practice]
 ---
 

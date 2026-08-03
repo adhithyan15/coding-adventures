@@ -9,7 +9,7 @@ prerequisites: [IT-C13-rosso-blu, IT-C05-parlare]
 sounds: [silent-h, double-n]
 roots: [latin-habere]
 etymology_hook: "avere ← habēre (→ habit/inhabit/exhibit/prohibit). Italian dropped the Latin h everywhere EXCEPT here: ho/hai/ha/hanno keep a silent h purely to distinguish them from o 'or', ai 'to the', a 'to', anno 'YEAR' — spelling doing a job sound can't"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C13-rosso-blu, IT-C05-parlare, IT-C11-acqua-vino]
 ---
 

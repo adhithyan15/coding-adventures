@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [IT-C01-ciao, IT-C01-buongiorno, IT-C01-sera, IT-C01-notte, IT-C01-grazie]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C01-ciao, IT-C01-buono, IT-C01-il-la-lo, IT-C01-giorno, IT-C01-buongiorno, IT-C01-sera, IT-C01-notte, IT-C01-grazie]
 ---
 

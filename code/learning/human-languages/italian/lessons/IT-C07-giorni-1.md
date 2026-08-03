@@ -9,7 +9,7 @@ prerequisites: [IT-C06-numeri-6-10]
 sounds: [final-stress-i, c-before-i]
 roots: [dies-latin, planet-gods]
 etymology_hook: "lunedì/martedì… = [planet] + dì (← diēs 'day'); same Roman planet-week as French, with the accented -dì kept audible; Spanish twins lunes/martes"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C06-numeri-6-10]
 ---
 

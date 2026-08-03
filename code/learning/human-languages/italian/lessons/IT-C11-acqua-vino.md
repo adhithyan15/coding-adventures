@@ -9,7 +9,7 @@ prerequisites: [IT-C11-pane]
 sounds: [double-cq, v-clear]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "acqua kept Latin aqua almost whole (the -cq- doubles the sound) — the loud original French wore down to eau; vino ← vīnum → wine/vine/vinegar/vintage"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C11-pane, IT-C10-genitori]
 ---
 

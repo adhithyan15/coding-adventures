@@ -9,7 +9,7 @@ prerequisites: [IT-C03-io, IT-C02-come]
 sounds: [r-tap, vowel-a-open]
 roots: [parabolare-latin]
 etymology_hook: "parlare ← Late Latin parabolāre 'to tell parables' (← parabola) → English parable, parole; = French parler"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C03-practice, IT-C04-practice]
 ---
 

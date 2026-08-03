@@ -9,7 +9,7 @@ prerequisites: [IT-C12-numeri-17-20]
 sounds: [open-e, palatal-bi]
 roots: [latin-niger, germanic-blank]
 etymology_hook: "nero ← niger, but bianco ← Germanic *blank 'shining' — brought by the Lombards and displacing Latin albus, which survives in alba ('dawn') and albume"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C12-numeri-17-20, IT-C11-pane-acqua]
 ---
 

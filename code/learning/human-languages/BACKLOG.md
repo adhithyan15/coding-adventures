@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Bengali duration
-tranche: 20 registered tracks, 985 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the Italian duration
+tranche: 20 registered tracks, 989 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -53,7 +53,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01D | Complete in the Punjabi duration PR | Remove all ten sub-five-minute violations from the Punjabi track. | The report measures zero Punjabi violations; the one genuinely long lesson is now two prerequisite-ordered micro-lessons. |
 | HL-D01E | Complete in the Sanskrit duration PR | Remove all ten sub-five-minute violations from the Sanskrit track. | The report measures zero Sanskrit violations; the 513-second anchor lesson is now three prerequisite-ordered micro-lessons. |
 | HL-D01F | Complete in the Bengali duration PR | Remove all eleven sub-five-minute violations from the Bengali track. | The report measures zero Bengali violations; all eleven lesson bodies remain unchanged because their computed durations were already below 300 seconds. |
-| HL-D01G | Next | Remove all twenty sub-five-minute violations from the Italian track. | Italian is now the smallest remaining set: seventeen declaration-only lessons and three genuinely computed violations, with a 404-second maximum. |
+| HL-D01G | Complete in the Italian duration PR | Remove all twenty sub-five-minute violations from the Italian track. | The report measures zero Italian violations; four new prerequisite-ordered micro-lessons preserve the register, metaphor, suppletion, and agreement content that did not fit safely in the original lessons. |
+| HL-D01H | Next | Remove all twenty-three sub-five-minute violations from the Portuguese track. | Portuguese is now the smallest remaining set: eighteen declaration-only lessons and five genuinely computed violations, with a 565-second maximum. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -66,6 +67,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B11 | Queued | Remove Sanskrit's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports three overfull boxes, six underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B12 | Queued | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The duration audit confirms authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B13 | Queued | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports six missing glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 27 Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B14 | Queued | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
+| HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -256,6 +259,30 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - Italian's twenty violations are now the smallest remaining track-sized set.
   Seventeen are declaration-only and three are genuinely computed, with a
   404-second maximum, so HL-D01G is next.
+
+## Findings from HL-D01G
+
+- Italian now has zero duration violations. The repository grows from 985 to
+  989 lessons and drops from 424 to 404 violations overall; unknown
+  prerequisites remain at zero.
+- Seventeen lessons needed only honest declared-budget corrections. The three
+  computed violations were replaced by prerequisite-ordered steps: informal
+  `Come stai?` → formal `Come sta?` → register-neutral `Come va?`; `essere`
+  forms → the borrowed `stato` story → `andare` → participle agreement.
+- The first attempted combined `Come sta? / Come va?` extension still measured
+  325 seconds. Splitting register from metaphor produced two independent
+  micro-lessons without deleting the cross-language or etymological depth.
+- `IT-C02-practice` at 297 computed seconds and `IT-C17-mano` at 296 are the
+  tightest remaining Italian lessons and should be watched during copy edits.
+- The Italian PDF builds successfully at 13 pages but contains only Chapter 1,
+  while canonical app lessons run through Chapter 17. HL-B14 records the
+  schema-v2 migration and generated publication work for Chapters 2–17.
+- That forced build reports no missing glyphs, overfull boxes, or duplicate
+  labels, but does expose one underfull box and three Unicode bookmark warnings.
+  HL-B15 records the pre-existing clean-build debt.
+- Portuguese's twenty-three violations are now the smallest remaining set.
+  Eighteen are declaration-only and five genuinely compute above the limit,
+  with a 565-second maximum, so HL-D01H is next.
 
 ## Completed foundations
 
