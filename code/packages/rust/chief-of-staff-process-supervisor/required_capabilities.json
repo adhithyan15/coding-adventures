@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-process-supervisor",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Re-verifies the registered signed package directory immediately before every process launch."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Launches the orchestrator-configured host executable without invoking a shell."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "*",
+      "justification": "Hard-kills an owned host child after protocol failure or graceful-shutdown timeout."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Samples monotonic receipt, launch, and graceful-shutdown deadline times."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "Performs bounded short waits while enforcing a graceful-shutdown deadline."
+    }
+  ],
+  "justification": "Concrete process authority that verifies package files, launches and reaps configured children, transports authenticated control records over pipes, and enforces bounded monotonic deadlines."
+}

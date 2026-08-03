@@ -22,8 +22,9 @@ remain responsibilities of the reconciler and runnable orchestrator.
 
 ## Process Contract
 
-One configured host program contains a non-empty executable path and at most
-128 fixed arguments. The adapter never invokes a shell. It launches the program
+One configured host program contains a non-empty absolute executable path and
+at most 128 fixed arguments. The adapter never invokes a shell or performs
+ambient `PATH` resolution. It launches the program
 with piped standard input and output and with the verified package directory as
 its working directory. Standard error is inherited so diagnostics do not share
 the authenticated protocol stream.
@@ -34,7 +35,9 @@ Standard input and output carry binary records:
 u32 big-endian payload length | payload bytes
 ```
 
-Payloads are between 1 byte and 1 MiB inclusive. Writers flush each complete
+Payloads are between 1 byte and 1 MiB inclusive. At most 64 complete records may
+wait between the reader and supervisor, so a flooding child receives pipe
+backpressure rather than consuming unbounded parent memory. Writers flush each complete
 record. Readers reject zero length, oversized length, truncation, or I/O failure
 before handing a payload to the secure-channel or control protocol. An invalid
 stream is terminal for that child.
