@@ -1961,6 +1961,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(saturation_current) = params.get("IS") {
+            if !saturation_current.is_finite() || *saturation_current <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET IS must be finite and positive",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

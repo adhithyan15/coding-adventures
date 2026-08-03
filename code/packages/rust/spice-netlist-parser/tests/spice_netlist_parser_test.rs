@@ -2075,6 +2075,30 @@ fn preserves_non_negative_mosfet_model_gate_bulk_overlap_capacitance() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_saturation_current() {
+    for saturation_current in ["0", "-1p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model leakage NMOS(IS={saturation_current})\nM1 d g s b leakage"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET IS must be finite and positive"));
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_saturation_current() {
+    let parsed = parse_netlist(".model leakage NMOS(IS=1p)\nM1 d g s b leakage").unwrap();
+
+    let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+    assert_close(mosfet.params.saturation_current, 1.0e-12);
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
