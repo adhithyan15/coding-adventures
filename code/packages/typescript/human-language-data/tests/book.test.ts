@@ -97,6 +97,32 @@ describe("canonical LaTeX chapter rendering", () => {
     );
   });
 
+  it("wraps configured Unicode-script runs in the book's dedicated font command", () => {
+    const options = { unicodeScript: "Devanagari", scriptCommand: "mr" };
+    expect(renderInlineMarkdown("**दोन** and पाच.", options)).toBe(
+      "\\textbf{\\mr{दोन}} and \\mr{पाच}.",
+    );
+  });
+
+  it("uses authored romanization for a non-Latin section bookmark", () => {
+    const lesson = parseLesson(
+      source("A", 10, "दोन").replace("gloss: दोन", "gloss: two\nromanization: don"),
+      "test",
+    );
+    const generated = renderBookChapter(
+      { ...target, unicodeScript: "Devanagari", scriptCommand: "mr" },
+      [lesson],
+    );
+    expect(generated.tex).toContain("\\section[don]{\\emph{\\mr{दोन}} — lesson}");
+  });
+
+  it("requires both script-rendering options when either is configured", () => {
+    const lesson = parseLesson(source("A", 10, "hello"), "test");
+    expect(() => renderBookChapter({ ...target, unicodeScript: "Devanagari" }, [lesson])).toThrow(
+      /unicodeScript and scriptCommand must be declared together/,
+    );
+  });
+
   it("fails closed when a target includes a legacy lesson", () => {
     const legacy = parseLesson(source("A", 10, "hello").replace("schema_version: 2\n", ""), "test");
     expect(() => renderBookChapter(target, [legacy])).toThrow(/schema version 2/);

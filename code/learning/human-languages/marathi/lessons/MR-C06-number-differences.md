@@ -1,25 +1,43 @@
 ---
+schema_version: 2
 id: MR-C06-number-differences
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 350
 chapter: 6
 type: etymology
 headword: दोन · तीन · पाच · चार
+romanization: don · tīn · pāch · chār
 gloss: why Marathi two rhymes with three, and why Hindi preserves a different piece of five
 prerequisites: [MR-C06-numbers-1-5]
 sounds: [matra-aa, matra-i, inherent-a]
 roots: [sanskrit-dvi, sanskrit-panca]
 etymology_hook: "Marathi don's final n is an innovation copied from tin, while Hindi paanch preserves Sanskrit pancha's nasal; neither daughter is simply older"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
+introduces:
+  knowledge: [MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]
+practises:
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [MR-C06-numbers-1-5]
 ---
 
 # Why Marathi *two* rhymes with *three*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N] -->
 
 [PAUSE 2s] Count once: *ek, don, tīn, tsār, pāch*. Which two words end in *n*?
 (*Don* and *tīn*.)
 
-## दोन — an ending borrowed from “three”
+## The word, taken apart — दोन borrowed from “three”
+<!-- hl-knowledge: introduces=[MR-ETYMON-DON-ANALOGY]; assesses=[] -->
 
 The tempting guess is that Marathi **दोन** *don* kept something Hindi **दो**
 *do* lost. It did not.
@@ -36,7 +54,8 @@ therefore an **innovation**, a rhyme borrowed from the number next door. Hindi
 English numbers did this too: *four* acquired its initial *f-* by analogy with
 *five*. Familiar sequences pull neighbouring words toward one another.
 
-## पाच — the nasal Hindi kept
+## What you've built: पाच and the nasal Hindi kept
+<!-- hl-knowledge: introduces=[MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]; assesses=[] -->
 
 Marathi **पाच** *pāch* and Hindi **पाँच** *pāṁch* tell the opposite story.
 Hindi's chandrabindu **ँ** records the nasal of Sanskrit ***pañca***; Marathi's
@@ -46,12 +65,14 @@ So neither language is simply “older.” Marathi innovated in *don*, while Hin
 retained an older feature in *pāṁch*. Comparing both descendants reveals the
 history that either one alone could hide.
 
-## चार — a change the spelling hides
+## Sounds you'll need: चार and the change its spelling hides
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SOUND-CHA-TSAA] -->
 
 Both write **चार**, but Marathi pronounces **च** before *ā* nearer **ts**:
 *tsār*. The letters stayed aligned while the sound moved.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
 
 [PAUSE 1s]
 - [YOU SAY: the borrowed rhyme — *tiṇṇi … doṇṇi*]
@@ -60,6 +81,7 @@ Both write **चार**, but Marathi pronounces **च** before *ā* nearer **ts
 - [YOU SAY: same spelling, shifted sound — *chār / tsār*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
 
 [PAUSE 3s] Did Marathi *don* preserve an ancient ending? (No: *two* copied
 *three*.) Which language retains Sanskrit *pañca*'s nasal in writing? (Hindi.)

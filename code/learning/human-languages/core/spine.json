@@ -81,6 +81,14 @@
       "prerequisites": ["SPINE-EXCHANGE-NAMES"],
       "core": false,
       "concepts": ["GRAMMAR-THE"]
+    },
+    {
+      "id": "SPINE-COUNT-ONE-TO-FIVE",
+      "stage": "A1",
+      "canDo": "I can understand and produce the cardinal numbers one through five.",
+      "prerequisites": ["SPINE-RESPOND-BASIC"],
+      "core": false,
+      "concepts": ["NUMBER-ONE-TO-FIVE"]
     }
   ]
 }

@@ -62,6 +62,9 @@ npm run check:books
 orders schema-v2 lessons by `sequence`, writes the LaTeX chapter, and records a
 stable FNV-1a fingerprint in `core/generated-book-hashes.json`. The fingerprint
 detects drift between book and app inputs; it is not a security hash.
+Non-Latin targets also declare `unicodeScript` and `scriptCommand`; the renderer
+wraps matching Unicode runs in the book's existing font macro and uses each
+lesson's `romanization` for a PDF-bookmark-safe short title.
 
 The duration estimator uses instructional word count, explicit pauses, repeat
 cues, learner-response prompts, and a safety margin. Its effective duration is
