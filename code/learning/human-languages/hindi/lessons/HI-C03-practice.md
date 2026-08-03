@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [HI-C03-aap-kaise-hain, HI-C03-thik, HI-C03-aapka-swagat-hai]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C03-kaise, HI-C03-aap-kaise-hain, HI-C03-main, HI-C03-hun, HI-C03-thik, HI-C03-aapka-swagat-hai]
 ---
 

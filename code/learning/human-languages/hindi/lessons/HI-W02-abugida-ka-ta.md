@@ -2,18 +2,18 @@
 id: HI-W02-abugida-ka-ta
 chapter: 1
 type: writing
-headword: "क, त"
-gloss: "the inherent vowel — क is not 'k' but 'ka' — plus the letters क and त"
-romanization: "ka, ta"
-prerequisites: [HI-W01-shirorekha-na-ma]
+headword: "अ"
+gloss: "the inherent vowel — every Devanagari consonant arrives with a built-in a"
+romanization: "a"
+prerequisites: [HI-W01-na-ma]
 sounds: [devanagari-inherent-vowel, devanagari-spine]
 roots: [ethiopic-abugida]
 etymology_hook: "a script whose consonants carry a built-in vowel is called an ABUGIDA — a name coined from Ge'ez, and cleverly built: ʾä-bu-gi-da names the first four consonants of the old SEMITIC letter order AND the first four VOWEL series at once, so the word demonstrates the very consonant-plus-vowel system it names"
-est_minutes: 5
-reviews_of: [HI-W01-shirorekha-na-ma, HI-C01-namaste]
+est_minutes: 4
+reviews_of: [HI-W01-na-ma, HI-W01-shirorekha-na-ma, HI-C01-namaste]
 ---
 
-# The vowel that's already there — and क, त
+# The vowel that is already there — the abugida
 
 ## Warm-up
 
@@ -64,52 +64,12 @@ consonant plus vowel, four times over. A term that performs its own definition.
 *abugida* is a scholar's coinage drawing on the inherited Semitic order, not the
 Ethiopian schoolroom one.)
 
-## क — "ka"
-
-1. **a left loop**
-2. **a vertical spine** on the right
-3. **the top bar** — last.
-
-## त — "ta"
-
-1. **a small left curl**
-2. **a tall spine**
-3. **the top bar** — last.
-
-Same frame as before: spine right, shape left, bar on top. Only the left-hand
-part changes.
-
-## Why the letters are in the order they're in
-
-One more thing worth knowing, because it makes the whole script feel less
-arbitrary. The heart of the Devanagari consonant order is not historical accident
-like A-B-C. The stops are grouped into five families (*vargas*), **sorted by
-where in your mouth the closure happens** — starting at the soft palate and
-walking forward to the lips:
-
-**क** (soft palate) → **च** (hard palate) → **ट** (roof, tongue curled back) →
-**त** (teeth) → **प** (lips)
-
-Say those five in order and feel the closure travel forward. Indian phoneticians
-organised the sounds this way well over two thousand years ago — Pāṇini's work is
-roughly 4th century BCE — producing a phonetics chart memorised as an alphabet,
-long before anyone in Europe attempted the same analysis.
-
-Two honest footnotes. The tidy front-to-back walk describes the **five stop
-families**, not the whole letter list — the vowels come first, and ह sits at the
-very end after the labials. And of those five sample letters, **ट is not yet in
-this curriculum's Devanagari data**: read it here, and you'll draw it when its
-entry is written. This track only asks you to hand-write letters whose stroke
-data actually exists.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "क is **ka**, not k"]
-- [YOU WRITE: क — "loop, spine, bar last"]
-- [YOU WRITE: त — "curl, spine, bar last"]
 - [YOU WRITE: नम — two letters, **one bar across both** — "nama"]
-- [YOU SAY: the mouth-walk — "ka … ca … ṭa … ta … pa", back to front]
+- [YOU SAY: "abugida — a consonant plus its built-in vowel"]
 
 ## Wrap-up Recall
 
@@ -118,6 +78,4 @@ is that vowel called? (The **inherent vowel**.) What kind of script is this, and
 where does the word come from? (An **abugida** — *ʾä-bu-gi-da*, from Ge'ez,
 naming four **consonants** of the old Semitic order **and** four **vowel series**
 at once, so the word performs its own definition.) Write **नम** — what does it
-say? (*Nama*.) What orders the five stop families? (**Place of articulation** —
-soft palate forward to the lips.) Next: how to get rid of the inherent vowel
-and put a different one in.
+say? (*Nama*.) Next: two more letters, and the sound-map that orders them.

@@ -9,7 +9,7 @@ prerequisites: [HI-C11-kaalaa-safed]
 sounds: [devanagari-long-aa, retroflex-la-vs-dental]
 roots: [laal-persian, nila-sanskrit]
 etymology_hook: "लाल laal 'red' comes from a Persian word for a RUBY; नीला niilaa 'blue' is Sanskrit for the indigo plant — and India's indigo trade is why English says 'indigo' at all"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C11-kaalaa-safed]
 ---
 

@@ -32,9 +32,10 @@ reading course.
   Hindi; *hindī* ← *sindhu*) → rahnā (to live; postposition *meṁ*) → karnā (to
   do; ← √kṛ, the root of *karma/namaskār/Sanskrit*) → practice. The present
   habitual (stem + *-tā/-tī/-te* + *honā*), verb-last, gender agreement.
-- **Writing track W01–W05 — hand-writing Devanagari.** A parallel spine, the
+- **Writing track W01–W05 — eleven hand-writing micro-lessons.** A parallel spine, the
   Hindi counterpart of Arabic AR-W01–12 and Russian RU-W01–05, ending on the
-  first word of the course. **W01** the **shirorekhā** (शिरोरेखा = "head-line";
+  first word of the course. Each numbered cluster is split at one script seam so
+  no step reaches five minutes. **W01** the **shirorekhā** (शिरोरेखा = "head-line";
   *śiras* ← PIE \**ḱerh₂-*, the root of Latin *cornu*/*cerebrum* and English
   **horn**) — drawn **last**, and as **one** bar across a whole word, so Hindi
   hangs *from* a line where Latin sits *on* one (flagged as the **common

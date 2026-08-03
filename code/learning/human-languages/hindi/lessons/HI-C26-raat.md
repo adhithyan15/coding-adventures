@@ -9,7 +9,7 @@ prerequisites: [HI-C17-dopahar-aadhi-raat, HI-C25-din]
 sounds: [devanagari-long-aa, devanagari-ta]
 roots: [sanskrit-ratri, pie-h1reh1-rest]
 etymology_hook: "रात (raat, 'night') ← Prakrit रत्ति (ratti) ← Sanskrit रात्रि (rātri) ← Proto-Indo-Iranian *HráHtriH ← Proto-Indo-European *h₁reh₁-trih₂ ('rest' + a feminine suffix); despite both being Indo-European 'night' words, this is a COMPLETELY DIFFERENT PIE root from Latin's nox (*nókʷts) — a genuine false cousin, not a true cognate, unlike Hindi's din/Latin's diēs pair"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C17-dopahar-aadhi-raat, HI-C25-din]
 ---
 

@@ -5,12 +5,12 @@ type: word
 headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार
 gloss: Monday–Friday — Hindi's own planet-week, independent of Rome's
 concept_tag: HI-DAYS-WEEKDAYS
-prerequisites: [HI-C06-numbers-1-5]
+prerequisites: [HI-C06-paanch-nasal]
 sounds: [devanagari-conjunct-kra, anusvara]
 roots: [vara-sanskrit, navagraha]
 etymology_hook: "सोमवार somavār 'Moon's day' and its four siblings are India's OWN planet-week — the same seven-body idea as Rome's, likely both downstream of a shared Babylonian source, not one copying the other"
-est_minutes: 5
-reviews_of: [HI-C06-numbers-1-5]
+est_minutes: 4
+reviews_of: [HI-C06-paanch-nasal, HI-C06-numbers-1-5]
 ---
 
 # सोमवार to शुक्रवार — Hindi's own planet-week

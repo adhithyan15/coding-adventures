@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [devanagari-inherent-a, matra-e, halant-conjunct]
 roots: [nam]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

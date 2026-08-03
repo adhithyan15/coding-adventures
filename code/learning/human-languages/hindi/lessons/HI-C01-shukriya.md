@@ -8,7 +8,7 @@ concept_tag: COURTESY-THANKS-CASUAL
 prerequisites: [HI-C01-dhanyavad]
 sounds: [devanagari-inherent-a, matra-i, matra-aa, halant-conjunct]
 roots: [shukr]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C01-dhanyavad]
 ---
 

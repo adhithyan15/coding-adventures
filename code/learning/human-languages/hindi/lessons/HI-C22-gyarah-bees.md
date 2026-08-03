@@ -5,12 +5,12 @@ type: word
 headword: ग्यारह — बीस
 gloss: 11-20 — genuinely irregular, must be memorized individually; but उन्नीस (19) most likely preserves Sanskrit's OWN subtractive naming, the same logic as Latin's ūndēvīgintī
 concept_tag: HI-NUMBERS-11-20
-prerequisites: [HI-C21-numbers-6-10]
+prerequisites: [HI-C21-six-nine-ten-history]
 sounds: [conjunct-gya, vowel-sign-ii]
 roots: [sanskrit-ekadasha-vimshati, sanskrit-una-subtractive]
 etymology_hook: "ग्यारह-अठारह (11-18) are each opaque, individually-eroded Sanskrit descendants that must be memorized, unlike Spanish's transparent teens — but उन्नीस (unnīs, 19) most likely continues Sanskrit's OWN subtractive ūnaviṃśati ('one less than twenty,' the later, eka-less form of the fuller Vedic ekonaviṃśati), the SAME logic as Latin's ūndēvīgintī from the Latin numbers lesson — two unrelated language families independently naming 19 as 'twenty minus one'"
-est_minutes: 6
-reviews_of: [HI-C21-numbers-6-10]
+est_minutes: 4
+reviews_of: [HI-C21-six-nine-ten-history, HI-C21-numbers-6-10]
 ---
 
 # ग्यारह, बीस — genuinely irregular, and one honest exception

@@ -9,7 +9,7 @@ prerequisites: [HI-C11-laal-niila]
 sounds: [devanagari-long-aa, retroflex-vs-dental-ta]
 roots: [pie-pater, pie-mater]
 etymology_hook: "पिता pitā and माता mātā are Sanskrit cousins of Latin pater/mater and English father/mother; बाप bāp and माँ māṁ are ALSO Sanskrit-descended, just via a different root (vaptṛ) and a Prakrit doublet, not uncertain outliers"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C11-laal-niila]
 ---
 

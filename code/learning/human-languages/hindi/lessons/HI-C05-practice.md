@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [HI-C05-bolna, HI-C05-main-hindi-bolta-hun, HI-C05-rahna, HI-C05-karna]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C05-bolna, HI-C05-main-hindi-bolta-hun, HI-C05-rahna, HI-C05-karna, HI-C03-hun, HI-C03-main]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [HI-C12-pitaa-maataa]
 sounds: [devanagari-long-ii, aspirated-bha]
 roots: [pie-bhrater, bhaga-sanskrit]
 etymology_hook: "भाई bhāī IS the PIE cousin of English 'brother' — but बहन bahin is NOT the cousin of 'sister'; Sanskrit's PIE-cognate word for sister (svasṛ) faded, replaced by bhaginī, 'the one who shares,' the ancestor of bahin"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C12-pitaa-maataa]
 ---
 

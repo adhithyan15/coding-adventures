@@ -9,7 +9,7 @@ prerequisites: [HI-C16-mahine]
 sounds: [devanagari-vowel-sign-o, devanagari-long-ii]
 roots: [do-two, pahar-traditional-watch, aadhi-half, raat-night]
 etymology_hook: "दोपहर (dopahar) 'noon' is literally 'two pahars' — pahar being a traditional ~3-hour time-unit, with noon falling at the end of the second pahar after sunrise; आधी रात (aadhi raat) 'half night' is fully transparent, just like Latin's media nox"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C16-mahine]
 ---
 

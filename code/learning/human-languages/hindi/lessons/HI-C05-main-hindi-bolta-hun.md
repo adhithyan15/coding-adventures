@@ -8,7 +8,7 @@ concept_tag: HI-WORD-HINDI
 prerequisites: [HI-C05-bolna, HI-C03-main, HI-C03-hun]
 sounds: [anusvara, matra-i]
 roots: [sindhu-river]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [HI-C05-bolna, HI-C03-main, HI-C03-hun]
 ---
 

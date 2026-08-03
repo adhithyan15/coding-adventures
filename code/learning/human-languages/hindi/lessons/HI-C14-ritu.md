@@ -9,7 +9,7 @@ prerequisites: [HI-C13-haath]
 sounds: [devanagari-conjunct-shma, anusvara]
 roots: [ritu-sanskrit-six-season-system]
 etymology_hook: "Hindi's traditional calendar recognizes SIX ऋतु (ṛtu) 'seasons', not four — vasant, grishma, varsha (monsoon), sharad, hemant, shishir — a genuinely different structure, not just extra vocabulary"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [HI-C13-haath]
 ---
 

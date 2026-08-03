@@ -9,7 +9,7 @@ prerequisites: [HI-C15-paani-roti]
 sounds: [nukta-f, devanagari-long-ii]
 roots: [gregorian-months-borrowed, vikrama-samvat-sanskrit]
 etymology_hook: "janvarii, maarch, agast... are borrowed English/international month-names for everyday civil use — Hindu tradition keeps a SEPARATE calendar, Vikram Samvat, whose months (Chaitra, Vaishaakh...) map onto the SIX ritu from the seasons lesson, not four Western seasons"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [HI-C15-paani-roti]
 ---
 
