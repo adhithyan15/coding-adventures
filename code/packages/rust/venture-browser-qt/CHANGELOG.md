@@ -9,5 +9,8 @@
   mounted QML surface, and non-empty Cairo frame on provisioned Qt hosts.
 - Promote the generated-project gate to real address, history, wheel, hover,
   and link interaction acceptance through the package-owned Qt adapter.
+- Export Flutter-named C ABI wrappers over the same host-neutral controller and
+  Cairo renderer so Venture's generated Flutter shell can share the live page
+  implementation.
 - Accept either CMake's plain macOS executable or an application-bundle shell
   when launching the generated project.

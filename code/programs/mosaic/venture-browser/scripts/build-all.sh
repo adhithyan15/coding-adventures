@@ -237,12 +237,37 @@ case "$host_os" in
 esac
 
 if [[ -n "$flutter_platform" ]] && has_command flutter; then
+  echo "==> Building Venture Flutter native bridge"
+  flutter_bridge_args=(build -p venture-browser-qt)
+  flutter_bridge_profile=debug
+  if ((release)); then
+    flutter_bridge_args+=(--release)
+    flutter_bridge_profile=release
+  fi
+  (cd "$rust_workspace" && cargo "${flutter_bridge_args[@]}")
+  case "$host_os" in
+    Darwin)
+      flutter_bridge_source=libventure_browser_qt.dylib
+      flutter_bridge_name=libventure_browser_flutter.dylib
+      ;;
+    Linux)
+      flutter_bridge_source=libventure_browser_qt.so
+      flutter_bridge_name=libventure_browser_flutter.so
+      ;;
+    *)
+      flutter_bridge_source=venture_browser_qt.dll
+      flutter_bridge_name=venture_browser_flutter.dll
+      ;;
+  esac
+  cp "$rust_workspace/target/$flutter_bridge_profile/$flutter_bridge_source" \
+    "$output_root/flutter/$flutter_bridge_name"
   echo "==> Building flutter ($flutter_platform)"
   (
     cd "$output_root/flutter"
     flutter pub get
     flutter analyze lib
-    flutter test test/venture_chrome_interaction_test.dart
+    VENTURE_BROWSER_FLUTTER_LIBRARY="$output_root/flutter/$flutter_bridge_name" \
+      flutter test test/venture_chrome_interaction_test.dart
     if [[ ! -d "$flutter_platform" ]]; then
       flutter create "--platforms=$flutter_platform" .
     fi

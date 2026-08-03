@@ -358,6 +358,8 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
             "  void initState() {{\n",
             "    super.initState();\n",
             "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n",
+            "    _mosaicHost?.setPropsChangedHandler(() =>\n",
+            "        _queueMosaicResponse(_mosaicHost.props()));\n",
             "    _queueMosaicResponse(_mosaicHost?.props());\n",
             "  }}\n\n",
             "  @override\n",
@@ -542,6 +544,7 @@ fn build_mosaic_host_dart() -> String {
     out.push_str(
         "  FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) => null;\n\n",
     );
+    out.push_str("  void setPropsChangedHandler(void Function()? handler) {}\n\n");
     out.push_str("  void dispose() {}\n");
     out.push_str("}\n");
     out
@@ -5243,6 +5246,12 @@ mod tests {
             "main.dart must hydrate initial props through the Mosaic host"
         );
         assert!(
+            proj.main_dart.contains(
+                "_mosaicHost?.setPropsChangedHandler(() =>\n        _queueMosaicResponse(_mosaicHost.props()))"
+            ),
+            "main.dart must subscribe to host-owned page interaction updates"
+        );
+        assert!(
             proj.main_dart
                 .contains("final response = _mosaicHost?.handleEvent(event.mosaicEnvelope);"),
             "main.dart must forward Mosaic event envelopes to the host"
@@ -5265,6 +5274,11 @@ mod tests {
             proj.mosaic_host_dart
                 .contains("FutureOr<Map<String, Object?>?> handleEvent"),
             "default mosaic_host.dart must allow async host responses"
+        );
+        assert!(
+            proj.mosaic_host_dart
+                .contains("void setPropsChangedHandler(void Function()? handler) {}"),
+            "default mosaic_host.dart must expose optional prop-change notifications"
         );
     }
 

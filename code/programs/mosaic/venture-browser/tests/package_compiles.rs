@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 13);
+    assert_eq!(package.host_assets.files.len(), 14);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -104,40 +104,46 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     assert_eq!(package.host_assets.files[2].backend, "flutter");
     assert_eq!(
         package.host_assets.files[2].source,
+        "host/flutter/mosaic_host.dart"
+    );
+    assert_eq!(package.host_assets.files[2].target, "lib/mosaic_host.dart");
+    assert_eq!(package.host_assets.files[3].backend, "flutter");
+    assert_eq!(
+        package.host_assets.files[3].source,
         "host/flutter/venture_chrome_interaction_test.dart"
     );
     assert_eq!(
-        package.host_assets.files[2].target,
+        package.host_assets.files[3].target,
         "test/venture_chrome_interaction_test.dart"
     );
-    assert_eq!(package.host_assets.files[3].backend, "qt");
+    assert_eq!(package.host_assets.files[4].backend, "qt");
     assert_eq!(
-        package.host_assets.files[3].source,
+        package.host_assets.files[4].source,
         "host/qt/MosaicHost.cpp"
     );
-    assert_eq!(package.host_assets.files[3].target, "MosaicHost.cpp");
-    assert_eq!(package.host_assets.files[4].backend, "qt");
-    assert_eq!(package.host_assets.files[4].source, "host/qt/MosaicHost.h");
-    assert_eq!(package.host_assets.files[4].target, "MosaicHost.h");
+    assert_eq!(package.host_assets.files[4].target, "MosaicHost.cpp");
     assert_eq!(package.host_assets.files[5].backend, "qt");
+    assert_eq!(package.host_assets.files[5].source, "host/qt/MosaicHost.h");
+    assert_eq!(package.host_assets.files[5].target, "MosaicHost.h");
+    assert_eq!(package.host_assets.files[6].backend, "qt");
     assert_eq!(
-        package.host_assets.files[5].source,
+        package.host_assets.files[6].source,
         "host/qt/tst_venture_chrome.qml"
     );
     assert_eq!(
-        package.host_assets.files[5].target,
+        package.host_assets.files[6].target,
         "test/tst_venture_chrome.qml"
     );
-    assert_eq!(package.host_assets.files[6].backend, "compose");
+    assert_eq!(package.host_assets.files[7].backend, "compose");
     assert_eq!(
-        package.host_assets.files[6].source,
+        package.host_assets.files[7].source,
         "host/compose/VentureChromeInteractionTest.kt"
     );
     assert_eq!(
-        package.host_assets.files[6].target,
+        package.host_assets.files[7].target,
         "src/test/kotlin/VentureChromeInteractionTest.kt"
     );
-    for index in [7, 8] {
+    for index in [8, 9] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/react/VentureChromeInteraction.test.tsx"
@@ -147,16 +153,16 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "src/VentureChromeInteraction.test.tsx"
         );
     }
-    assert_eq!(package.host_assets.files[7].backend, "react");
-    assert_eq!(package.host_assets.files[8].backend, "electron");
-    for index in [9, 11] {
+    assert_eq!(package.host_assets.files[8].backend, "react");
+    assert_eq!(package.host_assets.files[9].backend, "electron");
+    for index in [10, 12] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/package.json"
         );
         assert_eq!(package.host_assets.files[index].target, "package.json");
     }
-    for index in [10, 12] {
+    for index in [11, 13] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/VentureChromeInteraction.test.js"
@@ -166,10 +172,10 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "test/VentureChromeInteraction.test.js"
         );
     }
-    assert_eq!(package.host_assets.files[9].backend, "html");
     assert_eq!(package.host_assets.files[10].backend, "html");
-    assert_eq!(package.host_assets.files[11].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[11].backend, "html");
     assert_eq!(package.host_assets.files[12].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[13].backend, "webcomponent");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -305,13 +311,33 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         );
     }
 
+    let flutter_host = read_package_file("host/flutter/mosaic_host.dart");
+    for symbol in [
+        "venture_browser_flutter_new",
+        "venture_browser_flutter_handle_event",
+        "venture_browser_flutter_render_rgba",
+        "VentureContentSurface",
+        "PointerScrollEvent",
+        "activateLink",
+        "updateHover",
+        "setPropsChangedHandler",
+        "RawImage",
+    ] {
+        assert!(
+            flutter_host.contains(symbol),
+            "Flutter live host omits {symbol}"
+        );
+    }
+
     let flutter_acceptance = read_package_file("host/flutter/venture_chrome_interaction_test.dart");
     for symbol in [
         "MosaicApp(mosaicHost: host)",
-        "disabled native controls suppress Mosaic dispatch",
-        "address edit, Return, and Go cross the Mosaic host seam",
+        "package-owned Flutter shell drives the live shared browser and Cairo page",
+        "MosaicHost.open",
         "tester.testTextInput.receiveAction(TextInputAction.done)",
-        "Navigated through MosaicHost",
+        "PointerScrollEvent",
+        "PointerHoverEvent",
+        "Flutter Link Target",
     ] {
         assert!(
             flutter_acceptance.contains(symbol),

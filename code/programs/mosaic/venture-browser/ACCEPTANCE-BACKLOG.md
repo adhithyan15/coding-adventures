@@ -20,8 +20,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
   - [x] Qt live interaction promotion: drive the generated address and history
     controls plus native scroll/link input through the real bridge, replacing
     the recording host as the authoritative Qt interaction gate.
-  - [ ] Flutter live page bridge and direct acceptance.
+  - [x] Flutter live page bridge and direct acceptance.
   - [ ] Compose Desktop live page bridge and direct acceptance.
+- [ ] **P2 architecture — backend-neutral Cairo bridge ownership.** Flutter now
+  reuses the exact controller and renderer currently packaged by the
+  Qt-named bridge crate. Extract that shared C ABI implementation into a
+  backend-neutral package before further native consumers make the ownership
+  boundary harder to change; keep thin Qt and Flutter exports over one session.
 - [ ] **P2 — Qt native-control style compatibility.** The macOS-native Qt
   Quick Controls style rejects custom `background` items emitted from Mosaic
   MSL. Define a native-compatible palette/appearance lowering (or an explicit
