@@ -12,11 +12,11 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 1063,
+    "totalLessons": 1065,
     "authoredBooks": 20,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
-    "laterChapterLessonsWithoutPrerequisites": 40,
+    "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 257,
     "legacySchemaTracks": 19,
@@ -275,31 +275,6 @@
         "chapter": 1
       },
       {
-        "lessonId": "ES-C04-estar",
-        "language": "spanish",
-        "chapter": 4
-      },
-      {
-        "lessonId": "ES-C04-gracias",
-        "language": "spanish",
-        "chapter": 4
-      },
-      {
-        "lessonId": "ES-C05-adios",
-        "language": "spanish",
-        "chapter": 5
-      },
-      {
-        "lessonId": "ES-C06-hablar",
-        "language": "spanish",
-        "chapter": 6
-      },
-      {
-        "lessonId": "ES-C06-por-favor",
-        "language": "spanish",
-        "chapter": 6
-      },
-      {
         "lessonId": "ES-C08-numeros-1-5",
         "language": "spanish",
         "chapter": 8
@@ -490,31 +465,6 @@
         "lessonId": "SA-C04-punah",
         "language": "sanskrit",
         "chapter": 4
-      },
-      {
-        "lessonId": "ES-C04-estar",
-        "language": "spanish",
-        "chapter": 4
-      },
-      {
-        "lessonId": "ES-C04-gracias",
-        "language": "spanish",
-        "chapter": 4
-      },
-      {
-        "lessonId": "ES-C05-adios",
-        "language": "spanish",
-        "chapter": 5
-      },
-      {
-        "lessonId": "ES-C06-hablar",
-        "language": "spanish",
-        "chapter": 6
-      },
-      {
-        "lessonId": "ES-C06-por-favor",
-        "language": "spanish",
-        "chapter": 6
       },
       {
         "lessonId": "ES-C08-numeros-1-5",
@@ -1515,10 +1465,10 @@
       {
         "language": "spanish",
         "status": "mixed",
-        "lessonCount": 126,
+        "lessonCount": 128,
         "versions": {
-          "1": 102,
-          "2": 24
+          "1": 77,
+          "2": 51
         }
       },
       {
