@@ -50,6 +50,10 @@ Lua rockspecs are decoded as strict UTF-8. Malformed metadata fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2; a valid
 literal U+FFFD replacement character remains valid UTF-8.
 
+Emitted build plans use repository-relative forward-slash package paths on
+every platform, including Windows, so downstream jobs receive the same logical
+plan regardless of the producer host.
+
 ## Platform-specific BUILD files
 
 The discovery system supports platform-specific BUILD files with the following priority:

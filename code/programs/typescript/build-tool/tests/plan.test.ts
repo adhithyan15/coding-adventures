@@ -13,6 +13,8 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
   writePlan,
   readPlan,
@@ -53,6 +55,27 @@ function makeMinimalPlan(overrides?: Partial<BuildPlan>): BuildPlan {
     languages_needed: {},
     ...overrides,
   };
+}
+
+interface SharedPlanFixture {
+  workspace: {
+    files: Array<{ path: string; content_utf8: string }>;
+  };
+  expected: {
+    result: { plan: BuildPlan };
+  };
+  limits: { wall_time_ms: number };
+}
+
+const packageRoot = fileURLToPath(new URL("..", import.meta.url));
+const sharedFixtureRoot = fileURLToPath(
+  new URL("../../../../specs/fixtures/build-tool-v1/cases/", import.meta.url),
+);
+
+function loadSharedPlanFixture(name: string): SharedPlanFixture {
+  return JSON.parse(
+    fs.readFileSync(path.join(sharedFixtureRoot, name), "utf-8"),
+  ) as SharedPlanFixture;
 }
 
 // ---------------------------------------------------------------------------
@@ -212,5 +235,46 @@ describe("writePlan file format", () => {
     expect(raw.endsWith("\n")).toBe(true);
     // Should be valid JSON.
     expect(() => JSON.parse(raw)).not.toThrow();
+  });
+});
+
+describe("real CLI plan emission", () => {
+  it("consumes the shared portable package-path fixture", () => {
+    const fixture = loadSharedPlanFixture("plan-portable-package-path.json");
+    const root = path.join(tempDir, "repo");
+    fs.mkdirSync(path.join(root, ".git"), { recursive: true });
+    for (const file of fixture.workspace.files) {
+      const destination = path.join(root, ...file.path.split("/"));
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.writeFileSync(destination, file.content_utf8, "utf-8");
+    }
+
+    const outputPath = path.join(tempDir, "emitted-plan.json");
+    const tsxCli = path.join(
+      packageRoot,
+      "node_modules",
+      "tsx",
+      "dist",
+      "cli.mjs",
+    );
+    const entrypoint = path.join(packageRoot, "src", "index.ts");
+    const result = spawnSync(
+      process.execPath,
+      [
+        tsxCli,
+        entrypoint,
+        "--root",
+        root,
+        "--force",
+        "--emit-plan",
+        "--plan-file",
+        outputPath,
+      ],
+      { encoding: "utf-8", timeout: fixture.limits.wall_time_ms },
+    );
+
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
+    expect(readPlan(outputPath)).toEqual(fixture.expected.result.plan);
   });
 });
