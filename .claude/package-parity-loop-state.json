@@ -11,23 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "item_id": "build-tool-ruby-engine-rockspec-utf8-conformance",
-    "number": 9648,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9648",
-    "branch": "codex/build-tool-ruby-rockspec-utf8"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "816bd31f41bd21ce5bda30c1dfaac8b8b5102de0",
+    "revision": "b3a6616a14718cec150d82e87bdc9a2d35d30670",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1225,
-    "implementation_package_slots": 4373,
+    "implementation_identities": 1226,
+    "implementation_package_slots": 4374,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 775,
-    "singleton_missing_slots": 10850,
-    "rust_singletons": 580,
+    "singleton_packages": 776,
+    "singleton_missing_slots": 10864,
+    "rust_singletons": 581,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -366,11 +361,11 @@
     {
       "id": "build-tool-ruby-engine-rockspec-utf8-conformance",
       "title": "Make the Ruby build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-ruby-rockspec-utf8",
       "pr_number": 9648,
-      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. After conflict-free rebases through 816bd31f, exact-head validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, a real 258-Lua-package/382-edge plan, and the collision-clean inventory. Full-repository validation separately discovered the undeclared Starlark runtime dependency and 44 canonical BUILD parse fallbacks; both have dedicated pending owners below and do not expand this UTF-8 slice."
+      "notes": "Merged PR #9648 as 6bf73aa418a62ddee66c1382f51205ca4774511e on 2026-08-03 after 17 exact-head checks were terminal: two detects, two fixture consumers, two Ubuntu builds, macOS, Windows, two CI gates, CodeQL detection, and Ruby analysis passed; four irrelevant analyzers skipped and the CodeQL aggregate was neutral. Ruby now strictly decodes raw rockspec bytes, emits typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, preserves exact success edges, accepts literal U+FFFD, rejects five malformed-sequence classes, and maps the real CLI to exit 2 without checkout-root leakage. Local validation passed 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, a real 258-Lua-package/382-edge plan, collision inventory, diff, state, and credential scans. Full-repository validation separately discovered the undeclared Starlark runtime dependency and 44 canonical BUILD parse fallbacks; both have dedicated owners below."
     },
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
@@ -393,11 +388,11 @@
     {
       "id": "build-tool-ruby-starlark-runtime-closure",
       "title": "Make the Ruby build tool declare and load its Starlark runtime closure",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-ruby-engine-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-ruby-starlark-runtime-closure",
       "pr_number": null,
-      "notes": "Discovered while running the real full-repository Lua plan for the Ruby UTF-8 slice. The build tool lazily requires coding_adventures_starlark_interpreter whenever a Starlark BUILD file is present, but its Gemfile declares only progress_bar and test gems; a clean source-tree invocation therefore aborts with LoadError until every Ruby package lib directory is injected through RUBYLIB. Declare a repository-local runtime closure or a supported bootstrap path, exercise it from a clean environment on Windows and Unix, and preserve the tool's zero-network build execution policy."
+      "notes": "Selected after merged PR #9648 and the collision-clean b3a6616a inventory. The build tool lazily requires coding_adventures_starlark_interpreter whenever a Starlark BUILD file is present, but its Gemfile declares only progress_bar and test gems; a clean source-tree invocation therefore aborts with LoadError until every Ruby package lib directory is injected through RUBYLIB. Declare a repository-local runtime closure or a supported bootstrap path, exercise it from a clean environment on Windows and Unix, and preserve the tool's zero-network build execution policy. The post-merge dependency/leverage pass ranked this ahead of Haskell and Elixir UTF-8 because Ruby 3.4.9 is already validated locally, the fix is the narrowest unblocked build-tool boundary, and it unlocks the dependent 44-case canonical BUILD compatibility repair."
     },
     {
       "id": "build-tool-ruby-starlark-canonical-build-compatibility",
@@ -919,6 +914,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 9bb12864 inventory after PR #9640 added Rust-only chief-of-staff-channel-store. Define language-neutral fixtures for two-phase CAS sequence reservation, exact pending-header recovery, nonce-safe abandoned gaps, idempotent encrypted-message and sealed-grant persistence, ordered pagination, monotonic per-receiver acknowledgements, conflict/retry ceilings, corrupt-record rejection, and stable repository-owned storage keys/errors. Expand the authority-free orchestration over injected StorageBackend and channel-crypto contracts after the cryptographic vectors land; backend I/O, filesystem durability, key custody, entropy, and actor routing remain separately injected or native and are not part of this portable package."
+    },
+    {
+      "id": "chief-channel-endpoints-portable-conformance",
+      "title": "Fixture and expand the portable Chief authorized channel endpoints",
+      "status": "pending",
+      "depends_on": ["chief-channel-store-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean b3a6616a inventory after PR #9649 added Rust-only chief-of-staff-channel-endpoints. Define language-neutral fixtures for bounded identities, one-originator/nonempty-unique-receiver definitions, role and key authorization, monotonic active-to-destroyed lifecycle, injected UUIDv7/timestamp metadata, publish/grant/read/acknowledge orchestration, current-session delivery receipts, stable record identities, corrupt-definition rejection, and normalized authorization failures. Expand only the zero-capability deterministic core over the channel-store, channel-crypto, and injected StorageBackend contracts; backend I/O, filesystem durability, clocks, randomness, key custody, and actor routing remain injected or native."
     },
     {
       "id": "venture-browser-qt-portable-bridge-and-native-host",
