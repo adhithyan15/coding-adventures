@@ -1985,6 +1985,16 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        for nominal_temperature in [params.get("T_NOM"), params.get("TNOM")]
+            .into_iter()
+            .flatten()
+        {
+            if !nominal_temperature.is_finite() || *nominal_temperature <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET T_NOM must be finite and positive",
+                ));
+            }
+        }
         if let Some(width) = params.get("W") {
             if !width.is_finite() || *width <= 0.0 {
                 return Err(NetlistParseError::new(

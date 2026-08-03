@@ -2381,6 +2381,37 @@ fn preserves_positive_mosfet_model_substrate_doping_aliases() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_nominal_temperatures() {
+    for alias in ["T_NOM", "TNOM"] {
+        for temperature in ["0", "-1", "1e999"] {
+            let error = parse_netlist(&format!(
+                ".model temperature NMOS({alias}={temperature})\nM1 d g s b temperature"
+            ))
+            .unwrap_err();
+
+            assert!(error
+                .to_string()
+                .contains("MOSFET T_NOM must be finite and positive"));
+        }
+    }
+}
+
+#[test]
+fn preserves_positive_mosfet_model_nominal_temperature_aliases() {
+    for alias in ["T_NOM", "TNOM"] {
+        let parsed = parse_netlist(&format!(
+            ".model temperature NMOS({alias}=325)\nM1 d g s b temperature"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.t_nom, 325.0);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
