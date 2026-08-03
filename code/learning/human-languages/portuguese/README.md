@@ -31,7 +31,9 @@ uniquely agrees with the **speaker**, not the listener.
 
 The 105-page edition compiles with XeLaTeX. It uses Latin Modern for Portuguese
 and the repository-vendored Noto Naskh Arabic only for preserved Arabic source
-forms in the etymology. Run `latexmk -xelatex book.tex`.
+forms in the etymology. The forced build is free of missing glyphs, layout
+boxes, duplicate destinations, Hyperref warnings, and LaTeX warnings. Run
+`latexmk -xelatex book.tex`.
 
 ## Files
 

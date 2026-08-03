@@ -33,8 +33,10 @@ reviews_of: [PT-C17-cabeca]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] **Cabeça** kept Latin *caput*, “head.” Other languages replaced that
-everyday word with containers, which makes the Portuguese survival visible.
+[PAUSE 2s]
+
+**Cabeça** kept Latin *caput*, “head.” Other languages used container
+words instead. That contrast makes the Portuguese survival visible.
 
 | language | “head” | older picture |
 |---|---|---|
@@ -75,7 +77,7 @@ because each route changes it differently.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-CABECA-02, PT-ETYMON-CABECA-03, PT-ETYMON-CABECA-CAPUT-02] -->
 
-[PAUSE 3s] Which languages kept the *caput* head-word? (**Portuguese and
-Spanish**.) What did French, Italian, and German substitute? (**Container
-words**.) What is the doubling in *cabeça / capital*? (One **inherited**, one
-**re-borrowed**.) Next: the hand and the disappearing *n*.
+[PAUSE 3s] Which two languages kept *caput* as their everyday head-word?
+(**Portuguese and Spanish**.) What did French, Italian, and German use instead?
+(**Container words**.) Why do *cabeça* and *capital* look different? (One is
+**inherited**; one is **re-borrowed**.) Next: the hand and the disappearing *n*.
