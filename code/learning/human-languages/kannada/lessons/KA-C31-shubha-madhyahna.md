@@ -28,7 +28,7 @@ register: formal-workplace
 variety: standard-colloquial
 ---
 
-# ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna) — the "noon" word doing the afternoon's job
+# ಶುಭ ಮಧ್ಯಾಹ್ನ — good afternoon
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C28-APARAHNA-01, KA-PRAGMATICS-C28-APARAHNA-02, KA-ETYMON-C30-SHUBHA-SANJE-01, KA-PRAGMATICS-C30-SHUBHA-SANJE-02] -->

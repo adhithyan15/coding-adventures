@@ -6,3 +6,5 @@
 - Validate host identity and package hashes before dispatch.
 - Keep credentials, endpoints, terminal access, and connection setup outside argv parsing.
 - Add deterministic pretty-JSON result rendering.
+- Add a typed local `install-daemon` action without introducing filesystem or
+  process authority into the command parser.

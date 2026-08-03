@@ -156,6 +156,18 @@ repository-owned model-facing tool contract and built-in tool catalog.
 **Used by:** Future agent packages (email reader, email responder, calendar, finance,
 health, browser agents), CLI interface, mobile clients
 
+### Level 1 `SKILL.md` contract
+
+A Level 1 agent is a CommonMark document with one H1 title, a descriptive first
+paragraph, and a `## Capabilities needed` list. Each capability is written as
+`category:action:target`, optionally followed by ` | justification`; `- none`
+declares an explicit empty profile. The title and paragraph provide zero-config
+identity defaults. Optional `---` frontmatter may override `agent`, `description`,
+`privilege_tier`, `reads`, `writes`, and `restart_policy`; unknown or duplicate
+keys fail closed. The parser emits the schema-v1 `agent_manifest.json` shape and
+sorted, deduplicated Deno permission arguments. Time and standard-stream
+capabilities remain manifest declarations but do not widen Deno OS permissions.
+
 ---
 
 ## Key Concepts
@@ -1985,6 +1997,25 @@ $ chief-of-staff doctor
   ✗ Email Reader host: Deno process crashed 2m ago (host restarting...)
 ```
 
+The installation boundary is split deliberately. The pure
+`chief-of-staff-daemon-service-files` package validates explicit absolute daemon
+and configuration paths and renders deterministic, owner-only definitions for
+the three user-scoped supervisors. A later `install-daemon` CLI owns directory
+creation, atomic writes, and shell-free native registration. The rendered
+definitions use `RunAtLoad` plus unsuccessful-exit `KeepAlive` on launchd,
+`Type=simple` plus `Restart=on-failure` under systemd, and a least-privilege,
+single-instance logon task with bounded failure restarts on Windows.
+`chief-of-staff-daemon-installer` is the corresponding local mutation boundary:
+it publishes an absent definition atomically, permits only byte-identical
+registration retries, preserves conflicting files, and invokes an explicit
+absolute native supervisor executable through tokenized arguments without a
+shell. Installation plans are reviewable before mutation and cannot be applied
+on a different operating system.
+`chief-of-staff-cli` is the concrete operator composition root. Its
+`install-daemon` action resolves the sibling daemon and default configuration,
+then invokes that installer; authenticated lifecycle commands load the local
+credential outside argv and connect only to the configured loopback API.
+
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 
 TOML is used because the repo already has a TOML lexer and parser (spec F03).
@@ -2033,6 +2064,20 @@ handles prevent replacement during validation, reparse points are rejected, and
 creation supplies a protected DACL with exactly one allow ACE for the current token
 user. Existing Windows credentials must retain that owner and protected one-ACE DACL;
 inherited directory permissions are not sufficient.
+
+The concrete `chief-of-staff-daemon` executable is the composition root for these
+contracts. With no arguments it resolves `~/.chief-of-staff/config.toml` from the
+platform user-home environment; one explicit absolute config path is also accepted.
+The config file is bounded to 256 KiB, must remain a regular non-link file throughout
+loading, and is parsed by the closed schema above. Startup then loads the package
+keyring and local credential, initializes the filesystem service registry, constructs
+the verified shell-free host supervisor, binds the authenticated WebSocket API to the
+validated loopback address, reconciles once, and schedules further reconciliation at
+`health_check_interval`. Three missed intervals are tolerated before a heartbeat is
+stale. Channel topology mutation remains fail-closed until the Trust Checker exists.
+Unix `SIGINT`/`SIGTERM` and Windows console termination events cooperatively stop the
+listener; teardown releases the control plane and reaps every child owned by that
+daemon instance.
 
 **Host restart policies:**
 

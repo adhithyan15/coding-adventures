@@ -293,8 +293,9 @@ func TestParseRubyDeps(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"lib-foo/lib_foo.gemspec": `Gem::Specification.new do |spec|
   spec.name = "coding_adventures_lib_foo"
-  spec.add_dependency "coding_adventures_lib_bar"
-  spec.add_dependency "coding_adventures_lib_baz"
+  spec.add_dependency 'coding_adventures_lib_bar'
+  spec.add_runtime_dependency("coding_adventures_lib_baz")
+  spec.add_development_dependency "coding_adventures_lib_dev"
 end
 `,
 	})
@@ -303,6 +304,7 @@ end
 		{Name: "ruby/lib-foo", Path: filepath.Join(root, "lib-foo"), Language: "ruby"},
 		{Name: "ruby/lib_bar", Path: filepath.Join(root, "lib_bar"), Language: "ruby"},
 		{Name: "ruby/lib_baz", Path: filepath.Join(root, "lib_baz"), Language: "ruby"},
+		{Name: "ruby/lib_dev", Path: filepath.Join(root, "lib_dev"), Language: "ruby"},
 	}
 
 	known := BuildKnownNames(packages)
@@ -310,6 +312,22 @@ end
 
 	if len(deps) != 2 {
 		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestRubyResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-ruby-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
 	}
 }
 
@@ -791,12 +809,21 @@ func TestBuildKnownNamesPython(t *testing.T) {
 }
 
 func TestBuildKnownNamesRuby(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"compiler-ir/coding_adventures_compiler_ir.gemspec": `Gem::Specification.new do |spec|
+  spec.name = "coding_adventures_compiler_ir"
+end
+`,
+	})
 	packages := []discovery.Package{
-		{Name: "ruby/logic_gates", Path: "/repo/packages/ruby/logic_gates", Language: "ruby"},
+		{Name: "ruby/compiler-ir", Path: filepath.Join(root, "compiler-ir"), Language: "ruby"},
 	}
 	known := BuildKnownNames(packages)
-	if known["coding_adventures_logic_gates"] != "ruby/logic_gates" {
-		t.Fatalf("expected ruby/logic_gates, got %s", known["coding_adventures_logic_gates"])
+	if known["coding_adventures_compiler-ir"] != "ruby/compiler-ir" {
+		t.Fatalf("expected derived ruby/compiler-ir alias, got %s", known["coding_adventures_compiler-ir"])
+	}
+	if known["coding_adventures_compiler_ir"] != "ruby/compiler-ir" {
+		t.Fatalf("expected declared ruby/compiler-ir alias, got %s", known["coding_adventures_compiler_ir"])
 	}
 }
 
@@ -978,12 +1005,26 @@ func TestParseRustDeps(t *testing.T) {
 name = "arithmetic"
 version = "0.1.0"
 edition = "2021"
+description = "Mentions gamma without depending on it"
+
+[features]
+gamma = ["gamma"]
 
 [dependencies]
-logic-gates = { path = "../logic-gates" }
+logic_alias = { package = "logic-gates", path = "../logic-gates" }
+gamma = { version = "0.1.0", features = ["path"] }
+serde = "1"
+
+[dev-dependencies]
+gamma = { path = "../gamma" }
 `,
 		"logic-gates/Cargo.toml": `[package]
 name = "logic-gates"
+version = "0.1.0"
+edition = "2021"
+`,
+		"gamma/Cargo.toml": `[package]
+name = "gamma"
 version = "0.1.0"
 edition = "2021"
 `,
@@ -992,6 +1033,7 @@ edition = "2021"
 	packages := []discovery.Package{
 		{Name: "rust/arithmetic", Path: filepath.Join(root, "arithmetic"), Language: "rust"},
 		{Name: "rust/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "rust"},
+		{Name: "rust/gamma", Path: filepath.Join(root, "gamma"), Language: "rust"},
 	}
 
 	known := BuildKnownNames(packages)

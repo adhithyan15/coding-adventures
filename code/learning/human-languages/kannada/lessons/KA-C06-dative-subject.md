@@ -34,8 +34,9 @@ variety: standard-colloquial
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C06-DATIVE-STACKING-01] -->
 
-[PAUSE 2s] Chapter 5 gave you **ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ** — "**I** speak Kannada."
-Now say "I **know** Kannada." Kannada will not let you use *nānu*.
+[PAUSE 2s] Chapter 5 gave you **ನಾನು ಕನ್ನಡ** — "**I** speak Kannada" — with the
+verb **ಮಾತನಾಡುತ್ತೇನೆ**. Now say "I **know** Kannada." Kannada will not let you
+use *nānu*.
 
 ## You'll want to know: The sentence
 <!-- hl-knowledge: introduces=[KA-LEX-C06-DATIVE-SUBJECT-01]; assesses=[] -->

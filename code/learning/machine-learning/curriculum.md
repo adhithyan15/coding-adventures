@@ -127,6 +127,21 @@ registered commands distinct from evidence that an external process ran. The
 next cross-language tranche can therefore define a stable Rust C ABI without
 confusing a native reference baseline with a core binding.
 
+NN35 defines that stable boundary. One allocation-free C function accepts
+caller-owned binary64 buffers, exposes both weighted contributions and the
+prediction, and returns a closed status without partial output writes. A
+versioned header, language-neutral ABI catalog, direct Rust tests, and a Python
+`ctypes` call all pin the same `0x00010000` contract. Native NN34 lanes remain
+the comparison baseline; the next tranche can add binding-backed lanes and
+track which language concepts use native code or the Rust core.
+
+NN36 closes that comparison with an executable ownership inventory. Go, Ruby,
+and Rust remain three native lanes; Python `ctypes` is one Rust-core binding.
+The language-neutral catalog preserves the 1.35 paper oracle, records who owns
+each calculation, and reruns both underlying gates before counting `3 + 1 = 4`
+verified lanes. Future coverage grows only when a real native implementation or
+Rust-core binding earns the same fixture result.
+
 ## Corpus Rule
 
 Every new curriculum unit should contribute all of the following:

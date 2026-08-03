@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C16-kollavarsham-maasangal
+spine_node: SPINE-TIME-OF-DAY
+sequence: 440
 chapter: 16
 type: word
 headword: ചിങ്ങം കന്നി തുലാം വൃശ്ചികം ധനു മകരം കുംഭം മീനം മേടം ഇടവം മിഥുനം കർക്കടകം
@@ -9,29 +12,44 @@ prerequisites: [ML-C15-vellam-ari]
 sounds: [malayalam-anusvara, malayalam-chillu-rr]
 roots: [malayalam-solar-calendar-zodiac, kollam-era]
 etymology_hook: "Malayalam's Kollam Era calendar is ALSO solar, like Tamil's — but its months are named for the ZODIAC SIGN the sun occupies (Chingam = Leo, Kanni = Virgo...), not nakshatras — a genuinely different naming logic from its closest cousin"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]
+practises:
+  knowledge: [ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C15-vellam-ari]
 ---
 
 # ചിങ്ങം to കർക്കടകം — Kerala's own solar calendar, named by the zodiac
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam, like Tamil, has its **own** solar calendar — but even
 here, the two closest cousins name their months by two **different**
 logics.
 
-## The twelve Malayalam months
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01]; assesses=[] -->
 
 **ചിങ്ങം, കന്നി, തുലാം, വൃശ്ചികം, ധനു, മകരം, കുംഭം, മീനം, മേടം, ഇടവം,
-മിഥുനം, കർക്കടകം** (*Chiṅṅam, Kanni, Tulām, Vr̥ścikam, Dhanu, Makaram,
+മിഥുനം, കർക്കടകം** (*Chiṅṅam, Kanni, Tulām, Vṛścikam, Dhanu, Makaram,
 Kumbham, Mīnam, Mēḍam, Iḍavam, Mithunam, Karkiḍakam*).
 
 This is the **Kollam Era** calendar (also called the Malayalam calendar),
 Kerala's own solar civil calendar — genuinely separate from the Gregorian,
 the pan-Indian Hindu lunisolar calendar, **and** Tamil's solar calendar.
 
-## Be honest: same solar structure, different naming logic
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02]; assesses=[] -->
 
 Both Tamil's and Malayalam's calendars are **solar**, and both are
 independent of the Hindu lunisolar system — but they name their months
@@ -48,15 +66,17 @@ start of the **Onam** festival season — Kerala's own solar calendar,
 running its own independent year.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: the twelve — "Chiṅṅam, Kanni, Tulām, Vr̥ścikam, Dhanu, Makaram,
+- [YOU SAY: the twelve — "Chiṅṅam, Kanni, Tulām, Vṛścikam, Dhanu, Makaram,
   Kumbham, Mīnam, Mēḍam, Iḍavam, Mithunam, Karkiḍakam"]
 - [YOU SAY: "Chiṅṅam = Leo" — a zodiac sign, not a nakshatra]
 - [YOU SAY: the contrast — Tamil uses nakshatras, Malayalam uses zodiac
   signs]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-01, ML-CONCEPT-C16-KOLLAVARSHAM-MAASANGAL-02] -->
 
 [PAUSE 3s] Is Malayalam's calendar solar or lunisolar? (**Solar** — like
 Tamil's, and separate from the Hindu lunisolar system.) How does it differ

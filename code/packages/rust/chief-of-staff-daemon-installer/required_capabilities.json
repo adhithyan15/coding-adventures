@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-installer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "explicit daemon, configuration, user service directories, and existing definition paths",
+      "justification": "Validates regular input files, rejects linked service paths, and permits only byte-identical retries."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "platform user service directory and definition path",
+      "justification": "Creates missing private service directories and atomically claims an absent native definition name."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "unique sibling service-definition file",
+      "justification": "Writes and synchronizes the complete rendered definition before atomic publication."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "explicit absolute launchctl, systemctl, or schtasks executable",
+      "justification": "Registers the published definition directly with the current user's native supervisor without a shell."
+    }
+  ],
+  "justification": "Local install-daemon mutation boundary; all paths are explicit and registration commands are typed argument vectors."
+}

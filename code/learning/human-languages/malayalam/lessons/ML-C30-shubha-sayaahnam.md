@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C30-shubha-sayaahnam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 620
 chapter: 30
 type: phrase
 headword: ശുഭ സായാഹ്നം
@@ -9,19 +12,33 @@ prerequisites: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-hna]
 roots: [sanskrit-shubha-beautiful, sanskrit-saya-end]
 etymology_hook: "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ, 'good evening') is confirmed real by a directly-fetched source (preply.com), used 'from late afternoon until sunset' — built on ശുഭ (ML-C25, already verified PIE *ḱewbʰ- root, shared with Hindi/Kannada/Telugu) plus സായാഹ്നം (sāyāhnaṁ, 'evening, eventide'); be honest about a genuine surprise: this is NOT built on ML-C27's native വൈകുന്നേരം at all — സായാഹ്നം is a SEPARATE word, a Sanskrit tatsama that Wiktionary's own part-of-speech label calls 'poetic' (a real, citable register signal, not an unverifiable blog claim, that this greeting likely skews formal/literary); a Sanskrit dictionary page confirms സായാഹ്നം is a karmadhāraya compound of साय ('end') + अह्न ('day'), and Wiktionary's own separate साय entry directly confirms साय traces to PIE *seh₁- ('long, lasting'), explicitly listing सायम् (sāyam, TE-C27's own root), Latin sērus, and Gothic seiþus as cognates — meaning സായാഹ്നം's root and Telugu's TE-C27 సాయంత్రం (built on sāyam) share a genuinely, properly-verified common PIE ancestor, not just a plausible guess; a claim that ordinary Malayalis rarely say this phrase, favoring നമസ്കാരം instead, could NOT be independently verified (the pages making that claim returned 403 errors) — so it is deliberately NOT asserted here, only the Wiktionary 'poetic' register label, which IS independently verifiable"
-est_minutes: 4
+duration:
+  max_seconds: 293
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01, ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02]
+practises:
+  knowledge: [ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01, ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal
+variety: standard-colloquial
 reviews_of: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 ---
 
 # ശുഭ സായാഹ്നം (śubha sāyāhnaṁ) — "good evening," a different evening-word than expected
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You might expect this greeting to pair śubha with the
 evening-word you already know. It doesn't — Malayalam reaches for a
 completely different word instead, one with a poetic edge.
 
-## ശുഭ സായാഹ്നം — a SEPARATE evening word, not vaikunnēraṁ
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01]; assesses=[] -->
 
 **ശുഭ സായാഹ്നം** (**śubha sāyāhnaṁ**) — "**good evening**" —
 is confirmed real by a directly-fetched source, used "**from late
@@ -36,7 +53,8 @@ unverifiable blog claim) that this particular greeting likely leans
 formal or literary, even though the phrase itself is confirmed correct
 and genuinely used.
 
-## A striking, properly-confirmed cross-language echo
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02]; assesses=[] -->
 
 **സായാഹ്നം** is, per a Sanskrit dictionary, a compound of **साय**
 ("**end**") plus **अह्न** ("**day**") — the same "-ahna" day-part
@@ -52,6 +70,7 @@ plausible guess, but a confirmed cognate, reached by chaining through
 two Wiktionary pages rather than stopping at the first.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01, ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubha sāyāhnaṁ" — "good evening," confirmed real, used
@@ -62,6 +81,7 @@ two Wiktionary pages rather than stopping at the first.
   TE-C27's PIE *seh₁-/Latin sērus connection]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-01, ML-CONCEPT-C30-SHUBHA-SAYAAHNAM-02] -->
 
 [PAUSE 3s] Is ശുഭ സായാഹ്നം built on വൈകുന്നേരം, ML-C27's
 native evening word? (**No** — സായാഹ്നം is a completely separate

@@ -8,23 +8,136 @@ use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use adj_lang::ast::Term as AstTerm;
+use adj_lang::ast::{ExprAst, FormulaDef, Term as AstTerm};
 use adj_lang::{
-    compile_with_imports, formula_provenance, program_source_map, CompileWithImportsError,
-    ImportLimits, ImportProvider, LowerError, ProgramSourceMap, SourceSpan,
+    compile_with_imports, formula_provenance, program_source_map, replay_formula_source,
+    CompileWithImportsError, FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome,
+    FormulaGuardTrace, ImportLimits, ImportProvider, LowerError, ProgramSourceMap, SourceSpan,
 };
 use coding_adventures_sha256::sha256_hex;
 use logic_engine::compute::ExactRational;
 use logic_engine::{
-    verify_derived, ComputationFailure, ComputationStatus, ComputeError, ComputeExpr, ContentHash,
-    DerivationNode, FactId, KnowledgeBase, Provenance, QuoteMiss, QuoteStatus, RoundSpec,
-    RoundingMode, SnapshotStore, TrustTier, UnverifiedReason,
+    verify_derived, verify_quote, ComputationFailure, ComputationStatus, ComputeError, ComputeExpr,
+    ContentHash, DerivationNode, FactId, KnowledgeBase, Provenance, QuoteMiss, QuoteStatus,
+    RoundSpec, RoundingMode, SnapshotStore, TrustTier, UnverifiedReason,
 };
 use serde::Serialize;
+use serde_json::Value;
 
 use crate::FsProvider;
 
 const MAX_BYTES: u64 = 64 * 1024 * 1024;
+
+fn canonical_json(value: Value) -> Value {
+    match value {
+        Value::Array(items) => Value::Array(items.into_iter().map(canonical_json).collect()),
+        Value::Object(items) => {
+            let sorted: BTreeMap<_, _> = items
+                .into_iter()
+                .map(|(key, value)| (key, canonical_json(value)))
+                .collect();
+            Value::Object(sorted.into_iter().collect())
+        }
+        scalar => scalar,
+    }
+}
+
+fn write_canonical_json(mut writer: impl Write, value: &Value) -> Result<(), std::io::Error> {
+    let mut rendered = Vec::new();
+    serde_json::to_writer_pretty(&mut rendered, value).map_err(std::io::Error::other)?;
+    let rendered = String::from_utf8(rendered).expect("serde_json always emits UTF-8");
+    for scalar in rendered.chars() {
+        if scalar.is_ascii() {
+            writer.write_all(&[scalar as u8])?;
+        } else {
+            let codepoint = scalar as u32;
+            if codepoint <= 0xffff {
+                write!(writer, "\\u{codepoint:04x}")?;
+            } else {
+                let supplementary = codepoint - 0x1_0000;
+                let high = 0xd800 + (supplementary >> 10);
+                let low = 0xdc00 + (supplementary & 0x3ff);
+                write!(writer, "\\u{high:04x}\\u{low:04x}")?;
+            }
+        }
+    }
+    writer.write_all(b"\n")
+}
+
+#[cfg(test)]
+mod canonical_json_tests {
+    use super::{canonical_json, validate_guard_prefix, write_canonical_json};
+    use adj_lang::{FormulaBodyTrace, FormulaGuardOutcome};
+
+    #[test]
+    fn writer_escapes_unicode_like_the_cas_canonical_encoder() {
+        let value = canonical_json(serde_json::json!({
+            "bmp": "\u{2260}",
+            "supplementary": "\u{1f600}",
+        }));
+        let mut output = Vec::new();
+        write_canonical_json(&mut output, &value).expect("write canonical JSON");
+        assert_eq!(
+            String::from_utf8(output).expect("canonical JSON is UTF-8"),
+            "{\n  \"bmp\": \"\\u2260\",\n  \"supplementary\": \"\\ud83d\\ude00\"\n}\n"
+        );
+    }
+
+    #[test]
+    fn guard_prefix_requires_every_pass_or_one_terminal_failure() {
+        let expected = [0, 0, 1];
+        assert!(validate_guard_prefix(
+            "f",
+            &[FormulaGuardOutcome::Passed],
+            &expected,
+            2,
+            FormulaBodyTrace::Evaluated,
+        )
+        .is_err());
+        assert!(validate_guard_prefix(
+            "f",
+            &[FormulaGuardOutcome::Passed, FormulaGuardOutcome::Failed],
+            &expected,
+            2,
+            FormulaBodyTrace::Evaluated,
+        )
+        .is_err());
+        assert!(validate_guard_prefix(
+            "f",
+            &[FormulaGuardOutcome::Failed, FormulaGuardOutcome::Passed,],
+            &expected,
+            2,
+            FormulaBodyTrace::WithheldPreconditionFailed,
+        )
+        .is_err());
+        assert_eq!(
+            validate_guard_prefix(
+                "f",
+                &[FormulaGuardOutcome::Passed, FormulaGuardOutcome::Failed],
+                &expected,
+                2,
+                FormulaBodyTrace::WithheldPreconditionFailed,
+            )
+            .expect("terminal failure is a complete executed prefix"),
+            (true, 1),
+        );
+        assert_eq!(
+            validate_guard_prefix(
+                "f",
+                &[
+                    FormulaGuardOutcome::Passed,
+                    FormulaGuardOutcome::Passed,
+                    FormulaGuardOutcome::Passed,
+                ],
+                &expected,
+                2,
+                FormulaBodyTrace::Evaluated,
+            )
+            .expect("all guards passed"),
+            (false, 2),
+        );
+    }
+}
 
 #[derive(Debug)]
 enum Failure {
@@ -359,6 +472,82 @@ struct AuditDto {
     schema_version: u8,
 }
 
+#[derive(Serialize)]
+struct ComparedValueDto {
+    exact_rational: RationalDto,
+    f64_bits: String,
+}
+
+#[derive(Serialize)]
+struct ComparisonDto {
+    observed: ComparedValueDto,
+    operator: &'static str,
+    threshold: ComparedValueDto,
+}
+
+#[derive(Serialize)]
+struct GuardPreconditionDto {
+    arguments: Vec<SpanDto>,
+    declaration: SpanDto,
+    index: usize,
+    parameter: Option<String>,
+    predicate: String,
+}
+
+#[derive(Serialize)]
+struct GuardVerificationDto {
+    computation: ComputationStatusDto,
+    formula_quote: FormulaCheckDto,
+    fully_verified: bool,
+    input_quotes: Vec<InputDto>,
+    passed: bool,
+}
+
+#[derive(Serialize)]
+struct GuardDto {
+    comparison: ComparisonDto,
+    formula: FormulaIdentityDto,
+    inputs: Vec<FactIdentityDto>,
+    outcome: &'static str,
+    plan: PlanDto,
+    precondition: GuardPreconditionDto,
+    tree: TreeDto,
+    verification: GuardVerificationDto,
+}
+
+#[derive(Serialize)]
+#[serde(tag = "status", rename_all = "snake_case")]
+enum BodyDto {
+    Evaluated { derivation: Box<DerivationDto> },
+    Withheld { reason: &'static str },
+}
+
+#[derive(Serialize)]
+struct ExecutionDto {
+    export: FormulaIdentityDto,
+    question: QuestionDto,
+    formula_sequence: Vec<FormulaIdentityDto>,
+    guards: Vec<GuardDto>,
+    body: BodyDto,
+}
+
+#[derive(Serialize)]
+struct AuditV2Dto {
+    contract: &'static str,
+    executions: Vec<ExecutionDto>,
+    imports: Vec<ImportDto>,
+    kind: &'static str,
+    root_source_sha256: String,
+    schema_version: u8,
+}
+
+#[derive(Serialize)]
+#[serde(untagged)]
+enum AuditOutput {
+    V1(AuditDto),
+    V2(AuditV2Dto),
+}
+
 struct LoadedSource {
     hash: String,
     map: ProgramSourceMap,
@@ -369,6 +558,7 @@ struct LoadedSource {
 struct ExportRecord {
     identity: FormulaIdentityDto,
     provenance: Provenance,
+    formula: FormulaDef,
 }
 
 struct DirSnapshots {
@@ -907,6 +1097,7 @@ fn build_exports(sources: &BTreeMap<String, LoadedSource>) -> Result<Vec<ExportR
             exports.push(ExportRecord {
                 identity,
                 provenance,
+                formula: mapped.formula.clone(),
             });
         }
     }
@@ -934,6 +1125,703 @@ fn unique_export<'a>(
             provenance.source
         ))),
     }
+}
+
+fn traced_export<'a>(
+    formula: &str,
+    provenance: &Provenance,
+    exports: &'a [ExportRecord],
+) -> Result<&'a ExportRecord, Failure> {
+    let matches: Vec<_> = exports
+        .iter()
+        .filter(|candidate| {
+            candidate.identity.name == formula && candidate.provenance == *provenance
+        })
+        .collect();
+    match matches.as_slice() {
+        [only] => Ok(*only),
+        _ => Err(Failure::Audit(format!(
+            "formula trace {formula} maps to {} parser-backed exports",
+            matches.len()
+        ))),
+    }
+}
+
+fn contains_exact_literal(expr: &ComputeExpr) -> bool {
+    match expr {
+        ComputeExpr::ExactLit(_) => true,
+        ComputeExpr::Bin(_, left, right) => {
+            contains_exact_literal(left) || contains_exact_literal(right)
+        }
+        ComputeExpr::Unary(_, expression)
+        | ComputeExpr::Round {
+            expr: expression, ..
+        }
+        | ComputeExpr::ToScientific {
+            expr: expression, ..
+        }
+        | ComputeExpr::ToPercent {
+            expr: expression, ..
+        }
+        | ComputeExpr::ToCurrency {
+            expr: expression, ..
+        } => contains_exact_literal(expression),
+        ComputeExpr::Ref(_) | ComputeExpr::Lit(_) | ComputeExpr::Agg(_, _) => false,
+    }
+}
+
+fn quote_is_verified(status: &QuoteStatus) -> bool {
+    matches!(status, QuoteStatus::Verified { .. })
+}
+
+#[derive(Clone)]
+struct ExpectedGuard {
+    application_index: usize,
+    formula: FormulaIdentityDto,
+    index: usize,
+    parameter: String,
+    slot: String,
+}
+
+struct SourceExecutionReplay {
+    formula_sequence: Vec<FormulaIdentityDto>,
+    guards: Vec<ExpectedGuard>,
+    halted: bool,
+    outcomes: Vec<FormulaGuardOutcome>,
+}
+
+fn is_runtime_builtin_application(name: &str) -> bool {
+    matches!(
+        name,
+        "round_to" | "round_sig" | "to_scientific" | "to_percent" | "to_currency"
+    )
+}
+
+fn validate_guard_prefix(
+    export: &str,
+    outcomes: &[FormulaGuardOutcome],
+    expected_applications: &[usize],
+    sequence_len: usize,
+    body: FormulaBodyTrace,
+) -> Result<(bool, usize), Failure> {
+    if outcomes.len() > expected_applications.len() {
+        return Err(Failure::Audit(format!(
+            "v2 execution {export} has more guards than source replay"
+        )));
+    }
+    let mut failed_at = None;
+    for (position, outcome) in outcomes.iter().enumerate() {
+        match outcome {
+            FormulaGuardOutcome::Passed if failed_at.is_none() => {}
+            FormulaGuardOutcome::Failed if failed_at.is_none() => failed_at = Some(position),
+            FormulaGuardOutcome::Unresolved => {
+                return Err(Failure::Audit(format!(
+                    "v2 execution {export} contains an unresolved guard"
+                )))
+            }
+            _ => {
+                return Err(Failure::Audit(format!(
+                    "v2 execution {export} contains a guard after short circuit"
+                )))
+            }
+        }
+        if failed_at.is_some() && position + 1 != outcomes.len() {
+            return Err(Failure::Audit(format!(
+                "v2 execution {export} contains a guard after short circuit"
+            )));
+        }
+    }
+    match body {
+        FormulaBodyTrace::Evaluated
+            if failed_at.is_some() || outcomes.len() != expected_applications.len() =>
+        {
+            return Err(Failure::Audit(format!(
+                "v2 execution {export} evaluated a body without the complete guard prefix"
+            )))
+        }
+        FormulaBodyTrace::WithheldPreconditionFailed if failed_at.is_none() => {
+            return Err(Failure::Audit(format!(
+                "v2 execution {export} withheld a body without a failed guard"
+            )))
+        }
+        _ => {}
+    }
+    let sequence_end = failed_at
+        .map(|position| expected_applications[position] + 1)
+        .unwrap_or(sequence_len);
+    Ok((failed_at.is_some(), sequence_end))
+}
+
+fn query_arguments(term: &AstTerm) -> Result<Vec<ExprAst>, Failure> {
+    let AstTerm::Compound { args, .. } = term else {
+        return Err(Failure::Audit(
+            "formula source question is not an application".to_string(),
+        ));
+    };
+    args.iter()
+        .map(|argument| match argument {
+            AstTerm::Atom(name) => Ok(ExprAst::Ref(name.clone())),
+            AstTerm::Num(value) => Ok(ExprAst::ExactLit(value.clone())),
+            _ => Err(Failure::Audit(
+                "formula source question has an unsupported argument".to_string(),
+            )),
+        })
+        .collect()
+}
+
+fn replay_source_expression(
+    expression: &ExprAst,
+    exports: &[ExportRecord],
+    replay: &mut SourceExecutionReplay,
+    active: &mut BTreeSet<String>,
+) -> Result<ExprAst, Failure> {
+    if replay.halted {
+        return Ok(expression.clone());
+    }
+    Ok(match expression {
+        ExprAst::Apply(name, arguments) => {
+            let mut expanded = Vec::with_capacity(arguments.len());
+            for argument in arguments {
+                expanded.push(replay_source_expression(argument, exports, replay, active)?);
+                if replay.halted {
+                    return Ok(expression.clone());
+                }
+            }
+            if !is_runtime_builtin_application(name)
+                && exports
+                    .iter()
+                    .any(|candidate| candidate.identity.name == *name)
+            {
+                replay_source_formula(name, &expanded, exports, replay, active)?
+            } else {
+                ExprAst::Apply(name.clone(), expanded)
+            }
+        }
+        ExprAst::Bin(_, left, right) | ExprAst::Call2(_, left, right) => {
+            let left = replay_source_expression(left, exports, replay, active)?;
+            let right = replay_source_expression(right, exports, replay, active)?;
+            match expression {
+                ExprAst::Bin(operator, _, _) => {
+                    ExprAst::Bin(*operator, Box::new(left), Box::new(right))
+                }
+                ExprAst::Call2(function, _, _) => {
+                    ExprAst::Call2(*function, Box::new(left), Box::new(right))
+                }
+                _ => unreachable!(),
+            }
+        }
+        ExprAst::Abs(operand) => ExprAst::Abs(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Floor(operand) => ExprAst::Floor(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Ceil(operand) => ExprAst::Ceil(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Round(operand) => ExprAst::Round(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Trunc(operand) => ExprAst::Trunc(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Sign(operand) => ExprAst::Sign(Box::new(replay_source_expression(
+            operand, exports, replay, active,
+        )?)),
+        ExprAst::Call(function, operand) => ExprAst::Call(
+            *function,
+            Box::new(replay_source_expression(operand, exports, replay, active)?),
+        ),
+        ExprAst::RoundTo(operand, precision) => ExprAst::RoundTo(
+            Box::new(replay_source_expression(operand, exports, replay, active)?),
+            *precision,
+        ),
+        ExprAst::ToScientific(operand, figures) => ExprAst::ToScientific(
+            Box::new(replay_source_expression(operand, exports, replay, active)?),
+            *figures,
+        ),
+        ExprAst::ToPercent(operand, places) => ExprAst::ToPercent(
+            Box::new(replay_source_expression(operand, exports, replay, active)?),
+            *places,
+        ),
+        ExprAst::ToCurrency(operand, code, places) => ExprAst::ToCurrency(
+            Box::new(replay_source_expression(operand, exports, replay, active)?),
+            code.clone(),
+            *places,
+        ),
+        ExprAst::Ref(_) | ExprAst::Lit(_) | ExprAst::ExactLit(_) | ExprAst::Agg(_, _) => {
+            expression.clone()
+        }
+    })
+}
+
+fn replay_source_formula(
+    name: &str,
+    arguments: &[ExprAst],
+    exports: &[ExportRecord],
+    replay: &mut SourceExecutionReplay,
+    active: &mut BTreeSet<String>,
+) -> Result<ExprAst, Failure> {
+    if !active.insert(name.to_string()) {
+        return Err(Failure::Audit(format!(
+            "formula source replay encountered recursion at {name}"
+        )));
+    }
+    let matches: Vec<_> = exports
+        .iter()
+        .filter(|candidate| candidate.identity.name == name)
+        .collect();
+    let export = match matches.as_slice() {
+        [only] => *only,
+        _ => {
+            return Err(Failure::Audit(format!(
+                "formula source replay {name} maps to {} exports",
+                matches.len()
+            )))
+        }
+    };
+    let source = replay_formula_source(&export.formula, arguments).map_err(|error| {
+        Failure::Audit(format!(
+            "formula source replay failed for {name}: {error:?}"
+        ))
+    })?;
+    let application_index = replay.formula_sequence.len();
+    replay.formula_sequence.push(export.identity.clone());
+    for (index, ((predicate, bound), declared)) in source
+        .preconditions
+        .iter()
+        .zip(&export.formula.preconditions)
+        .enumerate()
+    {
+        let ([ExprAst::Ref(slot)], [ExprAst::Ref(parameter)]) =
+            (bound.as_slice(), declared.arguments.as_slice())
+        else {
+            return Err(Failure::Audit(format!(
+                "formula source guard {name}[{index}] is not a direct bound reference"
+            )));
+        };
+        if predicate != &declared.predicate {
+            return Err(Failure::Audit(format!(
+                "formula source guard {name}[{index}] predicate drifted"
+            )));
+        }
+        replay.guards.push(ExpectedGuard {
+            application_index,
+            formula: export.identity.clone(),
+            index,
+            parameter: parameter.clone(),
+            slot: slot.clone(),
+        });
+        if replay.outcomes.get(replay.guards.len() - 1) == Some(&FormulaGuardOutcome::Failed) {
+            replay.halted = true;
+            break;
+        }
+    }
+    let body = if replay.halted {
+        source.body
+    } else {
+        replay_source_expression(&source.body, exports, replay, active)?
+    };
+    active.remove(name);
+    Ok(body)
+}
+
+fn replay_source_execution(
+    export: &ExportRecord,
+    question: &AstTerm,
+    exports: &[ExportRecord],
+    outcomes: &[FormulaGuardOutcome],
+) -> Result<SourceExecutionReplay, Failure> {
+    let mut replay = SourceExecutionReplay {
+        formula_sequence: Vec::new(),
+        guards: Vec::new(),
+        halted: false,
+        outcomes: outcomes.to_vec(),
+    };
+    replay_source_formula(
+        &export.identity.name,
+        &query_arguments(question)?,
+        exports,
+        &mut replay,
+        &mut BTreeSet::new(),
+    )?;
+    Ok(replay)
+}
+
+fn guard_dto(
+    guard: &FormulaGuardTrace,
+    expected: &ExpectedGuard,
+    exports: &[ExportRecord],
+    kb: &KnowledgeBase,
+    snapshots: &dyn SnapshotStore,
+) -> Result<GuardDto, Failure> {
+    let outcome = match guard.outcome {
+        FormulaGuardOutcome::Passed => "passed",
+        FormulaGuardOutcome::Failed => "failed",
+        FormulaGuardOutcome::Unresolved => {
+            return Err(Failure::Audit(format!(
+                "guarded formula audit cannot witness unresolved precondition {}[{}]",
+                guard.formula, guard.precondition_index
+            )))
+        }
+    };
+    if guard.predicate != "nonzero" || guard.precision_loss {
+        return Err(Failure::Audit(format!(
+            "guarded formula audit cannot witness predicate {} with precision_loss={}",
+            guard.predicate, guard.precision_loss
+        )));
+    }
+    let export = traced_export(&guard.formula, &guard.provenance, exports)?;
+    let identity = export
+        .identity
+        .preconditions
+        .get(guard.precondition_index)
+        .ok_or_else(|| {
+            Failure::Audit(format!(
+                "guard trace {}[{}] is outside parser-backed preconditions",
+                guard.formula, guard.precondition_index
+            ))
+        })?;
+    if identity.predicate != guard.predicate {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] predicate disagrees with source identity",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    if export.identity != expected.formula
+        || guard.precondition_index != expected.index
+        || guard.parameter.as_deref() != Some(expected.parameter.as_str())
+    {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] disagrees with source replay order or binding",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    let (Some(value), Some(exact), Some(plan), Some(recorded_tree), Some(scope)) = (
+        guard.value,
+        guard.exact.as_ref(),
+        guard.plan.as_ref(),
+        guard.tree.as_ref(),
+        guard.scope,
+    ) else {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] lacks a resolved exact computation",
+            guard.formula, guard.precondition_index
+        )));
+    };
+    let ComputeExpr::Ref(slot) = plan else {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] is not a direct observed operand",
+            guard.formula, guard.precondition_index
+        )));
+    };
+    if slot != &expected.slot {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] slot {slot} disagrees with source-bound slot {}",
+            guard.formula, guard.precondition_index, expected.slot
+        )));
+    }
+    let DerivationNode::Leaf {
+        slot: tree_slot,
+        value: tree_value,
+        fact_id,
+    } = recorded_tree
+    else {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] is derived; backlog 9c is required",
+            guard.formula, guard.precondition_index
+        )));
+    };
+    if tree_slot != slot
+        || tree_value.to_bits() != value.to_bits()
+        || guard.fact_ids.as_slice() != [*fact_id]
+        || fact_id.0 >= scope.fact_limit
+        || scope.derived_limit > kb.derived_bindings().len()
+    {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] plan/tree/scope identities disagree",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    let observed = kb
+        .observed_numerics_all(slot)
+        .into_iter()
+        .rfind(|(_, id)| id.0 < scope.fact_limit)
+        .ok_or_else(|| {
+            Failure::Audit(format!(
+                "guard trace {}[{}] has no direct observation in scope",
+                guard.formula, guard.precondition_index
+            ))
+        })?;
+    if observed.1 != *fact_id
+        || observed.0.value.to_bits() != value.to_bits()
+        || observed.0.exact.as_ref() != Some(exact)
+        || observed.0.precision_loss
+    {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] disagrees with its direct observation",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    let is_zero = exact.numerator().is_zero();
+    if (guard.outcome == FormulaGuardOutcome::Passed) == is_zero {
+        return Err(Failure::Audit(format!(
+            "guard trace {}[{}] outcome disagrees with exact comparison",
+            guard.formula, guard.precondition_index
+        )));
+    }
+
+    let input_identity = fact_identity(kb, *fact_id)?;
+    let fact = kb.fact(*fact_id).ok_or_else(|| {
+        Failure::Audit(format!("guard trace references absent fact {}", fact_id.0))
+    })?;
+    let input_quote = verify_quote(&fact.provenance, snapshots);
+    if !status_matches_quote_identity(&fact.provenance, &input_quote) {
+        return Err(Failure::Audit(format!(
+            "guard input quote identity differs for {}[{}]",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    let formula_quote = verify_quote(&guard.provenance, snapshots);
+    if !status_matches_quote_identity(&guard.provenance, &formula_quote) {
+        return Err(Failure::Audit(format!(
+            "guard formula quote identity differs for {}[{}]",
+            guard.formula, guard.precondition_index
+        )));
+    }
+    let fully_verified = quote_is_verified(&input_quote) && quote_is_verified(&formula_quote);
+    Ok(GuardDto {
+        comparison: ComparisonDto {
+            observed: ComparedValueDto {
+                exact_rational: rational(exact),
+                f64_bits: bits(value),
+            },
+            operator: "not_equal",
+            threshold: ComparedValueDto {
+                exact_rational: RationalDto {
+                    denominator: "1".to_string(),
+                    numerator: "0".to_string(),
+                },
+                f64_bits: bits(0.0),
+            },
+        },
+        formula: export.identity.clone(),
+        inputs: vec![input_identity.clone()],
+        outcome,
+        plan: PlanDto {
+            expression: plan_expr(plan),
+            is_query_answer: false,
+            scope: ScopeDto {
+                derived_limit: scope.derived_limit,
+                fact_limit: scope.fact_limit,
+            },
+        },
+        precondition: GuardPreconditionDto {
+            arguments: identity.arguments.clone(),
+            declaration: identity.declaration.clone(),
+            index: guard.precondition_index,
+            parameter: guard.parameter.clone(),
+            predicate: identity.predicate.clone(),
+        },
+        tree: tree(recorded_tree, kb)?,
+        verification: GuardVerificationDto {
+            computation: computation_status(&ComputationStatus::ReChecked),
+            formula_quote: FormulaCheckDto {
+                identity: export.identity.clone(),
+                provenance: provenance_dto(&guard.provenance),
+                quote: quote_status(&formula_quote),
+            },
+            fully_verified,
+            input_quotes: vec![InputDto {
+                identity: input_identity,
+                quote: quote_status(&input_quote),
+            }],
+            passed: !matches!(input_quote, QuoteStatus::QuoteMissing(_))
+                && !matches!(formula_quote, QuoteStatus::QuoteMissing(_)),
+        },
+    })
+}
+
+fn build_v2_audit(
+    root: &LoadedSource,
+    exports: &[ExportRecord],
+    imports: Vec<ImportDto>,
+    derivations: Vec<DerivationDto>,
+    traces: &[FormulaExecutionTrace],
+    kb: &KnowledgeBase,
+    snapshots: &dyn SnapshotStore,
+) -> Result<AuditOutput, Failure> {
+    let mut bodies = BTreeMap::new();
+    for derivation in derivations {
+        let name = derivation.export.name.clone();
+        if bodies.insert(name.clone(), derivation).is_some() {
+            return Err(Failure::Audit(format!(
+                "v2 audit repeats evaluated body for {name}"
+            )));
+        }
+    }
+    let mut used_questions = BTreeSet::new();
+    let mut executions = Vec::new();
+    for trace in traces {
+        let export_matches: Vec<_> = exports
+            .iter()
+            .filter(|candidate| candidate.identity.name == trace.export)
+            .collect();
+        let export = match export_matches.as_slice() {
+            [only] => *only,
+            _ => {
+                return Err(Failure::Audit(format!(
+                    "v2 execution {} maps to {} exports",
+                    trace.export,
+                    export_matches.len()
+                )))
+            }
+        };
+        let question_matches: Vec<_> = root
+            .map
+            .queries
+            .iter()
+            .filter(|question| {
+                formula_name_arity(&question.conclusion).is_some_and(|(name, arity)| {
+                    name == trace.export && arity == export.identity.parameters.len()
+                })
+            })
+            .collect();
+        let question = match question_matches.as_slice() {
+            [only] => *only,
+            _ => {
+                return Err(Failure::Audit(format!(
+                    "v2 execution {} maps to {} source questions",
+                    trace.export,
+                    question_matches.len()
+                )))
+            }
+        };
+        if !used_questions.insert(question.declaration_span.start) {
+            return Err(Failure::Audit(format!(
+                "v2 source question for {} was consumed twice",
+                trace.export
+            )));
+        }
+        let outcomes: Vec<_> = trace.guards.iter().map(|guard| guard.outcome).collect();
+        let source_replay =
+            replay_source_execution(export, &question.conclusion, exports, &outcomes)?;
+        let formula_sequence: Vec<_> = trace
+            .formula_sequence
+            .iter()
+            .map(|application| {
+                traced_export(&application.formula, &application.provenance, exports)
+                    .map(|item| item.identity.clone())
+            })
+            .collect::<Result<_, _>>()?;
+        if formula_sequence.first() != Some(&export.identity) {
+            return Err(Failure::Audit(format!(
+                "v2 execution {} does not begin with its export",
+                trace.export
+            )));
+        }
+        let expected_guard_applications: Vec<_> = source_replay
+            .guards
+            .iter()
+            .map(|guard| guard.application_index)
+            .collect();
+        let (saw_failure, expected_sequence_end) = validate_guard_prefix(
+            &trace.export,
+            &outcomes,
+            &expected_guard_applications,
+            source_replay.formula_sequence.len(),
+            trace.body,
+        )?;
+        let guards = trace
+            .guards
+            .iter()
+            .zip(&source_replay.guards)
+            .map(|(guard, expected)| guard_dto(guard, expected, exports, kb, snapshots))
+            .collect::<Result<Vec<_>, _>>()?;
+        if formula_sequence != source_replay.formula_sequence[..expected_sequence_end] {
+            return Err(Failure::Audit(format!(
+                "v2 execution {} formula sequence disagrees with source replay: runtime={:?} source={:?}",
+                trace.export,
+                formula_sequence.iter().map(|item| item.name.as_str()).collect::<Vec<_>>(),
+                source_replay.formula_sequence[..expected_sequence_end]
+                    .iter()
+                    .map(|item| item.name.as_str())
+                    .collect::<Vec<_>>()
+            )));
+        }
+        let body = match trace.body {
+            FormulaBodyTrace::Evaluated => {
+                if saw_failure
+                    || trace.guards.len() != source_replay.guards.len()
+                    || trace
+                        .guards
+                        .iter()
+                        .any(|guard| guard.outcome != FormulaGuardOutcome::Passed)
+                {
+                    return Err(Failure::Audit(format!(
+                        "v2 execution {} evaluated a body without all guards passing",
+                        trace.export
+                    )));
+                }
+                let derivation = bodies.remove(&trace.export).ok_or_else(|| {
+                    Failure::Audit(format!(
+                        "v2 execution {} has no evaluated body artifact",
+                        trace.export
+                    ))
+                })?;
+                if derivation.export != export.identity
+                    || derivation.formula_sequence != formula_sequence
+                {
+                    return Err(Failure::Audit(format!(
+                        "v2 execution {} body identity disagrees with its trace",
+                        trace.export
+                    )));
+                }
+                BodyDto::Evaluated {
+                    derivation: Box::new(derivation),
+                }
+            }
+            FormulaBodyTrace::WithheldPreconditionFailed => {
+                if !saw_failure
+                    || trace.guards.is_empty()
+                    || trace.guards.len() > source_replay.guards.len()
+                    || bodies.contains_key(&trace.export)
+                {
+                    return Err(Failure::Audit(format!(
+                        "v2 execution {} withheld body disagrees with guard outcome",
+                        trace.export
+                    )));
+                }
+                BodyDto::Withheld {
+                    reason: "precondition_failed",
+                }
+            }
+        };
+        executions.push(ExecutionDto {
+            export: export.identity.clone(),
+            question: QuestionDto {
+                declaration: span(root.source.as_bytes(), question.declaration_span),
+                name: trace.export.clone(),
+                source_sha256: root.hash.clone(),
+            },
+            formula_sequence,
+            guards,
+            body,
+        });
+    }
+    if !bodies.is_empty() {
+        return Err(Failure::Audit(
+            "v2 evaluated bodies and runtime executions disagree".to_string(),
+        ));
+    }
+    Ok(AuditOutput::V2(AuditV2Dto {
+        contract: "adj-lang/formula_audit/v2",
+        executions,
+        imports,
+        kind: "formula_execution_audit",
+        root_source_sha256: root.hash.clone(),
+        schema_version: 2,
+    }))
 }
 
 fn build_imports(
@@ -985,7 +1873,7 @@ fn build_audit(
     root_id: &str,
     provider: &RecordingProvider,
     snapshots: &dyn SnapshotStore,
-) -> Result<AuditDto, Failure> {
+) -> Result<AuditOutput, Failure> {
     let lowered =
         compile_with_imports(root_id, provider, ImportLimits::default()).map_err(|error| {
             match error {
@@ -995,28 +1883,18 @@ fn build_audit(
                 other => Failure::Audit(format!("compile failed: {other:?}")),
             }
         })?;
-    if !lowered.formula_abstentions.is_empty() {
-        return Err(Failure::Audit(
-            "formula abstention audit requires a versioned precondition witness contract"
-                .to_string(),
-        ));
-    }
     let sources = build_sources(provider.sources.borrow().clone())?;
     let root = sources
         .get(root_id)
         .ok_or_else(|| Failure::Audit("root source was not recorded".to_string()))?;
     let exports = build_exports(&sources)?;
-    if exports
-        .iter()
-        .any(|export| !export.identity.preconditions.is_empty())
-    {
-        return Err(Failure::Audit(
-            "guarded formula audit requires a versioned precondition witness contract".to_string(),
-        ));
-    }
     let imports = build_imports(&sources, &provider.imports.borrow())?;
 
     let mut derivations = Vec::new();
+    let mut requires_v2 = lowered.formula_executions.iter().any(|execution| {
+        !execution.guards.is_empty()
+            || execution.body == FormulaBodyTrace::WithheldPreconditionFailed
+    });
     let mut used_questions = BTreeSet::new();
     for (index, derived) in lowered.kb.derived_bindings().iter().enumerate() {
         let plan = lowered
@@ -1081,6 +1959,7 @@ fn build_audit(
                 derived.name
             )));
         }
+        requires_v2 |= contains_exact_literal(plan.expr);
 
         let checked = verify_derived(derived, &lowered.kb, snapshots);
         if checked.name != derived.name || checked.is_query_answer != plan.is_query_answer {
@@ -1216,19 +2095,35 @@ fn build_audit(
             },
         });
     }
-    if derivations.is_empty() {
+    if !requires_v2 {
+        if derivations.is_empty() {
+            return Err(Failure::Audit(
+                "program produced no formula query answers".to_string(),
+            ));
+        }
+        return Ok(AuditOutput::V1(AuditDto {
+            contract: "adj-lang/formula_audit/v1",
+            derivations,
+            imports,
+            kind: "formula_execution_audit",
+            root_source_sha256: root.hash.clone(),
+            schema_version: 1,
+        }));
+    }
+    if lowered.formula_executions.is_empty() {
         return Err(Failure::Audit(
-            "program produced no formula query answers".to_string(),
+            "v2 program produced no formula query executions".to_string(),
         ));
     }
-    Ok(AuditDto {
-        contract: "adj-lang/formula_audit/v1",
-        derivations,
+    build_v2_audit(
+        root,
+        &exports,
         imports,
-        kind: "formula_execution_audit",
-        root_source_sha256: root.hash.clone(),
-        schema_version: 1,
-    })
+        derivations,
+        &lowered.formula_executions,
+        &lowered.kb,
+        snapshots,
+    )
 }
 
 fn parse_args() -> Result<(PathBuf, Option<PathBuf>), Failure> {
@@ -1289,14 +2184,13 @@ fn run() -> Result<(), Failure> {
         &empty
     };
     let audit = build_audit(&root_id, &provider, store)?;
-    let canonical = serde_json::to_value(&audit)
-        .map_err(|error| Failure::Audit(format!("cannot construct JSON: {error}")))?;
+    let canonical = canonical_json(
+        serde_json::to_value(&audit)
+            .map_err(|error| Failure::Audit(format!("cannot construct JSON: {error}")))?,
+    );
     let stdout = std::io::stdout();
     let mut writer = stdout.lock();
-    serde_json::to_writer_pretty(&mut writer, &canonical)
-        .map_err(|error| Failure::Usage(format!("cannot write JSON: {error}")))?;
-    writer
-        .write_all(b"\n")
+    write_canonical_json(&mut writer, &canonical)
         .and_then(|()| writer.flush())
         .map_err(|error| Failure::Usage(format!("cannot write JSON: {error}")))?;
     Ok(())

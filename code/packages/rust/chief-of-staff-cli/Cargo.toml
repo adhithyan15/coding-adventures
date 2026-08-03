@@ -1,0 +1,26 @@
+[package]
+name = "chief-of-staff-cli"
+version = "0.1.0"
+edition = "2021"
+description = "Concrete local operator CLI for the D18 Chief daemon"
+license = "MIT"
+
+[lib]
+name = "chief_of_staff_cli"
+path = "src/lib.rs"
+
+[[bin]]
+name = "chief-of-staff"
+path = "src/main.rs"
+
+[dependencies]
+chief-of-staff-cli-core = { path = "../chief-of-staff-cli-core" }
+chief-of-staff-daemon = { path = "../chief-of-staff-daemon" }
+chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+chief-of-staff-daemon-credential = { path = "../chief-of-staff-daemon-credential" }
+chief-of-staff-daemon-installer = { path = "../chief-of-staff-daemon-installer" }
+websocket-runtime = { path = "../websocket-runtime" }
+
+[dev-dependencies]
+transport-platform = { path = "../transport-platform" }
+websocket-core = { path = "../websocket-core" }

@@ -1836,7 +1836,31 @@ impl Lowerer {
             // a `uint64_t` whose top bit is set is a *negative* int64 and a
             // native `>>` would sign-extend it.  Route unsigned `>>` to a
             // distinct `u>>` builtin the backends render as a logical shift.
-            let name = if op == ">>" && !lp.signed { "u>>" } else { op };
+            //
+            // Bug fix — `<<` routes to a DISTINCT `c<<` builtin, not the bare
+            // `"<<"` name: the Ruby frontend (`ruby-to-semantic-ir`) ALSO
+            // emits `BuiltinCall("<<", ...)`, but for Ruby's own polymorphic
+            // `<<` (Array push / String concat / SATURATING Integer shift —
+            // no bignum growth, unlike C's raw two's-complement bit pattern).
+            // Both frontends sharing the bare name `"<<"` meant the C
+            // backend's `_sir_builtin_method_v`-adjacent dispatch tables had
+            // to pick ONE meaning for it — it silently picked Ruby's
+            // saturating semantics for EVERY `<<`, including C-sourced ones,
+            // so `uint64_t x = 1; uint64_t y = x << 63;` (a value whose true
+            // bit pattern needs `INT64_MAX + 1`, unrepresentable without
+            // saturating) got silently clamped to `INT64_MAX` instead of the
+            // correct `0x8000000000000000` bit pattern — caught by
+            // `three_way_conformance`'s "uint64 logical right shift of a
+            // high-bit value" case. `>>`/`u>>` never had this collision
+            // (Ruby doesn't implement `>>` at all), so only `<<` needs the
+            // rename.
+            let name = if op == "<<" {
+                "c<<"
+            } else if !lp.signed {
+                "u>>"
+            } else {
+                op
+            };
             return Ok((convert(builtin(name, vec![le, re]), lp), CType::Int(lp)));
         }
 

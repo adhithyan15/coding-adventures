@@ -5,10 +5,11 @@ D18 Chief daemon. It parses a small declarative `cli-builder` command tree and
 dispatches host lifecycle operations through an injected, already-authenticated
 daemon client.
 
-The current commands are `agents`, `doctor`, `register`, `start`, `stop`,
-`reconcile`, and `deregister`. Credentials and socket endpoints are deliberately
-absent from argv; a later executable adapter will acquire credentials through a
-secure terminal boundary and provide the connected client.
+The current commands are `install-daemon`, `agents`, `doctor`, `register`,
+`start`, `stop`, `reconcile`, and `deregister`. `install-daemon` is a typed local
+action; the remaining commands require an already-authenticated daemon client.
+Credentials and socket endpoints are deliberately absent from argv so the
+executable adapter can resolve them through local trusted configuration.
 
 ## Validation
 

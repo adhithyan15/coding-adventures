@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -194,6 +194,46 @@ resolutionPythonSpec = describe "Python resolution conformance" $ do
                     Right
                         [ ["python/beta-helper", "python/delta", "python/gamma"]
                         , ["python/alpha"]
+                        ]
+
+resolutionRustSpec :: Spec
+resolutionRustSpec = describe "Rust resolution conformance" $ do
+    it "reads only inline path dependencies in the top-level dependencies table" $
+        withFixture "resolution-rust-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "rust" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "rust/alpha"
+                    , "rust/beta-helper"
+                    , "rust/delta"
+                    , "rust/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["rust/beta-helper", "rust/delta", "rust/gamma"]
+                        , ["rust/alpha"]
+                        ]
+
+resolutionRubySpec :: Spec
+resolutionRubySpec = describe "Ruby resolution conformance" $ do
+    it "reads only runtime dependency declarations on the gem specification receiver" $
+        withFixture "resolution-ruby-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "ruby" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "ruby/alpha"
+                    , "ruby/beta"
+                    , "ruby/delta"
+                    , "ruby/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["ruby/beta", "ruby/delta", "ruby/gamma"]
+                        , ["ruby/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation

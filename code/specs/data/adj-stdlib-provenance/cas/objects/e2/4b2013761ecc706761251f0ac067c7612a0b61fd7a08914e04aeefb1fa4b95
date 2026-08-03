@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "ecbf7154f36196b11c4d3d6a76c392858da2bcf6",
+  "body_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+  "body_size": 104,
+  "captured_at": "2026-08-03T20:00:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt"
+}

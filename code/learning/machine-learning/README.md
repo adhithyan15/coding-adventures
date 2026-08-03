@@ -51,13 +51,15 @@ larger network:
 31. [Precision, Quantization, and Buffer Residency, by Hand](./precision-quantization-and-residency-by-hand.md)
 32. [Reference Fixtures: Make Every Expected Answer Earn Your Trust](./reference-fixtures-by-hand.md)
 33. [One Fixture, Three Languages](./one-fixture-three-languages.md)
-34. [Matrix Math](../matrix-math.md)
-35. [Loss Functions](../loss-functions.md)
-36. [Gradient Descent](../gradient-descent.md)
-37. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-38. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-39. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-40. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+34. [A Rust C ABI, by Hand](./rust-c-abi-by-hand.md)
+35. [Native and Rust-core Coverage, by Hand](./native-and-rust-core-coverage-by-hand.md)
+36. [Matrix Math](../matrix-math.md)
+37. [Loss Functions](../loss-functions.md)
+38. [Gradient Descent](../gradient-descent.md)
+39. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+40. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+41. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+42. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -67,7 +69,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has twenty-one complementary views:
+has twenty-three complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -172,6 +174,12 @@ has twenty-one complementary views:
   Ruby, and Rust expose native source, exact commands, and one closed receipt
   contract; the browser recomputes the paper trace without claiming to run the
   external programs.
+- **Rust C ABI lab:** keep caller-owned buffers, versioned functions, closed
+  statuses, and validate-before-write behavior visible across the foreign-
+  function boundary.
+- **Implementation coverage lab:** keep the same 1.35 answer fixed while
+  separating three native arithmetic owners from one Python-to-Rust binding
+  and linking every count to executable evidence.
 
 ## Language-Neutral Corpus
 
@@ -324,6 +332,17 @@ fixture. Each program recomputes the arithmetic and emits the same bounded JSON
 receipt; the orchestrator rejects command drift, extra output, and dishonest
 results before comparing all three lanes.
 
+NN35 adds `code/specs/fixtures/neural-learning-rust-cabi-v1`, which pins the
+versioned public header, closed status table, caller-owned buffer rules, NN03
+hand calculation, and five failure probes. Its validator dynamically loads the
+compiled Rust shared library and checks that rejected calls leave outputs
+unchanged.
+
+NN36 adds `code/specs/fixtures/neural-learning-implementation-coverage-v1`,
+which classifies the NN34 Go, Ruby, and Rust lanes as native and the NN35
+Python `ctypes` lane as a Rust-core binding. Its validator reruns both
+executable gates before reporting `3 native + 1 binding = 4 verified lanes`.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -359,6 +378,8 @@ python code/scripts/validate_backend_parity_labs.py
 python code/scripts/validate_precision_residency_labs.py
 python code/scripts/validate_reference_fixture_catalog.py
 python code/scripts/validate_cross_language_fixture_consumers.py
+python code/scripts/validate_neural_learning_rust_cabi.py
+python code/scripts/validate_neural_learning_implementation_coverage.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -432,6 +453,9 @@ covering all 30 fixture families and 33 lab documents.
 The first NN34 lab computes `2 * 0.5 + (-1) * (-0.25) + 0.1 = 1.35`, then makes
 Go, Ruby, and Rust earn parity by independently reading that same fixture and
 emitting one schema-checked receipt.
+The first NN35 lab moves that exact arithmetic behind a versioned C function,
+returns `[1.0, 0.25]` and `1.35` through caller-owned buffers, and proves five
+failure statuses write no partial answer.
 
 ## How to Study a Model
 

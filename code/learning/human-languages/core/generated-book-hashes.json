@@ -332,7 +332,7 @@
     {
       "language": "kannada",
       "chapter": 6,
-      "sourceHash": "fnv1a64:50403c9e67a9e065",
+      "sourceHash": "fnv1a64:cc167694fde562f4",
       "lessonIds": [
         "KA-C06-dative-ge",
         "KA-C06-dative-stacking",
@@ -371,7 +371,7 @@
     {
       "language": "kannada",
       "chapter": 10,
-      "sourceHash": "fnv1a64:ed7b58b40b1355d8",
+      "sourceHash": "fnv1a64:33566b64ea65a0a8",
       "lessonIds": [
         "KA-C10-vaara"
       ],
@@ -407,7 +407,7 @@
     {
       "language": "kannada",
       "chapter": 14,
-      "sourceHash": "fnv1a64:e6a8916497172741",
+      "sourceHash": "fnv1a64:ec354231e214ee71",
       "lessonIds": [
         "KA-C14-kaalagalu"
       ],
@@ -443,7 +443,7 @@
     {
       "language": "kannada",
       "chapter": 18,
-      "sourceHash": "fnv1a64:41f497a34f5e25af",
+      "sourceHash": "fnv1a64:b8039d88f5603008",
       "lessonIds": [
         "KA-C18-gante"
       ],
@@ -452,7 +452,7 @@
     {
       "language": "kannada",
       "chapter": 19,
-      "sourceHash": "fnv1a64:d6aaad7ff154ff8f",
+      "sourceHash": "fnv1a64:f7c28f10b80343b3",
       "lessonIds": [
         "KA-C19-vayassu"
       ],
@@ -461,7 +461,7 @@
     {
       "language": "kannada",
       "chapter": 20,
-      "sourceHash": "fnv1a64:ef0879e7a5fd9007",
+      "sourceHash": "fnv1a64:ebc489f9095368bd",
       "lessonIds": [
         "KA-C20-hannondu-ippattu",
         "KA-C20-havamana"
@@ -561,11 +561,252 @@
     {
       "language": "kannada",
       "chapter": 31,
-      "sourceHash": "fnv1a64:3c1a2104befa120f",
+      "sourceHash": "fnv1a64:f2a6ae56d39f4220",
       "lessonIds": [
         "KA-C31-shubha-madhyahna"
       ],
       "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a395cc73dc812086",
+      "lessonIds": [
+        "ML-C06-dative-ikku",
+        "ML-C06-dative-subject"
+      ],
+      "tex": "malayalam/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:86b461ccf2e61aa9",
+      "lessonIds": [
+        "ML-C07-numbers-1-5",
+        "ML-C07-numbers-6-10"
+      ],
+      "tex": "malayalam/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:beb32b8b66098647",
+      "lessonIds": [
+        "ML-C08-dayavayi"
+      ],
+      "tex": "malayalam/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:60ba9f3764eeac28",
+      "lessonIds": [
+        "ML-C09-kshamikkanam"
+      ],
+      "tex": "malayalam/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:7488bd8c935f62d7",
+      "lessonIds": [
+        "ML-C10-azhcha"
+      ],
+      "tex": "malayalam/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:fbbc1ab28dbc377d",
+      "lessonIds": [
+        "ML-C11-nirangal"
+      ],
+      "tex": "malayalam/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e42ba8156c6e3d9a",
+      "lessonIds": [
+        "ML-C12-kudumbam"
+      ],
+      "tex": "malayalam/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:8d847e5cf2b99e2d",
+      "lessonIds": [
+        "ML-C13-shareera-bhaagangal"
+      ],
+      "tex": "malayalam/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:cab5ece57c64c887",
+      "lessonIds": [
+        "ML-C14-kaalangal"
+      ],
+      "tex": "malayalam/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:f87c2d31a9e1bcb9",
+      "lessonIds": [
+        "ML-C15-vellam-ari"
+      ],
+      "tex": "malayalam/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:3ae69cba397926e5",
+      "lessonIds": [
+        "ML-C16-kollavarsham-maasangal"
+      ],
+      "tex": "malayalam/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:288f60854351ad94",
+      "lessonIds": [
+        "ML-C17-ucha-paathira",
+        "ML-C17-paathira"
+      ],
+      "tex": "malayalam/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:39e6627618aef15f",
+      "lessonIds": [
+        "ML-C18-mani"
+      ],
+      "tex": "malayalam/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:e5e120e17bcb588f",
+      "lessonIds": [
+        "ML-C19-vayassu"
+      ],
+      "tex": "malayalam/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:f974ebaac51f7c0e",
+      "lessonIds": [
+        "ML-C20-pathinonnu-irupathu",
+        "ML-C20-kalavastha"
+      ],
+      "tex": "malayalam/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e2a78a4d8d90f4df",
+      "lessonIds": [
+        "ML-C21-naaya-poocha"
+      ],
+      "tex": "malayalam/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
+      "lessonIds": [
+        "ML-C22-paccha-manja"
+      ],
+      "tex": "malayalam/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:56e12d6bddb8a7f7",
+      "lessonIds": [
+        "ML-C23-divasam",
+        "ML-C23-naal"
+      ],
+      "tex": "malayalam/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:acbff52e5880c78d",
+      "lessonIds": [
+        "ML-C24-rathri",
+        "ML-C24-native-night-words"
+      ],
+      "tex": "malayalam/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:447949184dfe4ff4",
+      "lessonIds": [
+        "ML-C25-shubha-rathri"
+      ],
+      "tex": "malayalam/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:2606e98487e2c8e6",
+      "lessonIds": [
+        "ML-C26-raavile"
+      ],
+      "tex": "malayalam/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:c2a9ff4b74bdfb8e",
+      "lessonIds": [
+        "ML-C27-vaikunneram"
+      ],
+      "tex": "malayalam/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:585d631c6cb2a93a",
+      "lessonIds": [
+        "ML-C28-uchakazhinju"
+      ],
+      "tex": "malayalam/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:8afc5076ee8c3dff",
+      "lessonIds": [
+        "ML-C29-suprabhaatham"
+      ],
+      "tex": "malayalam/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:043cd698c21af4b8",
+      "lessonIds": [
+        "ML-C30-shubha-sayaahnam"
+      ],
+      "tex": "malayalam/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:5cd8f71d62d40931",
+      "lessonIds": [
+        "ML-C31-shubha-madhyaahnam",
+        "ML-C31-afternoon-convergence"
+      ],
+      "tex": "malayalam/book/chapters/ch31-good-afternoon.tex"
     },
     {
       "language": "marathi",

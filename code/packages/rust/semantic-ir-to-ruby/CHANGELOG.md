@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.20.1 — accept `c<<`, the C frontend's own bitwise left shift
+
+`c-to-semantic-ir` and `ruby-to-semantic-ir` both used to lower their
+`<<` to the SAME bare `BuiltinCall("<<", ...)` name — one meaning C's raw
+bitwise left shift, the other Ruby's polymorphic `<<` (Array push/String
+concat/saturating-Integer-shift). `semantic-ir-to-c` had to pick ONE
+meaning for the shared name and got it wrong for C-sourced programs (see
+its own 0.36.2 CHANGELOG entry). `c-to-semantic-ir` now emits a distinct
+`c<<` for its own shift; this backend accepts it in `SUPPORTED_BUILTINS`
+and renders it identically to `<<` (Ruby's native `<<` operator already
+computes the mathematically correct arbitrary-precision left shift for
+any Integer operand, so no new runtime behavior is needed — just
+recognizing the renamed builtin so the structural scan doesn't reject a
+C-sourced program using it).
+
+`semantic-ir-to-ruby` 0.20.0 -> 0.20.1.
+
 ## 0.20.0 — fix: `puts` on an Array bracket-displayed instead of unpacking
 
 The same bug independently discovered and fixed in `semantic-ir-to-c`

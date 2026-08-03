@@ -2,7 +2,7 @@ import Test.Hspec
 
 import BuildToolSpec (buildToolSpec)
 import HashingSpec (hashingSpec)
-import ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionUtf8Spec)
+import ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec)
 
 main :: IO ()
 main = hspec spec
@@ -14,3 +14,5 @@ spec = do
     resolutionUtf8Spec
     resolutionCabalSpec
     resolutionPythonSpec
+    resolutionRustSpec
+    resolutionRubySpec

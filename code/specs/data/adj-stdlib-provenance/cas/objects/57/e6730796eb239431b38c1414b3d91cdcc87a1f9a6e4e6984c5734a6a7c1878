@@ -1,0 +1,104 @@
+{
+  "bundle_id": "adj.math.arithmetic.proportion.zero_second.query.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+      "end": 16,
+      "input_claim": {
+        "end": 309,
+        "quote": "observe first_term(2)\n    quote \"first term is 2.\" at 0 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "c73783e99072cb0ac85e515a0e7d7b0c95b371f47a47592fc913399051bcaeb3",
+        "start": 25
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+      "quote": "first term is 2.",
+      "quote_sha256": "1e9023fc7049f1f3baf70ace6b2466cf2cdb3a60e064ab22aa77c10f62a0f245",
+      "resolution": {
+        "authority_receipt_sha256": "e24b2013761ecc706761251f0ac067c7612a0b61fd7a08914e04aeefb1fa4b95",
+        "authority_source_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic proportion query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+      "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+      "end": 86,
+      "input_claim": {
+        "end": 596,
+        "quote": "observe second_term(0)\n    quote \"second term is 0.\" at 69 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "301dd912470b24228b64e39d32d21b920a2cdd1cec5d06e2d4b63b7a6cdcc073",
+        "start": 309
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+      "quote": "second term is 0.",
+      "quote_sha256": "368d2632ca2b9faaf432f8c1362ab0856b7fc28337939f3b8d050738f5812ad9",
+      "resolution": {
+        "authority_receipt_sha256": "e24b2013761ecc706761251f0ac067c7612a0b61fd7a08914e04aeefb1fa4b95",
+        "authority_source_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic proportion query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+      "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7",
+      "start": 69
+    },
+    {
+      "claim_id": "adj.input.arithmetic.proportion.third_term.4",
+      "end": 51,
+      "input_claim": {
+        "end": 881,
+        "quote": "observe third_term(4)\n    quote \"third term is 4.\" at 35 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "eebea0fad60adaec55fa4821780cee63f83f077305851c3b2f5de02c0e9f4a40",
+        "start": 596
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+      "quote": "third term is 4.",
+      "quote_sha256": "6758cb9682cd020068713d99e320b094806fb4caaee549300401e8bdb68bf296",
+      "resolution": {
+        "authority_receipt_sha256": "e24b2013761ecc706761251f0ac067c7612a0b61fd7a08914e04aeefb1fa4b95",
+        "authority_source_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic proportion query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+      "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7",
+      "start": 35
+    }
+  ],
+  "dependencies": [
+    "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6"
+  ],
+  "execution_witness_sha256s": [
+    "07e2e53063b17d5f6993ae5daeb513f80f0f227b98954cd31104f688121b4194"
+  ],
+  "formula_derivation_sha256s": [
+    "7ef9696ab19c66e3cd8c758ecf455ba6226a268b7c186c208eff5f6cd8e15294"
+  ],
+  "input": {
+    "raw_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+    "receipt_sha256": "2933cdcc6efed92c3b52f10af0944ba6d3cc201190c38811f9744ac96fb2b91c",
+    "source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/proportion-zero-second.query.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+      "receipt_sha256": "2933cdcc6efed92c3b52f10af0944ba6d3cc201190c38811f9744ac96fb2b91c",
+      "representations": [],
+      "source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09"
+    },
+    {
+      "raw_source_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+      "receipt_sha256": "e24b2013761ecc706761251f0ac067c7612a0b61fd7a08914e04aeefb1fa4b95",
+      "representations": [],
+      "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7"
+    }
+  ]
+}

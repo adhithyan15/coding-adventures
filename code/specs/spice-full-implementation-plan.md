@@ -4431,15 +4431,65 @@ the Rust, Python, and TypeScript surfaces together.
      shared engine diode saturation-current temperature-exponent field.
 
 422. Python and TypeScript Berkeley SPICE diode energy-gap parity.
-   - Status: completed in this diode energy-gap parity slice.
+   - Status: completed in PR 9826.
    - Both parser facades validate positive finite `EG` values and lower them
      into the shared engine diode energy-gap field.
+
+423. Python and TypeScript Berkeley SPICE diode flicker-noise coefficient parity.
+   - Status: completed in PR 9829.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine diode flicker-noise coefficient field.
+
+424. Python and TypeScript Berkeley SPICE diode flicker-noise exponent parity.
+   - Status: completed in PR 9831.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine diode flicker-noise exponent field.
+
+425. Python and TypeScript Berkeley SPICE JFET flicker-noise coefficient parity.
+   - Status: completed in PR 9835.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine JFET flicker-noise coefficient field.
+
+426. Python and TypeScript Berkeley SPICE JFET flicker-noise exponent parity.
+   - Status: completed in PR 9837.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine JFET flicker-noise exponent field.
+
+427. Python and TypeScript Berkeley SPICE JFET junction-potential parity.
+   - Status: completed in PR 9839.
+   - Both parser facades validate positive finite `PB` / `VJ` values, prefer
+     canonical `PB`, and lower the result into the shared engine JFET
+     junction-potential field.
+
+428. Python and TypeScript Berkeley SPICE JFET depletion-coefficient parity.
+   - Status: completed in PR 9842.
+   - Both parser facades validate finite `FC` values in `[0, 1)` and lower
+     them into the shared engine JFET forward-bias depletion field.
+
+429. Python and TypeScript Berkeley SPICE JFET gate-current parity.
+   - Status: completed in PR 9843.
+   - Both parser facades validate positive finite `IS` values and lower them
+     into the shared engine JFET gate saturation-current field.
+
+430. Python and TypeScript Berkeley SPICE JFET temperature-exponent parity.
+   - Status: completed in PR 9848.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine JFET gate-current temperature-exponent field.
+
+431. Python and TypeScript Berkeley SPICE JFET energy-gap parity.
+   - Status: completed in this JFET energy-gap parity slice.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine JFET bandgap-voltage field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited diode model-card lowering surfaces with `KF` and `AF`
-     validation and lowering parity.
+   - Continue the audited JFET model-card gaps, beginning with `B`, then `NLEV`,
+     `GDSNOI`, `RD`, `RS`,
+     `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
+   - Continue the audited BJT model-card gaps after the smaller JFET fields;
+     prioritize direct engine fields before adding new model surfaces.
+   - Re-audit MOS lowering after those direct JFET and BJT omissions close.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

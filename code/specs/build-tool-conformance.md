@@ -314,6 +314,25 @@ normalization: each run of hyphens, underscores, or periods becomes one hyphen
 before internal-package lookup. Extras, version specifiers, and environment
 markers do not form part of the normalized distribution name.
 
+For Rust `Cargo.toml` manifests, dependency candidates come only from inline
+entries in the top-level `[dependencies]` table whose value contains a `path`
+assignment. The dependency key before the first `=` is matched against known
+Cargo package names unless the inline table provides a quoted `package`
+override, in which case that published package name is authoritative. Resolvers
+ignore `[package]`, `[lib]`, features, workspace
+metadata, dev dependencies, build dependencies, target-specific dependency
+tables, non-path registry dependencies, comments, and every other field or
+table. Reaching any new TOML table ends the authoritative dependency table.
+
+For Ruby `.gemspec` manifests, dependency candidates come only from the first
+quoted gem-name argument of `add_dependency` and `add_runtime_dependency`
+calls on the `Gem::Specification.new` block receiver. The two methods are
+runtime-dependency synonyms for graph purposes. Resolvers ignore gem identity,
+summary and description text, file and require-path lists, metadata, comments,
+`add_development_dependency` calls, and every other field or method. Both Ruby
+quote forms and optional call parentheses are accepted; the gem name is matched
+case-insensitively against known Ruby package aliases.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,

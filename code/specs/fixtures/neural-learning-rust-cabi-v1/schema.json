@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/neural-learning-rust-cabi-v1.json",
+  "title": "Neural-learning Rust C ABI v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "question", "source_fixture", "abi", "statuses", "hand_check", "failure_probes"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": { "const": "weighted-neuron-rust-c-abi" },
+    "title": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "source_fixture": { "const": "code/specs/fixtures/neural-learning-v1/labs/00-weighted-neuron.json" },
+    "abi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version_number", "version_hex", "header", "crate", "library_base_name", "functions", "rules"],
+      "properties": {
+        "version_number": { "const": 65536 },
+        "version_hex": { "const": "0x00010000" },
+        "header": { "const": "code/packages/rust/neural-learning-capi/include/neural_learning.h" },
+        "crate": { "const": "code/packages/rust/neural-learning-capi/Cargo.toml" },
+        "library_base_name": { "const": "neural_learning_capi" },
+        "functions": {
+          "const": [
+            "uint32_t neural_learning_abi_version(void)",
+            "const char *neural_learning_status_message_v1(uint32_t status)",
+            "uint32_t neural_learning_weighted_sum_f64_v1(const double *inputs, const double *weights, uint64_t input_count, double bias, double *contributions_out, uint64_t contributions_capacity, double *prediction_out)"
+          ]
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "statuses": {
+      "const": [
+        { "code": 0, "symbol": "NEURAL_LEARNING_OK", "message": "ok" },
+        { "code": 1, "symbol": "NEURAL_LEARNING_NULL_POINTER", "message": "null pointer" },
+        { "code": 2, "symbol": "NEURAL_LEARNING_EMPTY_INPUT", "message": "input count must be positive" },
+        { "code": 3, "symbol": "NEURAL_LEARNING_BUFFER_TOO_SMALL", "message": "contribution buffer is too small" },
+        { "code": 4, "symbol": "NEURAL_LEARNING_VALUE_TOO_LARGE", "message": "input count is too large" },
+        { "code": 5, "symbol": "NEURAL_LEARNING_NON_FINITE", "message": "all inputs and arithmetic results must be finite" },
+        { "code": 6, "symbol": "NEURAL_LEARNING_PANIC", "message": "Rust panic was contained" },
+        { "code": 7, "symbol": "NEURAL_LEARNING_OVERLAPPING_BUFFER", "message": "mutable output buffers must not overlap other buffers" },
+        { "code": 8, "symbol": "NEURAL_LEARNING_MISALIGNED_POINTER", "message": "pointer is not aligned for a double" }
+      ]
+    },
+    "hand_check": {
+      "const": {
+        "inputs": [2.0, -1.0],
+        "weights": [0.5, -0.25],
+        "bias": 0.1,
+        "contributions_capacity": 2,
+        "expected_status": 0,
+        "expected_contributions": [1.0, 0.25],
+        "expected_prediction": 1.35,
+        "absolute_tolerance": 0.000001
+      }
+    },
+    "failure_probes": {
+      "const": [
+        { "id": "null-input", "expected_status": 1, "outputs_unchanged": true },
+        { "id": "empty-input", "expected_status": 2, "outputs_unchanged": true },
+        { "id": "short-output", "expected_status": 3, "outputs_unchanged": true },
+        { "id": "non-finite", "expected_status": 5, "outputs_unchanged": true },
+        { "id": "overlapping-output", "expected_status": 7, "outputs_unchanged": true }
+      ]
+    }
+  }
+}

@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased - replayable formula guard traces
+
+- Direct formula queries retain an ordered execution trace for every passed, failed, or unresolved
+  precondition, including its exact rational and `f64` value, substituted computation plan,
+  derivation tree, original scope, consumed `FactId`s, predicate identity, and provenance.
+- Guard traces flow through nested formula expansion, so an earlier successful outer guard remains
+  available when a later guard or nested callee fails. Withheld query bodies are recorded separately
+  from evaluated bodies and never publish a derived value.
+- Parser-derived source replay can bind formula parameters to query arguments independently of the
+  runtime trace, including nested formula calls and multi-step formula bodies.
+
 ## [0.71.0] - 2026-08-03 - executable formula preconditions
 
 - Formulas can declare ordered, generic `requires` predicates; the first closed execution

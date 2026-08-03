@@ -106,19 +106,19 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `9441f4c7` after
-rebasing the Haskell Python-resolution slice. The inventory contains 1,247 normalized
-implementation identities across 4,400 established-lane package slots and
+working inventory was regenerated on August 3, 2026 from `fd103586` after the
+latest Chief operator CLI merge. The inventory contains 1,254 normalized
+implementation identities across 4,408 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 173 | 272 |
+| Present in 10-15 languages | 173 | 271 |
 | Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 795 | 11,130 |
+| Present in one language | 804 | 11,256 |
 
-The loop must not start by attempting 11,130 singleton ports. It should finish
+The loop must not start by attempting 11,256 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -326,27 +326,74 @@ program edges and identities, and matches the Go oracle exactly. That repair
 exposed the same generic-token debt in the real 205-package Haskell lane. PR
 #9806 completed the dependency-shaped Cabal slice: it replaced 43 false edges
 from non-authoritative manifest text with `build-depends` parsing and now
-matches all 486 canonical edges. The post-merge leverage audit selects Python
-next because it is the largest affected lane: 488 real packages collapse into
-an all-node cycle, with 1,492 Haskell edges versus 1,118 canonical edges, 383
-false edges, and nine missing PEP 503-normalized edges. A dependent backlog
-owner carries the remaining post-Python readers. The post-rebase `9441f4c7`
-collision-checked inventory has 1,247
-identities and 4,400 implementation slots across 15 established lanes, with
-173 high-consensus packages and 272 missing slots, 797 singleton packages and
-11,158 missing slots, 602 Rust singletons, and zero collisions or unknown
-buckets. The Python slice now reads only PEP 621
-`[project].dependencies` and applies PEP 503 distribution-name normalization.
-Its full 488-package lane completes without failures, and the repaired
-1,118-edge graph matches the Go oracle exactly: zero Haskell-only edges and
-zero Go-only edges. The two unrelated Python `BUILD_windows` prerequisite gaps
+matches all 486 canonical edges. The next leverage audit selected Python
+because its 488 real packages collapsed into an all-node cycle, with 1,492
+Haskell edges versus 1,118 canonical edges, 383 false edges, and nine missing
+PEP 503-normalized edges. PR #9817 completed that slice by reading only PEP 621
+`[project].dependencies` and applying PEP 503 distribution-name normalization;
+the real lane now completes without failures and its 1,118-edge graph matches
+the Go oracle exactly. The new post-merge audit selects Rust because it is the
+largest remaining clean repair: 945 packages, 3,201 Haskell edges versus 2,353
+canonical edges, 848 false edges, and zero missing edges. A dependent backlog
+owner carries the remaining post-Rust readers. The repair reads only inline
+path entries from Cargo's top-level `[dependencies]` table. Full-graph
+validation also exposed valid renamed dependencies missing from the Go oracle,
+so the shared contract and both engines now honor Cargo `package` overrides.
+On the rebased tree, both engines discover 948 packages and match exactly at
+2,373 edges; the Haskell front door completes the lane with zero failures.
+Guarded squash auto-completion merged exact-head PR #9832 after all 17 checks
+were terminal and two consecutive mergeability readings were clean. The
+post-merge resolver audit selects Ruby next: its 301-package lane initially
+has 543 Haskell edges versus 420 canonical Go edges, with 123 apparent false
+edges and zero apparent missing edges. Corpus inspection separates six valid
+`add_runtime_dependency` declarations and 28 valid declared-gem-name aliases
+from generic-token noise. The shared Ruby contract and both engines now accept
+the runtime dependency synonyms, exclude development dependencies, metadata,
+comments, and unrelated text, and register manifest-declared aliases. Both
+engines now match exactly at 301 packages and 454 edges, with zero one-sided
+edges. TypeScript remains larger but is not a clean field-boundary
+slice: 469 packages have 147 false and 948 missing edges, and the canonical
+audit also encounters separately owned `BUILD_windows` prerequisite debt.
+Ruby therefore removes the largest remaining clean false-cycle risk while
+repairing its oracle without mixing unrelated manifest grammars or build-file
+remediation. The
+`fd103586` collision-checked inventory has 1,254
+identities and 4,408 implementation slots across 15 established lanes, with
+173 high-consensus packages and 271 missing slots, 804 singleton packages and
+11,256 missing slots, 609 Rust singletons, and zero collisions or unknown
+buckets. The two unrelated Python `BUILD_windows` prerequisite gaps
 exposed by the full validator remain owned by
 `build-file-standalone-integrity`. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill
 existing identities; ZStd
-is complete across all 15 lanes and ZIP now spans 12. The new Chief daemon
-keyring and Synology Surveillance singleton packages own concrete filesystem or
+is complete across all 15 lanes and ZIP now spans 13. The Chief daemon keyring,
+new Chief daemon credential persistence adapter, Chief daemon composition root,
+and Synology Surveillance singleton packages own concrete filesystem or
 credentialed network authority and have excluded native-authority review
-owners. The previously discovered singleton,
+owners. The new zero-capability `chief-of-staff-daemon-service-files` package
+is different: its deterministic launchd, systemd-user, and Task Scheduler
+renderers have a new portable-conformance backlog owner, while file writes and
+native registration commands remain outside that contract. The sole new
+identity in the refreshed inventory, `chief-of-staff-daemon-installer`, owns
+secure filesystem publication and native launchctl/systemctl/schtasks execution;
+it now has an excluded native-authority review and does not expand the portable
+denominator. The two later singleton identities are now classified as well.
+`neural-learning-capi` is a Rust/C ABI wrapper around the already portable
+neural-learning core, with an excluded wrapper/native-ABI review tied to its
+existing language-neutral ABI fixture rather than a fabricated all-language
+port campaign. `smart-home-enphase-envoy-integration` is mixed: bounded origin
+validation, request planning, HTTP/JSON decoding, meter correlation, identity,
+health, telemetry projection, and authorization-before-effect ordering have an
+eligible portable-core extraction and conformance owner, while live DNS/TCP/TLS,
+bearer-token materialization, Vault/runtime effects, and host mutation have a
+separate excluded native-authority review. The previously
+discovered `chief-of-staff-cli` singleton is the concrete D18 composition root
+for environment and path discovery, owner-only credential loading, loopback
+WebSocket authentication, terminal output, native service publication, and
+supervisor execution. Its deterministic command grammar, typed dispatch,
+result rendering, install planning, and service-file rendering already have
+portable owners; the residual executable now has an excluded native-authority
+review rather than expanding the all-language denominator. The previously
+discovered singleton,
 `smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR
 adapter; the state backlog records an excluded native-authority review instead
 of treating that host integration as an all-language portability gap. The new

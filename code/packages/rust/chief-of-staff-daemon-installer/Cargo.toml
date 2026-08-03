@@ -1,0 +1,9 @@
+[package]
+name = "chief-of-staff-daemon-installer"
+version = "0.1.0"
+edition = "2021"
+description = "Secure user-scoped installation and native registration for the Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-daemon-service-files = { path = "../chief-of-staff-daemon-service-files" }

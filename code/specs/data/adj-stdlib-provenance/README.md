@@ -59,14 +59,15 @@ python code/scripts/adj_stdlib_provenance.py project --output <directory>
 
 ## Reviewed roots
 
-The arithmetic primitive, ratio, and percent-of roots and their worked-query
-fixtures are rebuilt entirely offline from retained CAS source bodies:
+The arithmetic primitive, ratio, percent-of, and proportion roots and their
+worked-query fixtures are rebuilt entirely offline from retained CAS source bodies:
 
 ```text
 python code/scripts/migrate_adj_formula_inventories.py --formula-inventory-binary <adj-formula-inventory-binary> --formula-audit-binary <adj-formula-audit-binary>
 python code/scripts/build_adj_arithmetic_provenance.py --formula-inventory-binary <adj-formula-inventory-binary> --formula-audit-binary <adj-formula-audit-binary>
 python code/scripts/build_adj_ratio_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary> --formula-audit-binary <adj-formula-audit-binary>
 python code/scripts/build_adj_percent_of_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary> --formula-audit-binary <adj-formula-audit-binary>
+python code/scripts/build_adj_proportion_provenance.py --arithmetic-bundle-sha256 <verified-current-root-sha256> --formula-inventory-binary <adj-formula-inventory-binary> --formula-audit-binary <adj-formula-audit-binary>
 ```
 
 Each generator checks retained source hashes and expected source spans before
@@ -75,9 +76,11 @@ Dependent generators require the verified current primitive-arithmetic root hash
 explicitly; they reject malformed hashes and roots with the wrong bundle ID. The
 migration command replays the trusted parser against each formula-bearing input
 and the formula audit against each query reconstructed from CAS bytes, then
-compare-and-swaps all six formula and query roots as one dependency closure. The
-current witnesses cover four primitive operations, one ratio, and one percent-of
-example; they establish replayable provenance for those executions, not universal
+compare-and-swaps all eleven formula and query roots as one dependency closure.
+The current witnesses cover four primitive operations, one ratio, one percent-of,
+and four proportion executions. The proportion set contains one successful query
+and three abstentions that independently exercise each nonzero precondition; these
+witnesses establish replayable provenance for those executions, not universal
 correctness for every possible input.
 The ratio generator's reviewed one-time bootstrap accepts captured bytes without
 opening the locator; after those exact bytes enter the CAS, ordinary reruns need
@@ -95,6 +98,19 @@ captures of the OpenStax rational-numbers page produced the identical
 Its formal MathML rule is projected deterministically to
 `n% of x items is (n/100)*x.`; both the raw MathML and every rendered byte remain
 linked in the CAS.
+
+The proportion bootstrap is likewise offline. Six controlled captures of the
+OpenStax proportions page produced the identical 536,280-byte body with SHA-256
+`a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25`.
+The definition paragraph `fs-id1166492018126` and cross-products paragraph
+`fs-id1517408` are byte-spanned in the complete raw source IR. Their text and
+MathML are projected independently and deterministically; skipped publisher markup
+is represented by contiguous discard operations with explicit reasons. The formula cites the
+92-byte cross-products rule with SHA-256
+`6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851`;
+the 71-byte definition projection remains linked as corroborating source evidence.
+The one-time bootstrap passes `--captured-source <proportion.html>`; retained
+replays omit it and perform no network access.
 
 The reviewed ratio capture was repeated six times with `Accept: text/html`,
 identity transfer encoding, no request cookies, and the same user agent. All six

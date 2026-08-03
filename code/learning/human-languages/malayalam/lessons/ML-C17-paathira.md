@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C17-paathira
+spine_node: SPINE-TIME-OF-DAY
+sequence: 460
 chapter: 17
 type: word
 headword: പാതിരാ
@@ -9,18 +12,32 @@ prerequisites: [ML-C17-ucha-paathira]
 sounds: [malayalam-vowel-sign-aa]
 roots: [dravidian-paathi-half]
 etymology_hook: "പാതിരാ and Telugu ardharātri share the half-night metaphor but use unrelated words for half"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C17-PAATHIRA-01]
+practises:
+  knowledge: [ML-CONCEPT-C17-PAATHIRA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C17-ucha-paathira]
 ---
 
 # പാതിരാ — midnight as “half-night”
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **ഉച്ച** named noon by the sun’s height. Malayalam builds midnight
 with a different spatial idea: cut the night in half.
 
-## പാതി + a shortened night
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C17-PAATHIRA-01]; assesses=[] -->
 
 **പാതിരാ** (*paathira*) means “**midnight**.” It is built on **പാതി**
 (*paathi*), the everyday Malayalam word for “**half**”—as in *paathi vila*,
@@ -36,6 +53,7 @@ while filling it with unrelated words for “half.” The metaphor matches; the
 vocabulary does not.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *paathira* — midnight]
@@ -43,6 +61,7 @@ vocabulary does not.
 - [YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->
 
 [PAUSE 3s] What does **പാതിരാ** build on? (**പാതി**, “half,” plus a shortened
 night-word.) Is *paathi* the same root as Telugu *ardha*? (**No.** The two

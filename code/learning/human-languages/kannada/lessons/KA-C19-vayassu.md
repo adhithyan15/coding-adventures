@@ -39,7 +39,7 @@ variety: standard-colloquial
 ## The word, taken apart: ವಯಸ್ಸು — a Sanskrit word, and a PIE cousin of Latin vīs
 <!-- hl-knowledge: introduces=[KA-ETYMON-C19-VAYASSU-01]; assesses=[] -->
 
-**ವಯಸ್ಸು** (*vayassu*) = "**age**" — from Sanskrit **वयस्** (*vayas*, "age,
+**ವಯಸ್ಸು** (*vayassu*, "**age**") comes from Sanskrit **वयस्** (*vayas*, "age,
 youth, vigor, strength"), which traces back to **Proto-Indo-European**
 ***wéyh₁os**. That PIE root is the **same** one behind Latin **vīs**, "force,
 strength, vigor" — so Sanskrit's word for "age" and Latin's word for "force" are
@@ -49,10 +49,9 @@ before splitting toward different specific meanings.
 ## Grammar Lens: a simple possessive, no verb
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C19-VAYASSU-02]; assesses=[] -->
 
-> **ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು?** — "How old are you?" — literally "**your age
-  how-much**?" (*ninna vayassu eṣṭu?*)
-> **ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು.** — "I am twenty years old." — literally "**my age**
-  [is] **twenty**." (*nanna vayassu ippattu.*)
+> **ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು?** — "How old are you?" — literally "**your age — how much?**" (*ninna vayassu eṣṭu?*)
+
+> **ನನ್ನ ವಯಸ್ಸು ಇಪ್ಪತ್ತು.** — "I am twenty years old." — literally "**my age [is] twenty**." (*nanna vayassu ippattu.*)
 
 Just like Arabic's *ʿumr*, this is a **verbless** construction in the present
 tense — Kannada simply states "your age" and "how much," with no "is" needed.

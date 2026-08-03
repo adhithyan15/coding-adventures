@@ -1257,6 +1257,22 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode EG must be finite and positive");
   }
+  const diodeFlickerNoiseCoefficient = params.get("KF");
+  if (
+    kind === "D" &&
+    diodeFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(diodeFlickerNoiseCoefficient) || diodeFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("diode KF must be finite and non-negative");
+  }
+  const diodeFlickerNoiseExponent = params.get("AF");
+  if (
+    kind === "D" &&
+    diodeFlickerNoiseExponent !== undefined &&
+    (!Number.isFinite(diodeFlickerNoiseExponent) || diodeFlickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("diode AF must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1328,6 +1344,64 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     (!Number.isFinite(gateDrainCapacitance) || gateDrainCapacitance < 0.0)
   ) {
     throw new NetlistParseError("JFET CGD must be finite and non-negative");
+  }
+  const jfetFlickerNoiseCoefficient = params.get("KF");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetFlickerNoiseCoefficient !== undefined &&
+    (!Number.isFinite(jfetFlickerNoiseCoefficient) || jfetFlickerNoiseCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("JFET KF must be finite and non-negative");
+  }
+  const jfetFlickerNoiseExponent = params.get("AF");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetFlickerNoiseExponent !== undefined &&
+    (!Number.isFinite(jfetFlickerNoiseExponent) || jfetFlickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("JFET AF must be finite and non-negative");
+  }
+  const jfetJunctionPotential = params.get("PB") ?? params.get("VJ");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetJunctionPotential !== undefined &&
+    (!Number.isFinite(jfetJunctionPotential) || jfetJunctionPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET PB must be finite and positive");
+  }
+  const jfetDepletionCoefficient = params.get("FC");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetDepletionCoefficient !== undefined &&
+    (!Number.isFinite(jfetDepletionCoefficient) ||
+      jfetDepletionCoefficient < 0.0 ||
+      jfetDepletionCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("JFET FC must be finite and in [0, 1)");
+  }
+  const jfetSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetSaturationCurrent !== undefined &&
+    (!Number.isFinite(jfetSaturationCurrent) || jfetSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET IS must be finite and positive");
+  }
+  const jfetTemperatureExponent = params.get("XTI");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetTemperatureExponent !== undefined &&
+    !Number.isFinite(jfetTemperatureExponent)
+  ) {
+    throw new NetlistParseError("JFET XTI must be finite");
+  }
+  const jfetEnergyGap = params.get("EG");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetEnergyGap !== undefined &&
+    (!Number.isFinite(jfetEnergyGap) || jfetEnergyGap <= 0.0)
+  ) {
+    throw new NetlistParseError("JFET EG must be finite and positive");
   }
   const level = params.get("LEVEL");
   if (
@@ -1849,6 +1923,8 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       saturationCurrentTemperatureExponent: model.params.get("XTI") ?? 3.0,
       energyGapElectronVolts: model.params.get("EG") ?? 1.11,
       seriesResistance: model.params.get("RS") ?? 0.0,
+      flickerNoiseCoefficient: model.params.get("KF") ?? 0.0,
+      flickerNoiseExponent: model.params.get("AF") ?? 1.0,
     };
   }
   if (prefix === "Q") {
@@ -1914,6 +1990,13 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("LAMBDA") ?? 0.0,
       model.params.get("CGS") ?? model.params.get("CGS0") ?? 0.0,
       model.params.get("CGD") ?? model.params.get("CGD0") ?? 0.0,
+      model.params.get("KF") ?? 0.0,
+      model.params.get("AF") ?? 1.0,
+      model.params.get("PB") ?? model.params.get("VJ") ?? 1.0,
+      model.params.get("FC") ?? 0.5,
+      model.params.get("IS") ?? 1.0e-14,
+      model.params.get("XTI") ?? 3.0,
+      model.params.get("EG") ?? 1.11,
     );
   }
   if (prefix === "M") {

@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"sync"
 	"testing"
 
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
@@ -154,10 +155,13 @@ type xargsExecRecord struct {
 }
 
 func makeMockXargsExec(records *[]xargsExecRecord) xargsExecFunc {
+	var mu sync.Mutex
 	return func(name string, args []string, stdout, stderr io.Writer) int {
 		argsCopy := make([]string, len(args))
 		copy(argsCopy, args)
+		mu.Lock()
 		*records = append(*records, xargsExecRecord{name, argsCopy})
+		mu.Unlock()
 		// Simulate echo: write args to stdout.
 		fmt.Fprintln(stdout, strings.Join(args, " "))
 		return 0
@@ -322,4 +326,3 @@ func TestXargsInvalidSpec(t *testing.T) {
 		t.Errorf("exit code = %d, want 1", rc)
 	}
 }
-
