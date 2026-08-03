@@ -23,6 +23,24 @@ public enum BuildToolError: Error, LocalizedError {
     }
 }
 
+public struct MetadataEncodingError: Error, LocalizedError, Equatable {
+    public let code: String
+    public let package: String
+    public let manifest: String
+    public let encoding: String
+
+    public init(code: String, package: String, manifest: String, encoding: String) {
+        self.code = code
+        self.package = package
+        self.manifest = manifest
+        self.encoding = encoding
+    }
+
+    public var errorDescription: String? {
+        "\(code): package=\(package) manifest=\(manifest) encoding=\(encoding)"
+    }
+}
+
 public enum BuildStatus: String, Codable {
     case built
     case failed

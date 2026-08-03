@@ -368,6 +368,24 @@
       "notes": "Selected after merged PR #9527 and the eabfc1a3 collision-clean reprioritization because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The Swift build tool currently converts a failed UTF-8 decode into an empty Lua dependency list. Bind the engine to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, require exact success edges, and fail closed with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, real CLI exit 2, and no host-path disclosure. This slice changes only the Swift engine; TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate children."
     },
     {
+      "id": "build-tool-swift-windows-absolute-file-options",
+      "title": "Recognize Windows absolute paths in Swift build-tool file options",
+      "status": "pending",
+      "depends_on": ["build-tool-fixtures"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while validating the Swift UTF-8 slice on Windows. --emit-plan with an absolute drive-letter path reaches package discovery and resolution but absolutePath treats the value as repository-relative because it only recognizes a leading slash, producing an invalid filename. Add Windows and POSIX path fixtures, then use platform-correct absolute-path detection consistently for emit-plan, plan-file, and cache-file without widening the current metadata-only slice."
+    },
+    {
+      "id": "build-tool-swift-language-identity-registry",
+      "title": "Bring Swift build-tool discovery to the canonical language and identity registry",
+      "status": "pending",
+      "depends_on": ["build-tool-swift-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the full-repository release-plan audit in the Swift UTF-8 slice. The Swift engine emits 4,767 package entries but only 4,593 unique names: 143 identity groups contain 317 entries, and 397 entries across 228 names are classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding."
+    },
+    {
       "id": "build-tool-rust-self-edge-diagnostic",
       "title": "Make the Rust build tool reject self-edges without panicking",
       "status": "merged",

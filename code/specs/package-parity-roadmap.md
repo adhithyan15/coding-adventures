@@ -229,6 +229,15 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   completed the Go operational-oracle child, and merged PR #9510 completed
   Rust. The next dependency-shaped child is the Swift engine, whose failed
   UTF-8 decode currently becomes an empty Lua dependency list;
+- make Swift build-tool file options recognize Windows drive-letter absolute
+  paths. The UTF-8 validation run discovered that `--emit-plan` reaches
+  resolution but then joins an absolute Windows path under the repository;
+  cover `--emit-plan`, `--plan-file`, and `--cache-file` in a separate slice;
+- align Swift build-tool discovery with the canonical language and identity
+  registry. Its full release plan currently emits 4,767 entries but only 4,593
+  unique names, including 143 duplicate identity groups and 397 `unknown`
+  entries; consume the shared registry and duplicate-identity fixtures in a
+  separate post-UTF-8 slice;
 - merged PR #9521 makes the Rust build tool reject resolver self-edges with a
   stable diagnostic and preserves distinct package/program identities for
   `elixir/grammar_tools`;
