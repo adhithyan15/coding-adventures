@@ -5,6 +5,9 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
+  compatible with the repository build tool's `/bin/sh` executor while it
+  delegates the backend matrix to the Bash-specific implementation script.
 - [x] **P0 — Web Component runtime output encoding.** Encode host-controlled text
   and attribute interpolation, reject executable dynamic link schemes, and
   constrain runtime CSS widths before adding a browser interaction gate.

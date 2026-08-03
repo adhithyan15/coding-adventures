@@ -75,6 +75,9 @@ backend on the current machine:
 
 Repository package CI reaches those same scripts through `BUILD` on POSIX and
 `BUILD_windows` on Windows, after the Rust package-contract tests pass.
+The POSIX wrapper stays `/bin/sh` compatible because the repository build tool
+interprets `BUILD` contents itself; Bash-specific logic remains in
+`scripts/build-all.sh`.
 
 React and Electron run their production builds; HTML and Web Components run
 JavaScript syntax checks plus one shared package-owned jsdom interaction gate;

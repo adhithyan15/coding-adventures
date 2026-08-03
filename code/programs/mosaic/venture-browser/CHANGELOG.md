@@ -2,6 +2,11 @@
 
 ## [0.1.0] - Unreleased
 
+### Fixed
+
+- Keep the authoritative POSIX `BUILD` wrapper compatible with the repository
+  build tool's `/bin/sh` executor instead of requiring Bash `pipefail` syntax.
+
 ### Added
 
 - Run the primary generated SwiftUI and WinUI direct-launch interaction tests

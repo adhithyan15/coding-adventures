@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-set -euo pipefail
+set -eu
 
-script_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+script_root="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 cd "$script_root"
 
 # Keep the package contract tests and the generated cross-platform shell matrix
