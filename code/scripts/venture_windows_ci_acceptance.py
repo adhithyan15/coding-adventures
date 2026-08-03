@@ -12,7 +12,9 @@ from typing import Any
 
 ACCEPTANCE_PACKAGES = frozenset(
     {
+        "rust/venture-browser-cairo",
         "rust/venture-browser-macos",
+        "rust/venture-browser-qt",
         "rust/venture-browser-windows",
         "unknown/programs/venture-browser",
     }

@@ -49,8 +49,9 @@ recreating the surrounding chrome in backend-specific UI code.
   generated-app gates inject native wheel deltas and require those production
   paths to scroll and repaint the shared viewport.
 - The Qt project receives a package-owned `MosaicHost.cpp/.h` adapter and the
-  `venture-browser-qt` dynamic library. The adapter hydrates the same generated
-  chrome contract and mounts a Cairo-rendered `QQuickPaintedItem`; resize,
+  Qt-named copy of the backend-neutral `venture-browser-cairo` dynamic
+  library. The adapter hydrates the same generated chrome contract and mounts
+  a Cairo-rendered `QQuickPaintedItem`; resize,
   wheel, keyboard scroll, hover, and link activation all delegate to the
   shared `BrowserHostController` instead of owning Qt-specific browser state.
   Its direct generated-app gate edits the Mosaic-emitted address field, drives
@@ -148,20 +149,21 @@ generated project copies that native bridge next to the executable so its
 package-owned `MosaicHost.cs` can load it without a handwritten Win32 chrome
 layer.
 
-On Qt-capable Linux and macOS hosts, both matrix scripts build
-`venture-browser-qt`, copy its native library into the generated Qt project,
-compile the C++/QML shell, and run `qt_project_launch` with the direct-launch
-interaction gate required. Other workspace test environments may skip that one native
-launch test when CMake or Qt6 is unavailable; the package matrix does not.
+On Qt-capable Linux and macOS hosts, both matrix scripts build the shared
+`venture-browser-cairo` library, copy it into the generated Qt project under
+the stable Qt library name, compile the C++/QML shell, and run
+`qt_project_launch` with the direct-launch interaction gate required. Other
+workspace test environments may skip that one native launch test when CMake
+or Qt6 is unavailable; the package matrix does not.
 Repository CI provisions those Qt6 dependencies on its Linux Venture lane so
 the generated project build and direct launch are mandatory there.
 
-On Flutter-capable macOS and Linux hosts, the matrix builds the same Cairo page
-bridge, copies it beside the generated Flutter project, runs the live widget
-interaction gate, and then builds the native Flutter runner for that host.
+On Flutter-capable macOS and Linux hosts, the matrix copies that same neutral
+Cairo library under the stable Flutter name, runs the live widget interaction
+gate, and then builds the native Flutter runner for that host.
 
-On JDK 21 and Gradle-capable desktop hosts, the matrix copies that shared Cairo
-bridge beside the generated Compose project, supplies its absolute path to the
+On JDK 21 and Gradle-capable desktop hosts, the matrix copies that same neutral
+Cairo library under the stable Compose name, supplies its absolute path to the
 JNA host, and runs the live native interaction gate before the Compose build.
 
 The macOS and Windows Rust package tests are the authoritative direct-launch

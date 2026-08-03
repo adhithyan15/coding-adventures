@@ -51,7 +51,7 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     let build = Command::new(cargo)
         .arg("build")
         .arg("-p")
-        .arg("venture-browser-qt")
+        .arg("venture-browser-cairo")
         .arg("--target-dir")
         .arg(&target)
         .current_dir(env!("CARGO_MANIFEST_DIR"))
@@ -64,9 +64,9 @@ fn build_native_bridge(output: &Path) -> PathBuf {
         String::from_utf8_lossy(&build.stderr)
     );
     #[cfg(target_os = "macos")]
-    let library = target.join("debug/libventure_browser_qt.dylib");
+    let library = target.join("debug/libventure_browser_cairo.dylib");
     #[cfg(target_os = "linux")]
-    let library = target.join("debug/libventure_browser_qt.so");
+    let library = target.join("debug/libventure_browser_cairo.so");
     library
 }
 

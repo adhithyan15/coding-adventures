@@ -181,7 +181,7 @@ fi
 
 if has_command cmake && has_command qmltestrunner; then
   echo "==> Building Venture Qt native bridge"
-  qt_bridge_args=(build -p venture-browser-qt)
+  qt_bridge_args=(build -p venture-browser-cairo)
   qt_bridge_profile=debug
   if ((release)); then
     qt_bridge_args+=(--release)
@@ -189,11 +189,20 @@ if has_command cmake && has_command qmltestrunner; then
   fi
   (cd "$rust_workspace" && cargo "${qt_bridge_args[@]}")
   case "$host_os" in
-    Darwin) qt_bridge_name=libventure_browser_qt.dylib ;;
-    Linux) qt_bridge_name=libventure_browser_qt.so ;;
-    *) qt_bridge_name=venture_browser_qt.dll ;;
+    Darwin)
+      cairo_bridge_name=libventure_browser_cairo.dylib
+      qt_bridge_name=libventure_browser_qt.dylib
+      ;;
+    Linux)
+      cairo_bridge_name=libventure_browser_cairo.so
+      qt_bridge_name=libventure_browser_qt.so
+      ;;
+    *)
+      cairo_bridge_name=venture_browser_cairo.dll
+      qt_bridge_name=venture_browser_qt.dll
+      ;;
   esac
-  cp "$rust_workspace/target/$qt_bridge_profile/$qt_bridge_name" \
+  cp "$rust_workspace/target/$qt_bridge_profile/$cairo_bridge_name" \
     "$output_root/qt/$qt_bridge_name"
   echo "==> Building qt"
   if has_command qt-cmake; then
@@ -238,7 +247,7 @@ esac
 
 if [[ -n "$flutter_platform" ]] && has_command flutter; then
   echo "==> Building Venture Flutter native bridge"
-  flutter_bridge_args=(build -p venture-browser-qt)
+  flutter_bridge_args=(build -p venture-browser-cairo)
   flutter_bridge_profile=debug
   if ((release)); then
     flutter_bridge_args+=(--release)
@@ -247,15 +256,15 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
   (cd "$rust_workspace" && cargo "${flutter_bridge_args[@]}")
   case "$host_os" in
     Darwin)
-      flutter_bridge_source=libventure_browser_qt.dylib
+      flutter_bridge_source=libventure_browser_cairo.dylib
       flutter_bridge_name=libventure_browser_flutter.dylib
       ;;
     Linux)
-      flutter_bridge_source=libventure_browser_qt.so
+      flutter_bridge_source=libventure_browser_cairo.so
       flutter_bridge_name=libventure_browser_flutter.so
       ;;
     *)
-      flutter_bridge_source=venture_browser_qt.dll
+      flutter_bridge_source=venture_browser_cairo.dll
       flutter_bridge_name=venture_browser_flutter.dll
       ;;
   esac
@@ -290,7 +299,7 @@ elif [[ -z "$java_major" || "$java_major" -lt 21 ]]; then
   skip_backend compose "JDK 21 or newer is not installed"
 else
   echo "==> Building Venture Compose native bridge"
-  compose_bridge_args=(build -p venture-browser-qt)
+  compose_bridge_args=(build -p venture-browser-cairo)
   compose_bridge_profile=debug
   if ((release)); then
     compose_bridge_args+=(--release)
@@ -299,15 +308,15 @@ else
   (cd "$rust_workspace" && cargo "${compose_bridge_args[@]}")
   case "$host_os" in
     Darwin)
-      compose_bridge_source=libventure_browser_qt.dylib
+      compose_bridge_source=libventure_browser_cairo.dylib
       compose_bridge_name=libventure_browser_compose.dylib
       ;;
     Linux)
-      compose_bridge_source=libventure_browser_qt.so
+      compose_bridge_source=libventure_browser_cairo.so
       compose_bridge_name=libventure_browser_compose.so
       ;;
     *)
-      compose_bridge_source=venture_browser_qt.dll
+      compose_bridge_source=venture_browser_cairo.dll
       compose_bridge_name=venture_browser_compose.dll
       ;;
   esac

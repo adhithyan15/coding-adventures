@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Move shared browser/controller/Cairo ownership into the backend-neutral
+  `venture-browser-cairo` crate and retain this package as the thin Qt facade.
+
 - Add a Cairo-backed native page bridge for Mosaic's generated Qt Quick host.
 - Reuse `venture-browser-core::BrowserHostController` for navigation, chrome
   projection, scrolling, link activation, hover, and retained-page reflow.
