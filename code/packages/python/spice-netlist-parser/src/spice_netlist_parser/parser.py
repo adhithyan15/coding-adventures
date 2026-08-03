@@ -39,6 +39,8 @@ from spice_engine import (
     ac_sweep,
     dc_op,
     dc_sweep,
+    mosfet_from_model_card,
+    normalize_model_card,
     transient,
 )
 
@@ -1886,6 +1888,9 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
                 raise NetlistParseError("only MOS LEVEL=1 model cards are supported")
         if "TOX" in params and (not math.isfinite(params["TOX"]) or params["TOX"] <= 0.0):
             raise NetlistParseError("MOSFET TOX must be finite and positive")
+        mobility = params.get("U0", params.get("UO"))
+        if mobility is not None and (not math.isfinite(mobility) or mobility < 0.0):
+            raise NetlistParseError("MOSFET U0 must be finite and non-negative")
     return ModelCard(name=name, kind=kind, params=params)
 
 
@@ -1923,6 +1928,7 @@ _LEVEL1_PARAM_ALIASES = {
     "NSUB": "N_SUB",
     "N": "N_SUB",
     "TNOM": "T_NOM",
+    "UO": "U0",
     "VTO": "VT0",
 }
 
@@ -1939,6 +1945,13 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
         param_name = _LEVEL1_PARAM_ALIASES.get(name, name)
         if param_name in values and not isinstance(values[param_name], bool):
             values[param_name] = value
+    if "KP" not in params and "TOX" in model.params:
+        derivation_params = {"TOX": model.params["TOX"]}
+        if "U0" in values:
+            derivation_params["U0"] = values["U0"]
+        normalized = normalize_model_card(model.name, model.kind, derivation_params)
+        derived = mosfet_from_model_card("M", "d", "g", "s", "b", normalized)
+        values["KP"] = derived.model.model.params.KP
     return MOSFET(
         type=MosfetType[model.kind],
         model=Level1Model(Level1Params(**values)),

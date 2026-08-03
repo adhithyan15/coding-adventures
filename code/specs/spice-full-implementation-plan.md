@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley SPICE MOS model-card oxide-thickness parity.
+1. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite model-card `TOX` values with the
-     diagnostic already used by Rust and the shared engines.
-   - Lower valid `TOX` values into Level-1 oxide thickness instead of silently
-     discarding them.
+   - Lower `U0` / `UO` and reject negative or non-finite values with the shared
+     diagnostic.
+   - Reuse shared engine semantics to derive `KP` from surface mobility and
+     `TOX` when no explicit transconductance is supplied.
 
 ## Completed Slices
 
@@ -4132,29 +4132,31 @@ the Rust, Python, and TypeScript surfaces together.
      same tolerance and diagnostic as Rust and the shared engines.
    - Explicit `LEVEL=1` model cards and cards that omit `LEVEL` remain accepted.
 
+369. Python and TypeScript Berkeley SPICE MOS model-card oxide-thickness parity.
+   - Status: completed in PR 9586.
+   - Zero, negative, and non-finite model-card `TOX` values are rejected with
+     the shared diagnostic.
+   - Valid `TOX` values reach Level-1 oxide thickness in both facades.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE MOS model-card oxide-thickness parity.
-   - Validate and lower canonical `TOX`; Python currently aliases it to a
-     nonexistent field and TypeScript currently omits it from accepted fields.
-
-2. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
+1. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
    - Lower `U0` / `UO`, validate its finite non-negative domain, and derive `KP`
      from `U0` and `TOX` when `KP` is omitted.
 
-3. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
+2. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
    - Apply Rust-aligned domains and diagnostics to already lowered `KP`, `VT0`,
      `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, and nominal-temperature fields.
 
-4. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
+3. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
    - Lower missing canonical resistance, geometry, capacitance, junction, and
      noise fields, then align `VTH`, `LAM`, `CJS`, and `CJD` aliases.
 
-5. Python and TypeScript Berkeley SPICE MOS electrostatic-default parity.
+4. Python and TypeScript Berkeley SPICE MOS electrostatic-default parity.
    - Validate and consume `NSS` / `TPG`, then derive `VT0`, `GAMMA`, and `PHI`
      from `N_SUB` / `TOX` with shared engine semantics.
 
-6. Grammar-backed parser and app facade.
+5. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4162,7 +4164,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-7. Deck compatibility follow-up.
+6. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4173,7 +4175,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-8. Production solver core follow-up.
+7. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4184,14 +4186,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-9. Device model depth.
+8. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-10. Analysis completion.
+9. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4200,14 +4202,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-11. Mixed-signal integration.
+10. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-12. Verilog-A and custom models.
+11. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
