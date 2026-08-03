@@ -10,6 +10,8 @@ flat hash directory consumed by ``adj-verify``.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import ctypes
 import hashlib
 import html
@@ -36,6 +38,9 @@ DEFAULT_ROOT = Path("code/specs/data/adj-stdlib-provenance/cas")
 DEFAULT_MANIFEST = Path("code/specs/data/adj-stdlib-provenance/manifest.json")
 DEFAULT_SCHEMA = Path("code/specs/data/adj-stdlib-provenance/manifest.schema.json")
 MAX_OBJECT_BYTES = 64 * 1024 * 1024
+TRANSACTION_JOURNAL_CONTRACT = "adj-stdlib/cas-transaction-journal/v1"
+TRANSACTION_JOURNAL_NAME = ".transaction-journal.json"
+TRANSACTION_PRUNE_DIRECTORY = ".transaction-prune"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 OBJECT_KINDS = {
     "execution_witness",
@@ -293,15 +298,39 @@ def _read_regular_file(path: Path, *, limit: int = MAX_OBJECT_BYTES) -> bytes:
 
 
 def _ensure_real_directory(path: Path) -> None:
+    missing: list[Path] = []
+    cursor = path
+    while not cursor.exists():
+        missing.append(cursor)
+        parent = cursor.parent
+        if parent == cursor:
+            raise ProvenanceError(
+                f"cannot create directory below unavailable filesystem root: {cursor}"
+            )
+        cursor = parent
     if path.exists():
         _reject_link_components(path)
     else:
         _reject_link_components(path, allow_missing_leaf=True)
     path.mkdir(parents=True, exist_ok=True)
+    for created in reversed(missing):
+        _sync_directory(created.parent)
     _reject_link_components(path)
     info = path.lstat()
     if _is_link_or_reparse(info) or not stat.S_ISDIR(info.st_mode):
         raise ProvenanceError(f"refusing non-directory CAS path: {path}")
+
+
+def _sync_directory(path: Path) -> None:
+    if os.name == "nt":
+        return
+    descriptor = os.open(
+        path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    )
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
 
 
 def _write_exclusive(path: Path, data: bytes) -> None:
@@ -326,6 +355,7 @@ def _write_exclusive(path: Path, data: bytes) -> None:
                 ) from None
         if _read_regular_file(path, limit=len(data)) != data:
             raise ProvenanceError(f"published bytes do not re-read exactly: {path}")
+        _sync_directory(path.parent)
     finally:
         temporary.unlink(missing_ok=True)
 
@@ -334,7 +364,9 @@ def _write_atomic(path: Path, data: bytes) -> None:
     _ensure_real_directory(path.parent)
     if path.exists():
         _reject_link_components(path)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=".index-", dir=path.parent)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}-", dir=path.parent
+    )
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "wb") as output:
@@ -342,8 +374,25 @@ def _write_atomic(path: Path, data: bytes) -> None:
             output.flush()
             os.fsync(output.fileno())
         os.replace(temporary, path)
+        _sync_directory(path.parent)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def _encoded_bytes(data: bytes) -> str:
+    return base64.b64encode(data).decode("ascii")
+
+
+def _decoded_bytes(value: Any, field: str) -> bytes:
+    if not isinstance(value, str):
+        raise ProvenanceError(f"{field} must be base64 text")
+    try:
+        decoded = base64.b64decode(value, validate=True)
+    except (ValueError, binascii.Error) as error:
+        raise ProvenanceError(f"{field} must be canonical base64") from error
+    if _encoded_bytes(decoded) != value:
+        raise ProvenanceError(f"{field} must be canonical base64")
+    return decoded
 
 
 def _require_hash(value: Any, field: str) -> str:
@@ -3471,20 +3520,333 @@ class CasRootLock:
         return False
 
 
+def _transaction_paths(cas_root: Path) -> tuple[Path, Path]:
+    return (
+        cas_root / TRANSACTION_JOURNAL_NAME,
+        cas_root / TRANSACTION_PRUNE_DIRECTORY,
+    )
+
+
+def _cleanup_atomic_temporaries(path: Path) -> None:
+    if not path.parent.exists():
+        return
+    _ensure_real_directory(path.parent)
+    removed = False
+    for temporary in path.parent.glob(f".{path.name}-*"):
+        _read_regular_file(temporary)
+        temporary.unlink()
+        removed = True
+    if removed:
+        _sync_directory(path.parent)
+
+
+def _cleanup_cas_temporaries(cas_root: Path) -> None:
+    objects = cas_root / "objects"
+    if not objects.exists():
+        return
+    _ensure_real_directory(objects)
+    synced: set[Path] = set()
+    for temporary in objects.rglob(".cas-*"):
+        _read_regular_file(temporary)
+        temporary.unlink()
+        synced.add(temporary.parent)
+    for parent in synced:
+        _sync_directory(parent)
+
+
+def _scan_cas_object_files(cas_root: Path) -> dict[str, Path]:
+    objects = cas_root / "objects"
+    if not objects.exists():
+        return {}
+    _ensure_real_directory(objects)
+    result: dict[str, Path] = {}
+    for path in objects.rglob("*"):
+        if path.is_dir():
+            _reject_link_components(path)
+            continue
+        data = _read_regular_file(path)
+        relative = path.relative_to(objects)
+        if len(relative.parts) != 2:
+            raise ProvenanceError(f"non-canonical CAS object path: {path}")
+        digest = relative.parts[0] + relative.parts[1]
+        _require_hash(digest, "CAS object path hash")
+        if sha256_bytes(data) != digest:
+            raise ProvenanceError(f"CAS object bytes disagree with path: {path}")
+        result[digest] = path
+    return result
+
+
+def _manifest_journal_path(cas_root: Path, relative_value: Any) -> Path:
+    relative_text = _require_nonempty(relative_value, "journal manifest path")
+    relative = PurePosixPath(relative_text)
+    if (
+        relative.is_absolute()
+        or ".." in relative.parts
+        or "\\" in relative_text
+        or relative.as_posix() != relative_text
+    ):
+        raise ProvenanceError("journal manifest path must stay below the CAS parent")
+    parent = cas_root.resolve().parent
+    selected = parent.joinpath(*relative.parts)
+    _reject_link_components(selected)
+    try:
+        selected.resolve().relative_to(parent)
+    except ValueError as error:
+        raise ProvenanceError(
+            "journal manifest path escapes the CAS parent"
+        ) from error
+    return selected
+
+
+def _load_transaction_journal(cas_root: Path) -> dict[str, Any] | None:
+    journal_path, _backup_root = _transaction_paths(cas_root)
+    try:
+        info = journal_path.lstat()
+    except FileNotFoundError:
+        return None
+    if _is_link_or_reparse(info) or not stat.S_ISREG(info.st_mode):
+        raise ProvenanceError(
+            f"refusing non-file CAS transaction journal: {journal_path}"
+        )
+    raw = _read_regular_file(journal_path)
+    try:
+        value = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ProvenanceError("CAS transaction journal must be UTF-8 JSON") from error
+    if raw != canonical_json_bytes(value):
+        raise ProvenanceError("CAS transaction journal must be canonical JSON")
+    if not isinstance(value, dict) or set(value) != {
+        "allowed_index_sha256s",
+        "allowed_manifest_sha256s",
+        "baseline_index_base64",
+        "baseline_manifest",
+        "baseline_object_sha256s",
+        "contract",
+        "pruned_sha256s",
+    }:
+        raise ProvenanceError("CAS transaction journal has unknown or missing fields")
+    if value["contract"] != TRANSACTION_JOURNAL_CONTRACT:
+        raise ProvenanceError("CAS transaction journal uses an unsupported contract")
+    for field in ("allowed_index_sha256s", "allowed_manifest_sha256s"):
+        values = value[field]
+        if not isinstance(values, list) or values != sorted(set(values)):
+            raise ProvenanceError(f"journal {field} must be sorted and unique")
+        for index, digest in enumerate(values):
+            _require_hash(digest, f"{field}[{index}]")
+    baseline = value["baseline_object_sha256s"]
+    pruned = value["pruned_sha256s"]
+    if not isinstance(baseline, list) or baseline != sorted(set(baseline)):
+        raise ProvenanceError(
+            "journal baseline_object_sha256s must be sorted and unique"
+        )
+    if not isinstance(pruned, list) or pruned != sorted(set(pruned)):
+        raise ProvenanceError("journal pruned_sha256s must be sorted and unique")
+    for index, digest in enumerate(baseline):
+        _require_hash(digest, f"baseline_object_sha256s[{index}]")
+    for index, digest in enumerate(pruned):
+        _require_hash(digest, f"pruned_sha256s[{index}]")
+    if not set(pruned).issubset(baseline):
+        raise ProvenanceError("journal pruned objects must belong to the baseline")
+    encoded_index = value["baseline_index_base64"]
+    if encoded_index is not None:
+        index_bytes = _decoded_bytes(encoded_index, "baseline_index_base64")
+        try:
+            index_value = json.loads(index_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise ProvenanceError("journal baseline index must be UTF-8 JSON") from error
+        if index_bytes != canonical_json_bytes(index_value) or not isinstance(
+            index_value, dict
+        ):
+            raise ProvenanceError("journal baseline index must be canonical JSON")
+        if set(index_value) != set(baseline):
+            raise ProvenanceError(
+                "journal baseline object set disagrees with its CAS index"
+            )
+        if sha256_bytes(index_bytes) not in value["allowed_index_sha256s"]:
+            raise ProvenanceError("journal does not authorize its baseline CAS index")
+    elif baseline:
+        raise ProvenanceError("index-free journal cannot claim baseline CAS objects")
+    manifest = value["baseline_manifest"]
+    if manifest is not None:
+        if not isinstance(manifest, dict) or set(manifest) != {
+            "bytes_base64",
+            "path",
+        }:
+            raise ProvenanceError("journal baseline_manifest is malformed")
+        _manifest_journal_path(cas_root, manifest["path"])
+        manifest_bytes = _decoded_bytes(
+            manifest["bytes_base64"], "baseline_manifest.bytes_base64"
+        )
+        if sha256_bytes(manifest_bytes) not in value["allowed_manifest_sha256s"]:
+            raise ProvenanceError("journal does not authorize its baseline manifest")
+    elif value["allowed_manifest_sha256s"]:
+        raise ProvenanceError("manifest-free journal cannot authorize manifest bytes")
+    return value
+
+
+def _cleanup_transaction_backups(cas_root: Path) -> None:
+    _journal_path, backup_root = _transaction_paths(cas_root)
+    try:
+        info = backup_root.lstat()
+    except FileNotFoundError:
+        return
+    if _is_link_or_reparse(info) or not stat.S_ISDIR(info.st_mode):
+        raise ProvenanceError(
+            f"refusing non-directory transaction backup path: {backup_root}"
+        )
+    _reject_link_components(backup_root)
+    for path in backup_root.iterdir():
+        if not path.is_file():
+            raise ProvenanceError(f"unexpected transaction backup entry: {path}")
+        digest = _require_hash(path.name, "transaction backup hash")
+        if sha256_bytes(_read_regular_file(path)) != digest:
+            raise ProvenanceError(f"transaction backup bytes disagree: {path}")
+    for path in backup_root.iterdir():
+        path.unlink()
+    backup_root.rmdir()
+    _sync_directory(cas_root)
+
+
+def _recover_transaction(
+    cas_root: Path, *, expected_manifest_path: Path | None = None
+) -> bool:
+    journal_path, backup_root = _transaction_paths(cas_root)
+    _cleanup_atomic_temporaries(journal_path)
+    _cleanup_cas_temporaries(cas_root)
+    journal = _load_transaction_journal(cas_root)
+    if journal is None:
+        _cleanup_atomic_temporaries(cas_root / "index.json")
+        if expected_manifest_path is not None:
+            _cleanup_atomic_temporaries(expected_manifest_path)
+        _cleanup_transaction_backups(cas_root)
+        return False
+    manifest_record = journal["baseline_manifest"]
+    manifest_path: Path | None = None
+    manifest_bytes: bytes | None = None
+    if manifest_record is not None:
+        manifest_path = _manifest_journal_path(cas_root, manifest_record["path"])
+        if (
+            expected_manifest_path is not None
+            and manifest_path != expected_manifest_path.resolve()
+        ):
+            raise ProvenanceError(
+                "pending CAS journal belongs to a different provenance manifest"
+            )
+        manifest_bytes = _decoded_bytes(
+            manifest_record["bytes_base64"], "baseline_manifest.bytes_base64"
+        )
+        _cleanup_atomic_temporaries(manifest_path)
+    index_path = cas_root / "index.json"
+    _cleanup_atomic_temporaries(index_path)
+    if index_path.exists():
+        current_index_hash = sha256_bytes(_read_regular_file(index_path))
+        if current_index_hash not in journal["allowed_index_sha256s"]:
+            raise ProvenanceError(
+                "current CAS index is not authorized by the transaction journal"
+            )
+    elif journal["baseline_index_base64"] is not None:
+        raise ProvenanceError(
+            "transaction journal cannot account for a missing CAS index"
+        )
+    if manifest_path is not None:
+        if not manifest_path.exists():
+            raise ProvenanceError(
+                "transaction journal cannot account for a missing manifest"
+            )
+        current_manifest_hash = sha256_bytes(_read_regular_file(manifest_path))
+        if current_manifest_hash not in journal["allowed_manifest_sha256s"]:
+            raise ProvenanceError(
+                "current manifest is not authorized by the transaction journal"
+            )
+    for digest in journal["pruned_sha256s"]:
+        backup = backup_root / digest
+        data = _read_regular_file(backup)
+        if sha256_bytes(data) != digest:
+            raise ProvenanceError(f"transaction prune backup disagrees for {digest}")
+        destination = Cas(cas_root).object_path(digest)
+        if destination.exists():
+            if _read_regular_file(destination) != data:
+                raise ProvenanceError(
+                    f"cannot recover over mismatched CAS object {digest}"
+                )
+        else:
+            _ensure_real_directory(destination.parent)
+            _write_exclusive(destination, data)
+    if manifest_path is not None and manifest_bytes is not None:
+        _write_atomic(manifest_path, manifest_bytes)
+    encoded_index = journal["baseline_index_base64"]
+    if encoded_index is None:
+        if index_path.exists():
+            _reject_link_components(index_path)
+            index_path.unlink()
+            _sync_directory(cas_root)
+    else:
+        _write_atomic(
+            index_path, _decoded_bytes(encoded_index, "baseline_index_base64")
+        )
+    baseline = set(journal["baseline_object_sha256s"])
+    current = _scan_cas_object_files(cas_root)
+    for digest in sorted(set(current) - baseline):
+        current[digest].unlink()
+        _sync_directory(current[digest].parent)
+    objects = cas_root / "objects"
+    if objects.exists():
+        for path in sorted(objects.rglob("*"), reverse=True):
+            if path.is_dir():
+                try:
+                    path.rmdir()
+                except OSError:
+                    pass
+                else:
+                    _sync_directory(path.parent)
+    if (
+        manifest_path is not None
+        and manifest_bytes is not None
+        and _read_regular_file(manifest_path) != manifest_bytes
+    ):
+        raise ProvenanceError("recovered manifest bytes do not match the journal")
+    if encoded_index is not None:
+        recovered = Cas(cas_root)
+        recovered.load()
+        _validate_index(recovered)
+    elif _scan_cas_object_files(cas_root):
+        raise ProvenanceError("index-free recovery left CAS object bytes behind")
+    journal_path.unlink()
+    _sync_directory(cas_root)
+    _cleanup_transaction_backups(cas_root)
+    return True
+
+
 class CasMutationTransaction:
     """Serialize one CAS mutation and remove newly materialized bytes on failure."""
 
-    def __init__(self, cas_root: Path, *, blocking: bool = True) -> None:
+    def __init__(
+        self,
+        cas_root: Path,
+        *,
+        blocking: bool = True,
+        manifest_path: Path | None = None,
+    ) -> None:
         self.cas = Cas(cas_root)
         self._lock = CasRootLock(cas_root, blocking=blocking)
+        self._journal_path, self._prune_backup_root = _transaction_paths(cas_root)
+        self._journal_manifest_path = manifest_path
         self._baseline_index: bytes | None = None
+        self._baseline_manifest: bytes | None = None
         self._baseline_objects: set[Path] = set()
+        self._journal_pruned_digests: list[str] = []
+        self._allowed_index_sha256s: set[str] = set()
+        self._allowed_manifest_sha256s: set[str] = set()
         self._entered = False
         self._committed = False
 
     def __enter__(self):
         self._lock.__enter__()
         try:
+            _recover_transaction(
+                self.cas.root,
+                expected_manifest_path=self._journal_manifest_path,
+            )
             self.cas.load()
             if self.cas.index_path.exists():
                 _validate_index(self.cas)
@@ -3494,47 +3856,115 @@ class CasMutationTransaction:
             self._baseline_objects = {
                 path.resolve() for path in self.cas.objects.rglob("*") if path.is_file()
             }
+            if self._baseline_index is None and self._baseline_objects:
+                raise ProvenanceError("CAS objects exist without a baseline index")
+            if self._journal_manifest_path is not None:
+                self._baseline_manifest = _read_regular_file(
+                    self._journal_manifest_path
+                )
+            if self._baseline_index is not None:
+                self._allowed_index_sha256s.add(
+                    sha256_bytes(self._baseline_index)
+                )
+            if self._baseline_manifest is not None:
+                self._allowed_manifest_sha256s.add(
+                    sha256_bytes(self._baseline_manifest)
+                )
             self._entered = True
+            self._write_journal()
             return self
         except Exception:
+            if self._entered and self._journal_path.exists():
+                self._rollback()
             self._lock.__exit__(None, None, None)
+            self._entered = False
             raise
+
+    def _journal_manifest(self) -> dict[str, str] | None:
+        if self._journal_manifest_path is None:
+            return None
+        if self._baseline_manifest is None:
+            raise ProvenanceError("transaction manifest baseline is unavailable")
+        try:
+            relative = self._journal_manifest_path.resolve().relative_to(
+                self.cas.root.resolve().parent
+            )
+        except ValueError as error:
+            raise ProvenanceError(
+                "transaction manifest must stay below the CAS parent"
+            ) from error
+        return {
+            "bytes_base64": _encoded_bytes(self._baseline_manifest),
+            "path": relative.as_posix(),
+        }
+
+    def _write_journal(self) -> None:
+        baseline_digests = sorted(
+            path.parent.name + path.name for path in self._baseline_objects
+        )
+        journal = {
+            "allowed_index_sha256s": sorted(self._allowed_index_sha256s),
+            "allowed_manifest_sha256s": sorted(self._allowed_manifest_sha256s),
+            "baseline_index_base64": (
+                _encoded_bytes(self._baseline_index)
+                if self._baseline_index is not None
+                else None
+            ),
+            "baseline_manifest": self._journal_manifest(),
+            "baseline_object_sha256s": baseline_digests,
+            "contract": TRANSACTION_JOURNAL_CONTRACT,
+            "pruned_sha256s": sorted(self._journal_pruned_digests),
+        }
+        _write_atomic(self._journal_path, canonical_json_bytes(journal))
+
+    def _publish_index(self) -> None:
+        target = canonical_json_bytes(self.cas.index)
+        self._allowed_index_sha256s.add(sha256_bytes(target))
+        self._write_journal()
+        self.cas.write_index()
+
+    def _publish_manifest(self, data: bytes) -> None:
+        if self._journal_manifest_path is None:
+            raise ProvenanceError("transaction has no manifest publication target")
+        self._allowed_manifest_sha256s.add(sha256_bytes(data))
+        self._write_journal()
+        _write_atomic(self._journal_manifest_path, data)
+
+    def _finish_commit(self) -> None:
+        _reject_link_components(self._journal_path)
+        self._journal_path.unlink()
+        try:
+            _sync_directory(self.cas.root)
+        except OSError:
+            # Unlinking the journal is the process-termination commit point.
+            # Directory-flush failure cannot be reported as a rolled-back write.
+            pass
+        try:
+            _cleanup_transaction_backups(self.cas.root)
+        except (OSError, ProvenanceError):
+            # Journal removal is the commit point.  A suspicious backup must
+            # remain for fail-closed inspection, not turn a commit into rollback.
+            pass
 
     def commit(self) -> None:
         if not self._entered or self._committed:
             raise ProvenanceError("CAS mutation transaction is not open")
-        self.cas.write_index()
+        try:
+            self._publish_index()
+            _validate_index(self.cas)
+            self._finish_commit()
+        except Exception:
+            self._rollback()
+            raise
         self._committed = True
 
     def _rollback(self) -> None:
         if not self._entered:
             return
-        if self._baseline_index is None:
-            if self.cas.index_path.exists():
-                _reject_link_components(self.cas.index_path)
-                self.cas.index_path.unlink()
-        else:
-            _write_atomic(self.cas.index_path, self._baseline_index)
-        if self.cas.objects.exists():
-            for path in sorted(self.cas.objects.rglob("*"), reverse=True):
-                if not path.is_file() or path.resolve() in self._baseline_objects:
-                    continue
-                data = _read_regular_file(path)
-                relative = path.relative_to(self.cas.objects)
-                if len(relative.parts) != 2:
-                    raise ProvenanceError(
-                        f"refusing rollback of non-canonical CAS path {path}"
-                    )
-                digest = relative.parts[0] + relative.parts[1]
-                if sha256_bytes(data) != digest:
-                    raise ProvenanceError(
-                        f"refusing rollback of mismatched CAS object {path}"
-                    )
-                path.unlink()
-                try:
-                    path.parent.rmdir()
-                except OSError:
-                    pass
+        _recover_transaction(
+            self.cas.root,
+            expected_manifest_path=self._journal_manifest_path,
+        )
         self.cas.load()
 
     def __exit__(self, exc_type: object, exc: object, traceback: object) -> bool:
@@ -3565,7 +3995,11 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         allow_unwitnessed_baseline: bool = False,
         allow_migration_formula_inputs_baseline: bool = False,
     ) -> None:
-        super().__init__(cas_root, blocking=False)
+        super().__init__(
+            cas_root,
+            blocking=False,
+            manifest_path=manifest_path,
+        )
         self.manifest_path = manifest_path
         self.expected_manifest_id = expected_manifest_id
         self.schema_path = schema_path
@@ -3576,7 +4010,6 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         self.allow_migration_formula_inputs_baseline = (
             allow_migration_formula_inputs_baseline
         )
-        self._baseline_manifest = b""
 
     def __enter__(self):
         try:
@@ -3593,7 +4026,7 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                     self.allow_migration_formula_inputs_baseline
                 ),
             )
-            self._baseline_manifest = _read_regular_file(self.manifest_path)
+            assert self._baseline_manifest is not None
             return self
         except Exception:
             super().__exit__(Exception, None, None)
@@ -3604,13 +4037,13 @@ class BundleRegistrationTransaction(CasMutationTransaction):
             raise ProvenanceError("registration transaction is not open")
         manifest, registered = _registered_manifest(
             self.cas,
-            self._baseline_manifest,
+            self._baseline_manifest or b"",
             registrations,
             self.expected_manifest_id,
         )
         try:
-            self.cas.write_index()
-            _write_atomic(self.manifest_path, canonical_json_bytes(manifest))
+            self._publish_index()
+            self._publish_manifest(canonical_json_bytes(manifest))
             _validate_repository_unlocked(
                 self.cas.root,
                 self.manifest_path,
@@ -3619,19 +4052,12 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 formula_inventory_command=self.formula_inventory_command,
                 formula_audit_command=self.formula_audit_command,
             )
+            self._finish_commit()
         except Exception:
             self._rollback()
             raise
         self._committed = True
         return registered
-
-    def _rollback(self) -> None:
-        if not self._entered:
-            return
-        if self._baseline_manifest:
-            _write_atomic(self.manifest_path, self._baseline_manifest)
-        super()._rollback()
-
 
 class BundleRootReplacementTransaction(BundleRegistrationTransaction):
     """Explicitly replace owned roots and prune only newly unreachable objects."""
@@ -3639,8 +4065,6 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._baseline_digests: set[str] = set()
-        self._pruned_digests: list[str] = []
-        self._prune_backup: tempfile.TemporaryDirectory[str] | None = None
 
     def __enter__(self):
         super().__enter__()
@@ -3648,45 +4072,31 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
         return self
 
     def _stage_prune(self, digests: set[str]) -> None:
-        backup = tempfile.TemporaryDirectory(prefix="adj-provenance-prune-")
-        backup_root = Path(backup.name)
         try:
+            _ensure_real_directory(self._prune_backup_root)
             for digest in sorted(digests):
                 data = _read_regular_file(self.cas.object_path(digest))
                 if sha256_bytes(data) != digest:
                     raise ProvenanceError(
                         f"refusing to prune mismatched CAS object {digest}"
                     )
-                _write_exclusive(backup_root / digest, data)
+                _write_exclusive(self._prune_backup_root / digest, data)
+            self._journal_pruned_digests = sorted(digests)
+            self._write_journal()
             for digest in sorted(digests):
                 path = self.cas.object_path(digest)
                 _reject_link_components(path)
-                self._pruned_digests.append(digest)
                 path.unlink()
+                _sync_directory(path.parent)
                 try:
                     path.parent.rmdir()
                 except OSError:
                     pass
+                else:
+                    _sync_directory(path.parent.parent)
         except Exception:
-            self._prune_backup = backup
-            self._restore_pruned()
+            self._journal_pruned_digests = sorted(digests)
             raise
-        self._prune_backup = backup
-
-    def _restore_pruned(self) -> None:
-        if self._prune_backup is None:
-            return
-        backup_root = Path(self._prune_backup.name)
-        for digest in self._pruned_digests:
-            destination = self.cas.object_path(digest)
-            if destination.exists():
-                if sha256_bytes(_read_regular_file(destination)) != digest:
-                    raise ProvenanceError(
-                        f"cannot restore over mismatched CAS object {digest}"
-                    )
-                continue
-            _write_exclusive(destination, _read_regular_file(backup_root / digest))
-        self._pruned_digests.clear()
 
     def commit(self, registrations: dict[str, str]) -> list[str]:
         del registrations
@@ -3721,7 +4131,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
             )
         manifest, registered = _registered_manifest(
             self.cas,
-            self._baseline_manifest,
+            self._baseline_manifest or b"",
             new_roots,
             self.expected_manifest_id,
             allow_replacements=True,
@@ -3729,7 +4139,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
             expected_current=expected_current,
         )
         try:
-            self.cas.write_index()
+            self._publish_index()
             with tempfile.TemporaryDirectory(
                 prefix="adj-provenance-candidate-"
             ) as candidate_directory:
@@ -3758,8 +4168,8 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                 for digest, record in self.cas.index.items()
                 if digest in reachable
             }
-            self.cas.write_index()
-            _write_atomic(self.manifest_path, canonical_json_bytes(manifest))
+            self._publish_index()
+            self._publish_manifest(canonical_json_bytes(manifest))
             _validate_repository_unlocked(
                 self.cas.root,
                 self.manifest_path,
@@ -3768,28 +4178,13 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                 formula_inventory_command=self.formula_inventory_command,
                 formula_audit_command=self.formula_audit_command,
             )
+            self._finish_commit()
         except Exception:
             self._rollback()
             raise
         self._committed = True
         pruned = sorted(unreachable)
-        if self._prune_backup is not None:
-            try:
-                self._prune_backup.cleanup()
-            except OSError:
-                pass
-            self._prune_backup = None
         return {"bundle_hashes": registered, "pruned_sha256s": pruned}
-
-    def _rollback(self) -> None:
-        self._restore_pruned()
-        super()._rollback()
-        if self._prune_backup is not None:
-            try:
-                self._prune_backup.cleanup()
-            except OSError:
-                pass
-            self._prune_backup = None
 
 
 def _validate_index(cas: Cas) -> None:
@@ -4604,6 +4999,7 @@ def validate_repository(
     formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
+        _recover_transaction(cas_root, expected_manifest_path=manifest_path)
         return _validate_repository_unlocked(
             cas_root,
             manifest_path,
@@ -4624,6 +5020,7 @@ def project_snapshots(
     formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
+        _recover_transaction(cas_root, expected_manifest_path=manifest_path)
         result = _validate_repository_unlocked(
             cas_root,
             manifest_path,

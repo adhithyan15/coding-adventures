@@ -277,8 +277,21 @@ option mapping, or judge/evaluation failure.
     graph, rejects staged stray objects and stale same-ID transitive roots, preserves
     nonconflicting shared dependencies, and reports the exact baseline objects pruned
     because no final root reaches them.
-7d. Add a write-ahead recovery journal for process termination between the
-    atomic CAS-index and manifest publications.
+7d. **Complete for process termination:** every index-only, additive-registration,
+    and root-replacement transaction writes a canonical journal under the CAS lock
+    before object mutation. The journal pins the exact baseline index and manifest
+    bytes, complete baseline object set, transaction-authorized publication hashes,
+    and every prune-backup hash. Pruned bytes live in a discoverable CAS-local backup,
+    not process temporary storage. Until the journal is durably removed, recovery has
+    one decision: restore the baseline byte for byte, remove only hash-checked
+    post-baseline objects, validate, then clear recovery state. Python readers and
+    writers recover before loading the index; the Rust projection reader refuses a
+    pending journal under the same lock. Spawned-process `os._exit` fixtures cover
+    journal preparation, object temporary and publication, index temporary and
+    publication, manifest temporary and publication, and post-prune publication.
+    Injected recovery interruption proves idempotence on retry. POSIX directory entries
+    are fsynced after creation, publication, and removal. This item proves process-
+    termination recovery on POSIX and Windows, not power-loss recovery.
 7e. **Complete:** scope native snapshot projection to a named bundle and its
     recursive dependency closure so adding an unrelated manifest root cannot
     perturb an already verified consumer.
