@@ -37,6 +37,13 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/PA-C05-*`](./lessons/)): bolṇā, **maiṁ
   panjābī boldā hāṁ** (*panj* "five" + *āb* "river"), rahiṇā, kamm karnā, practice.
   The gendered present habitual. In the book.
+- **Chapter 6 — Numbers 1–5** ([`lessons/PA-C06-*`](./lessons/)): a short
+  counting-and-Gurmukhi lesson followed by a prerequisite-ordered explanation
+  of why native Punjabi *panj* and Persian *panj* are convergence, not borrowing.
+
+Chapters 1–5 are in the book. Chapter 6 is canonical app-ready lesson content;
+its one-source book publication remains explicitly tracked in the shared
+backlog.
 
 ## Book / fonts
 

@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–5
+# Session Map — Punjabi Chapters 1–6
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -64,6 +64,13 @@ word needs.
 | 30 | kamm-karna | ਕੰਮ ਕਰਨਾ | "to work" (noun + *karnā*) ← √kṛ, the root of *namaskār* |
 | 31 | practice | (dialogue) | three verbs, one engine |
 
+## Chapter 6 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 32 | numbers-1-5 | ਇੱਕ, ਦੋ, ਤਿੰਨ, ਚਾਰ, ਪੰਜ | retrieve the five forms; distinguish addak from tippi; reuse *panj* from *panjābī* |
+| 33 | panj-convergence | ਪੰਜ · *panj* | Punjabi *pañca → panj* and Persian *panč → panj* converge independently |
+
 ## Next
 
-Chapter 6 — postpositions (*nū̃, tō̃, vic, te*) and numbers 1–10.
+Finish Chapter 6 with numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*).

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PA-C05-bolna, PA-C05-main-punjabi-bolda-han, PA-C05-rahna, PA-C05-kamm-karna]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C05-bolna, PA-C05-main-punjabi-bolda-han, PA-C05-rahna, PA-C05-kamm-karna, PA-C03-main]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PA-C03-tusi-kivein-ho, PA-C03-thik, PA-C03-koi-gall-nahin]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C03-kivein, PA-C03-tusi-kivein-ho, PA-C03-main, PA-C03-thik, PA-C03-koi-gall-nahin]
 ---
 

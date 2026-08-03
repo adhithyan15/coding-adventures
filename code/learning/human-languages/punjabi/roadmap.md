@@ -28,7 +28,8 @@ vocabularies** (Sanskritic and Perso-Arabic) and the **Gurmukhi** script, taught
 - **Ch. 5 — First Verbs**: bolṇā (to speak) → maiṁ panjābī boldā hāṁ (I speak
   Punjabi; *panj* "five" + *āb* "river") → rahiṇā (to live) → kamm karnā (to work;
   ← √kṛ) → practice. The gendered present habitual.
-- **Ch. 6 — Numbers 1–5** (`PA-C06-numbers-1-5`): *ikk, do, tinn, chār, panj* —
+- **Ch. 6 — Numbers 1–5** (`PA-C06-numbers-1-5` →
+  `PA-C06-panj-convergence`): first make *ikk, do, tinn, chār, panj* automatic
   in **Gurmukhi**, distinguishing the **ੱ** *addak* (doubles the following
   consonant, *ikk*) from the **ੰ** *tippi* (marks a nasal, *tinn*, *panj*). The
   chapter is built as a **payoff to Ch. 5**, which already took *panjābī* apart
@@ -38,13 +39,14 @@ vocabularies** (Sanskritic and Perso-Arabic) and the **Gurmukhi** script, taught
   voicing of a stop after a nasal (*panjāh* "fifty" against Hindi *pacās*),
   while Persian voiced its own *č* separately. **Convergence, not borrowing** —
   which is precisely why the Persian place-name sits so comfortably in Punjabi.
-  The *name* is Persian; the *numeral* is homegrown. **Authored.**
+  The *name* is Persian; the *numeral* is homegrown. The convergence history now
+  occupies its own sub-five-minute etymology lesson. **Authored.**
 
 ## Planned
 
 | Chapter | Theme |
 |---|---|
-| 6 | Postpositions (*nū̃, tō̃, vic, te*); numbers 1–10 (Sanskritic vs. everyday) |
+| 6 continuation | Numbers 6–10, then postpositions (*nū̃, tō̃, vic, te*) |
 | 7+ | Gendered verbs deepened, family, food — with the Sanskrit/Persian thread; tone flagged where it distinguishes words |
 
 Note: Punjabi marks "you" by **register** (*tūṇ* familiar / *tusīṇ* respectful,

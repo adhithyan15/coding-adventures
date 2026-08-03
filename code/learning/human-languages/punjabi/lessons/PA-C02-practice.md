@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PA-C02-mera-naam-hai, PA-C02-tuhada-naam-ki-hai, PA-C02-khushi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C02-naam, PA-C02-mera, PA-C02-hai, PA-C02-mera-naam-hai, PA-C02-tu-tusi, PA-C02-ki, PA-C02-tuhada-naam-ki-hai, PA-C02-khushi]
 ---
 

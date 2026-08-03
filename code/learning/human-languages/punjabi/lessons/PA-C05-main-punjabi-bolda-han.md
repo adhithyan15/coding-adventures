@@ -8,7 +8,7 @@ concept_tag: PA-WORD-PUNJABI
 prerequisites: [PA-C05-bolna, PA-C03-main]
 sounds: [tippi-nasal, kanna-aa]
 roots: [panj-persian, aab-persian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C05-bolna, PA-C03-main]
 ---
 

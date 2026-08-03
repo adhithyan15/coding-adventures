@@ -8,7 +8,7 @@ concept_tag: PA-VERB-KARNA
 prerequisites: [PA-C05-bolna]
 sounds: [tippi-nasal, double-mm]
 roots: [kr-do]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C05-bolna, PA-C05-rahna]
 ---
 

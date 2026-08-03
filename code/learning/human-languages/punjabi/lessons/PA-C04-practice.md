@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [PA-C04-phir-milaange, PA-C04-rab-raakha]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PA-C01-sat-sri-akal, PA-C04-phir, PA-C04-milaange, PA-C04-phir-milaange, PA-C04-rab-raakha]
 ---
 
