@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 1008 lessons, 20 books
-219 lessons at or above 300 effective seconds
+20 tracks, 1012 lessons, 20 books
+180 lessons at or above 300 effective seconds
 0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
 19 legacy, 1 mixed, 0 version-2 schema tracks
@@ -22,9 +22,9 @@ Longest effective lessons:
   HI-W01-shirorekha-na-ma: 381s (declared 240s, computed 381s; computed)
   TA-C24-iravu: 377s (declared 360s, computed 377s; declared+computed)
   LA-C19-quid-agis: 370s (declared 360s, computed 370s; declared+computed)
-  AR-C14-ashhur: 360s (declared 360s, computed 298s; declared)
-  AR-C20-ahada-ashar-ishrun: 360s (declared 360s, computed 220s; declared)
-  AR-C21-kalb-qitt: 360s (declared 360s, computed 278s; declared)
-  AR-C22-akhdar-asfar: 360s (declared 360s, computed 214s; declared)
   ES-C31-numeros-11-20: 360s (declared 360s, computed 245s; declared)
+  ES-C32-perro-gato: 360s (declared 360s, computed 265s; declared)
+  ES-C33-verde-amarillo: 360s (declared 360s, computed 205s; declared)
+  HI-C14-ritu: 360s (declared 360s, computed 253s; declared)
+  HI-C16-mahine: 360s (declared 360s, computed 253s; declared)
 
