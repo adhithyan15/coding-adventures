@@ -4,6 +4,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - host-controlled shadow-DOM interpolation
+
+Generated pipeline components now encode dynamic text and quoted-attribute
+values before assigning their template to `shadowRoot.innerHTML`. Dynamic link
+targets reject executable `javascript:`, `data:`, and `vbscript:` schemes, and
+runtime column widths are constrained to finite numbers. Host props and loop
+items can no longer escape their intended text, attribute, URL, or numeric CSS
+contexts.
+
 ### Fixed - project-shell named node-slot mounting
 
 Generated Web Component shells now recognize `node` and component props from
