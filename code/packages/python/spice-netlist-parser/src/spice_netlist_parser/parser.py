@@ -1274,6 +1274,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 "CJO", model.params.get("CJ", model.params.get("CJ0", 0.0))
             ),
             Tt=model.params.get("TT", 0.0),
+            Rs=model.params.get("RS", 0.0),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")
@@ -1957,6 +1958,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(transit_time) or transit_time < 0.0
         ):
             raise NetlistParseError("diode TT must be finite and non-negative")
+        series_resistance = params.get("RS")
+        if series_resistance is not None and (
+            not math.isfinite(series_resistance) or series_resistance < 0.0
+        ):
+            raise NetlistParseError("diode RS must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (

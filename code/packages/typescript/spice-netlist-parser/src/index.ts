@@ -1207,6 +1207,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode TT must be finite and non-negative");
   }
+  const diodeSeriesResistance = params.get("RS");
+  if (
+    kind === "D" &&
+    diodeSeriesResistance !== undefined &&
+    (!Number.isFinite(diodeSeriesResistance) || diodeSeriesResistance < 0.0)
+  ) {
+    throw new NetlistParseError("diode RS must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1780,18 +1788,21 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         `model ${JSON.stringify(model.name)} has kind ${JSON.stringify(model.kind)}, expected "D"`,
       );
     }
-    return diode(
-      name,
-      fields[1],
-      fields[2],
-      model.params.get("IS") ?? model.params.get("JS") ?? 1.0e-15,
-      model.params.get("VT") ?? model.params.get("V_T") ?? 0.02585,
-      model.params.get("N") ?? 1.0,
-      model.params.get("BV"),
-      model.params.get("IBV") ?? 1.0e-3,
-      model.params.get("CJO") ?? model.params.get("CJ") ?? model.params.get("CJ0") ?? 0.0,
-      model.params.get("TT") ?? 0.0,
-    );
+    return {
+      ...diode(
+        name,
+        fields[1],
+        fields[2],
+        model.params.get("IS") ?? model.params.get("JS") ?? 1.0e-15,
+        model.params.get("VT") ?? model.params.get("V_T") ?? 0.02585,
+        model.params.get("N") ?? 1.0,
+        model.params.get("BV"),
+        model.params.get("IBV") ?? 1.0e-3,
+        model.params.get("CJO") ?? model.params.get("CJ") ?? model.params.get("CJ0") ?? 0.0,
+        model.params.get("TT") ?? 0.0,
+      ),
+      seriesResistance: model.params.get("RS") ?? 0.0,
+    };
   }
   if (prefix === "Q") {
     requireFields(fields, 5, "BJT");

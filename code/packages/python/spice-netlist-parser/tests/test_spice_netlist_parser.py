@@ -756,7 +756,7 @@ Rload out 0 500
 def test_parse_diode_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n RS=3)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -776,6 +776,7 @@ Rload out 0 1k
                 "IBV": 1.0e-6,
                 "CJO": 2.0e-12,
                 "TT": 4.0e-9,
+                "RS": 3.0,
             },
         )
     }
@@ -790,6 +791,7 @@ Rload out 0 1k
     assert diode.IBV == 1.0e-6
     assert diode.Cjo == 2.0e-12
     assert diode.Tt == 4.0e-9
+    assert diode.Rs == 3.0
 
     result = dc_op(parsed.circuit)
     assert result.converged
@@ -889,6 +891,23 @@ def test_rejects_invalid_diode_breakdown_current(value: str) -> None:
         NetlistParseError, match="diode IBV must be finite and positive"
     ):
         parse_netlist(f".model clamp D(IBV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_accepts_valid_diode_series_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(RS={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.Rs
+
+
+@pytest.mark.parametrize("value", ["-1", "1e999"])
+def test_rejects_invalid_diode_series_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode RS must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(RS={value})")
 
 
 def test_parse_diode_junction_capacitance_alias() -> None:
