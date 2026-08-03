@@ -1,4 +1,4 @@
-# Session Map — Gujarati Chapters 1–5
+# Session Map — Gujarati Chapters 1–6
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -64,7 +64,14 @@ lesson introduces exactly the letters that word needs.
 | 30 | kaam-karvun | કામ કરવું | "to work"; *karvũ* ← *kṛ* (root of *namaskār*, *karma*) |
 | 31 | practice | (recap) | three verbs, one engine — sentences about yourself |
 
+## Chapter 6 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 32 | numbers-1-5 | એક, બે, ત્રણ, ચાર, પાંચ | retrieve the five forms and the headless-script clue; notice surprising *be* and *traṇ* |
+| 33 | number-histories | બે · ત્રણ | *be* continues *dvé* through *dv → bb → b*; *traṇ* regained an *r* after Prakrit lost it |
+
 ## Next
 
-Chapter 6 — numbers 1–10 (words + Gujarati digits ૧૨૩), then family and food,
-then the tenses where the three genders return on the verb.
+Finish Chapter 6 with numbers 6–10 and Gujarati digits ૧૨૩, then family and
+food, then the tenses where the three genders return on the verb.

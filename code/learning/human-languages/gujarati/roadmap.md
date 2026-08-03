@@ -25,8 +25,10 @@ trade layer**. The script is taught **inline**, never as a gated reading course.
   The future ending; the retroflex ળ ḷ.
 - **Ch. 5 — The First Verbs**: bolvũ → "hũ gujarātī bolũ chhũ" → rahevũ → kām
   karvũ → practice. Stem + person + copula; postposition *-mā*; the *kṛ* root.
-- **Ch. 6 — Numbers 1–5** (`GU-C06-numbers-1-5`): *ek, be, traṇ, chār, pā̃ch* —
-  **two numbers that don't match the neighbours, each for a reason**. **બે** *be*
+- **Ch. 6 — Numbers 1–5** (`GU-C06-numbers-1-5` →
+  `GU-C06-number-histories`): first make *ek, be, traṇ, chār, pā̃ch* automatic,
+  then trace **two numbers that don't match the neighbours, each for a reason**,
+  in a separate sub-five-minute etymology lesson. **બે** *be*
   continues Sanskrit's **feminine/neuter *dvé*** where **Hindi and Marathi**
   continue the masculine *dváu* (Bengali is a third case, continuing the
   disyllabic Prakrit *duve*) — a *different inheritance* from the same paradigm,
@@ -43,7 +45,7 @@ trade layer**. The script is taught **inline**, never as a gated reading course.
 
 | Chapter | Theme |
 |---|---|
-| 6 | Numbers 1–10 (native words + Gujarati digits ૧૨૩), counting, age |
+| 6 continuation | Numbers 6–10 (native words + Gujarati digits ૧૨૩), counting, age |
 | 7 | Family (*mātā*, *pitā*, *bhāī*, *ben*) and the honorific *-jī* / *-bhāī* / *-ben* |
 | 8 | Food and the market — where the Perso-Arabic and Portuguese loans cluster (*batākā* ← Portuguese *batata*) |
 | 9+ | Past and future tenses (where the three genders return on the verb), postpositions, everyday sentences |
