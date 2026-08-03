@@ -123,6 +123,22 @@ if (Test-Command "node") {
     } finally {
         Pop-Location
     }
+
+    foreach ($backend in @("html", "webcomponent")) {
+        if (-not (Test-Command "npm")) {
+            Skip-Backend -Backend $backend -Reason "npm is not installed"
+            continue
+        }
+        Write-Host "==> Testing $backend interactions"
+        Push-Location (Join-Path $outputRoot $backend)
+        try {
+            Invoke-Checked -Command "npm" -Arguments @("install", "--ignore-scripts")
+            Invoke-Checked -Command "npm" -Arguments @("test")
+            Invoke-Checked -Command "npm" -Arguments @("audit", "--audit-level=high")
+        } finally {
+            Pop-Location
+        }
+    }
 } else {
     Skip-Backend -Backend "html" -Reason "node is not installed"
     Skip-Backend -Backend "webcomponent" -Reason "node is not installed"

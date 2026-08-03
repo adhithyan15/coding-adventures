@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 7);
+    assert_eq!(package.host_assets.files.len(), 11);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -140,6 +140,27 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     }
     assert_eq!(package.host_assets.files[5].backend, "react");
     assert_eq!(package.host_assets.files[6].backend, "electron");
+    for index in [7, 9] {
+        assert_eq!(
+            package.host_assets.files[index].source,
+            "host/web/package.json"
+        );
+        assert_eq!(package.host_assets.files[index].target, "package.json");
+    }
+    for index in [8, 10] {
+        assert_eq!(
+            package.host_assets.files[index].source,
+            "host/web/VentureChromeInteraction.test.js"
+        );
+        assert_eq!(
+            package.host_assets.files[index].target,
+            "test/VentureChromeInteraction.test.js"
+        );
+    }
+    assert_eq!(package.host_assets.files[7].backend, "html");
+    assert_eq!(package.host_assets.files[8].backend, "html");
+    assert_eq!(package.host_assets.files[9].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[10].backend, "webcomponent");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -275,8 +296,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         );
     }
 
-    let flutter_acceptance =
-        read_package_file("host/flutter/venture_chrome_interaction_test.dart");
+    let flutter_acceptance = read_package_file("host/flutter/venture_chrome_interaction_test.dart");
     for symbol in [
         "MosaicApp(mosaicHost: host)",
         "disabled native controls suppress Mosaic dispatch",
@@ -305,8 +325,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         );
     }
 
-    let compose_acceptance =
-        read_package_file("host/compose/VentureChromeInteractionTest.kt");
+    let compose_acceptance = read_package_file("host/compose/VentureChromeInteractionTest.kt");
     for symbol in [
         "MosaicApp(host)",
         "disabledNativeControlsSuppressMosaicDispatch",
@@ -321,8 +340,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         );
     }
 
-    let react_acceptance =
-        read_package_file("host/react/VentureChromeInteraction.test.tsx");
+    let react_acceptance = read_package_file("host/react/VentureChromeInteraction.test.tsx");
     for symbol in [
         "React and Electron renderer controls cross the Mosaic host seam",
         "button.click()",
@@ -333,6 +351,20 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         assert!(
             react_acceptance.contains(symbol),
             "React/Electron interaction acceptance omits {symbol}"
+        );
+    }
+
+    let web_acceptance = read_package_file("host/web/VentureChromeInteraction.test.js");
+    for symbol in [
+        "controls cross the Mosaic host seam",
+        "disabled native buttons must suppress dispatch",
+        "mosaic-host-ready",
+        "addressChange",
+        "Handled navigate through MosaicHost",
+    ] {
+        assert!(
+            web_acceptance.contains(symbol),
+            "HTML/Web Component interaction acceptance omits {symbol}"
         );
     }
 }
@@ -370,6 +402,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "--emit-project",
         "npm run build",
         "npm test",
+        "npm audit --audit-level=high",
         "node --check",
         "swift build",
         "cargo \"${bridge_args[@]}\"",
@@ -388,6 +421,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "--emit-project",
         "npm",
         "@(\"test\")",
+        "@(\"audit\", \"--audit-level=high\")",
         "node",
         "swift",
         "venture-browser-macos",

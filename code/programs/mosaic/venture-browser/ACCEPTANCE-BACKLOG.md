@@ -8,7 +8,7 @@ cross-platform proving application. Items are ordered by risk and dependency.
 - [x] **P0 — Web Component runtime output encoding.** Encode host-controlled text
   and attribute interpolation, reject executable dynamic link schemes, and
   constrain runtime CSS widths before adding a browser interaction gate.
-- [ ] **P1 — HTML and Web Component interaction acceptance.** Drive the generated
+- [x] **P1 — HTML and Web Component interaction acceptance.** Drive the generated
   browser controls through their real DOM and Custom Element host seams,
   covering disabled controls, address editing, Return, Go, and host-driven prop
   refresh. Keep both outputs sourced from the shared Venture MIL/MLL/MSL

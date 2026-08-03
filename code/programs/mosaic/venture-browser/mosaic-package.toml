@@ -16,6 +16,10 @@ files = [
   { backend = "compose", source = "host/compose/VentureChromeInteractionTest.kt", target = "src/test/kotlin/VentureChromeInteractionTest.kt" },
   { backend = "react", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },
   { backend = "electron", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },
+  { backend = "html", source = "host/web/package.json", target = "package.json" },
+  { backend = "html", source = "host/web/VentureChromeInteraction.test.js", target = "test/VentureChromeInteraction.test.js" },
+  { backend = "webcomponent", source = "host/web/package.json", target = "package.json" },
+  { backend = "webcomponent", source = "host/web/VentureChromeInteraction.test.js", target = "test/VentureChromeInteraction.test.js" },
 ]
 
 [kernel]

@@ -634,6 +634,13 @@ fn activate_react_host_asset(backend_dir: &Path, target_rel: &Path) -> Result<()
 }
 
 fn is_html_module_asset(path: &Path) -> bool {
+    let Some(file_name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    if file_name.contains(".test.") || file_name.contains(".spec.") {
+        return false;
+    }
+
     matches!(
         path.extension().and_then(|extension| extension.to_str()),
         Some("js") | Some("mjs")
@@ -2950,6 +2957,13 @@ files = [
             host_at < main_at,
             "host module should load before generated main.js"
         );
+    }
+
+    #[test]
+    fn html_test_host_assets_are_copied_without_production_activation() {
+        assert!(!is_html_module_asset(Path::new("test/grid-host.test.js")));
+        assert!(!is_html_module_asset(Path::new("test/grid-host.spec.mjs")));
+        assert!(is_html_module_asset(Path::new("host/grid-host.js")));
     }
 
     #[test]
