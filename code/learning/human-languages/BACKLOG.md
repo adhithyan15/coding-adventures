@@ -80,9 +80,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B10 | Complete (#9690) | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | All three schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B11 | Complete (#9698) | Remove Sanskrit's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes, and shorter running titles make the forced six-chapter build warning-free. |
 | HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
-| HL-B13 | Complete in this PR | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
-| HL-I01 | Next | Reduce unified all-books workflow setup time without splitting the single publication bundle. | The exact-merge Sanskrit cleanup run spent seven minutes installing TeX Live, while a redundant PR run remained there beyond eighteen minutes; cache or pre-bake the toolchain and keep all 20 books plus bundle verification in one job. |
-| HL-B14 | Queued | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
+| HL-B13 | Complete (#9711) | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
+| HL-I01 | Complete in this PR | Reduce unified all-books workflow setup time without splitting the single publication bundle. | A focused, preflighted XeLaTeX dependency closure replaces `texlive-full`; the unchanged job still builds all 20 books, verifies one bundle, and publishes that bundle from `main`. |
+| HL-B14 | Next | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B16 | Queued | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Portuguese has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B17 | Queued | Remove Portuguese's LaTeX layout warnings. | A forced build succeeds with no missing glyphs, overfull boxes, duplicate labels, or Hyperref warnings, but reports three underfull boxes; the clean-build signal is zero. |
@@ -498,6 +498,26 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   breaks cleanly, split callouts are unclipped, and short pages have deliberate
   natural bottoms. All 39 PDF outline entries remain readable, ending with the
   generated romanized Chapter 6 title.
+
+## Findings from HL-I01
+
+- Three successful unified-publication baselines spent 7:00, 8:09, and 8:02
+  installing `texlive-full`; the most recent then built all 20 books in 1:41.
+  Setup, not the single-job book loop, was the dominant and variable cost.
+- The complete TeX source inventory uses the standard `book` class and eleven
+  packages. Ubuntu's `texlive-xetex` dependency closure provides the LaTeX base,
+  recommended, and extra collections containing those packages; the focused
+  install adds `texlive-lang-arabic` for `bidi.sty`, `lmodern` for the named
+  Latin Modern faces, `texlive-fonts-recommended` for Hyperref's `pzdr.tfm`,
+  and `latexmk` as the build driver.
+- All non-Latin faces are repository-vendored static fonts, so the system-wide
+  Noto font collections are unrelated to the current builds. A fail-closed
+  preflight now resolves the engine, driver, all eleven packages, the class,
+  RTL support, and Latin Modern before compiling any book.
+- The workflow remains one job with one setup, one dynamically discovered
+  20-book loop, one verified artifact, and one `main`-only Pages publication.
+  HL-B14 is next: close the learner-visible Italian app/book drift through the
+  same canonical generation path.
 
 ## Findings from HL-D01C
 

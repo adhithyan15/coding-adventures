@@ -53,23 +53,45 @@ jobs:
             > "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
           cat "$GITHUB_WORKSPACE/dist/human-languages/books/curriculum-gaps.txt"
 
-      # Install the COMPLETE TeX Live distribution rather than a hand-picked
-      # list of texlive-* sub-packages. The earlier granular approach broke
-      # CI (`Unable to locate package texlive-lang-indic`) and risked silently
-      # missing font/language packages a book needs. `texlive-full` is a single
-      # guaranteed-to-exist meta-package that bundles every engine (XeLaTeX),
-      # every language collection (Arabic, Indic, etc.), and every font that
-      # ships with TeX Live — including Latin Modern and the Noto families.
-      # This is the "machine that has all the fonts": ubuntu-latest already has
-      # git/node for checkout, and texlive-full supplies the full typesetting
-      # stack, so no Windows/macOS runner is needed for font coverage.
-      # fonts-noto-* additionally register the Noto families with fontconfig
-      # by family name, which the non-Latin-script tracks will want later.
-      - name: Install TeX Live (full)
+      # Keep one shared XeLaTeX toolchain for the one all-books job, but avoid
+      # installing TeX Live's unrelated documentation, music, science, CJK,
+      # and publishing collections. texlive-xetex pulls the LaTeX base,
+      # recommended, and extra layers used by every preamble. The Arabic
+      # collection supplies bidi.sty for Arabic, Persian, and Urdu; every
+      # non-Latin book font is vendored under human-languages/_fonts. The
+      # recommended font collection supplies Hyperref's Zapf Dingbats metric.
+      - name: Install focused TeX toolchain
         run: |
+          setup_started_at=$(date +%s)
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            texlive-full latexmk fonts-noto-core fonts-noto-extra
+            fontconfig latexmk lmodern texlive-fonts-recommended \
+            texlive-lang-arabic texlive-xetex
+
+          setup_seconds=$(($(date +%s) - setup_started_at))
+          echo "TeX toolchain setup completed in ${setup_seconds}s"
+          echo "TeX toolchain setup: ${setup_seconds}s" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify focused TeX toolchain
+        run: |
+          set -euo pipefail
+
+          for executable in xelatex latexmk kpsewhich fc-match; do
+            command -v "$executable"
+          done
+
+          for tex_asset in \
+            book.cls fontspec.sty newunicodechar.sty xcolor.sty \
+            tcolorbox.sty booktabs.sty longtable.sty tabularx.sty array.sty \
+            hyperref.sty titlesec.sty polyglossia.sty bidi.sty pzdr.tfm; do
+            asset_path=$(kpsewhich "$tex_asset")
+            test -n "$asset_path"
+            echo "$tex_asset -> $asset_path"
+          done
+
+          latin_modern_path=$(fc-match -f '%{file}\n' 'Latin Modern Roman' | head -n 1)
+          test -f "$latin_modern_path"
+          echo "Latin Modern Roman -> $latin_modern_path"
 
       - name: Build every book
         run: |
