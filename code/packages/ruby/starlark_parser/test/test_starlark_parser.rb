@@ -71,6 +71,25 @@ class TestStarlarkParser < Minitest::Test
     refute_nil number_token, "Expected INT token '1' in AST"
   end
 
+  def test_function_can_end_with_multiline_structured_return
+    source = <<~STARLARK
+      def build_target(name):
+          return {
+              "rule": "demo_library",
+              "name": name,
+              "commands": [
+                  {"type": "cmd", "program": "demo", "args": ["test"]},
+              ],
+          }
+    STARLARK
+
+    ast = parse(source)
+
+    assert_equal "file", ast.rule_name
+    assert_equal 1, find_nodes_by_rule(ast, "def_stmt").length
+    assert_equal 1, find_nodes_by_rule(ast, "return_stmt").length
+  end
+
   # ------------------------------------------------------------------
   # Expression: 1 + 2 * 3
   # ------------------------------------------------------------------

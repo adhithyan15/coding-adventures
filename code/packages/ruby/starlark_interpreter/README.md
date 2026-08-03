@@ -12,6 +12,8 @@ Key features:
 - **Caching**: Loaded modules are cached to avoid re-execution
 - **File resolver**: Configurable resolution of module labels to file contents
 - **File interpretation**: Read and execute `.star` files from disk
+- **Defining-module globals**: Loaded functions keep their own helpers and
+  injected globals across nested module boundaries
 
 ## How It Fits in the Stack
 

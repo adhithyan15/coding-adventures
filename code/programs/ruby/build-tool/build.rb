@@ -277,11 +277,16 @@ module BuildTool
         result = begin
           StarlarkEvaluator.evaluate_build_file(build_file.to_s, pkg.path.to_s, root.to_s)
         rescue StandardError => e
-          $stderr.puts "Warning: Starlark eval failed for #{pkg.name}: #{e.message}"
-          nil
+          $stderr.puts "Error: Starlark evaluation failed for #{pkg.name}: #{e.message}"
+          return 1
         end
 
-        if result && result.targets.any?
+        if result.targets.empty?
+          $stderr.puts "Error: Starlark evaluation failed for #{pkg.name}: no targets declared"
+          return 1
+        end
+
+        if result.targets.any?
           t = result.targets.first
           pkg = pkg.with(
             declared_srcs: t.srcs,

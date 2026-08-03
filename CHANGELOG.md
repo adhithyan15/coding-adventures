@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed — Ruby Canonical Starlark BUILD Compatibility
+- Ruby's Starlark stack now closes indented files in the specified token order,
+  preserves `r`/`b`-leading identifiers, binds mixed keyword calls, and keeps
+  defining-module globals across nested loads.
+- The Ruby build tool injects the normalized v1 evaluation context, validates
+  structured commands, and fails closed after Starlark classification instead
+  of silently falling back to raw shell lines; evaluation errors redact the
+  checkout root.
+
 ### Fixed — Venture Windows CI Acceptance
 - The pull-request Windows runner now derives a dedicated Venture acceptance
   flag from the shared build plan, installs MSVC and .NET only when that slice

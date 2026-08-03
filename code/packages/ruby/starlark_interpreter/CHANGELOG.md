@@ -2,6 +2,14 @@
 
 All notable changes to `coding_adventures_starlark_interpreter` will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Imported functions now retain the globals of the module that defined them,
+  including helpers and injected rule functions used by nested Starlark loads.
+- Loaded symbols whose names begin with `r` or `b`, such as `rust_library`,
+  preserve their full identifiers through compilation and execution.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

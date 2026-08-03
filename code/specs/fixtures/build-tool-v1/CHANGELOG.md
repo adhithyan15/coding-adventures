@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-03
+
+- Expanded the structured Starlark command/context case to use the canonical
+  multiline target return shape, including trailing commas, so adapters must
+  parse the same form used by repository rule helpers.
+
 ## 2026-08-02
 
 - Added discovery cases for every canonical language bucket missing from the
