@@ -4,7 +4,7 @@ Interactive machine learning lab for building intuition around small models.
 
 ## What It Shows
 
-The app has twenty-two workbenches that move from one arithmetic update to small
+The app has twenty-three workbenches that move from one arithmetic update to small
 spatial and hidden-layer networks.
 
 ### Training-step microscope
@@ -292,6 +292,15 @@ failure probes to see the returned status and whether output memory may change.
 The browser recomputes the committed ABI catalog; the Python validator builds
 and dynamically loads the real shared library.
 
+### Implementation coverage
+
+The Implementation Coverage workbench keeps the NN03 `1.35` answer fixed while
+it separates three native arithmetic owners from one Python `ctypes` caller
+that delegates the calculation to Rust. Select a lane to inspect its
+classification, owner, interface, evidence file, and executable validator. The
+browser checks registrations; the NN36 validator reruns both native and binding
+gates before counting four verified lanes.
+
 ## Lab Families
 
 - Basics: clean linear relationships such as Celsius to Fahrenheit.
@@ -455,6 +464,12 @@ C declarations, version number, status table, ownership rules, paper trace,
 and closed-output failure probes. Run `python
 code/scripts/validate_neural_learning_rust_cabi.py` to build and call the actual
 shared library.
+
+NN36 under `code/specs/fixtures/neural-learning-implementation-coverage-v1`
+classifies the NN34 lanes as native and the NN35 Python `ctypes` call as a
+Rust-core binding. Run `python
+code/scripts/validate_neural_learning_implementation_coverage.py` to execute
+both gates before accepting the `3 native + 1 binding` inventory.
 
 ## Development
 

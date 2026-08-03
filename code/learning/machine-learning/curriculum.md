@@ -135,6 +135,13 @@ versioned header, language-neutral ABI catalog, direct Rust tests, and a Python
 the comparison baseline; the next tranche can add binding-backed lanes and
 track which language concepts use native code or the Rust core.
 
+NN36 closes that comparison with an executable ownership inventory. Go, Ruby,
+and Rust remain three native lanes; Python `ctypes` is one Rust-core binding.
+The language-neutral catalog preserves the 1.35 paper oracle, records who owns
+each calculation, and reruns both underlying gates before counting `3 + 1 = 4`
+verified lanes. Future coverage grows only when a real native implementation or
+Rust-core binding earns the same fixture result.
+
 ## Corpus Rule
 
 Every new curriculum unit should contribute all of the following:
