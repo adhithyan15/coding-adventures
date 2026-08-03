@@ -49,13 +49,14 @@ larger network:
 29. [Backward and Optimizer Lowering, by Hand](./backward-and-optimizer-lowering-by-hand.md)
 30. [CPU, Rust Core, and Accelerated Backends, by Hand](./cpu-rust-and-accelerated-backends-by-hand.md)
 31. [Precision, Quantization, and Buffer Residency, by Hand](./precision-quantization-and-residency-by-hand.md)
-32. [Matrix Math](../matrix-math.md)
-33. [Loss Functions](../loss-functions.md)
-34. [Gradient Descent](../gradient-descent.md)
-35. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-36. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-37. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-38. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+32. [Reference Fixtures: Make Every Expected Answer Earn Your Trust](./reference-fixtures-by-hand.md)
+33. [Matrix Math](../matrix-math.md)
+34. [Loss Functions](../loss-functions.md)
+35. [Gradient Descent](../gradient-descent.md)
+36. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+37. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+38. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+39. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -65,7 +66,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has nineteen complementary views:
+has twenty complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -162,6 +163,10 @@ has nineteen complementary views:
 - **Precision and residency lab:** round two close inputs through binary32 and
   binary16, quantize them with a pinned symmetric int8 scale, and compare an
   eager copy schedule with buffers that stay resident across repeated passes.
+- **Reference catalog lab:** recompute one tolerance check, follow the strict
+  evidence chain, filter the complete NN03-NN32 roster by curriculum track, and
+  inspect the exact spec, fixture root, validator, lab count, and oracle for
+  every registered family without claiming that the browser executed Python.
 
 ## Language-Neutral Corpus
 
@@ -303,6 +308,11 @@ binary32 and binary16 payloads, a symmetric signed-int8 encoding with pinned
 scales, recomputed output-error oracles, and eager-versus-resident transfer
 counts for repeated execution.
 
+NN33 adds `code/specs/fixtures/reference-validation-v1`, a strict ordered
+catalog that maps all 30 NN03-NN32 fixture families and 33 lab documents to
+their independent Python reference validators. Its orchestrator proves the
+roster is complete before running every validator without a shell.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -336,6 +346,7 @@ python code/scripts/validate_forward_graph_lowering_labs.py
 python code/scripts/validate_backward_optimizer_lowering_labs.py
 python code/scripts/validate_backend_parity_labs.py
 python code/scripts/validate_precision_residency_labs.py
+python code/scripts/validate_reference_fixture_catalog.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -403,6 +414,9 @@ The first NN32 lab sends the close inputs `1.0004` and `1.0006` through
 `y = x * 2`, then exposes how binary32, binary16, and symmetric int8 encode the
 values and change the answer. Replaying the binary32 pass three times also
 contrasts 72 eager-transfer bytes with 24 bytes for resident buffers.
+The first NN33 lab computes `|0.15000000000000002 - 0.15|`, compares the result
+with `1e-12`, then expands that small trust rule into one fail-closed command
+covering all 30 fixture families and 33 lab documents.
 
 ## How to Study a Model
 

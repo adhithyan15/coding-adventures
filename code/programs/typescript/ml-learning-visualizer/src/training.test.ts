@@ -64,6 +64,12 @@ import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
 import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { PrecisionResidencyWorkbench } from "./PrecisionResidencyWorkbench.js";
+import { ReferenceValidationWorkbench } from "./ReferenceValidationWorkbench.js";
+import {
+  parseReferenceCatalog,
+  referenceCatalog,
+  traceReferenceValidation,
+} from "./reference-validation-catalog.js";
 import {
   normalizePrecisionResidencyFixture,
   PRECISION_RESIDENCY_FIXTURE,
@@ -72,6 +78,7 @@ import {
   tracePrecisionResidency,
 } from "./precision-residency-lab.js";
 import precisionResidencyDocument from "../../../../specs/fixtures/precision-residency-v1/labs/00-tiny-affine.json";
+import referenceCatalogDocument from "../../../../specs/fixtures/reference-validation-v1/catalog.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -2576,5 +2583,58 @@ describe("precision, quantization, and buffer residency", () => {
     expect(screen.getByLabelText("Buffer residency transfer trace").textContent)
       .toMatch(/5 uploads.*5 forward passes.*5 downloads.*120 bytes/s);
     expect(screen.getByText("run affine neuron 5 times")).toBeTruthy();
+  });
+});
+
+describe("reference fixture catalog", () => {
+  it("covers NN03 through NN32 and recomputes the hand tolerance check", () => {
+    const trace = traceReferenceValidation();
+
+    expect(trace.familyCount).toBe(30);
+    expect(trace.labCount).toBe(33);
+    expect(trace.trackCount).toBe(9);
+    expect(referenceCatalog.families.map((family) => family.order)).toEqual(
+      Array.from({ length: 30 }, (_, index) => index + 3),
+    );
+    expect(trace.recomputedError).toBe(2.7755575615628914e-17);
+    expect(trace.passes).toBe(true);
+  });
+
+  it("fails closed on malformed, duplicated, and path-swapped catalogs", () => {
+    expect(() => parseReferenceCatalog({})).toThrow(/unexpected keys/);
+    const duplicate = JSON.parse(JSON.stringify(referenceCatalogDocument));
+    duplicate.families[1].id = duplicate.families[0].id;
+    duplicate.families[1].fixture_root = duplicate.families[0].fixture_root;
+    expect(() => parseReferenceCatalog(duplicate)).toThrow(/incomplete or duplicate roster/);
+
+    const escaped = JSON.parse(JSON.stringify(referenceCatalogDocument));
+    escaped.families[0].fixture_root = "../../outside-v1";
+    expect(() => parseReferenceCatalog(escaped)).toThrow(/invalid fixture or validator path/);
+
+    const dishonest = JSON.parse(JSON.stringify(referenceCatalogDocument));
+    dishonest.protocol.hand_check.absolute_error = 0;
+    expect(() => parseReferenceCatalog(dishonest)).toThrow(/dishonest arithmetic/);
+  });
+
+  it("filters curriculum tracks and opens one exact validator contract", () => {
+    render(React.createElement(ReferenceValidationWorkbench));
+    expect(screen.getByRole("heading", { name: "Reference fixture catalog" })).toBeTruthy();
+    expect(screen.getByText("30 families · 33 labs")).toBeTruthy();
+    expect(screen.getByLabelText("Hand-calculated tolerance check").textContent)
+      .toMatch(/2\.776e-17.*1\.000e-12.*passes/s);
+
+    fireEvent.change(screen.getByLabelText("Filter reference families by track"), {
+      target: { value: "attention" },
+    });
+    expect(screen.getAllByRole("button", { name: /Inspect NN1[2-5]/ })).toHaveLength(4);
+    expect(screen.queryByRole("button", { name: /Inspect NN03/ })).toBeNull();
+
+    fireEvent.change(screen.getByLabelText("Filter reference families by track"), {
+      target: { value: "compilation" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Inspect NN32/ }));
+    expect(screen.getByLabelText("Selected fixture-family contract").textContent)
+      .toMatch(/NN32.*precision-residency.*precision-residency-v1.*validate_precision_residency_labs\.py/s);
+    expect(screen.getByText(/Each family is labeled registered, not executed/)).toBeTruthy();
   });
 });

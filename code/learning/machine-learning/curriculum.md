@@ -113,6 +113,14 @@ actual stored values and scales. Eager and resident schedules then replay the
 same pass with explicit transfer-byte equations, completing the local
 compilation/performance bridge before cross-language consumers expand.
 
+NN33 begins that expansion by proving the existing corpus is one complete
+contract. A strict catalog links NN03 through NN32 to 30 fixture roots, 30
+independent Python reference validators, and 33 lab documents. One fail-closed
+command checks the roster before running every validator, while the browser
+separates a registered mapping from evidence that Python actually executed it.
+Representative non-Python consumers come next and must earn parity from the
+same JSON rather than copying Python output.
+
 ## Corpus Rule
 
 Every new curriculum unit should contribute all of the following:

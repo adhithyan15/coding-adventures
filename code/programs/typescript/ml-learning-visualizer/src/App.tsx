@@ -14,6 +14,7 @@ import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
 import { PrecisionResidencyWorkbench } from "./PrecisionResidencyWorkbench.js";
+import { ReferenceValidationWorkbench } from "./ReferenceValidationWorkbench.js";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -184,7 +185,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -321,6 +322,8 @@ export function App() {
                 ? "One graph can cross execution engines"
               : workbench === "precision-residency"
                 ? "Representation and movement are separate choices"
+              : workbench === "reference-validation"
+                ? "Every stored answer needs an independent witness"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -462,6 +465,13 @@ export function App() {
             >
               Precision + Residency
             </button>
+            <button
+              className={workbench === "reference-validation" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("reference-validation")}
+            >
+              Reference Catalog
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -498,6 +508,8 @@ export function App() {
               <>same graph {"->"} <strong>CPU · Rust · WebGPU</strong> {"->"} equal output</>
             ) : workbench === "precision-residency" ? (
               <>number grid + <strong>buffer placement</strong> {"->"} accuracy + transfers</>
+            ) : workbench === "reference-validation" ? (
+              <>catalog {"->"} <strong>inspect registrations</strong> {"->"} CLI evidence</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -541,6 +553,8 @@ export function App() {
         <BackendParityWorkbench />
       ) : workbench === "precision-residency" ? (
         <PrecisionResidencyWorkbench />
+      ) : workbench === "reference-validation" ? (
+        <ReferenceValidationWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">
