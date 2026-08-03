@@ -1554,6 +1554,27 @@ def test_lowers_positive_mosfet_model_length() -> None:
     assert isclose(mosfet.model.model.params.L, 2.0e-6)
 
 
+@pytest.mark.parametrize("parameters", ["LD=-1n", "LD=1e999", "L=100n LD=50n"])
+def test_rejects_invalid_mosfet_model_lateral_diffusion(parameters: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=r"MOSFET LD must be finite and non-negative with L - 2\*LD > 0",
+    ):
+        parse_netlist(f".model nfast NMOS({parameters})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("lateral_diffusion", ["0", "10n"])
+def test_lowers_valid_mosfet_model_lateral_diffusion(
+    lateral_diffusion: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(L=180n LD={lateral_diffusion})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.LD, parse_value(lateral_diffusion))
+
+
 @pytest.mark.parametrize("saturation_current", ["0", "-1p", "1e999"])
 def test_rejects_invalid_mosfet_model_saturation_current(
     saturation_current: str,

@@ -1485,6 +1485,28 @@ Xright c d load
     expect(element.params.L).toBeCloseTo(2.0e-6, 15);
   });
 
+  it.each(["LD=-1n", "LD=1e999", "L=100n LD=50n"])(
+    "rejects invalid MOSFET model lateral diffusion %s",
+    (parameters) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(${parameters})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET LD must be finite and non-negative with L - 2*LD > 0");
+    },
+  );
+
+  it.each([
+    ["0", 0.0],
+    ["10n", 10.0e-9],
+  ])("lowers valid MOSFET model LD=%s", (lateralDiffusion, expected) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(L=180n LD=${lateralDiffusion})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.LD).toBeCloseTo(expected, 15);
+  });
+
   it.each(["0", "-1p", "1e999"])(
     "rejects invalid MOSFET model IS=%s",
     (saturationCurrent) => {
