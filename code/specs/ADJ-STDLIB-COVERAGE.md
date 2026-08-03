@@ -356,9 +356,20 @@ option mapping, or judge/evaluation failure.
      process waits, pipe reads and closes, and close retries all retain
      machine-inspectable causal structure. Worker-thread I/O faults fail closed even
      when the bytes received before the fault happen to form valid canonical JSON.
-13h. **Backlog:** add platform-neutral fault injection for POSIX process-group
-     termination, including `killpg` permission/lookup failures, root-kill fallback,
-     simultaneous pipe cleanup failures, and hosted Linux/macOS execution gates.
+13h. **Complete:** POSIX process-group termination now has platform-neutral injection
+     for lookup misses, permission failures, process polling, root-kill fallback, and
+     ordered compound failures. Runner-level terminator injection proves simultaneous
+     stdout/stderr close failures remain in the lifecycle tree. An attempt-ordered event
+     ledger preserves concurrent reader causality and every repeated termination, and a
+     final bounded wait reaps the root after recovery termination. Hosted Linux runs the
+     full provenance suite in `detect`; hosted macOS runs the focused POSIX/process-tree
+     selector with pinned Python, and the Windows selector includes all Job and generic
+     process-tree cases.
+13i. **Backlog:** contain descendants that deliberately create a new session and add
+     kill-on-verifier-crash semantics for POSIX, where `start_new_session=True` alone
+     cannot guarantee cleanup after abrupt verifier termination. Add independently
+     bounded raw-handle closure for readers that remain stuck after tree termination;
+     ordinary buffered `close()` can itself block behind a concurrent read.
 
 ### Wave 2: complete K-8 foundations
 

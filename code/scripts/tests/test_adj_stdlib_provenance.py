@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import unittest
 from contextlib import redirect_stdout
@@ -1610,6 +1611,247 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         process.kill.assert_called_once_with()
 
+    def test_posix_process_group_lookup_miss_uses_root_fallback(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        killpg = mock.Mock(side_effect=ProcessLookupError(3, "group absent"))
+
+        provenance._terminate_process_tree(
+            process,
+            None,
+            platform_name="posix",
+            kill_process_group=killpg,
+        )
+
+        killpg.assert_called_once_with(process.pid, provenance.POSIX_SIGKILL)
+        process.kill.assert_called_once_with()
+
+    def test_posix_process_group_permission_failure_is_structured(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        killpg = mock.Mock(side_effect=PermissionError(13, "permission denied"))
+
+        with self.assertRaisesRegex(OSError, "permission denied") as raised:
+            provenance._terminate_process_tree(
+                process,
+                None,
+                platform_name="posix",
+                kill_process_group=killpg,
+            )
+
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process_tree.terminate", "os.killpg", 13),
+        )
+        process.kill.assert_called_once_with()
+
+    def test_posix_process_group_fallback_failures_are_ordered(self) -> None:
+        process = self.windows_process()
+        process.poll.side_effect = OSError(6, "poll failed")
+        process.kill.side_effect = OSError(1, "root kill failed")
+        killpg = mock.Mock(side_effect=PermissionError(13, "killpg failed"))
+
+        with self.assertRaisesRegex(OSError, "root kill failed") as raised:
+            provenance._terminate_process_tree(
+                process,
+                None,
+                platform_name="posix",
+                kill_process_group=killpg,
+            )
+
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process_tree.terminate", "os.killpg", 13),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("process.poll", "Popen.poll", 6),
+                ("process.terminate", "Popen.kill", 1),
+            ],
+        )
+
+    def test_posix_process_root_fallback_failure_is_structured(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        process.kill.side_effect = OSError(1, "root kill failed")
+        killpg = mock.Mock()
+
+        with self.assertRaisesRegex(OSError, "root kill failed") as raised:
+            provenance._terminate_process_tree(
+                process,
+                None,
+                platform_name="posix",
+                kill_process_group=killpg,
+            )
+
+        failure = raised.exception.failure
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("process.terminate", "Popen.kill", 1),
+        )
+
+    def test_posix_process_root_lookup_miss_is_benign(self) -> None:
+        process = self.windows_process()
+        process.poll.return_value = None
+        process.kill.side_effect = ProcessLookupError(3, "root absent")
+
+        provenance._terminate_process_tree(
+            process,
+            None,
+            platform_name="posix",
+            kill_process_group=mock.Mock(),
+        )
+
+        process.kill.assert_called_once_with()
+
+    def test_posix_process_repeated_termination_failures_are_ordered(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.2),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+            -9,
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+        terminator = mock.Mock(
+            side_effect=[
+                provenance._lifecycle_error(
+                    "process_tree.terminate",
+                    "killpg failed",
+                    api="os.killpg",
+                    error_code=13,
+                ),
+                provenance._lifecycle_error(
+                    "process.terminate",
+                    "root kill failed",
+                    api="Popen.kill",
+                    error_code=1,
+                ),
+            ]
+        )
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(provenance.ProvenanceError, "timed out") as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="repeated termination fixture",
+                timeout_seconds=0.2,
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=terminator,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("process_tree.terminate", "os.killpg", 13),
+                ("process.wait", "Popen.wait", None),
+                ("process.terminate", "Popen.kill", 1),
+            ],
+        )
+        self.assertEqual(process.wait.call_count, 3)
+
+    def test_posix_process_unreaped_timeout_does_not_claim_exit(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.2),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+        ]
+        process.poll.return_value = None
+        process.stdout.read.side_effect = OSError(5, "stdout read failed")
+        process.stderr.read.return_value = b""
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(provenance.ProvenanceError, "timed out") as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="unreaped timeout fixture",
+                timeout_seconds=0.2,
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=mock.Mock(),
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertNotIn(
+            "command.exit",
+            [cause.stage for cause in failure.cleanup_causes],
+        )
+        self.assertFalse(any("exited None" in cause.message for cause in failure.cleanup_causes))
+        self.assertEqual(process.wait.call_count, 3)
+
+    def test_posix_process_failure_preserves_both_pipe_close_causes(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+            OSError(6, "recovery wait failed"),
+            -9,
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+        process.stdout.close.side_effect = OSError(5, "stdout close failed")
+        process.stderr.close.side_effect = OSError(6, "stderr close failed")
+        terminator = mock.Mock(
+            side_effect=[
+                provenance._lifecycle_error(
+                    "process_tree.terminate",
+                    "killpg failed",
+                    api="os.killpg",
+                    error_code=13,
+                ),
+                None,
+            ]
+        )
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "timed out.*killpg failed.*stdout close failed.*stderr close failed",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="POSIX compound cleanup fixture",
+                timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=terminator,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "command.timeout")
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("process_tree.terminate", "os.killpg", 13),
+                ("process.wait", "Popen.wait", 6),
+                ("pipe.close", "Popen.stdout.close", 5),
+                ("pipe.close", "Popen.stderr.close", 6),
+            ],
+        )
+        self.assertEqual(failure.message, str(raised.exception))
+
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
     def test_windows_job_factory_failure_precedes_process_launch(self) -> None:
         factory = mock.Mock(side_effect=OSError("injected CreateJobObjectW failure"))
@@ -1897,6 +2139,39 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.stdout.close.assert_not_called()
         process.stderr.close.assert_not_called()
 
+    def test_json_command_primary_stuck_drain_is_not_self_causal(self) -> None:
+        process = mock.Mock(pid=404)
+        process.stdout = mock.Mock()
+        process.stderr = mock.Mock()
+        process.wait.return_value = 0
+        threads = [mock.Mock(), mock.Mock()]
+        for thread in threads:
+            thread.is_alive.return_value = True
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(
+                provenance.threading, "Thread", side_effect=threads
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "output pipes did not close within bounds",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="primary stuck drain fixture",
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=mock.Mock(),
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "pipe.drain")
+        self.assertEqual(failure.cleanup_causes, ())
+        self.assertEqual(failure.message, str(raised.exception))
+
     def test_json_command_pipe_read_failure_fails_closed(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -1941,6 +2216,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.poll.return_value = 7
         process.stdout.read.side_effect = OSError(5, "injected stdout read failure")
         process.stderr.read.return_value = b""
+        process.stdout.close.side_effect = OSError(6, "injected stdout close failure")
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
@@ -1965,9 +2241,59 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 (cause.stage, cause.api, cause.error_code)
                 for cause in failure.cleanup_causes
             ],
-            [("pipe.read", "Popen.stdout.read", 5)],
+            [
+                ("pipe.read", "Popen.stdout.read", 5),
+                ("pipe.close", "Popen.stdout.close", 6),
+            ],
         )
         self.assertEqual(failure.message, str(raised.exception))
+
+    def test_json_command_reader_primary_follows_event_order(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = -9
+        process.poll.side_effect = [None, -9]
+        stderr_failed = threading.Event()
+
+        def stdout_read(_size: int) -> bytes:
+            stderr_failed.wait(1)
+            raise OSError(5, "stdout read failed")
+
+        def stderr_read(_size: int) -> bytes:
+            stderr_failed.set()
+            raise OSError(6, "stderr read failed")
+
+        process.stdout.read.side_effect = stdout_read
+        process.stderr.read.side_effect = stderr_read
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "stderr pipe read failed"
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="reader order fixture",
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=mock.Mock(),
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(
+            (failure.stage, failure.api, failure.error_code),
+            ("pipe.read", "Popen.stderr.read", 6),
+        )
+        self.assertEqual(
+            [
+                (cause.stage, cause.api, cause.error_code)
+                for cause in failure.cleanup_causes
+            ],
+            [
+                ("pipe.read", "Popen.stdout.read", 5),
+                ("command.exit", "Popen.wait", -9),
+            ],
+        )
 
     def test_json_command_pipe_read_preserves_poll_failure(self) -> None:
         process = mock.Mock(pid=404)
@@ -2010,6 +2336,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.wait.side_effect = [
             OSError(5, "injected wait failure"),
             OSError(6, "injected wait retry failure"),
+            -9,
         ]
         process.stdout.read.return_value = b""
         process.stderr.read.return_value = b""
@@ -2047,6 +2374,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.wait.side_effect = [
             OSError(5, "injected wait failure"),
             subprocess.TimeoutExpired(["fixture"], 0.1),
+            -9,
         ]
         process.stdout.read.return_value = b""
         process.stderr.read.return_value = b""
@@ -2092,6 +2420,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.wait.side_effect = [
             subprocess.TimeoutExpired(["fixture"], 0.2),
             subprocess.TimeoutExpired(["fixture"], 0.1),
+            -9,
         ]
         process.stdout.read.return_value = b""
         process.stderr.read.return_value = b""
@@ -2315,7 +2644,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 )
                 self.assertEqual(close_calls, 2)
 
-    def test_windows_job_timeout_kills_descendant_pipe_holders(self) -> None:
+    def test_process_tree_timeout_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
             child = (
@@ -2348,7 +2677,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertLess(time.monotonic() - started, 8)
             self.assert_process_exits(int(pid_path.read_text()))
 
-    def test_windows_job_parent_exit_kills_descendant_pipe_holders(self) -> None:
+    def test_process_tree_parent_exit_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
             child = (

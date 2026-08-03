@@ -132,5 +132,11 @@ projection is versioned as `adj-stdlib/process-lifecycle-failure/v1`; CLI failur
 it as `lifecycle_failure` while retaining the existing `error` and `valid` fields.
 Process-wait, pipe-read, and pipe-close faults are records too; partial output is never
 accepted merely because its prefix happens to be valid canonical JSON.
+POSIX group termination is fault-injected independently of the host OS: lookup misses,
+permission errors, poll failures, root-process fallback, and simultaneous pipe-close
+failures retain API-attempt ordering. Repeated termination attempts are never collapsed,
+concurrent reader failures use event order, and recovery ends with a bounded root wait.
+Linux runs the complete suite and macOS runs the focused POSIX/process-tree gate before
+merge.
 Existing hashes are reused, while missing or changed bytes, claims, transforms, graph
 edges, receipts, partitions, and projections fail closed.
