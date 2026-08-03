@@ -2021,6 +2021,19 @@ biometric_timeout = 30           # seconds
 hardware_key_timeout = 60        # seconds
 ```
 
+The operator credential path is a fail-closed local trust boundary. Composition
+MUST load an existing canonical 64-byte lowercase-hex credential or claim an absent
+file name without truncating or replacing any existing object. Reads are bounded,
+links and non-regular files are rejected, and returned secret storage is wiped on
+drop. On Unix, every path component is opened relative to a trusted directory handle
+without following links; new bytes are durably written at mode `000` before the file
+is published as owner-readable/writable mode `0600`. Existing files must be owned by
+the effective user and grant no group/world access. On Windows, ancestor directory
+handles prevent replacement during validation, reparse points are rejected, and
+creation supplies a protected DACL with exactly one allow ACE for the current token
+user. Existing Windows credentials must retain that owner and protected one-ACE DACL;
+inherited directory permissions are not sufficient.
+
 **Host restart policies:**
 
 | Policy       | Behavior                                          |

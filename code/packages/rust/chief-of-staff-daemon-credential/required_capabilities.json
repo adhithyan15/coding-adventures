@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-daemon-credential",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "configured operator credential path",
+      "justification": "Loads one bounded credential only after rejecting links, non-regular files, foreign ownership, and broad access controls."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "configured operator credential path",
+      "justification": "Claims an absent credential name without overwrite and creates it with owner-only platform security metadata."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "configured operator credential path",
+      "justification": "Writes and synchronizes one freshly generated canonical credential before making it readable."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc openat/fstat/fchmod and Windows file/token/security APIs",
+      "justification": "Uses handle-relative no-follow file operations and native ownership/access-control inspection unavailable through portable Rust filesystem APIs."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "1ms bounded credential publication retry",
+      "justification": "Lets concurrent creators wait up to 250ms for the winning process to finish durable owner-only publication."
+    }
+  ],
+  "justification": "OS trust-boundary adapter that durably creates or loads exactly one local bearer credential without following links, inheriting broad access, or overwriting existing content."
+}
