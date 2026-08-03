@@ -68,7 +68,7 @@ edition is authored.
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1-6 authored (lessons + book) |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi (vendored font) | Chapter 1 (Greetings) authored (lessons + book) |
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali (vendored font) | Chapter 1 (Greetings) authored (lessons + book) |
-| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati (vendored font) | Chapters 1-5 authored (new track, script inline) |
+| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |
 | [Tamil](./tamil/README.md) | Dravidian / Tamil (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |

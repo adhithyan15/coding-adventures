@@ -3,6 +3,16 @@
   "algorithm": "fnv1a64",
   "chapters": [
     {
+      "language": "gujarati",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:388a6950ab136cc1",
+      "lessonIds": [
+        "GU-C06-numbers-1-5",
+        "GU-C06-number-histories"
+      ],
+      "tex": "gujarati/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:d0addd66aaedf900",

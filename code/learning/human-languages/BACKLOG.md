@@ -72,9 +72,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Queued | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
-| HL-B05 | Complete in this PR | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
-| HL-B06 | Next | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
-| HL-B07 | Queued | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
+| HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
+| HL-B06 | Complete in this PR | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
+| HL-B07 | Next | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B08 | Queued | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B09 | Queued | Remove Punjabi's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B10 | Queued | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -318,6 +318,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The forced 31-page XeLaTeX build now reports zero package or LaTeX warnings,
   missing glyphs, overfull boxes, underfull boxes, and duplicate destinations.
   HL-B06 is next: publish Gujarati Chapter 6 through the same canonical pipeline.
+
+## Findings from HL-B06
+
+- Gujarati Chapter 6 now comes from its two canonical schema-v2 lessons. The
+  generator manifest and Language Ladder independently combine the same ordered
+  lesson hashes, so the app and downloadable book cannot drift silently.
+- Both lessons realize `SPINE-COUNT-ONE-TO-FIVE` while retaining Gujarati's
+  local headless-script clue, the *dvé → be* assimilation path, and the learned
+  restoration of *r* in *traṇ*. Their effective 174- and 253-second boundaries
+  remain below the strict five-minute ceiling.
+- The shared Unicode generator wraps Gujarati runs with the book's existing
+  `\gu` command, while authored romanization supplies readable section
+  bookmarks. The final outline contains `ek be traṇ chār pā̃ch` and `be · traṇ`.
+- The deterministic report now measures 1,065 lessons, 20 books, zero duration
+  violations, zero unknown prerequisites, and 255 lesson chapters without book
+  chapters. Gujarati joins Spanish and Marathi as the third mixed-schema track.
+- The forced letter-size XeLaTeX build is 27 pages. Visual inspection of every
+  generated page found shaped Gujarati, width-aware tables, intact callouts, and
+  no clipping; tightening the final four-question recall kept it on one page.
+- The generated chapter adds no new missing-glyph, overfull, underfull,
+  duplicate-label, bookmark, or font warnings. HL-B07 remains the bounded cleanup
+  for warnings already present in the five handwritten chapters.
 
 ## Findings from HL-D01C
 
