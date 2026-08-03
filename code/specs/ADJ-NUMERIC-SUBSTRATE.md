@@ -203,12 +203,19 @@ tests → impl → security-review → babysit:
   derived value's tree, failing hard on any disagreement. This is the audit-exactness leg of
   NUM-6 — a rounded/formatted number is now re-derivable from the exact source it came from, not
   asserted.
-- **Remaining (the only open NUM-6 item):** per-`KnowledgeBase` `BigDouble` precision — the
-  configurable working precision the §3 default (256 bits) defers here. This depends on the
-  `Number::Real(BigDouble)` compute path of §5, which is **not yet wired into the engine**
-  (roots and transcendentals still evaluate on the `f64` fallback with the exact-rational
-  sidecar going `None`); it is therefore its own substrate rung — wire the `Real` contagion
-  into `compute`, then make its precision a per-`KnowledgeBase` setting — not a small closer.
+- **NUM-6 is otherwise complete.** The one item its own §4.4 text used to defer — per-`KnowledgeBase`
+  `BigDouble` precision — is **not** a NUM-6 sub-letter: it needs the `Number::Real(BigDouble)`
+  compute path of §5, which is not wired into the engine, so it is its own rung. See **§8, NUM-7**.
+
+> **Naming note (NUM-5, disambiguated).** "NUM-5" is used two ways across specs and they are
+> **not** the same deliverable. §6 below describes NUM-5 as "engine adopts Big-by-default" — the
+> **full** `Value = Number` tower swap (§5), where `f64` stops being a stored field and
+> `ExactRational` is subsumed. That has **not** shipped; there is no `✅` marker for it anywhere in
+> this document. `ADJ-EXACT-NUMBERS.md` (lines 11–14, 27–29) separately calls its own prerequisite
+> "NUM-5" too, but describes something narrower that **has** shipped: making the *compute sidecar*
+> itself exact and unbounded (`ExactRational(BigRational)`, `compute.rs:67` — upgraded off the old
+> bounded `i128` pair). Read "NUM-5" in each document as scoped to that document; NUM-7 (§8) does
+> not reuse the number, to avoid adding a third meaning.
 
 ---
 
@@ -264,10 +271,18 @@ Big arithmetic; a constraint solves over exact rationals where the backend allow
 - **NUM-6 — precision/format ops + stdlib formulas** (`round_to`, `round_sig`,
   `to_scientific`, `to_percent`, `to_currency`) + audit exactness + `adj-verify` precision
   re-check. Surface, mode, audit record and engine shape pinned in §4.1–§4.4; lands in
-  focused sub-PRs **NUM-6a** (`round_to`) → **NUM-6b** (`round_sig`) → **NUM-6c** (formatters
-  + per-`KnowledgeBase` `BigDouble` precision).
+  focused sub-PRs **NUM-6a** (`round_to`) → **NUM-6b** (`round_sig`) → **NUM-6c** (formatters).
+  ✅ **shipped in full** (NUM-6a/6b/6c/6v all landed; see §4.4).
+- **NUM-7 — a constrained `Real`/`BigDouble` audit companion, per-`KnowledgeBase` precision.**
+  NOT the full NUM-5 tower swap (see the naming note in §4.4) — a small, additive first rung
+  that wires `bignum-core::BigDouble` into `compute.rs` for `sqrt` only, alongside the existing
+  `f64` value and `ExactRational` sidecar (nothing existing changes shape). See §8 for the full
+  design; sub-staged **NUM-7a** (bignum-core primitive + KB setting) → **NUM-7b** (engine wiring
+  + audit JSON) → **NUM-7c** (`adj-verify` recheck).
 - **Later — retire `numeric-tower`'s `num-bigint`** onto `bignum-core` (pays down the
   existing third-party debt; out of this spec's critical path).
+- **Later still — the full NUM-5 tower swap** (§5) and transcendentals (`ln`/`exp`/`sin`/`cos`/…)
+  in `bignum-core`/NUM-7, once a genuine need for either surfaces. Neither is scheduled.
 
 **Sequencing:** foundational and mostly **parallelizable** with the rule-substrate rungs
 (RS-*); the engine swap (NUM-5) is the integration point and should land **before the
@@ -288,3 +303,55 @@ has no dependency and can start immediately.
   interval check); `adj-verify` re-derives and confirms the rendered figures.
 - `cargo test`/`cargo clippy` green per crate; the shipped formula/rule libraries keep
   their surface and their (now exact) values.
+
+---
+
+## 8. NUM-7 — a constrained `Real`/`BigDouble` audit companion
+
+**Scope decision.** §5's full `Number` tower is a breaking swap of the compute `Value` type —
+every `DerivationNode` variant, `adj-verify`'s recheck logic, and every consumer crate would need
+to move off `f64`+`ExactRational` at once. That is its own, larger, unscheduled effort (§6,
+"Later still"). NUM-7 instead wires just enough of `BigDouble` into the engine to deliver §3's
+per-`KnowledgeBase` precision promise, **additively**: nothing about the existing `f64` value or
+`ExactRational` sidecar changes shape or meaning.
+
+- **Scoped to `sqrt` only.** `bignum-core::BigDouble` (NUM-4) is correctly-rounded for
+  `+ − × ÷ √`, but has **no transcendentals** (`ln`/`exp`/`sin`/`cos`/… are explicitly out of
+  `bignum-core`'s scope today). So `sqrt` (reached via `x ^ 0.5` — the native lowering of both
+  `\sqrt{x}` and `\sqrt[n]{x}`, adj-lang's LaTeX frontend) is the only op that gets a `Real`
+  companion this rung. Wiring transcendentals is a **future rung**, blocked on `bignum-core`
+  gaining correctly-rounded implementations of them first — that prerequisite is new information
+  from this rung, not previously flagged.
+- **Additive, not contagious.** A `sqrt` result's audit gains an optional `Real` companion (the
+  `BigDouble` value, its precision, and its rounding mode) alongside the unchanged `f64` `result`.
+  Further arithmetic on that value does **not** propagate the companion (`sqrt(4) + 1` has no
+  `Real` companion on the `+`) — that promotion-lattice contagion is §5's job, not NUM-7's. A
+  perfect square (`sqrt(4)`) still gets a companion like any other `sqrt` — NUM-7 does not special
+  -case "is this base a perfect square," to avoid a second detection path.
+- **Precision — the first per-`KnowledgeBase` setting.** `KnowledgeBase` gains a
+  `real_precision_bits` field (default 256, per §3) plus builder/setter methods — this is the
+  struct's first configuration field (previously: only facts/rules/derived data). No new `.adj`
+  grammar exposes it per-program yet; setting it is a Rust-API-only KB construction step this
+  rung. A future rung could add a program-level directive (e.g. `precision 512` at the top of a
+  `.adj` file).
+- **Audited, not just computed.** The `Real` companion is captured with the exact rational it was
+  promoted from and its rounding mode, so `adj-verify` can independently re-promote-and-`sqrt` and
+  confirm the recorded value — reusing the existing narrowing-recheck machinery (§4.3), even
+  though a promotion to `Real` is technically a *widening* (exact → approximate) rather than a
+  narrowing.
+
+**Sub-staging** (each: spec-sync → tests → impl → security-review → babysit):
+
+- **NUM-7a** — `bignum-core::BigDouble::from_rational` (the exact-rational → `BigDouble`
+  promotion primitive, generalizing the existing private-use pattern inside
+  `BigRational::to_f64()` to a caller-supplied precision) + `KnowledgeBase::real_precision_bits`
+  (default 256, clamped to `bignum_core::MAX_PRECISION` since `BigDouble`'s internal precision
+  guard panics outside range).
+- **NUM-7b** — engine wiring: a new `real: Option<RealCompanion>` field on
+  `DerivationNode::Op` (additive; `Round`/`ToScientific`/`ToPercent`/`ToCurrency` and their
+  `ExactRational`-typed audit fields are untouched), populated when a `Pow` node's evaluated
+  exponent is bit-exactly `0.5` and its base carried an exact sidecar. CLI JSON gains an additive
+  `"real"` key when present.
+- **NUM-7c** — `adj-verify` recheck: an `Op` node with a `Real` companion is re-promoted and
+  re-`sqrt`'d at its recorded precision/mode and compared, reported through the existing
+  `NarrowingCheck` machinery.
