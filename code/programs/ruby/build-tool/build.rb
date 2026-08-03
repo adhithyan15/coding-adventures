@@ -318,7 +318,12 @@ module BuildTool
       puts "Discovered #{packages.size} packages"
 
       # -- Step 4: Resolve dependencies -----------------------------------------
-      graph = Resolver.resolve_dependencies(packages)
+      graph = begin
+        Resolver.resolve_dependencies(packages)
+      rescue MetadataEncodingError => e
+        $stderr.puts e.message
+        return 2
+      end
 
       # -- Step 5: Git-diff change detection (default mode) ---------------------
       #

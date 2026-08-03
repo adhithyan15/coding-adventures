@@ -38,6 +38,23 @@
 # skipped.
 
 module BuildTool
+  # MetadataEncodingError -- Stable failure for malformed package metadata.
+  #
+  # The error carries only portable package and repository-relative manifest
+  # identities. CLI callers can therefore report malformed UTF-8 without
+  # exposing a host-specific checkout root.
+  class MetadataEncodingError < StandardError
+    attr_reader :code, :package, :manifest, :encoding
+
+    def initialize(package:, manifest:)
+      @code = "METADATA_INVALID_UTF8"
+      @package = package
+      @manifest = manifest
+      @encoding = "UTF-8"
+      super("#{code}: package=#{package} manifest=#{manifest} encoding=#{encoding}")
+    end
+  end
+
   # --------------------------------------------------------------------------
   # DirectedGraph -- A minimal directed graph for dependency resolution.
   #
@@ -374,7 +391,7 @@ module BuildTool
       rockspec_files = package.path.glob("*.rockspec").to_a
       return [] if rockspec_files.empty?
 
-      text = rockspec_files.first.read
+      text = read_utf8_metadata(package, rockspec_files.first)
       internal_deps = []
       in_deps = false
 
@@ -402,6 +419,29 @@ module BuildTool
       end
 
       internal_deps
+    end
+
+    # read_utf8_metadata -- Read raw metadata bytes and decode strict UTF-8.
+    #
+    # Pathname#read inherits Ruby's process-default external encoding. Package
+    # manifests are portable repository data, so their decoding must not vary
+    # with a runner locale or silently replace malformed byte sequences.
+    def read_utf8_metadata(package, path)
+      text = File.binread(path).force_encoding(Encoding::UTF_8)
+      return text if text.valid_encoding?
+
+      raise MetadataEncodingError.new(
+        package: package.name,
+        manifest: repository_relative_manifest(path)
+      )
+    end
+
+    def repository_relative_manifest(path)
+      normalized = Pathname(path).cleanpath.to_s.tr("\\", "/")
+      match = normalized.match(%r{(?:\A|/)(code/(?:packages|programs)/.+)\z})
+      return match[1] if match
+
+      Pathname(normalized).basename.to_s
     end
 
     # extract_lua_deps -- Extract dependency names from a line of a rockspec.

@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `ec53a3f9` after the
-Perl build-tool branch was rebased onto current `origin/main`. The inventory
-contains 1,224 normalized implementation identities across 4,372 established-lane
+working inventory was regenerated on August 2, 2026 from `816bd31f` after the
+Ruby build-tool branch was rebased onto current `origin/main`. The inventory
+contains 1,225 normalized implementation identities across 4,373 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 774 | 10,836 |
+| Present in one language | 775 | 10,850 |
 
-The loop must not start by attempting 10,836 singleton ports. It should finish
+The loop must not start by attempting 10,850 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`ec53a3f9e9b2f31deefc43552a4d48658c49f3f4` is collision-clean at 1,224
-normalized implementation identities, 4,372 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 774 singletons, 579
+`816bd31f41bd21ce5bda30c1dfaac8b8b5102de0` is collision-clean at 1,225
+normalized implementation identities, 4,373 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 775 singletons, 580
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -183,6 +183,15 @@ framing, epoch, and cryptographic core around explicit entropy, persistence,
 and key-custody boundaries. The latter has a reusable deterministic host-bridge
 contract around a Qt/Cairo/C++ native shell. Both now have explicit backlog
 owners; neither is treated as an unclassified blind all-language port.
+
+The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
+authority-free orchestration layer over injected storage and cryptography:
+two-phase CAS reservation, crash recovery, nonce-safe abandoned gaps,
+idempotent encrypted records and grants, ordered paging, acknowledgements,
+and stable record errors are portable fixture candidates. Backend I/O,
+filesystem durability, key custody, entropy, and actor routing remain injected
+or native. A dedicated backlog owner depends on the channel-crypto vectors, so
+the new singleton is classified but is not eligible to preempt that dependency.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
@@ -246,13 +255,24 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. Merged PR
   #9603 completed Lua with strict raw-byte validation, both shared fixtures,
   the stable repository-relative diagnostic, real CLI exit code 2, malformed
-  Unicode coverage, and green Ubuntu, macOS, and Windows checks. The selected
-  Ready-for-review PR #9632 is the Perl child because its raw-byte boundary is
-  the narrowest remaining resolver. Its security gate
+  Unicode coverage, and green Ubuntu, macOS, and Windows checks. Merged PR
+  #9632 completed Perl with strict decoding, exact success edges, typed stable
+  diagnostics, real CLI exit 2, malformed-sequence coverage, and green Ubuntu,
+  macOS, Windows, fixture, CI-gate, and CodeQL checks. Its security gate
   also discovered that the Perl build tool's `5.026` runtime floor and
   version-free core-module declarations do not produce an auditable clean
   dependency floor; that compatibility-policy review is logged as a separate
-  pending child instead of expanding the UTF-8 behavior slice;
+  pending child instead of expanding the UTF-8 behavior slice. Ready-for-review
+  PR #9648 owns the Ruby child with strict byte decoding, typed stable
+  diagnostics, the exact shared fixtures, and real CLI exit 2. Haskell and
+  Elixir remain pending until that sole active parity PR merges;
+- close the Ruby build tool's Starlark source-tree execution gaps. The Ruby
+  UTF-8 validation found that a clean real plan cannot load the undeclared
+  `coding_adventures_starlark_interpreter` runtime until repository library
+  paths are injected, after which 44 canonical Elixir, Go, and Rust
+  BUILD suffixes still produce parse warnings and raw-command fallback. Runtime
+  closure and canonical BUILD compatibility are separate pending children so
+  the metadata-decoding slice stays behaviorally narrow;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

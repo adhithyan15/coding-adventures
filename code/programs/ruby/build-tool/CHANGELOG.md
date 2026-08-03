@@ -2,6 +2,17 @@
 
 All notable changes to the Ruby build tool are documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Lua rockspecs are decoded from raw bytes as strict UTF-8 before dependency
+  parsing. Malformed metadata raises a typed `METADATA_INVALID_UTF8` error with
+  stable package and repository-relative manifest identity.
+- The real CLI maps only that metadata error to exit code 2 and root-redacted
+  stderr. Shared valid and invalid fixtures, literal U+FFFD, and five malformed
+  UTF-8 classes are covered by the Ruby test suite.
+
 ## [0.3.0] - 2026-03-29
 
 ### Added

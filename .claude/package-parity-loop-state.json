@@ -12,22 +12,22 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "item_id": "build-tool-perl-engine-rockspec-utf8-conformance",
-    "number": 9632,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9632",
-    "branch": "codex/build-tool-perl-rockspec-utf8"
+    "item_id": "build-tool-ruby-engine-rockspec-utf8-conformance",
+    "number": 9648,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9648",
+    "branch": "codex/build-tool-ruby-rockspec-utf8"
   },
   "last_inventory": {
-    "revision": "ec53a3f9e9b2f31deefc43552a4d48658c49f3f4",
+    "revision": "816bd31f41bd21ce5bda30c1dfaac8b8b5102de0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1224,
-    "implementation_package_slots": 4372,
+    "implementation_identities": 1225,
+    "implementation_package_slots": 4373,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 774,
-    "singleton_missing_slots": 10836,
-    "rust_singletons": 579,
+    "singleton_packages": 775,
+    "singleton_missing_slots": 10850,
+    "rust_singletons": 580,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -343,7 +343,7 @@
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, TypeScript, and Lua were remediated in merged PRs #9504, #9510, #9537, #9572, and #9603. Four engines remain: Perl accepts malformed bytes, Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity. The Perl engine is materialized as the next pending child because its raw byte boundary is narrow and Perl 5.38 is locally available."
+      "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, TypeScript, Lua, and Perl were remediated in merged PRs #9504, #9510, #9537, #9572, #9603, and #9632. Three engines remain: Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity. All three remaining children are explicitly materialized below."
     },
     {
       "id": "build-tool-lua-engine-rockspec-utf8-conformance",
@@ -357,11 +357,56 @@
     {
       "id": "build-tool-perl-engine-rockspec-utf8-conformance",
       "title": "Make the Perl build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-perl-rockspec-utf8",
       "pr_number": 9632,
-      "notes": "Ready-for-review PR #9632 opened at b60299988ed47b8acc21ea838f99d9f39648d8ed after merged PR #9603 and the collision-clean ec53a3f9 inventory. The four-engine leverage pass ranked Perl first because its raw-byte rockspec reader is the narrowest remaining boundary, and the shared valid/invalid fixtures plus five merged reference implementations pin the exact contract. Implemented strict raw-byte decoding, a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, exact success edges without the rockspec package field becoming a self-dependency, malformed-sequence and literal-U+FFFD coverage, and a real CLI exit-2 contract without checkout-root leakage. Rebased conflict-free onto ec53a3f9; the full 127-test Perl suite, MakeMaker workflow, syntax, severity-5 Perl::Critic, coverage, canonical Go test/vet/build and 256-package Perl validator, 57 conformance tests, 37-case/56-file corpus, 258-package real Lua plan, collision inventory, diff, dependency, and credential scans pass. Keep Ruby and Haskell locale-sensitive decoding and Elixir's position-dependent decoding as separate later children."
+      "notes": "Merged PR #9632 as 46d95281010e384243dd027a0b94063d5cd6b382 on 2026-08-03 after all exact-head checks were terminal: two detects, two fixture consumers, two Ubuntu builds, macOS, Windows, two CI gates, and CodeQL detection passed; five irrelevant CodeQL analyzers skipped. The resolver strictly decodes raw bytes, emits typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, preserves exact success edges without a package-field self-dependency, accepts literal U+FFFD, rejects five malformed-sequence classes, and maps the real CLI to exit 2 without checkout-root leakage. Local validation passed the full 127-test Perl suite, MakeMaker workflow, syntax, severity-5 Perl::Critic, 83.9% aggregate coverage, canonical Go test/vet/build and 256-package Perl validator, 57 conformance tests, 37-case/56-file corpus, 258-package real Lua plan, collision inventory, diff, direct Encode dependency, and credential scans."
+    },
+    {
+      "id": "build-tool-ruby-engine-rockspec-utf8-conformance",
+      "title": "Make the Ruby build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pr-open",
+      "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
+      "branch": "codex/build-tool-ruby-rockspec-utf8",
+      "pr_number": 9648,
+      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit. After conflict-free rebases through 816bd31f, exact-head validation passes 296 Ruby runs/585 assertions with 87.41% line and 72.05% branch coverage, syntax, changed-file Lint/Security RuboCop, zero-advisory bundle audit, current dependencies, canonical Go test/vet/build and 300-package Ruby validation, 57 conformance tests, the 37-case/56-file corpus, a real 258-Lua-package/382-edge plan, and the collision-clean inventory. Full-repository validation separately discovered the undeclared Starlark runtime dependency and 44 canonical BUILD parse fallbacks; both have dedicated pending owners below and do not expand this UTF-8 slice."
+    },
+    {
+      "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
+      "title": "Make the Haskell build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized after merged PR #9632. Replace locale-sensitive lazy text I/O at the rockspec boundary with explicit strict UTF-8 decoding, consume both exact shared fixtures, preserve exact dependency edges, propagate typed METADATA_INVALID_UTF8 identity, and cover the real executable exit/stderr contract. Schedule after Ruby because the Haskell toolchain and lazy-I/O boundary require a broader build and resource audit."
+    },
+    {
+      "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
+      "title": "Make the Elixir build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized after merged PR #9632. Elixir reads binaries but its current regex extraction has position-dependent behavior on malformed UTF-8. Add an explicit UTF-8 validity gate before parsing, consume both exact shared fixtures, preserve exact dependency edges, return typed METADATA_INVALID_UTF8 identity, and prove the real CLI exit/stderr contract. Schedule after the direct locale-sensitive Ruby and Haskell boundaries so their references further pin cross-platform behavior."
+    },
+    {
+      "id": "build-tool-ruby-starlark-runtime-closure",
+      "title": "Make the Ruby build tool declare and load its Starlark runtime closure",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while running the real full-repository Lua plan for the Ruby UTF-8 slice. The build tool lazily requires coding_adventures_starlark_interpreter whenever a Starlark BUILD file is present, but its Gemfile declares only progress_bar and test gems; a clean source-tree invocation therefore aborts with LoadError until every Ruby package lib directory is injected through RUBYLIB. Declare a repository-local runtime closure or a supported bootstrap path, exercise it from a clean environment on Windows and Unix, and preserve the tool's zero-network build execution policy."
+    },
+    {
+      "id": "build-tool-ruby-starlark-canonical-build-compatibility",
+      "title": "Make the Ruby Starlark path parse canonical BUILD files without fallback",
+      "status": "pending",
+      "depends_on": ["build-tool-ruby-starlark-runtime-closure"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -865,6 +910,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean ec53a3f9 inventory after PR #9609 added Rust-only chief-of-staff-channel-crypto. Define language-neutral vectors for the versioned bounded grant/message wire records, stable storage keys, framed authenticated headers, digest/signature inputs, epoch transition rules, retry/conflict handling, and sequence reservation/recovery. Expand deterministic codecs and cryptographic behavior only where each lane has suitable constant-time primitives; keep OS CSPRNG access, key custody, durable sequence persistence, storage, and actor routing behind injected or native authority boundaries, with reviewed exceptions where a safe implementation is unavailable."
+    },
+    {
+      "id": "chief-channel-store-portable-conformance",
+      "title": "Fixture and expand the portable Chief encrypted channel store",
+      "status": "pending",
+      "depends_on": ["chief-channel-crypto-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 9bb12864 inventory after PR #9640 added Rust-only chief-of-staff-channel-store. Define language-neutral fixtures for two-phase CAS sequence reservation, exact pending-header recovery, nonce-safe abandoned gaps, idempotent encrypted-message and sealed-grant persistence, ordered pagination, monotonic per-receiver acknowledgements, conflict/retry ceilings, corrupt-record rejection, and stable repository-owned storage keys/errors. Expand the authority-free orchestration over injected StorageBackend and channel-crypto contracts after the cryptographic vectors land; backend I/O, filesystem durability, key custody, entropy, and actor routing remain separately injected or native and are not part of this portable package."
     },
     {
       "id": "venture-browser-qt-portable-bridge-and-native-host",
