@@ -289,6 +289,9 @@ option mapping, or judge/evaluation failure.
     and exact half-open declaration/body byte spans. Provenance tooling can now
     inventory parsed formula bodies without regex discovery or source normalization;
     import resolution, lowering, semantic derivation, and execution remain separate gates.
+7i. **Complete:** expose that parser inventory as canonical JSON with the exact input,
+    declaration, and final-body SHA-256s so CAS tooling can consume a stable byte-level
+    boundary without serializing `f64` AST literals as if they preserved source exactness.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 9. Add executable formula preconditions or domain guards before migrating
@@ -301,9 +304,14 @@ option mapping, or judge/evaluation failure.
 12. Revisit `simple-interest.adj` with its variable/unit context, explicit
     rejection of contradicted page metadata, unit-bearing query facts, and a
     structured lowering from source notation to primitive operations.
-13. Add CAS `formula_derivation` and execution-witness objects on top of the
-    parser-backed source map, then enforce set equality across parsed exports,
-    replayed derivations, and fully verified query executions.
+13a. **Complete:** define `formula_parser_inventory` CAS objects and an optional
+     provenance-bundle link, then replay the trusted parser binary against the exact
+     linked CAS input on every verification. Output is bounded while streaming, and
+     each formula requires its own enclosing input-IR claim. The isolated bridge is
+     schema-checked; current manifest roots remain explicitly unmigrated.
+13b. Migrate parser inventories into every formula-bearing provenance root, add
+     `formula_derivation` and execution-witness objects, then enforce set equality
+     across parsed exports, replayed derivations, and fully verified query executions.
 
 ### Wave 2: complete K-8 foundations
 

@@ -89,6 +89,24 @@ machine-readable measure of how much of the corpus is still uncheckable.
 touches the network — it is the deep re-execution *inside* one engine artifact,
 which ADJ08's linter should call rather than reimplement.
 
+## `adj-formula-inventory` - exact parser source spans
+
+```sh
+adj-formula-inventory LIBRARY.adj
+```
+
+This binary emits canonical JSON that binds the input SHA-256 to every formula
+found by the real Adj-Lang parser. Each entry carries exact half-open UTF-8 byte
+spans and SHA-256s for the declaration and final body expression, along with the
+formula name, parameters, parser order, and step count. It is a structural input
+for provenance tooling: it does not resolve imports, prove source-to-formula
+equivalence, or claim that any formula executed successfully.
+
+The ADJ provenance verifier stores this output as a `formula_parser_inventory`
+CAS object and reruns this binary against the linked CAS input. Verification
+requires exact JSON agreement and one distinct enclosing input-IR claim for each
+formula declaration.
+
 ## Where it fits
 
 ```

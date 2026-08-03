@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.33.0] - 2026-08-02 - parser-backed formula inventory
+
+- Added `adj-formula-inventory`, which emits canonical JSON from the real Adj-Lang parser for
+  every formula in one source file.
+- Each inventory binds the exact source SHA-256 and each formula's declaration and final-body
+  half-open UTF-8 spans plus their byte hashes. Parameters, parser order, and multi-step counts
+  are structural metadata; the inventory does not claim import resolution, semantic derivation,
+  or execution.
+- Serialization and verifier pipe capture enforce the 64 MiB CAS object limit while streaming.
+  The provenance CAS can store and replay the inventory against its linked input bytes, and each
+  formula declaration must have its own enclosing input-IR claim.
+
 ## [0.32.0] - 2026-08-02 - formula-only `adj-verify`
 
 - `adj-verify` now reports every computed binding, re-evaluates its separately stored compiler
