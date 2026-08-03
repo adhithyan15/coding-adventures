@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C04-ila-liqaa
+spine_node: SPINE-TAKE-LEAVE
+sequence: 420
 chapter: 4
 type: phrase
 headword: إلى اللقاء
@@ -10,18 +13,32 @@ prerequisites: [AR-C04-maa-salama, AR-C01-al]
 sounds: [hamza, alif-maqsura]
 roots: [semitic-l-q-y]
 etymology_hook: "'until the meeting' is exactly the Spanish hasta luego / hasta mañana shape — and hasta ITSELF is an Arabic loan (ḥattā), so Spanish borrowed the very word that builds this kind of farewell; liqāʾ ← root l-q-y 'to meet'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02]
+practises:
+  knowledge: [AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C04-maa-salama, AR-C01-al, AR-W06-hamza, AR-W06-harakat-and-hamza]
 ---
 
 # إلى اللقاء (ilā l-liqāʾ) — "see you"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The other everyday farewell — and the one with a surprise waiting in
 the Spanish track.
 
-## A note on the letters
+## You'll want to know — A note on the letters
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-ILA-LIQAA-01]; assesses=[] -->
 
 *(Skim if you read Arabic.)* Two pieces here are **beyond what the writing track
 has covered**, so read them for now and draw them later:
@@ -35,7 +52,8 @@ has covered**, so read them for now and draw them later:
 
 The rest — **ا ل ء** — you have written.
 
-## The two pieces
+## You'll want to know — The two pieces
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-ILA-LIQAA-02]; assesses=[] -->
 
 | piece | meaning |
 |---|---|
@@ -51,7 +69,8 @@ decoration.
 Note **ل** is a sun letter too, so *al-liqāʾ* doubles the *l*, just as *as-salāma*
 doubled the *s*.
 
-## The Spanish surprise
+## Why it's said this way — The Spanish surprise
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Spanish says goodbye like this:
 
@@ -75,6 +94,7 @@ builds it.
 | Italian | *a presto* | to + soon |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*ilā l-liqāʾ*" — double the *l*]
@@ -83,6 +103,7 @@ builds it.
 - [YOU SAY: the root — "**l · q · y** — to meet"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02] -->
 
 [PAUSE 3s] What does **إلى اللقاء** literally say? ("**Until the meeting**.")
 What root is *liqāʾ* from? (**l–q–y**, "to meet".) Which two letters here has the

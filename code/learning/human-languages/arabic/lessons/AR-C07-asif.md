@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C07-asif
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 470
 chapter: 7
 type: word
 headword: آسف / آسفة
@@ -9,19 +12,33 @@ prerequisites: [AR-C06-min-fadlik]
 sounds: [alef-madda, gendered-ending, arabic-rtl]
 roots: [asifa-arabic]
 etymology_hook: "آسف āsif/āsifa 'sorry' is a GENDERED adjective — unlike English sorry, the speaker's own gender changes the word"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C07-ASIF-02]
+practises:
+  knowledge: [AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C07-ASIF-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C06-min-fadlik]
 ---
 
 # آسف / آسفة (āsif / āsifa) — sorry
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already know **من فضلك**, "please." Arabic's word for "sorry"
 teaches a new lesson entirely: it isn't a fixed word at all — **it changes
 with the speaker.**
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C07-ASIF-01]; assesses=[] -->
 
 **آسف** (*āsif*, said by a man) and **آسفة** (*āsifa*, said by a woman) both
 mean "**sorry**." They come from the verb **أَسِفَ** (*asifa*), "to grieve, to
@@ -35,7 +52,8 @@ meet across Arabic adjectives. English "sorry" never changes no matter who
 says it; Arabic "sorry" always tells you the speaker's gender in the same
 breath.
 
-## Be honest about the other word: معذرة
+## Why it's said this way — Be honest about the other word: معذرة
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C07-ASIF-02]; assesses=[] -->
 
 For a quick, **ungendered** "excuse me / pardon" — squeezing past someone,
 interrupting, a light apology — Arabic reaches for **معذرة** (*maʿdhira*),
@@ -48,6 +66,7 @@ Use **آسف/آسفة** when you mean a real, felt "I'm sorry" (and remember to 
 your own gender); reach for **معذرة** for the light, everyday "pardon me."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C07-ASIF-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: a man says — "āsif"]
@@ -55,6 +74,7 @@ your own gender); reach for **معذرة** for the light, everyday "pardon me."
 - [YOU SAY: the ungendered one — "maʿdhira" = excuse me / pardon]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C07-ASIF-01, AR-CONCEPT-C07-ASIF-02] -->
 
 [PAUSE 3s] What's unusual about **آسف / آسفة** compared to English "sorry"?
 (**It's a gendered adjective** — *āsif* for a man, *āsifa* for a woman — where

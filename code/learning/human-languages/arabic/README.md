@@ -40,12 +40,32 @@ Two more things:
   mā, **mā ismuka/ismuki?** ("what's your name?"), tasharrafnā, practice. The
   zero copula (shared with Dravidian) and "you" split by **gender**. In the
   book.
+- **Chapters 3–7 — Wellbeing, farewells, and courtesy**
+  ([`lessons/AR-C0{3,4,5,6,7}-*`](./lessons/)): ask and answer how someone is,
+  assemble **maʿa s-salāma**, respond yes or no, and add please and sorry. Six
+  dependency-ordered writing companions introduce only the letters and joins
+  needed by the spoken lessons. In the book from canonical schema-v2 lessons.
+- **Chapters 8–18 — Calendar and everyday domains**
+  ([`lessons/AR-C{08..18}-*`](./lessons/)): days, colours, family, body, seasons,
+  food, months, dayparts, clock time, age, and weather, with Arabic's root and
+  pattern system kept visible. In the book from canonical schema-v2 lessons.
+- **Chapters 19–27 — Counting, description, and leave-taking**
+  ([`lessons/AR-C{19..27}-*`](./lessons/)): numbers one through twenty, animals,
+  more colours, **ʿafwan**, and a gentle sequence from tomorrow and day/night
+  vocabulary to **tuṣbiḥ ʿalā khayr**. In the book from canonical schema-v2
+  lessons.
+
+All forty-five lessons in Chapters 3–27 remain below five effective minutes.
+Their twenty-five generated chapters carry the same source hashes Language
+Ladder recomputes from the browser-loaded lesson AST, so app and book cannot
+drift silently.
 
 ## Book / fonts
 
-The book compiles with XeLaTeX using the **vendored** Noto Naskh Arabic font
-(`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+The book compiles with XeLaTeX using **vendored** Noto Naskh Arabic and Noto
+Sans Hebrew fonts (`../../_fonts/`), loaded by relative path — so Arabic script
+and Semitic comparisons build identically locally and in CI, with no system-font
+dependency. `latexmk -xelatex book.tex`.
 
 ## Files
 
@@ -53,5 +73,5 @@ and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
-Lessons are slug-named (e.g. `AR-C01-salam`); order lives in the book and
-`session-map.md`.
+Lessons are slug-named (e.g. `AR-C01-salam`); schema-v2 lessons carry their
+prerequisite-safe sequence in canonical metadata consumed by both app and book.

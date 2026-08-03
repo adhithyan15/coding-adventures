@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C03-practice
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 350
 chapter: 3
 type: practice
 headword: (dialogue)
@@ -8,18 +11,32 @@ concept_tag: REVIEW
 prerequisites: [AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02]
+practises:
+  knowledge: [AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C03-kayfa, AR-C03-hal, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah, AR-C02-ismii, AR-C01-as-salamu-alaykum]
 ---
 
 # Practice — the whole exchange
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Chapter 1 let you greet. Chapter 2 let you introduce yourself. This
 chapter closes the loop: you can now **ask after someone and answer back**.
 
-## The dialogue
+## The exchange
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-01]; assesses=[] -->
 
 | | Arabic | literally |
 |---|---|---|
@@ -32,7 +49,8 @@ chapter closes the loop: you can now **ask after someone and answer back**.
 Read down the right-hand column. **Not one line contains a verb "to be."** Arabic
 joins things by putting them next to each other.
 
-## What's assembled, not memorised
+## You'll want to know — the pieces
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C03-PRACTICE-02]; assesses=[] -->
 
 | phrase | built from |
 |---|---|
@@ -44,7 +62,8 @@ joins things by putting them next to each other.
 Three tiny attaching pieces — **al-**, **bi-**, **li-** — and two suffixes,
 **-ī** and **-ka/-ki**. That is most of the chapter.
 
-## The gender switch
+## Grammar Lens — gender
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Every "you" in this chapter splits. Say the pair aloud:
 
@@ -57,6 +76,7 @@ Every "you" in this chapter splits. Say the pair aloud:
 One vowel mark decides — the *fatḥa* / *kasra* pair from the writing set.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full exchange, both parts, to a man]
@@ -66,6 +86,7 @@ One vowel mark decides — the *fatḥa* / *kasra* pair from the writing set.
   good · **ḥ-m-d** praise"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-PRACTICE-01, AR-CONCEPT-C03-PRACTICE-02] -->
 
 [PAUSE 3s] Ask "how are you?" to a woman. (*Kayfa ḥāluki?*) Give both answers.
 (*Bi-khayr* / *al-ḥamdu lillāh*.) What do *al-*, *bi-* and *li-* have in common?

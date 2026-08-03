@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C10-ab-umm
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 520
 chapter: 10
 type: word
 headword: أب أم
@@ -9,19 +12,33 @@ prerequisites: [AR-C09-ahmar-azraq]
 sounds: [hamza-variants, arabic-rtl]
 roots: [semitic-ab, semitic-umm]
 etymology_hook: "أب ab 'father' and أم umm 'mother' are ancient Semitic roots, cousins of Hebrew av and em — the same roots behind Aramaic abba ('Abba, Father') and the honorific naming pattern Umm [child]"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02]
+practises:
+  knowledge: [AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C09-ahmar-azraq]
 ---
 
 # أب, أم (ab, umm) — father and mother
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two short, ancient words — each just two or three letters — sitting
 at the root of Semitic family vocabulary across several languages, not just
 Arabic.
 
 ## Taken apart
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C10-AB-UMM-01]; assesses=[] -->
 
 - **أب** (*ab*) = "**father**." A short, ancient Semitic root, cousin of
   Hebrew **אב** (*av*) and Aramaic **אבא** (*abba*) — the very word behind
@@ -33,7 +50,8 @@ These aren't borrowings between Arabic and Hebrew — both descend from the
 same ancient Semitic family vocabulary, the way *pater* and English *father*
 are cousins through PIE rather than one copying the other.
 
-## A living naming pattern
+## Why it's said this way — A living naming pattern
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C10-AB-UMM-02]; assesses=[] -->
 
 **أم** stays productive in everyday Arabic naming: **أم** + a child's name
 forms a **kunya**, an honorific "**mother of ___**" (and **أبو**, *abū*,
@@ -42,6 +60,7 @@ publicly as *Umm Khālid*, "mother of Khālid," rather than by their own given
 name — a naming custom still very much alive today.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ab" — father — then "umm," mother]
@@ -49,6 +68,7 @@ name — a naming custom still very much alive today.
 - [YOU SAY: the naming pattern — "Umm + [child's name]" = mother of ___]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C10-AB-UMM-01, AR-CONCEPT-C10-AB-UMM-02] -->
 
 [PAUSE 3s] What are Arabic's words for father and mother? (**أب ab, أم
 umm**.) What are their Hebrew cousins? (**av, em** — not borrowings, both

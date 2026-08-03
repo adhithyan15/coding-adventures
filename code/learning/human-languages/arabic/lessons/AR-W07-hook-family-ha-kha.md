@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-W07-hook-family-ha-kha
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 270
 chapter: 3
 type: writing
 headword: "ح، خ، ج"
@@ -8,20 +11,34 @@ romanization: "ḥāʾ, khāʾ, jīm"
 prerequisites: [AR-W06-hamza]
 sounds: [arabic-ha-deep, arabic-kha, arabic-jim]
 roots: [phoenician-heth, phoenician-giml]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
+practises:
+  knowledge: [AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-W06-hamza, AR-W06-harakat-and-hamza, AR-W04-dots-family-nun-ta, AR-C01-sabah-al-khayr]
 ---
 
 # ح، خ، ج — the dots trick, on a brand-new body
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Back in Lesson 4 you learned a whole family of letters that share one
 **bowl** and differ only by dots. Arabic does the *same trick* on a **second**
 skeleton — a curvy **hook-and-tail body** — giving three more common letters. Learn
 the body once; the dots do the rest, exactly as before.
 
-## The hook-and-tail family
+## Script — The hook-and-tail family
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01]; assesses=[] -->
 
 Every letter here is the **same shape**: a rounded **hook** at the top flowing into
 a **tail that drops below the line**. Only the dot changes:
@@ -35,7 +52,8 @@ a **tail that drops below the line**. Only the dot changes:
 It is the bowl-family idea reborn: one skeleton, the dots deciding everything. Say
 the dial — **no dot / above / below → ḥ / kh / j**.
 
-## Draw them
+## Script — Draw them
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]; assesses=[] -->
 
 - **ح** (*ḥāʾ*) — the hook body, then the descending tail; **no dot**. From
   Phoenician **ḥēth** ("fence") — the ancestor of Latin **H**.
@@ -45,7 +63,8 @@ the dial — **no dot / above / below → ḥ / kh / j**.
 - **ج** (*jīm*) — the same body, plus **one dot below**. From Phoenician **gīml**
   ("camel") — the great-grandparent of Greek *gamma* and Latin **C/G**.
 
-## Where you've seen it — خير
+## Script — Where you've seen it — خير
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 You have already read **خير** (*khayr*, "good/well") inside the Chapter 1 greeting
 **صباح الخير** (*ṣabāḥ al-khayr*, "good morning"). It **opens with خ** — the
@@ -53,6 +72,7 @@ hook-body plus one dot above. You now know the first letter of a word you've bee
 saying since Lesson… one.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02] -->
 
 [PAUSE 1s]
 - [YOU WRITE: the same hook-and-tail body three times, then dot them — ح (none),
@@ -61,6 +81,7 @@ saying since Lesson… one.
 - [YOU SAY: "خ opens خير — the 'good' in *ṣabāḥ al-khayr*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02] -->
 
 [PAUSE 3s] What do **ح, خ, ج** share, and what tells them apart? (One
 **hook-and-tail body**; the **dots** — none / above / below.) Which sound is *خ*,

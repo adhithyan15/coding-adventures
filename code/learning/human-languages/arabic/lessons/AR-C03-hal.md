@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C03-hal
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 310
 chapter: 3
 type: word
 headword: حال
@@ -10,19 +13,33 @@ prerequisites: [AR-C03-kayfa]
 sounds: [rtl-known-letters, deep-h]
 roots: [h-w-l]
 etymology_hook: "ḥāl ← root ḥ-w-l 'to turn, change' — so a 'state' is literally the way things have TURNED; the same root gives ḥawla ('around'), taḥwīl ('transformation') and ḥawl ('a year' — one full turn)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02]
+practises:
+  knowledge: [AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C03-kayfa, AR-W07-hook-family-ha-kha, AR-C01-salam]
 ---
 
 # حال (ḥāl) — "state, condition"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] English asks "how are **you**?" Arabic asks about something else
 entirely — your **حال**, your *state*. Get this word and the whole question falls
 open.
 
-## The letters in this word
+## You'll want to know — The letters in this word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C03-HAL-01]; assesses=[] -->
 
 *(Skim if you read Arabic.)* Three letters, **all already yours**: **ح**
 (*ḥāʾ*, the deep throat *h*, from the hook-family lesson), **ا** (*alif*), **ل**
@@ -31,7 +48,8 @@ open.
 Right to left: **ح · ا · ل** → *ḥāl*. And remember from the writing set: *alif*
 **breaks** the join, so *ḥā-* then *-l*.
 
-## The root ḥ–w–l — "to turn"
+## Why it's said this way — The root ḥ–w–l — "to turn"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C03-HAL-02]; assesses=[] -->
 
 Here is the payoff. **حال** comes from the root **ḥ–w–l**, "**to turn, to
 change**." Look what grows from it:
@@ -52,6 +70,7 @@ Latin *stāre*, "to **stand**." Two languages, two metaphors for the same idea �
 one **stands**, one **turns**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*ḥāl*" — deep *ḥ* from the throat, not an English *h*]
@@ -59,6 +78,7 @@ one **stands**, one **turns**.
 - [YOU SAY: the contrast — "Arabic **turns**, Spanish *estar* **stands**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C03-HAL-01, AR-CONCEPT-C03-HAL-02] -->
 
 [PAUSE 3s] What does **حال** mean? ("**State, condition**.") What root is it
 from, and what does that root mean? (**ḥ–w–l**, "**to turn, change**.") So what

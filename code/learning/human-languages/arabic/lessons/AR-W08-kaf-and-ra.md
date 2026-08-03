@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-W08-kaf-and-ra
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 280
 chapter: 3
 type: writing
 headword: "ك، ر"
@@ -8,19 +11,33 @@ romanization: "kāf, rā"
 prerequisites: [AR-W07-hook-family-ha-kha]
 sounds: [arabic-kaf, arabic-ra]
 roots: [phoenician-kaph, phoenician-resh]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02]
+practises:
+  knowledge: [AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-W07-hook-family-ha-kha, AR-W01-direction-and-alif]
 ---
 
 # ك and ر — an angular k, and an r that won't hold hands
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two more shapes, and then — next lesson — you can write **خير**. Meet
 **ك** (*kāf*, "k") and **ر** (*rā*, "r"). One is angular and new; the other
 revisits a rule you learned on the very first day.
 
-## ك (kāf) — the angular k
+## Script — ك (kāf) — the angular k
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W08-KAF-AND-RA-01]; assesses=[] -->
 
 Break it apart:
 
@@ -32,7 +49,8 @@ Break it apart:
 ancestor of Greek *kappa* and Latin **K**. It joins its neighbours, changing shape
 by position like the other connectors.
 
-## ر (rā) — the little downward curve that breaks
+## Script — ر (rā) — the little downward curve that breaks
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W08-KAF-AND-RA-02]; assesses=[] -->
 
 Break it apart — there's just *one piece*:
 
@@ -45,6 +63,7 @@ not join to the letter after it** — it is one of the **six non-joiners**. So *
 forces the pen to **lift**, just as *alif* did in *سلام*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02] -->
 
 [PAUSE 1s]
 - [YOU WRITE: **ك** — angular body + the inner flick]
@@ -53,6 +72,7 @@ forces the pen to **lift**, just as *alif* did in *سلام*.
 - [YOU SAY: "*kaph* → K, *rēsh* → R — the Phoenician cousins again"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02] -->
 
 [PAUSE 3s] Describe **ك**: angular or curved, and what sits inside? (**Angular**
 body with a small **inner stroke**.) What Latin letters descend from *kāf* and *rā*?

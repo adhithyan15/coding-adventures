@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C19-wahid-khamsa
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 630
 chapter: 19
 type: word
 headword: واحد اثنان ثلاثة أربعة خمسة
@@ -9,19 +12,33 @@ prerequisites: [AR-C18-al-taqs]
 sounds: [arabic-hamza, arabic-teh-marbuta]
 roots: [arabic-semitic-numerals]
 etymology_hook: "واحد، اثنان، ثلاثة، أربعة، خمسة (wāḥid, ithnān, thalātha, arbaʿa, khamsa) are the Arabic WORDS for 1-5 — genuinely different from 'Arabic numerals' (the written digit shapes 0-9), which actually originated in India and reached Europe via Arabic mathematicians like al-Khwārizmī, not from these words at all"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C19-WAHID-KHAMSA-01, AR-CONCEPT-C19-WAHID-KHAMSA-02]
+practises:
+  knowledge: [AR-CONCEPT-C19-WAHID-KHAMSA-01, AR-CONCEPT-C19-WAHID-KHAMSA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C18-al-taqs]
 ---
 
 # واحد، اثنان، ثلاثة، أربعة، خمسة — one through five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Before the numbers themselves — an honest correction to a very
 common mix-up: "Arabic numerals" (the digit shapes **0, 1, 2, 3**...) are
 **not** these words, and don't come from Arabic at all.
 
-## واحد, اثنان, ثلاثة, أربعة, خمسة — the words
+## You'll want to know — واحد, اثنان, ثلاثة, أربعة, خمسة — the words
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C19-WAHID-KHAMSA-01]; assesses=[] -->
 
 | Arabic | Transliteration | Meaning |
 |---|---|---|
@@ -34,7 +51,8 @@ common mix-up: "Arabic numerals" (the digit shapes **0, 1, 2, 3**...) are
 These are ordinary Semitic-root Arabic words, built the same way Arabic
 builds any noun — nothing to do with the shapes of the digits you write.
 
-## Be honest: "Arabic numerals" are actually Indian
+## Why it's said this way — Be honest: "Arabic numerals" are actually Indian
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C19-WAHID-KHAMSA-02]; assesses=[] -->
 
 Here's the correction: the **digit shapes** **0, 1, 2, 3, 4, 5, 6, 7, 8, 9**
 that English calls "Arabic numerals" didn't originate in Arabic at all — they
@@ -50,6 +68,7 @@ here (*wāḥid, ithnān, thalātha*...) are a completely separate thing: genuin
 native Arabic vocabulary, unrelated to that digit-shape history.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C19-WAHID-KHAMSA-01, AR-CONCEPT-C19-WAHID-KHAMSA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "wāḥid, ithnān, thalātha, arbaʿa, khamsa" — one through five]
@@ -57,6 +76,7 @@ native Arabic vocabulary, unrelated to that digit-shape history.
   actually Indian in origin, not these Arabic WORDS]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C19-WAHID-KHAMSA-01, AR-CONCEPT-C19-WAHID-KHAMSA-02] -->
 
 [PAUSE 3s] What are the Arabic words for one through five? (**wāḥid, ithnān,
 thalātha, arbaʿa, khamsa**.) Where did the digit shapes 0-9 actually

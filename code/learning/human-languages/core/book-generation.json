@@ -24,6 +24,10 @@
       { "unicodeScript": "Kannada", "scriptCommand": "ka" },
       { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "arabic-main": [
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
+      { "unicodeScript": "Hebrew", "scriptCommand": "he" }
     ]
   },
   "targets": [
@@ -1016,6 +1020,206 @@
       "label": "ch:ml-good-afternoon",
       "output": "malayalam/book/chapters/ch31-good-afternoon.tex",
       "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "arabic",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:ar-how-are-you",
+      "output": "arabic/book/chapters/ch03-how-are-you.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:ar-farewells",
+      "output": "arabic/book/chapters/ch04-farewells.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "title": "Yes and No",
+      "label": "ch:ar-yes-and-no",
+      "output": "arabic/book/chapters/ch05-yes-and-no.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "title": "Please",
+      "label": "ch:ar-please",
+      "output": "arabic/book/chapters/ch06-please.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "title": "Sorry",
+      "label": "ch:ar-sorry",
+      "output": "arabic/book/chapters/ch07-sorry.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "title": "Days of the Week",
+      "label": "ch:ar-days-of-the-week",
+      "output": "arabic/book/chapters/ch08-days.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "title": "Four Core Colours",
+      "label": "ch:ar-core-colours",
+      "output": "arabic/book/chapters/ch09-colours.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:ar-family",
+      "output": "arabic/book/chapters/ch10-family.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "title": "Head and Hand",
+      "label": "ch:ar-head-and-hand",
+      "output": "arabic/book/chapters/ch11-head-and-hand.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "title": "Seasons",
+      "label": "ch:ar-seasons",
+      "output": "arabic/book/chapters/ch12-seasons.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "title": "Water and Bread",
+      "label": "ch:ar-water-and-bread",
+      "output": "arabic/book/chapters/ch13-water-and-bread.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "title": "Months",
+      "label": "ch:ar-months",
+      "output": "arabic/book/chapters/ch14-months.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "title": "Noon and Midnight",
+      "label": "ch:ar-noon-and-midnight",
+      "output": "arabic/book/chapters/ch15-noon-and-midnight.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "title": "Telling Time",
+      "label": "ch:ar-telling-time",
+      "output": "arabic/book/chapters/ch16-telling-time.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "title": "Asking Someone's Age",
+      "label": "ch:ar-asking-age",
+      "output": "arabic/book/chapters/ch17-age.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "title": "Weather",
+      "label": "ch:ar-weather",
+      "output": "arabic/book/chapters/ch18-weather.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "title": "Numbers One to Five",
+      "label": "ch:ar-numbers-one-to-five",
+      "output": "arabic/book/chapters/ch19-numbers-1-5.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:ar-numbers-eleven-to-twenty",
+      "output": "arabic/book/chapters/ch20-numbers-11-20.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ar-dog-and-cat",
+      "output": "arabic/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ar-green-and-yellow",
+      "output": "arabic/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "title": "You're Welcome",
+      "label": "ch:ar-youre-welcome",
+      "output": "arabic/book/chapters/ch23-youre-welcome.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "title": "See You Tomorrow",
+      "label": "ch:ar-see-you-tomorrow",
+      "output": "arabic/book/chapters/ch24-see-you-tomorrow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "title": "Day",
+      "label": "ch:ar-day",
+      "output": "arabic/book/chapters/ch25-day.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "title": "Night",
+      "label": "ch:ar-night",
+      "output": "arabic/book/chapters/ch26-night.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "title": "Good Night",
+      "label": "ch:ar-good-night",
+      "output": "arabic/book/chapters/ch27-good-night.tex",
+      "scriptSet": "arabic-main"
     },
     {
       "language": "bengali",
