@@ -8,7 +8,8 @@ This port mirrors the other build-tool implementations in the repo:
 
 1. Discovers packages by recursively walking `BUILD` files under `code/`
 2. Evaluates simple Starlark-style BUILD targets used in this monorepo
-3. Resolves internal dependencies across Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Swift
+3. Resolves internal dependencies across the repository's implementation
+   languages
 4. Detects changed packages from `git diff`
 5. Hashes package sources and dependency state for cache fallback
 6. Builds independent packages in parallel by dependency level
@@ -28,6 +29,28 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 The resolver tests consume the language-neutral `resolution/lua-utf8` and
 `resolution/lua-invalid-utf8` fixtures, require the exact success edge set,
 and verify that diagnostics never expose the checkout root.
+
+## Discovery identity safety
+
+Package discovery classifies the exact bucket immediately below `packages` or
+`programs` using the canonical language registry. It covers all established
+and emerging implementation lanes, the WASM target, Mosaic and Twig domain
+languages, Starlark, and the shared .NET program host. Specification fixture
+trees are excluded, programs retain a `/programs/` identity segment, and an
+unrecognized bucket remains `unknown` instead of borrowing a language name
+from a later path component.
+
+If distinct directories still collapse to one qualified name, discovery stops
+with CLI exit code `2` and a stable diagnostic containing sorted repository-
+relative paths:
+
+```text
+DUPLICATE_PACKAGE_IDENTITY: package=unknown/demo paths=code/packages/alpha/demo,code/packages/beta/demo
+```
+
+The shared `discovery/language-registry` and
+`discovery/duplicate-identity` fixtures cover this behavior through the Swift
+API and the real executable without disclosing the checkout root.
 
 ## Usage
 

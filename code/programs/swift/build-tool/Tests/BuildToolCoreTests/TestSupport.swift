@@ -10,14 +10,20 @@ func makeTempDirectory(label: String = "build_tool_swift") throws -> String {
 
 func writeFile(_ path: String, _ contents: String) throws {
     let url = URL(fileURLWithPath: path)
-    try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-    try contents.write(to: url, atomically: true, encoding: .utf8)
+    try FileManager.default.createDirectory(
+        at: url.deletingLastPathComponent(),
+        withIntermediateDirectories: true
+    )
+    try Data(contents.utf8).write(to: url)
 }
 
 func writeData(_ path: String, _ contents: Data) throws {
     let url = URL(fileURLWithPath: path)
-    try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-    try contents.write(to: url, options: .atomic)
+    try FileManager.default.createDirectory(
+        at: url.deletingLastPathComponent(),
+        withIntermediateDirectories: true
+    )
+    try contents.write(to: url)
 }
 
 struct SharedResolutionFixture: Decodable {
@@ -72,6 +78,58 @@ struct SharedResolutionFixture: Decodable {
     let expected: Expected
 }
 
+struct SharedDiscoveryFixture: Decodable {
+    struct Workspace: Decodable {
+        let files: [File]
+    }
+
+    struct File: Decodable {
+        let path: String
+        let contentUTF8: String
+
+        enum CodingKeys: String, CodingKey {
+            case path
+            case contentUTF8 = "content_utf8"
+        }
+    }
+
+    struct Expected: Decodable {
+        struct Result: Decodable {
+            struct Package: Decodable {
+                let language: String
+                let name: String
+                let relPath: String
+
+                enum CodingKeys: String, CodingKey {
+                    case language
+                    case name
+                    case relPath = "rel_path"
+                }
+            }
+
+            let packages: [Package]?
+        }
+
+        struct Diagnostic: Decodable {
+            struct Details: Decodable {
+                let paths: [String]
+            }
+
+            let code: String
+            let path: String
+            let package: String
+            let details: Details
+        }
+
+        let outcome: String
+        let result: Result
+        let diagnostics: [Diagnostic]
+    }
+
+    let workspace: Workspace
+    let expected: Expected
+}
+
 func loadSharedResolutionFixture(_ name: String) throws -> SharedResolutionFixture {
     let packageRoot = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()
@@ -81,7 +139,45 @@ func loadSharedResolutionFixture(_ name: String) throws -> SharedResolutionFixtu
         .appendingPathComponent("../../../specs/fixtures/build-tool-v1/cases")
         .appendingPathComponent(name)
         .standardizedFileURL
-    return try JSONDecoder().decode(SharedResolutionFixture.self, from: Data(contentsOf: fixtureURL))
+    return try JSONDecoder().decode(
+        SharedResolutionFixture.self,
+        from: Data(contentsOf: fixtureURL)
+    )
+}
+
+func loadSharedDiscoveryFixture(_ name: String) throws -> SharedDiscoveryFixture {
+    let packageRoot = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    let fixtureURL = packageRoot
+        .appendingPathComponent("../../../specs/fixtures/build-tool-v1/cases")
+        .appendingPathComponent(name)
+        .standardizedFileURL
+    return try JSONDecoder().decode(
+        SharedDiscoveryFixture.self,
+        from: Data(contentsOf: fixtureURL)
+    )
+}
+
+func materializeSharedDiscoveryFixture(
+    _ fixture: SharedDiscoveryFixture,
+    label: String
+) throws -> String {
+    let root = try makeTempDirectory(label: label)
+    try FileManager.default.createDirectory(
+        atPath: (root as NSString).appendingPathComponent(".git"),
+        withIntermediateDirectories: false
+    )
+    for file in fixture.workspace.files {
+        let url = URL(fileURLWithPath: (root as NSString).appendingPathComponent(file.path))
+        try FileManager.default.createDirectory(
+            at: url.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data(file.contentUTF8.utf8).write(to: url)
+    }
+    return root
 }
 
 func materializeSharedResolutionFixture(
@@ -97,7 +193,7 @@ func materializeSharedResolutionFixture(
         try writeData((root as NSString).appendingPathComponent(file.path), file.data())
     }
     let codeRoot = (root as NSString).appendingPathComponent("code")
-    return (root, Discovery.discoverPackages(root: codeRoot))
+    return (root, try Discovery.discoverPackages(root: codeRoot))
 }
 
 func buildToolExecutableURL() throws -> URL {
