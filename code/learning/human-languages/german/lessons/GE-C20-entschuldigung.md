@@ -28,7 +28,7 @@ variety: standard-contemporary
 reviews_of: [GE-C19-bitte-requests, GE-C03-bitte, GE-C03-danke]
 ---
 
-# Entschuldigung — "sorry" / "excuse me" (un-guilting)
+# Entschuldigung — “sorry” / “excuse me”
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

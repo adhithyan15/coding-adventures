@@ -58,7 +58,9 @@ French *nuit* — one Indo-European word, split four ways.
 
 **All twenty-three chapters are authored and in the book (104 pages).** Chapters
 17–23 are generated from the same canonical lesson AST and source hashes that
-Language Ladder verifies independently.
+Language Ladder verifies independently. The forced XeLaTeX build is warning-free:
+zero missing glyphs, overfull or underfull boxes, duplicate destinations,
+Hyperref warnings, or LaTeX warnings.
 
 ## Files
 
