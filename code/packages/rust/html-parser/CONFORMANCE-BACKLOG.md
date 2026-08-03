@@ -25,8 +25,8 @@ The 2026-08-02 upstream audit covered all 1,934 WPT tree-construction cases and
 all 6,806 html5lib tokenizer cases with zero missing signatures and zero
 normalized skips. DOM output is complete, but diagnostic coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the implied-body tail-transition slice, 1,786 of those cases emit at
-least one lexer or parser diagnostic and 397 remain uncovered. Another 139
+After the after-after-frameset diagnostic slice, 1,794 of those cases emit at
+least one lexer or parser diagnostic and 389 remain uncovered. Another 139
 cases emit diagnostics despite having no legacy `#errors` rows. These are
 reviewed rather than automatically removed: 89 are full-document inputs for
 which the legacy fixtures omit the Standard-required missing-doctype error,
@@ -40,10 +40,10 @@ Prioritized work items:
    start-tag diagnostics, body/html end tags with disallowed open elements,
    full-document in-body EOF diagnostics, unexpected-token recovery in the
    after-body and after-after-body modes, and the implied-shell `</body>`
-   transition are complete. The fresh 397-case inventory identifies
-   after-after-frameset unexpected tokens, stray end tags before an implied
-   root or body, and rejected frameset starts as the remaining concrete shell
-   slices, in that order.
+   transition, and after-after-frameset unexpected-token diagnostics are
+   complete. The fresh 389-case inventory identifies stray end tags before an
+   implied root or body and rejected frameset starts as the remaining concrete
+   shell slices, in that order.
 2. **Fragment EOF diagnostics.** Audit the current in-body EOF rule against
    fragment parsing. Legacy fragment fixtures omit many EOF error rows, so add
    explicit current-WHATWG evidence before extending the full-document

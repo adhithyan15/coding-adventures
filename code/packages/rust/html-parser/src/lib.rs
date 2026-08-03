@@ -4677,7 +4677,11 @@ impl HtmlParser {
     }
 
     fn process_document_tail_mode(&mut self, token: &Token) {
-        if self.is_fragment || self.document_has_closed_frameset() {
+        if self.is_fragment {
+            return;
+        }
+        if self.document_has_closed_frameset() {
+            self.process_closed_frameset_tail_mode(token);
             return;
         }
 
@@ -4710,6 +4714,32 @@ impl HtmlParser {
                 ),
             ));
             self.document_tail_mode = DocumentTailMode::InBody;
+        }
+    }
+
+    fn process_closed_frameset_tail_mode(&mut self, token: &Token) {
+        if !self.explicit_html_end_seen || self.current_element_is("noframes") {
+            return;
+        }
+
+        let allowed = matches!(
+            token,
+            Token::Comment(_)
+                | Token::ProcessingInstruction { .. }
+                | Token::Doctype { .. }
+                | Token::Eof
+        ) || matches!(token, Token::Text(text) if is_html_whitespace_text(text))
+            || matches!(
+                token,
+                Token::StartTag { name, .. }
+                    if matches!(name.as_str(), "html" | "noframes")
+            );
+
+        if !allowed {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-token-after-after-frameset",
+                "unexpected token was ignored in the after after frameset insertion mode",
+            ));
         }
     }
 
@@ -33103,6 +33133,40 @@ mod tests {
             parse_html_with_diagnostics("<!doctype html><menuitem></html><p>x").unwrap();
         assert!(!ignored_html_end.parser_diagnostics.iter().any(|diagnostic| {
             diagnostic.code == "unexpected-token-after-html"
+        }));
+    }
+
+    #[test]
+    fn reports_unexpected_tokens_after_after_frameset() {
+        for (source, expected_count) in [
+            ("<!doctype html><frameset></frameset></html>text", 1),
+            ("<!doctype html><frameset></frameset></html><p>", 1),
+            ("<!doctype html><frameset></frameset></html></p>", 1),
+            (
+                "<!doctype html><frameset></frameset></html><plaintext></plaintext>",
+                2,
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-token-after-after-frameset"
+                    })
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset></html> \n<!--tail--><?pi?><noframes>x</noframes>",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-token-after-after-frameset"
         }));
     }
 
