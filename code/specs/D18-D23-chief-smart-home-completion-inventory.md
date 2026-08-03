@@ -809,8 +809,9 @@ These items move toward retiring an existing Home Assistant install:
   authenticated relay/light/sensor inspection, and verified control, Fronius
   Solar API v1 local discovery and site/inverter power and energy telemetry,
   HomeWizard Energy API v1 local discovery and device/utility telemetry, HEOS
-  SSDP discovery and read-only CLI player inspection, and the Z-Wave, Zigbee,
-  and Matter runtime adapters: ONVIF PullPoint camera
+  SSDP discovery and read-only CLI player inspection, AirGradient local mDNS
+  identity and environmental telemetry, and the Z-Wave, Zigbee, and Matter
+  runtime adapters: ONVIF PullPoint camera
   events, RTSP media transfer and recording,
   Reolink and other vendor-specific camera/NVR media, recording, control, and
   push-event integrations, authenticated KLAP/Tapo devices and other broader
@@ -818,6 +819,11 @@ These items move toward retiring an existing Home Assistant install:
   commissioning/secure-session/network host, a Thread border-router host, a
   production Zigbee coordinator/join/security host, and production Z-Wave
   inclusion and S2.
+- Prioritized follow-ups discovered while delivering the broader-device slices:
+  1. HEOS change-event subscriptions and authorized playback, volume, grouping,
+     and queue controls.
+  2. AirGradient authorized local configuration, LED/display control, and CO2
+     calibration, with cloud-controlled configuration conflicts kept explicit.
 
 ## End-To-End Definition
 

@@ -1,5 +1,8 @@
 # Changelog
 
+- Add first-party AirGradient local environmental telemetry coverage and the
+  environmental telemetry primitive.
+
 ## Unreleased
 
 - Added first-party HEOS CLI runtime coverage for SSDP/manual discovery and

@@ -910,6 +910,7 @@ members = [
     "smart-home-tasmota-local-integration",
     "smart-home-fronius-local-integration",
     "smart-home-homewizard-energy-integration",
+    "smart-home-airgradient-local-integration",
     "smart-home-govee-lan-integration",
     "smart-home-lifx-lan-integration",
     "smart-home-kasa-lan-integration",

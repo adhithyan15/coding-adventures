@@ -139,6 +139,7 @@ pub enum PrimitiveFamily {
     MqttCredentials,
     CameraMedia,
     EnergyTelemetry,
+    EnvironmentalTelemetry,
     CalculatedState,
     CommandMapping,
     CapabilityPolicy,
@@ -179,6 +180,7 @@ impl PrimitiveFamily {
             Self::MqttCredentials => "mqtt_credentials",
             Self::CameraMedia => "camera_media",
             Self::EnergyTelemetry => "energy_telemetry",
+            Self::EnvironmentalTelemetry => "environmental_telemetry",
             Self::CalculatedState => "calculated_state",
             Self::CommandMapping => "command_mapping",
             Self::CapabilityPolicy => "capability_policy",
@@ -44760,6 +44762,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "Energy Telemetry",
             "Energy, climate, utility, and production measurements.",
         ),
+        PrimitiveFamily::EnvironmentalTelemetry => (
+            "Environmental Telemetry",
+            "Air quality, particulate, gas, temperature, and humidity measurements.",
+        ),
         PrimitiveFamily::CalculatedState => (
             "Calculated State",
             "Internal derived entities and dependency-driven state.",
@@ -44821,6 +44827,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::MqttCredentials,
         PrimitiveFamily::CameraMedia,
         PrimitiveFamily::EnergyTelemetry,
+        PrimitiveFamily::EnvironmentalTelemetry,
         PrimitiveFamily::CalculatedState,
         PrimitiveFamily::CommandMapping,
         PrimitiveFamily::CapabilityPolicy,
@@ -45356,6 +45363,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::Supervision,
             PrimitiveFamily::TestSimulator,
+        ]),
+        base_entry(
+            "airgradient",
+            "AirGradient",
+            "Local AirGradient monitor identity and environmental telemetry.",
+            IntegrationCategory::EnergyClimate,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "airgradient",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "airgradient_local_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Current runtime support is read-only; local configuration, LED/display control, and CO2 calibration remain separate authorized work.",
         ]),
         energy_entry(
             "tesla_powerwall",
@@ -81199,6 +81236,36 @@ mod tests {
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(homewizard.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn airgradient_entry_exposes_read_only_local_environmental_runtime() {
+        let catalog = first_party_catalog();
+        let airgradient = find_entry(&catalog, &IntegrationId::trusted("airgradient")).unwrap();
+
+        assert_eq!(
+            airgradient.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(airgradient.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(airgradient.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            airgradient.supported_protocols,
+            vec![ProtocolFamily::Vendor("airgradient_local_api".to_string())]
+        );
+        assert_eq!(
+            airgradient.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnvironmentalTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(airgradient.required_primitives.contains(&primitive));
         }
     }
 
