@@ -122,7 +122,7 @@ The loop must not start by attempting 10,864 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`b3a6616a14718cec150d82e87bdc9a2d35d30670` is collision-clean at 1,226
+`2c740cd5f41f57d014c28ae7260c7c71668efa6e` is collision-clean at 1,226
 normalized implementation identities, 4,374 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 776 singletons, 581
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -282,7 +282,16 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   closure and canonical BUILD compatibility are separate children so the
   metadata-decoding slice stays behaviorally narrow. The post-#9648 leverage
   pass selected runtime closure first because it is the narrowest unblocked
-  fix and unlocks the dependent 44-case compatibility repair;
+  fix and unlocks the dependent 44-case compatibility repair. The selected
+  implementation now imports the interpreter's authoritative repository-local
+  Gemfile closure and proves the exact repository feature loads from a clean
+  Bundler subprocess with ambient Ruby load paths removed and network proxies
+  blocked. Exact-base validation passed 297 Ruby runs/589 assertions with
+  87.91% line and 72.05% branch coverage, 38 downstream interpreter runs,
+  canonical Go test/vet/build and a 300-package Ruby plan, the 17+40
+  conformance suites and 37-case/56-file corpus, and a real 258-package Ruby-
+  engine plan with zero LoadErrors while preserving all 44 separately owned
+  canonical Starlark parse fallbacks;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
