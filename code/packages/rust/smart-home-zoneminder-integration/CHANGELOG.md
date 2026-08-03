@@ -1,0 +1,11 @@
+# Changelog
+
+## 0.1.0
+
+- Add manual local-HTTPS endpoint intake and Vault-backed ZoneMinder credentials.
+- Add transport-private API 2.0 access-token handling with no persisted refresh
+  token or token-bearing request plan.
+- Add authorized, bounded version and monitor-health inspection through the
+  documented ZoneMinder API.
+- Add normalized bridge, camera device, entity, capability, and confirmed state
+  installation with an exact loopback protocol proof.
