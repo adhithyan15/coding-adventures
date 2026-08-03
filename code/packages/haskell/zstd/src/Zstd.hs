@@ -424,7 +424,7 @@ decodeSequences remaining literals literalTable matchTable offsetTable literalSt
     -- skipped ENTIRELY for the last sequence in the block: there is no
     -- "next" sequence to prepare a state for, and (symmetrically) the
     -- encoder never flushed any bits for that non-existent transition --
-    -- see the `fseInit`/`encodeSymbol` split in `encodeSequences` below.
+    -- see the `encodeInitState`/`encodeSymbol` split in `encodeOne` below.
     -- Performing this read unconditionally, as an earlier revision of this
     -- decoder did, consumes bits that were never written, corrupting the
     -- position of every read that follows.
