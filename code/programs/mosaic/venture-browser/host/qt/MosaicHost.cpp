@@ -9,6 +9,8 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QQuickItem>
+#include <QQuickWindow>
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QTimer>
@@ -46,6 +48,37 @@ QByteArray keyCommand(QKeyEvent *event)
     return event->modifiers().testFlag(Qt::ShiftModifier) ? "page-up" : "page-down";
   default: return {};
   }
+}
+
+bool sendKey(QObject *control, int key)
+{
+  auto *item = qobject_cast<QQuickItem *>(control);
+  if (!item) {
+    return false;
+  }
+  if (item->window()) {
+    item->window()->requestActivate();
+  }
+  item->forceActiveFocus();
+  QKeyEvent press(QEvent::KeyPress, key, Qt::NoModifier);
+  QKeyEvent release(QEvent::KeyRelease, key, Qt::NoModifier);
+  QObject *receiver = item->window() ? static_cast<QObject *>(item->window())
+                                     : static_cast<QObject *>(item);
+  QCoreApplication::sendEvent(receiver, &press);
+  QCoreApplication::sendEvent(receiver, &release);
+  QCoreApplication::processEvents();
+  return true;
+}
+
+void finishAcceptance(const QByteArray &markerPath, QJsonObject report, bool ok)
+{
+  report.insert(QStringLiteral("ok"), ok);
+  QFile marker(QString::fromUtf8(markerPath));
+  if (marker.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+    marker.write(QJsonDocument(report).toJson(QJsonDocument::Compact));
+    marker.close();
+  }
+  QCoreApplication::exit(ok ? 0 : 2);
 }
 
 } // namespace
@@ -253,6 +286,7 @@ bool MosaicHost::loadBridge()
   RESOLVE(handleEvent_, "handle_event");
   RESOLVE(scroll_, "scroll");
   RESOLVE(scrollCommand_, "scroll_command");
+  RESOLVE(scrollMetrics_, "scroll_metrics");
   RESOLVE(activateLink_, "activate_link");
   RESOLVE(updateHover_, "update_hover");
   RESOLVE(resize_, "resize");
@@ -261,8 +295,8 @@ bool MosaicHost::loadBridge()
 #undef RESOLVE
 
   if (!new_ || !free_ || !applyProps_ || !handleEvent_ || !scroll_
-      || !scrollCommand_ || !activateLink_ || !updateHover_ || !resize_
-      || !render_ || !stringFree_) {
+      || !scrollCommand_ || !scrollMetrics_ || !activateLink_ || !updateHover_
+      || !resize_ || !render_ || !stringFree_) {
     library_.unload();
     return false;
   }
@@ -282,6 +316,13 @@ void MosaicHost::scheduleAcceptance()
   }
 
   QTimer::singleShot(250, this, [this, markerPath]() {
+    const QByteArray targetUrl = qgetenv("VENTURE_BROWSER_INTERACTION_URL");
+    const QByteArray linkUrl = qgetenv("VENTURE_BROWSER_INTERACTION_LINK_URL");
+    if (!targetUrl.isEmpty() && !linkUrl.isEmpty()) {
+      runInteractionAcceptance(markerPath, targetUrl, linkUrl);
+      return;
+    }
+
     const QVariantMap browserResponse = props();
     const QVariantMap browserProps = browserResponse.value(QStringLiteral("props")).toMap();
     QImage frame;
@@ -302,13 +343,161 @@ void MosaicHost::scheduleAcceptance()
       {QStringLiteral("width"), frame.width()},
       {QStringLiteral("height"), frame.height()},
     };
-    QFile marker(QString::fromUtf8(markerPath));
-    if (marker.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-      marker.write(QJsonDocument(report).toJson(QJsonDocument::Compact));
-      marker.close();
-    }
-    QCoreApplication::exit(ok ? 0 : 2);
+    finishAcceptance(markerPath, report, ok);
   });
+}
+
+bool MosaicHost::scrollOffset(double *offsetY) const
+{
+  if (!browser_ || !scrollMetrics_ || !offsetY) {
+    return false;
+  }
+  double viewportHeight = 0;
+  double contentHeight = 0;
+  double maxOffsetY = 0;
+  return scrollMetrics_(browser_, offsetY, &viewportHeight, &contentHeight,
+                        &maxOffsetY) != 0;
+}
+
+void MosaicHost::runInteractionAcceptance(const QByteArray &markerPath,
+                                          const QByteArray &targetUrl,
+                                          const QByteArray &linkUrl)
+{
+  auto fail = [&markerPath](const QString &message) {
+    finishAcceptance(markerPath,
+                     {{QStringLiteral("backend"), QStringLiteral("qt")},
+                      {QStringLiteral("status"), QStringLiteral("error")},
+                      {QStringLiteral("error"), message}},
+                     false);
+  };
+  if (!root_) {
+    fail(QStringLiteral("generated Qt root is unavailable"));
+    return;
+  }
+
+  auto *address = root_->findChild<QObject *>(QStringLiteral("address-input"));
+  auto *back = root_->findChild<QObject *>(QStringLiteral("back-button"));
+  auto *forward = root_->findChild<QObject *>(QStringLiteral("forward-button"));
+  auto *surface = root_->findChild<VentureContentSurface *>();
+  if (!address || !back || !forward || !surface) {
+    fail(QStringLiteral("generated address/history controls or live surface are unavailable"));
+    return;
+  }
+  const QString startUrl = QString::fromUtf8(qgetenv("VENTURE_START_URL"));
+  if (back->property("enabled").toBool() || forward->property("enabled").toBool()) {
+    fail(QStringLiteral("initial generated history controls are not disabled"));
+    return;
+  }
+
+  address->setProperty("text", QString::fromUtf8(targetUrl));
+  QCoreApplication::processEvents();
+  if (!sendKey(address, Qt::Key_Return)) {
+    fail(QStringLiteral("generated address control rejected native Return"));
+    return;
+  }
+  QVariantMap current = props().value(QStringLiteral("props")).toMap();
+  if (current.value(QStringLiteral("address")).toString() != QString::fromUtf8(targetUrl)
+      || current.value(QStringLiteral("pageTitle")).toString()
+           != QStringLiteral("Venture Qt interaction acceptance")
+      || !back->property("enabled").toBool()
+      || forward->property("enabled").toBool()) {
+    fail(QStringLiteral("native address commit did not update shared history state"));
+    return;
+  }
+
+  if (!sendKey(back, Qt::Key_Space)) {
+    fail(QStringLiteral("generated Back control rejected native Space"));
+    return;
+  }
+  current = props().value(QStringLiteral("props")).toMap();
+  if (current.value(QStringLiteral("address")).toString() != startUrl
+      || !forward->property("enabled").toBool()) {
+    fail(QStringLiteral("generated Back control did not traverse shared history"));
+    return;
+  }
+
+  if (!sendKey(forward, Qt::Key_Space)) {
+    fail(QStringLiteral("generated Forward control rejected native Space"));
+    return;
+  }
+  current = props().value(QStringLiteral("props")).toMap();
+  if (current.value(QStringLiteral("address")).toString() != QString::fromUtf8(targetUrl)) {
+    fail(QStringLiteral("generated Forward control did not traverse shared history"));
+    return;
+  }
+  if (!sendKey(back, Qt::Key_Space)) {
+    fail(QStringLiteral("generated Back control could not restore the start page"));
+    return;
+  }
+
+  double beforeWheel = 0;
+  double afterWheel = 0;
+  const QPointF wheelPoint(32, 100);
+  QWheelEvent wheel(wheelPoint, wheelPoint, QPoint(), QPoint(0, -120), Qt::NoButton,
+                    Qt::NoModifier, Qt::ScrollUpdate, false);
+  surface->forceActiveFocus();
+  if (!scrollOffset(&beforeWheel)) {
+    fail(QStringLiteral("shared viewport metrics are unavailable"));
+    return;
+  }
+  QCoreApplication::sendEvent(surface, &wheel);
+  QCoreApplication::processEvents();
+  if (!wheel.isAccepted() || !scrollOffset(&afterWheel) || afterWheel <= beforeWheel) {
+    fail(QStringLiteral("native wheel did not scroll the shared viewport"));
+    return;
+  }
+  QWheelEvent resetWheel(wheelPoint, wheelPoint, QPoint(), QPoint(0, 120),
+                         Qt::NoButton, Qt::NoModifier, Qt::ScrollUpdate, false);
+  QCoreApplication::sendEvent(surface, &resetWheel);
+  QCoreApplication::processEvents();
+  if (!resetWheel.isAccepted() || !scrollOffset(&afterWheel)
+      || std::abs(afterWheel) > 0.5) {
+    fail(QStringLiteral("native reverse wheel did not reset the shared viewport (offset %1)")
+           .arg(afterWheel));
+    return;
+  }
+
+  const QPointF linkPoint(32, 26);
+  QHoverEvent hover(QEvent::HoverMove, linkPoint, linkPoint, QPointF(-1, -1));
+  QCoreApplication::sendEvent(surface, &hover);
+  QCoreApplication::processEvents();
+  current = props().value(QStringLiteral("props")).toMap();
+  if (current.value(QStringLiteral("statusText")).toString() != QString::fromUtf8(linkUrl)) {
+    fail(QStringLiteral("native hover did not project the live link URL"));
+    return;
+  }
+
+  QMouseEvent press(QEvent::MouseButtonPress, linkPoint, linkPoint, linkPoint,
+                    Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+  QMouseEvent release(QEvent::MouseButtonRelease, linkPoint, linkPoint, linkPoint,
+                      Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+  QCoreApplication::sendEvent(surface, &press);
+  QCoreApplication::sendEvent(surface, &release);
+  QCoreApplication::processEvents();
+  current = props().value(QStringLiteral("props")).toMap();
+  QImage frame;
+  const bool rendered = render(&frame);
+  const bool ok = current.value(QStringLiteral("address")).toString()
+                    == QString::fromUtf8(linkUrl)
+    && current.value(QStringLiteral("pageTitle")).toString()
+         == QStringLiteral("Venture Qt link acceptance")
+    && rendered && !frame.isNull();
+  finishAcceptance(
+    markerPath,
+    {{QStringLiteral("backend"), QStringLiteral("qt")},
+     {QStringLiteral("status"), ok ? QStringLiteral("interacted")
+                                    : QStringLiteral("error")},
+     {QStringLiteral("addressCommit"), QStringLiteral("native-return")},
+     {QStringLiteral("historyControls"), QStringLiteral("back-forward")},
+     {QStringLiteral("surfaceWheel"), QStringLiteral("scroll")},
+     {QStringLiteral("surfaceHover"), QStringLiteral("status")},
+     {QStringLiteral("surfacePointer"), QStringLiteral("link")},
+     {QStringLiteral("address"), current.value(QStringLiteral("address")).toString()},
+     {QStringLiteral("pageTitle"), current.value(QStringLiteral("pageTitle")).toString()},
+     {QStringLiteral("rendered"), rendered},
+     {QStringLiteral("width"), frame.width()},
+     {QStringLiteral("height"), frame.height()}},
+    ok);
 }
 
 QVariantMap MosaicHost::response(char *json) const

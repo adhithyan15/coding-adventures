@@ -17,11 +17,16 @@ cross-platform proving application. Items are ordered by risk and dependency.
   - [x] Qt bridge foundation: generated Qt shells load the shared Rust session,
     mount a Cairo-backed `QQuickPaintedItem`, and directly launch against a
     deterministic live page before reporting render acceptance.
-  - [ ] Qt live interaction promotion: drive the generated address and history
+  - [x] Qt live interaction promotion: drive the generated address and history
     controls plus native scroll/link input through the real bridge, replacing
-    the remaining recording host in the Qt interaction gate.
+    the recording host as the authoritative Qt interaction gate.
   - [ ] Flutter live page bridge and direct acceptance.
   - [ ] Compose Desktop live page bridge and direct acceptance.
+- [ ] **P2 — Qt native-control style compatibility.** The macOS-native Qt
+  Quick Controls style rejects custom `background` items emitted from Mosaic
+  MSL. Define a native-compatible palette/appearance lowering (or an explicit
+  per-project style contract) so generated Qt shells do not warn and silently
+  drop authored button backgrounds while retaining native controls.
 - [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
   compatible with the repository build tool's `/bin/sh` executor while it
   delegates the backend matrix to the Bash-specific implementation script.
