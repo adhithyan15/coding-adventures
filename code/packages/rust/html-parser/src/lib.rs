@@ -4350,6 +4350,7 @@ pub struct HtmlParser {
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
+    initial_insertion_mode: bool,
     quirks_mode: bool,
     strip_next_leading_lf: bool,
     explicit_head_end_seen: bool,
@@ -4371,6 +4372,7 @@ impl Default for HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options: HtmlParseOptions::default(),
+            initial_insertion_mode: true,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
@@ -4391,8 +4393,11 @@ impl HtmlParser {
     }
 
     pub fn with_options(options: HtmlParseOptions) -> Self {
+        let initial_insertion_mode =
+            options.initial_tokenizer_context == HtmlInitialTokenizerContext::Data;
         Self {
             options,
+            initial_insertion_mode,
             ..Self::default()
         }
     }
@@ -4419,6 +4424,7 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
@@ -4442,6 +4448,7 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
             explicit_head_end_seen: false,
@@ -4564,6 +4571,7 @@ impl HtmlParser {
     }
 
     fn process_token(&mut self, token: Token) {
+        self.process_initial_insertion_mode(&token);
         if matches!(token, Token::Eof) {
             self.flush_foreign_cdata_text();
         }
@@ -4621,6 +4629,26 @@ impl HtmlParser {
                     }
                     Token::Text(_) => unreachable!("text token handled before clearing LF state"),
                 }
+            }
+        }
+    }
+
+    fn process_initial_insertion_mode(&mut self, token: &Token) {
+        if !self.initial_insertion_mode {
+            return;
+        }
+
+        match token {
+            Token::Text(text) if is_html_whitespace_text(text) => {}
+            Token::Comment(_) | Token::ProcessingInstruction { .. } => {}
+            Token::Doctype { .. } => self.initial_insertion_mode = false,
+            _ => {
+                self.initial_insertion_mode = false;
+                self.quirks_mode = true;
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "missing-doctype",
+                    "document started without a doctype token",
+                ));
             }
         }
     }
@@ -29825,7 +29853,7 @@ mod tests {
 
     #[test]
     fn reports_unmatched_end_tags_without_dropping_content() {
-        let output = parse_html_with_diagnostics("<p>Hello</section>").unwrap();
+        let output = parse_html_with_diagnostics("<!doctype html><p>Hello</section>").unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -30376,7 +30404,7 @@ mod tests {
     #[test]
     fn ignores_nested_form_start_tags() {
         let output = parse_html_with_diagnostics(
-            "<form id=outer><div>One<form id=inner><input name=x></form><p>After",
+            "<!doctype html><form id=outer><div>One<form id=inner><input name=x></form><p>After",
         )
         .unwrap();
 
@@ -31316,7 +31344,7 @@ mod tests {
     #[test]
     fn ignores_self_closing_flag_on_non_void_html_elements() {
         let output = parse_html_with_diagnostics(
-            "<div/>Text</div><span/>Tail</span><p/>Next<section/>Block</section>",
+            "<!doctype html><div/>Text</div><span/>Tail</span><p/>Next<section/>Block</section>",
         )
         .unwrap();
 
@@ -31354,7 +31382,7 @@ mod tests {
     #[test]
     fn self_closing_text_mode_elements_still_drive_tokenizer_handoff() {
         let output = parse_html_with_diagnostics(
-            "<title/>Tom &amp; Jerry</title><style/>a < b &amp; c</style><script/>if (a < b)</script><textarea/>\nA &lt; B</textarea><p>x</p>",
+            "<!doctype html><title/>Tom &amp; Jerry</title><style/>a < b &amp; c</style><script/>if (a < b)</script><textarea/>\nA &lt; B</textarea><p>x</p>",
         )
         .unwrap();
 
@@ -31393,9 +31421,10 @@ mod tests {
 
     #[test]
     fn self_closing_plaintext_still_consumes_until_eof() {
-        let output =
-            parse_html_with_diagnostics("<p>before</p><plaintext/><b>&amp;</b></plaintext>")
-                .unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><p>before</p><plaintext/><b>&amp;</b></plaintext>",
+        )
+        .unwrap();
 
         let body = body(&output.document);
         let paragraph = element(&body.children[0]);
@@ -31417,8 +31446,10 @@ mod tests {
 
     #[test]
     fn self_closing_noscript_uses_scripting_sensitive_handoff() {
-        let enabled =
-            parse_html_with_diagnostics("<noscript/><p>&amp;</p></noscript><p>x</p>").unwrap();
+        let enabled = parse_html_with_diagnostics(
+            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
+        )
+        .unwrap();
 
         let enabled_noscript = element(&head(&enabled.document).children[0]);
         assert_eq!(enabled_noscript.name, "noscript");
@@ -31429,7 +31460,7 @@ mod tests {
         );
 
         let disabled = parse_html_with_diagnostics_and_options(
-            "<noscript/><p>&amp;</p></noscript><p>x</p>",
+            "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>",
             HtmlParseOptions {
                 scripting: HtmlScriptingMode::Disabled,
                 ..HtmlParseOptions::default()
@@ -31472,7 +31503,7 @@ mod tests {
     #[test]
     fn acknowledges_self_closing_void_starts_and_ignores_void_end_tags() {
         let output = parse_html_with_diagnostics(
-            "<p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
+            "<!doctype html><p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
         )
         .unwrap();
 
@@ -31622,7 +31653,8 @@ mod tests {
 
     #[test]
     fn treats_legacy_image_start_tag_as_img() {
-        let output = parse_html_with_diagnostics("<p><image src=hero.png></p>").unwrap();
+        let output =
+            parse_html_with_diagnostics("<!doctype html><p><image src=hero.png></p>").unwrap();
 
         let paragraph = element(&body(&output.document).children[0]);
         assert_eq!(paragraph.name, "p");
@@ -31640,8 +31672,10 @@ mod tests {
 
     #[test]
     fn ignores_self_closing_flag_inside_implied_table_structure() {
-        let output =
-            parse_html_with_diagnostics("<table><tr/><td/>A<td/>B</table><p>after</p>").unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><table><tr/><td/>A<td/>B</table><p>after</p>",
+        )
+        .unwrap();
 
         let table = element(&body(&output.document).children[0]);
         let tbody = element(&table.children[0]);
@@ -32613,8 +32647,37 @@ mod tests {
     }
 
     #[test]
+    fn reports_missing_doctype_for_non_initial_tokens() {
+        for source in ["", "text", "<p>", "</p>"] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "missing-doctype")
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn initial_whitespace_comments_and_processing_instructions_allow_a_doctype() {
+        let output = parse_html_with_diagnostics(
+            " \n<!--before--><?xml-model href='schema.rng'?><!doctype html><p>x",
+        )
+        .unwrap();
+
+        assert!(!output
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "missing-doctype"));
+    }
+
+    #[test]
     fn ignores_stray_paragraph_end_tag_before_body_starts() {
-        let output = parse_html_with_diagnostics("<head></p><meta><p>").unwrap();
+        let output = parse_html_with_diagnostics("<!doctype html><head></p><meta><p>").unwrap();
 
         let head = head(&output.document);
         assert_eq!(head.children.len(), 1);
@@ -32677,9 +32740,10 @@ mod tests {
 
     #[test]
     fn ignores_head_start_tags_after_body_content_starts() {
-        let output =
-            parse_html_with_diagnostics("<body><p>before</p><head data-late=yes><p>after</p>")
-                .unwrap();
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><body><p>before</p><head data-late=yes><p>after</p>",
+        )
+        .unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -32702,7 +32766,8 @@ mod tests {
 
     #[test]
     fn recovers_special_p_and_br_end_tags() {
-        let output = parse_html_with_diagnostics("Before</p>Middle</br>After").unwrap();
+        let output =
+            parse_html_with_diagnostics("<!doctype html>Before</p>Middle</br>After").unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -32809,7 +32874,7 @@ mod tests {
     #[test]
     fn recovers_omitted_shell_end_tag_boundaries() {
         let output = parse_html_with_diagnostics(
-            "<title>T</title></head><p>before</body>after<section>next</html>tail",
+            "<!doctype html><title>T</title></head><p>before</body>after<section>next</html>tail",
         )
         .unwrap();
 
