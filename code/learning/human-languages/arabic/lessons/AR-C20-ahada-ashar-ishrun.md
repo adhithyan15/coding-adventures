@@ -9,7 +9,7 @@ prerequisites: [AR-C19-wahid-khamsa]
 sounds: [arabic-ain-shiin, arabic-teh-marbuta]
 roots: [arabic-ashar-ten, arabic-ishrun-twenty]
 etymology_hook: "أحد عشر through خمسة عشر (11-15) are plain 'X and ten' compounds, X + عشر (ʿashar, 'ten') — but عشرون (ʿishrūn, 'twenty') is NOT 'two-ten'; it's its OWN distinct plural-like form built directly on the 'ten' root, the same root behind Hebrew's eser and English's own '-teen'"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [AR-C19-wahid-khamsa]
 ---
 

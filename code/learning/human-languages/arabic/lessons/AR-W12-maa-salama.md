@@ -8,8 +8,8 @@ romanization: "maʿa s-salāma"
 prerequisites: [AR-W11-ha-and-ta-marbuta]
 sounds: [arabic-ayn, arabic-ta-marbuta]
 roots: [semitic-s-l-m]
-est_minutes: 5
-reviews_of: [AR-W11-ha-and-ta-marbuta, AR-W10-ayn, AR-W03-dots-mim-ba-salam]
+est_minutes: 4
+reviews_of: [AR-W11-ha-and-ta-marbuta, AR-W10-ayn, AR-W03-write-salam, AR-W03-dots-mim-ba-salam]
 ---
 
 # مع السلامة — the goodbye, and a word you already know

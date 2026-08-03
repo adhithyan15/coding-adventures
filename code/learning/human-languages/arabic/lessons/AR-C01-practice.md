@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C01-salam, AR-C01-marhaba, AR-C01-al, AR-C01-as-salamu-alaykum, AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C01-shukran]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C01-salam, AR-C01-marhaba, AR-C01-al, AR-C01-as-salamu-alaykum, AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C01-shukran]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]
 roots: [y-w-m]
 etymology_hook: "يوم (yawm, 'day') ← Proto-Semitic *yawm-, a genuine Common Semitic word shared with Hebrew יוֹם (yōm, as in Yom Kippur), Akkadian ūmum, and Aramaic yawmā; further back, some scholars connect it to Proto-Afroasiatic *yam- ('day'), possibly related to Egyptian ỉmy ('sun, as an eye') — a speculative but genuinely proposed deep link, not settled fact"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C08-al-ahad-al-khamis]
 ---
 

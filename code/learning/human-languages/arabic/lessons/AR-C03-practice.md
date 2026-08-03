@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C03-kayfa, AR-C03-hal, AR-C03-kayfa-haluka, AR-C03-bi-khayr, AR-C03-al-hamdu-lillah, AR-C02-ismii, AR-C01-as-salamu-alaykum]
 ---
 

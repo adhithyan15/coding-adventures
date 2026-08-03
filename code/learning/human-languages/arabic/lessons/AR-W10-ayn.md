@@ -8,7 +8,7 @@ romanization: "ʿayn"
 prerequisites: [AR-W09-khayr-bikhayr]
 sounds: [arabic-ayn]
 roots: [phoenician-ayin]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-W09-khayr-bikhayr, AR-W07-hook-family-ha-kha, AR-C01-as-salamu-alaykum]
 ---
 

@@ -8,7 +8,7 @@ romanization: "khayr, bi-khayr"
 prerequisites: [AR-W08-kaf-and-ra]
 sounds: [arabic-khayr]
 roots: [semitic-kh-y-r]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-W08-kaf-and-ra, AR-W07-hook-family-ha-kha, AR-C01-sabah-al-khayr]
 ---
 

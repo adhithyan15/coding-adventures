@@ -10,7 +10,7 @@ prerequisites: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
 etymology_hook: "تصبح على خير (tuṣbiḥ ʿalā khayr), the everyday Arabic 'good night,' literally means 'may you WAKE UP into goodness' — tuṣbiḥ is the ordinary imperfect of aṣbaḥa ('to become morning'), used performatively as a blessing (no special subjunctive/jussive marking), the same ṣ-b-ḥ root as ṣabāḥ al-khayr ('good morning'), plus khayr ('goodness') already met in masāʾ al-khayr; unlike every other language in this arc, Arabic's night-parting phrase points FORWARD to the morning, not to the night itself"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 ---
 

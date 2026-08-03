@@ -9,7 +9,7 @@ prerequisites: [AR-C17-kam-umruka]
 sounds: [arabic-emphatic-taa, arabic-feminine-dummy-pronoun]
 roots: [arabic-taqs-weather-rite]
 etymology_hook: "الطقس (aṭ-ṭaqs, 'weather') shares its root ط-ق-س with طقوس (ṭuqūs), 'rites, religious ceremonies' — weather and ritual sharing one root; الجو حار/بارد ('it's hot/cold') are verbless, like كم عمرك, but rain gets its OWN personal verb: إنها تمطر, 'she/it is raining'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C17-kam-umruka]
 ---
 

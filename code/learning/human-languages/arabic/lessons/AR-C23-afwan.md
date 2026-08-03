@@ -9,7 +9,7 @@ prerequisites: [AR-C01-shukran]
 sounds: [ayn, tanwin-fath]
 roots: [ayn-f-w]
 etymology_hook: "عفوا (ʿafwan), root ʿ-f-w, 'to erase, obliterate' → 'to pardon, forgive' (forgiving as metaphorically erasing an offense) — the same root behind العفو (al-ʿAfuww, 'The Supreme Pardoner,' one of the 99 names of Allah); grammatically, ʿafwan carries the exact same indefinite-accusative ending (tanwīn fatḥ, the '-an' sound) as شكرا (shukran) itself — both are fixed, idiomatic accusative forms, not full sentences"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C01-shukran]
 ---
 

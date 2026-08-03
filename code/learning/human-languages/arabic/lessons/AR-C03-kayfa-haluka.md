@@ -10,7 +10,7 @@ prerequisites: [AR-C03-hal, AR-C02-ii-my, AR-C02-anta-anti]
 sounds: [rtl-known-letters, harakat]
 roots: [h-w-l, k-y-f]
 etymology_hook: "the -ka/-ki 'your' suffix is the SAME gender split as anta/anti, attached the SAME way as the -ī 'my' suffix — so kayfa ḥāluka is assembled entirely from Chapter 2 machinery, with zero copula: 'how your-state?'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C03-hal, AR-C03-kayfa, AR-C02-ii-my, AR-C02-anta-anti, AR-C02-ismii]
 ---
 

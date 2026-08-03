@@ -5,11 +5,11 @@ type: writing
 headword: "ح، خ، ج"
 gloss: a second dots-family on a new skeleton — the hook-and-tail body ḥāʾ, khāʾ, jīm
 romanization: "ḥāʾ, khāʾ, jīm"
-prerequisites: [AR-W06-harakat-and-hamza]
+prerequisites: [AR-W06-hamza]
 sounds: [arabic-ha-deep, arabic-kha, arabic-jim]
 roots: [phoenician-heth, phoenician-giml]
-est_minutes: 5
-reviews_of: [AR-W06-harakat-and-hamza, AR-W04-dots-family-nun-ta, AR-C01-sabah-al-khayr]
+est_minutes: 4
+reviews_of: [AR-W06-hamza, AR-W06-harakat-and-hamza, AR-W04-dots-family-nun-ta, AR-C01-sabah-al-khayr]
 ---
 
 # ح، خ، ج — the dots trick, on a brand-new body

@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [AR-C04-maa-salama, AR-C04-ila-liqaa]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C04-maa-with, AR-C04-al-salama, AR-C04-maa-salama, AR-C04-ila-liqaa, AR-C03-practice, AR-C02-practice, AR-C01-practice]
 ---
 

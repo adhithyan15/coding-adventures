@@ -9,7 +9,7 @@ prerequisites: [AR-C16-al-saa]
 sounds: [arabic-ain, possessive-suffix-ka-ki]
 roots: [arabic-umr-life]
 etymology_hook: "كم عمرك؟ (kam ʿumruka?, 'how old are you?') is literally 'how much [is] your ʿumr' — ʿumr (life, lifetime, age) from root ع-م-ر, the same root behind the name ʿUmar; Arabic asks age with a NOUN + possessive suffix, no verb at all — a FOURTH shape, after Romance's 'have', Germanic's 'be', and Latin's 'born + accusative of duration'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C16-al-saa]
 ---
 

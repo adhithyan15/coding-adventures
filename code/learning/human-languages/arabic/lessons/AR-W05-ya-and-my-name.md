@@ -8,7 +8,7 @@ romanization: "yāʾ"
 prerequisites: [AR-W04-dots-family-nun-ta]
 sounds: [arabic-ya, long-i]
 roots: [phoenician-yod]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-W04-dots-family-nun-ta, AR-C02-ism, AR-C02-ii-my]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [AR-C14-ashhur]
 sounds: [arabic-rtl, emphatic-zaa]
 roots: [zahara-appear, nisf-half]
 etymology_hook: "الظهر (adh-dhuhr) 'noon' is also the name of the midday prayer, salat al-zuhr — Arabic's word for noon is bound up with the daily prayer schedule, not a neutral clock-time word; منتصف الليل (muntasaf al-layl) 'the half of the night' is fully transparent, from nisf 'half'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [AR-C14-ashhur]
 ---
 

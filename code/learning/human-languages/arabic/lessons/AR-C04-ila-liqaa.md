@@ -11,7 +11,7 @@ sounds: [hamza, alif-maqsura]
 roots: [semitic-l-q-y]
 etymology_hook: "'until the meeting' is exactly the Spanish hasta luego / hasta mañana shape — and hasta ITSELF is an Arabic loan (ḥattā), so Spanish borrowed the very word that builds this kind of farewell; liqāʾ ← root l-q-y 'to meet'"
 est_minutes: 4
-reviews_of: [AR-C04-maa-salama, AR-C01-al, AR-W06-harakat-and-hamza]
+reviews_of: [AR-C04-maa-salama, AR-C01-al, AR-W06-hamza, AR-W06-harakat-and-hamza]
 ---
 
 # إلى اللقاء (ilā l-liqāʾ) — "see you"

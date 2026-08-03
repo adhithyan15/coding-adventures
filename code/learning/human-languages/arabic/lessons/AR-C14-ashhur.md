@@ -9,7 +9,7 @@ prerequisites: [AR-C13-maa-khubz]
 sounds: [arabic-rtl, long-vowels]
 roots: [latin-months-borrowed]
 etymology_hook: "yanaayir, maaris, uktuubar... are simply Latin month-names in Arabic dress, borrowed for everyday/civil use — while the Islamic Hijri calendar keeps its OWN, entirely different 12 lunar months (Muharram, Rabi' al-Awwal...) for religious life, both running side by side"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [AR-C13-maa-khubz]
 ---
 
