@@ -27,7 +27,7 @@
 -- correctness does not depend on the binary being present.
 module ZstdCliInteropSpec (spec) where
 
-import Control.Exception (IOException, try)
+import Control.Exception (IOException, finally, try)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
 import System.Directory (getTemporaryDirectory, removeFile)
@@ -85,7 +85,9 @@ interopBothDirections original = do
 -- 'compressWithCli' route the binary payload through temp files (@-o@ on
 -- the way out) rather than piping bytes through the process's textual
 -- stdout. Only 'stderr', which is always human-readable text, is captured
--- directly for error messages.
+-- directly for error messages. Cleanup runs via 'finally' so a failed CLI
+-- invocation or a decode/read exception doesn't leak temp files into the
+-- shared system temp directory.
 runInteropForward :: String -> BS.ByteString -> IO BS.ByteString
 runInteropForward label compressed = do
     tempDir <- getTemporaryDirectory
@@ -94,17 +96,18 @@ runInteropForward label compressed = do
     hClose inHandle
     (outPath, outHandle) <- openBinaryTempFile tempDir "zstd-haskell-tc9-decoded.bin"
     hClose outHandle
-    (exitCode, _stdout, stderr) <-
-        readProcessWithExitCode "zstd" ["-d", "-q", "-f", "-o", outPath, inPath] ""
-    decoded <-
-        case exitCode of
-            ExitSuccess -> BS.readFile outPath
-            _ -> fail ("real `zstd -d` failed to decode " ++ label ++ ": " ++ stderr)
-    removeFile inPath
-    removeFile outPath
-    pure decoded
+    let cleanup = removeFile inPath >> removeFile outPath
+    ( do
+            (exitCode, _stdout, stderr) <-
+                readProcessWithExitCode "zstd" ["-d", "-q", "-f", "-o", outPath, inPath] ""
+            case exitCode of
+                ExitSuccess -> BS.readFile outPath
+                _ -> fail ("real `zstd -d` failed to decode " ++ label ++ ": " ++ stderr)
+        )
+        `finally` cleanup
 
 -- | Compress bytes with the real @zstd@ CLI and return the raw frame bytes.
+-- See 'runInteropForward' for why cleanup runs via 'finally'.
 compressWithCli :: BS.ByteString -> IO BS.ByteString
 compressWithCli original = do
     tempDir <- getTemporaryDirectory
@@ -113,15 +116,15 @@ compressWithCli original = do
     hClose inHandle
     (outPath, outHandle) <- openBinaryTempFile tempDir "zstd-haskell-tc9-output.zst"
     hClose outHandle
-    (exitCode, _stdout, stderr) <-
-        readProcessWithExitCode "zstd" ["-q", "-c", "-f", "-o", outPath, inPath] ""
-    compressed <-
-        case exitCode of
-            ExitSuccess -> BS.readFile outPath
-            _ -> fail ("real `zstd -c` failed to compress input: " ++ stderr)
-    removeFile inPath
-    removeFile outPath
-    pure compressed
+    let cleanup = removeFile inPath >> removeFile outPath
+    ( do
+            (exitCode, _stdout, stderr) <-
+                readProcessWithExitCode "zstd" ["-q", "-c", "-f", "-o", outPath, inPath] ""
+            case exitCode of
+                ExitSuccess -> BS.readFile outPath
+                _ -> fail ("real `zstd -c` failed to compress input: " ++ stderr)
+        )
+        `finally` cleanup
 
 -- | Run an interop check, but mark the test pending (not failed) when the
 -- @zstd@ binary isn't reachable on @PATH@ -- CI/dev environments vary, and
