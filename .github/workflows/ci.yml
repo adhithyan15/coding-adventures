@@ -602,23 +602,24 @@ jobs:
 
       # ── Java / Kotlin ──────────────────────────────────────────
       #
-      # Both Java and Kotlin packages use Gradle and JDK 21.
-      # A single JDK + Gradle setup covers both languages since
-      # Kotlin/JVM runs on the same JVM.
+      # Both Java and Kotlin packages use Gradle and JDK 21. Venture's
+      # cross-platform package acceptance also emits and directly exercises
+      # its Compose Desktop shell, even though the package harness is Rust.
+      # A single JDK + Gradle setup covers all three cases.
 
       - name: Set up JDK 21
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Set up Gradle
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         uses: gradle/actions/setup-gradle@v4
 
       - name: Disable long-lived Gradle services on Windows CI
-        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
         shell: bash
         run: |
           {
@@ -822,7 +823,19 @@ jobs:
             throw "Windows App Runtime installer failed with exit code $LASTEXITCODE"
           }
           Set-Location code/packages/rust
-          cargo test -p venture-browser-windows
+          cargo test -p paint-vm-cairo -p venture-browser-qt -p venture-browser-windows
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows render and bridge tests failed with exit code $LASTEXITCODE"
+          }
+          Set-Location ..\..\programs\mosaic\venture-browser
+          cargo test
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Mosaic package tests failed with exit code $LASTEXITCODE"
+          }
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-all.ps1
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows backend matrix failed with exit code $LASTEXITCODE"
+          }
 
       - name: Build and test Venture macOS acceptance
         if: runner.os == 'macOS' && needs.detect.outputs.needs_venture_windows == 'true'

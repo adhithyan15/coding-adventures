@@ -12,5 +12,7 @@
 - Export Flutter-named C ABI wrappers over the same host-neutral controller and
   Cairo renderer so Venture's generated Flutter shell can share the live page
   implementation.
+- Export Compose-named C ABI wrappers over that same session, using explicit
+  64-bit frame lengths for stable JNA interop on macOS, Windows, and Linux.
 - Accept either CMake's plain macOS executable or an application-bundle shell
   when launching the generated project.

@@ -16,6 +16,7 @@ files = [
   { backend = "qt", source = "host/qt/MosaicHost.cpp", target = "MosaicHost.cpp" },
   { backend = "qt", source = "host/qt/MosaicHost.h", target = "MosaicHost.h" },
   { backend = "qt", source = "host/qt/tst_venture_chrome.qml", target = "test/tst_venture_chrome.qml" },
+  { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
   { backend = "compose", source = "host/compose/VentureChromeInteractionTest.kt", target = "src/test/kotlin/VentureChromeInteractionTest.kt" },
   { backend = "react", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },
   { backend = "electron", source = "host/react/VentureChromeInteraction.test.tsx", target = "src/VentureChromeInteraction.test.tsx" },

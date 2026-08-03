@@ -289,8 +289,36 @@ if ! has_command gradle; then
 elif [[ -z "$java_major" || "$java_major" -lt 21 ]]; then
   skip_backend compose "JDK 21 or newer is not installed"
 else
+  echo "==> Building Venture Compose native bridge"
+  compose_bridge_args=(build -p venture-browser-qt)
+  compose_bridge_profile=debug
+  if ((release)); then
+    compose_bridge_args+=(--release)
+    compose_bridge_profile=release
+  fi
+  (cd "$rust_workspace" && cargo "${compose_bridge_args[@]}")
+  case "$host_os" in
+    Darwin)
+      compose_bridge_source=libventure_browser_qt.dylib
+      compose_bridge_name=libventure_browser_compose.dylib
+      ;;
+    Linux)
+      compose_bridge_source=libventure_browser_qt.so
+      compose_bridge_name=libventure_browser_compose.so
+      ;;
+    *)
+      compose_bridge_source=venture_browser_qt.dll
+      compose_bridge_name=venture_browser_compose.dll
+      ;;
+  esac
+  cp "$rust_workspace/target/$compose_bridge_profile/$compose_bridge_source" \
+    "$output_root/compose/$compose_bridge_name"
   echo "==> Testing and building compose"
-  (cd "$output_root/compose" && gradle --no-daemon test build)
+  (
+    cd "$output_root/compose"
+    VENTURE_BROWSER_COMPOSE_LIBRARY="$output_root/compose/$compose_bridge_name" \
+      gradle --no-daemon test build
+  )
 fi
 
 echo "Built or checked $((${#backends[@]} - ${#skipped[@]} - ${#deferred[@]})) of ${#backends[@]} Venture backend projects."

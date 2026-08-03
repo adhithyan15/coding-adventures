@@ -109,7 +109,28 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             "&& runner.os == 'Linux'",
             workflow,
         )
-        self.assertIn("cargo test -p venture-browser-windows", workflow)
+        self.assertEqual(
+            workflow.count(
+                "needs.detect.outputs.needs_java == 'true' || "
+                "needs.detect.outputs.needs_kotlin == 'true' || "
+                "needs.detect.outputs.needs_venture_windows == 'true'"
+            ),
+            3,
+        )
+        self.assertIn(
+            "cargo test -p paint-vm-cairo -p venture-browser-qt "
+            "-p venture-browser-windows",
+            workflow,
+        )
+        self.assertIn(
+            "Set-Location ..\\..\\programs\\mosaic\\venture-browser",
+            workflow,
+        )
+        self.assertIn(
+            "powershell -NoProfile -ExecutionPolicy Bypass -File "
+            "scripts\\build-all.ps1",
+            workflow,
+        )
         self.assertIn("cargo test -p venture-browser-macos", workflow)
 
 
