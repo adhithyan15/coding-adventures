@@ -1231,6 +1231,16 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode M must be finite and non-negative");
   }
+  const diodeDepletionCoefficient = params.get("FC");
+  if (
+    kind === "D" &&
+    diodeDepletionCoefficient !== undefined &&
+    (!Number.isFinite(diodeDepletionCoefficient) ||
+      diodeDepletionCoefficient < 0.0 ||
+      diodeDepletionCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("diode FC must be finite and in [0, 1)");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1819,6 +1829,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       ),
       junctionPotential: model.params.get("VJ") ?? model.params.get("PB") ?? 1.0,
       gradingCoefficient: model.params.get("M") ?? model.params.get("MJ") ?? 0.5,
+      forwardBiasDepletionCoefficient: model.params.get("FC") ?? 0.5,
       seriesResistance: model.params.get("RS") ?? 0.0,
     };
   }

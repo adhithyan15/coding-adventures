@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower diode model-card `FC` depletion coefficient.
 - Validate and lower diode model-card `M` / `MJ` grading coefficient.
 - Validate and lower diode model-card `VJ` / `PB` junction potential.
 - Validate and lower finite, non-negative diode model-card `RS` series resistance.

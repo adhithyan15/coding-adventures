@@ -964,6 +964,25 @@ def test_rejects_invalid_diode_grading_coefficient(
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.6", 0.6)])
+def test_lowers_valid_diode_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(FC={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Fc == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_diode_depletion_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match=r"diode FC must be finite and in \[0, 1\)"
+    ):
+        parse_netlist(f".model clamp D(FC={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """
