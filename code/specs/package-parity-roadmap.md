@@ -222,18 +222,20 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
   succeeds across 4,765 packages and 7,100 edges;
-- bring the remaining Rust, Swift, TypeScript, Lua, Perl, Ruby, Elixir, and
-  Haskell build-tool resolvers to the shared strict-UTF-8 rockspec contract.
+- bring the remaining Swift, TypeScript, Lua, Perl, Ruby, Elixir, and Haskell
+  build-tool resolvers to the shared strict-UTF-8 rockspec contract.
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
   is tracked separately from the Python full-scan blocker. Merged PR #9504
-  completed the Go operational-oracle child, and the Rust child is next;
+  completed the Go operational-oracle child, and merged PR #9510 completed
+  Rust. The next dependency-shaped child is the Swift engine, whose failed
+  UTF-8 decode currently becomes an empty Lua dependency list;
 - merged PR #9521 makes the Rust build tool reject resolver self-edges with a
   stable diagnostic and preserves distinct package/program identities for
   `elixir/grammar_tools`;
 - bring Rust build-tool discovery to the complete canonical language and
-  identity registry. The active slice classifies every repository bucket,
+  identity registry. Merged PR #9527 classifies every repository bucket,
   excludes specification fixture trees, and rejects residual duplicate names;
-  its real full plan exits zero with 4,764 entries, 4,764 unique identities,
+  its real full plan exits zero with 4,765 entries, 4,765 unique identities,
   and only the intentional language-neutral `code/sites/blog` package;
 - expose Haskell through the Python build tool's `--language` filter. Haskell
   is already in its resolver and canonical language registry but is missing
