@@ -1545,6 +1545,24 @@ J1 drain gate source fast
     );
   });
 
+  it("parses the JFET energy gap", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(EG=1.05)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      bandgapVoltage: 1.05,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])("rejects invalid JFET energy gap %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(EG=${value})`)).toThrow(
+      "JFET EG must be finite and positive",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
