@@ -80,6 +80,45 @@
       "required": ["body_sha256", "body_size", "final_locator", "headers", "kind", "locator", "media_type", "retrieved_at", "status"],
       "type": "object"
     },
+    "formula_parser_inventory": {
+      "additionalProperties": false,
+      "properties": {
+        "formulas": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "body": { "$ref": "#/$defs/formula_span" },
+              "declaration": { "$ref": "#/$defs/formula_span" },
+              "formula": { "minLength": 1, "type": "string" },
+              "formulabook": { "minLength": 1, "type": "string" },
+              "parameters": { "items": { "minLength": 1, "type": "string" }, "type": "array" },
+              "step_count": { "minimum": 0, "type": "integer" }
+            },
+            "required": ["body", "declaration", "formula", "formulabook", "parameters", "step_count"],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "kind": { "const": "formula_parser_inventory" },
+        "parser_contract": { "const": "adj-lang/formula_source_map/v1" },
+        "schema_version": { "const": 1 },
+        "scope": { "const": "source_file" },
+        "source_sha256": { "$ref": "#/$defs/hash" },
+        "source_size": { "maximum": 67108864, "minimum": 0, "type": "integer" }
+      },
+      "required": ["formulas", "kind", "parser_contract", "schema_version", "scope", "source_sha256", "source_size"],
+      "type": "object"
+    },
+    "formula_span": {
+      "additionalProperties": false,
+      "properties": {
+        "end": { "minimum": 1, "type": "integer" },
+        "sha256": { "$ref": "#/$defs/hash" },
+        "start": { "minimum": 0, "type": "integer" }
+      },
+      "required": ["end", "sha256", "start"],
+      "type": "object"
+    },
     "hash": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
     "input_receipt": {
       "additionalProperties": false,
@@ -130,6 +169,7 @@
         "bundle_id": { "minLength": 1, "type": "string" },
         "clauses": { "items": { "$ref": "#/$defs/clause" }, "minItems": 1, "type": "array" },
         "dependencies": { "items": { "$ref": "#/$defs/hash" }, "type": "array", "uniqueItems": true },
+        "formula_inventory_sha256": { "$ref": "#/$defs/hash" },
         "input": { "$ref": "#/$defs/source_binding" },
         "kind": { "const": "provenance_bundle" },
         "library": { "minLength": 1, "type": "string" },

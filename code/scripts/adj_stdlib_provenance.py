@@ -16,9 +16,11 @@ import json
 import os
 import re
 import stat
+import subprocess
 import tempfile
+import threading
 import xml.etree.ElementTree as ET
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -31,6 +33,7 @@ MAX_OBJECT_BYTES = 64 * 1024 * 1024
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 OBJECT_KINDS = {
     "fetch_receipt",
+    "formula_parser_inventory",
     "input_receipt",
     "provenance_bundle",
     "raw_source",
@@ -652,6 +655,211 @@ def _json_object(cas: Cas, digest: str, expected_kind: str) -> dict[str, Any]:
     return value
 
 
+def _run_formula_inventory(
+    parser_command: Sequence[str], source_path: Path
+) -> dict[str, Any]:
+    if not parser_command:
+        raise ProvenanceError("formula inventory parser command must not be empty")
+    try:
+        process = subprocess.Popen(
+            [*parser_command, os.fspath(source_path)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except OSError as error:
+        raise ProvenanceError(
+            f"formula inventory parser failed to run: {error}"
+        ) from error
+    stdout = bytearray()
+    stderr = bytearray()
+    overflow = threading.Event()
+
+    def drain(stream: Any, output: bytearray, limit: int) -> None:
+        while True:
+            chunk = stream.read(65536)
+            if not chunk:
+                return
+            remaining = limit - len(output)
+            output.extend(chunk[:remaining])
+            if len(chunk) > remaining:
+                overflow.set()
+                process.kill()
+                return
+
+    stdout_thread = threading.Thread(
+        target=drain,
+        args=(process.stdout, stdout, MAX_OBJECT_BYTES),
+        daemon=True,
+    )
+    stderr_thread = threading.Thread(
+        target=drain,
+        args=(process.stderr, stderr, 4096),
+        daemon=True,
+    )
+    stdout_thread.start()
+    stderr_thread.start()
+    try:
+        returncode = process.wait(timeout=60)
+    except subprocess.TimeoutExpired as error:
+        process.kill()
+        process.wait()
+        raise ProvenanceError(
+            "formula inventory parser timed out after 60 seconds"
+        ) from error
+    finally:
+        stdout_thread.join()
+        stderr_thread.join()
+        process.stdout.close()
+        process.stderr.close()
+    if overflow.is_set():
+        raise ProvenanceError("formula inventory parser output exceeds byte limit")
+    if returncode != 0:
+        detail = bytes(stderr).decode("utf-8", errors="replace").strip()
+        raise ProvenanceError(f"formula inventory parser exited {returncode}: {detail}")
+    try:
+        value = json.loads(bytes(stdout).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ProvenanceError(
+            "formula inventory parser did not emit UTF-8 JSON"
+        ) from error
+    if not isinstance(value, dict):
+        raise ProvenanceError("formula inventory parser output must be an object")
+    if bytes(stdout) != canonical_json_bytes(value):
+        raise ProvenanceError("formula inventory parser output is not canonical JSON")
+    return value
+
+
+def _validate_formula_inventory_value(
+    value: Any, source_hash: str, source: bytes
+) -> None:
+    if not isinstance(value, dict) or set(value) != {
+        "formulas",
+        "kind",
+        "parser_contract",
+        "schema_version",
+        "scope",
+        "source_sha256",
+        "source_size",
+    }:
+        raise ProvenanceError("formula parser inventory has unknown or missing fields")
+    if (
+        value["kind"] != "formula_parser_inventory"
+        or value["parser_contract"] != "adj-lang/formula_source_map/v1"
+        or not _is_integer(value["schema_version"])
+        or value["schema_version"] != 1
+        or value["scope"] != "source_file"
+        or _require_hash(
+            value["source_sha256"], "formula parser inventory source_sha256"
+        )
+        != source_hash
+        or not _is_integer(value["source_size"])
+        or value["source_size"] != len(source)
+    ):
+        raise ProvenanceError(
+            "formula parser inventory contract or source binding disagrees"
+        )
+    formulas = value["formulas"]
+    if not isinstance(formulas, list):
+        raise ProvenanceError("formula parser inventory formulas must be an array")
+    previous_end = 0
+    for index, formula in enumerate(formulas):
+        prefix = f"formula parser inventory formulas[{index}]"
+        if not isinstance(formula, dict) or set(formula) != {
+            "body",
+            "declaration",
+            "formula",
+            "formulabook",
+            "parameters",
+            "step_count",
+        }:
+            raise ProvenanceError(f"{prefix} has unknown or missing fields")
+        _require_nonempty(formula["formula"], f"{prefix}.formula")
+        _require_nonempty(formula["formulabook"], f"{prefix}.formulabook")
+        parameters = formula["parameters"]
+        if not isinstance(parameters, list) or any(
+            not isinstance(parameter, str) or not parameter for parameter in parameters
+        ):
+            raise ProvenanceError(f"{prefix}.parameters must contain non-empty strings")
+        if not _is_integer(formula["step_count"]) or formula["step_count"] < 0:
+            raise ProvenanceError(f"{prefix}.step_count must be a non-negative integer")
+        spans: dict[str, tuple[int, int]] = {}
+        for span_name in ("body", "declaration"):
+            span = formula[span_name]
+            if not isinstance(span, dict) or set(span) != {"end", "sha256", "start"}:
+                raise ProvenanceError(f"{prefix}.{span_name} has the wrong schema")
+            start = span["start"]
+            end = span["end"]
+            if (
+                not _is_integer(start)
+                or not _is_integer(end)
+                or start < 0
+                or end <= start
+                or end > len(source)
+            ):
+                raise ProvenanceError(f"{prefix}.{span_name} is outside source bytes")
+            if _require_hash(
+                span["sha256"], f"{prefix}.{span_name}.sha256"
+            ) != sha256_bytes(source[start:end]):
+                raise ProvenanceError(f"{prefix}.{span_name} byte hash disagrees")
+            spans[span_name] = (start, end)
+        body_start, body_end = spans["body"]
+        declaration_start, declaration_end = spans["declaration"]
+        if not (
+            declaration_start <= body_start
+            and body_end <= declaration_end
+            and declaration_start >= previous_end
+        ):
+            raise ProvenanceError(
+                f"{prefix} body/declaration containment or parser order disagrees"
+            )
+        previous_end = declaration_end
+
+
+def _validate_formula_inventory(
+    cas: Cas,
+    digest: str,
+    source_hash: str,
+    input_claims: dict[str, dict[str, Any]],
+    parser_command: Sequence[str] | None,
+) -> dict[str, Any]:
+    source = _read_regular_file(cas.object_path(source_hash))
+    value = _json_object(cas, digest, "formula_parser_inventory")
+    _validate_formula_inventory_value(value, source_hash, source)
+    if cas.index[digest]["links"] != [source_hash]:
+        raise ProvenanceError(
+            "formula parser inventory must link only to its source bytes"
+        )
+    if parser_command is None:
+        raise ProvenanceError(
+            "formula inventory replay requires --formula-inventory-binary"
+        )
+    replayed = _run_formula_inventory(parser_command, cas.object_path(source_hash))
+    if replayed != value:
+        raise ProvenanceError(
+            "stored formula parser inventory disagrees with parser replay"
+        )
+    selected_claims: set[str] = set()
+    for index, formula in enumerate(value["formulas"]):
+        declaration = formula["declaration"]
+        enclosing = [
+            claim_id
+            for claim_id, claim in input_claims.items()
+            if claim["start"] <= declaration["start"]
+            and declaration["end"] <= claim["end"]
+        ]
+        if len(enclosing) != 1:
+            raise ProvenanceError(
+                f"formula parser inventory formulas[{index}] declaration must be "
+                "enclosed by exactly one input IR claim"
+            )
+        if enclosing[0] in selected_claims:
+            raise ProvenanceError(
+                f"input IR claim {enclosing[0]} cannot ground more than one formula"
+            )
+        selected_claims.add(enclosing[0])
+    return value
+
+
 def _registered_manifest(
     cas: Cas,
     manifest_bytes: bytes,
@@ -879,12 +1087,14 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         expected_manifest_id: str,
         schema_path: Path | None = None,
         workspace_root: Path | None = None,
+        formula_inventory_command: Sequence[str] | None = None,
     ) -> None:
         super().__init__(cas_root, blocking=False)
         self.manifest_path = manifest_path
         self.expected_manifest_id = expected_manifest_id
         self.schema_path = schema_path
         self.workspace_root = workspace_root
+        self.formula_inventory_command = formula_inventory_command
         self._baseline_manifest = b""
 
     def __enter__(self):
@@ -895,6 +1105,7 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 self.manifest_path,
                 self.schema_path,
                 workspace_root=self.workspace_root,
+                formula_inventory_command=self.formula_inventory_command,
             )
             self._baseline_manifest = _read_regular_file(self.manifest_path)
             return self
@@ -919,6 +1130,7 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 self.manifest_path,
                 self.schema_path,
                 workspace_root=self.workspace_root,
+                formula_inventory_command=self.formula_inventory_command,
             )
         except Exception:
             self._rollback()
@@ -1042,6 +1254,7 @@ def _validate_cas_schemas(schema_path: Path, cas: Cas) -> None:
     definitions = schema.get("$defs", {})
     schema_kinds = {
         "fetch_receipt",
+        "formula_parser_inventory",
         "input_receipt",
         "provenance_bundle",
         "source_ir",
@@ -1323,6 +1536,7 @@ def _validate_bundle(
     snapshots: set[str],
     bundle_claims: dict[str, set[str]],
     bundle_inputs: dict[str, str],
+    formula_inventory_command: Sequence[str] | None,
 ) -> None:
     if digest in validated:
         return
@@ -1330,7 +1544,7 @@ def _validate_bundle(
         raise ProvenanceError(f"provenance bundle dependency cycle at {digest}")
     visiting.add(digest)
     bundle = _json_object(cas, digest, "provenance_bundle")
-    if set(bundle) != {
+    required_fields = {
         "bundle_id",
         "clauses",
         "dependencies",
@@ -1338,7 +1552,11 @@ def _validate_bundle(
         "kind",
         "library",
         "sources",
-    }:
+    }
+    if set(bundle) not in (
+        required_fields,
+        required_fields | {"formula_inventory_sha256"},
+    ):
         raise ProvenanceError(f"bundle {digest} has unknown or missing fields")
     if bundle["kind"] != "provenance_bundle":
         raise ProvenanceError(f"bundle {digest} payload has the wrong kind")
@@ -1357,6 +1575,7 @@ def _validate_bundle(
             snapshots=snapshots,
             bundle_claims=bundle_claims,
             bundle_inputs=bundle_inputs,
+            formula_inventory_command=formula_inventory_command,
         )
     sources = bundle["sources"]
     if not isinstance(sources, list) or not sources:
@@ -1422,6 +1641,24 @@ def _validate_bundle(
             f"bundles disagree on input bytes for {bundle['library']}"
         )
     bundle_inputs[bundle["library"]] = input_raw_hash
+    if "formula_inventory_sha256" in bundle:
+        inventory_hash = _require_hash(
+            bundle["formula_inventory_sha256"], "bundle.formula_inventory_sha256"
+        )
+        if "formula_parser_inventory" not in cas.index.get(inventory_hash, {}).get(
+            "kinds", []
+        ):
+            raise ProvenanceError(
+                f"bundle {digest} formula inventory is missing or has the wrong kind"
+            )
+        _validate_formula_inventory(
+            cas,
+            inventory_hash,
+            input_raw_hash,
+            claims[input_ir_hash],
+            formula_inventory_command,
+        )
+        expected_links.add(inventory_hash)
     clauses = bundle["clauses"]
     if not isinstance(clauses, list) or not clauses:
         raise ProvenanceError(f"bundle {digest} must contain clauses")
@@ -1576,6 +1813,7 @@ def _validate_repository_unlocked(
     manifest_path: Path,
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
+    formula_inventory_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -1620,6 +1858,7 @@ def _validate_repository_unlocked(
             snapshots=snapshots,
             bundle_claims=bundle_claims,
             bundle_inputs=bundle_inputs,
+            formula_inventory_command=formula_inventory_command,
         )
     effective_workspace_root = workspace_root or manifest_path.parent
     for repo_path, expected_hash in sorted(bundle_inputs.items()):
@@ -1648,6 +1887,7 @@ def validate_repository(
     manifest_path: Path,
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
+    formula_inventory_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
         return _validate_repository_unlocked(
@@ -1655,6 +1895,7 @@ def validate_repository(
             manifest_path,
             schema_path,
             workspace_root=workspace_root,
+            formula_inventory_command=formula_inventory_command,
         )
 
 
@@ -1664,10 +1905,15 @@ def project_snapshots(
     output: Path,
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
+    formula_inventory_command: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     with CasRootLock(cas_root):
         result = _validate_repository_unlocked(
-            cas_root, manifest_path, schema_path, workspace_root=workspace_root
+            cas_root,
+            manifest_path,
+            schema_path,
+            workspace_root=workspace_root,
+            formula_inventory_command=formula_inventory_command,
         )
         cas = Cas(cas_root)
         cas.load()
@@ -1710,6 +1956,8 @@ def _resolve(root: Path, value: Path) -> Path:
 
 def _bundle_declared_links(bundle: dict[str, Any]) -> list[str]:
     links = set(bundle.get("dependencies", []))
+    if bundle.get("formula_inventory_sha256") is not None:
+        links.add(bundle["formula_inventory_sha256"])
     for source in bundle.get("sources", []):
         links.update(
             (
@@ -1742,12 +1990,14 @@ def main() -> int:
     verify_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
     verify_parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     verify_parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
+    verify_parser.add_argument("--formula-inventory-binary", type=Path)
 
     project_parser = subparsers.add_parser("project")
     project_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
     project_parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     project_parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     project_parser.add_argument("--output", type=Path, required=True)
+    project_parser.add_argument("--formula-inventory-binary", type=Path)
 
     capture_parser = subparsers.add_parser("capture")
     capture_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
@@ -1786,6 +2036,12 @@ def main() -> int:
     ir_parser.add_argument("--segments", type=Path, required=True)
     ir_parser.add_argument("--label", required=True)
 
+    formula_parser = subparsers.add_parser("put-formula-inventory")
+    formula_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
+    formula_parser.add_argument("--source", required=True)
+    formula_parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    formula_parser.add_argument("--label", required=True)
+
     bundle_parser = subparsers.add_parser("put-bundle")
     bundle_parser.add_argument("--cas", type=Path, default=DEFAULT_ROOT)
     bundle_parser.add_argument("--bundle", type=Path, required=True)
@@ -1800,6 +2056,11 @@ def main() -> int:
                 _resolve(repo_root, args.manifest),
                 _resolve(repo_root, args.schema),
                 workspace_root=repo_root,
+                formula_inventory_command=(
+                    [os.fspath(_resolve(repo_root, args.formula_inventory_binary))]
+                    if args.formula_inventory_binary is not None
+                    else None
+                ),
             )
         elif args.command == "project":
             result = project_snapshots(
@@ -1808,6 +2069,11 @@ def main() -> int:
                 _resolve(repo_root, args.output),
                 _resolve(repo_root, args.schema),
                 workspace_root=repo_root,
+                formula_inventory_command=(
+                    [os.fspath(_resolve(repo_root, args.formula_inventory_binary))]
+                    if args.formula_inventory_binary is not None
+                    else None
+                ),
             )
         elif args.command == "capture":
             with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
@@ -1903,6 +2169,31 @@ def main() -> int:
                 )
                 transaction.commit()
             result = {"source_ir_sha256": ir_hash}
+        elif args.command == "put-formula-inventory":
+            with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
+                cas = transaction.cas
+                source_hash = _require_hash(args.source, "source hash")
+                if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
+                    raise ProvenanceError(
+                        "formula inventory source is not raw_source bytes"
+                    )
+                inventory = _run_formula_inventory(
+                    [os.fspath(_resolve(repo_root, args.formula_inventory_binary))],
+                    cas.object_path(source_hash),
+                )
+                _validate_formula_inventory_value(
+                    inventory,
+                    source_hash,
+                    _read_regular_file(cas.object_path(source_hash)),
+                )
+                inventory_hash = cas.put_json(
+                    inventory,
+                    kind="formula_parser_inventory",
+                    label=args.label,
+                    links=[source_hash],
+                )
+                transaction.commit()
+            result = {"formula_inventory_sha256": inventory_hash}
         elif args.command == "put-transform":
             with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
                 cas = transaction.cas

@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -36,7 +37,18 @@ def acquire_cas_lock_with_alternate_temp(
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
-    def build_repository(self, root: Path) -> tuple[Path, Path, dict[str, str]]:
+    def formula_inventory_command(self) -> list[str]:
+        suffix = ".exe" if os.name == "nt" else ""
+        binary = (
+            Path(__file__).resolve().parents[2]
+            / f"packages/rust/target/debug/adj-formula-inventory{suffix}"
+        )
+        self.assertTrue(binary.is_file(), f"missing formula inventory binary: {binary}")
+        return [os.fspath(binary)]
+
+    def build_repository(
+        self, root: Path, *, with_formula_inventory: bool = False
+    ) -> tuple[Path, Path, dict[str, str]]:
         cas_root = root / "cas"
         manifest_path = root / "manifest.json"
         body = b"Header\nSum is the result of addition.\nFooter\n"
@@ -154,7 +166,12 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             links=[raw_hash, rendered_hash],
         )
         input_body = (
-            b'formula sum(a, b) = a + b\n  locator "https://example.test/sum"\n'
+            b"formulabook arithmetic {\n"
+            b"  formula sum(a, b) = a + b\n"
+            b'    source "fixture arithmetic definition"\n'
+            b'    locator "https://example.test/sum"\n'
+            b"    trust authoritative\n"
+            b"}\n"
         )
         input_path = root / "code/example/arithmetic.adj"
         input_path.parent.mkdir(parents=True)
@@ -253,6 +270,21 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             "library": "code/example/arithmetic.adj",
             "sources": [source_entry, input_source_entry],
         }
+        inventory_hash = ""
+        if with_formula_inventory:
+            inventory = provenance._run_formula_inventory(
+                self.formula_inventory_command(), cas.object_path(input_hash)
+            )
+            provenance._validate_formula_inventory_value(
+                inventory, input_hash, input_body
+            )
+            inventory_hash = cas.put_json(
+                inventory,
+                kind="formula_parser_inventory",
+                label="fixture formula parser inventory",
+                links=[input_hash],
+            )
+            bundle["formula_inventory_sha256"] = inventory_hash
         bundle_hash = cas.put_json(
             bundle,
             kind="provenance_bundle",
@@ -279,6 +311,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 "input": input_hash,
                 "input_ir": input_ir_hash,
                 "input_receipt": input_receipt_hash,
+                "formula_inventory": inventory_hash,
                 "bundle": bundle_hash,
                 "transform": transform_hash,
                 "snapshot": rendered_hash,
@@ -329,6 +362,137 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertEqual(
                 provenance.sha256_bytes(projected_bytes), hashes["snapshot"]
             )
+
+    def test_formula_inventory_is_replayed_from_exact_cas_input_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(
+                root, with_formula_inventory=True
+            )
+            schema = (
+                Path(__file__).resolve().parents[2]
+                / "specs/data/adj-stdlib-provenance/manifest.schema.json"
+            )
+
+            result = provenance.validate_repository(
+                cas_root,
+                manifest_path,
+                schema,
+                workspace_root=root,
+                formula_inventory_command=self.formula_inventory_command(),
+            )
+
+            self.assertTrue(result["valid"])
+            self.assertEqual(result["objects"], 11)
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            inventory = provenance._json_object(
+                cas, hashes["formula_inventory"], "formula_parser_inventory"
+            )
+            self.assertEqual(inventory["source_sha256"], hashes["input"])
+            self.assertEqual(
+                [item["formula"] for item in inventory["formulas"]], ["sum"]
+            )
+
+    def test_formula_inventory_fails_closed_without_replay_binary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _ = self.build_repository(
+                root, with_formula_inventory=True
+            )
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "requires --formula-inventory-binary"
+            ):
+                provenance.validate_repository(
+                    cas_root, manifest_path, workspace_root=root
+                )
+
+    def test_formula_inventory_rejects_parser_replay_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _ = self.build_repository(
+                root, with_formula_inventory=True
+            )
+            command = self.formula_inventory_command()
+            original = provenance._run_formula_inventory
+
+            def drifted(parser_command: object, source_path: Path) -> dict[str, object]:
+                value = original(parser_command, source_path)
+                value["formulas"][0]["step_count"] = 1
+                return value
+
+            with (
+                mock.patch.object(provenance, "_run_formula_inventory", drifted),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "disagrees with parser replay"
+                ),
+            ):
+                provenance.validate_repository(
+                    cas_root,
+                    manifest_path,
+                    workspace_root=root,
+                    formula_inventory_command=command,
+                )
+
+    def test_formula_inventory_parser_output_is_bounded_while_reading(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source.adj"
+            source.write_bytes(b"")
+            command = [
+                sys.executable,
+                "-c",
+                "import sys; sys.stdout.buffer.write(b'x' * 2048)",
+            ]
+
+            with (
+                mock.patch.object(provenance, "MAX_OBJECT_BYTES", 1024),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "output exceeds byte limit"
+                ),
+            ):
+                provenance._run_formula_inventory(command, source)
+
+    def test_one_broad_input_claim_cannot_ground_two_formulas(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = (
+                b"formulabook demo {\n"
+                b'  formula first(x) = x + 1 source "s" locator "cas://s" trust authoritative\n'
+                b'  formula second(x) = x + 2 source "s" locator "cas://s" trust authoritative\n'
+                b"}\n"
+            )
+            cas = provenance.Cas(root / "cas")
+            source_hash = cas.put(source, kind="raw_source", label="two formulas")
+            inventory = provenance._run_formula_inventory(
+                self.formula_inventory_command(), cas.object_path(source_hash)
+            )
+            inventory_hash = cas.put_json(
+                inventory,
+                kind="formula_parser_inventory",
+                label="two-formula inventory",
+                links=[source_hash],
+            )
+            broad_claim = {
+                "broad": {
+                    "claim_id": "broad",
+                    "end": len(source),
+                    "quote": source.decode("utf-8"),
+                    "quote_sha256": provenance.sha256_bytes(source),
+                    "start": 0,
+                }
+            }
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "cannot ground more than one formula"
+            ):
+                provenance._validate_formula_inventory(
+                    cas,
+                    inventory_hash,
+                    source_hash,
+                    broad_claim,
+                    self.formula_inventory_command(),
+                )
 
     def test_committed_json_schema_accepts_a_complete_bundle_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
