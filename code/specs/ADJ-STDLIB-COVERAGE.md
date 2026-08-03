@@ -285,6 +285,10 @@ option mapping, or judge/evaluation failure.
     transform discards source bytes, its operations must partition the selected
     source span contiguously and bind every discarded range to one claim and an
     explicit reason.
+7h. **Complete:** expose a real-parser formula source map with the typed `ExprAst`
+    and exact half-open declaration/body byte spans. Provenance tooling can now
+    inventory parsed formula bodies without regex discovery or source normalization;
+    import resolution, lowering, semantic derivation, and execution remain separate gates.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 9. Add executable formula preconditions or domain guards before migrating
@@ -297,6 +301,9 @@ option mapping, or judge/evaluation failure.
 12. Revisit `simple-interest.adj` with its variable/unit context, explicit
     rejection of contradicted page metadata, unit-bearing query facts, and a
     structured lowering from source notation to primitive operations.
+13. Add CAS `formula_derivation` and execution-witness objects on top of the
+    parser-backed source map, then enforce set equality across parsed exports,
+    replayed derivations, and fully verified query executions.
 
 ### Wave 2: complete K-8 foundations
 
