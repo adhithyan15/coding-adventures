@@ -164,10 +164,25 @@ With this, `alloc`/`field_store`/`field_load` are now literally the same
 dispatch-table entries as `gc_alloc`/`gc_field_store`/`gc_field_load` — every
 `alloc` emission site in the pipeline already passed zero operands with
 `type_hint = "ref<LispyPair>"` (always the 16-byte default), so the swap
-needed no adapter. `is_null` gained one case: nil stored into a field and
-read back via a `"ref<...>"`-hinted `field_load` decodes as
-`Value::HeapRef(HeapRef::NULL)`, not the top-level `Int(0)` sentinel —
-`is_null` now treats both as null.
+needed no adapter. `is_null` gained a defensive second case
+(`Value::HeapRef(r) if r.is_null()`) alongside the literal `Int(0)`
+sentinel — nil round-trips through a field as `Int(0)` under the tag-based
+decode (its tag is plain-int, never heap-ref, regardless of type_hint), so
+this arm isn't reachable through any path `dispatch.rs` exercises today, but
+keeps `is_null` correct if a future caller ever produces a null `HeapRef`
+directly.
+
+A security review of this reroute found two gaps, both fixed before it
+landed: `handle_gc_alloc` (now also `alloc`'s handler) capped only the
+*count* of live objects, not any single allocation's size — since `alloc`
+takes an explicit byte-count operand, a handful of huge single allocations
+would clear the count cap outright; fixed with a new, dedicated
+`VMCore::max_gc_heap_bytes` field (default 64 MiB) checked against
+`FlatHeap::live_bytes()`. And the tag scheme's soundness (a `HeapRef`'s
+address always has its low 3 bits clear) was enforced only by a
+`debug_assert_eq!`, which compiles out in release — promoted to a real
+runtime check so a future cross-crate alignment regression in `gc-core`
+fails loudly instead of silently corrupting an address.
 
 ## 3. What's explicitly out of scope (not a silent gap)
 

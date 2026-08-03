@@ -46,12 +46,38 @@ real Twig program.
   none fits the tag scheme, and no Twig lowering pass stores one directly
   into a record/union/closure field on any backend today (confirmed by
   investigation) — pre-existing unsupported territory, not a regression.
-- **`is_null` recognizes `HeapRef::NULL` as null, alongside the literal
-  `Int(0)` sentinel.** Nil itself is still `const Int(0)` (unchanged), but
-  nil *stored into a field* and read back through a `"ref<...>"`-hinted
-  `field_load` now decodes as `Value::HeapRef(HeapRef::NULL)` — the same
-  "nothing here" concept, a different representation once it round-trips
-  through a real heap field instead of `ctx.arrays`.
+- **`is_null` also recognizes `HeapRef::NULL` as null, defensively.** Nil
+  itself is still `const Int(0)`, and now round-trips through a field as
+  `Int(0)` too (the tag-based decode reads its tag as plain-int, not a heap
+  ref, regardless of type_hint) — so this arm isn't reachable through any
+  path `dispatch.rs` itself exercises today (nothing here ever constructs or
+  stores a null `HeapRef`), but is kept so `is_null` stays correct if a
+  future caller ever produces one directly.
+- **Security-review fixes, before this landed:**
+  - `handle_gc_alloc` (now also `alloc`'s handler) only capped the *count*
+    of live objects, not any single allocation's size — unlike the old
+    `handle_alloc`, which also bounded a running total-element count. Since
+    `alloc`/`gc_alloc` take an explicit, IR-controlled byte-count operand, a
+    handful of huge single allocations would clear the count cap outright.
+    Fixed with a new `VMCore::max_gc_heap_bytes` field (default 64 MiB),
+    checked against `FlatHeap::live_bytes()` before every allocation — its
+    own dedicated field rather than a derived multiple of
+    `max_memory_entries`, since bytes and object-count are different units.
+  - The tag scheme's soundness depends on every live `HeapRef`'s address
+    having its low 3 bits clear (`FlatHeap::alloc`'s 16-byte-alignment
+    guarantee) — initially enforced only by a `debug_assert_eq!`, which
+    compiles out in release, the exact build that runs untrusted Twig
+    programs. Promoted to a real runtime check returning `VMError` on
+    mismatch, so a future cross-crate alignment regression in `gc-core`
+    fails loudly instead of silently corrupting an address via the tag OR.
+  - Noted (not fixed — not currently reachable): `gc_field_load`/
+    `gc_field_store`'s bounds check is only correct because a `HeapRef` is
+    always a block's *base* address; `FlatHeap::payload_size` resolves an
+    interior address to the whole block's size, not the remaining bytes to
+    its end. No op here ever produces an interior `HeapRef` today, but a
+    future one would need to re-derive the bound from the block's real
+    start rather than reuse this check as-is.
+  - Tests: `gc_alloc_is_capped_by_aggregate_byte_budget_independent_of_object_count`.
 - Tests: `vm-core/tests/heap_objects.rs` —
   `field_load_disambiguates_int_and_nested_pair_from_the_same_dynamically_typed_field`
   (the headline regression proof), `field_store_rejects_an_integer_too_large_for_the_tag_scheme`,

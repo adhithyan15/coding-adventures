@@ -75,6 +75,10 @@ pub struct DispatchCtx<'a> {
     /// `io_out` return `VMError::Custom`.  Guards against unbounded HashMap
     /// growth from looping IIR programs.
     pub max_memory_entries: usize,
+    /// Aggregate live-byte ceiling `handle_gc_alloc` enforces against
+    /// `FlatHeap::live_bytes`, alongside `max_memory_entries`'s object-count
+    /// cap. See [`crate::core::VMCore`]'s field of the same name.
+    pub max_gc_heap_bytes: usize,
     /// Optional hard cap on total instructions dispatched.  `None` = unlimited
     /// (safe for trusted code); `Some(N)` returns `VMError::Custom` after N
     /// instructions (sandbox / untrusted-IIR mode).
@@ -1032,16 +1036,19 @@ fn reserve_nil_handle(ctx: &mut DispatchCtx) {
 /// `is_null d <- x` — `d = (x is nil)`. The E6d list terminator (`null?`,
 /// empty list) is the `const Int(0) : ref<LispyPair>` sentinel emitted by the
 /// frontend, which `handle_const` yields as plain `Value::Int(0)` (it ignores
-/// `type_hint`); every real cons cell is now a `Value::HeapRef` from
+/// `type_hint`); every real cons cell is a `Value::HeapRef` from
 /// `handle_gc_alloc`, a distinct enum variant, so `x == Int(0)` already
-/// separates the two correctly at the top level.
+/// separates the two correctly. Nil stored into a field via `gc_field_store`
+/// and read back via `gc_field_load` also round-trips as `Value::Int(0)` —
+/// the tag-based decode (see [`FIELD_TAG_MASK`]) reads its tag as `000`
+/// (plain int), never `111` (heap ref), regardless of the load's type hint.
 ///
-/// A field that itself *holds* nil is a second case: nil stored via
-/// `gc_field_store` (as `Value::Int(0)`) and read back via `gc_field_load`
-/// with a `"ref<...>"` type hint decodes as `Value::HeapRef(HeapRef::NULL)`
-/// — the same "nothing here" concept, a different representation. Both are
-/// treated as null. Returns a boolean, which a downstream `jmp_if_false`
-/// branches on.
+/// The `Value::HeapRef(r) if r.is_null()` arm below is therefore defensive,
+/// not currently reachable through any path `dispatch.rs` itself exercises
+/// (nothing here ever constructs or stores a null `HeapRef` — `gc_alloc`
+/// fails outright rather than returning one) — kept so `is_null` stays
+/// correct even if a future caller (a hand-built IIR module, a different
+/// frontend) ever produces one directly.
 fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let x = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1140,18 +1147,34 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     if bytes <= 0 {
         return Err(VMError::Custom(format!("gc_alloc size must be positive, got {bytes}")));
     }
-    // Aggregate ceiling on the *count* of live gc_alloc'd objects — the same
-    // pattern handle_alloc/handle_alloc_array enforce against ctx.arrays.len().
-    // This exists specifically so gc_field_load/gc_field_store's bounds check
-    // (FlatHeap::payload_size, O(live object count)) can't be driven
-    // arbitrarily high: without this cap, N allocations followed by M field
-    // accesses against the oldest one would cost O(N*M) wall-clock time while
-    // an instruction budget (max_instructions) only charges O(N+M) — a
-    // quadratic blowup a security review flagged. See
-    // VMCore::gc_object_count's doc comment for the full argument.
+    // Two aggregate ceilings, mirroring the two `handle_alloc`/`handle_alloc_array`
+    // used to enforce against `ctx.arrays.len()`/total element count:
+    //
+    // 1. Live *object count* — so `gc_field_load`/`gc_field_store`'s bounds
+    //    check (`FlatHeap::payload_size`, O(live object count)) can't be
+    //    driven arbitrarily high: without this cap, N allocations followed
+    //    by M field accesses against the oldest one would cost O(N*M)
+    //    wall-clock time while an instruction budget (`max_instructions`)
+    //    only charges O(N+M) — a quadratic blowup a security review flagged.
+    //    See `VMCore::gc_object_count`'s doc comment for the full argument.
+    // 2. Live *byte total* — a security review of this reroute found that,
+    //    unlike `handle_alloc`'s old total-word ceiling, nothing bounded a
+    //    *single* allocation's `bytes` operand: a handful of allocations
+    //    each requesting gigabytes would pass the count cap outright.
+    //    `max_memory_entries` is a count, not naturally a byte quantity (its
+    //    default, 1_000_000, would make an unscaled reuse either far too
+    //    small or an arbitrary multiple), so this is its own dedicated field
+    //    — see `VMCore::max_gc_heap_bytes`.
     if *ctx.gc_object_count >= ctx.max_memory_entries {
         return Err(VMError::Custom(format!(
             "gc_alloc count exceeds the {} live-object cap", ctx.max_memory_entries
+        )));
+    }
+    let live_bytes = ctx.heap.live_bytes();
+    if live_bytes.saturating_add(bytes as usize) > ctx.max_gc_heap_bytes {
+        return Err(VMError::Custom(format!(
+            "gc_alloc of {bytes} bytes would exceed the {}-byte total cap (live: {live_bytes})",
+            ctx.max_gc_heap_bytes
         )));
     }
     let ptr = ctx.heap.alloc(bytes as usize, 0);
@@ -1193,7 +1216,13 @@ const FIELD_TAG_HEAP_REF: i64 = 0b111;
 /// invalid `HeapRef` — `payload_size` reads `0` for any address that isn't a
 /// live block, and `0 + 8 > 0` fails the check for every index, so a null
 /// dereference traps exactly like an out-of-bounds one, no special-casing
-/// needed.
+/// needed. This bound is only correct because `obj` is always a block's
+/// *base* address — `payload_size` resolves an interior address to the
+/// whole containing block's size, not the remaining bytes to its end, and
+/// no op in this file ever produces an interior `HeapRef` (no pointer
+/// arithmetic on `HeapRef` exists here). A future op that did would need to
+/// re-derive the bound from the block's real start, not reuse this check
+/// as-is.
 ///
 /// Decoded purely from the word's own tag bits (see [`FIELD_TAG_MASK`]),
 /// never from `instr.type_hint` — a field's *declared* type ("ref<any>")
@@ -1278,11 +1307,21 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
     }
     let word: i64 = match &val {
         Value::HeapRef(r) => {
-            // SAFETY-relevant invariant, not a runtime check: `FlatHeap::alloc`
-            // guarantees a 16-byte-aligned payload, so a real address's low 3
-            // bits are always clear and OR-ing in the tag never loses address
-            // bits. `HeapRef::NULL` (address 0) also satisfies this trivially.
-            debug_assert_eq!(r.addr() & (FIELD_TAG_MASK as usize), 0, "HeapRef address must be tag-aligned");
+            // `FlatHeap::alloc` guarantees a 16-byte-aligned payload, so a real
+            // address's low 3 bits are always clear and OR-ing in the tag never
+            // loses address bits (`HeapRef::NULL`, address 0, satisfies this
+            // trivially too). A real runtime check, not `debug_assert!` — this
+            // is a cross-crate invariant vm-core takes on faith from gc-core;
+            // a future gc-core change weakening it must fail loudly here, not
+            // silently corrupt an address in release builds where a
+            // debug-only assert would have compiled out.
+            if r.addr() & (FIELD_TAG_MASK as usize) != 0 {
+                return Err(VMError::Custom(format!(
+                    "gc_field_store: HeapRef address {:#x} is not tag-aligned \
+                     (FlatHeap's 16-byte alignment guarantee must hold)",
+                    r.addr()
+                )));
+            }
             (r.addr() as i64) | FIELD_TAG_HEAP_REF
         }
         Value::Int(n) => {
