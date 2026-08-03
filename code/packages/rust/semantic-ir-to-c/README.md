@@ -197,7 +197,17 @@ lowered yet is still rejected cleanly.  **Bracket-index** (`recv[k]` /
 runtime and delegate to the existing index/get and set helpers — never a
 compile-time guess from the index's syntactic shape, so a Hash with a
 non-string key (an int or symbol key) can never be mis-routed to the Array
-path.
+path.  **Slice 8** (remaining String methods): `capitalize`, `swapcase`,
+`strip`/`lstrip`/`rstrip`, `chomp`, `chars`/`bytes`/`each_char` (UTF-8-
+CHARACTER-aware — a multi-byte sequence is one `chars`/`each_char` element,
+unlike `bytes`, which is byte-naive by design), `split`, `replace`, `sub`/
+`gsub` (literal, non-regex — an empty pattern is a no-op, not an infinite
+scan), `to_i`/`to_f`, `to_sym`, `tr`.  Semantics are matched against the
+Python/TS `sir-runtime-oop` reference catalog (this cascade's cross-backend
+golden source), not always byte-for-byte true Ruby; char-set methods
+(`count`/`delete`/`squeeze`), padding methods (`ljust`/`rjust`/`center`), and
+the `*`/`+` String operators are explicitly deferred — see
+`code/specs/sir-collection-methods.md`'s "C backend lane" addendum.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and
