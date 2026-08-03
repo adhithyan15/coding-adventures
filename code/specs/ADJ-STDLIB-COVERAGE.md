@@ -316,9 +316,27 @@ option mapping, or judge/evaluation failure.
    PDF decomposition, explicit zero/negative-baseline policy review,
    repository-input IR, parser inventory, derivations, witnesses, and CAS
    registration remain part of the Wave 1 migration.
-9. Add executable formula preconditions or domain guards before migrating
-   `proportion.adj`; `a/b=c/x` requires nonzero `a`, `b`, and `c`, while the
-   current formula fails closed only on its final divisor.
+9a. **Complete for the language/runtime guard substrate:** formulas now support generic,
+   parser-backed `requires` predicates with exact byte spans, recursive execution,
+   typed validation, structured abstention, runtime consumed-fact IDs, and v2
+   parser inventory identity with source-byte spans.
+   `proportion.adj` requires nonzero `a`, `b`, and `c`, and E2E coverage proves
+   each zero position withholds the answer before body evaluation. CAS migration
+   remains separate until the worked query's observed inputs receive source IR.
+9b. Add versioned formula-audit guard outcomes and CAS execution witnesses that
+    independently replay both passed and failed guards, exact compared values,
+    consumed facts, guard source spans, and the presence or absence of the body
+    result. Every consumed fact must bind a stable owner source, source-IR claim,
+    and exact observation-byte span rather than relying on a runtime `FactId`.
+    The v2 contract must also encode exact-literal plans directly; v1 compatibility
+    must be selected by the declared contract rather than heuristic projection.
+    Guarded formulas must not migrate to CAS before this lands.
+9c. Bind predicate contributions over derived slots to their computation IDs,
+    transitive input facts, formula sources, and `verify_derived` results. Direct
+    observed predicate inputs are fact-bound and quote-checked now; derived inputs
+    must not claim equivalent byte completeness until this transitive proof lands.
+9d. Replace state-machine failure detail strings with a structured error
+    discriminant and typed phase on both guard and yield precision failures.
 10. Use the first-class derivation and execution-witness contract to execute every
     exported formula before migrating `average.adj`; prose cannot prove its `N=2`
     and `N=3` specializations.

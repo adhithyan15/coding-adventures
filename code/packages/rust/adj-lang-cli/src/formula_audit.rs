@@ -10,8 +10,8 @@ use std::process::ExitCode;
 
 use adj_lang::ast::Term as AstTerm;
 use adj_lang::{
-    compile_with_imports, formula_provenance, program_source_map, ImportLimits, ImportProvider,
-    ProgramSourceMap, SourceSpan,
+    compile_with_imports, formula_provenance, program_source_map, CompileWithImportsError,
+    ImportLimits, ImportProvider, LowerError, ProgramSourceMap, SourceSpan,
 };
 use coding_adventures_sha256::sha256_hex;
 use logic_engine::compute::ExactRational;
@@ -107,7 +107,16 @@ struct FormulaIdentityDto {
     formulabook: String,
     name: String,
     parameters: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    preconditions: Vec<FormulaPreconditionIdentityDto>,
     source_sha256: String,
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct FormulaPreconditionIdentityDto {
+    arguments: Vec<SpanDto>,
+    declaration: SpanDto,
+    predicate: String,
 }
 
 #[derive(Serialize, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -193,6 +202,10 @@ enum PlanExprDto {
         right: Box<PlanExprDto>,
     },
     Literal {
+        f64_bits: String,
+    },
+    ExactLiteral {
+        exact_rational: RationalDto,
         f64_bits: String,
     },
     Reference {
@@ -494,6 +507,10 @@ fn plan_expr(value: &ComputeExpr) -> PlanExprDto {
         ComputeExpr::Lit(value) => PlanExprDto::Literal {
             f64_bits: bits(*value),
         },
+        ComputeExpr::ExactLit(value) => PlanExprDto::ExactLiteral {
+            exact_rational: rational(value),
+            f64_bits: bits(value.to_f64()),
+        },
         ComputeExpr::Bin(op, left, right) => PlanExprDto::Binary {
             left: Box::new(plan_expr(left)),
             operator: op.symbol(),
@@ -713,6 +730,7 @@ fn compute_error_reason(value: &ComputeError) -> &'static str {
         ComputeError::MalformedExpr { .. } => "malformed_expression",
         ComputeError::TooDeep { .. } => "too_deep",
         ComputeError::NonFinite { .. } => "non_finite",
+        ComputeError::PrecisionLoss { .. } => "precision_loss",
         ComputeError::DimensionMismatch { .. } => "dimension_mismatch",
     }
 }
@@ -852,6 +870,20 @@ fn build_exports(sources: &BTreeMap<String, LoadedSource>) -> Result<Vec<ExportR
                 formulabook: mapped.formulabook.clone(),
                 name: mapped.formula.name.clone(),
                 parameters: mapped.formula.params.clone(),
+                preconditions: mapped
+                    .preconditions
+                    .iter()
+                    .map(|precondition| FormulaPreconditionIdentityDto {
+                        arguments: precondition
+                            .argument_spans
+                            .iter()
+                            .copied()
+                            .map(|value| span(loaded.source.as_bytes(), value))
+                            .collect(),
+                        declaration: span(loaded.source.as_bytes(), precondition.declaration_span),
+                        predicate: precondition.precondition.predicate.clone(),
+                    })
+                    .collect(),
                 source_sha256: loaded.hash.clone(),
             };
             if !names.insert(identity.name.clone()) {
@@ -954,13 +986,34 @@ fn build_audit(
     provider: &RecordingProvider,
     snapshots: &dyn SnapshotStore,
 ) -> Result<AuditDto, Failure> {
-    let lowered = compile_with_imports(root_id, provider, ImportLimits::default())
-        .map_err(|error| Failure::Audit(format!("compile failed: {error:?}")))?;
+    let lowered =
+        compile_with_imports(root_id, provider, ImportLimits::default()).map_err(|error| {
+            match error {
+                CompileWithImportsError::Lower(LowerError::DuplicateFormula { formula }) => {
+                    Failure::Audit(format!("duplicate formula export name: {formula}"))
+                }
+                other => Failure::Audit(format!("compile failed: {other:?}")),
+            }
+        })?;
+    if !lowered.formula_abstentions.is_empty() {
+        return Err(Failure::Audit(
+            "formula abstention audit requires a versioned precondition witness contract"
+                .to_string(),
+        ));
+    }
     let sources = build_sources(provider.sources.borrow().clone())?;
     let root = sources
         .get(root_id)
         .ok_or_else(|| Failure::Audit("root source was not recorded".to_string()))?;
     let exports = build_exports(&sources)?;
+    if exports
+        .iter()
+        .any(|export| !export.identity.preconditions.is_empty())
+    {
+        return Err(Failure::Audit(
+            "guarded formula audit requires a versioned precondition witness contract".to_string(),
+        ));
+    }
     let imports = build_imports(&sources, &provider.imports.borrow())?;
 
     let mut derivations = Vec::new();
@@ -1022,6 +1075,12 @@ fn build_audit(
                 )))
             }
         };
+        if derived.precision_loss {
+            return Err(Failure::Audit(format!(
+                "formula query answer {} crossed a lossy numeric boundary",
+                derived.name
+            )));
+        }
 
         let checked = verify_derived(derived, &lowered.kb, snapshots);
         if checked.name != derived.name || checked.is_query_answer != plan.is_query_answer {

@@ -60,7 +60,10 @@ dictionary proportion_vocab {
 % The composed formula. For the proportion `a/b = c/x` (first/second = third/x),
 % the rule of three gives x = (b·c)/a. The body is a formula CALLING two cited
 % primitives: `product(second_term, third_term)` forms b·c, and `quotient(…,
-% first_term)` divides it by a. The engine resolves both applications on the
+% first_term)` divides it by a. The original relation and its solved form are
+% defined only when all three supplied terms are nonzero, so executable domain
+% requirements stop evaluation before denominator cancellation can fabricate 0.
+% The engine resolves both applications on the
 % CPU and carries their citations alongside this one. `fourth_proportional`
 % asserts its own claim about the world (how a missing proportional is found)
 % and so carries its own required source.
@@ -69,7 +72,8 @@ formulabook proportions {
     use proportion_vocab
 
     formula fourth_proportional(first_term, second_term, third_term) = quotient(product(second_term, third_term), first_term)
-        source "For an equation of the form a/b = c/x, where the variable to be evaluated is in the right-hand denominator, the rule of three states that x = bc/a."
-        locator "https://en.wikipedia.org/wiki/Cross-multiplication"
-        trust consensus
+        requires nonzero(first_term), nonzero(second_term), nonzero(third_term)
+        source "OpenStax defines a proportion a/b = c/x only where b and x are nonzero. Solving x = bc/a additionally requires nonzero a; with nonzero a and b, requiring nonzero c keeps the computed denominator x nonzero."
+        locator "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications"
+        trust inferred
 }

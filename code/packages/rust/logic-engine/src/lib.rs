@@ -55,7 +55,7 @@ use logic_core::{unify, LogicVar, Number, Substitution, Term};
 pub use bignum_core::RoundingMode;
 pub use compute::{
     compute, recheck_narrowing, recheck_narrowings, ApproxReal, ComputationId, ComputationPlanRef,
-    ComputationScope, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived,
+    ComputationScope, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived, ExactRational,
     NarrowingCheck, RealCompanion, RoundSpec,
 };
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
@@ -69,7 +69,7 @@ pub use govern::{
     enumerate_governing, ConflictStatus, GovernStatus, GovernedAnswer, GovernedResult,
 };
 pub use lr_aggregate::{
-    counterfactual, lr_aggregate, sigmoid, source_disagreements,
+    comparison_requires_lossy_fallback, counterfactual, lr_aggregate, sigmoid, source_disagreements,
     source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,
     KbError, KickbackReport, LRAggregateResult, LrAggregateWarning, PredicateContributionClause,
     PriorClause, SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
@@ -421,6 +421,17 @@ impl RealPrecisionBits {
     pub fn get(self) -> u32 {
         self.0
     }
+}
+
+/// A numeric slot resolution together with the evidence needed by discrete
+/// consumers to decide whether the value is safe to compare.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ResolvedNumeric {
+    pub value: f64,
+    pub exact: Option<crate::compute::ExactRational>,
+    /// True when the value crossed a lossy boundary after originating from an
+    /// exact source. Predicate and state-machine guards must fail closed on it.
+    pub precision_loss: bool,
 }
 
 /// A collection of Facts and Rules, indexed for clause selection by
@@ -907,18 +918,25 @@ impl KnowledgeBase {
     /// rational sidecar when one is available. This is used by equality-heavy
     /// predicate gates such as `answer == 3 / 10`: the public magnitude remains
     /// `f64`, but exact integer/rational arithmetic can avoid float artifacts.
-    pub fn observed_numeric(
-        &self,
-        slot: &str,
-    ) -> Option<(f64, Option<crate::compute::ExactRational>)> {
+    pub fn observed_numeric(&self, slot: &str) -> Option<ResolvedNumeric> {
         self.observed_value_with_fact(slot)
             .map(|(v, id)| {
                 let exact = self
                     .observed_exact_value_with_fact(slot)
                     .and_then(|(x, exact_id)| if exact_id == id { Some(x) } else { None });
-                (v, exact)
+                ResolvedNumeric {
+                    value: v,
+                    exact,
+                    precision_loss: false,
+                }
             })
-            .or_else(|| self.derived_for(slot).map(|d| (d.value, d.exact.clone())))
+            .or_else(|| {
+                self.derived_for(slot).map(|d| ResolvedNumeric {
+                    value: d.value,
+                    exact: d.exact.clone(),
+                    precision_loss: d.precision_loss,
+                })
+            })
     }
 
     /// Like [`observed_value`](Self::observed_value) but also returns the
@@ -1005,19 +1023,75 @@ impl KnowledgeBase {
         out
     }
 
+    /// Every observed numeric value plus its exact sidecar, in fact-insertion
+    /// order. Aggregations use this paired view so exact observations cannot be
+    /// reduced through `f64` and then presented as untainted values.
+    pub fn observed_numerics_all(&self, slot: &str) -> Vec<(ResolvedNumeric, FactId)> {
+        let mut out: Vec<(ResolvedNumeric, FactId)> = self
+            .facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_magnitude(&args[0]).map(|value| {
+                        (
+                            ResolvedNumeric {
+                                value,
+                                exact: numeric_exact_magnitude(&args[0]),
+                                precision_loss: false,
+                            },
+                            f.id,
+                        )
+                    })
+                }
+                _ => None,
+            })
+            .collect();
+        out.sort_by_key(|(_, id)| id.0);
+        out
+    }
+
     /// Bind a `let`-computed [`Derived`](crate::compute::Derived) value into the
     /// KB. A later [`observed_value`](Self::observed_value) of its name returns
     /// the computed value, and a formula can reference it by name.
     pub fn add_derived(&mut self, mut derived: crate::compute::Derived) {
         let id = crate::compute::ComputationId(self.computation_plans.len());
         derived.computation_id = Some(id);
-        self.computation_plans.push(crate::compute::ComputationPlan {
-            expr: derived.expr.clone(),
-            scope: derived.scope,
-            formula_sources: derived.formula_sources.clone(),
-            is_query_answer: derived.is_query_answer,
-        });
+        self.computation_plans
+            .push(crate::compute::ComputationPlan {
+                expr: derived.expr.clone(),
+                scope: derived.scope,
+                formula_sources: derived.formula_sources.clone(),
+                is_query_answer: derived.is_query_answer,
+            });
         self.derived.push(derived);
+    }
+
+    /// Make one derived candidate visible for an owned-result computation, then
+    /// remove both the candidate and its trusted plan before returning. This is
+    /// the transactional overlay used when a branch RHS may refer to its staged
+    /// LHS; it avoids cloning the complete KB and removes the staging state even
+    /// when the callback unwinds.
+    pub fn with_staged_derived<R>(
+        &mut self,
+        derived: crate::compute::Derived,
+        operation: impl FnOnce(&KnowledgeBase) -> R,
+    ) -> (crate::compute::Derived, R) {
+        self.add_derived(derived);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| operation(self)));
+        let mut derived = self
+            .derived
+            .pop()
+            .expect("staged derived binding must remain present during callback");
+        self.computation_plans
+            .pop()
+            .expect("staged computation plan must remain paired with its binding");
+        derived.computation_id = None;
+        match result {
+            Ok(result) => (derived, result),
+            Err(payload) => std::panic::resume_unwind(payload),
+        }
     }
 
     /// Look up a bound derived value by name (most-recently-bound wins, so a
@@ -1608,6 +1682,43 @@ mod tests {
 
         let clone = stored.clone();
         assert!(kb.computation_plan_for(&clone).is_none());
+    }
+
+    #[test]
+    fn staged_derived_is_visible_only_during_the_callback_and_can_be_committed() {
+        let mut kb = KnowledgeBase::new();
+        let candidate = compute::compute("candidate", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+
+        let (candidate, (visible, planned)) = kb.with_staged_derived(candidate, |view| {
+            let staged = view.derived_for("candidate").expect("candidate is staged");
+            (
+                staged.value == 7.0,
+                view.computation_plan_for(staged).is_some(),
+            )
+        });
+        assert!(visible);
+        assert!(planned);
+        assert!(kb.derived_for("candidate").is_none());
+        assert!(kb.derived_bindings().is_empty());
+
+        kb.add_derived(candidate);
+        let committed = kb.derived_for("candidate").expect("candidate commits");
+        assert!(kb.computation_plan_for(committed).is_some());
+    }
+
+    #[test]
+    fn staged_derived_is_removed_when_the_callback_unwinds() {
+        let mut kb = KnowledgeBase::new();
+        let candidate = compute::compute("candidate", &compute::ComputeExpr::Lit(7.0), &kb)
+            .expect("literal computes");
+
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            kb.with_staged_derived(candidate, |_view| panic!("deliberate callback failure"));
+        }));
+        assert!(result.is_err());
+        assert!(kb.derived_for("candidate").is_none());
+        assert!(kb.derived_bindings().is_empty());
     }
 
     #[test]

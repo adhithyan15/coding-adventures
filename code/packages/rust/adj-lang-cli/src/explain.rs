@@ -36,11 +36,14 @@
 //!   indented one level deeper, so a line in the prose maps back to exactly one
 //!   node in the derivation tree.
 
-use adj_lang::{LoweredStateMachine, StateMachineOutcome, StateMachineRun};
+use adj_lang::{FormulaAbstention, LoweredStateMachine, StateMachineOutcome, StateMachineRun};
 use logic_engine::compute::{DerivationNode, RoundSpec};
 use logic_engine::differential::{Differential, DifferentialDecision};
 use logic_engine::proof_dag::{DerivationOrigin, ProofStep};
-use logic_engine::{GovernStatus, GovernedResult, KnowledgeBase, Provenance, RoundingMode, TrustTier};
+use logic_engine::{
+    GovernStatus, GovernedResult, KnowledgeBase, LrAggregateWarning, Provenance, RoundingMode,
+    TrustTier,
+};
 
 /// Render the human-readable explanation of a decided query.
 ///
@@ -60,10 +63,15 @@ use logic_engine::{GovernStatus, GovernedResult, KnowledgeBase, Provenance, Roun
 pub fn explain(
     kb: &KnowledgeBase,
     diff: &Differential,
+    formula_abstentions: &[FormulaAbstention],
     state_machine_runs: &[(&LoweredStateMachine, StateMachineRun)],
     arguments: &[(logic_core::Term, GovernedResult)],
 ) -> String {
     let mut sections: Vec<String> = Vec::new();
+    let abstentions = render_formula_abstentions(formula_abstentions);
+    if !abstentions.is_empty() {
+        sections.push(abstentions);
+    }
     let derivations = render_derivations(kb);
     if !derivations.is_empty() {
         sections.push(derivations);
@@ -72,10 +80,13 @@ pub fn explain(
     // evidence (a prior or a contribution produced a proof step). A bare
     // computation / recall query has empty proofs and renders no differential —
     // so a `let`-only program stays derivations-only, unchanged from PR-E1.
-    let has_inference = diff
-        .ranked
-        .iter()
-        .any(|r| r.result.dag.proofs.first().is_some_and(|p| !p.steps.is_empty()));
+    let has_inference = diff.ranked.iter().any(|r| {
+        r.result
+            .dag
+            .proofs
+            .first()
+            .is_some_and(|p| !p.steps.is_empty())
+    });
     if has_inference {
         let inference = render_inference(kb, diff);
         if !inference.is_empty() {
@@ -104,6 +115,36 @@ pub fn explain(
         sections.push(runs);
     }
     sections.join("\n\n")
+}
+
+fn render_formula_abstentions(abstentions: &[FormulaAbstention]) -> String {
+    if abstentions.is_empty() {
+        return String::new();
+    }
+    let mut lines = vec!["FORMULA ABSTENTIONS".to_string()];
+    for abstention in abstentions {
+        let result = if adj_lang_cli::sensitive_input() {
+            "[redacted]".to_string()
+        } else if let Some(actual) = abstention.actual {
+            fmt_num(actual)
+        } else {
+            format!(
+                "unresolved ({})",
+                abstention.detail.as_deref().unwrap_or("unknown reason")
+            )
+        };
+        lines.push(format!(
+            "  {}: abstained because {}.{}[{}]({}) = {}   [{}]",
+            abstention.name,
+            abstention.formula,
+            abstention.predicate,
+            abstention.precondition_index,
+            abstention.parameter.as_deref().unwrap_or("expression"),
+            result,
+            fmt_prov(&abstention.provenance)
+        ));
+    }
+    lines.join("\n")
 }
 
 /// Render the state-machine run surface (ADJ-STATEMACHINE §3–§4, RS-3c) — for each
@@ -146,6 +187,14 @@ fn render_state_machines(runs: &[(&LoweredStateMachine, StateMachineRun)]) -> St
                 format!("  => NonTerminating (cycle at {state})")
             }
             StateMachineOutcome::Stuck { state } => format!("  => Stuck in {state}"),
+            StateMachineOutcome::PrecisionLoss { state, guard } => {
+                format!("  => Precision loss in {state}: {guard}")
+            }
+            StateMachineOutcome::ComputationError {
+                state,
+                phase,
+                detail,
+            } => format!("  => Computation error in {state} during {phase}: {detail}"),
         };
         out.push(outcome);
     }
@@ -174,11 +223,19 @@ fn render_derivations(kb: &KnowledgeBase) -> String {
         };
         // The exact-first display (NUM-5): all digits when the value has a finite
         // decimal expansion, else the labeled-lossy f64 — matching `value_json`.
-        let value = d
-            .exact
-            .as_ref()
-            .and_then(|e| e.to_exact_decimal_string())
-            .unwrap_or_else(|| fmt_num(d.value));
+        let value = if d.precision_loss {
+            fmt_num(d.value)
+        } else {
+            d.exact
+                .as_ref()
+                .and_then(|e| e.to_exact_decimal_string())
+                .unwrap_or_else(|| fmt_num(d.value))
+        };
+        let precision = if d.precision_loss {
+            " [precision loss]"
+        } else {
+            ""
+        };
         // P2: a value produced by applying a provenanced `formula` carries the
         // formula's citation (why the formula is trusted). A plain `let` has no
         // library claim; its audit trail is the derivation tree itself.
@@ -186,7 +243,14 @@ fn render_derivations(kb: &KnowledgeBase) -> String {
             Some(p) => format!("   <= {}", fmt_prov(p)),
             None => String::new(),
         };
-        out.push(format!("{} = {} [{}]{}", d.name, value, d.dim.tag(), cited));
+        out.push(format!(
+            "{} = {} [{}]{}{}",
+            d.name,
+            value,
+            d.dim.tag(),
+            precision,
+            cited
+        ));
         expand(&d.tree, 1, kb, &mut out);
         out.push(String::new()); // blank line between bindings
     }
@@ -296,9 +360,12 @@ fn render_inference(kb: &KnowledgeBase, diff: &Differential) -> String {
                 DerivationOrigin::FromPredicateContribution {
                     clause_id,
                     slot,
+                    observation_fact_id,
                     op,
                     threshold,
+                    threshold_exact,
                     observed,
+                    observed_exact,
                     logit_delta,
                 } => {
                     let via = predicates
@@ -306,12 +373,15 @@ fn render_inference(kb: &KnowledgeBase, diff: &Differential) -> String {
                         .find(|p| p.id == *clause_id)
                         .map(|p| format!(" via [{}]", fmt_prov(&p.provenance)))
                         .unwrap_or_default();
+                    let input = observation_fact_id
+                        .map(|id| format!(" input {}", cite_facts(kb, &[id])))
+                        .unwrap_or_default();
                     format!(
-                        "{ind}{} {} {} (observed {}) contributes logit {}{via}",
+                        "{ind}{} {} {} (observed {}) contributes logit {}{via}{input}",
                         slot,
                         op.symbol(),
-                        fmt_num(*threshold),
-                        fmt_num(*observed),
+                        fmt_exact_operand(*threshold, threshold_exact),
+                        fmt_exact_operand(*observed, observed_exact),
                         fmt_num(*logit_delta)
                     )
                 }
@@ -336,6 +406,18 @@ fn render_adjudication(kb: &KnowledgeBase, diff: &Differential) -> String {
             fmt_num(r.posterior),
             fmt_num(r.posterior_logit)
         ));
+        for warning in &r.result.warnings {
+            if let LrAggregateWarning::PredicatePrecisionLoss { slot, .. } = warning {
+                out.push(format!(
+                    "    warning: predicate for {slot} was not evaluated because its numeric value lost precision"
+                ));
+            }
+            if let LrAggregateWarning::PredicateEvaluationError { slot, detail, .. } = warning {
+                out.push(format!(
+                    "    warning: predicate for {slot} could not be evaluated: {detail}"
+                ));
+            }
+        }
     }
     match &diff.decision {
         DifferentialDecision::Empty => {
@@ -356,6 +438,16 @@ fn render_adjudication(kb: &KnowledgeBase, diff: &Differential) -> String {
                 trust
             ));
         }
+        DifferentialDecision::Indeterminate {
+            leader,
+            posterior,
+            reason,
+        } => out.push(format!(
+            "  => INDETERMINATE: {} (posterior {}) - {}",
+            leader,
+            fmt_num(*posterior),
+            reason
+        )),
         DifferentialDecision::Kickback {
             leader,
             runner_up,
@@ -401,7 +493,10 @@ fn render_adjudication(kb: &KnowledgeBase, diff: &Differential) -> String {
 /// **budget-truncated** search is never laundered into "no proof exists" — the
 /// two are reported distinctly (§proof_dag `truncated`). Returns "" when the
 /// program declared no binding query.
-fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, GovernedResult)]) -> String {
+fn render_arguments(
+    kb: &KnowledgeBase,
+    arguments: &[(logic_core::Term, GovernedResult)],
+) -> String {
     if arguments.is_empty() {
         return String::new();
     }
@@ -414,9 +509,7 @@ fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, Governed
             // absence) from "the search gave up" (a statement about budget, not
             // the world) — never collapse the two into a false claim.
             if dag.truncated {
-                out.push(
-                    "  (search truncated before a complete chain was found)".to_string(),
-                );
+                out.push("  (search truncated before a complete chain was found)".to_string());
             } else {
                 out.push("  abstained: no grounded chain derives this".to_string());
             }
@@ -462,7 +555,10 @@ fn render_arguments(kb: &KnowledgeBase, arguments: &[(logic_core::Term, Governed
 /// left exactly as ADR-6 rendered it. A defeated conclusion is named WITHDRAWN
 /// and cites its defeater plus the context precedence that withdrew it
 /// (`reanalysis outranks initial_report`); the surviving rival is GOVERNING.
-fn govern_suffix(conclusion: &logic_core::Term, answers: &[logic_engine::GovernedAnswer]) -> String {
+fn govern_suffix(
+    conclusion: &logic_core::Term,
+    answers: &[logic_engine::GovernedAnswer],
+) -> String {
     let contested = answers
         .iter()
         .any(|a| !matches!(a.status, GovernStatus::Governing));
@@ -714,7 +810,10 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
             out.push(format!("{ind}{slot} = {}   {}", fmt_num(*value), prov));
         }
         DerivationNode::DerivedRef { name, value } => {
-            out.push(format!("{ind}{name} = {}   (derived above)", fmt_num(*value)));
+            out.push(format!(
+                "{ind}{name} = {}   (derived above)",
+                fmt_num(*value)
+            ));
         }
         // A `Lit` operand never reaches here (guarded by `expands`); handled for
         // totality — a bare literal used as the whole tree just shows its value.
@@ -809,6 +908,17 @@ fn expand(n: &DerivationNode, depth: usize, kb: &KnowledgeBase, out: &mut Vec<St
 /// is exactly the stability P4 requires.
 fn fmt_num(v: f64) -> String {
     format!("{}", v)
+}
+
+fn fmt_exact_operand(value: f64, exact: &Option<logic_engine::compute::ExactRational>) -> String {
+    exact.as_ref().map_or_else(
+        || fmt_num(value),
+        |exact| {
+            exact
+                .to_exact_decimal_string()
+                .unwrap_or_else(|| format!("{}/{}", exact.numerator(), exact.denominator()))
+        },
+    )
 }
 
 /// The provenance of a leaf's grounding fact, or `[unattributed]`. P2: a fact

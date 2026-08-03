@@ -28,8 +28,7 @@
 //!
 //! # Termination — total by construction (ADJ-STATEMACHINE §3–§4)
 //!
-//! The loop returns exactly one of four typed outcomes ([`StateMachineOutcome`]):
-//! `Halted` / `StepBudgetExceeded` / `NonTerminating` / `Stuck`. It **cannot hang**:
+//! The loop returns exactly one typed [`StateMachineOutcome`]. It **cannot hang**:
 //! the `steps >= budget` guard caps the loop at `budget + 1` iterations even if
 //! cycle detection never fires, and `budget` is the modeller's declared literal
 //! bound (a `u64`, but a fixed input value). A malicious or buggy machine therefore
@@ -55,14 +54,16 @@
 use std::collections::{BTreeSet, HashSet};
 
 use logic_core::Term as CoreTerm;
-use logic_engine::compute::Derived;
-use logic_engine::{compute, enumerate_all, CmpOp as EngineCmpOp, Fact, KnowledgeBase, Provenance};
+use logic_engine::compute::{ComputeError, Derived};
+use logic_engine::{
+    comparison_requires_lossy_fallback, compute, enumerate_all, CmpOp as EngineCmpOp, Fact,
+    KnowledgeBase, Provenance,
+};
 
 use crate::lower::{LoweredGuard, LoweredStateMachine};
 
-/// The outcome of a state-machine run — one of the four typed terminals of
-/// ADJ-STATEMACHINE §4. Total by construction: [`run_state_machine`] returns
-/// exactly one of these, always, and never hangs.
+/// The outcome of a state-machine run. Total by construction:
+/// [`run_state_machine`] returns exactly one of these, always, and never hangs.
 #[derive(Debug, Clone)]
 pub enum StateMachineOutcome {
     /// An exit criterion held; `result` is the yielded value (numeric with its
@@ -81,6 +82,17 @@ pub enum StateMachineOutcome {
     /// In `state`, no transition guard holds and no exit criterion holds — a dead
     /// end; a grounded abstention ("no transition applies in state …").
     Stuck { state: String },
+    /// A comparison guard could only be decided after discarding exact input
+    /// identity, so the machine abstained at that guard.
+    PrecisionLoss { state: String, guard: String },
+    /// A guard or yield expression failed in the shared computation engine.
+    /// `phase` identifies where evaluation stopped and `detail` preserves the
+    /// typed engine failure as a stable, human-readable diagnostic.
+    ComputationError {
+        state: String,
+        phase: String,
+        detail: String,
+    },
 }
 
 impl StateMachineOutcome {
@@ -92,6 +104,8 @@ impl StateMachineOutcome {
             StateMachineOutcome::StepBudgetExceeded { .. } => "step_budget_exceeded",
             StateMachineOutcome::NonTerminating { .. } => "non_terminating",
             StateMachineOutcome::Stuck { .. } => "stuck",
+            StateMachineOutcome::PrecisionLoss { .. } => "precision_loss",
+            StateMachineOutcome::ComputationError { .. } => "computation_error",
         }
     }
 }
@@ -178,15 +192,55 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
     loop {
         // (1) Exit first: the FIRST exit (source order) whose guard holds halts the
         //     run, yielding its evaluated expression.
-        if let Some(exit) = sm.exits.iter().find(|e| guard_holds(&e.guard, &kb)) {
-            let result = eval_yield(&exit.yield_expr, &kb);
-            return StateMachineRun {
-                outcome: StateMachineOutcome::Halted {
-                    state: state.clone(),
-                    result,
-                },
-                steps: trace,
-            };
+        for exit in &sm.exits {
+            match evaluate_guard(&exit.guard, &kb) {
+                GuardEvaluation::Holds => {
+                    return match eval_yield(&exit.yield_expr, &kb) {
+                        YieldEvaluation::Value(result) => StateMachineRun {
+                            outcome: StateMachineOutcome::Halted {
+                                state: state.clone(),
+                                result,
+                            },
+                            steps: trace,
+                        },
+                        YieldEvaluation::PrecisionLoss => StateMachineRun {
+                            outcome: StateMachineOutcome::PrecisionLoss {
+                                state: state.clone(),
+                                guard: format!("yield {}", render_expr(&exit.yield_expr)),
+                            },
+                            steps: trace,
+                        },
+                        YieldEvaluation::ComputationError(detail) => StateMachineRun {
+                            outcome: StateMachineOutcome::ComputationError {
+                                state: state.clone(),
+                                phase: "yield".to_string(),
+                                detail,
+                            },
+                            steps: trace,
+                        },
+                    };
+                }
+                GuardEvaluation::PrecisionLoss => {
+                    return StateMachineRun {
+                        outcome: StateMachineOutcome::PrecisionLoss {
+                            state: state.clone(),
+                            guard: render_guard(&exit.guard),
+                        },
+                        steps: trace,
+                    };
+                }
+                GuardEvaluation::ComputationError(detail) => {
+                    return StateMachineRun {
+                        outcome: StateMachineOutcome::ComputationError {
+                            state: state.clone(),
+                            phase: "exit_guard".to_string(),
+                            detail,
+                        },
+                        steps: trace,
+                    };
+                }
+                GuardEvaluation::DoesNotHold => {}
+            }
         }
 
         // (2) Budget: the hard termination guarantee. At most `budget + 1`
@@ -231,7 +285,36 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
                 steps: trace,
             };
         };
-        let Some(tr) = cur.transitions.iter().find(|t| guard_holds(&t.guard, &kb)) else {
+        let mut selected = None;
+        for transition in &cur.transitions {
+            match evaluate_guard(&transition.guard, &kb) {
+                GuardEvaluation::Holds => {
+                    selected = Some(transition);
+                    break;
+                }
+                GuardEvaluation::PrecisionLoss => {
+                    return StateMachineRun {
+                        outcome: StateMachineOutcome::PrecisionLoss {
+                            state: state.clone(),
+                            guard: render_guard(&transition.guard),
+                        },
+                        steps: trace,
+                    };
+                }
+                GuardEvaluation::ComputationError(detail) => {
+                    return StateMachineRun {
+                        outcome: StateMachineOutcome::ComputationError {
+                            state: state.clone(),
+                            phase: "transition_guard".to_string(),
+                            detail,
+                        },
+                        steps: trace,
+                    };
+                }
+                GuardEvaluation::DoesNotHold => {}
+            }
+        }
+        let Some(tr) = selected else {
             return StateMachineRun {
                 outcome: StateMachineOutcome::Stuck {
                     state: state.clone(),
@@ -266,7 +349,15 @@ pub fn run_state_machine(sm: &LoweredStateMachine, base_kb: &KnowledgeBase) -> S
 /// (ADJ-STATEMACHINE §3) lives in this function: a comparison guard is the
 /// predicate-gated-contribution comparison, a presence guard is an SLD "any proof?"
 /// check, and the bare atom `true` is the always-holds special case.
-fn guard_holds(g: &LoweredGuard, kb: &KnowledgeBase) -> bool {
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum GuardEvaluation {
+    Holds,
+    DoesNotHold,
+    PrecisionLoss,
+    ComputationError(String),
+}
+
+fn evaluate_guard(g: &LoweredGuard, kb: &KnowledgeBase) -> GuardEvaluation {
     match &g.comparison {
         // Comparison guard `subject <op> rhs`: read the subject's valued slot and
         // the (computed) rhs, then compare exact-first — mirroring exactly how
@@ -274,25 +365,44 @@ fn guard_holds(g: &LoweredGuard, kb: &KnowledgeBase) -> bool {
         // thr` predicate clause.
         Some((op, rhs)) => {
             let slot = subject_slot(&g.subject);
-            let Some((observed, observed_exact)) = kb.observed_numeric(&slot) else {
+            let Some(observed) = kb.observed_numeric(&slot) else {
                 // No value for the slot → the comparison cannot hold (it is not an
                 // error; the fact simply is not there yet).
-                return false;
+                return GuardEvaluation::DoesNotHold;
             };
-            let Ok(r) = compute("__sm_guard_rhs", rhs, kb) else {
-                // A malformed rhs is a non-firing guard, never a panic.
-                return false;
+            if observed.precision_loss {
+                return GuardEvaluation::PrecisionLoss;
+            }
+            let r = match compute("__sm_guard_rhs", rhs, kb) {
+                Ok(result) => result,
+                Err(error) => {
+                    return GuardEvaluation::ComputationError(compute_error_detail(&error));
+                }
             };
-            eval_cmp(*op, observed, r.value, observed_exact, r.exact)
+            if r.precision_loss {
+                return GuardEvaluation::PrecisionLoss;
+            }
+            if comparison_requires_lossy_fallback(&observed.exact, &r.exact) {
+                return GuardEvaluation::PrecisionLoss;
+            }
+            if eval_cmp(*op, observed.value, r.value, observed.exact, r.exact) {
+                GuardEvaluation::Holds
+            } else {
+                GuardEvaluation::DoesNotHold
+            }
         }
         // Presence guard: the bare atom `true` always holds (an unconditional
         // transition); any other atom holds iff it is present/derivable in the KB.
         None => {
             if is_true_atom(&g.subject) {
-                return true;
+                return GuardEvaluation::Holds;
             }
             let dag = enumerate_all(&g.subject, kb);
-            !dag.proofs.is_empty()
+            if dag.proofs.is_empty() {
+                GuardEvaluation::DoesNotHold
+            } else {
+                GuardEvaluation::Holds
+            }
         }
     }
 }
@@ -328,10 +438,37 @@ fn is_true_atom(subject: &CoreTerm) -> bool {
 /// result carries its derivation tree; a bare symbolic atom (whose slot has no
 /// numeric binding) is reported as a symbol — the engine's `UnknownSlot` on such
 /// an expression is the signal that the yield is symbolic, not a failure.
-fn eval_yield(expr: &logic_engine::ComputeExpr, kb: &KnowledgeBase) -> YieldValue {
+enum YieldEvaluation {
+    Value(YieldValue),
+    PrecisionLoss,
+    ComputationError(String),
+}
+
+fn eval_yield(expr: &logic_engine::ComputeExpr, kb: &KnowledgeBase) -> YieldEvaluation {
     match compute("__sm_yield", expr, kb) {
-        Ok(d) => YieldValue::Numeric(Box::new(d)),
-        Err(_) => YieldValue::Symbol(expr_symbol(expr)),
+        Ok(d) if d.precision_loss => YieldEvaluation::PrecisionLoss,
+        Ok(d) => YieldEvaluation::Value(YieldValue::Numeric(Box::new(d))),
+        Err(ComputeError::UnknownSlot { .. })
+            if matches!(expr, logic_engine::ComputeExpr::Ref(_)) =>
+        {
+            YieldEvaluation::Value(YieldValue::Symbol(expr_symbol(expr)))
+        }
+        Err(error) => YieldEvaluation::ComputationError(compute_error_detail(&error)),
+    }
+}
+
+fn compute_error_detail(error: &ComputeError) -> String {
+    match error {
+        ComputeError::UnknownSlot { slot } => format!("unknown slot: {slot}"),
+        ComputeError::EmptyAggregation { slot } => format!("empty aggregation: {slot}"),
+        ComputeError::DivisionByZero => "division by zero".to_string(),
+        ComputeError::MalformedExpr { detail } => format!("malformed expression: {detail}"),
+        ComputeError::TooDeep { limit } => format!("expression depth exceeds {limit}"),
+        ComputeError::NonFinite { op } => format!("non-finite result from {op:?}"),
+        ComputeError::PrecisionLoss { op } => format!("precision loss in {op:?}"),
+        ComputeError::DimensionMismatch { op, lhs, rhs } => {
+            format!("dimension mismatch for {op:?}: {lhs} versus {rhs}")
+        }
     }
 }
 
@@ -345,6 +482,7 @@ fn expr_symbol(expr: &logic_engine::ComputeExpr) -> String {
     match expr {
         E::Ref(slot) => slot.clone(),
         E::Lit(x) => format!("{x}"),
+        E::ExactLit(x) => format!("{}", x.to_f64()),
         _ => "<expr>".to_string(),
     }
 }
@@ -366,7 +504,211 @@ fn render_expr(expr: &logic_engine::ComputeExpr) -> String {
     match expr {
         E::Ref(slot) => slot.clone(),
         E::Lit(x) => format!("{x}"),
+        E::ExactLit(x) => format!("{}", x.to_f64()),
         E::Agg(_, slot) => slot.clone(),
         _ => "<expr>".to_string(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::lower::{LoweredExit, LoweredState, LoweredTransition};
+    use logic_core::atom;
+    use logic_engine::{ComputeExpr, ComputeOp};
+
+    fn machine(
+        transitions: Vec<LoweredTransition>,
+        exit_guard: LoweredGuard,
+        yield_expr: ComputeExpr,
+    ) -> LoweredStateMachine {
+        LoweredStateMachine {
+            name: "test_machine".to_string(),
+            initial: "start".to_string(),
+            states: vec![LoweredState {
+                name: "start".to_string(),
+                transitions,
+            }],
+            exits: vec![LoweredExit {
+                guard: exit_guard,
+                yield_expr,
+            }],
+            budget: 1,
+            provenance: Provenance::default(),
+        }
+    }
+
+    fn division_by_zero() -> ComputeExpr {
+        ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(ComputeExpr::Lit(1.0)),
+            Box::new(ComputeExpr::Lit(0.0)),
+        )
+    }
+
+    #[test]
+    fn comparison_guard_fails_closed_on_precision_loss() {
+        let mut kb = KnowledgeBase::new();
+        let measurement = compute("measurement", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(measurement);
+        let guard = LoweredGuard {
+            subject: atom("measurement"),
+            comparison: Some((EngineCmpOp::Ge, ComputeExpr::Lit(0.0))),
+        };
+
+        assert_eq!(evaluate_guard(&guard, &kb), GuardEvaluation::PrecisionLoss);
+    }
+
+    #[test]
+    fn comparison_guard_fails_closed_on_precision_lost_rhs() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_fact(Fact::certain(logic_core::compound(
+            "measurement",
+            vec![logic_core::int(5)],
+        )));
+        let threshold = compute("threshold", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(threshold);
+        let guard = LoweredGuard {
+            subject: atom("measurement"),
+            comparison: Some((EngineCmpOp::Ge, ComputeExpr::Ref("threshold".into()))),
+        };
+
+        assert_eq!(evaluate_guard(&guard, &kb), GuardEvaluation::PrecisionLoss);
+    }
+
+    #[test]
+    fn transition_guard_compute_error_does_not_fall_through() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_fact(Fact::certain(logic_core::compound(
+            "measurement",
+            vec![logic_core::int(5)],
+        )));
+        let broken = LoweredTransition {
+            guard: LoweredGuard {
+                subject: atom("measurement"),
+                comparison: Some((EngineCmpOp::Ge, division_by_zero())),
+            },
+            target: "start".to_string(),
+            actions: vec![],
+        };
+        let fallback = LoweredTransition {
+            guard: LoweredGuard {
+                subject: atom("true"),
+                comparison: None,
+            },
+            target: "start".to_string(),
+            actions: vec![],
+        };
+        let sm = machine(
+            vec![broken, fallback],
+            LoweredGuard {
+                subject: atom("never"),
+                comparison: None,
+            },
+            ComputeExpr::Ref("unreachable".to_string()),
+        );
+
+        let run = run_state_machine(&sm, &kb);
+        match run.outcome {
+            StateMachineOutcome::ComputationError {
+                state,
+                phase,
+                detail,
+            } => {
+                assert_eq!(state, "start");
+                assert_eq!(phase, "transition_guard");
+                assert_eq!(detail, "division by zero");
+            }
+            other => panic!("expected typed computation error, got {other:?}"),
+        }
+        assert!(run.steps.is_empty());
+    }
+
+    #[test]
+    fn exit_guard_compute_error_does_not_fall_through() {
+        let mut kb = KnowledgeBase::new();
+        kb.add_fact(Fact::certain(logic_core::compound(
+            "measurement",
+            vec![logic_core::int(5)],
+        )));
+        let sm = machine(
+            vec![],
+            LoweredGuard {
+                subject: atom("measurement"),
+                comparison: Some((EngineCmpOp::Ge, division_by_zero())),
+            },
+            ComputeExpr::Ref("unreachable".to_string()),
+        );
+
+        let run = run_state_machine(&sm, &kb);
+        match run.outcome {
+            StateMachineOutcome::ComputationError {
+                state,
+                phase,
+                detail,
+            } => {
+                assert_eq!(state, "start");
+                assert_eq!(phase, "exit_guard");
+                assert_eq!(detail, "division by zero");
+            }
+            other => panic!("expected typed computation error, got {other:?}"),
+        }
+        assert!(run.steps.is_empty());
+    }
+
+    #[test]
+    fn yield_compute_error_is_not_symbolic_placeholder() {
+        let sm = machine(
+            vec![],
+            LoweredGuard {
+                subject: atom("true"),
+                comparison: None,
+            },
+            division_by_zero(),
+        );
+
+        let run = run_state_machine(&sm, &KnowledgeBase::new());
+        match run.outcome {
+            StateMachineOutcome::ComputationError {
+                state,
+                phase,
+                detail,
+            } => {
+                assert_eq!(state, "start");
+                assert_eq!(phase, "yield");
+                assert_eq!(detail, "division by zero");
+            }
+            other => panic!("expected typed computation error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn precision_lost_numeric_yield_abstains() {
+        let mut kb = KnowledgeBase::new();
+        let tainted = compute("tainted", &ComputeExpr::Lit(3.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(tainted);
+        let sm = machine(
+            vec![],
+            LoweredGuard {
+                subject: atom("true"),
+                comparison: None,
+            },
+            ComputeExpr::Ref("tainted".to_string()),
+        );
+
+        let run = run_state_machine(&sm, &kb);
+        match run.outcome {
+            StateMachineOutcome::PrecisionLoss { state, guard } => {
+                assert_eq!(state, "start");
+                assert_eq!(guard, "yield tainted");
+            }
+            other => panic!("expected typed precision loss, got {other:?}"),
+        }
     }
 }

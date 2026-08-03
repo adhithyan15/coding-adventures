@@ -76,7 +76,7 @@ use std::collections::{BTreeSet, HashMap, HashSet};
 use logic_core::{unify, LogicVar, Substitution, Term};
 
 use crate::compute::{compute, ComputeError, DerivationNode, Derived};
-use crate::lr_aggregate::CmpOp;
+use crate::lr_aggregate::{comparison_requires_lossy_fallback, CmpOp};
 use crate::proof_dag::{DerivationOrigin, Proof, ProofStep};
 use crate::provenance::{ContentHash, Provenance, Quote};
 use crate::BodyLiteral;
@@ -373,6 +373,12 @@ pub enum LogicFailure {
     SlotNotObserved(String),
     /// The right-hand side of a predicate-gated clause could not be evaluated.
     ThresholdNotEvaluable,
+    /// A predicate operand crossed a lossy boundary after an exact source, so
+    /// re-running the discrete comparison would manufacture confidence.
+    PredicatePrecisionLoss { slot: String },
+    /// The proof's recorded predicate operands do not match recomputation from
+    /// the current exact input and rule expression.
+    PredicateOperandsDiffer,
     /// The comparison that fired no longer holds on the current observation.
     PredicateDoesNotHold {
         slot: String,
@@ -565,6 +571,14 @@ pub fn verify_quote(prov: &Provenance, snapshots: &dyn SnapshotStore) -> QuoteSt
     }
 }
 
+fn require_both_quotes(primary: QuoteStatus, input: QuoteStatus) -> QuoteStatus {
+    if matches!(input, QuoteStatus::Verified { .. }) {
+        primary
+    } else {
+        input
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Computed-answer verification
 // ---------------------------------------------------------------------------
@@ -663,6 +677,9 @@ fn recheck_derived_recursive(
     if fresh.exact != derived.exact {
         return ComputationStatus::Failed(ComputationFailure::ExactValueDiffers);
     }
+    if fresh.precision_loss && !derived.precision_loss {
+        return ComputationStatus::Failed(ComputationFailure::ArtifactDoesNotMatchPlan);
+    }
     if fresh.dim != derived.dim {
         return ComputationStatus::Failed(ComputationFailure::DimensionDiffers);
     }
@@ -707,7 +724,9 @@ fn recheck_derived_recursive(
         checked.insert(index);
     }
 
-    if has_inexact_narrowing(&fresh.tree) {
+    if derived.precision_loss {
+        ComputationStatus::Unverifiable("precision-lost exact source")
+    } else if has_inexact_narrowing(&fresh.tree) {
         ComputationStatus::Unverifiable("inexact narrowing source")
     } else {
         ComputationStatus::ReChecked
@@ -1149,6 +1168,12 @@ pub fn verify_step(
         DerivationOrigin::FromPredicateContribution {
             clause_id,
             slot,
+            observation_fact_id,
+            op: recorded_op,
+            threshold: recorded_threshold,
+            threshold_exact: recorded_threshold_exact,
+            observed: recorded_observed,
+            observed_exact: recorded_observed_exact,
             logit_delta,
             ..
         } => {
@@ -1165,6 +1190,23 @@ pub fn verify_step(
                 ),
                 Some(clause) => {
                     let prov = Some(clause.provenance.clone());
+                    let current_fact_id = kb
+                        .observed_numerics_all(&clause.slot)
+                        .last()
+                        .map(|(_, fact_id)| *fact_id);
+                    if slot != &clause.slot
+                        || recorded_op != &clause.op
+                        || observation_fact_id != &current_fact_id
+                    {
+                        return StepVerification {
+                            index,
+                            depth: step.depth,
+                            kind: "FromPredicateContribution",
+                            goal: step.goal.clone(),
+                            logic: LogicStatus::Failed(LogicFailure::PredicateOperandsDiffer),
+                            quote: verify_quote(&clause.provenance, snapshots),
+                        };
+                    }
                     // Re-read the observation and re-run the comparison on CPU.
                     // The trail's own `observed` / `threshold` numbers are
                     // deliberately NOT trusted as inputs here — they are the
@@ -1175,19 +1217,59 @@ pub fn verify_step(
                             LogicStatus::Failed(LogicFailure::SlotNotObserved(slot.clone())),
                             prov,
                         ),
-                        Some((observed, observed_exact)) => {
+                        Some(observed) if observed.precision_loss => (
+                            "FromPredicateContribution",
+                            LogicStatus::Failed(LogicFailure::PredicatePrecisionLoss {
+                                slot: slot.clone(),
+                            }),
+                            prov,
+                        ),
+                        Some(observed) => {
                             match compute("__verify_predicate_rhs", &clause.rhs, kb) {
                                 Err(_) => (
                                     "FromPredicateContribution",
                                     LogicStatus::Failed(LogicFailure::ThresholdNotEvaluable),
                                     prov,
                                 ),
+                                Ok(rhs) if rhs.precision_loss => (
+                                    "FromPredicateContribution",
+                                    LogicStatus::Failed(LogicFailure::PredicatePrecisionLoss {
+                                        slot: slot.clone(),
+                                    }),
+                                    prov,
+                                ),
+                                Ok(rhs)
+                                    if comparison_requires_lossy_fallback(
+                                        &observed.exact,
+                                        &rhs.exact,
+                                    ) =>
+                                {
+                                    (
+                                        "FromPredicateContribution",
+                                        LogicStatus::Failed(LogicFailure::PredicatePrecisionLoss {
+                                            slot: slot.clone(),
+                                        }),
+                                        prov,
+                                    )
+                                }
                                 Ok(rhs) => {
-                                    if !clause.op.eval_values(
-                                        observed,
+                                    if !close(*recorded_observed, observed.value)
+                                        || !close(*recorded_threshold, rhs.value)
+                                        || recorded_observed_exact != &observed.exact
+                                        || recorded_threshold_exact != &rhs.exact
+                                    {
+                                        (
+                                            "FromPredicateContribution",
+                                            LogicStatus::Failed(
+                                                LogicFailure::PredicateOperandsDiffer,
+                                            ),
+                                            prov,
+                                        )
+                                    } else if !clause.op.eval_values(
+                                        observed.value,
                                         rhs.value,
-                                        observed_exact,
-                                        rhs.exact,
+                                        observed.exact.clone(),
+                                        rhs.exact.clone(),
                                     ) {
                                         (
                                             "FromPredicateContribution",
@@ -1196,7 +1278,7 @@ pub fn verify_step(
                                                     slot: slot.clone(),
                                                     op: clause.op,
                                                     threshold: rhs.value,
-                                                    observed,
+                                                    observed: observed.value,
                                                 },
                                             ),
                                             prov,
@@ -1211,11 +1293,7 @@ pub fn verify_step(
                                             prov,
                                         )
                                     } else {
-                                        (
-                                            "FromPredicateContribution",
-                                            LogicStatus::ReChecked,
-                                            prov,
-                                        )
+                                        ("FromPredicateContribution", LogicStatus::ReChecked, prov)
                                     }
                                 }
                             }
@@ -1232,6 +1310,16 @@ pub fn verify_step(
         (DerivationOrigin::FromNegation { .. }, _) => QuoteStatus::NotApplicable,
         (_, Some(p)) => verify_quote(p, snapshots),
         (_, None) => QuoteStatus::Unverified(UnverifiedReason::NoProvenance),
+    };
+    let quote = match &step.origin {
+        DerivationOrigin::FromPredicateContribution {
+            observation_fact_id: Some(fact_id),
+            ..
+        } => match kb.fact(*fact_id) {
+            Some(fact) => require_both_quotes(quote, verify_quote(&fact.provenance, snapshots)),
+            None => QuoteStatus::Unverified(UnverifiedReason::NoProvenance),
+        },
+        _ => quote,
     };
 
     StepVerification {

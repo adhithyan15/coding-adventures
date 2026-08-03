@@ -35,7 +35,7 @@ impl NumLit {
     /// The **labeled lossy** `f64` view of this literal — the single sanctioned way to obtain an
     /// `f64` from a `NumLit`. `Int` widens with `as f64`; `Exact` narrows to the nearest `f64` via
     /// [`bignum_core::BigDecimal::to_f64`]. Used only where an `f64` is genuinely required (a
-    /// compute leaf or an approximate backend), never at parse time. The name is deliberately
+    /// retained AST leaf lowering or an approximate backend), never at parse time. The name is deliberately
     /// greppable so every lossy boundary is auditable, mirroring `logic_core::Number::to_f64_lossy`.
     pub fn to_f64_lossy(&self) -> f64 {
         match self {
@@ -209,6 +209,10 @@ pub enum ExprAst {
     Ref(String),
     /// A numeric literal written into the formula.
     Lit(f64),
+    /// A native numeric literal retained exactly until the lowering boundary.
+    /// Guarded formula applications reject this leaf if narrowing it to the
+    /// compute layer's `f64` literal would change its value.
+    ExactLit(NumLit),
     /// A binary arithmetic operation.
     Bin(ArithOp, Box<ExprAst>, Box<ExprAst>),
     /// An absolute value, `|x|` — a unary arithmetic form. Lowers to the native
@@ -633,11 +637,25 @@ pub struct FormulaDef {
     /// The formula body — the EXISTING `let` expression AST, reused verbatim.
     /// In the block form this is the final expression after the `let`-steps.
     pub body: ExprAst,
+    /// Domain requirements that must hold before this formula's body may be
+    /// evaluated. Predicates remain generic at the surface; lowering maps them
+    /// into a closed, typed execution set and rejects unknown names or arities.
+    pub preconditions: Vec<FormulaPrecondition>,
     /// The provenance envelope (`source` / `locator` / `trust`, plus any
     /// corroborating `cites`), reusing the shared [`Annotation`] set every
     /// grounded clause carries. Lowered via `annotations_to_provenance`; a
     /// shipped formula must carry a non-empty `source`.
     pub annotations: Vec<Annotation>,
+}
+
+/// One declared formula-domain requirement, preserving source order.
+///
+/// This is intentionally distinct from [`ExprAst::Apply`]: a precondition is a
+/// Boolean gate over bound arguments, not a numeric formula application.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaPrecondition {
+    pub predicate: String,
+    pub arguments: Vec<ExprAst>,
 }
 
 /// A single `let`-step inside a multi-step formula body (ADJ-RULE-SUBSTRATE

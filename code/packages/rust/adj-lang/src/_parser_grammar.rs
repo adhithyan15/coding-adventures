@@ -579,6 +579,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"formula_params"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"formula_body"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"formula_requires"#.to_string() }) },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
             ] },
             line_number: 364,
@@ -621,6 +622,34 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 381,
         },
         GrammarRule {
+            name: r#"formula_requires"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::Literal { value: r#"requires"#.to_string() },
+                GrammarElement::RuleReference { name: r#"formula_precondition"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"formula_precondition"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 383,
+        },
+        GrammarRule {
+            name: r#"formula_precondition"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
+                GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                        GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                                GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                                GrammarElement::RuleReference { name: r#"expr"#.to_string() },
+                            ] }) },
+                    ] }) },
+                GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+            ] },
+            line_number: 385,
+        },
+        GrammarRule {
             name: r#"table_decl"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"table"#.to_string() },
@@ -632,7 +661,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 415,
+            line_number: 419,
         },
         GrammarRule {
             name: r#"columns_decl"#.to_string(),
@@ -644,7 +673,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                     ] }) },
             ] },
-            line_number: 417,
+            line_number: 421,
         },
         GrammarRule {
             name: r#"table_row"#.to_string(),
@@ -663,7 +692,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
                     ] }) },
             ] },
-            line_number: 425,
+            line_number: 429,
         },
         GrammarRule {
             name: r#"row_item"#.to_string(),
@@ -672,7 +701,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 427,
+            line_number: 431,
         },
         GrammarRule {
             name: r#"statemachine_decl"#.to_string(),
@@ -691,7 +720,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 440,
+            line_number: 444,
         },
         GrammarRule {
             name: r#"sm_state"#.to_string(),
@@ -702,7 +731,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"sm_transition"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 449,
+            line_number: 453,
         },
         GrammarRule {
             name: r#"sm_transition"#.to_string(),
@@ -721,7 +750,7 @@ pub fn parser_grammar() -> ParserGrammar {
                             ] }) },
                     ] }) },
             ] },
-            line_number: 456,
+            line_number: 460,
         },
         GrammarRule {
             name: r#"sm_exit"#.to_string(),
@@ -732,7 +761,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"yield"#.to_string() },
                 GrammarElement::RuleReference { name: r#"expr"#.to_string() },
             ] },
-            line_number: 458,
+            line_number: 462,
         },
         GrammarRule {
             name: r#"sm_guard"#.to_string(),
@@ -752,7 +781,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"expr"#.to_string() },
                     ] }) },
             ] },
-            line_number: 460,
+            line_number: 464,
         },
         GrammarRule {
             name: r#"sm_action"#.to_string(),
@@ -760,7 +789,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"assert"#.to_string() },
                 GrammarElement::RuleReference { name: r#"term"#.to_string() },
             ] },
-            line_number: 462,
+            line_number: 466,
         },
         GrammarRule {
             name: r#"argument_decl"#.to_string(),
@@ -772,7 +801,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"arg_infer"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"RBRACE"#.to_string() },
             ] },
-            line_number: 480,
+            line_number: 484,
         },
         GrammarRule {
             name: r#"arg_premise"#.to_string(),
@@ -784,7 +813,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"term"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"annotation"#.to_string() }) },
             ] },
-            line_number: 482,
+            line_number: 486,
         },
         GrammarRule {
             name: r#"arg_infer"#.to_string(),
@@ -809,7 +838,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
                     ] }) },
             ] },
-            line_number: 495,
+            line_number: 499,
         },
         GrammarRule {
             name: r#"arg_unless"#.to_string(),
@@ -821,12 +850,12 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"term"#.to_string() },
                     ] }) },
             ] },
-            line_number: 497,
+            line_number: 501,
         },
         GrammarRule {
             name: r#"arg_ref"#.to_string(),
             body: GrammarElement::TokenReference { name: r#"IDENT"#.to_string() },
-            line_number: 499,
+            line_number: 503,
         },
         GrammarRule {
             name: r#"import_decl"#.to_string(),
@@ -834,7 +863,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"import"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 515,
+            line_number: 519,
         },
         GrammarRule {
             name: r#"annotation"#.to_string(),
@@ -845,7 +874,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"cites_annotation"#.to_string() },
                 GrammarElement::RuleReference { name: r#"quote_annotation"#.to_string() },
             ] },
-            line_number: 527,
+            line_number: 531,
         },
         GrammarRule {
             name: r#"source_annotation"#.to_string(),
@@ -853,7 +882,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"source"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 534,
+            line_number: 538,
         },
         GrammarRule {
             name: r#"locator_annotation"#.to_string(),
@@ -861,7 +890,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"locator"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 535,
+            line_number: 539,
         },
         GrammarRule {
             name: r#"trust_annotation"#.to_string(),
@@ -869,7 +898,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"trust"#.to_string() },
                 GrammarElement::RuleReference { name: r#"trust_tier"#.to_string() },
             ] },
-            line_number: 536,
+            line_number: 540,
         },
         GrammarRule {
             name: r#"cites_annotation"#.to_string(),
@@ -879,7 +908,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"locator"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 537,
+            line_number: 541,
         },
         GrammarRule {
             name: r#"quote_annotation"#.to_string(),
@@ -891,7 +920,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"snapshot"#.to_string() },
                 GrammarElement::TokenReference { name: r#"STRING"#.to_string() },
             ] },
-            line_number: 545,
+            line_number: 549,
         },
         GrammarRule {
             name: r#"trust_tier"#.to_string(),
@@ -902,7 +931,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"inferred"#.to_string() },
                 GrammarElement::Literal { value: r#"unattributed"#.to_string() },
             ] },
-            line_number: 547,
+            line_number: 551,
         },
         GrammarRule {
             name: r#"term"#.to_string(),
@@ -926,7 +955,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                     ] }) },
             ] },
-            line_number: 569,
+            line_number: 573,
         },
     ],
         version: 1,

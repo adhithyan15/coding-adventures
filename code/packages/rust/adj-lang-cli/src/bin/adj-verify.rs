@@ -192,6 +192,8 @@ fn logic_json(status: &LogicStatus) -> String {
             LogicFailure::LogitDiffers { .. } => "logit_differs",
             LogicFailure::SlotNotObserved(_) => "slot_not_observed",
             LogicFailure::ThresholdNotEvaluable => "threshold_not_evaluable",
+            LogicFailure::PredicatePrecisionLoss { .. } => "predicate_precision_loss",
+            LogicFailure::PredicateOperandsDiffer => "predicate_operands_differ",
             LogicFailure::PredicateDoesNotHold { .. } => "predicate_does_not_hold",
         },
     };

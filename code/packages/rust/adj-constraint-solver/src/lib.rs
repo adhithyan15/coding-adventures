@@ -27,7 +27,7 @@ use cas_solve::frac::Frac;
 use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
 use constraint_core::Predicate;
 use constraint_engine::{lia::LiaTactic, sat::SatTactic, Model, SolverResult, Value};
-use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
+use logic_engine::{compute::ExactRational, ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
 /// What solving a [`ConstraintSystem`] produced.
@@ -234,11 +234,12 @@ pub fn check(cs: &ConstraintSystem, kb: &KnowledgeBase) -> FeasibilityOutcome {
             // integer tactic *could* (e.g. `!=`), the integer verdict stands.
             SolverResult::Unsat => match real_feasibility(&subbed) {
                 FmResult::Sat(w) => return FeasibilityOutcome::SatReal { assignments: w },
-                FmResult::Unsat | FmResult::Unknown(_) => {
+                FmResult::Unsat => {
                     return FeasibilityOutcome::Unsat {
                         core: minimal_unsat_core(&subbed, &int_vars),
                     }
                 }
+                FmResult::Unknown(reason) => return FeasibilityOutcome::Unknown { reason },
             },
             // Integer tactic punted — let the real layer try.
             SolverResult::Unknown(_) => {}
@@ -337,7 +338,7 @@ fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
     match e {
         ComputeExpr::Ref(name) => Some(Predicate::Var(name.clone())),
         // A non-integer literal can't be expressed in LIA → None.
-        ComputeExpr::Lit(_) => int_const(e).map(Predicate::Int),
+        ComputeExpr::Lit(_) | ComputeExpr::ExactLit(_) => int_const(e).map(Predicate::Int),
         ComputeExpr::Bin(op, a, b) => {
             let pa = expr_to_pred(a)?;
             let pb = expr_to_pred(b)?;
@@ -384,8 +385,32 @@ fn int_const(e: &ComputeExpr) -> Option<i128> {
         ComputeExpr::Lit(x) if x.fract() == 0.0 && x.is_finite() && x.abs() < i128::MAX as f64 => {
             Some(*x as i128)
         }
+        ComputeExpr::ExactLit(exact) => exact_integer(exact),
         _ => None,
     }
+}
+
+/// Read an exact rational's parts without crossing a floating-point boundary.
+/// Fixed-width solver backends decline parts that do not fit rather than round.
+fn exact_parts_i128(exact: &ExactRational) -> Option<(i128, i128)> {
+    Some((
+        exact.numerator().to_string().parse().ok()?,
+        exact.denominator().to_string().parse().ok()?,
+    ))
+}
+
+fn exact_integer(exact: &ExactRational) -> Option<i128> {
+    let (num, den) = exact_parts_i128(exact)?;
+    (den == 1).then_some(num)
+}
+
+fn exact_to_rat(exact: &ExactRational) -> Option<Rat> {
+    let (num, den) = exact_parts_i128(exact)?;
+    Rat::new(num, den)
+}
+
+fn representable_exact_f64(exact: &ExactRational) -> Option<f64> {
+    exact.is_representable_as_f64().then(|| exact.to_f64())
 }
 
 // ===========================================================================
@@ -636,6 +661,7 @@ fn linearize(e: &ComputeExpr) -> Option<LinForm> {
     match e {
         ComputeExpr::Ref(name) => Some(LinForm::var(name)),
         ComputeExpr::Lit(x) => Some(LinForm::constant(f64_to_rat(*x)?)),
+        ComputeExpr::ExactLit(exact) => Some(LinForm::constant(exact_to_rat(exact)?)),
         ComputeExpr::Bin(op, a, b) => {
             let la = linearize(a)?;
             let lb = linearize(b)?;
@@ -1062,6 +1088,11 @@ pub enum OptimizeOutcome {
 /// - otherwise (the default: `: scalar`, `: money(...)`, …) solve the real-valued
 ///   (QF_LRA) LP via Fourier–Motzkin, byte-for-byte as before.
 pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
+    if optimization_requires_lossy_exact(cs, kb) {
+        return OptimizeOutcome::Unknown {
+            reason: "optimization would narrow a non-representable exact value".to_string(),
+        };
+    }
     if is_integer_program(cs) {
         if let Some(out) = optimize_integer(cs, kb) {
             return out;
@@ -1070,6 +1101,68 @@ pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
         // tactic punted) — the real solver still answers (or says Unknown).
     }
     optimize_real(cs, kb)
+}
+
+fn optimization_requires_lossy_exact(cs: &ConstraintSystem, kb: &KnowledgeBase) -> bool {
+    let variables: HashSet<&str> = cs.symbols.iter().map(|(name, _)| name.as_str()).collect();
+    fn expr_requires_loss(
+        expr: &ComputeExpr,
+        variables: &HashSet<&str>,
+        kb: &KnowledgeBase,
+    ) -> bool {
+        match expr {
+            ComputeExpr::ExactLit(value) => !value.is_representable_as_f64(),
+            ComputeExpr::Ref(name) if !variables.contains(name.as_str()) => {
+                kb.observed_numeric(name).is_some_and(|value| {
+                    value.precision_loss
+                        || value
+                            .exact
+                            .is_some_and(|exact| !exact.is_representable_as_f64())
+                })
+            }
+            ComputeExpr::Bin(_, left, right) => {
+                expr_requires_loss(left, variables, kb) || expr_requires_loss(right, variables, kb)
+            }
+            ComputeExpr::Unary(_, inner)
+            | ComputeExpr::Round { expr: inner, .. }
+            | ComputeExpr::ToScientific { expr: inner, .. }
+            | ComputeExpr::ToPercent { expr: inner, .. }
+            | ComputeExpr::ToCurrency { expr: inner, .. } => {
+                expr_requires_loss(inner, variables, kb)
+            }
+            ComputeExpr::Lit(_) | ComputeExpr::Ref(_) | ComputeExpr::Agg(_, _) => false,
+        }
+    }
+    fn mentions_variable(expr: &ComputeExpr, variables: &HashSet<&str>) -> bool {
+        match expr {
+            ComputeExpr::Ref(name) => variables.contains(name.as_str()),
+            ComputeExpr::Bin(_, left, right) => {
+                mentions_variable(left, variables) || mentions_variable(right, variables)
+            }
+            ComputeExpr::Unary(_, inner)
+            | ComputeExpr::Round { expr: inner, .. }
+            | ComputeExpr::ToScientific { expr: inner, .. }
+            | ComputeExpr::ToPercent { expr: inner, .. }
+            | ComputeExpr::ToCurrency { expr: inner, .. } => mentions_variable(inner, variables),
+            ComputeExpr::Lit(_) | ComputeExpr::ExactLit(_) | ComputeExpr::Agg(_, _) => false,
+        }
+    }
+    let root_requires_loss = |expr: &ComputeExpr| {
+        expr_requires_loss(expr, &variables, kb)
+            || (!mentions_variable(expr, &variables)
+                && logic_engine::compute("__optimization_exactness", expr, kb).is_ok_and(|value| {
+                    value.precision_loss
+                        || value
+                            .exact
+                            .is_some_and(|exact| !exact.is_representable_as_f64())
+                }))
+    };
+    cs.constraints.iter().any(|constraint| {
+        root_requires_loss(&constraint.lhs) || root_requires_loss(&constraint.rhs)
+    }) || cs
+        .objective
+        .as_ref()
+        .is_some_and(|(_, expr)| root_requires_loss(expr))
 }
 
 /// True iff this is an opted-in integer program: it has an objective, at least
@@ -1247,6 +1340,17 @@ fn optimize_integer(cs: &ConstraintSystem, kb: &KnowledgeBase) -> Option<Optimiz
         )?,
     };
 
+    if !ExactRational::from_i128(k_opt).is_representable_as_f64()
+        || !syms.iter().all(|name| match witness.get(name) {
+            Some(Value::Int(n)) => ExactRational::from_i128(*n).is_representable_as_f64(),
+            Some(Value::Bool(_)) => true,
+            _ => false,
+        })
+    {
+        return Some(OptimizeOutcome::Unknown {
+            reason: "integer optimum cannot be represented as f64".to_string(),
+        });
+    }
     let assignments: Vec<(String, f64)> = syms
         .iter()
         .filter_map(|v| match witness.get(v) {
@@ -1699,6 +1803,18 @@ fn solve_setcover_sat(
     let oracle = |k: i128| cover_sat(clauses, weights, syms, k);
     // smallest K in [0, feasible_obj] with Σwx ≤ K feasible
     let (raw, witness) = sat_min_feasible(&oracle, 0, feasible_obj)?;
+    let optimum = konst.checked_add(raw)?;
+    if !ExactRational::from_i128(optimum).is_representable_as_f64()
+        || !syms.iter().all(|name| match witness.get(name) {
+            Some(Value::Int(n)) => ExactRational::from_i128(*n).is_representable_as_f64(),
+            Some(Value::Bool(_)) => true,
+            _ => false,
+        })
+    {
+        return Some(OptimizeOutcome::Unknown {
+            reason: "set-cover optimum cannot be represented as f64".to_string(),
+        });
+    }
     let assignments: Vec<(String, f64)> = syms
         .iter()
         .filter_map(|v| match witness.get(v) {
@@ -1709,7 +1825,7 @@ fn solve_setcover_sat(
         .collect();
     let binding = binding_constraints(cs, kb, var_set, &assignments);
     Some(OptimizeOutcome::Optimal {
-        value: (konst + raw) as f64,
+        value: optimum as f64,
         assignments,
         binding,
     })
@@ -1883,6 +1999,13 @@ fn optimize_real(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
             }
         },
     };
+    if !ExactRational::new(value_rat.num, value_rat.den)
+        .is_some_and(|value| value.is_representable_as_f64())
+    {
+        return OptimizeOutcome::Unknown {
+            reason: "optimal value cannot be represented as f64".to_string(),
+        };
+    }
 
     // Recover an achieving assignment: pin `max_obj = opt_internal` and run the
     // feasibility witness reconstruction over the original constraints.
@@ -2004,13 +2127,18 @@ fn substitute_observed(
         ComputeExpr::Ref(name) => {
             if variables.contains(name.as_str()) {
                 e.clone() // an unknown we are solving for — keep it symbolic
-            } else if let Some(v) = kb.observed_value(name) {
-                ComputeExpr::Lit(v) // a known observed fact — substitute its value
+            } else if let Some(numeric) = kb.observed_numeric(name) {
+                match numeric.exact {
+                    Some(exact) => ComputeExpr::ExactLit(exact),
+                    None if !numeric.precision_loss => ComputeExpr::Lit(numeric.value),
+                    // No faithful literal exists for a precision-lost value.
+                    None => e.clone(),
+                }
             } else {
                 e.clone() // neither — a free reference (likely makes it singular)
             }
         }
-        ComputeExpr::Lit(_) => e.clone(),
+        ComputeExpr::Lit(_) | ComputeExpr::ExactLit(_) => e.clone(),
         ComputeExpr::Bin(op, a, b) => ComputeExpr::Bin(
             *op,
             Box::new(substitute_observed(a, variables, kb)),
@@ -2077,6 +2205,7 @@ fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
         ComputeExpr::Ref(name) if name == x => Some(vec![0.0, 1.0]),
         ComputeExpr::Ref(_) => None,
         ComputeExpr::Lit(c) => Some(vec![*c]),
+        ComputeExpr::ExactLit(exact) => Some(vec![representable_exact_f64(exact)?]),
         ComputeExpr::Bin(op, a, b) => {
             let pa = poly_of(a, x)?;
             let pb = poly_of(b, x)?;
@@ -2315,6 +2444,7 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
     match e {
         ComputeExpr::Ref(name) => Some(sym(name)),
         ComputeExpr::Lit(x) => num_to_ir(*x),
+        ComputeExpr::ExactLit(exact) => exact_to_ir(exact),
         ComputeExpr::Bin(op, a, b) => {
             let ia = expr_to_ir(a)?;
             let ib = expr_to_ir(b)?;
@@ -2335,11 +2465,7 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
                 // `a / c` (c a constant) is linear: rewrite as `a × (1/c)`.
                 // Division by a symbol is non-linear → None.
                 ComputeOp::Div => {
-                    let c = const_value(b)?;
-                    if c == 0.0 {
-                        return None;
-                    }
-                    let recip = num_to_ir(1.0 / c)?;
+                    let recip = reciprocal_to_ir(b)?;
                     Some(apply(sym(MUL), vec![ia, recip]))
                 }
                 // Aggregations reduce observed facts, not symbols — not part of
@@ -2364,10 +2490,26 @@ fn expr_to_ir(e: &ComputeExpr) -> Option<IRNode> {
     }
 }
 
-/// The constant value of an expr if it is a pure numeric literal, else `None`.
-fn const_value(e: &ComputeExpr) -> Option<f64> {
+/// Convert an exact literal to symbolic IR without narrowing it first. CAS IR
+/// stores i64 rational parts, so larger values are conservatively unsupported.
+fn exact_to_ir(exact: &ExactRational) -> Option<IRNode> {
+    let num: i64 = exact.numerator().to_string().parse().ok()?;
+    let den: i64 = exact.denominator().to_string().parse().ok()?;
+    if den == 1 {
+        Some(int(num))
+    } else {
+        Some(rat(num, den))
+    }
+}
+
+fn reciprocal_to_ir(e: &ComputeExpr) -> Option<IRNode> {
     match e {
-        ComputeExpr::Lit(x) => Some(*x),
+        ComputeExpr::Lit(c) if *c != 0.0 => num_to_ir(1.0 / c),
+        ComputeExpr::ExactLit(exact) => {
+            let num: i64 = exact.numerator().to_string().parse().ok()?;
+            let den: i64 = exact.denominator().to_string().parse().ok()?;
+            (num != 0).then(|| rat(den, num))
+        }
         _ => None,
     }
 }
@@ -2376,7 +2518,7 @@ fn const_value(e: &ComputeExpr) -> Option<f64> {
 /// constant) — used to keep multiplication/division linear.
 fn is_constant_expr(e: &ComputeExpr) -> bool {
     match e {
-        ComputeExpr::Lit(_) => true,
+        ComputeExpr::Lit(_) | ComputeExpr::ExactLit(_) => true,
         ComputeExpr::Ref(_) | ComputeExpr::Agg(_, _) => false,
         ComputeExpr::Bin(_, a, b) => is_constant_expr(a) && is_constant_expr(b),
         // `|c|` is constant iff its operand is (the absolute value of a constant
@@ -2433,11 +2575,12 @@ fn parse_rule(node: &IRNode) -> Option<(String, f64)> {
     let IRNode::Symbol(name) = &a.args[0] else {
         return None;
     };
-    let value = match &a.args[1] {
-        IRNode::Integer(n) => *n as f64,
-        IRNode::Rational(n, d) if *d != 0 => *n as f64 / *d as f64,
+    let exact = match &a.args[1] {
+        IRNode::Integer(n) => ExactRational::from_i128(*n as i128),
+        IRNode::Rational(n, d) if *d != 0 => ExactRational::new(*n as i128, *d as i128)?,
         _ => return None,
     };
+    let value = representable_exact_f64(&exact)?;
     if value.is_finite() {
         Some((name.clone(), value))
     } else {
@@ -2506,6 +2649,76 @@ mod tests {
             }
             other => panic!("expected Solved, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn lia_extracts_large_exact_integers_without_f64_narrowing() {
+        let value = 9_007_199_254_740_993_i128;
+        let expr = ComputeExpr::ExactLit(ExactRational::from_i128(value));
+        assert_eq!(int_const(&expr), Some(value));
+        assert!(matches!(expr_to_pred(&expr), Some(Predicate::Int(n)) if n == value));
+    }
+
+    #[test]
+    fn qf_lra_converts_large_exact_integers_directly_to_rat() {
+        let value = 9_007_199_254_740_993_i128;
+        let expr = ComputeExpr::ExactLit(ExactRational::from_i128(value));
+        let form = linearize(&expr).expect("large exact integer is within the Rat cap");
+        assert_eq!(form.constant, Rat::new(value, 1).unwrap());
+    }
+
+    #[test]
+    fn observed_substitution_preserves_the_exact_sidecar() {
+        let lowered = compile("observe large(9007199254740993)\n").unwrap();
+        let substituted = substitute_observed(
+            &ComputeExpr::Ref("large".into()),
+            &HashSet::new(),
+            &lowered.kb,
+        );
+        assert!(matches!(
+            substituted,
+            ComputeExpr::ExactLit(ref exact)
+                if exact_integer(exact) == Some(9_007_199_254_740_993)
+        ));
+    }
+
+    #[test]
+    fn cas_rejects_a_nonrepresentable_exact_assignment() {
+        let out = solve_src(
+            "symbol x : scalar\n\
+             constrain x = 9007199254740993\n\
+             solve for { x }\n",
+        );
+        assert!(matches!(out, SolveOutcome::Unsupported { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn polynomial_solver_rejects_a_nonrepresentable_exact_coefficient() {
+        let out = solve_src(
+            "symbol x : scalar\n\
+             constrain x * x = 9007199254740993\n\
+             solve for { x }\n",
+        );
+        assert!(matches!(out, SolveOutcome::Unsupported { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn tiny_exact_literal_is_unknown_or_unsupported_never_rounded_to_zero() {
+        let solved = solve_src(
+            "symbol x : scalar\n\
+             constrain x = 1e-400\n\
+             solve for { x }\n",
+        );
+        assert!(
+            matches!(solved, SolveOutcome::Unsupported { .. }),
+            "{solved:?}"
+        );
+
+        let checked = check_src("symbol x : scalar\nconstrain x = 1e-400\ncheck\n");
+        assert!(
+            matches!(checked, FeasibilityOutcome::Unknown { .. }),
+            "{checked:?}"
+        );
     }
 
     #[test]
@@ -3193,6 +3406,15 @@ mod tests {
         let out = optimize_src("symbol x : scalar\nconstrain x + x >= 3\nminimize x");
         let (value, _, _) = expect_optimal(&out);
         assert!((value - 1.5).abs() < 1e-9, "scalar stays real: {value}");
+    }
+
+    #[test]
+    fn optimization_rejects_a_nonrepresentable_exact_optimum() {
+        let out = optimize_src("symbol x : scalar\nconstrain x = 9007199254740993\nmaximize x");
+        assert!(
+            matches!(out, OptimizeOutcome::Unknown { .. }),
+            "got {out:?}"
+        );
     }
 
     // ---- SAT / pseudo-boolean set-cover scaling (B1b) ----------------------

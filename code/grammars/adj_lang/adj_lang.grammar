@@ -361,7 +361,7 @@ formulabook_decl = "formulabook" IDENT LBRACE { formulabook_item } RBRACE ;
 
 formulabook_item = use_decl | formula_decl ;
 
-formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN formula_body { annotation } ;
+formula_decl     = "formula" IDENT LPAREN [ formula_params ] RPAREN formula_body [ formula_requires ] { annotation } ;
 
 formula_params   = IDENT { COMMA IDENT } ;
 
@@ -379,6 +379,10 @@ formula_params   = IDENT { COMMA IDENT } ;
 formula_body     = EQUALS expr | LBRACE { formula_step } expr RBRACE ;
 
 formula_step     = "let" IDENT EQUALS expr ;
+
+formula_requires = "requires" formula_precondition { COMMA formula_precondition } ;
+
+formula_precondition = IDENT LPAREN [ expr { COMMA expr } ] RPAREN ;
 
 # ----------------------------------------------------------------
 # Table (ADJ-TABLES RS-5 — native tabular data as a first-class construct,

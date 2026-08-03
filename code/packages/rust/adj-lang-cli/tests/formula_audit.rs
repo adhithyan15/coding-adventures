@@ -85,6 +85,72 @@ fn formula_audit_rejects_duplicate_export_names_before_using_runtime_mapping() {
 }
 
 #[test]
+fn formula_audit_fails_closed_on_abstention_until_negative_witness_v2() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_abstention_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("abstention.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula quotient(a, b) = a / b\n\
+               requires nonzero(b)\n\
+               source \"division domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(0)\n\
+         ? quotient(numerator, denominator)\n",
+    )
+    .expect("write guarded program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr)
+        .contains("formula abstention audit requires a versioned precondition witness contract"));
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_fails_closed_on_a_passing_guard_until_witness_v2() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_passing_guard_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("passing_guard.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula quotient(a, b) = a / b\n\
+               requires nonzero(b)\n\
+               source \"division domain\" trust authoritative\n\
+         }\n\
+         observe numerator(8)\n\
+         observe denominator(2)\n\
+         ? quotient(numerator, denominator)\n",
+    )
+    .expect("write guarded program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert_eq!(output.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&output.stderr)
+        .contains("guarded formula audit requires a versioned precondition witness contract"));
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
 fn formula_audit_rejects_provenance_that_maps_to_multiple_exports() {
     let directory = std::env::temp_dir().join(format!(
         "adj_formula_audit_ambiguous_{}",

@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.17.0] - 2026-08-03 - exact computation literals
+
+- Every solver expression walker handles `ComputeExpr::ExactLit`. Solver backends retain their
+  existing numeric contracts while the execution engine preserves the literal's rational identity
+  for exact-first guards and audit output.
+
 ## [0.16.0] - 2026-07-23 — absorb `ComputeExpr::ToCurrency` (NUM-6c)
 
 ### Changed
