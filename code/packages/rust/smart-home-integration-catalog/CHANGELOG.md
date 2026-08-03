@@ -1,5 +1,7 @@
 # Changelog
 
+- Promote UniFi Network to a first-party local API-key runtime for bounded
+  application, site, and adopted-device health inspection.
 - Add first-party Synology Surveillance Station Web API discovery, isolated
   authenticated sessions, and privilege-filtered camera health inspection.
 - Add first-party authenticated Frigate NVR and camera health inspection over

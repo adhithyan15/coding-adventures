@@ -45101,19 +45101,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Switch, EntityKind::Sensor, EntityKind::Lock, EntityKind::Input],
             "switchbot",
         ),
-        local_hub_entry(
+        base_entry(
             "unifi",
             "UniFi Network",
-            "Local UniFi controller integration for presence, network, and device telemetry.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
-            2,
-            &["smart_home.read", "smart_home.diagnostics"],
-            &[EntityKind::Sensor, EntityKind::NetworkDiagnostic],
-            &[DiscoveryMechanism::Manual],
-            &[AuthMode::ApiKey, AuthMode::UsernamePassword],
+            "Authenticated local UniFi Network application, site, and adopted-device health inspection.",
+            IntegrationCategory::LocalHub,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
             "unifi",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::NetworkDiagnostic])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::ApiKey])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "unifi_network_integration_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the official local /proxy/network/integration/v1 API over HTTPS; plain HTTP is loopback-test-only.",
+            "The Vault-backed API key is materialized only as X-API-Key inside the bounded transport and never enters normalized state or request-plan debug output.",
+            "Remote Site Manager, connected clients, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
+        ]),
         base_entry(
             "sonos",
             "Sonos",
@@ -49015,37 +49032,6 @@ fn protocol_entry(
     .with_discovery(discovery)
     .with_auth(auth)
     .with_primitives(protocol_primitives(&protocol))
-}
-
-#[allow(clippy::too_many_arguments)]
-fn local_hub_entry(
-    id: &'static str,
-    name: &'static str,
-    summary: &'static str,
-    connectivity: ConnectivityClass,
-    status: ImplementationStatus,
-    priority: u8,
-    capabilities: &[&'static str],
-    entities: &[EntityKind],
-    discovery: &[DiscoveryMechanism],
-    auth: &[AuthMode],
-    ha_domain: &'static str,
-) -> IntegrationCatalogEntry {
-    base_entry(
-        id,
-        name,
-        summary,
-        IntegrationCategory::LocalHub,
-        connectivity,
-        status,
-        priority,
-        ha_domain,
-    )
-    .with_capabilities(capabilities)
-    .with_entities(entities)
-    .with_discovery(discovery)
-    .with_auth(auth)
-    .with_primitives(&local_transport_primitives(connectivity, discovery, auth))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -81043,6 +81029,41 @@ mod tests {
             .discovery_mechanisms
             .contains(&DiscoveryMechanism::WsDiscovery));
         assert!(onvif
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn unifi_entry_exposes_local_api_key_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let unifi = find_entry(&catalog, &IntegrationId::trusted("unifi")).unwrap();
+
+        assert_eq!(
+            unifi.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(unifi.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            unifi.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "unifi_network_integration_api".to_string()
+            )]
+        );
+        assert_eq!(unifi.auth_modes, vec![AuthMode::ApiKey]);
+        assert_eq!(
+            unifi.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
+        assert!(unifi
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!unifi
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
