@@ -361,11 +361,11 @@
     {
       "id": "build-tool-ruby-engine-rockspec-utf8-conformance",
       "title": "Make the Ruby build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-ruby-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized after merged PR #9632. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. Ruby 3.4.9 and Bundler 2.6.9 are locally available, making this the narrowest and fastest remaining boundary to validate."
+      "notes": "Selected after merged PR #9632 and the collision-clean 46d95281 inventory. Ruby currently reads rockspec text through the process locale/default external encoding. Consume the exact shared valid and invalid fixtures, decode raw bytes as strict UTF-8 before parsing, preserve exact dependency edges, raise a typed METADATA_INVALID_UTF8 failure with package and repository-relative manifest identity, and prove real CLI exit 2 plus stable root-redacted stderr. The quick post-merge leverage pass ranked Ruby before Haskell and Elixir because Ruby 3.4.9 and Bundler 2.6.9 are locally available, its direct read is the narrowest remaining boundary, and six merged implementations pin the behavior without the broader lazy-I/O or regex-position audit."
     },
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
