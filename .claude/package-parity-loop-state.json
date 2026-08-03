@@ -11,7 +11,11 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9703,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9703",
+    "branch": "codex/build-tool-go-language-identity-registry"
+  },
   "last_inventory": {
     "revision": "b42d1683d85daa9fd26cb96da3d928612034aa24",
     "schema_version": 3,
@@ -424,11 +428,11 @@
     {
       "id": "build-tool-go-language-identity-registry",
       "title": "Bring Go build-tool discovery to the complete canonical language registry",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-go-language-identity-registry",
-      "pr_number": null,
-      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discovered 4,776 packages, but Go classified all fourteen Mosaic packages and programs as unknown while Ruby followed the shared canonical registry and preserved mosaic/programs identities. Selected after PR #9691 merged and the collision-clean 9ad8105f inventory because this unblocked, shared-fixture-backed repository primitive precedes the independent Elixir semantic, Haskell/Elixir UTF-8, and leaf-package items. The implementation now recognizes every canonical, emerging, target, domain, build, and retained host bucket only at an exact packages/programs boundary; preserves program identities; excludes specification and build-artifact trees; and rejects collisions with the typed, root-redacted DUPLICATE_PACKAGE_IDENTITY contract and CLI exit 2. On rebased base b42d1683, exact-head validation passes gofmt, all Go tests at 73.6% aggregate coverage and 93.9% discovery coverage, go vet, the race detector, trimpath build, module verification, govulncheck with zero reachable vulnerabilities, 17 schema tests, 40 runner tests, and the valid 38-case/61-file fixture corpus. Independent Go and Ruby real plans match all 4,779 (name, language, rel_path) tuples with zero duplicates or backslashes, all 14 Mosaic identities canonical, and only the intentional unknown/blog bucket. The committed Go-lane dry-run selects 13 of 301 packages and skips 288. The full standalone validator reproduces the separately owned 73-gap debt gate: 12 Python, 3 Swift, and 58 TypeScript."
+      "pr_number": 9703,
+      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discovered 4,776 packages, but Go classified all fourteen Mosaic packages and programs as unknown while Ruby followed the shared canonical registry and preserved mosaic/programs identities. Selected after PR #9691 merged and the collision-clean 9ad8105f inventory because this unblocked, shared-fixture-backed repository primitive precedes the independent Elixir semantic, Haskell/Elixir UTF-8, and leaf-package items. The implementation now recognizes every canonical, emerging, target, domain, build, and retained host bucket only at an exact packages/programs boundary; preserves program identities; excludes specification and build-artifact trees; and rejects collisions with the typed, root-redacted DUPLICATE_PACKAGE_IDENTITY contract and CLI exit 2. On rebased base b42d1683, exact-head validation passes gofmt, all Go tests at 73.6% aggregate coverage and 93.9% discovery coverage, go vet, the race detector, trimpath build, module verification, govulncheck with zero reachable vulnerabilities, 17 schema tests, 40 runner tests, and the valid 38-case/61-file fixture corpus. Independent Go and Ruby real plans match all 4,779 (name, language, rel_path) tuples with zero duplicates or backslashes, all 14 Mosaic identities canonical, and only the intentional unknown/blog bucket. The committed Go-lane dry-run selects 13 of 301 packages and skips 288. The full standalone validator reproduces the separately owned 73-gap debt gate: 12 Python, 3 Swift, and 58 TypeScript. Ready PR #9703 opened at initial head d58b29bb after the exact-base validation; the state-only PR transition will establish the monitored exact head."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
