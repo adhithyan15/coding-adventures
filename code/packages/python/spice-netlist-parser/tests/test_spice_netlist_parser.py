@@ -2030,6 +2030,36 @@ def test_lowers_valid_mosfet_model_flicker_noise_exponent(exponent: str) -> None
     assert isclose(mosfet.model.model.params.AF, float(exponent))
 
 
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [("CJS", "CBS"), ("CJD", "CBD")],
+)
+@pytest.mark.parametrize("capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_junction_capacitance_aliases(
+    alias: str, canonical: str, capacitance: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"MOSFET {canonical} must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS({alias}={capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("alias", "canonical"),
+    [("CJS", "CBS"), ("CJD", "CBD")],
+)
+def test_lowers_mosfet_junction_capacitance_aliases(
+    alias: str, canonical: str
+) -> None:
+    parsed = parse_netlist(f".model nfast NMOS({alias}=2p)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(getattr(mosfet.model.model.params, canonical), 2.0e-12)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

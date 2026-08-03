@@ -1977,6 +1977,19 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(params["CJSW"]) or params["CJSW"] < 0.0
         ):
             raise NetlistParseError("MOSFET CJSW must be finite and non-negative")
+        for parameter_name, canonical in (
+            ("CBS", "CBS"),
+            ("CJS", "CBS"),
+            ("CBD", "CBD"),
+            ("CJD", "CBD"),
+        ):
+            if parameter_name in params and (
+                not math.isfinite(params[parameter_name])
+                or params[parameter_name] < 0.0
+            ):
+                raise NetlistParseError(
+                    f"MOSFET {canonical} must be finite and non-negative"
+                )
         if "JS" in params and (
             not math.isfinite(params["JS"]) or params["JS"] < 0.0
         ):
@@ -2051,6 +2064,8 @@ _LEVEL1_PARAM_ALIASES = {
     "VTO": "VT0",
     "VTH": "VT0",
     "LAM": "LAMBDA",
+    "CJS": "CBS",
+    "CJD": "CBD",
 }
 
 

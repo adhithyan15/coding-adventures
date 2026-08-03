@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower MOS model-card `CJS` and `CJD` aliases as canonical `CBS`
+  and `CBD` junction capacitances.
 - Reject negative and non-finite MOS model-card `AF` values before lowering
   valid flicker-noise exponents.
 - Reject negative and non-finite MOS model-card `KF` values before lowering
