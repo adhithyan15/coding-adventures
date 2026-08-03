@@ -32,14 +32,18 @@ The generic core receives:
 - validated reconciliation configuration; and
 - one channel-wiring authorizer.
 
-A production constructor composes the core with `ProcessHostSupervisor`, its
-trusted package keyring, long-lived X3DH identity, fixed absolute child program,
-fresh UUID-v7 session source, and the same monotonic clock used for authenticated
-receipt evidence.
+A production constructor composes the core with `ProcessHostSupervisor`, owned
+shared handles to its trusted package keyring and long-lived X3DH identity, a
+fixed absolute child program, fresh UUID-v7 session source, and the same
+monotonic clock used for authenticated receipt evidence.
 
-The backend and cryptographic trust objects are borrowed from the runnable
-daemon owner. The core does not create a self-referential filesystem backend or
-copy zeroizing identity material.
+The core owns an `Arc<dyn StorageBackend>` and the process supervisor owns
+`Arc` handles to its cryptographic trust objects. The complete control plane is
+therefore `Send + 'static` when its injected authorizer is, as required by the
+threaded WebSocket runtime. Shared ownership does not copy zeroizing identity
+material, leak process-lifetime allocations, or require a self-referential
+daemon owner. Registry and reconciliation handles borrow the owned backend only
+for the duration of each bounded operation.
 
 ## Host Intent API
 
@@ -107,8 +111,8 @@ CAS contract.
 
 The package exposes:
 
-- `OrchestratorCore<S, A>` for injected supervisors and authorizers;
-- `ProcessOrchestratorCore<A>` plus a production process-composition
+- owned `OrchestratorCore<S, A>` for injected supervisors and authorizers;
+- `ProcessOrchestratorCore<A>` plus a movable production process-composition
   constructor;
 - `ChannelWiringAuthorizer` and exact create/destroy request values;
 - `HostHealth`, preserving durable and authoritative views;
@@ -143,6 +147,8 @@ The package must cover:
 - authorization denial proving no channel mutation;
 - stable payload-free error diagnostics; and
 - production process-composition construction without spawning until a tick
-  actually requests start.
+  actually requests start; and
+- compile-time proof that production composition can cross the daemon's
+  `Send + 'static` handler boundary without leaks.
 
 The package forbids unsafe code and targets at least 95 percent line coverage.

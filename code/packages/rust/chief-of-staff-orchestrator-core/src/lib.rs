@@ -145,19 +145,19 @@ where
 }
 
 /// Bounded application core parameterized by process and authorization adapters.
-pub struct OrchestratorCore<'a, S, A> {
-    backend: &'a dyn StorageBackend,
-    reconciler: ServiceReconciler<'a>,
+pub struct OrchestratorCore<S, A> {
+    backend: Arc<dyn StorageBackend>,
+    reconcile_config: ReconcileConfig,
     supervisor: S,
     authorizer: A,
     clock: Arc<dyn MonotonicClock>,
     last_reconcile_ns: Option<u64>,
 }
 
-impl<'a, S, A> OrchestratorCore<'a, S, A> {
+impl<S, A> OrchestratorCore<S, A> {
     /// Bind storage, reconciliation, process authority, authorization, and time.
     pub fn new(
-        backend: &'a dyn StorageBackend,
+        backend: Arc<dyn StorageBackend>,
         supervisor: S,
         authorizer: A,
         clock: Arc<dyn MonotonicClock>,
@@ -165,7 +165,7 @@ impl<'a, S, A> OrchestratorCore<'a, S, A> {
     ) -> Self {
         Self {
             backend,
-            reconciler: ServiceReconciler::new(ServiceRegistry::new(backend), reconcile_config),
+            reconcile_config,
             supervisor,
             authorizer,
             clock,
@@ -184,7 +184,7 @@ impl<'a, S, A> OrchestratorCore<'a, S, A> {
     }
 }
 
-impl<S, A> OrchestratorCore<'_, S, A>
+impl<S, A> OrchestratorCore<S, A>
 where
     S: HostSupervisor,
     A: ChannelWiringAuthorizer,
@@ -195,7 +195,7 @@ where
         registration: HostRegistration,
         desired_state: DesiredState,
     ) -> Result<LoadedHost, OrchestratorCoreError<S::Error, A::Error>> {
-        ServiceRegistry::new(self.backend)
+        ServiceRegistry::new(self.backend.as_ref())
             .register(&HostEntry::registered(registration, desired_state))
             .map_err(OrchestratorCoreError::Registry)
     }
@@ -205,14 +205,14 @@ where
         &self,
         host_name: &HostName,
     ) -> Result<Option<LoadedHost>, OrchestratorCoreError<S::Error, A::Error>> {
-        ServiceRegistry::new(self.backend)
+        ServiceRegistry::new(self.backend.as_ref())
             .load(host_name)
             .map_err(OrchestratorCoreError::Registry)
     }
 
     /// List durable hosts in stable host-name order.
     pub fn list_hosts(&self) -> Result<Vec<LoadedHost>, OrchestratorCoreError<S::Error, A::Error>> {
-        ServiceRegistry::new(self.backend)
+        ServiceRegistry::new(self.backend.as_ref())
             .list()
             .map_err(OrchestratorCoreError::Registry)
     }
@@ -223,7 +223,7 @@ where
         host_name: &HostName,
         desired_state: DesiredState,
     ) -> Result<LoadedHost, OrchestratorCoreError<S::Error, A::Error>> {
-        let registry = ServiceRegistry::new(self.backend);
+        let registry = ServiceRegistry::new(self.backend.as_ref());
         let loaded = registry
             .load(host_name)
             .map_err(OrchestratorCoreError::Registry)?
@@ -250,10 +250,12 @@ where
         {
             return Err(OrchestratorCoreError::ClockRegressed);
         }
-        let report = self
-            .reconciler
-            .reconcile_all(&mut self.supervisor, now_ns)
-            .map_err(OrchestratorCoreError::Reconciliation)?;
+        let report = ServiceReconciler::new(
+            ServiceRegistry::new(self.backend.as_ref()),
+            self.reconcile_config,
+        )
+        .reconcile_all(&mut self.supervisor, now_ns)
+        .map_err(OrchestratorCoreError::Reconciliation)?;
         self.last_reconcile_ns = Some(now_ns);
         Ok(report)
     }
@@ -263,7 +265,7 @@ where
         &mut self,
         host_name: &HostName,
     ) -> Result<HostHealth, OrchestratorCoreError<S::Error, A::Error>> {
-        let durable = ServiceRegistry::new(self.backend)
+        let durable = ServiceRegistry::new(self.backend.as_ref())
             .load(host_name)
             .map_err(OrchestratorCoreError::Registry)?
             .ok_or_else(|| {
@@ -287,7 +289,7 @@ where
         &mut self,
         host_name: &HostName,
     ) -> Result<(), OrchestratorCoreError<S::Error, A::Error>> {
-        let registry = ServiceRegistry::new(self.backend);
+        let registry = ServiceRegistry::new(self.backend.as_ref());
         let loaded = registry
             .load(host_name)
             .map_err(OrchestratorCoreError::Registry)?
@@ -324,7 +326,7 @@ where
         self.authorizer
             .authorize(ChannelWiringRequest::Create(definition))
             .map_err(OrchestratorCoreError::Authorization)?;
-        ChannelDefinitionStore::new(self.backend)
+        ChannelDefinitionStore::new(self.backend.as_ref())
             .create(definition)
             .map_err(OrchestratorCoreError::Channel)
     }
@@ -334,7 +336,7 @@ where
         &self,
         channel_id: ChannelId,
     ) -> Result<Option<ChannelDefinition>, OrchestratorCoreError<S::Error, A::Error>> {
-        ChannelDefinitionStore::new(self.backend)
+        ChannelDefinitionStore::new(self.backend.as_ref())
             .load(channel_id)
             .map_err(OrchestratorCoreError::Channel)
     }
@@ -344,7 +346,7 @@ where
         &mut self,
         channel_id: ChannelId,
     ) -> Result<ChannelDefinition, OrchestratorCoreError<S::Error, A::Error>> {
-        let store = ChannelDefinitionStore::new(self.backend);
+        let store = ChannelDefinitionStore::new(self.backend.as_ref());
         let definition = store
             .load(channel_id)
             .map_err(OrchestratorCoreError::Channel)?
@@ -361,16 +363,16 @@ where
 }
 
 /// Production process-supervised specialization of the transport-independent core.
-pub type ProcessOrchestratorCore<'a, A> = OrchestratorCore<'a, ProcessHostSupervisor<'a>, A>;
+pub type ProcessOrchestratorCore<A> = OrchestratorCore<ProcessHostSupervisor, A>;
 
-impl<'a, A> OrchestratorCore<'a, ProcessHostSupervisor<'a>, A> {
+impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
     /// Compose package trust, X3DH identity, process authority, storage, and time.
     #[allow(clippy::too_many_arguments)]
     pub fn with_process_supervisor(
-        backend: &'a dyn StorageBackend,
+        backend: Arc<dyn StorageBackend>,
         process_config: ProcessSupervisorConfig,
-        keyring: &'a PackageKeyring,
-        identity: &'a IdentityKeyPair,
+        keyring: Arc<PackageKeyring>,
+        identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
         reconcile_config: ReconcileConfig,
@@ -577,12 +579,12 @@ mod tests {
         .expect("valid channel definition")
     }
 
-    fn core<'a>(
-        backend: &'a InMemoryStorageBackend,
+    fn core(
+        backend: Arc<InMemoryStorageBackend>,
         supervisor: FakeSupervisor,
         authorizer: FakeAuthorizer,
         clock: Arc<TestClock>,
-    ) -> OrchestratorCore<'a, FakeSupervisor, FakeAuthorizer> {
+    ) -> OrchestratorCore<FakeSupervisor, FakeAuthorizer> {
         OrchestratorCore::new(
             backend,
             supervisor,
@@ -594,11 +596,11 @@ mod tests {
 
     #[test]
     fn host_registration_listing_and_desired_state_are_idempotent() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let events = Arc::new(Mutex::new(Vec::new()));
         let core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([])),
@@ -640,10 +642,10 @@ mod tests {
 
     #[test]
     fn conflicting_registration_and_unknown_host_updates_are_typed() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let events = Arc::new(Mutex::new(Vec::new()));
         let core = core(
-            &backend,
+            Arc::clone(&backend),
             FakeSupervisor::default(),
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([])),
@@ -668,13 +670,13 @@ mod tests {
 
     #[test]
     fn reconciliation_samples_time_once_and_tracks_only_success() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let supervisor_state = Arc::clone(&supervisor.0);
         let clock = Arc::new(TestClock::new([1_000, 1_001, 1_002]));
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::clone(&clock),
@@ -719,12 +721,12 @@ mod tests {
 
     #[test]
     fn reconciliation_drives_start_observe_stop_and_restart() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let state = Arc::clone(&supervisor.0);
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([100, 110, 120, 130])),
@@ -785,12 +787,12 @@ mod tests {
 
     #[test]
     fn reconciliation_rejects_clock_regression_before_supervisor_io() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let state = Arc::clone(&supervisor.0);
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([20, 19])),
@@ -810,12 +812,12 @@ mod tests {
 
     #[test]
     fn health_keeps_cached_state_separate_from_fresh_authority() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let state = Arc::clone(&supervisor.0);
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([])),
@@ -856,12 +858,12 @@ mod tests {
 
     #[test]
     fn deregistration_requires_stopped_intent_and_absent_or_exited_authority() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let state = Arc::clone(&supervisor.0);
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(events),
             Arc::new(TestClock::new([])),
@@ -915,11 +917,11 @@ mod tests {
 
     #[test]
     fn channel_mutations_are_authorized_before_storage_changes() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             supervisor,
             FakeAuthorizer::allowing(Arc::clone(&events)),
             Arc::new(TestClock::new([])),
@@ -968,10 +970,10 @@ mod tests {
 
     #[test]
     fn denied_channel_mutations_leave_storage_unchanged() {
-        let backend = InMemoryStorageBackend::new();
+        let backend = Arc::new(InMemoryStorageBackend::new());
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = core(
-            &backend,
+            Arc::clone(&backend),
             FakeSupervisor::default(),
             FakeAuthorizer::denying(Arc::clone(&events)),
             Arc::new(TestClock::new([])),
@@ -987,7 +989,7 @@ mod tests {
             None
         );
 
-        ChannelDefinitionStore::new(&backend)
+        ChannelDefinitionStore::new(backend.as_ref())
             .create(&definition)
             .expect("seed definition");
         assert!(matches!(
@@ -1035,9 +1037,9 @@ mod tests {
 
     #[test]
     fn production_constructor_composes_an_empty_process_supervised_core() {
-        let backend = InMemoryStorageBackend::new();
-        let keyring = PackageKeyring::new();
-        let identity = generate_identity_keypair();
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let keyring = Arc::new(PackageKeyring::new());
+        let identity = Arc::new(generate_identity_keypair());
         let executable = std::env::current_exe().expect("current executable");
         let config = ProcessSupervisorConfig::new(
             HostProgram::new(executable, std::iter::empty::<&str>()).expect("host program"),
@@ -1048,15 +1050,17 @@ mod tests {
         let clock = Arc::new(TestClock::new([1]));
         let events = Arc::new(Mutex::new(Vec::new()));
         let mut core = ProcessOrchestratorCore::with_process_supervisor(
-            &backend,
+            backend,
             config,
-            &keyring,
-            &identity,
+            keyring,
+            identity,
             clock,
             Box::<UuidV7SessionIdSource>::default(),
             ReconcileConfig::new(100).expect("reconcile config"),
             FakeAuthorizer::allowing(events),
         );
+        fn assert_send_static<T: Send + 'static>(_: &T) {}
+        assert_send_static(&core);
         assert!(core
             .reconcile_once()
             .expect("empty production tick")

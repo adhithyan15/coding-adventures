@@ -5,6 +5,10 @@ D18 Chief hosts. It re-verifies a registered signed package immediately before
 each spawn, owns and reaps the child, bootstraps a fresh UUID-v7 secure channel,
 and reports readiness and heartbeat only after authenticated control messages.
 
+Its keyring and X3DH identity are shared through owned `Arc` handles, and its
+session source is `Send`, so the complete supervisor can move with the daemon's
+threaded control plane without copying secret key material.
+
 The crate implements the dependency-light service reconciler's
 `HostSupervisor` interface. It deliberately leaves durable restart policy,
 scheduling, backoff, and registry updates to the reconciler and runnable

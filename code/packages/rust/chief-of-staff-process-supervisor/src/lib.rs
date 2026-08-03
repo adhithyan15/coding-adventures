@@ -194,7 +194,7 @@ impl MonotonicClock for SystemMonotonicClock {
 }
 
 /// Source of fresh valid UUID-v7 secure-session identities.
-pub trait SessionIdSource {
+pub trait SessionIdSource: Send {
     /// Return the next per-spawn session.
     fn next_session(&mut self) -> Result<SessionId, ProcessSupervisorError>;
 }
@@ -362,21 +362,21 @@ impl OwnedInstance {
 }
 
 /// Concrete verified process authority for the D18 service reconciler.
-pub struct ProcessHostSupervisor<'a> {
+pub struct ProcessHostSupervisor {
     config: ProcessSupervisorConfig,
-    keyring: &'a PackageKeyring,
-    identity: &'a IdentityKeyPair,
+    keyring: Arc<PackageKeyring>,
+    identity: Arc<IdentityKeyPair>,
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
     instances: BTreeMap<String, OwnedInstance>,
 }
 
-impl<'a> ProcessHostSupervisor<'a> {
+impl ProcessHostSupervisor {
     /// Construct a supervisor around injected package trust, identity, time, and sessions.
     pub fn new(
         config: ProcessSupervisorConfig,
-        keyring: &'a PackageKeyring,
-        identity: &'a IdentityKeyPair,
+        keyring: Arc<PackageKeyring>,
+        identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
     ) -> Self {
@@ -395,7 +395,7 @@ impl<'a> ProcessHostSupervisor<'a> {
         registration: &HostRegistration,
     ) -> Result<OwnedInstance, ProcessSupervisorError> {
         let package_path = Path::new(registration.package_path().as_str());
-        let package = verify_agent_package(package_path, self.keyring)
+        let package = verify_agent_package(package_path, self.keyring.as_ref())
             .map_err(|_| ProcessSupervisorError::PackageVerification)?;
         if package.digest() != *registration.package_hash() {
             return Err(ProcessSupervisorError::PackageMismatch);
@@ -404,7 +404,7 @@ impl<'a> ProcessHostSupervisor<'a> {
         let session = self.sessions.next_session()?;
         let host = HostId::new(registration.host_name().as_str().to_owned())
             .map_err(|_| ProcessSupervisorError::Bootstrap)?;
-        let bootstrap = OrchestratorBootstrap::new(self.identity, host, session)
+        let bootstrap = OrchestratorBootstrap::new(self.identity.as_ref(), host, session)
             .map_err(|_| ProcessSupervisorError::Bootstrap)?;
         let offer = bootstrap
             .offer()
@@ -510,7 +510,7 @@ impl<'a> ProcessHostSupervisor<'a> {
     }
 }
 
-impl HostSupervisor for ProcessHostSupervisor<'_> {
+impl HostSupervisor for ProcessHostSupervisor {
     type Error = ProcessSupervisorError;
 
     fn inspect(
@@ -593,7 +593,7 @@ impl HostSupervisor for ProcessHostSupervisor<'_> {
     }
 }
 
-impl Drop for ProcessHostSupervisor<'_> {
+impl Drop for ProcessHostSupervisor {
     fn drop(&mut self) {
         for instance in self.instances.values_mut() {
             if instance.is_active() {

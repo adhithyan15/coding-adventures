@@ -151,12 +151,12 @@ impl SessionIdSource for TestSessions {
     }
 }
 
-fn new_supervisor<'a>(
-    keyring: &'a PackageKeyring,
-    identity: &'a coding_adventures_x3dh::IdentityKeyPair,
+fn new_supervisor(
+    keyring: Arc<PackageKeyring>,
+    identity: Arc<coding_adventures_x3dh::IdentityKeyPair>,
     bootstrap_timeout: Duration,
     graceful_timeout: Duration,
-) -> ProcessHostSupervisor<'a> {
+) -> ProcessHostSupervisor {
     let program = HostProgram::new(
         env!("CARGO_BIN_EXE_process-supervisor-test-child"),
         std::iter::empty::<&str>(),
@@ -174,7 +174,7 @@ fn new_supervisor<'a>(
 }
 
 fn await_phase(
-    supervisor: &mut ProcessHostSupervisor<'_>,
+    supervisor: &mut ProcessHostSupervisor,
     registration: &HostRegistration,
     expected: SupervisorPhase,
 ) -> chief_of_staff_service_reconciler::SupervisorInstance {
@@ -199,11 +199,11 @@ fn await_phase(
 fn real_child_reaches_running_and_stops_gracefully() {
     let package = TestPackage::new("graceful", None);
     let registration = package.registration("fixture-host");
-    let keyring = keyring();
-    let identity = generate_identity_keypair();
+    let keyring = Arc::new(keyring());
+    let identity = Arc::new(generate_identity_keypair());
     let mut supervisor = new_supervisor(
-        &keyring,
-        &identity,
+        Arc::clone(&keyring),
+        Arc::clone(&identity),
         Duration::from_secs(3),
         Duration::from_secs(1),
     );
@@ -235,11 +235,11 @@ fn real_child_reaches_running_and_stops_gracefully() {
 fn exact_hash_is_checked_before_spawn_and_active_hash_cannot_change() {
     let package = TestPackage::new("identity", None);
     let mut registration = package.registration("identity-host");
-    let keyring = keyring();
-    let identity = generate_identity_keypair();
+    let keyring = Arc::new(keyring());
+    let identity = Arc::new(generate_identity_keypair());
     let mut supervisor = new_supervisor(
-        &keyring,
-        &identity,
+        Arc::clone(&keyring),
+        Arc::clone(&identity),
         Duration::from_secs(3),
         Duration::from_millis(200),
     );
@@ -290,10 +290,9 @@ fn bootstrap_timeout_and_oversized_record_are_cleaned_up() {
     ] {
         let package = TestPackage::new(label, Some(marker));
         let registration = package.registration(&format!("{label}-host"));
-        let keyring = keyring();
-        let identity = generate_identity_keypair();
-        let mut supervisor =
-            new_supervisor(&keyring, &identity, timeout, Duration::from_millis(100));
+        let keyring = Arc::new(keyring());
+        let identity = Arc::new(generate_identity_keypair());
+        let mut supervisor = new_supervisor(keyring, identity, timeout, Duration::from_millis(100));
         assert_eq!(supervisor.start(&registration), Err(expected));
         assert_eq!(
             supervisor.inspect(&registration).unwrap(),
@@ -318,11 +317,11 @@ fn wrong_ready_and_exit_before_ready_fail_closed() {
     ] {
         let package = TestPackage::new(label, Some(marker));
         let registration = package.registration(&format!("{label}-host"));
-        let keyring = keyring();
-        let identity = generate_identity_keypair();
+        let keyring = Arc::new(keyring());
+        let identity = Arc::new(generate_identity_keypair());
         let mut supervisor = new_supervisor(
-            &keyring,
-            &identity,
+            keyring,
+            identity,
             Duration::from_secs(3),
             Duration::from_millis(100),
         );
@@ -349,11 +348,11 @@ fn wrong_ready_and_exit_before_ready_fail_closed() {
 fn graceful_timeout_hard_kills_and_drop_reaps() {
     let package = TestPackage::new("hard-kill", Some("IGNORE_TERMINATE"));
     let registration = package.registration("hard-kill-host");
-    let keyring = keyring();
-    let identity = generate_identity_keypair();
+    let keyring = Arc::new(keyring());
+    let identity = Arc::new(generate_identity_keypair());
     let mut supervisor = new_supervisor(
-        &keyring,
-        &identity,
+        Arc::clone(&keyring),
+        Arc::clone(&identity),
         Duration::from_secs(3),
         Duration::from_millis(100),
     );
@@ -371,8 +370,8 @@ fn graceful_timeout_hard_kills_and_drop_reaps() {
     let second = TestPackage::new("drop", None);
     let second_registration = second.registration("drop-host");
     let mut dropped = new_supervisor(
-        &keyring,
-        &identity,
+        keyring,
+        identity,
         Duration::from_secs(3),
         Duration::from_millis(100),
     );
@@ -391,11 +390,11 @@ fn invalid_package_fails_before_process_creation() {
         [0; 32],
         RestartPolicy::Never,
     );
-    let keyring = keyring();
-    let identity = generate_identity_keypair();
+    let keyring = Arc::new(keyring());
+    let identity = Arc::new(generate_identity_keypair());
     let mut supervisor = new_supervisor(
-        &keyring,
-        &identity,
+        keyring,
+        identity,
         Duration::from_secs(1),
         Duration::from_secs(1),
     );
