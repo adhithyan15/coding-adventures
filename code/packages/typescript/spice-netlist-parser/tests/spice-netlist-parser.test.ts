@@ -989,6 +989,37 @@ Q2 col base emit slow
     );
   });
 
+  it("parses the BJT CJE0 capacitance alias with canonical precedence", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(CJE=2p CJE0=3p CBE=4p)
+Q1 col base emit fast
+.model slow PNP(CJE0=5p)
+Q2 col base emit slow
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      baseEmitterCapacitance: 2.0e-12,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "bjt",
+      baseEmitterCapacitance: 5.0e-12,
+    });
+  });
+
+  it.each([
+    ["CJE", "-1p"],
+    ["CJE", "1e999"],
+    ["CJE0", "-1p"],
+    ["CJE0", "1e999"],
+    ["CBE", "-1p"],
+    ["CBE", "1e999"],
+  ])("rejects invalid BJT %s base-emitter capacitance %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      "BJT CJE must be finite and non-negative",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

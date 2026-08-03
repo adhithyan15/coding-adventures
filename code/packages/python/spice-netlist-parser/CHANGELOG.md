@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate BJT model-card `CJE` / `CJE0` / `CBE` base-emitter capacitance and
+  lower the `CJE0` alias instead of silently dropping it.
 - Validate BJT model-card `VT` / `V_T` thermal voltage and lower the `V_T`
   alias instead of silently dropping it.
 - Validate and lower the BJT model-card `HFE` forward-beta alias.
