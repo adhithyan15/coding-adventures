@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card length validation.
+1. Rust Berkeley SPICE MOS model-card lateral-diffusion-length validation.
    - Status: current PR completion candidate.
-   - Reject zero, negative, and non-finite model-card `L` values before
-     lowering MOS elements into engine parameters.
-   - Preserve positive model lengths.
+   - Reject negative and non-finite model-card `LD` values, plus combinations
+     where `L - 2*LD <= 0`, before lowering MOS elements into engine parameters.
+   - Preserve valid zero and positive lateral-diffusion lengths.
 
 ## Completed Slices
 
@@ -4053,9 +4053,22 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Positive model widths remain accepted.
 
+356. Rust Berkeley SPICE MOS model-card length validation.
+   - Status: completed in PR 9538.
+   - Zero, negative, and non-finite model-card `L` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Positive model lengths remain accepted.
+
 ## Backlog
 
-1. Grammar-backed parser and app facade.
+1. Rust Berkeley SPICE MOS model-card validation follow-ups.
+   - Validate the remaining facade gaps in priority order: drain resistance
+     `RD`, source resistance `RS`, sheet resistance `RSH`, flicker-noise
+     coefficient `KF`, and flicker-noise exponent `AF`.
+   - Reuse the finite non-negative contracts and diagnostics already aligned
+     across the Rust, Python, and TypeScript engines.
+
+2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4063,7 +4076,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-2. Deck compatibility follow-up.
+3. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4074,7 +4087,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-3. Production solver core follow-up.
+4. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4085,14 +4098,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-4. Device model depth.
+5. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-5. Analysis completion.
+6. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4101,14 +4114,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-6. Mixed-signal integration.
+7. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-7. Verilog-A and custom models.
+8. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
