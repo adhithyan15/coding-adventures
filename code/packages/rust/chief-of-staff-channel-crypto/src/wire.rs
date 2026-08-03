@@ -298,6 +298,11 @@ pub fn message_record_prefix(channel_id: ChannelId) -> String {
     format!("{}/messages/", encode_hex(&channel_id.0))
 }
 
+/// Stable storage key for one channel's durable membership definition.
+pub fn channel_definition_record_key(channel_id: ChannelId) -> String {
+    format!("{}/definition", encode_hex(&channel_id.0))
+}
+
 /// Stable storage key for the durable next-sequence record of one channel.
 pub fn sequence_state_record_key(channel_id: ChannelId) -> String {
     format!("{}/state/next-sequence", encode_hex(&channel_id.0))
@@ -658,6 +663,10 @@ mod tests {
         assert_eq!(
             sequence_state_record_key(channel_id()),
             format!("{}/state/next-sequence", encode_hex(&channel_id().0))
+        );
+        assert_eq!(
+            channel_definition_record_key(channel_id()),
+            format!("{}/definition", encode_hex(&channel_id().0))
         );
 
         let unsafe_receiver = b"../../receiver\nname";
