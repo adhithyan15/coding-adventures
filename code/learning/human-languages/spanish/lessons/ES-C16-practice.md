@@ -8,7 +8,7 @@ concept_tag: CH16-PRACTICE
 prerequisites: [ES-C16-imperfecto, ES-C16-tres-irregulares]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C16-imperfecto, ES-C16-tres-irregulares, ES-C15-practice, ES-C14-practice]
 ---
 
@@ -16,9 +16,8 @@ reviews_of: [ES-C16-imperfecto, ES-C16-tres-irregulares, ES-C15-practice, ES-C14
 
 ## Warm-up
 
-[PAUSE 2s] You now have **both** past tenses. English marks this difference only
-sometimes, and never with an ending — so this is a genuinely **new distinction**
-to think in, not just new forms to learn.
+[PAUSE 2s] You now have **both** past tenses. English never marks this whole
+distinction with an ending, so it is a new contrast to think in.
 
 ## The split
 
@@ -39,8 +38,7 @@ The classic pairing — the imperfect sets the scene, the preterite breaks it:
 > **Hablaba** con María cuando **llegó** Juan.
 > *(I was talking to María when Juan arrived.)*
 
-The talking is the **line**; the arriving is the **point** that lands on it. Swap
-the tenses and the sentence stops making sense.
+The talking is the **line**; the arriving is the **point** that lands on it.
 
 ## Verbs that change meaning
 

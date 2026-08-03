@@ -9,7 +9,7 @@ prerequisites: [ES-C09-ser, ES-C04-estar]
 sounds: [r-tap, st-no-e]
 roots: [esse-latin, stare-latin]
 etymology_hook: "the split is baked into the roots: ser ← esse (essence, what a thing IS) vs estar ← stāre (to stand, how it stands right now)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C09-ser, ES-C04-estar, ES-C04-como-esta]
 ---
 

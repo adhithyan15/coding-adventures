@@ -9,7 +9,7 @@ prerequisites: [ES-C08-numeros-6-10]
 sounds: [rolled-rr, silent-none]
 roots: [latin-cattus-afroasiatic, unknown-perro]
 etymology_hook: "gato ← Latin cattus, itself probably from an Afro-Asiatic word (compare Nubian kadis) that traveled along Roman trade routes as domestic cats spread out of Egypt — a real, sourced etymology; perro, by honest contrast, is a genuine UNSOLVED mystery with no confirmed origin at all, and it quietly REPLACED Latin's own word for dog, canis (which survives as archaic Spanish can)"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ES-C08-numeros-6-10]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [ES-C13-venir, ES-C09-ser, ES-C10-ir]
 sounds: [diphthong-ui, stress-final]
 roots: [fui-latin]
 etymology_hook: "fui ← Latin fuī 'I have been' (perfect of a second 'be' root — cousin of English BE, future, physics); ser AND ir share this ONE preterite, so fui = 'I was' AND 'I went', context deciding"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C13-venir, ES-C09-ser, ES-C10-ir]
 ---
 

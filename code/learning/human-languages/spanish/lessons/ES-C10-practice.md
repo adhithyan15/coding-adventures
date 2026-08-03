@@ -8,7 +8,7 @@ concept_tag: CH10-PRACTICE
 prerequisites: [ES-C10-ir, ES-C10-ir-a-futuro, ES-C10-mi-tu-su]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C10-ir, ES-C10-ir-a-futuro, ES-C10-mi-tu-su, ES-C09-practice]
 ---
 

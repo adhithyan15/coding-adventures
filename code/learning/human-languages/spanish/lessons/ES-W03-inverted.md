@@ -3,12 +3,12 @@ id: ES-W03-inverted
 chapter: 4
 type: writing
 headword: "¿ ¡"
-gloss: the inverted opening marks — Spanish brackets a question or exclamation at both ends
-prerequisites: [ES-C04-como-esta]
+gloss: the inverted opening marks — an early cue for question or exclamation intonation
+prerequisites: [ES-C04-como-estas-register]
 sounds: []
 roots: []
 est_minutes: 3
-reviews_of: [ES-C04-como-esta, ES-W01-acento]
+reviews_of: [ES-C04-como-estas-register, ES-C04-como-esta, ES-W01-acento]
 ---
 
 # ¿ ¡ — the marks that open a question
@@ -43,27 +43,17 @@ the very first word."* It's a **melody cue placed before the melody**, the exact
 same instinct as the written accent marking stress you can't otherwise see. For
 a language read aloud, it's genuinely useful.
 
-## A nuance: they don't have to hug the capital
-
-The opening mark goes where the *question* starts, not where the sentence
-starts:
-
-> Roberto, ¿cómo estás?
-
-The *¿* opens only the question part. Same for *¡*: *Roberto, ¡buenos días!*
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: read "¿Cómo estás?" — start the rising *question* melody from the
   very first word, the way the ¿ tells you to]
-- [YOU SAY: "¡Hola!" then "¡Gracias!" — the ¡ warns you to land them with energy]
+- [YOU SAY: "¡Hola!" — the ¡ warns you to begin with exclamation energy]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Why does Spanish open a question with **¿**? (Because word order often
 doesn't change, so the reader needs an early warning to use question
 intonation.) How do you write it? (A normal *?* rotated 180°.) Does it always
-sit at the sentence's start? (No — at the *question's* start: *Roberto, ¿cómo
-estás?*) That's the full writing toolkit for Latin-script Spanish: **the acute
-accent, ñ, and ¿ ¡**.
+sit at the sentence's start? (**The next step places it around a question
+inside a larger sentence.**)

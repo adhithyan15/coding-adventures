@@ -8,7 +8,7 @@ concept_tag: CH12-PRACTICE
 prerequisites: [ES-C12-hacer, ES-C12-decir, ES-C12-yo-go]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C12-hacer, ES-C12-decir, ES-C12-yo-go, ES-C11-practice]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [ES-C12-hacer, ES-C03-llamar]
 sounds: [ll-digraph, diphthong-ue]
 roots: [tempus-latin, calor-latin, frigidus-latin, sol-latin, pluere-latin]
 etymology_hook: "el tiempo means BOTH 'time' and 'weather' — from Latin tempus, which already covered both senses; hace calor/frío/sol reuse hacer ('it makes'), but llueve ('it's raining') is its own dedicated verb, llover ← Latin pluere, the SAME cl-/fl-/pl- → ll- sound change you met in llamar/llave/llama"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C12-hacer, ES-C03-llamar]
 ---
 

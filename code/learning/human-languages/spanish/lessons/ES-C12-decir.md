@@ -9,7 +9,7 @@ prerequisites: [ES-C12-hacer, ES-C11-querer]
 sounds: [diphthong-none-i, g-hard]
 roots: [dicere-latin]
 etymology_hook: "decir ← Latin dīcere 'to say, tell' → dictate, diction, dictionary, predict, verdict, contradict; doubly irregular — the -go yo-form digo (like hago/tengo) AND the e→i stem-change (dices/dice)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C12-hacer, ES-C11-querer, ES-C11-stem-changes]
 ---
 

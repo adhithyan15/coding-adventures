@@ -9,7 +9,7 @@ prerequisites: [ES-C21-lunes-viernes, ES-C08-numeros-6-10]
 sounds: [r-tap, diphthong-ie]
 roots: [latin-months, roman-gods]
 etymology_hook: "marzo ← Martius ← Mars, the SAME war-god behind martes; septiembre–diciembre still mean Latin 7–10 because the year once started in March — Julius and Augustus didn't ADD months, they just got two already-existing ones (Quintilis, Sextilis) RENAMED after them"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C21-lunes-viernes, ES-C08-numeros-6-10]
 ---
 

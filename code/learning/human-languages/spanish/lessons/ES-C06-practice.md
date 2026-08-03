@@ -8,7 +8,7 @@ concept_tag: CH6-PRACTICE
 prerequisites: [ES-C06-por-favor, ES-C06-hablar, ES-C06-trabajar, ES-C06-estudiar, ES-C06-espanol]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C06-hablar, ES-C06-trabajar, ES-C06-estudiar, ES-C06-espanol, ES-C04-practice]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [ES-C06-hablar]
 sounds: [r-tap, vowel-o]
 roots: [comedere-latin]
 etymology_hook: "comer ← Latin comedere 'to eat up' (com- + edere 'eat') → English edible, comestible"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C06-hablar, ES-C06-practice]
 ---
 

@@ -49,26 +49,10 @@ deep, how *intimate*, those centuries of contact were. (Its Latin rival *ad*
 "to"/*usque* "up to" simply lost.) You say a piece of al-Andalus every time you
 say goodbye.
 
-And *hasta* is not quite alone. **Ojalá** ("would that…") is also a function
-word, from Andalusi Arabic *law šāʾ Allāh*, "**if God should will**" — the
-*Allāh* is still sitting in its second half. It is arguably the stronger case:
-where *hasta* is a preposition, *ojalá* reaches into the grammar and forces the
-verb after it into a whole different **mood**. Chapter 18 puts it to work.
-
-## Grammar Lens: hasta = "until," a pointer at a limit
-
-*hasta* marks the **end point** of something — in space or time:
-
-- **hasta aquí** — "up to here."
-- **hasta las tres** — "until three o'clock."
-- **hasta luego / mañana / pronto** — "until later / tomorrow / soon" → the
-  farewells that fill the rest of this chapter.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "hasta" — *AHS-tah*, silent h]
-- [YOU SAY: "hasta las tres" — "until three"]
 - [YOU SAY: "hasta" then Arabic *ḥattā* — the same word, 1,300 years apart]
 
 ## Wrap-up Recall
@@ -78,6 +62,5 @@ verb after it into a whole different **mood**. Chapter 18 puts it to work.
 word* / preposition — languages almost never borrow those; it shows how deep the
 Arabic centuries went.) How do you spot many Arabic nouns in Spanish? (The frozen
 *al-* article: *almohada, azúcar, álgebra*.) Which **other** Arabic function word
-did this lesson mention, and what is hiding inside it? (***Ojalá***, from *law
-šāʾ Allāh* — "**if God should will**"; the *Allāh* is still in it.) Next:
-**hasta luego**.
+will return in Chapter 18? (***Ojalá***, a word that triggers a grammatical
+mood.)

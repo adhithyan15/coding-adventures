@@ -5,11 +5,11 @@ type: practice-mix
 headword: (practice)
 gloss: closing a conversation — the full set of farewells
 concept_tag: CH5-PRACTICE
-prerequisites: [ES-C05-adios, ES-C05-hasta, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto]
+prerequisites: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto]
 sounds: []
 roots: []
-est_minutes: 5
-reviews_of: [ES-C05-adios, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto, ES-C04-practice]
+est_minutes: 4
+reviews_of: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta, ES-C05-hasta-luego, ES-C05-hasta-manana, ES-C05-hasta-pronto, ES-C04-practice]
 ---
 
 # Practice — saying goodbye

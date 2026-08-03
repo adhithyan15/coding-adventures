@@ -9,7 +9,7 @@ prerequisites: [ES-C08-tener, ES-C06-hablar]
 sounds: [jota-h-silent, g-hard]
 roots: [facere-latin]
 etymology_hook: "hacer ← Latin facere 'to do, make' → fact, factory, affect, perfect, manufacture, satisfy; the f→h softening (facere→hacer, like Ch.6 hablar) and the -go yo-form hago (like tengo)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C08-tener, ES-C10-practice]
 ---
 

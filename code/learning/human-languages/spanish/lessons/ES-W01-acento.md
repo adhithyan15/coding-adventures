@@ -3,8 +3,8 @@ id: ES-W01-acento
 chapter: 4
 type: writing
 headword: "á é í ó ú"
-gloss: the acute accent (el acento / la tilde) — Spanish's one and only accent mark
-prerequisites: [ES-C03-como, ES-C03-tu-usted, ES-C04-como-esta]
+gloss: the acute accent as a visible exception to Spanish's default stress rules
+prerequisites: [ES-C03-como, ES-C03-tu-usted, ES-C04-como-estas-register]
 sounds: [stress]
 roots: []
 est_minutes: 4
@@ -43,37 +43,17 @@ overrides it to *es-**TÁ***. *cómo* ends in a vowel (rule wants *co-**MO***) b
 is stressed *CÓ-mo*, so it gets the mark. The accent is a **spoken stress you
 can see** — it never changes the vowel's sound, only which syllable you hit.
 
-## Job 2 — it splits look-alike words (la tilde diacrítica)
-
-The same mark pulls apart pairs that are spelled identically but do different
-jobs. This is the one you *must* know — you've already met most of them:
-
-| no accent | with accent |
-|---|---|
-| **tu** = your | **tú** = you (Ch. 3) |
-| **el** = the | **él** = he |
-| **si** = if | **sí** = yes |
-| **se** = (reflexive *se*, Ch. 3) | **sé** = I know |
-| **mas** = but (literary) | **más** = more (Ch. 4) |
-| **como** = like/as | **cómo** = how? (Ch. 3) |
-| **que** = that | **qué** = what? |
-
-Notice the pattern in the bottom rows: **question words wear the accent**
-(*qué, cómo, cuándo, dónde, quién*) — the mark is how writing shows the rising
-"I'm asking" stress. That's why *¿**Có**mo está?* has the accent but *tan
-**co**mo* would not.
-
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "tu" vs "tú", "el" vs "él", "si" vs "sí" — same spelling, the accent
-  is the only difference, and it changes the meaning entirely]
-- [YOU SAY: "cómo" as a question, then "como" as "like" — hear the accent land]
+- [YOU SAY: "casa, joven, llamo" — second-to-last stress]
+- [YOU SAY: "usted, regular, hablar" — final stress]
+- [YOU SAY: "está, cómo" — the accent overrides the default]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] How many accent marks does Spanish have, and which way does it lean?
 (One — the acute, `´`, rising left-to-right.) Its two jobs? (Mark irregular
-stress; split look-alike words like *tu/tú*, *si/sí*.) Which class of words
-almost always carries it? (Question words — *qué, cómo, dónde*.) Next writing
-lesson: the letter that is a *tilde* wearing a hat — **ñ**.
+stress; the next step covers its look-alike job.) When does a word ending in
+a vowel, **-n**, or **-s** need an accent? (**When its stress breaks the
+second-to-last default.**)

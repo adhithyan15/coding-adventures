@@ -8,7 +8,7 @@ concept_tag: CH14-PRACTICE
 prerequisites: [ES-C14-ser-ir-preterite, ES-C14-hablar-preterite]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C14-ser-ir-preterite, ES-C14-hablar-preterite, ES-C13-practice]
 ---
 

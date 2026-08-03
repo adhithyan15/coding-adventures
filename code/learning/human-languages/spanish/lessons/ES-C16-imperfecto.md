@@ -9,7 +9,7 @@ prerequisites: [ES-C15-practice, ES-C07-comer, ES-C07-vivir]
 sounds: [accent-acute, hiatus-ia]
 roots: [latin-abam-ebam]
 etymology_hook: "-aba ← Latin -ābam, -ía ← -ēbam (the b wore away in the -er/-ir set but survives whole in -ar); -er and -ir share ONE set a third time; the accent on -ía breaks the diphthong so i and a are two syllables"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C15-practice, ES-C15-comer-vivir-preterite, ES-C06-hablar, ES-C07-comer]
 ---
 

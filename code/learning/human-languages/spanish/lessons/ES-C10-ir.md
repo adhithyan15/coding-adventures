@@ -9,7 +9,7 @@ prerequisites: [ES-C09-ser, ES-C04-estar]
 sounds: [vowel-i, diphthong-oy]
 roots: [ire-vadere-latin]
 etymology_hook: "ir ← Latin īre 'to go', but its present (voy/vas/va/vamos/van) comes from a DIFFERENT verb, vādere — suppletion, exactly like English go/went"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C09-ser, ES-C09-practice]
 ---
 

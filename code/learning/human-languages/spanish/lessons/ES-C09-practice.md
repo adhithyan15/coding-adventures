@@ -8,7 +8,7 @@ concept_tag: CH9-PRACTICE
 prerequisites: [ES-C09-ser, ES-C09-ser-vs-estar, ES-C09-soy-de, ES-C09-esta-en]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C09-ser-vs-estar, ES-C09-soy-de, ES-C09-esta-en, ES-C04-estar, ES-C08-practice]
 ---
 
@@ -54,18 +54,6 @@ every sentence, name *why* the verb is the one it is.
 
 Two verbs, one conversation: *soy de / soy profesor* (essence → **ser**), *estoy
 en casa / estoy cansado* (state → **estar**).
-
-## What you've built this chapter
-
-- **ser** — the *essence* to-be (← *esse* → essence/present; suppletive **soy ·
-  eres · es · somos · son**, cousins of English *is/am/are*), completing the pair
-  begun with *estar* back in Ch.4.
-- **the ser/estar split**, from the roots: *essence* (ser) vs *estado/standing*
-  (estar) — with **minimal pairs** that flip meaning (*es/está aburrido*, *rico*,
-  *verde*, *listo*).
-- **soy de…** (origin → **ser**; *de* ← *dē*) and **está en…** (location →
-  **estar**; *en* ← *in*), plus the twin questions *¿De dónde eres?* vs *¿Dónde
-  estás?*
 
 ## Guided Practice
 

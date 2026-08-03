@@ -9,7 +9,7 @@ prerequisites: [ES-C14-ser-ir-preterite, ES-C06-hablar]
 sounds: [stress-final, accent-acute]
 roots: [latin-perfect-avi]
 etymology_hook: "the -ar preterite endings -é/-aste/-ó/-amos/-aron ← Latin perfect -āvī/-āvistī/-āvit (amāvī → amé); the written accent on hablé/habló marks the stress Latin put on that final vowel"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C14-ser-ir-preterite, ES-C06-hablar]
 ---
 

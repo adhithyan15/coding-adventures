@@ -3,13 +3,13 @@ id: ES-C18-practice
 chapter: 18
 type: practice-mix
 headword: "Chapter 18 practice"
-gloss: "drilling the vowel flip, the two-subject test, and fact vs. wish"
+gloss: "drilling the vowel flip and inherited stems"
 concept_tag: CH18-PRACTICE
-prerequisites: [ES-C18-subjuntivo, ES-C18-quiero-que]
+prerequisites: [ES-C18-subjunctive-name, ES-C18-ojala]
 sounds: [vowel-e, vowel-a, accent-mark, stress-default-vowel-ns]
 roots: [latin-subiunctivus]
-est_minutes: 6
-reviews_of: [ES-C18-subjuntivo, ES-C18-quiero-que, ES-C12-yo-go, ES-C14-hablar-preterite]
+est_minutes: 4
+reviews_of: [ES-C18-subjunctive-name, ES-C18-ojala, ES-C18-subjuntivo, ES-C18-quiero-que, ES-C12-yo-go, ES-C14-hablar-preterite]
 ---
 
 # Chapter 18 practice — fact or wish?
@@ -52,67 +52,13 @@ throughout (**HA**-ble, ha-**BLE**-mos, **HA**-blen). *Estar* doesn't: es-**TÉ*
 es-**TÉS**, es-**TÉN** all land on the **last** syllable, so each needs a written
 accent. Only es-**TE**-mos falls where Spanish expects, and it takes none.
 
-## Drill 2 — one subject or two?
-
-The test: **does the second verb have a different subject?**
-
-| | |
-|---|---|
-| I want to eat. | Quiero **comer**. *(same subject → infinitive)* |
-| I want you to eat. | Quiero **que comas**. *(two → que + subjunctive)* |
-| We want to live here. | Queremos **vivir** aquí. |
-| We want them to live here. | Queremos **que vivan** aquí. |
-| She wants to work. | Quiere **trabajar**. |
-| She wants me to work. | Quiere **que yo trabaje**. |
-
-Say each pair aloud back to back. The English switches quietly from *"to eat"* to
-*"you to eat"*; Spanish switches loudly, and the loudness is the help.
-
-## Drill 3 — fact or not?
-
-Same *que*, different mood. Report the world → **indicative**. Reach for it →
-**subjunctive**.
-
-| | |
-|---|---|
-| Sé que **comes** aquí. | I know you eat here. *(fact)* |
-| Quiero que **comas** aquí. | I want you to eat here. *(wish)* |
-| Sé que **está** aquí. | I know he's here. *(fact)* |
-| Ojalá **esté** aquí. | I hope he's here. *(wish)* |
-| Dice que **viene**. | She says she's coming. *(report)* |
-| Quiero que **venga**. | I want her to come. *(wish)* |
-
-Notice *ojalá* needs no *que* and no main verb. The word **is** the wish, so it
-triggers the mood by itself.
-
-## Drill 4 — hear the flip
-
-The vowel swap is small on paper and clear in the mouth. Say each pair:
-
-| indicative | subjunctive |
-|---|---|
-| habl**a** | habl**e** |
-| com**e** | com**a** |
-| trabaj**a** | trabaj**e** |
-| viv**e** | viv**a** |
-
-The two *-ar* rows are also a reminder from Chapter 14. *Hable* and *hablé* are
-different words — and so are *trabaje* and *trabajé*. The written accent is the
-only thing separating "**(that) he speak**" from "**I spoke**," which is exactly
-what Chapter 14 meant by saying the accent **carries** the tense.
-
 ## Wrap-up Recall
 
 [PAUSE 3s] Recite the recipe. (***Yo* form, drop the *-o*, flip the vowel**.)
 Which earlier irregulars come along free? (The ***-go* club** of Ch. 12–13 and
 **Ch. 11's stem-changers**.) What's the two-subject test? (If the second verb has
-a **different subject**, use *que* + subjunctive; if the same, use the
-**infinitive**.) Translate both: "I want to eat" / "I want you to eat."
-(*Quiero comer* / *Quiero que comas*.) Why is *Sé que comes aquí* indicative?
-(It **reports a fact**.) Which *yo* forms leave no *-o* to strip, and which of
+**Ch. 11's stem-changers**.) Which *yo* forms leave no *-o* to strip, and which of
 them is still predictable? (*Soy, voy, sé, he, estoy* — and ***estoy*** is the
 predictable one, *est-* + normal endings.) Where does *estar*'s irregularity
 actually live? (**In the stress** — es-**TÉ** lands on the **last** syllable,
-breaking Spanish's second-to-last default, which is what the accent is recording.) What does *ojalá* need to work? (**Nothing** — no *que*,
-no main verb; it's a wish by itself.) And where is it from? (Arabic **law šāʾ
-Allāh**.) Next chapter: describing the world around you.
+breaking Spanish's second-to-last default, which is what the accent records.)

@@ -9,7 +9,7 @@ prerequisites: [ES-C14-hablar-preterite, ES-C07-comer, ES-C07-vivir]
 sounds: [stress-final, accent-acute]
 roots: [latin-perfect-i]
 etymology_hook: "the -er and -ir preterites are IDENTICAL (-í/-iste/-ió/-imos/-ieron) though their presents differ — two conjugations merging into one; ← Latin perfect -ī/-istī/-it, with -istī → -iste still plainly visible"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C14-hablar-preterite, ES-C07-comer, ES-C07-vivir]
 ---
 

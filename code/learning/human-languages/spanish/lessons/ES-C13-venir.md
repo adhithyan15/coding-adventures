@@ -9,7 +9,7 @@ prerequisites: [ES-C13-salir, ES-C11-querer]
 sounds: [g-hard, diphthong-ie]
 roots: [venire-latin]
 etymology_hook: "venir ← Latin venīre 'to come' → adventure, convene, event, invent, avenue, souvenir; doubly irregular like decir — the -go yo-form vengo AND the e→ie stem-change (vienes/viene), completing the club"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C13-salir, ES-C13-poner, ES-C11-querer, ES-C12-decir]
 ---
 

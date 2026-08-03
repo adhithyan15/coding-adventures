@@ -9,7 +9,7 @@ prerequisites: [ES-C08-numeros-6-10]
 sounds: [diphthong-ie, silent-none]
 roots: [latin-undecim-quindecim, latin-viginti]
 etymology_hook: "once-quince (11-15) are Latin's ūndecim-quīndecim, fused down almost past recognition; dieciséis-diecinueve (16-19) are perfectly transparent 'diez y seis' compounds — but Latin's OWN 18 and 19 were subtractive oddities, duodēvīgintī ('two from twenty') and ūndēvīgintī ('one from twenty'); Spanish didn't inherit that quirk, it replaced it with plain addition"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ES-C08-numeros-6-10]
 ---
 

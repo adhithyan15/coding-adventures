@@ -8,7 +8,7 @@ concept_tag: CH11-PRACTICE
 prerequisites: [ES-C11-querer, ES-C11-poder, ES-C11-stem-changes, ES-C11-nuestro]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C11-querer, ES-C11-poder, ES-C11-nuestro, ES-C10-practice]
 ---
 
@@ -51,17 +51,6 @@ without thinking.
 
 Every tool of the chapter: *quiero* (want, e→ie), *puedes/puedo/podemos* (can,
 o→ue), *nuestros* (our, agreeing), and *ir a* from Ch.10.
-
-## What you've built this chapter
-
-- **querer** (want, ← *quaerere* "seek" → query/quest/conquer) — the **e→ie**
-  stem-changer.
-- **poder** (can, ← *potēre* → power/potent/possible) — the **o→ue** stem-changer,
-  and *poder* + infinitive for ability.
-- **the boot**: one sound-law (short stressed *e→ie*, *o→ue*; *tierra*, *puerta*)
-  cracking all forms but *nosotros/vosotros*.
-- **nuestro/vuestro** (← *noster/voster* → Paternoster) — the possessive that agrees
-  in **gender and number**, four forms.
 
 ## Guided Practice
 

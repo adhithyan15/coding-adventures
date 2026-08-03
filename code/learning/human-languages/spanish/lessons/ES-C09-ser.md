@@ -9,7 +9,7 @@ prerequisites: [ES-C04-estar, ES-C08-tener]
 sounds: [vowel-e, r-tap]
 roots: [esse-latin, sedere-latin]
 etymology_hook: "ser ← Latin esse 'to be' (+ sedēre 'to sit'); its forms are suppletive — soy/es/son are cousins of English am/is/are"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C04-estar, ES-C08-tener]
 ---
 

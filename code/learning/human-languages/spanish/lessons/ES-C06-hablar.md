@@ -9,7 +9,7 @@ prerequisites: []
 sounds: [silent-h, r-tap, v-b]
 roots: [fabulari-latin]
 etymology_hook: "hablar ← Latin fabulārī 'to chat, tell tales' (← fābula 'story' → fable); the f→h sound-law"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C06-por-favor]
 ---
 

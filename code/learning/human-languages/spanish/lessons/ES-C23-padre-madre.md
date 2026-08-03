@@ -9,7 +9,7 @@ prerequisites: [ES-C22-rojo-azul]
 sounds: [r-tap, d-soft]
 roots: [pater-latin, mater-latin]
 etymology_hook: "padre ← pater, madre ← mater — the same PIE *ph2ter/*meh2ter that gave English father/mother via Grimm's law (p→f, t→th)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C22-rojo-azul, ES-C22-negro-blanco]
 ---
 

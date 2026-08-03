@@ -9,7 +9,7 @@ prerequisites: [ES-C22-rojo-azul]
 sounds: [rolled-none, double-l-y]
 roots: [latin-viridis-vireo, latin-amarus-bitter]
 etymology_hook: "verde ← Latin viridis, 'green,' from virere, 'to be green/vigorous' (cousin of English verdant, verdure — NOT of English green itself, a separate Germanic root); amarillo is the real surprise — it does NOT come from any Latin word for yellow at all, but from amarellus, 'a little bitter,' a diminutive of amarus, 'bitter' — the same root as Spanish's own amargo, 'bitter'"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ES-C22-rojo-azul]
 ---
 
