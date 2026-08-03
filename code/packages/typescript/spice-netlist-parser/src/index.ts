@@ -1215,6 +1215,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode RS must be finite and non-negative");
   }
+  const diodeJunctionPotential = params.get("VJ") ?? params.get("PB");
+  if (
+    kind === "D" &&
+    diodeJunctionPotential !== undefined &&
+    (!Number.isFinite(diodeJunctionPotential) || diodeJunctionPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("diode VJ must be finite and positive");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
@@ -1801,6 +1809,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         model.params.get("CJO") ?? model.params.get("CJ") ?? model.params.get("CJ0") ?? 0.0,
         model.params.get("TT") ?? 0.0,
       ),
+      junctionPotential: model.params.get("VJ") ?? model.params.get("PB") ?? 1.0,
       seriesResistance: model.params.get("RS") ?? 0.0,
     };
   }
