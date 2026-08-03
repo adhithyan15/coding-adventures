@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate and lower MOS model-card `TOX` into Level-1 oxide thickness instead
+  of silently discarding it.
 - Reject non-finite and non-Level-1 MOS model-card `LEVEL` values while
   preserving explicit and implicit Level 1 cards.
 - Parse `.save`, scoped or global `.probe`, and `.measure` / `.meas` cards,

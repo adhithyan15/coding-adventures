@@ -1155,6 +1155,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("only MOS LEVEL=1 model cards are supported");
   }
+  const oxideThickness = params.get("TOX");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    oxideThickness !== undefined &&
+    (!Number.isFinite(oxideThickness) || oxideThickness <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET TOX must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,
@@ -1223,6 +1231,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "PHI",
     "W",
     "L",
+    "TOX",
     "IS",
     "N_SUB",
     "T_NOM",
