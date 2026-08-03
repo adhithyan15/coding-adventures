@@ -2031,6 +2031,13 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(flicker_noise_exponent) = params.get("AF") {
+            if !flicker_noise_exponent.is_finite() || *flicker_noise_exponent < 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET AF must be finite and non-negative",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

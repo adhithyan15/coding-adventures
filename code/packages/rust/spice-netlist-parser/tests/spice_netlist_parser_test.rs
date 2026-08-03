@@ -2321,6 +2321,35 @@ fn preserves_non_negative_mosfet_model_flicker_noise_coefficient() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_flicker_noise_exponents() {
+    for exponent in ["-1", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model noise NMOS(AF={exponent})\nM1 d g s b noise"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET AF must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_flicker_noise_exponent() {
+    for (exponent, expected) in [("0", 0.0), ("1.2", 1.2)] {
+        let parsed = parse_netlist(&format!(
+            ".model noise NMOS(AF={exponent})\nM1 d g s b noise"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.flicker_noise_exponent, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
