@@ -12,15 +12,15 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 1065,
+    "totalLessons": 1066,
     "authoredBooks": 20,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 213,
-    "legacySchemaTracks": 11,
-    "mixedSchemaTracks": 9,
+    "lessonChaptersWithoutBooks": 207,
+    "legacySchemaTracks": 10,
+    "mixedSchemaTracks": 10,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -727,6 +727,7 @@
           17,
           18,
           19,
+          20,
           21,
           22,
           23
@@ -747,18 +748,18 @@
           13,
           14,
           15,
-          16
-        ],
-        "missingBookChapters": [
+          16,
           17,
           18,
           19,
+          20,
           21,
           22,
           23
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 73
+        "coveragePercent": 100
       },
       {
         "language": "arabic",
@@ -1482,10 +1483,11 @@
       },
       {
         "language": "german",
-        "status": "legacy",
-        "lessonCount": 75,
+        "status": "mixed",
+        "lessonCount": 76,
         "versions": {
-          "1": 75
+          "1": 66,
+          "2": 10
         }
       },
       {
