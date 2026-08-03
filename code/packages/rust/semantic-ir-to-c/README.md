@@ -175,7 +175,13 @@ array's length AND its items pointer once before its loop/allocation instead
 of re-reading either — length alone isn't enough, since `push` reallocates
 relative to the CURRENT length, which can be smaller than an outer snapshot
 after a `pop`/`shift` — the same "iterate a snapshot" convention
-`_sir_seq_iter`'s `ForEach` already uses.  A
+`_sir_seq_iter`'s `ForEach` already uses; **slice 6** (Hash non-block
+methods): `keys`/`values`/`to_a`/`to_h`/`dig`/`merge`/`invert` (all
+non-mutating), plus `delete`/`clear` — the FIRST Hash methods that mutate
+the receiver (`delete` shifts later entries down like `Array#shift`;
+`clear` resets `len` in place like `Array#pop`).  `fetch`/`to_a` widen to
+accept a Hash receiver alongside their Array forms; `dig` is polymorphic
+over Hash/Array from the start.  A
 wrong-type receiver or argument raises `NoMethodError`; a built-in method not
 lowered yet is still rejected cleanly.
 

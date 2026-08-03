@@ -783,6 +783,11 @@ SirValue _sir_map_set(SirValue map, SirValue key, SirValue val) {
     return val;
 }
 
+static SirValue _sir_map_wrap(SirMap *m) {
+    SirValue v; v.tag = SIR_MAP; v.as.map = m;
+    return v;
+}
+
 SirValue _sir_is_null(SirValue v)   { return _sir_bool(v.tag == SIR_NIL); }
 SirValue _sir_is_pair(SirValue v)   { return _sir_bool(v.tag == SIR_PAIR); }
 SirValue _sir_is_number(SirValue v) { return _sir_bool(_sir_is_num(v)); }
@@ -1830,6 +1835,102 @@ static SirValue _sir_array_zip(SirSeq *s, int argc, SirValue *args) {
     return _sir_seq_wrap(r);
 }
 
+/* ---- Collections slice 6: Hash non-block methods ---------------------------
+ *
+ * `keys`/`values`/`to_a` walk `m->entries` in INSERTION order (the same
+ * order `_sir_fmt_map`/iteration already use), so they agree with how a map
+ * prints. None of these take a block (that's slice 7), so — unlike the
+ * Array block helpers — there is no closure call mid-loop that could mutate
+ * the receiver; no snapshot retrofit is needed here. */
+
+static SirValue _sir_hash_keys(SirMap *m) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = m->len;
+    r->items = (m->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)m->len) : NULL;
+    for (int64_t i = 0; i < m->len; i++) r->items[i] = m->entries[i].key;
+    return _sir_seq_wrap(r);
+}
+static SirValue _sir_hash_values(SirMap *m) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = m->len;
+    r->items = (m->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)m->len) : NULL;
+    for (int64_t i = 0; i < m->len; i++) r->items[i] = m->entries[i].val;
+    return _sir_seq_wrap(r);
+}
+/* `fetch(k)` — like `h[k]` but RAISES `KeyError` on a missing key instead of
+ * returning nil (matching Ruby's `Hash#fetch`, and this backend's
+ * `Array#fetch`, which raises `IndexError` the same way). */
+static SirValue _sir_hash_fetch(SirMap *m, SirValue key) {
+    int64_t at = _sir_map_find(m, key);
+    if (at < 0) return _sir_raise(_sir_error("KeyError", _sir_str("key not found")));
+    return m->entries[at].val;
+}
+static SirValue _sir_hash_to_a(SirMap *m) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = m->len;
+    r->items = (m->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)m->len) : NULL;
+    for (int64_t i = 0; i < m->len; i++) r->items[i] = _sir_seq_lit(2, m->entries[i].key, m->entries[i].val);
+    return _sir_seq_wrap(r);
+}
+/* `dig(k0, k1, ...)` — looks up `k0`, then recurses INTO the result for each
+ * remaining key if it is itself diggable (a Hash or an Array); anything else
+ * (including running out of structure early) yields nil — the same lenient
+ * OOB-is-nil convention `_sir_seq_index`/`_sir_map_get` already use, rather
+ * than real Ruby's `TypeError` on a non-diggable intermediate. Polymorphic
+ * over the STARTING receiver too, so it doubles as `Array#dig`. */
+static SirValue _sir_dig(SirValue recv, int argc, SirValue *args) {
+    SirValue cur = recv;
+    for (int i = 0; i < argc; i++) {
+        if (cur.tag == SIR_MAP) cur = _sir_map_get(cur, args[i]);
+        else if (cur.tag == SIR_SEQ) cur = _sir_seq_index(cur, args[i]);
+        else return _sir_nil();
+    }
+    return cur;
+}
+/* `merge(other)` — a FRESH map with `self`'s entries, then `other`'s entries
+ * put on top (a shared key takes `other`'s value, matching Ruby's no-block
+ * `Hash#merge`); a non-Hash `other` is ignored (lenient, mirroring
+ * `Array#zip`'s treatment of a non-Array `other` elsewhere in this file). */
+static SirValue _sir_hash_merge(SirMap *m, SirValue other) {
+    int64_t other_len = (other.tag == SIR_MAP) ? other.as.map->len : 0;
+    SirMap *r = _sir_map_new(m->len + other_len);
+    for (int64_t i = 0; i < m->len; i++) _sir_map_put(r, m->entries[i].key, m->entries[i].val);
+    for (int64_t i = 0; i < other_len; i++) {
+        _sir_map_put(r, other.as.map->entries[i].key, other.as.map->entries[i].val);
+    }
+    return _sir_map_wrap(r);
+}
+/* `delete(k)` — the FIRST Hash method that mutates the receiver: removes the
+ * entry (shifting later entries down by one, matching `Array#shift`'s
+ * in-place style — no reallocation) and returns its value, or nil if `k`
+ * wasn't present. No block-taking Hash helper exists yet (slice 7), so no
+ * mid-iteration mutation is reachable here — but slice 7 must apply the
+ * same len+entries-pointer snapshot discipline slice 4 established for
+ * Array once it lands. */
+static SirValue _sir_hash_delete(SirMap *m, SirValue key) {
+    int64_t at = _sir_map_find(m, key);
+    if (at < 0) return _sir_nil();
+    SirValue v = m->entries[at].val;
+    for (int64_t i = at + 1; i < m->len; i++) m->entries[i - 1] = m->entries[i];
+    m->len--;
+    return v;
+}
+/* `clear` — removes every entry IN PLACE (just resets `len`; the backing
+ * array is never freed, matching `Array#pop`'s style) and returns the
+ * (now-empty) receiver, matching Ruby. */
+static SirValue _sir_hash_clear(SirMap *m) {
+    m->len = 0;
+    return _sir_map_wrap(m);
+}
+/* `invert` — a FRESH map with keys and values swapped; a later duplicate
+ * (by resulting key, i.e. an earlier VALUE) overwrites the earlier one via
+ * `_sir_map_put`, matching Ruby (last entry in insertion order wins). */
+static SirValue _sir_hash_invert(SirMap *m) {
+    SirMap *r = _sir_map_new(m->len);
+    for (int64_t i = 0; i < m->len; i++) _sir_map_put(r, m->entries[i].val, m->entries[i].key);
+    return _sir_map_wrap(r);
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -1911,6 +2012,7 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ) return _sir_array_flatten(recv);
     } else if (strcmp(m, "to_a") == 0) {
         if (recv.tag == SIR_SEQ) return recv;  /* Array#to_a is the array itself */
+        if (recv.tag == SIR_MAP) return _sir_hash_to_a(recv.as.map);
     }
     /* Collections slice 5: Array block methods. Each requires exactly the
        trailing-block shape the frontend emits (`argc==1`, a closure) except
@@ -1960,6 +2062,7 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ && argc == 0) return _sir_array_shift(recv.as.seq);
     } else if (strcmp(m, "fetch") == 0) {
         if (recv.tag == SIR_SEQ && argc == 1) return _sir_array_fetch(recv.as.seq, args[0]);
+        if (recv.tag == SIR_MAP && argc == 1) return _sir_hash_fetch(recv.as.map, args[0]);
     } else if (strcmp(m, "values_at") == 0) {
         if (recv.tag == SIR_SEQ) return _sir_array_values_at(recv.as.seq, argc, args);
     } else if (strcmp(m, "rotate") == 0) {
@@ -1969,6 +2072,25 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         }
     } else if (strcmp(m, "zip") == 0) {
         if (recv.tag == SIR_SEQ) return _sir_array_zip(recv.as.seq, argc, args);
+    }
+    /* Collections slice 6: Hash non-block methods. */
+    else if (strcmp(m, "keys") == 0) {
+        if (recv.tag == SIR_MAP) return _sir_hash_keys(recv.as.map);
+    } else if (strcmp(m, "values") == 0) {
+        if (recv.tag == SIR_MAP) return _sir_hash_values(recv.as.map);
+    } else if (strcmp(m, "to_h") == 0) {
+        if (recv.tag == SIR_MAP) return recv;  /* Hash#to_h is the hash itself */
+    } else if (strcmp(m, "dig") == 0) {
+        if ((recv.tag == SIR_MAP || recv.tag == SIR_SEQ) && argc >= 1)
+            return _sir_dig(recv, argc, args);
+    } else if (strcmp(m, "merge") == 0) {
+        if (recv.tag == SIR_MAP && argc >= 1) return _sir_hash_merge(recv.as.map, args[0]);
+    } else if (strcmp(m, "delete") == 0) {
+        if (recv.tag == SIR_MAP && argc == 1) return _sir_hash_delete(recv.as.map, args[0]);
+    } else if (strcmp(m, "clear") == 0) {
+        if (recv.tag == SIR_MAP && argc == 0) return _sir_hash_clear(recv.as.map);
+    } else if (strcmp(m, "invert") == 0) {
+        if (recv.tag == SIR_MAP && argc == 0) return _sir_hash_invert(recv.as.map);
     }
     /* Collections slice 2: 1-arg String queries (arg is a String); slice 4
        widens `include?`/`index` to accept an Array receiver too. */
