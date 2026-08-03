@@ -90,10 +90,13 @@ public static class MosaicHost
         var targetUrl = Environment.GetEnvironmentVariable("VENTURE_BROWSER_INTERACTION_URL");
         var linkUrl = Environment.GetEnvironmentVariable(
             "VENTURE_BROWSER_INTERACTION_LINK_URL");
+        var failureUrl = Environment.GetEnvironmentVariable(
+            "VENTURE_BROWSER_INTERACTION_FAILURE_URL");
         var startUrl = Environment.GetEnvironmentVariable("VENTURE_START_URL");
         if (string.IsNullOrWhiteSpace(markerPath)
             || string.IsNullOrWhiteSpace(targetUrl)
             || string.IsNullOrWhiteSpace(linkUrl)
+            || string.IsNullOrWhiteSpace(failureUrl)
             || string.IsNullOrWhiteSpace(startUrl)
             || System.Threading.Interlocked.Exchange(ref interactionAcceptanceStarted, 1) != 0)
         {
@@ -509,6 +512,45 @@ public static class MosaicHost
                     return;
                 }
 
+                _ = addressInput.Focus(FocusState.Programmatic);
+                addressInput.Text = failureUrl;
+                for (var remaining = 20; remaining >= 0; remaining--)
+                {
+                    if (string.Equals(component.Address, failureUrl, StringComparison.Ordinal))
+                    {
+                        break;
+                    }
+                    await System.Threading.Tasks.Task.Delay(50);
+                }
+                if (!string.Equals(component.Address, failureUrl, StringComparison.Ordinal)
+                    || !CommitAddressWithEnter(addressInput))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        error = "failed-navigation native address Enter event unavailable",
+                    });
+                    return;
+                }
+                if (!await WaitForFailedNavigationAsync(
+                    component, failureUrl, "Venture link acceptance")
+                    || !backButton.IsEnabled
+                    || forwardButton.IsEnabled)
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        address = component.Address,
+                        pageTitle = component.PageTitle,
+                        statusText = component.StatusText,
+                        error = "failed navigation did not preserve the shared browser transaction",
+                    });
+                    return;
+                }
+
                 WriteInteractionResult(markerPath, new
                 {
                     backend = "xaml",
@@ -516,6 +558,9 @@ public static class MosaicHost
                     controls = "back-forward-reload-home",
                     addressCommit = "native-return",
                     navigationState = "native-disabled-transitions",
+                    failedNavigation = "transaction-retained",
+                    failureStatus = component.StatusText,
+                    failureAddress = failureUrl,
                     surfaceFocus = "native",
                     surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
@@ -573,6 +618,27 @@ public static class MosaicHost
             _ = ApplyProps(component);
             if (string.Equals(component.Address, address, StringComparison.Ordinal)
                 && string.Equals(component.PageTitle, pageTitle, StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static async System.Threading.Tasks.Task<bool> WaitForFailedNavigationAsync(
+        VentureChrome component,
+        string address,
+        string retainedPageTitle)
+    {
+        for (var remaining = 50; remaining >= 0; remaining--)
+        {
+            await System.Threading.Tasks.Task.Delay(100);
+            _ = ApplyProps(component);
+            if (string.Equals(component.Address, address, StringComparison.Ordinal)
+                && string.Equals(
+                    component.PageTitle, retainedPageTitle, StringComparison.Ordinal)
+                && component.StatusText.StartsWith(
+                    "Load failed: HTTP status 503", StringComparison.Ordinal))
             {
                 return true;
             }
