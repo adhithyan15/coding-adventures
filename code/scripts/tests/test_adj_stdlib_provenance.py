@@ -475,6 +475,66 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
         return old_roots
 
+    def downgrade_formula_inputs_to_legacy(
+        self, workspace: Path
+    ) -> dict[str, str]:
+        cas_root = workspace / provenance.DEFAULT_ROOT
+        manifest_path = workspace / provenance.DEFAULT_MANIFEST
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        roots = formula_inventory_migration._registered_roots(cas, manifest_path)
+        legacy_roots = dict(roots)
+        for bundle_id, digest in roots.items():
+            query = provenance._json_object(cas, digest, "provenance_bundle")
+            if "execution_witness_sha256s" not in query:
+                continue
+            audit = provenance._materialize_formula_audit(
+                cas, query, self.formula_audit_command()
+            )
+            legacy = provenance._normalized_formula_evidence(
+                cas, query, audit, legacy_input_references=True
+            )
+            derivation_hashes = []
+            witness_hashes = []
+            for derivation, derivation_links, witness, witness_links in legacy:
+                derivation_hash = cas.put_json(
+                    derivation,
+                    kind="formula_derivation",
+                    label=f"{bundle_id} legacy derivation",
+                    links=derivation_links,
+                )
+                witness["formula_derivation_sha256"] = derivation_hash
+                witness_hash = cas.put_json(
+                    witness,
+                    kind="execution_witness",
+                    label=f"{bundle_id} legacy witness",
+                    links=witness_links | {derivation_hash},
+                )
+                derivation_hashes.append(derivation_hash)
+                witness_hashes.append(witness_hash)
+            query["formula_derivation_sha256s"] = sorted(derivation_hashes)
+            query["execution_witness_sha256s"] = sorted(witness_hashes)
+            legacy_roots[bundle_id] = cas.put_json(
+                query,
+                kind="provenance_bundle",
+                label=f"{bundle_id} legacy query root",
+                links=provenance._bundle_declared_links(query),
+            )
+
+        reachable = provenance._reachable(cas, legacy_roots.values())
+        for digest in sorted(set(cas.index) - reachable):
+            cas.object_path(digest).unlink()
+        cas.index = {
+            digest: record
+            for digest, record in cas.index.items()
+            if digest in reachable
+        }
+        cas.write_index()
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["bundle_hashes"] = sorted(legacy_roots.values())
+        manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+        return legacy_roots
+
     def replace_bundle(
         self, cas_root: Path, manifest_path: Path, mutate: object
     ) -> None:
@@ -784,6 +844,558 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 formula_inventory_command=self.formula_inventory_command(),
             )
 
+    def test_formula_input_reference_resolves_dependency_owner(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, _manifest_path, hashes = self.build_repository(root)
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            bundle = provenance._json_object(
+                cas, hashes["bundle"], "provenance_bundle"
+            )
+            clause = bundle["clauses"][0]
+            identity = {
+                "provenance": {
+                    "corroborations": [],
+                    "locator": clause["locator"],
+                    "quote": {
+                        "byte_len": clause["end"] - clause["start"],
+                        "byte_offset": clause["start"],
+                        "snapshot_sha256": clause["snapshot_sha256"],
+                        "text_sha256": clause["quote_sha256"],
+                    },
+                    "source": "fixture input",
+                    "trust": "authoritative",
+                },
+                "term": "fixture_value(1)",
+            }
+
+            reference, links = provenance._input_reference(
+                [(hashes["bundle"], bundle)], identity
+            )
+
+            self.assertEqual(
+                reference["owner"],
+                {
+                    "bundle_id": bundle["bundle_id"],
+                    "bundle_sha256": hashes["bundle"],
+                    "kind": "dependency",
+                },
+            )
+            self.assertEqual(
+                reference["owner_source_sha256"],
+                bundle["input"]["raw_source_sha256"],
+            )
+            self.assertEqual(
+                reference["owner_source_ir_sha256"],
+                bundle["input"]["source_ir_sha256"],
+            )
+            self.assertEqual(reference["snapshot_sha256"], hashes["snapshot"])
+            self.assertEqual(reference["source_ir_sha256"], hashes["rendered_ir"])
+            self.assertEqual(reference["schema_version"], 2)
+            self.assertEqual(
+                links,
+                {
+                    hashes["bundle"],
+                    hashes["input"],
+                    hashes["input_ir"],
+                    hashes["snapshot"],
+                    hashes["rendered_ir"],
+                },
+            )
+
+            query_reference, _query_links = provenance._input_reference(
+                [(None, bundle)], identity
+            )
+            self.assertEqual(
+                query_reference["owner"],
+                {"bundle_id": bundle["bundle_id"], "kind": "query"},
+            )
+
+    def test_formula_input_reference_rejects_ambiguous_closure_quote(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, _manifest_path, hashes = self.build_repository(root)
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            bundle = provenance._json_object(
+                cas, hashes["bundle"], "provenance_bundle"
+            )
+            duplicate = deepcopy(bundle)
+            duplicate["bundle_id"] = "test.duplicate.v1"
+            clause = bundle["clauses"][0]
+            identity = {
+                "provenance": {
+                    "corroborations": [],
+                    "locator": clause["locator"],
+                    "quote": {
+                        "byte_len": clause["end"] - clause["start"],
+                        "byte_offset": clause["start"],
+                        "snapshot_sha256": clause["snapshot_sha256"],
+                        "text_sha256": clause["quote_sha256"],
+                    },
+                    "source": "fixture input",
+                    "trust": "authoritative",
+                },
+                "term": "fixture_value(1)",
+            }
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "must resolve to exactly one closure claim",
+            ):
+                provenance._input_reference(
+                    [(hashes["bundle"], bundle), ("0" * 64, duplicate)], identity
+                )
+
+    def test_formula_input_reference_rejects_a_forged_locator(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = (
+            formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        )
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        query_hash = self.registered_bundle_hash(
+            cas_root, manifest_path, "adj.math.arithmetic.ratio.query.v1"
+        )
+        query = provenance._json_object(cas, query_hash, "provenance_bundle")
+        audit = provenance._materialize_formula_audit(
+            cas, query, self.formula_audit_command()
+        )
+        audit["derivations"][0]["inputs"][0]["provenance"]["locator"] = (
+            "repo://forged/input.txt"
+        )
+
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "input locator disagrees"
+        ):
+            provenance._normalized_formula_evidence(cas, query, audit)
+
+    def test_formula_input_reference_rejects_a_forged_quote_status(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = (
+            formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        )
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        query_hash = self.registered_bundle_hash(
+            cas_root, manifest_path, "adj.math.arithmetic.ratio.query.v1"
+        )
+        query = provenance._json_object(cas, query_hash, "provenance_bundle")
+        audit = provenance._materialize_formula_audit(
+            cas, query, self.formula_audit_command()
+        )
+        status = audit["derivations"][0]["verification"]["input_quotes"][0][
+            "quote"
+        ]
+        status["byte_len"] += 1
+
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "quote status disagrees"
+        ):
+            provenance._normalized_formula_evidence(cas, query, audit)
+
+    def test_formula_audit_import_requires_a_direct_cas_edge(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = (
+            formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        )
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        query_hash = self.registered_bundle_hash(
+            cas_root, manifest_path, "adj.math.arithmetic.ratio.query.v1"
+        )
+        query = provenance._json_object(cas, query_hash, "provenance_bundle")
+        audit = provenance._materialize_formula_audit(
+            cas, query, self.formula_audit_command()
+        )
+        by_source, formula_bundles = provenance._execution_graph(cas, query)
+        nested_import = next(
+            item
+            for item in audit["imports"]
+            if item["importer_source_sha256"]
+            != query["input"]["raw_source_sha256"]
+        )
+        importer_source = nested_import["importer_source_sha256"]
+        importer_hash, importer = by_source[importer_source]
+        importer_without_edge = deepcopy(importer)
+        importer_without_edge["dependencies"] = []
+        by_source[importer_source] = (importer_hash, importer_without_edge)
+
+        with (
+            mock.patch.object(
+                provenance,
+                "_execution_graph",
+                return_value=(by_source, formula_bundles),
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "import is not a direct CAS dependency"
+            ),
+        ):
+            provenance._normalized_formula_evidence(cas, query, audit)
+
+    def test_direct_formula_dependency_ignores_fact_only_siblings(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = (
+            formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        )
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        roots = formula_inventory_migration._registered_roots(cas, manifest_path)
+        ratio_query = provenance._json_object(
+            cas,
+            roots["adj.math.arithmetic.ratio.query.v1"],
+            "provenance_bundle",
+        )
+        ratio_formula = roots["adj.math.arithmetic.ratio.v1"]
+        fact_only = roots["adj.math.arithmetic.percent_of.query.v1"]
+        query_with_sibling = deepcopy(ratio_query)
+        query_with_sibling["dependencies"] = sorted([ratio_formula, fact_only])
+
+        selected, _inventory_hash, _inventory = provenance._direct_formula_inventory(
+            cas, query_with_sibling
+        )
+        self.assertEqual(selected, ratio_formula)
+
+        query_with_sibling["dependencies"].append(
+            roots["adj.math.arithmetic.primitives.v1"]
+        )
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "exactly one direct formula dependency"
+        ):
+            provenance._direct_formula_inventory(cas, query_with_sibling)
+
+    def test_transitive_imported_fact_witness_passes_strict_replay(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            cas = provenance.Cas(cas_root)
+            facts_path = "code/example/imported-facts.adj"
+            formula_path = "code/example/imported-formula.adj"
+            query_path = "code/example/imported-query.adj"
+            fact_fixture_path = "code/example/imported-fact.txt"
+            formula_fixture_path = "code/example/imported-formula.txt"
+            unused_fixture_path = "code/example/unused-query-fact.txt"
+            fact_fixture = b"imported value is 3."
+            formula_fixture = b"Double a value by multiplying it by 2."
+            unused_fixture = b"unused value is 1."
+            fact_snapshot = provenance.sha256_bytes(fact_fixture)
+            formula_snapshot = provenance.sha256_bytes(formula_fixture)
+            unused_snapshot = provenance.sha256_bytes(unused_fixture)
+            facts_source = (
+                b"dictionary imported_vocab {\n"
+                b"  define imported : finding\n"
+                b"  define unused : finding\n"
+                b"}\n"
+                b"observe imported(3)\n"
+                b'  quote "imported value is 3." at 0 snapshot "'
+                + fact_snapshot.encode()
+                + b'"\n  source "imported value fixture"\n'
+                b'  locator "repo://code/example/imported-fact.txt"\n'
+                b"  trust authoritative\n"
+            )
+            formula_source = (
+                b'import "imported-facts.adj"\n'
+                b"formulabook imported_math {\n"
+                b"  formula double(value) = value * 2\n"
+                b'    quote "Double a value by multiplying it by 2." at 0 snapshot "'
+                + formula_snapshot.encode()
+                + b'"\n    source "Double a value by multiplying it by 2."\n'
+                b'    locator "repo://code/example/imported-formula.txt"\n'
+                b"    trust authoritative\n"
+                b"}\n"
+            )
+            query_source = (
+                b'import "imported-formula.adj"\n'
+                b"observe unused(1)\n"
+                b'  quote "unused value is 1." at 0 snapshot "'
+                + unused_snapshot.encode()
+                + b'"\n  source "unused query fixture"\n'
+                b'  locator "repo://code/example/unused-query-fact.txt"\n'
+                b"  trust authoritative\n"
+                b"? double(imported)\n"
+            )
+            for repo_path, data in (
+                (facts_path, facts_source),
+                (formula_path, formula_source),
+                (query_path, query_source),
+                (fact_fixture_path, fact_fixture),
+                (formula_fixture_path, formula_fixture),
+                (unused_fixture_path, unused_fixture),
+            ):
+                destination = workspace / repo_path
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data)
+
+            def line_range(data: bytes, marker: bytes, final: bytes) -> tuple[int, int]:
+                start = data.index(marker)
+                final_start = data.index(final, start)
+                return start, data.index(b"\n", final_start) + 1
+
+            original_root = ratio_builder.REPO_ROOT
+            ratio_builder.REPO_ROOT = workspace
+            try:
+                fact_start, fact_end = line_range(
+                    facts_source, b"observe imported", b"trust authoritative"
+                )
+                facts_input, facts_claims = ratio_builder.local_source(
+                    cas,
+                    facts_path,
+                    [("test.imported.fact", fact_start, fact_end)],
+                    "imported facts input",
+                    discarded_reason="dictionary syntax outside the selected fact",
+                )
+                fact_external, fact_external_claims = ratio_builder.local_source(
+                    cas,
+                    fact_fixture_path,
+                    [("test.imported.fact", 0, len(fact_fixture))],
+                    "imported fact fixture",
+                    discarded_reason="no discarded fixture bytes",
+                )
+                formula_import_start, formula_import_end = line_range(
+                    formula_source, b'import "', b'import "'
+                )
+                formula_start, formula_end = line_range(
+                    formula_source, b"  formula double", b"trust authoritative"
+                )
+                formula_input, formula_claims = ratio_builder.local_source(
+                    cas,
+                    formula_path,
+                    [
+                        (
+                            "test.imported.formula.import",
+                            formula_import_start,
+                            formula_import_end,
+                        ),
+                        ("test.imported.formula", formula_start, formula_end),
+                    ],
+                    "imported formula input",
+                    discarded_reason="formulabook syntax outside selected rules",
+                )
+                formula_external, formula_external_claims = ratio_builder.local_source(
+                    cas,
+                    formula_fixture_path,
+                    [("test.imported.formula", 0, len(formula_fixture))],
+                    "imported formula fixture",
+                    discarded_reason="no discarded fixture bytes",
+                )
+                query_import_start, query_import_end = line_range(
+                    query_source, b'import "', b'import "'
+                )
+                unused_start, unused_end = line_range(
+                    query_source, b"observe unused", b"trust authoritative"
+                )
+                question_start = query_source.index(b"? double")
+                query_input, query_claims = ratio_builder.local_source(
+                    cas,
+                    query_path,
+                    [
+                        (
+                            "test.imported.query.import",
+                            query_import_start,
+                            query_import_end,
+                        ),
+                        ("test.imported.query.unused", unused_start, unused_end),
+                        (
+                            "test.imported.query.question",
+                            question_start,
+                            len(query_source),
+                        ),
+                    ],
+                    "imported fact query input",
+                    discarded_reason="no discarded executable query bytes",
+                )
+                unused_external, unused_external_claims = ratio_builder.local_source(
+                    cas,
+                    unused_fixture_path,
+                    [("test.imported.query.unused", 0, len(unused_fixture))],
+                    "unused query fixture",
+                    discarded_reason="no discarded fixture bytes",
+                )
+            finally:
+                ratio_builder.REPO_ROOT = original_root
+
+            def accepted_clause(
+                claim_id: str,
+                input_claim: dict[str, object],
+                external: dict[str, object],
+                external_claim: dict[str, object],
+                repo_path: str,
+                classification: str,
+            ) -> dict[str, object]:
+                return {
+                    **external_claim,
+                    "input_claim": ratio_builder.input_claim_payload(input_claim),
+                    "locator": f"repo://{repo_path}",
+                    "resolution": {
+                        "authority_receipt_sha256": external["receipt_sha256"],
+                        "authority_source_sha256": external["raw_source_sha256"],
+                        "classification": classification,
+                        "kind": "accepted_root",
+                        "reason": "deterministic imported-input replay fixture",
+                    },
+                    "snapshot_sha256": external["raw_source_sha256"],
+                    "source_ir_sha256": external["source_ir_sha256"],
+                }
+
+            facts_bundle = {
+                "bundle_id": "test.imported.facts.v1",
+                "clauses": [
+                    accepted_clause(
+                        "test.imported.fact",
+                        facts_claims["test.imported.fact"],
+                        fact_external,
+                        fact_external_claims["test.imported.fact"],
+                        fact_fixture_path,
+                        "accepted_fact",
+                    )
+                ],
+                "dependencies": [],
+                "input": {
+                    key: facts_input[key]
+                    for key in (
+                        "raw_source_sha256",
+                        "receipt_sha256",
+                        "source_ir_sha256",
+                    )
+                },
+                "kind": "provenance_bundle",
+                "library": facts_path,
+                "sources": [facts_input, fact_external],
+            }
+            facts_hash = cas.put_json(
+                facts_bundle,
+                kind="provenance_bundle",
+                label="imported facts bundle",
+                links=provenance._bundle_declared_links(facts_bundle),
+            )
+            formula_inventory_hash = provenance.put_formula_parser_inventory(
+                cas,
+                formula_input["raw_source_sha256"],
+                self.formula_inventory_command(),
+                label="imported formula inventory",
+            )
+            formula_bundle = {
+                "bundle_id": "test.imported.formula.v1",
+                "clauses": [
+                    accepted_clause(
+                        "test.imported.formula",
+                        formula_claims["test.imported.formula"],
+                        formula_external,
+                        formula_external_claims["test.imported.formula"],
+                        formula_fixture_path,
+                        "primary_definition",
+                    )
+                ],
+                "dependencies": [facts_hash],
+                "formula_inventory_sha256": formula_inventory_hash,
+                "input": {
+                    key: formula_input[key]
+                    for key in (
+                        "raw_source_sha256",
+                        "receipt_sha256",
+                        "source_ir_sha256",
+                    )
+                },
+                "kind": "provenance_bundle",
+                "library": formula_path,
+                "sources": [formula_input, formula_external],
+            }
+            formula_hash = cas.put_json(
+                formula_bundle,
+                kind="provenance_bundle",
+                label="imported formula bundle",
+                links=provenance._bundle_declared_links(formula_bundle),
+            )
+            query_bundle = {
+                "bundle_id": "test.imported.query.v1",
+                "clauses": [
+                    accepted_clause(
+                        "test.imported.query.unused",
+                        query_claims["test.imported.query.unused"],
+                        unused_external,
+                        unused_external_claims["test.imported.query.unused"],
+                        unused_fixture_path,
+                        "accepted_fact",
+                    )
+                ],
+                "dependencies": [formula_hash],
+                "input": {
+                    key: query_input[key]
+                    for key in (
+                        "raw_source_sha256",
+                        "receipt_sha256",
+                        "source_ir_sha256",
+                    )
+                },
+                "kind": "provenance_bundle",
+                "library": query_path,
+                "sources": [query_input, unused_external],
+            }
+            derivations, witnesses = provenance.put_formula_execution_evidence(
+                cas,
+                query_bundle,
+                self.formula_audit_command(),
+                label="transitive imported fact",
+            )
+            query_bundle["formula_derivation_sha256s"] = derivations
+            query_bundle["execution_witness_sha256s"] = witnesses
+            query_hash = cas.put_json(
+                query_bundle,
+                kind="provenance_bundle",
+                label="imported fact query bundle",
+                links=provenance._bundle_declared_links(query_bundle),
+            )
+            cas.write_index()
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_bytes(
+                provenance.canonical_json_bytes(
+                    {
+                        "algorithm": "sha256",
+                        "bundle_hashes": sorted(
+                            [facts_hash, formula_hash, query_hash]
+                        ),
+                        "manifest_id": "test.imported.fact.v1",
+                        "schema_version": 1,
+                    }
+                )
+            )
+
+            result = provenance.validate_repository(
+                cas_root,
+                manifest_path,
+                formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_SCHEMA,
+                workspace_root=workspace,
+                formula_inventory_command=self.formula_inventory_command(),
+                formula_audit_command=self.formula_audit_command(),
+            )
+            self.assertTrue(result["valid"])
+            witness = provenance._json_object(cas, witnesses[0], "execution_witness")
+            self.assertEqual(len(witness["inputs"]), 1)
+            reference = witness["inputs"][0]
+            self.assertEqual(
+                reference["owner"],
+                {
+                    "bundle_id": facts_bundle["bundle_id"],
+                    "bundle_sha256": facts_hash,
+                    "kind": "dependency",
+                },
+            )
+            self.assertEqual(
+                reference["owner_source_sha256"],
+                facts_input["raw_source_sha256"],
+            )
+            self.assertTrue(
+                {
+                    facts_hash,
+                    facts_input["raw_source_sha256"],
+                    facts_input["source_ir_sha256"],
+                    fact_external["raw_source_sha256"],
+                    fact_external["source_ir_sha256"],
+                }.issubset(cas.index[witnesses[0]]["links"])
+            )
+
     def test_formula_execution_replay_rejects_a_substituted_result(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             workspace = Path(directory)
@@ -848,6 +1460,172 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     formula_inventory_command=self.formula_inventory_command(),
                     formula_audit_command=self.formula_audit_command(),
                 )
+
+    def test_formula_execution_replay_rejects_a_reachable_legacy_input(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = formula_inventory_migration.REPO_ROOT
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / provenance.DEFAULT_ROOT.parent,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic",
+                arithmetic_copy,
+            )
+
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            query_hash = self.registered_bundle_hash(
+                cas_root, manifest_path, "adj.math.arithmetic.ratio.query.v1"
+            )
+            query = provenance._json_object(cas, query_hash, "provenance_bundle")
+            witness_hash = query["execution_witness_sha256s"][0]
+            witness = provenance._json_object(cas, witness_hash, "execution_witness")
+
+            def legacy(reference: dict[str, object]) -> dict[str, object]:
+                return {
+                    "claim_id": reference["claim_id"],
+                    "identity": reference["identity"],
+                    "source_ir_sha256": reference["source_ir_sha256"],
+                }
+
+            witness["inputs"] = [legacy(item) for item in witness["inputs"]]
+            for check in witness["verification"]["input_quotes"]:
+                check["identity"] = legacy(check["identity"])
+            legacy_hash = cas.put_json(
+                witness,
+                kind="execution_witness",
+                label="reachable legacy execution input",
+                links=cas.index[witness_hash]["links"],
+            )
+            query["execution_witness_sha256s"] = [legacy_hash]
+            legacy_query_hash = cas.put_json(
+                query,
+                kind="provenance_bundle",
+                label="query with reachable legacy execution input",
+                links=provenance._bundle_declared_links(query),
+            )
+            manifest["bundle_hashes"] = sorted(
+                legacy_query_hash if digest == query_hash else digest
+                for digest in manifest["bundle_hashes"]
+            )
+            cas.write_index()
+            manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "stored formula evidence set disagrees with replay",
+            ):
+                provenance.validate_repository(
+                    cas_root,
+                    manifest_path,
+                    workspace / provenance.DEFAULT_SCHEMA,
+                    workspace_root=workspace,
+                    formula_inventory_command=self.formula_inventory_command(),
+                    formula_audit_command=self.formula_audit_command(),
+                )
+
+    def test_formula_inventory_migration_accepts_only_a_legacy_baseline(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = formula_inventory_migration.REPO_ROOT
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / provenance.DEFAULT_ROOT.parent,
+                provenance_copy,
+                ignore=shutil.ignore_patterns("lock"),
+            )
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic",
+                arithmetic_copy,
+            )
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            schema_path = workspace / provenance.DEFAULT_SCHEMA
+            legacy_roots = self.downgrade_formula_inputs_to_legacy(workspace)
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "stored formula evidence set disagrees with replay",
+            ):
+                provenance.validate_repository(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace_root=workspace,
+                    formula_inventory_command=self.formula_inventory_command(),
+                    formula_audit_command=self.formula_audit_command(),
+                )
+
+            original_roots = (
+                arithmetic_builder.REPO_ROOT,
+                ratio_builder.REPO_ROOT,
+                percent_of_builder.REPO_ROOT,
+            )
+            arithmetic_builder.REPO_ROOT = workspace
+            ratio_builder.REPO_ROOT = workspace
+            percent_of_builder.REPO_ROOT = workspace
+            try:
+                result = formula_inventory_migration.migrate(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace,
+                    formula_inventory_command=self.formula_inventory_command(),
+                    formula_audit_command=self.formula_audit_command(),
+                )
+            finally:
+                (
+                    arithmetic_builder.REPO_ROOT,
+                    ratio_builder.REPO_ROOT,
+                    percent_of_builder.REPO_ROOT,
+                ) = original_roots
+
+            self.assertTrue(
+                provenance.validate_repository(
+                    cas_root,
+                    manifest_path,
+                    schema_path,
+                    workspace_root=workspace,
+                    formula_inventory_command=self.formula_inventory_command(),
+                    formula_audit_command=self.formula_audit_command(),
+                )["valid"]
+            )
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            current = formula_inventory_migration._registered_roots(
+                cas, manifest_path
+            )
+            for bundle_id, replacement in result["replacements"].items():
+                self.assertEqual(
+                    replacement["expected_old_sha256"], legacy_roots[bundle_id]
+                )
+                self.assertEqual(replacement["new_sha256"], current[bundle_id])
+                bundle = provenance._json_object(
+                    cas, current[bundle_id], "provenance_bundle"
+                )
+                for witness_hash in bundle.get("execution_witness_sha256s", []):
+                    witness = provenance._json_object(
+                        cas, witness_hash, "execution_witness"
+                    )
+                    self.assertTrue(
+                        all(item["schema_version"] == 2 for item in witness["inputs"])
+                    )
 
     def test_formula_execution_rejects_swapped_verified_provenance(self) -> None:
         cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT

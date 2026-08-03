@@ -330,9 +330,14 @@ option mapping, or judge/evaluation failure.
 13d. **Complete:** every trusted parser/audit subprocess bound applies to its
      complete process tree and to pipe-drain joins, so a timed-out descendant cannot
      keep provenance verification alive indefinitely.
-13e. **Backlog:** allow verified execution inputs to resolve from the complete bundle
-     closure, not only the root query bundle, while retaining the owning bundle and
-     source identities in each normalized input reference.
+13e. **Complete:** verified execution inputs resolve uniquely across the complete
+     bundle closure. Each normalized input pins its owning bundle role and ID, exact
+     ADJ source and IR, and exact cited snapshot and IR; dependency-owned inputs also
+     pin the owning bundle hash. Root-query ownership is parent-bound because its own
+     bundle hash would form a content-addressing cycle through the witness.
+13f. **Backlog:** add native-API fault injection for Windows Job creation, assignment,
+     thread discovery, resume, termination, and handle-close failures so each inspected
+     fail-closed branch also has an executable regression fixture.
 
 ### Wave 2: complete K-8 foundations
 

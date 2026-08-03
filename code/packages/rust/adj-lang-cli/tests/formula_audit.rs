@@ -116,11 +116,75 @@ fn formula_audit_rejects_provenance_that_maps_to_multiple_exports() {
 }
 
 #[test]
-fn formula_audit_accepts_a_zero_input_constant_formula() {
+fn formula_audit_consumes_a_quoted_fact_from_an_imported_source() {
     let directory = std::env::temp_dir().join(format!(
-        "adj_formula_audit_constant_{}",
+        "adj_formula_audit_imported_fact_{}",
         std::process::id()
     ));
+    let _ = fs::remove_dir_all(&directory);
+    let snapshots = directory.join("snapshots");
+    fs::create_dir_all(&snapshots).expect("create temporary snapshot directory");
+    let fact_bytes = b"imported value is 3.";
+    let fact_snapshot = coding_adventures_sha256::sha256_hex(fact_bytes);
+    fs::write(snapshots.join(&fact_snapshot), fact_bytes).expect("write fact snapshot");
+    let formula_bytes = b"Double a value by multiplying it by 2.";
+    let formula_snapshot = coding_adventures_sha256::sha256_hex(formula_bytes);
+    fs::write(snapshots.join(&formula_snapshot), formula_bytes).expect("write formula snapshot");
+    fs::write(
+        directory.join("dependency.adj"),
+        format!(
+            "dictionary imported_vocab {{\n\
+                 define imported : finding\n\
+             }}\n\
+             observe imported(3)\n\
+               quote \"imported value is 3.\" at 0 snapshot \"{fact_snapshot}\"\n\
+               source \"imported value fixture\"\n\
+               locator \"https://example.test/imported-value\"\n\
+               trust authoritative\n\
+             formulabook imported_math {{\n\
+               formula double(value) = value * 2\n\
+                 quote \"Double a value by multiplying it by 2.\" at 0 snapshot \"{formula_snapshot}\"\n\
+                 source \"Double a value by multiplying it by 2.\"\n\
+                 locator \"https://example.test/double\"\n\
+                 trust authoritative\n\
+             }}\n"
+        ),
+    )
+    .expect("write imported fact dependency");
+    let query = directory.join("query.adj");
+    fs::write(&query, "import \"dependency.adj\"\n? double(imported)\n")
+        .expect("write imported fact query");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg("--snapshots")
+        .arg(&snapshots)
+        .arg(&query)
+        .output()
+        .expect("run imported fact audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value =
+        serde_json::from_slice(&output.stdout).expect("imported fact audit JSON");
+    assert_eq!(audit["imports"].as_array().expect("imports").len(), 1);
+    let derivation = &audit["derivations"][0];
+    assert_eq!(derivation["inputs"][0]["term"], "imported(3)");
+    assert_eq!(
+        derivation["inputs"][0]["provenance"]["quote"]["snapshot_sha256"],
+        fact_snapshot
+    );
+    assert_eq!(derivation["result"]["f64_bits"], "4018000000000000");
+    assert_eq!(derivation["verification"]["fully_verified"], true);
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_accepts_a_zero_input_constant_formula() {
+    let directory =
+        std::env::temp_dir().join(format!("adj_formula_audit_constant_{}", std::process::id()));
     let _ = fs::remove_dir_all(&directory);
     let snapshots = directory.join("snapshots");
     fs::create_dir_all(&snapshots).expect("create temporary snapshot directory");
@@ -159,7 +223,10 @@ fn formula_audit_accepts_a_zero_input_constant_formula() {
     let derivation = &audit["derivations"][0];
     assert_eq!(derivation["export"]["name"], "answer");
     assert_eq!(derivation["inputs"], serde_json::json!([]));
-    assert_eq!(derivation["verification"]["input_quotes"], serde_json::json!([]));
+    assert_eq!(
+        derivation["verification"]["input_quotes"],
+        serde_json::json!([])
+    );
     assert_eq!(derivation["verification"]["fully_verified"], true);
     assert!(audit["imports"].as_array().expect("imports").is_empty());
 

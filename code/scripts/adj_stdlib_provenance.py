@@ -1221,10 +1221,19 @@ def _direct_formula_inventory(
     cas: Cas, query_bundle: dict[str, Any]
 ) -> tuple[str, str, dict[str, Any]]:
     dependencies = query_bundle.get("dependencies")
-    if not isinstance(dependencies, list) or len(dependencies) != 1:
-        raise ProvenanceError("execution witness requires exactly one formula dependency")
-    bundle_hash = _require_hash(dependencies[0], "execution witness formula bundle")
-    bundle = _json_object(cas, bundle_hash, "provenance_bundle")
+    if not isinstance(dependencies, list):
+        raise ProvenanceError("execution witness dependencies must be an array")
+    candidates = []
+    for dependency in dependencies:
+        bundle_hash = _require_hash(dependency, "execution witness dependency")
+        bundle = _json_object(cas, bundle_hash, "provenance_bundle")
+        if "formula_inventory_sha256" in bundle:
+            candidates.append((bundle_hash, bundle))
+    if len(candidates) != 1:
+        raise ProvenanceError(
+            "execution witness requires exactly one direct formula dependency"
+        )
+    bundle_hash, bundle = candidates[0]
     inventory_hash = _require_hash(
         bundle.get("formula_inventory_sha256"),
         "execution witness formula inventory",
@@ -1457,7 +1466,10 @@ def _question_reference(
 
 
 def _input_reference(
-    query_bundle: dict[str, Any], identity: Any
+    execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
+    identity: Any,
+    *,
+    legacy: bool = False,
 ) -> tuple[dict[str, Any], set[str]]:
     if not isinstance(identity, dict) or set(identity) != {"provenance", "term"}:
         raise ProvenanceError("formula audit input identity has the wrong schema")
@@ -1465,26 +1477,74 @@ def _input_reference(
     quote = provenance.get("quote") if isinstance(provenance, dict) else None
     if not isinstance(quote, dict):
         raise ProvenanceError("formula audit input has no byte quote identity")
-    matches = [
-        clause
-        for clause in query_bundle["clauses"]
-        if clause["snapshot_sha256"] == quote.get("snapshot_sha256")
-        and clause["start"] == quote.get("byte_offset")
-        and clause["end"] - clause["start"] == quote.get("byte_len")
-        and clause["quote_sha256"] == quote.get("text_sha256")
-    ]
+    matches = []
+    for bundle_hash, bundle in execution_bundles:
+        for clause in bundle["clauses"]:
+            if (
+                clause["snapshot_sha256"] == quote.get("snapshot_sha256")
+                and clause["start"] == quote.get("byte_offset")
+                and clause["end"] - clause["start"] == quote.get("byte_len")
+                and clause["quote_sha256"] == quote.get("text_sha256")
+            ):
+                matches.append((bundle_hash, bundle, clause))
     if len(matches) != 1:
-        raise ProvenanceError("formula audit input must resolve to exactly one query claim")
-    clause = matches[0]
-    return {
+        raise ProvenanceError(
+            "formula audit input must resolve to exactly one closure claim"
+        )
+    bundle_hash, bundle, clause = matches[0]
+    if provenance.get("locator") != clause["locator"]:
+        raise ProvenanceError("formula audit input locator disagrees with its CAS clause")
+    source_hash = _require_hash(
+        bundle["input"]["raw_source_sha256"], "formula input owner source"
+    )
+    source_ir_hash = _require_hash(
+        bundle["input"]["source_ir_sha256"], "formula input owner source IR"
+    )
+    snapshot_hash = _require_hash(
+        clause["snapshot_sha256"], "formula input provenance snapshot"
+    )
+    snapshot_ir_hash = _require_hash(
+        clause["source_ir_sha256"], "formula input provenance snapshot IR"
+    )
+    if legacy:
+        return {
+            "claim_id": clause["claim_id"],
+            "identity": identity,
+            "source_ir_sha256": snapshot_ir_hash,
+        }, {snapshot_hash, snapshot_ir_hash}
+    owner = {
+        "bundle_id": bundle["bundle_id"],
+        "kind": "query",
+    }
+    links = {source_hash, source_ir_hash, snapshot_hash, snapshot_ir_hash}
+    if bundle_hash is not None:
+        owner = {
+            "bundle_id": bundle["bundle_id"],
+            "bundle_sha256": _require_hash(
+                bundle_hash, "formula input owner bundle"
+            ),
+            "kind": "dependency",
+        }
+        links.add(bundle_hash)
+    reference = {
         "claim_id": clause["claim_id"],
         "identity": identity,
-        "source_ir_sha256": clause["source_ir_sha256"],
-    }, {clause["snapshot_sha256"], clause["source_ir_sha256"]}
+        "owner": owner,
+        "owner_source_ir_sha256": source_ir_hash,
+        "owner_source_sha256": source_hash,
+        "schema_version": 2,
+        "snapshot_sha256": snapshot_hash,
+        "source_ir_sha256": snapshot_ir_hash,
+    }
+    return reference, links
 
 
 def _normalized_formula_evidence(
-    cas: Cas, query_bundle: dict[str, Any], audit: dict[str, Any]
+    cas: Cas,
+    query_bundle: dict[str, Any],
+    audit: dict[str, Any],
+    *,
+    legacy_input_references: bool = False,
 ) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
     by_source, formula_bundles = _execution_graph(cas, query_bundle)
     imports: list[dict[str, Any]] = []
@@ -1501,6 +1561,8 @@ def _normalized_formula_evidence(
         imported = by_source.get(item["imported_source_sha256"])
         if importer is None or imported is None or imported[0] is None:
             raise ProvenanceError("formula audit import escapes the CAS bundle graph")
+        if imported[0] not in importer[1]["dependencies"]:
+            raise ProvenanceError("formula audit import is not a direct CAS dependency")
         importer_ir = importer[1]["input"]["source_ir_sha256"]
         claim_id, _claim = _enclosing_claim(
             cas,
@@ -1559,7 +1621,11 @@ def _normalized_formula_evidence(
         inputs = []
         input_links: set[str] = set()
         for identity in item["inputs"]:
-            reference, links = _input_reference(query_bundle, identity)
+            reference, links = _input_reference(
+                by_source.values(),
+                identity,
+                legacy=legacy_input_references,
+            )
             inputs.append(reference)
             input_links.update(links)
         verification = item["verification"]
@@ -1597,9 +1663,22 @@ def _normalized_formula_evidence(
         for check in input_checks:
             if not isinstance(check, dict) or set(check) != {"identity", "quote"}:
                 raise ProvenanceError("formula audit input quote has the wrong schema")
-            reference, links = _input_reference(query_bundle, check["identity"])
-            if check["quote"].get("status") != "verified":
-                raise ProvenanceError("formula audit input quote is not verified")
+            reference, links = _input_reference(
+                by_source.values(),
+                check["identity"],
+                legacy=legacy_input_references,
+            )
+            quote_identity = reference["identity"]["provenance"]["quote"]
+            expected_status = {
+                "byte_len": quote_identity["byte_len"],
+                "byte_offset": quote_identity["byte_offset"],
+                "reason": None,
+                "status": "verified",
+            }
+            if check["quote"] != expected_status:
+                raise ProvenanceError(
+                    "formula audit input quote status disagrees with its identity"
+                )
             normalized_input_checks.append({"identity": reference, "quote": check["quote"]})
             input_links.update(links)
         if [check["identity"] for check in normalized_formula_checks] != sequence:
@@ -1690,6 +1769,8 @@ def _validate_formula_execution_evidence(
     cas: Cas,
     query_bundle: dict[str, Any],
     audit_command: Sequence[str] | None,
+    *,
+    allow_migration_input_references: bool = False,
 ) -> set[str]:
     if audit_command is None:
         raise ProvenanceError("formula evidence replay requires --formula-audit-binary")
@@ -1706,26 +1787,53 @@ def _validate_formula_execution_evidence(
         raise ProvenanceError("formula evidence hashes must be non-empty sorted unique arrays")
     audit = _materialize_formula_audit(cas, query_bundle, audit_command)
     expected = _normalized_formula_evidence(cas, query_bundle, audit)
-    expected_derivations: list[str] = []
-    expected_witnesses: list[str] = []
+
+    def expected_hashes(
+        items: list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]],
+    ) -> tuple[list[str], list[str]]:
+        derivations = []
+        witnesses = []
+        for derivation, _derivation_links, witness, _witness_links in items:
+            derivation_hash = sha256_bytes(canonical_json_bytes(derivation))
+            derivations.append(derivation_hash)
+            normalized_witness = {
+                **witness,
+                "formula_derivation_sha256": derivation_hash,
+            }
+            witnesses.append(sha256_bytes(canonical_json_bytes(normalized_witness)))
+        return derivations, witnesses
+
+    expected_derivations, expected_witnesses = expected_hashes(expected)
+    if (
+        sorted(expected_derivations) != stored_derivations
+        or sorted(expected_witnesses) != stored_witnesses
+    ) and allow_migration_input_references:
+        expected = _normalized_formula_evidence(
+            cas, query_bundle, audit, legacy_input_references=True
+        )
+        expected_derivations, expected_witnesses = expected_hashes(expected)
+    if (
+        sorted(expected_derivations) != stored_derivations
+        or sorted(expected_witnesses) != stored_witnesses
+    ):
+        raise ProvenanceError("stored formula evidence set disagrees with replay")
+
     expected_links: set[str] = set()
-    for derivation, derivation_links, witness, witness_links in expected:
-        derivation_hash = sha256_bytes(canonical_json_bytes(derivation))
-        expected_derivations.append(derivation_hash)
+    for (
+        (derivation, derivation_links, witness, witness_links),
+        derivation_hash,
+        witness_hash,
+    ) in zip(expected, expected_derivations, expected_witnesses, strict=True):
         stored_derivation = _json_object(cas, derivation_hash, "formula_derivation")
         if stored_derivation != derivation or cas.index[derivation_hash]["links"] != sorted(derivation_links):
             raise ProvenanceError("stored formula derivation disagrees with replay")
         witness["formula_derivation_sha256"] = derivation_hash
-        witness_hash = sha256_bytes(canonical_json_bytes(witness))
-        expected_witnesses.append(witness_hash)
         stored_witness = _json_object(cas, witness_hash, "execution_witness")
         if stored_witness != witness or cas.index[witness_hash]["links"] != sorted(
             witness_links | {derivation_hash}
         ):
             raise ProvenanceError("stored execution witness disagrees with replay")
         expected_links.update((derivation_hash, witness_hash))
-    if sorted(expected_derivations) != stored_derivations or sorted(expected_witnesses) != stored_witnesses:
-        raise ProvenanceError("stored formula evidence set disagrees with replay")
     return expected_links
 
 
@@ -1977,6 +2085,7 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         formula_inventory_command: Sequence[str] | None = None,
         formula_audit_command: Sequence[str] | None = None,
         allow_unwitnessed_baseline: bool = False,
+        allow_migration_formula_inputs_baseline: bool = False,
     ) -> None:
         super().__init__(cas_root, blocking=False)
         self.manifest_path = manifest_path
@@ -1986,6 +2095,9 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         self.formula_inventory_command = formula_inventory_command
         self.formula_audit_command = formula_audit_command
         self.allow_unwitnessed_baseline = allow_unwitnessed_baseline
+        self.allow_migration_formula_inputs_baseline = (
+            allow_migration_formula_inputs_baseline
+        )
         self._baseline_manifest = b""
 
     def __enter__(self):
@@ -1999,6 +2111,9 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 formula_inventory_command=self.formula_inventory_command,
                 formula_audit_command=self.formula_audit_command,
                 _allow_unwitnessed=self.allow_unwitnessed_baseline,
+                _allow_migration_formula_inputs=(
+                    self.allow_migration_formula_inputs_baseline
+                ),
             )
             self._baseline_manifest = _read_regular_file(self.manifest_path)
             return self
@@ -2594,6 +2709,7 @@ def _validate_bundle(
     bundle_inputs: dict[str, str],
     formula_inventory_command: Sequence[str] | None,
     formula_audit_command: Sequence[str] | None,
+    allow_migration_formula_inputs: bool,
 ) -> None:
     if digest in validated:
         return
@@ -2645,6 +2761,7 @@ def _validate_bundle(
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
             formula_audit_command=formula_audit_command,
+            allow_migration_formula_inputs=allow_migration_formula_inputs,
         )
     sources = bundle["sources"]
     if not isinstance(sources, list) or not sources:
@@ -2879,7 +2996,10 @@ def _validate_bundle(
             )
         expected_links.update(
             _validate_formula_execution_evidence(
-                cas, bundle, formula_audit_command
+                cas,
+                bundle,
+                formula_audit_command,
+                allow_migration_input_references=allow_migration_formula_inputs,
             )
         )
     if cas.index[digest]["links"] != sorted(expected_links):
@@ -2900,6 +3020,7 @@ def _validate_repository_unlocked(
     formula_audit_command: Sequence[str] | None = None,
     _allow_unreferenced: bool = False,
     _allow_unwitnessed: bool = False,
+    _allow_migration_formula_inputs: bool = False,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -2948,6 +3069,7 @@ def _validate_repository_unlocked(
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
             formula_audit_command=formula_audit_command,
+            allow_migration_formula_inputs=_allow_migration_formula_inputs,
         )
     if not _allow_unwitnessed:
         inventoried = {
@@ -2956,12 +3078,14 @@ def _validate_repository_unlocked(
             if "formula_inventory_sha256"
             in _json_object(cas, digest, "provenance_bundle")
         }
-        witnessed = {
-            _json_object(cas, digest, "provenance_bundle")["dependencies"][0]
-            for digest in validated
-            if "execution_witness_sha256s"
-            in _json_object(cas, digest, "provenance_bundle")
-        }
+        witnessed = set()
+        for digest in validated:
+            bundle = _json_object(cas, digest, "provenance_bundle")
+            if "execution_witness_sha256s" in bundle:
+                formula_bundle_hash, _inventory_hash, _inventory = (
+                    _direct_formula_inventory(cas, bundle)
+                )
+                witnessed.add(formula_bundle_hash)
         if inventoried != witnessed:
             missing = sorted(inventoried - witnessed)
             extra = sorted(witnessed - inventoried)

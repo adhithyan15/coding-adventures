@@ -35,7 +35,11 @@ It starts empty and grows only through reviewed source migrations.
   plan. An `execution_witness` binds that derivation to byte-pinned input facts, an
   exact rational and IEEE-754 result, the nested computation tree, and successful
   formula, input, and recomputation checks. Verification recreates programs from
-  CAS bytes and requires the replayed canonical objects to hash identically.
+  CAS bytes and requires the replayed canonical objects to hash identically. Input
+  v2 references resolve uniquely across the complete dependency closure and pin their
+  exact ADJ source/IR and cited snapshot/IR. Dependency inputs name their owning
+  bundle hash; query inputs use the parent bundle relationship because embedding
+  that bundle's own hash in its witness would create a content-addressing cycle.
 - `manifest.json` pins bundle hashes. Only snapshots reachable from verified
   bundle clauses may be projected for `adj-verify`.
 
