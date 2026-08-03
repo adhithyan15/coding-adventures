@@ -1340,6 +1340,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             Pb=model.params.get("PB", model.params.get("VJ", 1.0)),
             Fc=model.params.get("FC", 0.5),
             Is=model.params.get("IS", 1.0e-14),
+            Xti=model.params.get("XTI", 3.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -2105,6 +2106,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(saturation_current) or saturation_current <= 0.0
         ):
             raise NetlistParseError("JFET IS must be finite and positive")
+        temperature_exponent = params.get("XTI")
+        if temperature_exponent is not None and not math.isfinite(
+            temperature_exponent
+        ):
+            raise NetlistParseError("JFET XTI must be finite")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

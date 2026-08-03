@@ -1486,6 +1486,25 @@ def test_rejects_invalid_jfet_gate_saturation_current(value: str) -> None:
         parse_netlist(f".model fast NJF(IS={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_parse_jfet_temperature_exponent(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(XTI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Xti, expected)
+
+
+def test_rejects_non_finite_jfet_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="JFET XTI must be finite"):
+        parse_netlist(".model fast NJF(XTI=1e999)")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

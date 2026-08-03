@@ -1387,6 +1387,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET IS must be finite and positive");
   }
+  const jfetTemperatureExponent = params.get("XTI");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetTemperatureExponent !== undefined &&
+    !Number.isFinite(jfetTemperatureExponent)
+  ) {
+    throw new NetlistParseError("JFET XTI must be finite");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1979,6 +1987,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("PB") ?? model.params.get("VJ") ?? 1.0,
       model.params.get("FC") ?? 0.5,
       model.params.get("IS") ?? 1.0e-14,
+      model.params.get("XTI") ?? 3.0,
     );
   }
   if (prefix === "M") {

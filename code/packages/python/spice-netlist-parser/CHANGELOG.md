@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `XTI` temperature exponent.
 - Validate and lower JFET model-card `IS` gate saturation current.
 - Validate and lower JFET model-card `FC` depletion coefficient.
 - Validate and lower JFET model-card `PB` / `VJ` junction potential.
