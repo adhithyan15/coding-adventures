@@ -44,6 +44,19 @@ inline_table       = LBRACE [ keyval { COMMA keyval } ] RBRACE ;
 
 ## Usage
 
+Production callers should use the fallible entrypoint. Its error categories do
+not echo source text or token values:
+
+```rust
+use coding_adventures_toml_parser::try_parse_toml;
+
+let ast = try_parse_toml("[server]\nport = 8080")?;
+assert_eq!(ast.rule_name, "document");
+# Ok::<(), coding_adventures_toml_parser::TomlParseError>(())
+```
+
+The original panic-on-error convenience remains available for trusted fixtures:
+
 ```rust
 use coding_adventures_toml_parser::parse_toml;
 
@@ -59,6 +72,9 @@ use coding_adventures_toml_parser::create_toml_parser;
 let mut parser = create_toml_parser("key = 42");
 let ast = parser.parse().expect("parse failed");
 ```
+
+Use `try_create_toml_parser` when fine-grained control also needs lexical errors
+to remain recoverable.
 
 ## Key differences from json-parser
 

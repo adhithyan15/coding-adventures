@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2026-08-03
+
+### Added
+
+- Add `try_create_toml_parser` and `try_parse_toml` so malformed TOML returns typed lexical or syntax errors instead of panicking.
+- Keep fallible error diagnostics payload-blind: source text and token values are never retained or displayed.
+
 ## [0.1.1] - 2026-07-18
 
 ### Fixed
