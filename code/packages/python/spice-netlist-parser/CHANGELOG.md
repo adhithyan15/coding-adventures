@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS instance `PS` values before lowering
+  valid source diffusion perimeters.
 - Reject negative and non-finite MOS instance `PD` values before lowering
   valid drain diffusion perimeters.
 - Reject negative and non-finite MOS instance `AS` values before lowering

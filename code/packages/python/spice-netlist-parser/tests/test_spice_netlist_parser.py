@@ -1065,6 +1065,32 @@ def test_lowers_valid_mosfet_instance_drain_perimeter(
     assert isclose(mosfet.model.model.params.PD, expected)
 
 
+@pytest.mark.parametrize("source_perimeter", ["-1u", "1e999"])
+def test_rejects_invalid_mosfet_instance_source_perimeter(
+    source_perimeter: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="MOSFET PS must be finite and non-negative"
+    ):
+        parse_netlist(
+            f".model nfast NMOS\nM1 d g s b nfast PS={source_perimeter}\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("source_perimeter", "expected"), [("0", 0.0), ("7u", 7.0e-6)]
+)
+def test_lowers_valid_mosfet_instance_source_perimeter(
+    source_perimeter: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS\nM1 d g s b nfast PS={source_perimeter}\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.PS, expected)
+
+
 def test_parse_pwl_and_sin_source_waveforms() -> None:
     parsed = parse_netlist(
         """
