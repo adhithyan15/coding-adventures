@@ -220,3 +220,34 @@ fn array_map_pushing_to_the_receiver_does_not_overrun_its_output_buffer() {
         None => eprintln!("skip: no cc"),
     }
 }
+
+#[test]
+fn count_with_block_pushing_to_the_receiver_terminates() {
+    // Security regression: an earlier draft of the slice-4 safety retrofit
+    // touched every slice-3/5 helper but MISSED `count`'s block form (added
+    // in slice 5) -- caught by security review. `count`'s block-form loop
+    // must snapshot len/items BEFORE the loop too, or a block that pushes to
+    // its own receiver never terminates.
+    match run_ruby("a = [1, 2, 3]\nputs a.count { |x| a.push(x)\ntrue }\n") {
+        Some(out) => assert_eq!(out, "3\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn array_each_shrinking_then_growing_the_receiver_does_not_overread() {
+    // Security regression: snapshotting `len` ALONE is not enough -- `push`
+    // reallocates its new buffer sized to the CURRENT (live) `s->len`, so a
+    // block that first shrinks the receiver (`pop`/`shift`, in place, no
+    // reallocation) and THEN pushes produces a buffer smaller than a `len`
+    // already snapshotted by an outer iterating helper. Continuing to read
+    // via a live `s->items` pointer up to that stale, larger snapshot would
+    // then run past the fresh (smaller) allocation -- caught by security
+    // review. The fix snapshots the ITEMS POINTER too, not just the length,
+    // so this must not crash, and `x` must reflect the ORIGINAL 5-element
+    // buffer (`each`'s own snapshot at entry), never the shrunk/regrown one.
+    match run_ruby("a = [1, 2, 3, 4, 5]\na.each { |x| a.pop\na.pop\na.push(99)\nputs x }\n") {
+        Some(out) => assert_eq!(out, "1\n2\n3\n4\n5\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}

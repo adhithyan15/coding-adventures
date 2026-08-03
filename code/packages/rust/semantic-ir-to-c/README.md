@@ -170,9 +170,12 @@ that mutate a `SirSeq` after construction (`push` reallocates to grow,
 `pop`/`shift` shrink `len` in place) — plus `fetch`/`values_at`/`rotate`/
 `zip`, and `include?`/`index` widen to accept an Array alongside their
 slice-2 String forms.  Because a block can now grow/shrink the very receiver
-it's iterating, every block-taking helper (slice 3/5) snapshots the array's
-length once before its loop/allocation instead of re-reading it — the same
-"iterate a snapshot" convention `_sir_seq_iter`'s `ForEach` already uses.  A
+it's iterating, every block-taking helper (slice 3/5) snapshots BOTH the
+array's length AND its items pointer once before its loop/allocation instead
+of re-reading either — length alone isn't enough, since `push` reallocates
+relative to the CURRENT length, which can be smaller than an outer snapshot
+after a `pop`/`shift` — the same "iterate a snapshot" convention
+`_sir_seq_iter`'s `ForEach` already uses.  A
 wrong-type receiver or argument raises `NoMethodError`; a built-in method not
 lowered yet is still rejected cleanly.
 

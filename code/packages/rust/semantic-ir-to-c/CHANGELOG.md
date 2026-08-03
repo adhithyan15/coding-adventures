@@ -22,21 +22,40 @@ after construction. No new `Feature`.
   elements positionally, padding a shorter `other` with nil). `include?` and
   `index` (both already allowlisted for String since slice 2) widen to accept
   an Array receiver too.
-- **Security retrofit**: `push` is the first operation that can change
-  `SirSeq.len`/`.items` AFTER a block-taking helper (slice 3/5's `map`/
-  `select`/`reject`/`sort_by`/`each`/`any?`/`all?`/`none?`/`each_with_index`/
-  `reduce`/`inject`, plus `count`'s block form) has already started iterating
-  — e.g. `arr.map { |x| arr.push(x); x }`. Every such helper now snapshots
-  `s->len` into a local ONCE before its loop/allocation and uses that
-  snapshot (never `s->len` directly) as both the output-buffer size and the
-  loop bound, so a block that grows or shrinks the receiver mid-iteration
-  can't run unbounded or write past a buffer sized at the OLD length. Since
-  this arena never frees, a stale snapshot pointer stays valid even after a
-  `push` reallocates — the same "iterate a snapshot" convention
-  `_sir_seq_iter` (`ForEach`) already uses. Pinned by two new tests: `each`
-  pushing to its own receiver terminates instead of looping forever, and
-  `map` pushing to its own receiver returns output reflecting only the
-  original elements (not a heap overflow).
+- **Security retrofit** (two rounds; see below): `push` is the first
+  operation that can change `SirSeq.len`/`.items` AFTER a block-taking helper
+  (slice 3/5's `map`/`select`/`reject`/`sort_by`/`each`/`any?`/`all?`/`none?`/
+  `each_with_index`/`reduce`/`inject`, plus `count`'s block form) has already
+  started iterating — e.g. `arr.map { |x| arr.push(x); x }`. Every such
+  helper now snapshots BOTH `s->len` AND `s->items` into locals ONCE before
+  its loop/allocation and uses only those locals — never `s->len`/`s->items`
+  directly — for the output-buffer size and every element read, so a block
+  that mutates the receiver mid-iteration can't run unbounded, read/write
+  past a buffer sized at the OLD length, or read past a buffer `push`
+  reallocated smaller than an outer snapshot (see below). Since this arena
+  never frees, a snapshotted buffer stays valid indefinitely regardless of
+  what `s->items` is reassigned to afterward — the same "iterate a snapshot"
+  convention `_sir_seq_iter` (`ForEach`) already uses.
+
+  Security review round 1 caught that snapshotting `s->len` ALONE (the
+  initial draft) is insufficient in two ways, both now fixed:
+  1. The `count` block-form arm (added in slice 5, before `push` existed)
+     was missed by the retrofit entirely — a block that pushes to its own
+     receiver inside `arr.count { |x| ... }` never terminated (unbounded
+     loop + unbounded reallocation, a real DoS/OOM).
+  2. `push` reallocates its new buffer sized to the CURRENT (live) `s->len`;
+     if a block first shrinks the receiver (`pop`/`shift`, in place, no
+     reallocation) and THEN pushes, the fresh buffer is smaller than a `len`
+     an outer helper already snapshotted — continuing to read the LIVE
+     `s->items` up to that stale, larger count then reads past the new,
+     smaller allocation (a genuine heap out-of-bounds read). Fixed by
+     snapshotting the ITEMS POINTER too, not just the length (see above).
+
+  Pinned by four tests: `each`/`count` pushing to their own receiver
+  terminate instead of looping forever; `map` pushing to its own receiver
+  returns output reflecting only the original elements (not a heap
+  overflow); and a receiver shrunk-then-regrown mid-`each` still yields the
+  ORIGINAL snapshotted elements without over-reading.
 
 **Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
 used only as a `strcmp` target — never reflection.

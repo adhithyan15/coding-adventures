@@ -1586,63 +1586,76 @@ static SirValue _sir_array_flatten(SirValue recv) {
 /* SECURITY (retrofitted for slice 4's `push`/`pop`/`shift`, which made
  * `SirSeq.items`/`.len` MUTABLE after construction — see `_sir_array_push`/
  * `_sir_array_pop`/`_sir_array_shift` below): every helper here that invokes
- * a block MUST snapshot `s->len` into a local (`n`) ONCE, before its loop,
- * and use `n` — never `s->len` directly — as both the output-buffer size and
- * the loop bound. If the block mutates the RECEIVER mid-iteration (e.g.
- * `arr.each { |x| arr.push(x) }`), a loop that re-read `s->len` fresh each
- * iteration could keep growing (unbounded work) or, worse, run PAST an
- * output buffer that was already allocated at the OLD (smaller) length —
- * an out-of-bounds write. Reading `s->items[i]` for `i < n` stays safe
- * regardless of what happens to `s->items`/`s->len` afterward: this arena
- * never frees, so even a `push`-triggered reallocation leaves the OLD
- * buffer's memory valid (just superseded) — `n` simply pins the iteration to
- * a consistent snapshot, the same convention `_sir_seq_iter` already uses
- * for `ForEach`. */
+ * a block MUST snapshot BOTH `s->len` AND `s->items` into locals (`n`/
+ * `items`) ONCE, before its loop, and use ONLY those locals — never
+ * `s->len`/`s->items` directly — for the output-buffer size and every
+ * element read. Snapshotting `len` alone is NOT enough: `push` reallocates
+ * its NEW buffer sized to the CURRENT (live) `s->len`, so if a block first
+ * shrinks the receiver (`pop`/`shift`, in place, no reallocation) and THEN
+ * pushes, the fresh buffer `push` allocates is sized to the SHRUNK length —
+ * smaller than a `len` this helper already snapshotted before the block ran.
+ * Continuing to read the LIVE `s->items[i]` for `i` up to the stale, larger
+ * `n` would then run past that fresh (smaller) allocation — a heap
+ * out-of-bounds read (caught by security review; a real, exploitable gap in
+ * an earlier draft of this fix that only snapshotted `len`). Snapshotting
+ * the ITEMS POINTER too closes it: `items[i]` for `i < n` always reads the
+ * buffer that existed AT SNAPSHOT TIME, which `push`'s copy-then-append
+ * preserves byte-for-byte at indices `0..old_len-1` — and since this arena
+ * never frees, that original buffer stays validly allocated for the whole
+ * loop regardless of what `s->items` is reassigned to afterward. Matches the
+ * "iterate a snapshot" convention `_sir_seq_iter` already uses for
+ * `ForEach`. */
 
 static SirValue _sir_array_each(SirSeq *s, SirValue block) {
     int64_t n = s->len;
-    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, s->items[i]);
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, items[i]);
     return _sir_seq_wrap(s);  /* Array#each returns the receiver */
 }
 static SirValue _sir_array_map(SirSeq *s, SirValue block) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->len = n;
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
-    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 1, s->items[i]);
+    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 1, items[i]);
     return _sir_seq_wrap(r);
 }
 /* Shared by `select` (keep_if_truthy=1) and `reject` (keep_if_truthy=0). */
 static SirValue _sir_array_filter(SirSeq *s, SirValue block, int keep_if_truthy) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     int64_t k = 0;
     for (int64_t i = 0; i < n; i++) {
-        int truthy = _sir_truthy(_sir_apply(block, 1, s->items[i]));
-        if (truthy == keep_if_truthy) r->items[k++] = s->items[i];
+        int truthy = _sir_truthy(_sir_apply(block, 1, items[i]));
+        if (truthy == keep_if_truthy) r->items[k++] = items[i];
     }
     r->len = k;
     return _sir_seq_wrap(r);
 }
 static SirValue _sir_array_any(SirSeq *s, SirValue block) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     for (int64_t i = 0; i < n; i++) {
-        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(1);
+        if (_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(1);
     }
     return _sir_bool(0);
 }
 static SirValue _sir_array_all(SirSeq *s, SirValue block) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     for (int64_t i = 0; i < n; i++) {
-        if (!_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+        if (!_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(0);
     }
     return _sir_bool(1);
 }
 static SirValue _sir_array_none(SirSeq *s, SirValue block) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     for (int64_t i = 0; i < n; i++) {
-        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+        if (_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(0);
     }
     return _sir_bool(1);
 }
@@ -1653,13 +1666,14 @@ static SirValue _sir_array_none(SirSeq *s, SirValue block) {
  * the new order. */
 static SirValue _sir_array_sort_by(SirSeq *s, SirValue block) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     SirValue *keys = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->len = n;
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     for (int64_t i = 0; i < n; i++) {
-        keys[i] = _sir_apply(block, 1, s->items[i]);
-        r->items[i] = s->items[i];
+        keys[i] = _sir_apply(block, 1, items[i]);
+        r->items[i] = items[i];
     }
     for (int64_t i = 1; i < n; i++) {
         SirValue key = keys[i], val = r->items[i];
@@ -1676,7 +1690,8 @@ static SirValue _sir_array_sort_by(SirSeq *s, SirValue block) {
 }
 static SirValue _sir_array_each_with_index(SirSeq *s, SirValue block) {
     int64_t n = s->len;
-    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, s->items[i], _sir_int(i));
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, items[i], _sir_int(i));
     return _sir_seq_wrap(s);
 }
 /* `reduce`/`inject`: `argc==1` is block-only (Ruby seeds the accumulator with
@@ -1686,6 +1701,7 @@ static SirValue _sir_array_each_with_index(SirSeq *s, SirValue block) {
  * the block (the caller already checked it's a closure before calling in). */
 static SirValue _sir_array_reduce(SirSeq *s, int argc, SirValue *args) {
     int64_t n = s->len;
+    SirValue *items = s->items;
     SirValue block = args[argc - 1];
     SirValue acc;
     int64_t start;
@@ -1694,10 +1710,10 @@ static SirValue _sir_array_reduce(SirSeq *s, int argc, SirValue *args) {
         start = 0;
     } else {
         if (n == 0) return _sir_nil();
-        acc = s->items[0];
+        acc = items[0];
         start = 1;
     }
-    for (int64_t i = start; i < n; i++) acc = _sir_apply(block, 2, acc, s->items[i]);
+    for (int64_t i = start; i < n; i++) acc = _sir_apply(block, 2, acc, items[i]);
     return acc;
 }
 
@@ -1857,9 +1873,16 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ) {
             if (argc == 0) return _sir_int(recv.as.seq->len);
             if (argc == 1 && args[0].tag == SIR_CLOSURE) {
+                /* SECURITY (slice 4): snapshot len/items BEFORE the loop, like
+                   every other block-taking helper -- see the doc comment on
+                   the slice-5 helpers above. `push` (slice 4) can grow this
+                   same receiver from inside the block; a live `recv.as.seq->
+                   len` read in the loop condition would never terminate. */
+                int64_t cnt_len = recv.as.seq->len;
+                SirValue *cnt_items = recv.as.seq->items;
                 int64_t n = 0;
-                for (int64_t i = 0; i < recv.as.seq->len; i++) {
-                    if (_sir_truthy(_sir_apply(args[0], 1, recv.as.seq->items[i]))) n++;
+                for (int64_t i = 0; i < cnt_len; i++) {
+                    if (_sir_truthy(_sir_apply(args[0], 1, cnt_items[i]))) n++;
                 }
                 return _sir_int(n);
             }
