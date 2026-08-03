@@ -371,6 +371,41 @@ public class ZipTests
         Assert.False(Path.IsPathRooted(entries[0].Name));
     }
 
+    // Windows also supports *drive-relative* paths, where the colon is NOT
+    // followed by a separator (e.g. "C:evil.dll" means "relative to drive
+    // C's current directory"). Path.IsPathRooted is true for this shape too
+    // (it only looks at the first two characters), so a fix that only strips
+    // a segment equal to exactly "C:" (i.e. requires a separator right after
+    // the colon) misses this case entirely — caught in a third review round.
+    [Fact]
+    public void Security_WriterStripsDriveRelativePrefixWithNoSeparator()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile("C:evil.dll", "x"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.Equal("evil.dll", entries[0].Name);
+        Assert.False(Path.IsPathRooted(entries[0].Name));
+    }
+
+    // The multi-segment variant of the same drive-relative shape: the drive
+    // prefix is glued onto the first path component rather than standing
+    // alone as its own segment.
+    [Fact]
+    public void Security_WriterStripsDriveRelativePrefixWithSubdirectory()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile(@"C:relative\evil.dll", "x"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.Equal("relative/evil.dll", entries[0].Name);
+        Assert.False(Path.IsPathRooted(entries[0].Name));
+    }
+
     // A directory entry's trailing slash must survive normalization.
     [Fact]
     public void Security_WriterNormalizationPreservesTrailingSlashForDirectories()

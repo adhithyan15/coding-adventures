@@ -99,10 +99,12 @@ adversarial-input classes beyond simple format conformance:
 
 - **Zip-slip / path traversal — write side**: `ZipWriter.AddFile`/`AddDirectory`
   normalize every entry name before writing it — backslashes become forward
-  slashes, a leading Windows drive letter (`C:`) is dropped, and empty, `.`,
-  and `..` segments are dropped — the same `normalize_part_name` pattern used
-  by `rust/opc-writer`. An archive *produced by this package* can therefore
-  never contain a `..`-shaped, absolute, or drive-rooted entry name.
+  slashes, a Windows drive prefix (`C:...`, including the drive-*relative*
+  form with no separator after the colon, e.g. `C:evil.dll`) is stripped from
+  the start of each segment, and empty, `.`, and `..` segments are dropped —
+  the same `normalize_part_name` pattern used by `rust/opc-writer`. An
+  archive *produced by this package* can therefore never contain a
+  `..`-shaped, absolute, or drive-rooted entry name.
   **This does not cover the read side.** Per `code/specs/CMP09-zip.md`'s
   Security Considerations, `ZipReader`/`ZipArchive.Unzip` return entry names
   from a third-party archive verbatim and unsanitized — the in-memory API

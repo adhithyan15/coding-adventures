@@ -745,26 +745,30 @@ public sealed class ZipWriter
     /// can never be absolute and can never traverse upward, whatever the
     /// input. A trailing slash (directory marker) is preserved.
     ///
-    /// A leading Windows drive-letter segment (e.g. "C:" in "C:\Windows\...")
-    /// is also dropped: split-on-separator alone does not touch it (it
-    /// contains no "/" or "\"), but a name like "C:/Windows/evil.dll" is still
-    /// `Path.IsPathRooted`-true on Windows, so a downstream extractor's
-    /// `Path.Combine(outDir, entry.Name)` would silently discard `outDir` and
-    /// return the attacker-chosen absolute path verbatim — `Path.Combine`
-    /// returns its second argument unchanged whenever it is already rooted.
+    /// A Windows drive-letter *prefix* (e.g. "C:" at the start of "C:\Windows\..."
+    /// or of drive-relative "C:evil.dll") is also stripped. Path.IsPathRooted
+    /// on Windows is true whenever the first two characters are
+    /// "&lt;letter&gt;:" — it does not require anything (let alone a
+    /// separator) after the colon. So it is not enough to drop a segment that
+    /// happens to equal "C:" exactly after splitting on "/"; a segment like
+    /// "C:evil.dll" (no separator between the colon and the rest) is still
+    /// rooted, and would still make a downstream `Path.Combine(outDir,
+    /// entry.Name)` silently discard `outDir` and return the attacker-chosen
+    /// path verbatim. We therefore strip a two-character drive prefix from the
+    /// *start* of each segment (keeping whatever follows), not just segments
+    /// that are drive-letter-and-nothing-else.
     /// </summary>
     private static string NormalizeEntryName(string name)
     {
         var isDirectory = name.EndsWith('/') || name.EndsWith('\\');
         var segments = name.Replace('\\', '/')
             .Split('/')
+            // Strip a leading "<letter>:" drive prefix from each segment
+            // before the empty/./ .. filter below, so e.g. "C:" alone becomes
+            // "" (and gets filtered out) and "C:evil.dll" becomes "evil.dll"
+            // rather than passing through untouched.
+            .Select(s => s.Length >= 2 && s[1] == ':' && char.IsAsciiLetter(s[0]) ? s[2..] : s)
             .Where(s => s.Length > 0 && s != "." && s != "..")
-            // Drop a Windows drive-letter segment ("C:", "D:", ...) wherever
-            // it appears — most naturally as the first segment, but filtering
-            // unconditionally rather than only at index 0 costs nothing and
-            // closes the same hole if one ever ends up elsewhere via a
-            // pathological input.
-            .Where(s => !(s.Length == 2 && s[1] == ':' && char.IsAsciiLetter(s[0])))
             .ToArray();
         if (segments.Length == 0)
             throw new ArgumentException(

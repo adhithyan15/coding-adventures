@@ -35,11 +35,8 @@ fixed here, with adversarial regression tests added for each:
 
 - **Zip-slip (write-side defense-in-depth)**: `ZipWriter.AddFile`/`AddDirectory` now
   normalize entry names before writing them — backslashes become forward slashes, a
-  leading Windows drive letter (`C:`) is dropped, and empty, `.`, `..` segments are
-  dropped — mirroring `rust/opc-writer`'s `normalize_part_name`. (The initial version of
-  this fix missed the drive-letter case — caught in a second review round: `"C:/evil.dll"`
-  is still `Path.IsPathRooted`-true on Windows even without a leading slash, so
-  `Path.Combine(outDir, ...)` would have silently discarded `outDir`.) This package
+  Windows drive prefix is stripped from the start of each segment, and empty, `.`, `..`
+  segments are dropped — mirroring `rust/opc-writer`'s `normalize_part_name`. This package
   performs no filesystem I/O itself, so this isn't directly exploitable by the package's
   own code, but it prevents a `..`-shaped, absolute, or drive-rooted name from ever
   reaching a downstream extractor that naively does
@@ -49,6 +46,20 @@ fixed here, with adversarial regression tests added for each:
   only — `ZipReader`/`ZipArchive.Unzip` return third-party entry names verbatim, and
   callers writing extracted entries to disk remain responsible for sanitizing them, same
   as with any other ZIP reader.
+
+  The drive-prefix stripping took two follow-up rounds to get right, both caught in
+  review rather than by the initial implementation:
+  - Round 2 found that a segment-equality check (`s == "C:"`) misses the common
+    `C:\...`/`C:/...` shape's own edge cases at other split points, and more importantly
+    doesn't generalize.
+  - Round 3 found that the round-2 fix — matching a whole segment of exactly `"C:"` — still
+    missed Windows *drive-relative* paths, where the colon isn't followed by a separator at
+    all (e.g. `C:evil.dll`, meaning "relative to drive C's current directory"; `C:relative\
+    evil.dll` in the multi-segment case). `Path.IsPathRooted` on Windows is `true` for this
+    shape too — it only inspects the first two characters — so `Path.Combine(outDir,
+    "C:evil.dll")` would still have silently discarded `outDir`. Fixed by stripping a
+    two-character `<letter>:` prefix from the *start* of each segment (keeping whatever
+    follows) rather than only matching segments that are the drive letter and nothing else.
 - **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,
