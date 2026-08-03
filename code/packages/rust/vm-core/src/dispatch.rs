@@ -1294,13 +1294,12 @@ fn push_heap_ref_roots(values: &mut [Value], roots: &mut Vec<usize>) {
 
 /// Build vm-core's own **precise** root set — every live `Value::HeapRef`
 /// vm-core itself can see: every register across every active frame, every
-/// global, every `memory` slot, and every array element — and run one
-/// `collect_mixed` cycle on `ctx.heap`, unconditionally.
+/// global, every `memory` slot, and every array element.
 ///
 /// No conservative stack scan, unlike the native-AOT `gc-core-capi` path: an
 /// interpreter already knows exactly where every reference lives, so there
 /// is nothing to scan conservatively.
-fn collect_now(ctx: &mut DispatchCtx) {
+fn build_roots(ctx: &mut DispatchCtx) -> Vec<usize> {
     let mut roots: Vec<usize> = Vec::new();
     for frame in ctx.frames.iter_mut() {
         push_heap_ref_roots(&mut frame.registers, &mut roots);
@@ -1314,6 +1313,14 @@ fn collect_now(ctx: &mut DispatchCtx) {
     for arr in ctx.arrays.iter_mut() {
         push_heap_ref_roots(arr, &mut roots);
     }
+    roots
+}
+
+/// Run one **non-moving** `collect_mixed` cycle on `ctx.heap`, unconditionally,
+/// rooted at [`build_roots`]. The explicit-request path (`gc_collect`); see
+/// [`run_safepoint`] for the paced, possibly-compacting alternative.
+fn collect_now(ctx: &mut DispatchCtx) {
+    let roots = build_roots(ctx);
     // SAFETY: every collected address is the interior field of a live
     // Value::HeapRef owned by frames/globals/memory/arrays, all reachable
     // through `ctx` for the duration of this call, so they stay valid and
@@ -1328,9 +1335,28 @@ fn collect_now(ctx: &mut DispatchCtx) {
 /// loop's periodic automatic check (`AUTO_SAFEPOINT_INTERVAL`) both use, so
 /// a long-running loop with no explicit `safepoint` still gets collected
 /// under allocation pressure without collecting on every single tick.
+///
+/// When due, further upgrades to a **compacting** cycle whenever
+/// `ctx.heap.should_compact()` says fragmentation warrants it — the same
+/// shared policy `gc-core-capi`'s `__gc_safepoint` consults, so the two
+/// automatic-collection call sites can't drift apart. `collect_compacting`'s
+/// root-slot rewrite (see `gc_core::HeapRef::as_mut_ptr`) transparently
+/// updates every `Value::HeapRef` in `build_roots`' root set in place, so
+/// vm-core needs no fixup logic of its own beyond passing the same roots.
 fn run_safepoint(ctx: &mut DispatchCtx) {
-    if ctx.heap.should_collect() {
-        collect_now(ctx);
+    if !ctx.heap.should_collect() {
+        return;
+    }
+    let roots = build_roots(ctx);
+    // SAFETY: same argument as `collect_now` — every address is the interior
+    // field of a live Value::HeapRef reachable through `ctx` for the
+    // duration of this call.
+    unsafe {
+        if ctx.heap.should_compact() {
+            ctx.heap.collect_compacting(&roots, &[]);
+        } else {
+            ctx.heap.collect_mixed(&roots, &[]);
+        }
     }
 }
 

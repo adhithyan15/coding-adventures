@@ -1,5 +1,27 @@
 # Changelog — gc-core
 
+## 0.27.0 — 2026-08-02 — `FlatHeap::should_compact` — the shared automatic-compaction policy
+
+- **`FlatHeap::should_compact(&self) -> bool`** — whether the *next*
+  collection should also relocate objects, per `AdaptivePolicy`'s
+  fragmentation signal against the heap's own `GcProfile`. This is the
+  **one** place the compaction-cadence decision lives, so every
+  automatic-collection call site shares it identically instead of each
+  reimplementing its own threshold: `gc-core-capi`'s `__gc_safepoint` and
+  `vm-core`'s `safepoint` opcode both now call it (see their own
+  changelogs). Defers to `AdaptivePolicy`'s existing priority order (pause
+  time → survival ratio → fragmentation) — a cycle with an urgent pause-time
+  or survival-ratio signal does not compact just because fragmentation is
+  also high; a moving collection has its own pause cost, so it is not owed
+  priority over a more urgent latency signal. Pure policy, like
+  `should_collect`: names no roots, runs no collection itself.
+- Closes the last half of a caveat identified by direct code inspection
+  (not commit messages): automatic (safepoint-triggered) collection used to
+  never compact at all — only reachable via the explicit
+  `__gc_collect_compacting`/`gc_collect_compacting` builtins. It is now
+  automatic whenever this policy says fragmentation warrants it.
+- Test: `should_compact_follows_adaptive_policy_fragmentation_signal`.
+
 ## 0.26.0 — 2026-08-02 — `payload_size` + `HeapRef::as_mut_ptr` (for vm-core's direct FlatHeap integration)
 
 - **`FlatHeap::payload_size(addr) -> usize`** — the live heap object's

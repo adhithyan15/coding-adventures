@@ -66,6 +66,7 @@
 //! `__twig_gc_collect`) live in the `gc-core-capi` crate and a follow-up PR
 //! respectively.
 
+use crate::policy::{AdaptivePolicy, GcAlgorithm, GcPolicy, PolicyDecision};
 use crate::profile::{GcCycleStats, GcProfile};
 use std::alloc::{alloc, alloc_zeroed, dealloc, Layout};
 use std::collections::{HashMap, HashSet};
@@ -645,6 +646,28 @@ impl FlatHeap {
     /// allocation consults this and, when true, drives a collect.
     pub fn should_collect(&self) -> bool {
         self.live_bytes >= self.collect_threshold
+    }
+
+    /// Whether the *next* collection should also relocate objects
+    /// (compact), per [`AdaptivePolicy`]'s fragmentation signal against this
+    /// heap's own [`GcProfile`] — the **one** place this decision lives, so
+    /// every automatic-collection call site (`gc-core-capi`'s
+    /// `__gc_safepoint` and `vm-core`'s `safepoint` opcode) shares it
+    /// identically and can't drift apart. Like [`Self::should_collect`],
+    /// this is pure policy: it names no roots and runs no collection itself.
+    ///
+    /// Defers to `AdaptivePolicy`'s own priority order (pause time →
+    /// survival ratio → fragmentation, see `policy.rs`) — a cycle with both
+    /// high fragmentation *and* an unacceptable pause time recommends fixing
+    /// the pause first, and `should_compact` answers `false` here, same as
+    /// if fragmentation were low. This matches a production collector's own
+    /// trade-off: a moving collection has its own pause cost, so recovering
+    /// space is not owed priority over a more urgent latency signal.
+    pub fn should_compact(&self) -> bool {
+        matches!(
+            AdaptivePolicy::default().evaluate(&self.profile),
+            PolicyDecision::SuggestSwitch(GcAlgorithm::Compacting, _)
+        )
     }
 
     /// Re-tune the threshold after a cycle, given the live bytes *before* it.
@@ -2642,6 +2665,36 @@ mod tests {
         assert!(heap.should_collect());
         heap.live_bytes = 101;
         assert!(heap.should_collect());
+    }
+
+    #[test]
+    fn should_compact_follows_adaptive_policy_fragmentation_signal() {
+        let mut heap = FlatHeap::new();
+
+        // Too few cycles: AdaptivePolicy's min_cycles_before_advice (5) gates
+        // every recommendation, fragmentation notwithstanding.
+        heap.profile.total_collections = 4;
+        heap.profile.last_fragmentation = 0.90;
+        assert!(!heap.should_compact(), "too few cycles to advise yet");
+
+        // Enough cycles, but fragmentation below the 0.40 threshold.
+        heap.profile.total_collections = 10;
+        heap.profile.last_fragmentation = 0.10;
+        assert!(!heap.should_compact(), "fragmentation too low to warrant compacting");
+
+        // Enough cycles, fragmentation above threshold, no higher-priority
+        // signal (pause time / survival ratio) preempting it. Survival ratio
+        // must be pushed above the generational threshold too — its default
+        // (0.0) would otherwise itself outrank fragmentation.
+        heap.profile.last_fragmentation = 0.90;
+        heap.profile.ema_survival_ratio = 0.50;
+        assert!(heap.should_compact(), "high fragmentation with no higher-priority signal");
+
+        // A higher-priority signal (max pause > 10ms) takes precedence over
+        // fragmentation, per AdaptivePolicy's own priority order — the exact
+        // deferral `should_compact`'s doc comment describes.
+        heap.profile.max_pause_ns = 20_000_000;
+        assert!(!heap.should_compact(), "pause-time signal outranks fragmentation");
     }
 
     /// Retention-heavy cycle (> half survived) doubles the threshold.

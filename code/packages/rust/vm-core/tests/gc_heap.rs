@@ -198,6 +198,34 @@ fn gc_collect_frees_an_object_whose_only_root_was_overwritten() {
     assert_eq!(vm.gc_heap().object_count(), 1, "the unrooted garbage object was reclaimed");
 }
 
+/// A paced `safepoint` **over** threshold actually collects — one big
+/// `gc_alloc` (bigger than `FlatHeap`'s 1 MiB adaptive threshold outright)
+/// crosses it in a single allocation, so the very next `safepoint` must run
+/// a real cycle: reclaiming the now-unrooted garbage block while preserving
+/// the kept object's field. Exercises the same `run_safepoint` path
+/// `should_compact`'s dispatch (gc-core 0.27.0 / gc-core-capi's
+/// `__gc_safepoint`) now guards with a compact-vs-non-moving choice — on a
+/// freshly-created heap `should_compact` is always false (too few cycles),
+/// so this specifically proves the non-moving branch still collects for
+/// real through the paced entry point, not just through `gc_collect`.
+#[test]
+fn safepoint_over_threshold_collects_and_reclaims() {
+    let (result, vm) = run_with_vm(vec![
+        ins("const", Some("v"), vec![Operand::Int(7)], "i64"),
+        ins("gc_alloc", Some("keep"), vec![], "ref<pair>"),
+        ins("gc_field_store", None, vec![Operand::Var("keep".into()), Operand::Int(0), Operand::Var("v".into())], "void"),
+        ins("gc_alloc", Some("garbage"), vec![Operand::Int(1_100_000)], "ref<bytes>"),
+        // Overwrite the only register naming `garbage` — it is now unreachable.
+        ins("const", Some("garbage"), vec![Operand::Int(0)], "i64"),
+        ins("safepoint", None, vec![], "void"),
+        ins("gc_field_load", Some("r"), vec![Operand::Var("keep".into()), Operand::Int(0)], "i64"),
+        ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert_eq!(result, Some(Value::Int(7)));
+    assert_eq!(vm.gc_heap().collection_count(), 1, "over threshold — safepoint must actually collect");
+    assert_eq!(vm.gc_heap().object_count(), 1, "the unrooted 1 MiB garbage block was reclaimed");
+}
+
 /// A paced `safepoint` under threshold is a no-op — proven by allocating one
 /// object, calling `safepoint`, and confirming it is still there (no error,
 /// no premature reclamation) even though nothing rooted it beyond the

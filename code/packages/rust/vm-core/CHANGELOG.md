@@ -1,5 +1,25 @@
 # Changelog — vm-core
 
+## [0.21.0] — 2026-08-02 (`safepoint` upgrades to automatic compaction via the shared `should_compact` policy)
+
+`safepoint`'s paced collection now also relocates objects (`collect_compacting`
+instead of `collect_mixed`) whenever `gc_core::FlatHeap::should_compact` says
+fragmentation warrants it — the exact same policy `gc-core-capi`'s
+`__gc_safepoint` now consults (gc-core-capi 0.23.0), so both automatic-collection
+call sites share one cadence and can't drift apart. `collect_compacting`'s
+root-slot rewrite transparently updates every live `Value::HeapRef` in
+vm-core's own root set in place (registers/globals/memory/arrays) — no
+vm-core-side pointer-fixup code needed, since the roots passed in ARE those
+values' own storage addresses.
+
+New test `safepoint_over_threshold_collects_and_reclaims`: one `gc_alloc`
+bigger than `FlatHeap`'s 1 MiB adaptive threshold crosses it outright, so the
+very next `safepoint` must run a real (currently non-moving — a fresh heap's
+`should_compact` is always false for the first several cycles) cycle,
+reclaiming the now-unrooted block while the kept object's field survives —
+proving the paced dispatch collects for real, not just that `gc_collect`
+(the unconditional path) does.
+
 ## [0.20.0] — 2026-08-02 (a real, shared GC — `gc_alloc`/`gc_field_load`/`gc_field_store`/`safepoint`/`gc_collect`)
 
 vm-core gets a real garbage collector, sharing the exact engine (`gc-core`'s

@@ -136,8 +136,8 @@ here directly as a Rust dependency:
 | `gc_alloc [<size_bytes>] -> dest` | Allocate on `FlatHeap` (kind 0), returning a `Value::HeapRef` |
 | `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word; `ref`-typed `type_hint` decodes it as a `HeapRef`, else `Int` |
 | `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word; runs the write barrier for a `HeapRef` value |
-| `safepoint` | Collect only if `FlatHeap` is over its adaptive threshold (**paced**) |
-| `gc_collect` | Collect unconditionally |
+| `safepoint` | Collect only if `FlatHeap` is over its adaptive threshold (**paced**); also **compacts** (relocates objects) when `FlatHeap::should_compact` says fragmentation warrants it — the same shared policy `gc-core-capi`'s `__gc_safepoint` consults |
+| `gc_collect` | Collect unconditionally, non-moving |
 
 Root-finding is **precise by construction** — no conservative stack scan.
 `dispatch::collect_now` walks every `Value::HeapRef` across every frame's

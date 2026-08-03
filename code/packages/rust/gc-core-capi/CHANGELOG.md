@@ -2,6 +2,27 @@
 
 All notable changes to this crate are documented here.
 
+## 0.23.0 - 2026-08-02 — `__gc_safepoint` upgrades to precise + automatic compaction
+
+- **`__gc_safepoint`** no longer runs the fully-conservative `__gc_collect`
+  when the heap is over threshold. It now calls `__gc_collect_precise`
+  (using whatever stack maps are registered, degrading exactly to the old
+  conservative behavior when none are — a documented, already-tested
+  property of `__gc_collect_precise` itself, not a new safety argument) and,
+  when `gc_core::FlatHeap::should_compact` says fragmentation warrants it,
+  `__gc_collect_compacting` instead — so automatic, safepoint-triggered
+  collection can now relocate objects with no separate opt-in required.
+  Closes a caveat identified by directly reading the code (not commit
+  messages): automatic collection previously never got precise roots or
+  compaction at all, both being reachable only via explicit builtin calls.
+- No signature or ABI change — `__gc_safepoint`'s ABI, behavior at/under
+  threshold, and ABI-level contract are unchanged; only what happens *above*
+  threshold got more precise and, when warranted, compacting.
+- Existing test `safepoint_throttles_then_collects_at_threshold` continues
+  to pass unchanged, proving no regression in the paced trigger's own
+  behavior; `should_compact` is gc-core's to test (0.27.0) — this crate just
+  wires it in.
+
 ## 0.22.0 - 2026-07-30 — `__twig_gc_alloc_pair` — movable {0,8} pair allocator for records
 
 - **`__twig_gc_alloc_pair() -> ptr`** (new `#[no_mangle]` export in `twig_compat.rs`) — allocates a
