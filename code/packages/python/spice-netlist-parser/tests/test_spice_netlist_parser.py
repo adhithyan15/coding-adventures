@@ -842,6 +842,30 @@ def test_rejects_invalid_diode_thermal_voltage(parameter: str, value: str) -> No
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+def test_parse_diode_junction_capacitance_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(CJ=3p)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Cjo == 3.0e-12
+
+
+@pytest.mark.parametrize("parameter", ["CJO", "CJ", "CJ0"])
+@pytest.mark.parametrize("value", ["-1p", "1e999"])
+def test_rejects_invalid_diode_junction_capacitance(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode CJO must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

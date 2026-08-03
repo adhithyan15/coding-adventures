@@ -800,6 +800,31 @@ D1 in out clamp
     );
   });
 
+  it("parses the diode CJ junction-capacitance alias", () => {
+    const parsed = parseNetlist(`
+.model clamp D(CJ=3p)
+D1 in out clamp
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      junctionCapacitance: 3.0e-12,
+    });
+  });
+
+  it.each([
+    ["CJO", "-1p"],
+    ["CJO", "1e999"],
+    ["CJ", "-1p"],
+    ["CJ", "1e999"],
+    ["CJ0", "-1p"],
+    ["CJ0", "1e999"],
+  ])("rejects invalid diode %s junction capacitance %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode CJO must be finite and non-negative",
+    );
+  });
+
   it("parses the diode V_T thermal-voltage alias", () => {
     const parsed = parseNetlist(`
 .model clamp D(V_T=27m)
