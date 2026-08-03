@@ -4225,11 +4225,17 @@ the Rust, Python, and TypeScript surfaces together.
      diagnostic while zero and positive drain-square counts lower into Level-1
      parameters.
 
+385. Python and TypeScript Berkeley SPICE MOS source-squares parity.
+   - Status: completed in PR 9667.
+   - Negative and non-finite instance `NRS` values are rejected with the shared
+     diagnostic while zero and positive source-square counts lower into
+     Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `NRS`, `AD`, `AS`, `PD`,
-     `PS`, `CJ`, `CJSW`, `JS`, `PB`, `MJ`,
+   - TypeScript still needs canonical lowering for `AD`, `AS`, `PD`, `PS`,
+     `CJ`, `CJSW`, `JS`, `PB`, `MJ`,
      `MJSW`, `FC`, `KF`, and `AF`; Python already lowers these canonical fields
      but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both

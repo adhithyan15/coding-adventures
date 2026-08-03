@@ -991,6 +991,23 @@ Mp out gate vdd vdd pfast W=3u L=250n
     expect(element.params.NRS).toBe(expected);
   });
 
+  it.each(["-1n", "1e999"])("rejects invalid MOSFET instance AD=%s", (drainArea) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS\nM1 d g s b nfast AD=${drainArea}\n`),
+    ).toThrow("MOSFET AD must be finite and non-negative");
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["3n", 3.0e-9],
+  ])("lowers valid MOSFET instance AD=%s", (drainArea, expected) => {
+    const parsed = parseNetlist(`.model nfast NMOS\nM1 d g s b nfast AD=${drainArea}\n`);
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.AD).toBeCloseTo(expected, 15);
+  });
+
   it("parses PWL and SIN source waveforms", () => {
     const parsed = parseNetlist(`
 V1 in 0 PWL(0 0, 1n 1.8, 2n 0)
