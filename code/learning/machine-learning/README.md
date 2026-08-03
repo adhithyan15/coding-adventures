@@ -48,13 +48,14 @@ larger network:
 28. [Forward Graph Lowering, by Hand](./forward-graph-lowering-by-hand.md)
 29. [Backward and Optimizer Lowering, by Hand](./backward-and-optimizer-lowering-by-hand.md)
 30. [CPU, Rust Core, and Accelerated Backends, by Hand](./cpu-rust-and-accelerated-backends-by-hand.md)
-31. [Matrix Math](../matrix-math.md)
-32. [Loss Functions](../loss-functions.md)
-33. [Gradient Descent](../gradient-descent.md)
-34. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-35. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-36. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-37. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+31. [Precision, Quantization, and Buffer Residency, by Hand](./precision-quantization-and-residency-by-hand.md)
+32. [Matrix Math](../matrix-math.md)
+33. [Loss Functions](../loss-functions.md)
+34. [Gradient Descent](../gradient-descent.md)
+35. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+36. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+37. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+38. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -64,7 +65,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has eighteen complementary views:
+has nineteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -158,6 +159,9 @@ has eighteen complementary views:
   fixture-validated Rust `f32` execution helper, and run the same production
   matrix plan on a real WebGPU adapter when the browser provides one. Every lane keeps its
   operations, buffer residency, precision, and evidence level visible.
+- **Precision and residency lab:** round two close inputs through binary32 and
+  binary16, quantize them with a pinned symmetric int8 scale, and compare an
+  eager copy schedule with buffers that stay resident across repeated passes.
 
 ## Language-Neutral Corpus
 
@@ -294,6 +298,11 @@ MatrixIR graph, little-endian `f32` input and output payloads, scalar and
 TypeScript CPU traces, a Node-free Rust execution-helper test, and an optional
 real-WebGPU probe with explicit unavailable states.
 
+NN32 adds `code/specs/fixtures/precision-residency-v1`, including exact
+binary32 and binary16 payloads, a symmetric signed-int8 encoding with pinned
+scales, recomputed output-error oracles, and eager-versus-resident transfer
+counts for repeated execution.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -326,6 +335,7 @@ python code/scripts/validate_gradient_accumulation_labs.py
 python code/scripts/validate_forward_graph_lowering_labs.py
 python code/scripts/validate_backward_optimizer_lowering_labs.py
 python code/scripts/validate_backend_parity_labs.py
+python code/scripts/validate_precision_residency_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -389,6 +399,10 @@ The first NN31 lab evaluates `XW + B` for `X = [1, 2, 3]`, `W = [2]`, and
 `B = [1, 1, 1]`. Production scalar and TypeScript matrix execution, fixture-
 validated Rust `f32` execution, and an optional live WebGPU dispatch all target
 `[3, 5, 7]` without treating an oracle as hardware evidence.
+The first NN32 lab sends the close inputs `1.0004` and `1.0006` through
+`y = x * 2`, then exposes how binary32, binary16, and symmetric int8 encode the
+values and change the answer. Replaying the binary32 pass three times also
+contrasts 72 eager-transfer bytes with 24 bytes for resident buffers.
 
 ## How to Study a Model
 

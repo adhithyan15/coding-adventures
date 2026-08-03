@@ -57,11 +57,11 @@ trace, and tests.
   - [x] Shape and broadcasting visualizer.
   - [x] Dynamic computation graph and saved-value trace.
   - [x] Gradient accumulation and zeroing behavior.
-- [ ] Compilation and performance bridge
+- [x] Compilation and performance bridge
   - [x] Forward graph lowering to NeuralIR and MatrixIR.
   - [x] Backward and optimizer graph lowering.
   - [x] CPU, Rust core, and accelerated-backend parity.
-  - [ ] Precision, quantization, and buffer-residency experiments.
+  - [x] Precision, quantization, and buffer-residency experiments.
 - [ ] Cross-language consumers
   - [ ] Validate every fixture with the reference implementation.
   - [ ] Add thin consumers in representative language families.

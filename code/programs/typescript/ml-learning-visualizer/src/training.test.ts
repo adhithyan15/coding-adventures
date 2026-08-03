@@ -63,6 +63,15 @@ import { initializerScale, traceInitializationDistributions } from "./initializa
 import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
 import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
+import { PrecisionResidencyWorkbench } from "./PrecisionResidencyWorkbench.js";
+import {
+  normalizePrecisionResidencyFixture,
+  PRECISION_RESIDENCY_FIXTURE,
+  roundTiesToEven,
+  roundToBinary16,
+  tracePrecisionResidency,
+} from "./precision-residency-lab.js";
+import precisionResidencyDocument from "../../../../specs/fixtures/precision-residency-v1/labs/00-tiny-affine.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -2457,5 +2466,115 @@ describe("CPU Rust and accelerated backend parity", () => {
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+});
+
+describe("precision, quantization, and buffer residency", () => {
+  it("reproduces binary32, binary16, and symmetric int8 arithmetic", () => {
+    const binary32 = tracePrecisionResidency("binary32", "eager", 3);
+    const binary16 = tracePrecisionResidency("binary16", "resident", 3);
+    const int8 = tracePrecisionResidency("symmetric_int8", "resident", 3);
+
+    expect(binary32.rows.map((row) => row.output)).toEqual([
+      2.0007998943328857,
+      2.001199960708618,
+    ]);
+    expect(binary16.rows.map((row) => row.encodedInput)).toEqual([1, 1.0009765625]);
+    expect(binary16.rows.map((row) => row.output)).toEqual([2, 2.001953125]);
+    expect(int8.rows.map((row) => row.encodedInput)).toEqual([100, 100]);
+    expect(int8.rows.map((row) => row.accumulator)).toEqual([400, 400]);
+    expect(int8.rows.map((row) => row.output)).toEqual([2, 2]);
+  });
+
+  it("rounds representative normal and subnormal values to binary16", () => {
+    expect(roundToBinary16(1.0004)).toBe(1);
+    expect(roundToBinary16(1.0006)).toBe(1.0009765625);
+    expect(roundToBinary16(2 ** -24)).toBe(2 ** -24);
+    expect(roundToBinary16(2 ** -25)).toBe(0);
+    expect(roundToBinary16(-2)).toBe(-2);
+    expect(roundToBinary16(65505)).toBe(65504);
+    expect(roundToBinary16(65519)).toBe(65504);
+    expect(() => roundToBinary16(65520)).toThrow(/representable/);
+    expect(roundTiesToEven(0.5)).toBe(0);
+    expect(roundTiesToEven(1.5)).toBe(2);
+    expect(roundTiesToEven(-0.5)).toBe(0);
+    expect(roundTiesToEven(-1.5)).toBe(-2);
+  });
+
+  it("counts eager versus resident transfers for interactive repeat counts", () => {
+    const eager = tracePrecisionResidency("binary32", "eager", 3);
+    expect(eager).toMatchObject({
+      uploadCount: 3,
+      downloadCount: 3,
+      transferBytes: 72,
+      bytesSavedAgainstEager: 0,
+    });
+    expect(eager.strategy).toMatchObject({
+      uploadCount: 3,
+      downloadCount: 3,
+      totalTransferBytes: 72,
+    });
+    const resident = tracePrecisionResidency("binary32", "resident", 3);
+    expect(resident).toMatchObject({
+      uploadCount: 1,
+      downloadCount: 1,
+      transferBytes: 24,
+      bytesSavedAgainstEager: 48,
+    });
+    expect(resident.strategy).toMatchObject({
+      uploadCount: 1,
+      downloadCount: 1,
+      totalTransferBytes: 24,
+    });
+    expect(tracePrecisionResidency("binary16", "resident", 8).bytesSavedAgainstEager).toBe(168);
+    expect(() => tracePrecisionResidency("binary16", "resident", 0)).toThrow(/1 through 8/);
+  });
+
+  it("validates and freezes the bundled fixture", () => {
+    expect(PRECISION_RESIDENCY_FIXTURE.formats.map((format) => format.id)).toEqual([
+      "binary32",
+      "binary16",
+      "symmetric_int8",
+    ]);
+    expect(Object.isFrozen(PRECISION_RESIDENCY_FIXTURE)).toBe(true);
+    expect(Object.isFrozen(PRECISION_RESIDENCY_FIXTURE.formats[0])).toBe(true);
+    expect(() => normalizePrecisionResidencyFixture({})).toThrow(/unexpected fields/);
+    expect(() => normalizePrecisionResidencyFixture({
+      ...PRECISION_RESIDENCY_FIXTURE,
+      surprise: true,
+    })).toThrow(/unexpected fields/);
+
+    const dishonestTitle = JSON.parse(JSON.stringify(precisionResidencyDocument));
+    dishonestTitle.formats[1].title = "IEEE-754 binary64";
+    expect(() => normalizePrecisionResidencyFixture(dishonestTitle)).toThrow(/title/);
+    const dishonestSteps = JSON.parse(JSON.stringify(precisionResidencyDocument));
+    dishonestSteps.residency.strategies[0].steps[1] = "download never";
+    expect(() => normalizePrecisionResidencyFixture(dishonestSteps)).toThrow(/transfer oracle/);
+    const escapedPayload = JSON.parse(JSON.stringify(precisionResidencyDocument));
+    escapedPayload.formats[0].input_payload_file = "../../../../README.md";
+    expect(() => normalizePrecisionResidencyFixture(escapedPayload)).toThrow(/payload reference/);
+  });
+
+  it("lets a learner switch format, residency, and repeat count", () => {
+    render(React.createElement(PrecisionResidencyWorkbench));
+    expect(screen.getByRole("heading", { name: "Precision and residency laboratory" })).toBeTruthy();
+    const table = screen.getByRole("table", { name: "Precision output and error rows" });
+    expect(within(table).getAllByRole("cell")).toHaveLength(12);
+    expect(screen.getByLabelText("Selected precision arithmetic trace").textContent)
+      .toMatch(/1\.000976563.*2\.001953125/s);
+    expect(screen.getByLabelText("Buffer residency transfer trace").textContent)
+      .toMatch(/1 upload.*3 forward passes.*1 download.*24 bytes.*48 bytes saved/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Use Symmetric signed int8" }));
+    expect(screen.getByText("Both close inputs become integer 100.")).toBeTruthy();
+    expect(screen.getAllByText("1-byte operands · 4-byte accumulator")).toHaveLength(2);
+    expect(screen.getByLabelText("Selected precision arithmetic trace").textContent)
+      .toMatch(/100.*4.*400.*2/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Eager copies" }));
+    fireEvent.input(screen.getByLabelText("Forward pass repeats"), { target: { value: "5" } });
+    expect(screen.getByLabelText("Buffer residency transfer trace").textContent)
+      .toMatch(/5 uploads.*5 forward passes.*5 downloads.*120 bytes/s);
+    expect(screen.getByText("run affine neuron 5 times")).toBeTruthy();
   });
 });

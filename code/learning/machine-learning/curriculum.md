@@ -107,6 +107,12 @@ optional live WebGPU dispatch. Buffer residency and evidence provenance stay
 visible so later performance experiments can change mechanics without changing
 the mathematical contract.
 
+NN32 performs that next experiment on one two-value affine neuron. Binary32,
+binary16, and symmetric int8 share a paper oracle while raw payloads expose the
+actual stored values and scales. Eager and resident schedules then replay the
+same pass with explicit transfer-byte equations, completing the local
+compilation/performance bridge before cross-language consumers expand.
+
 ## Corpus Rule
 
 Every new curriculum unit should contribute all of the following:
