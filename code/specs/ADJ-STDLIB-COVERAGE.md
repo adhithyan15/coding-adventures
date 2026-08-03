@@ -274,8 +274,9 @@ option mapping, or judge/evaluation failure.
     objects and index changes on failure.
 7c. **Complete:** add an explicit transactional root-replacement migration that
     compares each expected old root hash before publishing, validates the replacement
-    graph, rejects staged stray objects, preserves shared dependencies, and reports the
-    exact baseline objects pruned because no final root reaches them.
+    graph, rejects staged stray objects and stale same-ID transitive roots, preserves
+    nonconflicting shared dependencies, and reports the exact baseline objects pruned
+    because no final root reaches them.
 7d. Add a write-ahead recovery journal for process termination between the
     atomic CAS-index and manifest publications.
 7e. **Complete:** scope native snapshot projection to a named bundle and its
@@ -310,13 +311,13 @@ option mapping, or judge/evaluation failure.
      provenance-bundle link, then replay the trusted parser binary against the exact
      linked CAS input on every verification. Output is bounded while streaming, and
      each formula requires its own enclosing input-IR claim. The isolated bridge is
-     schema-checked; current manifest roots remain explicitly unmigrated.
-13b. **In progress:** dependent provenance builders now require an explicit,
-     syntactically valid primitive-root hash and reject roots whose bundle identity
-     is not the expected arithmetic dependency. Next migrate parser inventories into
-     every formula-bearing provenance root, add `formula_derivation` and
-     execution-witness objects, and enforce set equality across parsed exports,
-     replayed derivations, and fully verified query executions.
+     schema-checked and consumed only through an explicit parser command.
+13b. **In progress:** dependent provenance builders require an explicit verified
+     primitive-root hash. The arithmetic, ratio, and percent-of formula roots now
+     store replayed parser inventories, and one compare-and-swap migration rebuilds
+     their complete six-root formula/query dependency closure. Next add
+     `formula_derivation` and execution-witness objects and enforce set equality across
+     parsed exports, replayed derivations, and fully verified query executions.
 
 ### Wave 2: complete K-8 foundations
 

@@ -815,6 +815,27 @@ def _validate_formula_inventory_value(
         previous_end = declaration_end
 
 
+def put_formula_parser_inventory(
+    cas: Cas,
+    source_hash: str,
+    parser_command: Sequence[str],
+    *,
+    label: str,
+) -> str:
+    source_hash = _require_hash(source_hash, "formula inventory source hash")
+    if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
+        raise ProvenanceError("formula inventory source is not raw_source bytes")
+    source = _read_regular_file(cas.object_path(source_hash))
+    inventory = _run_formula_inventory(parser_command, cas.object_path(source_hash))
+    _validate_formula_inventory_value(inventory, source_hash, source)
+    return cas.put_json(
+        inventory,
+        kind="formula_parser_inventory",
+        label=label,
+        links=[source_hash],
+    )
+
+
 def _validate_formula_inventory(
     cas: Cas,
     digest: str,
@@ -1710,6 +1731,7 @@ def _validate_bundle(
     validated: set[str],
     snapshots: set[str],
     bundle_claims: dict[str, set[str]],
+    bundle_ids: dict[str, str],
     bundle_inputs: dict[str, str],
     formula_inventory_command: Sequence[str] | None,
 ) -> None:
@@ -1735,7 +1757,13 @@ def _validate_bundle(
         raise ProvenanceError(f"bundle {digest} has unknown or missing fields")
     if bundle["kind"] != "provenance_bundle":
         raise ProvenanceError(f"bundle {digest} payload has the wrong kind")
-    _require_nonempty(bundle["bundle_id"], "bundle.bundle_id")
+    bundle_id = _require_nonempty(bundle["bundle_id"], "bundle.bundle_id")
+    prior_digest = bundle_ids.get(bundle_id)
+    if prior_digest is not None and prior_digest != digest:
+        raise ProvenanceError(
+            f"bundle_id {bundle_id} resolves to both {prior_digest} and {digest}"
+        )
+    bundle_ids[bundle_id] = digest
     _require_nonempty(bundle["library"], "bundle.library")
     dependencies = bundle["dependencies"]
     if not isinstance(dependencies, list) or dependencies != sorted(set(dependencies)):
@@ -1749,6 +1777,7 @@ def _validate_bundle(
             validated=validated,
             snapshots=snapshots,
             bundle_claims=bundle_claims,
+            bundle_ids=bundle_ids,
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
         )
@@ -2024,6 +2053,7 @@ def _validate_repository_unlocked(
     snapshots: set[str] = set()
     validated: set[str] = set()
     bundle_claims: dict[str, set[str]] = {}
+    bundle_ids: dict[str, str] = {}
     bundle_inputs: dict[str, str] = {}
     for bundle in normalized_bundles:
         _validate_bundle(
@@ -2033,6 +2063,7 @@ def _validate_repository_unlocked(
             validated=validated,
             snapshots=snapshots,
             bundle_claims=bundle_claims,
+            bundle_ids=bundle_ids,
             bundle_inputs=bundle_inputs,
             formula_inventory_command=formula_inventory_command,
         )
@@ -2348,25 +2379,11 @@ def main() -> int:
         elif args.command == "put-formula-inventory":
             with CasMutationTransaction(_resolve(repo_root, args.cas)) as transaction:
                 cas = transaction.cas
-                source_hash = _require_hash(args.source, "source hash")
-                if "raw_source" not in cas.index.get(source_hash, {}).get("kinds", []):
-                    raise ProvenanceError(
-                        "formula inventory source is not raw_source bytes"
-                    )
-                inventory = _run_formula_inventory(
+                inventory_hash = put_formula_parser_inventory(
+                    cas,
+                    args.source,
                     [os.fspath(_resolve(repo_root, args.formula_inventory_binary))],
-                    cas.object_path(source_hash),
-                )
-                _validate_formula_inventory_value(
-                    inventory,
-                    source_hash,
-                    _read_regular_file(cas.object_path(source_hash)),
-                )
-                inventory_hash = cas.put_json(
-                    inventory,
-                    kind="formula_parser_inventory",
                     label=args.label,
-                    links=[source_hash],
                 )
                 transaction.commit()
             result = {"formula_inventory_sha256": inventory_hash}

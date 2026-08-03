@@ -1,0 +1,29 @@
+{
+  "formulas": [
+    {
+      "body": {
+        "end": 4083,
+        "sha256": "083ab1167e9f30698437a6f872f85f9ece91728b9ec3687410369aaca8c8f566",
+        "start": 4048
+      },
+      "declaration": {
+        "end": 4378,
+        "sha256": "39aa6f0dd9777ae2b690ed3bd2089c21664c13e710d02125b374b1ee01c83fba",
+        "start": 4014
+      },
+      "formula": "percent_of",
+      "formulabook": "percent_of_book",
+      "parameters": [
+        "whole",
+        "rate"
+      ],
+      "step_count": 0
+    }
+  ],
+  "kind": "formula_parser_inventory",
+  "parser_contract": "adj-lang/formula_source_map/v1",
+  "schema_version": 1,
+  "scope": "source_file",
+  "source_sha256": "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834",
+  "source_size": 4381
+}

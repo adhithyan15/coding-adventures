@@ -95,6 +95,7 @@
     }
   ],
   "dependencies": [],
+  "formula_inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
   "input": {
     "raw_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
     "receipt_sha256": "2c8535d22198eb06e2f1d7986f1b48d40dcd2907472d631fbbb7fc3a83605346",

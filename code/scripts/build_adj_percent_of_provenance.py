@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Sequence
 from pathlib import Path
 
 import adj_stdlib_provenance as provenance
@@ -309,6 +310,7 @@ def build(
     captured_source: Path | None,
     *,
     arithmetic_bundle_sha256: str,
+    formula_inventory_command: Sequence[str],
 ) -> dict[str, str]:
     arithmetic_bundle_sha256 = provenance._require_hash(
         arithmetic_bundle_sha256, "arithmetic_bundle_sha256"
@@ -353,6 +355,12 @@ def build(
             "selected import, vocabulary, use, and formula rules"
         ),
     )
+    formula_inventory_hash = provenance.put_formula_parser_inventory(
+        cas,
+        input_source["raw_source_sha256"],
+        formula_inventory_command,
+        label="percent-of.adj parser inventory",
+    )
 
     percent_of_claim = external_claims[PERCENT_OF_CLAIM]
     bundle = {
@@ -379,6 +387,7 @@ def build(
             }
         ],
         "dependencies": [arithmetic_bundle_sha256],
+        "formula_inventory_sha256": formula_inventory_hash,
         "input": {
             key: input_source[key]
             for key in ("raw_source_sha256", "receipt_sha256", "source_ir_sha256")
@@ -515,19 +524,23 @@ def main() -> None:
         ),
         help="verified current primitive arithmetic provenance root",
     )
+    parser.add_argument("--formula-inventory-binary", type=Path, required=True)
     args = parser.parse_args()
+    formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
         REPO_ROOT / provenance.DEFAULT_MANIFEST,
         expected_manifest_id="adj.stdlib.provenance.v1",
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
+        formula_inventory_command=formula_inventory_command,
     ) as transaction:
         transaction.commit(
             build(
                 transaction.cas,
                 args.captured_source,
                 arithmetic_bundle_sha256=args.arithmetic_bundle_sha256,
+                formula_inventory_command=formula_inventory_command,
             )
         )
 

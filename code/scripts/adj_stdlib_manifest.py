@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -57,13 +58,23 @@ def _safe_repo_path(value: str) -> bool:
     )
 
 
-def discover_library_evidence(root: Path) -> dict[str, dict[str, Any]]:
-    report = adj_stdlib_report.build_report(root)
+def discover_library_evidence(
+    root: Path, formula_inventory_command: Sequence[str] | None = None
+) -> dict[str, dict[str, Any]]:
+    report = adj_stdlib_report.build_report(
+        root,
+        formula_inventory_command=(
+            list(formula_inventory_command)
+            if formula_inventory_command is not None
+            else None
+        ),
+    )
     return {row["path"]: row for row in report["libraries"]}
 
 
 def load_provenance_bundles(
     root: Path,
+    formula_inventory_command: Sequence[str] | None = None,
 ) -> tuple[dict[str, dict[str, Any]], list[str]]:
     """Load only bundles already proven by the offline CAS verifier."""
 
@@ -73,7 +84,11 @@ def load_provenance_bundles(
     try:
         with adj_stdlib_provenance.CasRootLock(cas_root):
             adj_stdlib_provenance._validate_repository_unlocked(
-                cas_root, manifest_path, schema_path, workspace_root=root
+                cas_root,
+                manifest_path,
+                schema_path,
+                workspace_root=root,
+                formula_inventory_command=formula_inventory_command,
             )
             manifest = _load_json(manifest_path)
             cas = adj_stdlib_provenance.Cas(cas_root)
@@ -213,12 +228,15 @@ def validate_manifest(
     manifest: Any,
     library_evidence: dict[str, dict[str, Any]] | None = None,
     provenance_bundles: dict[str, dict[str, Any]] | None = None,
+    formula_inventory_command: Sequence[str] | None = None,
 ) -> list[str]:
     """Return stable validation errors; an empty list means valid."""
 
     errors: list[str] = []
     if provenance_bundles is None:
-        provenance_bundles, provenance_errors = load_provenance_bundles(root)
+        provenance_bundles, provenance_errors = load_provenance_bundles(
+            root, formula_inventory_command
+        )
         errors.extend(provenance_errors)
     if not isinstance(manifest, dict):
         return ["manifest must be a JSON object"]
@@ -247,7 +265,7 @@ def validate_manifest(
         errors.append("objectives must be an array")
         objectives = []
     if library_evidence is None:
-        library_evidence = discover_library_evidence(root)
+        library_evidence = discover_library_evidence(root, formula_inventory_command)
 
     objective_ids: list[str] = []
     prerequisites: dict[str, list[str]] = {}
@@ -421,6 +439,7 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--validate-json-schema", action="store_true")
+    parser.add_argument("--formula-inventory-binary", type=Path, required=True)
     args = parser.parse_args()
 
     root = args.root.resolve()
@@ -430,12 +449,16 @@ def main() -> int:
     schema_path = args.schema if args.schema.is_absolute() else root / args.schema
     manifest = _load_json(manifest_path)
     schema = _load_json(schema_path)
-    provenance_bundles, provenance_errors = load_provenance_bundles(root)
+    formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
+    provenance_bundles, provenance_errors = load_provenance_bundles(
+        root, formula_inventory_command
+    )
     errors = [
         *validate_manifest(
             root,
             manifest,
             provenance_bundles=provenance_bundles,
+            formula_inventory_command=formula_inventory_command,
         ),
         *provenance_errors,
     ]

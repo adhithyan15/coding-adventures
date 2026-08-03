@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -60,6 +61,24 @@ class AdjStdlibReportTests(unittest.TestCase):
         self.assertEqual(row["counts"]["tables"], 1)
         self.assertEqual(report["summary"]["pin_syntax_libraries"], 1)
         self.assertEqual(report["summary"]["byte_pinned_libraries"], 0)
+
+    def test_report_forwards_formula_inventory_command(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_root(directory)
+            command = ["trusted-parser"]
+            with mock.patch.object(
+                stdlib.adj_stdlib_provenance,
+                "_validate_repository_unlocked",
+                side_effect=stdlib.adj_stdlib_provenance.ProvenanceError(
+                    "injected replay stop"
+                ),
+            ) as validate:
+                report = stdlib.build_report(root, formula_inventory_command=command)
+
+        self.assertEqual(report["scope"]["provenance_error"], "injected replay stop")
+        self.assertEqual(
+            validate.call_args.kwargs["formula_inventory_command"], command
+        )
 
     def test_requires_a_complete_source_envelope_for_every_clause(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import argparse
+from collections.abc import Sequence
 from pathlib import Path
 
 import adj_stdlib_provenance as provenance
@@ -155,7 +157,9 @@ def local_source(
     )
 
 
-def build(cas: provenance.Cas) -> dict[str, str]:
+def build(
+    cas: provenance.Cas, *, formula_inventory_command: Sequence[str]
+) -> dict[str, str]:
     source_entries = []
     clauses = []
     for item in SOURCES:
@@ -313,6 +317,12 @@ def build(cas: provenance.Cas) -> dict[str, str]:
         "representations": [],
         "source_ir_sha256": input_ir_hash,
     }
+    formula_inventory_hash = provenance.put_formula_parser_inventory(
+        cas,
+        input_hash,
+        formula_inventory_command,
+        label="arithmetic.adj parser inventory",
+    )
     for item in SOURCES:
         external = item["rendered_claim"]
         code = input_claims[item["id"]]
@@ -342,6 +352,7 @@ def build(cas: provenance.Cas) -> dict[str, str]:
         "bundle_id": "adj.math.arithmetic.primitives.v1",
         "clauses": clauses,
         "dependencies": [],
+        "formula_inventory_sha256": formula_inventory_hash,
         "input": {
             "raw_source_sha256": input_hash,
             "receipt_sha256": input_receipt_hash,
@@ -444,14 +455,24 @@ def build(cas: provenance.Cas) -> dict[str, str]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    args = parser.parse_args()
+    formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
         REPO_ROOT / provenance.DEFAULT_MANIFEST,
         expected_manifest_id="adj.stdlib.provenance.v1",
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
+        formula_inventory_command=formula_inventory_command,
     ) as transaction:
-        transaction.commit(build(transaction.cas))
+        transaction.commit(
+            build(
+                transaction.cas,
+                formula_inventory_command=formula_inventory_command,
+            )
+        )
 
 
 if __name__ == "__main__":
