@@ -4189,11 +4189,21 @@ the Rust, Python, and TypeScript surfaces together.
    - Zero, negative, and non-finite `IS` values are rejected with the shared
      diagnostic while positive saturation currents lower into Level-1 parameters.
 
+379. Python and TypeScript Berkeley SPICE MOS nominal-temperature validation parity.
+   - Status: completed in PR 9631.
+   - Zero, negative, and non-finite `TNOM` / `T_NOM` values are rejected with
+     the shared diagnostic while positive Kelvin values lower into Level-1
+     parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - Lower missing canonical resistance, geometry, capacitance, junction, and
-     noise fields, then align the `CJS` and `CJD` aliases.
+   - TypeScript still needs canonical lowering for `RD`, `RS`, `RSH`, `LD`,
+     `NRD`, `NRS`, `AD`, `AS`, `PD`, `PS`, `CJ`, `CJSW`, `JS`, `PB`, `MJ`,
+     `MJSW`, `FC`, `KF`, and `AF`; Python already lowers these canonical fields
+     but still needs matching facade validation coverage.
+   - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both
+     facades after the canonical-field slices.
 
 2. Python and TypeScript Berkeley SPICE MOS electrostatic-default parity.
    - Validate and consume `NSS` / `TPG`, then derive `VT0`, `GAMMA`, and `PHI`

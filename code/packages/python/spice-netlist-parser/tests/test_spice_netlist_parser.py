@@ -1588,6 +1588,31 @@ def test_lowers_positive_mosfet_model_nominal_temperature(alias: str) -> None:
     assert mosfet.model.model.params.T_NOM == 325.0
 
 
+@pytest.mark.parametrize("drain_resistance", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_drain_resistance(
+    drain_resistance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET RD must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(RD={drain_resistance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("drain_resistance", ["0", "12.5"])
+def test_lowers_valid_mosfet_model_drain_resistance(
+    drain_resistance: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(RD={drain_resistance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(drain_resistance) == mosfet.model.model.params.RD
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
