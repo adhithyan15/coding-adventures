@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 11);
+    assert_eq!(package.host_assets.files.len(), 13);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -113,22 +113,34 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     assert_eq!(package.host_assets.files[3].backend, "qt");
     assert_eq!(
         package.host_assets.files[3].source,
+        "host/qt/MosaicHost.cpp"
+    );
+    assert_eq!(package.host_assets.files[3].target, "MosaicHost.cpp");
+    assert_eq!(package.host_assets.files[4].backend, "qt");
+    assert_eq!(
+        package.host_assets.files[4].source,
+        "host/qt/MosaicHost.h"
+    );
+    assert_eq!(package.host_assets.files[4].target, "MosaicHost.h");
+    assert_eq!(package.host_assets.files[5].backend, "qt");
+    assert_eq!(
+        package.host_assets.files[5].source,
         "host/qt/tst_venture_chrome.qml"
     );
     assert_eq!(
-        package.host_assets.files[3].target,
+        package.host_assets.files[5].target,
         "test/tst_venture_chrome.qml"
     );
-    assert_eq!(package.host_assets.files[4].backend, "compose");
+    assert_eq!(package.host_assets.files[6].backend, "compose");
     assert_eq!(
-        package.host_assets.files[4].source,
+        package.host_assets.files[6].source,
         "host/compose/VentureChromeInteractionTest.kt"
     );
     assert_eq!(
-        package.host_assets.files[4].target,
+        package.host_assets.files[6].target,
         "src/test/kotlin/VentureChromeInteractionTest.kt"
     );
-    for index in [5, 6] {
+    for index in [7, 8] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/react/VentureChromeInteraction.test.tsx"
@@ -138,16 +150,16 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "src/VentureChromeInteraction.test.tsx"
         );
     }
-    assert_eq!(package.host_assets.files[5].backend, "react");
-    assert_eq!(package.host_assets.files[6].backend, "electron");
-    for index in [7, 9] {
+    assert_eq!(package.host_assets.files[7].backend, "react");
+    assert_eq!(package.host_assets.files[8].backend, "electron");
+    for index in [9, 11] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/package.json"
         );
         assert_eq!(package.host_assets.files[index].target, "package.json");
     }
-    for index in [8, 10] {
+    for index in [10, 12] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/VentureChromeInteraction.test.js"
@@ -157,10 +169,10 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "test/VentureChromeInteraction.test.js"
         );
     }
-    assert_eq!(package.host_assets.files[7].backend, "html");
-    assert_eq!(package.host_assets.files[8].backend, "html");
-    assert_eq!(package.host_assets.files[9].backend, "webcomponent");
-    assert_eq!(package.host_assets.files[10].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[9].backend, "html");
+    assert_eq!(package.host_assets.files[10].backend, "html");
+    assert_eq!(package.host_assets.files[11].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[12].backend, "webcomponent");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -325,6 +337,21 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         );
     }
 
+    let qt_host = read_package_file("host/qt/MosaicHost.cpp");
+    for symbol in [
+        "VentureContentSurface::paint",
+        "venture_browser_qt_",
+        "MosaicHost::handleEvent",
+        "MosaicHost::publishProps",
+        "MosaicHost::activateLink",
+        "MosaicHost::scrollCommand",
+        "MosaicHost::scheduleAcceptance",
+        "VENTURE_BROWSER_ACCEPTANCE_PATH",
+        "surfaceMounted",
+    ] {
+        assert!(qt_host.contains(symbol), "Qt live host omits {symbol}");
+    }
+
     let compose_acceptance = read_package_file("host/compose/VentureChromeInteractionTest.kt");
     for symbol in [
         "MosaicApp(host)",
@@ -431,6 +458,10 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "swift build",
         "cargo \"${bridge_args[@]}\"",
         "libventure_browser_macos.dylib",
+        "venture-browser-qt",
+        "libventure_browser_qt",
+        "qt_project_launch",
+        "VENTURE_QT_ACCEPTANCE_REQUIRED=1",
         "cmake --build",
         "qmltestrunner -platform offscreen -style Basic -input test -import .",
         "dotnet build",
@@ -450,6 +481,10 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "swift",
         "venture-browser-macos",
         "libventure_browser_macos.dylib",
+        "venture-browser-qt",
+        "venture_browser_qt",
+        "qt_project_launch",
+        "VENTURE_QT_ACCEPTANCE_REQUIRED",
         "venture-browser-windows",
         "venture_browser_windows.dll",
         "-p:Platform=x64",

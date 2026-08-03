@@ -48,6 +48,11 @@ recreating the surrounding chrome in backend-specific UI code.
   link activation call back into the same Rust browser session. The direct
   generated-app gates inject native wheel deltas and require those production
   paths to scroll and repaint the shared viewport.
+- The Qt project receives a package-owned `MosaicHost.cpp/.h` adapter and the
+  `venture-browser-qt` dynamic library. The adapter hydrates the same generated
+  chrome contract and mounts a Cairo-rendered `QQuickPaintedItem`; resize,
+  wheel, keyboard scroll, hover, and link activation all delegate to the
+  shared `BrowserHostController` instead of owning Qt-specific browser state.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
@@ -95,8 +100,11 @@ disabled dispatch suppression, node-slot mounting, Return, Go, and
 `mosaic-host-ready` refresh. The Flutter gate additionally pumps the emitted `MosaicApp`
 with a recording host and drives the generated native controls, including
 disabled buttons, address editing, Return, Go, and host-driven prop refresh.
-The Qt gate runs the same contract through Qt Quick Test against the emitted
-part-backed native controls and its generated `mosaicHost` seam.
+The Qt gate runs the same chrome contract through Qt Quick Test against the
+emitted part-backed native controls and its generated `mosaicHost` seam. On
+Linux and macOS with Qt and CMake available, it also directly launches the
+generated application against a deterministic HTTP page and requires the real
+Rust/Cairo bridge and mounted QML content surface to render before success.
 The Compose gate uses the emitted Mosaic-part test tags to drive native
 Compose controls through the generated injectable `MosaicComposeHost` seam,
 including disabled buttons, address editing, Return, Go, and host prop refresh.
@@ -120,6 +128,14 @@ DLL beside the generated WinUI project, and runs the x64 `dotnet build`. The
 generated project copies that native bridge next to the executable so its
 package-owned `MosaicHost.cs` can load it without a handwritten Win32 chrome
 layer.
+
+On Qt-capable Linux and macOS hosts, both matrix scripts build
+`venture-browser-qt`, copy its native library into the generated Qt project,
+compile the C++/QML shell, and run `qt_project_launch` with the direct-launch
+gate required. Other workspace test environments may skip that one native
+launch test when CMake or Qt6 is unavailable; the package matrix does not.
+Repository CI provisions those Qt6 dependencies on its Linux Venture lane so
+the generated project build and direct launch are mandatory there.
 
 The macOS and Windows Rust package tests are the authoritative direct-launch
 gates. Each test builds its platform bridge in an isolated temporary target

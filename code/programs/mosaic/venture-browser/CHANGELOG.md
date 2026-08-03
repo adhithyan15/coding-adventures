@@ -9,6 +9,15 @@
 
 ### Added
 
+- Add the package-owned Qt `MosaicHost.cpp/.h` and Cairo-backed
+  `venture-browser-qt` bridge, reusing the shared native host controller for
+  live page rendering, navigation, scrolling, hover, link activation, and
+  resize without duplicating Mosaic-authored chrome.
+- Add a generated Qt direct-launch gate that fetches a deterministic HTTP
+  page, mounts the real QML content surface, renders through Cairo, and only
+  then writes its acceptance marker.
+- Provision the Linux Venture CI lane with Qt6 Quick/QML/Widgets and Quick
+  Test so that gate is required rather than reported as a missing-tool skip.
 - Run the primary generated SwiftUI and WinUI direct-launch interaction tests
   from the shared backend build matrix on their native hosts.
 - Route the authoritative POSIX and Windows package build entry points through

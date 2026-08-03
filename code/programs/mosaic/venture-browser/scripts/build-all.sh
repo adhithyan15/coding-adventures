@@ -180,6 +180,21 @@ else
 fi
 
 if has_command cmake && has_command qmltestrunner; then
+  echo "==> Building Venture Qt native bridge"
+  qt_bridge_args=(build -p venture-browser-qt)
+  qt_bridge_profile=debug
+  if ((release)); then
+    qt_bridge_args+=(--release)
+    qt_bridge_profile=release
+  fi
+  (cd "$rust_workspace" && cargo "${qt_bridge_args[@]}")
+  case "$host_os" in
+    Darwin) qt_bridge_name=libventure_browser_qt.dylib ;;
+    Linux) qt_bridge_name=libventure_browser_qt.so ;;
+    *) qt_bridge_name=venture_browser_qt.dll ;;
+  esac
+  cp "$rust_workspace/target/$qt_bridge_profile/$qt_bridge_name" \
+    "$output_root/qt/$qt_bridge_name"
   echo "==> Building qt"
   if has_command qt-cmake; then
     (cd "$output_root/qt" && qt-cmake -S . -B build && cmake --build build)
@@ -188,6 +203,12 @@ if has_command cmake && has_command qmltestrunner; then
   fi
   echo "==> Testing qt interactions"
   (cd "$output_root/qt" && qmltestrunner -platform offscreen -style Basic -input test -import .)
+  echo "==> Testing qt direct launch and live page render"
+  qt_acceptance_args=(test -p venture-browser-qt --test qt_project_launch)
+  if ((release)); then
+    qt_acceptance_args+=(--release)
+  fi
+  (cd "$rust_workspace" && VENTURE_QT_ACCEPTANCE_REQUIRED=1 cargo "${qt_acceptance_args[@]}")
 elif ! has_command cmake; then
   skip_backend qt "cmake is not installed"
 else
