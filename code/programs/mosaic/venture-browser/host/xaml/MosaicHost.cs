@@ -129,6 +129,22 @@ public static class MosaicHost
                     return;
                 }
 
+                if (!await WaitForControlStateAsync(
+                    () => !backButton.IsEnabled
+                        && !forwardButton.IsEnabled
+                        && reloadButton.IsEnabled
+                        && goButton.IsEnabled
+                        && !addressInput.IsReadOnly))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "initial native navigation control state did not match",
+                    });
+                    return;
+                }
+
                 var invokeProvider = new ButtonAutomationPeer(goButton) as IInvokeProvider;
                 if (invokeProvider is null)
                 {
@@ -177,13 +193,14 @@ public static class MosaicHost
                     return;
                 }
 
-                if (!await WaitForEnabledAsync(backButton))
+                if (!await WaitForControlStateAsync(
+                    () => backButton.IsEnabled && !forwardButton.IsEnabled))
                 {
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
-                        error = "native Back button did not become enabled",
+                        error = "native navigation controls did not update after navigation",
                     });
                     return;
                 }
@@ -212,13 +229,14 @@ public static class MosaicHost
                     return;
                 }
 
-                if (!await WaitForEnabledAsync(forwardButton))
+                if (!await WaitForControlStateAsync(
+                    () => !backButton.IsEnabled && forwardButton.IsEnabled))
                 {
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
-                        error = "native Forward button did not become enabled",
+                        error = "native navigation controls did not update after Back",
                     });
                     return;
                 }
@@ -248,7 +266,19 @@ public static class MosaicHost
                     return;
                 }
 
-                if (!await WaitForEnabledAsync(reloadButton))
+                if (!await WaitForControlStateAsync(
+                    () => backButton.IsEnabled && !forwardButton.IsEnabled))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native navigation controls did not update after Forward",
+                    });
+                    return;
+                }
+
+                if (!await WaitForControlStateAsync(() => reloadButton.IsEnabled))
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -283,7 +313,7 @@ public static class MosaicHost
                     return;
                 }
 
-                if (!await WaitForEnabledAsync(homeButton))
+                if (!await WaitForControlStateAsync(() => homeButton.IsEnabled))
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -485,6 +515,7 @@ public static class MosaicHost
                     status = "interacted",
                     controls = "back-forward-reload-home",
                     addressCommit = "native-return",
+                    navigationState = "native-disabled-transitions",
                     surfaceFocus = "native",
                     surfaceWheel = "scroll",
                     surfaceKeyboard = "document-end",
@@ -549,12 +580,13 @@ public static class MosaicHost
         return false;
     }
 
-    private static async System.Threading.Tasks.Task<bool> WaitForEnabledAsync(Button button)
+    private static async System.Threading.Tasks.Task<bool> WaitForControlStateAsync(
+        Func<bool> matches)
     {
         for (var remaining = 50; remaining >= 0; remaining--)
         {
             await System.Threading.Tasks.Task.Delay(50);
-            if (button.IsEnabled)
+            if (matches())
             {
                 return true;
             }

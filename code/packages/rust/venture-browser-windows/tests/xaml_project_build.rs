@@ -270,6 +270,7 @@ fn package_owned_xaml_project_builds_launches_and_interacts() {
     );
     assert!(interaction.contains("\"controls\":\"back-forward-reload-home\""));
     assert!(interaction.contains("\"addressCommit\":\"native-return\""));
+    assert!(interaction.contains("\"navigationState\":\"native-disabled-transitions\""));
     assert!(interaction.contains("\"surfaceFocus\":\"native\""));
     assert!(interaction.contains("\"surfaceWheel\":\"scroll\""));
     assert!(interaction.contains("\"surfaceKeyboard\":\"document-end\""));
