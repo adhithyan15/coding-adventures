@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C05-falar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 280
 chapter: 5
 type: word
 headword: falar
@@ -9,23 +12,38 @@ prerequisites: [PT-C03-eu, PT-C02-como]
 sounds: [final-r, final-a-reduces]
 roots: [fabulari-latin]
 etymology_hook: "falar ← Latin fabulārī 'to chat' (← fābula 'story' → fable); Portuguese KEPT the f- where Spanish shifted f→h"
-est_minutes: 4
+duration:
+  max_seconds: 222
+requires:
+  knowledge: [PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04]
+introduces:
+  knowledge: [PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
+practises:
+  knowledge: [PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C03-practice, PT-C04-practice]
 ---
 
 # falar — "to speak," and the *f* that Spanish lost
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Until now you've assembled fixed phrases. **falar** ("to speak") is
 your first real **verb** — the model for the big **-ar** family — and it hides a
 beautiful contrast with Spanish, right at its first letter.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[PT-SOUND-FALAR-02]; assesses=[] -->
 
 - `final-r` — **falar** = *fah-LAR*, tapped final *r*. The stem is *fal-*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-FALAR-03]; assesses=[] -->
 
 **falar** comes from Latin **fabulārī**, *"to chat, to tell tales"* — from
 **fābula**, "a story" (→ English **fable**, **fabulous**, **confabulate**). The
@@ -48,6 +66,7 @@ still has the honest Latin *f* — *hijo/filho*, *hacer/fazer*. Portuguese is th
 more conservative sister here.
 
 ## Grammar Lens: the -ar present tense (pro-drop)
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-FALAR-04]; assesses=[] -->
 
 Drop **-ar** to get *fal-*, then add the endings:
 
@@ -64,6 +83,7 @@ says "I," so no *eu* needed. (Portuguese joins the *drop* camp: ES, PT, IT drop;
 FR, DE keep.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "falar" — *fah-LAR*]
@@ -72,6 +92,7 @@ FR, DE keep.)
   drops it to silent *h*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-EU-02, PT-ETYMON-EU-03, PT-GRAMMAR-EU-04, PT-SOUND-COMO-02, PT-ETYMON-COMO-03, PT-GRAMMAR-COMO-04, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04] -->
 
 [PAUSE 3s] What Latin verb is *falar* from, and which Spanish verb is its twin?
 (*fabulārī* — Spanish *hablar*.) What sound-law separates them? (Portuguese kept

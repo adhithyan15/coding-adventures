@@ -20,14 +20,18 @@ uniquely agrees with the **speaker**, not the listener.
 
 - **Chapter 1 — Greetings** ([`lessons/PT-C01-*`](./lessons/)): olá, bom/boa,
   o/a (gender), dia, bom dia, tarde/boa tarde, noite/boa noite,
-  obrigado/obrigada, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *o meu nome é… / chamo-me…*,
-  *tu* vs. *você*.
+  obrigado/obrigada, practice. Legacy canonical lessons; in the book.
+- **Chapters 2–17**: 50 prerequisite-ordered schema-v2 micro-lessons spanning
+  conversation, verbs, numbers, time, family, food, colours, possession, past
+  tense, *ser/estar*, and the body. Every lesson is below five minutes and every
+  chapter is generated from the same typed lesson AST consumed by Language
+  Ladder.
 
 ## Book
 
-Compiles with XeLaTeX (Latin Modern, no vendored font needed). `latexmk
--xelatex book.tex`.
+The 105-page edition compiles with XeLaTeX. It uses Latin Modern for Portuguese
+and the repository-vendored Noto Naskh Arabic only for preserved Arabic source
+forms in the etymology. Run `latexmk -xelatex book.tex`.
 
 ## Files
 

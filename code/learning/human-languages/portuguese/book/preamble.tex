@@ -2,22 +2,37 @@
 % XeLaTeX only. Mirrors the Spanish/French/Italian tracks (Latin script).
 
 \usepackage{fontspec}
-\usepackage{polyglossia}
-\setdefaultlanguage{english}
-\setotherlanguage{portuguese}
-
 \setmainfont{Latin Modern Roman}
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
+% polyglossia loads bidi for Arabic, so color-related packages must come first.
 \usepackage[table]{xcolor}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setotherlanguage{portuguese}
+\setotherlanguage{arabic}
+
+% Chapter 4 preserves the Arabic source of Portuguese ate. Use the same
+% vendored font as the Arabic, Persian, and Urdu books so local and CI output
+% are deterministic and no source-script glyph is dropped.
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newcommand{\ptar}[1]{\textarabic{#1}}
 
 \hypersetup{
   pdftitle={Portuguese, Step by Step, Root by Root},
@@ -36,10 +51,10 @@
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
   fonttitle=\bfseries, title={Why it's said this way}
 }
-\newtcolorbox{grammarlens}{
+\newtcolorbox{grammarlens}[1][]{
   breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
-  fonttitle=\bfseries, title={Grammar Lens}
+  fonttitle=\bfseries, title={Grammar Lens}, #1
 }
 \newtcolorbox{sounds}{
   breakable, skin=enhanced, colback=green!6, colframe=green!30!black,

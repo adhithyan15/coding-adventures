@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C07-dias-2
+spine_node: SPINE-TIME-OF-DAY
+sequence: 360
 chapter: 7
 type: word
 headword: sábado, domingo
@@ -9,19 +12,33 @@ prerequisites: [PT-C07-dias-1]
 sounds: [nasal-o, open-a]
 roots: [sabbatum-latin, dominica-latin]
 etymology_hook: "sábado ← Sabbatum (Sabbath), domingo ← diēs Dominica ('the Lord's day') — and because domingo is the 'first' day, Monday becomes the 'second' (segunda)"
-est_minutes: 4
+duration:
+  max_seconds: 199
+requires:
+  knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
+introduces:
+  knowledge: [PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03]
+practises:
+  knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C07-dias-1, PT-C06-numeros-1-5]
 ---
 
 # sábado and domingo — and why Monday is "the second"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Five weekdays got numbered — but two kept their names. *Sábado* and
 *domingo* are the **religious anchors** of the Portuguese week, and *domingo* is
 the key that explains why the counting started where it did.
 
 ## The two days, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-DIAS-2-02]; assesses=[] -->
 
 | Portuguese | ← Latin | meaning | shared with |
 |---|---|---|---|
@@ -34,6 +51,7 @@ the key that explains why the counting started where it did.
   master" (→ English *dominion, dominate, dame*).
 
 ## Grammar Lens: domingo is "day one" — so Monday is "day two"
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-DIAS-2-03]; assesses=[] -->
 
 Now the loop closes. The Church counted **domingo (Sunday) as the *first* day** of
 the week — *prima feria*, the Lord's day, the start. That's why:
@@ -47,6 +65,7 @@ you know Sunday was counted first. The whole week is a countdown anchored on
 *domingo*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full week — "domingo, segunda, terça, quarta, quinta, sexta,
@@ -55,6 +74,7 @@ you know Sunday was counted first. The whole week is a countdown anchored on
 - [YOU SAY: the logic — "domingo is 1st, so segunda (Monday) is 2nd"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-DIAS-2-02, PT-GRAMMAR-DIAS-2-03] -->
 
 [PAUSE 3s] Give all seven Portuguese days. (*Domingo, segunda … sábado*.) What does
 *domingo* mean, and why does that make Monday "*segunda*"? ("The **Lord's** day";

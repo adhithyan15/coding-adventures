@@ -209,6 +209,184 @@
       "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:b1f0b2f2afaf849c",
+      "lessonIds": [
+        "PT-C02-de-nada",
+        "PT-C02-como",
+        "PT-C02-tudo",
+        "PT-C02-tudo-bem",
+        "PT-C02-como-vai-esta",
+        "PT-C02-mais-ou-menos",
+        "PT-C02-practice",
+        "PT-C02-formal-practice"
+      ],
+      "tex": "portuguese/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:fe554312c9530dd0",
+      "lessonIds": [
+        "PT-C03-eu",
+        "PT-C03-me-chamo",
+        "PT-C03-como-se-chama",
+        "PT-C03-prazer",
+        "PT-C03-practice"
+      ],
+      "tex": "portuguese/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:5525ef6075d2060a",
+      "lessonIds": [
+        "PT-C04-adeus",
+        "PT-C04-ate-logo",
+        "PT-C04-ate-amanha",
+        "PT-C04-ate-breve",
+        "PT-C04-practice"
+      ],
+      "tex": "portuguese/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:fca2fd8fd1da3e96",
+      "lessonIds": [
+        "PT-C05-falar",
+        "PT-C05-morar",
+        "PT-C05-trabalhar",
+        "PT-C05-falo-portugues",
+        "PT-C05-practice"
+      ],
+      "tex": "portuguese/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:e500f5a113192fbf",
+      "lessonIds": [
+        "PT-C06-numeros-1-5",
+        "PT-C06-numeros-6-10"
+      ],
+      "tex": "portuguese/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:b504ffa532cad313",
+      "lessonIds": [
+        "PT-C07-dias-1",
+        "PT-C07-dias-2"
+      ],
+      "tex": "portuguese/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:074f8f7eba5b6b2a",
+      "lessonIds": [
+        "PT-C08-hora",
+        "PT-C08-meio-dia-meia-noite"
+      ],
+      "tex": "portuguese/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:565993042600b26d",
+      "lessonIds": [
+        "PT-C09-meses",
+        "PT-C09-estacoes"
+      ],
+      "tex": "portuguese/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:756b61183a892e04",
+      "lessonIds": [
+        "PT-C10-pais",
+        "PT-C10-irmaos"
+      ],
+      "tex": "portuguese/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:45ea90ec38957e5b",
+      "lessonIds": [
+        "PT-C11-pao",
+        "PT-C11-agua-vinho"
+      ],
+      "tex": "portuguese/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:d62ea89555f0cfaf",
+      "lessonIds": [
+        "PT-C12-numeros-11-15",
+        "PT-C12-numeros-16-20"
+      ],
+      "tex": "portuguese/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:bde0638b592353e1",
+      "lessonIds": [
+        "PT-C13-preto-branco",
+        "PT-C13-vermelho-azul"
+      ],
+      "tex": "portuguese/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:5dd21c93ee684761",
+      "lessonIds": [
+        "PT-C14-ter",
+        "PT-C14-idade"
+      ],
+      "tex": "portuguese/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:6126b552a3d85de0",
+      "lessonIds": [
+        "PT-C15-preterito-perfeito",
+        "PT-C15-tenho-falado"
+      ],
+      "tex": "portuguese/book/chapters/ch15-past-portuguese-kept.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:bc608ce25d6412a4",
+      "lessonIds": [
+        "PT-C16-ser",
+        "PT-C16-ser-roots",
+        "PT-C16-ser-vs-estar",
+        "PT-C16-ser-estar-meaning"
+      ],
+      "tex": "portuguese/book/chapters/ch16-ser-and-estar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:dff69b7e6fc4d902",
+      "lessonIds": [
+        "PT-C17-cabeca",
+        "PT-C17-cabeca-caput",
+        "PT-C17-mao"
+      ],
+      "tex": "portuguese/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
       "language": "punjabi",
       "chapter": 6,
       "sourceHash": "fnv1a64:f165e75f6db9bbe5",

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C14-idade
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 500
 chapter: 14
 type: phrase
 headword: tenho vinte anos
@@ -9,26 +12,41 @@ prerequisites: [PT-C14-ter, PT-C12-numeros-16-20]
 sounds: [nasal-anos, plural-s]
 roots: [latin-annus, latin-aetas]
 etymology_hook: "tenho vinte anos literally 'I HOLD twenty years' (ter ← tenēre), the strongest form of the Romance have-your-age idiom; ano ← annus simplified the -nn- where Spanish palatalized it to año — one Latin word, two Iberian outcomes"
-est_minutes: 4
+duration:
+  max_seconds: 259
+requires:
+  knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03]
+introduces:
+  knowledge: [PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04]
+practises:
+  knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C14-ter, PT-C12-numeros-16-20, PT-C09-meses]
 ---
 
 # tenho vinte anos — holding your years
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Portuguese states age with **ter**. And since *ter* came from "to
 **hold**," the sentence is, at the root, "**I hold twenty years**" — the most
 physical version of this idea in any of the five languages.
 
-## The phrase
+## You'll want to know: The phrase
+<!-- hl-knowledge: introduces=[PT-LEX-IDADE-02]; assesses=[] -->
 
 > **Quantos anos tens?** — "How many years do you **have**?"
 > **Tenho vinte anos.** — "I **have** twenty years."
 
 *Ser* is wrong here. And **anos** can't be dropped, unlike English "I'm twenty."
 
-## ano ← annus, minus one n
+## The word, taken apart: ano ← annus, minus one n
+<!-- hl-knowledge: introduces=[PT-ETYMON-IDADE-03]; assesses=[] -->
 
 **ano** ("year") ← Latin ***annus*** → English **annual**, **anniversary**,
 **annals**.
@@ -47,7 +65,8 @@ Latin *n*.
 Careful: keep *ano* distinct from *ânus*. The stress and the circumflex do the
 work.
 
-## Who has, who is
+## Grammar Lens: Who has, who is
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-IDADE-04]; assesses=[] -->
 
 | language | | literally |
 |---|---|---|
@@ -62,6 +81,7 @@ Three layers: Germanic **is** its years, French and Italian **have** them, and
 Iberian Romance **holds** them.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Quantos anos tens?"]
@@ -70,6 +90,7 @@ Iberian Romance **holds** them.
 - [YOU SAY: the sister pair — "**ano** … **año**" — one Latin *annus*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-GRAMMAR-NUMEROS-16-20-02, PT-NOTICE-NUMEROS-16-20-03, PT-LEX-IDADE-02, PT-ETYMON-IDADE-03, PT-GRAMMAR-IDADE-04] -->
 
 [PAUSE 3s] Which verb does Portuguese use for age? (***Ter***, never *ser*.)
 Given *ter*'s root, what does the sentence literally say? ("I **hold** twenty

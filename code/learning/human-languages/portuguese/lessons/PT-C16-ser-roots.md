@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C16-ser-roots
+spine_node: SPINE-ASK-LOCATION
+sequence: 540
 chapter: 16
 type: etymology
 headword: sou / era / fui / ser
@@ -9,13 +12,26 @@ prerequisites: [PT-C16-ser]
 sounds: [open-e]
 roots: [latin-esse, latin-sedere, latin-fui]
 etymology_hook: "ser uses esse for sou/era, sedere 'sit' for the infinitive, and esse's ancient fui perfect; ir later borrowed that whole perfect"
-est_minutes: 4
+duration:
+  max_seconds: 173
+requires:
+  knowledge: [PT-LEX-SER-02, PT-LEX-SER-03]
+introduces:
+  knowledge: [PT-ETYMON-SER-ROOTS-02]
+practises:
+  knowledge: [PT-LEX-SER-02, PT-LEX-SER-03, PT-ETYMON-SER-ROOTS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C16-ser, PT-C15-preterito-perfeito]
 ---
 
 # ser — two verbs, three stems
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **Sou, era, fui, ser** do not resemble one another because the
 modern verb preserves several older roots.
@@ -31,7 +47,8 @@ That is **two Latin verbs** but **three stems**: *esse* was already suppletive,
 using both its ordinary root and the older *fuī* perfect. *Sedēre* also gave
 English **sedentary** and **session**.
 
-## fui means “was” and “went”
+## The word, taken apart: fui means “was” and “went”
+<!-- hl-knowledge: introduces=[PT-ETYMON-SER-ROOTS-02]; assesses=[] -->
 
 The entire preterite is shared with **ir**, “to go”:
 
@@ -49,6 +66,7 @@ ancestor; **ir** borrowed the row after Latin *īre*’s own perfect wore away.
 Spanish made the same Iberian choice.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-SER-02, PT-LEX-SER-03, PT-ETYMON-SER-ROOTS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: “ser ← sedēre, to sit”]
@@ -58,6 +76,7 @@ Spanish made the same Iberian choice.
 [REPEAT x2] “Two verbs, three stems; *fui* has two meanings.”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-SER-02, PT-LEX-SER-03, PT-ETYMON-SER-ROOTS-02] -->
 
 [PAUSE 3s] Which Latin verb gives the infinitive? (***Sedēre**, “sit.”*) Which
 gives *sou* and *era*? (***Esse**.) What two verbs share *fui*? (**Ser** and

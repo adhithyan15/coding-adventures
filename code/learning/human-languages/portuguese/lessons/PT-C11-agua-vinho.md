@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C11-agua-vinho
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 440
 chapter: 11
 type: word
 headword: a água, o vinho
@@ -9,26 +12,41 @@ prerequisites: [PT-C11-pao]
 sounds: [nasal-none, nh-palatal]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "água kept aqua's body (where French wore it to eau); vinho ← vīnum, with Portuguese's signature -nh- (= Spanish ñ, French/Italian gn) → wine/vine/vinegar"
-est_minutes: 4
+duration:
+  max_seconds: 171
+requires:
+  knowledge: [PT-ETYMON-PAO-02, PT-ETYMON-PAO-03]
+introduces:
+  knowledge: [PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03]
+practises:
+  knowledge: [PT-ETYMON-PAO-02, PT-ETYMON-PAO-03, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C11-pao, PT-C10-pais]
 ---
 
 # a água, o vinho — water and wine
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two drinks, two more sound-stories. Portuguese kept **água** close to
 Latin *aqua* (unlike French, which dissolved it to *eau*), and it stamps **vinho**
 with its signature spelling — the **-nh-**.
 
-## a água (water) — Latin aqua, kept
+## The word, taken apart: a água (water) — Latin aqua, kept
+<!-- hl-knowledge: introduces=[PT-ETYMON-AGUA-VINHO-02]; assesses=[] -->
 
 - **a água** ("water") ← Latin **aqua**. Portuguese held its body — *aqua → água*
   — where French wore it down to a single vowel (*eau*). The accent on **á** marks
   the stress. It's **feminine**: *a* água. English kept the loud original in
   **aquatic, aquarium, aqueduct**.
 
-## o vinho (wine) — Latin vīnum, with -nh-
+## The word, taken apart: o vinho (wine) — Latin vīnum, with -nh-
+<!-- hl-knowledge: introduces=[PT-ETYMON-AGUA-VINHO-03]; assesses=[] -->
 
 - **o vinho** ("wine") ← Latin **vīnum**. The **-nh-** is Portuguese's palatal *ny*
   sound — the **same sound** as Spanish **ñ** (*viño*→*vinho*), French/Italian
@@ -37,6 +55,7 @@ with its signature spelling — the **-nh-**.
   vintage**. Masculine: *o* vinho.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-PAO-02, PT-ETYMON-PAO-03, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "a água, o vinho" — stress the *á*; *-nh-* = palatal *ny*]
@@ -44,6 +63,7 @@ with its signature spelling — the **-nh-**.
 - [YOU SAY: "the *nh* of *vinho* = Spanish *ñ*, met before in *amanhã*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-PAO-02, PT-ETYMON-PAO-03, PT-ETYMON-AGUA-VINHO-02, PT-ETYMON-AGUA-VINHO-03] -->
 
 [PAUSE 3s] Give "water" and "wine" with articles. (**a água, o vinho**.) How does
 *água* compare with French *eau*, from the same *aqua*? (Portuguese **kept** the

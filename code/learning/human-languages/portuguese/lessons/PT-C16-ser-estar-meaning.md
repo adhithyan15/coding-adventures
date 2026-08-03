@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C16-ser-estar-meaning
+spine_node: SPINE-ASK-LOCATION
+sequence: 560
 chapter: 16
 type: grammar
 headword: é bonita / está bonita
@@ -9,13 +12,26 @@ prerequisites: [PT-C16-ser-vs-estar]
 sounds: []
 roots: [latin-esse, latin-stare]
 etymology_hook: "the Iberian ser/estar split turns one adjective into a defining quality or a current impression"
-est_minutes: 4
+duration:
+  max_seconds: 198
+requires:
+  knowledge: [PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03]
+introduces:
+  knowledge: [PT-ETYMON-SER-ESTAR-MEANING-02]
+practises:
+  knowledge: [PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03, PT-ETYMON-SER-ESTAR-MEANING-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C16-ser-vs-estar]
 ---
 
 # é bonita / está bonita — a choice you can use
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] *Ser* and *estar* are not competing answers where one is always a
 mistake. With many adjectives, swapping the verb deliberately changes meaning.
@@ -29,7 +45,8 @@ mistake. With many adjectives, swapping the verb deliberately changes meaning.
 the quality as the current condition or impression. Context, not a mechanical
 “permanent” rule, decides what you mean.
 
-## The wider family
+## The word, taken apart: The wider family
+<!-- hl-knowledge: introduces=[PT-ETYMON-SER-ESTAR-MEANING-02]; assesses=[] -->
 
 Portuguese and Spanish maintain this full two-verb choice. Italian keeps
 *essere* and *stare* but lets them overlap differently; French has one *être*
@@ -46,6 +63,7 @@ The Romance rows started with the same Latin material and reorganised it in
 three ways. That is why the Portuguese choice is systematic but not universal.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03, PT-ETYMON-SER-ESTAR-MEANING-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: “Ela é bonita” — a quality]
@@ -55,6 +73,7 @@ three ways. That is why the Portuguese choice is systematic but not universal.
 [REPEAT x2] “Ser: what it is. Estar: the condition it is in.”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-SER-VS-ESTAR-02, PT-NOTICE-SER-VS-ESTAR-03, PT-ETYMON-SER-ESTAR-MEANING-02] -->
 
 [PAUSE 3s] What changes between *ela é bonita* and *ela está bonita*? (A
 defining quality versus a **current impression**.) Is *estar* automatically a

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C10-pais
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 410
 chapter: 10
 type: word
 headword: o pai, a mãe
@@ -9,13 +12,26 @@ prerequisites: [PT-C09-estacoes, PT-C01-ola]
 sounds: [nasal-ae, diphthong-ai]
 roots: [pater-latin, mater-latin]
 etymology_hook: "Portuguese wore pater/māter down further than any sister — to one-syllable pai and nasal mãe (the intervocalic -t- vanished, pater→pae→pai); os pais means both 'the parents' and, literally, 'the fathers'"
-est_minutes: 4
+duration:
+  max_seconds: 219
+requires:
+  knowledge: [PT-ETYMON-ESTACOES-02]
+introduces:
+  knowledge: [PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03]
+practises:
+  knowledge: [PT-ETYMON-ESTACOES-02, PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C09-estacoes, PT-C01-ola]
 ---
 
 # o pai, a mãe — the family words worn to the bone
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Every Romance sister descends from *pater* and *māter*, but
 **Portuguese wore them down the furthest**. Italian kept *padre/madre*; French
@@ -23,6 +39,7 @@ reviews_of: [PT-C09-estacoes, PT-C01-ola]
 one-syllable **pai** and the nasal **mãe**.
 
 ## Taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-PAIS-02]; assesses=[] -->
 
 - **o pai** ("father") ← Latin **pater**. Portuguese dropped the intervocalic
   **-t-** completely: *pater → pae → pai*. The same disappearing-*-t-* you saw in
@@ -33,7 +50,8 @@ one-syllable **pai** and the nasal **mãe**.
 
 Articles: *o* pai (masculine), *a* mãe (feminine).
 
-## The plural trick — os pais
+## Grammar Lens: The plural trick — os pais
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-PAIS-03]; assesses=[] -->
 
 Portuguese says **os pais** for "**the parents**" — but literally it is "the
 **fathers**." Like Spanish *los padres*, the masculine plural **covers a mixed
@@ -46,6 +64,7 @@ The learned adjectives, borrowed back from Latin, still show the old root:
 dressed-up versions of the same word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-ESTACOES-02, PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "o pai, a mãe" — *mãe* fully nasal]
@@ -53,6 +72,7 @@ dressed-up versions of the same word.
 - [YOU SAY: "os pais = the parents (lit. 'the fathers'); mind *o país* = country"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-ETYMON-ESTACOES-02, PT-ETYMON-PAIS-02, PT-GRAMMAR-PAIS-03] -->
 
 [PAUSE 3s] Give "father" and "mother" with articles. (**o pai, a mãe**.) What
 happened to the *-t-* of *pater/māter* in Portuguese? (It **vanished** — *pater →
