@@ -40,6 +40,18 @@ claim about a gap that doesn't actually exist:
   `array_ops_emit_twig_alloc_bytes_trap_and_gep` (renamed from their
   `_calloc_` predecessors) assert the new call target, the `inttoptr`
   handle recovery, and the absence of `@calloc`.
+- **Security-review finding, documented not fixed (pre-existing, cross-backend,
+  tracked separately):** `array<str>`/`array<any>`/`array<symbol>` elements
+  are i64 handles to separately GC-managed blocks, but `lower_alloc_array`
+  registers every array under `__twig_alloc_bytes`'s no-ref `HeapKind`
+  regardless of element type — a string/symbol reachable only via such an
+  array element isn't traced as a root and could be collected while the
+  array still holds a dangling handle. Not introduced by this fix (the old
+  `@calloc` block was equally untraced), but this is the first point the
+  array's own block becomes collector-managed, so it's the right place to
+  flag it. `aarch64-backend`/`x86_64-backend` share the identical gap. Fixed
+  the doc comment that previously claimed (incorrectly) that no array
+  element type could ever hold a GC reference.
 - See `code/specs/AOT00-T1w-llvm-gc-completion.md` for the full design
   rationale, including a real exit-code-truncation bug found while writing
   the end-to-end proof and a `lang_matrix.rs` test-harness duplicate-symbol

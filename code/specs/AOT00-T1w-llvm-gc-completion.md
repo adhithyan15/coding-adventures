@@ -162,6 +162,33 @@ already being linked).
   potential collection point in a way that would need fixing up (values flow
   as i64 handles, converted to `ptr` immediately before use, not held live
   across a call boundary as a native pointer).
+- **A real, pre-existing correctness gap found by security review, not
+  fixed here**: `array<str>`/`array<any>`/`array<symbol>` (and any
+  `array<ref<Lispy...>>`) elements are i64 *handles* to separately
+  GC-managed, no-ref blocks (`llvm_type_for` maps all of these to the same
+  `"i64"` LLVM type plain integers use — confirmed already exercised today
+  by `algol-iir-compiler`'s `string array` feature) — but `lower_alloc_array`
+  registers *every* array's block under `__twig_alloc_bytes`'s no-ref
+  `HeapKind` regardless of element type, so the collector never traces an
+  `array<str>`'s payload for the string handles stored inside it. A
+  string/symbol reachable *only* via such an array element (no separate
+  long-lived reference elsewhere) could be collected while the array still
+  holds a now-dangling handle. **Not newly introduced by this fix** — the
+  old raw `@calloc` block was equally invisible to the collector, so nothing
+  inside it was ever traced either; what's new is that this round is the
+  first point where the array's own block becomes collector-managed at all,
+  which is exactly where this gap should be closed but isn't yet. The fix is
+  understood — register such arrays under a **ref-array** `HeapKind` via the
+  already-exposed `__gc_register_ref_array_kind`/
+  `__twig_gc_register_ref_array_kind` (`tail_from = 8` to skip the array's
+  own length header, tracing every word after it as a reference — the same
+  primitive McCarthy Lisp's variable-length ref arrays already use,
+  `gc-core-capi/src/lib.rs:179`) — but the gap is **cross-backend**
+  (`aarch64-backend`/`x86_64-backend` call the identical `__twig_alloc_bytes`
+  for `alloc_array` with no ref-kind distinction either), so a real fix
+  needs to land uniformly across every backend that emits `alloc_array`, not
+  just LLVM. Out of scope for this round; flagged as a follow-up rather than
+  silently left unmentioned.
 
 ## 6. Tests
 
