@@ -2046,6 +2046,35 @@ fn preserves_non_negative_mosfet_model_gate_drain_overlap_capacitance() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_gate_bulk_overlap_capacitance() {
+    for capacitance in ["-8p", "1e999"] {
+        let error = parse_netlist(&format!(
+            ".model overlap NMOS(CGBO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET CGBO must be finite and non-negative"));
+    }
+}
+
+#[test]
+fn preserves_non_negative_mosfet_model_gate_bulk_overlap_capacitance() {
+    for (capacitance, expected) in [("0", 0.0), ("8p", 8.0e-12)] {
+        let parsed = parse_netlist(&format!(
+            ".model overlap NMOS(CGBO={capacitance})\nM1 d g s b overlap"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.gate_bulk_overlap_capacitance, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"
