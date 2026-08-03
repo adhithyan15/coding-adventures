@@ -98,6 +98,7 @@ foreach ($backend in @("react", "electron")) {
     Push-Location (Join-Path $outputRoot $backend)
     try {
         Invoke-Checked -Command "npm" -Arguments @("install", "--ignore-scripts")
+        Invoke-Checked -Command "npm" -Arguments @("test")
         Invoke-Checked -Command "npm" -Arguments @("run", "build")
     } finally {
         Pop-Location
