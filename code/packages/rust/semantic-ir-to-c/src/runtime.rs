@@ -1944,6 +1944,17 @@ static SirValue _sir_hash_delete(SirMap *m, SirValue key) {
     }
     m->entries = ne;
     m->len = new_len;
+    /* SECURITY: `cap` (unlike `SirSeq`, `SirMap` DOES track spare capacity
+     * for `_sir_map_put`'s amortized growth) must stay in sync with the
+     * buffer just allocated — it is now tightly sized to `new_len`, with NO
+     * spare slots. Leaving `m->cap` at its old, larger value would desync
+     * `_sir_map_put`'s `if (m->len == m->cap)` grow check: a later `put`
+     * would see `len < cap`, skip growing, and write directly at
+     * `entries[len]` — one past the end of THIS tightly-sized buffer, a
+     * heap out-of-bounds write. (Caught by security review: reallocating
+     * without updating `cap` is a real, ordinary-Ruby-reachable bug, not a
+     * theoretical one — `h.delete(k); h[new_key] = v` triggers it.) */
+    m->cap = new_len;
     return v;
 }
 /* `clear` — removes every entry IN PLACE (just resets `len`; the backing

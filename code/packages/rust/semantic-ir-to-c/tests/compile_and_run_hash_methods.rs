@@ -113,6 +113,139 @@ fn hash_delete_mutates_a_shared_binding() {
     }
 }
 
+// The Ruby frontend has no source syntax for a bracket-index assignment
+// TARGET (`h[k] = v`) yet — confirmed while writing this test ("Unexpected
+// token: =") — so the regression below hand-builds a `semantic_ir::Module`
+// directly (`Stmt::MapSet`), the same workaround the pre-existing
+// cyclic-array/cyclic-map tests already use for an unrelated reason.
+mod insert_after_delete {
+    use std::path::PathBuf;
+    use std::process::Command;
+    use std::sync::atomic::{AtomicU32, Ordering};
+
+    use semantic_ir::{
+        Block, EffectSet, Expr, Feature, FeatureManifest, Function, MapEntry, Metadata, Module,
+        Scope, Span, Stmt, CURRENT_SIR_VERSION,
+    };
+
+    static COUNTER: AtomicU32 = AtomicU32::new(0);
+
+    fn run(module: &Module) -> Option<String> {
+        let cc = super::find_cc()?;
+        let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
+        let dir = std::env::temp_dir();
+        let n = COUNTER.fetch_add(1, Ordering::Relaxed);
+        let stem = format!("sirc_hashm_delcap_{}_{}", std::process::id(), n);
+        let cpath: PathBuf = dir.join(format!("{stem}.c"));
+        let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
+        std::fs::write(&cpath, &artifact.source).expect("write .c");
+        let out = Command::new(&cc)
+            .args(["-std=c99", "-Wall", "-o"])
+            .arg(&exe)
+            .arg(&cpath)
+            .output()
+            .expect("spawn cc");
+        assert!(
+            out.status.success(),
+            "compile failed:\n{}\n--- source ---\n{}",
+            String::from_utf8_lossy(&out.stderr),
+            artifact.source
+        );
+        let r = Command::new(&exe).output().expect("run");
+        assert!(r.status.success(), "run failed (exit {:?})", r.status.code());
+        Some(String::from_utf8_lossy(&r.stdout).replace("\r\n", "\n"))
+    }
+
+    fn s() -> Span {
+        Span::synthetic()
+    }
+    fn ilit(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+    fn slit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+    fn local(name: &str) -> Expr {
+        Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
+    }
+    fn bc(name: &str, args: Vec<Expr>) -> Expr {
+        Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
+    }
+    fn puts(arg: Expr) -> Stmt {
+        Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    }
+    fn let_(name: &str, value: Expr) -> Stmt {
+        Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
+    }
+    fn delete_call(key: i64) -> Stmt {
+        Stmt::ExprStmt {
+            expr: bc("__method__", vec![local("h"), slit("delete"), ilit(key)]),
+            span: s(),
+        }
+    }
+    fn map_set(key: i64, value: &str) -> Stmt {
+        Stmt::MapSet { map: local("h"), key: ilit(key), value: slit(value), span: s() }
+    }
+
+    #[test]
+    fn hash_insert_after_delete_does_not_overflow_the_reallocated_buffer() {
+        // Security regression: `delete` reallocates a fresh, tightly-sized
+        // buffer (see its own runtime.rs comment) but an early draft forgot
+        // to sync `m->cap` to the new (smaller) size, leaving
+        // `_sir_map_put`'s `len == cap` grow-check desynced -- a later
+        // `h[k] = v` would see `len < cap`, skip growing, and write one past
+        // the end of the tightly-sized buffer (a heap out-of-bounds write).
+        // Reachable by entirely ordinary code: delete a key, then assign a
+        // new one. Repeated twice (delete+insert, delete+insert again) to
+        // also exercise the grow-triggering `len == cap` path on the SECOND
+        // insert.
+        let m = Module {
+            name: "hashdelcapprog".into(),
+            manifest: FeatureManifest::from_features(&[Feature::Maps, Feature::Strings]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![
+                        let_(
+                            "h",
+                            Expr::MapLit {
+                                entries: vec![
+                                    MapEntry { key: ilit(1), value: slit("a") },
+                                    MapEntry { key: ilit(2), value: slit("b") },
+                                    MapEntry { key: ilit(3), value: slit("c") },
+                                ],
+                                span: s(),
+                            },
+                        ),
+                        delete_call(1),
+                        map_set(4, "d"),
+                        delete_call(2),
+                        map_set(5, "e"),
+                        puts(local("h")),
+                    ],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        match run(&m) {
+            Some(out) => assert_eq!(out, "{3: c, 4: d, 5: e}\n"),
+            None => eprintln!("skip: no cc"),
+        }
+    }
+}
+
 #[test]
 fn hash_clear_empties_and_returns_the_receiver() {
     match run_ruby("h = {1 => \"a\", 2 => \"b\"}\nputs h.clear.keys\nputs h.empty?\n") {

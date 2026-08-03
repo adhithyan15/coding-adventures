@@ -36,6 +36,19 @@ No new `Feature`.
   and (retroactively) Array test suites: `each` deleting/shifting from its
   own receiver mid-iteration now correctly sees every ORIGINAL element
   exactly once.
+- **Security fix, round 2 (found by re-review of the round-1 fix)**: the
+  reallocation `delete` gained above introduced a NEW bug — it resized
+  `m->entries` without also updating `m->cap`, the field `_sir_map_put`'s
+  `if (m->len == m->cap)` amortized-growth check relies on (`SirMap`, unlike
+  `SirSeq`, tracks spare capacity). A stale, too-large `cap` after `delete`
+  makes a LATER `put` skip growing and write one past the end of the freshly
+  tightly-sized buffer — a genuine heap out-of-bounds write reachable by
+  entirely ordinary code (`h.delete(k); h[new_key] = v`), not an edge case.
+  `delete` now sets `m->cap = new_len` alongside `m->entries`/`m->len`.
+  Pinned by a new hand-built-IR regression test (bracket-index assignment,
+  `h[k] = v`, has no Ruby source syntax yet — a separate, pre-existing
+  frontend gap, tracked on the backlog) that deletes then inserts twice,
+  crossing the grow-triggering `len == cap` boundary on the second insert.
 
 **Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
 used only as a `strcmp` target — never reflection.
