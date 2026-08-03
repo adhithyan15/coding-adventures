@@ -30,22 +30,26 @@ reviews_of: [ES-C03-me]
 # llamo — "I call," from a root that shouts
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The verb inside "my name is." On its own it means "to call" — and
 its Latin root literally means *to shout*, which is why it echoes through a
 whole family of English words.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB]; assesses=[] -->
 
 - [me](./ES-C03-me.md) — you'll bolt *me* onto *llamo* next
   lesson.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `ll-y` — **ll** sounds like English **y**: *llamo* is *YA-mo*, not *LA-mo*.
   → [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **llamo** — "I call." The dictionary form (the infinitive) is **llamar**,
 "to call." Root: Latin **clamare**, "to cry out, to shout." That *clam-*
@@ -63,6 +67,7 @@ shouts all through English:
 English cousin usually kept the original cluster (*clamor*, *flame*, *pluvial*).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME, ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB] -->
 
 [PAUSE 1s]
 - [YOU SAY: "llamo" — *YA-mo*]
@@ -70,6 +75,7 @@ English cousin usually kept the original cluster (*clamor*, *flame*, *pluvial*).
 - [YOU SAY: "llamar" (to call), "llave" (key) — both from Latin *cl-*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME, ES-LEX-LLAMO, ES-GRAMMAR-FIRST-PERSON-VERB] -->
 
 [PAUSE 3s] What does the root *clamare* mean? (To shout / cry out.) Latin
 *cl-* becomes which two letters in Spanish? (*ll-* — *clamare → llamar*.)

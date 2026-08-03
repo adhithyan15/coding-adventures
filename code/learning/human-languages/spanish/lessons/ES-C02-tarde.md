@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-TARDE]
 practises:
-  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-LEX-TARDE]
+  knowledge: [ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-LEX-TARDE, ES-GRAMMAR-NOUN-NUMBER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,17 +30,20 @@ reviews_of: [ES-C01-buenos-dias]
 # tarde — "afternoon," and the "late" hiding inside it
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You built *buenos días*. The afternoon greeting is coming, but
 first its key word on its own — *tarde* — and it's secretly a word you
 already know from English.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-TARDE]; assesses=[] -->
 
 - [buenos días](./ES-C01-buenos-dias.md) — you'll pair
   *tarde* with *buena* the same way you paired *días* with *bueno*.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - Regular stress: *TAR-de* — ends in a vowel, so the stress falls on the
   second-to-last syllable. → [reference](../pronunciation-reference.md)
@@ -66,6 +69,7 @@ isn't reliably guessable — and it will decide the shape of every word that
 describes the noun, starting next lesson.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-LEX-TARDE, ES-GRAMMAR-NOUN-NUMBER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tarde" — *TAR-de*]
@@ -73,6 +77,7 @@ describes the noun, starting next lesson.
 - [YOU SAY: "tardes" — plural, add *-s* (vowel ending), just like *día → días*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-LEX-TARDE, ES-GRAMMAR-NOUN-NUMBER] -->
 
 [PAUSE 3s] What did Latin *tardus* originally mean, before "afternoon"?
 (Slow, late — as in *tardy*, *retard*.) And how do you make *tarde* plural?

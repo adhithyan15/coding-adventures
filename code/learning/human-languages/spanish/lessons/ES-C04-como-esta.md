@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-COMO-ESTA-USTED]
 practises:
-  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO, ES-LEX-USTED]
+  knowledge: [ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO, ES-LEX-USTED, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,12 +31,14 @@ reviews_of: [ES-C04-estar, ES-C03-como, ES-C03-tu-usted]
 # ¿cómo está usted? — "how are you?"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Everything you've built this chapter now snaps together into one
 question. You already met **cómo** ("how") and the **tú / usted** choice back in
 Chapter 3; you just learned **estar**. Assemble them.
 
 ## The word, taken apart — assembling the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-COMO-ESTA-USTED]; assesses=[] -->
 
 > **¿Cómo está usted?** = "How are you?" (formal)
 > literally: **"In what manner are you standing?"**
@@ -50,12 +52,14 @@ the melody is coming before you start reading aloud. (We take that mark apart in
 a dedicated writing lesson.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO, ES-LEX-USTED, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
 [PAUSE 1s]
 - [YOU SAY: "¿Cómo está usted?" — formal, for a stranger]
 - [YOU SAY: the pieces — "cómo + está + usted"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO, ES-LEX-USTED, ES-LEX-ESTAR, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
 [PAUSE 3s] Which be-verb does "how are you?" use — *ser* or *estar*, and why?
 (*estar* — it's about your current state.) What changes between formal and

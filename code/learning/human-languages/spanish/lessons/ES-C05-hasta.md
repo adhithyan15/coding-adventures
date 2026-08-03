@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-ETYMON-HATTA]
+  knowledge: [ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,6 +31,7 @@ reviews_of: [ES-C05-adios]
 # hasta — "until," and Spain's Arabic centuries
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Spanish says "see you later" as **hasta luego** — literally "**until**
 later." So the key word is **hasta**, "until." And *hasta* carries the single
@@ -38,11 +39,13 @@ most important fact about Spanish's history: **for nearly 800 years, much of
 Spain spoke Arabic.**
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `silent-h` — Spanish **h is always silent**: **hasta** = *AHS-tah* (no breath
   on the *h* at all). Stress the front.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS]; assesses=[] -->
 
 **hasta** comes from Arabic **ḥattā**, “until, up to.” From **711 CE**,
 Muslim armies ruled much of the Iberian Peninsula — *al-Andalus* — and Arabic was
@@ -65,17 +68,17 @@ deep, how *intimate*, those centuries of contact were. (Its Latin rival *ad*
 say goodbye.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hasta" — *AHS-tah*, silent h]
 - [YOU SAY: "hasta" then Arabic *ḥattā* — the same word, 1,300 years apart]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-ETYMON-HATTA, ES-HISTORY-AL-ANDALUS-LOANS] -->
 
 [PAUSE 3s] What language is *hasta* from, and what does it mean? (Arabic *ḥattā*
 — "until.") Why is it remarkable that Spanish borrowed it? (It's a *function
 word* / preposition — languages almost never borrow those; it shows how deep the
 Arabic centuries went.) How do you spot many Arabic nouns in Spanish? (The frozen
-*al-* article: *almohada, azúcar, álgebra*.) Which **other** Arabic function word
-will return in Chapter 18? (***Ojalá***, a word that triggers a grammatical
-mood.)
+*al-* article: *almohada, azúcar, álgebra*.)

@@ -29,11 +29,13 @@ reviews_of: [ES-W03-inverted, ES-W01-tilde-diacritica]
 # Where does ¿ begin? — bracket the spoken span
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can open a whole question with **¿**. Now place that mark
 inside a larger sentence, exactly where the questioning voice begins.
 
 ## Script — bracket the spoken span
+<!-- hl-knowledge: introduces=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN]; assesses=[] -->
 
 The opening mark goes where the **question** begins, even if the sentence
 started earlier:
@@ -49,6 +51,7 @@ This is why the opening mark is more than decoration. It tells the reader
 exactly where to begin and end a change in spoken melody.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION] -->
 
 [PAUSE 1s]
 - [YOU WRITE: “María, ¿cómo estás?”]
@@ -56,6 +59,7 @@ exactly where to begin and end a change in spoken melody.
 - [YOU SAY: begin the new melody at ¿ or ¡, not at the first capital]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION] -->
 
 [PAUSE 3s] In **Roberto, ¿cómo estás?**, is **Roberto** inside the
 question? (**No.**) Where does the inverted mark go? (**At the start of the

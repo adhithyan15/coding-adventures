@@ -7,4 +7,15 @@ describe("lessonSections", () => {
       { title: "Notice", blocks: ["Read سلام.", "• Say salâm."] },
     ]);
   });
+
+  it("keeps block-boundary knowledge metadata out of learner copy", () => {
+    expect(lessonSections(`# Title
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA] -->
+
+Say *hola*.`)).toEqual([
+      { title: "Guided Practice", blocks: ["Say hola."] },
+    ]);
+  });
 });

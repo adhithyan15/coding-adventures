@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO]
+  knowledge: [ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,17 +31,20 @@ reviews_of: [ES-C05-hasta-limits, ES-C05-hasta, ES-C05-adios]
 # hasta luego — the everyday "see you later"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] This is the goodbye you'll actually use most — friendly, casual,
 open-ended. **hasta luego**: "until later." You already own **hasta** ("until");
 today you add **luego** ("later"), and it has a very Latin backstory.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `diphthong-ue` — **luego** = *LWEH-goh*: the *ue* is a *w*-glide, *lweh-*.
 - The whole phrase: *AHS-tah LWEH-goh*.
 
 ## The word, taken apart — the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS]; assesses=[] -->
 
 > **hasta luego** = "until later" → "see you later."
 
@@ -56,6 +59,7 @@ A nice contrast: **hasta luego** fuses an **Arabic** word and a **Latin** word i
 three syllables — the two great layers of Spanish, shaking hands as you leave.
 
 ## Grammar Lens: the "hasta …" family
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *hasta* + a time word is Spanish's whole toolkit of soft goodbyes. You'll build
 the other two this chapter:
@@ -67,6 +71,7 @@ the other two this chapter:
 | **hasta pronto** | soon | you expect to meet again shortly |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hasta luego" — *AHS-tah LWEH-goh*]
@@ -74,6 +79,7 @@ the other two this chapter:
 - [YOU SAY: "¡Adiós! … no — ¡hasta luego!" — feel the difference: final vs. soon]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-LUEGO, ES-LEX-HASTA-LUEGO, ES-ETYMON-LOCUS] -->
 
 [PAUSE 3s] What does *hasta luego* literally mean? ("Until later.") What did
 *luego*'s Latin root *loco* first mean, and what English words keep it? (Place —

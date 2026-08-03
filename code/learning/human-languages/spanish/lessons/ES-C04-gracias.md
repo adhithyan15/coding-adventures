@@ -31,12 +31,14 @@ reviews_of: [ES-C03-practice]
 # gracias — "thank you," and a whole family of English words
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can now introduce yourself. The next exchange is *how are you?* —
 but every answer ends the same polite way, so we learn the courtesy word first:
 **gracias**.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `vowel-a` — the clean *ah* of *father*, twice.
 - `r-tap` — a single flicked *r* (not the English one, and not yet the rolled
@@ -45,6 +47,7 @@ but every answer ends the same polite way, so we learn the courtesy word first:
   soft *th* in most of Spain (**GRAH-thyahs**). Either is correct — pick one.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA]; assesses=[] -->
 
 **gracias** is the plural of **gracia** ("grace, favour"), from Latin **grātia**
 — *favour freely given*. Saying *gracias* literally offers someone "graces,"
@@ -65,12 +68,14 @@ So *gracias* is not a word to memorize cold: it is **grace**, made plural and
 handed to another person.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gracias" — *GRAH-syahs*, one soft tap on the *r*]
 - [YOU SAY: "gracias" then English "grace, grateful, gratitude" — one family]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-ETYMON-GRATIA] -->
 
 [PAUSE 3s] What everyday English word is *gracias* the plural of, at the root?
 (*Grace*.) So when you thank someone in Spanish, you are literally handing them

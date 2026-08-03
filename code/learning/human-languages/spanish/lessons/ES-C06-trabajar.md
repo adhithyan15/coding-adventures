@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]
 practises:
-  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,18 +31,21 @@ reviews_of: [ES-C06-hablar]
 # trabajar — "to work," and it once meant *torture*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A second **-ar** verb — snap it into the exact template you just
 learned. And *trabajar* has the darkest, best etymology in this chapter: it began
 as a word for **torture**, and it's the secret origin of English **travel**.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `j-jota` — the **j** is a raspy *h*-from-the-throat (the *jota*): *trabajar* =
   *tra-ba-**HAR***.
 - `r-tap`, `b-soft` — tapped *r*, soft *b*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]; assesses=[] -->
 
 **trabajar** comes from Vulgar Latin **tripaliāre**, *"to torture"* — from
 **tripalium**, a Roman instrument of torture made of **three stakes** (*tri-*
@@ -61,6 +64,7 @@ So even plain **trabajo**, “I work,” hides the old idea of toil as torment �
 dark little joke inside an everyday verb.
 
 ## Grammar Lens: same -ar template
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Drop **-ar**, add the ending — identical to *hablar*:
 
@@ -74,6 +78,7 @@ Notice you didn't learn a new ending — that's the point. **One template, every
 regular -ar verb.**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM] -->
 
 [PAUSE 1s]
 - [YOU SAY: "trabajar" — *tra-ba-HAR*, raspy *j*]
@@ -81,6 +86,7 @@ regular -ar verb.**
 - [YOU SAY: "trabajar" → travail → travel — torture became a journey]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-TRIPALIUM] -->
 
 [PAUSE 3s] What did *trabajar* originally mean, and from what device? ("To
 torture," ← *tripalium*, a three-stake tool.) What two English words come from

@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-LEX-SE-LLAMA, ES-LEX-USTED]
+  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED]
 introduces:
   knowledge: [ES-LEX-COMO-SE-LLAMA]
 practises:
-  knowledge: [ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA]
+  knowledge: [ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,17 +30,20 @@ reviews_of: [ES-C03-me-llamo, ES-C03-como, ES-C03-se-llama]
 # ¿cómo se llama usted? — assembling the question, and answering it
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Everything you built this chapter clicks into one sentence: how to
 ask a stranger their name, and how to answer back. This is your first real
 two-way exchange.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-COMO-SE-LLAMA]; assesses=[] -->
 
 - [cómo](./ES-C03-como.md) · [se llama](./ES-C03-se-llama.md)
   · [usted](./ES-C03-tu-usted.md)
 
 ## The word, taken apart — by assembling it
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **¿Cómo se llama usted?** = *cómo* ("how") + *se llama* ("do you-formal call
 yourself") + *usted* ("you," formal).
@@ -57,16 +60,15 @@ real sentence:
 - To a friend, a child, a peer → *¿Cómo te llamas?*
 
 ## How to answer
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO] -->
 
 You already have the answer from the *me llamo* lesson: **Me llamo ___.**
 
 > — ¿Cómo se llama usted?
-> — **Me llamo David.** ¿Y usted?
-
-(*¿Y usted?* — "And you?" — bounces the same question back; *y* = "and," a
-whole lesson's worth of its own soon, but usable now.)
+> — **Me llamo David.**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO] -->
 
 [PAUSE 1s]
 - [YOU SAY: ask a stranger their name — *¿cómo se llama usted?*]
@@ -74,6 +76,7 @@ whole lesson's worth of its own soon, but usable now.)
 - [YOU SAY: the whole mini-exchange — ask, then answer with *me llamo ___*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-ME-LLAMO] -->
 
 [PAUSE 3s] Formal vs. informal "what's your name"? (*¿Cómo se llama usted?* /
 *¿Cómo te llamas?*) Does Spanish literally ask "what" or "how" is your name?

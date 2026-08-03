@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-BUENOS-DIAS, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]
 practises:
-  knowledge: [ES-LEX-BUENOS-DIAS, ES-LEX-BIEN, ES-LEX-DIA]
+  knowledge: [ES-LEX-BUENOS-DIAS, ES-LEX-BIEN, ES-LEX-DIA, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,6 +30,7 @@ reviews_of: [ES-C01-bien, ES-C01-dia]
 # buenos días — assembled from two words you already have
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Now watch two lessons snap together. You have *bueno* ("good,"
 from the *bien* lesson) and *días* ("days," from the *día* lesson). Put them side by side and
@@ -37,17 +38,20 @@ you build the greeting everyone knows — and, for the first time, you'll know
 *why it's shaped the way it is*.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-BUENOS-DIAS]; assesses=[] -->
 
 - [bien / bueno](./ES-C01-bien.md) — the adjective *bueno*.
 - [día](./ES-C01-dia.md) — the noun *días*, and that it's
   masculine.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `diphthong-ue` — **ue** is a quick *WEH*: *bueno* is *BWEH-no*.
 - `accent-i` — *días* keeps its stress on the *í*: *DEE-as*.
 
 ## The word, taken apart — by assembling it
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **buenos días** = **bueno** ("good") + **días** ("days") = literally **"good
 days."**
@@ -56,6 +60,7 @@ But look closely: it's *buen**os***, not *bueno*. Why? Because of the one new
 grammar rule of this lesson.
 
 ## Grammar Lens: agreement
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]; assesses=[] -->
 
 An adjective in Spanish **agrees** with its noun — it copies the noun's
 gender and number. *días* is **masculine** (the *día* lesson's flagged
@@ -77,6 +82,7 @@ hundred. Spanish makes the adjective echo the noun. That echo is *why* it's
 *buenos días* and not *bueno días*.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 So why "good **days**," plural at all? Because *buenos días* is a **fossil** —
 the worn-down stub of a blessing: **"Buenos días os dé Dios,"** *"may God give
@@ -87,6 +93,7 @@ casual. It is, almost literally, a small *bene*diction (the *bien* lesson's word
 widely-accepted account; exact history debated.)*
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENOS-DIAS, ES-LEX-BIEN, ES-LEX-DIA, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
 
 [PAUSE 1s]
 - [YOU SAY: build it slowly — "bueno" … "días" … "buenos días"]
@@ -94,6 +101,7 @@ widely-accepted account; exact history debated.)*
 - [YOU SAY: why is it *buenos*, not *bueno*? (out loud, in your own words)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENOS-DIAS, ES-LEX-BIEN, ES-LEX-DIA, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
 
 [PAUSE 3s] Two things: why is it *buenos* and not *bueno*? (Agreement — *días*
 is masculine plural.) And what blessing was *buenos días* shortened from?

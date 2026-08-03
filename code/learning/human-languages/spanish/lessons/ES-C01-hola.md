@@ -30,11 +30,13 @@ reviews_of: []
 # hola — hello
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The very first word, and the easiest to say — but there's already
 one trap hiding in it, and one small mystery.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SOUND-H-SILENT]; assesses=[] -->
 
 - `silent-h` — the **h is silent**. *hola* is said *OH-la*, never *HOH-la*.
   The letter is written but makes no sound at all. This is true of every
@@ -42,6 +44,7 @@ one trap hiding in it, and one small mystery.
 - `vowel-o`, `vowel-a` — two pure vowels: *OH*, *AH*. No glide, no drift.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-HOLA]; assesses=[] -->
 
 **hola** — hello / hi.
 
@@ -64,6 +67,7 @@ words sound alike by pure coincidence, not shared ancestry.
 > strangers who happen to look alike.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *hola* is **informal**. It's the "hi" you'd say to a friend, a kid, a
 shopkeeper you know. It carries no time of day and no deference — which is
@@ -75,12 +79,14 @@ Note the written form: an exclamation gets an **upside-down mark** at the
 front — *¡hola!* — so you know the tone before you start reading it aloud.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-SOUND-H-SILENT] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hola" — *OH-la*, silent h]
 - [YOU SAY: "¡hola!" to an imagined friend — light, informal]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-SOUND-H-SILENT] -->
 
 [PAUSE 3s] Two things to lock in: what sound does the *h* make? (None.) And
 is *hola* actually related to English *hello*? (No — a coincidence, a false

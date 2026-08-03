@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-POR-FAVOR, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR]
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,12 +31,14 @@ reviews_of: [ES-C04-gracias, ES-C04-de-nada]
 # por favor — "please," i.e. "for a favour"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can already thank (*gracias*) and reply (*de nada*). The third
 courtesy completes the set: **por favor**, "please" — literally *"for [a]
 favour."* You're asking someone to do you a kindness.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `r-tap` — one soft tapped *r* in *por* and *favor*.
 - `v-b` — Spanish *v* and *b* sound **identical** (a soft *b*): *favor* ≈
@@ -44,6 +46,7 @@ favour."* You're asking someone to do you a kindness.
   like the *b* you'd hear in "harbour.")
 
 ## The word, taken apart — the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-POR-FAVOR, ES-ETYMON-PRO-FAVOR]; assesses=[] -->
 
 - **por** = "for / through / by," from Latin **prō** ("for, on behalf of") — the
   same *pro-* in English **pro**noun, **pro**pose, **pro**tect.
@@ -56,6 +59,7 @@ to me.* English **favour**, **favorite**, and **favorable** keep the same
 Latin family visible without asking you to learn another language's formula.
 
 ## Grammar Lens: the courtesy set is complete
+<!-- hl-knowledge: introduces=[ES-PRAGMATICS-POLITE-REQUEST]; assesses=[] -->
 
 You now hold the three pillars of politeness:
 
@@ -64,6 +68,7 @@ You now hold the three pillars of politeness:
 - **de nada** — you're welcome (replying).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR] -->
 
 [PAUSE 1s]
 - [YOU SAY: "por favor" — *por fah-BOR*, soft *v/b*]
@@ -71,6 +76,7 @@ You now hold the three pillars of politeness:
 - [YOU SAY: "favor" then English "favour, favorite" — one family]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-PRAGMATICS-POLITE-REQUEST, ES-ETYMON-PRO-FAVOR] -->
 
 [PAUSE 3s] What does *por favor* literally mean? ("For a favour.") What Latin
 verb is *favor* from, and its English cousins? (*favēre* — favour, favorite,

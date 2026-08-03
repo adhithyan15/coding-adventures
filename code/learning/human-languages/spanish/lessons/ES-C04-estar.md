@@ -31,12 +31,14 @@ reviews_of: [ES-C04-gracias]
 # estar — "to be," the *standing* kind
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] To ask *how are you?* Spanish needs a verb for **being**. Today:
 **estar** — the verb used for how someone is right now and where someone is.
 Spanish has another identity verb later; you do not need it yet.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `st-no-e` — Spanish never starts a word with a bare *st-*; it props it up with
   an *e*: *es-TAR*. (That reflex is why Spanish speakers say *e-Spain*,
@@ -44,6 +46,7 @@ Spanish has another identity verb later; you do not need it yet.
 - `r-tap` — the final *r* is one soft tap: *es-TAR*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-ESTAR, ES-ETYMON-STARE]; assesses=[] -->
 
 **estar** comes straight from Latin **stāre**, *"to stand."* And "to stand" is
 exactly the right picture for the *temporary* be-verb: how you are *standing* at
@@ -63,6 +66,7 @@ So *¿cómo estás?* is, at the root, **"how are you standing?"** — a snapshot
 right now.
 
 ## Grammar Lens: state and location use estar
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR]; assesses=[] -->
 
 Use **estar** for a current state or location. “How are you?” asks about a
 current state, so it takes **estar**. The other Spanish be-verb handles
@@ -75,6 +79,7 @@ You only need two forms of it this chapter:
 - **está** — "you are" (formal *usted*) / "he/she is"
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
 [PAUSE 1s]
 - [YOU SAY: "estar" — *es-TAR*, with the little propping *e*]
@@ -82,6 +87,7 @@ You only need two forms of it this chapter:
 - [YOU SAY: "estar" then English "stay, state, status, stable" — all *standing*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR] -->
 
 [PAUSE 3s] Which Latin verb is *estar* — “to be” or “to stand”? (To *stand* —
 *stāre*.) Which verb do you use for how you feel right now? (*estar*.) Next

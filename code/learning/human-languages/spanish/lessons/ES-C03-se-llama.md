@@ -16,9 +16,9 @@ duration:
 requires:
   knowledge: [ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-GRAMMAR-USTED-THIRD-PERSON, ES-ETYMON-VUESTRA-MERCED]
 introduces:
-  knowledge: [ES-LEX-SE-LLAMA, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON]
+  knowledge: [ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON]
 practises:
-  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-LEX-SE-LLAMA]
+  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,12 +30,14 @@ reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted]
 # se llama — the reflexive that fits *usted*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can say *me llamo* ("I call myself"). To ask someone *else*
 their name — especially formally, with *usted* — you need the version that
 loops back on *them*: *se llama*.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-SE-LLAMA]; assesses=[] -->
 
 - [me llamo](./ES-C03-me-llamo.md) — the reflexive "I call
   myself."
@@ -43,6 +45,7 @@ loops back on *them*: *se llama*.
   *usted* takes *he/she* verb forms.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **se llama** = **se** ("himself / herself / yourself-formal") + **llama**
 ("calls"). So *se llama* = "he/she calls himself," or — because *usted* uses
@@ -61,6 +64,7 @@ Every one is something turned in on itself or set apart — the same idea as a
 reflexive looping the action back on the doer.
 
 ## Grammar Lens: the reflexive pronoun changes with the person
+<!-- hl-knowledge: introduces=[ES-LEX-TE-LLAMAS, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON]; assesses=[] -->
 
 The verb *llamar* stays, but the little reflexive word in front shifts to
 match *who* is doing the calling:
@@ -74,6 +78,7 @@ formal "what's your name?" is *¿cómo **se** llama usted?* — *usted*, born fr
 "your grace," politely takes the *he/she* shape.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON] -->
 
 [PAUSE 1s]
 - [YOU SAY: "se llama" — *seh YA-ma*]
@@ -81,6 +86,7 @@ formal "what's your name?" is *¿cómo **se** llama usted?* — *usted*, born fr
 - [YOU SAY: "se" then "secede", "seclude", "separate" — the set-apart root]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ME-LLAMO, ES-LEX-USTED, ES-LEX-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-GRAMMAR-REFLEXIVE-THIRD-PERSON] -->
 
 [PAUSE 3s] Which reflexive goes with *usted* — *te* or *se*? (*se* — because
 *usted* takes third-person forms.) What's the "self/apart" root inside

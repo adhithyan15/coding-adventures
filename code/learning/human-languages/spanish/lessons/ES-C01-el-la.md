@@ -30,22 +30,26 @@ reviews_of: [ES-C01-bien]
 # el and la — "the," and the gender it carries
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Before your first noun, meet two of the smallest, most frequent
 words in Spanish: *el* and *la*. Both mean "the." Your job here is simply to
 recognize the pair and connect each form to its label.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - [bien / bueno](./ES-C01-bien.md) — you saw *bueno* change to *buena*; this
   lesson explains the gender that made it happen.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `vowel-e`, `vowel-a` — two clean vowels: *el* (*ehl*), *la* (*lah*). →
   [reference](../pronunciation-reference.md)
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-ETYMON-ILLE-ILLA]; assesses=[] -->
 
 **el** — "the" (masculine). **la** — "the" (feminine). English has one word,
 "the"; Spanish makes this two-way distinction.
@@ -68,19 +72,22 @@ the accent. (English "the," by contrast, is Germanic and *unrelated* — a
 shared job, not a shared root.)
 
 ## What you've built
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-DEFINITE-ARTICLES]; assesses=[] -->
 
 *el* and *la* are **articles**: little words that mark "the." Keep them apart
 from their accented relatives *él* and *ella*, the pronouns "he" and "she."
 The next micro-lesson explains why Spanish needs two article forms.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-ETYMON-ILLE-ILLA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "el" then "la" — the two "the"s]
 - [YOU SAY: which article goes with a masculine noun? with a feminine one?]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-ETYMON-ILLE-ILLA] -->
 
 [PAUSE 3s] Which form is labelled masculine? (*el*.) Which is labelled
 feminine? (*la*.) Both come from Latin words meaning what? ("That one" —
-*ille* / *illa*.) What accented twins share their root? (*él* / *ella*.)
+*ille* / *illa*.)

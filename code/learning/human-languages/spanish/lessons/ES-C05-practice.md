@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-ADIOS, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-HOLA, ES-LEX-COMO-ESTA-USTED]
+  knowledge: [ES-LEX-ADIOS, ES-LEX-HASTA, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-HOLA, ES-LEX-COMO-ESTA-USTED]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -30,12 +30,14 @@ reviews_of: [ES-C05-adios, ES-C05-hasta-limits, ES-C05-hasta, ES-C05-hasta-luego
 # Practice — saying goodbye
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] No new words. This chapter's farewells — *adiós* and the three *hasta
 …* goodbyes — now close a real conversation, and fold back into the whole arc
 you've built since *hola*.
 
 ## Grammar Lens: choosing the right goodbye
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The choice is about **when you'll meet again**:
 
@@ -47,6 +49,7 @@ The choice is about **when you'll meet again**:
 | leaving for the day | **Hasta mañana.** |
 
 ## The exchange — start to finish
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Everything from Chapters 1–5, in one conversation:
 
@@ -58,6 +61,7 @@ Everything from Chapters 1–5, in one conversation:
 > — **Hasta mañana**, Ana. **¡Adiós!**
 
 ## What you've built this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **adiós** — the plain/final goodbye ("to God"; twin of *goodbye*).
 - **hasta** — "until," Spain's everyday Arabic word (← *ḥattā*).
@@ -65,6 +69,7 @@ Everything from Chapters 1–5, in one conversation:
   Arabic + Latin handshake.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ADIOS, ES-LEX-HASTA, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-HOLA, ES-LEX-COMO-ESTA-USTED] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full conversation above, both voices — greeting to goodbye]
@@ -74,6 +79,7 @@ Everything from Chapters 1–5, in one conversation:
 [REPEAT x2] Run the whole exchange, *hola* to *adiós*, without stopping.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ADIOS, ES-LEX-HASTA, ES-LEX-HASTA-LUEGO, ES-LEX-HASTA-MANANA, ES-LEX-HASTA-PRONTO, ES-LEX-HOLA, ES-LEX-COMO-ESTA-USTED] -->
 
 [PAUSE 3s] Which goodbye for someone you won't see for a long time? (*Adiós*.)
 Which everyday word for "until" did Spanish take from Arabic? (*hasta*.) You can

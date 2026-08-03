@@ -29,6 +29,7 @@ reviews_of: [ES-C04-como-estas-register, ES-C04-como-esta, ES-W01-acento]
 # ¿ ¡ — the marks that open a question
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've been writing them since *¿cómo está usted?* Spanish is the one
 major language that puts an **upside-down** question or exclamation mark at the
@@ -36,6 +37,7 @@ major language that puts an **upside-down** question or exclamation mark at the
 the reason is purely practical.
 
 ## Script — the two opening marks
+<!-- hl-knowledge: introduces=[ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION]; assesses=[] -->
 
 - **¿ … ?** wraps a question: *¿Cómo estás?*
 - **¡ … !** wraps an exclamation: *¡Hola!* *¡Gracias!*
@@ -45,6 +47,7 @@ The opening mark is just the closing mark **flipped 180°** — turned upside do
 the hook ends up at the bottom, the dot on top.
 
 ## Why it's said this way — the opening mark is an early cue
+<!-- hl-knowledge: introduces=[ES-HISTORY-RAE-INVERTED-MARKS]; assesses=[] -->
 
 English lets you read most of a sentence before the final **?** reveals it was a
 question — fine, because English usually flags a question early with word order
@@ -59,6 +62,7 @@ same instinct as the written accent marking stress you can't otherwise see. For
 a language read aloud, it's genuinely useful.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION] -->
 
 [PAUSE 1s]
 - [YOU SAY: read "¿Cómo estás?" — start the rising *question* melody from the
@@ -66,6 +70,7 @@ a language read aloud, it's genuinely useful.
 - [YOU SAY: "¡Hola!" — the ¡ warns you to begin with exclamation energy]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION] -->
 
 [PAUSE 3s] Why does Spanish open a question with **¿**? (Because word order often
 doesn't change, so the reader needs an early warning to use question

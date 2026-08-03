@@ -29,6 +29,7 @@ reviews_of: [ES-W01-tilde-diacritica, ES-W01-acento]
 # ñ — the letter that remembers a doubled n
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **ñ** is the one letter English doesn't have — and it has the best
 origin story in the alphabet. That wavy hat (`~`, a *tilde*) is not decoration.
@@ -36,6 +37,7 @@ It is **a tiny second *n*, written on top to save space.** Once you know that,
 you know both how to write it *and* why it sounds the way it does.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SOUND-ENYE]; assesses=[] -->
 
 **ñ** = the *ny* in "ca**ny**on" or "o**ni**on" — one squished sound, tongue
 flat against the roof of the mouth. English *canyon* is, in fact, Spanish
@@ -43,6 +45,7 @@ flat against the roof of the mouth. English *canyon* is, in fact, Spanish
 that's ñ.
 
 ## Script — how to write it, and where the hat came from
+<!-- hl-knowledge: introduces=[ES-SCRIPT-ENYE, ES-FORM-MANANA, ES-FORM-ESPANOL, ES-ETYMON-DOUBLE-N]; assesses=[] -->
 
 Write a normal **n**, then a small wavy **~** floating above it. That wave is a
 **medieval shorthand**. Scribes copying Latin were forever writing double
@@ -66,6 +69,7 @@ shortcut.
 > is not optional flourish, it's a distinct letter of the alphabet.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-ENYE, ES-SOUND-ENYE, ES-FORM-MANANA, ES-FORM-ESPANOL] -->
 
 [PAUSE 1s]
 - [YOU SAY: "año" — *AH-nyo*, one squished *ny*; then English "annual" — same
@@ -73,6 +77,7 @@ shortcut.
 - [YOU SAY: “año, mañana, español” — the ñ in three forms from this lesson]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-ENYE, ES-SOUND-ENYE, ES-FORM-MANANA, ES-FORM-ESPANOL] -->
 
 [PAUSE 3s] What is the tilde on *ñ*, really? (A tiny second *n* — a scribe's
 shorthand for a doubled *nn*.) What Latin word gives *año*, and what English

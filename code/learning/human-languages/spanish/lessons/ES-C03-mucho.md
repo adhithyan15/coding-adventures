@@ -30,16 +30,19 @@ reviews_of: [ES-C03-se-llama]
 # mucho — "much," and a sound-change you've already seen
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One more word before "pleased to meet you." *mucho* — "much, a
 lot" — and it hides the same Latin-to-Spanish sound trick you spotted in
 *noche*.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `soft-c` — the **ch** is the *ch* of *church*: *MOO-cho*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-MUCHO]; assesses=[] -->
 
 **mucho** — "much, a lot." Root: Latin **multus** ("much, many"). The English
 cousins keep the original *-lt-*:
@@ -54,6 +57,7 @@ to a Latin *-ct-* or *-lt-* root — and the English cousin usually preserves
 it (*noct*urnal, *mult*iple).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUCHO] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mucho" — *MOO-cho*]
@@ -62,6 +66,7 @@ it (*noct*urnal, *mult*iple).
   cluster]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUCHO] -->
 
 [PAUSE 3s] *mucho* comes from Latin *multus* — what English words keep the
 *-lt-*? (multiple, multitude, multiply.) What Latin cluster melted into the

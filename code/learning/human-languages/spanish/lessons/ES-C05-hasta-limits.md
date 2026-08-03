@@ -30,11 +30,13 @@ reviews_of: [ES-C05-hasta, ES-C05-adios]
 # hasta aquí / hasta la noche — point to the limit
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You know **hasta** means “until” or “up to.” Give that small word
 one spatial endpoint and one temporal endpoint, using only one new word.
 
 ## Grammar Lens: endpoints in space and time
+<!-- hl-knowledge: introduces=[ES-LEX-AQUI, ES-GRAMMAR-HASTA-ENDPOINT]; assesses=[] -->
 
 **Aquí** means **here**. Put it after **hasta**:
 
@@ -48,6 +50,7 @@ The same preposition points to a place or the end of a stretch of time.
 The next lessons will place new time words after it one at a time.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-AQUI, ES-LEX-NOCHE, ES-GRAMMAR-HASTA-ENDPOINT] -->
 
 [PAUSE 1s]
 - [YOU SAY: “aquí” — here]
@@ -55,6 +58,7 @@ The next lessons will place new time words after it one at a time.
 - [YOU SAY: “hasta la noche” — until tonight]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-AQUI, ES-LEX-NOCHE, ES-GRAMMAR-HASTA-ENDPOINT] -->
 
 [PAUSE 3s] What does **hasta** point to? (**An endpoint.**) Give one spatial
 and one temporal example. (**Hasta aquí; hasta la noche.**) What is the only

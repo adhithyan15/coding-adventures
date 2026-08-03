@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+  knowledge: [ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -30,12 +30,14 @@ reviews_of: [ES-C06-hablar, ES-C06-trabajar, ES-C06-estudiar, ES-C06-espanol, ES
 # Practice — making sentences with -ar verbs
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A milestone chapter: for the first time you're not reciting fixed
 phrases, you're **building sentences from a pattern**. Drill the three verbs
 through the endings until *hablo / hablas / habla* is automatic.
 
 ## Grammar Lens: conjugate on command
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 1s] Run each verb through the three singular jobs you know: the ending
 alone for **I** → **tú** → **usted**:
@@ -48,12 +50,14 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 **-ar** present, singular.
 
 ## The exchange — say something real
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 > — ¿**Hablas** español? — **Hablo español.**
 > — ¿**Estudias** español? — **Estudio español.**
 > — **Café, por favor.** — ¡Gracias! — De nada.
 
 ## What you've built this chapter
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **por favor** — please (← "for a favour"), completing gracias / de nada / por
   favor.
@@ -64,6 +68,7 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 - **Hablo español** — your first self-assembled sentence (pro-drop, no article).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA] -->
 
 [PAUSE 1s]
 - [YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]
@@ -73,10 +78,11 @@ Same three endings (**-o / -as / -a**) every time — that's the whole regular
 [REPEAT x2] Ask and answer “¿Hablas español? — Hablo español.”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-POR-FAVOR, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-GRACIAS, ES-LEX-DE-NADA] -->
 
 [PAUSE 3s] What are the three singular *-ar* endings? (*-o / -as / -a*.) Give the
 “I” form of all three verbs. (*Hablo, trabajo, estudio*.) Why does *Hablo
 español* need no separate subject word? (The *-o* carries “I.”) You can now
 generate sentences — the course stops
-handing you phrases and starts handing you *rules*. Next chapter: the *-er/-ir*
-verbs, and questions with *qué / dónde*.
+handing you phrases and starts handing you *rules*. Next chapter adds the
+*-er/-ir* verb families.

@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -30,11 +30,13 @@ reviews_of: [ES-C01-hola, ES-C01-bien, ES-C01-dia, ES-C01-buenos-dias]
 # Practice — hola and buenos días
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] End of the chapter. No new words — just the four you have, turned
 over until they're automatic.
 
 ## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 In four short lessons you went from nothing to two full greetings and the
 first two rules of Spanish grammar:
@@ -47,13 +49,14 @@ first two rules of Spanish grammar:
   turning *bueno* into *buenos* to match.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
 
 [PAUSE 1s] Say each out loud; don't just read.
 
 - [YOU SAY: greet a friend casually — *hola*]
 - [YOU SAY: greet someone warmly in the morning — *buenos días*]
 - [YOU SAY: stack them — *hola, buenos días*]
-- [YOU SAY: answer "how are you" with one word — *bien*; then *muy bien*]
+- [YOU SAY: answer "how are you" with one word — *bien*]
 - [YOU SAY: the four shapes of "good" — *bueno, buena, buenos, buenas* — and
   for each, is it masculine/feminine, singular/plural?]
 
@@ -62,6 +65,7 @@ masculine-plural *días* → *buenos días*. Do it until the "why" feels obvious
 not memorized.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
 
 [PAUSE 3s] You can now greet two ways and give a one-word positive answer.
 The very next question is the one that opens a real conversation: when

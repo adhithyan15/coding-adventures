@@ -11,6 +11,7 @@ import type {
   Dataset,
   Gender,
   LessonBodyBlock,
+  LessonBlockKnowledge,
   LessonBlockType,
   Realization,
   Script,
@@ -65,6 +66,49 @@ function classifyBlock(title: string): LessonBlockType {
   return "unknown";
 }
 
+const KNOWLEDGE_DIRECTIVE =
+  /^<!--\s*hl-knowledge:\s*introduces=\[([^\]]*)\];\s*assesses=\[([^\]]*)\]\s*-->$/;
+
+function directiveList(value: string): string[] {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item !== "");
+}
+
+function parseBlockKnowledge(markdown: string): {
+  markdown: string;
+  knowledge?: LessonBlockKnowledge;
+  knowledgeDirectiveError?: string;
+} {
+  const lines = markdown.split("\n");
+  const directiveIndexes = lines
+    .map((line, index) => (line.includes("hl-knowledge") ? index : -1))
+    .filter((index) => index >= 0);
+  if (directiveIndexes.length === 0) return { markdown };
+
+  const firstContent = lines.findIndex((line) => line.trim() !== "");
+  const directiveIndex = directiveIndexes[0] ?? -1;
+  const directive = lines[directiveIndex]?.trim() ?? "";
+  const match = KNOWLEDGE_DIRECTIVE.exec(directive);
+  if (directiveIndexes.length !== 1 || directiveIndex !== firstContent || !match) {
+    return {
+      markdown,
+      knowledgeDirectiveError:
+        "expected one first-line '<!-- hl-knowledge: introduces=[...]; assesses=[...] -->' directive",
+    };
+  }
+
+  lines.splice(directiveIndex, 1);
+  return {
+    markdown: lines.join("\n").replace(/^\n|\n$/g, ""),
+    knowledge: {
+      introduces: directiveList(match[1] ?? ""),
+      assesses: directiveList(match[2] ?? ""),
+    },
+  };
+}
+
 /** Parse level-two lesson sections into the stable HL04 body-block vocabulary. */
 export function parseBodyBlocks(body: string): {
   preamble: string;
@@ -77,7 +121,14 @@ export function parseBodyBlocks(body: string): {
   const blockLines: string[] = [];
   const finish = (): void => {
     if (!current) return;
-    current.markdown = blockLines.join("\n").replace(/^\n|\n$/g, "");
+    const parsedKnowledge = parseBlockKnowledge(
+      blockLines.join("\n").replace(/^\n|\n$/g, ""),
+    );
+    current.markdown = parsedKnowledge.markdown;
+    current.knowledge = parsedKnowledge.knowledge;
+    current.knowledgeDirectiveError = parsedKnowledge.knowledgeDirectiveError;
+    if (current.knowledge === undefined) delete current.knowledge;
+    if (current.knowledgeDirectiveError === undefined) delete current.knowledgeDirectiveError;
     blocks.push(current);
     blockLines.length = 0;
   };

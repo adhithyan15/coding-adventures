@@ -30,6 +30,7 @@ reviews_of: [ES-C01-hola]
 # bien — "well," a whole answer in one word
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You have *hola*. Now the word that carries half of everyday small
 talk: *bien*. It answers "how are you," it agrees to a plan, it stands
@@ -37,17 +38,20 @@ completely on its own — and it opens a family of English words you already
 use.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-BIEN]; assesses=[] -->
 
 - [hola](./ES-C01-hola.md) — your first word; *bien* is
   what you say back when someone asks how you are.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `diphthong-ie` — **ie** is a quick *YEH*: *bien* is said *byen*, one
   syllable. → [reference](../pronunciation-reference.md)
 - `v-b` — the **b** is soft, halfway to a *v*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **bien** — "well." Root: Latin **bene** ("well"). That *bene* is the piece
 hiding in a shelf of English words, every one about something being *good* or
@@ -65,9 +69,9 @@ your whole life.
 
 - "*¿Cómo estás?*" (how are you?) → "**Bien.**" — "Well." / "I'm good." Done.
 - As agreement, when someone suggests something → "**Bien.**" — "Okay / fine."
-- Stack it: "**muy bien**" — "very well / very good."
 
 ## The adjective sibling: *bueno* / *buena*
+<!-- hl-knowledge: introduces=[ES-MORPH-BUENO-BUENA]; assesses=[] -->
 
 *bien* is an **adverb** — it describes *how* something is done ("you speak
 *well*"). When you want the **adjective** — to describe a *thing* as "good" —
@@ -84,13 +88,14 @@ and Spanish kept both. The Latin-descended English cousins of *bueno* are
 > **bien = well, bueno/buena = good.**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-MORPH-BUENO-BUENA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bien" as the answer to "how are you"]
-- [YOU SAY: "muy bien"]
 - [YOU SAY: "bueno" then "buena" — the adjective, masculine then feminine]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-MORPH-BUENO-BUENA] -->
 
 [PAUSE 3s] Which is the adverb ("well") and which is the adjective ("good")?
 (*bien* / *bueno*–*buena*.) And name an English *bene-* cousin of *bien*.
