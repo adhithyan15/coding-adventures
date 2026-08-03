@@ -1388,6 +1388,27 @@ def test_rejects_invalid_jfet_flicker_noise_coefficient(value: str) -> None:
         parse_netlist(f".model fast NJF(KF={value})")
 
 
+def test_parse_jfet_flicker_noise_exponent() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(AF=1.4)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Af, 1.4)
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(AF={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """
