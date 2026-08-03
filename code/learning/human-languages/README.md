@@ -48,8 +48,10 @@ toward generating book and app views from one lesson AST.
 
 The [public book catalog](https://adhithyan15.github.io/coding-adventures/human-languages/books/)
 offers every currently authored LaTeX book as a free PDF download. Pull requests
-install TeX once, compile every book in one job, and retain the complete publication
-bundle as a workflow artifact for review. After a change reaches `main`, the same
+install one focused XeLaTeX toolchain, compile every book in one job, and retain the
+complete publication bundle as a workflow artifact for review. A dependency
+preflight verifies the engine, every package used by the books, RTL support, and
+Latin Modern before compilation begins. After a change reaches `main`, the same
 validated PDFs and a machine-readable `catalog.json` are published to GitHub Pages
 automatically. Tracks without a `book/` directory are omitted until their long-form
 edition is authored.
