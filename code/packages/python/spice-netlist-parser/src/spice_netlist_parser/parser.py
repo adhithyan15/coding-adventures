@@ -1345,6 +1345,10 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             not math.isfinite(instance_params["PD"]) or instance_params["PD"] < 0.0
         ):
             raise NetlistParseError("MOSFET PD must be finite and non-negative")
+        if "PS" in instance_params and (
+            not math.isfinite(instance_params["PS"]) or instance_params["PS"] < 0.0
+        ):
+            raise NetlistParseError("MOSFET PS must be finite and non-negative")
         return Mosfet(
             name,
             fields[1],

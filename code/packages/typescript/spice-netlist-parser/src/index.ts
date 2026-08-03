@@ -1375,6 +1375,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "AD",
     "AS",
     "PD",
+    "PS",
     "IS",
     "N_SUB",
     "T_NOM",
@@ -1625,6 +1626,13 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       (!Number.isFinite(drainPerimeter) || drainPerimeter < 0.0)
     ) {
       throw new NetlistParseError("MOSFET PD must be finite and non-negative");
+    }
+    const sourcePerimeter = instanceParams.get("PS");
+    if (
+      sourcePerimeter !== undefined &&
+      (!Number.isFinite(sourcePerimeter) || sourcePerimeter < 0.0)
+    ) {
+      throw new NetlistParseError("MOSFET PS must be finite and non-negative");
     }
     return mosfet(
       name,
