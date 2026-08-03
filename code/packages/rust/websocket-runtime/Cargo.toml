@@ -1,0 +1,13 @@
+[package]
+name = "websocket-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "TCP client and reactor-server adapters for websocket-core"
+license = "MIT"
+
+[dependencies]
+coding_adventures_csprng = { path = "../csprng" }
+tcp-client = { path = "../tcp-client" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
+websocket-core = { path = "../websocket-core" }
