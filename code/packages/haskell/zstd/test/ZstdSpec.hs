@@ -71,9 +71,18 @@ spec = do
             compress input `shouldBe` compress input
 
         it "matches the established cross-language compressed vector" $
+            -- Regenerated after fixing the FSE sequences-codec conformance
+            -- bugs described in lessons.md Lesson 95 (fabricated table-
+            -- spread split, wrong per-sequence field order, and an
+            -- unconditional last-sequence state transition). The old
+            -- vector below was internally self-consistent (this package's
+            -- own encoder/decoder pair agreed on it) but was NOT real RFC
+            -- 8878 wire format -- confirmed by decoding this new vector
+            -- with the actual `zstd` CLI (see the CLI-interop test below).
+            --   old (pre-fix): 28b52ffde0b400000000000000dd00009068656c6c6f207a73746420776f726c6421200100f50100402930
             compress (BSC.pack (concat (replicate 10 "hello zstd world! ")))
                 `shouldBe` Right
-                    (hexBytes "28b52ffde0b400000000000000dd00009068656c6c6f207a73746420776f726c6421200100f50100402930")
+                    (hexBytes "28b52ffde0b400000000000000cd00009068656c6c6f207a73746420776f726c64212001003e45cd30")
 
     describe "standard frame forms" $ do
         it "decodes a hand-crafted raw frame" $
@@ -91,10 +100,16 @@ spec = do
                 `shouldBe` Right (BS.replicate 10 0x41)
 
         it "consumes multi-segment headers and checksums" $
+            -- Descriptor 0x10 previously exercised the checksum path only
+            -- because the decoder (wrongly) read Content_Checksum_Flag from
+            -- bit 4 instead of bit 2 (RFC 8878 SS3.1.1.1; see lessons.md
+            -- Lesson 95). 0x10 is actually Unused_bit, which a compliant
+            -- decoder must ignore, so it no longer triggers the checksum
+            -- path. 0x04 sets the real Content_Checksum_Flag bit.
             decompress
                 ( BS.pack
                     [ 0x28, 0xB5, 0x2F, 0xFD
-                    , 0x10, 0x00
+                    , 0x04, 0x00
                     , 0x09, 0, 0, 0x78
                     , 1, 2, 3, 4
                     ]

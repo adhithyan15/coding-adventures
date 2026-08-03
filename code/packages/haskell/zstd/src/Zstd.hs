@@ -219,10 +219,17 @@ decompress input = do
     when (BS.length input < 5) (Left "frame is too short")
     unless (BS.take 4 input == magicBytes) (Left "bad Zstandard magic number")
     let descriptor = BS.index input 4
-    when (descriptor .&. 0x0C /= 0) (Left "reserved frame-header bits are set")
+    -- RFC 8878 SS3.1.1.1 frame header descriptor bit layout:
+    --   bit 2 = Content_Checksum_Flag, bit 3 = Reserved_bit (must be 0),
+    --   bit 4 = Unused_bit (decoder must ignore it, NOT reserved).
+    -- An earlier revision of this decoder read the checksum flag from bit 4
+    -- and treated bits 2+3 as jointly reserved -- rejecting every real
+    -- checksummed frame as "reserved bits set" while silently never
+    -- detecting a checksum trailer on any frame. See lessons.md Lesson 95.
+    when (descriptor .&. 0x08 /= 0) (Left "reserved frame-header bits are set")
     let contentSizeFlag = fromIntegral (descriptor `shiftR` 6) :: Int
         singleSegment = descriptor .&. 0x20 /= 0
-        checksum = descriptor .&. 0x10 /= 0
+        checksum = descriptor .&. 0x04 /= 0
         dictionaryFlag = fromIntegral (descriptor .&. 3) :: Int
     afterWindow <-
         if singleSegment
@@ -333,9 +340,15 @@ decompressBlock input initialOutput = do
                     literalTable <- buildDecodeTable literalLengthNorm literalLengthAccuracyLog
                     matchTable <- buildDecodeTable matchLengthNorm matchLengthAccuracyLog
                     offsetTable <- buildDecodeTable offsetNorm offsetAccuracyLog
+                    -- RFC 8878 SS3.1.1.3.2.1.2: the initial FSE states are read
+                    -- in order LL, OF, ML -- deliberately NOT the same order
+                    -- as the per-sequence symbol decode below (LL, ML, OF).
+                    -- Verified against the real `zstd` CLI (Lesson 95); an
+                    -- earlier revision of this decoder read LL, ML, OF here,
+                    -- which is wrong only for this one-time initial read.
                     (literalState, reader1) <- readBits literalLengthAccuracyLog reader0
-                    (matchState, reader2) <- readBits matchLengthAccuracyLog reader1
-                    (offsetState, reader3) <- readBits offsetAccuracyLog reader2
+                    (offsetState, reader2) <- readBits offsetAccuracyLog reader1
+                    (matchState, reader3) <- readBits matchLengthAccuracyLog reader2
                     (output, literalPosition, _) <-
                         decodeSequences
                             sequenceCount
@@ -367,14 +380,29 @@ decodeSequences ::
 decodeSequences 0 _ _ _ _ _ _ _ output literalPosition reader =
     Right (output, literalPosition, reader)
 decodeSequences remaining literals literalTable matchTable offsetTable literalState matchState offsetState output literalPosition reader0 = do
-    (literalCode, nextLiteralState, reader1) <- decodeSymbol literalState literalTable reader0
-    (offsetCode, nextOffsetState, reader2) <- decodeSymbol offsetState offsetTable reader1
-    (matchCode, nextMatchState, reader3) <- decodeSymbol matchState matchTable reader2
+    -- Step 1 -- PEEK all three symbols from the current states. This is a
+    -- bare table lookup (table ! state) and consumes NO bits: the FSE
+    -- state itself already IS the decode-table index. Only the state
+    -- UPDATE (step 3 below) reads bits. An earlier revision of this
+    -- decoder fused peek-and-update into one step (via `decodeSymbol`) and
+    -- performed it eagerly for LL, OF, ML in that order -- BEFORE reading
+    -- any extra bits -- which reads the wrong bits at the wrong bitstream
+    -- position. See lessons.md Lesson 95.
+    literalEntry <- indexEither "FSE decoder state" literalTable literalState
+    matchEntry <- indexEither "FSE decoder state" matchTable matchState
+    offsetEntry <- indexEither "FSE decoder state" offsetTable offsetState
+    let literalCode = decodeEntrySymbol literalEntry
+        matchCode = decodeEntrySymbol matchEntry
+        offsetCode = decodeEntrySymbol offsetEntry
     literalRange <- lookupCodeRange "literal length" literalCode literalLengthCodes
     matchRange <- lookupCodeRange "match length" matchCode matchLengthCodes
-    (literalExtra, reader4) <- readBits (codeExtraBits literalRange) reader3
-    (matchExtra, reader5) <- readBits (codeExtraBits matchRange) reader4
-    (offsetExtra, reader6) <- readBits offsetCode reader5
+    -- Step 2 -- read the VALUE extra bits, order OF, ML, LL (RFC 8878
+    -- SS3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
+    -- required to decode offset. It does the same for Match_Length and
+    -- then for Literals_Length.").
+    (offsetExtra, reader1) <- readBits offsetCode reader0
+    (matchExtra, reader2) <- readBits (codeExtraBits matchRange) reader1
+    (literalExtra, reader3) <- readBits (codeExtraBits literalRange) reader2
     let literalLength = codeBaseline literalRange + literalExtra
         matchLength = codeBaseline matchRange + matchExtra
         rawOffset = (1 `shiftL` offsetCode) .|. offsetExtra
@@ -390,6 +418,29 @@ decodeSequences remaining literals literalTable matchTable offsetTable literalSt
         (Left "match offset exceeds decoded output")
     ensureOutputLimit (Seq.length afterLiterals) matchLength
     afterMatch <- copyMatch matchOffset matchLength afterLiterals
+    -- Step 3 -- update FSE states (consumes bits), order LL, ML, OF,
+    -- preparing the states the NEXT sequence's peek (step 1) will use.
+    -- Per the reference decoder (ZSTD_decodeSequence), this update is
+    -- skipped ENTIRELY for the last sequence in the block: there is no
+    -- "next" sequence to prepare a state for, and (symmetrically) the
+    -- encoder never flushed any bits for that non-existent transition --
+    -- see the `fseInit`/`encodeSymbol` split in `encodeSequences` below.
+    -- Performing this read unconditionally, as an earlier revision of this
+    -- decoder did, consumes bits that were never written, corrupting the
+    -- position of every read that follows.
+    (nextLiteralState, nextMatchState, nextOffsetState, reader6) <-
+        if remaining == 1
+            then Right (literalState, matchState, offsetState, reader3)
+            else do
+                (literalValue, reader4) <- readBits (decodeEntryBits literalEntry) reader3
+                (matchValue, reader5) <- readBits (decodeEntryBits matchEntry) reader4
+                (offsetValue, reader6') <- readBits (decodeEntryBits offsetEntry) reader5
+                Right
+                    ( decodeEntryBaseline literalEntry + literalValue
+                    , decodeEntryBaseline matchEntry + matchValue
+                    , decodeEntryBaseline offsetEntry + offsetValue
+                    , reader6'
+                    )
     decodeSequences
         (remaining - 1)
         literals
@@ -500,15 +551,27 @@ encodeSequences sequences = do
     let literalSize = 1 `shiftL` literalLengthAccuracyLog
         matchSize = 1 `shiftL` matchLengthAccuracyLog
         offsetSize = 1 `shiftL` offsetAccuracyLog
+        -- Encode sequences in reverse order (last real sequence first); tag
+        -- each with its position in that reversed walk so `encodeOne` can
+        -- tell whether it is processing index 0 -- the semantically LAST
+        -- real sequence, which needs direct state initialisation instead of
+        -- a normal transition (see `encodeOne`).
+        reversedSequences = zip [0 :: Int ..] (reverse sequences)
     (writer, literalState, matchState, offsetState) <-
         foldM
             (encodeOne literalEntries literalStates matchEntries matchStates offsetEntries offsetStates)
             (emptyBitWriter, literalSize, matchSize, offsetSize)
-            (reverse sequences)
+            reversedSequences
+    -- RFC 8878 SS3.1.1.3.2.1.2: a forward decoder reads the initial FSE
+    -- states in order LL, OF, ML (see decompressBlock) -- a DIFFERENT order
+    -- from the per-sequence update order below. Because this bitstream is
+    -- written backward (the LAST bits written here are the FIRST bits a
+    -- forward reader consumes), we write them in the reverse of that read
+    -- order: ML, then OF, then LL.
     let finished =
             addBits (literalState - literalSize) literalLengthAccuracyLog
-                ( addBits (matchState - matchSize) matchLengthAccuracyLog
-                    (addBits (offsetState - offsetSize) offsetAccuracyLog writer)
+                ( addBits (offsetState - offsetSize) offsetAccuracyLog
+                    (addBits (matchState - matchSize) matchLengthAccuracyLog writer)
                 )
     Right (finishWriter finished)
 
@@ -520,9 +583,9 @@ encodeOne ::
     [EncodeEntry] ->
     [Int] ->
     (BitWriter, Int, Int, Int) ->
-    Sequence ->
+    (Int, Sequence) ->
     Either String (BitWriter, Int, Int, Int)
-encodeOne literalEntries literalStates matchEntries matchStates offsetEntries offsetStates (writer0, literalState, matchState, offsetState) currentSequence = do
+encodeOne literalEntries literalStates matchEntries matchStates offsetEntries offsetStates (writer0, literalState, matchState, offsetState) (index, currentSequence) = do
     let literalCode = valueToCode (sequenceLiteralLength currentSequence) literalLengthCodes
         matchCode = valueToCode (sequenceMatchLength currentSequence) matchLengthCodes
         rawOffset = sequenceOffset currentSequence + 3
@@ -530,27 +593,59 @@ encodeOne literalEntries literalStates matchEntries matchStates offsetEntries of
         offsetExtra = rawOffset - (1 `shiftL` offsetCode)
         literalRange = literalLengthCodes !! literalCode
         matchRange = matchLengthCodes !! matchCode
-        writer1 = addBits offsetExtra offsetCode writer0
-        writer2 =
-            addBits
-                (sequenceMatchLength currentSequence - codeBaseline matchRange)
-                (codeExtraBits matchRange)
-                writer1
-        writer3 =
-            addBits
-                (sequenceLiteralLength currentSequence - codeBaseline literalRange)
-                (codeExtraBits literalRange)
-                writer2
-    (nextMatchState, matchBits, matchValue) <-
-        encodeSymbol matchState matchCode matchEntries matchStates
-    let writer4 = addBits matchValue matchBits writer3
-    (nextOffsetState, offsetBits, offsetValue) <-
-        encodeSymbol offsetState offsetCode offsetEntries offsetStates
-    let writer5 = addBits offsetValue offsetBits writer4
-    (nextLiteralState, literalBits, literalValue) <-
-        encodeSymbol literalState literalCode literalEntries literalStates
-    let writer6 = addBits literalValue literalBits writer5
-    Right (writer6, nextLiteralState, nextMatchState, nextOffsetState)
+        literalExtraValue = sequenceLiteralLength currentSequence - codeBaseline literalRange
+        matchExtraValue = sequenceMatchLength currentSequence - codeBaseline matchRange
+    -- The sequence processed FIRST in this reverse loop (index 0) is the
+    -- semantically LAST real sequence in the block. A forward decoder never
+    -- performs a state-update read after decoding the last sequence (see
+    -- decodeSequences' conditional update), so this encoder cannot produce
+    -- that sequence's starting state via a normal bit-flushing transition
+    -- either -- there is no corresponding decode-side bit read to consume
+    -- it. It must be computed directly via `encodeInitState` (mirrors real
+    -- zstd's FSE_initCState2), which writes NO bits at all. Every other
+    -- sequence gets a normal transition, write order OF, ML, LL. An earlier
+    -- revision of this encoder always flushed a transition uniformly,
+    -- writing bits a real decoder would never read and shifting the
+    -- bit-alignment of everything that followed. See lessons.md Lesson 95.
+    (writer1, nextLiteralState, nextMatchState, nextOffsetState) <-
+        if index == 0
+            then do
+                initOffsetState <- encodeInitState offsetCode offsetEntries offsetStates
+                initMatchState <- encodeInitState matchCode matchEntries matchStates
+                initLiteralState <- encodeInitState literalCode literalEntries literalStates
+                Right (writer0, initLiteralState, initMatchState, initOffsetState)
+            else do
+                (nextOffsetState, offsetBits, offsetValue) <-
+                    encodeSymbol offsetState offsetCode offsetEntries offsetStates
+                let writerA = addBits offsetValue offsetBits writer0
+                (nextMatchState, matchBits, matchValue) <-
+                    encodeSymbol matchState matchCode matchEntries matchStates
+                let writerB = addBits matchValue matchBits writerA
+                (nextLiteralState, literalBits, literalValue) <-
+                    encodeSymbol literalState literalCode literalEntries literalStates
+                let writerC = addBits literalValue literalBits writerB
+                Right (writerC, nextLiteralState, nextMatchState, nextOffsetState)
+    -- Extra bits, write order LL, ML, OF (a forward decoder reads these in
+    -- order OF, ML, LL immediately after peeking symbols).
+    let writer2 = addBits literalExtraValue (codeExtraBits literalRange) writer1
+        writer3 = addBits matchExtraValue (codeExtraBits matchRange) writer2
+        writer4 = addBits offsetExtra offsetCode writer3
+    Right (writer4, nextLiteralState, nextMatchState, nextOffsetState)
+
+-- | Initialise an FSE encoder state directly from a symbol, WITHOUT
+-- flushing any bits -- the reverse-encoding-loop analogue of real zstd's
+-- @FSE_initCState2@. Used only for the sequence processed first in
+-- `encodeSequences`' reverse loop (the semantically last real sequence),
+-- whose starting state a forward decoder never derives via a bit-consuming
+-- update (see `decodeSequences`).
+encodeInitState :: Int -> [EncodeEntry] -> [Int] -> Either String Int
+encodeInitState symbol entries states = do
+    entry <- indexEither "FSE symbol" entries symbol
+    let deltaBits = encodeEntryDeltaBits entry
+        nbBitsOut = (deltaBits + (1 `shiftL` 15)) `shiftR` 16
+        value = (nbBitsOut `shiftL` 16) - deltaBits
+        slot = (value `shiftR` nbBitsOut) + encodeEntryDeltaFindState entry
+    indexEither "FSE encoder state" states slot
 
 buildDecodeTable :: [Int] -> Int -> Either String [DecodeEntry]
 buildDecodeTable normalized accuracyLog = do
@@ -609,15 +704,22 @@ spreadSymbols normalized size = do
         initial = foldl' (\values (slot, symbol) -> replaceAt slot symbol values) (replicate size 0) lowPlacements
         high = size - 1 - length lowSymbols
         step = (size `shiftR` 1) + (size `shiftR` 3) + 3
-        commonSymbols =
-            concat
-                [ concatMap (expandSymbol (\count -> count > 1)) (zip [0 ..] normalized)
-                , concatMap (expandSymbol (\count -> count == 1)) (zip [0 ..] normalized)
-                ]
+        -- A SINGLE pass over symbols 0..maxSymbolValue in ascending order,
+        -- placing each symbol's full count immediately when encountered.
+        -- This is the real algorithm (FSE_buildDTable_internal's low-
+        -- probability branch, verified against the zstd C reference
+        -- source). An earlier revision of this codec used a fabricated
+        -- two-pass split -- all count>1 symbols first, then all count==1
+        -- symbols, both in ascending symbol order -- which produces a
+        -- DIFFERENT (but internally self-consistent) table layout: our own
+        -- decoder mirrored our own encoder, so every round-trip test
+        -- passed, but the real `zstd` CLI rejected our output as corrupt.
+        -- See lessons.md Lesson 95.
+        commonSymbols = concatMap expandSymbol (zip [0 ..] normalized)
     fst <$> foldM (placeSymbol size high step) (initial, 0) commonSymbols
   where
-    expandSymbol predicate (symbol, count)
-        | count > 0 && predicate count = replicate count symbol
+    expandSymbol (symbol, count)
+        | count > 0 = replicate count symbol
         | otherwise = []
 
 placeSymbol :: Int -> Int -> Int -> ([Int], Int) -> Int -> Either String ([Int], Int)
@@ -639,16 +741,6 @@ encodeSymbol state symbol entries states = do
         slot = (state `shiftR` bits) + encodeEntryDeltaFindState entry
     nextState <- indexEither "FSE encoder state" states slot
     Right (nextState, bits, value)
-
-decodeSymbol :: Int -> [DecodeEntry] -> BitReader -> Either String (Int, Int, BitReader)
-decodeSymbol state table reader = do
-    entry <- indexEither "FSE decoder state" table state
-    (value, nextReader) <- readBits (decodeEntryBits entry) reader
-    Right
-        ( decodeEntrySymbol entry
-        , decodeEntryBaseline entry + value
-        , nextReader
-        )
 
 lookupCodeRange :: String -> Int -> [CodeRange] -> Either String CodeRange
 lookupCodeRange label code ranges
