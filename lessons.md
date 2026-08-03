@@ -1994,3 +1994,11 @@ Two less obvious bounds matter at this seam:
 Encode revisions and nanosecond timestamps as decimal strings in JSON. They are
 opaque or 64-bit values; passing them through an IEEE-754-backed JSON consumer
 can otherwise silently destroy the exact compare-and-swap or health evidence.
+
+The matching client codec belongs beside the server codec, not inside the CLI.
+A hand-built CLI request can look correct while omitting response-version checks,
+accepting the wrong request ID, or interpreting a malformed error envelope. A
+typed sequential client should generate IDs, require an exact response ID, apply
+the same size/depth/duplicate-key bounds in the reverse direction, and return
+only a validated result or stable remote error. Then the terminal layer owns
+only argument parsing, secure credential acquisition, and human rendering.
