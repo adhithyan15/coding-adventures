@@ -1843,6 +1843,33 @@ def test_lowers_valid_mosfet_model_junction_capacitance(
     assert isclose(mosfet.model.model.params.CJ, expected)
 
 
+@pytest.mark.parametrize("sidewall_capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_sidewall_capacitance(
+    sidewall_capacitance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CJSW must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CJSW={sidewall_capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("sidewall_capacitance", "expected"), [("0", 0.0), ("3p", 3.0e-12)]
+)
+def test_lowers_valid_mosfet_model_sidewall_capacitance(
+    sidewall_capacitance: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CJSW={sidewall_capacitance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CJSW, expected)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

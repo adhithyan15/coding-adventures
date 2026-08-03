@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `CJSW` values and lower valid
+  sidewall-junction capacitance densities instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `CJ` values and lower valid
   bottom-junction capacitance densities instead of silently dropping them.
 - Reject negative and non-finite MOS instance `PS` values and lower valid
