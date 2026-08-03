@@ -65,9 +65,11 @@ The child independently verifies its package before sending
 control endpoint and terminates the child.
 
 Every launch receives a fresh non-zero UUID-v7 `SessionId` from an injected
-source. The session ID becomes the registry `ChannelId`; the adapter never mints
-a second channel identity. The orchestrator X3DH identity is borrowed rather
-than copied, preserving its zeroizing key ownership.
+`Send` source. The session ID becomes the registry `ChannelId`; the adapter never
+mints a second channel identity. The supervisor owns shared `Arc` handles to the
+trusted package keyring and orchestrator X3DH identity. This permits the complete
+process authority to move into the daemon's WebSocket handler without copying
+zeroizing identity material or constructing a self-referential owner.
 
 ## Process Authority
 
@@ -122,7 +124,8 @@ The package exposes:
 
 - validated `ProcessSupervisorConfig` and `HostProgram` values;
 - `MonotonicClock` and `SessionIdSource` interfaces plus production adapters;
-- `ProcessHostSupervisor`, implementing the reconciler `HostSupervisor` trait;
+- owned, movable `ProcessHostSupervisor`, implementing the reconciler
+  `HostSupervisor` trait;
 - `ChildProcessControl<R, W>` for host-runtime integration; and
 - bounded, input-independent `ProcessSupervisorError` diagnostics.
 
@@ -143,6 +146,8 @@ The package must cover:
 - real cross-platform child bootstrap, matching readiness, heartbeat, and
   graceful termination;
 - idempotent same-hash start and refusal of an active different-hash launch;
+- compile-time `Send + 'static` production composition with shared trust and
+  identity ownership;
 - bootstrap timeout, malformed bootstrap, wrong readiness, and exit-before-ready
   cleanup;
 - graceful-stop timeout with hard-kill fallback;
