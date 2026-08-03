@@ -2,6 +2,77 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] — 2026-08-03 (W04 — real garbage collection for `gc_heap`)
+
+The WasmGC struct heap (`gc_heap`) was, until now, an append-only arena with
+no reclamation — its own doc comment justified this as "bounded by the VM's
+instruction budget," a budget that does not actually exist anywhere in this
+crate. A long-running WASM-compiled program could allocate without bound.
+
+- **New `gc` module**: a real mark-and-sweep collector over a **tombstone +
+  free-list slot arena** — `gc_heap: Vec<GcStruct>` becomes
+  `Vec<Option<GcStruct>>` (`Some` = live, `None` = a reclaimed slot ready
+  for reuse). Compaction is out of scope: a `WasmValue::Ref(Some(handle))`
+  is a `Vec` index (a WASM-spec-mandated representation), so shrinking the
+  arena would silently invalidate every other live handle past the removed
+  index. No generation tag is needed to guard a reused slot against
+  aliasing a stale reference — mark-sweep's ordinary soundness argument
+  (nothing left unmarked is reachable, given an exhaustive root walk)
+  already rules that out, since every handle a program can hold either sat
+  in a scanned root or was freshly minted.
+- **Root set**: every `WasmValue::Ref(Some(_))` in `ctx.globals`,
+  `ctx.typed_locals`, **every** `ctx.saved_frames[*].locals` (a paused
+  caller's locals — missing this would free something a suspended caller
+  still references), and the interpreter's operand stack
+  (`GenericVM::typed_stack`, via the existing `REF_TAG` convention),
+  traced transitively through each object's own fields — cycle-safe by
+  construction (a worklist walk with a `marked` visited set, not naive
+  recursion). Precise, with no `HeapKind`-style schema needed: a
+  `GcStruct` field is a tagged `WasmValue`, self-describing as a reference
+  or not.
+- **Checked at two chokepoints**: `execute_branch` (every taken
+  `br`/`br_if`/`br_table` — a loop's back-edge is a branch to its own loop
+  label) and the internal `call_function` helper (every `call`/
+  `call_indirect`, nested or not) — both of this crate's independent
+  dispatch loops (`GenericVM::execute_with_context` and the hand-inlined
+  loop inside `call_function`) route through these two shared functions, so
+  instrumenting them covers both loops without adding anything WASM-specific
+  to the generic `virtual-machine` crate's own dispatch code. Mirrors the
+  existing "safepoints at back-edges and calls" convention rather than a
+  per-instruction counter.
+- **Adaptive object-count threshold**, mirroring `gc-core::FlatHeap::should_collect`/
+  `adapt_threshold` verbatim (just in units of live objects rather than
+  bytes, since this heap has no byte-size concept). New `gc-core` path
+  dependency, reusing its representation-agnostic `GcProfile`/`GcCycleStats`
+  for diagnostic consistency with the native-AOT and `vm-core` GC paths —
+  exposed via new `WasmExecutionEngine::gc_live_object_count()` /
+  `gc_profile()` accessors (`gc_heap` itself still resets every call, as it
+  always has; only the counters are written back).
+- Tests: `gc`'s own unit tests (`mark`/`sweep`/`alloc`/threshold-adaptation
+  in isolation, including cycle-safety and a saved-caller-frame root) plus
+  `end_to_end_loop_reclaims_garbage_and_preserves_kept_object` — a real WASM
+  loop, driven through actual bytecode dispatch, that allocates 2000
+  objects while keeping exactly one alive, proving both that the kept
+  object survives with its field intact and that the live count is
+  reclaimed mid-run rather than left to accumulate.
+- **Security-review fixes, before this landed**:
+  - `sweep` now also drops `gc_heap`'s trailing run of tombstoned slots
+    (removing their indices from `free_list` too). Without this, the
+    arena's length — and therefore `mark`/`sweep`'s O(len) cost — was a
+    monotonically non-decreasing high-water mark for the life of a call: a
+    program that transiently spiked the live count high, then settled into
+    low-retention churn, would keep paying that peak cost on every
+    subsequent collection. Not compaction (no live object moves or is
+    renumbered) — only provably-all-garbage trailing capacity is dropped.
+  - `gc::alloc`'s new-handle assignment now uses a checked `u32` conversion
+    (clean trap on failure) instead of an unchecked `as u32` cast, so an
+    eventual overflow (practically unreachable — it implies 100+GB of
+    live, uncollected heap) can't silently alias a fresh object's handle
+    onto an already-occupied lower index.
+  - Tests: `sweep_shrinks_arena_when_everything_is_reclaimed`,
+    `sweep_does_not_truncate_past_a_live_object_in_the_middle`.
+- See `code/specs/W04-wasm-gc.md` for the full design rationale.
+
 ## [0.5.0] — 2026-07-07
 
 ### Added — `memory.copy` bulk-memory op (E4-dyn runtime string concat)
