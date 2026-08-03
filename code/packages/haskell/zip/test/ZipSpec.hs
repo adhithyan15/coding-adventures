@@ -229,6 +229,31 @@ spec = describe "Zip" $ do
         -- Entry 1 is untouched and must still be readable.
         readEntry corrupted (BC.pack "a.txt") `shouldBe` Right dat1
 
+    -- Regression (security review, round 3): a declared uncompressed size
+    -- must bound decompression work, not just get applied as a post-hoc
+    -- truncation. Before this fix, deflateDecompress always ran to its
+    -- flat 256 MB ceiling regardless of what the caller expected, and
+    -- readLocalData only truncated the *result* to the declared size
+    -- afterward — so a Central Directory entry could declare a tiny
+    -- uncompSize (even 0, which also used to skip CRC verification) while
+    -- its compressed data actually decoded to something large, forcing
+    -- the full expensive decode before the truncation discarded it. That
+    -- let readZip's aggregate decompression-bomb budget be bypassed
+    -- entirely, since the budget only ever saw the truncated size.
+    it "deflateDecompressCapped bounds decode work by the declared size, not just the 256 MB ceiling" $ do
+        -- Real payload big enough that DEFLATE compresses it a lot (so the
+        -- compressed bytes are small) but decoding it in full is not free.
+        let dat        = BC.concat (replicate 20000 (BC.pack "abcdefghij"))  -- 200 KB
+            compressed = deflateCompress dat
+        BS.length compressed `shouldSatisfy` (< BS.length dat)
+        -- Declaring the true size still decodes correctly.
+        deflateDecompressCapped (BS.length dat) compressed `shouldBe` Right dat
+        -- Declaring an undersized cap must fail fast rather than silently
+        -- decoding the full 200 KB and truncating afterward.
+        case deflateDecompressCapped 0 compressed of
+            Left err -> err `shouldContain` "output size limit exceeded"
+            Right d  -> fail ("expected a capped failure, got " ++ show (BS.length d) ++ " bytes")
+
 -- ─── LCG helper (for TC-7) ────────────────────────────────────────────────────
 
 -- | One step of a 32-bit linear congruential generator (Knuth parameters).

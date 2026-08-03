@@ -78,6 +78,7 @@ module Zip
     , crc32
     , deflateCompress
     , deflateDecompress
+    , deflateDecompressCapped
     ) where
 
 import Data.ByteString (ByteString)
@@ -610,13 +611,49 @@ fixedLLDecode br =
 -- the sibling @lzss@ package's own overlap-safe decoder, which uses the
 -- same 'Seq' trick for the same reason (see @LZSS.decodeToken@).
 
--- | Decompress a raw RFC 1951 DEFLATE bit-stream.
+-- | Decompress a raw RFC 1951 DEFLATE bit-stream, bounded only by the
+-- absolute 256 MB decompression-bomb ceiling.
+--
+-- Prefer 'deflateDecompressCapped' when the caller already knows an
+-- expected output size (as 'readLocalData' does, from the entry's Central
+-- Directory metadata): bounding decode by that declared size, in addition
+-- to this function's own 256 MB ceiling, closes a decompression-bomb
+-- variant where a maliciously small declared size would otherwise let a
+-- huge amount of real decode work happen before the result is truncated
+-- away — see 'deflateDecompressCapped's Haddock.
+--
 -- Returns @Left msg@ on malformed or unsupported (BTYPE=10) input.
 deflateDecompress :: ByteString -> Either String ByteString
-deflateDecompress bs =
+deflateDecompress = deflateDecompressCapped (256 * 1024 * 1024)
+
+-- | Like 'deflateDecompress', but stops with an error as soon as the
+-- decoded output would exceed @capBytes@ (which is still clamped to the
+-- absolute 256 MB ceiling, so callers can only ever tighten it, not
+-- loosen it).
+--
+-- == Why a caller-supplied cap matters
+--
+-- 'readLocalData' knows an entry's declared uncompressed size
+-- (@cdmUncompSize@, from the Central Directory) before it decompresses
+-- anything, and only ever needs the first @uncompSize@ bytes of the
+-- result — any more get discarded by a post-hoc @'BS.take'@. If decoding
+-- always ran to the flat 256 MB ceiling before that truncation happened,
+-- an attacker could declare a tiny @uncompSize@ (even 0, which also
+-- happens to skip this module's CRC check) on many Central Directory
+-- entries while still forcing up to 256 MB of real decompression work
+-- /per entry/ — silently reopening the "many entries, each an
+-- expensive bomb" attack that 'readZip's aggregate budget
+-- ("materialiseAll") is otherwise supposed to close, because that budget
+-- only ever sees the truncated, post-hoc size. Capping decode at the
+-- entry's own declared size makes the cost actually paid match the cost
+-- that gets counted.
+deflateDecompressCapped :: Int -> ByteString -> Either String ByteString
+deflateDecompressCapped capBytes bs =
     go (newBitReader bs) Seq.empty
   where
-    maxOut = 256 * 1024 * 1024  -- 256 MB safety cap
+    -- Never allow a caller-supplied cap to exceed the absolute ceiling;
+    -- only tightening is possible, not loosening.
+    maxOut = min (max 0 capBytes) (256 * 1024 * 1024)
 
     go br acc =
         case readLsb br 1 of
@@ -1005,7 +1042,21 @@ materialiseEntry bs meta = do
     fileData <- readLocalData bs (cdmLocalOffset meta) (cdmCompSize meta)
                     (cdmUncompSize meta) (cdmMethod meta)
     let actualCrc = crc32 fileData 0
-    if actualCrc /= cdmCrc meta && cdmUncompSize meta > 0
+    -- Always verify, including declared-empty entries: 'crc32' of an empty
+    -- 'ByteString' is always exactly 0 (see 'crc32's Haddock), and
+    -- 'writeZip' always writes 0 as the stored CRC for empty data, so a
+    -- genuinely empty entry passes this check naturally. A previous
+    -- version of this check skipped verification whenever
+    -- @cdmUncompSize meta == 0@; combined with an unbounded decoder, that
+    -- let an attacker declare @uncompSize = 0@ on an entry whose
+    -- compressed data actually decoded to something large, forcing real
+    -- decompression work while dodging both the CRC check and the size
+    -- accounting in 'readZip's aggregate budget. 'readLocalData' now caps
+    -- decode at the declared size (see 'deflateDecompressCapped'), so
+    -- that specific bypass is already closed independently of this
+    -- check — but verifying unconditionally is strictly more correct and
+    -- costs nothing extra for well-formed archives.
+    if actualCrc /= cdmCrc meta
         then Left ("zip: CRC-32 mismatch for '" ++ show (cdmName meta)
                    ++ "': expected " ++ showHex (cdmCrc meta)
                    ++ ", got " ++ showHex actualCrc)
@@ -1036,7 +1087,16 @@ readLocalData bs localOffset compSize uncompSize method = do
             let compressed = BS.take compSize (BS.drop dataStart bs)
             case method of
                 0 -> Right compressed   -- Stored: verbatim
-                8 -> case deflateDecompress compressed of
+                8 -> -- Cap decode at the entry's own declared uncompressed
+                     -- size (from the Central Directory), not just the
+                     -- absolute 256 MB ceiling — see
+                     -- 'deflateDecompressCapped's Haddock for why this
+                     -- matters: without it, a declared size far smaller
+                     -- than the real decompressed output lets the full,
+                     -- expensive decode happen before a post-hoc 'BS.take'
+                     -- discards it, which silently reopens the aggregate
+                     -- decompression-bomb hole 'readZip' otherwise closes.
+                     case deflateDecompressCapped uncompSize compressed of
                         Left err -> Left ("zip: DEFLATE: " ++ err)
                         Right d  -> Right (BS.take uncompSize d)
                 m -> Left ("zip: unsupported method " ++ show m)

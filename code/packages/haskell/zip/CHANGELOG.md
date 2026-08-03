@@ -61,6 +61,32 @@
   per the spec's `Num_Entries_Total` guidance. Added a regression test
   (`readEntry ignores corruption in a different entry`) that proves
   `readEntry` no longer touches unrelated entries.
+- Fixed a HIGH-severity finding from a third security-review round: the
+  aggregate budget above counted the *post-truncation* `entryData` size
+  (`BS.take uncompSize d`), not the actual decode work performed. Because
+  `deflateDecompress` always ran to its own flat 256 MB ceiling regardless
+  of what the caller expected, an attacker could declare a tiny
+  `uncompSize` (even `0`, which also skipped CRC verification under the
+  previous check) on a Central Directory entry whose compressed data
+  actually decoded to something large — paying up to 256 MB of real decode
+  work per entry while contributing 0 counted bytes to `readZip`'s
+  aggregate total, silently reopening the "many entries, each an
+  expensive bomb" attack from the previous fix. Split `deflateDecompress`
+  into `deflateDecompressCapped :: Int -> ByteString -> Either String
+  ByteString` (stops decoding the instant output would exceed the given
+  cap, still clamped to the absolute 256 MB ceiling) and
+  `deflateDecompress = deflateDecompressCapped (256 * 1024 * 1024)`.
+  `readLocalData` now calls `deflateDecompressCapped uncompSize`, so decode
+  work is bounded by the entry's own declared size — the cost actually
+  paid now matches the cost `readZip`'s aggregate budget counts. Also
+  removed the `uncompSize > 0` guard on the CRC check: `crc32` of an empty
+  `ByteString` is always exactly `0` and `writeZip` always writes `0` for
+  empty data, so the guard was already redundant for well-formed archives
+  and only made the exploit easier to construct (no need to forge a
+  matching CRC). Exported `deflateDecompressCapped` (matching the existing
+  "low-level, exported for tests" convention) and added a direct
+  regression test proving a declared cap of `0` fails fast on a real
+  200 KB payload instead of fully decoding it first.
 
 ## [0.1.0] — 2026-04-24
 
