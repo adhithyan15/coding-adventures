@@ -7195,6 +7195,13 @@ impl HtmlParser {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_anchor_for_reconstruction_boundary();
                 self.close_open_element_if(|name| name == "p");
+                if !self.current_element_is("li") && self.open_list_item_in_scope_index().is_some()
+                {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-li-start-tag",
+                        "start tag `<li>` implied the end of a non-current list item",
+                    ));
+                }
                 self.close_open_list_item_if_in_scope();
             }
         } else if incoming_name == "dt" || incoming_name == "dd" {
@@ -7336,17 +7343,22 @@ impl HtmlParser {
         self.open_elements.truncate(index);
     }
 
-    fn close_open_list_item_if_in_scope(&mut self) -> bool {
-        let Some(index) = self.open_elements.iter().rposition(|path| {
+    fn open_list_item_in_scope_index(&self) -> Option<usize> {
+        let index = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| name == "li")
-        }) else {
-            return false;
-        };
+        })?;
         if self.open_elements.iter().skip(index + 1).any(|path| {
             element_at_path(&self.document, path).is_some_and(is_list_item_scope_boundary)
         }) {
-            return false;
+            return None;
         }
+        Some(index)
+    }
+
+    fn close_open_list_item_if_in_scope(&mut self) -> bool {
+        let Some(index) = self.open_list_item_in_scope_index() else {
+            return false;
+        };
         self.open_elements.truncate(index);
         true
     }
@@ -33233,6 +33245,30 @@ mod tests {
         let matching =
             parse_html_with_diagnostics("<!doctype html><h3><li>abc</h3>foo").unwrap();
         assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_li_start_tags_that_close_non_current_list_items() {
+        for source in [
+            "<!DOCTYPE html><li><menuitem><li>",
+            "<!DOCTYPE html><html><head></head><body><ul><li><div><p><li></ul></body></html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-li-start-tag",
+                    "start tag `<li>` implied the end of a non-current list item"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><ul><li>one<li>two").unwrap();
+        assert!(!adjacent
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-li-start-tag"));
     }
 
     #[test]
