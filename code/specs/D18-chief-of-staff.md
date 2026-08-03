@@ -168,6 +168,13 @@ keys fail closed. The parser emits the schema-v1 `agent_manifest.json` shape and
 sorted, deduplicated Deno permission arguments. Time and standard-stream
 capabilities remain manifest declarations but do not widen Deno OS permissions.
 
+The Level 1 runtime injects a provider-neutral LLM client plus authorized input
+and output channel endpoints. For each verified UTF-8 message it sends the full
+skill body as model instructions, sends the message as the user turn, publishes
+the non-empty text response, and only then acknowledges the input. Model and
+publication failures leave the channel cursor unchanged so recovery can replay
+the message.
+
 ---
 
 ## Key Concepts

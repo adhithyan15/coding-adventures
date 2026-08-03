@@ -1027,4 +1027,5 @@ members = [
   "chief-of-staff-daemon-installer",
   "chief-of-staff-cli",
   "chief-of-staff-skill-parser",
+  "chief-of-staff-skill-runtime",
 ]
