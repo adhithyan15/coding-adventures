@@ -60,7 +60,7 @@ trace, and tests.
 - [ ] Compilation and performance bridge
   - [x] Forward graph lowering to NeuralIR and MatrixIR.
   - [x] Backward and optimizer graph lowering.
-  - [ ] CPU, Rust core, and accelerated-backend parity.
+  - [x] CPU, Rust core, and accelerated-backend parity.
   - [ ] Precision, quantization, and buffer-residency experiments.
 - [ ] Cross-language consumers
   - [ ] Validate every fixture with the reference implementation.

@@ -1,11 +1,11 @@
-//! # `exec` — Pure-Rust glue: plan a `matrix_ir::Graph`, run it on
+//! # `graph_execution` — plan a `matrix_ir::Graph`, run it on
 //! the CPU executor, return the output bytes.
 //!
 //! This module is the **Phase 2** core of MX07.  It is intentionally
 //! Node-free so `cargo test` can exercise the real planning +
-//! execution pipeline without a Node toolchain.  The N-API wrapper in
-//! `lib.rs` just marshals strings/bytes across the FFI boundary and
-//! calls into here.
+//! execution pipeline without a Node toolchain. The wrapper in
+//! `matrix-rust-napi/src/lib.rs` just marshals strings/bytes across the
+//! FFI boundary and calls into here.
 //!
 //! ## What the helper does
 //!
@@ -44,9 +44,9 @@
 
 use std::collections::HashMap;
 
+use crate::CpuExecutor;
 use compute_ir::{BufferId, ComputeGraph, PlacedConstant, PlacedOp, PlacedTensor, Residency};
 use executor_protocol::{ExecutorRequest, ExecutorResponse};
-use matrix_cpu::CpuExecutor;
 use matrix_ir::Graph;
 use matrix_runtime::Runtime;
 
@@ -59,10 +59,9 @@ use matrix_runtime::Runtime;
 /// and trigger a process abort via `handle_alloc_error`.
 ///
 /// 4 GiB is "generous for a 2026-era inference workload, well below
-/// the host RAM of every CI runner this project targets".  Bigger
-/// graphs can override by setting `MATRIX_RUST_NAPI_MAX_BUFFER_BYTES`
-/// in their environment when the helper grows env-var support (not
-/// in v0.2 — file an issue when it becomes a real constraint).
+/// the host RAM of every CI runner this project targets". The cap is
+/// fixed for now; a future core API can make it configurable if a real
+/// workload demonstrates that need.
 const MAX_TOTAL_BUFFER_BYTES: u64 = 4 * 1024 * 1024 * 1024;
 
 /// Plan and execute `graph` on the CPU executor.  Each entry of
@@ -83,27 +82,8 @@ pub fn run_graph_on_cpu(graph: &Graph, inputs: &[Vec<u8>]) -> Result<Vec<Vec<u8>
             inputs.len()
         ));
     }
-    // Confirm each input's byte length matches the declared tensor
-    // size.  Catches the most common caller bug — wrong dtype or
-    // wrong shape on the Node side — with a precise error.
-    for (i, t) in graph.inputs.iter().enumerate() {
-        let expected = t
-            .shape
-            .byte_size(t.dtype)
-            .ok_or_else(|| format!("graph.inputs[{}] tensor size overflows u64", i))?;
-        if (inputs[i].len() as u64) != expected {
-            return Err(format!(
-                "graph.inputs[{}] byte length mismatch: tensor dtype/shape requires {} bytes, \
-                 caller provided {}",
-                i,
-                expected,
-                inputs[i].len()
-            ));
-        }
-    }
-
     // ─── Plan ──────────────────────────────────────────────────
-    let rt = Runtime::new(matrix_cpu::profile());
+    let rt = Runtime::new(crate::profile());
     let mut placed = rt
         .plan(graph)
         .map_err(|e| format!("matrix-runtime plan failed: {:?}", e))?;
@@ -145,9 +125,9 @@ pub fn run_graph_on_cpu(graph: &Graph, inputs: &[Vec<u8>]) -> Result<Vec<Vec<u8>
                 .shape
                 .byte_size(t.dtype)
                 .ok_or_else(|| format!("tensor {:?} byte size overflows u64", t.id))?;
-            total = total.checked_add(bytes).ok_or_else(|| {
-                "graph total byte size overflows u64".to_string()
-            })?;
+            total = total
+                .checked_add(bytes)
+                .ok_or_else(|| "graph total byte size overflows u64".to_string())?;
             if total > MAX_TOTAL_BUFFER_BYTES {
                 return Err(format!(
                     "graph total buffer size {} bytes exceeds limit of {} bytes \
@@ -155,6 +135,26 @@ pub fn run_graph_on_cpu(graph: &Graph, inputs: &[Vec<u8>]) -> Result<Vec<Vec<u8>
                     total, MAX_TOTAL_BUFFER_BYTES
                 ));
             }
+        }
+    }
+
+    // Confirm each input's byte length only after the planned graph passes the
+    // total resource cap. This order lets a caller present an empty payload for
+    // an oversized graph and still receive a bounded rejection; tests never
+    // need to allocate a multi-gigabyte vector merely to reach the cap check.
+    for (i, t) in graph.inputs.iter().enumerate() {
+        let expected = t
+            .shape
+            .byte_size(t.dtype)
+            .ok_or_else(|| format!("graph.inputs[{}] tensor size overflows u64", i))?;
+        if (inputs[i].len() as u64) != expected {
+            return Err(format!(
+                "graph.inputs[{}] byte length mismatch: tensor dtype/shape requires {} bytes, \
+                 caller provided {}",
+                i,
+                expected,
+                inputs[i].len()
+            ));
         }
     }
 
@@ -383,7 +383,11 @@ mod tests {
         let mut g = GraphBuilder::new();
         // y = max(0, x @ W + b)
         let x = g.input(DType::F32, Shape::from(&[1, 2]));
-        let w = g.constant(DType::F32, Shape::from(&[2, 2]), f32_bytes(&[1.0, 0.0, 0.0, 1.0])); // identity
+        let w = g.constant(
+            DType::F32,
+            Shape::from(&[2, 2]),
+            f32_bytes(&[1.0, 0.0, 0.0, 1.0]),
+        ); // identity
         let b = g.constant(DType::F32, Shape::from(&[1, 2]), f32_bytes(&[-1.0, -5.0])); // bias
         let zero = g.constant(DType::F32, Shape::from(&[1, 2]), f32_bytes(&[0.0, 0.0]));
         let xw = g.matmul(&x, &w);
@@ -392,8 +396,8 @@ mod tests {
         g.output(&y);
         let graph = g.build().expect("graph builds");
 
-        let outputs = run_graph_on_cpu(&graph, &[f32_bytes(&[10.0, 3.0])])
-            .expect("execution succeeds");
+        let outputs =
+            run_graph_on_cpu(&graph, &[f32_bytes(&[10.0, 3.0])]).expect("execution succeeds");
 
         // x @ W + b = [10, 3] + [-1, -5] = [9, -2]
         // max(0, [9, -2]) = [9, 0]
@@ -431,25 +435,15 @@ mod tests {
         // 2e9 f32s = 8 GB, > MAX_TOTAL_BUFFER_BYTES (= 4 GiB).
         let a = g.input(DType::F32, Shape::from(&[2_000_000_000]));
         g.output(&a);
-        let graph = g.build().expect("graph builds — only the runner caps size, not the builder");
+        let graph = g
+            .build()
+            .expect("graph builds — only the runner caps size, not the builder");
 
-        // We supply an empty inputs slice so the *byte-length* check
-        // would also fire if the cap-check didn't.  But the cap
-        // should fire first (it runs before the byte-length check
-        // for outputs/intermediates, and inputs[i] would not match
-        // the giant size).  Either way: must be Err, must not abort.
-        let err = run_graph_on_cpu(&graph, &[vec![0u8; 0]])
-            .expect_err("oversized graph must be refused");
-        // The byte-length check fires first since input count == 1
-        // and our supplied bytes len doesn't match.  That's fine —
-        // the cap check is the defence-in-depth for the case where
-        // the caller *does* match the giant size or the giant tensor
-        // is an intermediate / output rather than an input.
-        assert!(
-            err.contains("mismatch") || err.contains("exceeds limit"),
-            "got: {}",
-            err
-        );
+        // An empty payload proves the cap fires before input-length validation;
+        // the test itself never allocates the declared giant tensor.
+        let err =
+            run_graph_on_cpu(&graph, &[vec![0u8; 0]]).expect_err("oversized graph must be refused");
+        assert!(err.contains("exceeds limit"), "got: {}", err);
     }
 
     /// More direct cap test: a graph whose *output* tensor is huge.
@@ -470,11 +464,8 @@ mod tests {
         g.output(&c);
         let graph = g.build().expect("graph builds");
 
-        let err = run_graph_on_cpu(
-            &graph,
-            &[f32_bytes(&[1.0]), vec![0u8; (k as usize) * 4]],
-        )
-        .expect_err("oversized intermediate/output must be refused");
+        let err = run_graph_on_cpu(&graph, &[f32_bytes(&[1.0]), vec![]])
+            .expect_err("oversized intermediate/output must be refused");
         assert!(err.contains("exceeds limit"), "got: {}", err);
     }
 

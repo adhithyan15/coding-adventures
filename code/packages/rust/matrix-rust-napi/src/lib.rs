@@ -67,7 +67,6 @@
 #![allow(non_camel_case_types)]
 
 mod classes;
-mod exec;
 
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use matrix_ir_json::{decode, encode};
@@ -76,7 +75,7 @@ use node_bridge::{
     set_named_property, str_from_js, str_to_js, throw_error, undefined,
 };
 
-pub use exec::run_graph_on_cpu;
+pub use matrix_cpu::run_graph_on_cpu;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Pure Rust core: the testable round-trip.
@@ -107,7 +106,7 @@ pub fn round_trip_json(input: &str) -> Result<String, String> {
 // ─────────────────────────────────────────────────────────────────────────────
 // Phase 2: end-to-end execution on the CPU executor.
 //
-// The Rust helper `exec::run_graph_on_cpu` does the real work; this
+// The Rust helper `matrix_cpu::run_graph_on_cpu` does the real work; this
 // section adds a JSON-envelope wrapper so we can expose it over the
 // existing string-in / string-out N-API surface without yet wiring
 // Buffer marshalling into node-bridge.

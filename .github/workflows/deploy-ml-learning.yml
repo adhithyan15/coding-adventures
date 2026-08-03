@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "code/programs/typescript/ml-learning-visualizer/**"
+      - "code/specs/fixtures/backend-parity-v1/**"
+      - "code/scripts/validate_backend_parity_labs.py"
       - "code/packages/typescript/cli-builder/**"
       - "code/packages/typescript/directed-graph/**"
       - "code/packages/typescript/state-machine/**"
@@ -42,6 +44,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Validate backend parity fixture
+        run: python3 code/scripts/validate_backend_parity_labs.py
 
       - name: Install local source dependencies
         run: |

@@ -47,13 +47,14 @@ larger network:
 27. [Gradient Accumulation and Zeroing, by Hand](./gradient-accumulation-and-zeroing-by-hand.md)
 28. [Forward Graph Lowering, by Hand](./forward-graph-lowering-by-hand.md)
 29. [Backward and Optimizer Lowering, by Hand](./backward-and-optimizer-lowering-by-hand.md)
-30. [Matrix Math](../matrix-math.md)
-31. [Loss Functions](../loss-functions.md)
-32. [Gradient Descent](../gradient-descent.md)
-33. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
-34. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
-35. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
-36. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
+30. [CPU, Rust Core, and Accelerated Backends, by Hand](./cpu-rust-and-accelerated-backends-by-hand.md)
+31. [Matrix Math](../matrix-math.md)
+32. [Loss Functions](../loss-functions.md)
+33. [Gradient Descent](../gradient-descent.md)
+34. [Single-Layer, Multi-Output Networks](../ml-single-layer-multi-output.md)
+35. [Feature Normalization and Learning-Rate Sweeps](../ml-feature-normalization-and-rate-sweeps.md)
+36. [Hidden Layers with XOR](../ml-hidden-layers-xor.md)
+37. [Hidden-Layer Example Suite](../ml-hidden-layer-example-suite.md)
 
 The [delivery roadmap](./ROADMAP.md) tracks implementation progress. The
 [full curriculum](./curriculum.md) continues from these foundations through
@@ -63,7 +64,7 @@ networks.
 ## Interactive Lab
 
 The TypeScript [ML Learning Visualizer](../../programs/typescript/ml-learning-visualizer/README.md)
-has seventeen complementary views:
+has eighteen complementary views:
 
 - **Training microscope:** pause one update and reveal multiplication, bias,
   activation, loss, chain-rule gradients, and parameter movement one phase at a
@@ -148,10 +149,15 @@ has seventeen complementary views:
   MatrixIR plan and inspect exactly which weight loads, products, and addition
   fuse together. Run one row or two while direct graph, scalar NeuralIR, and
   matrix-plan outputs remain in parity. Continue into backward and optimizer
-  lowering: keep the production forward compiler for saved values, inspect six
-  reverse instructions and four separate SGD instructions, then follow ten
-  matrix-training operations as one or two row gradients reduce into shared
-  parameter state.
+   lowering: keep the production forward compiler for saved values, inspect six
+   reverse instructions and four separate SGD instructions, then follow ten
+   matrix-training operations as one or two row gradients reduce into shared
+   parameter state.
+- **Backend parity lab:** execute one dense batch through the production scalar
+  graph and TypeScript matrix plan, compare their binary64 outputs with the
+  fixture-validated Rust `f32` execution helper, and run the same production
+  matrix plan on a real WebGPU adapter when the browser provides one. Every lane keeps its
+  operations, buffer residency, precision, and evidence level visible.
 
 ## Language-Neutral Corpus
 
@@ -283,6 +289,11 @@ reduction, one-row and two-row mean-SGD cases, explicit nonzero-buffer carry,
 matrix-training provenance, and independent finite-difference audits of each
 current batch contribution.
 
+NN31 adds `code/specs/fixtures/backend-parity-v1`, including one canonical
+MatrixIR graph, little-endian `f32` input and output payloads, scalar and
+TypeScript CPU traces, a Node-free Rust execution-helper test, and an optional
+real-WebGPU probe with explicit unavailable states.
+
 Validate the bootstrap corpus with:
 
 ```text
@@ -314,6 +325,7 @@ python code/scripts/validate_dynamic_autograd_labs.py
 python code/scripts/validate_gradient_accumulation_labs.py
 python code/scripts/validate_forward_graph_lowering_labs.py
 python code/scripts/validate_backward_optimizer_lowering_labs.py
+python code/scripts/validate_backend_parity_labs.py
 ```
 
 The first NN03 labs cover a weighted forward pass, Celsius regression, a
@@ -373,6 +385,10 @@ The first NN30 lab saves `prediction` and `residual`, lowers six reverse-mode
 instructions and four non-clearing SGD instructions, then proves that a
   ten-operation matrix plan reduces row gradients `[2, 2]` to `4`, applies the
 explicit mean `2`, and updates `w` to `0.8`.
+The first NN31 lab evaluates `XW + B` for `X = [1, 2, 3]`, `W = [2]`, and
+`B = [1, 1, 1]`. Production scalar and TypeScript matrix execution, fixture-
+validated Rust `f32` execution, and an optional live WebGPU dispatch all target
+`[3, 5, 7]` without treating an oracle as hardware evidence.
 
 ## How to Study a Model
 

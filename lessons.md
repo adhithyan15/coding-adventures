@@ -56,6 +56,12 @@ A condensed quick-reference of mistakes made during development, grouped by cate
   production runtime implements those contracts. Prove persistence with a
   nonzero incoming gradient buffer: reduce the current batch separately, add it
   to the prior buffer, and finite-difference only the current batch loss.
+- **Backend parity needs distinct evidence levels.** A deterministic oracle,
+  a native fixture test, and a live accelerator probe answer different
+  questions. Treat an unavailable accelerator as an honest result, never label
+  a CPU oracle as GPU execution, keep MatrixIR and byte payloads language-
+  neutral, and test a Node-free Rust helper without forcing host-linked N-API
+  symbols into standalone Windows binaries.
 - **Haskell `cabal.project` must list every transitive local package.** Cabal does not discover sibling deps from a sibling's own `cabal.project`. Single-package validation: plain `cabal test` (NOT `cabal test all`, which builds the whole universe).
 - **Haskell record accessors share the module's top-level namespace.** A field such as `requestBodyKind` creates a function with that exact name, so a private helper with the same spelling fails with `Multiple declarations`. Name decision helpers distinctly (`determineRequestBodyKind`) before compiling.
 - **HTTP/1 parity must preserve fail-closed wire grammar, not legacy parser permissiveness.** Reject TE+CL ambiguity, conflicting duplicate lengths, non-final request chunking, whitespace before a field colon, variable start-line delimiters, and unbounded heads; response framing must receive HEAD/CONNECT request context, and parse errors must not retain raw targets or field values.

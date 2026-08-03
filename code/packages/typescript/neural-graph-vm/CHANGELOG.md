@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Added scalar `constant` node compilation through `LOAD_CONST`.
 - Added `runNeuralBytecodeForwardWithTrace` for instruction-level VM traces.
+- Added explicit `WebGpuMatrixBackend.destroy()` device cleanup for bounded
+  browser probes.
 
 ### Changed (transparent via dep)
 

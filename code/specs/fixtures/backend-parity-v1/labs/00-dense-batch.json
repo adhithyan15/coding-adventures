@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "dense-backend-parity",
+  "title": "One dense column across CPU, Rust, and accelerator boundaries",
+  "question": "What changes, and what must stay equal, when y = XW + B moves to another backend?",
+  "absolute_tolerance": 0.000001,
+  "graph": {
+    "equation": "y = XW + B",
+    "dtype": "f32",
+    "input_shape": [3, 1],
+    "weight_shape": [1, 1],
+    "bias_shape": [3, 1],
+    "output_shape": [3, 1],
+    "weight": [2],
+    "bias": [1, 1, 1],
+    "matrix_ir_file": "../matrix-ir/00-dense-batch.graph.json"
+  },
+  "scenario": {
+    "id": "three_row_dense",
+    "inputs": [1, 2, 3],
+    "input_payload_file": "../payloads/00-input-x.f32le.hex",
+    "expected_payload_file": "../payloads/00-expected-output.f32le.hex",
+    "expected": {
+      "products": [2, 4, 6],
+      "outputs": [3, 5, 7]
+    }
+  },
+  "lanes": [
+    {
+      "id": "scalar_cpu",
+      "title": "Scalar CPU reference",
+      "runtime": "NN00 bytecode interpreter",
+      "precision": "binary64",
+      "availability": "required",
+      "steps": ["load one x", "multiply by w", "add b", "store one y"],
+      "residency": ["host:x", "host:product", "host:y"],
+      "expected_outputs": [3, 5, 7]
+    },
+    {
+      "id": "typescript_matrix_cpu",
+      "title": "TypeScript matrix CPU",
+      "runtime": "NN01 CANM matrix plan",
+      "precision": "binary64",
+      "availability": "required",
+      "steps": ["load x column", "scale column by w", "broadcast and add b", "store y column"],
+      "residency": ["host:x[3x1]", "host:product[3x1]", "host:y[3x1]"],
+      "expected_outputs": [3, 5, 7]
+    },
+    {
+      "id": "rust_matrix_cpu",
+      "title": "Rust matrix CPU core",
+      "runtime": "MatrixIR JSON -> matrix-rust-napi -> matrix-cpu",
+      "precision": "f32",
+      "availability": "required-in-native-test",
+      "steps": ["decode MatrixIR JSON", "MatMul X by W", "Add broadcast B", "download output bytes"],
+      "residency": ["host:x bytes", "rust:x,W,B buffers", "rust:y buffer", "host:y bytes"],
+      "expected_outputs": [3, 5, 7]
+    },
+    {
+      "id": "webgpu_accelerated",
+      "title": "WebGPU accelerator",
+      "runtime": "NN01 async WebGpuMatrixBackend",
+      "precision": "f32",
+      "availability": "optional-runtime-probe",
+      "steps": ["upload x column", "scale on device", "add bias on device", "download y and value trace"],
+      "residency": ["host:x", "device:x,product,bias,y", "host:output y", "host:trace x,bias,y"],
+      "expected_outputs": [3, 5, 7]
+    }
+  ]
+}
