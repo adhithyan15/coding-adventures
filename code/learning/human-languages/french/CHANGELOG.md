@@ -1,5 +1,18 @@
 # Changelog
 
+## Warning-free 98-page book — 2026-08-03
+
+- Added natural page bottoms for intentionally short micro-lessons and concise
+  optional running titles for six long legacy section headings.
+- Made two Chapter 12 bookmarks prose-only, allowed three internal source paths
+  to break naturally, and gave five dense comparison tables flexible final
+  columns without removing any vocabulary, grammar, or etymology.
+- Reflowed one pronominal-verb explanation into clearer sentence boundaries
+  while preserving its agreement rule and examples.
+- A forced XeLaTeX build now reports zero missing glyphs, overfull or underfull
+  boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings across
+  all 98 pages.
+
 ## Canonical Chapters 17–23 — 2026-08-03
 
 - Migrated the nine lessons in Chapters 17–23 to schema version 2 with typed

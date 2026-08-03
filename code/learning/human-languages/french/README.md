@@ -58,7 +58,9 @@ is assumed: the text supplies every Spanish form in full, as enrichment, so the
 
 **All twenty-three chapters are authored and in the book (98 pages).** Chapters
 17–23 are generated from the same canonical lesson AST and source hashes that
-Language Ladder verifies independently.
+Language Ladder verifies independently. A forced XeLaTeX build is free of
+missing glyphs, layout boxes, duplicate destinations, Hyperref warnings, and
+LaTeX warnings.
 
 ## Files
 
