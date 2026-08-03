@@ -106,11 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `9302e736` after
+working inventory was regenerated on August 2, 2026 from `c840af78` after
 merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PRs
-#9502, #9505, #9506, #9510, #9512, #9514, #9515, and #9516 changed existing
-packages or learning assets without creating another implementation package
-directory.
+#9502, #9505, #9506, #9510, #9512, #9514, #9515, #9516, and #9521 changed
+existing packages or learning assets without creating another implementation
+package directory.
 The inventory contains
 1,218 normalized implementation identities across 4,366 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
@@ -126,7 +126,7 @@ The loop must not start by attempting 10,752 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`9302e73668017a31e38f432c31bbba4f091a56bf` is collision-clean at 1,218
+`c840af78378a1597134694e1008c922f4e355f95` is collision-clean at 1,218
 normalized implementation identities, 4,366 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 768 singletons, 573
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -225,15 +225,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
   is tracked separately from the Python full-scan blocker. Merged PR #9504
   completed the Go operational-oracle child, and the Rust child is next;
-- make the Rust build tool reject resolver self-edges with a stable diagnostic.
-  A real 4,766-package plan reproduced the untouched-main exit-101 panic on
-  `elixir/grammar_tools`; this is tracked separately from UTF-8 decoding;
+- merged PR #9521 makes the Rust build tool reject resolver self-edges with a
+  stable diagnostic and preserves distinct package/program identities for
+  `elixir/grammar_tools`;
 - bring Rust build-tool discovery to the complete canonical language and
-  identity registry. The self-edge repair makes the full plan exit zero and
-  distinguishes package/program basenames, but a follow-up audit found 212
-  remaining duplicate `unknown/*` identities (382 extra discovered entries)
-  because several established and emerging language directories are not yet
-  classified by the Rust front door;
+  identity registry. The active slice classifies every repository bucket,
+  excludes specification fixture trees, and rejects residual duplicate names;
+  its real full plan exits zero with 4,764 entries, 4,764 unique identities,
+  and only the intentional language-neutral `code/sites/blog` package;
 - expose Haskell through the Python build tool's `--language` filter. Haskell
   is already in its resolver and canonical language registry but is missing
   from the native CLI choices;

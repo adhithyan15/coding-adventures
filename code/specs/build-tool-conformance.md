@@ -238,6 +238,22 @@ Required behavior:
   - macOS: `BUILD_mac`, then `BUILD_mac_and_linux`, then canonical `BUILD`;
   - Linux: `BUILD_linux`, then `BUILD_mac_and_linux`, then canonical `BUILD`.
 
+The bucket component immediately below `packages` or `programs` is the sole
+language discriminator; canonical words later in a path do not change the
+language. The canonical discovery registry classifies all established implementation
+lanes (`csharp`, `dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`,
+`lua`, `perl`, `python`, `ruby`, `rust`, `swift`, and `typescript`), emerging
+implementation lanes (`c`, `cpp`, and `ocaml`), the `wasm` execution target,
+the `mosaic` and `twig` domain languages, and the `starlark` build language.
+The repository also retains `dotnet` for programs hosted by the shared .NET
+engine; it is not a separate package-parity denominator. An unrecognized
+component is reported as `unknown` rather than borrowed from a substring.
+
+If two discovered directories still produce one qualified name, discovery
+fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
+package identity and every repository-relative package path in sorted order;
+it must not disclose the checkout root.
+
 The selected canonical `BUILD` may contain legacy shell lines or Starlark.
 Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in
 older migration documents is aspirational. Implementations must not infer

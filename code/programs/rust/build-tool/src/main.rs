@@ -80,8 +80,7 @@ struct Args {
     #[arg(long)]
     jobs: Option<usize>,
 
-    /// Filter to language: python, ruby, go, typescript, rust, elixir, lua,
-    /// perl, swift, java, kotlin, haskell, wasm, csharp, fsharp, dotnet, or all.
+    /// Filter to a canonical discovery language or use all.
     #[arg(long, default_value = "all")]
     language: String,
 
@@ -255,7 +254,13 @@ fn run() -> i32 {
     }
 
     // Step 2: Discover packages.
-    let mut packages = discovery::discover_packages(&code_root);
+    let mut packages = match discovery::discover_packages(&code_root) {
+        Ok(packages) => packages,
+        Err(error) => {
+            eprintln!("{}", error);
+            return 2;
+        }
+    };
     if packages.is_empty() {
         eprintln!("No packages found.");
         return 0;

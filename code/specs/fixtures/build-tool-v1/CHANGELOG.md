@@ -2,6 +2,10 @@
 
 ## 2026-08-02
 
+- Added discovery cases for every canonical language bucket missing from the
+  Rust registry, canonical fixture-tree exclusion, and fail-closed duplicate
+  qualified identities with the stable `DUPLICATE_PACKAGE_IDENTITY`
+  diagnostic.
 - Added Elixir resolution cases that preserve distinct package/program
   identities and reject genuine dependency self-edges with the stable
   `DEPENDENCY_SELF_EDGE` diagnostic.

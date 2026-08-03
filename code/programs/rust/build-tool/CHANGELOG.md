@@ -4,6 +4,19 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.4] - 2026-08-02
+
+### Fixed
+
+- Classify every canonical established, emerging, execution-target, domain,
+  and build-language bucket during discovery while retaining the shared
+  `dotnet` program host bucket, and exclude specification fixture trees from
+  the buildable package universe.
+- Reject duplicate qualified package identities with
+  `DUPLICATE_PACKAGE_IDENTITY`, sorted repository-relative paths, CLI exit code
+  2, and no checkout-path disclosure. Unit and real CLI coverage consume the
+  language-neutral discovery fixtures.
+
 ## [0.2.3] - 2026-08-02
 
 ### Fixed

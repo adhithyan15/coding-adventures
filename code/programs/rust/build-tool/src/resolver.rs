@@ -1077,7 +1077,8 @@ mod tests {
             fs::write(&path, data).unwrap();
         }
 
-        let packages = crate::discovery::discover_packages(&root.join("code"));
+        let packages = crate::discovery::discover_packages(&root.join("code"))
+            .expect("resolution fixture identities must be unique");
         (root, packages)
     }
 

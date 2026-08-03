@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9521,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "9302e73668017a31e38f432c31bbba4f091a56bf",
+    "revision": "c840af78378a1597134694e1008c922f4e355f95",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1218,
@@ -361,20 +361,20 @@
     {
       "id": "build-tool-rust-self-edge-diagnostic",
       "title": "Make the Rust build tool reject self-edges without panicking",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-rust-self-edge-diagnostic",
       "pr_number": 9521,
-      "notes": "Ready PR #9521 opened from collision-clean 9302e736. The implementation defines exact language-neutral Elixir package/program and genuine self-edge fixtures, preserves the programs identity segment, makes library aliases outrank same-basename programs, and returns DEPENDENCY_SELF_EDGE with package, dependency, and repository-relative manifest identity through CLI exit 2 without host paths. Validation passed 138 unit tests plus both real CLI integrations, strict Clippy, release build, 79.33% region and 79.51% line coverage, 17 schema tests, 40 runner tests, the valid 34-case/42-file conformance corpus, a zero-advisory RustSec audit, collision-clean 1,218-identity parity inventory, and a real 4,766-entry full plan that now exits zero and preserves both grammar_tools identities. The known 10-item Lua BUILD_windows debt remains byte-for-byte identical to untouched ca91ca25 after root normalization. A separate pending Rust language-identity-registry item owns the 212 duplicate unknown identities found by the successful full-plan audit."
+      "notes": "Merged PR #9521 at c840af78378a1597134694e1008c922f4e355f95 on 2026-08-02 after all applicable detection, fixture-consumer, CodeQL, Ubuntu, macOS, and Windows checks passed. The implementation defines exact language-neutral Elixir package/program and genuine self-edge fixtures, preserves the programs identity segment, makes library aliases outrank same-basename programs, and returns DEPENDENCY_SELF_EDGE with package, dependency, and repository-relative manifest identity through CLI exit 2 without host paths. Validation passed 138 unit tests plus both real CLI integrations, strict Clippy, release build, 79.33% region and 79.51% line coverage, 17 schema tests, 40 runner tests, the valid 34-case/42-file conformance corpus, a zero-advisory RustSec audit, collision-clean 1,218-identity parity inventory, and a real 4,766-entry full plan that now exits zero and preserves both grammar_tools identities. The known 10-item Lua BUILD_windows debt remains byte-for-byte identical to untouched ca91ca25 after root normalization. The separate Rust language-identity-registry item owns the 212 duplicate unknown identities found by the successful full-plan audit."
     },
     {
       "id": "build-tool-rust-language-identity-registry",
       "title": "Bring Rust build-tool discovery to the canonical language and identity registry",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-rust-self-edge-diagnostic"],
-      "branch": null,
+      "branch": "codex/build-tool-rust-language-identity-registry",
       "pr_number": null,
-      "notes": "Discovered while validating the Rust self-edge slice on ca91ca25. The repaired full plan exits zero and emits 4,766 package entries, but only 4,384 names are unique: 212 duplicate unknown/* identities account for 382 extra entries because the Rust discovery registry omits several established and emerging language directories. Add language-neutral discovery fixtures, classify every supported lane consistently with the canonical registry, and reject any residual duplicate qualified identity with a stable diagnostic. Keep this separate from the Elixir package/program self-edge repair."
+      "notes": "Selected from collision-clean c840af78 after merged PR #9521 satisfied the sole dependency. The implementation adds language-neutral canonical-registry and duplicate-identity discovery fixtures, classifies every established, emerging, execution-target, domain, and build-language bucket plus the shared dotnet program host, skips specification fixture trees, and rejects any residual duplicate qualified name with DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths, CLI exit 2, and no host-path disclosure. Validation passed 140 unit tests plus three real CLI integrations, strict Clippy, release build, 79.38% region and 79.49% line coverage with 94.01% discovery lines, 17 schema tests, 40 runner tests, the valid 36-case/54-file corpus, a zero-advisory RustSec audit, collision-clean 1,218-identity parity inventory, and a real full plan that now exits zero with 4,764 entries, 4,764 unique names, zero duplicates, and only the intentional unknown/blog site package. The known 10-item Lua BUILD_windows debt remains unchanged and separately owned."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
