@@ -60,6 +60,7 @@ fn compile_and_run(cc: &str, module: &semantic_ir::Module, name: &str) -> String
         .arg("-o")
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("spawn C compiler");
     assert!(

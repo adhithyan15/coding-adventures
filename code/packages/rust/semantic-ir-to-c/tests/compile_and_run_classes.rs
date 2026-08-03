@@ -52,6 +52,7 @@ fn run(module: &Module) -> Option<String> {
         .args(["-std=c99", "-Wall", "-Werror=unused-variable", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("spawn cc");
     assert!(

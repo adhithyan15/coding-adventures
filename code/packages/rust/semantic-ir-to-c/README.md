@@ -31,6 +31,13 @@ The included `tests/compile_and_run.rs` compiles and runs every corpus program
 through a real compiler (see below); the design itself is verified against all
 three.
 
+**Linking**: the embedded runtime uses `<math.h>` functions (`floor`/`ceil`/
+`fabs`, backing Numeric methods like `floor`/`ceil`/`round`/`abs`). MSVC and
+Clang/GCC on macOS link these in automatically; **GCC/Clang on Linux need an
+explicit `-lm`** on the compile/link command (glibc ships libm as a separate
+archive) — e.g. `cc -std=c99 -o prog prog.c -lm`. Omitting it produces an
+`undefined reference to 'floor'`-style link error, not a compile error.
+
 ## Usage
 
 ```rust
@@ -208,6 +215,15 @@ golden source), not always byte-for-byte true Ruby; char-set methods
 (`count`/`delete`/`squeeze`), padding methods (`ljust`/`rjust`/`center`), and
 the `*`/`+` String operators are explicitly deferred — see
 `code/specs/sir-collection-methods.md`'s "C backend lane" addendum.
+**Slice 9** (Numeric methods): `abs`, `even?`/`odd?`/`pred` (Integer-only,
+matching true Ruby), `zero?`/`positive?`/`negative?`, `floor`/`ceil`/`round`
+(0-arg form), `divmod` (raises a catchable `ZeroDivisionError` on a zero
+divisor), `fdiv` (never raises — returns `Infinity`/`-Infinity`/`NaN`
+instead), `clamp`/`between?`, `gcd`, `digits` (naturally bounded — no bignum
+DoS cap needed, since this runtime's integer is a fixed `int64_t`), and the
+BLOCK-taking `times`/`upto`/`downto`/`step` (a zero `step` stride is a
+documented no-op, never a hang); `to_i`/`to_f` widen to accept a numeric
+receiver alongside their slice-8 String forms.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

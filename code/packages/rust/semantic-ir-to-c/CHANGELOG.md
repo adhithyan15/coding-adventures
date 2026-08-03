@@ -1,5 +1,147 @@
 # Changelog
 
+## 0.31.0 — Collections slice 9: Numeric methods
+
+### Fixed (CI — Linux link failure)
+
+- **Every emitted C program failed to LINK on Linux** with `undefined
+  reference to 'floor'`/`'ceil'` (confirmed on `ubuntu-latest` CI; macOS and
+  Windows were unaffected). This slice's `floor`/`ceil`/`round`/`abs` are
+  the FIRST `<math.h>` function calls the embedded runtime template makes —
+  and the template is pasted into every generated `.c` file regardless of
+  whether the source program actually calls a Numeric method, so this broke
+  every single test in the crate on Linux, not just this slice's own.
+  glibc ships `libm` as a separate archive from `libc` (unlike macOS's
+  libSystem, which folds it in), so linking requires an explicit `-lm`.
+  Fixed by adding `-lm` to every test file's `cc` invocation (30 call sites
+  across 26 files) and documenting the requirement in the README for real
+  downstream consumers of the generated C.
+
+New `_sir_builtin_method_v` dispatch arms for `Integer`/`Float`: `abs`,
+`even?`/`odd?`/`pred` (Integer-only — true Ruby, unlike the looser dynamic
+typing the Python/TS `sir-runtime-oop` reference uses), `zero?`/`positive?`/
+`negative?`, `floor`/`ceil`/`round` (0-arg form only — the multi-digit
+`round(ndigits)` form is a documented follow-up, deferred the same way
+slice 8 deferred `ljust`/`rjust`/`center`), `divmod`, `fdiv`, `clamp`,
+`between?`, `gcd`, `digits`, and the BLOCK-taking `times`/`upto`/`downto`/
+`step`. `to_i`/`to_f` (previously String-only, slice 8) widen to accept a
+numeric receiver via the existing `_sir_to_i`/`_sir_to_f` conversions.
+
+Three points worth calling out:
+
+- **`digits` needs no bignum-DoS cap**, unlike the Python reference: this
+  runtime's `SirValue` integer is a fixed `int64_t`, never arbitrary
+  precision, so the output is naturally bounded at 19 decimal digits — the
+  reference's bit-length-cap guard has nothing to guard against here.
+- **`divmod` raises a catchable `ZeroDivisionError`** on a zero divisor
+  (the class was already registered in the exception hierarchy for
+  `rescue`, just never raised from a division site) rather than the raw
+  `exit(1)` the primitive `/`/`%` operators still fall back to — a
+  deliberately nicer, more Ruby-faithful failure mode for this new call
+  site, not a regression to those pre-existing operators. `fdiv` by
+  contrast NEVER raises (Ruby's Float division doesn't), returning
+  `Infinity`/`-Infinity`/`NaN` instead, matching the reference.
+- **`step` with a zero stride is a documented no-op**, not a hang: a zero
+  stride never crosses `limit` in a naive loop, so it is special-cased to
+  zero iterations up front — the same DoS-safety floor slice 8's empty-
+  pattern `sub`/`gsub` guard holds for string scanning.
+
+### Security (found and fixed by the pre-push review, before ever merging)
+
+- **`gcd`/`digits` negated a possibly-`INT64_MIN` value with a bare unary
+  `-`.** `-INT64_MIN` is signed-overflow UB (no positive `int64_t` can hold
+  its magnitude, 2^63) — verified to actually misbehave: the same code gave
+  `gcd(INT64_MIN, 6) == -2` at `-O0` but `== 2` at `-O1`/`-O2`/`-Os`, and
+  under one configuration the UB got compiled into a hardware trap
+  (`SIGTRAP`) instead of returning at all. Fixed with a new
+  `_sir_i64_abs_u` helper that computes the magnitude in `uint64_t` (whose
+  well-defined wraparound covers `INT64_MIN` correctly), mirroring the
+  `_sir_itdiv`/`_sir_itmod` `INT64_MIN`/`-1` guard this file already uses
+  for the analogous hazard on `/`/`%`.
+- **`floor`/`ceil`/`round` cast a `double` to `int64_t` with no range/NaN
+  guard.** A `(int64_t)` cast on a non-finite or out-of-int64-range double
+  is UB — verified platform-dependent (this machine's arm64 saturates;
+  x86's `cvttsd2si` yields a different "integer indefinite" value for the
+  same input). Fixed with `_sir_f64_to_i64_saturating`, which clamps to
+  `INT64_MAX`/`INT64_MIN`/`0` before the cast, matching this runtime's
+  other numeric conversions' never-raise floor (e.g. `_sir_mask_to`).
+
+A second review round on the fixes above surfaced three MORE overflow bugs
+in the same neighborhood (all fixed before merge, none ever reached `main`):
+
+- **`gcd`'s own fix had a narrowing-overflow gap**: `0.gcd(x) == x.abs` in
+  Ruby, and `|INT64_MIN|` is exactly `2^63` — one past `INT64_MAX`
+  (`2^63-1`). Casting that magnitude back to `int64_t` silently wrapped to
+  `INT64_MIN`. Since this runtime has no bignum to hold the true value, it
+  now saturates to `INT64_MAX` instead — the same "true value doesn't fit,
+  clamp rather than wrap" convention `_sir_f64_to_i64_saturating` uses.
+- **`divmod` had TWO distinct overflow paths**, not the one round 1 fixed
+  for `floor`/`ceil`/`round`: (1) `INT64_MIN / -1` is itself signed-overflow
+  UB in C (the pre-existing `_sir_ifloordiv` this called into has no guard
+  for it, unlike its siblings `_sir_itdiv`/`_sir_itmod`) — special-cased,
+  since dividing by `-1` always divides evenly; (2) computing the floored
+  remainder via `a - q * b` re-invites overflow through the back door even
+  when the division itself is fine — `INT64_MIN.divmod(3)` floors to
+  `q = -3074457345618258603`, and `q * b` ALONE overflows `int64_t` by 1,
+  even though the true remainder (`1`) fits trivially. Fixed by adjusting
+  the TRUNCATING remainder (`a % b`, then `+ b` if the sign needs fixing)
+  directly instead of ever multiplying `q * b`.
+- **`upto`/`downto`/`step` could increment their loop counter past int64
+  range** on the LAST iteration, before the loop's own continuation check
+  had a chance to stop it — e.g. `i++` in `for (; i <= n; i++)` is UB the
+  instant `i == INT64_MAX` (`upto`) or `i == INT64_MIN` (`downto`), and
+  `INT64_MAX.upto(INT64_MAX) { ... }` is exactly the one-iteration case that
+  hits it. Fixed by applying the block FIRST, then checking "was that the
+  boundary value" and breaking BEFORE ever advancing past it (`upto`/
+  `downto`), and by checking `v + stride` for overflow before performing it
+  in `step` (stopping the iteration there instead — there is no next
+  in-range value to visit anyway).
+
+A THIRD review round, prompted by round 2's finding that the SAME "bare
+negation"/"bare float cast" patterns kept recurring, swept for every
+remaining instance and found two more call sites that had gone unfixed
+purely because earlier rounds fixed the pattern where they happened to be
+looking, not everywhere the pattern appeared:
+
+- **`abs`/`pred` had the identical `-INT64_MIN`/`INT64_MIN - 1` overflow**
+  `gcd`/`digits`/`divmod` were already fixed for. `abs(INT64_MIN)` used to
+  return a NEGATIVE number (the wrapped result of the UB negation); `pred`
+  used to wrap to `INT64_MAX`, the opposite end of the range. Both now
+  saturate (via the existing `_sir_i64_abs_u` for `abs`, an explicit
+  boundary check for `pred`) instead of wrapping.
+- **Widening `to_i` to accept a numeric receiver routed a Float through
+  the pre-existing generic `_sir_to_i`**, whose cast is the identical UB
+  `floor`/`ceil`/`round` were fixed for in round 1 — just not swept to this
+  new call site. Now routes a Float receiver through
+  `_sir_f64_to_i64_saturating` directly instead.
+
+### Added
+
+- `tests/compile_and_run_numeric_methods.rs` — 27 execution-proof tests
+  (real `cc` compile+run): every new method, `divmod`'s catchable
+  `ZeroDivisionError`, `fdiv`'s never-raises floor, the zero-stride `step`
+  termination guard, and regressions for all seven overflow fixes above
+  (`gcd`/`digits` on a runtime-constructed `INT64_MIN`, `floor`/`ceil`/
+  `round` on `Infinity`/`-Infinity`/`NaN`/a huge finite float, `divmod` by
+  `-1` and by `3` on `INT64_MIN`, `gcd` with a zero operand, `upto`/`downto`
+  at the exact int64 boundary, `step` where the stride would cross
+  `INT64_MAX`, `abs`/`pred` on `INT64_MIN`, `to_i` on `Infinity`/
+  `-Infinity`/`NaN`). All seven were caught and fixed pre-merge across
+  three security review rounds — none ever reached `main`.
+- `collection_numeric_slice9_methods_route_to_the_builtin_dispatcher` — an
+  emit-shape test mirroring the String/Array/Hash slices' dispatcher-routing
+  tests.
+
+### Notes
+
+- Discovered (not fixed here, tracked separately): `puts (-5).abs` — a
+  paren-less command call whose argument is a space-separated parenthesized
+  expression immediately followed by a dot-chain — mis-parses as `puts(-5)`
+  plus a dangling `.abs` that raises `NoMethodError`, instead of one
+  statement. `puts((-5).abs)` (explicit call parens) sidesteps it and is
+  used throughout the new tests. Same family as the already-fixed
+  bare-comparison-statement and bracket-index frontend bugs.
+
 ## 0.30.0 — Collections slice 8: remaining String methods
 
 New `_sir_builtin_method_v` dispatch arms (all guarded on `recv.tag ==

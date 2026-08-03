@@ -2423,6 +2423,258 @@ static char *_sir_str_tr(const char *s, const char *from, const char *to) {
     return out;
 }
 
+/* ---- Collections slice 9: Numeric methods ------------------------------------
+ *
+ * `Integer`/`Float` methods. Semantics matched against the Python/TS
+ * `sir-runtime-oop` reference catalog, with one deliberate divergence: this
+ * runtime's `SirValue` int is a fixed `int64_t` (never arbitrary precision),
+ * so `digits` needs none of the reference's bignum-DoS bit-length cap — an
+ * int64 magnitude produces at most 19 decimal digits, an already-bounded
+ * output. `even?`/`odd?`/`pred` are gated to `SIR_INT` only (true Ruby: these
+ * are `Integer`-only methods, unlike the reference's looser dynamic-typing
+ * convention) — a `Float` receiver falls through to `NoMethodError`, matching
+ * this backend's existing typed-dispatch discipline (e.g. `upcase` is
+ * `SIR_STR`-only). `floor`/`ceil`/`round` take no `ndigits` argument in this
+ * slice (the 0-arg form only); the multi-digit rounding form is a documented
+ * follow-up, deferred for the same "keep the slice reviewable" reason slice
+ * 8 deferred `ljust`/`rjust`/`center`. */
+
+/* A `double`-to-`int64_t` cast is UB (platform-dependent -- e.g. saturates
+ * on arm64, gives INT64_MIN "integer indefinite" on x86) once the value is
+ * non-finite or outside int64 range. `floor`/`ceil`/`round` on a hostile
+ * huge/inf/nan Float must not depend on which CPU the C got compiled for,
+ * so every cast below goes through this guard first: out-of-range/non-finite
+ * saturates to INT64_MAX/INT64_MIN (never-raise floor, matching this
+ * runtime's other numeric conversions, e.g. `_sir_mask_to`/`_sir_convert`
+ * never trap either). */
+static int64_t _sir_f64_to_i64_saturating(double f) {
+    if (!(f == f)) return 0;                 /* NaN -> 0 */
+    if (f >= 9223372036854775807.0) return INT64_MAX;
+    if (f < -9223372036854775808.0) return INT64_MIN;
+    return (int64_t)f;
+}
+
+static SirValue _sir_num_floor(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) return _sir_int(_sir_f64_to_i64_saturating(floor(v.as.f)));
+    return v;
+}
+static SirValue _sir_num_ceil(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) return _sir_int(_sir_f64_to_i64_saturating(ceil(v.as.f)));
+    return v;
+}
+/* Round-half-AWAY-from-zero (Ruby's rule; unlike Python's banker's rounding,
+ * already the convention this runtime's `sir-runtime-oop` reference uses). */
+static SirValue _sir_num_round(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) {
+        double f = v.as.f;
+        double r = (f >= 0.0) ? floor(f + 0.5) : ceil(f - 0.5);
+        return _sir_int(_sir_f64_to_i64_saturating(r));
+    }
+    return v;
+}
+
+/* `divmod(divisor)` -- `[quotient, remainder]`, quotient FLOORED (via the
+ * existing `_sir_ifloordiv`, the SAME floor-division `/` uses), remainder
+ * takes the DIVISOR's sign. A zero divisor raises a catchable
+ * `ZeroDivisionError` (the class is already registered in the exception
+ * hierarchy for `rescue`) rather than the raw `exit(1)` the primitive `/`
+ * operator falls back to -- this is a NICER, more Ruby-faithful failure
+ * mode, not a regression: nothing upstream of this new dispatch arm relied
+ * on the exit-on-zero behavior. */
+static SirValue _sir_num_divmod(SirValue recv, SirValue divisor) {
+    if (recv.tag == SIR_INT && divisor.tag == SIR_INT) {
+        int64_t a = recv.as.i, b = divisor.as.i;
+        int64_t q, r;
+        if (b == 0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        /* Two DISTINCT overflow hazards, both avoided below rather than
+           computed and patched up:
+           (1) `a / b` / `a % b` (C's own operators, which `_sir_ifloordiv`
+               used verbatim) are signed-overflow UB for `a == INT64_MIN,
+               b == -1` -- so that ONE combination is special-cased first:
+               it divides evenly (remainder always 0), so the quotient is
+               just `-a`, saturated to `INT64_MIN` for the single input
+               (`a == INT64_MIN`) where `-a` itself would overflow --
+               mirroring the wraparound convention `_sir_itdiv` already uses
+               for this exact pair.
+           (2) For every OTHER `b`, computing the floored remainder via
+               `a - q * b` (an earlier version of this function) re-invites
+               overflow through the BACK door: e.g. `a = INT64_MIN, b = 3`
+               floors to `q = -3074457345618258603`, and `q * b` alone
+               overflows `int64_t` by 1 computing an intermediate product
+               that the FINAL remainder (1) never needed. Adjusting the
+               truncating remainder directly (`tr + b`, bounded in
+               magnitude by `b` and hence always in range) instead of
+               multiplying sidesteps this -- the standard truncating-to-
+               floored conversion, done without a multiply. */
+        if (b == -1) {
+            q = (a == INT64_MIN) ? INT64_MIN : -a;
+            return _sir_seq_lit(2, _sir_int(q), _sir_int(0));
+        }
+        {
+            int64_t tq = a / b, tr = a % b;
+            if (tr != 0 && ((tr < 0) != (b < 0))) { q = tq - 1; r = tr + b; }
+            else { q = tq; r = tr; }
+        }
+        return _sir_seq_lit(2, _sir_int(q), _sir_int(r));
+    }
+    {
+        double a = _sir_as_num(recv), b = _sir_as_num(divisor);
+        double q, r;
+        if (b == 0.0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        q = floor(a / b);
+        r = a - q * b;
+        return _sir_seq_lit(2, _sir_float(q), _sir_float(r));
+    }
+}
+
+/* `fdiv(other)` -- floating-point division; UNLIKE `/`/`divmod` this never
+ * raises: a zero divisor yields Infinity/-Infinity/NaN (Ruby's Float
+ * division never raises), matching the reference's never-raise-on-Float
+ * floor. */
+static SirValue _sir_num_fdiv(SirValue recv, SirValue divisor) {
+    double a = _sir_as_num(recv), b = _sir_as_num(divisor);
+    if (b == 0.0) {
+        if (a == 0.0) return _sir_float(0.0 / 0.0); /* NaN */
+        return _sir_float(a > 0.0 ? (1.0 / 0.0) : (-1.0 / 0.0)); /* +-Infinity */
+    }
+    return _sir_float(a / b);
+}
+
+/* `-INT64_MIN` is signed-overflow UB (its magnitude, 2^63, has no positive
+ * `int64_t` representation) -- confirmed to actually misbehave under
+ * optimization (wrong answers, and in one configuration a hardware trap) on
+ * this project's own toolchain, not just a theoretical hazard. Every caller
+ * that needs "the magnitude of a possibly-INT64_MIN value" goes through this
+ * helper instead of a bare unary `-`, computing it in `uint64_t` (well-
+ * defined two's-complement wraparound covers the full range including
+ * `INT64_MIN`'s magnitude, which does not fit back in an `int64_t`). */
+static uint64_t _sir_i64_abs_u(int64_t n) {
+    return (n < 0) ? (uint64_t)0 - (uint64_t)n : (uint64_t)n;
+}
+
+static SirValue _sir_num_gcd(SirValue recv, SirValue other) {
+    uint64_t a = _sir_i64_abs_u(_sir_as_int(recv));
+    uint64_t b = _sir_i64_abs_u(_sir_as_int(other));
+    while (b != 0) { uint64_t t = b; b = a % b; a = t; }
+    /* `a` is the gcd's magnitude, bounded by `min(|recv|,|other|)` when
+       NEITHER is 0, but by `max(|recv|,|other|)` when one IS 0 (Ruby:
+       `0.gcd(x) == x.abs`) -- and `|INT64_MIN|` is exactly `2^63`, one past
+       `INT64_MAX` (`2^63-1`). A bare `(int64_t)a` narrowing there is an
+       out-of-range conversion (confirmed to silently wrap to `INT64_MIN` in
+       practice) -- e.g. `0.gcd(INT64_MIN)`. Since this runtime has no
+       bignum to hold the true value, this saturates to `INT64_MAX` instead,
+       the same never-raise-by-saturating convention `_sir_f64_to_i64_
+       saturating` uses just above for the analogous "true value doesn't
+       fit" case. */
+    return _sir_int(a > (uint64_t)INT64_MAX ? INT64_MAX : (int64_t)a);
+}
+
+/* `digits` -- base-10 digits, LEAST-significant first (`123.digits ==
+ * [3, 2, 1]`). Bounded by construction: an `int64_t` magnitude has at most
+ * 19 decimal digits, so no separate DoS cap is needed (unlike the Python
+ * reference's arbitrary-precision receiver). `0.digits == [0]`. */
+static SirValue _sir_num_digits(SirValue recv) {
+    uint64_t n = _sir_i64_abs_u(_sir_as_int(recv));
+    SirValue buf[20];
+    int64_t k = 0;
+    SirSeq *r;
+    if (n == 0) buf[k++] = _sir_int(0);
+    while (n > 0) { buf[k++] = _sir_int((int64_t)(n % 10)); n /= 10; }
+    r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)k);
+    memcpy(r->items, buf, sizeof(SirValue) * (size_t)k);
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+
+/* `times { |i| .. }` / `upto(n) { |i| .. }` / `downto(n) { |i| .. }` --
+ * Integer-only block iteration; each returns the (unchanged) receiver,
+ * matching `Array#each`'s return-the-receiver convention. Bounded by the
+ * receiver/argument's own int64 magnitude -- no separate iteration cap
+ * needed (a hostile huge count just runs a long time, the same cost profile
+ * `ForRange`/`Array#each` already have for a huge input). */
+static SirValue _sir_num_times(SirValue recv, SirValue block) {
+    int64_t n = _sir_as_int(recv);
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, _sir_int(i));
+    return recv;
+}
+/* `i++`/`i--` in a `for (; i <= n; i++)`-shaped loop is signed-overflow UB
+ * the moment `i == INT64_MAX` (`upto`) or `i == INT64_MIN` (`downto`) --
+ * reachable from plain Ruby source (`INT64_MAX.upto(INT64_MAX) { |i| .. }`
+ * is one iteration whose loop-continuation test would still increment past
+ * the top). Both loops below instead apply the block FIRST, then check for
+ * "was that the last (boundary) value" and `break` BEFORE ever advancing
+ * past it -- so the increment/decrement is only ever reached when doing so
+ * is safe. */
+static SirValue _sir_num_upto(SirValue recv, SirValue limit, SirValue block) {
+    int64_t i = _sir_as_int(recv), n = _sir_as_int(limit);
+    if (i > n) return recv;
+    for (;;) {
+        _sir_apply(block, 1, _sir_int(i));
+        if (i == n) break;
+        i++;
+    }
+    return recv;
+}
+static SirValue _sir_num_downto(SirValue recv, SirValue limit, SirValue block) {
+    int64_t i = _sir_as_int(recv), n = _sir_as_int(limit);
+    if (i < n) return recv;
+    for (;;) {
+        _sir_apply(block, 1, _sir_int(i));
+        if (i == n) break;
+        i--;
+    }
+    return recv;
+}
+/* `v + st` would be signed-overflow UB if it crossed int64 range -- checked
+ * BEFORE performing the addition (computing it first and inspecting the
+ * result would already be the UB), so this is safe to call unconditionally. */
+static int _sir_i64_add_overflows(int64_t a, int64_t b) {
+    return (b >= 0) ? (a > INT64_MAX - b) : (a < INT64_MIN - b);
+}
+/* `step(limit, stride = 1) { |i| .. }` -- a stride of 0 would loop forever
+ * (never crosses `limit`), so it is a documented no-op (zero iterations)
+ * rather than a hang, the same DoS-safety floor `sub`/`gsub`'s empty-pattern
+ * guard holds for string scanning. A stride that would carry `v` past
+ * int64 range (e.g. a huge stride near `INT64_MAX`) stops the iteration
+ * there instead of overflowing -- there is no next in-range value to visit
+ * anyway. Promotes to float stepping if EITHER the receiver or the stride
+ * is a Float (matches Ruby: `1.step(2, 0.5)` yields floats), otherwise
+ * stays in exact int64 arithmetic. */
+static SirValue _sir_num_step(SirValue recv, SirValue limit, SirValue stride, SirValue block) {
+    int use_float = (recv.tag == SIR_FLOAT || stride.tag == SIR_FLOAT || limit.tag == SIR_FLOAT);
+    if (use_float) {
+        double v = _sir_as_num(recv), lim = _sir_as_num(limit), st = _sir_as_num(stride);
+        if (st == 0.0) return recv;
+        if (st > 0.0) { for (; v <= lim; v += st) _sir_apply(block, 1, _sir_float(v)); }
+        else          { for (; v >= lim; v += st) _sir_apply(block, 1, _sir_float(v)); }
+    } else {
+        int64_t v = _sir_as_int(recv), lim = _sir_as_int(limit), st = _sir_as_int(stride);
+        if (st == 0) return recv;
+        if (st > 0) {
+            for (; v <= lim; ) {
+                _sir_apply(block, 1, _sir_int(v));
+                if (_sir_i64_add_overflows(v, st)) break;
+                v += st;
+            }
+        } else {
+            for (; v >= lim; ) {
+                _sir_apply(block, 1, _sir_int(v));
+                if (_sir_i64_add_overflows(v, st)) break;
+                v += st;
+            }
+        }
+    }
+    return recv;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -2691,13 +2943,93 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             return _sir_str(_sir_str_replace_n(recv.as.s, args[0].as.s, args[1].as.s, -1));
     } else if (strcmp(m, "to_i") == 0) {
         if (recv.tag == SIR_STR) return _sir_int(_sir_str_to_i(recv.as.s));
+        /* A Float receiver must NOT reach the generic `_sir_to_i` here: it
+           bottoms out in a bare `(int64_t)v.as.f` cast (`_sir_as_int`,
+           pre-existing, used by many unrelated call sites this PR does not
+           touch), UB for a non-finite or out-of-int64-range Float -- the
+           SAME hazard `floor`/`ceil`/`round` already guard against just
+           below. Routed through the same saturating helper instead. */
+        if (recv.tag == SIR_FLOAT) return _sir_int(_sir_f64_to_i64_saturating(recv.as.f));
+        if (recv.tag == SIR_INT) return _sir_to_i(recv);
     } else if (strcmp(m, "to_f") == 0) {
         if (recv.tag == SIR_STR) return _sir_float(_sir_str_to_f(recv.as.s));
+        if (_sir_is_num(recv)) return _sir_to_f(recv);
     } else if (strcmp(m, "to_sym") == 0) {
         if (recv.tag == SIR_STR) return _sir_sym(recv.as.s);
     } else if (strcmp(m, "tr") == 0) {
         if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
             return _sir_str(_sir_str_tr(recv.as.s, args[0].as.s, args[1].as.s));
+    }
+    /* Collections slice 9: Numeric methods. */
+    else if (strcmp(m, "abs") == 0) {
+        /* Same `-INT64_MIN` hazard `_sir_i64_abs_u`'s doc comment describes
+           (confirmed to misbehave under optimization) -- reused here rather
+           than a bare unary `-`, saturating to INT64_MAX for the one input
+           whose true magnitude (2^63) doesn't fit (this runtime has no
+           bignum), matching `gcd`'s convention for the same situation. */
+        if (recv.tag == SIR_INT) {
+            uint64_t u = _sir_i64_abs_u(recv.as.i);
+            return _sir_int(u > (uint64_t)INT64_MAX ? INT64_MAX : (int64_t)u);
+        }
+        if (recv.tag == SIR_FLOAT) return _sir_float(fabs(recv.as.f));
+    } else if (strcmp(m, "even?") == 0) {
+        if (recv.tag == SIR_INT) return _sir_bool(recv.as.i % 2 == 0);
+    } else if (strcmp(m, "odd?") == 0) {
+        if (recv.tag == SIR_INT) return _sir_bool(recv.as.i % 2 != 0);
+    } else if (strcmp(m, "zero?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) == 0.0);
+    } else if (strcmp(m, "positive?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) > 0.0);
+    } else if (strcmp(m, "negative?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) < 0.0);
+    } else if (strcmp(m, "pred") == 0) {
+        /* `INT64_MIN - 1` is signed-overflow UB (confirmed to wrap to
+           INT64_MAX in practice, the opposite end of the range) -- there is
+           no smaller representable Integer, so this saturates at the floor
+           rather than wrapping, the same never-raise convention every other
+           fix in this slice uses. */
+        if (recv.tag == SIR_INT) return _sir_int(recv.as.i == INT64_MIN ? INT64_MIN : recv.as.i - 1);
+    } else if (strcmp(m, "floor") == 0) {
+        if (_sir_is_num(recv)) return _sir_num_floor(recv);
+    } else if (strcmp(m, "ceil") == 0) {
+        if (_sir_is_num(recv)) return _sir_num_ceil(recv);
+    } else if (strcmp(m, "round") == 0) {
+        if (_sir_is_num(recv) && argc == 0) return _sir_num_round(recv);
+    } else if (strcmp(m, "divmod") == 0) {
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_divmod(recv, args[0]);
+    } else if (strcmp(m, "fdiv") == 0) {
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_fdiv(recv, args[0]);
+    } else if (strcmp(m, "clamp") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && _sir_is_num(args[1])) {
+            if (_sir_truthy(_sir_lt(recv, args[0]))) return args[0];
+            if (_sir_truthy(_sir_gt(recv, args[1]))) return args[1];
+            return recv;
+        }
+    } else if (strcmp(m, "between?") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && _sir_is_num(args[1]))
+            return _sir_bool(_sir_truthy(_sir_ge(recv, args[0])) && _sir_truthy(_sir_le(recv, args[1])));
+    } else if (strcmp(m, "gcd") == 0) {
+        if (recv.tag == SIR_INT && argc == 1 && args[0].tag == SIR_INT)
+            return _sir_num_gcd(recv, args[0]);
+    } else if (strcmp(m, "digits") == 0) {
+        if (recv.tag == SIR_INT) return _sir_num_digits(recv);
+    } else if (strcmp(m, "times") == 0) {
+        if (recv.tag == SIR_INT && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_num_times(recv, args[0]);
+    } else if (strcmp(m, "upto") == 0) {
+        if (recv.tag == SIR_INT && argc == 2 && args[0].tag == SIR_INT && args[1].tag == SIR_CLOSURE)
+            return _sir_num_upto(recv, args[0], args[1]);
+    } else if (strcmp(m, "downto") == 0) {
+        if (recv.tag == SIR_INT && argc == 2 && args[0].tag == SIR_INT && args[1].tag == SIR_CLOSURE)
+            return _sir_num_downto(recv, args[0], args[1]);
+    } else if (strcmp(m, "step") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && args[1].tag == SIR_CLOSURE)
+            return _sir_num_step(recv, args[0], _sir_int(1), args[1]);
+        if (_sir_is_num(recv) && argc == 3 && _sir_is_num(args[0]) && _sir_is_num(args[1])
+            && args[2].tag == SIR_CLOSURE)
+            return _sir_num_step(recv, args[0], args[1], args[2]);
     }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));
