@@ -6721,7 +6721,12 @@ impl HtmlParser {
                 || self.current_namespace() == Some("svg")
                 || (self.current_namespace() == Some("math") && name == "p"))
         {
-            if self.current_namespace() == Some("math") && name == "p" {
+            if is_table_context_element(name) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-table-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` forced table recovery from foreign content"),
+                ));
+            } else if self.current_namespace() == Some("math") && name == "p" {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag-in-foreign-content",
                     "end tag `</p>` in MathML foreign content forced HTML recovery",
@@ -33431,6 +33436,34 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag-in-foreign-content"));
+    }
+
+    #[test]
+    fn reports_table_end_tags_that_break_out_of_foreign_content() {
+        for source in [
+            "<!doctype html><table><caption><svg><g>x</table>",
+            "<!doctype html><table><caption><math><mrow>x</table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-table-end-tag-in-foreign-content",
+                            "end tag `</table>` forced table recovery from foreign content",
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let closed_foreign = parse_html_with_diagnostics(
+            "<!doctype html><table><caption><svg></svg></caption></table>",
+        )
+        .unwrap();
+        assert!(closed_foreign.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+        }));
     }
 
     #[test]
