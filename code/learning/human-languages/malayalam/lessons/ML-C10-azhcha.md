@@ -9,7 +9,7 @@ prerequisites: [ML-C09-kshamikkanam]
 sounds: [malayalam-zha, malayalam-nya]
 roots: [dravidian-native-planet-words, sanskrit-planet-words]
 etymology_hook: "Malayalam's week-word ആഴ്ച āzhcha and several planet-names (thiṅkaḷ, veḷḷi, ñāyar) are near-identical to Tamil's — the two split apart only centuries ago"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C09-kshamikkanam]
 ---
 

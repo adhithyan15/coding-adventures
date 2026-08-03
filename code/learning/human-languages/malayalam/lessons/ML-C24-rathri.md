@@ -3,17 +3,17 @@ id: ML-C24-rathri
 chapter: 24
 type: word
 headword: രാത്രി
-gloss: "night" — the same Sanskrit tatsama word already hiding (shortened) inside pāthirā, "midnight"; native competitors exist too, but split into two different words with two different jobs, neither of them a plain synonym
+gloss: "night" — the Sanskrit tatsama already shortened inside paathira, with a different PIE root from Latin nox
 concept_tag: TIME-NIGHT
-prerequisites: [ML-C17-ucha-paathira, ML-C23-divasam]
+prerequisites: [ML-C17-paathira, ML-C23-naal]
 sounds: [malayalam-virama-ta, malayalam-vowel-sign-i]
-roots: [sanskrit-ratri, proto-dravidian-cira-darkness, proto-dravidian-cirvl]
-etymology_hook: "രാത്രി (rāthri, 'night') is a Sanskrit tatsama, likely the same word already hiding, shortened to just 'rā,' inside പാതിരാ (pāthirā, 'midnight,' Chapter 17); like Hindi's രാത്/raat, this രാത്രി traces to PIE *h₁reh₁- ('to rest'), a COMPLETELY DIFFERENT root from Latin nox's *nókʷts — a genuine false cognate, not a shared-family word; Malayalam also keeps two native words, but they split the job rather than competing head-on: ഇരവ് (iravŭ, cognate Tamil இரவு/iravu, traced by one source to Proto-Dravidian *cira, 'darkness') survives mainly as a literary/classical synonym for 'night' itself, while ഇരുൾ (iruḷ, Proto-Dravidian *cirVḷ, cognate Kannada's ಇರುಳು/Tamil's இருள்/Telugu's ఇరులు, already cited in the Kannada sibling of this arc) is still current in modern Malayalam (a 2021 film is literally titled Irul) but means specifically 'darkness,' not 'night' as a time period"
-est_minutes: 6
-reviews_of: [ML-C17-ucha-paathira, ML-C23-divasam]
+roots: [sanskrit-ratri]
+etymology_hook: "rāthri is the Sanskrit night-word shortened inside paathira; its PIE rest root differs from Latin nox"
+est_minutes: 4
+reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira, ML-C23-naal, ML-C23-divasam]
 ---
 
-# രാത്രി (rāthri) — "night," already hiding inside "midnight"
+# രാത്രി (rāthri) — night, already hiding inside midnight
 
 ## Warm-up
 
@@ -41,37 +41,12 @@ Two Indo-European languages, two words for "night," that **look** like they
 might be old cousins — but genuinely **aren't**. Same false-cognate story,
 now confirmed across a second Indo-Aryan-rooted borrowing.
 
-## Two native words, two different jobs — not one clean synonym
-
-Malayalam keeps native Dravidian words here too, but be honest: they
-**split the work**, rather than one cleanly standing in for *rāthri*.
-
-- **ഇരവ്** (**iravŭ**) — cognate with Tamil's **இரவு** (*iravu*), traced by
-  at least one source to **Proto-Dravidian** ***\*cira*** ("darkness") —
-  survives today mainly as a **literary, classical-register** synonym for
-  "night" itself. You'd meet it in poetry before you'd hear it in
-  conversation.
-- **ഇരുൾ** (**iruḷ**) — Proto-Dravidian ***\*cirVḷ***, the very same
-  pan-Dravidian cognate already named in this arc's Kannada lesson
-  (matching Kannada's **ಇರುಳು**, Tamil's **இருள்**, Telugu's **ఇరులు**) —
-  is still genuinely **current** in modern Malayalam (a 2021 film is
-  titled, simply, *Irul*). But its everyday sense is specifically
-  "**darkness**," not "night" as a stretch of time — a close cousin of the
-  idea, not a plain interchangeable word for it.
-
-So it's not "one native night-word, simply pushed into archaism" the way
-Kannada's *iruḷu* was. It's **two different native words**, each carrying
-only part of *rāthri*'s job — one gone formal/poetic, one still common but
-narrower in meaning.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "rāthri" — "night," already hiding, shortened, inside pāthirā]
 - [YOU SAY: the honest PIE echo — *h₁reh₁-, "to rest," like Hindi's raat,
   NOT related to Latin's nox]
-- [YOU SAY: "iravŭ" (literary "night") vs. "iruḷ" (everyday "darkness") —
-  two native words, two different jobs]
 
 ## Wrap-up Recall
 
@@ -79,7 +54,4 @@ narrower in meaning.
 before this lesson? (Shortened to "**rā**" inside **പാതിരാ**, *pāthirā*,
 "midnight," Chapter 17.) Does *rāthri*'s PIE root match Latin *nox*'s?
 (**No** — ***\*h₁reh₁-*** "to rest," a completely different root, the same
-false-cognate pattern already seen with Hindi's *raat*.) Do Malayalam's two
-native words, *iravŭ* and *iruḷ*, mean the same thing? (**No** — *iravŭ* is
-a literary synonym for "night" itself; *iruḷ* is still common but means
-specifically "darkness.")
+false-cognate pattern already seen with Hindi's *raat*.)

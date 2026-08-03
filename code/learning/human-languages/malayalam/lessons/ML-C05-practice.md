@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [ML-C05-samsaarikkuka, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C05-taamasikkuka, ML-C05-joli-ceyyuka]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C05-samsaarikkuka, ML-C05-njaan-malayalam-samsaarikkunnu, ML-C05-taamasikkuka, ML-C05-joli-ceyyuka, ML-C03-njaan]
 ---
 

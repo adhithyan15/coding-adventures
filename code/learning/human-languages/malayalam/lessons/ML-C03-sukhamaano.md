@@ -8,7 +8,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [ML-C02-aanu, ML-C03-engane]
 sounds: [question-o]
 roots: [sukha-sanskrit, aaka-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C02-aanu]
 ---
 

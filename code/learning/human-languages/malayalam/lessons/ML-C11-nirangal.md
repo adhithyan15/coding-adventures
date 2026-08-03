@@ -9,7 +9,7 @@ prerequisites: [ML-C10-azhcha]
 sounds: [malayalam-virama-final, malayalam-cha]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "കറുപ്പ്/വെള്ള/ചുവപ്പ് (black/white/red) closely match Tamil's karuppu/vellai/sivappu; നീല (blue) is the same Sanskrit loan as Tamil's nilam"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C10-azhcha]
 ---
 

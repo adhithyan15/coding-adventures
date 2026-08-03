@@ -8,7 +8,7 @@ concept_tag: ML-WORD-MALAYALAM
 prerequisites: [ML-C05-samsaarikkuka, ML-C03-njaan]
 sounds: [retroflex-l, long-aa]
 roots: [mala-mountain-dravidian, alam-place-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C05-samsaarikkuka, ML-C03-njaan]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: ML-VERB-CEYYUKA
 prerequisites: [ML-C05-samsaarikkuka]
 sounds: [double-yy]
 roots: [cey-do-dravidian, joli-work]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C05-samsaarikkuka, ML-C05-taamasikkuka]
 ---
 

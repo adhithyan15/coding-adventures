@@ -9,7 +9,7 @@ prerequisites: [ML-C15-vellam-ari]
 sounds: [malayalam-anusvara, malayalam-chillu-rr]
 roots: [malayalam-solar-calendar-zodiac, kollam-era]
 etymology_hook: "Malayalam's Kollam Era calendar is ALSO solar, like Tamil's — but its months are named for the ZODIAC SIGN the sun occupies (Chingam = Leo, Kanni = Virgo...), not nakshatras — a genuinely different naming logic from its closest cousin"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C15-vellam-ari]
 ---
 

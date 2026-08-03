@@ -9,7 +9,7 @@ prerequisites: [ML-C13-shareera-bhaagangal]
 sounds: [malayalam-chillu-l, malayalam-anusvara]
 roots: [dravidian-venal-mazha, sanskrit-vasantha]
 etymology_hook: "വേനൽ venal (summer heat) and മഴ mazha (rain) are native Dravidian, matching Tamil's kodai/mazhai closely — വസന്തം vasantham (spring) is the same Sanskrit loan Tamil uses too"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C13-shareera-bhaagangal]
 ---
 

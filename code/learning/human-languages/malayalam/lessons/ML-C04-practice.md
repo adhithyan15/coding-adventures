@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-veendum-kaanaam]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C04-pokuka, ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-veendum-kaanaam]
 ---
 

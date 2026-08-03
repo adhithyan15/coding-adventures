@@ -9,7 +9,7 @@ prerequisites: [ML-C18-mani]
 sounds: [malayalam-chillu-l, malayalam-existential-undu]
 roots: [sanskrit-vayas-vigor-age]
 etymology_hook: "വയസ്സ് (vayass, 'age') is the same Sanskrit वयस् as Kannada/Telugu's word — but Malayalam asks it differently: 'നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?' (ningalkku ethra vayassundu?, 'to you how much age exists?'), a DATIVE-SUBJECT + existential-verb (undu, 'exists') construction, a genuinely different grammatical shape than Kannada/Telugu's plain verbless possessive"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [ML-C18-mani]
 ---
 

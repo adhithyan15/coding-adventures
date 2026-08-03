@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu, ML-C02-santosham]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ML-C02-peru, ML-C02-enre, ML-C02-aanu, ML-C02-enre-peru-aanu, ML-C02-nii-ningal, ML-C02-entu, ML-C02-ninre-peru-entaanu, ML-C02-santosham]
 ---
 

@@ -5,12 +5,12 @@ type: word
 headword: മണി
 gloss: hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones
 concept_tag: ML-TIME-HOUR
-prerequisites: [ML-C17-ucha-paathira]
+prerequisites: [ML-C17-paathira]
 sounds: [malayalam-retroflex-nna, malayalam-vowel-sign-i]
 roots: [sanskrit-mani-gem-bell]
 etymology_hook: "മണി (mani, 'hour, bell, gem') — Malayalam's Wiktionary entry treats ALL these senses as ONE word borrowed from Sanskrit मणि (maṇi, 'gem'); this is genuinely different from how Tamil's OWN dictionaries treat its cognate மணி, which splits into two separate, unrelated words (a native 'bell/hour' word and a separate Sanskrit 'gem' loan) — two closest-cousin languages, two different scholarly pictures of the very same word"
-est_minutes: 6
-reviews_of: [ML-C17-ucha-paathira]
+est_minutes: 4
+reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira]
 ---
 
 # മണി — one word in Malayalam's dictionaries, two in Tamil's

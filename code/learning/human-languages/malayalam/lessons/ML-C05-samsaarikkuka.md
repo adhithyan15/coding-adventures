@@ -8,7 +8,7 @@ concept_tag: ML-VERB-SAMSARIKKUKA
 prerequisites: [ML-C03-njaan, ML-C04-pokuka]
 sounds: [anusvara, double-kk]
 roots: [samsaara-sanskrit]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 
