@@ -60,7 +60,8 @@ splits along the same Sanskrit/native line you've seen before in this course
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C18-GANTE-03]; assesses=[] -->
 
 > **ಒಂದು ಗಂಟೆ.** — "One o'clock." (*ondu gaṇṭe*, "one hour/bell")
-> **ಎರಡು ಗಂಟೆ.** — "Two o'clock." (*eraḍu gaṇṭe*, "two hour/bell")
+
+> **ಎರಡು ಗಂಟೆ.** — "Two o'clock." (*eraḍu gaṇṭe*)
 
 Kannada simply pairs the cardinal number with *gaṇṭe* — no ordinal/cardinal split
 like Arabic's, no singular/plural verb switch like Hindi's *bajnā*.

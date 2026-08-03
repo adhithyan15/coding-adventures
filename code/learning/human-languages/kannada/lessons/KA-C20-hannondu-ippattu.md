@@ -28,7 +28,7 @@ register: neutral
 variety: standard-colloquial
 ---
 
-# ಹನ್ನೊಂದು, ಇಪ್ಪತ್ತು — a real "two-tens" compound, just not one you can see today
+# ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02] -->

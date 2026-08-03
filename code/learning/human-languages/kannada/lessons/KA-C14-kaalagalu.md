@@ -73,7 +73,7 @@ Western split.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02] -->
 
-[PAUSE 3s] What's unusual about ವಸಂತ ಋತು compared to Tamil/Malayalam's
-spring-word? (**Both halves are Sanskrit** — *vasanta* and *ṛtu*, "season"
+[PAUSE 3s] How does ವಸಂತ ಋತು differ from the Tamil/Malayalam spring-word?
+(**Both halves are Sanskrit** — *vasanta* and *ṛtu*, "season"
 itself — where Tamil/Malayalam just add the long-assimilated *kaalam*.) Which season
 actually shapes Karnataka's year most? (**ಮಳೆಗಾಲ**, the rains.)
