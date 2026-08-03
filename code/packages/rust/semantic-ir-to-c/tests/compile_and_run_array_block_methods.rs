@@ -193,3 +193,23 @@ fn reduce_on_empty_with_initial_returns_it_untouched() {
         None => eprintln!("skip: no cc"),
     }
 }
+
+#[test]
+fn sum_with_block_transforms_before_summing() {
+    // Regression: the 0-arg `sum` arm (slice 3) ignored argc/args entirely,
+    // so `arr.sum { |x| .. }` silently summed the RAW elements instead of
+    // the block's transformed values -- the same latent-shadowing shape the
+    // slice-3 `count` gap had before it was fixed in slice 5.
+    match run_ruby("puts [1, 2, 3].sum\nputs [1, 2, 3].sum { |x| x * 2 }\n") {
+        Some(out) => assert_eq!(out, "6\n12\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn sum_with_block_on_empty_is_zero() {
+    match run_ruby("puts [].sum { |x| x * 2 }\n") {
+        Some(out) => assert_eq!(out, "0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
