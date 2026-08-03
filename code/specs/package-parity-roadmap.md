@@ -238,8 +238,8 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   byte fixtures plus real CLI exit-2 coverage. Merged PR #9572 completed
   TypeScript with strict decoding, exact shared-fixture coverage, and green
   Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. The Lua
-  engine is now materialized as the next pending child because its raw-byte
-  parser boundary is narrow and the local Lua 5.4 toolchain is available;
+  engine is the selected next child because its raw-byte parser boundary is
+  narrow and the local Lua 5.4 toolchain is available;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

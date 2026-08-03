@@ -343,11 +343,11 @@
     {
       "id": "build-tool-lua-engine-rockspec-utf8-conformance",
       "title": "Make the Lua build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-lua-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized in the post-#9592 prioritization pass as the first of five remaining engine children. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, validate raw rockspec bytes before pattern parsing, preserve the exact success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and exercise the real Lua CLI exit contract without disclosing the checkout root."
+      "notes": "Selected after merged PR #9592 and the collision-clean 5042eade inventory as the highest-leverage unblocked engine child: the shared fixtures and four reference remediations are already merged, Lua's raw byte-string parser boundary is narrow, and Lua 5.4 plus LuaRocks are locally available. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, validate raw rockspec bytes before pattern parsing, preserve the exact success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and exercise the real Lua CLI exit contract without disclosing the checkout root."
     },
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
