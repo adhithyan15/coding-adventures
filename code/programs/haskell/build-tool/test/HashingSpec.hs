@@ -29,7 +29,7 @@ hashingSpec = describe "package hashing" $ do
 
     it "falls back deterministically when git is unavailable" $
         withBinaryPackage $ \pkg ->
-            withPath "" $ do
+            withPath (packagePath pkg) $ do
                 digest <- hashPackage pkg
                 digest `shouldBe` "1986673100"
 
