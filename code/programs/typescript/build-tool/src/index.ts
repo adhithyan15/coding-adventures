@@ -316,7 +316,7 @@ Options:
     // Build the list of package entries for the plan.
     const planPackages: PackageEntry[] = packages.map((pkg) => ({
       name: pkg.name,
-      rel_path: path.relative(root, pkg.path),
+      rel_path: path.relative(root, pkg.path).replaceAll("\\", "/"),
       language: pkg.language,
       build_commands: pkg.buildCommands,
     }));

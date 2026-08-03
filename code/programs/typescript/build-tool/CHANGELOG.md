@@ -6,6 +6,8 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Emit build-plan package `rel_path` values with portable forward slashes on
+  Windows, backed by the shared plan fixture and a real CLI subprocess test.
 - Classify languages only from the canonical package/program bucket, preserve
   `language/programs/name` identities, and exclude specification fixtures.
 - Reject residual duplicate qualified names with the stable
