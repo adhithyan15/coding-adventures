@@ -12,9 +12,9 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 983,
+    "totalLessons": 985,
     "authoredBooks": 20,
-    "durationViolations": 445,
+    "durationViolations": 435,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
@@ -4891,167 +4891,6 @@
         ]
       },
       {
-        "lessonId": "SA-C01-namaste",
-        "language": "sanskrit",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 186,
-        "effectiveSeconds": 300,
-        "wordCount": 261,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C01-practice",
-        "language": "sanskrit",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 174,
-        "effectiveSeconds": 300,
-        "wordCount": 217,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C01-svagatam",
-        "language": "sanskrit",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 164,
-        "effectiveSeconds": 300,
-        "wordCount": 271,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C03-practice",
-        "language": "sanskrit",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 130,
-        "effectiveSeconds": 300,
-        "wordCount": 158,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "declaredSeconds": 300,
-        "computedSeconds": 107,
-        "effectiveSeconds": 300,
-        "wordCount": 142,
-        "promptCount": 0,
-        "repeatCueCount": 3,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 165,
-        "effectiveSeconds": 300,
-        "wordCount": 257,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 143,
-        "effectiveSeconds": 300,
-        "wordCount": 220,
-        "promptCount": 0,
-        "repeatCueCount": 2,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 111,
-        "effectiveSeconds": 300,
-        "wordCount": 172,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C05-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 180,
-        "effectiveSeconds": 300,
-        "wordCount": 267,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "SA-C06-numbers-1-5",
-        "language": "sanskrit",
-        "chapter": 6,
-        "declaredSeconds": 360,
-        "computedSeconds": 513,
-        "effectiveSeconds": 513,
-        "wordCount": 768,
-        "promptCount": 6,
-        "repeatCueCount": 2,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
         "lessonId": "ES-C04-como-esta",
         "language": "spanish",
         "chapter": 4,
@@ -8837,9 +8676,9 @@
       {
         "language": "sanskrit",
         "status": "legacy",
-        "lessonCount": 31,
+        "lessonCount": 33,
         "versions": {
-          "1": 31
+          "1": 33
         }
       },
       {
