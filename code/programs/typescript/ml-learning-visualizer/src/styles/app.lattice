@@ -10273,3 +10273,313 @@ code {
     grid-column: auto;
   }
 }
+
+.workspace--precision-residency {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 18px;
+}
+
+.precision-stage {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.precision-intro,
+.precision-paper,
+.precision-formats,
+.precision-trace,
+.precision-residency,
+.precision-controls {
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 12px;
+  background: $paper;
+  box-shadow: 0 14px 35px rgba(23, 32, 28, 0.08);
+}
+
+.precision-intro,
+.precision-paper,
+.precision-formats,
+.precision-trace,
+.precision-residency {
+  padding: 16px;
+}
+
+.precision-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.precision-intro h2,
+.precision-intro p,
+.precision-controls h2,
+.precision-controls p {
+  margin: 0;
+}
+
+.precision-intro p:not(.eyebrow),
+.precision-controls > p:not(.eyebrow),
+.precision-controls section p:not(.eyebrow) {
+  color: $muted;
+  line-height: 1.45;
+}
+
+.precision-chip {
+  align-self: start;
+  border-radius: 999px;
+  background: rgba(109, 91, 208, 0.1);
+  color: #5543b8;
+  padding: 7px 10px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.precision-paper .panel-heading,
+.precision-formats .panel-heading,
+.precision-trace .panel-heading,
+.precision-residency .panel-heading {
+  align-items: start;
+}
+
+.precision-paper .panel-heading > code,
+.precision-formats .panel-heading > code,
+.precision-residency .panel-heading > code {
+  border-radius: 7px;
+  background: rgba(37, 99, 235, 0.06);
+  padding: 6px 8px;
+  color: #234c9f;
+}
+
+.precision-equation-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.precision-equation-row code {
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.06);
+  padding: 13px;
+  text-align: center;
+}
+
+.precision-equation-row strong {
+  color: #1d6849;
+}
+
+.precision-format-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.precision-format-buttons button,
+.precision-strategy-buttons button {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+  color: $ink;
+  padding: 11px;
+  text-align: left;
+}
+
+.precision-format-buttons button[aria-pressed="true"],
+.precision-strategy-buttons button[aria-pressed="true"] {
+  border-color: rgba(109, 91, 208, 0.5);
+  background: rgba(109, 91, 208, 0.09);
+}
+
+.precision-format-buttons small,
+.precision-strategy-buttons span,
+.precision-transfer-flow small {
+  color: $muted;
+  font-size: 0.68rem;
+}
+
+.precision-format-buttons code {
+  overflow: hidden;
+  color: #234c9f;
+  text-overflow: ellipsis;
+}
+
+.precision-scale-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 11px 0 0;
+  border-radius: 9px;
+  background: rgba(183, 121, 31, 0.07);
+  padding: 10px;
+}
+
+.precision-scale-note span {
+  color: $muted;
+}
+
+.precision-table {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.precision-table > div {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(112px, 1fr));
+  min-width: 700px;
+  border-top: 1px solid $line;
+}
+
+.precision-table > div:first-child {
+  border-top: 0;
+}
+
+.precision-table code,
+.precision-table strong {
+  padding: 9px;
+  overflow-wrap: anywhere;
+}
+
+.precision-table-head {
+  color: $muted;
+  font-size: 0.7rem;
+}
+
+.precision-transfer-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.precision-transfer-flow > div {
+  display: grid;
+  gap: 5px;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.055);
+  padding: 11px;
+  text-align: center;
+}
+
+.precision-transfer-flow > span {
+  color: $muted;
+}
+
+.precision-transfer-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  border-radius: 9px;
+  background: rgba(35, 122, 87, 0.06);
+  padding: 10px;
+}
+
+.precision-transfer-equation strong {
+  color: #1d6849;
+}
+
+.precision-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.precision-controls label {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  color: $muted;
+  font-size: 0.75rem;
+}
+
+.precision-controls label input {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.precision-strategy-buttons {
+  display: grid;
+  gap: 7px;
+}
+
+.precision-controls section {
+  border-top: 1px solid $line;
+  padding-top: 12px;
+}
+
+.precision-controls ol {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  color: $muted;
+  line-height: 1.5;
+}
+
+.precision-warning {
+  border-radius: 9px;
+  background: rgba(183, 121, 31, 0.07);
+  padding: 11px;
+}
+
+@media (max-width: 1180px) {
+  .workspace--precision-residency {
+    grid-template-columns: 1fr;
+  }
+
+  .precision-controls {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .precision-controls > p,
+  .precision-controls > h2,
+  .precision-controls > label,
+  .precision-strategy-buttons {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 820px) {
+  .precision-intro,
+  .precision-paper .panel-heading,
+  .precision-formats .panel-heading,
+  .precision-trace .panel-heading,
+  .precision-residency .panel-heading {
+    display: grid;
+  }
+
+  .precision-chip {
+    justify-self: start;
+  }
+
+  .precision-equation-row,
+  .precision-format-buttons,
+  .precision-transfer-flow,
+  .precision-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .precision-transfer-flow > span {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .precision-controls > p,
+  .precision-controls > h2,
+  .precision-controls > label,
+  .precision-strategy-buttons {
+    grid-column: auto;
+  }
+}

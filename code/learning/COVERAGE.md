@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1252 | 1195 | 98 | 61 | 8 | 1085 |
+| 1255 | 1207 | 98 | 61 | 8 | 1088 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 25 | 6 | 55 |
 | P1 | 9 | 22 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 2 | 11 | 1 | 788 |
+| P3 | 2 | 11 | 1 | 791 |
 
 ## P0 Backlog
 
@@ -1174,6 +1174,7 @@ mention provides a complete lesson.
 | `sir-runtime-symbolic` | 1 | missing |
 | `sixlowpan` | 1 | missing |
 | `skill-store` | 1 | missing |
+| `smart-home-airgradient-local-integration` | 1 | missing |
 | `smart-home-automation-runtime` | 1 | missing |
 | `smart-home-camera-media` | 1 | missing |
 | `smart-home-capability-cage` | 1 | missing |
@@ -1184,11 +1185,13 @@ mention provides a complete lesson.
 | `smart-home-event-streams` | 1 | missing |
 | `smart-home-fronius-local-integration` | 1 | missing |
 | `smart-home-govee-lan-integration` | 1 | missing |
+| `smart-home-heos-cli-integration` | 1 | missing |
 | `smart-home-home-assistant-dashboard-migration` | 1 | missing |
 | `smart-home-home-assistant-definitions` | 1 | missing |
 | `smart-home-home-assistant-export` | 1 | missing |
 | `smart-home-home-assistant-history` | 1 | missing |
 | `smart-home-home-assistant-migration` | 1 | missing |
+| `smart-home-homewizard-energy-integration` | 1 | missing |
 | `smart-home-hue-pairing-service` | 1 | missing |
 | `smart-home-integration-catalog` | 1 | missing |
 | `smart-home-kasa-lan-integration` | 1 | missing |
