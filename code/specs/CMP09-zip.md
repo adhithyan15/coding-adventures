@@ -350,10 +350,21 @@ unzip(data: bytes) → {name: str → data: bytes}
 | Lua        | `coding-adventures-zip`      | `coding_adventures.zip`        |
 | Perl       | `CodingAdventures::Zip`      | `CodingAdventures::Zip`        |
 | Swift      | `CodingAdventuresZip`        | `CodingAdventures.Zip`         |
+| Haskell    | `zip`                        | `Zip`                          |
 
 **Dependencies:** each ZIP package depends on the corresponding language's `deflate`
 (CMP05) package for the DEFLATE codec. The CRC-32 implementation is inlined (no separate
 package — it's a trivial table-driven function).
+
+**Divergence (Haskell):** the Haskell package depends on `lzss` (CMP02) rather than
+`deflate` (CMP05). It reimplements the RFC 1951 raw-DEFLATE bitstream itself — fixed
+(BTYPE=01) Huffman tables plus LZ77 match-finding delegated to `LZSS.encodeWith` — instead
+of reusing the sibling `deflate` package's dynamic-Huffman encoder. This is a narrower
+DEFLATE (fixed Huffman only, no BTYPE=10 dynamic tables on the encode side; decode
+rejects BTYPE=10), which is sufficient for producing and reading valid ZIP entries but is
+not a byte-for-byte match with the `deflate` package's output. Documented here rather than
+changed, since the implementation is otherwise complete, tested, and correct for the
+DEFLATE subset it emits.
 
 ## Test Cases
 
