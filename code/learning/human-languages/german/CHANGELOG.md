@@ -1,5 +1,23 @@
 # Changelog
 
+## Sub-five-minute lesson remediation (2026-08-02)
+
+- All twenty-seven German duration violations are resolved. Twenty-two lessons
+  already computed below five minutes and now declare an honest four-minute
+  budget without changing their teaching content.
+- Five lessons that genuinely exceeded the limit become prerequisite-ordered
+  micro-sequences: informal wellbeing → formal *Ihnen* register → separate
+  casual/formal practice; Präteritum forms → its north/south areal map; the
+  *sein*-perfect auxiliary family → French/German agreement; *Kopf* as cup →
+  inherited *Haupt* and the Grimm's-law/container comparison.
+- The five new support lessons bring the German track to 86 lessons. Every new
+  or rewritten step computes between 147 and 244 seconds, with zero unknown
+  prerequisite ids.
+- A forced build still succeeds at 84 pages with no missing glyphs or duplicate
+  labels. Its existing seventeen overfull boxes, eleven underfull boxes, and
+  three Hyperref warnings are recorded separately in `HL-B21`; publishing the
+  canonical Chapters 17–23 is recorded in `HL-B20`.
+
 ## The book catches up -- Chapters 3-16 typeset
 
 The lessons had run ahead of the published artifact: 61 authored lessons through
@@ -36,7 +54,7 @@ superscripts all render correctly.
 
 ## Chapter 17 — The body: a cup for a head, and a hand with no Latin cousin
 
-- **Chapter 17 authored** (`GE-C17-kopf`, `-hand`) — the **body**, the theme the
+- **Chapter 17 authored** (`GE-C17-kopf`, `-kopf-haupt`, `-hand`) — the **body**, the theme the
   parallel-track roadmaps name next.
 - **der Kopf** (`GE-C17-kopf`): *Kopf* did not originally mean "head." It meant a
   **cup or bowl** — the same word as English **cup**, both early borrowings of
@@ -70,7 +88,8 @@ superscripts all render correctly.
 
 ## Chapter 16 — *sein*: three ancient verbs wearing one infinitive
 
-- **Chapter 16 authored** (`GE-C16-sein`, `-perfekt-sein`). Ch. 15 taught only
+- **Chapter 16 authored** (`GE-C16-sein`, `-perfekt-sein`,
+  `-perfekt-sein-agreement`). Ch. 15 taught only
   the *haben* half of the Perfekt because *sein* had never been taught. Fixed.
 - **sein** (`GE-C16-sein`): the present, plus *war/waren*, and then the reason
   they look unrelated — they **are** unrelated. *sein* is assembled from **three
@@ -108,7 +127,8 @@ superscripts all render correctly.
 
 ## Chapter 15 — The Perfekt, and the tense it pushed aside
 
-- **Chapter 15 authored** (`GE-C15-perfekt`, `-praeteritum`): the everyday past,
+- **Chapter 15 authored** (`GE-C15-perfekt`, `-praeteritum`,
+  `-praeteritum-map`): the everyday past,
   built on Ch.14's *haben* — reviewing Ch.5/14 via `reviews_of`.
 - **Perfekt** (`GE-C15-perfekt`): *haben* + past participle (*ich habe gesagt*),
   with two things German does that English can't. First, the weak participle is
@@ -345,7 +365,8 @@ superscripts all render correctly.
 ## Chapter 3 — "Wie geht's?" (completes the how-are-you trilogy)
 
 - **Chapter 3 authored** (`GE-C03-danke`, `-bitte`, `-gehen`, `-wie-geht-es`,
-  `-es-geht`, `-practice`): the "how are you?" exchange, atom-first, reviewing
+  `-wie-geht-register`, `-es-geht`, `-practice`, `-formal-practice`): the
+  "how are you?" exchange, atom-first, reviewing
   Chapter 2. Third of a deliberate cross-language trilogy in this PR (Spanish
   Ch.4 / French Ch.3 / German Ch.3), all sharing the canonical concepts
   `STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`, `WORD-SOSO`.

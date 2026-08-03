@@ -9,7 +9,7 @@ prerequisites: [GE-C06-zahlen-1-5]
 sounds: [ch-ach, diphthong-eu]
 roots: [germanic-numerals, grimms-law]
 etymology_hook: "sechs/sieben/acht/neun/zehn are Germanic twins of six/seven/eight/nine/ten; zehn↔ten↔decem shows Grimm's d→t; acht↔eight↔Nacht/night the -cht-"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C06-zahlen-1-5]
 ---
 

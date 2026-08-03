@@ -9,7 +9,7 @@ prerequisites: [GE-C06-zahlen-6-10, GE-C11-wasser-wein]
 sounds: [umlaut-oe, f-final]
 roots: [germanic-ainlif, germanic-twalif]
 etymology_hook: "elf ← ainlif, zwölf ← twalif — the -lif is 'leave/remain', so they mean 'ONE left [over ten]' and 'TWO left'; English eleven/twelve are the same words, same meaning — you counted ten fingers and had one left"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C06-zahlen-6-10, GE-C11-wasser-wein]
 ---
 

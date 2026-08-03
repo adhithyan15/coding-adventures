@@ -9,7 +9,7 @@ prerequisites: [GE-C06-zahlen-6-10, GE-C08-uhr]
 sounds: [vowel-ae, ch-none]
 roots: [latin-months]
 etymology_hook: "German's months are Latin loans (Januar←Janus, März←Mars, like mardi!) — the same reach-for-Rome that gave it Uhr, while its numbers and seasons stay native"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C06-zahlen-6-10, GE-C07-wochentage-1, GE-C08-uhr]
 ---
 

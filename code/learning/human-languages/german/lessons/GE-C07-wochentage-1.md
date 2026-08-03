@@ -9,7 +9,7 @@ prerequisites: [GE-C06-zahlen-6-10]
 sounds: [diphthong-ei, ch-ach]
 roots: [germanic-gods, planet-gods]
 etymology_hook: "German weekdays are Germanic gods — twins of the English days (Donnerstag = Thor's day = Thursday), not Latin planets — except Mittwoch 'mid-week', which the Church substituted for Woden's day"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C06-zahlen-6-10]
 ---
 

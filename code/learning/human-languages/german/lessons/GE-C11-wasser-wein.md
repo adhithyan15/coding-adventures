@@ -9,7 +9,7 @@ prerequisites: [GE-C11-brot]
 sounds: [w-as-v, ai-as-eye]
 roots: [germanic-watar, vinum-latin]
 etymology_hook: "Wasser is INHERITED Germanic (Grimm's-law twin of English water); but Wein — like English wine — is an ANCIENT Latin loan (vīnum), borrowed when Rome brought the vine north; native vs borrowed, side by side"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C11-brot, GE-C10-eltern]
 ---
 

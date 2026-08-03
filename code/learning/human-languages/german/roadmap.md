@@ -19,8 +19,9 @@ Spanish and French where a contrast helps. The recurring decoder is the
   is") → **du / Sie** → wie → **wie heißen Sie?** → freut mich → practice.
 - **Ch. 3 — "Wie geht's?"**: danke (← *denken* "think"; Eng *thank*=*think*) →
   bitte (← *bitten* "ask/pray"; Eng *bid*/*bead*) → **gehen** ("to go" = Eng
-  *go*; the state-verb, w/ a first taste of the **dative** *mir/dir*) → wie geht
-  es dir/Ihnen → es geht (so-so) → practice. **Authored** — completes the
+  *go*; the state-verb, w/ a first taste of the **dative** *mir/dir*) → informal
+  *wie geht es dir?* → formal *wie geht es Ihnen?* → es geht (so-so) → casual
+  practice → formal practice. **Authored** — completes the
   Spanish/French/German how-are-you trilogy.
 - **Ch. 4 — Farewells**: auf Wiedersehen ("on the seeing-again", *sehen* = *see*;
   twin of *au revoir*) → tschüss (← *adieu* → secretly "to God", cousin of
@@ -115,7 +116,8 @@ Spanish and French where a contrast helps. The recurring decoder is the
   south, better held in the north) but **standard in narrative writing**. The
   cross-language payoff: **German, French and Italian all** let a
   "have" compound displace their simple past, while Spanish and Portuguese kept
-  theirs. **Authored.**
+  theirs. The forms come first; the north/south register and three-language
+  areal map follow as their own micro-lesson. **Authored.**
 - **Ch. 16 — *sein*, and the Perfekt built on it**: ***sein*** (`GE-C16-sein`) —
   not one verb but **three PIE roots** under one infinitive: *ist/sind* ←
   \**h₁es-* (Latin *est/sunt*), *bin/bist* ← \**bʰuH-* "grow, become" (English
@@ -134,7 +136,8 @@ Spanish and French where a contrast helps. The recurring decoder is the
   *haben*/*sein* perfect is a native Germanic development that grew up
   **alongside** Romance by areal contact — the same Sprachbund Ch.15 blamed for
   the simple past retreating in three languages at once. Split **parallel**,
-  agreement **not shared**. **Authored.**
+  agreement **not shared**. The auxiliary family comes first and the agreement
+  contrast follows as its own micro-lesson. **Authored.**
 - **Ch. 17 — The body: a cup for a head, and a hand with no Latin cousin**:
   ***der Kopf*** (`GE-C17-kopf`) — originally a **cup or bowl**, Germanic
   \**kuppaz*, the same word as English **cup**, which displaced the inherited
@@ -149,7 +152,9 @@ Spanish and French where a contrast helps. The recurring decoder is the
   every Romance track here builds "hand" on *manus*, and \**handuz* is unrelated
   to it. The course keeps finding links; it matters to mark where the families
   genuinely diverge. *Manus* reached German only as **borrowed** vocabulary
-  (*Manuskript*, *manuell*). **Authored.**
+  (*Manuskript*, *manuell*). *Kopf* as the everyday vessel-word comes first;
+  inherited *Haupt*, Grimm's Law, and the French/German container comparison
+  follow before *Hand* as a separate support step. **Authored.**
 
 ## Planned
 

@@ -9,7 +9,7 @@ prerequisites: [GE-C02-ich, GE-C02-du-sie]
 sounds: [w-is-v, h-pronounced]
 roots: [wonen-ohg]
 etymology_hook: "wohnen ← Old High German wonēn 'to dwell, be accustomed' → English 'wont' (accustomed), archaic 'won'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C03-wie-geht-es, GE-C02-practice]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [GE-C22-hund-katze]
 sounds: [umlaut-u, consonant-b-final]
 roots: [germanic-groeniz-grow, pie-ghel-shine]
 etymology_hook: "grün is native Germanic, the direct cousin of English's own 'green' (Proto-Germanic *grōniz, PIE *ǵʰreh₁-, 'to grow, become green') — a COMPLETELY DIFFERENT root from Latin's viridis, even though both independently mean 'grow' → 'green'; gelb is native too (Proto-Germanic *gelwaz), usually traced to the same ultimate PIE root, *ghel- ('to shine'), as French's jaune — though modern Latin scholarship treats jaune's Latin ancestor galbus as genuinely unknown in origin, so treat gelb/jaune as probable, not certain, cousins"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [GE-C22-hund-katze]
 ---
 

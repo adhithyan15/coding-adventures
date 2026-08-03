@@ -3,96 +3,63 @@ id: GE-C17-kopf
 chapter: 17
 type: word
 headword: der Kopf
-gloss: the head — from a word meaning "cup, bowl"
+gloss: the head — masculine, capitalised, with final pf
 concept_tag: GE-BODY-HEAD
 prerequisites: [GE-C01-der-die-das]
 sounds: [final-devoicing]
-roots: [latin-cuppa, germanic-haubudam]
-etymology_hook: "Kopf originally meant a CUP or bowl — the same word as English CUP, both early borrowings of Late Latin cuppa — and it displaced the inherited Haupt ← *haubudam, which is the true Germanic cognate of Latin caput; so German swapped a vessel-word in for the head word — the very same move French made with tête ← testa 'pot'"
+roots: [latin-cuppa]
+etymology_hook: "Kopf first meant cup or bowl, from the same Late Latin cuppa source as English cup"
 est_minutes: 4
 reviews_of: [GE-C01-der-die-das, GE-W03-capitalization]
 ---
 
-# der Kopf — "the head"
+# Der Kopf — “the head”
 
 ## Warm-up
 
-[PAUSE 2s] The first body part — and German did something to it that a Romance
-language did too, entirely independently.
+[PAUSE 2s] Learn the first body part with its article and its characteristic
+final sound.
 
-## The word
+> **der Kopf** — the head
 
-> **der Kopf** — the head. Masculine, and capitalised, because every German noun
-> is (Chapter W03).
+It is masculine and capitalised because every German noun begins with a capital
+letter.
 
-Note the **-pf**: a single sound, made by starting with *p* and releasing it into
-*f*. It is one of German's signature noises, and English has nothing like it.
+## Make the -pf sequence
 
-## Kopf was a drinking vessel
+At the end of **Kopf**, close for *p* and release directly into *f*. English has
+no identical native ending, so practise it slowly:
 
-**Kopf** did not originally mean "head." It meant a **cup or bowl** — and it is
-the same word as English **cup**, both of them early borrowings of Late Latin
-***cuppa***, taken separately into Old High German and Old English.
+> Ko-p-f → **Kopf**
 
-So the *word* isn't native Germanic. What **is** independent is the **move**:
-just as with *tête* in French, a vessel-word became slang for the skull, and the
-slang won.
+A useful phrase is:
 
-## So what happened to the real word?
+> **Ich habe Kopfschmerzen.** — I have a headache.
 
-German's inherited word for "head" is **das Haupt** — and it is a genuine cousin
-of Latin *caput*:
+German compounds simply place nouns together: **Kopf** (head) + **Schmerzen**
+(pains).
 
-| | |
-|---|---|
-| Latin | *caput* |
-| German | **Haupt** |
-| English | **head** |
+## The old cup
 
-All three from PIE \**kaput-*, by **Grimm's law** — the same systematic swap
-(**p→f, t→th, k→h**) that turns *pater* into *father* and *pēs* into *foot*.
-Here it is the **k→h** you can see cleanly: *caput* begins with *k*, *Haupt* and
-*head* with *h*.
+**Kopf** originally meant a **cup or bowl**. It is related to English **cup**;
+both were early borrowings of Late Latin ***cuppa***. A container word became
+slang for the skull and eventually took over the everyday job.
 
-(The consonants further in are a longer story involving a second shift, so take
-the *k*→*h* as the demonstration and leave the rest.)
-
-*Haupt* is still alive, but only in compounds and formal register:
-**Haupt**stadt (capital city — literally "head city"), **Haupt**bahnhof (main
-station), **Haupt**sache ("the main thing").
-
-So German has both words, and gave the everyday job to the cup.
-
-## Two languages, one joke
-
-This is the part worth keeping:
-
-| | everyday "head" | from | the inherited word |
-|---|---|---|---|
-| **French** | *tête* | *testa*, an earthenware **pot** | *caput* → survives in *chef* |
-| **German** | *Kopf* | *cuppa*, a **cup** | \**haubudam* → survives in *Haupt* |
-
-Two unrelated languages, both replacing "head" with a **container**, both keeping
-the old word for chiefs and capitals. Nobody coordinated this.
-
-Be precise about what's independent, though: both vessel-words happen to trace
-back to Latin (*testa*, *cuppa*). It is the **metaphor** that was invented twice,
-not the vocabulary. Heads simply look like bowls, in any language.
+German’s older inherited head-word did not disappear completely. The next
+micro-lesson follows it into compounds and compares the same container metaphor
+in French.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "der Kopf" — feel the **-pf**]
-- [YOU SAY: "Ich habe Kopfschmerzen" — "I have a headache"]
-- [YOU SAY: the vessel — "Kopf = a **cup**"]
-- [YOU SAY: the survivor — "**Haupt**stadt, **Haupt**bahnhof"]
+- [YOU SAY: “der Kopf” — release *p* into *f*]
+- [YOU SAY: “Ich habe Kopfschmerzen.”]
+- [YOU SAY: “Kopf — cup or bowl”]
+
+[REPEAT x2] “Der Kopf — masculine, capitalised.”
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Say "the head." (*Der Kopf* — masculine, capitalised.) What did *Kopf*
-originally mean? (A **cup or bowl** — the same word as English **cup**, both borrowed from Late Latin *cuppa*.) What is
-German's inherited word for head? (***Das Haupt***, a true cousin of Latin
-*caput* and English *head*, by **Grimm's law**.) Where does *Haupt* survive?
-(In compounds — *Hauptstadt*, *Hauptbahnhof*.) What did French do with the same
-idea? (***Tête*** ← *testa*, a **pot** — the identical swap, invented
-separately.) Next: the hand.
+[PAUSE 3s] Say “the head.” (**Der Kopf**.) What gender? (**Masculine**.) Why the
+capital? (It is a **noun**.) What did *Kopf* first mean? (A **cup or bowl**.)
+Which English word is related? (**Cup**.) Next: find the inherited word *Haupt*.

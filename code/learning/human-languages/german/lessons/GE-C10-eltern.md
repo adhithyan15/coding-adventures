@@ -9,7 +9,7 @@ prerequisites: [GE-C09-jahreszeiten, GE-C01-hallo]
 sounds: [v-as-f, umlaut-u]
 roots: [pie-pater, pie-mater, grimms-law]
 etymology_hook: "Vater/Mutter aren't borrowed from Latin like the German months — they're inherited Germanic cousins of English father/mother, and Grimm's law (p→f, t→th→d) is written right on their faces"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [GE-C09-jahreszeiten, GE-C01-hallo]
 ---
 
