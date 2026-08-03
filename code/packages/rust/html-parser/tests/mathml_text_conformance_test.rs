@@ -106,6 +106,7 @@ fn tree_case(
         data: data.to_string(),
         scripting: HtmlScriptingMode::Enabled,
         fragment_context: fragment_context.map(str::to_string),
+        expected_errors: Vec::new(),
         document: document.iter().map(|line| (*line).to_string()).collect(),
     }
 }

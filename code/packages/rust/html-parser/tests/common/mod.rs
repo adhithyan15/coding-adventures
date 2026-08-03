@@ -1,6 +1,8 @@
 use coding_adventures_html_lexer::HtmlScriptingMode;
 use coding_adventures_html_parser::{
-    parse_html_fragment_for_context_with_options, parse_html_with_options, HtmlParseOptions,
+    parse_html_fragment_for_context_with_diagnostics_and_options,
+    parse_html_fragment_for_context_with_options, parse_html_with_diagnostics_and_options,
+    parse_html_with_options, HtmlParseOptions,
 };
 use dom_core::{Document, DocumentType, Element, Node};
 
@@ -10,6 +12,8 @@ pub struct TreeConstructionCase {
     pub data: String,
     pub scripting: HtmlScriptingMode,
     pub fragment_context: Option<String>,
+    #[allow(dead_code)]
+    pub expected_errors: Vec<String>,
     pub document: Vec<String>,
 }
 
@@ -37,6 +41,7 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
             data.push(line);
         }
 
+        let mut expected_errors = Vec::new();
         let mut scripting = HtmlScriptingMode::Enabled;
         let mut fragment_context = None;
         while let Some(line) = lines.next() {
@@ -56,6 +61,8 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
                 scripting = HtmlScriptingMode::Disabled;
             } else if line == "#script-on" {
                 scripting = HtmlScriptingMode::Enabled;
+            } else if !line.is_empty() {
+                expected_errors.push(line.to_string());
             }
         }
 
@@ -75,11 +82,47 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
             data: data.join("\n"),
             scripting,
             fragment_context,
+            expected_errors,
             document,
         });
     }
 
     cases
+}
+
+#[allow(dead_code)]
+pub fn actual_diagnostic_codes_for_tree_case(
+    case: &TreeConstructionCase,
+) -> Result<Vec<String>, String> {
+    let options = HtmlParseOptions {
+        scripting: case.scripting,
+        ..HtmlParseOptions::default()
+    };
+
+    let (lexer_diagnostics, parser_diagnostics) =
+        if let Some(fragment_context) = &case.fragment_context {
+            let output = parse_html_fragment_for_context_with_diagnostics_and_options(
+                &case.data,
+                fragment_context,
+                options,
+            )
+            .map_err(|error| format!("{error:?}"))?;
+            (output.lexer_diagnostics, output.parser_diagnostics)
+        } else {
+            let output = parse_html_with_diagnostics_and_options(&case.data, options)
+                .map_err(|error| format!("{error:?}"))?;
+            (output.lexer_diagnostics, output.parser_diagnostics)
+        };
+
+    Ok(lexer_diagnostics
+        .into_iter()
+        .map(|diagnostic| diagnostic.code)
+        .chain(
+            parser_diagnostics
+                .into_iter()
+                .map(|diagnostic| diagnostic.code),
+        )
+        .collect())
 }
 
 pub fn actual_dom_dump_for_tree_case(case: &TreeConstructionCase) -> Result<Vec<String>, String> {
