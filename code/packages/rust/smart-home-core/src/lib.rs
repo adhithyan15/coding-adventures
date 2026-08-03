@@ -105,6 +105,7 @@ pub enum RuntimeKind {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum BridgeTransport {
     LanHttp,
+    LanTcp,
     LanUdp,
     Mdns,
     Serial,

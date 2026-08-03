@@ -116,6 +116,7 @@ pub enum PrimitiveFamily {
     WsDiscovery,
     Ssdp,
     Udp,
+    Tcp,
     Dhcp,
     LocalHttp,
     WebSocket,
@@ -155,6 +156,7 @@ impl PrimitiveFamily {
             Self::WsDiscovery => "ws_discovery",
             Self::Ssdp => "ssdp",
             Self::Udp => "udp",
+            Self::Tcp => "tcp",
             Self::Dhcp => "dhcp",
             Self::LocalHttp => "local_http",
             Self::WebSocket => "websocket",
@@ -44685,6 +44687,10 @@ pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyD
             "UDP",
             "Bounded UDP datagrams for vendor discovery, state, and command transports.",
         ),
+        PrimitiveFamily::Tcp => (
+            "TCP",
+            "Bounded TCP streams for local line and frame-oriented protocols.",
+        ),
         PrimitiveFamily::Dhcp => (
             "DHCP",
             "Network-observed address hints for LAN device candidates.",
@@ -44792,6 +44798,7 @@ pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
         PrimitiveFamily::WsDiscovery,
         PrimitiveFamily::Ssdp,
         PrimitiveFamily::Udp,
+        PrimitiveFamily::Tcp,
         PrimitiveFamily::Dhcp,
         PrimitiveFamily::LocalHttp,
         PrimitiveFamily::WebSocket,
@@ -45125,6 +45132,34 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         ])
         .with_notes(&[
             "Current runtime support is polling-only; GENA subscriptions and media commands remain future work.",
+        ]),
+        base_entry(
+            "heos",
+            "HEOS",
+            "Local Denon and Marantz HEOS CLI player discovery and read-only inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            2,
+            "heos",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Unknown])
+        .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor("heos_cli".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Current runtime support is read-only; account access, media commands, grouping, queues, and change-event subscriptions remain separate work.",
         ]),
         media_entry(
             "cast",
@@ -81038,6 +81073,36 @@ mod tests {
             PrimitiveFamily::CommandMapping,
         ] {
             assert!(nanoleaf.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn heos_entry_exposes_ssdp_and_read_only_tcp_player_runtime() {
+        let catalog = first_party_catalog();
+        let heos = find_entry(&catalog, &IntegrationId::trusted("heos")).unwrap();
+
+        assert_eq!(
+            heos.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(heos.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(heos.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            heos.supported_protocols,
+            vec![ProtocolFamily::Vendor("heos_cli".to_string())]
+        );
+        assert_eq!(
+            heos.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Ssdp,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(heos.required_primitives.contains(&primitive));
         }
     }
 

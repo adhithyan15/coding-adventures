@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added first-party HEOS CLI runtime coverage for SSDP/manual discovery and
+  read-only player identity, playback, volume, mute, and media inspection.
+- Added a reusable TCP primitive family for bounded local stream protocols.
 - Added first-party HomeWizard Energy API v1 local runtime coverage for verified
   mDNS/manual discovery and read-only device and external-meter telemetry.
 - Added first-party Fronius Solar API v1 local runtime coverage for mDNS/manual

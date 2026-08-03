@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- A first-class `LanTcp` bridge transport for local stream protocols.
 - A first-class `LanUdp` bridge transport for local UDP discovery, polling,
   and command integrations.
 - First-class `Camera` entities and the `Onvif` protocol family for normalized
