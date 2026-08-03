@@ -11,18 +11,23 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "item_id": "build-tool-ruby-starlark-canonical-build-compatibility",
+    "number": 9677,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9677",
+    "branch": "codex/build-tool-ruby-starlark-canonical-compatibility"
+  },
   "last_inventory": {
-    "revision": "bfe51311154b51f9aed40becab19d17126f75ac0",
+    "revision": "4a66c66dfde5eb1cf1f39283bf71d2ae6396edca",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1227,
-    "implementation_package_slots": 4375,
+    "implementation_identities": 1228,
+    "implementation_package_slots": 4376,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 777,
-    "singleton_missing_slots": 10878,
-    "rust_singletons": 582,
+    "singleton_packages": 778,
+    "singleton_missing_slots": 10892,
+    "rust_singletons": 583,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -397,11 +402,11 @@
     {
       "id": "build-tool-ruby-starlark-canonical-build-compatibility",
       "title": "Make the Ruby Starlark path parse canonical BUILD files without fallback",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ruby-starlark-runtime-closure"],
       "branch": "codex/build-tool-ruby-starlark-canonical-compatibility",
-      "pr_number": null,
-      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates. Selected after PR #9660 merged and the collision-clean bfe51311 inventory. The dependency/leverage pass ranked this ahead of the independent Haskell and Elixir UTF-8 slices because the runtime closure directly unblocked it, it removes 44 silent canonical BUILD fallbacks from a supported build-tool implementation, and the Ruby/interpreter toolchain and exact plan baselines are already warm; the Chief service-registry and channel work remain dependency-blocked. Implemented canonical EOF token order, exact keyword operands and binding, defining-module globals, normalized v1 context propagation, strict structured-command extraction, root-redacted fail-closed diagnostics, and the canonical multiline shared fixture. Exact real-plan comparison matches every field for all 9 Elixir, 6 Go, and 29 Rust Starlark records; the 258-package/382-edge Lua plan has zero Starlark warnings. Local validation passes all seven Ruby suites, including 302 build-tool runs/614 assertions with one existing Windows platform skip and 88.04% line/71.11% branch coverage; the 37-case/56-file corpus; Go test/vet/trimpath build; zero-advisory Ruby audit; current dependencies; a collision-clean rebased 4a66c66d inventory of 1,228 identities and 4,376 slots; state, diff, JSON, and credential checks. The exact ten already-owned Lua BUILD_windows debts remain unchanged."
+      "pr_number": 9677,
+      "notes": "Discovered after supplying the repository Ruby libraries to the real Lua plan. The Ruby Starlark interpreter emits 44 repeatable end-of-file parse errors for canonical Elixir, Go, and Rust BUILD templates and the build tool silently falls back to raw commands; the plan still succeeds at 258 Lua packages and 382 edges. Minimize the failing template suffixes into language-neutral fixtures, repair the parser/compiler boundary or evaluator contract, fail closed where structured declarations are required, and prove exact plan equivalence across affected platform templates. Selected after PR #9660 merged and the collision-clean bfe51311 inventory. The dependency/leverage pass ranked this ahead of the independent Haskell and Elixir UTF-8 slices because the runtime closure directly unblocked it, it removes 44 silent canonical BUILD fallbacks from a supported build-tool implementation, and the Ruby/interpreter toolchain and exact plan baselines are already warm; the Chief service-registry and channel work remain dependency-blocked. Implemented canonical EOF token order, exact keyword operands and binding, defining-module globals, normalized v1 context propagation, strict structured-command extraction, root-redacted fail-closed diagnostics, and the canonical multiline shared fixture. Exact real-plan comparison matches every field for all 9 Elixir, 6 Go, and 29 Rust Starlark records; the 258-package/382-edge Lua plan has zero Starlark warnings. Local validation passes all seven Ruby suites, including 302 build-tool runs/614 assertions with one existing Windows platform skip and 88.04% line/71.11% branch coverage; the 37-case/56-file corpus; Go test/vet/trimpath build; zero-advisory Ruby audit; current dependencies; a collision-clean rebased 4a66c66d inventory of 1,228 identities and 4,376 slots; state, diff, JSON, and credential checks. The exact ten already-owned Lua BUILD_windows debts remain unchanged. Ready PR #9677 opened at exact head 7e3d3a08eb5a800ad748450bf613288e84ed80ec; checks are pending and auto-complete remains disabled until every exact-head check is terminal green or skipped."
     },
     {
       "id": "build-tool-ruby-language-identity-registry",
