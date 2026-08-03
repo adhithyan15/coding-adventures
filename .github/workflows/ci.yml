@@ -841,3 +841,38 @@ jobs:
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
+
+  # ── Job 4: CI gate ─────────────────────────────────────────────
+  #
+  # A single, always-present status check that summarizes the result of
+  # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
+  # labels vary per-PR (they come from the diff-based `detect` step), so an
+  # individual label cannot be required by branch protection: a PR that does
+  # not produce that label would have the check "expected" forever and never
+  # merge. Requiring THIS job instead gives branch protection one stable
+  # context (`CI gate`) that passes only when every required job succeeded —
+  # or was legitimately skipped (e.g. an empty build matrix when nothing
+  # relevant changed). `if: always()` makes the gate itself run even when a
+  # dependency failed, so it can report the failure rather than being skipped.
+  ci-gate:
+    name: CI gate
+    needs: [detect, phy00-phy01-fixture-consumers, build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs succeeded
+        shell: bash
+        env:
+          DETECT_RESULT: ${{ needs.detect.result }}
+          PHY_RESULT: ${{ needs['phy00-phy01-fixture-consumers'].result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT build=$BUILD_RESULT"
+          fail=0
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$BUILD_RESULT"; do
+            case "$r" in
+              success|skipped) ;;
+              *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
+            esac
+          done
+          if [ "$fail" = "0" ]; then echo "CI gate passed"; else exit 1; fi
