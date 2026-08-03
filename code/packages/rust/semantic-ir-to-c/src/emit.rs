@@ -1825,6 +1825,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "gcd" | "digits" | "times" | "upto" | "downto" | "step"
         // slice 10 — Symbol + universal Object/Bool methods
         | "inspect" | "nil?" | "equal?" | "itself" | "frozen?" | "&" | "|" | "^"
+        // deferred-from-slice-8 — String char-set + padding methods
+        | "squeeze" | "ljust" | "rjust" | "center"
     )
 }
 

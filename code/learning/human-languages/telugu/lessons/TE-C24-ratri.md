@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C24-ratri
+spine_node: SPINE-TIME-OF-DAY
+sequence: 520
 chapter: 24
 type: word
 headword: రాత్రి
@@ -9,18 +12,32 @@ prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 sounds: [telugu-conjunct-tra, telugu-vowel-sign-i]
 roots: [sanskrit-ratri, telugu-native-reyi-maapu]
 etymology_hook: "రాత్రి (rātri, 'night') is a Sanskrit tatsama word, already hiding inside అర్ధరాత్రి (ardharātri, 'midnight'), and — unlike rōju's genuine Persian surprise last lesson — it really is Telugu's everyday word for night; genuine native Telugu words exist too — రేయి (rēyi, most sources treat it as inherited Dravidian, though some grammars link it to rātri itself), మాపు (māpu, whose primary sense is actually 'evening/dusk,' as in రేపుమాపు, 'morning and evening'), and ఇరులు (irulu, cognate with Kannada's ಇರುಳು/iruḷu, primarily 'darkness') — a messier, three-way version of Kannada's cleaner two-word replacement story, not a tidy mirror of it"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02]
+introduces:
+  knowledge: [TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02]
+practises:
+  knowledge: [TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 ---
 
 # రాత్రి (rātri) — "night," this time matching the expected pattern
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02] -->
 
 [PAUSE 2s] Last lesson's *rōju* broke every expectation. This one is more
 straightforward — but still worth checking honestly, not assuming.
 
-## రాత్రి — Telugu's genuine everyday word
+## The word, taken apart - రాత్రి — Telugu's genuine everyday word
+<!-- hl-knowledge: introduces=[TE-ETYMON-C24-RATRI-01]; assesses=[] -->
 
 **రాత్రి** (**rātri**) — "**night**" — is a Sanskrit **tatsama** word,
 already hiding inside **అర్ధరాత్రి** (*ardharātri*, "midnight," Chapter 17).
@@ -28,7 +45,8 @@ Unlike *rōju*'s Persian surprise, *rātri* really **is** Telugu's ordinary,
 everyday word for "night" — matching Kannada's own pattern this time, not
 breaking it.
 
-## A messier story than Kannada's — three words, not one
+## The word, taken apart - A messier story than Kannada's — three words, not one
+<!-- hl-knowledge: introduces=[TE-ETYMON-C24-RATRI-02]; assesses=[] -->
 
 Telugu **does** have native words here — but be honest: it's a **messier**
 picture than Kannada's clean two-word story, not a tidy mirror of it.
@@ -47,6 +65,7 @@ unlike Kannada's single native competitor, Telugu's "native" side is split
 across three words in three different, overlapping senses.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rātri" — "night," already met inside ardharātri]
@@ -56,6 +75,7 @@ across three words in three different, overlapping senses.
   matches it]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-01, TE-ETYMON-C17-MADHYAAHNAM-ARDHARAATRI-02, TE-GRAMMAR-C17-MADHYAAHNAM-ARDHARAATRI-03, TE-ETYMON-C23-ROJU-01, TE-PRAGMATICS-C23-ROJU-02, TE-ETYMON-C24-RATRI-01, TE-ETYMON-C24-RATRI-02] -->
 
 [PAUSE 3s] Where have you already met **రాత్రి** before this lesson?
 (**అర్ధరాత్రి**, *ardharātri*, "midnight.") Does *rātri* follow the same

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C29-subhodayam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 570
 chapter: 29
 type: phrase
 headword: శుభోదయం
@@ -9,26 +12,41 @@ prerequisites: [TE-C26-udayam]
 sounds: [telugu-sha, telugu-conjunct-bha]
 roots: [su-good, sanskrit-udaya-rise]
 etymology_hook: "శుభోదయం (śubhōdayam, 'good morning') = శుభ ('good') + ఉదయం (already met, TE-C26); be honest about sourcing here: one directly-fetched source — a Telugu-learning content blog, the SAME low-authority genre already found overstated for Hindi's सुप्रभात and Kannada's ಶುಭೋದಯ — claims this is OUT OF TREND, displaced by ENGLISH 'good morning,' with children taught the English phrase from preschool; treat this with real skepticism, since a directly-fetched page isn't automatically an authoritative source; the same page also calls a SEPARATE alternative, సుప్రభాతం (suprabhātam, built on ప్రభాత/prabhāta — a genuinely DIFFERENT Sanskrit root from ఉదయ/udaya, NOT the same root as Kannada's ಶುಭೋದಯ, which itself uses udaya) 'archaic'; a third option, ప్రొద్దుటి వందనాలు ('morning greetings,' built on పొద్దు, TE-C26's genuine native competitor), also exists but isn't confirmed common; నమస్కారం is the safer everyday-greeting bet, matching the నమస్కార/नमस्ते pattern already found for Kannada and Hindi"
-est_minutes: 4
+duration:
+  max_seconds: 280
+requires:
+  knowledge: [TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02]
+introduces:
+  knowledge: [TE-ETYMON-C29-SUBHODAYAM-01, TE-PRAGMATICS-C29-SUBHODAYAM-02]
+practises:
+  knowledge: [TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C29-SUBHODAYAM-01, TE-PRAGMATICS-C29-SUBHODAYAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal-traditional
+variety: standard-colloquial
 reviews_of: [TE-C26-udayam]
 ---
 
 # శుభోదయం (śubhōdayam) — a claim worth real skepticism, not a settled fact
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->
 
 [PAUSE 2s] You already have ఉదయం. This lesson's honest twist is about
 a dramatic-sounding claim — and about being skeptical of it, even
 though it came from a source fetched directly.
 
-## శుభోదయం — శుభ + ఉదయం, the traditional phrase
+## The word, taken apart - శుభోదయం — శుభ + ఉదయం, the traditional phrase
+<!-- hl-knowledge: introduces=[TE-ETYMON-C29-SUBHODAYAM-01]; assesses=[] -->
 
 **శుభోదయం** (**śubhōdayam**) — "**good morning**" — is built from
 **శుభ** ("good") plus **ఉదయం** (already met, Chapter 26). Grammatically
 and etymologically, this is the straightforward, traditional Telugu
 "good morning."
 
-## Be honest: a dramatic claim, from a source worth real skepticism
+## Why it's said this way: Be honest: a dramatic claim, from a source worth real skepticism
+<!-- hl-knowledge: introduces=[TE-PRAGMATICS-C29-SUBHODAYAM-02]; assesses=[] -->
 
 Here's the twist, and the honesty this time cuts against the source
 itself: one directly-fetched page describes **శుభోదయం** as **out of
@@ -53,6 +71,7 @@ for everyday use — matching the same నమస్కార/नमस्ते 
 found doing the real everyday work for both Kannada and Hindi.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C29-SUBHODAYAM-01, TE-PRAGMATICS-C29-SUBHODAYAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubhōdayam" — "good morning," śubha + udayam]
@@ -61,6 +80,7 @@ found doing the real everyday work for both Kannada and Hindi.
 - [YOU SAY: నమస్కారం — the safer everyday-greeting bet]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02, TE-ETYMON-C29-SUBHODAYAM-01, TE-PRAGMATICS-C29-SUBHODAYAM-02] -->
 
 [PAUSE 3s] What is శుభోదయం built from? (**శుభ** + **ఉదయం**.) Is the
 claim that శుభోదయం has been displaced by English a confirmed,

@@ -1992,7 +1992,10 @@ TOML is used because the repo already has a TOML lexer and parser (spec F03).
 ```toml
 [orchestrator]
 bind = "127.0.0.1"           # loopback only — never exposed
+port = 7463                    # explicit local WebSocket port
 packages_dir = "~/.chief-of-staff/agents/"
+state_dir = "~/.chief-of-staff/state/"
+credential_path = "~/.chief-of-staff/run/operator.credential"
 
 [keyring]
 trusted_keys = [
@@ -2003,6 +2006,9 @@ trusted_keys = [
 [hosts.defaults]
 restart_policy = "on-failure"
 health_check_interval = 5000   # milliseconds
+executable = "~/.chief-of-staff/bin/chief-of-staff-host"
+bootstrap_timeout = 10000      # milliseconds, maximum 5 minutes
+graceful_stop_timeout = 5000   # milliseconds, maximum 5 minutes
 
 [vault]
 storage_path = "~/.chief-of-staff/vault/"

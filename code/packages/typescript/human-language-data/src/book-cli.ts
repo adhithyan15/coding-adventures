@@ -1,12 +1,22 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { renderBookChapter, type BookGenerationTarget } from "./book.js";
+import {
+  renderBookChapter,
+  type BookGenerationTarget,
+  type InlineRenderOptions,
+} from "./book.js";
 import { defaultCurriculumRoot, loadLessons } from "./loader.js";
+
+interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
+  /** Named reusable mapping from the config's scriptSets table. */
+  scriptSet?: string;
+}
 
 interface BookGenerationConfig {
   version: 1;
-  targets: BookGenerationTarget[];
+  scriptSets?: Record<string, InlineRenderOptions[]>;
+  targets: ConfiguredBookGenerationTarget[];
 }
 
 interface GeneratedBookHashManifest {
@@ -51,7 +61,27 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   const lessons = loadLessons(root);
   const outputs = new Map<string, string>();
   const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
-  for (const target of config.targets) {
+  for (const configuredTarget of config.targets) {
+    const { scriptSet, ...plainTarget } = configuredTarget;
+    let target: BookGenerationTarget = plainTarget;
+    if (scriptSet !== undefined) {
+      if (
+        target.inlineScripts !== undefined ||
+        target.unicodeScript !== undefined ||
+        target.scriptCommand !== undefined
+      ) {
+        throw new Error(
+          `${target.language} chapter ${target.chapter}: scriptSet cannot be combined with inline script options`,
+        );
+      }
+      const inlineScripts = config.scriptSets?.[scriptSet];
+      if (!inlineScripts) {
+        throw new Error(
+          `${target.language} chapter ${target.chapter}: unknown scriptSet '${scriptSet}'`,
+        );
+      }
+      target = { ...target, inlineScripts };
+    }
     const generated = renderBookChapter(target, lessons);
     safeOutput(root, target.output);
     outputs.set(target.output, generated.tex);

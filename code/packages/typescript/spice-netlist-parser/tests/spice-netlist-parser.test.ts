@@ -868,6 +868,27 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0.5", 0.5],
+    ["2", 2.0],
+  ])("accepts valid diode N emission coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(N=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      emissionCoefficient: expected,
+    });
+  });
+
+  it.each(["0", "-1", "1e999"])(
+    "rejects invalid diode N emission coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model clamp D(N=${value})`)).toThrow(
+        "diode N must be finite and positive",
+      );
+    },
+  );
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

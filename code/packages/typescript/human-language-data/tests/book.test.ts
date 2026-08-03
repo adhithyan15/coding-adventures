@@ -111,6 +111,17 @@ describe("canonical LaTeX chapter rendering", () => {
     );
   });
 
+  it("wraps comparisons across multiple configured writing systems", () => {
+    const options = [
+      { unicodeScript: "Telugu", scriptCommand: "te" },
+      { unicodeScript: "Tamil", scriptCommand: "ta" },
+      { unicodeScript: "Kannada", scriptCommand: "ka" },
+    ];
+    expect(renderInlineMarkdown("తెలుగు / தமிழ் / ಕನ್ನಡ", options)).toBe(
+      "\\te{తెలుగు} / \\ta{தமிழ்} / \\ka{ಕನ್ನಡ}",
+    );
+  });
+
   it("uses authored romanization for a non-Latin section bookmark", () => {
     const lesson = parseLesson(
       source("A", 10, "दोन").replace("gloss: दोन", "gloss: two\nromanization: don"),
@@ -128,6 +139,20 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(() => renderBookChapter({ ...target, unicodeScript: "Devanagari" }, [lesson])).toThrow(
       /unicodeScript and scriptCommand must be declared together/,
     );
+    expect(() => renderBookChapter({ ...target, inlineScripts: [] }, [lesson])).toThrow(
+      /inlineScripts must not be empty/,
+    );
+    expect(() =>
+      renderBookChapter(
+        {
+          ...target,
+          unicodeScript: "Devanagari",
+          scriptCommand: "mr",
+          inlineScripts: [{ unicodeScript: "Tamil", scriptCommand: "ta" }],
+        },
+        [lesson],
+      ),
+    ).toThrow(/inlineScripts cannot be combined/);
   });
 
   it("fails closed when a target includes a legacy lesson", () => {
