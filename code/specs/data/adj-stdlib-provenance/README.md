@@ -124,5 +124,13 @@ Windows Job lifecycle calls are fault-injected in platform-neutral tests and exe
 against real suspended processes in the Windows PR matrix. Native enumeration errors,
 truncated thread records, incomplete resumes, termination failures, and handle-close
 failures all prevent a verifier result from being accepted.
+Lifecycle failures remain human-readable but also expose an immutable recursive record
+through `ProvenanceError.lifecycle`: stage, native API, numeric error code, message, and
+ordered cleanup causes. Its `to_dict()` projection is canonical JSON-ready, so callers
+do not need to parse localized operating-system messages to diagnose containment. The
+projection is versioned as `adj-stdlib/process-lifecycle-failure/v1`; CLI failures add
+it as `lifecycle_failure` while retaining the existing `error` and `valid` fields.
+Process-wait, pipe-read, and pipe-close faults are records too; partial output is never
+accepted merely because its prefix happens to be valid canonical JSON.
 Existing hashes are reused, while missing or changed bytes, claims, transforms, graph
 edges, receipts, partitions, and projections fail closed.

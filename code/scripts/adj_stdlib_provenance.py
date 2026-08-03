@@ -24,6 +24,7 @@ import threading
 import time
 import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterable, Sequence
+from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -54,10 +55,156 @@ RECEIPT_HEADERS = {
     "etag",
     "last-modified",
 }
+LIFECYCLE_FAILURE_CONTRACT = "adj-stdlib/process-lifecycle-failure/v1"
+LIFECYCLE_STAGES = frozenset(
+    {
+        "command.canonical",
+        "command.decode",
+        "command.exit",
+        "command.output_limit",
+        "command.parse",
+        "command.shape",
+        "command.timeout",
+        "job.assign",
+        "job.close",
+        "job.configure",
+        "job.create",
+        "job.terminate",
+        "pipe.close",
+        "pipe.drain",
+        "pipe.read",
+        "process.launch",
+        "process.poll",
+        "process.terminate",
+        "process.wait",
+        "process_tree.terminate",
+        "thread.close",
+        "thread.enumerate",
+        "thread.open",
+        "thread.resume",
+        "thread.snapshot",
+        "thread_snapshot.close",
+    }
+)
+
+
+@dataclass(frozen=True)
+class LifecycleFailure:
+    """Machine-inspectable process lifecycle failure with recursive cleanup causes."""
+
+    stage: str
+    message: str
+    api: str | None = None
+    error_code: int | None = None
+    cleanup_causes: tuple[LifecycleFailure, ...] = ()
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.stage, str) or self.stage not in LIFECYCLE_STAGES:
+            raise ValueError(f"unknown lifecycle failure stage: {self.stage}")
+        if not isinstance(self.message, str) or not self.message:
+            raise ValueError("lifecycle failure message must be a non-empty string")
+        if self.api is not None and (
+            not isinstance(self.api, str) or not self.api
+        ):
+            raise ValueError("lifecycle failure API must be null or a non-empty string")
+        if self.error_code is not None and (
+            not isinstance(self.error_code, int)
+            or isinstance(self.error_code, bool)
+        ):
+            raise ValueError("lifecycle failure error code must be an integer or null")
+        if not isinstance(self.cleanup_causes, tuple) or not all(
+            isinstance(cause, LifecycleFailure) for cause in self.cleanup_causes
+        ):
+            raise ValueError(
+                "lifecycle failure cleanup causes must be a tuple of lifecycle failures"
+            )
+
+    def to_dict(self) -> dict[str, Any]:
+        return self._to_dict(include_contract=True)
+
+    def _to_dict(self, *, include_contract: bool) -> dict[str, Any]:
+        result = {
+            "api": self.api,
+            "cleanup_causes": [
+                cause._to_dict(include_contract=False)
+                for cause in self.cleanup_causes
+            ],
+            "error_code": self.error_code,
+            "message": self.message,
+            "stage": self.stage,
+        }
+        if include_contract:
+            result["contract"] = LIFECYCLE_FAILURE_CONTRACT
+        return result
+
+    def with_cleanup(self, *causes: LifecycleFailure) -> LifecycleFailure:
+        return replace(self, cleanup_causes=(*self.cleanup_causes, *causes))
 
 
 class ProvenanceError(ValueError):
     """A stable, user-actionable provenance validation failure."""
+
+    def __init__(
+        self, message: str, *, lifecycle: LifecycleFailure | None = None
+    ) -> None:
+        super().__init__(message)
+        self.lifecycle = lifecycle
+
+
+class _LifecycleError(OSError):
+    def __init__(
+        self,
+        failure: LifecycleFailure,
+        *,
+        legacy_args: tuple[Any, ...] | None = None,
+    ) -> None:
+        super().__init__(*(legacy_args or (failure.message,)))
+        self.failure = failure
+
+
+def _os_error_code(error: OSError) -> int | None:
+    code = getattr(error, "winerror", None)
+    return code if code is not None else error.errno
+
+
+def _failure_from_error(
+    error: BaseException,
+    *,
+    stage: str,
+    api: str | None = None,
+    error_code: int | None = None,
+) -> LifecycleFailure:
+    if isinstance(error, _LifecycleError):
+        return error.failure
+    if error_code is None and isinstance(error, OSError):
+        error_code = _os_error_code(error)
+    return LifecycleFailure(
+        stage=stage,
+        api=api,
+        error_code=error_code,
+        message=str(error),
+    )
+
+
+def _lifecycle_error(
+    stage: str,
+    message: str,
+    *,
+    api: str | None = None,
+    error_code: int | None = None,
+    cleanup_causes: Sequence[LifecycleFailure] = (),
+    legacy_args: tuple[Any, ...] | None = None,
+) -> _LifecycleError:
+    return _LifecycleError(
+        LifecycleFailure(
+            stage=stage,
+            api=api,
+            error_code=error_code,
+            message=message,
+            cleanup_causes=tuple(cleanup_causes),
+        ),
+        legacy_args=legacy_args,
+    )
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -663,75 +810,11 @@ def _json_object(cas: Cas, digest: str, expected_kind: str) -> dict[str, Any]:
 def _run_formula_inventory(
     parser_command: Sequence[str], source_path: Path
 ) -> dict[str, Any]:
-    if not parser_command:
-        raise ProvenanceError("formula inventory parser command must not be empty")
-    try:
-        process = subprocess.Popen(
-            [*parser_command, os.fspath(source_path)],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-    except OSError as error:
-        raise ProvenanceError(
-            f"formula inventory parser failed to run: {error}"
-        ) from error
-    stdout = bytearray()
-    stderr = bytearray()
-    overflow = threading.Event()
-
-    def drain(stream: Any, output: bytearray, limit: int) -> None:
-        while True:
-            chunk = stream.read(65536)
-            if not chunk:
-                return
-            remaining = limit - len(output)
-            output.extend(chunk[:remaining])
-            if len(chunk) > remaining:
-                overflow.set()
-                process.kill()
-                return
-
-    stdout_thread = threading.Thread(
-        target=drain,
-        args=(process.stdout, stdout, MAX_OBJECT_BYTES),
-        daemon=True,
+    return _run_json_command(
+        parser_command,
+        [os.fspath(source_path)],
+        label="formula inventory parser",
     )
-    stderr_thread = threading.Thread(
-        target=drain,
-        args=(process.stderr, stderr, 4096),
-        daemon=True,
-    )
-    stdout_thread.start()
-    stderr_thread.start()
-    try:
-        returncode = process.wait(timeout=60)
-    except subprocess.TimeoutExpired as error:
-        process.kill()
-        process.wait()
-        raise ProvenanceError(
-            "formula inventory parser timed out after 60 seconds"
-        ) from error
-    finally:
-        stdout_thread.join()
-        stderr_thread.join()
-        process.stdout.close()
-        process.stderr.close()
-    if overflow.is_set():
-        raise ProvenanceError("formula inventory parser output exceeds byte limit")
-    if returncode != 0:
-        detail = bytes(stderr).decode("utf-8", errors="replace").strip()
-        raise ProvenanceError(f"formula inventory parser exited {returncode}: {detail}")
-    try:
-        value = json.loads(bytes(stdout).decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise ProvenanceError(
-            "formula inventory parser did not emit UTF-8 JSON"
-        ) from error
-    if not isinstance(value, dict):
-        raise ProvenanceError("formula inventory parser output must be an object")
-    if bytes(stdout) != canonical_json_bytes(value):
-        raise ProvenanceError("formula inventory parser output is not canonical JSON")
-    return value
 
 
 def _validate_formula_inventory_value(
@@ -1005,65 +1088,108 @@ class _WindowsKillJob:
 
         handle = self._kernel32.CreateJobObjectW(None, None)
         if not handle:
-            raise self._error("CreateJobObjectW")
+            raise self._error("job.create", "CreateJobObjectW")
         self._handle: int | None = handle
         limits = ExtendedLimitInformation()
         limits.basic_limit_information.limit_flags = 0x00002000
         if not self._kernel32.SetInformationJobObject(
             handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
         ):
-            error = self._error("SetInformationJobObject")
+            error = self._error("job.configure", "SetInformationJobObject")
             try:
                 self.close()
             except OSError as close_error:
                 try:
                     self.close()
                 except OSError as retry_error:
-                    cleanup_error = OSError(
-                        f"{close_error}; close retry also failed: {retry_error}"
+                    cleanup_error = self._with_cleanup_error(
+                        close_error, retry_error
                     )
                     raise self._with_cleanup_error(
                         error, cleanup_error
                     ) from error
             raise error
 
-    def _error(self, operation: str, code: int | None = None) -> OSError:
+    def _error(
+        self,
+        stage: str,
+        operation: str,
+        code: int | None = None,
+        *,
+        display_operation: str | None = None,
+    ) -> _LifecycleError:
         if code is None:
             code = self._last_error()
         if hasattr(ctypes, "WinError"):
             detail = str(ctypes.WinError(code))
         else:
             detail = f"Windows error {code}"
-        return OSError(code, f"{operation} failed: {detail}")
+        display_operation = display_operation or operation
+        legacy_error = OSError(code, f"{display_operation} failed: {detail}")
+        return _lifecycle_error(
+            stage,
+            str(legacy_error),
+            api=operation,
+            error_code=code,
+            legacy_args=legacy_error.args,
+        )
 
     @staticmethod
-    def _with_cleanup_error(primary: OSError, cleanup: OSError) -> OSError:
-        return OSError(f"{primary}; cleanup also failed: {cleanup}")
+    def _with_cleanup_error(
+        primary: OSError, cleanup: OSError
+    ) -> _LifecycleError:
+        failure = _failure_from_error(
+            primary, stage="process_tree.terminate"
+        )
+        cleanup_failure = _failure_from_error(
+            cleanup, stage="job.close"
+        )
+        message = f"{primary}; cleanup also failed: {cleanup}"
+        return _LifecycleError(
+            replace(
+                failure,
+                message=message,
+                cleanup_causes=(*failure.cleanup_causes, cleanup_failure),
+            ),
+            legacy_args=(message,),
+        )
 
     def _close_handle(self, handle: int, label: str) -> None:
         if not self._kernel32.CloseHandle(handle):
-            raise self._error(f"CloseHandle({label})")
+            stage = {
+                "job": "job.close",
+                "thread": "thread.close",
+                "thread snapshot": "thread_snapshot.close",
+            }[label]
+            raise self._error(
+                stage,
+                "CloseHandle",
+                display_operation=f"CloseHandle({label})",
+            )
 
     def _validate_thread_entry(self, entry: ctypes.Structure) -> None:
         if entry.size < self._thread_entry_owner_end:
-            raise OSError(
+            raise _lifecycle_error(
+                "thread.enumerate",
                 "thread enumeration returned a truncated THREADENTRY32 "
-                f"record ({entry.size} bytes; need {self._thread_entry_owner_end})"
+                f"record ({entry.size} bytes; need {self._thread_entry_owner_end})",
             )
 
     def assign(self, process: subprocess.Popen[bytes]) -> None:
         if self._handle is None:
-            raise OSError("cannot assign a process to a closed Windows Job")
+            raise _lifecycle_error(
+                "job.assign", "cannot assign a process to a closed Windows Job"
+            )
         if not self._kernel32.AssignProcessToJobObject(
             self._handle,
             int(process._handle),  # type: ignore[attr-defined]
         ):
-            raise self._error("AssignProcessToJobObject")
+            raise self._error("job.assign", "AssignProcessToJobObject")
 
     def resume(self, process: subprocess.Popen[bytes]) -> None:
         snapshot = self._kernel32.CreateToolhelp32Snapshot(0x00000004, 0)
         if snapshot == ctypes.c_void_p(-1).value:
-            raise self._error("CreateToolhelp32Snapshot")
+            raise self._error("thread.snapshot", "CreateToolhelp32Snapshot")
         resume_error: OSError | None = None
         resumed = False
         try:
@@ -1073,22 +1199,26 @@ class _WindowsKillJob:
             found = self._kernel32.Thread32First(snapshot, ctypes.byref(entry))
             first_error = self._last_error() if not found else 0
             if not found and first_error != self.ERROR_NO_MORE_FILES:
-                raise self._error("Thread32First", first_error)
+                raise self._error("thread.enumerate", "Thread32First", first_error)
             while found:
                 self._validate_thread_entry(entry)
                 if entry.owner_process_id == process.pid:
                     thread = self._kernel32.OpenThread(0x0002, False, entry.thread_id)
                     if not thread:
-                        raise self._error("OpenThread")
+                        raise self._error("thread.open", "OpenThread")
                     thread_error: OSError | None = None
                     try:
                         previous_suspend_count = self._kernel32.ResumeThread(thread)
                         if previous_suspend_count == 0xFFFFFFFF:
-                            thread_error = self._error("ResumeThread")
+                            thread_error = self._error(
+                                "thread.resume", "ResumeThread"
+                            )
                         elif previous_suspend_count != 1:
-                            thread_error = OSError(
+                            thread_error = _lifecycle_error(
+                                "thread.resume",
                                 "ResumeThread did not release the CREATE_SUSPENDED "
-                                f"process (previous suspend count {previous_suspend_count})"
+                                f"process (previous suspend count {previous_suspend_count})",
+                                api="ResumeThread",
                             )
                     finally:
                         try:
@@ -1108,7 +1238,9 @@ class _WindowsKillJob:
                 found = self._kernel32.Thread32Next(snapshot, ctypes.byref(entry))
                 next_error = self._last_error() if not found else 0
                 if not found and next_error != self.ERROR_NO_MORE_FILES:
-                    raise self._error("Thread32Next", next_error)
+                    raise self._error(
+                        "thread.enumerate", "Thread32Next", next_error
+                    )
         except OSError as error:
             resume_error = error
         finally:
@@ -1124,13 +1256,16 @@ class _WindowsKillJob:
             raise resume_error
         if resumed:
             return
-        raise OSError(f"suspended process {process.pid} has no primary thread")
+        raise _lifecycle_error(
+            "thread.enumerate",
+            f"suspended process {process.pid} has no primary thread",
+        )
 
     def terminate(self) -> None:
         if self._handle is not None and not self._kernel32.TerminateJobObject(
             self._handle, 1
         ):
-            raise self._error("TerminateJobObject")
+            raise self._error("job.terminate", "TerminateJobObject")
 
     def close(self) -> None:
         if self._handle is not None:
@@ -1141,14 +1276,16 @@ class _WindowsKillJob:
 def _terminate_process_tree(
     process: subprocess.Popen[bytes], windows_job: _WindowsKillJob | None
 ) -> None:
-    errors: list[OSError] = []
+    failures: list[LifecycleFailure] = []
     if os.name == "nt":
         if windows_job is not None:
             try:
                 windows_job.terminate()
             except OSError as error:
-                errors.append(error)
-        if windows_job is None or errors:
+                failures.append(
+                    _failure_from_error(error, stage="job.terminate")
+                )
+        if windows_job is None or failures:
             try:
                 result = subprocess.run(
                     ["taskkill", "/PID", str(process.pid), "/T", "/F"],
@@ -1159,23 +1296,64 @@ def _terminate_process_tree(
                     timeout=5,
                 )
                 if result.returncode != 0:
-                    errors.append(
-                        OSError(f"taskkill /T exited {result.returncode}")
+                    failures.append(
+                        LifecycleFailure(
+                            stage="process_tree.terminate",
+                            api="taskkill",
+                            error_code=result.returncode,
+                            message=f"taskkill /T exited {result.returncode}",
+                        )
                     )
             except (OSError, subprocess.TimeoutExpired) as error:
-                errors.append(OSError(f"taskkill /T failed: {error}"))
+                failures.append(
+                    LifecycleFailure(
+                        stage="process_tree.terminate",
+                        api="taskkill",
+                        error_code=(
+                            _os_error_code(error)
+                            if isinstance(error, OSError)
+                            else None
+                        ),
+                        message=f"taskkill /T failed: {error}",
+                    )
+                )
     else:
         try:
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
-    if process.poll() is None:
+    try:
+        process_running = process.poll() is None
+    except OSError as error:
+        failures.append(
+            _failure_from_error(
+                error,
+                stage="process.poll",
+                api="Popen.poll",
+            )
+        )
+        process_running = True
+    if process_running:
         try:
             process.kill()
         except OSError as error:
-            errors.append(OSError(f"root process kill failed: {error}"))
-    if errors:
-        raise OSError("; ".join(str(error) for error in errors))
+            failures.append(
+                LifecycleFailure(
+                    stage="process.terminate",
+                    api="Popen.kill",
+                    error_code=_os_error_code(error),
+                    message=f"root process kill failed: {error}",
+                )
+            )
+    if failures:
+        primary, *cleanup = failures
+        raise _LifecycleError(
+            replace(
+                primary,
+                message="; ".join(failure.message for failure in failures),
+                cleanup_causes=(*primary.cleanup_causes, *cleanup),
+            )
+        )
 
 
 def _run_json_command(
@@ -1196,8 +1374,11 @@ def _run_json_command(
         try:
             windows_job = windows_job_factory()
         except OSError as error:
+            detail = f"{label} failed to create process job: {error}"
+            failure = _failure_from_error(error, stage="job.create")
             raise ProvenanceError(
-                f"{label} failed to create process job: {error}"
+                detail,
+                lifecycle=replace(failure, message=detail),
             ) from error
     popen_options: dict[str, Any] = {}
     if os.name == "nt":
@@ -1216,34 +1397,54 @@ def _run_json_command(
             **popen_options,
         )
     except OSError as error:
-        close_error: OSError | None = None
+        cleanup_failures: list[LifecycleFailure] = []
+        close_failure_text: list[str] = []
         if windows_job is not None:
             try:
                 windows_job.close()
             except OSError as cleanup_error:
+                close_failure = _failure_from_error(
+                    cleanup_error, stage="job.close"
+                )
+                close_failure_text.append(close_failure.message)
                 try:
                     windows_job.close()
                 except OSError as retry_error:
-                    close_error = OSError(
-                        f"{cleanup_error}; close retry also failed: {retry_error}"
+                    retry_failure = _failure_from_error(
+                        retry_error, stage="job.close"
                     )
-                else:
-                    close_error = cleanup_error
+                    close_failure = close_failure.with_cleanup(retry_failure)
+                    close_failure_text.append(
+                        f"close retry also failed: {retry_failure.message}"
+                    )
+                cleanup_failures.append(close_failure)
         detail = f"{label} failed to run: {error}"
-        if close_error is not None:
-            detail += f"; failed to close process job: {close_error}"
-        raise ProvenanceError(detail) from error
+        if close_failure_text:
+            detail += "; failed to close process job: " + "; ".join(
+                close_failure_text
+            )
+        failure = _failure_from_error(
+            error,
+            stage="process.launch",
+            api="Popen",
+        ).with_cleanup(*cleanup_failures)
+        raise ProvenanceError(
+            detail, lifecycle=replace(failure, message=detail)
+        ) from error
     if windows_job is not None:
-        try:
-            windows_job.assign(process)
-            windows_job.resume(process)
-        except OSError as error:
+        def fail_containment(error: OSError, default_stage: str) -> None:
             containment_errors = [str(error)]
+            cleanup_failures: list[LifecycleFailure] = []
             try:
                 try:
                     _terminate_process_tree(process, windows_job)
                 except OSError as termination_error:
                     containment_errors.append(str(termination_error))
+                    cleanup_failures.append(
+                        _failure_from_error(
+                            termination_error, stage="process_tree.terminate"
+                        )
+                    )
                 try:
                     process.wait(timeout=drain_timeout_seconds)
                 except subprocess.TimeoutExpired:
@@ -1253,40 +1454,143 @@ def _run_json_command(
                         containment_errors.append(
                             f"root process kill failed: {kill_error}"
                         )
+                        cleanup_failures.append(
+                            _failure_from_error(
+                                kill_error,
+                                stage="process.terminate",
+                                api="Popen.kill",
+                            )
+                        )
+                except OSError as wait_error:
+                    containment_errors.append(f"process wait failed: {wait_error}")
+                    cleanup_failures.append(
+                        _failure_from_error(
+                            wait_error,
+                            stage="process.wait",
+                            api="Popen.wait",
+                        )
+                    )
             finally:
                 try:
                     windows_job.close()
                 except OSError as close_error:
                     containment_errors.append(str(close_error))
+                    close_failure = _failure_from_error(
+                        close_error, stage="job.close"
+                    )
                     try:
                         windows_job.close()
                     except OSError as retry_error:
                         containment_errors.append(
                             f"close retry also failed: {retry_error}"
                         )
-                process.stdout.close()
-                process.stderr.close()
-            raise ProvenanceError(
+                        close_failure = close_failure.with_cleanup(
+                            _failure_from_error(
+                                retry_error,
+                                stage="job.close",
+                            )
+                        )
+                    cleanup_failures.append(close_failure)
+                for pipe_name, stream in (
+                    ("stdout", process.stdout),
+                    ("stderr", process.stderr),
+                ):
+                    try:
+                        stream.close()
+                    except OSError as pipe_error:
+                        message = f"{pipe_name} pipe close failed: {pipe_error}"
+                        containment_errors.append(message)
+                        cleanup_failures.append(
+                            replace(
+                                _failure_from_error(
+                                    pipe_error,
+                                    stage="pipe.close",
+                                    api=f"Popen.{pipe_name}.close",
+                                ),
+                                message=message,
+                            )
+                        )
+            detail = (
                 f"{label} failed to contain process tree: "
                 + "; ".join(containment_errors)
+            )
+            failure = _failure_from_error(
+                error, stage=default_stage
+            ).with_cleanup(*cleanup_failures)
+            raise ProvenanceError(
+                detail,
+                lifecycle=replace(failure, message=detail),
             ) from error
+
+        try:
+            windows_job.assign(process)
+        except OSError as error:
+            fail_containment(error, "job.assign")
+        try:
+            windows_job.resume(process)
+        except OSError as error:
+            fail_containment(error, "thread.resume")
     stdout = bytearray()
     stderr = bytearray()
     overflow = threading.Event()
     termination_lock = threading.Lock()
-    termination_errors: list[OSError] = []
+    termination_failures: list[LifecycleFailure] = []
+    pipe_read_failures: list[LifecycleFailure | None] = [None, None]
+    pipe_read_terminated_process = [False, False]
 
     def terminate() -> None:
         with termination_lock:
             try:
                 _terminate_process_tree(process, windows_job)
             except OSError as error:
-                if not termination_errors:
-                    termination_errors.append(error)
+                if not termination_failures:
+                    termination_failures.append(
+                        _failure_from_error(
+                            error, stage="process_tree.terminate"
+                        )
+                    )
 
-    def drain(stream: Any, output: bytearray, limit: int) -> None:
+    def drain(
+        stream: Any,
+        output: bytearray,
+        limit: int,
+        pipe_index: int,
+        pipe_name: str,
+    ) -> None:
         while True:
-            chunk = stream.read(65536)
+            try:
+                chunk = stream.read(65536)
+            except OSError as error:
+                message = f"{pipe_name} pipe read failed: {error}"
+                pipe_read_failures[pipe_index] = replace(
+                    _failure_from_error(
+                        error,
+                        stage="pipe.read",
+                        api=f"Popen.{pipe_name}.read",
+                    ),
+                    message=message,
+                )
+                try:
+                    process_running = process.poll() is None
+                except OSError as poll_error:
+                    poll_message = f"process status poll failed: {poll_error}"
+                    read_failure = pipe_read_failures[pipe_index]
+                    assert read_failure is not None
+                    pipe_read_failures[pipe_index] = read_failure.with_cleanup(
+                        replace(
+                            _failure_from_error(
+                                poll_error,
+                                stage="process.poll",
+                                api="Popen.poll",
+                            ),
+                            message=poll_message,
+                        )
+                    )
+                    process_running = True
+                if process_running:
+                    pipe_read_terminated_process[pipe_index] = True
+                    terminate()
+                return
             if not chunk:
                 return
             remaining = limit - len(output)
@@ -1299,18 +1603,22 @@ def _run_json_command(
     threads = (
         threading.Thread(
             target=drain,
-            args=(process.stdout, stdout, MAX_OBJECT_BYTES),
+            args=(process.stdout, stdout, MAX_OBJECT_BYTES, 0, "stdout"),
             daemon=True,
         ),
         threading.Thread(
-            target=drain, args=(process.stderr, stderr, 4096), daemon=True
+            target=drain,
+            args=(process.stderr, stderr, 4096, 1, "stderr"),
+            daemon=True,
         ),
     )
     for thread in threads:
         thread.start()
     timeout_error: subprocess.TimeoutExpired | None = None
+    wait_failure: LifecycleFailure | None = None
     returncode: int | None = None
-    close_error: OSError | None = None
+    close_failures: list[LifecycleFailure] = []
+    pipe_close_failures: list[LifecycleFailure] = []
     try:
         returncode = process.wait(timeout=timeout_seconds)
     except subprocess.TimeoutExpired as error:
@@ -1319,25 +1627,93 @@ def _run_json_command(
         try:
             returncode = process.wait(timeout=drain_timeout_seconds)
         except subprocess.TimeoutExpired:
+            wait_failure = LifecycleFailure(
+                stage="process.wait",
+                api="Popen.wait",
+                error_code=None,
+                message=(
+                    "process wait after command timeout timed out after "
+                    f"{drain_timeout_seconds:g} seconds"
+                ),
+            )
             terminate()
+        except OSError as wait_error:
+            message = f"process wait after timeout failed: {wait_error}"
+            wait_failure = replace(
+                _failure_from_error(
+                    wait_error,
+                    stage="process.wait",
+                    api="Popen.wait",
+                ),
+                message=message,
+            )
+    except OSError as error:
+        message = f"{label} process wait failed: {error}"
+        wait_failure = replace(
+            _failure_from_error(
+                error,
+                stage="process.wait",
+                api="Popen.wait",
+            ),
+            message=message,
+        )
+        terminate()
+        try:
+            returncode = process.wait(timeout=drain_timeout_seconds)
+        except subprocess.TimeoutExpired:
+            retry_message = (
+                "process wait retry timed out after "
+                f"{drain_timeout_seconds:g} seconds"
+            )
+            wait_failure = wait_failure.with_cleanup(
+                LifecycleFailure(
+                    stage="process.wait",
+                    api="Popen.wait",
+                    error_code=None,
+                    message=retry_message,
+                )
+            )
+            terminate()
+        except OSError as retry_error:
+            retry_message = f"process wait retry failed: {retry_error}"
+            wait_failure = wait_failure.with_cleanup(
+                replace(
+                    _failure_from_error(
+                        retry_error,
+                        stage="process.wait",
+                        api="Popen.wait",
+                    ),
+                    message=retry_message,
+                )
+            )
     finally:
         with termination_lock:
             if windows_job is not None:
                 try:
                     windows_job.close()
                 except OSError as error:
-                    close_error = error
+                    close_failure = _failure_from_error(
+                        error, stage="job.close"
+                    )
                     try:
                         _terminate_process_tree(process, windows_job)
                     except OSError as termination_error:
-                        if not termination_errors:
-                            termination_errors.append(termination_error)
+                        close_failure = close_failure.with_cleanup(
+                            _failure_from_error(
+                                termination_error,
+                                stage="process_tree.terminate",
+                            )
+                        )
                     try:
                         windows_job.close()
                     except OSError as retry_error:
-                        close_error = OSError(
-                            f"{error}; close retry also failed: {retry_error}"
+                        close_failure = close_failure.with_cleanup(
+                            _failure_from_error(
+                                retry_error,
+                                stage="job.close",
+                            )
                         )
+                    close_failures.append(close_failure)
         drain_deadline = time.monotonic() + drain_timeout_seconds
         for thread in threads:
             thread.join(timeout=max(0, drain_deadline - time.monotonic()))
@@ -1347,60 +1723,229 @@ def _run_json_command(
         final_drain_deadline = time.monotonic() + 1
         for thread in stuck_drains:
             thread.join(timeout=max(0, final_drain_deadline - time.monotonic()))
-    cleanup_failures: list[str] = []
-    if termination_errors:
-        cleanup_failures.append(
-            f"failed to terminate process tree: {termination_errors[0]}"
-        )
-    if close_error is not None:
-        cleanup_failures.append(f"failed to close process job: {close_error}")
-
-    def with_cleanup_failures(primary: str) -> str:
-        if not cleanup_failures:
-            return primary
-        return primary + "; " + "; ".join(cleanup_failures)
-
     drain_failure = any(thread.is_alive() for thread in threads)
     if not drain_failure:
-        process.stdout.close()
-        process.stderr.close()
+        for pipe_name, stream in (
+            ("stdout", process.stdout),
+            ("stderr", process.stderr),
+        ):
+            try:
+                stream.close()
+            except OSError as error:
+                message = f"{pipe_name} pipe close failed: {error}"
+                pipe_close_failures.append(
+                    replace(
+                        _failure_from_error(
+                            error,
+                            stage="pipe.close",
+                            api=f"Popen.{pipe_name}.close",
+                        ),
+                        message=message,
+                    )
+                )
+    pipe_read_failure_events = [
+        (failure, pipe_read_terminated_process[index])
+        for index, failure in enumerate(pipe_read_failures)
+        if failure is not None
+    ]
+    pipe_read_failure_records = [
+        failure for failure, _terminated in pipe_read_failure_events
+    ]
+    cleanup_failures = [
+        *termination_failures,
+        *close_failures,
+        *pipe_close_failures,
+    ]
+    cleanup_failure_text: list[str] = []
+    if termination_failures:
+        cleanup_failure_text.append(
+            "failed to terminate process tree: "
+            + termination_failures[0].message
+        )
+    if close_failures:
+        close_failure = close_failures[0]
+        close_text = close_failure.message
+        for recovery_failure in close_failure.cleanup_causes:
+            if recovery_failure.stage == "job.close":
+                close_text += (
+                    "; close retry also failed: " + recovery_failure.message
+                )
+            else:
+                close_text += (
+                    "; recovery termination failed: "
+                    + recovery_failure.message
+                )
+        cleanup_failure_text.append(
+            "failed to close process job: " + close_text
+        )
+    cleanup_failure_text.extend(
+        failure.message for failure in pipe_close_failures
+    )
+
+    def add_cleanup_failure(failure: LifecycleFailure) -> None:
+        cleanup_failures.append(failure)
+        cleanup_failure_text.append(failure.message)
+
+    def with_cleanup_failures(primary: str) -> str:
+        if not cleanup_failure_text:
+            return primary
+        return primary + "; " + "; ".join(cleanup_failure_text)
+
     primary_error: str | None = None
     primary_cause: BaseException | None = None
+    primary_failure: LifecycleFailure | None = None
     value: Any = None
     drain_error = f"{label} output pipes did not close within bounds"
     if timeout_error is not None:
         primary_error = f"{label} timed out after {timeout_seconds:g} seconds"
         primary_cause = timeout_error
+        primary_failure = LifecycleFailure(
+            stage="command.timeout",
+            api="Popen.wait",
+            error_code=None,
+            message=primary_error,
+        )
+        if wait_failure is not None:
+            add_cleanup_failure(wait_failure)
+        for failure in pipe_read_failure_records:
+            add_cleanup_failure(failure)
     elif overflow.is_set():
         primary_error = f"{label} output exceeds byte limit"
-    elif returncode != 0:
+        primary_failure = LifecycleFailure(
+            stage="command.output_limit", message=primary_error
+        )
+        if wait_failure is not None:
+            add_cleanup_failure(wait_failure)
+        for failure in pipe_read_failure_records:
+            add_cleanup_failure(failure)
+    elif wait_failure is not None:
+        primary_error = wait_failure.message
+        primary_failure = wait_failure
+        for failure in pipe_read_failure_records:
+            add_cleanup_failure(failure)
+    elif returncode != 0 and not any(
+        terminated for _failure, terminated in pipe_read_failure_events
+    ):
         detail = bytes(stderr).decode("utf-8", errors="replace").strip()
         primary_error = f"{label} exited {returncode}: {detail}"
+        primary_failure = LifecycleFailure(
+            stage="command.exit",
+            api="Popen.wait",
+            error_code=returncode,
+            message=primary_error,
+        )
+        for failure in pipe_read_failure_records:
+            add_cleanup_failure(failure)
+    elif pipe_read_failure_records:
+        causal_failures = [
+            failure
+            for failure, terminated in pipe_read_failure_events
+            if terminated
+        ]
+        primary_failure = (
+            causal_failures[0] if causal_failures else pipe_read_failure_records[0]
+        )
+        primary_error = primary_failure.message
+        for failure in pipe_read_failure_records:
+            if failure is not primary_failure:
+                add_cleanup_failure(failure)
+        if returncode != 0:
+            add_cleanup_failure(
+                LifecycleFailure(
+                    stage="command.exit",
+                    api="Popen.wait",
+                    error_code=returncode,
+                    message=f"process exited {returncode} after pipe-read termination",
+                )
+            )
     elif drain_failure:
         primary_error = drain_error
+        primary_failure = LifecycleFailure(
+            stage="pipe.drain", message=primary_error
+        )
     else:
         try:
-            value = json.loads(bytes(stdout).decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            decoded = bytes(stdout).decode("utf-8")
+        except UnicodeDecodeError as error:
             primary_error = f"{label} did not emit UTF-8 JSON"
             primary_cause = error
+            primary_failure = LifecycleFailure(
+                stage="command.decode", message=primary_error
+            )
         else:
-            if not isinstance(value, dict):
-                primary_error = f"{label} output must be an object"
-            elif bytes(stdout) != canonical_json_bytes(value):
-                primary_error = f"{label} output is not canonical JSON"
+            try:
+                value = json.loads(decoded)
+            except json.JSONDecodeError as error:
+                primary_error = f"{label} did not emit UTF-8 JSON"
+                primary_cause = error
+                primary_failure = LifecycleFailure(
+                    stage="command.parse", message=primary_error
+                )
+            else:
+                if not isinstance(value, dict):
+                    primary_error = f"{label} output must be an object"
+                    primary_failure = LifecycleFailure(
+                        stage="command.shape", message=primary_error
+                    )
+                elif bytes(stdout) != canonical_json_bytes(value):
+                    primary_error = f"{label} output is not canonical JSON"
+                    primary_failure = LifecycleFailure(
+                        stage="command.canonical", message=primary_error
+                    )
     if drain_failure and primary_error != drain_error:
-        cleanup_failures.append("output pipes did not close within bounds")
+        drain_failure_record = LifecycleFailure(
+            stage="pipe.drain",
+            message="output pipes did not close within bounds",
+        )
+        cleanup_failures.append(drain_failure_record)
+        cleanup_failure_text.append(drain_failure_record.message)
     if primary_error is not None:
-        raise ProvenanceError(with_cleanup_failures(primary_error)) from primary_cause
-    if termination_errors:
+        assert primary_failure is not None
+        final_message = with_cleanup_failures(primary_error)
+        failure = primary_failure.with_cleanup(*cleanup_failures)
         raise ProvenanceError(
-            f"{label} failed to terminate process tree: {termination_errors[0]}"
-        ) from termination_errors[0]
-    if close_error is not None:
+            final_message,
+            lifecycle=replace(failure, message=final_message),
+        ) from primary_cause
+    if termination_failures:
+        failure = termination_failures[0].with_cleanup(
+            *termination_failures[1:], *close_failures, *pipe_close_failures
+        )
+        detail = f"{label} failed to terminate process tree: {failure.message}"
         raise ProvenanceError(
-            f"{label} failed to close process job: {close_error}"
-        ) from close_error
+            detail, lifecycle=replace(failure, message=detail)
+        )
+    if close_failures:
+        failure = close_failures[0].with_cleanup(
+            *close_failures[1:], *pipe_close_failures
+        )
+        close_text = failure.message
+        for recovery_failure in failure.cleanup_causes:
+            if recovery_failure.stage == "job.close":
+                close_text += (
+                    "; close retry also failed: " + recovery_failure.message
+                )
+            elif recovery_failure.stage in {
+                "job.terminate",
+                "process.terminate",
+                "process_tree.terminate",
+            }:
+                close_text += (
+                    "; recovery termination failed: "
+                    + recovery_failure.message
+                )
+            else:
+                close_text += "; cleanup also failed: " + recovery_failure.message
+        detail = f"{label} failed to close process job: {close_text}"
+        raise ProvenanceError(
+            detail, lifecycle=replace(failure, message=detail)
+        )
+    if pipe_close_failures:
+        failure = pipe_close_failures[0].with_cleanup(*pipe_close_failures[1:])
+        detail = f"{label} failed to close output pipe: {failure.message}"
+        raise ProvenanceError(
+            detail, lifecycle=replace(failure, message=detail)
+        )
     return value
 
 
@@ -3693,9 +4238,18 @@ def main() -> int:
         json.JSONDecodeError,
         ProvenanceError,
     ) as error:
-        print(
-            json.dumps({"error": str(error), "valid": False}, indent=2, sort_keys=True)
-        )
+        failure = {
+            "error": str(error),
+            "valid": False,
+        }
+        lifecycle = None
+        if isinstance(error, ProvenanceError):
+            lifecycle = error.lifecycle
+        elif isinstance(error, _LifecycleError):
+            lifecycle = error.failure
+        if lifecycle is not None:
+            failure["lifecycle_failure"] = lifecycle.to_dict()
+        print(json.dumps(failure, indent=2, sort_keys=True))
         return 1
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
