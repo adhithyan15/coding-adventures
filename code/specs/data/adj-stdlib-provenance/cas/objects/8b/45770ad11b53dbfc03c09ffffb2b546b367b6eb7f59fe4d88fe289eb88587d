@@ -1,0 +1,513 @@
+{
+  "contract": "adj-lang/formula_derivation/v2",
+  "export": {
+    "body": {
+      "end": 4727,
+      "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+      "start": 4673
+    },
+    "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+    "claim_id": "adj.math.arithmetic.proportion",
+    "declaration": {
+      "end": 5240,
+      "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+      "start": 4606
+    },
+    "formula": "fourth_proportional",
+    "formulabook": "proportions",
+    "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+    "parameters": [
+      "first_term",
+      "second_term",
+      "third_term"
+    ],
+    "preconditions": [
+      {
+        "arguments": [
+          {
+            "end": 4763,
+            "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+            "start": 4753
+          }
+        ],
+        "declaration": {
+          "end": 4764,
+          "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+          "start": 4745
+        },
+        "predicate": "nonzero"
+      },
+      {
+        "arguments": [
+          {
+            "end": 4785,
+            "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+            "start": 4774
+          }
+        ],
+        "declaration": {
+          "end": 4786,
+          "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+          "start": 4766
+        },
+        "predicate": "nonzero"
+      },
+      {
+        "arguments": [
+          {
+            "end": 4806,
+            "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+            "start": 4796
+          }
+        ],
+        "declaration": {
+          "end": 4807,
+          "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+          "start": 4788
+        },
+        "predicate": "nonzero"
+      }
+    ],
+    "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+    "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+    "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+  },
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 4727,
+        "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+        "start": 4673
+      },
+      "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+      "claim_id": "adj.math.arithmetic.proportion",
+      "declaration": {
+        "end": 5240,
+        "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+        "start": 4606
+      },
+      "formula": "fourth_proportional",
+      "formulabook": "proportions",
+      "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+      "parameters": [
+        "first_term",
+        "second_term",
+        "third_term"
+      ],
+      "preconditions": [
+        {
+          "arguments": [
+            {
+              "end": 4763,
+              "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+              "start": 4753
+            }
+          ],
+          "declaration": {
+            "end": 4764,
+            "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+            "start": 4745
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4785,
+              "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+              "start": 4774
+            }
+          ],
+          "declaration": {
+            "end": 4786,
+            "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+            "start": 4766
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4806,
+              "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+              "start": 4796
+            }
+          ],
+          "declaration": {
+            "end": 4807,
+            "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+            "start": 4788
+          },
+          "predicate": "nonzero"
+        }
+      ],
+      "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+      "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+      "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+    },
+    {
+      "body": {
+        "end": 4843,
+        "sha256": "6f5490b92f7782d4fedd5b803c0dd05bad061b0f30ecda0e34a1c02cf3534ffd",
+        "start": 4820
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.product",
+      "declaration": {
+        "end": 5194,
+        "sha256": "b602175a41e073a27fd369640810bfc2821566089773749548948ad267c2c2d0",
+        "start": 4778
+      },
+      "formula": "product",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "factor_one",
+        "factor_two"
+      ],
+      "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    },
+    {
+      "body": {
+        "end": 5327,
+        "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+        "start": 5309
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.quotient",
+      "declaration": {
+        "end": 5753,
+        "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+        "start": 5271
+      },
+      "formula": "quotient",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "dividend",
+        "divisor"
+      ],
+      "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "guards": [
+    {
+      "formula": {
+        "body": {
+          "end": 4727,
+          "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+          "start": 4673
+        },
+        "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+        "claim_id": "adj.math.arithmetic.proportion",
+        "declaration": {
+          "end": 5240,
+          "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+          "start": 4606
+        },
+        "formula": "fourth_proportional",
+        "formulabook": "proportions",
+        "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+        "parameters": [
+          "first_term",
+          "second_term",
+          "third_term"
+        ],
+        "preconditions": [
+          {
+            "arguments": [
+              {
+                "end": 4763,
+                "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                "start": 4753
+              }
+            ],
+            "declaration": {
+              "end": 4764,
+              "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+              "start": 4745
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4785,
+                "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                "start": 4774
+              }
+            ],
+            "declaration": {
+              "end": 4786,
+              "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+              "start": 4766
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4806,
+                "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                "start": 4796
+              }
+            ],
+            "declaration": {
+              "end": 4807,
+              "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+              "start": 4788
+            },
+            "predicate": "nonzero"
+          }
+        ],
+        "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+        "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+        "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+      },
+      "precondition": {
+        "arguments": [
+          {
+            "end": 4763,
+            "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+            "start": 4753
+          }
+        ],
+        "declaration": {
+          "end": 4764,
+          "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+          "start": 4745
+        },
+        "index": 0,
+        "parameter": "first_term",
+        "predicate": "nonzero"
+      }
+    },
+    {
+      "formula": {
+        "body": {
+          "end": 4727,
+          "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+          "start": 4673
+        },
+        "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+        "claim_id": "adj.math.arithmetic.proportion",
+        "declaration": {
+          "end": 5240,
+          "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+          "start": 4606
+        },
+        "formula": "fourth_proportional",
+        "formulabook": "proportions",
+        "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+        "parameters": [
+          "first_term",
+          "second_term",
+          "third_term"
+        ],
+        "preconditions": [
+          {
+            "arguments": [
+              {
+                "end": 4763,
+                "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                "start": 4753
+              }
+            ],
+            "declaration": {
+              "end": 4764,
+              "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+              "start": 4745
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4785,
+                "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                "start": 4774
+              }
+            ],
+            "declaration": {
+              "end": 4786,
+              "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+              "start": 4766
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4806,
+                "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                "start": 4796
+              }
+            ],
+            "declaration": {
+              "end": 4807,
+              "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+              "start": 4788
+            },
+            "predicate": "nonzero"
+          }
+        ],
+        "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+        "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+        "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+      },
+      "precondition": {
+        "arguments": [
+          {
+            "end": 4785,
+            "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+            "start": 4774
+          }
+        ],
+        "declaration": {
+          "end": 4786,
+          "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+          "start": 4766
+        },
+        "index": 1,
+        "parameter": "second_term",
+        "predicate": "nonzero"
+      }
+    },
+    {
+      "formula": {
+        "body": {
+          "end": 4727,
+          "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+          "start": 4673
+        },
+        "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+        "claim_id": "adj.math.arithmetic.proportion",
+        "declaration": {
+          "end": 5240,
+          "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+          "start": 4606
+        },
+        "formula": "fourth_proportional",
+        "formulabook": "proportions",
+        "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+        "parameters": [
+          "first_term",
+          "second_term",
+          "third_term"
+        ],
+        "preconditions": [
+          {
+            "arguments": [
+              {
+                "end": 4763,
+                "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                "start": 4753
+              }
+            ],
+            "declaration": {
+              "end": 4764,
+              "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+              "start": 4745
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4785,
+                "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                "start": 4774
+              }
+            ],
+            "declaration": {
+              "end": 4786,
+              "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+              "start": 4766
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4806,
+                "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                "start": 4796
+              }
+            ],
+            "declaration": {
+              "end": 4807,
+              "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+              "start": 4788
+            },
+            "predicate": "nonzero"
+          }
+        ],
+        "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+        "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+        "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+      },
+      "precondition": {
+        "arguments": [
+          {
+            "end": 4806,
+            "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+            "start": 4796
+          }
+        ],
+        "declaration": {
+          "end": 4807,
+          "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+          "start": 4788
+        },
+        "index": 2,
+        "parameter": "third_term",
+        "predicate": "nonzero"
+      }
+    }
+  ],
+  "imports": [
+    {
+      "claim_id": "adj.code.arithmetic.proportion.import.arithmetic",
+      "declaration": {
+        "end": 2784,
+        "sha256": "6e2baf610eafda5b9940e63c4e957c8e99366137d3789bc1cf51e73cb3e3a894",
+        "start": 2761
+      },
+      "imported_bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "imported_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
+      "importer_source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+      "importer_source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+      "literal": "arithmetic.adj"
+    },
+    {
+      "claim_id": "adj.code.arithmetic.proportion.query.import",
+      "declaration": {
+        "end": 898,
+        "sha256": "3b1b5308ad51f62ea643c23604c07ddcc37829684c80c96e9866f1772931bd20",
+        "start": 875
+      },
+      "imported_bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+      "imported_source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+      "importer_source_ir_sha256": "bdb84f1c8ca6a00a021679acaf7770dfe306022b8bb7f8d11ff0bc1afb6276e0",
+      "importer_source_sha256": "ac8a7cc5df1e226d1f31dc3500bbd6d18a88985bb42b805dd758fac3aed4c433",
+      "literal": "proportion.adj"
+    }
+  ],
+  "kind": "formula_derivation",
+  "question": {
+    "claim_id": "adj.question.arithmetic.proportion.compute",
+    "declaration": {
+      "end": 1815,
+      "sha256": "3c1d96048228e8d1816a748ad1f2d7f836ca8120f2ab1714967f5f1a6366de54",
+      "start": 1757
+    },
+    "name": "fourth_proportional",
+    "source_ir_sha256": "bdb84f1c8ca6a00a021679acaf7770dfe306022b8bb7f8d11ff0bc1afb6276e0",
+    "source_sha256": "ac8a7cc5df1e226d1f31dc3500bbd6d18a88985bb42b805dd758fac3aed4c433"
+  },
+  "schema_version": 2
+}

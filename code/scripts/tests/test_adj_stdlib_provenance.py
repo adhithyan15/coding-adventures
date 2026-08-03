@@ -8,6 +8,7 @@ import multiprocessing
 import os
 import shutil
 import signal
+import struct
 import subprocess
 import sys
 import tempfile
@@ -17,6 +18,7 @@ import unittest
 from contextlib import redirect_stdout
 from copy import deepcopy
 from dataclasses import FrozenInstanceError
+from fractions import Fraction
 from pathlib import Path
 from unittest import mock
 
@@ -28,6 +30,7 @@ guardian = importlib.import_module("adj_process_guardian")
 arithmetic_builder = importlib.import_module("build_adj_arithmetic_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
 percent_of_builder = importlib.import_module("build_adj_percent_of_provenance")
+proportion_builder = importlib.import_module("build_adj_proportion_provenance")
 formula_inventory_migration = importlib.import_module("migrate_adj_formula_inventories")
 
 
@@ -621,10 +624,12 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             arithmetic_builder.REPO_ROOT,
             ratio_builder.REPO_ROOT,
             percent_of_builder.REPO_ROOT,
+            proportion_builder.REPO_ROOT,
         )
         arithmetic_builder.REPO_ROOT = workspace
         ratio_builder.REPO_ROOT = workspace
         percent_of_builder.REPO_ROOT = workspace
+        proportion_builder.REPO_ROOT = workspace
         try:
             formula_inventory_migration.migrate(
                 workspace / provenance.DEFAULT_ROOT,
@@ -639,6 +644,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 arithmetic_builder.REPO_ROOT,
                 ratio_builder.REPO_ROOT,
                 percent_of_builder.REPO_ROOT,
+                proportion_builder.REPO_ROOT,
             ) = original_roots
 
     def build_repository(
@@ -913,6 +919,491 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             },
         )
 
+    def guarded_v2_fixture(
+        self,
+        root: Path,
+        *,
+        first: int = 2,
+        first_literal: str | None = None,
+        first_runtime_literal: str | None = None,
+        first_slot: str = "a",
+        second_slot: str = "b",
+    ) -> tuple[provenance.Cas, dict[str, object], dict[str, object]]:
+        cas = provenance.Cas(root / "cas")
+
+        def span(data: bytes, value: bytes, start: int = 0) -> dict[str, object]:
+            offset = data.index(value, start)
+            return {
+                "end": offset + len(value),
+                "sha256": provenance.sha256_bytes(value),
+                "start": offset,
+            }
+
+        def put_source(
+            data: bytes, claims: list[tuple[str, dict[str, object]]], label: str
+        ) -> tuple[str, str]:
+            source_hash = cas.put(data, kind="raw_source", label=label)
+            segments = []
+            cursor = 0
+            for claim_id, claim_span in sorted(
+                claims, key=lambda item: item[1]["start"]
+            ):
+                if cursor < claim_span["start"]:
+                    segments.append(
+                        {
+                            "disposition": "discarded",
+                            "end": claim_span["start"],
+                            "reason": "fixture separators outside selected claims",
+                            "start": cursor,
+                        }
+                    )
+                quote = data[claim_span["start"] : claim_span["end"]]
+                segments.append(
+                    {
+                        "claims": [
+                            {
+                                "claim_id": claim_id,
+                                "end": claim_span["end"],
+                                "quote": quote.decode("utf-8"),
+                                "quote_sha256": claim_span["sha256"],
+                                "start": claim_span["start"],
+                            }
+                        ],
+                        "disposition": "represented",
+                        "end": claim_span["end"],
+                        "start": claim_span["start"],
+                    }
+                )
+                cursor = claim_span["end"]
+            if cursor < len(data):
+                segments.append(
+                    {
+                        "disposition": "discarded",
+                        "end": len(data),
+                        "reason": "fixture separators outside selected claims",
+                        "start": cursor,
+                    }
+                )
+            source_ir = provenance.build_source_ir(
+                source_sha256=source_hash,
+                source=data,
+                segments=segments,
+            )
+            ir_hash = cas.put_json(
+                source_ir, kind="source_ir", label=f"{label} IR", links=[source_hash]
+            )
+            return source_hash, ir_hash
+
+        formula_source = (
+            b"formulabook guarded {\n"
+            b"  formula divide(a, b) = a / b\n"
+            b"    requires nonzero(a), nonzero(b)\n"
+            b'    source "guarded fixture"\n'
+            b"}\n"
+        )
+        declaration = span(
+            formula_source,
+            b"formula divide(a, b) = a / b\n"
+            b"    requires nonzero(a), nonzero(b)\n"
+            b'    source "guarded fixture"',
+        )
+        body_span = span(formula_source, b"a / b")
+        first_guard_span = span(formula_source, b"nonzero(a)")
+        second_guard_span = span(formula_source, b"nonzero(b)")
+        first_argument = span(formula_source, b"a", first_guard_span["start"])
+        second_argument = span(formula_source, b"b", second_guard_span["start"])
+        preconditions = [
+            {
+                "arguments": [first_argument],
+                "declaration": first_guard_span,
+                "predicate": "nonzero",
+            },
+            {
+                "arguments": [second_argument],
+                "declaration": second_guard_span,
+                "predicate": "nonzero",
+            },
+        ]
+        formula_hash, formula_ir_hash = put_source(
+            formula_source, [("fixture.formula", declaration)], "guarded formula"
+        )
+        inventory = {
+            "formulas": [
+                {
+                    "body": body_span,
+                    "declaration": declaration,
+                    "formula": "divide",
+                    "formulabook": "guarded",
+                    "parameters": ["a", "b"],
+                    "preconditions": preconditions,
+                    "step_count": 1,
+                }
+            ],
+            "kind": "formula_parser_inventory",
+            "parser_contract": "adj-lang/formula_source_map/v2",
+            "schema_version": 2,
+            "scope": "source_file",
+            "source_sha256": formula_hash,
+            "source_size": len(formula_source),
+        }
+        inventory_hash = cas.put_json(
+            inventory,
+            kind="formula_parser_inventory",
+            label="guarded inventory",
+            links=[formula_hash],
+        )
+        formula_clause = {
+            "claim_id": "fixture.formula",
+            "end": len(formula_source),
+            "input_claim": {
+                "end": len(formula_source),
+                "quote": formula_source.decode("utf-8"),
+                "quote_sha256": provenance.sha256_bytes(formula_source),
+                "start": 0,
+            },
+            "locator": "https://example.test/guarded",
+            "quote": formula_source.decode("utf-8"),
+            "quote_sha256": provenance.sha256_bytes(formula_source),
+            "snapshot_sha256": formula_hash,
+            "source_ir_sha256": formula_ir_hash,
+            "start": 0,
+        }
+        formula_bundle = {
+            "bundle_id": "fixture.guarded.v1",
+            "clauses": [formula_clause],
+            "dependencies": [],
+            "formula_inventory_sha256": inventory_hash,
+            "input": {
+                "raw_source_sha256": formula_hash,
+                "source_ir_sha256": formula_ir_hash,
+            },
+            "kind": "provenance_bundle",
+            "library": "code/example/guarded.adj",
+            "sources": [],
+        }
+        formula_bundle_hash = cas.put_json(
+            formula_bundle,
+            kind="provenance_bundle",
+            label="guarded formula bundle",
+            links=provenance._bundle_declared_links(formula_bundle),
+        )
+
+        authored_first = first_literal or str(first)
+        query_source = (
+            b'import "guarded.adj"\n'
+            + f"observe {first_slot}({authored_first})\n".encode()
+            + f"observe {second_slot}(3)\n".encode()
+            + f"? divide({first_slot}, {second_slot})\n".encode()
+        )
+        import_span = span(query_source, b'import "guarded.adj"')
+        first_observation = span(
+            query_source, f"observe {first_slot}({authored_first})".encode()
+        )
+        second_observation = span(
+            query_source, f"observe {second_slot}(3)".encode()
+        )
+        question_span = span(
+            query_source, f"? divide({first_slot}, {second_slot})".encode()
+        )
+        query_hash, query_ir_hash = put_source(
+            query_source,
+            [
+                ("fixture.import", import_span),
+                ("fixture.input.a", first_observation),
+                ("fixture.input.b", second_observation),
+                ("fixture.question", question_span),
+            ],
+            "guarded query",
+        )
+        fact_source = (
+            f"{first_slot} is {first}.\n{second_slot} is 3.\n".encode()
+        )
+        first_fact_span = span(
+            fact_source, f"{first_slot} is {first}.".encode()
+        )
+        second_fact_span = span(
+            fact_source, f"{second_slot} is 3.".encode()
+        )
+        fact_hash, fact_ir_hash = put_source(
+            fact_source,
+            [
+                ("fixture.input.a", first_fact_span),
+                ("fixture.input.b", second_fact_span),
+            ],
+            "guarded facts",
+        )
+
+        def input_claim(value: dict[str, object]) -> dict[str, object]:
+            quote = query_source[value["start"] : value["end"]]
+            return {
+                "end": value["end"],
+                "quote": quote.decode("utf-8"),
+                "quote_sha256": value["sha256"],
+                "start": value["start"],
+            }
+
+        def clause(claim_id: str, value: dict[str, object], observation: dict[str, object]) -> dict[str, object]:
+            quote = fact_source[value["start"] : value["end"]]
+            return {
+                "claim_id": claim_id,
+                "end": value["end"],
+                "input_claim": input_claim(observation),
+                "locator": "repo://fixtures/guarded-inputs.txt",
+                "quote": quote.decode("utf-8"),
+                "quote_sha256": value["sha256"],
+                "snapshot_sha256": fact_hash,
+                "source_ir_sha256": fact_ir_hash,
+                "start": value["start"],
+            }
+
+        query_bundle = {
+            "bundle_id": "fixture.guarded.query.v1",
+            "clauses": [
+                clause("fixture.input.a", first_fact_span, first_observation),
+                clause("fixture.input.b", second_fact_span, second_observation),
+            ],
+            "dependencies": [formula_bundle_hash],
+            "input": {
+                "raw_source_sha256": query_hash,
+                "source_ir_sha256": query_ir_hash,
+            },
+            "kind": "provenance_bundle",
+            "library": "code/example/guarded.query.adj",
+            "sources": [],
+        }
+
+        formula_identity = {
+            "body": body_span,
+            "declaration": declaration,
+            "formulabook": "guarded",
+            "name": "divide",
+            "parameters": ["a", "b"],
+            "preconditions": preconditions,
+            "source_sha256": formula_hash,
+        }
+        question = {
+            "declaration": question_span,
+            "name": "divide",
+            "source_sha256": query_hash,
+        }
+        formula_provenance = {
+            "corroborations": [],
+            "locator": formula_clause["locator"],
+            "quote": {
+                "byte_len": len(formula_source),
+                "byte_offset": 0,
+                "snapshot_sha256": formula_hash,
+                "text_sha256": provenance.sha256_bytes(formula_source),
+            },
+            "source": formula_source.decode("utf-8"),
+            "trust": "authoritative",
+        }
+
+        def fact_identity(
+            name: str,
+            value: int,
+            value_span: dict[str, object],
+            runtime_literal: str | None = None,
+        ) -> dict[str, object]:
+            return {
+                "provenance": {
+                    "corroborations": [],
+                    "locator": "repo://fixtures/guarded-inputs.txt",
+                    "quote": {
+                        "byte_len": value_span["end"] - value_span["start"],
+                        "byte_offset": value_span["start"],
+                        "snapshot_sha256": fact_hash,
+                        "text_sha256": value_span["sha256"],
+                    },
+                    "source": "guarded input fixture",
+                    "trust": "authoritative",
+                },
+                "term": f"{name}({runtime_literal or value})",
+            }
+
+        facts = [
+            fact_identity(
+                first_slot, first, first_fact_span, first_runtime_literal
+            ),
+            fact_identity(second_slot, 3, second_fact_span),
+        ]
+        verified_quote = {
+            "byte_len": len(formula_source),
+            "byte_offset": 0,
+            "reason": None,
+            "status": "verified",
+        }
+
+        def verification(
+            raw_inputs: list[dict[str, object]], *, query_answer: bool
+        ) -> dict[str, object]:
+            return {
+                "computation": {
+                    "reason": None,
+                    "recomputed_f64_bits": None,
+                    "recorded_f64_bits": None,
+                    "status": "rechecked",
+                },
+                "formula_quotes": [
+                    {
+                        "identity": formula_identity,
+                        "provenance": formula_provenance,
+                        "quote": verified_quote,
+                    }
+                ],
+                "fully_verified": True,
+                "input_quotes": [
+                    {
+                        "identity": identity,
+                        "quote": {
+                            "byte_len": identity["provenance"]["quote"]["byte_len"],
+                            "byte_offset": identity["provenance"]["quote"]["byte_offset"],
+                            "reason": None,
+                            "status": "verified",
+                        },
+                    }
+                    for identity in raw_inputs
+                ],
+                "is_query_answer": query_answer,
+                "passed": True,
+            }
+
+        def guard_verification(raw_input: dict[str, object]) -> dict[str, object]:
+            return {
+                "computation": {
+                    "reason": None,
+                    "recomputed_f64_bits": None,
+                    "recorded_f64_bits": None,
+                    "status": "rechecked",
+                },
+                "formula_quote": {
+                    "identity": formula_identity,
+                    "provenance": formula_provenance,
+                    "quote": verified_quote,
+                },
+                "fully_verified": True,
+                "input_quotes": [
+                    {
+                        "identity": raw_input,
+                        "quote": {
+                            "byte_len": raw_input["provenance"]["quote"]["byte_len"],
+                            "byte_offset": raw_input["provenance"]["quote"][
+                                "byte_offset"
+                            ],
+                            "reason": None,
+                            "status": "verified",
+                        },
+                    }
+                ],
+                "passed": True,
+            }
+
+        def exact_value(value: int) -> dict[str, object]:
+            fraction = Fraction(value, 1)
+            return {
+                "exact_rational": {
+                    "denominator": str(fraction.denominator),
+                    "numerator": str(fraction.numerator),
+                },
+                "f64_bits": struct.pack(">d", float(fraction)).hex(),
+            }
+
+        def guard(index: int, name: str, value: int) -> dict[str, object]:
+            raw_input = facts[index]
+            return {
+                "comparison": {
+                    "observed": exact_value(value),
+                    "operator": "not_equal",
+                    "threshold": exact_value(0),
+                },
+                "formula": formula_identity,
+                "inputs": [raw_input],
+                "outcome": "passed" if value else "failed",
+                "plan": {
+                    "expression": {"kind": "reference", "name": name},
+                    "is_query_answer": False,
+                    "scope": {"derived_limit": 0, "fact_limit": 2},
+                },
+                "precondition": {
+                    **preconditions[index],
+                    "index": index,
+                    "parameter": ("a", "b")[index],
+                },
+                "tree": {
+                    "f64_bits": exact_value(value)["f64_bits"],
+                    "fact": raw_input,
+                    "kind": "leaf",
+                    "slot": name,
+                },
+                "verification": guard_verification(raw_input),
+            }
+
+        guards = [guard(0, first_slot, first)]
+        if first == 0:
+            body = {"reason": "precondition_failed", "status": "withheld"}
+        else:
+            guards.append(guard(1, second_slot, 3))
+            result = Fraction(first, 3)
+            body_tree = {
+                "f64_bits": struct.pack(">d", float(result)).hex(),
+                "kind": "operation",
+                "operands": [guards[0]["tree"], guards[1]["tree"]],
+                "operator": "/",
+            }
+            body = {
+                "derivation": {
+                    "export": formula_identity,
+                    "formula_sequence": [formula_identity],
+                    "inputs": facts,
+                    "plan": {
+                        "expression": {
+                            "kind": "binary",
+                            "left": {"kind": "reference", "name": first_slot},
+                            "operator": "/",
+                            "right": {"kind": "reference", "name": second_slot},
+                        },
+                        "is_query_answer": True,
+                        "scope": {"derived_limit": 0, "fact_limit": 2},
+                    },
+                    "question": question,
+                    "result": {
+                        "dimension": "scalar",
+                        "exact_rational": {
+                            "denominator": str(result.denominator),
+                            "numerator": str(result.numerator),
+                        },
+                        "f64_bits": struct.pack(">d", float(result)).hex(),
+                    },
+                    "tree": body_tree,
+                    "verification": verification(facts, query_answer=True),
+                },
+                "status": "evaluated",
+            }
+        audit = {
+            "contract": "adj-lang/formula_audit/v2",
+            "executions": [
+                {
+                    "body": body,
+                    "export": formula_identity,
+                    "formula_sequence": [formula_identity],
+                    "guards": guards,
+                    "question": question,
+                }
+            ],
+            "imports": [
+                {
+                    "declaration": import_span,
+                    "imported_source_sha256": formula_hash,
+                    "importer_source_sha256": query_hash,
+                    "literal": "guarded.adj",
+                }
+            ],
+            "kind": "formula_execution_audit",
+            "root_source_sha256": query_hash,
+            "schema_version": 2,
+        }
+        return cas, query_bundle, audit
+
     def registered_bundle_hash(
         self, cas_root: Path, manifest_path: Path, bundle_id: str
     ) -> str:
@@ -989,6 +1480,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         final_roots = {
             bundle_id: old_roots.get(bundle_id, digest)
             for bundle_id, digest in current.items()
+            if bundle_id not in formula_inventory_migration.PROPORTION_ROOT_IDS
         }
         manifest["bundle_hashes"] = sorted(final_roots.values())
         reachable = provenance._reachable(cas, manifest["bundle_hashes"])
@@ -1019,6 +1511,8 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             audit = provenance._materialize_formula_audit(
                 cas, query, self.formula_audit_command()
             )
+            if audit["contract"] != "adj-lang/formula_audit/v1":
+                continue
             legacy = provenance._normalized_formula_evidence(
                 cas, query, audit, legacy_input_references=True
             )
@@ -4037,63 +4531,386 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     empty, provenance.sha256_bytes(source), source
                 )
 
-    def test_guarded_formula_execution_evidence_fails_closed_until_v2_witness(self) -> None:
+    def test_formula_audit_dispatch_is_declared_not_shape_guessed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            cas = provenance.Cas(Path(directory) / "cas")
-            inventory_hash = cas.put_json(
-                {
-                    "formulas": [
-                        {
-                            "body": {"end": 2, "sha256": "1" * 64, "start": 1},
-                            "declaration": {
-                                "end": 3,
-                                "sha256": "2" * 64,
-                                "start": 0,
-                            },
-                            "formula": "guarded",
-                            "formulabook": "demo",
-                            "parameters": ["x"],
-                            "preconditions": [
-                                {
-                                    "arguments": [
-                                        {"end": 2, "sha256": "3" * 64, "start": 1}
-                                    ],
-                                    "declaration": {
-                                        "end": 3,
-                                        "sha256": "4" * 64,
-                                        "start": 0,
-                                    },
-                                    "predicate": "nonzero",
-                                }
-                            ],
-                            "step_count": 0,
-                        }
-                    ],
-                    "kind": "formula_parser_inventory",
-                    "parser_contract": "adj-lang/formula_source_map/v2",
-                    "schema_version": 2,
-                    "scope": "source_file",
-                    "source_sha256": "5" * 64,
-                    "source_size": 3,
-                },
-                kind="formula_parser_inventory",
-                label="guarded fixture inventory",
-            )
-            formula_bundle = {
-                "formula_inventory_sha256": inventory_hash,
-            }
+            cas, query, audit = self.guarded_v2_fixture(Path(directory))
+            mismatched = deepcopy(audit)
+            mismatched["contract"] = "adj-lang/formula_audit/v1"
             with (
                 mock.patch.object(
-                    provenance,
-                    "_execution_graph",
-                    return_value=({}, [("6" * 64, formula_bundle)]),
+                    provenance, "_run_json_command", return_value=mismatched
                 ),
                 self.assertRaisesRegex(
                     provenance.ProvenanceError,
-                    "guarded formula execution evidence requires",
+                    "contract or query binding disagrees",
                 ),
             ):
-                provenance._normalized_formula_evidence(cas, {}, {})
+                provenance._materialize_formula_audit(cas, query, ["audit"])
+
+    def test_formula_v1_plan_adapter_is_frozen_and_non_heuristic(self) -> None:
+        original = {
+            "expression": {
+                "kind": "exact_literal",
+                "exact_rational": {"denominator": "10", "numerator": "1"},
+                "f64_bits": "3fb999999999999a",
+            },
+            "is_query_answer": True,
+            "scope": {"derived_limit": 0, "fact_limit": 0},
+        }
+        projected = provenance._migration_project_formula_plan_v1(original)
+        self.assertEqual(
+            projected["expression"],
+            {"kind": "literal", "f64_bits": "3fb999999999999a"},
+        )
+        self.assertEqual(original["expression"]["kind"], "exact_literal")
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError,
+            "v1 forbids exact_literal",
+        ):
+            provenance._validate_formula_plan_v1(original)
+        from jsonschema import Draft202012Validator
+
+        schema = json.loads(
+            (formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_SCHEMA)
+            .read_text(encoding="utf-8")
+        )
+        validator = Draft202012Validator(
+            {
+                "$defs": schema["$defs"],
+                "$ref": "#/$defs/formula_plan_v1",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+            }
+        )
+        self.assertTrue(list(validator.iter_errors(original)))
+
+    def test_declared_v1_baseline_adapter_refuses_guarded_or_withheld_v2(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            _cas, _query, guarded = self.guarded_v2_fixture(Path(directory))
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "guarded formula audit cannot be adapted to v1",
+            ):
+                provenance._declared_v1_baseline_audit(guarded)
+
+            unguarded = deepcopy(guarded)
+            unguarded["executions"][0]["guards"] = []
+            adapted = provenance._declared_v1_baseline_audit(unguarded)
+            self.assertEqual(adapted["contract"], "adj-lang/formula_audit/v1")
+            self.assertEqual(adapted["schema_version"], 1)
+            self.assertEqual(
+                adapted["derivations"],
+                [unguarded["executions"][0]["body"]["derivation"]],
+            )
+
+            withheld = deepcopy(unguarded)
+            withheld["executions"][0]["body"] = {
+                "reason": "precondition_failed",
+                "status": "withheld",
+            }
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "withheld formula body cannot be adapted to v1",
+            ):
+                provenance._declared_v1_baseline_audit(withheld)
+
+    def test_guarded_formula_v2_normalizes_positive_execution_and_v3_inputs(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(Path(directory))
+            normalized = provenance._normalized_formula_evidence(cas, query, audit)
+            self.assertEqual(len(normalized), 1)
+            derivation, derivation_links, witness, witness_links = normalized[0]
+            self.assertEqual(derivation["contract"], "adj-lang/formula_derivation/v2")
+            self.assertEqual(witness["contract"], "adj-lang/formula_execution/v2")
+            self.assertEqual([guard["outcome"] for guard in witness["guards"]], ["passed", "passed"])
+            self.assertEqual(witness["body"]["status"], "evaluated")
+            first_input = witness["guards"][0]["inputs"][0]
+            self.assertEqual(first_input["schema_version"], 3)
+            self.assertEqual(first_input["observation"]["claim_id"], "fixture.input.a")
+            self.assertEqual(
+                first_input["observation"]["span"]["sha256"],
+                provenance.sha256_bytes(b"observe a(2)"),
+            )
+            self.assertTrue(
+                {
+                    first_input["owner_source_sha256"],
+                    first_input["owner_source_ir_sha256"],
+                    first_input["snapshot_sha256"],
+                    first_input["source_ir_sha256"],
+                }.issubset(witness_links)
+            )
+            derivation_hash = cas.put_json(
+                derivation,
+                kind="formula_derivation",
+                label="v2 derivation",
+                links=derivation_links,
+            )
+            witness["formula_derivation_sha256"] = derivation_hash
+            witness_hash = cas.put_json(
+                witness,
+                kind="execution_witness",
+                label="v2 witness",
+                links=witness_links | {derivation_hash},
+            )
+            from jsonschema import Draft202012Validator
+
+            schema = json.loads(
+                (formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_SCHEMA)
+                .read_text(encoding="utf-8")
+            )
+            for kind, value in (
+                ("formula_derivation", derivation),
+                ("execution_witness", provenance._json_object(cas, witness_hash, "execution_witness")),
+            ):
+                validator = Draft202012Validator(
+                    {
+                        "$defs": schema["$defs"],
+                        "$ref": f"#/$defs/{kind}",
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                    }
+                )
+                self.assertEqual(list(validator.iter_errors(value)), [])
+
+    def test_guarded_formula_v2_normalizes_verified_abstention(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(Path(directory), first=0)
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            self.assertEqual(
+                [guard["outcome"] for guard in witness["guards"]],
+                ["failed"],
+            )
+            self.assertEqual(
+                witness["body"],
+                {"reason": "precondition_failed", "status": "withheld"},
+            )
+            self.assertNotIn("result", witness["body"])
+            self.assertNotIn("tree", witness["body"])
+
+            positive = self.guarded_v2_fixture(Path(directory) / "positive")[2]
+            trailing = deepcopy(audit)
+            trailing["executions"][0]["guards"].append(
+                positive["executions"][0]["guards"][1]
+            )
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "guard ran after a failed guard"
+            ):
+                provenance._normalized_formula_evidence(cas, query, trailing)
+
+            old_shape = deepcopy(audit)
+            old_shape["executions"][0]["guards"].append(
+                {
+                    "formula": audit["executions"][0]["export"],
+                    "outcome": "not_evaluated",
+                    "precondition": {
+                        **audit["executions"][0]["export"]["preconditions"][1],
+                        "index": 1,
+                        "parameter": "b",
+                    },
+                }
+            )
+            with self.assertRaises(provenance.ProvenanceError):
+                provenance._normalized_formula_evidence(cas, query, old_shape)
+
+            extra_body_field = deepcopy(audit)
+            extra_body_field["executions"][0]["body"]["result"] = None
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "abstention body has the wrong schema"
+            ):
+                provenance._normalized_formula_evidence(
+                    cas, query, extra_body_field
+                )
+
+    def test_guarded_formula_v2_distinguishes_parameters_from_caller_slots(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(
+                Path(directory),
+                first_slot="numerator",
+                second_slot="denominator",
+            )
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            first_guard = witness["guards"][0]
+            self.assertEqual(first_guard["precondition"]["parameter"], "a")
+            self.assertEqual(
+                first_guard["plan"]["expression"],
+                {"kind": "reference", "name": "numerator"},
+            )
+            self.assertEqual(first_guard["tree"]["slot"], "numerator")
+
+    def test_guarded_formula_v2_binds_canonical_value_to_source_numeric_spelling(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(
+                Path(directory), first=100, first_literal="1e2"
+            )
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            self.assertEqual(
+                witness["guards"][0]["comparison"]["observed"][
+                    "exact_rational"
+                ],
+                {"denominator": "1", "numerator": "100"},
+            )
+
+    def test_guarded_formula_v2_accepts_legal_observation_whitespace(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(
+                Path(directory), first=100, first_literal="  1e2  "
+            )
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            self.assertEqual(
+                witness["guards"][0]["comparison"]["observed"][
+                    "exact_rational"
+                ],
+                {"denominator": "1", "numerator": "100"},
+            )
+
+    def test_guarded_formula_v2_uses_authored_exact_value_over_runtime_display(
+        self,
+    ) -> None:
+        exact = 9007199254740993
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(
+                Path(directory),
+                first=exact,
+                first_literal=f"{exact}.0",
+                first_runtime_literal="9007199254740992",
+            )
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            self.assertEqual(
+                witness["guards"][0]["comparison"]["observed"][
+                    "exact_rational"
+                ],
+                {"denominator": "1", "numerator": str(exact)},
+            )
+
+    def test_guarded_formula_v2_tampering_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(Path(directory))
+
+            def tamper_index(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["precondition"]["index"] = 1
+
+            def tamper_parameter(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["precondition"][
+                    "parameter"
+                ] = None
+
+            def tamper_span(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["precondition"]["declaration"]["sha256"] = "0" * 64
+
+            def tamper_outcome(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["outcome"] = "failed"
+
+            def tamper_comparison(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["comparison"]["observed"]["exact_rational"]["numerator"] = "0"
+
+            def tamper_plan(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["plan"]["expression"] = {"kind": "derived_reference", "name": "a"}
+
+            def tamper_input(value: dict[str, object]) -> None:
+                guard = value["executions"][0]["guards"][0]
+                guard["inputs"] = value["executions"][0]["body"]["derivation"]["inputs"][1:]
+
+            def tamper_verification(value: dict[str, object]) -> None:
+                value["executions"][0]["guards"][0]["verification"]["input_quotes"][0]["quote"]["byte_offset"] += 1
+
+            def tamper_body(value: dict[str, object]) -> None:
+                value["executions"][0]["body"]["derivation"].pop("result")
+
+            def tamper_coordinated_value(value: dict[str, object]) -> None:
+                guard = value["executions"][0]["guards"][0]
+                five = {
+                    "exact_rational": {"denominator": "1", "numerator": "5"},
+                    "f64_bits": "4014000000000000",
+                }
+                guard["comparison"]["observed"] = five
+                guard["tree"]["f64_bits"] = five["f64_bits"]
+                guard["inputs"][0]["term"] = "a(5)"
+                guard["tree"]["fact"]["term"] = "a(5)"
+                guard["verification"]["input_quotes"][0]["identity"]["term"] = (
+                    "a(5)"
+                )
+
+            for name, mutation in (
+                ("index", tamper_index),
+                ("parameter", tamper_parameter),
+                ("span", tamper_span),
+                ("outcome", tamper_outcome),
+                ("comparison", tamper_comparison),
+                ("plan", tamper_plan),
+                ("input", tamper_input),
+                ("verification", tamper_verification),
+                ("body", tamper_body),
+                ("coordinated_value", tamper_coordinated_value),
+            ):
+                with self.subTest(name=name):
+                    candidate = deepcopy(audit)
+                    mutation(candidate)
+                    with self.assertRaises(provenance.ProvenanceError):
+                        provenance._normalized_formula_evidence(cas, query, candidate)
+            forged_observation = deepcopy(query)
+            forged_observation["clauses"][0]["input_claim"]["quote_sha256"] = (
+                "0" * 64
+            )
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "observation disagrees with its owner source IR",
+            ):
+                provenance._normalized_formula_evidence(
+                    cas, forged_observation, audit
+                )
+
+    def test_guarded_formula_v2_replay_authenticates_all_cas_links(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(Path(directory))
+            derivations: list[str] = []
+            witnesses: list[str] = []
+            normalized = provenance._normalized_formula_evidence(cas, query, audit)
+            for derivation, derivation_links, witness, witness_links in normalized:
+                derivation_hash = cas.put_json(
+                    derivation,
+                    kind="formula_derivation",
+                    label="guarded replay derivation",
+                    links=derivation_links,
+                )
+                witness["formula_derivation_sha256"] = derivation_hash
+                witness_hash = cas.put_json(
+                    witness,
+                    kind="execution_witness",
+                    label="guarded replay witness",
+                    links=witness_links | {derivation_hash},
+                )
+                derivations.append(derivation_hash)
+                witnesses.append(witness_hash)
+            query["formula_derivation_sha256s"] = sorted(derivations)
+            query["execution_witness_sha256s"] = sorted(witnesses)
+            with mock.patch.object(
+                provenance, "_materialize_formula_audit", return_value=audit
+            ):
+                provenance._validate_formula_execution_evidence(
+                    cas, query, ["audit"]
+                )
+                cas.index[witnesses[0]]["links"] = cas.index[witnesses[0]]["links"][1:]
+                with self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "stored execution witness disagrees with replay",
+                ):
+                    provenance._validate_formula_execution_evidence(
+                        cas, query, ["audit"]
+                    )
 
     def test_formula_execution_replay_requires_the_audit_binary(self) -> None:
         cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
@@ -4640,8 +5457,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             )
             self.assertTrue(result["valid"])
             witness = provenance._json_object(cas, witnesses[0], "execution_witness")
-            self.assertEqual(len(witness["inputs"]), 1)
-            reference = witness["inputs"][0]
+            if witness["contract"] == "adj-lang/formula_execution/v1":
+                inputs = witness["inputs"]
+            else:
+                self.assertEqual(witness["contract"], "adj-lang/formula_execution/v2")
+                self.assertEqual(witness["body"]["status"], "evaluated")
+                inputs = witness["body"]["derivation"]["inputs"]
+            self.assertEqual(len(inputs), 1)
+            reference = inputs[0]
             self.assertEqual(
                 reference["owner"],
                 {
@@ -4844,10 +5667,12 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 arithmetic_builder.REPO_ROOT,
                 ratio_builder.REPO_ROOT,
                 percent_of_builder.REPO_ROOT,
+                proportion_builder.REPO_ROOT,
             )
             arithmetic_builder.REPO_ROOT = workspace
             ratio_builder.REPO_ROOT = workspace
             percent_of_builder.REPO_ROOT = workspace
+            proportion_builder.REPO_ROOT = workspace
             try:
                 result = formula_inventory_migration.migrate(
                     cas_root,
@@ -4862,6 +5687,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     arithmetic_builder.REPO_ROOT,
                     ratio_builder.REPO_ROOT,
                     percent_of_builder.REPO_ROOT,
+                    proportion_builder.REPO_ROOT,
                 ) = original_roots
 
             self.assertTrue(
@@ -4891,8 +5717,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     witness = provenance._json_object(
                         cas, witness_hash, "execution_witness"
                     )
+                    if witness["contract"] == "adj-lang/formula_execution/v2":
+                        if witness["body"]["status"] != "evaluated":
+                            continue
+                        inputs = witness["body"]["derivation"]["inputs"]
+                    else:
+                        inputs = witness["inputs"]
                     self.assertTrue(
-                        all(item["schema_version"] == 2 for item in witness["inputs"])
+                        all(item["schema_version"] >= 2 for item in inputs)
                     )
 
     def test_formula_execution_rejects_swapped_verified_provenance(self) -> None:
@@ -4942,6 +5774,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             cas_root = workspace / provenance.DEFAULT_ROOT
             manifest_path = workspace / provenance.DEFAULT_MANIFEST
             schema_path = workspace / provenance.DEFAULT_SCHEMA
+            retained = provenance.Cas(cas_root)
+            retained.load()
+            captured_proportion_source = workspace / "captured-proportion.html"
+            captured_proportion_source.write_bytes(
+                provenance._read_regular_file(
+                    retained.object_path(proportion_builder.RAW_HASH)
+                )
+            )
             old_roots = self.remove_formula_inventories_from_closure(
                 cas_root, manifest_path
             )
@@ -4953,10 +5793,12 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 arithmetic_builder.REPO_ROOT,
                 ratio_builder.REPO_ROOT,
                 percent_of_builder.REPO_ROOT,
+                proportion_builder.REPO_ROOT,
             )
             arithmetic_builder.REPO_ROOT = workspace
             ratio_builder.REPO_ROOT = workspace
             percent_of_builder.REPO_ROOT = workspace
+            proportion_builder.REPO_ROOT = workspace
             try:
                 result = formula_inventory_migration.migrate(
                     cas_root,
@@ -4965,6 +5807,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     workspace,
                     formula_inventory_command=formula_command,
                     formula_audit_command=formula_audit_command,
+                    captured_proportion_source=captured_proportion_source,
                 )
                 rerun = formula_inventory_migration.migrate(
                     cas_root,
@@ -4979,6 +5822,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     arithmetic_builder.REPO_ROOT,
                     ratio_builder.REPO_ROOT,
                     percent_of_builder.REPO_ROOT,
+                    proportion_builder.REPO_ROOT,
                 ) = original_roots
 
             cas.load()
@@ -4991,7 +5835,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertTrue(
                 {
                     old_roots[bundle_id]
-                    for bundle_id in formula_inventory_migration.ROOT_IDS
+                    for bundle_id in old_roots
                 }.issubset(result["pruned_sha256s"])
             )
             self.assertTrue(
@@ -5000,7 +5844,13 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertTrue(
                 all(
                     old_roots[key] != new_roots[key]
-                    for key in formula_inventory_migration.ROOT_IDS
+                    for key in old_roots
+                )
+            )
+            self.assertTrue(
+                all(
+                    result["replacements"][key]["expected_old_sha256"] is None
+                    for key in formula_inventory_migration.PROPORTION_ROOT_IDS
                 )
             )
             self.assertEqual(rerun["pruned_sha256s"], [])
@@ -5019,6 +5869,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     "product",
                     "quotient",
                 ],
+                "adj.math.arithmetic.proportion.v1": ["fourth_proportional"],
                 "adj.math.arithmetic.ratio.v1": ["ratio"],
             }
             for bundle_id, digest in new_roots.items():
@@ -5520,6 +6371,40 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
             self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
             self.assertFalse(provenance.Cas(cas_root).object_path(added_hash).exists())
+
+    def test_root_replacement_atomically_adds_an_expected_absent_root(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            with provenance.BundleRootReplacementTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                added = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                added["bundle_id"] = "test.new-root.v1"
+                added_hash = transaction.cas.put_json(
+                    added,
+                    kind="provenance_bundle",
+                    label="expected root addition",
+                    links=provenance._bundle_declared_links(added),
+                )
+                result = transaction.replace_roots(
+                    {
+                        "test.new-root.v1": {
+                            "expected_old_sha256": None,
+                            "new_sha256": added_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual(
+                result["bundle_hashes"], sorted([hashes["bundle"], added_hash])
+            )
+            self.assertEqual(result["pruned_sha256s"], [])
 
     def test_root_replacement_rejects_a_stale_expected_hash(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

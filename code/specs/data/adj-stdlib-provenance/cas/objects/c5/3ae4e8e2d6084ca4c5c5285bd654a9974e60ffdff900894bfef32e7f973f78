@@ -1,0 +1,19 @@
+import "proportion.adj"
+
+observe first_term(0)
+    quote "first term is 0." at 52 snapshot "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638"
+    source "proportion input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt"
+    trust authoritative
+observe second_term(3)
+    quote "second term is 3." at 17 snapshot "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638"
+    source "proportion input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt"
+    trust authoritative
+observe third_term(4)
+    quote "third term is 4." at 35 snapshot "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638"
+    source "proportion input fixture"
+    locator "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt"
+    trust authoritative
+
+? fourth_proportional(first_term, second_term, third_term)

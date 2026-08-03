@@ -1,0 +1,16 @@
+{
+  "body_sha256": "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+  "body_size": 536280,
+  "final_locator": "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications",
+  "headers": {
+    "content-length": "536280",
+    "content-type": "text/html",
+    "etag": "\"c940edde2f4478001fa42e29db51cea2\"",
+    "last-modified": "Mon, 15 Jun 2026 17:25:34 GMT"
+  },
+  "kind": "fetch_receipt",
+  "locator": "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications",
+  "media_type": "text/html",
+  "retrieved_at": "2026-08-03T19:40:12Z",
+  "status": 200
+}

@@ -1,0 +1,77 @@
+{
+  "formulas": [
+    {
+      "body": {
+        "end": 4727,
+        "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+        "start": 4673
+      },
+      "declaration": {
+        "end": 5240,
+        "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+        "start": 4606
+      },
+      "formula": "fourth_proportional",
+      "formulabook": "proportions",
+      "parameters": [
+        "first_term",
+        "second_term",
+        "third_term"
+      ],
+      "preconditions": [
+        {
+          "arguments": [
+            {
+              "end": 4763,
+              "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+              "start": 4753
+            }
+          ],
+          "declaration": {
+            "end": 4764,
+            "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+            "start": 4745
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4785,
+              "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+              "start": 4774
+            }
+          ],
+          "declaration": {
+            "end": 4786,
+            "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+            "start": 4766
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4806,
+              "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+              "start": 4796
+            }
+          ],
+          "declaration": {
+            "end": 4807,
+            "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+            "start": 4788
+          },
+          "predicate": "nonzero"
+        }
+      ],
+      "step_count": 0
+    }
+  ],
+  "kind": "formula_parser_inventory",
+  "parser_contract": "adj-lang/formula_source_map/v2",
+  "schema_version": 2,
+  "scope": "source_file",
+  "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+  "source_size": 5243
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion",
+          "end": 92,
+          "quote": "For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.",
+          "quote_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 92,
+      "start": 0
+    }
+  ],
+  "source_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+  "source_size": 92
+}
