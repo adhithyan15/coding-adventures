@@ -32,6 +32,9 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Rust dependency resolution now honors Cargo inline-table `package` renames
+  for path dependencies while retaining the top-level `[dependencies]` field
+  boundary.
 - Lua `.rockspec` metadata is now decoded as strict UTF-8 before dependency
   parsing. Invalid bytes fail closed with `METADATA_INVALID_UTF8`, package and
   repository-relative manifest identity, and CLI exit code 2 without leaking

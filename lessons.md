@@ -2063,6 +2063,17 @@ Three independent, compounding bugs were found by comparing against the real RFC
 
 Fixed in `java/zstd`: `code/packages/java/zstd/src/main/java/com/codingadventures/zstd/Zstd.java` (`buildDecodeTable`, `buildEncodeTable`, `encodeSequencesSection`, `decompressBlock`, new `fseInitState` method). Verified against the real `zstd` CLI across an 82-case fuzz corpus (varying periodic patterns, semi-random run-length data, pure random data, and prose at multiple repeat counts) in both directions, plus the two dedicated JUnit interop tests (`tc9CliInterop`, `rtCliInteropHighSequenceCount`).
 
+## Adjudicate oracle differences against the manifest contract
+
+A full Haskell-versus-Go Rust graph comparison initially showed two Haskell-only
+edges. Deleting them to match the reference engine would have hidden valid Cargo
+dependencies: each entry used a local source alias plus an authoritative
+`package = "..."` published-name override. A reference engine is evidence, not
+the specification. When parity comparison finds an extra edge, inspect the real
+manifest and shared behavior contract before classifying it as false. If the
+oracle is incomplete, add a language-neutral fixture and repair every affected
+engine in the same dependency-shaped slice.
+
 ## Adding shared build-tool fixtures must update the pinned corpus-summary tests
 
 Adding three valid conformance cases changed `validate-corpus` from 38 to 41,

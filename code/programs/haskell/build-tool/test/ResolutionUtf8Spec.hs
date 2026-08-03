@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionRustSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -194,6 +194,26 @@ resolutionPythonSpec = describe "Python resolution conformance" $ do
                     Right
                         [ ["python/beta-helper", "python/delta", "python/gamma"]
                         , ["python/alpha"]
+                        ]
+
+resolutionRustSpec :: Spec
+resolutionRustSpec = describe "Rust resolution conformance" $ do
+    it "reads only inline path dependencies in the top-level dependencies table" $
+        withFixture "resolution-rust-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "rust" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "rust/alpha"
+                    , "rust/beta-helper"
+                    , "rust/delta"
+                    , "rust/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["rust/beta-helper", "rust/delta", "rust/gamma"]
+                        , ["rust/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation

@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9817,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9817",
-    "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution"
+    "number": 9832,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9832",
+    "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution"
   },
   "last_inventory": {
-    "revision": "9441f4c74344f5e3fcba0b58e838af81fd512f63",
+    "revision": "88772e0dc3fce6f7303ea381076e6eeaa3c30b1c",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1247,
-    "implementation_package_slots": 4400,
+    "implementation_identities": 1249,
+    "implementation_package_slots": 4403,
     "high_consensus_packages": 173,
-    "high_consensus_missing_slots": 272,
-    "singleton_packages": 797,
-    "singleton_missing_slots": 11158,
-    "rust_singletons": 602,
+    "high_consensus_missing_slots": 271,
+    "singleton_packages": 799,
+    "singleton_missing_slots": 11186,
+    "rust_singletons": 604,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -410,7 +410,7 @@
     {
       "id": "build-tool-haskell-non-cabal-field-aware-manifest-resolution",
       "title": "Make Haskell Python manifest resolution field-aware and name-normalized",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-remaining-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution",
       "pr_number": 9817,
@@ -418,12 +418,21 @@
     },
     {
       "id": "build-tool-haskell-post-python-field-aware-manifest-resolution",
-      "title": "Make the remaining post-Python Haskell build-tool manifest readers field-aware",
-      "status": "pending",
+      "title": "Make Haskell Rust manifest resolution field-aware",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-non-cabal-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution",
+      "pr_number": 9832,
+      "notes": "Narrowed from the post-Python umbrella after guarded PR #9817 auto-merged exact head 2444811586 as b608f29c45 on 2026-08-03. The post-merge collision-checked inventory initially held 1,247 identities and 4,400 slots, 173 high-consensus packages with 272 missing slots, 797 singletons with 11,158 missing slots, 602 Rust singletons, and zero collisions or unknown buckets. The selection audit identified Rust as the largest clean dependency-shaped repair: its then-current 945-package snapshot had 3,201 Haskell edges versus 2,353 canonical Go edges, 848 false edges, and zero missing edges. TypeScript has larger two-sided drift (147 false and 948 missing), while Ruby has 123 false and zero missing; resolving Rust first removes the most false-cycle risk without mixing alias discovery and missing-edge work. The implementation now reads only inline path entries in Cargo's top-level dependencies table and ignores every non-authoritative table. Full-graph validation exposed two valid renamed-package edges that the Go oracle itself omitted, so the shared contract and both engines now honor Cargo package overrides before alias lookup. After conflict-free rebases through merged parity PR #9829 at 88772e0d, both engines discover 948 packages and match exactly at 2,373 edges with zero differences; the Haskell front door completes the lane with zero failures. The refreshed collision-checked inventory has 1,249 identities and 4,403 slots, 173 high-consensus packages with 271 missing slots, 799 singletons with 11,186 missing slots, 604 Rust singletons, and zero collisions or unknown buckets. Haskell ZIP fills an existing identity. The new chief-of-staff-daemon-credential and chief-of-staff-daemon singletons own concrete native authority and have newly logged excluded native-authority reviews. PR #9829 changes existing SPICE packages only, leaves inventory unchanged, and does not displace this selected repair. Ready-for-review PR #9832 is open with the complete validation summary."
+    },
+    {
+      "id": "build-tool-haskell-post-rust-field-aware-manifest-resolution",
+      "title": "Make the remaining post-Rust Haskell build-tool manifest readers field-aware",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-post-python-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Narrowed from the non-Cabal umbrella after the leverage audit selected the exact 488-package Python lane. The generic reader remains reachable for Ruby, Go, TypeScript, Dart, Rust/Wasm, Elixir, Perl, Swift, Java/Kotlin, and .NET. After the Python field and distribution-name rules are fixed, compare each remaining real lane with the Go oracle, add language-neutral field-boundary fixtures, and split implementation into dependency-shaped ecosystem slices rather than recreating a broad multi-language PR."
+      "notes": "Materialized after the post-Python leverage audit selected Rust. Remaining exact graph drift is TypeScript 147 false/948 missing, Ruby 123/0, Perl 95/2, Swift 65/0, C# 47/178, F# 39/178, Go 26/0, Kotlin 9/13, Elixir 8/0, Java 4/24, Dart 0/67, and the non-denominator Wasm execution target 12/1. Re-run the complete oracle audit after Rust lands, then split the highest-leverage coherent ecosystem without combining unrelated manifest grammars."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1523,7 +1532,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473."
+      "notes": "Share a Python/Rust/TypeScript corpus for MOS W/L/NRD/NRS/AD/AS/PD/PS and TOX/U0/UO/KP/VT0/VTO/VTH validation, including aliases, case, duplicates, NaN/Infinity, and stable diagnostics. Discovered across merged PRs #9427, #9429, #9432, #9436, #9437, #9439, #9443, #9448, #9450, #9453, #9459, #9464, #9469, and #9473. Merged PR #9829 adds finite non-negative diode KF validation and Python/TypeScript lowering coverage, but it is a narrow partial advance rather than completion of this shared multi-lane corpus."
     },
     {
       "id": "smart-home-switch-entity-command-contract",
@@ -1752,6 +1761,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 5c85a498 inventory after chief-of-staff-daemon-keyring landed as a Rust-only production key loader. The crate opens operator-configured filesystem paths, rejects link/device/race substitutions through native file-handle inspection, and supplies trusted keys to the concrete Chief host, so the package is not an all-language portable target. Review the minimum truthful fs:read and platform file-identity evidence; keep bounded 32-byte Ed25519 key decoding, subgroup validation, trust-tier mapping, and redacted stable diagnostics in shared portable fixtures where reusable; and record the residual file-loading adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-daemon-credential-native-authority-review",
+      "title": "Review the Chief daemon credential persistence native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-daemon-runtime-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 7acde69a inventory after chief-of-staff-daemon-credential landed as a Rust-only owner-only bearer-credential persistence adapter. The crate owns concrete filesystem read/create/write, native Unix and Windows file/security FFI, durable publication, ownership and ACL validation, bounded sleep/retry, secret generation, and zeroization, so the production adapter is not an all-language portable target. Review the minimum truthful native authority and platform evidence; keep bounded canonical credential decoding, stable redacted errors, and injected persistence-state semantics in portable fixtures where safe and reusable. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Rust resolver repair."
+    },
+    {
+      "id": "chief-daemon-executable-native-authority-review",
+      "title": "Review the Chief daemon composition-root native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-daemon-runtime-native-authority-review", "chief-daemon-keyring-native-authority-review", "chief-daemon-credential-native-authority-review", "chief-process-supervisor-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean bbb0276a inventory after chief-of-staff-daemon landed as the Rust-only concrete D18 composition root. It reads environment and configuration, opens trusted files, creates and writes durable credential/state paths, listens on loopback, executes and signals child processes, handles shutdown signals, and owns monotonic scheduling and bounded waits. Review the composed authority and platform evidence after its component native reviews; keep only dependency-injected orchestration ordering in portable contracts, and do not manufacture all-language privileged daemon executables. This review is excluded from autonomous delivery selection by parity policy and does not displace the active Haskell Rust resolver repair."
     },
     {
       "id": "smart-home-synology-surveillance-native-authority-review",
