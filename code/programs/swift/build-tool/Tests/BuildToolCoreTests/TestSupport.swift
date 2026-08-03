@@ -107,13 +107,39 @@ func buildToolExecutableURL() throws -> URL {
     let executableName = "build-tool"
     #endif
 
-    var directory = URL(fileURLWithPath: CommandLine.arguments[0]).deletingLastPathComponent()
-    for _ in 0 ..< 8 {
-        let candidate = directory.appendingPathComponent(executableName)
-        if FileManager.default.isExecutableFile(atPath: candidate.path) {
-            return candidate
+    let fileManager = FileManager.default
+    let testExecutables = [
+        Bundle.main.executableURL,
+        URL(fileURLWithPath: CommandLine.arguments[0]),
+    ].compactMap { $0 }
+
+    for testExecutable in testExecutables {
+        var directory = testExecutable.deletingLastPathComponent()
+        for _ in 0 ..< 8 {
+            let candidate = directory.appendingPathComponent(executableName)
+            if fileManager.isExecutableFile(atPath: candidate.path) {
+                return candidate
+            }
+            directory.deleteLastPathComponent()
         }
-        directory.deleteLastPathComponent()
+    }
+
+    // SwiftPM can copy the test bundle away from the package build directory
+    // on macOS. Fall back to the package-local scratch tree in that case.
+    let packageRoot = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+    if let enumerator = fileManager.enumerator(
+        at: packageRoot.appendingPathComponent(".build"),
+        includingPropertiesForKeys: [.isRegularFileKey, .isExecutableKey]
+    ) {
+        for case let candidate as URL in enumerator where candidate.lastPathComponent == executableName {
+            let values = try candidate.resourceValues(forKeys: [.isRegularFileKey, .isExecutableKey])
+            if values.isRegularFile == true, values.isExecutable == true {
+                return candidate
+            }
+        }
     }
     throw CocoaError(.fileNoSuchFile)
 }
