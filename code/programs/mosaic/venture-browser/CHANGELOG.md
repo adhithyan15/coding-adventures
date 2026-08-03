@@ -4,6 +4,9 @@
 
 ### Added
 
+- Strengthen generated SwiftUI direct interaction acceptance to require both
+  cold-start history controls to expose their disabled Mosaic state and
+  suppress native dispatch before the first navigation.
 - Require generated SwiftUI and WinUI interaction acceptance to navigate the
   shared browser session through the Mosaic-authored address field's native
   Return/Enter `onCommit` path while retaining the existing Go-button gate.

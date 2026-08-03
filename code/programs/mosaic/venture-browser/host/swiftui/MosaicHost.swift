@@ -185,6 +185,64 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         remaining: remaining)
       return
     }
+    let response = applyProps()
+    let props = response?["props"] as? NSDictionary
+    let currentAddress = props?["address"] as? String ?? ""
+    let backDisabled = props?["back-disabled"] as? Bool
+    let forwardDisabled = props?["forward-disabled"] as? Bool
+    guard currentAddress == startURL, backDisabled == true, forwardDisabled == true else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "address": currentAddress,
+          "error": "initial native navigation control state did not match",
+        ],
+        to: markerPath)
+      return
+    }
+    let backEventCount = chromeEventCounts["onBack", default: 0]
+    let forwardEventCount = chromeEventCounts["onForward", default: 0]
+    guard performNativeButtonClick(identifier: "back-button"),
+      performNativeButtonClick(identifier: "forward-button")
+    else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "initial native navigation controls not found",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self, weak address] in
+      self?.verifyInitialDisabledControls(
+        address: address, startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        backEventCount: backEventCount, forwardEventCount: forwardEventCount)
+    }
+  }
+
+  private func verifyInitialDisabledControls(
+    address: NSTextField?, startURL: String, targetURL: String, markerPath: String,
+    backEventCount: Int, forwardEventCount: Int
+  ) {
+    guard chromeEventCounts["onBack", default: 0] == backEventCount,
+      chromeEventCounts["onForward", default: 0] == forwardEventCount
+    else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "initial native disabled navigation control dispatched",
+        ],
+        to: markerPath)
+      return
+    }
+    guard let address else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error",
+          "error": "address-input unavailable after initial navigation state check",
+        ],
+        to: markerPath)
+      return
+    }
     address.selectText(nil)
     guard let editor = address.currentEditor() as? NSTextView else {
       writeInteractionResult(
