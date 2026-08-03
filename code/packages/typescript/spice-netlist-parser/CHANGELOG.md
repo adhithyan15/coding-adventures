@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite MOS model-card `IS` values before
+  lowering Level-1 saturation current.
 - Reject zero, negative, and non-finite MOS model-card `L` values before
   lowering Level-1 default length.
 - Reject zero, negative, and non-finite MOS model-card `W` values before

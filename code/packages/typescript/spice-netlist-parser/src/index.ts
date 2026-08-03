@@ -1229,6 +1229,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET L must be finite and positive");
   }
+  const saturationCurrent = params.get("IS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    saturationCurrent !== undefined &&
+    (!Number.isFinite(saturationCurrent) || saturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET IS must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,
