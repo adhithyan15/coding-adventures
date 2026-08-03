@@ -1989,7 +1989,7 @@ pub(crate) fn run_dispatch_loop(
         // still gets collected under allocation pressure instead of running the
         // heap unbounded. `run_safepoint` itself no-ops unless `ctx.heap` is over
         // threshold, so this is a cheap counter check on every other tick.
-        if *ctx.metrics_instrs % AUTO_SAFEPOINT_INTERVAL == 0 {
+        if ctx.metrics_instrs.is_multiple_of(AUTO_SAFEPOINT_INTERVAL) {
             run_safepoint(ctx);
         }
 
