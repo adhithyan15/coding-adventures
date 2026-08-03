@@ -958,6 +958,37 @@ Q3 col base emit legacy
     );
   });
 
+  it("parses the BJT V_T thermal-voltage alias with canonical precedence", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(VT=25m V_T=27m)
+Q1 col base emit fast
+.model slow PNP(V_T=28m)
+Q2 col base emit slow
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      thermalVoltage: 25.0e-3,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "bjt",
+      thermalVoltage: 28.0e-3,
+    });
+  });
+
+  it.each([
+    ["VT", "0"],
+    ["VT", "-1m"],
+    ["VT", "1e999"],
+    ["V_T", "0"],
+    ["V_T", "-1m"],
+    ["V_T", "1e999"],
+  ])("rejects invalid BJT %s thermal voltage %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      "BJT VT must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

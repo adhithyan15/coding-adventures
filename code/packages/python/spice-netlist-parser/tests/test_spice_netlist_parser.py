@@ -956,6 +956,30 @@ def test_rejects_invalid_bjt_forward_beta(parameter: str, value: str) -> None:
         parse_netlist(f".model fast NPN({parameter}={value})")
 
 
+def test_parse_bjt_thermal_voltage_alias_with_canonical_precedence() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(VT=25m V_T=27m)
+Q1 col base emit fast
+.model slow PNP(V_T=28m)
+Q2 col base emit slow
+"""
+    )
+
+    first, second = parsed.circuit.elements
+    assert isinstance(first, BJT)
+    assert isinstance(second, BJT)
+    assert first.Vt == 25.0e-3
+    assert second.Vt == 28.0e-3
+
+
+@pytest.mark.parametrize("parameter", ["VT", "V_T"])
+@pytest.mark.parametrize("value", ["0", "-1m", "1e999"])
+def test_rejects_invalid_bjt_thermal_voltage(parameter: str, value: str) -> None:
+    with pytest.raises(NetlistParseError, match="BJT VT must be finite and positive"):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

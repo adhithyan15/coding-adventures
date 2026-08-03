@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate BJT model-card `VT` / `V_T` thermal voltage and lower the `V_T`
+  alias instead of silently dropping it.
 - Validate and lower the BJT model-card `HFE` forward-beta alias.
 - Validate BJT model-card `BF` / `BETA` / `BETA_F` forward beta and lower the
   `BETA` alias instead of silently dropping it.
