@@ -1,0 +1,10 @@
+[package]
+name = "chief-of-staff-daemon-config"
+version = "0.1.0"
+edition = "2021"
+description = "Strict typed TOML configuration for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+coding-adventures-toml-parser = { path = "../toml-parser" }
+parser = { path = "../parser" }
