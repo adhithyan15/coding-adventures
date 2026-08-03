@@ -6933,7 +6933,12 @@ impl HtmlParser {
                 self.remove_pending_formatting_reconstruction(name);
             }
             name if is_heading_element(name) => {
-                self.close_open_heading_if_in_scope(None);
+                if !self.close_open_heading_if_in_scope(Some(name)) {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-heading-end-tag",
+                        format!("end tag `</{name}>` did not match the current heading element"),
+                    ));
+                }
             }
             _ => self.close_element(name),
         }
@@ -7367,9 +7372,7 @@ impl HtmlParser {
 
     fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| {
-                is_heading_element(name) && expected_name.is_none_or(|expected| name == expected)
-            })
+            element_at_path(&self.document, path).is_some_and(is_heading_element)
         }) else {
             return false;
         };
@@ -7383,8 +7386,13 @@ impl HtmlParser {
             self.pop_current_if(is_heading_element);
             return false;
         }
+        if expected_name.is_some() {
+            self.generate_implied_end_tags_above(index);
+        }
+        let matched_current =
+            expected_name.is_none_or(|expected| self.current_element_is(expected));
         self.open_elements.truncate(index);
-        true
+        matched_current
     }
 
     fn close_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -33203,6 +33211,28 @@ mod tests {
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn reports_heading_end_tags_without_a_matching_current_heading() {
+        for (source, end_tag) in [
+            ("<!doctype html><p></h3>foo", "h3"),
+            ("<!doctype html><h3><li>abc</h2>foo", "h2"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-heading-end-tag",
+                    format!("end tag `</{end_tag}>` did not match the current heading element")
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let matching =
+            parse_html_with_diagnostics("<!doctype html><h3><li>abc</h3>foo").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
     }
 
     #[test]
