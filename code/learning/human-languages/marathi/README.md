@@ -43,6 +43,8 @@ first five chapters retain their authored long-form narrative during migration.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Devanagari font
 (`../../_fonts/`) — the same font as the Hindi track. `latexmk -xelatex book.tex`.
+The six-chapter build is warning-clean, and its PDF outline preserves readable
+Devanagari while generated non-Latin sections use bookmark-safe romanization.
 
 ## Files
 
