@@ -4350,6 +4350,7 @@ pub struct HtmlParser {
     prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
+    is_fragment: bool,
     initial_insertion_mode: bool,
     quirks_mode: bool,
     strip_next_leading_lf: bool,
@@ -4372,6 +4373,7 @@ impl Default for HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options: HtmlParseOptions::default(),
+            is_fragment: false,
             initial_insertion_mode: true,
             quirks_mode: true,
             strip_next_leading_lf: false,
@@ -4424,6 +4426,7 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            is_fragment: true,
             initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
@@ -4448,6 +4451,7 @@ impl HtmlParser {
             prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
+            is_fragment: true,
             initial_insertion_mode: false,
             quirks_mode: true,
             strip_next_leading_lf: false,
@@ -4622,6 +4626,15 @@ impl HtmlParser {
                         }));
                     }
                     Token::Eof => {
+                        if !self.is_fragment
+                            && self.has_open_element("body")
+                            && self.has_disallowed_open_element_for_body_end_tag()
+                        {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-with-unclosed-elements",
+                                "end of file was reached with disallowed open elements",
+                            ));
+                        }
                         self.populate_selectedcontent_for_open_selects();
                         repair_table_cell_fostered_nobr_adoption(&mut self.document);
                         repair_insanely_badly_nested_table_sequence(&mut self.document.children);
@@ -30461,10 +30474,16 @@ mod tests {
 
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "nested-form-start-tag",
-                "nested form start tag was ignored while a form element was already open"
-            )]
+            vec![
+                ParserDiagnostic::new(
+                    "nested-form-start-tag",
+                    "nested form start tag was ignored while a form element was already open"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
         );
 
         let body = body(&output.document);
@@ -31488,10 +31507,16 @@ mod tests {
         );
         assert_eq!(
             output.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "non-void-html-element-self-closing",
-                "self-closing flag on non-void HTML element `<plaintext>` was ignored"
-            )]
+            vec![
+                ParserDiagnostic::new(
+                    "non-void-html-element-self-closing",
+                    "self-closing flag on non-void HTML element `<plaintext>` was ignored"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
         );
     }
 
@@ -32829,7 +32854,6 @@ mod tests {
         for (source, end_tag) in [
             ("<!doctype html><menuitem></body>", "body"),
             ("<!doctype html><menuitem></html>", "html"),
-            ("<!doctype html><table><tbody><tr><td></body>", "body"),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
@@ -32842,8 +32866,50 @@ mod tests {
             );
         }
 
+        let table = parse_html_with_diagnostics(
+            "<!doctype html><table><tbody><tr><td></body>",
+        )
+        .unwrap();
+        assert_eq!(
+            table.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "shell-end-tag-with-unclosed-elements",
+                    "end tag `</body>` was seen with disallowed open elements"
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )
+            ]
+        );
+
         let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
         assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_eof_with_disallowed_open_elements() {
+        for source in [
+            "<!doctype html><menuitem>",
+            "<!doctype html><div>",
+            "<!doctype html><svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        for source in ["<!doctype html><p>", "<!doctype html><head>"] {
+            let allowed = parse_html_with_diagnostics(source).unwrap();
+            assert!(allowed.parser_diagnostics.is_empty(), "source {source:?}");
+        }
     }
 
     #[test]
