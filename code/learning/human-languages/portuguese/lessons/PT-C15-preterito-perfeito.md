@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C15-preterito-perfeito
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 510
 chapter: 15
 type: word
 headword: falei
@@ -9,18 +12,32 @@ prerequisites: [PT-C14-ter, PT-C05-falar]
 sounds: [final-stress-ei, nasal-aram]
 roots: [latin-perfect]
 etymology_hook: "falei ← Vulgar Latin perfect **\*fabulāvī**, the direct inheritance — the SAME tense French exiled to literature (il parla), German pushed aside (sagte) and northern Italy dropped (parlò); Portuguese and Spanish, at the western edge, simply kept using it"
-est_minutes: 4
+duration:
+  max_seconds: 252
+requires:
+  knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04]
+introduces:
+  knowledge: [PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03]
+practises:
+  knowledge: [PT-LEX-TER-02, PT-ETYMON-TER-03, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C14-ter, PT-C05-falar, PT-C05-trabalhar]
 ---
 
 # falei — the past Portuguese kept
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Portuguese's everyday past tense. Its interest isn't its endings —
 it's that Portuguese still **has** it in daily speech, when several sisters do not.
 
-## The forms
+## You'll want to know: The forms
+<!-- hl-knowledge: introduces=[PT-LEX-PRETERITO-PERFEITO-02]; assesses=[] -->
 
 | | |
 |---|---|
@@ -40,7 +57,8 @@ lets context decide. Same word, one accent, two spelling conventions.
 Latin *-āv-* dissolved and left a **stressed final vowel** behind, which is why
 *falei* and *falou* end where they do.
 
-## The tense the others gave up
+## Why it's said this way: The tense the others gave up
+<!-- hl-knowledge: introduces=[PT-PRAGMATICS-PRETERITO-PERFEITO-03]; assesses=[] -->
 
 Now the point of the chapter:
 
@@ -61,6 +79,7 @@ participle (*falado*). It simply doesn't use them for this job. The next lesson
 shows what it uses them for instead.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "falei, falaste, falou, falámos, falaram"]
@@ -69,6 +88,7 @@ shows what it uses them for instead.
 - [YOU SAY: the five fates — "falou · habló · parlò · sagte · il parla"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-TER-02, PT-ETYMON-TER-03, PT-SOUND-FALAR-02, PT-ETYMON-FALAR-03, PT-GRAMMAR-FALAR-04, PT-LEX-PRETERITO-PERFEITO-02, PT-PRAGMATICS-PRETERITO-PERFEITO-03] -->
 
 [PAUSE 3s] How many words does the Portuguese past need? (**One** — no
 auxiliary.) Where does *falei* come from? (Vulgar Latin perfect **\*fabulāvī**, like

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C07-dias-1
+spine_node: SPINE-TIME-OF-DAY
+sequence: 350
 chapter: 7
 type: word
 headword: segunda, terça, quarta, quinta, sexta(-feira)
@@ -9,20 +12,34 @@ prerequisites: [PT-C06-numeros-1-5]
 sounds: [nasal-none, open-e]
 roots: [feria-latin, ordinals-latin]
 etymology_hook: "Portuguese is the ONLY Romance language to drop the pagan planet-gods: its weekdays are numbered 'feiras' — segunda-feira '2nd feast-day', built from the ordinals of the numbers you just learned"
-est_minutes: 4
+duration:
+  max_seconds: 243
+requires:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
+introduces:
+  knowledge: [PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
+practises:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C06-numeros-1-5, PT-C06-numeros-6-10]
 ---
 
 # segunda to sexta — the week that got numbered
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Here Portuguese does something **no other Romance language does**.
 French, Italian, and Spanish all name their weekdays for planet-gods (*lundi*,
 *lunedì*, *lunes* = the Moon). Portuguese threw the pagan gods out and **numbered**
 the days instead — and the numbers are the very ones you just learned.
 
-## The story: a bishop renames the week
+## Why it's said this way: The story: a bishop renames the week
+<!-- hl-knowledge: introduces=[PT-PRAGMATICS-DIAS-1-02]; assesses=[] -->
 
 In the 6th century, **Martinho de Braga**, a bishop in what is now northern
 Portugal, refused to let Christians name days after *Mars* and *Jupiter*. Borrowing
@@ -33,7 +50,8 @@ the Church's word for the numbered holy days of Easter week, he called them
 drifted, elsewhere, into "market/fair" — English **fair** is its cousin, because
 markets were held on feast-days.)
 
-## The pattern: [ordinal] + feira
+## Grammar Lens: The pattern: [ordinal] + feira
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-DIAS-1-03]; assesses=[] -->
 
 | Portuguese | means | ← ordinal of | (cardinal you learned) |
 |---|---|---|---|
@@ -49,6 +67,7 @@ segunda!*" — "See you Monday!" (Why does Monday start at **two**, not one? Bec
 Sunday is counted as the *first* day — the next lesson closes that loop.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "segunda, terça, quarta, quinta, sexta" — Monday through Friday]
@@ -57,6 +76,7 @@ Sunday is counted as the *first* day — the next lesson closes that loop.)
 - [YOU SAY: drop the tail — "Até sexta!" ("See you Friday!")]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03] -->
 
 [PAUSE 3s] How is Portuguese unique among Romance languages here? (It **numbers**
 its weekdays — *feiras* — instead of naming planet-gods.) What does *feira* mean,

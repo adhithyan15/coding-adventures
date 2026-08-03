@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C06-numeros-1-5
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 330
 chapter: 6
 type: word
 headword: um, dois, três, quatro, cinco
@@ -9,25 +12,40 @@ prerequisites: []
 sounds: [nasal-um, open-e]
 roots: [unus-duo-tres-latin]
 etymology_hook: "um/dois/três/quatro/cinco ← ūnus/duo/trēs/quattuor/quīnque; Portuguese uniquely keeps GENDER on 'two' (dois/duas). = Spanish uno/dos/tres/cuatro/cinco"
-est_minutes: 4
+duration:
+  max_seconds: 203
+requires:
+  knowledge: []
+introduces:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
+practises:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C05-practice]
 ---
 
 # um, dois, três, quatro, cinco — counting to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Portuguese counts almost like its sister Spanish — but with two
 signature Portuguese twists: heavy **nasal vowels**, and a number that still
 **changes for gender** where Spanish long stopped. Spanish twins are beside each.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[PT-SOUND-NUMEROS-1-5-02]; assesses=[] -->
 
 - `nasal-um` — **um** is nasal: *oong* said softly through the nose, no real *m*.
   (The *-m* is just the spelling for nasality, as in *sim*, *bom*.)
 - `open-e` — **três** = *trehs* with an open *e* and the circumflex marking it.
 
 ## The numbers, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-NUMEROS-1-5-03]; assesses=[] -->
 
 | Portuguese | ← Latin | Spanish twin | English cousins |
 |---|---|---|---|
@@ -41,6 +59,7 @@ signature Portuguese twists: heavy **nasal vowels**, and a number that still
 *two*.
 
 ## Grammar Lens: um/uma and the gendered "two" (dois/duas)
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-NUMEROS-1-5-04]; assesses=[] -->
 
 **um** is also "a/an," gendered **um** (masc.) / **uma** (fem.): *um café*, *uma
 cerveja*. That much matches Spanish. The surprise is **two**: Portuguese still
@@ -50,6 +69,7 @@ levelled this to a single *dos* centuries ago; Portuguese kept the old split. Th
 rest (*três, quatro, cinco*) don't change.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "um, dois, três, quatro, cinco" — count up]
@@ -57,6 +77,7 @@ rest (*três, quatro, cinco*) don't change.
 - [YOU SAY: each with its English cousin — "dois/duo, três/trio, cinco/quintet"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04] -->
 
 [PAUSE 3s] Give 1–5 in Portuguese. (*Um, dois, três, quatro, cinco*.) Which number
 still changes for gender, and how? (*Two* — *dois* / *duas*, ← Latin *duo/duae*.)

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C09-meses
+spine_node: SPINE-TIME-OF-DAY
+sequence: 390
 chapter: 9
 type: word
 headword: os meses
@@ -9,19 +12,33 @@ prerequisites: [PT-C06-numeros-6-10, PT-C07-dias-1]
 sounds: [nasal-none, open-e]
 roots: [latin-months, roman-gods]
 etymology_hook: "janeiro←Januarius (Janus), março←Mars, julho←Julius Caesar; setembro–dezembro still mean Latin 7–10 (the numbers you learned)"
-est_minutes: 4
+duration:
+  max_seconds: 183
+requires:
+  knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03]
+introduces:
+  knowledge: [PT-ETYMON-MESES-02]
+practises:
+  knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-MESES-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C06-numeros-6-10, PT-C07-dias-1]
 ---
 
 # os meses — the gods and numbers of the calendar
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The Portuguese months are the Roman procession of gods and Caesars,
 worn down the Portuguese way. And two things you know pay off: *março* is the
 war-god, and *setembro–dezembro* are the Latin numbers 7–10.
 
 ## The months, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-MESES-02]; assesses=[] -->
 
 | Portuguese | ← Latin | who / what | Spanish twin |
 |---|---|---|---|
@@ -48,6 +65,7 @@ Two payoffs:
   and pushed the count down two.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-MESES-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "janeiro, fevereiro, março … novembro, dezembro"]
@@ -55,6 +73,7 @@ Two payoffs:
 - [YOU SAY: "setembro = 7 (sete), dezembro = 10 (dez)"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04, PT-PRAGMATICS-DIAS-1-02, PT-GRAMMAR-DIAS-1-03, PT-ETYMON-MESES-02] -->
 
 [PAUSE 3s] Which god is *março* named for? (**Mars**, the war-god.) Why is
 *dezembro* Latin for "ten"? (The Roman year began in March.) Which two months honour

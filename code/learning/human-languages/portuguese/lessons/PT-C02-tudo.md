@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C02-tudo
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 120
 chapter: 2
 type: word
 headword: tudo
@@ -9,23 +12,38 @@ prerequisites: []
 sounds: [final-o-is-u]
 roots: [totus-latin]
 etymology_hook: "tudo ← Latin tōtus 'whole, entire' → English total, totally, teetotal"
-est_minutes: 3
+duration:
+  max_seconds: 252
+requires:
+  knowledge: []
+introduces:
+  knowledge: [PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04]
+practises:
+  knowledge: [PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C02-como]
 ---
 
 # tudo — "everything," the heart of *Tudo bem?*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The most Brazilian way to greet someone doesn't use a "you" or a
 "to be" at all — it just asks **Tudo bem?**, "everything well?" To own it, learn
 its first word: **tudo**, "everything."
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[PT-SOUND-TUDO-02]; assesses=[] -->
 
 - `final-o-is-u` — **tudo** = *TOO-doo*: final *-o* → *u*, and the *d* is soft.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-TUDO-03]; assesses=[] -->
 
 **tudo** = "everything, all," from Latin **tōtus**, *"whole, entire."* You ask
 whether the **whole** of someone's life is going well — *is everything OK?*
@@ -38,6 +56,7 @@ That root **tōtus** is completely at home in English:
   the family (you'll hear Spanish *todo* echoing this).
 
 ## Grammar Lens: pairing it with "well"
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-TUDO-04]; assesses=[] -->
 
 Portuguese "well" is **bem** (← Latin *bene*, "well" — the *bene* of *bene*fit,
 *bene*volent; cousin of Spanish *bien*, French *bien*). Put them together:
@@ -50,6 +69,7 @@ Portuguese — and you can answer with the very same two words: **Tudo bem.**
 ("Everything's well.") Or just **Tudo bom.**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tudo" — *TOO-doo*]
@@ -57,6 +77,7 @@ Portuguese — and you can answer with the very same two words: **Tudo bem.**
 - [YOU SAY: "tudo" then English "total, totally" — one family]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-TUDO-02, PT-ETYMON-TUDO-03, PT-GRAMMAR-TUDO-04] -->
 
 [PAUSE 3s] What Latin word gives *tudo*, and its English cousins? (*tōtus* →
 total, totally, teetotal.) Why is *Tudo bem?* so easy to use? (No pronoun, no

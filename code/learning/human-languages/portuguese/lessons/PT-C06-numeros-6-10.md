@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: PT-C06-numeros-6-10
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 340
 chapter: 6
 type: word
 headword: seis, sete, oito, nove, dez
@@ -9,25 +12,40 @@ prerequisites: [PT-C06-numeros-1-5]
 sounds: [diphthong-oi, open-e]
 roots: [sex-septem-octo-latin]
 etymology_hook: "sete/oito/nove/dez ← septem/octō/novem/decem → setembro/outubro/novembro/dezembro; oito shows the Portuguese ct→it shift (octō→oito, like noite/noctem)"
-est_minutes: 4
+duration:
+  max_seconds: 230
+requires:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04]
+introduces:
+  knowledge: [PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04]
+practises:
+  knowledge: [PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [PT-C06-numeros-1-5]
 ---
 
 # seis, sete, oito, nove, dez — and the calendar's secret
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The rest of the way to ten. Like Spanish, Portuguese hides the calendar
 fact — **setembro–dezembro are Latin for 7, 8, 9, 10** — and one number, *oito*,
 puts a signature Portuguese sound-shift on full display.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[PT-SOUND-NUMEROS-6-10-02]; assesses=[] -->
 
 - `diphthong-oi` — **oito** = *OY-too*, **dois** rhymes with it: the *oi* glide.
 - **dez** = *dehs* (open *e*); the final *-z* is a soft "sh"/"s" in Portugal,
   "s" in Brazil.
 
 ## The numbers, taken apart
+<!-- hl-knowledge: introduces=[PT-ETYMON-NUMEROS-6-10-03]; assesses=[] -->
 
 | Portuguese | ← Latin | Spanish twin | English cousins |
 |---|---|---|---|
@@ -45,6 +63,7 @@ guess the Latin word had a *-ct-*. (Spanish took a different path: *octō → oc
 with *-ct- → -ch-*. Same cluster, two sisters, two solutions — *oito* vs *ocho*.)
 
 ## Grammar Lens: why the months are "off by two"
+<!-- hl-knowledge: introduces=[PT-GRAMMAR-NUMEROS-6-10-04]; assesses=[] -->
 
 *Setembro* means "7th," yet sits **9th**. The old **Roman year began in March**,
 so *September* really was the seventh; *julho* and *agosto* (July, August) were
@@ -53,6 +72,7 @@ month names. Every *dezembro*, you're saying Roman "**ten**" — and *dez* also 
 Portuguese *dízimo*, a "tithe" (a tenth), the twin of English *dime*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "seis, sete, oito, nove, dez" — finish the count]
@@ -60,6 +80,7 @@ Portuguese *dízimo*, a "tithe" (a tenth), the twin of English *dime*.
 - [YOU SAY: the *-ct- → -it-* set — "oito, noite, leite" — then Spanish "ocho"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PT-SOUND-NUMEROS-1-5-02, PT-ETYMON-NUMEROS-1-5-03, PT-GRAMMAR-NUMEROS-1-5-04, PT-SOUND-NUMEROS-6-10-02, PT-ETYMON-NUMEROS-6-10-03, PT-GRAMMAR-NUMEROS-6-10-04] -->
 
 [PAUSE 3s] Give 6–10 in Portuguese. (*Seis, sete, oito, nove, dez*.) What Latin
 cluster became *-it-* in *oito*, and one more example? (*-ct-*; *noite* ← *noctem*

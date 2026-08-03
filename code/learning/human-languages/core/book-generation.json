@@ -156,6 +156,120 @@
       "output": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "portuguese",
+      "chapter": 2,
+      "title": "How Are You?",
+      "label": "ch:pt-how-are-you",
+      "output": "portuguese/book/chapters/ch02-how-are-you.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 3,
+      "title": "Introducing Yourself",
+      "label": "ch:pt-introductions",
+      "output": "portuguese/book/chapters/ch03-introductions.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:pt-farewells",
+      "output": "portuguese/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ptar"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 5,
+      "title": "The First Verbs",
+      "label": "ch:pt-first-verbs",
+      "output": "portuguese/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 6,
+      "title": "Numbers One to Ten",
+      "label": "ch:pt-numbers-one-to-ten",
+      "output": "portuguese/book/chapters/ch06-numbers-1-10.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 7,
+      "title": "Days of the Week",
+      "label": "ch:pt-days-of-the-week",
+      "output": "portuguese/book/chapters/ch07-days-of-the-week.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 8,
+      "title": "Telling Time",
+      "label": "ch:pt-telling-time",
+      "output": "portuguese/book/chapters/ch08-telling-time.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 9,
+      "title": "Months and Seasons",
+      "label": "ch:pt-months-and-seasons",
+      "output": "portuguese/book/chapters/ch09-months-and-seasons.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:pt-family",
+      "output": "portuguese/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 11,
+      "title": "Bread, Water, and Wine",
+      "label": "ch:pt-bread-water-wine",
+      "output": "portuguese/book/chapters/ch11-bread-water-wine.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 12,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:pt-numbers-eleven-to-twenty",
+      "output": "portuguese/book/chapters/ch12-numbers-11-20.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 13,
+      "title": "Colours",
+      "label": "ch:pt-colours",
+      "output": "portuguese/book/chapters/ch13-colours.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 14,
+      "title": "Having and Telling Your Age",
+      "label": "ch:pt-having-and-age",
+      "output": "portuguese/book/chapters/ch14-having-and-age.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 15,
+      "title": "The Past Portuguese Kept",
+      "label": "ch:pt-past-portuguese-kept",
+      "output": "portuguese/book/chapters/ch15-past-portuguese-kept.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 16,
+      "title": "Ser and Estar",
+      "label": "ch:pt-ser-and-estar",
+      "output": "portuguese/book/chapters/ch16-ser-and-estar.tex"
+    },
+    {
+      "language": "portuguese",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:pt-head-and-hand",
+      "output": "portuguese/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",

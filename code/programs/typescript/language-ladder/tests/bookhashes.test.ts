@@ -60,6 +60,31 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "italian", chapter)).toBe("synced");
   });
 
+  it.each([
+    [2, 8],
+    [3, 5],
+    [4, 5],
+    [5, 5],
+    [6, 2],
+    [7, 2],
+    [8, 2],
+    [9, 2],
+    [10, 2],
+    [11, 2],
+    [12, 2],
+    [13, 2],
+    [14, 2],
+    [15, 2],
+    [16, 4],
+    [17, 3],
+  ])("matches the browser-loaded Portuguese Chapter %i AST across %i lessons", (chapter, count) => {
+    const lessons = loadLessons();
+    const expected = expectedBookHash("portuguese", chapter);
+    expect(expected?.lessonIds).toHaveLength(count);
+    expect(actualChapterHash(lessons, "portuguese", chapter)).toBe(expected?.sourceHash);
+    expect(bookHashStatus(lessons, "portuguese", chapter)).toBe("synced");
+  });
+
   it("reports a generated chapter stale when one canonical lesson changes", () => {
     const lessons = loadLessons();
     const changed = lessons.map((lesson) =>
