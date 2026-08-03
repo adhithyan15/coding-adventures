@@ -190,6 +190,13 @@ checked tree-construction and tokenizer fixtures.
 The prioritized completion queue and intake rules live in
 `CONFORMANCE-BACKLOG.md`.
 
+Tree-construction data also carries legacy `#errors` rows. The shared test
+loader retains those rows and the main tree-construction test ratchets whether
+each malformed case produces any lexer or parser diagnostic. Exact legacy
+error strings are not treated as a public WHATWG taxonomy; they are used to
+identify missing diagnostic coverage while DOM output remains independently
+checked.
+
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
 adoption-agency, table/foster-parenting, template, foreign-content fragment,

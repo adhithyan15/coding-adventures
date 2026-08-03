@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Tree-construction conformance cases now retain their declared parse-error
+  rows and ratchet diagnostic coverage, exposing 1,577 malformed cases that
+  still produce no parser or lexer diagnostic without weakening DOM checks.
 - The conformance coverage report now pins the exact upstream WPT and
   html5lib-tests commits, and the package owns an explicit prioritized backlog
   and zero-debt completion boundary for future upstream drift.
