@@ -8,6 +8,8 @@
   receiver acknowledgements.
 - Add authenticated-header preparation, encoding, and post-reservation
   encryption for durable nonce-safe appends.
+- Add a stable durable channel-definition storage key for authorized endpoint
+  membership.
 
 ## 0.1.0
 
