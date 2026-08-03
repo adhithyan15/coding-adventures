@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- EOF in the tree builder's text insertion mode now reports the Standard's
+  parse error, pops the authored text element, and reprocesses EOF in the
+  original mode, closing 92 previously silent malformed corpus cases without
+  changing DOM recovery or diagnostics for seeded fragment contexts.
 - Fragment parsing now reports the in-body EOF parse error for authored
   disallowed open elements while excluding synthetic context-shell nodes,
   closing 54 previously silent malformed corpus cases without changing DOM

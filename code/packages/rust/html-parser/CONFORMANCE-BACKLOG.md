@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the fragment in-body EOF diagnostic slice, 1,891 of those cases emit at
-least one lexer or parser diagnostic and 292 remain uncovered. Another 139
+After the text insertion-mode EOF diagnostic slice, 1,983 of those cases emit
+at least one lexer or parser diagnostic and 200 remain uncovered. Another 139
 cases emit diagnostics despite having no legacy `#errors` rows. These are
 reviewed rather than automatically removed: 89 are full-document inputs for
 which the legacy fixtures omit the Standard-required missing-doctype error,
@@ -46,12 +46,15 @@ context and table-wrapper nodes are excluded. Remaining fragment EOF-labeled
 rows depend on table foster-parenting/scope recovery or foreign-content table
 boundaries and stay assigned to those algorithm audits.
 
+Text insertion-mode EOF diagnostics are complete for authored `script`,
+RCDATA, RAWTEXT, and scripting-enabled `noscript` elements. EOF now reports the
+mode's parse error, pops the current text element, and reprocesses EOF in the
+original mode; synthetic text fragment contexts remain diagnostic-free.
+
 Prioritized work items:
 
-1. **In-body and text insertion modes.** Cover scope failures, implied-end-tag
-   recovery, formatting reconstruction, stray start/end tags, and the large
-   executable cluster of unclosed script/style/title/noframes text-mode EOF
-   diagnostics.
+1. **In-body insertion mode.** Cover scope failures, implied-end-tag recovery,
+   formatting reconstruction, and stray start/end tags.
 2. **Table, select, and template insertion modes.** Cover foster parenting,
    table scopes, select recovery, and template mode-stack errors. The remaining
    fragment EOF inventory includes fostered-anchor `eof-in-table` rows and
