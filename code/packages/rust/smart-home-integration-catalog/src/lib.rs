@@ -45295,6 +45295,33 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Supervision,
             PrimitiveFamily::TestSimulator,
         ]),
+        base_entry(
+            "homewizard_energy",
+            "HomeWizard Energy",
+            "Local HomeWizard Energy API v1 device and utility telemetry.",
+            IntegrationCategory::EnergyClimate,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            4,
+            "homewizard",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::None])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "homewizard_energy_api_v1".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ]),
         energy_entry(
             "tesla_powerwall",
             "Tesla Powerwall",
@@ -81071,6 +81098,42 @@ mod tests {
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(fronius.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn homewizard_entry_exposes_read_only_local_utility_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let homewizard = find_entry(
+            &catalog,
+            &IntegrationId::trusted("homewizard_energy"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            homewizard.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(homewizard.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(homewizard.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            homewizard.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "homewizard_energy_api_v1".to_string()
+            )]
+        );
+        assert_eq!(
+            homewizard.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(homewizard.required_primitives.contains(&primitive));
         }
     }
 
