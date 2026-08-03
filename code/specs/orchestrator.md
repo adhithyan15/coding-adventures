@@ -248,7 +248,9 @@ The transport-independent daemon composition is specified in
 registry to deterministic reconciliation, authoritative process supervision,
 and authorized channel-topology mutation while remaining keyless and
 payload-blind. WebSocket serving, CLI parsing, daemon installation, and loop
-scheduling remain outer adapters.
+scheduling remain outer adapters. The transport-independent RFC 6455 contract
+for that outer server is specified in
+[`websocket-core.md`](websocket-core.md).
 
 A durable registry of host intent plus the orchestrator's last observation:
 

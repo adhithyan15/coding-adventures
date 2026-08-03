@@ -1,0 +1,11 @@
+[package]
+name = "websocket-core"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-independent RFC 6455 handshake, frame, and message core"
+license = "MIT"
+
+[dependencies]
+coding_adventures_sha1 = { path = "../sha1" }
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
