@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card flicker-noise-coefficient validation.
+1. Rust Berkeley SPICE MOS model-card flicker-noise-exponent validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `KF` values before lowering MOS
+   - Reject negative and non-finite model-card `AF` values before lowering MOS
      elements into engine parameters.
-   - Preserve zero and positive flicker-noise coefficients.
+   - Preserve zero and positive flicker-noise exponents.
 
 ## Completed Slices
 
@@ -4083,12 +4083,19 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Zero and positive sheet resistances remain accepted.
 
+361. Rust Berkeley SPICE MOS model-card flicker-noise-coefficient validation.
+   - Status: completed in PR 9554.
+   - Negative and non-finite model-card `KF` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive flicker-noise coefficients remain accepted.
+
 ## Backlog
 
-1. Rust Berkeley SPICE MOS model-card validation follow-ups.
-   - Validate the remaining flicker-noise-exponent facade gap for `AF`.
-   - Reuse the finite non-negative contracts and diagnostics already aligned
-     across the Rust, Python, and TypeScript engines.
+1. Rust Berkeley SPICE MOS model-card validation audit.
+   - Re-audit supported model-card parameters after the `AF` facade gap lands,
+     recording any newly confirmed gaps here before selecting another slice.
+   - Reuse contracts and diagnostics already aligned across the Rust, Python,
+     and TypeScript engines whenever the missing behavior is facade-only.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
