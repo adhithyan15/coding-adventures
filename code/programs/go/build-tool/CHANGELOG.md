@@ -32,6 +32,11 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Ruby dependency resolution now reads only runtime dependency calls on the
+  gem specification receiver, treats `add_dependency` and
+  `add_runtime_dependency` as synonyms, ignores development dependencies and
+  commented-out calls, and registers declared gem names alongside derived
+  directory aliases.
 - Rust dependency resolution now honors Cargo inline-table `package` renames
   for path dependencies while retaining the top-level `[dependencies]` field
   boundary.

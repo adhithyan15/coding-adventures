@@ -84,6 +84,13 @@ with `package = "published-name"`, the published package name drives internal
 lookup. Package metadata, features, dev/build/target tables, and registry-only
 dependencies remain outside this graph contract.
 
+Ruby dependency resolution reads only `add_dependency` and
+`add_runtime_dependency` calls on the gem specification receiver. Development
+dependencies, metadata, and comments remain outside the graph. Declared gem
+names are registered alongside directory-derived aliases, so valid
+hyphen/underscore naming differences resolve deterministically. The shared
+field-boundary fixture and complete 301-package lane resolve exactly 454 edges.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

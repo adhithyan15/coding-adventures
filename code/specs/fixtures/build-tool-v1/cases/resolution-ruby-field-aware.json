@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "resolution/ruby-field-aware",
+  "domain": "resolution",
+  "summary": "Ruby resolution reads only runtime dependency declarations on the gem specification receiver.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/ruby/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/ruby/alpha/coding_adventures_alpha.gemspec",
+        "content_utf8": "Gem::Specification.new do |spec|\n  spec.name = \"coding_adventures_alpha\"\n  spec.summary = \"Mentions coding_adventures_gamma without depending on it.\"\n  spec.description = \"The coding_adventures_gamma text is metadata only.\"\n  spec.files = [\"lib/coding_adventures_gamma.rb\"]\n  spec.require_paths = [\"lib/coding_adventures_gamma\"]\n  spec.metadata = {\"source_code_uri\" => \"https://example.invalid/coding_adventures_gamma\"}\n\n  spec.add_dependency 'coding_adventures_beta', '~> 0.1'\n  spec.add_runtime_dependency(\"coding_adventures_delta\", \">= 0.1\") # coding_adventures_gamma stays a comment\n  spec.add_development_dependency \"coding_adventures_gamma\", \"~> 0.1\"\n  # spec.add_dependency \"coding_adventures_gamma\"\nend\n"
+      },
+      {
+        "path": "code/packages/ruby/beta/BUILD",
+        "content_utf8": "echo build beta\n"
+      },
+      {
+        "path": "code/packages/ruby/beta/coding_adventures_beta.gemspec",
+        "content_utf8": "Gem::Specification.new do |spec|\n  spec.name = \"coding_adventures_beta\"\nend\n"
+      },
+      {
+        "path": "code/packages/ruby/delta/BUILD",
+        "content_utf8": "echo build delta\n"
+      },
+      {
+        "path": "code/packages/ruby/delta/coding_adventures_delta.gemspec",
+        "content_utf8": "Gem::Specification.new do |spec|\n  spec.name = \"coding_adventures_delta\"\nend\n"
+      },
+      {
+        "path": "code/packages/ruby/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/ruby/gamma/coding_adventures_gamma.gemspec",
+        "content_utf8": "Gem::Specification.new do |spec|\n  spec.name = \"coding_adventures_gamma\"\nend\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "ruby"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/ruby-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "ruby/beta",
+          "ruby/alpha"
+        ],
+        [
+          "ruby/delta",
+          "ruby/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

@@ -20,6 +20,9 @@ All notable changes to this package will be documented in this file.
   field-boundary and distribution-name normalization fixture.
 - Shared Rust field-boundary coverage for top-level Cargo path dependencies,
   package renames, and representative non-authoritative tables.
+- Shared Ruby field-boundary coverage for runtime dependency synonyms,
+  declared gem aliases, quote forms, optional parentheses, and representative
+  non-authoritative fields and calls.
 
 ### Changed
 
@@ -42,6 +45,9 @@ All notable changes to this package will be documented in this file.
   case and separator normalization before internal-package lookup.
 - Resolve Rust edges only from inline path dependencies in Cargo's top-level
   `[dependencies]` table, honoring `package` renames before alias lookup.
+- Resolve Ruby edges only from `add_dependency` and
+  `add_runtime_dependency` calls on the gem specification receiver, ignoring
+  development dependencies, metadata, comments, and unrelated text.
 
 ## [0.1.0] - 2026-04-05
 
