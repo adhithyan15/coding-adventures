@@ -208,27 +208,31 @@ List<_FseDe> _buildDecodeTable(List<int> norm, int accLog) {
   }
 
   // Phase 2: spread the remaining symbols into the lower portion.
-  // Two-pass approach (matching the Rust reference):
-  //   Pass 0: symbols with count > 1 (spread first to avoid clustering)
-  //   Pass 1: symbols with count == 1
+  //
+  // A SINGLE pass over symbols in ascending order 0..norm.length-1, placing
+  // each symbol's full count immediately when encountered — this is the
+  // real algorithm (FSE_buildDTable_internal's "else" branch, verified
+  // against the reference C source at github.com/facebook/zstd). An earlier
+  // revision of this codec used a fabricated two-pass split (all count>1
+  // symbols first, then all count==1 symbols) which produces a DIFFERENT
+  // table layout — internally self-consistent (our own decoder mirrored our
+  // own encoder) but not the real wire format, so our output was rejected by
+  // the real `zstd` CLI with "Data corruption detected" even though our own
+  // round-trip tests passed. See lessons.md Lesson 95/96. There is no
+  // correctness reason to special-case cnt>1 vs cnt==1 here — that split was
+  // a spurious deterministic-looking convention with no basis in the
+  // reference algorithm.
   var pos = 0;
-  for (var pass = 0; pass < 2; pass++) {
-    for (var s = 0; s < norm.length; s++) {
-      final c = norm[s];
-      if (c <= 0) continue;
-      final cnt = c;
-      // Process in the correct pass:
-      //   pass 0 handles symbols with count > 1
-      //   pass 1 handles symbols with count == 1
-      if ((pass == 0) != (cnt > 1)) continue;
-      symNext[s] = cnt;
-      for (var k = 0; k < cnt; k++) {
-        tbl[pos] = _FseDe(s, 0, 0);
+  for (var s = 0; s < norm.length; s++) {
+    final cnt = norm[s];
+    if (cnt <= 0) continue;
+    symNext[s] = cnt;
+    for (var k = 0; k < cnt; k++) {
+      tbl[pos] = _FseDe(s, 0, 0);
+      pos = (pos + step) & (sz - 1);
+      // Skip slots reserved for -1 probability symbols.
+      while (pos > high) {
         pos = (pos + step) & (sz - 1);
-        // Skip slots reserved for -1 probability symbols.
-        while (pos > high) {
-          pos = (pos + step) & (sz - 1);
-        }
       }
     }
   }
@@ -327,18 +331,19 @@ class _FseEe {
   final idxLimit = idxHigh; // highest free slot for phase 2
 
   // Phase 2: spread remaining symbols.
+  //
+  // Single pass over symbols in ascending order — must mirror
+  // _buildDecodeTable's Phase 2 exactly (same reasoning: the real algorithm
+  // has no count>1-vs-count==1 split; see Lesson 95/96).
   var pos = 0;
-  for (var pass = 0; pass < 2; pass++) {
-    for (var s = 0; s < norm.length; s++) {
-      if (norm[s] <= 0) continue;
-      final cnt = norm[s];
-      if ((pass == 0) != (cnt > 1)) continue;
-      for (var k = 0; k < cnt; k++) {
-        spread[pos] = s;
+  for (var s = 0; s < norm.length; s++) {
+    if (norm[s] <= 0) continue;
+    final cnt = norm[s];
+    for (var k = 0; k < cnt; k++) {
+      spread[pos] = s;
+      pos = (pos + step) & (sz - 1);
+      while (pos > idxLimit) {
         pos = (pos + step) & (sz - 1);
-        while (pos > idxLimit) {
-          pos = (pos + step) & (sz - 1);
-        }
       }
     }
   }
@@ -559,8 +564,12 @@ class _RevBitReader {
 /// 2. Write the low [nb] bits of [state] to [bw].
 /// 3. New state = `st[(state >> nb) + deltaFs]`.
 ///
-/// After all symbols, the final state minus sz is written as [accLog] bits
-/// so the decoder can re-initialise.
+/// This corresponds to the real decoder's per-sequence state UPDATE step
+/// (see [_decompressBlock]) — it is only used for sequences that have a
+/// "next" sequence whose peek needs a freshly transitioned state. The very
+/// first symbol processed in the encoder's reverse loop (the semantically
+/// LAST real sequence) has no such transition and must instead be
+/// initialised directly via [_fseInitState].
 void _fseEncodeSym(
   _RevBitWriter bw,
   List<int> state, // passed as a 1-element list so we can mutate in place
@@ -575,19 +584,50 @@ void _fseEncodeSym(
   state[0] = st[slotI];
 }
 
-/// Decode one symbol from the backward bitstream, updating the FSE state.
+/// Initialise an FSE encoder state directly from a symbol, WITHOUT flushing
+/// any bits — the reverse-encoding-loop analogue of real zstd's
+/// `FSE_initCState2`.
 ///
-/// 1. Look up `de[state]` → `(sym, nb, base)`.
-/// 2. New state = `base + read(nb bits)`.
-int _fseDecodeSym(
-  List<int> state, // 1-element mutable wrapper
-  List<_FseDe> de,
-  _RevBitReader br,
-) {
-  final e = de[state[0]];
-  final sym = e.sym;
-  state[0] = e.base + br.readBits(e.nb);
-  return sym;
+/// RFC 8878's decoder never performs a state-update read after the LAST
+/// sequence in a block (there is no "next" sequence whose peek needs a
+/// fresh state) — see [_decompressBlock]. Symmetrically, the ENCODER's first
+/// symbol processed in its reverse loop (which corresponds to that same
+/// last sequence) cannot derive its starting state via a normal
+/// [_fseEncodeSym] flush (there is no bit-consuming "update" on the decode
+/// side to produce it) — it must be computed directly.
+///
+/// Formula (mirrors `FSE_initCState2` in the reference C implementation):
+/// `nbBitsOut = (deltaNb + (1<<15)) >> 16`,
+/// `value = (nbBitsOut << 16) - deltaNb`, then a table lookup exactly like
+/// [_fseEncodeSym] but starting from that computed `value` instead of a
+/// live running state.
+int _fseInitState(int sym, List<_FseEe> ee, List<int> st) {
+  final e = ee[sym];
+  final nbBitsOut = (e.deltaNb + (1 << 15)) >> 16;
+  final value = (nbBitsOut << 16) - e.deltaNb;
+  final slotI = (value >> nbBitsOut) + e.deltaFs;
+  return st[slotI < 0 ? 0 : slotI];
+}
+
+/// Peek the FSE decode-table entry at the current state, WITHOUT consuming
+/// any bits.
+///
+/// The FSE state itself IS the decode-table index — reading `de[state]` is
+/// a bare table lookup. Only the subsequent state UPDATE (see
+/// [_fseUpdateState]) reads bits from the bitstream. Splitting peek from
+/// update mirrors the real decoder (`ZSTD_decodeSequence`): all three
+/// symbols (LL, ML, OF) are peeked from their CURRENT states before any
+/// extra bits or state-update bits are read, and (per RFC 8878
+/// §3.1.1.3.2.1.2) the update is skipped entirely for the last sequence in
+/// a block. See [_decompressBlock] for the full per-sequence order.
+_FseDe _fsePeek(List<int> state, List<_FseDe> de) => de[state[0]];
+
+/// Update the FSE state by reading its `nb` bits and adding them to `base`.
+///
+/// Must be called with the SAME table entry [entry] that [_fsePeek] just
+/// returned for the current state, before that state is overwritten.
+void _fseUpdateState(List<int> state, _FseDe entry, _RevBitReader br) {
+  state[0] = entry.base + br.readBits(entry.nb);
 }
 
 // ─── LL / ML code number helpers ──────────────────────────────────────────────
@@ -772,33 +812,50 @@ List<int> _encodeLiteralsSection(List<int> lits) {
 //   Mode 0 = Predefined, 1 = RLE, 2 = FSE_Compressed, 3 = Repeat.
 //   We always write 0x00 (all Predefined).
 //
-// The FSE bitstream is a reversed bitstream (built with _RevBitWriter):
-//   Sequences are encoded in REVERSE ORDER (last sequence first).
-//   For each sequence (in reverse):
-//     1. OF extra bits
-//     2. ML extra bits
-//     3. LL extra bits
-//     4. FSE encode ML symbol  (symbol bits, written to backward stream)
-//     5. FSE encode OF symbol
-//     6. FSE encode LL symbol  (LL written last = at the top = decoded first)
-//   After all sequences:
-//     7. Flush final LL state (LL_ACC_LOG bits)
-//     8. Flush final ML state (ML_ACC_LOG bits)
-//     9. Flush final OF state (OF_ACC_LOG bits)
-//     10. Call flush() to add sentinel and seal the byte stream.
+// The FSE bitstream is a reversed bitstream (built with _RevBitWriter).
 //
-// The decoder mirrors this exactly in reverse:
-//   1. Read LL_ACC_LOG bits → initial state_ll
-//   2. Read ML_ACC_LOG bits → initial state_ml
-//   3. Read OF_ACC_LOG bits → initial state_of
-//   4. For each sequence:
-//        decode LL symbol (state transition)
-//        decode OF symbol
-//        decode ML symbol
-//        read LL extra bits
-//        read ML extra bits
-//        read OF extra bits
-//   5. Apply sequence to output buffer.
+// This layout was audited against the real zstd C reference source
+// (fse.h / fse_decompress.c / zstd_decompress_block.c) after an earlier
+// revision's output was rejected by the real `zstd` CLI despite passing
+// every internal round-trip test — a self-consistent encoder/decoder pair
+// can still silently diverge from the real wire format. See lessons.md
+// Lesson 95/96 for the full story. The corrected per-sequence protocol
+// (RFC 8878 §3.1.1.3.2.1.2, cross-checked against `ZSTD_decodeSequence` /
+// `FSE_encodeSymbol` / `FSE_initCState2`) has THREE parts that are easy to
+// get wrong:
+//
+//   1. A decoder PEEKS all three symbols (LL, ML, OF) from their CURRENT
+//      states first — a bare table lookup that consumes NO bits, because
+//      the FSE state itself IS the decode-table index.
+//   2. It THEN reads extra bits, in order OF, ML, LL.
+//   3. It THEN updates the three states (consuming bits), in order
+//      LL, ML, OF — preparing the states the NEXT sequence's peek will
+//      use — but this update is skipped ENTIRELY for the LAST sequence in
+//      the block: there is no "next" sequence to prepare a state for.
+//
+// The decoder, reading forward:
+//   1. Read initial FSE states, in order LL, OF, ML (LL_ACC_LOG,
+//      OF_ACC_LOG, ML_ACC_LOG bits respectively) — note this is a
+//      DIFFERENT order from the per-sequence update order above; RFC 8878
+//      is asymmetric here.
+//   2. For each sequence (i = 0..nSeqs-1):
+//        a. Peek LL, ML, OF symbols from current states (no bits read).
+//        b. Read extra bits: OF, then ML, then LL.
+//        c. If this is NOT the last sequence: update states LL, ML, OF
+//           (bit-consuming). If it IS the last sequence: no update.
+//   3. Apply each sequence to the output buffer.
+//
+// The encoder mirrors this exactly in reverse (see _encodeSequencesSection):
+// it processes sequences in reverse order (last real sequence first), and
+// because RevBitWriter writes backward (the LAST bits written are the FIRST
+// bits a forward reader consumes), what the encoder writes in order
+// [extras][transition] each iteration becomes, to a forward reader,
+// [peek][extras][update] for the NEXT sequence in forward order. The
+// encoder's very first iteration (the semantically LAST real sequence) has
+// no incoming transition to flush — its starting state is computed directly
+// via _fseInitState (mirroring the reference's FSE_initCState2), writing NO
+// bits, exactly mirroring the decoder skipping the update after the last
+// sequence.
 
 /// Encode the sequence count using the RFC 8878 variable-length format.
 ///
@@ -867,16 +924,24 @@ Uint8List _encodeSequencesSection(List<_Seq> seqs) {
   final szMl = 1 << _mlAccLog;
   final szOf = 1 << _ofAccLog;
 
-  // FSE encoder states start at table_size (= sz). The valid encoder state
-  // range is [sz, 2*sz). State - sz gives the decode-table index.
-  final stateLl = [szLl];
-  final stateMl = [szMl];
-  final stateOf = [szOf];
+  // FSE encoder states. The valid encoder state range is [sz, 2*sz); state
+  // - sz gives the decode-table index. The very first iteration below
+  // (which processes the semantically LAST real sequence) initialises
+  // these directly via _fseInitState rather than starting from a
+  // placeholder — there is no incoming bit-consuming transition for it to
+  // mirror, per RFC 8878's last-sequence special case.
+  final stateLl = [0];
+  final stateMl = [0];
+  final stateOf = [0];
 
   final bw = _RevBitWriter();
 
-  // Encode sequences in reverse order.
-  // The backward bitstream reverses the order so the decoder sees them forward.
+  // Encode sequences in reverse order (last real sequence first).
+  // The backward bitstream reverses the order so the decoder sees them
+  // forward. `first` tracks whether we're on the very first iteration of
+  // this loop — i.e. processing the LAST real sequence, which needs direct
+  // state initialisation instead of a normal bit-flushing transition.
+  var first = true;
   for (var i = seqs.length - 1; i >= 0; i--) {
     final seq = seqs[i];
     final llCode = _llToCode(seq.ll);
@@ -895,26 +960,42 @@ Uint8List _encodeSequencesSection(List<_Seq> seqs) {
         ? 0
         : (rawOff.bitLength - 1); // floor(log2(rawOff)) = bitLength - 1
     final ofExtra = rawOff - (1 << ofCode);
-
-    // Write extra bits in OF, ML, LL order (they will be read back in LL, ML, OF order
-    // by the decoder after the backward stream reversal).
-    bw.addBits(ofExtra, ofCode);
     final mlExtra = seq.ml - _mlCodes[mlCode].$1;
-    bw.addBits(mlExtra, _mlCodes[mlCode].$2);
     final llExtra = seq.ll - _llCodes[llCode].$1;
-    bw.addBits(llExtra, _llCodes[llCode].$2);
 
-    // FSE encode symbols in ML → OF → LL order.
-    // Since the backward stream reverses write order, the decoder will read
-    // them as LL → OF → ML — the specified decode order.
-    _fseEncodeSym(bw, stateMl, mlCode, mlEe, mlSt);
-    _fseEncodeSym(bw, stateOf, ofCode, ofEe, ofSt);
-    _fseEncodeSym(bw, stateLl, llCode, llEe, llSt);
+    if (!first) {
+      // Transition state FROM "state used to peek the sequence processed
+      // in the PREVIOUS iteration" TO "state used to peek THIS sequence" —
+      // write order OF, ML, LL (a forward decoder will consume these in
+      // order LL, ML, OF, as the update AFTER decoding this sequence).
+      _fseEncodeSym(bw, stateOf, ofCode, ofEe, ofSt);
+      _fseEncodeSym(bw, stateMl, mlCode, mlEe, mlSt);
+      _fseEncodeSym(bw, stateLl, llCode, llEe, llSt);
+    } else {
+      // Last real sequence: no incoming transition to flush. Initialise
+      // state directly from the symbol (writes no bits at all).
+      stateOf[0] = _fseInitState(ofCode, ofEe, ofSt);
+      stateMl[0] = _fseInitState(mlCode, mlEe, mlSt);
+      stateLl[0] = _fseInitState(llCode, llEe, llSt);
+      first = false;
+    }
+
+    // Extra bits, write order LL, ML, OF (a forward decoder reads these in
+    // order OF, ML, LL immediately after peeking symbols).
+    bw.addBits(llExtra, _llCodes[llCode].$2);
+    bw.addBits(mlExtra, _mlCodes[mlCode].$2);
+    bw.addBits(ofExtra, ofCode);
   }
 
-  // Flush final states (written in OF, ML, LL order so decoder reads LL, ML, OF).
-  bw.addBits(stateOf[0] - szOf, _ofAccLog);
+  // Flush initial states (the state used to peek the FIRST real sequence).
+  // RFC 8878 §3.1.1.3.2.1.2: a forward-reading decoder reads these FIRST,
+  // in order LL_state, OF_state, ML_state (note: OF before ML here —
+  // different from the per-sequence update order above). Since these are
+  // the very LAST bits written overall, they become the FIRST bits a
+  // forward reader sees; to get decode order [LL, OF, ML] we write the
+  // reverse: [ML, OF, LL].
   bw.addBits(stateMl[0] - szMl, _mlAccLog);
+  bw.addBits(stateOf[0] - szOf, _ofAccLog);
   bw.addBits(stateLl[0] - szLl, _llAccLog);
   bw.flush();
 
@@ -1009,22 +1090,30 @@ void _decompressBlock(Uint8List data, List<int> out) {
   final dtMl = _buildDecodeTable(_mlNorm, _mlAccLog);
   final dtOf = _buildDecodeTable(_ofNorm, _ofAccLog);
 
-  // Read initial FSE states.
-  // The encoder wrote them in LL, ML, OF order (last written = at top of
-  // the backward stream = read first by the decoder).
+  // Read initial FSE states. RFC 8878 §3.1.1.3.2.1.2: initial states are
+  // read in order LL, OF, ML — this is a DIFFERENT order from the
+  // per-sequence symbol decode below (LL, ML, OF); the RFC is asymmetric
+  // here. Verified against the RFC text and cross-checked against the real
+  // `zstd` CLI — see lessons.md Lesson 95/96.
   final stateLl = [br.readBits(_llAccLog)];
-  final stateMl = [br.readBits(_mlAccLog)];
   final stateOf = [br.readBits(_ofAccLog)];
+  final stateMl = [br.readBits(_mlAccLog)];
 
   // Track our position in the literals buffer.
   var litPos = 0;
 
   // Decode and apply each sequence.
   for (var i = 0; i < nSeqs; i++) {
-    // Decode symbols (FSE state transitions) in LL → OF → ML order.
-    final llCode = _fseDecodeSym(stateLl, dtLl, br);
-    final ofCode = _fseDecodeSym(stateOf, dtOf, br);
-    final mlCode = _fseDecodeSym(stateMl, dtMl, br);
+    // Step 1 — PEEK symbols from the current states. This is a bare table
+    // lookup (de[state]) and consumes NO bits — the FSE state itself
+    // already IS the decode-table index. Only the subsequent state UPDATE
+    // (step 3 below) reads bits.
+    final llEntry = _fsePeek(stateLl, dtLl);
+    final mlEntry = _fsePeek(stateMl, dtMl);
+    final ofEntry = _fsePeek(stateOf, dtOf);
+    final llCode = llEntry.sym;
+    final mlCode = mlEntry.sym;
+    final ofCode = ofEntry.sym;
 
     // Validate codes are in range.
     if (llCode >= _llCodes.length) {
@@ -1034,22 +1123,45 @@ void _decompressBlock(Uint8List data, List<int> out) {
       throw FormatException('invalid ML code $mlCode');
     }
 
-    // Read extra bits to resolve the exact LL and ML values.
     final llInfo = _llCodes[llCode];
     final mlInfo = _mlCodes[mlCode];
-    final ll = llInfo.$1 + br.readBits(llInfo.$2);
-    final ml = mlInfo.$1 + br.readBits(mlInfo.$2);
 
+    // Step 2 — read the extra bits, order OF, ML, LL (RFC 8878
+    // §3.1.1.3.2.1.2: "Decoding starts by reading the Number_of_Bits
+    // required to decode offset. It does the same for Match_Length and
+    // then for Literals_Length.").
+    //
     // Decode offset:
     //   of_raw = (1 << of_code) | extra_bits
     //   actual_offset = of_raw - 3  (reverses the +3 encoder bias)
     final ofRaw = (1 << ofCode) | br.readBits(ofCode);
+    final ml = mlInfo.$1 + br.readBits(mlInfo.$2);
+    final ll = llInfo.$1 + br.readBits(llInfo.$2);
     if (ofRaw < 3) {
       throw FormatException(
         'decoded offset underflow: of_raw=$ofRaw (expected >= 3)',
       );
     }
     final offset = ofRaw - 3;
+
+    // Step 3 — update FSE states (consumes bits), order LL, ML, OF (RFC
+    // 8878 §3.1.1.3.2.1.2: "Literals_Length_State is updated, followed by
+    // Match_Length_State, and then Offset_State"), preparing the states
+    // the NEXT sequence's peek (step 1) will use.
+    //
+    // Per the reference decoder (ZSTD_decodeSequence): this update is
+    // skipped entirely for the LAST sequence — there is no "next" sequence
+    // to prepare a state for, and (symmetrically) the encoder never
+    // flushed any bits for that non-existent transition (see
+    // _fseInitState in _encodeSequencesSection). Performing this read
+    // unconditionally, as an earlier revision of this codec did, consumes
+    // bits that were never written, corrupting the position of every
+    // stream that follows.
+    if (i != nSeqs - 1) {
+      _fseUpdateState(stateLl, llEntry, br);
+      _fseUpdateState(stateMl, mlEntry, br);
+      _fseUpdateState(stateOf, ofEntry, br);
+    }
 
     // Emit [ll] literal bytes from the literals buffer.
     final litEnd = litPos + ll;
@@ -1119,13 +1231,25 @@ Uint8List compress(Uint8List data) {
   bd.setUint32(0, _magic, Endian.little);
   out.addAll(bd.buffer.asUint8List());
 
-  // Frame Header Descriptor (FHD = 1 byte):
+  // Frame Header Descriptor (FHD = 1 byte), per RFC 8878 §3.1.1.1:
   //   bits [7:6] = FCS_Field_Size = 11 → 8-byte Frame_Content_Size
   //   bit  [5]   = Single_Segment_Flag = 1 → no Window_Descriptor follows
-  //   bit  [4]   = Content_Checksum_Flag = 0
-  //   bits [3:2] = reserved = 0
-  //   bits [1:0] = Dict_ID_Flag = 0
+  //   bit  [4]   = Unused_bit = 0
+  //   bit  [3]   = Reserved_bit = 0
+  //   bit  [2]   = Content_Checksum_Flag = 0 (we never emit a checksum)
+  //   bits [1:0] = Dictionary_ID_Flag = 0
   //   = 0b1110_0000 = 0xE0
+  //
+  // NOTE: an earlier revision of this file (and this repo's Go/Rust ports
+  // and the CMP07-zstd.md spec) mislabelled bit 4 as Content_Checksum_Flag
+  // and bit 2 as reserved — backwards from RFC 8878. Verified empirically:
+  // `zstd -c file` (checksum on by default) emits FHD 0x64; `zstd -c
+  // --no-check file` emits FHD 0x60 — the differing bit is bit 2. This
+  // particular byte value (0xE0) has both bits clear either way, so the
+  // mislabelling was not itself a functional bug here — but the decoder
+  // below reads the checksum flag from the (correct) bit 2 position, so
+  // getting this comment right matters for anyone extending the encoder to
+  // ever set it. See lessons.md Lesson 95.
   out.add(0xE0);
 
   // Frame_Content_Size (8 bytes, little-endian) — the uncompressed byte count.
@@ -1238,6 +1362,23 @@ Uint8List decompress(Uint8List data) {
   // Single_Segment_Flag: bit 5. When set, no Window_Descriptor follows.
   final singleSeg = (fhd >> 5) & 1;
 
+  // Content_Checksum_Flag: bit 2. When set, a 4-byte xxHash64 checksum
+  // follows the last block. This implementation never sets this flag on
+  // frames it produces (we omit checksums entirely — an educational
+  // simplification), but real-world / CLI-produced frames enable it BY
+  // DEFAULT (verified empirically: `zstd -c file` → FHD 0x64; `zstd -c
+  // --no-check file` → FHD 0x60 — the differing bit is bit 2, and the
+  // checksummed output is exactly 4 bytes longer). A conformant decoder
+  // must recognise and skip it, or TC-9 (decompressing a frame produced by
+  // the real `zstd` CLI) fails on any default-settings `.zst` file. We
+  // skip the bytes without verifying them (xxHash64 is out of scope for
+  // this educational port).
+  //
+  // NOTE: bit 4 is NOT the checksum flag (it's RFC 8878's Unused_bit) —
+  // see the comment on the FHD byte in compress() and lessons.md Lesson 95
+  // for the empirical derivation of this.
+  final checksumFlag = (fhd >> 2) & 1;
+
   // Dict_ID_Flag: bits [1:0]. Controls how many dict ID bytes follow.
   final dictFlag = fhd & 3;
 
@@ -1344,6 +1485,18 @@ Uint8List decompress(Uint8List data) {
     }
 
     if (isLast) break;
+  }
+
+  // ── Content Checksum ────────────────────────────────────────────────────────
+  // If Content_Checksum_Flag was set, a 4-byte xxHash64 trailer follows the
+  // last block. Consume it (without verifying — see checksumFlag comment
+  // above) so callers that feed us a real-world checksummed frame don't
+  // see leftover trailing bytes silently misinterpreted.
+  if (checksumFlag == 1) {
+    if (pos + 4 > data.length) {
+      throw const FormatException('truncated content checksum');
+    }
+    pos += 4;
   }
 
   return Uint8List.fromList(out);
