@@ -120,5 +120,9 @@ into a network or SSRF primitive. Reads are bounded and reject links and Windows
 reparse points; object writes are exclusive; index writes are atomic. Trusted
 parser and audit commands run in isolated process groups; output overflow or timeout
 terminates the complete process tree, and pipe-drain joins have their own bound.
+Windows Job lifecycle calls are fault-injected in platform-neutral tests and exercised
+against real suspended processes in the Windows PR matrix. Native enumeration errors,
+truncated thread records, incomplete resumes, termination failures, and handle-close
+failures all prevent a verifier result from being accepted.
 Existing hashes are reused, while missing or changed bytes, claims, transforms, graph
 edges, receipts, partitions, and projections fail closed.

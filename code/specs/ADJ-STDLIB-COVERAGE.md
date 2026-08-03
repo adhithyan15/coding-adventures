@@ -335,9 +335,19 @@ option mapping, or judge/evaluation failure.
      ADJ source and IR, and exact cited snapshot and IR; dependency-owned inputs also
      pin the owning bundle hash. Root-query ownership is parent-bound because its own
      bundle hash would form a content-addressing cycle through the witness.
-13f. **Backlog:** add native-API fault injection for Windows Job creation, assignment,
-     thread discovery, resume, termination, and handle-close failures so each inspected
-     fail-closed branch also has an executable regression fixture.
+13f. **Complete:** injectable native-API fixtures exercise Windows Job creation,
+     kill-on-close setup, assignment, snapshot and thread discovery, exact suspended
+     resume, termination, and every handle-close boundary. Enumeration clears and
+     captures last-error state, accepts only `ERROR_NO_MORE_FILES` as exhaustion,
+     rejects truncated thread records, and restores their advertised size before
+     advancing. Cleanup failures retain the causal error; constructor rollback retries
+     a failed close, while runtime close failures retain the handle for checked Job
+     termination and a close retry. Failed Job termination invokes bounded `/T` tree
+     termination before the root-process fallback. The Windows PR matrix runs the
+     focused fake and real-process containment slice.
+13g. **Backlog:** replace concatenated Windows lifecycle error text with structured
+     stage, API, error-code, and cleanup-cause records so callers can inspect failures
+     without parsing localized operating-system messages.
 
 ### Wave 2: complete K-8 foundations
 
