@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9592,
   "last_inventory": {
-    "revision": "3918b1d9c24c765363069107ba49be573e09a2b4",
+    "revision": "b70e9b7dd03198973ceadbc4d5d272f101d99afa",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1222,
@@ -352,11 +352,11 @@
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
       "title": "Make TypeScript build-tool git-diff tests portable on Windows",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-typescript-windows-gitdiff",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9589 and the collision-clean 3918b1d9 inventory because these seven failures are the sole remaining blocker to a fully green TypeScript build-tool suite on Windows and fixing them strengthens every later parity validation. Keep the slice test-portability-only: replace two /bin/sh-dependent git commits with platform-native process invocation and replace five POSIX-only /repo path fixtures with temporary-directory-native paths, without widening runtime behavior."
+      "pr_number": 9592,
+      "notes": "Ready PR #9592 is the sole active parity PR. It replaces two /bin/sh-dependent fixture commits with direct git argument vectors, uses native temporary-directory package roots, and normalizes path.relative package roots to Git's forward-slash repository paths without changing diff-selection semantics. The red Windows baseline was 275 passing plus the exact seven owned failures; exact-head validation after a conflict-free rebase onto b70e9b7dd passed all 282 tests, 96.77% gitdiff line and 95% branch coverage, 89.36%/82.06% full-suite line/branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, and zero-advisory npm audit. The real plan contains 4,768 packages, 4,768 unique names, zero duplicate groups, 7,243 edges, and zero backslash paths. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets; BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
     },
     {
       "id": "build-tool-typescript-language-identity-registry",

@@ -240,9 +240,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
-  POSIX-only `/repo` path fixtures. This is the selected next slice because
-  these seven failures are the sole blocker to a fully green Windows package
-  suite; keep it test-portability-only rather than widening runtime behavior;
+  POSIX-only `/repo` path fixtures. Ready PR #9592 is the selected slice: it
+  uses direct Git argument vectors and native temporary roots, and normalizes
+  relative package paths at the Git boundary without changing selection
+  semantics. Its exact Windows suite is green at 282/282 tests;
 - align TypeScript build-tool discovery with the canonical language and identity
   registry. Merged PR #9582 consumes the shared registry and duplicate-
   identity fixtures, preserves package/program identity, excludes spec fixtures,
