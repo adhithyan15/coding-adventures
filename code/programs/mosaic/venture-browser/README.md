@@ -62,6 +62,10 @@ recreating the surrounding chrome in backend-specific UI code.
   `RawImage`. Pointer wheel, hover, and tap input stay in Flutter's native
   element tree while navigation and browser state remain in the shared Rust
   session.
+- The Compose Desktop project receives a package-owned `MosaicHost` adapter
+  that loads the same Rust/Cairo session through JNA and mounts its RGBA frame
+  as a native Compose `Image`. Generated address/history controls and native
+  scroll, hover, and pointer input all update that one shared session.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
@@ -119,9 +123,10 @@ application against deterministic HTTP pages. It requires the real Rust/Cairo
 bridge, native address and history control input, shared viewport scrolling,
 live-link hover projection, pointer activation, and a final rendered frame
 before success.
-The Compose gate uses the emitted Mosaic-part test tags to drive native
-Compose controls through the generated injectable `MosaicComposeHost` seam,
-including disabled buttons, address editing, Return, Go, and host prop refresh.
+The Compose gate uses emitted Mosaic-part test tags and the package-owned live
+host to drive native controls against deterministic HTTP pages. It requires a
+real Cairo frame, address and Back/Forward navigation, viewport scrolling,
+live-link hover projection, pointer activation, and host prop refresh.
 On macOS and Windows, the matrix also runs the generated SwiftUI or WinUI
 application's direct launch-and-interaction test after compiling its emitted
 project, so package-level CI cannot stop at a shell-only build.
@@ -154,6 +159,10 @@ the generated project build and direct launch are mandatory there.
 On Flutter-capable macOS and Linux hosts, the matrix builds the same Cairo page
 bridge, copies it beside the generated Flutter project, runs the live widget
 interaction gate, and then builds the native Flutter runner for that host.
+
+On JDK 21 and Gradle-capable desktop hosts, the matrix copies that shared Cairo
+bridge beside the generated Compose project, supplies its absolute path to the
+JNA host, and runs the live native interaction gate before the Compose build.
 
 The macOS and Windows Rust package tests are the authoritative direct-launch
 gates. Each test builds its platform bridge in an isolated temporary target

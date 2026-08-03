@@ -9,6 +9,8 @@ through a C ABI and renders the retained page to RGBA pixels with Cairo for a
 The crate also exports Flutter-named wrappers over that exact controller and
 Cairo session. Venture's Dart FFI host uses those wrappers to consume RGBA
 frames and native input without introducing a second browser implementation.
+Compose-named wrappers expose the same session to the generated Kotlin/JNA
+host, with explicit 64-bit frame lengths at the JVM native boundary.
 
 The package-owned C++ adapter dynamically loads this library, registers the
 surface as a QML type, and forwards generated Mosaic events and native surface

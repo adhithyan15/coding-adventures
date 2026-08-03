@@ -9,6 +9,12 @@
 
 ### Added
 
+- Add a package-owned Compose Desktop `MosaicHost` that loads the shared Rust
+  browser session through JNA, mounts Cairo-rendered RGBA pixels as a native
+  Compose `Image`, and forwards native wheel, hover, and pointer activation.
+- Replace Compose's recording-only gate with deterministic live HTTP
+  navigation, generated address and history controls, shared viewport scroll,
+  link hover projection, pointer activation, and rendered-frame acceptance.
 - Add a package-owned Flutter `MosaicHost` that loads the shared Rust browser
   session through Dart FFI, mounts Cairo-rendered RGBA pixels as a native
   Flutter `RawImage`, and forwards wheel, hover, and tap input without

@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - reactive Compose native host bridge
+
+- Compose Desktop project shells now subscribe to optional host prop-change
+  callbacks, allowing native content-surface interactions to reproject chrome
+  without duplicating state in generated UI.
+- Compose shells include pinned JNA and JSON runtime dependencies for
+  package-owned native host adapters.
+
 ## [Unreleased] - keep web test assets out of production
 
 - HTML and Web Component `.test.*` / `.spec.*` host assets are copied without

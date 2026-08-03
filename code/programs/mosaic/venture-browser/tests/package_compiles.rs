@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 14);
+    assert_eq!(package.host_assets.files.len(), 15);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -137,13 +137,22 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     assert_eq!(package.host_assets.files[7].backend, "compose");
     assert_eq!(
         package.host_assets.files[7].source,
-        "host/compose/VentureChromeInteractionTest.kt"
+        "host/compose/MosaicHost.kt"
     );
     assert_eq!(
         package.host_assets.files[7].target,
+        "src/main/kotlin/MosaicHost.kt"
+    );
+    assert_eq!(package.host_assets.files[8].backend, "compose");
+    assert_eq!(
+        package.host_assets.files[8].source,
+        "host/compose/VentureChromeInteractionTest.kt"
+    );
+    assert_eq!(
+        package.host_assets.files[8].target,
         "src/test/kotlin/VentureChromeInteractionTest.kt"
     );
-    for index in [8, 9] {
+    for index in [9, 10] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/react/VentureChromeInteraction.test.tsx"
@@ -153,16 +162,16 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "src/VentureChromeInteraction.test.tsx"
         );
     }
-    assert_eq!(package.host_assets.files[8].backend, "react");
-    assert_eq!(package.host_assets.files[9].backend, "electron");
-    for index in [10, 12] {
+    assert_eq!(package.host_assets.files[9].backend, "react");
+    assert_eq!(package.host_assets.files[10].backend, "electron");
+    for index in [11, 13] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/package.json"
         );
         assert_eq!(package.host_assets.files[index].target, "package.json");
     }
-    for index in [11, 13] {
+    for index in [12, 14] {
         assert_eq!(
             package.host_assets.files[index].source,
             "host/web/VentureChromeInteraction.test.js"
@@ -172,10 +181,10 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "test/VentureChromeInteraction.test.js"
         );
     }
-    assert_eq!(package.host_assets.files[10].backend, "html");
     assert_eq!(package.host_assets.files[11].backend, "html");
-    assert_eq!(package.host_assets.files[12].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[12].backend, "html");
     assert_eq!(package.host_assets.files[13].backend, "webcomponent");
+    assert_eq!(package.host_assets.files[14].backend, "webcomponent");
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -383,14 +392,30 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         assert!(qt_host.contains(symbol), "Qt live host omits {symbol}");
     }
 
+    let compose_host = read_package_file("host/compose/MosaicHost.kt");
+    for symbol in [
+        "venture_browser_compose_new",
+        "venture_browser_compose_handle_event",
+        "venture_browser_compose_render_rgba",
+        "VentureContentSurface",
+        "PointerEventType.Scroll",
+        "activateLink",
+        "updateHover",
+        "setPropsChangedHandler",
+        "toComposeImageBitmap",
+    ] {
+        assert!(compose_host.contains(symbol), "Compose live host omits {symbol}");
+    }
+
     let compose_acceptance = read_package_file("host/compose/VentureChromeInteractionTest.kt");
     for symbol in [
         "MosaicApp(host)",
-        "disabledNativeControlsSuppressMosaicDispatch",
-        "addressReturnAndGoCrossTheMosaicHostSeam",
-        "performTextReplacement(\"http://venture.test/next\")",
+        "packageOwnedComposeShellDrivesTheLiveSharedBrowserAndCairoPage",
+        "MosaicHost.open",
+        "performTextReplacement(targetUrl)",
         "performImeAction()",
-        "Navigated through MosaicHost",
+        "performMouseInput",
+        "Compose Link Target",
     ] {
         assert!(
             compose_acceptance.contains(symbol),

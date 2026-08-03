@@ -537,6 +537,115 @@ mod ffi {
     pub unsafe extern "C" fn venture_browser_flutter_string_free(value: *mut c_char) {
         unsafe { venture_browser_qt_string_free(value) }
     }
+
+    // Compose Desktop uses JNA, whose primitive `Long` mapping is stable across
+    // the supported 64-bit desktop targets. Keep the capacity/result width
+    // explicit at this ABI boundary instead of exposing Rust's platform-sized
+    // `usize` to Kotlin.
+    #[no_mangle]
+    pub extern "C" fn venture_browser_compose_new(
+        start_url: *const c_char,
+        width: f64,
+        height: f64,
+    ) -> *mut QtBrowserHost {
+        venture_browser_qt_new(start_url, width, height)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_free(host: *mut QtBrowserHost) {
+        unsafe { venture_browser_qt_free(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_apply_props(
+        host: *mut QtBrowserHost,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_apply_props(host) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_handle_event(
+        host: *mut QtBrowserHost,
+        name: *const c_char,
+        value: *const c_char,
+    ) -> *mut c_char {
+        unsafe { venture_browser_qt_handle_event(host, name, value) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_scroll(
+        host: *mut QtBrowserHost,
+        delta_y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_scroll(host, delta_y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_activate_link(
+        host: *mut QtBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_activate_link(host, x, y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_update_hover(
+        host: *mut QtBrowserHost,
+        x: f64,
+        y: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_update_hover(host, x, y) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_scroll_metrics(
+        host: *mut QtBrowserHost,
+        offset_y: *mut f64,
+        viewport_height: *mut f64,
+        content_height: *mut f64,
+        max_offset_y: *mut f64,
+    ) -> u8 {
+        unsafe {
+            venture_browser_qt_scroll_metrics(
+                host,
+                offset_y,
+                viewport_height,
+                content_height,
+                max_offset_y,
+            )
+        }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_resize(
+        host: *mut QtBrowserHost,
+        width: f64,
+        height: f64,
+    ) -> u8 {
+        unsafe { venture_browser_qt_resize(host, width, height) }
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_render_rgba(
+        host: *mut QtBrowserHost,
+        output: *mut u8,
+        capacity: u64,
+        width: *mut u32,
+        height: *mut u32,
+    ) -> u64 {
+        let Ok(capacity) = usize::try_from(capacity) else {
+            return 0;
+        };
+        let written =
+            unsafe { venture_browser_qt_render_rgba(host, output, capacity, width, height) };
+        u64::try_from(written).unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_compose_string_free(value: *mut c_char) {
+        unsafe { venture_browser_qt_string_free(value) }
+    }
 }
 
 fn finite_positive_or(value: f64, fallback: f64) -> f64 {

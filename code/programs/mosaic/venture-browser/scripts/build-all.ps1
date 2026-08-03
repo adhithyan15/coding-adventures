@@ -346,11 +346,45 @@ if (-not (Test-Command "gradle")) {
 } elseif ($null -eq $javaMajor -or $javaMajor -lt 21) {
     Skip-Backend -Backend "compose" -Reason "JDK 21 or newer is not installed"
 } else {
+    Write-Host "==> Building Venture Compose native bridge"
+    $composeBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $composeBridgeProfile = "debug"
+    if ($Release) {
+        $composeBridgeArgs += "--release"
+        $composeBridgeProfile = "release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $composeBridgeArgs
+    } finally {
+        Pop-Location
+    }
+    $composeBridgeSource = if ($isWindows) {
+        "venture_browser_qt.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_qt.dylib"
+    } else {
+        "libventure_browser_qt.so"
+    }
+    $composeBridgeName = if ($isWindows) {
+        "venture_browser_compose.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_compose.dylib"
+    } else {
+        "libventure_browser_compose.so"
+    }
+    $composeBridgePath = Join-Path $outputRoot "compose/$composeBridgeName"
+    Copy-Item -Force `
+        (Join-Path $rustWorkspace "target/$composeBridgeProfile/$composeBridgeSource") `
+        $composeBridgePath
     Write-Host "==> Testing and building compose"
     Push-Location (Join-Path $outputRoot "compose")
+    $previousComposeLibrary = $env:VENTURE_BROWSER_COMPOSE_LIBRARY
     try {
+        $env:VENTURE_BROWSER_COMPOSE_LIBRARY = $composeBridgePath
         Invoke-Checked -Command "gradle" -Arguments @("--no-daemon", "test", "build")
     } finally {
+        $env:VENTURE_BROWSER_COMPOSE_LIBRARY = $previousComposeLibrary
         Pop-Location
     }
 }

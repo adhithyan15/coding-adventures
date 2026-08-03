@@ -9,7 +9,7 @@ cross-platform proving application. Items are ordered by risk and dependency.
   reduction, status/chrome synchronization, scrolling, scrollbar projection,
   link activation, and hover state into one host-neutral Rust controller used
   by both the SwiftUI/Metal and WinUI/Direct2D adapters.
-- [ ] **P1 — live page bridges for the remaining generated hosts.** Replace the
+- [x] **P1 — live page bridges for the remaining generated hosts.** Replace the
   recording-only content hosts in Qt, Flutter, and Compose acceptance with
   adapters backed by the shared Venture session and page renderer, starting
   with Qt on Linux and reusing the same controller rather than introducing
@@ -21,7 +21,7 @@ cross-platform proving application. Items are ordered by risk and dependency.
     controls plus native scroll/link input through the real bridge, replacing
     the recording host as the authoritative Qt interaction gate.
   - [x] Flutter live page bridge and direct acceptance.
-  - [ ] Compose Desktop live page bridge and direct acceptance.
+  - [x] Compose Desktop live page bridge and direct acceptance.
 - [ ] **P2 architecture — backend-neutral Cairo bridge ownership.** Flutter now
   reuses the exact controller and renderer currently packaged by the
   Qt-named bridge crate. Extract that shared C ABI implementation into a
