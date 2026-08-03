@@ -45204,14 +45204,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "axis_vapix",
             "Axis VAPIX",
-            "Authenticated local Axis camera and NVR discovery plus device and API inspection.",
+            "Authenticated local Axis camera and NVR discovery, inspection, and bounded PTZ control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             3,
             "axis_vapix",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command"])
         .with_entities(&[EntityKind::Camera])
         .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::UsernamePassword])
@@ -45227,7 +45227,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         ])
         .with_notes(&[
             "Production inspection requires HTTPS Basic authentication; plain HTTP is accepted only for loopback transport tests.",
-            "PTZ control, event streaming, snapshots, and media transfer remain separate capability-specific work.",
+            "Camera 1 PTZ is capability-probed, human-approved, queue-aware, and bounded with an explicit native stop.",
+            "Event streaming, snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
         ]),
         base_entry(
             "reolink",
@@ -81004,6 +81005,9 @@ mod tests {
         );
         assert_eq!(axis.auth_modes, vec![AuthMode::UsernamePassword]);
         assert_eq!(axis.target_entity_kinds, vec![EntityKind::Camera]);
+        assert!(axis
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command")));
         assert!(axis
             .discovery_mechanisms
             .contains(&DiscoveryMechanism::Mdns));

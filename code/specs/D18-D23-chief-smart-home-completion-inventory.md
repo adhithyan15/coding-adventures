@@ -925,6 +925,28 @@ documented local discovery and authenticated JSON APIs:
 - A real loopback HTTP test proves both JSON requests, Basic-auth materialization,
   response parsing, runtime installation, and denial before transport.
 
+## Current Axis VAPIX PTZ Control Slice
+
+This slice extends the authenticated Axis host with capability-probed physical
+camera control while preserving the device's native arbitration boundary:
+
+- Devices advertising `ptz-control` are inspected through documented `info=1`,
+  `query=position`, `query=presetposall`, and `CtlQueueing` requests for VAPIX
+  camera 1. Confirmed pan, tilt, zoom, and enabled server presets become runtime
+  state without implying broader channel coverage.
+- `camera.ptz` is installed only when native speed control plus continuous
+  pan/tilt or at least one server preset are proven. Unknown queue settings fail
+  closed instead of silently bypassing device arbitration.
+- Preset recall accepts only probed IDs and a 1-100 native speed. Directional
+  movement accepts left/right/up/down, a 1-100 speed, and at most five seconds,
+  then emits an explicit `continuouspantiltmove=0,0` stop.
+- D23 applies the existing human-approval command tier before credentials or
+  transport I/O. Commands acquire and release `ptzqueue.cgi` control when
+  required, while the queue cookie exists only inside the bounded transport.
+- Commands do not invent optimistic orientation after movement. A real loopback
+  test proves probing, denial and argument rejection before I/O, queue-cookie
+  isolation, preset recall, bounded start/stop movement, and queue release.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -936,37 +958,39 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Extend Axis VAPIX with capability-probed position/preset inspection and
-   bounded PTZ control, including operator permission and PTZ control-queue
-   semantics, over the existing authenticated HTTPS host.
-5. Add another vendor-specific camera or NVR integration where authenticated
+4. Add another vendor-specific camera or NVR integration where authenticated
    protocol and transport primitives are concrete.
-6. Add Axis event streaming only after a concrete WebSocket event host and
-   digest or short-lived session-token authentication lifecycle exist.
-7. Add Axis snapshots and media transfer only through the camera-media lease and
+5. Add Axis event streaming only after the existing WebSocket protocol core has
+   a concrete authenticated host, digest or short-lived session-token lifecycle,
+   and subscription supervision.
+6. Add Axis snapshots and media transfer only through the camera-media lease and
    a concrete media executor.
-8. Add reusable HTTP Digest authentication before supporting Axis devices that
+7. Add reusable HTTP Digest authentication before supporting Axis devices that
    cannot expose the preferred HTTPS Basic-auth path.
-9. Add Reolink snapshot, recording search/download, and playback operations only
+8. Enumerate Axis video sources/channels before extending PTZ beyond the current
+   capability-probed VAPIX camera 1 boundary.
+9. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+   only when each operation has a specific capability probe and readable state.
+10. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-10. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+11. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-11. Add Reolink push events only after a concrete webhook or event-stream host
+12. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-12. Add authenticated KLAP/Tapo devices and other broader-device families only
+13. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-13. Add ONVIF PullPoint events once a concrete event host and subscription
+14. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-14. Add RTSP media transfer and recording once concrete media transfer and
+15. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-15. Add a production Matter commissioning, secure-session, and network host only
+16. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-16. Add a Thread border-router host only after an actual host transport exists.
-17. Add a production Zigbee coordinator, join, and security host only after
+17. Add a Thread border-router host only after an actual host transport exists.
+18. Add a production Zigbee coordinator, join, and security host only after
    concrete coordinator transport and security primitives exist.
-18. Add production Z-Wave inclusion and S2 only after concrete host transport
+19. Add production Z-Wave inclusion and S2 only after concrete host transport
    and security primitives exist.
 
 ## End-To-End Definition
