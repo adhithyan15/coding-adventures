@@ -1816,6 +1816,33 @@ def test_lowers_valid_mosfet_model_sheet_resistance(
     assert float(sheet_resistance) == mosfet.model.model.params.RSH
 
 
+@pytest.mark.parametrize("junction_capacitance", ["-1p", "1e999"])
+def test_rejects_invalid_mosfet_model_junction_capacitance(
+    junction_capacitance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET CJ must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(CJ={junction_capacitance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize(
+    ("junction_capacitance", "expected"), [("0", 0.0), ("2p", 2.0e-12)]
+)
+def test_lowers_valid_mosfet_model_junction_capacitance(
+    junction_capacitance: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(CJ={junction_capacitance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.CJ, expected)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
