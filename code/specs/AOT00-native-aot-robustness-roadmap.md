@@ -63,8 +63,16 @@ level is "reached" only when its gate (§4) holds across the whole chain.
 - **T1 Runtime — GC.** Conservative → **precise** GC: compiler emits stack maps /
   GC-root descriptors at safepoints; the collector uses them; then generational,
   then concurrent. Biggest single robustness lever. *(Depends on L1 substrate so
-  the value model is uniform.)* **Detailed spec:**
-  [`AOT00-T1-precise-gc.md`](AOT00-T1-precise-gc.md).
+  the value model is uniform.)* **Status: the native-AOT side is done** —
+  conservative → interior-precise → generational → precise roots (all three
+  native targets) → moving/compacting → incremental, plus automatic safepoints
+  now upgrade to precise roots and, per a shared fragmentation policy, to
+  compaction, with no separate opt-in. `vm-core` (the bytecode interpreter) now
+  shares the exact same collector engine directly as a Rust dependency, rather
+  than carrying (or never actually getting) a collector of its own — see
+  [`AOT00-T1v-vm-core-shared-gc.md`](AOT00-T1v-vm-core-shared-gc.md). Only
+  **concurrent** GC remains open, folded into the T3 concurrency track below.
+  **Detailed spec:** [`AOT00-T1-precise-gc.md`](AOT00-T1-precise-gc.md).
 - **T2 Runtime — exceptions & unwinding.** Structured throw/catch, unwinding
   tables, stack traces; supersedes traps. **Detailed spec:**
   [`AOT00-T2-exceptions.md`](AOT00-T2-exceptions.md) — shares T1's frame descriptor
