@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `RD` values and lower valid
+  Level-1 drain resistance instead of silently dropping it.
 - Reject zero, negative, and non-finite MOS model-card `TNOM` / `T_NOM` values
   before lowering Level-1 nominal temperature.
 - Reject zero, negative, and non-finite MOS model-card `IS` values before

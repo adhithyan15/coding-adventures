@@ -1515,6 +1515,22 @@ Xright c d load
     expect(element.params.T_NOM).toBe(325);
   });
 
+  it.each(["-1", "1e999"])("rejects invalid MOSFET model RD=%s", (drainResistance) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(RD=${drainResistance})\nM1 d g s b nfast\n`),
+    ).toThrow("MOSFET RD must be finite and non-negative");
+  });
+
+  it.each(["0", "12.5"])("lowers valid MOSFET model RD=%s", (drainResistance) => {
+    const parsed = parseNetlist(
+      `.model nfast NMOS(RD=${drainResistance})\nM1 d g s b nfast\n`,
+    );
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.RD).toBe(Number(drainResistance));
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
