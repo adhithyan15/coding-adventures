@@ -74,7 +74,7 @@ edition is authored.
 | [Telugu](./telugu/README.md) | Dravidian / Telugu (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam (vendored font) | Chapters 1-2 authored (lessons + book) |
 | [Latin](./latin/README.md) | Italic / Latin (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapter 1 (Greetings) authored (lessons + book) |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari (**taproot**) | Chapters 1–6 authored (lessons + book; Chapter 6 canonical/generated) |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | Chapters 1-2 authored (lessons + book) |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | Shared-spine pilot plus a two-chapter starter book |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu Nastaliq | Shared-spine pilot plus a two-chapter starter book |
