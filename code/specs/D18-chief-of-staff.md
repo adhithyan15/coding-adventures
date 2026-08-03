@@ -114,8 +114,9 @@ Orchestrator (Rust actor, D18)     ← signature verification + host supervision
 ├── extends ──► Capability Security (Spec 13)
 │                └── agent_manifest.json extends required_capabilities.json
 │
-├── uses ──► Crypto Primitives (D20, future spec)
-│             └── XChaCha20-Poly1305, Ed25519, HKDF, Argon2id
+├── uses ──► Messaging Crypto Foundation (MSG-CRYPTO-FOUNDATION)
+│             └── XChaCha20-Poly1305, Ed25519, X25519, HKDF, SHA-256
+│             └── Vault at-rest encryption uses VLT01 + Argon2id
 │
 ├── uses ──► IPC (D16)
 │             └── channels build on message queues / append-only logs
@@ -143,8 +144,9 @@ are D19 primitives. Capability Security (Spec 13) — agent manifests extend the
 capability taxonomy. IPC (D16) — channels build on message queue concepts. Network
 Stack (D17) — host sub-agents needing external access use the socket API. Process
 Manager (D14) — host and agent lifecycle uses fork/exec/wait. File System (D15) —
-channel logs and vault secrets are stored on disk. Crypto Primitives (D20, future) —
-encryption algorithms.
+channel logs and vault secrets are stored on disk. MSG-CRYPTO-FOUNDATION provides the
+transit-crypto contracts and test vectors; VLT01 owns Vault at-rest encryption and
+Argon2id key derivation. D20 is the JSON specification and is not a crypto dependency.
 
 **Extended by:** D18A Chief of Staff Stores — repository-owned storage abstraction,
 ContextStore, ArtifactStore, SkillStore, and MemoryStore. D18C Chief of Staff Job
@@ -178,6 +180,7 @@ Message
 │ originator_id    │ Who created this message                  │
 │ channel_id       │ Which channel this message belongs to     │
 │ sequence         │ Monotonic counter within the channel      │
+│ key_epoch        │ Channel-key generation used by payload    │
 │ content_type     │ MIME type (application/json, text/plain)  │
 │ payload          │ Encrypted bytes (ciphertext)              │
 │ plaintext_hash   │ SHA-256 of plaintext (integrity check)    │
@@ -195,10 +198,11 @@ Message
    computed before encryption. A receiver who decrypts the payload can verify that the
    plaintext has not been tampered with by recomputing the hash.
 
-3. **Authenticity.** The `signature` is an Ed25519 signature over the message ID,
-   timestamp, channel ID, sequence number, content type, and plaintext hash. A receiver
-   can verify that the message was created by the claimed originator by checking the
-   signature against the originator's public key.
+3. **Authenticity.** The `signature` is an Ed25519 signature over a canonical,
+   length-framed encoding of the message ID, timestamp, originator ID, channel ID,
+   sequence number, key epoch, content type, and plaintext hash. A receiver can verify
+   that the message was created by the claimed originator by checking the signature
+   against the originator's public key.
 
 4. **Opacity.** The `payload` is always ciphertext. Anyone who intercepts the message
    without the channel's decryption key sees only random bytes. This includes the
@@ -227,9 +231,10 @@ Channel
 │ id                │ UUID v7                                 │
 │ originator_id     │ The single entity that writes messages  │
 │ receiver_ids      │ List of entities that read messages     │
-│ channel_master_key│ Symmetric key (256-bit, held by         │
-│                   │ originator, NEVER by orchestrator)       │
-│ receiver_keys     │ Map<receiver_id, derived_key>           │
+│ key_epoch         │ Current monotonically increasing epoch   │
+│ channel_master_key│ Current 256-bit content key; held by     │
+│                   │ originator + authorized receivers only   │
+│ sealed_key_grants │ Map<receiver_id, SealedChannelKey>       │
 │ log               │ Append-only list of Messages            │
 │ created_at        │ Timestamp                               │
 └───────────────────┴────────────────────────────────────────┘
@@ -240,7 +245,7 @@ ReceiverState (tracked per receiver)
 │ receiver_id       │ Which receiver this state belongs to    │
 │ channel_id        │ Which channel                           │
 │ last_ack          │ Sequence number of last processed msg   │
-│ decryption_key    │ This receiver's derived key              │
+│ epoch_keys        │ Unwrapped CMKs keyed by key epoch        │
 └───────────────────┴────────────────────────────────────────┘
 ```
 
@@ -1117,7 +1122,8 @@ channel, it is because you have the decryption key. If you have the decryption k
 it is because the orchestrator authorized you to receive on that channel. These are
 not two separate checks — they are the same thing.
 
-**Algorithm choices** (implementation deferred to D20 — Crypto Primitives):
+**Algorithm choices** (implemented by the repository crypto crates described in
+MSG-CRYPTO-FOUNDATION and the Vault specifications):
 
 | Purpose              | Algorithm            | Why                                       |
 |----------------------|----------------------|-------------------------------------------|
@@ -1132,48 +1138,115 @@ not two separate checks — they are the same thing.
 **Key lifecycle:**
 
 ```
-1. CHANNEL CREATION
-   Originator generates Channel Master Key (CMK):
+1. CHANNEL CREATION (EPOCH 0)
+   Originator generates the first Channel Master Key (CMK):
    cmk = random_bytes(32)    // 256-bit symmetric key
+   key_epoch = 0
 
-2. PER-RECEIVER KEY DERIVATION
+2. PER-RECEIVER KEY WRAPPING
    For each authorized receiver:
-   receiver_key = HKDF(
-     ikm  = cmk,
-     salt = channel_id,
-     info = "receiver" || receiver_id || channel_id,
+   ephemeral_private, ephemeral_public = X25519_generate_keypair()
+   shared_secret = X25519(ephemeral_private, receiver_public_key)
+   wrapping_key = HKDF-SHA256(
+     ikm  = shared_secret,
+     salt = frame(channel_id, key_epoch),
+     info = frame("chief-channel-key-wrap-v1", receiver_id),
      len  = 32
    )
-
-3. KEY DISTRIBUTION
-   For each receiver:
-   encrypted_key = X25519_seal(
-     receiver_public_key,
-     receiver_key
+   wrapping_nonce = random_bytes(24)
+   wrapped_cmk = XChaCha20-Poly1305_encrypt(
+     key       = wrapping_key,
+     nonce     = wrapping_nonce,
+     plaintext = cmk,
+     aad       = frame(
+       "chief-channel-key-grant-v1",
+       originator_id,
+       channel_id,
+       key_epoch,
+       receiver_id,
+       ephemeral_public
+     )
    )
-   // Host delivers encrypted_key to receiver's host
-   // Neither orchestrator nor host sees the plaintext key
+   originator_signature = Ed25519_sign(
+     originator_signing_key,
+     frame(
+       "chief-channel-key-grant-v1",
+       originator_id,
+       channel_id,
+       key_epoch,
+       receiver_id,
+       ephemeral_public,
+       wrapping_nonce,
+       wrapped_cmk
+     )
+   )
+   sealed_key_grant = {
+     originator_id, receiver_id, channel_id, key_epoch,
+     ephemeral_public, wrapping_nonce, wrapped_cmk, originator_signature
+   }
+   zeroize(ephemeral_private, shared_secret, wrapping_key)
 
-4. MESSAGE ENCRYPTION (per message)
-   nonce = channel_id[0:16] || sequence_number[0:8]  // 24 bytes
+   // The orchestrator routes sealed_key_grant but cannot unwrap it.
+   // The receiver first verifies originator_signature, then repeats X25519 +
+   // HKDF with its private key, unwraps the shared CMK, and verifies that the
+   // grant is bound to the channel, epoch, and receiver identity.
+
+   A shared append-only log needs one ciphertext per message, so every authorized
+   receiver in an epoch receives the same CMK. Deriving a different content key per
+   receiver would require one ciphertext per receiver and is a different fan-out
+   design. Per-receiver derivation is used only for the wrapping key that protects
+   the shared CMK in transit.
+
+3. MESSAGE ENCRYPTION (PER MESSAGE)
+   // channel_id is the canonical 16-byte UUID representation.
+   // sequence is an unsigned 64-bit big-endian value and never resets.
+   nonce = channel_id_bytes || u64_be(sequence)  // exactly 24 bytes
+   aad = frame(
+     "chief-channel-message-v1",
+     message_id,
+     timestamp,
+     originator_id,
+     channel_id,
+     sequence,
+     key_epoch,
+     content_type,
+     plaintext_hash
+   )
    ciphertext = XChaCha20_Poly1305_encrypt(
      key       = cmk,
      nonce     = nonce,
      plaintext = payload,
-     aad       = message_id || timestamp || originator_id
+     aad       = aad
    )
 
-5. KEY ROTATION (when a receiver is revoked)
-   new_cmk = random_bytes(32)
-   // Re-derive keys for remaining receivers
-   // Old messages remain readable with old keys (keys are versioned)
-   // New messages use new CMK
-   // Revoked receiver's key no longer works for new messages
+   `frame(...)` length-prefixes every variable-width field and fixes integer byte
+   order. Raw concatenation is forbidden because ambiguous field boundaries could
+   authenticate one logical header as another.
 
-6. CHANNEL DESTRUCTION
-   // Zeroize CMK and all derived keys
+4. KEY ROTATION (WHEN A RECEIVER IS REVOKED)
+   key_epoch += 1
+   new_cmk = random_bytes(32)
+   // Seal new_cmk independently to each remaining receiver using step 2.
+   // Old messages remain readable with retained old epoch keys.
+   // New messages name key_epoch and use new_cmk.
+   // A revoked receiver receives no grant for key_epoch and cannot read new messages.
+
+5. CHANNEL DESTRUCTION
+   // Zeroize every locally retained CMK, wrapping key, and private ephemeral.
    // Channel log remains on disk (immutable) but is unreadable
 ```
+
+**Failure rules:**
+
+- Reject an all-zero X25519 shared secret before HKDF.
+- Treat a byte-identical retransmission of the current key grant as idempotent. Reject
+  a conflicting grant for the same epoch, a decreasing epoch, an invalid originator
+  signature, or a grant whose receiver ID does not match the local receiver.
+- Reject sequence reuse. A writer must recover the durable next-sequence value before
+  encrypting after restart; it must fail closed rather than restart at zero.
+- Reject a message whose authenticated header disagrees with its outer log metadata.
+- Never log CMKs, wrapping keys, shared secrets, receiver private keys, plaintexts, or
+  decrypted key grants.
 
 ---
 
@@ -1344,8 +1417,9 @@ Layer 0: Encryption at rest
   Even if someone copies the vault file, they need the master key.
 
 Layer 1: Channel encryption
-  You need the channel's receiver key to read ANY message
-  on the channel. Without it, the entire payload is ciphertext.
+  You need the CMK for the message's key epoch to read it.
+  Each authorized receiver obtains that CMK from an identity-bound
+  sealed key grant. Without it, the entire payload is ciphertext.
 
 Layer 2: Lease encryption (leased mode only)
   Even after decrypting the channel message, the secret itself
@@ -1948,7 +2022,7 @@ hardware_key_timeout = 60        # seconds
 3. **Message signature verification.** Create message with key A, verify with key A
    (success), verify with key B (failure).
 4. **Channel creation.** Create a channel with one originator and two receivers,
-   verify structure and key derivation.
+   verify both receivers can unwrap the same epoch-0 CMK and a third key cannot.
 5. **Channel write.** Write a message, verify it appears in the log at the correct
    sequence number.
 6. **Channel read with offset.** Write 5 messages, ack 3, read next — verify message
@@ -1956,59 +2030,70 @@ hardware_key_timeout = 60        # seconds
 7. **Channel one-way enforcement.** Attempt to write from a receiver ID — verify
    error is returned.
 8. **Channel encryption.** Write plaintext, read raw log bytes — verify they are not
-   plaintext. Decrypt with correct receiver key — verify plaintext matches.
-9. **Channel wrong key.** Attempt to decrypt with a different receiver's derived
-   key — verify decryption fails (AEAD authentication error).
-10. **Vault store and retrieve.** Store a secret, lock vault, unlock vault, retrieve
+   plaintext. Decrypt with an authorized receiver's unwrapped epoch CMK — verify
+   plaintext matches.
+9. **Channel key-grant isolation.** Attempt to unwrap receiver A's sealed grant with
+   receiver B's private key, or after changing receiver ID / epoch AAD — verify AEAD
+   authentication fails.
+10. **Channel nonce and header binding.** Encrypt messages across sequence and epoch
+    boundaries, verify all nonces are unique, and verify changing any authenticated
+    header field causes decryption failure.
+11. **Channel rotation.** Revoke one receiver, rotate the CMK, and verify remaining
+    receivers can read the new epoch while the revoked receiver cannot. Verify old
+    messages remain readable only with retained old epoch keys.
+12. **Channel restart safety.** Recover the durable next sequence before encryption;
+    simulate missing or decreasing state and verify the writer fails closed instead
+    of reusing a nonce.
+13. **Vault store and retrieve.** Store a secret, lock vault, unlock vault, retrieve
     secret — verify plaintext matches.
-11. **Vault wrong passphrase.** Attempt unlock with incorrect passphrase — verify
+14. **Vault wrong passphrase.** Attempt unlock with incorrect passphrase — verify
     failure.
-12. **Vault direct mode.** Request direct delivery — verify secret appears on consumer
+15. **Vault direct mode.** Request direct delivery — verify secret appears on consumer
     channel, not on agent's channels.
-13. **Vault leased mode.** Request lease — verify lease key decrypts secret, verify
+16. **Vault leased mode.** Request lease — verify lease key decrypts secret, verify
     TTL is correct.
-14. **Vault lease expiry.** Create lease with 1-second TTL, wait 2 seconds — verify
+17. **Vault lease expiry.** Create lease with 1-second TTL, wait 2 seconds — verify
     expired and lease key invalid.
-15. **Vault lease revocation.** Create lease, revoke immediately — verify revoked.
-16. **Privilege tier 0.** Wire a Tier 0 pipeline — verify no approval triggered.
-17. **Privilege tier 2 without biometric.** Attempt Tier 2 pipeline — verify blocked.
-18. **Privilege tier escalation.** Pipeline touching Tier 0 and Tier 2 — verify
+18. **Vault lease revocation.** Create lease, revoke immediately — verify revoked.
+19. **Privilege tier 0.** Wire a Tier 0 pipeline — verify no approval triggered.
+20. **Privilege tier 2 without biometric.** Attempt Tier 2 pipeline — verify blocked.
+21. **Privilege tier escalation.** Pipeline touching Tier 0 and Tier 2 — verify
     effective tier is 2.
-19. **Package signature valid.** Sign package, verify — success.
-20. **Package signature tampered.** Modify one byte after signing — verify failure.
-21. **Package signature wrong key.** Sign with key A, verify with key B — failure.
-22. **Developer key tier limits.** Dev-signed package attempts Tier 2 — verify blocked.
-23. **Host capability check.** Host receives JSON-RPC for undeclared capability —
+22. **Package signature valid.** Sign package, verify — success.
+23. **Package signature tampered.** Modify one byte after signing — verify failure.
+24. **Package signature wrong key.** Sign with key A, verify with key B — failure.
+25. **Developer key tier limits.** Dev-signed package attempts Tier 2 — verify blocked.
+26. **Host capability check.** Host receives JSON-RPC for undeclared capability —
     verify CapabilityDenied returned.
-24. **Host capability allowed.** Host receives JSON-RPC for declared capability —
+27. **Host capability allowed.** Host receives JSON-RPC for declared capability —
     verify request proxied.
-25. **Host JSON-RPC malformed.** Send garbage to host stdin — verify error response,
+28. **Host JSON-RPC malformed.** Send garbage to host stdin — verify error response,
     no crash.
-26. **Host JSON-RPC unknown method.** Send valid JSON-RPC with unknown method —
+29. **Host JSON-RPC unknown method.** Send valid JSON-RPC with unknown method —
     verify error response.
-27. **Ephemeral sub-agent lifecycle.** Spawn sub-agent, verify it services request,
+30. **Ephemeral sub-agent lifecycle.** Spawn sub-agent, verify it services request,
     verify it dies, verify no lingering process.
-28. **Crash recovery.** Write 5 messages, simulate crash at offset 2, restart —
+31. **Crash recovery.** Write 5 messages, simulate crash at offset 2, restart —
     verify resumes at m3.
 
 ### Integration Tests
 
-29. **Full email pipeline with host mediation.** Wire email-reader host → user →
+32. **Full email pipeline with host mediation.** Wire email-reader host → user →
     email-responder host, send a message through the complete pipeline, verify
     end-to-end encryption and decryption through host.* API.
-30. **Pipeline isolation.** Create email pipeline and finance pipeline. Attempt to
+33. **Pipeline isolation.** Create email pipeline and finance pipeline. Attempt to
     read from a finance channel using the email agent's host — verify denied.
-31. **Vault + host integration.** Agent requests leased secret via host, uses it,
+34. **Vault + host integration.** Agent requests leased secret via host, uses it,
     lease expires, agent requests again — verify new lease key is different.
-32. **Host crash recovery.** Kill host actor, orchestrator restarts host, host
+35. **Host crash recovery.** Kill host actor, orchestrator restarts host, host
     relaunches Deno — verify agent resumes from last channel ack.
-33. **Orchestrator crash recovery.** Kill orchestrator, OS restarts it — verify all
+36. **Orchestrator crash recovery.** Kill orchestrator, OS restarts it — verify all
     hosts are rediscovered.
-34. **Privilege escalation via host.** Compromised Tier 0 agent attempts
+37. **Privilege escalation via host.** Compromised Tier 0 agent attempts
     host.vault.requestLease for a Tier 2 secret — verify host middleware blocks.
-35. **Wasm agent double cage.** Wasm agent runs inside Deno, calls host.* API —
+38. **Wasm agent double cage.** Wasm agent runs inside Deno, calls host.* API —
     verify requests are proxied and Wasm sandbox is active.
-36. **Third-party package install.** Install package with author key, verify
+39. **Third-party package install.** Install package with author key, verify
     launch.sh is regenerated locally, not shipped.
 
 ### Coverage Target
@@ -2034,9 +2119,9 @@ D18 Chief of Staff
 │                └── Friction stack layers (linter, CI, hardware key) apply
 │                └── Signed packages extend the hardware-key gate concept
 │
-├── depends on ──► D20 Crypto Primitives (FUTURE SPEC)
-│                   └── XChaCha20-Poly1305, Ed25519, X25519, HKDF, Argon2id
-│                   └── SHA-256 for integrity verification
+├── depends on ──► MSG-CRYPTO-FOUNDATION + repository crypto crates
+│                   └── XChaCha20-Poly1305, Ed25519, X25519, HKDF, SHA-256
+│                   └── VLT01 + Argon2id for Vault at-rest key derivation
 │                   └── Ed25519 for package signing
 │
 ├── depends on ──► D16 IPC
@@ -2111,8 +2196,9 @@ We are honest about the costs:
 7. **Zero-dependency crypto.** Implementing XChaCha20-Poly1305 and Ed25519 from
    scratch (per the repo's zero-dependency philosophy) risks implementation bugs that
    battle-tested libraries like libsodium have already found and fixed. Mitigation:
-   the D20 crypto spec will include extensive test vectors from RFC 8439
-   (ChaCha20-Poly1305) and RFC 8032 (Ed25519).
+   the crypto packages are checked against published vectors including RFC 8439
+   (ChaCha20-Poly1305), RFC 8032 (Ed25519), RFC 7748 (X25519), RFC 5869 (HKDF),
+   and RFC 9106 (Argon2id). D20 is the JSON specification, not a crypto roadmap.
 
 8. **Dual runtime complexity.** Running Rust for infrastructure and Deno for agents
    means two toolchains, two build systems, and a JSON-RPC bridge between them. The
