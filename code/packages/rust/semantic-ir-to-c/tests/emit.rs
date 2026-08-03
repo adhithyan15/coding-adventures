@@ -334,6 +334,27 @@ fn collection_string_query_passes_its_argument() {
 }
 
 #[test]
+fn collection_numeric_slice9_methods_route_to_the_builtin_dispatcher() {
+    // Collections slice 9: a 2-arg Numeric method (`clamp`) routes to the
+    // runtime dispatcher and carries both arguments through, same shape as
+    // the String/Array/Hash slices.
+    let m = lower_ruby("puts 10.clamp(1, 5)");
+    let src = compile(&m).unwrap().source;
+    assert!(
+        src.contains("_sir_builtin_method("),
+        "a slice-9 Numeric method dispatches through the runtime dispatcher\n{src}"
+    );
+    assert!(
+        src.contains("\"clamp\""),
+        "the method name is a quoted C string literal\n{src}"
+    );
+    assert!(
+        src.contains(", 2, _sir_int(1LL), _sir_int(5LL))"),
+        "the dispatcher is passed argc=2 and both integer arguments\n{src}"
+    );
+}
+
+#[test]
 fn collection_string_slice8_methods_route_to_the_builtin_dispatcher() {
     // Collections slice 8: a 1-arg String method (`sub`, taking a pattern and
     // a replacement) routes to the runtime dispatcher and carries both

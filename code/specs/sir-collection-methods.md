@@ -198,8 +198,8 @@ repo's standard workflow):
 | 7 | Hash block: `each_key`, `each_value`, `group_by`, `partition` (+ `each`/`map`/`select`/`reject`/`sort_by`/`sum` widen to Hash) | ✅ merged | #9668 |
 | — | Bug fix: `Array#sum` ignored a block argument | ✅ merged | #9673 |
 | — | Bug fix: bracket-index (`a[i]`/`a[i] = v`) had no grammar rule at all — new `__method__("[]"/"[]=", …)` dispatch | ✅ merged | #9686 |
-| 8 | Remaining String methods: `capitalize`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`, `bytes`, `split`, `replace`, `sub`, `gsub`, `to_i`, `to_f`, `to_sym`, `swapcase`, `tr`, `each_char` (block) — semantics matched against the Python/TS `sir-runtime-oop` reference catalog | 🚧 this PR | — |
-| 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | planned | — |
+| 8 | Remaining String methods: `capitalize`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`, `bytes`, `split`, `replace`, `sub`, `gsub`, `to_i`, `to_f`, `to_sym`, `swapcase`, `tr`, `each_char` (block) — semantics matched against the Python/TS `sir-runtime-oop` reference catalog | ✅ merged | #9694 |
+| 9 | Numeric methods: `abs`, `to_i`, `to_f`, `even?`, `odd?`, `zero?`, `positive?`, `negative?`, `pred`, `floor`, `ceil`, `round`, `divmod`, `fdiv`, `clamp`, `between?`, `gcd`, `digits` + block methods `times`/`upto`/`downto`/`step` | 🚧 this PR | — |
 | 10 | Symbol + Object/Bool generic methods | planned | — |
 | — | Cross-backend conformance corpus for the full collection-method catalog | planned | — |
 
@@ -212,6 +212,11 @@ for `Array#push`; see the "Ruby frontend: add `<<` as a binary operator" backlog
 item), so there is nothing for a C dispatch arm to receive regardless. The
 char-set and padding methods are deferred to keep this slice reviewable at a
 similar size to its predecessors; they are tracked as follow-up work.
+
+**Explicitly out of scope for slice 9**: the multi-digit `round(ndigits)`
+form (only the 0-arg `round` is implemented) — deferred for the same
+"keep the slice reviewable" reason, tracked as follow-up work alongside
+slice 8's deferrals.
 
 ## Out of scope (documented)
 

@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.31.0 — Collections slice 9: Numeric methods
+
+New `_sir_builtin_method_v` dispatch arms for `Integer`/`Float`: `abs`,
+`even?`/`odd?`/`pred` (Integer-only — true Ruby, unlike the looser dynamic
+typing the Python/TS `sir-runtime-oop` reference uses), `zero?`/`positive?`/
+`negative?`, `floor`/`ceil`/`round` (0-arg form only — the multi-digit
+`round(ndigits)` form is a documented follow-up, deferred the same way
+slice 8 deferred `ljust`/`rjust`/`center`), `divmod`, `fdiv`, `clamp`,
+`between?`, `gcd`, `digits`, and the BLOCK-taking `times`/`upto`/`downto`/
+`step`. `to_i`/`to_f` (previously String-only, slice 8) widen to accept a
+numeric receiver via the existing `_sir_to_i`/`_sir_to_f` conversions.
+
+Three points worth calling out:
+
+- **`digits` needs no bignum-DoS cap**, unlike the Python reference: this
+  runtime's `SirValue` integer is a fixed `int64_t`, never arbitrary
+  precision, so the output is naturally bounded at 19 decimal digits — the
+  reference's bit-length-cap guard has nothing to guard against here.
+- **`divmod` raises a catchable `ZeroDivisionError`** on a zero divisor
+  (the class was already registered in the exception hierarchy for
+  `rescue`, just never raised from a division site) rather than the raw
+  `exit(1)` the primitive `/`/`%` operators still fall back to — a
+  deliberately nicer, more Ruby-faithful failure mode for this new call
+  site, not a regression to those pre-existing operators. `fdiv` by
+  contrast NEVER raises (Ruby's Float division doesn't), returning
+  `Infinity`/`-Infinity`/`NaN` instead, matching the reference.
+- **`step` with a zero stride is a documented no-op**, not a hang: a zero
+  stride never crosses `limit` in a naive loop, so it is special-cased to
+  zero iterations up front — the same DoS-safety floor slice 8's empty-
+  pattern `sub`/`gsub` guard holds for string scanning.
+
+### Added
+
+- `tests/compile_and_run_numeric_methods.rs` — 18 execution-proof tests
+  (real `cc` compile+run): every new method, `divmod`'s catchable
+  `ZeroDivisionError`, `fdiv`'s never-raises floor, and the zero-stride
+  `step` termination guard.
+- `collection_numeric_slice9_methods_route_to_the_builtin_dispatcher` — an
+  emit-shape test mirroring the String/Array/Hash slices' dispatcher-routing
+  tests.
+
+### Notes
+
+- Discovered (not fixed here, tracked separately): `puts (-5).abs` — a
+  paren-less command call whose argument is a space-separated parenthesized
+  expression immediately followed by a dot-chain — mis-parses as `puts(-5)`
+  plus a dangling `.abs` that raises `NoMethodError`, instead of one
+  statement. `puts((-5).abs)` (explicit call parens) sidesteps it and is
+  used throughout the new tests. Same family as the already-fixed
+  bare-comparison-statement and bracket-index frontend bugs.
+
 ## 0.30.0 — Collections slice 8: remaining String methods
 
 New `_sir_builtin_method_v` dispatch arms (all guarded on `recv.tag ==

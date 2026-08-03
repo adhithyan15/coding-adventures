@@ -1780,7 +1780,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// `capitalize`/`swapcase`, `strip`/`lstrip`/`rstrip`, `chomp`, `chars`/
 /// `bytes`/`each_char` (UTF-8-character-aware, not byte-naive), `split`,
 /// `replace`/`sub`/`gsub`, `to_i`/`to_f`/`to_sym`, `tr` — semantics matched
-/// against the Python/TS `sir-runtime-oop` reference catalog. The dispatcher
+/// against the Python/TS `sir-runtime-oop` reference catalog. Slice 9 =
+/// Numeric methods: `abs`, `even?`/`odd?`/`pred` (Integer-only, matching true
+/// Ruby), `zero?`/`positive?`/`negative?`, `floor`/`ceil`/`round` (0-arg
+/// form), `divmod`/`fdiv`, `clamp`/`between?`, `gcd`, `digits`, and the
+/// BLOCK-taking `times`/`upto`/`downto`/`step`; `to_i`/`to_f` widen to accept
+/// a numeric receiver alongside their slice-8 String forms. The dispatcher
 /// raises `NoMethodError` on an unsupported receiver type or a malformed
 /// call (missing/extra args, a non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
@@ -1808,6 +1813,10 @@ fn is_builtin_method(name: &str) -> bool {
         | "capitalize" | "swapcase" | "strip" | "lstrip" | "rstrip" | "chomp"
         | "chars" | "bytes" | "each_char" | "split" | "replace" | "sub" | "gsub"
         | "to_i" | "to_f" | "to_sym" | "tr"
+        // slice 9 — Numeric methods
+        | "abs" | "even?" | "odd?" | "zero?" | "positive?" | "negative?" | "pred"
+        | "floor" | "ceil" | "round" | "divmod" | "fdiv" | "clamp" | "between?"
+        | "gcd" | "digits" | "times" | "upto" | "downto" | "step"
     )
 }
 

@@ -2423,6 +2423,158 @@ static char *_sir_str_tr(const char *s, const char *from, const char *to) {
     return out;
 }
 
+/* ---- Collections slice 9: Numeric methods ------------------------------------
+ *
+ * `Integer`/`Float` methods. Semantics matched against the Python/TS
+ * `sir-runtime-oop` reference catalog, with one deliberate divergence: this
+ * runtime's `SirValue` int is a fixed `int64_t` (never arbitrary precision),
+ * so `digits` needs none of the reference's bignum-DoS bit-length cap — an
+ * int64 magnitude produces at most 19 decimal digits, an already-bounded
+ * output. `even?`/`odd?`/`pred` are gated to `SIR_INT` only (true Ruby: these
+ * are `Integer`-only methods, unlike the reference's looser dynamic-typing
+ * convention) — a `Float` receiver falls through to `NoMethodError`, matching
+ * this backend's existing typed-dispatch discipline (e.g. `upcase` is
+ * `SIR_STR`-only). `floor`/`ceil`/`round` take no `ndigits` argument in this
+ * slice (the 0-arg form only); the multi-digit rounding form is a documented
+ * follow-up, deferred for the same "keep the slice reviewable" reason slice
+ * 8 deferred `ljust`/`rjust`/`center`. */
+
+static SirValue _sir_num_floor(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) return _sir_int((int64_t)floor(v.as.f));
+    return v;
+}
+static SirValue _sir_num_ceil(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) return _sir_int((int64_t)ceil(v.as.f));
+    return v;
+}
+/* Round-half-AWAY-from-zero (Ruby's rule; unlike Python's banker's rounding,
+ * already the convention this runtime's `sir-runtime-oop` reference uses). */
+static SirValue _sir_num_round(SirValue v) {
+    if (v.tag == SIR_INT) return v;
+    if (v.tag == SIR_FLOAT) {
+        double f = v.as.f;
+        double r = (f >= 0.0) ? floor(f + 0.5) : ceil(f - 0.5);
+        return _sir_int((int64_t)r);
+    }
+    return v;
+}
+
+/* `divmod(divisor)` -- `[quotient, remainder]`, quotient FLOORED (via the
+ * existing `_sir_ifloordiv`, the SAME floor-division `/` uses), remainder
+ * takes the DIVISOR's sign. A zero divisor raises a catchable
+ * `ZeroDivisionError` (the class is already registered in the exception
+ * hierarchy for `rescue`) rather than the raw `exit(1)` the primitive `/`
+ * operator falls back to -- this is a NICER, more Ruby-faithful failure
+ * mode, not a regression: nothing upstream of this new dispatch arm relied
+ * on the exit-on-zero behavior. */
+static SirValue _sir_num_divmod(SirValue recv, SirValue divisor) {
+    if (recv.tag == SIR_INT && divisor.tag == SIR_INT) {
+        int64_t a = recv.as.i, b = divisor.as.i;
+        int64_t q, r;
+        if (b == 0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        q = _sir_ifloordiv(a, b);
+        r = a - q * b;
+        return _sir_seq_lit(2, _sir_int(q), _sir_int(r));
+    }
+    {
+        double a = _sir_as_num(recv), b = _sir_as_num(divisor);
+        double q, r;
+        if (b == 0.0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        q = floor(a / b);
+        r = a - q * b;
+        return _sir_seq_lit(2, _sir_float(q), _sir_float(r));
+    }
+}
+
+/* `fdiv(other)` -- floating-point division; UNLIKE `/`/`divmod` this never
+ * raises: a zero divisor yields Infinity/-Infinity/NaN (Ruby's Float
+ * division never raises), matching the reference's never-raise-on-Float
+ * floor. */
+static SirValue _sir_num_fdiv(SirValue recv, SirValue divisor) {
+    double a = _sir_as_num(recv), b = _sir_as_num(divisor);
+    if (b == 0.0) {
+        if (a == 0.0) return _sir_float(0.0 / 0.0); /* NaN */
+        return _sir_float(a > 0.0 ? (1.0 / 0.0) : (-1.0 / 0.0)); /* +-Infinity */
+    }
+    return _sir_float(a / b);
+}
+
+static SirValue _sir_num_gcd(SirValue recv, SirValue other) {
+    int64_t a = _sir_as_int(recv), b = _sir_as_int(other);
+    if (a < 0) a = -a;
+    if (b < 0) b = -b;
+    while (b != 0) { int64_t t = b; b = a % b; a = t; }
+    return _sir_int(a);
+}
+
+/* `digits` -- base-10 digits, LEAST-significant first (`123.digits ==
+ * [3, 2, 1]`). Bounded by construction: an `int64_t` magnitude has at most
+ * 19 decimal digits, so no separate DoS cap is needed (unlike the Python
+ * reference's arbitrary-precision receiver). `0.digits == [0]`. */
+static SirValue _sir_num_digits(SirValue recv) {
+    int64_t n = _sir_as_int(recv);
+    SirValue buf[20];
+    int64_t k = 0;
+    SirSeq *r;
+    if (n < 0) n = -n;
+    if (n == 0) buf[k++] = _sir_int(0);
+    while (n > 0) { buf[k++] = _sir_int(n % 10); n /= 10; }
+    r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)k);
+    memcpy(r->items, buf, sizeof(SirValue) * (size_t)k);
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+
+/* `times { |i| .. }` / `upto(n) { |i| .. }` / `downto(n) { |i| .. }` --
+ * Integer-only block iteration; each returns the (unchanged) receiver,
+ * matching `Array#each`'s return-the-receiver convention. Bounded by the
+ * receiver/argument's own int64 magnitude -- no separate iteration cap
+ * needed (a hostile huge count just runs a long time, the same cost profile
+ * `ForRange`/`Array#each` already have for a huge input). */
+static SirValue _sir_num_times(SirValue recv, SirValue block) {
+    int64_t n = _sir_as_int(recv);
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, _sir_int(i));
+    return recv;
+}
+static SirValue _sir_num_upto(SirValue recv, SirValue limit, SirValue block) {
+    int64_t i = _sir_as_int(recv), n = _sir_as_int(limit);
+    for (; i <= n; i++) _sir_apply(block, 1, _sir_int(i));
+    return recv;
+}
+static SirValue _sir_num_downto(SirValue recv, SirValue limit, SirValue block) {
+    int64_t i = _sir_as_int(recv), n = _sir_as_int(limit);
+    for (; i >= n; i--) _sir_apply(block, 1, _sir_int(i));
+    return recv;
+}
+/* `step(limit, stride = 1) { |i| .. }` -- a stride of 0 would loop forever
+ * (never crosses `limit`), so it is a documented no-op (zero iterations)
+ * rather than a hang, the same DoS-safety floor `sub`/`gsub`'s empty-pattern
+ * guard holds for string scanning. Promotes to float stepping if EITHER the
+ * receiver or the stride is a Float (matches Ruby: `1.step(2, 0.5)` yields
+ * floats), otherwise stays in exact int64 arithmetic. */
+static SirValue _sir_num_step(SirValue recv, SirValue limit, SirValue stride, SirValue block) {
+    int use_float = (recv.tag == SIR_FLOAT || stride.tag == SIR_FLOAT || limit.tag == SIR_FLOAT);
+    if (use_float) {
+        double v = _sir_as_num(recv), lim = _sir_as_num(limit), st = _sir_as_num(stride);
+        if (st == 0.0) return recv;
+        if (st > 0.0) { for (; v <= lim; v += st) _sir_apply(block, 1, _sir_float(v)); }
+        else          { for (; v >= lim; v += st) _sir_apply(block, 1, _sir_float(v)); }
+    } else {
+        int64_t v = _sir_as_int(recv), lim = _sir_as_int(limit), st = _sir_as_int(stride);
+        if (st == 0) return recv;
+        if (st > 0) { for (; v <= lim; v += st) _sir_apply(block, 1, _sir_int(v)); }
+        else        { for (; v >= lim; v += st) _sir_apply(block, 1, _sir_int(v)); }
+    }
+    return recv;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -2691,13 +2843,73 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             return _sir_str(_sir_str_replace_n(recv.as.s, args[0].as.s, args[1].as.s, -1));
     } else if (strcmp(m, "to_i") == 0) {
         if (recv.tag == SIR_STR) return _sir_int(_sir_str_to_i(recv.as.s));
+        if (_sir_is_num(recv)) return _sir_to_i(recv);
     } else if (strcmp(m, "to_f") == 0) {
         if (recv.tag == SIR_STR) return _sir_float(_sir_str_to_f(recv.as.s));
+        if (_sir_is_num(recv)) return _sir_to_f(recv);
     } else if (strcmp(m, "to_sym") == 0) {
         if (recv.tag == SIR_STR) return _sir_sym(recv.as.s);
     } else if (strcmp(m, "tr") == 0) {
         if (recv.tag == SIR_STR && argc == 2 && args[0].tag == SIR_STR && args[1].tag == SIR_STR)
             return _sir_str(_sir_str_tr(recv.as.s, args[0].as.s, args[1].as.s));
+    }
+    /* Collections slice 9: Numeric methods. */
+    else if (strcmp(m, "abs") == 0) {
+        if (recv.tag == SIR_INT) return _sir_int(recv.as.i < 0 ? -recv.as.i : recv.as.i);
+        if (recv.tag == SIR_FLOAT) return _sir_float(fabs(recv.as.f));
+    } else if (strcmp(m, "even?") == 0) {
+        if (recv.tag == SIR_INT) return _sir_bool(recv.as.i % 2 == 0);
+    } else if (strcmp(m, "odd?") == 0) {
+        if (recv.tag == SIR_INT) return _sir_bool(recv.as.i % 2 != 0);
+    } else if (strcmp(m, "zero?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) == 0.0);
+    } else if (strcmp(m, "positive?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) > 0.0);
+    } else if (strcmp(m, "negative?") == 0) {
+        if (_sir_is_num(recv)) return _sir_bool(_sir_as_num(recv) < 0.0);
+    } else if (strcmp(m, "pred") == 0) {
+        if (recv.tag == SIR_INT) return _sir_int(recv.as.i - 1);
+    } else if (strcmp(m, "floor") == 0) {
+        if (_sir_is_num(recv)) return _sir_num_floor(recv);
+    } else if (strcmp(m, "ceil") == 0) {
+        if (_sir_is_num(recv)) return _sir_num_ceil(recv);
+    } else if (strcmp(m, "round") == 0) {
+        if (_sir_is_num(recv) && argc == 0) return _sir_num_round(recv);
+    } else if (strcmp(m, "divmod") == 0) {
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_divmod(recv, args[0]);
+    } else if (strcmp(m, "fdiv") == 0) {
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_fdiv(recv, args[0]);
+    } else if (strcmp(m, "clamp") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && _sir_is_num(args[1])) {
+            if (_sir_truthy(_sir_lt(recv, args[0]))) return args[0];
+            if (_sir_truthy(_sir_gt(recv, args[1]))) return args[1];
+            return recv;
+        }
+    } else if (strcmp(m, "between?") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && _sir_is_num(args[1]))
+            return _sir_bool(_sir_truthy(_sir_ge(recv, args[0])) && _sir_truthy(_sir_le(recv, args[1])));
+    } else if (strcmp(m, "gcd") == 0) {
+        if (recv.tag == SIR_INT && argc == 1 && args[0].tag == SIR_INT)
+            return _sir_num_gcd(recv, args[0]);
+    } else if (strcmp(m, "digits") == 0) {
+        if (recv.tag == SIR_INT) return _sir_num_digits(recv);
+    } else if (strcmp(m, "times") == 0) {
+        if (recv.tag == SIR_INT && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_num_times(recv, args[0]);
+    } else if (strcmp(m, "upto") == 0) {
+        if (recv.tag == SIR_INT && argc == 2 && args[0].tag == SIR_INT && args[1].tag == SIR_CLOSURE)
+            return _sir_num_upto(recv, args[0], args[1]);
+    } else if (strcmp(m, "downto") == 0) {
+        if (recv.tag == SIR_INT && argc == 2 && args[0].tag == SIR_INT && args[1].tag == SIR_CLOSURE)
+            return _sir_num_downto(recv, args[0], args[1]);
+    } else if (strcmp(m, "step") == 0) {
+        if (_sir_is_num(recv) && argc == 2 && _sir_is_num(args[0]) && args[1].tag == SIR_CLOSURE)
+            return _sir_num_step(recv, args[0], _sir_int(1), args[1]);
+        if (_sir_is_num(recv) && argc == 3 && _sir_is_num(args[0]) && _sir_is_num(args[1])
+            && args[2].tag == SIR_CLOSURE)
+            return _sir_num_step(recv, args[0], args[1], args[2]);
     }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));

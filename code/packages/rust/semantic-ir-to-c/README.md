@@ -208,6 +208,15 @@ golden source), not always byte-for-byte true Ruby; char-set methods
 (`count`/`delete`/`squeeze`), padding methods (`ljust`/`rjust`/`center`), and
 the `*`/`+` String operators are explicitly deferred — see
 `code/specs/sir-collection-methods.md`'s "C backend lane" addendum.
+**Slice 9** (Numeric methods): `abs`, `even?`/`odd?`/`pred` (Integer-only,
+matching true Ruby), `zero?`/`positive?`/`negative?`, `floor`/`ceil`/`round`
+(0-arg form), `divmod` (raises a catchable `ZeroDivisionError` on a zero
+divisor), `fdiv` (never raises — returns `Infinity`/`-Infinity`/`NaN`
+instead), `clamp`/`between?`, `gcd`, `digits` (naturally bounded — no bignum
+DoS cap needed, since this runtime's integer is a fixed `int64_t`), and the
+BLOCK-taking `times`/`upto`/`downto`/`step` (a zero `step` stride is a
+documented no-op, never a hang); `to_i`/`to_f` widen to accept a numeric
+receiver alongside their slice-8 String forms.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and
