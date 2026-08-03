@@ -45204,14 +45204,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "reolink",
             "Reolink",
-            "Authenticated local Reolink camera and NVR device, channel, and motion inspection.",
+            "Authenticated local Reolink camera and NVR inspection plus verified recording control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             3,
             "reolink",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
         .with_entities(&[EntityKind::Camera, EntityKind::Sensor])
         .with_discovery(&[DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::UsernamePassword])
@@ -45225,7 +45225,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Supervision,
         ])
         .with_notes(&[
-            "This runtime slice covers authenticated CGI status and motion inspection; media transfer, recording, PTZ, and push events remain separate work.",
+            "Supported channels expose GetRecV20 state and authorized SetRecV20 recording enable/disable with readback verification.",
+            "Recording search/download, media transfer, PTZ, and push events remain separate work.",
         ]),
         base_entry(
             "roku",
@@ -80943,6 +80944,9 @@ mod tests {
             vec![ProtocolFamily::Vendor("reolink_cgi".to_string())]
         );
         assert_eq!(reolink.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert!(reolink
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.device")));
         assert!(reolink.target_entity_kinds.contains(&EntityKind::Camera));
         assert!(reolink.target_entity_kinds.contains(&EntityKind::Sensor));
         assert!(reolink

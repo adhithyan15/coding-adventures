@@ -90181,6 +90181,9 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "device_set_correction_profile" => Ok(CommandType::DeviceControl(
             DeviceControlCommandType::SetCorrectionProfile,
         )),
+        "camera_set_recording" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetCameraRecording,
+        )),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
     }
 }
@@ -92589,6 +92592,9 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         }
         CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
             "device_set_correction_profile"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
+            "camera_set_recording"
         }
     }
 }
@@ -121539,6 +121545,10 @@ mod tests {
             (
                 "device_set_correction_profile",
                 DeviceControlCommandType::SetCorrectionProfile,
+            ),
+            (
+                "camera_set_recording",
+                DeviceControlCommandType::SetCameraRecording,
             ),
         ];
         for (label, device_command) in commands {

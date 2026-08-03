@@ -7,6 +7,7 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add the stable `camera_set_recording` local API command label.
 - Add stable local API labels for typed device-configuration commands.
 
 - Added round-trippable local API labels for D23 media playback, volume,

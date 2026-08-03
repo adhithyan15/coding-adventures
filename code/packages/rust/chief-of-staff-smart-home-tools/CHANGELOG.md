@@ -7,6 +7,7 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Expose the `camera_set_recording` D23 command label.
 - Expose labels for typed non-credential device-configuration commands.
 
 - Added explicit labels and argument conversion for D23 media playback,
