@@ -202,6 +202,33 @@ spec = describe "Zip" $ do
             Left err  -> fail err
             Right got -> got `shouldBe` []
 
+    -- Regression (security review): readEntry must be genuinely random-access
+    -- — it should decompress only the requested entry, not every entry in the
+    -- archive. We prove this functionally: corrupt a byte inside a SECOND,
+    -- unrelated entry's file data (which makes that entry's own CRC check
+    -- fail) and confirm readEntry for the FIRST entry still succeeds. Before
+    -- the fix, readEntry routed through readZip, which decompressed and
+    -- CRC-verified every entry up front, so corrupting entry 2 would have
+    -- failed the lookup for entry 1 too.
+    it "readEntry ignores corruption in a different entry" $ do
+        let dat1 = BC.pack "AAAA"
+            dat2 = BC.pack "BBBB"
+            arch = writeZip
+                    [ (BC.pack "a.txt", dat1, False)
+                    , (BC.pack "b.txt", dat2, False)
+                    ]
+            -- Layout (both entries Stored, compress=False):
+            --   entry 1: Local Header (30) + "a.txt" (5) + "AAAA" (4) = 39 bytes
+            --   entry 2 data starts at 39 + 30 (header) + 5 ("b.txt") = 74
+            -- Flip a byte inside entry 2's file data only.
+            corrupted = flipByte arch 74
+        -- Entry 2 is indeed corrupted (its own CRC check fails).
+        case readEntry corrupted (BC.pack "b.txt") of
+            Left err -> err `shouldContain` "CRC"
+            Right _  -> fail "expected entry 2's CRC check to fail"
+        -- Entry 1 is untouched and must still be readable.
+        readEntry corrupted (BC.pack "a.txt") `shouldBe` Right dat1
+
 -- ─── LCG helper (for TC-7) ────────────────────────────────────────────────────
 
 -- | One step of a 32-bit linear congruential generator (Knuth parameters).

@@ -44,6 +44,23 @@
   module never writes to disk itself, so there's no traversal bug in this
   code today, but any caller that later writes `entryName` to a filesystem
   path must sanitise it first (reject `..` segments and absolute paths).
+- Fixed a MEDIUM/HIGH aggregate decompression-bomb finding from a second
+  security-review round: the per-entry 256 MB `deflateDecompress` cap was
+  the only limit — a Central Directory listing many entries (optionally all
+  pointing at the same or overlapping Local File Header data) could force
+  `readZip` to decompress `256 MB × (entry count)` before returning, and
+  `readEntry` wasn't actually random-access (it called `readZip` and
+  filtered afterward, so looking up one entry paid the cost of decompressing
+  every entry). Refactored the reader into a metadata-only Central Directory
+  scan (`locateEntries`/`CdEntryMeta`/`parseCentralDirectoryMeta`, no
+  decompression) shared by both `readZip` and `readEntry`: `readZip` now
+  threads a running total through every entry it materialises and errors
+  out once the aggregate decompressed size across the call would exceed
+  256 MB, and `readEntry` decompresses only the matching entry. Also capped
+  Central Directory entry count at 65535 (its wire field's own maximum),
+  per the spec's `Num_Entries_Total` guidance. Added a regression test
+  (`readEntry ignores corruption in a different entry`) that proves
+  `readEntry` no longer touches unrelated entries.
 
 ## [0.1.0] — 2026-04-24
 

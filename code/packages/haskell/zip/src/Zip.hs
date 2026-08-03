@@ -875,13 +875,59 @@ buildEOCD numEntries cdSize cdOffset =
 --
 -- 1. Scans backwards for the EOCD signature @PK\\x05\\x06@.
 -- 2. Reads the CD offset and size from EOCD.
--- 3. Parses all Central Directory headers.
--- 4. For each file entry, reads and decompresses the data from the Local Header.
+-- 3. Parses all Central Directory headers into lightweight metadata (name
+--    and location — no entry data is touched yet).
+-- 4. For each file entry, reads and decompresses the data from the Local
+--    Header, enforcing a shared decompression budget across every entry
+--    materialised by this call.
 -- 5. Verifies CRC-32 for each file entry.
 --
--- Returns @Left msg@ on structural errors or CRC mismatches.
+-- Returns @Left msg@ on structural errors, CRC mismatches, or if the
+-- archive's aggregate decompressed size would exceed the safety budget
+-- (see \"Aggregate decompression-bomb budget\" below).
+--
+-- == Aggregate decompression-bomb budget
+--
+-- 'deflateDecompress' already caps any /single/ entry's decompressed size
+-- at 256 MB. That alone is not enough: a Central Directory can list many
+-- entries — optionally all pointing at the same or overlapping Local File
+-- Header data — so a tiny file on disk could still force this function to
+-- decompress @256 MB × (entry count)@ before returning. 'readZip'
+-- therefore threads a running total through every entry it materialises
+-- and stops with an error once the /sum/ of decompressed sizes for this
+-- call would exceed 'maxAggregateOut'. The Central Directory's own entry
+-- count is also capped at 65535 (the largest value its wire field can
+-- hold), matching the spec's guidance to bound @Num_Entries_Total@ before
+-- doing per-entry work.
 readZip :: ByteString -> Either String [ZipEntry]
 readZip bs = do
+    metas <- locateEntries bs
+    materialiseAll 0 metas
+  where
+    -- Shared budget across every entry this call decompresses. Matches
+    -- 'deflateDecompress's own per-entry cap, so one call to 'readZip' can
+    -- never decompress more than roughly one cap's worth of total output
+    -- regardless of how many Central Directory entries it walks.
+    maxAggregateOut :: Int
+    maxAggregateOut = 256 * 1024 * 1024
+
+    materialiseAll :: Int -> [CdEntryMeta] -> Either String [ZipEntry]
+    materialiseAll _ [] = Right []
+    materialiseAll used (meta : rest) = do
+        entry <- materialiseEntry bs meta
+        let used' = used + BS.length (entryData entry)
+        if used' > maxAggregateOut
+            then Left "zip: aggregate decompressed size exceeds limit"
+            else (entry :) <$> materialiseAll used' rest
+
+-- | Locate every Central Directory entry's metadata (name, method, sizes,
+-- CRC, and Local Header offset) without decompressing any entry data.
+-- Shared by 'readZip' (which then decompresses every entry, subject to the
+-- aggregate budget above) and 'readEntry' (which decompresses only the one
+-- entry the caller asked for — this is what makes 'readEntry' genuinely
+-- random-access instead of paying the cost of every other entry first).
+locateEntries :: ByteString -> Either String [CdEntryMeta]
+locateEntries bs = do
     eocdOff  <- maybe (Left "zip: no EOCD record found") Right (findEOCD bs)
     cdOffset <- maybe (Left "zip: EOCD truncated (cd_offset)") (Right . fromIntegral)
                     (readLE32M bs (eocdOff + 16))
@@ -889,49 +935,81 @@ readZip bs = do
                     (readLE32M bs (eocdOff + 12))
     if cdOffset + cdSize > BS.length bs
         then Left "zip: Central Directory out of bounds"
-        else parseCentralDirectory bs cdOffset cdSize
+        else parseCentralDirectoryMeta bs cdOffset cdSize
 
--- | Parse all Central Directory headers starting at @cdOffset@.
-parseCentralDirectory :: ByteString -> Int -> Int -> Either String [ZipEntry]
-parseCentralDirectory bs cdOffset cdSize =
-    go cdOffset []
+-- | Metadata for one Central Directory entry, parsed without touching its
+-- file data. @cdmCompSize@\/@cdmUncompSize@ are the sizes as declared by
+-- the Central Directory, which is the authoritative source (the Local
+-- Header's copies are only consulted for its own @name_len@\/@extra_len@,
+-- to find where the entry's data starts).
+data CdEntryMeta = CdEntryMeta
+    { cdmName        :: !ByteString
+    , cdmMethod      :: !Word16
+    , cdmCrc         :: !Word32
+    , cdmCompSize    :: !Int
+    , cdmUncompSize  :: !Int
+    , cdmLocalOffset :: !Int
+    }
+
+-- | Maximum Central Directory entries a well-formed archive can declare —
+-- @Num_Entries_Total@ in the EOCD record is a uint16, so no legitimate
+-- archive needs more than this. Rejecting excess entries up front bounds
+-- the metadata-scan work independently of the aggregate decompression
+-- budget in 'readZip'.
+maxEntries :: Int
+maxEntries = 65535
+
+-- | Parse all Central Directory headers starting at @cdOffset@ into
+-- metadata records (no decompression).
+parseCentralDirectoryMeta :: ByteString -> Int -> Int -> Either String [CdEntryMeta]
+parseCentralDirectoryMeta bs cdOffset cdSize =
+    go cdOffset (0 :: Int) []
   where
     cdEnd = cdOffset + cdSize
 
-    go pos acc
+    go pos count acc
         | pos + 4 > cdEnd = Right (reverse acc)
         | otherwise =
             let sig = readLE32 bs pos
             in if sig /= cdSig
                 then Right (reverse acc)  -- end of CD (or padding)
-                else do
-                    entry <- parseCDEntry bs pos
-                    let nextPos = pos + 46
-                                  + fromIntegral (readLE16 bs (pos + 28))  -- name_len
-                                  + fromIntegral (readLE16 bs (pos + 30))  -- extra_len
-                                  + fromIntegral (readLE16 bs (pos + 32))  -- comment_len
-                    go nextPos (entry : acc)
+                else if count >= maxEntries
+                    then Left ("zip: Central Directory declares more than "
+                               ++ show maxEntries ++ " entries")
+                    else
+                        let meta = parseCdEntryMeta bs pos
+                            nextPos = pos + 46
+                                      + fromIntegral (readLE16 bs (pos + 28))  -- name_len
+                                      + fromIntegral (readLE16 bs (pos + 30))  -- extra_len
+                                      + fromIntegral (readLE16 bs (pos + 32))  -- comment_len
+                        in go nextPos (count + 1) (meta : acc)
 
--- | Parse one Central Directory entry and read its file data.
-parseCDEntry :: ByteString -> Int -> Either String ZipEntry
-parseCDEntry bs pos = do
-    let method         = readLE16 bs (pos + 10)
-        storedCrc      = readLE32 bs (pos + 16)
-        compSize       = fromIntegral (readLE32 bs (pos + 20)) :: Int
-        uncompSize     = fromIntegral (readLE32 bs (pos + 24)) :: Int
-        nameLen        = fromIntegral (readLE16 bs (pos + 28)) :: Int
-        localOffset    = fromIntegral (readLE32 bs (pos + 42)) :: Int
-        nameStart      = pos + 46
-        nameBytes      = BS.take nameLen (BS.drop nameStart bs)
-    -- Read data via the Local File Header.
-    fileData <- readLocalData bs localOffset compSize uncompSize method
-    -- Verify CRC-32.
+-- | Parse one Central Directory Header's metadata fields (name and
+-- location) without reading its data.
+parseCdEntryMeta :: ByteString -> Int -> CdEntryMeta
+parseCdEntryMeta bs pos =
+    let method      = readLE16 bs (pos + 10)
+        storedCrc   = readLE32 bs (pos + 16)
+        compSize    = fromIntegral (readLE32 bs (pos + 20)) :: Int
+        uncompSize  = fromIntegral (readLE32 bs (pos + 24)) :: Int
+        nameLen     = fromIntegral (readLE16 bs (pos + 28)) :: Int
+        localOffset = fromIntegral (readLE32 bs (pos + 42)) :: Int
+        nameStart   = pos + 46
+        nameBytes   = BS.take nameLen (BS.drop nameStart bs)
+    in CdEntryMeta nameBytes method storedCrc compSize uncompSize localOffset
+
+-- | Read, decompress, and CRC-verify one entry's data given its Central
+-- Directory metadata.
+materialiseEntry :: ByteString -> CdEntryMeta -> Either String ZipEntry
+materialiseEntry bs meta = do
+    fileData <- readLocalData bs (cdmLocalOffset meta) (cdmCompSize meta)
+                    (cdmUncompSize meta) (cdmMethod meta)
     let actualCrc = crc32 fileData 0
-    if actualCrc /= storedCrc && uncompSize > 0
-        then Left ("zip: CRC-32 mismatch for '" ++ show nameBytes
-                   ++ "': expected " ++ showHex storedCrc
+    if actualCrc /= cdmCrc meta && cdmUncompSize meta > 0
+        then Left ("zip: CRC-32 mismatch for '" ++ show (cdmName meta)
+                   ++ "': expected " ++ showHex (cdmCrc meta)
                    ++ ", got " ++ showHex actualCrc)
-        else Right (ZipEntry nameBytes fileData)
+        else Right (ZipEntry (cdmName meta) fileData)
 
 -- | Show a Word32 as uppercase hex (for error messages).
 showHex :: Word32 -> String
@@ -965,14 +1043,20 @@ readLocalData bs localOffset compSize uncompSize method = do
 
 -- | Read a specific file by name from a ZIP archive.
 -- Returns @Left msg@ if not found or on error.
+--
+-- This is genuinely random-access: it locates the matching Central
+-- Directory entry via 'locateEntries' (a cheap metadata-only scan) and
+-- decompresses only that one entry — unlike routing through 'readZip',
+-- which would pay the cost of decompressing every other entry in the
+-- archive first.
 readEntry :: ByteString  -- ^ Archive bytes
           -> ByteString  -- ^ Filename to find (UTF-8)
           -> Either String ByteString
 readEntry archive name = do
-    entries <- readZip archive
-    case filter (\e -> entryName e == name) entries of
-        []    -> Left ("zip: entry not found: " ++ show name)
-        (e:_) -> Right (entryData e)
+    metas <- locateEntries archive
+    case filter (\m -> cdmName m == name) metas of
+        []      -> Left ("zip: entry not found: " ++ show name)
+        (m : _) -> entryData <$> materialiseEntry archive m
 
 -- =============================================================================
 -- EOCD finder
