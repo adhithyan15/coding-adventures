@@ -247,8 +247,9 @@ option mapping, or judge/evaluation failure.
    plan in its original fact/binding scope plus every formula/input quote before
    a formula-only query can become `fully_verified`.
 1. **In progress:** migrate the ten arithmetic libraries first because every
-   later layer imports them. The four-clause `arithmetic.adj` primitive root and
-   its worked query are now fully byte-verified end to end.
+   later layer imports them. The four-clause `arithmetic.adj` primitive root,
+   the composed `ratio.adj` root, and both worked queries are now fully
+   byte-verified end to end.
 2. Store source bytes and fetch receipts in the CAS.
 3. Add byte offsets and snapshot hashes to every grounded clause.
 4. Recursively decompose source dependencies with discarded-byte accounting.
@@ -273,6 +274,9 @@ option mapping, or judge/evaluation failure.
     replacement graph and prunes only objects unreachable from every new root.
 7d. Add a write-ahead recovery journal for process termination between the
     atomic CAS-index and manifest publications.
+7e. **Complete:** scope native snapshot projection to a named bundle and its
+    recursive dependency closure so adding an unrelated manifest root cannot
+    perturb an already verified consumer.
 8. Replace the dead MathWorld `PercentageChange` locator before migrating
    `percent.adj`; a source returning 404 cannot ground that clause.
 

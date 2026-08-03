@@ -1,0 +1,87 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 68,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.ratio.query.import",
+          "end": 87,
+          "quote": "import \"ratio.adj\"\n",
+          "quote_sha256": "1aaf7c7762e11633193837bb7c48cfcc4b0ab338b318e2e4b24ccc1ce1b095db",
+          "start": 68
+        }
+      ],
+      "disposition": "represented",
+      "end": 87,
+      "start": 68
+    },
+    {
+      "disposition": "discarded",
+      "end": 88,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 87
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.ratio.numerator",
+          "end": 360,
+          "quote": "observe numerator(3)\n    quote \"numerator is 3.\" at 0 snapshot \"192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7\"\n    source \"ratio input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "5f322ce818771f95431eff19c0c3aa746b34b2041347b920a0925387ee8476a0",
+          "start": 88
+        }
+      ],
+      "disposition": "represented",
+      "end": 360,
+      "start": 88
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.ratio.denominator",
+          "end": 637,
+          "quote": "observe denominator(4)\n    quote \"denominator is 4.\" at 16 snapshot \"192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7\"\n    source \"ratio input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "a3988a491ba47fd42ee535c2d7234fa51c1f5663d28991a3723d74db0ccc2013",
+          "start": 360
+        }
+      ],
+      "disposition": "represented",
+      "end": 637,
+      "start": 360
+    },
+    {
+      "disposition": "discarded",
+      "end": 638,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 637
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.ratio.compute",
+          "end": 669,
+          "quote": "? ratio(numerator, denominator)",
+          "quote_sha256": "4fa4bb1e52b3711b06a3f46f4fcfd6e3b0cecd2b6013f5866c8673a717823b82",
+          "start": 638
+        }
+      ],
+      "disposition": "represented",
+      "end": 669,
+      "start": 638
+    },
+    {
+      "disposition": "discarded",
+      "end": 685,
+      "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
+      "start": 669
+    }
+  ],
+  "source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+  "source_size": 685
+}

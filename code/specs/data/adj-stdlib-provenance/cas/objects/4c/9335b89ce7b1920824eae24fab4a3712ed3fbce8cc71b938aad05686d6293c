@@ -1,0 +1,33 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 249,
+      "reason": "publisher markup and context outside the selected ratio rule",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.ratio",
+          "end": 403,
+          "quote": "The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.",
+          "quote_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+          "start": 249
+        }
+      ],
+      "disposition": "represented",
+      "end": 403,
+      "start": 249
+    },
+    {
+      "disposition": "discarded",
+      "end": 52191,
+      "reason": "publisher markup and context outside the selected ratio rule",
+      "start": 403
+    }
+  ],
+  "source_sha256": "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf",
+  "source_size": 52191
+}

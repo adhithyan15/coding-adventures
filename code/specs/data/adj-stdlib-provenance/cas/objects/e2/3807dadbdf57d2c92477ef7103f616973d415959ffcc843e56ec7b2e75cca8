@@ -1,0 +1,75 @@
+{
+  "bundle_id": "adj.math.arithmetic.ratio.query.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.input.arithmetic.ratio.numerator",
+      "end": 15,
+      "input_claim": {
+        "end": 360,
+        "quote": "observe numerator(3)\n    quote \"numerator is 3.\" at 0 snapshot \"192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7\"\n    source \"ratio input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "5f322ce818771f95431eff19c0c3aa746b34b2041347b920a0925387ee8476a0",
+        "start": 88
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+      "quote": "numerator is 3.",
+      "quote_sha256": "fc0649511a55c34d4982b3cf6339ccebf09c855608fbcdb1f6ba9fecec5c6a15",
+      "resolution": {
+        "authority_receipt_sha256": "e4fda0e0400a88bbe78a735953d91fdb8a6e0dc57d68c49c83188011e7e43102",
+        "authority_source_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic ratio-query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+      "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4",
+      "start": 0
+    },
+    {
+      "claim_id": "adj.input.arithmetic.ratio.denominator",
+      "end": 33,
+      "input_claim": {
+        "end": 637,
+        "quote": "observe denominator(4)\n    quote \"denominator is 4.\" at 16 snapshot \"192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7\"\n    source \"ratio input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt\"\n    trust authoritative\n",
+        "quote_sha256": "a3988a491ba47fd42ee535c2d7234fa51c1f5663d28991a3723d74db0ccc2013",
+        "start": 360
+      },
+      "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/ratio-inputs.txt",
+      "quote": "denominator is 4.",
+      "quote_sha256": "0fe3fd93a2e09b50888a3e3bf9a3e3b27bb6dde869f323469f005092bf20e4f8",
+      "resolution": {
+        "authority_receipt_sha256": "e4fda0e0400a88bbe78a735953d91fdb8a6e0dc57d68c49c83188011e7e43102",
+        "authority_source_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+        "classification": "accepted_fact",
+        "kind": "accepted_root",
+        "reason": "deterministic ratio-query input retained as the explicit accepted fact"
+      },
+      "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+      "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4",
+      "start": 16
+    }
+  ],
+  "dependencies": [
+    "4ac3c56cc15d3543fda906a98f36bc85441d1876d8bc554cf3ed24f5b484446d"
+  ],
+  "input": {
+    "raw_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+    "receipt_sha256": "3f1bd9828a7b63fe6762cbbbd584a99242eb2f11974310f5d74ad25f70412113",
+    "source_ir_sha256": "cb0ab4d3166774f8a85e73a9566757b4c87a1099d5613b0f7b6f448b2fad2568"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/ratio.query.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+      "receipt_sha256": "3f1bd9828a7b63fe6762cbbbd584a99242eb2f11974310f5d74ad25f70412113",
+      "representations": [],
+      "source_ir_sha256": "cb0ab4d3166774f8a85e73a9566757b4c87a1099d5613b0f7b6f448b2fad2568"
+    },
+    {
+      "raw_source_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
+      "receipt_sha256": "e4fda0e0400a88bbe78a735953d91fdb8a6e0dc57d68c49c83188011e7e43102",
+      "representations": [],
+      "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "bundle_id": "adj.math.arithmetic.ratio.v1",
+  "clauses": [
+    {
+      "claim_id": "adj.math.arithmetic.ratio",
+      "end": 154,
+      "input_claim": {
+        "end": 3867,
+        "quote": "    formula ratio(numerator, denominator) = quotient(numerator, denominator)\n        quote \"The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.\" at 0 snapshot \"93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73\"\n        source \"The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.\"\n        locator \"https://mathworld.wolfram.com/Ratio.html\"\n        trust authoritative\n",
+        "quote_sha256": "6cc6f6d9d9bc931cb1d236c7b9070790fce98cc03a1fa0b6188d3c7160b7ba9e",
+        "start": 3279
+      },
+      "locator": "https://mathworld.wolfram.com/Ratio.html",
+      "quote": "The ratio of two numbers r and s is written r/s, where r is the numerator and s is the denominator. The ratio of r to s is equivalent to the quotient r/s.",
+      "quote_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+      "resolution": {
+        "bundle_sha256": "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0",
+        "claim_id": "adj.math.arithmetic.quotient",
+        "kind": "dependency"
+      },
+      "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+      "source_ir_sha256": "e8c5fecf1c61b87ebaa69d6a89edaf5e3aacb79021af3358018e1aaae142d377",
+      "start": 0
+    }
+  ],
+  "dependencies": [
+    "1864e954aee505be00a64dd318f2571aaaed739f83d5f2d4b8e7617d423603c0"
+  ],
+  "input": {
+    "raw_source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+    "receipt_sha256": "ee4d40abf20282162cadb2972f85b76dda8feac8362e5b35baef2f4f777f915c",
+    "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf"
+  },
+  "kind": "provenance_bundle",
+  "library": "code/specs/data/adj-formula-stdlib/arithmetic/ratio.adj",
+  "sources": [
+    {
+      "raw_source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+      "receipt_sha256": "ee4d40abf20282162cadb2972f85b76dda8feac8362e5b35baef2f4f777f915c",
+      "representations": [],
+      "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf"
+    },
+    {
+      "raw_source_sha256": "8eced6f9859e60557b69ec9ef2c1cbaf31c7086cc0d9212edc7b39b52ef52baf",
+      "receipt_sha256": "ce1dc59cf73644563ee6c202b7067d3fab290cafab8534bd958eace36826c93b",
+      "representations": [
+        {
+          "rendered_text_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+          "source_ir_sha256": "e8c5fecf1c61b87ebaa69d6a89edaf5e3aacb79021af3358018e1aaae142d377",
+          "transform_sha256": "7d8c05f9bc89cf610e4b098d7e755a52084302aee1d03872e7e40277a2b56ee5"
+        }
+      ],
+      "source_ir_sha256": "4c9335b89ce7b1920824eae24fab4a3712ed3fbce8cc71b938aad05686d6293c"
+    }
+  ]
+}

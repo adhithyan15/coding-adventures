@@ -4,6 +4,7 @@ import importlib
 import json
 import multiprocessing
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+ratio_builder = importlib.import_module("build_adj_ratio_provenance")
 
 
 def acquire_cas_lock_and_exit(cas_root: str, ready: object) -> None:
@@ -543,6 +545,156 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
             self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
             self.assertFalse(stray_path.exists())
+
+    def test_ratio_generator_is_offline_idempotent_and_reuses_quotient(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            workspace = Path(directory)
+            repo_root = ratio_builder.REPO_ROOT
+            provenance_source = repo_root / provenance.DEFAULT_ROOT.parent
+            provenance_copy = workspace / provenance.DEFAULT_ROOT.parent
+            provenance_copy.parent.mkdir(parents=True)
+            shutil.copytree(provenance_source, provenance_copy)
+            arithmetic_source = (
+                repo_root / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy = (
+                workspace / "code/specs/data/adj-formula-stdlib/arithmetic"
+            )
+            arithmetic_copy.parent.mkdir(parents=True)
+            shutil.copytree(arithmetic_source, arithmetic_copy)
+
+            cas_root = workspace / provenance.DEFAULT_ROOT
+            manifest_path = workspace / provenance.DEFAULT_MANIFEST
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            original_root = ratio_builder.REPO_ROOT
+            ratio_builder.REPO_ROOT = workspace
+            try:
+                with provenance.BundleRegistrationTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="adj.stdlib.provenance.v1",
+                    schema_path=workspace / provenance.DEFAULT_SCHEMA,
+                    workspace_root=workspace,
+                ) as transaction:
+                    transaction.commit(ratio_builder.build(transaction.cas, None))
+            finally:
+                ratio_builder.REPO_ROOT = original_root
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            cas = provenance.Cas(cas_root)
+            cas.load()
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            bundles = {
+                provenance._json_object(cas, digest, "provenance_bundle")[
+                    "bundle_id"
+                ]: (digest, provenance._json_object(cas, digest, "provenance_bundle"))
+                for digest in manifest["bundle_hashes"]
+            }
+            ratio_hash, ratio_bundle = bundles["adj.math.arithmetic.ratio.v1"]
+            query_hash, query_bundle = bundles["adj.math.arithmetic.ratio.query.v1"]
+            self.assertEqual(
+                ratio_bundle["dependencies"], [ratio_builder.ARITHMETIC_BUNDLE_HASH]
+            )
+            self.assertEqual(
+                ratio_bundle["clauses"][0]["resolution"],
+                {
+                    "bundle_sha256": ratio_builder.ARITHMETIC_BUNDLE_HASH,
+                    "claim_id": "adj.math.arithmetic.quotient",
+                    "kind": "dependency",
+                },
+            )
+            self.assertNotIn(
+                "0be79e8dfa46675a74374e37ba59bda163388617c3d728324ce8c7bb3d2f6f86",
+                [source["raw_source_sha256"] for source in ratio_bundle["sources"]],
+            )
+            self.assertEqual(query_bundle["dependencies"], [ratio_hash])
+            self.assertIn(query_hash, manifest["bundle_hashes"])
+
+            ratio_ir = provenance._json_object(
+                cas, ratio_bundle["input"]["source_ir_sha256"], "source_ir"
+            )
+            ratio_claims = {
+                item["claim_id"]
+                for segment in ratio_ir["segments"]
+                for item in segment.get("claims", [])
+            }
+            self.assertEqual(
+                ratio_claims,
+                {
+                    "adj.code.arithmetic.ratio.import.arithmetic",
+                    "adj.code.arithmetic.ratio.use.ratio_vocab",
+                    "adj.code.arithmetic.ratio.vocabulary",
+                    "adj.math.arithmetic.ratio",
+                },
+            )
+            query_ir = provenance._json_object(
+                cas, query_bundle["input"]["source_ir_sha256"], "source_ir"
+            )
+            query_claims = {
+                item["claim_id"]
+                for segment in query_ir["segments"]
+                for item in segment.get("claims", [])
+            }
+            self.assertEqual(
+                query_claims,
+                {
+                    "adj.code.arithmetic.ratio.query.import",
+                    "adj.input.arithmetic.ratio.denominator",
+                    "adj.input.arithmetic.ratio.numerator",
+                    "adj.question.arithmetic.ratio.compute",
+                },
+            )
+
+            captured_source = workspace / "captured-ratio.html"
+            captured_source.write_bytes(
+                provenance._read_regular_file(cas.object_path(ratio_builder.RAW_HASH))
+            )
+            arithmetic_roots = []
+            for digest in manifest["bundle_hashes"]:
+                bundle_id = provenance._json_object(cas, digest, "provenance_bundle")[
+                    "bundle_id"
+                ]
+                if bundle_id.startswith("adj.math.arithmetic.primitives"):
+                    arithmetic_roots.append(digest)
+            reachable = provenance._reachable(cas, arithmetic_roots)
+            for digest in sorted(set(cas.index) - reachable):
+                cas.object_path(digest).unlink()
+            cas.index = {
+                digest: record
+                for digest, record in cas.index.items()
+                if digest in reachable
+            }
+            cas.write_index()
+            manifest["bundle_hashes"] = sorted(arithmetic_roots)
+            manifest_path.write_bytes(provenance.canonical_json_bytes(manifest))
+            arithmetic_only = provenance.validate_repository(
+                cas_root,
+                manifest_path,
+                workspace / provenance.DEFAULT_SCHEMA,
+                workspace_root=workspace,
+            )
+            self.assertEqual(
+                (arithmetic_only["bundles"], arithmetic_only["objects"]), (2, 35)
+            )
+
+            ratio_builder.REPO_ROOT = workspace
+            try:
+                with provenance.BundleRegistrationTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="adj.stdlib.provenance.v1",
+                    schema_path=workspace / provenance.DEFAULT_SCHEMA,
+                    workspace_root=workspace,
+                ) as transaction:
+                    transaction.commit(
+                        ratio_builder.build(transaction.cas, captured_source)
+                    )
+            finally:
+                ratio_builder.REPO_ROOT = original_root
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
 
     def test_partition_rejects_gaps_overlaps_and_unreasoned_discards(self) -> None:
         cases = [
