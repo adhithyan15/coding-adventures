@@ -1292,7 +1292,10 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             polarity=model.kind,
             Is=model.params.get("IS", 1e-14),
             beta_f=model.params.get(
-                "BF", model.params.get("BETA", model.params.get("BETA_F", 100.0))
+                "BF",
+                model.params.get(
+                    "BETA", model.params.get("BETA_F", model.params.get("HFE", 100.0))
+                ),
             ),
             Vt=model.params.get("VT", 0.02585),
             Cje=model.params.get("CJE", model.params.get("CBE", 0.0)),
@@ -1932,7 +1935,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             raise NetlistParseError("diode CJO must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
         forward_beta = next(
-            (params[name] for name in ("BF", "BETA", "BETA_F") if name in params),
+            (
+                params[name]
+                for name in ("BF", "BETA", "BETA_F", "HFE")
+                if name in params
+            ),
             None,
         )
         if forward_beta is not None and (

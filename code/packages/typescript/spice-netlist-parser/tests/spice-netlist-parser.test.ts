@@ -917,10 +917,12 @@ Q2 out base emit slow
 
   it("parses the BJT BETA forward-beta alias with canonical precedence", () => {
     const parsed = parseNetlist(`
-.model fast NPN(BF=120 BETA=90 BETA_F=80)
+.model fast NPN(BF=120 BETA=90 BETA_F=80 HFE=70)
 Q1 col base emit fast
 .model slow PNP(BETA=75)
 Q2 col base emit slow
+.model legacy NPN(HFE=65)
+Q3 col base emit legacy
 `);
 
     expect(parsed.circuit.elements()[0]).toMatchObject({
@@ -930,6 +932,10 @@ Q2 col base emit slow
     expect(parsed.circuit.elements()[1]).toMatchObject({
       kind: "bjt",
       forwardBeta: 75.0,
+    });
+    expect(parsed.circuit.elements()[2]).toMatchObject({
+      kind: "bjt",
+      forwardBeta: 65.0,
     });
   });
 
@@ -943,6 +949,9 @@ Q2 col base emit slow
     ["BETA_F", "0"],
     ["BETA_F", "-1"],
     ["BETA_F", "1e999"],
+    ["HFE", "0"],
+    ["HFE", "-1"],
+    ["HFE", "1e999"],
   ])("rejects invalid BJT %s forward beta %s", (parameter, value) => {
     expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
       "BJT BF must be finite and positive",

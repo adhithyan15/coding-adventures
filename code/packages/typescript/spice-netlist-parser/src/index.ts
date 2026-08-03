@@ -1176,7 +1176,10 @@ function parseModelCard(fields: readonly string[]): ModelCard {
     throw new NetlistParseError("diode CJO must be finite and non-negative");
   }
   const bjtForwardBeta =
-    params.get("BF") ?? params.get("BETA") ?? params.get("BETA_F");
+    params.get("BF") ??
+    params.get("BETA") ??
+    params.get("BETA_F") ??
+    params.get("HFE");
   if (
     (kind === "NPN" || kind === "PNP") &&
     bjtForwardBeta !== undefined &&
@@ -1737,6 +1740,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("BF") ??
         model.params.get("BETA") ??
         model.params.get("BETA_F") ??
+        model.params.get("HFE") ??
         100.0,
       model.params.get("VT") ?? 0.02585,
       model.params.get("CJE") ?? model.params.get("CBE") ?? 0.0,
