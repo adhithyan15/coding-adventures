@@ -1,6 +1,6 @@
 [package]
 name = "sir-bench"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Cross-backend performance benchmark harness for the Semantic IR: lowers real Ruby source, emits to every backend, and times emit / compile / run so you can see how fast the GENERATED code is (Ruby → SIR → C / Rust / Go / Python / JS / Ruby)."
 

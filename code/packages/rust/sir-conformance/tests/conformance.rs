@@ -60,14 +60,18 @@ const CORPUS: &[Program] = &[
     },
     // Array literal + `.length` (a method call, which lowers cleanly).
     //
-    // NOTE: index *reads* (`a[1]`, `h["k"]`) are deliberately NOT in the corpus
-    // yet — they hit two separate, currently-open Ruby-frontend gaps (see
-    // `lessons.md`): the paren-less `puts a[1]` mis-parses as `(puts a)[1]` and
-    // `puts(a[1])` fails to parse, while `x = a[1]` parses but fails SIR
-    // validation (`var-ref ... unknown name 'a'` — the index base is
-    // mis-scoped). Those are frontend bugs, tracked for a separate fix; adding a
-    // program that can't pass would only mask them. `.length` covers array
-    // construction end-to-end without tripping the index path.
+    // UPDATE: the frontend gaps that used to block index *reads* (`a[1]`,
+    // `h["k"]`) are now FIXED — `a[1]`/`h["k"] = v` parse and lower correctly
+    // on every backend (PR #9686, both the grammar and the shared
+    // `__method__("[]"/"[]=", ...)` lowering). Still NOT in this corpus,
+    // though, for a DIFFERENT reason: that lowering only has a runtime
+    // dispatch implementation on the C backend so far — Python/JS/Go/Rust's
+    // OOP runtime catalogs have no `[]`/`[]=` entries yet, so a bracket-index
+    // program fails at runtime (not a skip) on those four. Tracked as its own
+    // follow-up ("Python/JS/Go/Rust backends: implement []/[]= bracket-index
+    // runtime dispatch"); adding it here now would break the matrix rather
+    // than prove anything. `.length` covers array construction end-to-end
+    // without tripping the index path.
     Program {
         name: "array_length",
         ruby: "a = [10, 20, 30]\nputs a.length\n",
@@ -135,6 +139,55 @@ const CORPUS: &[Program] = &[
         name: "seq_assign",
         ruby: "a = 5\nb = a + 1\nc = b + a\nputs a\nputs b\nputs c\n",
         expected: "5\n6\n11",
+    },
+    // ── Collections cascade (C-backend slices 3-10) ──────────────────────
+    //
+    // The programs below all print SCALARS (never a bare Array/Hash), so
+    // they sidestep a separate, real display-convention bug this batch
+    // uncovered: `puts` on an Array bracket-displays it on the C backend
+    // (`[1, 2, 3]`) but correctly unpacks one element per line on
+    // Python/JS/Go/Rust, matching real Ruby (`puts [1,2,3]` → "1\n2\n3\n").
+    // Tracked as its own follow-up ("C backend: puts on an Array should
+    // unpack one-per-line") rather than fixed here — this corpus addition's
+    // job is proving the METHOD CATALOG agrees, not the display layer.
+    //
+    // A block method (`reduce`), proving closures round-trip identically
+    // through every backend's calling convention.
+    Program {
+        name: "array_reduce",
+        ruby: "puts [1, 2, 3, 4].reduce { |acc, x| acc + x }\n",
+        expected: "10",
+    },
+    // Two Array 0-arg query methods (slice 3).
+    Program {
+        name: "array_count_sum",
+        ruby: "puts [1, 2, 3, 4, 5].count\nputs [1, 2, 3].sum\n",
+        expected: "5\n6",
+    },
+    // Hash non-block methods (slice 6): `.length` and `.fetch`.
+    Program {
+        name: "hash_length_fetch",
+        ruby: "h = {\"a\" => 1, \"b\" => 2}\nputs h.length\nputs h.fetch(\"a\")\n",
+        expected: "2\n1",
+    },
+    // Remaining String methods (slice 8): literal `sub`/`gsub`.
+    Program {
+        name: "string_gsub_sub",
+        ruby: "puts \"aaa\".gsub(\"a\", \"b\")\nputs \"aaa\".sub(\"a\", \"b\")\n",
+        expected: "bbb\nbaa",
+    },
+    // Numeric methods (slice 9): `abs` and `gcd`.
+    Program {
+        name: "numeric_abs_gcd",
+        ruby: "puts((-5).abs)\nputs 12.gcd(18)\n",
+        expected: "5\n6",
+    },
+    // Symbol methods (slice 10): `upcase` widened from the String helper,
+    // `length` widened the same way.
+    Program {
+        name: "symbol_upcase_length",
+        ruby: "puts :hello.upcase\nputs :hello.length\n",
+        expected: "HELLO\n5",
     },
 ];
 
