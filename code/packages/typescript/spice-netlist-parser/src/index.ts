@@ -1181,6 +1181,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET KP must be finite and positive");
   }
+  const thresholdVoltage = params.get("VT0") ?? params.get("VTO") ?? params.get("VTH");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    thresholdVoltage !== undefined &&
+    !Number.isFinite(thresholdVoltage)
+  ) {
+    throw new NetlistParseError("MOSFET VT0 must be finite");
+  }
   return {
     name: fields[1],
     kind,
@@ -1221,6 +1229,7 @@ function parseElementParams(tokens: readonly string[], label: string): ReadonlyM
 
 const MOSFET_PARAM_ALIASES = new Map<string, keyof MosfetLevel1Params>([
   ["VTO", "VT0"],
+  ["VTH", "VT0"],
   ["NSUB", "N_SUB"],
   ["N", "N_SUB"],
   ["TNOM", "T_NOM"],

@@ -1374,6 +1374,28 @@ Xright c d load
     expect(element.params.KP).toBeCloseTo(175.0e-6, 15);
   });
 
+  it.each(["VT0", "VTO", "VTH"])(
+    "rejects non-finite MOSFET model threshold alias %s",
+    (alias) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(${alias}=1e999)\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET VT0 must be finite");
+    },
+  );
+
+  it.each(["VT0", "VTO", "VTH"])(
+    "lowers finite MOSFET model threshold alias %s",
+    (alias) => {
+      const parsed = parseNetlist(`.model nfast NMOS(${alias}=-0.38)\nM1 d g s b nfast\n`);
+      const element = parsed.circuit.elements()[0];
+      expect(element.kind).toBe("mosfet");
+      if (element.kind !== "mosfet") {
+        throw new Error("unexpected element kind");
+      }
+      expect(element.params.VT0).toBe(-0.38);
+    },
+  );
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
