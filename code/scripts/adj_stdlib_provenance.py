@@ -21,6 +21,7 @@ import stat
 import subprocess
 import tempfile
 import threading
+import time
 import xml.etree.ElementTree as ET
 from collections.abc import Iterable, Sequence
 from datetime import datetime
@@ -1168,13 +1169,15 @@ def _run_json_command(
         with termination_lock:
             if windows_job is not None:
                 windows_job.close()
+        drain_deadline = time.monotonic() + drain_timeout_seconds
         for thread in threads:
-            thread.join(timeout=drain_timeout_seconds)
+            thread.join(timeout=max(0, drain_deadline - time.monotonic()))
         stuck_drains = [thread for thread in threads if thread.is_alive()]
         if stuck_drains:
             terminate()
+        final_drain_deadline = time.monotonic() + 1
         for thread in stuck_drains:
-            thread.join(timeout=1)
+            thread.join(timeout=max(0, final_drain_deadline - time.monotonic()))
     if any(thread.is_alive() for thread in threads):
         raise ProvenanceError(f"{label} output pipes did not close within bounds")
     process.stdout.close()
