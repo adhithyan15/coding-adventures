@@ -4656,6 +4656,13 @@ impl HtmlParser {
                         }));
                     }
                     Token::Eof => {
+                        if self.current_element_is_authored_text_mode_element() {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-in-text-mode",
+                                "end of file was reached while parsing a text element",
+                            ));
+                            self.open_elements.pop();
+                        }
                         if (self.is_fragment || self.has_open_element("body"))
                             && self.has_disallowed_authored_open_element_for_eof()
                         {
@@ -8177,6 +8184,28 @@ impl HtmlParser {
                     && is_disallowed_open_element_for_body_end(element)
             })
         })
+    }
+
+    fn current_element_is_authored_text_mode_element(&self) -> bool {
+        self.open_elements
+            .last()
+            .and_then(|path| element_ref_at_path(&self.document, path))
+            .is_some_and(|element| {
+                element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+                    && (matches!(
+                        element.name.as_str(),
+                        "iframe"
+                            | "noembed"
+                            | "noframes"
+                            | "script"
+                            | "style"
+                            | "textarea"
+                            | "title"
+                            | "xmp"
+                    ) || (element.name == "noscript"
+                        && self.options.scripting == HtmlScriptingMode::Enabled))
+            })
     }
 
     fn has_document_type(&self) -> bool {
@@ -33155,6 +33184,46 @@ mod tests {
                     "end of file was reached with disallowed open elements"
                 )],
                 "context {context:?}, source {source:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn reports_eof_in_text_insertion_mode() {
+        for source in [
+            "<!doctype html><script>",
+            "<!doctype html><style> EOF",
+            "<!doctype html><title>title",
+            "<!doctype html><frameset></frameset><noframes>fallback",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "eof-in-text-mode",
+                    "end of file was reached while parsing a text element"
+                )],
+                "source {source:?}"
+            );
+        }
+
+        let output = parse_html_fragment_with_diagnostics("<script>").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "eof-in-text-mode",
+                "end of file was reached while parsing a text element"
+            )]
+        );
+    }
+
+    #[test]
+    fn text_fragment_context_eof_does_not_diagnose_the_seeded_element() {
+        for context in ["script", "style", "textarea", "title"] {
+            let output = parse_html_fragment_for_context_with_diagnostics("", context).unwrap();
+            assert!(
+                output.parser_diagnostics.is_empty(),
+                "context {context:?}"
             );
         }
     }
