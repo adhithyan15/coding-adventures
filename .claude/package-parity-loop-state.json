@@ -361,11 +361,11 @@
     {
       "id": "build-tool-swift-rockspec-utf8-conformance",
       "title": "Make the Swift build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-swift-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized after merged PR #9527 and the eabfc1a3 collision-clean reprioritization. The Swift build tool currently converts a failed UTF-8 decode into an empty Lua dependency list. Bind the engine to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, require exact success edges, and fail closed with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, real CLI exit 2, and no host-path disclosure. This slice changes only the Swift engine; TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate children."
+      "notes": "Selected after merged PR #9527 and the eabfc1a3 collision-clean reprioritization because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The Swift build tool currently converts a failed UTF-8 decode into an empty Lua dependency list. Bind the engine to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, require exact success edges, and fail closed with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, real CLI exit 2, and no host-path disclosure. This slice changes only the Swift engine; TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate children."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
