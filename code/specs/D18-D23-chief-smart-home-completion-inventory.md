@@ -905,6 +905,26 @@ state that the portable CGI contract cannot read back:
 - A real loopback HTTP test proves probing, preset filtering, denial, recall,
   bounded start/stop movement, logout, and exact native request shapes.
 
+## Current Axis VAPIX Inspection Slice
+
+This slice adds a second vendor-specific camera/NVR runtime using Axis's
+documented local discovery and authenticated JSON APIs:
+
+- The shared production mDNS scanner targets `_axis-video._tcp.local` and
+  `_axis-nvr._tcp.local`, preserving advertisements as credential-required
+  candidates until authenticated identity verifies them.
+- Production configuration requires a credential-free HTTPS origin and a
+  `VaultRef`; Basic credentials are materialized only inside the bounded TLS
+  transport. Plain HTTP is restricted to loopback transport tests.
+- The host calls `basicdeviceinfo.cgi` and `apidiscovery.cgi`, rejects VAPIX
+  errors, bounds response sizes, and normalizes product identity, firmware, and
+  the device's sorted public API inventory.
+- D23 authorizes the read before credentials or network transport are touched,
+  then installs one confirmed camera entity and a paired Axis bridge without
+  exposing secrets in request plans, runtime metadata, or debug output.
+- A real loopback HTTP test proves both JSON requests, Basic-auth materialization,
+  response parsing, runtime installation, and denial before transport.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -916,29 +936,38 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Add another vendor-specific camera or NVR integration where authenticated
+4. Extend Axis VAPIX with capability-probed position/preset inspection and
+   bounded PTZ control, including operator permission and PTZ control-queue
+   semantics, over the existing authenticated HTTPS host.
+5. Add another vendor-specific camera or NVR integration where authenticated
    protocol and transport primitives are concrete.
-5. Add Reolink snapshot, recording search/download, and playback operations only
+6. Add Axis event streaming only after a concrete WebSocket event host and
+   digest or short-lived session-token authentication lifecycle exist.
+7. Add Axis snapshots and media transfer only through the camera-media lease and
+   a concrete media executor.
+8. Add reusable HTTP Digest authentication before supporting Axis devices that
+   cannot expose the preferred HTTPS Basic-auth path.
+9. Add Reolink snapshot, recording search/download, and playback operations only
    through the existing camera-media lease and a concrete media executor.
-6. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+10. Add Reolink current-position, zoom, guard-point, or patrol controls only when
    each operation has a capability-specific probe and the firmware exposes the
    native state needed to avoid invented orientation claims.
-7. Add Reolink push events only after a concrete webhook or event-stream host
+11. Add Reolink push events only after a concrete webhook or event-stream host
    and subscription lifecycle exist.
-8. Add authenticated KLAP/Tapo devices and other broader-device families only
+12. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-9. Add ONVIF PullPoint events once a concrete event host and subscription
+13. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-10. Add RTSP media transfer and recording once concrete media transfer and
+14. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-11. Add a production Matter commissioning, secure-session, and network host only
+15. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-12. Add a Thread border-router host only after an actual host transport exists.
-13. Add a production Zigbee coordinator, join, and security host only after
-    concrete coordinator transport and security primitives exist.
-14. Add production Z-Wave inclusion and S2 only after concrete host transport
-    and security primitives exist.
+16. Add a Thread border-router host only after an actual host transport exists.
+17. Add a production Zigbee coordinator, join, and security host only after
+   concrete coordinator transport and security primitives exist.
+18. Add production Z-Wave inclusion and S2 only after concrete host transport
+   and security primitives exist.
 
 ## End-To-End Definition
 

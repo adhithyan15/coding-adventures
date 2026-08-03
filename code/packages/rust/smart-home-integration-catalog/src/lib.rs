@@ -45202,6 +45202,34 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Supervision,
         ]),
         base_entry(
+            "axis_vapix",
+            "Axis VAPIX",
+            "Authenticated local Axis camera and NVR discovery plus device and API inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "axis_vapix",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor("axis_vapix".to_string())])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection requires HTTPS Basic authentication; plain HTTP is accepted only for loopback transport tests.",
+            "PTZ control, event streaming, snapshots, and media transfer remain separate capability-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
             "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
@@ -80956,6 +80984,36 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
         assert!(!reolink
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn axis_entry_exposes_authenticated_vapix_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let axis = find_entry(&catalog, &IntegrationId::trusted("axis_vapix")).unwrap();
+
+        assert_eq!(
+            axis.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(axis.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            axis.supported_protocols,
+            vec![ProtocolFamily::Vendor("axis_vapix".to_string())]
+        );
+        assert_eq!(axis.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(axis.target_entity_kinds, vec![EntityKind::Camera]);
+        assert!(axis
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::Mdns));
+        assert!(axis
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(axis
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!axis
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
