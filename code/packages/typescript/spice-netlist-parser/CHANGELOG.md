@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `MJ` values and lower valid
+  bottom-junction grading coefficients instead of silently dropping them.
 - Reject zero, negative, and non-finite MOS model-card `PB` values and lower
   valid bulk-junction potentials instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `JS` values and lower valid

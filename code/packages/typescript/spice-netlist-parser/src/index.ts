@@ -1308,6 +1308,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET PB must be finite and positive");
   }
+  const gradingCoefficient = params.get("MJ");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    gradingCoefficient !== undefined &&
+    (!Number.isFinite(gradingCoefficient) || gradingCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET MJ must be finite and non-negative");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1412,6 +1420,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "CJSW",
     "JS",
     "PB",
+    "MJ",
     "IS",
     "N_SUB",
     "T_NOM",
