@@ -1,5 +1,95 @@
 # Changelog — vm-core
 
+## [0.21.1] — 2026-08-02 (security fix: cap live `gc_alloc` count to bound `gc_field_load`/`gc_field_store` cost)
+
+A security review of the 0.20.0/0.21.0 GC work found that `gc_field_load`/
+`gc_field_store`'s bounds check (`FlatHeap::payload_size`) is O(live object
+count) — it walks the block list, the same cost `FlatHeap::kind_of`'s own
+docs already flag as unsuitable for a hot per-instruction loop. Without a
+cap on live `gc_alloc`'d objects, a program allocating N objects then
+performing M field accesses against the oldest one could cost O(N·M)
+wall-clock time while an instruction budget (`max_instructions`, vm-core's
+existing sandbox-mode guard) only charges O(N+M) — a quadratic blowup
+defeating the budget's intended linear bound.
+
+Fixed by adding `VMCore::gc_object_count` — an O(1)-maintained live count
+(incremented on `gc_alloc`, decremented by each collection's `freed` count;
+a compacted survivor is not freed, so it stays counted) — and enforcing
+`max_memory_entries` against it in `handle_gc_alloc`, exactly mirroring the
+aggregate ceiling `handle_alloc`/`handle_alloc_array` already enforce
+against `ctx.arrays.len()`. New test
+`gc_alloc_is_capped_and_collection_frees_room_under_the_cap`.
+
+## [0.21.0] — 2026-08-02 (`safepoint` upgrades to automatic compaction via the shared `should_compact` policy)
+
+`safepoint`'s paced collection now also relocates objects (`collect_compacting`
+instead of `collect_mixed`) whenever `gc_core::FlatHeap::should_compact` says
+fragmentation warrants it — the exact same policy `gc-core-capi`'s
+`__gc_safepoint` now consults (gc-core-capi 0.23.0), so both automatic-collection
+call sites share one cadence and can't drift apart. `collect_compacting`'s
+root-slot rewrite transparently updates every live `Value::HeapRef` in
+vm-core's own root set in place (registers/globals/memory/arrays) — no
+vm-core-side pointer-fixup code needed, since the roots passed in ARE those
+values' own storage addresses.
+
+New test `safepoint_over_threshold_collects_and_reclaims`: one `gc_alloc`
+bigger than `FlatHeap`'s 1 MiB adaptive threshold crosses it outright, so the
+very next `safepoint` must run a real (currently non-moving — a fresh heap's
+`should_compact` is always false for the first several cycles) cycle,
+reclaiming the now-unrooted block while the kept object's field survives —
+proving the paced dispatch collects for real, not just that `gc_collect`
+(the unconditional path) does.
+
+## [0.20.0] — 2026-08-02 (a real, shared GC — `gc_alloc`/`gc_field_load`/`gc_field_store`/`safepoint`/`gc_collect`)
+
+vm-core gets a real garbage collector, sharing the exact engine (`gc-core`'s
+`FlatHeap`) the native-AOT backends already use via `gc-core-capi` — linked
+directly as a Rust dependency instead of through the C ABI, since vm-core is
+already Rust. This closes a real gap: `gc-core`'s only prior interpreter-facing
+design (`GcCore`/`GcAdapter`, over a separate `garbage-collector` crate) was
+never actually wired into vm-core despite its own doc comments claiming
+otherwise — see `gc-core`'s 0.25.0 changelog entry, which removes it.
+
+This is **additive**, not a replacement for the existing heap model: `alloc`/
+`alloc_array`/`field_store`/`field_load` still allocate on `ctx.arrays` (a
+plain Rust bump arena, never collected) exactly as before. The new ops are:
+
+- **`gc_alloc [<size_bytes>] -> dest`** — allocates on the shared `FlatHeap`
+  (kind 0, conservative), returning a `Value::HeapRef`.
+- **`gc_field_load dest <- obj, idx`** / **`gc_field_store obj, idx, val`** —
+  read/write the `idx`-th 8-byte word of a `gc_alloc`'d object's payload, raw
+  words with no NaN-boxing (mirroring the native cons-cell convention).
+  Bounds-checked against the object's *actual* allocated size via the new
+  `FlatHeap::payload_size` (see `gc-core` 0.25.0) — which also rejects a null
+  or invalid `HeapRef` for free, since it reads `0` for any non-live address.
+  `gc_field_store` runs the generational write barrier when storing a nested
+  `Value::HeapRef`.
+- **`safepoint`** — a **paced** collection point: collects only if `FlatHeap`
+  is over its adaptive threshold. The dispatch loop also checks every 4096
+  instructions automatically, so a long-running loop with no explicit
+  `safepoint` still gets collected under allocation pressure.
+- **`gc_collect`** — an **unconditional** collection, mirroring
+  `gc-core-capi`'s split between its paced `__gc_safepoint` and its
+  unconditional `__gc_collect_precise`/`__gc_collect_compacting` builtins.
+
+Root-finding is **precise by construction**, with no conservative stack scan
+at all: `dispatch::collect_now` walks every `Value::HeapRef` vm-core itself
+can see — every register across every active frame, every global, every
+`memory` slot, and every array element — and hands their exact storage
+addresses to `FlatHeap::collect_mixed`. An interpreter always knows exactly
+where every reference lives, so there is nothing to scan conservatively.
+
+New `Value::HeapRef(gc_core::HeapRef)` variant (`iir_type_name() == "ref"`,
+falsy iff null, `Display` via `HeapRef`'s own). `vm-runtime`'s
+`VmResult::from_value` gained the corresponding `Value::HeapRef -> VmResult::Ref`
+arm (LANG16's `VmResultTag::Ref`/`from_ref` already anticipated this).
+
+Tests: `tests/gc_heap.rs` (9 new integration tests), including the headline
+proof — `gc_collect_frees_an_object_whose_only_root_was_overwritten` — that a
+collection genuinely reclaims an object once its only root is gone, while
+`gc_collect_reclaims_unreachable_and_preserves_reachable` proves a live
+object's field data survives intact.
+
 ## [0.19.0] — 2026-07-14 (E6d list `null?` on the generic VM — `is_null` + nil-handle reservation)
 
 Completes the E6d dynamic features on the generic VM: Twig **list** builtins

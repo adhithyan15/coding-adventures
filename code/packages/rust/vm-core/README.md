@@ -52,7 +52,7 @@ assert_eq!(result, Some(Value::Int(42)));
 ### `Value` — the register type
 
 ```rust
-pub enum Value { Int(i64), Float(f64), Bool(bool), Str(String), Null }
+pub enum Value { Int(i64), Float(f64), Bool(bool), Str(String), HeapRef(gc_core::HeapRef), Null }
 ```
 
 `iir_type_name()` maps a `Value` to its IIR type string, with range-aware
@@ -123,6 +123,38 @@ reads these slots to guide specialisation.
 
 ---
 
+## GC-managed heap objects
+
+`alloc`/`alloc_array`/`field_store`/`field_load` (above) allocate on
+`ctx.arrays`, a plain Rust bump arena that is never collected. A second,
+**additive** set of ops allocates on `gc-core`'s `FlatHeap` — the exact same
+collector engine the native-AOT backends share via `gc-core-capi`, linked
+here directly as a Rust dependency:
+
+| Op | Effect |
+|----|--------|
+| `gc_alloc [<size_bytes>] -> dest` | Allocate on `FlatHeap` (kind 0), returning a `Value::HeapRef`. Capped by `max_memory_entries` live objects (an O(1)-tracked count) — bounds `gc_field_load`/`gc_field_store`'s O(live-count) size check against DoS |
+| `gc_field_load dest <- obj, idx` | Read the `idx`-th 8-byte word; `ref`-typed `type_hint` decodes it as a `HeapRef`, else `Int` |
+| `gc_field_store obj, idx, val` | Write the `idx`-th 8-byte word; runs the write barrier for a `HeapRef` value |
+| `safepoint` | Collect only if `FlatHeap` is over its adaptive threshold (**paced**); also **compacts** (relocates objects) when `FlatHeap::should_compact` says fragmentation warrants it — the same shared policy `gc-core-capi`'s `__gc_safepoint` consults |
+| `gc_collect` | Collect unconditionally, non-moving |
+
+Root-finding is **precise by construction** — no conservative stack scan.
+`dispatch::collect_now` walks every `Value::HeapRef` across every frame's
+registers, `globals`, `memory`, and `arrays`, and hands their exact storage
+addresses to `FlatHeap::collect_mixed`: an interpreter already knows exactly
+where every reference lives. A `safepoint` op and an automatic check every
+4096 dispatched instructions (`AUTO_SAFEPOINT_INTERVAL`) both call the paced
+path, so a long loop with no explicit `safepoint` still collects under
+allocation pressure.
+
+Fields are raw 64-bit words with no NaN-boxing — the same convention the
+native cons-cell path uses — so a field holds either a nested `HeapRef`'s raw
+address or a plain integer; storing anything else (a `Str`/`Float`/`Bool`)
+traps. See `tests/gc_heap.rs` for the full round-trip and reclamation proofs.
+
+---
+
 ## JIT integration
 
 ```rust
@@ -185,4 +217,4 @@ src/
 cargo test -p vm-core
 ```
 
-29 unit tests + 6 doctests, all green.
+94 tests across unit + integration suites, plus 6 doctests, all green.

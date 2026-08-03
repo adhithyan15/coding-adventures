@@ -40,7 +40,7 @@ The interpreters use `gc-core`'s managed-object collector; native output uses
 | `int64_t __gc_collect_roots(const int64_t *roots, int64_t count)` | mark from `count` root words, sweep; returns objects freed |
 | `int64_t __gc_collect_region(const uint8_t *base, int64_t len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 | `int64_t __gc_collect(void)` | conservative collection rooted at this thread's live stack + callee-saved registers (no caller roots); returns objects freed |
-| `int64_t __gc_safepoint(void)` | paced collect — runs `__gc_collect` only when the live set has reached the adaptive threshold; returns objects freed (0 if throttled) |
+| `int64_t __gc_safepoint(void)` | paced collect — once the live set reaches the adaptive threshold, runs `__gc_collect_precise` (or `__gc_collect_compacting` when `FlatHeap::should_compact` says fragmentation warrants it); returns objects freed (0 if throttled) |
 | `void __gc_write_barrier(int64_t parent, int64_t child)` | generational write barrier — records an old `parent` so a minor cycle finds its young children (O(1); `child` not dereferenced) |
 | `int64_t __gc_collect_minor(void)` | minor (young-only) collection rooted at this thread's stack + registers; reclaims young garbage without scanning the old generation; returns objects freed |
 | `int64_t __gc_live_bytes(void)` | live payload bytes |

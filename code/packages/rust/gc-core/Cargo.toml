@@ -1,13 +1,10 @@
 [package]
 name = "gc-core"
-version = "0.24.0"
+version = "0.27.0"
 edition = "2021"
-description = "LANG16 — adaptive GC adapter layer wiring garbage-collector into the LANG VM pipeline."
+description = "The shared GC engine (FlatHeap) for the LANG pipeline: linked directly by native-AOT backends (via gc-core-capi) and by vm-core."
 license = "MIT"
 
 [lib]
 name = "gc_core"
 path = "src/lib.rs"
-
-[dependencies]
-garbage-collector = { path = "../garbage-collector" }

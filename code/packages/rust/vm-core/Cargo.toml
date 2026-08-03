@@ -1,6 +1,6 @@
 [package]
 name = "vm-core"
-version = "0.19.0"
+version = "0.21.1"
 edition = "2021"
 description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline.  v0.15.0 (LANG-FULL AL8-arctan): f64_atan and f64_tan dispatch handlers added — routes through the generic f64_transcendental helper using Rust's f64::atan / f64::tan.  v0.8.0 (LANG-FULL E6 layer 1 — typed module globals): executes the lowered `global_load`/`global_store` IIR ops over a name-keyed `globals` map (a never-written global reads as 0, matching the code-gen backends' zero-init slots) — distinct from the dynamic `call_builtin \"global_get/set\"` table, so a statically-typed frontend's typed globals run on the VM (and JIT, via cold interpretation).  v0.5.0 (LANG-FULL E2 — register width & wrap, backend 1/6): integer arithmetic / bitwise / shift handlers now mask their result to the width named by the instruction's type_hint (u4→&0xF, u8→&0xFF, u16, u32), so a u8-typed `add` of 200+100 yields 44 and `~x` on a u8 flips 8 bits — the register-arithmetic analogue of the existing byte-tape store_byte mask, on top of the legacy whole-module u8_wrap flag.  v0.4.0 (LANG-MATRIX Phase V): adds the byte-tape ops alloc_bytes/load_byte/store_byte over the flat memory address space (a cell is memory[base+idx], store_byte masks to a byte for Brainfuck's 8-bit wrap), so the generic VM runs Brainfuck — every matrix language now runs on this one register interpreter."
 
@@ -9,4 +9,5 @@ name = "vm_core"
 path = "src/lib.rs"
 
 [dependencies]
-interpreter-ir = { path = "../interpreter-ir" }
+gc-core         = { path = "../gc-core" }
+interpreter-ir  = { path = "../interpreter-ir" }

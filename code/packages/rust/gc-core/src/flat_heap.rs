@@ -1,27 +1,31 @@
-//! # `flat_heap` — a real-memory mark-and-sweep heap for native consumers
+//! # `flat_heap` — the one real collector `gc-core` ships
 //!
-//! `gc-core`'s primary collector ([`crate::gc_core::GcCore`] over the
-//! `garbage-collector` crate) models the heap as a `HashMap<usize, Box<dyn
-//! HeapObject>>` with *synthetic* addresses.  That is exactly right for the
-//! **interpreters** (`vm-core`, `jit-core`): a running Rust interpreter always
-//! knows the static type of every slot, so a boxed trait object per heap value
-//! costs nothing conceptually and buys reflection-free tracing.
+//! `alloc(n)` returns a **real machine pointer** to `n` contiguous bytes that a
+//! consumer reads and writes directly at byte offsets (the IIR `field_load`/
+//! `field_store` ops), with no map indirection and no `Box<dyn>`. A McCarthy-Lisp
+//! cons cell, a boxed integer, a closure record — all are just `alloc(16)`
+//! returning a pointer the caller dereferences directly.
 //!
-//! It is the **wrong** model for **native-AOT** output.  There the heap must be
-//! *flat*: `alloc(n)` returns a **real machine pointer** to `n` contiguous bytes
-//! that compiled code reads and writes directly at byte offsets (the IIR
-//! `field_load`/`field_store` ops), with no map indirection and no `Box<dyn>`.
-//! A McCarthy-Lisp cons cell, a boxed integer, a closure record — all are just
-//! `alloc(16)` returning a pointer the generated machine code dereferences.
+//! This module is that flat representation, a first-class **generic** algorithm
+//! (see `AOT00-T1-precise-gc.md` §3.1) shared by every consumer that needs a real
+//! collector, native or interpreted alike:
 //!
-//! This module is that flat representation, lifted into `gc-core` as a
-//! first-class **generic** algorithm (see `AOT00-T1-precise-gc.md` §3.1 and
-//! `LANG16-gc-core.md`).  It is the collector the native-AOT / LLVM / WASM
-//! columns link through the C ABI (`gc-core-capi`), and it supersedes the
-//! Twig-specific `twig-aot/runtime/twig_gc.c` — same flat model (32-byte header,
-//! 16-byte-aligned payload, intrusive free list, mark/sweep), but now one
-//! generic Rust collector every native consumer shares rather than a hand-written
-//! C fork.
+//! - **Native-AOT / LLVM / WASM** link through the C ABI (`gc-core-capi`), where
+//!   it supersedes the Twig-specific `twig-aot/runtime/twig_gc.c` — same flat
+//!   model (32-byte header, 16-byte-aligned payload, intrusive free list,
+//!   mark/sweep), but one generic Rust collector every native consumer shares
+//!   rather than a hand-written C fork.
+//! - **`vm-core`** (the bytecode interpreter) depends on this crate directly as a
+//!   Rust library — no C ABI needed, since it's already Rust — allocating
+//!   GC-managed objects through the same `FlatHeap` and rooting them precisely
+//!   from its own register/global/local storage (see `vm-core`'s `Value::HeapRef`
+//!   and its `safepoint` opcode handler).
+//!
+//! An earlier, `HashMap<usize, Box<dyn HeapObject>>`-based design (`GcCore` over
+//! the standalone `garbage-collector` crate) explored a synthetic-address model
+//! aimed at interpreters specifically. It was never wired into any real
+//! consumer and has been removed in favor of `vm-core` sharing this collector
+//! directly, the same way the native-AOT backends do.
 //!
 //! ## Memory layout
 //!
@@ -62,6 +66,7 @@
 //! `__twig_gc_collect`) live in the `gc-core-capi` crate and a follow-up PR
 //! respectively.
 
+use crate::policy::{AdaptivePolicy, GcAlgorithm, GcPolicy, PolicyDecision};
 use crate::profile::{GcCycleStats, GcProfile};
 use std::alloc::{alloc, alloc_zeroed, dealloc, Layout};
 use std::collections::{HashMap, HashSet};
@@ -609,6 +614,28 @@ impl FlatHeap {
         }
     }
 
+    /// Payload size in bytes of the live heap object at `addr`, or `0` if `addr`
+    /// is not inside any live block (null, non-heap, or a stale/freed pointer).
+    ///
+    /// Lets a consumer bounds-check a raw field access (`addr + offset`)
+    /// against the object's *actual* allocated size without tracking it in a
+    /// side table of its own — which would go stale across a compacting
+    /// collection unless painstakingly kept in sync. This never goes stale:
+    /// it is always resolved fresh from the header at `addr`, and `addr`
+    /// itself is only ever trustworthy in the caller's hands because it was
+    /// either just returned by [`Self::alloc`] or is a root slot the
+    /// collector kept up to date (see [`crate::HeapRef::as_mut_ptr`]).
+    /// Same O(n) cost and safety argument as [`Self::kind_of`].
+    pub fn payload_size(&self, addr: usize) -> usize {
+        let h = self.find_header(addr);
+        if h.is_null() {
+            0
+        } else {
+            // SAFETY: `find_header` returned a live block we own; its header is valid.
+            unsafe { (*h).size }
+        }
+    }
+
     /// Whether the live set has reached the threshold — i.e. a collection is due.
     ///
     /// This is the *policy* half of paced collection: it answers "should I collect
@@ -619,6 +646,28 @@ impl FlatHeap {
     /// allocation consults this and, when true, drives a collect.
     pub fn should_collect(&self) -> bool {
         self.live_bytes >= self.collect_threshold
+    }
+
+    /// Whether the *next* collection should also relocate objects
+    /// (compact), per [`AdaptivePolicy`]'s fragmentation signal against this
+    /// heap's own [`GcProfile`] — the **one** place this decision lives, so
+    /// every automatic-collection call site (`gc-core-capi`'s
+    /// `__gc_safepoint` and `vm-core`'s `safepoint` opcode) shares it
+    /// identically and can't drift apart. Like [`Self::should_collect`],
+    /// this is pure policy: it names no roots and runs no collection itself.
+    ///
+    /// Defers to `AdaptivePolicy`'s own priority order (pause time →
+    /// survival ratio → fragmentation, see `policy.rs`) — a cycle with both
+    /// high fragmentation *and* an unacceptable pause time recommends fixing
+    /// the pause first, and `should_compact` answers `false` here, same as
+    /// if fragmentation were low. This matches a production collector's own
+    /// trade-off: a moving collection has its own pause cost, so recovering
+    /// space is not owed priority over a more urgent latency signal.
+    pub fn should_compact(&self) -> bool {
+        matches!(
+            AdaptivePolicy::default().evaluate(&self.profile),
+            PolicyDecision::SuggestSwitch(GcAlgorithm::Compacting, _)
+        )
     }
 
     /// Re-tune the threshold after a cycle, given the live bytes *before* it.
@@ -2618,6 +2667,36 @@ mod tests {
         assert!(heap.should_collect());
     }
 
+    #[test]
+    fn should_compact_follows_adaptive_policy_fragmentation_signal() {
+        let mut heap = FlatHeap::new();
+
+        // Too few cycles: AdaptivePolicy's min_cycles_before_advice (5) gates
+        // every recommendation, fragmentation notwithstanding.
+        heap.profile.total_collections = 4;
+        heap.profile.last_fragmentation = 0.90;
+        assert!(!heap.should_compact(), "too few cycles to advise yet");
+
+        // Enough cycles, but fragmentation below the 0.40 threshold.
+        heap.profile.total_collections = 10;
+        heap.profile.last_fragmentation = 0.10;
+        assert!(!heap.should_compact(), "fragmentation too low to warrant compacting");
+
+        // Enough cycles, fragmentation above threshold, no higher-priority
+        // signal (pause time / survival ratio) preempting it. Survival ratio
+        // must be pushed above the generational threshold too — its default
+        // (0.0) would otherwise itself outrank fragmentation.
+        heap.profile.last_fragmentation = 0.90;
+        heap.profile.ema_survival_ratio = 0.50;
+        assert!(heap.should_compact(), "high fragmentation with no higher-priority signal");
+
+        // A higher-priority signal (max pause > 10ms) takes precedence over
+        // fragmentation, per AdaptivePolicy's own priority order — the exact
+        // deferral `should_compact`'s doc comment describes.
+        heap.profile.max_pause_ns = 20_000_000;
+        assert!(!heap.should_compact(), "pause-time signal outranks fragmentation");
+    }
+
     /// Retention-heavy cycle (> half survived) doubles the threshold.
     #[test]
     fn adapt_threshold_doubles_when_retention_high() {
@@ -2702,6 +2781,43 @@ mod tests {
         assert_eq!(heap.kind_of(0xdead_beef), 0, "a non-heap address → 0 (no OOB read)");
         // An interior address of a live block still resolves to that block's kind.
         assert_eq!(heap.kind_of(pair + 8), cons, "interior address resolves to the block's kind");
+    }
+
+    #[test]
+    fn payload_size_reports_allocated_bytes_and_zero_for_non_heap() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.alloc(16, 0) as usize;
+        let wide = heap.alloc(40, 0) as usize;
+
+        assert_eq!(heap.payload_size(pair), 16);
+        assert_eq!(heap.payload_size(wide), 40);
+        assert_eq!(heap.payload_size(0), 0, "null → 0");
+        assert_eq!(heap.payload_size(0xdead_beef), 0, "a non-heap address → 0 (no OOB read)");
+        // An interior address of a live block still resolves to that block's size —
+        // a bounds check must key off the block's *start*, not whatever address a
+        // caller happens to probe with.
+        assert_eq!(heap.payload_size(pair + 8), 16, "interior address resolves to the block's size");
+    }
+
+    /// A compacting collection relocates the object; `payload_size` resolved at
+    /// the *new* address must still report the original size — proving a caller
+    /// that bounds-checks field access via `payload_size` stays correct across
+    /// compaction without maintaining any address-keyed side table of its own.
+    #[test]
+    fn payload_size_survives_compaction_at_the_new_address() {
+        let mut heap = FlatHeap::new();
+        let cons = heap.register_kind(&[0, 8]);
+        let root = heap.alloc(16, cons) as usize;
+        assert_eq!(heap.payload_size(root), 16);
+
+        let slots = [&root as *const usize as usize];
+        unsafe {
+            heap.collect_compacting(&slots, &[]);
+        }
+
+        let relocated = root; // the root slot was rewritten in place to the new address
+        assert_ne!(relocated, 0, "sanity: still a real address");
+        assert_eq!(heap.payload_size(relocated), 16, "size still correct at the relocated address");
     }
 
     /// The headline property: with a precise kind whose only ref field is at

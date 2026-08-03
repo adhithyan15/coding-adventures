@@ -373,9 +373,12 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
     freed
 }
 
-/// A **paced** collect: run [`__gc_collect`] only if the heap has reached its
-/// adaptive threshold ([`gc_core::FlatHeap::should_collect`]); otherwise do
-/// nothing. Returns objects freed (`0` if no collection ran).
+/// A **paced** collect: if the heap has reached its adaptive threshold
+/// ([`gc_core::FlatHeap::should_collect`]), run a collection — **precise**
+/// roots when [`__gc_collect_precise`] can provide them, upgraded further to
+/// a **compacting** cycle ([`__gc_collect_compacting`]) when
+/// [`gc_core::FlatHeap::should_compact`] says fragmentation warrants it.
+/// Otherwise does nothing. Returns objects freed (`0` if no collection ran).
 ///
 /// This is the drop-in for `twig_gc.c`'s `__twig_gc_safepoint`. The native
 /// backend emits a `safepoint` op at loop back-edges and function entries — cheap,
@@ -384,16 +387,30 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 /// cost stays proportional to allocation, and a tight allocation loop can never
 /// starve the collector (the twig_gc.c comment's original motivation).
 ///
+/// **Always calling the precise/compacting entry points is sound, not just an
+/// optimisation opportunity:** both degrade *exactly* to this function's old
+/// fully-conservative behaviour when no stack maps are registered yet (see
+/// their own doc comments — an unmapped frame becomes a conservative region
+/// tiling its span, so nothing is missed and nothing unsound is moved). A
+/// program with zero maps registered pays a small extra bookkeeping cost
+/// (walking the frame-pointer chain into per-frame regions instead of one
+/// bulk `[sp, base)` scan) for identical coverage; as backends register
+/// maps, this safepoint gets more precise — and, once `should_compact` fires
+/// — starts relocating objects — automatically, with no separate opt-in.
+///
 /// # Safety
 ///
 /// Same contract as [`__gc_collect`]: the calling thread must own its stack.
 #[no_mangle]
 #[inline(never)]
 pub unsafe extern "C" fn __gc_safepoint() -> i64 {
-    if with_heap(|h| h.should_collect()) {
-        __gc_collect()
+    if !with_heap(|h| h.should_collect()) {
+        return 0;
+    }
+    if with_heap(|h| h.should_compact()) {
+        __gc_collect_compacting()
     } else {
-        0
+        __gc_collect_precise()
     }
 }
 

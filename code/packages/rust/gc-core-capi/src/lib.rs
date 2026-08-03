@@ -25,7 +25,7 @@
 //! | `__gc_collect_roots(roots, count)` | mark from `count` root words at `roots`, sweep; returns objects freed |
 //! | `__gc_collect_region(base, len)` | mark from every candidate pointer in a raw region, sweep; returns objects freed |
 //! | `__gc_collect()` | conservative collect rooted at this thread's live stack + callee-saved registers; returns objects freed |
-//! | `__gc_safepoint()` | paced collect — runs `__gc_collect` only when live bytes reach the adaptive threshold; returns objects freed |
+//! | `__gc_safepoint()` | paced collect — when live bytes reach the adaptive threshold, runs `__gc_collect_precise` (or `__gc_collect_compacting` when `FlatHeap::should_compact` says so); returns objects freed |
 //! | `__gc_live_bytes()` | live payload bytes |
 //! | `__gc_collection_count()` | collections run so far |
 //! | `__gc_reset()` | drop the whole heap (frees everything); mainly for tests / process teardown |

@@ -1,5 +1,68 @@
 # Changelog — gc-core
 
+## 0.27.0 — 2026-08-02 — `FlatHeap::should_compact` — the shared automatic-compaction policy
+
+- **`FlatHeap::should_compact(&self) -> bool`** — whether the *next*
+  collection should also relocate objects, per `AdaptivePolicy`'s
+  fragmentation signal against the heap's own `GcProfile`. This is the
+  **one** place the compaction-cadence decision lives, so every
+  automatic-collection call site shares it identically instead of each
+  reimplementing its own threshold: `gc-core-capi`'s `__gc_safepoint` and
+  `vm-core`'s `safepoint` opcode both now call it (see their own
+  changelogs). Defers to `AdaptivePolicy`'s existing priority order (pause
+  time → survival ratio → fragmentation) — a cycle with an urgent pause-time
+  or survival-ratio signal does not compact just because fragmentation is
+  also high; a moving collection has its own pause cost, so it is not owed
+  priority over a more urgent latency signal. Pure policy, like
+  `should_collect`: names no roots, runs no collection itself.
+- Closes the last half of a caveat identified by direct code inspection
+  (not commit messages): automatic (safepoint-triggered) collection used to
+  never compact at all — only reachable via the explicit
+  `__gc_collect_compacting`/`gc_collect_compacting` builtins. It is now
+  automatic whenever this policy says fragmentation warrants it.
+- Test: `should_compact_follows_adaptive_policy_fragmentation_signal`.
+
+## 0.26.0 — 2026-08-02 — `payload_size` + `HeapRef::as_mut_ptr` (for vm-core's direct FlatHeap integration)
+
+- **`FlatHeap::payload_size(addr) -> usize`** — the live heap object's
+  allocated payload size in bytes, or `0` for a null/non-heap/stale address.
+  A sibling of the existing `kind_of(addr)`, same safety argument (resolved
+  fresh from the header at `addr`, so it stays correct across a compacting
+  collection without the caller needing an address-keyed side table of its
+  own). Lets a consumer bounds-check a raw field access against an object's
+  *actual* size. Tests: `payload_size_reports_allocated_bytes_and_zero_for_non_heap`,
+  `payload_size_survives_compaction_at_the_new_address`.
+- **`HeapRef::as_mut_ptr(&mut self) -> *mut usize`** — a raw pointer to a
+  `HeapRef`'s interior address word, for a consumer that embeds a `HeapRef`
+  in its own root storage (a VM register, a global slot) to hand that exact
+  address to `collect_mixed`/`collect_compacting` as a root slot — reads the
+  current address, and under compaction, has the post-move address written
+  back through it. Test: `as_mut_ptr_reads_and_writes_through_to_the_ref`.
+- Both exist to support `vm-core` 0.20.0 depending on `gc-core` directly and
+  rooting its own `Value::HeapRef`s precisely, without going through the C
+  ABI (`gc-core-capi`) that native-AOT backends use — see `vm-core`'s
+  changelog for the consumer side.
+
+## 0.25.0 — 2026-08-02 — remove the dead `GcCore`/`GcAdapter` facade
+
+- **Removed `gc_core`, `adapter`, `root_set`, and `write_barrier` modules** —
+  the `GcCore`/`GcAdapter` facade over a separate, standalone
+  `garbage-collector` crate (a synthetic-address `HashMap<usize, Box<dyn
+  HeapObject>>` heap model) was **100% dead code**: nothing outside its own
+  crate (not `vm-core`, despite the removed doc comments' claims, not any
+  other crate) referenced `GcCore` or `GcAdapter`, and its `write_barrier`
+  method was a literal no-op. Dropped the now-unused `garbage-collector`
+  path dependency entirely.
+- Rewrote `lib.rs`'s and `flat_heap.rs`'s crate/module doc comments, and
+  `README.md`, to describe what the crate actually is: `FlatHeap`, the one
+  real collector, shared directly by both the native-AOT path (via
+  `gc-core-capi`'s C ABI) and — as of the following `vm-core` integration —
+  the bytecode interpreter, rather than each carrying its own engine.
+- Corrected `README.md`'s precision-ladder section, which had gone stale:
+  moving/compacting and incremental collection were listed as "planned" long
+  after both actually shipped (AOT00-T3, AOT00-T4).
+- No behavior change to `FlatHeap` itself in this release.
+
 ## 0.24.0 — 2026-07-29 — `FlatHeap::kind_of` — object-class accessor (AOT00-T6)
 
 - **`FlatHeap::kind_of(addr) -> u16`** — the kind id of the live heap object containing payload

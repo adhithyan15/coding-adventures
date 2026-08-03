@@ -1,5 +1,15 @@
 # Changelog — vm-runtime
 
+## [0.1.2] — 2026-08-02
+
+### Fixed (`Value::HeapRef` exhaustiveness)
+
+- `VmResult::from_value` now handles `vm-core` 0.20.0's new
+  `Value::HeapRef` variant, mapping it to `VmResult::from_ref(r.addr() as
+  u64)` — the `VmResultTag::Ref` case this type already anticipated (see
+  the `from_ref` constructor's original "LANG16" doc comment), just never
+  had a producer wired up until now.
+
 ## [0.1.1] — 2026-05-11
 
 ### Fixed (LANG32 — `Operand::Str` exhaustiveness)

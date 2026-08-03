@@ -418,13 +418,22 @@ fallback keeps absent-toolchain rows valid).
 ## 10. Non-goals / honesty
 
 - **Not** a from-scratch collector: T1 reuses `gc-core`'s existing mark/sweep
-  algorithm, profiling, adaptive policy, `HeapKind` field maps, and `WriteBarrier`
-  seam (LANG16). It adds the precise root/interior/moving machinery on top and
-  replaces two conservative approximations with compiler truth. `twig_gc.c`'s
-  battle-tested details (adaptive threshold, OOM-safe mark stack, header alignment)
-  inform `gc-core`'s native collector but are not carried as a separate C fork.
-- **Not** delivering concurrent GC in T1 (that's rung E / T3). T1's core deliverable
-  is precise + moving + generational on the three linear-memory columns.
+  algorithm, profiling, adaptive policy, and `HeapKind` field maps. It adds the
+  precise root/interior/moving machinery on top and replaces two conservative
+  approximations with compiler truth. `twig_gc.c`'s battle-tested details
+  (adaptive threshold, OOM-safe mark stack, header alignment) inform
+  `gc-core`'s native collector but are not carried as a separate C fork.
+  (An earlier interpreter-facing seam — `GcCore`/`GcAdapter`/`WriteBarrier`,
+  over a separate synthetic-address `garbage-collector` crate, "LANG16" — was
+  never actually wired into any interpreter and has been removed;
+  `FlatHeap`'s own `write_barrier` method, not that trait, is what every real
+  consumer — native-AOT via `gc-core-capi`, and now `vm-core` directly — uses.
+  See [`AOT00-T1v-vm-core-shared-gc.md`](AOT00-T1v-vm-core-shared-gc.md).)
+- **Not** delivering concurrent GC in T1 (that's rung E / T3). T1's core
+  deliverable — precise + moving + generational + incremental, with automatic
+  safepoints upgrading to both precise roots and, per a shared policy,
+  compaction — is now complete on every linear-memory column T1 targets,
+  native-AOT and interpreted alike.
 - **Not** changing observable program behavior: precise GC must be output-invisible;
   T7 agreement is the proof. The only observable is memory/pause metrics.
 - **Not** claiming this reaches GraalVM/CoreCLR GC maturity in one arc — those are
