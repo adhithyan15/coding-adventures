@@ -940,6 +940,396 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(transform["result_size"], len(result))
 
+    def test_discard_transform_accounts_for_stripped_html_tags(self) -> None:
+        source = b"<p>A &amp; B</p>"
+        result = b"A & B"
+        transform = provenance.build_text_transform(
+            source_sha256=provenance.sha256_bytes(source),
+            source=source,
+            result_sha256=provenance.sha256_bytes(result),
+            result=result,
+            operations=[
+                {
+                    "claim_id": "claim",
+                    "operation": "discard",
+                    "reason": "opening paragraph tag is markup, not text",
+                    "result_end": 0,
+                    "result_start": 0,
+                    "source_end": 3,
+                    "source_start": 0,
+                },
+                {
+                    "operation": "copy",
+                    "result_end": 2,
+                    "result_start": 0,
+                    "source_end": 5,
+                    "source_start": 3,
+                },
+                {
+                    "operation": "html_entity_decode",
+                    "result_end": 3,
+                    "result_start": 2,
+                    "source_end": 10,
+                    "source_start": 5,
+                },
+                {
+                    "operation": "copy",
+                    "result_end": 5,
+                    "result_start": 3,
+                    "source_end": 12,
+                    "source_start": 10,
+                },
+                {
+                    "claim_id": "claim",
+                    "operation": "discard",
+                    "reason": "closing paragraph tag is markup, not text",
+                    "result_end": 5,
+                    "result_start": 5,
+                    "source_end": len(source),
+                    "source_start": 12,
+                },
+            ],
+        )
+
+        self.assertEqual(transform["result_size"], len(result))
+        self.assertEqual(
+            [operation["operation"] for operation in transform["operations"]],
+            ["discard", "copy", "html_entity_decode", "copy", "discard"],
+        )
+
+    def test_discard_transform_requires_nonempty_reason(self) -> None:
+        source = b"<p>"
+        base_operation = {
+            "claim_id": "claim",
+            "operation": "discard",
+            "result_end": 0,
+            "result_start": 0,
+            "source_end": len(source),
+            "source_start": 0,
+        }
+        cases = [
+            (base_operation, "exact operation schema"),
+            ({**base_operation, "reason": ""}, "must be a non-empty string"),
+        ]
+
+        for operation, message in cases:
+            with (
+                self.subTest(operation=operation),
+                self.assertRaisesRegex(provenance.ProvenanceError, message),
+            ):
+                provenance.build_text_transform(
+                    source_sha256=provenance.sha256_bytes(source),
+                    source=source,
+                    result_sha256=provenance.sha256_bytes(b""),
+                    result=b"",
+                    operations=[operation],
+                )
+
+    def test_discard_transform_rejects_nonzero_result_range(self) -> None:
+        source = b"<p>"
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "non-canonical byte mapping"
+        ):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"<"),
+                result=b"<",
+                operations=[
+                    {
+                        "claim_id": "claim",
+                        "operation": "discard",
+                        "reason": "opening paragraph tag is markup, not text",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": len(source),
+                        "source_start": 0,
+                    }
+                ],
+            )
+
+    def test_discard_transform_rejects_noncanonical_source_order(self) -> None:
+        source = b"<p>A</p>"
+        result = b"A"
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "non-canonical byte mapping"
+        ):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(result),
+                result=result,
+                operations=[
+                    {
+                        "operation": "copy",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": 4,
+                        "source_start": 3,
+                    },
+                    {
+                        "claim_id": "claim",
+                        "operation": "discard",
+                        "reason": "opening paragraph tag is markup, not text",
+                        "result_end": 1,
+                        "result_start": 1,
+                        "source_end": 3,
+                        "source_start": 0,
+                    },
+                ],
+            )
+
+    def test_discard_transform_rejects_an_unaccounted_source_gap(self) -> None:
+        source = b"<p> A</p>"
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "non-canonical byte mapping"
+        ):
+            provenance.build_text_transform(
+                source_sha256=provenance.sha256_bytes(source),
+                source=source,
+                result_sha256=provenance.sha256_bytes(b"A"),
+                result=b"A",
+                operations=[
+                    {
+                        "claim_id": "claim",
+                        "operation": "discard",
+                        "reason": "opening paragraph tag is markup, not text",
+                        "result_end": 0,
+                        "result_start": 0,
+                        "source_end": 3,
+                        "source_start": 0,
+                    },
+                    {
+                        "operation": "copy",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": 5,
+                        "source_start": 4,
+                    },
+                    {
+                        "claim_id": "claim",
+                        "operation": "discard",
+                        "reason": "closing paragraph tag is markup, not text",
+                        "result_end": 1,
+                        "result_start": 1,
+                        "source_end": len(source),
+                        "source_start": 5,
+                    },
+                ],
+            )
+
+    def test_discard_at_a_claim_boundary_has_one_explicit_owner(self) -> None:
+        operations = [
+            {
+                "operation": "copy",
+                "result_end": 1,
+                "result_start": 0,
+                "source_end": 1,
+                "source_start": 0,
+            },
+            {
+                "claim_id": "claim.a",
+                "operation": "discard",
+                "reason": "separator belongs to the first claim",
+                "result_end": 1,
+                "result_start": 1,
+                "source_end": 2,
+                "source_start": 1,
+            },
+            {
+                "operation": "copy",
+                "result_end": 2,
+                "result_start": 1,
+                "source_end": 3,
+                "source_start": 2,
+            },
+        ]
+
+        first = provenance._transform_operations_for_claim(
+            operations, "claim.a", {"start": 0, "end": 1}
+        )
+        second = provenance._transform_operations_for_claim(
+            operations, "claim.b", {"start": 1, "end": 2}
+        )
+
+        self.assertEqual(
+            [operation["operation"] for operation in first], ["copy", "discard"]
+        )
+        self.assertEqual([operation["operation"] for operation in second], ["copy"])
+
+    def test_schema_backed_adjacent_claim_discards_have_exact_owners(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas = provenance.Cas(Path(directory) / "cas")
+            raw = b"<p>A</p><p>B</p>"
+            rendered = b"AB"
+            raw_hash = cas.put(raw, kind="raw_source", label="two HTML claims")
+            rendered_hash = cas.put(
+                rendered,
+                kind="rendered_text",
+                label="two rendered claims",
+                links=[raw_hash],
+            )
+            receipt = provenance.build_fetch_receipt(
+                locator="https://example.test/two-claims",
+                final_locator="https://example.test/two-claims",
+                retrieved_at="2026-08-02T12:00:00Z",
+                status=200,
+                media_type="text/html",
+                body_sha256=raw_hash,
+                body_size=len(raw),
+            )
+            receipt_hash = cas.put_json(
+                receipt,
+                kind="fetch_receipt",
+                label="two-claim receipt",
+                links=[raw_hash],
+            )
+
+            def claim(claim_id: str, data: bytes, start: int, end: int) -> dict:
+                quote = data[start:end]
+                return {
+                    "claim_id": claim_id,
+                    "end": end,
+                    "quote": quote.decode("utf-8"),
+                    "quote_sha256": provenance.sha256_bytes(quote),
+                    "start": start,
+                }
+
+            raw_ir = provenance.build_source_ir(
+                source_sha256=raw_hash,
+                source=raw,
+                segments=[
+                    {
+                        "claims": [claim("claim.a", raw, 0, 8)],
+                        "disposition": "represented",
+                        "end": 8,
+                        "start": 0,
+                    },
+                    {
+                        "claims": [claim("claim.b", raw, 8, 16)],
+                        "disposition": "represented",
+                        "end": 16,
+                        "start": 8,
+                    },
+                ],
+            )
+            raw_ir_hash = cas.put_json(
+                raw_ir, kind="source_ir", label="two-claim raw IR", links=[raw_hash]
+            )
+            rendered_ir = provenance.build_source_ir(
+                source_sha256=rendered_hash,
+                source=rendered,
+                segments=[
+                    {
+                        "claims": [claim("claim.a", rendered, 0, 1)],
+                        "disposition": "represented",
+                        "end": 1,
+                        "start": 0,
+                    },
+                    {
+                        "claims": [claim("claim.b", rendered, 1, 2)],
+                        "disposition": "represented",
+                        "end": 2,
+                        "start": 1,
+                    },
+                ],
+            )
+            rendered_ir_hash = cas.put_json(
+                rendered_ir,
+                kind="source_ir",
+                label="two-claim rendered IR",
+                links=[rendered_hash],
+            )
+            transform = provenance.build_text_transform(
+                source_sha256=raw_hash,
+                source=raw,
+                result_sha256=rendered_hash,
+                result=rendered,
+                operations=[
+                    {
+                        "claim_id": "claim.a",
+                        "operation": "discard",
+                        "reason": "first opening tag",
+                        "result_end": 0,
+                        "result_start": 0,
+                        "source_end": 3,
+                        "source_start": 0,
+                    },
+                    {
+                        "operation": "copy",
+                        "result_end": 1,
+                        "result_start": 0,
+                        "source_end": 4,
+                        "source_start": 3,
+                    },
+                    {
+                        "claim_id": "claim.a",
+                        "operation": "discard",
+                        "reason": "first closing tag",
+                        "result_end": 1,
+                        "result_start": 1,
+                        "source_end": 8,
+                        "source_start": 4,
+                    },
+                    {
+                        "claim_id": "claim.b",
+                        "operation": "discard",
+                        "reason": "second opening tag",
+                        "result_end": 1,
+                        "result_start": 1,
+                        "source_end": 11,
+                        "source_start": 8,
+                    },
+                    {
+                        "operation": "copy",
+                        "result_end": 2,
+                        "result_start": 1,
+                        "source_end": 12,
+                        "source_start": 11,
+                    },
+                    {
+                        "claim_id": "claim.b",
+                        "operation": "discard",
+                        "reason": "second closing tag",
+                        "result_end": 2,
+                        "result_start": 2,
+                        "source_end": 16,
+                        "source_start": 12,
+                    },
+                ],
+            )
+            transform_hash = cas.put_json(
+                transform,
+                kind="text_transform",
+                label="two-claim transform",
+                links=[raw_hash, rendered_hash],
+            )
+            cas.write_index()
+            schema = (
+                Path(__file__).resolve().parents[2]
+                / "specs/data/adj-stdlib-provenance/manifest.schema.json"
+            )
+            provenance._validate_cas_schemas(schema, cas)
+            links, claims, _authorities = provenance._validate_source_entry(
+                cas,
+                {
+                    "raw_source_sha256": raw_hash,
+                    "receipt_sha256": receipt_hash,
+                    "representations": [
+                        {
+                            "rendered_text_sha256": rendered_hash,
+                            "source_ir_sha256": rendered_ir_hash,
+                            "transform_sha256": transform_hash,
+                        }
+                    ],
+                    "source_ir_sha256": raw_ir_hash,
+                },
+                "two_claim_source",
+            )
+
+            self.assertIn(transform_hash, links)
+            self.assertEqual(set(claims[rendered_ir_hash]), {"claim.a", "claim.b"})
+
     def test_mathml_transform_reproduces_canonical_infix_bytes(self) -> None:
         source = (
             b"<math><semantics><mrow><mfrac><mi>n</mi><mn>100</mn></mfrac>"
@@ -1138,6 +1528,133 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
             with self.assertRaisesRegex(provenance.ProvenanceError, "not represented"):
                 provenance.validate_repository(cas_root, manifest_path)
+
+    def test_discard_transform_partition_must_cover_its_raw_claim(self) -> None:
+        schema = (
+            Path(__file__).resolve().parents[2]
+            / "specs/data/adj-stdlib-provenance/manifest.schema.json"
+        )
+        for include_leading_discard in (True, False):
+            with (
+                self.subTest(include_leading_discard=include_leading_discard),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                cas_root, manifest_path, _ = self.build_repository(root)
+
+                def mutate(
+                    bundle: dict[str, object],
+                    cas: provenance.Cas,
+                    include_leading_discard: bool = include_leading_discard,
+                ) -> None:
+                    source = bundle["sources"][0]
+                    raw_hash = source["raw_source_sha256"]
+                    raw = provenance._read_regular_file(cas.object_path(raw_hash))
+                    claim_id = bundle["clauses"][0]["claim_id"]
+                    raw_ir = provenance.build_source_ir(
+                        source_sha256=raw_hash,
+                        source=raw,
+                        segments=[
+                            {
+                                "claims": [
+                                    {
+                                        "claim_id": claim_id,
+                                        "end": len(raw),
+                                        "quote": raw.decode("utf-8"),
+                                        "quote_sha256": provenance.sha256_bytes(raw),
+                                        "start": 0,
+                                    }
+                                ],
+                                "disposition": "represented",
+                                "end": len(raw),
+                                "start": 0,
+                            }
+                        ],
+                    )
+                    source["source_ir_sha256"] = cas.put_json(
+                        raw_ir,
+                        kind="source_ir",
+                        label="whole raw claim IR",
+                        links=[raw_hash],
+                    )
+                    rendered_hash = bundle["clauses"][0]["snapshot_sha256"]
+                    rendered = provenance._read_regular_file(
+                        cas.object_path(rendered_hash)
+                    )
+                    start = raw.index(rendered)
+                    end = start + len(rendered)
+                    operations = []
+                    if include_leading_discard:
+                        operations.append(
+                            {
+                                "claim_id": claim_id,
+                                "operation": "discard",
+                                "reason": "header is outside the rendered definition",
+                                "result_end": 0,
+                                "result_start": 0,
+                                "source_end": start,
+                                "source_start": 0,
+                            }
+                        )
+                    operations.extend(
+                        [
+                            {
+                                "operation": "copy",
+                                "result_end": len(rendered),
+                                "result_start": 0,
+                                "source_end": end,
+                                "source_start": start,
+                            },
+                            {
+                                "claim_id": claim_id,
+                                "operation": "discard",
+                                "reason": "footer is outside the rendered definition",
+                                "result_end": len(rendered),
+                                "result_start": len(rendered),
+                                "source_end": len(raw),
+                                "source_start": end,
+                            },
+                        ]
+                    )
+                    transform = provenance.build_text_transform(
+                        source_sha256=raw_hash,
+                        source=raw,
+                        result_sha256=rendered_hash,
+                        result=rendered,
+                        operations=operations,
+                    )
+                    source["representations"][0]["transform_sha256"] = cas.put_json(
+                        transform,
+                        kind="text_transform",
+                        label="explicit source partition transform",
+                        links=[raw_hash, rendered_hash],
+                    )
+
+                self.replace_bundle(cas_root, manifest_path, mutate)
+                if include_leading_discard:
+                    cas = provenance.Cas(cas_root)
+                    cas.load()
+                    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                    reachable = provenance._reachable(cas, manifest["bundle_hashes"])
+                    for digest in sorted(set(cas.index) - reachable):
+                        cas.object_path(digest).unlink()
+                    cas.index = {
+                        digest: record
+                        for digest, record in cas.index.items()
+                        if digest in reachable
+                    }
+                    cas.write_index()
+                    self.assertTrue(
+                        provenance.validate_repository(cas_root, manifest_path, schema)[
+                            "valid"
+                        ]
+                    )
+                else:
+                    with self.assertRaisesRegex(
+                        provenance.ProvenanceError,
+                        "explicit transform partition does not account",
+                    ):
+                        provenance.validate_repository(cas_root, manifest_path, schema)
 
     def test_dependency_resolution_names_an_exported_claim(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

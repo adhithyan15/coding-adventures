@@ -553,17 +553,27 @@ def build_text_transform(
     _require_hash(result_sha256, "transform.result_sha256")
     if not isinstance(operations, list) or not operations:
         raise ProvenanceError("transform.operations must not be empty")
+    explicit_source_partition = any(
+        isinstance(operation, dict) and operation.get("operation") == "discard"
+        for operation in operations
+    )
     result_cursor = 0
     source_cursor = 0
     for index, operation in enumerate(operations):
         prefix = f"transform.operations[{index}]"
-        if not isinstance(operation, dict) or set(operation) != {
+        if not isinstance(operation, dict):
+            raise ProvenanceError(f"{prefix} must be an object")
+        operation_name = operation.get("operation")
+        expected_fields = {
             "operation",
             "result_end",
             "result_start",
             "source_end",
             "source_start",
-        }:
+        }
+        if operation_name == "discard":
+            expected_fields.update(("claim_id", "reason"))
+        if set(operation) != expected_fields:
             raise ProvenanceError(f"{prefix} must have the exact operation schema")
         source_start = operation["source_start"]
         source_end = operation["source_end"]
@@ -574,17 +584,25 @@ def build_text_transform(
             for value in (source_start, source_end, result_start, result_end)
         ):
             raise ProvenanceError(f"{prefix} byte ranges must be integers")
-        if (
+        invalid_mapping = (
             source_start < source_cursor
+            or (
+                explicit_source_partition
+                and index > 0
+                and source_start != source_cursor
+            )
             or source_end <= source_start
             or source_end > len(source)
             or result_start != result_cursor
-            or result_end <= result_start
             or result_end > len(result)
-        ):
+        )
+        if operation_name == "discard":
+            invalid_mapping = invalid_mapping or result_end != result_start
+        else:
+            invalid_mapping = invalid_mapping or result_end <= result_start
+        if invalid_mapping:
             raise ProvenanceError(f"{prefix} has a non-canonical byte mapping")
         source_slice = source[source_start:source_end]
-        operation_name = operation["operation"]
         if operation_name == "copy":
             expected = source_slice
         elif operation_name == "html_entity_decode":
@@ -594,6 +612,10 @@ def build_text_transform(
                 raise ProvenanceError(f"{prefix} source is not UTF-8") from error
         elif operation_name == "mathml_to_infix":
             expected = _mathml_to_infix(source_slice, prefix)
+        elif operation_name == "discard":
+            _require_nonempty(operation["claim_id"], f"{prefix}.claim_id")
+            _require_nonempty(operation["reason"], f"{prefix}.reason")
+            expected = b""
         else:
             raise ProvenanceError(f"{prefix}.operation is unsupported")
         if expected != result[result_start:result_end]:
@@ -1086,6 +1108,21 @@ def _range_is_represented(start: int, end: int, ir: dict[str, Any]) -> bool:
     return False
 
 
+def _transform_operations_for_claim(
+    operations: list[dict[str, Any]], claim_id: str, text_claim: dict[str, Any]
+) -> list[dict[str, Any]]:
+    return [
+        operation
+        for operation in operations
+        if (operation["operation"] == "discard" and operation["claim_id"] == claim_id)
+        or (
+            operation["operation"] != "discard"
+            and operation["result_end"] > text_claim["start"]
+            and operation["result_start"] < text_claim["end"]
+        )
+    ]
+
+
 def _validate_source_entry(
     cas: Cas, source: Any, prefix: str
 ) -> tuple[
@@ -1210,10 +1247,47 @@ def _validate_source_entry(
                 f"{item_prefix} rendered claims lack raw claims: "
                 f"{', '.join(missing_raw_claims)}"
             )
+        discard_claims = {
+            operation["claim_id"]
+            for operation in transform["operations"]
+            if operation["operation"] == "discard"
+        }
+        unknown_discard_claims = sorted(
+            discard_claims - (set(text_claims) & set(raw_claims))
+        )
+        if unknown_discard_claims:
+            raise ProvenanceError(
+                f"{item_prefix} transform discards name unknown claims: "
+                f"{', '.join(unknown_discard_claims)}"
+            )
         for claim_id, text_claim in text_claims.items():
             raw_claim = raw_claims[claim_id]
+            if discard_claims:
+                claim_operations = _transform_operations_for_claim(
+                    transform["operations"], claim_id, text_claim
+                )
+                if not claim_operations or (
+                    raw_claim["start"] != claim_operations[0]["source_start"]
+                    or raw_claim["end"] != claim_operations[-1]["source_end"]
+                ):
+                    raise ProvenanceError(
+                        f"{item_prefix} explicit transform partition does not "
+                        f"account for every raw claim byte in {claim_id}"
+                    )
             claim_cursor = text_claim["start"]
             for operation in transform["operations"]:
+                if operation["operation"] == "discard":
+                    if operation["claim_id"] != claim_id:
+                        continue
+                    if (
+                        operation["source_start"] < raw_claim["start"]
+                        or operation["source_end"] > raw_claim["end"]
+                    ):
+                        raise ProvenanceError(
+                            f"{item_prefix} transform discard for claim {claim_id} "
+                            "escapes its corresponding raw claim bytes"
+                        )
+                    continue
                 if operation["result_end"] <= claim_cursor:
                     continue
                 if (

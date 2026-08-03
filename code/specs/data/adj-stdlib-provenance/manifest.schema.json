@@ -95,16 +95,34 @@
       "type": "object"
     },
     "operation": {
-      "additionalProperties": false,
-      "properties": {
-        "operation": { "enum": ["copy", "html_entity_decode", "mathml_to_infix"] },
-        "result_end": { "minimum": 1, "type": "integer" },
-        "result_start": { "minimum": 0, "type": "integer" },
-        "source_end": { "minimum": 1, "type": "integer" },
-        "source_start": { "minimum": 0, "type": "integer" }
-      },
-      "required": ["operation", "result_end", "result_start", "source_end", "source_start"],
-      "type": "object"
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "enum": ["copy", "html_entity_decode", "mathml_to_infix"] },
+            "result_end": { "minimum": 1, "type": "integer" },
+            "result_start": { "minimum": 0, "type": "integer" },
+            "source_end": { "minimum": 1, "type": "integer" },
+            "source_start": { "minimum": 0, "type": "integer" }
+          },
+          "required": ["operation", "result_end", "result_start", "source_end", "source_start"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claim_id": { "minLength": 1, "type": "string" },
+            "operation": { "const": "discard" },
+            "reason": { "minLength": 1, "type": "string" },
+            "result_end": { "minimum": 0, "type": "integer" },
+            "result_start": { "minimum": 0, "type": "integer" },
+            "source_end": { "minimum": 1, "type": "integer" },
+            "source_start": { "minimum": 0, "type": "integer" }
+          },
+          "required": ["claim_id", "operation", "reason", "result_end", "result_start", "source_end", "source_start"],
+          "type": "object"
+        }
+      ]
     },
     "provenance_bundle": {
       "additionalProperties": false,

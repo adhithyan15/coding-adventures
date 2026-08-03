@@ -18,8 +18,11 @@ It starts empty and grows only through reviewed source migrations.
   records its exact byte range, UTF-8 quote, and quote hash; every discarded range
   has a non-empty reason.
 - A `text_transform` proves how selected raw response bytes reproduce every byte
-  of a rendered-text representation. Copy, HTML-entity decoding, and a strict
-  MathML-to-infix projection are the only accepted operations.
+  of a rendered-text representation. Copy, HTML-entity decoding, a strict
+  MathML-to-infix projection, and reasoned source-byte discards are the only
+  accepted operations. Once a transform uses `discard`, its operations form a
+  contiguous source partition and each zero-output discard carries a reason and
+  the exact claim ID that owns it.
 - A `provenance_bundle` binds stable clause IDs to snapshots, byte ranges, source
   IR, receipts, and recursively checked dependency or accepted-root decisions.
   Dependency decisions name the exact exported claim. Accepted roots classify
