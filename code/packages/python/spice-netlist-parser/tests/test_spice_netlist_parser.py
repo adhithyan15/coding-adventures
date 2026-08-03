@@ -999,6 +999,23 @@ def test_rejects_non_finite_diode_temperature_exponent() -> None:
         parse_netlist(".model clamp D(XTI=1e999)")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("1.2", 1.2)])
+def test_lowers_positive_diode_energy_gap(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(EG={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Eg == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_energy_gap(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode EG must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(EG={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """

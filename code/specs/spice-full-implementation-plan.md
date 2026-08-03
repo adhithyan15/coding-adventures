@@ -4426,15 +4426,20 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine diode depletion-coefficient field.
 
 421. Python and TypeScript Berkeley SPICE diode temperature-exponent parity.
-   - Status: completed in this diode temperature-exponent parity slice.
+   - Status: completed in PR 9824.
    - Both parser facades validate finite `XTI` values and lower them into the
      shared engine diode saturation-current temperature-exponent field.
+
+422. Python and TypeScript Berkeley SPICE diode energy-gap parity.
+   - Status: completed in this diode energy-gap parity slice.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine diode energy-gap field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited diode model-card lowering surfaces with `EG`, `KF`,
-     and `AF` validation and lowering parity.
+   - Continue the audited diode model-card lowering surfaces with `KF` and `AF`
+     validation and lowering parity.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
