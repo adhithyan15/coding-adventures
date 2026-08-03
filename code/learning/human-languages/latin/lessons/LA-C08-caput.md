@@ -9,7 +9,7 @@ prerequisites: [LA-C07-frater-soror]
 sounds: [macron-long-vowel]
 roots: [pie-kaput]
 etymology_hook: "caput 'head' gives English captain/capital/decapitate/capitulate and Spanish cabeza (via capitia) — but French quietly REPLACED it with testa, 'pot,' Roman soldiers' slang for the skull"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C07-frater-soror, LA-C07-pater-mater]
 ---
 

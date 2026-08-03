@@ -9,7 +9,7 @@ prerequisites: [LA-C10-panis, LA-C10-aqua-vinum]
 sounds: [macron-long-vowel, qu-as-kw]
 roots: [ianus-latin, mars-latin, numbering-months]
 etymology_hook: "Quintilis and Sextilis, 'the 5th and 6th months,' were later RENAMED Iulius and Augustus in honor of Caesar and the emperor — Rome didn't add two new months, it just relabeled two old ones"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C10-panis, LA-C10-aqua-vinum]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [LA-C05-dies-lunae-veneris, LA-C01-vale, LA-C01-gratias]
 sounds: [macron-long-vowel, future-tense-bo]
 roots: [prope-latin, dies-latin, videre-latin]
 etymology_hook: "propediem tē vidēbō, 'I shall see you soon,' is genuinely attested TWICE in Cicero's own letters (Ad Familiārēs 2.12, to Caelius: 'Sed, ut spērō, propediem tē vidēbō'; and Ad Familiārēs 15.6, to Cato, in reversed order: 'Ego, ut spērō, tē propediem vidēbō'); propediem itself breaks down as prope ('near') + diem (accusative of diēs, 'day' — the same diēs from your days-of-week lessons), literally 'near the day' = 'very soon'"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C01-vale]
 ---
 

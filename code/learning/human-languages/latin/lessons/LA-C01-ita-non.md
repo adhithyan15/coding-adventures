@@ -8,7 +8,7 @@ concept_tag: RESPONSE-YESNO
 prerequisites: [LA-C01-gratias]
 sounds: [macron-long-vowel]
 roots: [ita, sic, non, ne-negative]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-salve]
 ---
 

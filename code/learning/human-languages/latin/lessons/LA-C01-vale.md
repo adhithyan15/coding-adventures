@@ -8,7 +8,7 @@ concept_tag: FAREWELL
 prerequisites: [LA-C01-ave]
 sounds: [v-as-w, macron-long-vowel]
 roots: [valere]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-salve]
 ---
 

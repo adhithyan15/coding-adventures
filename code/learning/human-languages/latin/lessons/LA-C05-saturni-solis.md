@@ -9,7 +9,7 @@ prerequisites: [LA-C05-dies-lunae-veneris]
 sounds: [macron-long-vowel]
 roots: [saturnus-latin, sol-latin, sabbatum-latin, dominus-latin]
 etymology_hook: "Latin ORIGINALLY said diēs Saturnī and diēs Sōlis — English Saturday/Sunday kept these pagan names directly, while Spanish/French later swapped in the Christian Sabbatum/Dominica"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C05-dies-lunae-veneris]
 ---
 

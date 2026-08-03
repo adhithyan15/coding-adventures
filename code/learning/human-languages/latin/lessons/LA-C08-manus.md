@@ -9,7 +9,7 @@ prerequisites: [LA-C08-caput]
 sounds: [macron-long-vowel]
 roots: [pie-man]
 etymology_hook: "manus is feminine despite belonging to the 4th declension, a group of -us nouns that runs mostly MASCULINE (fructus, exercitus, senatus) — manus is one of only a handful of exceptions, and Spanish's mano inherited that oddity intact"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C08-caput]
 ---
 

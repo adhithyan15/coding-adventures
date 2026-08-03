@@ -9,7 +9,7 @@ prerequisites: [LA-C31-mane, LA-C01-salve]
 sounds: [macron-long-vowel]
 roots: [bonus-latin, mane-latin, salus-latin]
 etymology_hook: "bonum māne, 'good morning,' is a modern, pedagogical phrase — like bonam noctem, not classically attested as a fixed Roman farewell/greeting formula; but unlike bonam noctem, its grammar is genuinely INVISIBLE rather than just uncertain: māne is neuter, and Latin neuter nouns never distinguish nominative from accusative (bonum works either way), so the Accusative-of-Exclamation rule that bonam noctem demonstrated so clearly simply can't be shown here; what Romans DID have, richly documented, was the salūtātiō (mātūtīna salūtātiō) — clients visiting their patron's house at dawn to pay respects — from salūtāre ('to greet'), itself derived from salūs ('health, safety, wholeness'), a genuine DOUBLET of salvus (the root of salvē, Chapter 1's first word) — both descend from the same PIE root, *solh₂- ('whole'); a morning greeting Romans actually had, just as an ACTION, not a phrase"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C31-mane, LA-C01-salve]
 ---
 

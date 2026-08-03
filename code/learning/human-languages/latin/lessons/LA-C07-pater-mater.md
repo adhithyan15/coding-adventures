@@ -9,7 +9,7 @@ prerequisites: [LA-C06-ruber-caeruleus]
 sounds: [macron-long-vowel]
 roots: [pie-pater, pie-mater]
 etymology_hook: "pater and English father are COUSINS, not parent-and-child — both descend independently from PIE *ph2ter, with Latin keeping the p and Germanic shifting it to f via Grimm's Law"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C06-ruber-caeruleus, LA-C06-niger-albus]
 ---
 

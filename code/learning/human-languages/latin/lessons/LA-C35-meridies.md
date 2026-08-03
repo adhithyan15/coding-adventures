@@ -9,7 +9,7 @@ prerequisites: [LA-C12-medius-dies-nox, LA-C13-hora]
 sounds: [macron-long-vowel]
 roots: [medius-latin, dies-latin]
 etymology_hook: "merīdiēs ('midday, noon') is the SAME phrase as medius diēs (Chapter 12), contracted by sound dissimilation from an earlier medīdiēs into merīdiēs — a fifth-declension noun (acc. merīdiem), and the ultimate root of English meridian (via the Latin adjective merīdiānus, 'of midday'); be honest: Romans did NOT have a colloquial 'afternoon' word the way Spanish's tarde or French's après-midi do — instead, they split the whole day around merīdiēs into ante merīdiem ('before noon') and post merīdiem ('after noon'), the direct ancestors of English's own a.m./p.m., a genuinely load-bearing legal distinction under the Twelve Tables (a court case had to be argued before noon with both parties present; a magistrate could rule in absentia only after noon); Latin's tardus ('slow, late') — the very word Spanish tarde comes from, per that lesson — stayed a plain adjective in Latin itself and never meant 'afternoon' there"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C12-medius-dies-nox, LA-C13-hora]
 ---
 

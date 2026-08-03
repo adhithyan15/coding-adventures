@@ -9,7 +9,7 @@ prerequisites: [LA-C16-undecim-viginti]
 sounds: [macron-long-vowel, consonant-cluster-tt]
 roots: [latin-canis-dog, latin-feles-cat, latin-cattus-afroasiatic]
 etymology_hook: "canis ('dog') is the source of English canine, French chien, Italian cane — and the word Spanish's perro mysteriously displaced, surviving there only as archaic can; fēlēs was Classical Latin's OWN word for 'cat' (source of the scientific Felis), later pushed out within Latin itself by the newcomer cattus, probably an Afro-Asiatic loanword that traveled with the cat itself out of Egypt"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C16-undecim-viginti]
 ---
 

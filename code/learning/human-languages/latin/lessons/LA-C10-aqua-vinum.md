@@ -9,7 +9,7 @@ prerequisites: [LA-C09-anni-tempora]
 sounds: [macron-long-vowel, qu-as-kw]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "aqua survived nearly whole into Spanish agua and Italian acqua — but French wore it all the way down to a bare 'eau'; vīnum, by contrast, barely changed ANYWHERE, surviving into every Romance daughter and into Germanic English as 'wine'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C09-anni-tempora, LA-C08-manus]
 ---
 

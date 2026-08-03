@@ -9,7 +9,7 @@ prerequisites: [LA-C11-menses]
 sounds: [macron-long-vowel]
 roots: [medius-latin, dies-latin, nox-latin]
 etymology_hook: "medius diēs 'mid-day' and media nox 'mid-night' survived at wildly different rates: Spanish kept both halves fully alive, French kept nox/nuit but wore diēs/-di to a fossil, and English's OWN word for noon isn't even this phrase — it's nōna hōra, 'the ninth hour,' which drifted from 3pm to midday"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C11-menses]
 ---
 

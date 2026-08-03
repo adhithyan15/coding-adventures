@@ -5,12 +5,12 @@ type: word
 headword: tū / vōs
 gloss: you (singular) / you (plural) — a PURELY grammatical number distinction in Classical Latin, with no politeness dimension at all; the polite-vous pattern (a Late Latin innovation) is vōs's own direct descendant, unlike German's Sie, which solved the same politeness problem independently via a completely different pronoun (3rd-person plural, not 2nd)
 concept_tag: PRONOUN-YOU
-prerequisites: [LA-C20-quid-tibi-nomen]
+prerequisites: [LA-C20-name-case-variation]
 sounds: [long-vowel-u, macron-long-vowel]
 roots: [tu-pie, vos-pie]
 etymology_hook: "tū ('you,' singular) and vōs ('you,' plural) are a PURELY grammatical number distinction in Classical Latin — genuinely NO politeness dimension existed yet; the later habit of using plural vōs to address one person politely only developed in LATE Latin, after the classical period, and is the direct ancestor of French's polite vous — a genuinely separate solution from German's Sie, which independently repurposes an entirely different pronoun (3rd-person plural 'they'), not a descendant of vōs at all"
-est_minutes: 5
-reviews_of: [LA-C20-quid-tibi-nomen]
+est_minutes: 4
+reviews_of: [LA-C20-name-case-variation, LA-C20-quid-tibi-nomen]
 ---
 
 # tū, vōs — "you," before politeness got involved

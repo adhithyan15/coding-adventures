@@ -9,7 +9,7 @@ prerequisites: [LA-C24-propediem-te-videbo]
 sounds: [macron-long-vowel, future-tense-bo]
 roots: [cras-latin, videre-latin]
 etymology_hook: "crās tē vidēbō, 'I'll see you tomorrow,' combines crās ('tomorrow,' Proto-Italic *krās, deeper origin genuinely uncertain/debated) with vidēbō (future of vidēre, already met in propediem tē vidēbō) — same grammatical pattern as that attested phrase, though THIS exact combination isn't itself quoted in a surviving letter; honest cross-language twist: crās was abandoned by most major Romance languages (French demain, Italian domani, Catalan demà all rebuilt 'tomorrow' from dē māne, 'in the morning' instead) — Sardinian and Sicilian are the main holdouts that kept crās itself"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [LA-C24-propediem-te-videbo]
 ---
 

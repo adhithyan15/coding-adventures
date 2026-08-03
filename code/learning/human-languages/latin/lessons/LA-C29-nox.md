@@ -9,7 +9,7 @@ prerequisites: [LA-C12-medius-dies-nox, LA-C28-dies]
 sounds: [macron-none-short-vowel, x-ks-sound]
 roots: [nox-latin]
 etymology_hook: "nox ('night'), genitive noctis, is cognate with English 'night' itself, German Nacht, Greek nyx, Sanskrit nakta — all from Proto-Indo-European *nókʷts, one of the most solid, uncontroversial PIE reconstructions there is; its own derivative nocturnus ('of the night') was coined directly on the analogy of diēs's own diurnum, reusing its exact -urnus suffix, and gives English nocturnal/nocturne; aequus ('equal') + nox/noct- gives equinox, 'equal night'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C12-medius-dies-nox, LA-C28-dies]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [LA-C29-nox]
 sounds: [macron-none-short-vowel, accusative-am-em]
 roots: [bonus-latin, nox-latin]
 etymology_hook: "bonam noctem, 'good night,' uses a genuinely classical Latin grammatical principle — Latin wishes and exclamations conventionally take the ACCUSATIVE case, not the nominative (the same 'Accusative of Exclamation' construction behind Fēlīcem nātālem, 'happy birthday'); be honest, though: while the accusative-of-wishing rule is solid, this SPECIFIC fixed phrase, bonam noctem, is NOT itself attested as a Roman farewell formula in any surviving classical text — a later, post-classical convention"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C29-nox]
 ---
 

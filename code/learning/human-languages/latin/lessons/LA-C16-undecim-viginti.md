@@ -5,12 +5,12 @@ type: word
 headword: ūndecim — vīgintī
 gloss: 11-20, the source numbers themselves — including Latin's own genuine oddity, SUBTRACTIVE 18 and 19, which Spanish quietly regularized away
 concept_tag: LA-NUM-11-20
-prerequisites: [LA-C15-tempestas-pluit]
+prerequisites: [LA-C15-weather-verbs]
 sounds: [macron-long-vowel, prefix-un-duo]
 roots: [latin-decim-ten, latin-viginti-twenty]
 etymology_hook: "ūndecim through quīndecim (11-15) are simple 'X-ten' compounds, the direct source of Spanish's fused once-quince; but 18 and 19 are the genuinely odd ones — duodēvīgintī ('two FROM twenty') and ūndēvīgintī ('one FROM twenty'), SUBTRACTIVE counting that Spanish did NOT inherit, replacing it with plain addition instead"
-est_minutes: 6
-reviews_of: [LA-C15-tempestas-pluit]
+est_minutes: 4
+reviews_of: [LA-C15-weather-verbs, LA-C15-tempestas-pluit]
 ---
 
 # ūndecim, vīgintī — the source numbers, including a genuine oddity

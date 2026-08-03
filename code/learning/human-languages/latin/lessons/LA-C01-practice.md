@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [LA-C01-salve, LA-C01-ave, LA-C01-vale, LA-C01-gratias, LA-C01-ita-non]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-salve, LA-C01-ave, LA-C01-vale, LA-C01-gratias, LA-C01-ita-non]
 ---
 

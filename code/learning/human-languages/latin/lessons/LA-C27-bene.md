@@ -5,12 +5,12 @@ type: word
 headword: bene
 gloss: "well" — a morphologically simple inheritance: French bien and Spanish bien are just bene plus one regular sound change (the same short-e-diphthongizes-to-ie shift as mel→miel), with no extra grafted-on suffix, unlike quōmodo's more roundabout Romance history
 concept_tag: WORD-WELL
-prerequisites: [LA-C19-quid-agis]
+prerequisites: [LA-C19-valeo-family]
 sounds: [macron-none-short-e]
 roots: [bene-latin, bonus-latin]
 etymology_hook: "bene ('well') is a genuinely classical adverb, related to bonus ('good') — both from the same Old Latin ancestor duenos/duonus (found in the famous Duenos inscription, one of the oldest surviving Latin texts), ultimately from a Proto-Indo-European root with several competing proposals; French bien and Spanish bien both continue bene through one single, regular sound change (short stressed e diphthongizing to 'ie,' the same shift behind mel→miel, terra→tierra) and nothing more — no extra suffix grafted on, unlike quōmodo's more roundabout Romance history; bene is genuinely attested used alone, repeated, as a toast in Plautus's Stichus 709: 'bene vōs, bene nōs, bene tē, bene mē, bene nostram etiam Stephanium'"
-est_minutes: 5
-reviews_of: [LA-C19-quid-agis]
+est_minutes: 4
+reviews_of: [LA-C19-valeo-family, LA-C19-quid-agis]
 ---
 
 # bene — a morphologically simple inheritance

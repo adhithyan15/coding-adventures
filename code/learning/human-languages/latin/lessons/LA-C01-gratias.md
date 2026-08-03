@@ -8,7 +8,7 @@ concept_tag: COURTESY-THANKS
 prerequisites: [LA-C01-vale]
 sounds: [hard-c-t, macron-long-vowel]
 roots: [gratia, gratus, ago]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [LA-C01-ave]
 ---
 
