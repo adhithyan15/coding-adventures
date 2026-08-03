@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9572,
+  "active_pr": 9582,
   "last_inventory": {
-    "revision": "6384e2cf4e5a812f1b8fc9782c661bf5ade9bdd9",
+    "revision": "6141793a9c29cd1177b3b201565e4f8537e77585",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1222,
@@ -343,11 +343,11 @@
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
       "title": "Make the TypeScript build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": "codex/build-tool-typescript-rockspec-utf8",
       "pr_number": 9572,
-      "notes": "Ready-for-review PR #9572 is the sole active parity PR. Materialized from the remaining-engine UTF-8 umbrella after merged PR #9553. TypeScript's replacement decoder could not distinguish malformed rockspec bytes from valid replacement characters. The implementation now consumes the exact shared positive and invalid-byte fixtures, requires the exact edge set, rejects malformed bytes before parsing with typed METADATA_INVALID_UTF8 package and repository-relative manifest identity, accepts valid literal U+FFFD, and returns exit 2 through a real tsx CLI subprocess. Rebased validation on origin/main 6384e2cf passed 47 resolver tests, 266 unaffected package tests, 85.40% resolver line coverage, esbuild production bundling, 17 schema and 40 runner tests, the valid 36-case/55-file corpus, a 258-package Lua dry run, a 4,770-record/7,623-edge full plan, collision-clean 1,222-identity/4,370-slot parity inventory, JSON/diff/secret checks, and zero npm advisories. The full Windows suite separately reproduces seven pre-existing gitdiff portability failures, now logged as its own pending child; BUILD validation reproduces only the same 10 owned Lua BUILD_windows debt items."
+      "notes": "Merged PR #9572 at 6141793a9c29cd1177b3b201565e4f8537e77585 on 2026-08-02 after both detection runs, both fixture-consumer runs, both Ubuntu builds, macOS, Windows, and JavaScript/TypeScript CodeQL passed; irrelevant CodeQL languages skipped and the aggregate CodeQL check was neutral. TypeScript now consumes the exact shared positive and invalid-byte fixtures, requires the exact edge set, rejects malformed bytes before parsing with typed METADATA_INVALID_UTF8 package and repository-relative manifest identity, accepts valid literal U+FFFD, and returns exit 2 through a real tsx CLI subprocess. Final validation passed 47 resolver tests, 266 unaffected package tests, 85.40% resolver line coverage, esbuild production bundling, 17 schema and 40 runner tests, the valid 36-case/55-file corpus, a 258-package Lua dry run, a 4,770-record/7,623-edge full plan, collision-clean 1,222-identity/4,370-slot parity inventory, JSON/diff/secret checks, and zero npm advisories. The full local Windows suite separately reproduces seven pre-existing gitdiff portability failures, logged as its own pending child; BUILD validation reproduced only the same 10 owned Lua BUILD_windows debt items."
     },
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
@@ -361,11 +361,20 @@
     {
       "id": "build-tool-typescript-language-identity-registry",
       "title": "Bring TypeScript build-tool discovery to the canonical language and identity registry",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
+      "branch": "codex/build-tool-typescript-language-identity-registry",
+      "pr_number": 9582,
+      "notes": "Ready PR #9582 is the sole active parity PR. It consumes the shared discovery language-registry and duplicate-identity fixtures, classifies only exact package/program lane boundaries, preserves language/programs/name identity, excludes spec fixtures, and fails closed with DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths, real CLI exit 2, and no checkout-root disclosure. Exact-head validation after a conflict-free rebase onto fc27dd48 passed 37 discovery tests, 271 unaffected tests, 93.40% discovery line and 89.23% branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, zero-advisory npm audit, and a real 4,768-record/7,242-edge full plan with 4,768 unique names, zero duplicate groups, and only intentional unknown/blog. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets. Full local Windows testing separately reproduced only the exact seven owned gitdiff portability failures, and BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts. The newly discovered Windows plan rel_path normalization is logged as its own pending child."
+    },
+    {
+      "id": "build-tool-typescript-windows-plan-rel-path-portability",
+      "title": "Emit portable TypeScript build-plan package paths on Windows",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-language-identity-registry"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the real full-repository plan during the TypeScript UTF-8 slice. The engine emits 4,770 package records but only 4,383 unique names, including 655 unknown-language records and 217 duplicate identity groups; common C, C++, Dart, Java, and Kotlin packages collapse together under unknown/<basename>. Consume the shared discovery language-registry and duplicate-identity fixtures, classify exact package/program lane boundaries, preserve package versus program identity, exclude spec fixtures, and fail closed on residual duplicate qualified names in a separate focused slice."
+      "notes": "Discovered by the real full-repository plan validation for the TypeScript language/identity-registry slice. On Windows, package rel_path values are emitted with backslashes because index.ts serializes path.relative directly, while the language-neutral canonical path contract requires forward slashes. Keep this separate from discovery identity: add a cross-platform plan fixture and real CLI coverage, normalize only repository-relative serialized paths, and preserve absolute destination option handling for its separately owned file-option concerns."
     },
     {
       "id": "build-tool-go-rockspec-utf8-conformance",

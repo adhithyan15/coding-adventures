@@ -235,17 +235,23 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   is tracked separately from the Python full-scan blocker. Merged PR #9504
   completed the Go operational-oracle child, and merged PR #9510 completed
   Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
-  byte fixtures plus real CLI exit-2 coverage. TypeScript is the selected next
-  dependency-shaped child because its replacement decoder cannot report
-  malformed bytes faithfully;
+  byte fixtures plus real CLI exit-2 coverage. Merged PR #9572 completed
+  TypeScript with strict decoding, exact shared-fixture coverage, and green
+  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures; this is tracked as a separate test-
   portability slice rather than widening the metadata decoder change;
 - align TypeScript build-tool discovery with the canonical language and identity
-  registry. Its real full plan currently emits 4,770 records but only 4,383
-  unique names, including 655 `unknown` records and 217 duplicate identity
-  groups that collapse C, C++, Dart, Java, Kotlin, and other lanes by basename;
+  registry. Ready PR #9582 consumes the shared registry and duplicate-
+  identity fixtures, preserves package/program identity, excludes spec fixtures,
+  and fails closed on collisions. Its real Windows plan now emits 4,768 unique
+  identities, zero duplicate groups, and only intentional `unknown/blog`, down
+  from 655 unknown records and 217 duplicate groups;
+- make TypeScript build-plan package paths portable on Windows. The identity-
+  registry validation found that `rel_path` values still use host backslashes;
+  normalize serialized repository-relative paths in a separate fixture-driven
+  slice rather than widening discovery behavior;
 - make Swift build-tool file options recognize Windows drive-letter absolute
   paths. The UTF-8 validation run discovered that `--emit-plan` reaches
   resolution but then joins an absolute Windows path under the repository;

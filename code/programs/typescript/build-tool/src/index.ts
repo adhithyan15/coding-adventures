@@ -34,7 +34,10 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { parseArgs } from "node:util";
-import { discoverPackages } from "./discovery.js";
+import {
+  DuplicatePackageIdentityError,
+  discoverPackages,
+} from "./discovery.js";
 import {
   CI_WORKFLOW_PATH,
   analyzeCIWorkflowChanges,
@@ -405,7 +408,10 @@ Options:
 main().then((code) => {
   process.exit(code);
 }).catch((error: unknown) => {
-  if (error instanceof MetadataEncodingError) {
+  if (
+    error instanceof MetadataEncodingError ||
+    error instanceof DuplicatePackageIdentityError
+  ) {
     console.error(error.message);
     process.exit(2);
   }

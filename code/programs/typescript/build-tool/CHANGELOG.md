@@ -6,6 +6,11 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Fixed
 
+- Classify languages only from the canonical package/program bucket, preserve
+  `language/programs/name` identities, and exclude specification fixtures.
+- Reject residual duplicate qualified names with the stable
+  `DUPLICATE_PACKAGE_IDENTITY` diagnostic, sorted repository-relative paths,
+  and CLI exit code 2.
 - Decode Lua rockspec metadata as strict UTF-8 and fail closed with the portable
   `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2 for malformed input.
 - Consume the shared positive and invalid UTF-8 resolver fixtures, including a
