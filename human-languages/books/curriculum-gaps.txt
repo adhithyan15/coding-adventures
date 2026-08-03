@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 1025 lessons, 20 books
-140 lessons at or above 300 effective seconds
+20 tracks, 1045 lessons, 20 books
+98 lessons at or above 300 effective seconds
 0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
 19 legacy, 1 mixed, 0 version-2 schema tracks
@@ -10,12 +10,7 @@ Longest effective lessons:
   ES-C18-subjuntivo: 731s (declared 360s, computed 731s; declared+computed)
   ES-C18-practice: 500s (declared 360s, computed 500s; declared+computed)
   ES-C18-quiero-que: 456s (declared 360s, computed 456s; declared+computed)
-  TA-W04-vowel-signs-nandri: 441s (declared 360s, computed 441s; declared+computed)
-  TA-W02-ma-retroflex-na: 401s (declared 300s, computed 401s; declared+computed)
-  TA-W01-curves-va-ka: 400s (declared 300s, computed 400s; declared+computed)
   ES-C17-practice: 398s (declared 300s, computed 398s; declared+computed)
-  TA-W03-pulli-vanakkam: 398s (declared 300s, computed 398s; declared+computed)
-  TA-C24-iravu: 377s (declared 360s, computed 377s; declared+computed)
   LA-C19-quid-agis: 370s (declared 360s, computed 370s; declared+computed)
   ES-C31-numeros-11-20: 360s (declared 360s, computed 245s; declared)
   ES-C32-perro-gato: 360s (declared 360s, computed 265s; declared)
@@ -27,4 +22,9 @@ Longest effective lessons:
   LA-C16-undecim-viginti: 360s (declared 360s, computed 213s; declared)
   LA-C17-canis-feles-cattus: 360s (declared 360s, computed 297s; declared)
   LA-C18-viridis-flavus: 360s (declared 360s, computed 279s; declared)
+  LA-C20-quid-tibi-nomen: 360s (declared 360s, computed 309s; declared+computed)
+  LA-C21-volup-est-convenisse: 360s (declared 360s, computed 309s; declared+computed)
+  LA-C24-propediem-te-videbo: 360s (declared 360s, computed 250s; declared)
+  LA-C25-cras-te-videbo: 360s (declared 360s, computed 263s; declared)
+  LA-C26-quomodo: 360s (declared 360s, computed 272s; declared)
 
