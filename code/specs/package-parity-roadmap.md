@@ -309,6 +309,16 @@ identity normalization, and stable projection remain portable seams, while the
 residual adapter is a reviewed native-runtime exception. Both review items are
 excluded from autonomous delivery selection.
 
+The `3445da42` refresh adds `chief-of-staff-cli-core` and a Rust
+`semantic-ir-to-c` implementation. The CLI core is zero-capability and keeps
+credentials, sockets, terminal input, and process policy outside an injected
+authenticated client. Its declarative command grammar, conservative defaults,
+typed host/path/hash validation, dispatch records, stable errors, and
+deterministic JSON rendering are portable fixture candidates. A dedicated
+dependency-shaped owner now waits on the service-registry portable contract
+and daemon authority split. The additional SIR implementation fills an
+existing identity slot and creates no new package identity or exception.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

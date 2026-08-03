@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "479ba6d78c2168ad36f02a1da020d7b91f6e4ef8",
+    "revision": "3445da42b281fe7af366d92bc589db5fa3951cfa",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1237,
-    "implementation_package_slots": 4385,
+    "implementation_identities": 1238,
+    "implementation_package_slots": 4386,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 787,
-    "singleton_missing_slots": 11018,
-    "rust_singletons": 592,
+    "singleton_packages": 788,
+    "singleton_missing_slots": 11032,
+    "rust_singletons": 593,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -1658,6 +1658,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 479ba6d7 inventory after chief-of-staff-daemon-api landed as a Rust-only authenticated WebSocket control surface. It couples bounded JSON protocol handling to Chief host lifecycle operations and an optional concrete listener through websocket-runtime, and declares net:listen authority. Review the minimum truthful inherited listener, stream, authentication, and host-lifecycle authority; keep reusable bounded DTO, version, duplicate-field, stable-error, and redaction semantics in portable injected contracts; and record the residual daemon transport as a native-runtime exception rather than manufacturing all-language host-control servers. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-cli-core-portable-conformance",
+      "title": "Fixture and expand the portable Chief operator CLI core",
+      "status": "pending",
+      "depends_on": ["chief-service-registry-portable-conformance", "chief-daemon-api-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 3445da42 inventory after chief-of-staff-cli-core landed as a Rust-only zero-capability command layer. Its declarative argv grammar, conservative registration defaults, host/path/hash validation, typed injected-client dispatch, payload-blind daemon errors, deterministic JSON rendering, and exclusion of credential-bearing arguments are portable fixture candidates. Define language-neutral command/result/error cases, preserve the authenticated daemon client as an injected interface, expand only after the service-registry contract and daemon authority split are adjudicated, and keep sockets, credentials, terminal input, and process exit policy in native adapters."
     },
     {
       "id": "smart-home-axis-vapix-native-authority-review",
