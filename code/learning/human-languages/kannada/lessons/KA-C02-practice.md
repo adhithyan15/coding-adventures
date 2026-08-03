@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [KA-C02-nanna-hesaru, KA-C02-nimma-hesaru-enu, KA-C02-santosha]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C02-hesaru, KA-C02-nanna, KA-C02-nanna-hesaru, KA-C02-niinu-niivu, KA-C02-enu, KA-C02-nimma-hesaru-enu, KA-C02-santosha]
 ---
 

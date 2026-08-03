@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [KA-C01-namaskara, KA-C01-dhanyavada, KA-C01-haudu, KA-C01-illa, KA-C01-sari]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C01-namaskara, KA-C01-dhanyavada, KA-C01-haudu, KA-C01-illa, KA-C01-sari]
 ---
 

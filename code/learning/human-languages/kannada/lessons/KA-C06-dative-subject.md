@@ -6,12 +6,12 @@ headword: ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು
 gloss: "'I know Kannada' — built with no subject, because knowing happens TO you"
 romanization: nanage kannaḍa gottu
 concept_tag: KA-DATIVE-SUBJECT
-prerequisites: [KA-C06-dative-ge, KA-C05-naanu-kannada-maatanaaduttene]
+prerequisites: [KA-C06-dative-stacking, KA-C05-naanu-kannada-maatanaaduttene]
 sounds: [gemination-tt]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative — knowing, liking, wanting all happen TO you rather than being done BY you — so 'I know Kannada' has no nominative 'I', the person sitting in the dative instead (a 'dative subject'); gottu is not even a verb but a noun-like word meaning 'known', which is why nothing in the sentence is 'doing' anything"
-est_minutes: 5
-reviews_of: [KA-C06-dative-ge, KA-C05-naanu-kannada-maatanaaduttene, KA-C03-naanu]
+est_minutes: 4
+reviews_of: [KA-C06-dative-stacking, KA-C06-dative-ge, KA-C05-naanu-kannada-maatanaaduttene, KA-C03-naanu]
 ---
 
 # ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು — "I know Kannada"

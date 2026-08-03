@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [KA-C04-hoogi-baruttene, KA-C04-naale-sigona, KA-C04-matte-sigona]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C04-hoogu, KA-C04-hoogi-baruttene, KA-C04-naale-sigona, KA-C04-matte-sigona]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [KA-C03-hege, KA-C02-niinu-niivu]
 sounds: [double-dd, long-ii]
 roots: [iru-be-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C02-niinu-niivu, KA-C03-hege]
 ---
 

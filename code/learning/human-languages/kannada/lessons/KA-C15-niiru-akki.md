@@ -9,7 +9,7 @@ prerequisites: [KA-C14-kaalagalu]
 sounds: [kannada-vowel-sign-ii, kannada-geminate-kka]
 roots: [niiru-water-dravidian, akki-rice-dravidian]
 etymology_hook: "ನೀರು niiru (water) matches Tamil's nir/thanneer closely — unlike Malayalam's genuinely different vellam; ಅಕ್ಕಿ akki (rice) and ಅನ್ನ anna (cooked rice) complete the same raw/cooked distinction found across the family"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C14-kaalagalu]
 ---
 

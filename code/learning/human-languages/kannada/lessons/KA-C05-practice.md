@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [KA-C05-maatanaadu, KA-C05-naanu-kannada-maatanaaduttene, KA-C05-iru, KA-C05-kelasa-maadu]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C05-maatanaadu, KA-C05-naanu-kannada-maatanaaduttene, KA-C05-iru, KA-C05-kelasa-maadu, KA-C03-naanu]
 ---
 

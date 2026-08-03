@@ -9,7 +9,7 @@ prerequisites: [KA-C19-vayassu]
 sounds: [kannada-anusvara-o, kannada-geminate-pp]
 roots: [dravidian-hattu-ten, dravidian-ir-two-bound]
 etymology_hook: "ಹನ್ನೊಂದು-ಹತ್ತೊಂಬತ್ತು (11-19) are compounds echoing ಹತ್ತು (hattu, 'ten') + a digit — ಇಪ್ಪತ್ತು (ippattu, 'twenty') traces to Proto-Dravidian *ir- ('two') + *paHtu ('ten'), a real compositional origin, but Kannada's own sound changes (gemination, and a p→h shift that only fires word-initially) mean neither modern eraḍu nor modern hattu is directly visible inside it today — unlike Sanskrit/Latin/Arabic, which have no compositional origin for 'twenty' AT ALL"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C19-vayassu]
 ---
 

@@ -12,6 +12,11 @@ Kannada script is taught **inline**, inside the word lessons, never as a gated
 reading course. Grammar is introduced piece by piece, on the first word that
 needs it.
 
+Coverage note: canonical lessons now continue through Chapter 31, while the
+narrative sequence below is complete only through Chapter 6. `HL-M03` tracks
+bringing this roadmap and the session map up to the canonical prerequisite
+order; `HL-B24` tracks publishing Chapters 6–31 from the same source.
+
 ## Authored
 
 - **Ch. 1 — Greetings**: namaskāra → dhanyavāda → haudu → illa → sari →
@@ -45,7 +50,9 @@ needs it.
   Dravidian dative ***k* softened between vowels** — a change Kannada made and its
   carried **into the dative** where its sisters kept the hard consonant — while
   the **geminate** *-kke* form (*kelasakke*) resisted voicing and preserves the old hard
-  doubled consonant. Includes *nānu* → **ನನಗೆ** *nanage* ("to me") → **ನನಗೆ ಕನ್ನಡ
+  doubled consonant. The forms and sound history come first; the visible
+  stacking-versus-Latin-fusion comparison follows as its own micro-lesson.
+  Includes *nānu* → **ನನಗೆ** *nanage* ("to me") → **ನನಗೆ ಕನ್ನಡ
   ಗೊತ್ತು** (*nanage kannaḍa gottu*, "I know Kannada") — literally "**to-me Kannada
   known**," with **no nominative subject**, and where *gottu* isn't even an action
   verb, so nothing in the sentence is *doing* anything. The **dative-subject**

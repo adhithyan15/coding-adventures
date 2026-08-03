@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina]
 sounds: [kannada-conjunct-tra, kannada-vowel-sign-i]
 roots: [sanskrit-ratri, proto-dravidian-cirvl]
 etymology_hook: "ರಾತ್ರಿ (rātri, 'night') is a Sanskrit tatsama word, the same one already hiding inside ಮಧ್ಯರಾತ್ರಿ (madhyarātri, 'midnight'), now standing alone as Kannada's everyday word for 'night'; Kannada DOES have a genuine native Dravidian word, ಇರುಳು (iruḷu) ← Proto-Dravidian *cirVḷ, cognate with Tamil இருள், Malayalam ഇരുൾ, and Telugu ఇరులు — but unlike ಹಗಲು (hagalu, still a living word for 'daytime'), iruḷu has been pushed into archaism, surviving mainly in older poetry"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina]
 ---
 

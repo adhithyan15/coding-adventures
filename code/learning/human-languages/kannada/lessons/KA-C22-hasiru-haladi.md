@@ -9,7 +9,7 @@ prerequisites: [KA-C11-bannagalu, KA-C21-naayi-bekku]
 sounds: [kannada-retroflex-lla, kannada-virama-geminate]
 roots: [proto-dravidian-pac-green, sanskrit-haridra-turmeric]
 etymology_hook: "ಹಸಿರು (hasiru, 'green') ← Old Kannada ಪಸಿರ್ (pasir) ← Proto-Dravidian *pac-, 'green' — the SAME root as Tamil's பச்சை (paccai) and Telugu's పచ్చ (pacca); ಹಳದಿ (haḷadi, 'yellow') appears to be a Sanskrit/Hindi loan built on हरिद्रा (haridrā, 'turmeric'), which traces to हरि (hari, 'yellow, tawny') from Proto-Indo-European *ǵʰelh₃- — the same ancient root already behind Hindi's harā (green) and German's gelb (yellow); note that Hindi itself keeps 'turmeric' (haldi) and 'yellow' (pīlā) as two separate, unrelated words, unlike Kannada/Bengali/Odia which reuse the turmeric-word for the color"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C21-naayi-bekku]
 ---
 

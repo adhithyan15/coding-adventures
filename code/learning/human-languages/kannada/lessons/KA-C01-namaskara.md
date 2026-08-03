@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [kannada-inherent-a, virama, ottakshara-conjunct]
 roots: [namas, kṛ]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

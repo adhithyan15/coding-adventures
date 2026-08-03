@@ -9,7 +9,7 @@ prerequisites: [KA-C24-ratri]
 sounds: [kannada-sha, kannada-bha]
 roots: [sanskrit-shubha-beautiful, sanskrit-ratri]
 etymology_hook: "ಶುಭ ರಾತ್ರಿ (śubha rātri), 'good night,' literally 'auspicious night' — both pieces are Sanskrit tatsama: ರಾತ್ರಿ (rātri, already met last lesson) plus ಶುಭ (śubha, 'auspicious, good'), from Sanskrit root śubh, 'to be beautiful, splendid,' from a well-sourced PIE root *ḱewbʰ-; the exact same phrase, शुभ रात्रि, is also common in Hindi — most likely shared Sanskrit vocabulary rather than one language directly borrowing the whole phrase from the other, though 'good night' as a farewell is itself a modern convention across Indian languages, so some cross-language reinforcement can't be ruled out"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C24-ratri]
 ---
 

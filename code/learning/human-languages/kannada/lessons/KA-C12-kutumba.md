@@ -9,7 +9,7 @@ prerequisites: [KA-C11-bannagalu]
 sounds: [kannada-retroflex-nna, kannada-anusvara]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "ಅಪ್ಪ appa/ಅಮ್ಮ amma and the four sibling words (ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ) match Tamil's set almost word-for-word — Kannada splits siblings by age too"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C11-bannagalu]
 ---
 

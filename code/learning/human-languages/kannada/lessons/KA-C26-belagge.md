@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina, KA-C24-ratri]
 sounds: [kannada-conjunct-gge, kannada-vowel-sign-e]
 roots: [proto-dravidian-belaku-light]
 etymology_hook: "ಬೆಳಗ್ಗೆ (beḷagge, 'morning') is native Dravidian, from ಬೆಳಗು (beḷagu, 'to shine, to become bright, to dawn') and ಬೆಳಕು (beḷaku, 'light') — unlike EVERY other everyday time-word already met in Kannada's arc, ದಿನ/dina ('day'), ರಾತ್ರಿ/ratri ('night'), and ಮಧ್ಯಾಹ್ನ/madhyāhna ('noon') — all genuine Sanskrit tatsama borrowings — ಬೆಳಗ್ಗೆ is the odd one out, Kannada's own word, no Sanskrit involved"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina, KA-C24-ratri]
 ---
 
