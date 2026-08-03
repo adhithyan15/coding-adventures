@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "resolution/lua-program-package",
+  "domain": "resolution",
+  "summary": "Lua package aliases win over same-basename program aliases while the program keeps its qualified identity.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/lua/grammar_tools/BUILD",
+        "content_utf8": "echo grammar_tools\n"
+      },
+      {
+        "path": "code/packages/lua/grammar_tools/coding-adventures-grammar-tools-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-grammar-tools\"\nversion = \"0.1.0-1\"\ndependencies = { \"lua >= 5.4\" }\n"
+      },
+      {
+        "path": "code/programs/lua/grammar-tools/BUILD",
+        "content_utf8": "# build-tool: deps=lua/grammar_tools\necho grammar-tools program\n"
+      },
+      {
+        "path": "code/packages/lua/consumer/BUILD",
+        "content_utf8": "echo consumer\n"
+      },
+      {
+        "path": "code/packages/lua/consumer/coding-adventures-consumer-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-consumer\"\nversion = \"0.1.0-1\"\ndependencies = { \"coding-adventures-grammar-tools >= 0.1.0\" }\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "lua"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/lua-program-package",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "lua/grammar_tools",
+          "lua/consumer"
+        ],
+        [
+          "lua/grammar_tools",
+          "lua/programs/grammar-tools"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

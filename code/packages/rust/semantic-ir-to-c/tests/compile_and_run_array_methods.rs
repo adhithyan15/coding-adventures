@@ -83,7 +83,7 @@ fn array_first_last_on_empty_is_nil() {
 #[test]
 fn array_reverse_and_sort() {
     match run_ruby("puts [1, 2, 3].reverse\nputs [3, 1, 2].sort\n") {
-        Some(out) => assert_eq!(out, "[3, 2, 1]\n[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "3\n2\n1\n1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -93,7 +93,7 @@ fn array_reverse_does_not_mutate_the_receiver() {
     // `reverse` (unlike a hypothetical `reverse!`) returns a FRESH array; the
     // original binding must still print in its original order afterward.
     match run_ruby("a = [1, 2, 3]\na.reverse\nputs a\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -103,7 +103,7 @@ fn array_sort_strings() {
     // `sort` reuses `_sir_lt`, which has a String branch (`strcmp`), so a
     // String array sorts lexicographically, not just numeric arrays.
     match run_ruby("puts [\"banana\", \"apple\", \"cherry\"].sort\n") {
-        Some(out) => assert_eq!(out, "[apple, banana, cherry]\n"),
+        Some(out) => assert_eq!(out, "apple\nbanana\ncherry\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -136,7 +136,7 @@ fn array_sum_promotes_to_float() {
 #[test]
 fn array_uniq_preserves_first_occurrence_order() {
     match run_ruby("puts [1, 2, 1, 3, 2].uniq\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -144,7 +144,7 @@ fn array_uniq_preserves_first_occurrence_order() {
 #[test]
 fn array_compact_drops_nils() {
     match run_ruby("puts [1, nil, 2, nil, 3].compact\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -152,7 +152,7 @@ fn array_compact_drops_nils() {
 #[test]
 fn array_flatten_is_fully_recursive() {
     match run_ruby("puts [1, [2, [3, 4], 5], 6].flatten\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3, 4, 5, 6]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n4\n5\n6\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -160,7 +160,7 @@ fn array_flatten_is_fully_recursive() {
 #[test]
 fn array_to_a_is_the_array_itself() {
     match run_ruby("puts [1, 2, 3].to_a\n") {
-        Some(out) => assert_eq!(out, "[1, 2, 3]\n"),
+        Some(out) => assert_eq!(out, "1\n2\n3\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -169,7 +169,7 @@ fn array_to_a_is_the_array_itself() {
 fn array_methods_chain() {
     // `sort` returns an Array, so another built-in method dispatches on it.
     match run_ruby("puts [3, 1, 2].sort.reverse\n") {
-        Some(out) => assert_eq!(out, "[3, 2, 1]\n"),
+        Some(out) => assert_eq!(out, "3\n2\n1\n"),
         None => eprintln!("skip: no cc"),
     }
 }

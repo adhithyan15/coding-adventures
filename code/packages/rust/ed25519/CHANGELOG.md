@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Security
+
+- Reject non-canonical and small-order public-key and signature points during
+  verification.
+- Add public prime-subgroup Ed25519 public-key validation for trust-boundary
+  loaders, including mixed-order rejection.
+
 ## [0.1.0] - 2026-04-13
 
 ### Added

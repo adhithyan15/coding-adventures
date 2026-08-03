@@ -1,5 +1,7 @@
 # Changelog
 
+- Add first-party authenticated Frigate NVR and camera health inspection over
+  the bounded local HTTPS API session host.
 - Upgrade Blue Iris with permission-probed, readback-verified manual recording
   and bounded PTZ controls over the authenticated local JSON session host.
 - Add first-party Blue Iris local HTTPS challenge-response authentication and

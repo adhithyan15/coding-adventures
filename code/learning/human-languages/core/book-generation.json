@@ -319,6 +319,55 @@
       "output": "french/book/chapters/ch23-green-and-yellow.tex"
     },
     {
+      "language": "german",
+      "chapter": 17,
+      "title": "Head and Hand",
+      "label": "ch:ge-head-and-hand",
+      "output": "german/book/chapters/ch17-head-and-hand.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "title": "Yes and No",
+      "label": "ch:ge-yes-and-no",
+      "output": "german/book/chapters/ch18-yes-and-no.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "title": "Please",
+      "label": "ch:ge-please",
+      "output": "german/book/chapters/ch19-please.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "title": "Sorry",
+      "label": "ch:ge-sorry",
+      "output": "german/book/chapters/ch20-sorry.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "title": "Weather",
+      "label": "ch:ge-weather",
+      "output": "german/book/chapters/ch21-weather.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "title": "Dog and Cat",
+      "label": "ch:ge-dog-and-cat",
+      "output": "german/book/chapters/ch22-dog-and-cat.tex"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "title": "Green and Yellow",
+      "label": "ch:ge-green-and-yellow",
+      "output": "german/book/chapters/ch23-green-and-yellow.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "title": "Numbers One to Five",
