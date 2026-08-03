@@ -2454,6 +2454,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(process.wait.call_count, 3)
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_unreaped_timeout_does_not_claim_exit(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
