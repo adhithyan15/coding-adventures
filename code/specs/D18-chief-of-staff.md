@@ -1564,6 +1564,14 @@ Channels are persistent, append-only logs stored on disk. This means crash recov
 is straightforward: find the last successfully processed message and resume from the
 next one.
 
+Host discovery follows the same durable-but-reverified rule. The service registry
+stores desired state and the orchestrator's last bounded observation, but cached PIDs
+and channel IDs are never process authority. On every startup and health tick, the
+orchestrator reconciles registry entries against fresh supervisor evidence, verifies
+the live package hash, applies restart policy, and CAS-updates the observation. The
+detailed state machine is specified in
+[`service-registry-reconciliation.md`](service-registry-reconciliation.md).
+
 **Analogy:** Imagine a stack of numbered memos on a desk. Each staffer has a
 bookmark showing which memo they last read. If the staffer goes home sick and comes
 back the next day, they just pick up from their bookmark. The memos are still there,

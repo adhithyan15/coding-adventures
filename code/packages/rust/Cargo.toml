@@ -753,6 +753,7 @@ members = [
     "chief-of-staff-channel-endpoints",
     "chief-of-staff-secure-host-channel",
     "chief-of-staff-service-registry",
+    "chief-of-staff-service-reconciler",
     "chief-of-staff-tool-api",
     "chief-of-staff-host-runtime",
     "chief-of-staff-smart-home-tools",
