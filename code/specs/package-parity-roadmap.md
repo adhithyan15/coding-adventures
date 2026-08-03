@@ -122,7 +122,7 @@ The loop must not start by attempting 10,878 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`bce05ed6abe668df1339c4169e63fa1ed3c8d666` is collision-clean at 1,227
+`bfe51311154b51f9aed40becab19d17126f75ac0` is collision-clean at 1,227
 normalized implementation identities, 4,375 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 777 singletons, 582
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -301,8 +301,11 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   canonical Go test/vet/build and a 300-package Ruby plan, the 17+40
   conformance suites and 37-case/56-file corpus, and a real 258-package Ruby-
   engine plan with zero LoadErrors while preserving all 44 separately owned
-  canonical Starlark parse fallbacks. Ready PR #9660 is the sole active parity
-  PR;
+  canonical Starlark parse fallbacks. PR #9660 merged as `bfe5131115` after all
+  17 rebased exact-head checks passed, skipped, or completed neutrally. The
+  refreshed leverage pass selected the now-unblocked canonical BUILD
+  compatibility child next because it removes all 44 silent fallbacks using
+  the already-validated Ruby and interpreter toolchains;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
