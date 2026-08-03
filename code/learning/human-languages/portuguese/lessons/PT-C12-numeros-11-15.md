@@ -9,7 +9,7 @@ prerequisites: [PT-C06-numeros-6-10, PT-C11-agua-vinho]
 sounds: [nasal-on, z-voiced]
 roots: [latin-decim]
 etymology_hook: "onze…quinze ← ūndecim…quīndecim, the -ze a worn-down decem ('ten'); Portuguese keeps only FIVE fused teens — fewer than any sister — then rebuilds from 16 on"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C06-numeros-6-10, PT-C11-agua-vinho]
 ---
 

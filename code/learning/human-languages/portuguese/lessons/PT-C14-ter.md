@@ -9,7 +9,7 @@ prerequisites: [PT-C13-vermelho-azul, PT-C05-falar]
 sounds: [nasal-em, circumflex-tem]
 roots: [latin-tenere]
 etymology_hook: "PT and ES alone use tenēre 'to HOLD' (→ tenant/retain/tenacious) for 'have', while French/Italian kept habēre; Portuguese does have haver ← habēre, but demoted it to an auxiliary — two verbs swapped jobs on the Iberian peninsula"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C13-vermelho-azul, PT-C05-falar, PT-C10-irmaos]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [PT-C06-numeros-1-5]
 sounds: [diphthong-oi, open-e]
 roots: [sex-septem-octo-latin]
 etymology_hook: "sete/oito/nove/dez ← septem/octō/novem/decem → setembro/outubro/novembro/dezembro; oito shows the Portuguese ct→it shift (octō→oito, like noite/noctem)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C06-numeros-1-5]
 ---
 

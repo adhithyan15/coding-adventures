@@ -5,12 +5,12 @@ type: word
 headword: a mão
 gloss: the hand — feminine, and a showcase of the -ão ending that swallowed three Latin endings
 concept_tag: PT-BODY-HAND
-prerequisites: [PT-C17-cabeca, PT-C01-o-a]
+prerequisites: [PT-C17-cabeca-caput, PT-C01-o-a]
 sounds: [nasal-ao, til]
 roots: [latin-manus]
 etymology_hook: "mão ← manus: the -n- between vowels DISSOLVED (a regular Portuguese change, cf. lua ← luna, boa ← bona) nasalising the vowel — nasality the til records in mão/pão but which faded again in lua/boa; and like Italian mano it stays FEMININE, because manus was a fourth-declension feminine"
-est_minutes: 5
-reviews_of: [PT-C17-cabeca, PT-C11-pao]
+est_minutes: 4
+reviews_of: [PT-C17-cabeca, PT-C17-cabeca-caput, PT-C11-pao]
 ---
 
 # a mão — "the hand"

@@ -9,7 +9,7 @@ prerequisites: [PT-C12-numeros-11-15]
 sounds: [double-ss, nasal-in]
 roots: [latin-decem, viginti-latin]
 etymology_hook: "dezesseis = dez + e + seis, literally 'TEN AND SIX' — Portuguese rebuilt its upper teens from live words, keeping the 'and' (e) visible; it breaks at 16, earlier than any sister"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C12-numeros-11-15, PT-C06-numeros-6-10]
 ---
 
