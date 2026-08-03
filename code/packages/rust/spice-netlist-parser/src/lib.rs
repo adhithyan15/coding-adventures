@@ -1975,6 +1975,16 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        for substrate_doping in [params.get("N_SUB"), params.get("NSUB"), params.get("N")]
+            .into_iter()
+            .flatten()
+        {
+            if !substrate_doping.is_finite() || *substrate_doping <= 0.0 {
+                return Err(NetlistParseError::new(
+                    "MOSFET N_SUB must be finite and positive",
+                ));
+            }
+        }
         if let Some(width) = params.get("W") {
             if !width.is_finite() || *width <= 0.0 {
                 return Err(NetlistParseError::new(

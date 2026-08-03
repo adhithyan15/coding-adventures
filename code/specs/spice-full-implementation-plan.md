@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card flicker-noise-exponent validation.
+1. Rust Berkeley SPICE MOS model-card substrate-doping validation.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite model-card `AF` values before lowering MOS
-     elements into engine parameters.
-   - Preserve zero and positive flicker-noise exponents.
+   - Reject zero, negative, and non-finite model-card `N_SUB` / `NSUB` / `N`
+     values before lowering MOS elements into engine parameters.
+   - Preserve positive substrate-doping values across all supported aliases.
 
 ## Completed Slices
 
@@ -4089,15 +4089,37 @@ the Rust, Python, and TypeScript surfaces together.
      lowering MOS elements into engine parameters.
    - Zero and positive flicker-noise coefficients remain accepted.
 
+362. Rust Berkeley SPICE MOS model-card flicker-noise-exponent validation.
+   - Status: completed in PR 9558.
+   - Negative and non-finite model-card `AF` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Zero and positive flicker-noise exponents remain accepted.
+
 ## Backlog
 
-1. Rust Berkeley SPICE MOS model-card validation audit.
-   - Re-audit supported model-card parameters after the `AF` facade gap lands,
-     recording any newly confirmed gaps here before selecting another slice.
+1. Rust Berkeley SPICE MOS model-card substrate-doping validation.
+   - Reject zero, negative, and non-finite model-card `N_SUB` / `NSUB` / `N`
+     values before lowering MOS elements into engine parameters.
+   - Preserve positive substrate-doping values across all supported aliases.
+
+2. Rust Berkeley SPICE MOS model-card nominal-temperature validation.
+   - Reject zero, negative, and non-finite model-card `T_NOM` / `TNOM` values
+     before lowering MOS elements into engine parameters.
+   - Preserve positive nominal temperatures across both supported aliases.
+
+3. Rust Berkeley SPICE MOS model-card level validation.
+   - Reject non-finite and non-Level-1 model-card `LEVEL` values before lowering
+     MOS elements into engine parameters.
+   - Preserve explicit `LEVEL=1` model cards and cards that omit `LEVEL`.
+
+4. Rust Berkeley SPICE MOS model-card validation audit.
+   - Re-audit supported model-card parameters after the `LEVEL` facade gap
+     lands, recording any newly confirmed gaps here before selecting another
+     slice.
    - Reuse contracts and diagnostics already aligned across the Rust, Python,
      and TypeScript engines whenever the missing behavior is facade-only.
 
-2. Grammar-backed parser and app facade.
+5. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
      syntax facade as the grammar evolves, even if that breaks current
      pre-release parser APIs.
@@ -4105,7 +4127,7 @@ the Rust, Python, and TypeScript surfaces together.
      toward packaging, WebAssembly embedding, and product integration backed by
      the same public parser contract.
 
-3. Deck compatibility follow-up.
+6. Deck compatibility follow-up.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.
@@ -4116,7 +4138,7 @@ the Rust, Python, and TypeScript surfaces together.
      command routing, including control flow, variables, and script execution
      policy.
 
-4. Production solver core follow-up.
+7. Production solver core follow-up.
    - Sparse real/complex matrix paths now have cross-language native coverage,
      and Python real DC solves now use an optional SciPy sparse-LU backend with
      structured native fallback metadata.
@@ -4127,14 +4149,14 @@ the Rust, Python, and TypeScript surfaces together.
      damping, device limiting, tolerance policy, and additional convergence
      diagnostics for difficult transistor decks.
 
-5. Device model depth.
+8. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-6. Analysis completion.
+9. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
@@ -4143,14 +4165,14 @@ the Rust, Python, and TypeScript surfaces together.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-7. Mixed-signal integration.
+10. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-8. Verilog-A and custom models.
+11. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
