@@ -1092,14 +1092,25 @@ public final class Zip {
             }
 
             // Read EOCD fields: cd_size at +12, cd_offset at +16.
-            int cdOffset = (int) readU32(data, eocdOffset + 16);
-            int cdSize   = (int) readU32(data, eocdOffset + 12);
+            //
+            // These are raw uint32 values out of attacker-controlled bytes. Do the
+            // range check in `long` BEFORE narrowing to `int` — cdOffset/cdSize can
+            // each be as large as 0xFFFFFFFF, and (int) cdOffset + (int) cdSize can
+            // wrap into a small or negative number that would slip past an
+            // int-only "> data.length" check (a negative sum is never > a positive
+            // length). A wrapped value would otherwise drive pos to a negative
+            // array index and crash with an undocumented ArrayIndexOutOfBoundsException
+            // instead of the IOException this constructor promises to throw.
+            long cdOffsetL = readU32(data, eocdOffset + 16);
+            long cdSizeL   = readU32(data, eocdOffset + 12);
 
-            if (cdOffset + cdSize > data.length) {
+            if (cdOffsetL + cdSizeL > data.length) {
                 throw new IOException(
-                    "zip: Central Directory [" + cdOffset + ", " + (cdOffset + cdSize) +
+                    "zip: Central Directory [" + cdOffsetL + ", " + (cdOffsetL + cdSizeL) +
                     ") out of bounds (file size " + data.length + ")");
             }
+            int cdOffset = (int) cdOffsetL;
+            int cdSize   = (int) cdSizeL;
 
             // Parse Central Directory headers.
             int pos = cdOffset;
@@ -1107,20 +1118,34 @@ public final class Zip {
                 long sig = readU32(data, pos);
                 if (sig != (CD_SIG & 0xFFFFFFFFL)) break; // end of CD or padding
 
-                short method         = (short) readU16(data, pos + 10);
-                long crc             = readU32(data, pos + 16);
-                int compressedSize   = (int) readU32(data, pos + 20);
-                int uncompressedSize = (int) readU32(data, pos + 24);
-                int nameLen          = readU16(data, pos + 28);
-                int extraLen         = readU16(data, pos + 30);
-                int commentLen       = readU16(data, pos + 32);
-                int localOffset      = (int) readU32(data, pos + 42);
+                short method          = (short) readU16(data, pos + 10);
+                long crc              = readU32(data, pos + 16);
+                long compressedSizeL   = readU32(data, pos + 20);
+                long uncompressedSizeL = readU32(data, pos + 24);
+                int nameLen           = readU16(data, pos + 28);
+                int extraLen          = readU16(data, pos + 30);
+                int commentLen        = readU16(data, pos + 32);
+                long localOffsetL     = readU32(data, pos + 42);
 
-                int nameStart = pos + 46;
-                int nameEnd   = nameStart + nameLen;
-                if (nameEnd > data.length) {
+                // Reject sizes/offsets that don't fit in a Java array index
+                // (>= 2^31) up front, in `long`, before any narrowing occurs.
+                if (compressedSizeL > Integer.MAX_VALUE || uncompressedSizeL > Integer.MAX_VALUE
+                        || localOffsetL > Integer.MAX_VALUE || localOffsetL < 0) {
+                    throw new IOException(
+                        "zip: Central Directory entry at " + pos + " has an out-of-range "
+                        + "size/offset field");
+                }
+                int compressedSize   = (int) compressedSizeL;
+                int uncompressedSize = (int) uncompressedSizeL;
+                int localOffset      = (int) localOffsetL;
+
+                long nameStartL = pos + 46L;
+                long nameEndL   = nameStartL + nameLen;
+                if (nameEndL > data.length) {
                     throw new IOException("zip: CD entry name out of bounds");
                 }
+                int nameStart = (int) nameStartL;
+                int nameEnd   = (int) nameEndL;
 
                 String name = new String(data, nameStart, nameLen, StandardCharsets.UTF_8);
 
@@ -1191,16 +1216,25 @@ public final class Zip {
 
             // The Local Header name_len and extra_len can differ from the CD header,
             // so we must re-read them to find the actual start of the file data.
-            int lhNameLen  = readU16(data, lhOff + 26);
-            int lhExtraLen = readU16(data, lhOff + 28);
-            int dataStart  = lhOff + 30 + lhNameLen + lhExtraLen;
-            int dataEnd    = dataStart + em.compressedSize;
+            //
+            // Do the arithmetic in `long` before narrowing back to `int`: lhOff and
+            // em.compressedSize are both attacker-influenced (via the archive bytes),
+            // and an int-only sum could in principle wrap past Integer.MAX_VALUE and
+            // slip a negative dataEnd past the "> data.length" check below, driving
+            // System.arraycopy with a corrupt length. long arithmetic keeps the
+            // bounds check exact and reports it as the documented IOException rather
+            // than an unchecked exception.
+            int lhNameLen   = readU16(data, lhOff + 26);
+            int lhExtraLen  = readU16(data, lhOff + 28);
+            long dataStartL = (long) lhOff + 30 + lhNameLen + lhExtraLen;
+            long dataEndL   = dataStartL + em.compressedSize;
 
-            if (dataEnd > data.length) {
+            if (dataEndL > data.length) {
                 throw new IOException(
-                    "zip: entry '" + em.name + "' data [" + dataStart + ", " + dataEnd +
+                    "zip: entry '" + em.name + "' data [" + dataStartL + ", " + dataEndL +
                     ") out of bounds");
             }
+            int dataStart = (int) dataStartL;
 
             byte[] compressed = new byte[em.compressedSize];
             System.arraycopy(data, dataStart, compressed, 0, em.compressedSize);
@@ -1280,14 +1314,20 @@ public final class Zip {
         // ── Little-endian readers ──────────────────────────────────────────────────
 
         private static int readU16(byte[] data, int offset) throws IOException {
-            if (offset + 2 > data.length) {
+            // offset is derived from attacker-controlled header fields (e.g. a
+            // crafted localOffset can be negative once narrowed to int elsewhere),
+            // so guard the lower bound explicitly rather than relying on the
+            // upper-bound check alone: a negative offset would otherwise reach
+            // data[offset] and throw an unchecked ArrayIndexOutOfBoundsException
+            // instead of the documented IOException.
+            if (offset < 0 || offset + 2 > data.length) {
                 throw new IOException("zip: read U16 at " + offset + " out of bounds");
             }
             return (data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8);
         }
 
         private static long readU32(byte[] data, int offset) throws IOException {
-            if (offset + 4 > data.length) {
+            if (offset < 0 || offset + 4 > data.length) {
                 throw new IOException("zip: read U32 at " + offset + " out of bounds");
             }
             return ((long)(data[offset] & 0xFF))

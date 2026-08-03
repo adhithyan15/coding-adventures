@@ -29,6 +29,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - All 12 JUnit 5 tests (TC-01 through TC-12) pass unchanged against the
   current toolchain.
 
+### Security
+
+- Fixed a MEDIUM finding from the pre-push security review: `compressed_size`,
+  `uncompressed_size`, and `local_offset` fields read from the (attacker-
+  controlled) Central Directory were narrowed from the wire's unsigned
+  32-bit representation to a Java `int` *before* being range-checked. A
+  crafted value of `0xFFFFFFFF` would narrow to `-1`, slip past an int-only
+  `> data.length` bounds check (a negative number is never greater than a
+  positive length), and surface as an undocumented
+  `NegativeArraySizeException` / `ArrayIndexOutOfBoundsException` instead of
+  the `IOException` the public API promises — a denial-of-service /
+  API-contract bug for callers who (reasonably) only catch `IOException`
+  around untrusted ZIP input. Fixed by doing all offset/size bounds
+  arithmetic in `long` before narrowing, rejecting out-of-`int`-range values
+  explicitly, and adding a `offset < 0` guard to the low-level `readU16`/
+  `readU32` helpers. Added `malformedCompressedSizeRejectedCleanly` and
+  `malformedLocalOffsetRejectedCleanly` regression tests (14 tests total).
+  Not memory-unsafe in either direction — the JVM bounds-checks all array
+  accesses — but the fix restores the documented `IOException` contract.
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

@@ -349,4 +349,89 @@ class ZipTest {
         List<Zip.ZipEntry> entries = Zip.unzip(archive2);
         assertEquals(0, entries.size());
     }
+
+    // ─── TC-13: Malformed size field is rejected as IOException, not a crash ──
+
+    /**
+     * TC-13 (security regression): a Central Directory {@code compressed_size}
+     * field of {@code 0xFFFFFFFF} (the maximum unsigned 32-bit value) must be
+     * rejected with a documented {@link IOException}, never let through as an
+     * unchecked exception.
+     *
+     * <p>{@code compressed_size} is read from attacker-controlled archive bytes
+     * as an unsigned 32-bit value. Naively narrowing it to a Java {@code int}
+     * turns {@code 0xFFFFFFFF} into {@code -1}. Downstream, {@code -1} would
+     * either sail past an int-only "greater than" bounds check (a negative
+     * number is never greater than a positive length) and reach
+     * {@code new byte[-1]} — a {@link NegativeArraySizeException} — or corrupt
+     * an offset computation into an {@link ArrayIndexOutOfBoundsException}.
+     * Both are unchecked, so a caller that (reasonably, per the constructor's
+     * and {@link Zip.ZipReader#read} Javadoc) only catches {@code IOException}
+     * around untrusted ZIP input would see an uncaught crash instead of a
+     * handled parse failure. The reader must instead validate the field while
+     * it is still a {@code long} and fail with {@code IOException}.</p>
+     */
+    @Test
+    void malformedCompressedSizeRejectedCleanly() throws IOException {
+        Zip.ZipWriter w = new Zip.ZipWriter();
+        w.addFile("f.txt", utf8("hello"), false);
+        byte[] archive = w.finish();
+
+        // Locate the Central Directory Header (signature 0x02014B50, stored
+        // little-endian as bytes 50 4B 01 02) and overwrite its compressed_size
+        // field (offset +20 from the signature) with 0xFFFFFFFF.
+        int cdHeaderOffset = -1;
+        for (int i = 0; i + 4 <= archive.length; i++) {
+            if ((archive[i] & 0xFF) == 0x50 && (archive[i + 1] & 0xFF) == 0x4B
+                    && (archive[i + 2] & 0xFF) == 0x01 && (archive[i + 3] & 0xFF) == 0x02) {
+                cdHeaderOffset = i;
+                break;
+            }
+        }
+        assertTrue(cdHeaderOffset >= 0, "test setup: Central Directory Header not found");
+
+        int compressedSizeOffset = cdHeaderOffset + 20;
+        archive[compressedSizeOffset]     = (byte) 0xFF;
+        archive[compressedSizeOffset + 1] = (byte) 0xFF;
+        archive[compressedSizeOffset + 2] = (byte) 0xFF;
+        archive[compressedSizeOffset + 3] = (byte) 0xFF;
+
+        // The out-of-range compressed_size is validated eagerly while parsing
+        // the Central Directory, so the constructor itself throws IOException
+        // (never an unchecked RuntimeException).
+        assertThrows(IOException.class, () -> new Zip.ZipReader(archive));
+    }
+
+    /**
+     * TC-14 (security regression): a Central Directory {@code local_offset}
+     * field of {@code 0xFFFFFFFF} must likewise be rejected with
+     * {@link IOException} rather than crashing with a negative array index.
+     */
+    @Test
+    void malformedLocalOffsetRejectedCleanly() throws IOException {
+        Zip.ZipWriter w = new Zip.ZipWriter();
+        w.addFile("f.txt", utf8("hello"), false);
+        byte[] archive = w.finish();
+
+        int cdHeaderOffset = -1;
+        for (int i = 0; i + 4 <= archive.length; i++) {
+            if ((archive[i] & 0xFF) == 0x50 && (archive[i + 1] & 0xFF) == 0x4B
+                    && (archive[i + 2] & 0xFF) == 0x01 && (archive[i + 3] & 0xFF) == 0x02) {
+                cdHeaderOffset = i;
+                break;
+            }
+        }
+        assertTrue(cdHeaderOffset >= 0, "test setup: Central Directory Header not found");
+
+        // relative_offset_of_local_header is at +42 from the CD header signature.
+        int localOffsetField = cdHeaderOffset + 42;
+        archive[localOffsetField]     = (byte) 0xFF;
+        archive[localOffsetField + 1] = (byte) 0xFF;
+        archive[localOffsetField + 2] = (byte) 0xFF;
+        archive[localOffsetField + 3] = (byte) 0xFF;
+
+        // The malformed local_offset is caught eagerly during Central Directory
+        // parsing (before any read() call), so the constructor itself throws.
+        assertThrows(IOException.class, () -> new Zip.ZipReader(archive));
+    }
 }
