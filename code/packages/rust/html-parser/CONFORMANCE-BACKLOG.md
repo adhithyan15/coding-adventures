@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the specialized foster-parented foreign-start-tag diagnostic slice, 2,055
-of those cases emit at least one lexer or parser diagnostic and 128 remain
+After the foreign-content HTML-start-tag breakout diagnostic slice, 2,070 of
+those cases emit at least one lexer or parser diagnostic and 113 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -63,7 +63,7 @@ recovery closes a non-current list item, and a paragraph end tag reports when it
 breaks out of MathML foreign content. A formatting end tag also reports when an
 open table blocks adoption-agency recovery.
 
-The fresh 128-case residual inventory keeps the next concrete groups in the
+The fresh 113-case residual inventory keeps the next concrete groups in the
 existing priority order: remaining table foster-parenting and table-scope
 boundaries;
 select/template recovery; script-tokenizer EOF recovery; plaintext/frameset
@@ -83,7 +83,9 @@ Prioritized work items:
 3. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
 4. **Foreign content and fragment parsing.** Cover SVG/MathML integration
-   boundaries and context-sensitive fragment errors.
+   boundaries and context-sensitive fragment errors. HTML start tags that force
+   recovery from foreign content now report their parse error; remaining work
+   includes foreign end-tag and fragment-shell recovery.
 5. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
