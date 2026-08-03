@@ -120,6 +120,21 @@ build_node_project() {
 build_node_project react
 build_node_project electron
 
+test_web_project() {
+  local backend="$1"
+  if ! has_command npm; then
+    skip_backend "$backend" "npm is not installed"
+    return
+  fi
+  echo "==> Testing $backend interactions"
+  (
+    cd "$output_root/$backend"
+    npm install --ignore-scripts
+    npm test
+    npm audit --audit-level=high
+  )
+}
+
 if has_command node; then
   echo "==> Checking html"
   (cd "$output_root/html" && node --check main.js)
@@ -130,6 +145,8 @@ if has_command node; then
     node --check index.js
     node --check main.js
   )
+  test_web_project html
+  test_web_project webcomponent
 else
   skip_backend html "node is not installed"
   skip_backend webcomponent "node is not installed"

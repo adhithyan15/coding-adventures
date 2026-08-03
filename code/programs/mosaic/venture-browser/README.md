@@ -74,11 +74,14 @@ backend on the current machine:
 ```
 
 React and Electron run their production builds; HTML and Web Components run
-JavaScript syntax checks; SwiftUI, Qt, XAML, Flutter, and Compose invoke their
-native toolchains. React and Electron also run the same package-owned DOM
+JavaScript syntax checks plus one shared package-owned jsdom interaction gate;
+SwiftUI, Qt, XAML, Flutter, and Compose invoke their native toolchains. React
+and Electron also run the same package-owned DOM
 interaction gate against their shared generated renderer, covering disabled
 controls, address editing, Return, Go, and host-driven prop refresh. The
-Flutter gate additionally pumps the emitted `MosaicApp`
+HTML/Web Component gate drives each target's real host runtime, including
+disabled dispatch suppression, node-slot mounting, Return, Go, and
+`mosaic-host-ready` refresh. The Flutter gate additionally pumps the emitted `MosaicApp`
 with a recording host and drives the generated native controls, including
 disabled buttons, address editing, Return, Go, and host-driven prop refresh.
 The Qt gate runs the same contract through Qt Quick Test against the emitted

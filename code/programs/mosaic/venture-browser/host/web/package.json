@@ -1,0 +1,14 @@
+{
+  "name": "venture-browser-mosaic-web-acceptance",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/VentureChromeInteraction.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "25.0.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

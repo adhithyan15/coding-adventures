@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased] - keep web test assets out of production
+
+- HTML and Web Component `.test.*` / `.spec.*` host assets are copied without
+  being injected as production page modules, matching the existing React host
+  asset rule.
+
 ## [Unreleased] - runnable host-surface shell acceptance
 
 - Compose Desktop project shells now resolve `node` slots from an optional

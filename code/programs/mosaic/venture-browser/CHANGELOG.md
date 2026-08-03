@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add one package-owned jsdom interaction gate shared by the generated HTML
+  and Web Component targets, covering native disabled controls, address edit,
+  Return, Go, node-slot mounting, and host-driven prop refresh.
 - Add one package-owned React/Electron DOM interaction gate for native disabled
   controls, address editing, Return and Go dispatch, and host prop refresh.
 - Add direct generated Compose Desktop interaction acceptance for native
