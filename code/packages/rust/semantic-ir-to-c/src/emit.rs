@@ -1772,8 +1772,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// forms); slice 7 = Hash methods taking a trailing BLOCK argument
 /// (`each_key`/`each_value`/`group_by`/`partition`; `each`/`map`/`select`/
 /// `reject`/`sort_by`/`sum` widen to accept a Hash receiver alongside their
-/// slice-3/5 Array forms). The dispatcher raises `NoMethodError` on an
-/// unsupported receiver type or a malformed call (missing/extra args, a
+/// slice-3/5 Array forms). `[]`/`[]=` (bracket-index read/write, Ruby's
+/// `recv.[](k)`/`recv.[]=(k, v)`) dispatch on the RECEIVER's actual runtime
+/// tag (Array vs Hash) — never a compile-time guess from the index's
+/// syntactic shape, so a Hash with a non-string key (e.g. an int or symbol
+/// key) can never be mis-routed. The dispatcher raises `NoMethodError` on
+/// an unsupported receiver type or a malformed call (missing/extra args, a
 /// non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
@@ -1794,6 +1798,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "keys" | "values" | "to_h" | "dig" | "merge" | "delete" | "clear" | "invert"
         // slice 7 — Hash block methods
         | "each_key" | "each_value" | "group_by" | "partition"
+        // bracket-index read/write
+        | "[]" | "[]="
     )
 }
 

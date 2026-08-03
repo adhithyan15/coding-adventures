@@ -9442,4 +9442,125 @@ b = "y"
             );
         }
     }
+
+    // -----------------------------------------------------------------
+    // Bug fix: bracket-index read/write lowering.
+    //
+    // Both `a[i]` (read) and `a[i] = v` (write) route through the SAME
+    // `__method__` dispatch every other Collections built-in uses --
+    // `__method__(recv, "[]", index)` / `__method__(recv, "[]=", index,
+    // value)` -- rather than a compile-time guess (Array vs Hash) from the
+    // INDEX's syntactic shape. An earlier version of this lowering used
+    // such a heuristic (string-literal key -> Map, else -> Seq, matching
+    // `python-to-semantic-ir`'s convention) but it mis-routes a Hash write
+    // with a non-string key (e.g. `h[2] = "b"` on an int-keyed Hash) to the
+    // Array path, which crashes at runtime. Dispatching on the RECEIVER's
+    // actual runtime tag instead can never mis-route, regardless of the
+    // index's type.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn bracket_index_read_lowers_to_method_dispatch() {
+        // A trailing `puts x` keeps `x = a[1]` from being tail-promoted into
+        // `body.value` (only the LAST top-level statement is ever promoted,
+        // and only when it's a bare `expression_stmt`/method call — see
+        // `lower_program`), so the assignment lands in `body.stmts` as an
+        // ordinary `LetBinding` we can inspect directly.
+        let m = lower("a = [1, 2, 3]\nx = a[1]\nputs x\n");
+        let main = main_body(&m);
+        let value = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "x" => Some(value),
+            _ => None,
+        }).expect("expected `x = ...` LetBinding");
+        match value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 3, "__method__(recv, \"[]\", index)");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]"));
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall for `a[1]`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_write_lowers_to_method_dispatch() {
+        let m = lower("a[0] = 9\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 4, "__method__(recv, \"[]=\", index, value)");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "a"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 0, .. }));
+                assert!(matches!(&args[3], Expr::IntLit { value: 9, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `a[0] = 9`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_write_with_non_string_key_is_not_a_seq_set() {
+        // The heuristic this replaced would have mis-routed this to
+        // `Stmt::SeqSet` (int key -> "must be an Array"), which crashes at
+        // runtime when `h` is actually a Hash. The `__method__` dispatch
+        // carries the index through untouched -- no type decision is made
+        // at lowering time at all.
+        let m = lower("h[2] = \"b\"\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        assert!(
+            !matches!(stmt, Stmt::SeqSet { .. }),
+            "must not lower to SeqSet -- the receiver's type is unknown at lowering time"
+        );
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected __method__ BuiltinCall statement, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn chained_bracket_index_read_nests_method_dispatch() {
+        // `a[1][0]` -- the outer `__method__("[]", ...)` receives the
+        // inner `__method__("[]", ...)` as ITS receiver. A trailing `puts x`
+        // keeps `x = a[1][0]` out of the tail-promoted `body.value` slot
+        // (see the comment on `bracket_index_read_lowers_to_method_dispatch`).
+        let m = lower("a = [[1, 2], [3, 4]]\nx = a[1][0]\nputs x\n");
+        let main = main_body(&m);
+        let value = main.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "x" => Some(value),
+            _ => None,
+        }).expect("expected `x = ...` LetBinding");
+        match value {
+            Expr::BuiltinCall { name, args, .. } if name == "__method__" => {
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]"));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "[]"));
+                    }
+                    other => panic!("expected nested __method__ receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall for `a[1][0]`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn bracket_index_read_and_write_pass_sir_validator() {
+        // `[]=`'s receiver must already exist (bracket-assignment mutates,
+        // it can't create a binding), so `a`/`h` are declared first.
+        let m = lower(
+            "a = [[1, 2], [3, 4]]\nh = {}\na[0] = 9\nh[\"k\"] = 1\nputs a[0]\nputs h[\"k\"]\nputs a[1][0]\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected bracket-index program: {:?}", result);
+    }
 }

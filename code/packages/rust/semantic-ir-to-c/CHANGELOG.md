@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.29.0 — bracket-index read/write (`recv[k]` / `recv[k] = v`)
+
+New dispatch arms for `"[]"` (read) and `"[]="` (write) in
+`_sir_builtin_method_v`, reached via `ruby-to-semantic-ir` 0.8.0's new
+`__method__("[]"/"[]=" ...)` lowering for Ruby's `recv[k]`/`recv[k] = v`
+syntax (real method syntax: `recv.[](k)`/`recv.[]=(k, v)`). Both branch on
+the RECEIVER's actual `SIR_SEQ`/`SIR_MAP` tag at runtime and delegate to
+the existing `_sir_seq_index`/`_sir_map_get` and `_sir_seq_set`/
+`_sir_map_set` helpers — no new runtime logic, just a new named entry point
+into machinery every other Array/Hash method already goes through.
+
+This replaces an earlier, REJECTED design where the Ruby frontend guessed
+Array-vs-Hash from the INDEX's syntactic shape at compile time (a
+string-literal key → Hash, anything else → Array). That heuristic mis-types
+a Hash with a non-string key — `h[2] = "b"` on an int-keyed Hash routed to
+`_sir_seq_set` regardless of `h`'s real type, which `exit()`s on a
+non-sequence receiver. Dispatching on the receiver's ACTUAL tag here, at
+runtime, can never mis-route: the index's type is irrelevant to which
+helper runs. As with every other bracket-index frontend gap, this was only
+reachable at all once `ruby-parser` grew a grammar rule for it — see that
+crate's 0.7.0 CHANGELOG entry for the parse-side half of this fix.
+
+### Added
+
+- `tests/compile_and_run_index_bracket.rs` — 11 execution-proof tests: Array
+  and Hash read/write, out-of-bounds/missing-key → `nil`, chained reads
+  (`a[1][0]`), updating an existing Hash key in place, a cyclic write
+  (`a[0] = a`), and — the case that motivated the runtime-dispatch design —
+  Hash writes with integer and symbol keys, which the rejected heuristic
+  would have crashed on.
+
 ## 0.28.1 — fix: `Array#sum` ignored a block argument
 
 The 0-arg `sum` dispatch arm (slice 3) never checked `argc`/`args`, so
