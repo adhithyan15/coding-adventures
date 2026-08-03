@@ -133,7 +133,8 @@ The package has no direct filesystem, network, stream, environment, process, clo
 or random capability. It receives complete encrypted frames and trusted receipt
 times from its caller. Length-prefix framing, pipe ownership, process launch/reap,
 heartbeat scheduling, time sampling, and hard-kill fallback belong to the concrete
-process-supervisor adapter.
+process-supervisor adapter specified in
+[`process-host-supervisor.md`](process-host-supervisor.md).
 
 ## Required Tests
 
