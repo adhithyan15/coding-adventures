@@ -18,9 +18,9 @@
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 181,
-    "legacySchemaTracks": 9,
-    "mixedSchemaTracks": 11,
+    "lessonChaptersWithoutBooks": 155,
+    "legacySchemaTracks": 8,
+    "mixedSchemaTracks": 12,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -1020,9 +1020,7 @@
           2,
           3,
           4,
-          5
-        ],
-        "missingBookChapters": [
+          5,
           6,
           7,
           8,
@@ -1050,8 +1048,9 @@
           30,
           31
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 16
+        "coveragePercent": 100
       },
       {
         "language": "telugu",
@@ -1515,10 +1514,11 @@
       },
       {
         "language": "kannada",
-        "status": "legacy",
+        "status": "mixed",
         "lessonCount": 60,
         "versions": {
-          "1": 60
+          "1": 30,
+          "2": 30
         }
       },
       {
