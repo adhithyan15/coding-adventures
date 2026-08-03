@@ -1524,6 +1524,29 @@ def test_rejects_invalid_jfet_energy_gap(value: str) -> None:
         parse_netlist(f".model fast NJF(EG={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("3", 3.0)])
+def test_parse_jfet_noise_equation_level(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(NLEV={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Nlev == expected
+
+
+@pytest.mark.parametrize("value", ["0", "1.5", "1e999"])
+def test_rejects_invalid_jfet_noise_equation_level(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="JFET NLEV must be a finite integer greater than or equal to 1",
+    ):
+        parse_netlist(f".model fast NJF(NLEV={value})")
+
+
 def test_parse_pjf_model_aliases_beta() -> None:
     parsed = parse_netlist(
         """

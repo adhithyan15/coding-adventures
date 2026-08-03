@@ -1563,6 +1563,27 @@ J1 drain gate source fast
     );
   });
 
+  it.each([
+    ["1", 1.0],
+    ["3", 3.0],
+  ])("parses JFET noise equation level %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(NLEV=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      noiseEquationLevel: expected,
+    });
+  });
+
+  it.each(["0", "1.5", "1e999"])("rejects invalid JFET noise equation level %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(NLEV=${value})`)).toThrow(
+      "JFET NLEV must be a finite integer greater than or equal to 1",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)

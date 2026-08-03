@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `NLEV` noise equation level.
 - Validate and lower JFET model-card `EG` energy gap.
 - Validate and lower JFET model-card `XTI` temperature exponent.
 - Validate and lower JFET model-card `IS` gate saturation current.
