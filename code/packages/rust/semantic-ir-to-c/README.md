@@ -31,6 +31,13 @@ The included `tests/compile_and_run.rs` compiles and runs every corpus program
 through a real compiler (see below); the design itself is verified against all
 three.
 
+**Linking**: the embedded runtime uses `<math.h>` functions (`floor`/`ceil`/
+`fabs`, backing Numeric methods like `floor`/`ceil`/`round`/`abs`). MSVC and
+Clang/GCC on macOS link these in automatically; **GCC/Clang on Linux need an
+explicit `-lm`** on the compile/link command (glibc ships libm as a separate
+archive) — e.g. `cc -std=c99 -o prog prog.c -lm`. Omitting it produces an
+`undefined reference to 'floor'`-style link error, not a compile error.
+
 ## Usage
 
 ```rust

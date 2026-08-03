@@ -2,6 +2,21 @@
 
 ## 0.31.0 — Collections slice 9: Numeric methods
 
+### Fixed (CI — Linux link failure)
+
+- **Every emitted C program failed to LINK on Linux** with `undefined
+  reference to 'floor'`/`'ceil'` (confirmed on `ubuntu-latest` CI; macOS and
+  Windows were unaffected). This slice's `floor`/`ceil`/`round`/`abs` are
+  the FIRST `<math.h>` function calls the embedded runtime template makes —
+  and the template is pasted into every generated `.c` file regardless of
+  whether the source program actually calls a Numeric method, so this broke
+  every single test in the crate on Linux, not just this slice's own.
+  glibc ships `libm` as a separate archive from `libc` (unlike macOS's
+  libSystem, which folds it in), so linking requires an explicit `-lm`.
+  Fixed by adding `-lm` to every test file's `cc` invocation (30 call sites
+  across 26 files) and documenting the requirement in the README for real
+  downstream consumers of the generated C.
+
 New `_sir_builtin_method_v` dispatch arms for `Integer`/`Float`: `abs`,
 `even?`/`odd?`/`pred` (Integer-only — true Ruby, unlike the looser dynamic
 typing the Python/TS `sir-runtime-oop` reference uses), `zero?`/`positive?`/

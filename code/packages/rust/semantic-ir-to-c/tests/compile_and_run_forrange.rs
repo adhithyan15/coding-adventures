@@ -52,6 +52,7 @@ fn compile_and_run(cc: &str, module: &Module) -> String {
         .args(["-std=c99", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("spawn C compiler");
     assert!(
@@ -219,6 +220,7 @@ fn for_range_with_unused_counter_compiles_under_werror() {
         .args(["-std=c99", "-Wall", "-Werror=unused-variable", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("spawn cc");
     assert!(

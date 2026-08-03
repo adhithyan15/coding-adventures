@@ -47,6 +47,7 @@ fn run_ruby(src: &str) -> Option<String> {
         .args(["-std=c99", "-Wall", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("spawn cc");
     assert!(
