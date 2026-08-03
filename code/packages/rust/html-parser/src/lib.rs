@@ -6801,7 +6801,13 @@ impl HtmlParser {
             "p" if !self.has_open_element("p")
                 && !self.has_open_element("body")
                 && !self.document_has_body_element()
-                && !self.body_has_non_whitespace_child() => {}
+                && !self.body_has_non_whitespace_child() =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag-before-body",
+                    "end tag `</p>` before body content was ignored",
+                ));
+            }
             "p" if self.current_parent_has_element_ancestor("button")
                 && !self.current_parent_has_element_in_button_scope("p") =>
             {
@@ -32939,6 +32945,21 @@ mod tests {
                 "end tag `</p>` before body content was ignored"
             )]
         );
+
+        for source in [
+            "<!doctype html><html></p><!--foo-->",
+            "<!doctype html><head></head></p><!--foo-->",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-p-end-tag-before-body",
+                    "end tag `</p>` before body content was ignored"
+                )],
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]

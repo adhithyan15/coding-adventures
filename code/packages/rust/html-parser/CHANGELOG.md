@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Stray paragraph end tags before the parser has implied the document body now
+  reuse the existing pre-body diagnostic, closing 4 previously silent malformed
+  corpus cases without changing DOM recovery.
 - The after-after-frameset insertion mode now reports unexpected character,
   start-tag, and end-tag tokens, closing 8 previously silent malformed corpus
   cases without changing DOM recovery.
