@@ -147,16 +147,32 @@ fn derivation_tree_json(
             op,
             operands,
             result,
+            real,
         } => {
             let kids: Vec<String> = operands
                 .iter()
                 .map(|o| derivation_tree_json(o, kb))
                 .collect();
+            // NUM-7: an additive audit companion, present only for a square root of an exact
+            // base. Absent for every other op, including a sqrt whose base had no exact sidecar.
+            let real_json = match real {
+                Some(rc) => format!(
+                    ",\"real\":{{\"precision_bits\":{},\"mode\":\"{}\",\"value\":\"{}\"}}",
+                    rc.value.precision_bits(),
+                    rounding_mode_name(rc.mode),
+                    esc(&rc
+                        .value
+                        .to_decimal_string()
+                        .unwrap_or_else(|| rc.value.to_f64().to_string())),
+                ),
+                None => String::new(),
+            };
             format!(
-                "{{\"node\":\"op\",\"op\":\"{}\",\"value\":{},\"operands\":[{}]}}",
+                "{{\"node\":\"op\",\"op\":\"{}\",\"value\":{},\"operands\":[{}]{}}}",
                 esc(op.symbol()),
                 jnum(*result),
-                kids.join(",")
+                kids.join(","),
+                real_json
             )
         }
         // A `round_to(x, n)` narrowing (NUM-6a): the audit exposes the precision,

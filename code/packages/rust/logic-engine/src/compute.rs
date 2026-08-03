@@ -52,7 +52,7 @@
 
 use crate::dimension::{DimOp, Dimension};
 use crate::{FactId, KnowledgeBase};
-use bignum_core::{BigDecimal, BigInteger, BigRational, RoundingMode};
+use bignum_core::{BigDecimal, BigDouble, BigInteger, BigRational, RoundingMode};
 
 /// An exact rational value for CPU arithmetic — a [`BigRational`] from `bignum-core`, so it is
 /// **unbounded** (no `i128` overflow) and every `+ − × ÷` of rationals stays exact forever.
@@ -187,6 +187,53 @@ impl ExactRational {
             .ok()
             .map(Self)
     }
+}
+
+/// An arbitrary-precision APPROXIMATE real value — the audit-visible "Real" companion (NUM-7,
+/// ADJ-NUMERIC-SUBSTRATE §8). Wraps a [`BigDouble`] at a stated, carried precision. Unlike
+/// [`ExactRational`], a value of this type is never a `Derived`'s ground representation — it
+/// exists only where the true value is genuinely irrational (today: `sqrt`), captured alongside
+/// the ordinary `f64` `result` and, independently, an `ExactRational` sidecar (when the operand
+/// itself was exact). This is deliberately **additive**: it does not replace or contagiously
+/// propagate through either of those, unlike the full `Number` tower ADJ-NUMERIC-SUBSTRATE §5
+/// describes and NUM-7 does not attempt.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApproxReal(BigDouble);
+
+impl ApproxReal {
+    /// The working precision, in mantissa bits, this value was computed at.
+    pub fn precision_bits(&self) -> u32 {
+        self.0.precision()
+    }
+
+    /// The underlying arbitrary-precision float.
+    pub fn as_big_double(&self) -> &BigDouble {
+        &self.0
+    }
+
+    /// A **lossy** narrowing to `f64`, for a boundary consumer that has no use for the extra
+    /// precision (mirrors [`ExactRational::to_f64`]).
+    pub fn to_f64(&self) -> f64 {
+        self.0.to_f64()
+    }
+
+    /// An exact base-10 rendering, when practical — `None` only when [`BigDouble::to_decimal`]'s
+    /// own huge-exponent DoS budget refuses (astronomically far beyond any real precision this
+    /// engine would ever be configured to).
+    pub fn to_decimal_string(&self) -> Option<String> {
+        self.0.to_decimal().map(|d| d.to_string())
+    }
+}
+
+/// A [`DerivationNode::Op`]'s optional `Real` companion (NUM-7): the [`ApproxReal`] value,
+/// alongside the exact rational `source` it was promoted from and the `mode` it was rounded
+/// under — captured so [`recheck_narrowing`] can independently re-derive it, mirroring how
+/// `Round`/`ToScientific`/etc. capture `operand_exact` for the same purpose.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RealCompanion {
+    pub value: ApproxReal,
+    pub source: ExactRational,
+    pub mode: RoundingMode,
 }
 
 /// The largest exponent [`ExactRational::powi`] accepts; beyond it the `f64` magnitude is
@@ -513,6 +560,11 @@ pub enum DerivationNode {
         op: ComputeOp,
         operands: Vec<DerivationNode>,
         result: f64,
+        /// NUM-7: the `Real`/`BigDouble` audit companion, populated only for a `Pow` node that
+        /// is a square root (evaluated exponent bit-exactly `0.5`) whose base carried an exact
+        /// rational sidecar. `None` for every other `Op` — including a sqrt whose base itself
+        /// had no exact sidecar (this rung does not chain/contagiously propagate `Real`).
+        real: Option<RealCompanion>,
     },
     /// A **precision narrowing** node (NUM-6a) — the audit record for a
     /// `round_to(x, n)`. Carries the `spec`/`mode` it rounded under and its single
@@ -948,6 +1000,35 @@ fn eval(
                 if !result.is_finite() {
                     return Err(ComputeError::NonFinite { op: *op });
                 }
+                // A square root gets a correctly-rounded `BigDouble` "Real" audit companion
+                // (NUM-7). Detected on the *evaluated* exponent, bit-exactly `0.5` — not the
+                // exponent's exact sidecar, which is always `None` here: `ExactRational::
+                // from_integer_f64` is integer-only, and both `\sqrt{x}` and `\sqrt[n]{x}` lower
+                // their exponent to exactly this literal (adj-lang's LaTeX-root lowering), so an
+                // exact-sidecar check would simply never fire. Safe by construction: `result` is
+                // already finite-checked just above, so a negative base — which would make
+                // `BigDouble::sqrt` *panic* — can never reach here (f64 `powf`/`sqrt` of a
+                // negative base is `NaN`, already routed to `Err` above).
+                let real = if exponent == 0.5 {
+                    exact_l.as_ref().map(|base_exact| {
+                        let prec = kb.real_precision_bits();
+                        let mode = RoundingMode::HalfEven;
+                        let promoted = BigDouble::from_rational(base_exact.as_ratio(), prec, mode);
+                        RealCompanion {
+                            value: ApproxReal(promoted.sqrt(prec, mode)),
+                            source: base_exact.clone(),
+                            mode,
+                        }
+                    })
+                } else {
+                    None
+                };
+                // Tighten the plain f64 `result` to `f64::sqrt` for this case: `powf` is not
+                // guaranteed correctly-rounded on every platform, while `BigDouble::sqrt` at
+                // `prec = 53` reproduces `f64::sqrt` bit-for-bit (bignum-core's own module doc),
+                // so this keeps the two audit-visible values from ever disagreeing in the last
+                // bit.
+                let result = if exponent == 0.5 { base.sqrt() } else { result };
                 // Exact sidecar only for a non-negative integer exponent of an
                 // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
                 // just the `f64` result.
@@ -965,6 +1046,7 @@ fn eval(
                         op: *op,
                         operands: vec![lhs, rhs],
                         result,
+                        real,
                     },
                     result_dim,
                     exact,
@@ -1057,6 +1139,7 @@ fn eval(
                     op: *op,
                     operands: vec![lhs, rhs],
                     result,
+                    real: None,
                 },
                 result_dim,
                 exact,
@@ -1136,6 +1219,7 @@ fn eval(
                     op: *op,
                     operands,
                     result,
+                    real: None,
                 },
                 result_dim,
                 None,
@@ -1315,6 +1399,7 @@ fn eval_unary(
             op,
             operands: vec![operand],
             result,
+            real: None,
         },
         result_dim,
         exact,
@@ -2205,6 +2290,107 @@ mod tests {
         assert_eq!(d.exact, None);
     }
 
+    // ---- NUM-7b: the sqrt Real/BigDouble audit companion ----------------
+
+    fn real_companion_of(d: &Derived) -> Option<&RealCompanion> {
+        match &d.tree {
+            DerivationNode::Op { real, .. } => real.as_ref(),
+            other => panic!("expected an Op node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn sqrt_of_an_exact_base_gets_a_real_companion() {
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(4.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        let real = real_companion_of(&d).expect("sqrt of an exact base should get a real companion");
+        assert_eq!(real.value.precision_bits(), 256);
+        assert_eq!(real.value.to_decimal_string().unwrap(), "2");
+    }
+
+    #[test]
+    fn sqrt_of_an_irrational_base_matches_known_digits() {
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        let real = real_companion_of(&d).expect("sqrt of 2 should get a real companion");
+        let rendered = real.value.to_decimal_string().unwrap();
+        assert!(rendered.starts_with("1.41421356237309504880168"), "got {rendered}");
+    }
+
+    #[test]
+    fn sqrt_respects_a_configured_kb_precision() {
+        let kb = kb_with(vec![]).with_real_precision_bits(64);
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(0.5)),
+            &kb,
+        )
+        .unwrap();
+        let real = real_companion_of(&d).expect("sqrt should get a real companion");
+        assert_eq!(real.value.precision_bits(), 64);
+    }
+
+    #[test]
+    fn sqrt_of_a_negative_base_stays_a_clean_error_not_a_panic() {
+        // BigDouble::sqrt PANICS on a negative operand — the ordering that computes the Real
+        // companion only after the existing f64 finiteness check must keep this reachable ONLY
+        // as a clean Err, never as a panic deep inside bignum-core.
+        let err = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(-4.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap_err();
+        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }));
+    }
+
+    #[test]
+    fn non_sqrt_pow_has_no_real_companion() {
+        let d = compute(
+            "p",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(3.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert!(real_companion_of(&d).is_none());
+    }
+
+    #[test]
+    fn cube_root_shaped_pow_has_no_real_companion() {
+        // 27 ^ (1/3) = 3 — a genuine root, but NOT a square root (exponent != 0.5 bit-exactly),
+        // and BigDouble has no cbrt: this must not be mistaken for a sqrt.
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(27.0), ComputeExpr::Lit(1.0 / 3.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert!(real_companion_of(&d).is_none());
+    }
+
+    #[test]
+    fn sqrt_of_an_inexact_base_skips_the_real_companion() {
+        // sqrt(sqrt(2)): the inner sqrt's own returned "exact" sidecar is None (2's square root
+        // is irrational), so the outer sqrt's base carries no exact sidecar to promote from —
+        // NUM-7 does not chain/contagiously propagate Real companions.
+        let inner = bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(0.5));
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, inner, ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert!(real_companion_of(&d).is_none());
+    }
+
     #[test]
     fn absolute_value_flips_a_negative_scalar_and_stays_exact() {
         // |−7| = 7, scalar, and the exact sidecar stays exact (|−7/1| = 7/1) —
@@ -2825,6 +3011,7 @@ mod tests {
                 op,
                 operands,
                 result,
+                real: _,
             } => {
                 assert_eq!(*op, ComputeOp::Div);
                 assert!((result - 0.4).abs() < 1e-12);

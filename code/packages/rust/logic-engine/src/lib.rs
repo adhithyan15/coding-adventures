@@ -54,9 +54,9 @@ use logic_core::{unify, LogicVar, Number, Substitution, Term};
 /// `bignum-core` directly (NUM-6a).
 pub use bignum_core::RoundingMode;
 pub use compute::{
-    compute, recheck_narrowing, recheck_narrowings, ComputationId, ComputationPlanRef,
+    compute, recheck_narrowing, recheck_narrowings, ApproxReal, ComputationId, ComputationPlanRef,
     ComputationScope, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived,
-    NarrowingCheck, RoundSpec,
+    NarrowingCheck, RealCompanion, RoundSpec,
 };
 pub use conversion::{add_or_sub, convert_value, ConvError, Conversion, ConversionTable};
 pub use datetime::{
