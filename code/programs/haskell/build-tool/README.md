@@ -31,6 +31,14 @@ alias wins over a same-basename program alias. Shared fixtures cover the
 field-aware boundary, genuine cycles, legacy BUILD dependencies, and
 package/program alias collisions.
 
+Haskell dependency resolution reads package requirements only from Cabal
+`build-depends` fields, including indented comma continuations and repeated
+fields across stanzas. Synopsis and description text, source directories,
+compiler options, comments, and other fields cannot invent graph edges. The
+shared `resolution-haskell-field-aware` fixture covers both inline and
+multiline dependencies plus representative non-authoritative collisions. The
+complete 205-package Haskell lane matches the Go oracle edge-for-edge.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

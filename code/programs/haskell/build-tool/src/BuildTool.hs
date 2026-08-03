@@ -19,7 +19,7 @@ import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
-import Data.Char (isAlphaNum, ord, toLower)
+import Data.Char (isAlpha, isAlphaNum, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
@@ -777,7 +777,56 @@ parseBuildToolDependencyLine line =
 readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readCabalDependencyTokens :: Package -> IO [String]
+readCabalDependencyTokens pkg = do
+    entries <- listDirectory (packagePath pkg)
+    let cabalPaths =
+            sort
+                [ packagePath pkg </> entry
+                | entry <- entries
+                , map toLower (takeExtension entry) == ".cabal"
+                ]
+    fmap (nub . concat) $
+        forM cabalPaths $ \path -> do
+            contents <- readFileStrict path
+            pure (cabalDependencyTokens contents)
+
+cabalDependencyTokens :: String -> [String]
+cabalDependencyTokens = collect False . lines
+  where
+    collect _ [] = []
+    collect inside (rawLine : rest) =
+        let stripped = trim (stripCabalComment rawLine)
+            (field, assignment) = break (== ':') stripped
+            fieldName = map toLower (trim field)
+            startsField = not (null assignment) && isCabalFieldName fieldName
+            indented =
+                case rawLine of
+                    first : _ -> first `elem` [' ', '\t']
+                    [] -> False
+         in if startsField && fieldName == "build-depends"
+                then tokenize (drop 1 assignment) ++ collect True rest
+                else
+                    if inside
+                        then
+                            if null stripped || startsField || not indented
+                                then collect False rest
+                                else tokenize stripped ++ collect True rest
+                        else collect False rest
+
+isCabalFieldName :: String -> Bool
+isCabalFieldName fieldName =
+    not (null fieldName)
+        && isAlpha (head fieldName)
+        && all (\character -> isAlphaNum character || character == '-') fieldName
+
+stripCabalComment :: String -> String
+stripCabalComment [] = []
+stripCabalComment ('-' : '-' : _) = []
+stripCabalComment (character : rest) = character : stripCabalComment rest
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

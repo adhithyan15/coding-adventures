@@ -106,30 +106,20 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `b3a6616a` after
-Ruby build-tool PR #9648 merged. The inventory contains 1,226 normalized
-implementation identities across 4,374 established-lane
-package slots and found zero canonical collisions or unknown language buckets:
+working inventory was regenerated on August 3, 2026 from `bd73c3f1` after
+the latest Spice parser repair merged. The inventory contains 1,245 normalized
+implementation identities across 4,398 established-lane package slots and
+found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
 |---|---:|---:|
-| Present in 10-15 languages | 172 | 271 |
-| Present in 5-9 languages | 121 | 911 |
+| Present in 10-15 languages | 173 | 272 |
+| Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 784 | 10,976 |
+| Present in one language | 795 | 11,130 |
 
-The loop must not start by attempting 10,976 singleton ports. It should finish
+The loop must not start by attempting 11,130 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
-
-The current working inventory on
-`479ba6d78c2168ad36f02a1da020d7b91f6e4ef8` is collision-clean at 1,237
-normalized implementation identities, 4,385 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 787 singletons, 592
-Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The new `websocket-runtime`, `chief-of-staff-daemon-api`, and
-`smart-home-axis-vapix-integration` identities have explicit native-authority
-review owners; the intervening parser, CI, and curriculum fixes changed no
-other canonical package identity.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
@@ -328,20 +318,25 @@ portable seam. The dedicated review is excluded from autonomous delivery.
 The same refresh merged Haskell strict rockspec decoding and directly unlocked
 the binary-safe source-hashing child. PR #9756 completed that cache-boundary
 repair and lets the exact `lua/logic_gates` to `lua/arithmetic` closure dry-run
-successfully. The full 258-package Lua lane then reaches a separate all-node
-cycle failure in Haskell's whole-manifest token resolver. The selected direct
-child now repairs the Lua reader: it distinguishes genuine cycles from false
-alias matches, parses only authoritative rockspec dependency fields, preserves
-BUILD-declared program edges and identities, and compares the exact edge set
-with the Go oracle. Validation of that narrow repair exposed the same generic
-token-reader debt in the remaining ecosystem readers: the real 205-package
-Haskell lane still reports an all-node cycle. A dependent backlog owner now
-carries those non-Lua manifest readers instead of widening this slice. The
-post-rebase `81e7f0e6` collision-checked inventory has 1,243
-identities and 4,391 implementation slots across 15 established lanes, with
-172 high-consensus packages and 271 missing slots, 793 singleton packages and
-11,102 missing slots, 598 Rust singletons, and zero collisions or unknown
-buckets. The previously discovered singleton,
+successfully. The full 258-package Lua lane then reached a separate all-node
+cycle failure in Haskell's whole-manifest token resolver. PR #9777 repaired the
+Lua reader: it distinguishes genuine cycles from false alias matches, parses
+only authoritative rockspec dependency fields, preserves BUILD-declared
+program edges and identities, and matches the Go oracle exactly. That repair
+exposed the same generic-token debt in the real 205-package Haskell lane. The
+selected direct child is now the dependency-shaped Cabal slice: its baseline
+has all 486 canonical edges plus 43 false edges from non-authoritative manifest
+text, and it replaces whole-file tokenization with `build-depends` parsing.
+The remaining non-Cabal readers have a separate dependent backlog owner. The
+post-rebase `bd73c3f1` collision-checked inventory has 1,245
+identities and 4,398 implementation slots across 15 established lanes, with
+173 high-consensus packages and 272 missing slots, 795 singleton packages and
+11,130 missing slots, 600 Rust singletons, and zero collisions or unknown
+buckets. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill existing identities; ZStd
+is complete across all 15 lanes and ZIP now spans 12. The new Chief daemon
+keyring and Synology Surveillance singleton packages own concrete filesystem or
+credentialed network authority and have excluded native-authority review
+owners. The previously discovered singleton,
 `smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR
 adapter; the state backlog records an excluded native-authority review instead
 of treating that host integration as an all-language portability gap. The new

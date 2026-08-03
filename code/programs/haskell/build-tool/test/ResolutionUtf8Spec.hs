@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -151,6 +151,26 @@ resolutionUtf8Spec = describe "Lua resolution conformance" $ do
                 ]
                 `shouldReturn` 2
 
+resolutionCabalSpec :: Spec
+resolutionCabalSpec = describe "Cabal resolution conformance" $ do
+    it "reads only every authoritative build-depends field" $
+        withFixture "resolution-haskell-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "haskell" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "haskell/alpha"
+                    , "haskell/beta"
+                    , "haskell/delta"
+                    , "haskell/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["haskell/beta", "haskell/delta", "haskell/gamma"]
+                        , ["haskell/alpha"]
+                        ]
+
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation
 assertMetadataError root metadataError = do
     metadataErrorCode metadataError `shouldBe` "METADATA_INVALID_UTF8"
@@ -163,9 +183,12 @@ assertMetadataError root metadataError = do
     renderMetadataEncodingError metadataError `shouldSatisfy` (not . isInfixOf root)
 
 resolveFixture :: FilePath -> IO DG.DirectedGraph
-resolveFixture root = do
+resolveFixture = resolveFixtureFor "lua"
+
+resolveFixtureFor :: String -> FilePath -> IO DG.DirectedGraph
+resolveFixtureFor language root = do
     packages <- discoverPackages (root </> "code")
-    resolveDependencies (filter ((== "lua") . packageLanguage) packages)
+    resolveDependencies (filter ((== language) . packageLanguage) packages)
 
 graphEdges :: DG.DirectedGraph -> [[String]]
 graphEdges graph =
