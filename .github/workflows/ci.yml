@@ -467,7 +467,7 @@ jobs:
           components: clippy
 
       - name: Install native Paint VM dependencies
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev
