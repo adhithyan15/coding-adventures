@@ -39,7 +39,13 @@
 
 % Vendored Devanagari font (../../_fonts/ from <lang>/book/); \sk{...} = inline
 % Sanskrit snippet.
-\newfontfamily\sanskritfont[Path=../../_fonts/, Script=Devanagari]{NotoSansDevanagari-Static.ttf}
+\newfontfamily\sanskritfont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
 \newcommand{\sk}[1]{{\sanskritfont #1}}
 
 \hypersetup{
@@ -48,6 +54,14 @@
   pdfsubject={Etymology-driven Sanskrit curriculum},
   pdfkeywords={Sanskrit, Devanagari, Indo-European, language learning}
 }
+\pdfstringdefDisableCommands{%
+  \def\sk#1{#1}% Keep Devanagari text while dropping font-only presentation.
+  \def\sanskritfont{}%
+}
+
+% Lesson callouts are deliberately kept together when they fit. Let short pages
+% end naturally instead of stretching their vertical glue around those boxes.
+\raggedbottom
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
