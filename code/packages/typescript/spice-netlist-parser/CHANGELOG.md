@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite MOS model-card `PB` values and lower
+  valid bulk-junction potentials instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `JS` values and lower valid
   junction saturation-current densities instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `CJSW` values and lower valid

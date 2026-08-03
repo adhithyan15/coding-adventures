@@ -1897,6 +1897,26 @@ def test_lowers_valid_mosfet_model_junction_current(
     assert isclose(mosfet.model.model.params.JS, expected)
 
 
+@pytest.mark.parametrize("bulk_potential", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_mosfet_model_bulk_potential(
+    bulk_potential: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET PB must be finite and positive",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(PB={bulk_potential})\nM1 d g s b nfast\n"
+        )
+
+
+def test_lowers_positive_mosfet_model_bulk_potential() -> None:
+    parsed = parse_netlist(".model nfast NMOS(PB=0.72)\nM1 d g s b nfast\n")
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.PB, 0.72)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
