@@ -1879,10 +1879,13 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
         if params_text.startswith("(") and params_text.endswith(")"):
             params_text = params_text[1:-1]
     params = _parse_model_params(params_text)
-    if kind in {"NMOS", "PMOS"} and "LEVEL" in params:
-        level = params["LEVEL"]
-        if not math.isfinite(level) or abs(level - 1.0) > 1.0e-12:
-            raise NetlistParseError("only MOS LEVEL=1 model cards are supported")
+    if kind in {"NMOS", "PMOS"}:
+        if "LEVEL" in params:
+            level = params["LEVEL"]
+            if not math.isfinite(level) or abs(level - 1.0) > 1.0e-12:
+                raise NetlistParseError("only MOS LEVEL=1 model cards are supported")
+        if "TOX" in params and (not math.isfinite(params["TOX"]) or params["TOX"] <= 0.0):
+            raise NetlistParseError("MOSFET TOX must be finite and positive")
     return ModelCard(name=name, kind=kind, params=params)
 
 
@@ -1920,7 +1923,6 @@ _LEVEL1_PARAM_ALIASES = {
     "NSUB": "N_SUB",
     "N": "N_SUB",
     "TNOM": "T_NOM",
-    "TOX": "T_OX",
     "VTO": "VT0",
 }
 

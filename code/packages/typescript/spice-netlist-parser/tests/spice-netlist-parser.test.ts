@@ -1306,6 +1306,25 @@ Xright c d load
     },
   );
 
+  it.each(["0", "-1n", "1e999"])(
+    "rejects invalid MOSFET model TOX=%s",
+    (oxideThickness) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(TOX=${oxideThickness})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET TOX must be finite and positive");
+    },
+  );
+
+  it("lowers MOSFET model oxide thickness", () => {
+    const parsed = parseNetlist(".model nfast NMOS(TOX=7n)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.TOX).toBeCloseTo(7.0e-9, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });

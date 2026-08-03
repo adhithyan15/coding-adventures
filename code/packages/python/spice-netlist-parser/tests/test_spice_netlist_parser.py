@@ -1392,6 +1392,23 @@ def test_preserves_supported_and_implicit_mosfet_model_level_one(parameters: str
     assert isinstance(parsed.circuit.elements[0], Mosfet)
 
 
+@pytest.mark.parametrize("oxide_thickness", ["0", "-1n", "1e999"])
+def test_rejects_invalid_mosfet_model_oxide_thickness(oxide_thickness: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET TOX must be finite and positive",
+    ):
+        parse_netlist(f".model nfast NMOS(TOX={oxide_thickness})\nM1 d g s b nfast\n")
+
+
+def test_lowers_mosfet_model_oxide_thickness() -> None:
+    parsed = parse_netlist(".model nfast NMOS(TOX=7n)\nM1 d g s b nfast\n")
+
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.TOX, 7.0e-9)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
