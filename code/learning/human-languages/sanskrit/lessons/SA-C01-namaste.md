@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, halant-conjunct]
 roots: [namas, te]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

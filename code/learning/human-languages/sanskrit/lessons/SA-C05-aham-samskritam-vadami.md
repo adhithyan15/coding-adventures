@@ -8,7 +8,7 @@ concept_tag: SA-WORD-SAMSKRITA
 prerequisites: [SA-C05-vadami, SA-C03-aham]
 sounds: [anusvara, kr-vocalic]
 roots: [samskrita, sam-kr]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C05-vadami, SA-C03-aham]
 ---
 

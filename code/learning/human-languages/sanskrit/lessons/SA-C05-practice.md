@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami, SA-C05-vasami, SA-C05-karomi]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C05-vadami, SA-C05-aham-samskritam-vadami, SA-C05-vasami, SA-C05-karomi, SA-C03-aham]
 ---
 

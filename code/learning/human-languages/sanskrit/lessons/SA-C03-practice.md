@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [SA-C03-bhavan-katham-asti, SA-C03-kushalam, SA-C03-na-cinta]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C03-katham, SA-C03-bhavan-katham-asti, SA-C03-aham, SA-C03-kushalam, SA-C03-na-cinta]
 ---
 

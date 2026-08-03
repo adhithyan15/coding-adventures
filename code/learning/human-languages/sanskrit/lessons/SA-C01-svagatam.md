@@ -8,7 +8,7 @@ concept_tag: GREETING-WELCOME
 prerequisites: [SA-C01-dhanyavada]
 sounds: [sva-conjunct, halant]
 roots: [su-good, gam-come]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [SA-C01-namaskara]
 ---
 

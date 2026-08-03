@@ -1,4 +1,4 @@
-# Session Map — Sanskrit Chapters 1–5
+# Session Map — Sanskrit Chapters 1–6
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -63,6 +63,14 @@ and the Sanskrit-specific marks (visarga, conjuncts) — that word needs.
 | 29 | karomi | करोमि | "I do" ← √kṛ — the root of *namaskāra*, *karma*, *Sanskrit* |
 | 30 | practice | (dialogue) | three verbs, one engine, and the dual |
 
+## Chapter 6 — Numbers 1–5
+
+| Session | Lesson | Word | Root / hook |
+|---|---|---|---|
+| 31 | numbers-1-5 | एक, द्व, त्रि, चतुर्, पञ्च | retrieve the stems; notice dual and gender; keep the neuter daughter-language forms in view |
+| 32 | number-cognates | *eka · dva · tri · catur · pañca* | Latin and English cousins; PIE *kʷ* outcomes; Grimm's law and analogical *four* |
+| 33 | pancha-travels | पञ्च | *Punjab*, Greek *pente*, and the qualified five-ingredient account of *punch* |
+
 ## Next
 
-Chapter 6 — the eight cases, one at a time, and numbers *eka–daśa* (1–10).
+Finish Chapter 6 with numbers 6–10, then introduce the eight cases one at a time.
