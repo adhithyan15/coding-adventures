@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 985 lessons, 20 books
-424 lessons at or above 300 effective seconds
+20 tracks, 989 lessons, 20 books
+404 lessons at or above 300 effective seconds
 0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
 19 legacy, 1 mixed, 0 version-2 schema tracks
@@ -17,7 +17,6 @@ Longest effective lessons:
   TA-W04-vowel-signs-nandri: 441s (declared 360s, computed 441s; declared+computed)
   HI-C06-numbers-1-5: 426s (declared 300s, computed 426s; declared+computed)
   PT-C16-ser: 409s (declared 300s, computed 409s; declared+computed)
-  IT-C16-passato-prossimo-essere: 404s (declared 360s, computed 404s; declared+computed)
   TA-W02-ma-retroflex-na: 401s (declared 300s, computed 401s; declared+computed)
   TA-W01-curves-va-ka: 400s (declared 300s, computed 400s; declared+computed)
   ES-C17-practice: 398s (declared 300s, computed 398s; declared+computed)
@@ -27,4 +26,5 @@ Longest effective lessons:
   PT-C02-tudo-bem: 380s (declared 240s, computed 380s; computed)
   TA-C24-iravu: 377s (declared 360s, computed 377s; declared+computed)
   FR-C16-etre: 375s (declared 300s, computed 375s; declared+computed)
+  LA-C19-quid-agis: 370s (declared 360s, computed 370s; declared+computed)
 
