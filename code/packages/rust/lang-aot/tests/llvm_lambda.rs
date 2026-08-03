@@ -13,9 +13,15 @@
 //!      so it is coerced by `__dyn_to_exit_code`, a RUNTIME tag switch
 //!      (int → `>> 3`, `#t`/`#f`/nil → `1`/`0`/`0`, symbol/pair → verbatim).
 //!
-//! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c`, run with `clang`.
+//! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c` + the
+//! `gc-core-capi` staticlib (`dynval_runtime.c`'s `__dyn_cons` calls
+//! `__gc_alloc_kind`/`__gc_register_kind`, which only `gc-core-capi` defines —
+//! this file used to link `dynval_runtime.c` alone and fail with "Undefined
+//! symbols for architecture ...: ___gc_alloc_kind"), run with `clang`.
 
 use lang_aot::{compile_source_to_llvm_with_target, Language};
+
+mod common;
 
 fn clang_available() -> bool {
     std::process::Command::new("clang").arg("--version").output()
@@ -39,6 +45,7 @@ fn run(src: &str, module: &str) -> i32 {
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
         .arg("-x").arg("none").arg(dynval_runtime_c())
+        .args(common::gc_link_args()) // gc-core-capi staticlib: defines __gc_alloc_kind/__gc_register_kind
         .arg("-o").arg(&exe).output().expect("spawn clang");
     assert!(build.status.success(), "clang failed: {}", String::from_utf8_lossy(&build.stderr));
     std::process::Command::new(&exe).output().expect("run").status.code().expect("exit code")

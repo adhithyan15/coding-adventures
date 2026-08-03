@@ -1937,7 +1937,17 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(junction_capacitance) or junction_capacitance < 0.0
         ):
             raise NetlistParseError("diode CJO must be finite and non-negative")
+        transit_time = params.get("TT")
+        if transit_time is not None and (
+            not math.isfinite(transit_time) or transit_time < 0.0
+        ):
+            raise NetlistParseError("diode TT must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
+        saturation_current = params.get("IS")
+        if saturation_current is not None and (
+            not math.isfinite(saturation_current) or saturation_current <= 0.0
+        ):
+            raise NetlistParseError("BJT IS must be finite and positive")
         forward_beta = next(
             (
                 params[name]
