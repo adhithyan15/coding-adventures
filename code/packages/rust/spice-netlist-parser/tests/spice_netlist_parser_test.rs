@@ -2176,6 +2176,35 @@ fn preserves_positive_mosfet_model_length() {
 }
 
 #[test]
+fn rejects_invalid_mosfet_model_lateral_diffusion_lengths() {
+    for params in ["LD=-1n", "LD=1e999", "L=100n LD=50n"] {
+        let error = parse_netlist(&format!(
+            ".model geometry NMOS({params})\nM1 d g s b geometry"
+        ))
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("MOSFET LD must be finite and non-negative with L - 2*LD > 0"));
+    }
+}
+
+#[test]
+fn preserves_valid_mosfet_model_lateral_diffusion_lengths() {
+    for (lateral_diffusion_length, expected) in [("0", 0.0), ("10n", 10.0e-9)] {
+        let parsed = parse_netlist(&format!(
+            ".model geometry NMOS(L=180n LD={lateral_diffusion_length})\nM1 d g s b geometry"
+        ))
+        .unwrap();
+
+        let Element::Mosfet(mosfet) = &parsed.circuit.elements()[0] else {
+            panic!("expected MOSFET");
+        };
+        assert_close(mosfet.params.lateral_diffusion_length, expected);
+    }
+}
+
+#[test]
 fn parses_pmos_mosfet_model_cards() {
     let parsed = parse_netlist(
         r#"

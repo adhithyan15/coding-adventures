@@ -1989,6 +1989,20 @@ fn parse_model_card(fields: &[String]) -> Result<ModelCard, NetlistParseError> {
                 ));
             }
         }
+        if let Some(lateral_diffusion_length) = params.get("LD") {
+            let length = params
+                .get("L")
+                .copied()
+                .unwrap_or_else(|| MosfetLevel1Params::default().l);
+            if !lateral_diffusion_length.is_finite()
+                || *lateral_diffusion_length < 0.0
+                || length - 2.0 * lateral_diffusion_length <= 0.0
+            {
+                return Err(NetlistParseError::new(
+                    "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+                ));
+            }
+        }
     }
     Ok(ModelCard {
         name: fields[1].clone(),

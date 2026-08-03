@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject invalid Level-1 MOS model-card `LD` values that are negative,
+  non-finite, or leave a non-positive effective channel length.
 - Reject zero, negative, and non-finite Level-1 MOS model-card `L` values
   before lowering netlist elements into the engine.
 - Reject zero, negative, and non-finite Level-1 MOS model-card `W` values
