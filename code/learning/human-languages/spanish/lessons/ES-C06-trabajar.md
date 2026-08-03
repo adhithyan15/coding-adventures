@@ -64,6 +64,8 @@ dark little joke inside an everyday verb.
 
 Drop **-ar**, add the ending — identical to *hablar*:
 
+| person | form | meaning |
+|---|---|---|
 | I (ending carries the subject) | **trabajo** | I work |
 | tú | **trabajas** | you work |
 | usted | **trabaja** | you (formal) work |

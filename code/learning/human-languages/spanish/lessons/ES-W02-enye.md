@@ -61,7 +61,7 @@ So the tilde on **ñ** is a **frozen abbreviation**: a thousand-year-old note
 that says "there used to be two *n*'s here." You are writing a scribe's
 shortcut.
 
-> ⚠️ Careful: **ñ is its own letter**, not "n with an accent." *año* ("year")
+> **Careful:** **ñ is its own letter**, not "n with an accent." *año* ("year")
 > and *ano* (a rather different word) are completely different words — the tilde
 > is not optional flourish, it's a distinct letter of the alphabet.
 

@@ -73,10 +73,25 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(generated.tex).toContain("$\\to$");
   });
 
+  it("renders Markdown tables as width-aware LaTeX tables", () => {
+    const lesson = parseLesson(
+      source("A", 10, "hablar").replace(
+        "## Guided Practice",
+        "## Grammar Lens: singular forms\n\n| person | form |\n|---|---|\n| I | **hablo** |\n\n## Guided Practice",
+      ),
+      "test",
+    );
+    const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain("\\begin{tabularx}{\\linewidth}");
+    expect(generated.tex).toContain("\\textbf{person} & \\textbf{form} \\\\");
+    expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
+  });
+
   it("escapes LaTeX control characters while preserving authored emphasis", () => {
     expect(renderInlineMarkdown("**A&B** costs $5 and uses `x_y`")).toBe(
       "\\textbf{A\\&B} costs \\$5 and uses \\texttt{x\\_y}",
     );
+    expect(renderInlineMarkdown("favor ≈ fah-BOR")).toBe("favor $\\approx$ fah-BOR");
     expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
       "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
     );

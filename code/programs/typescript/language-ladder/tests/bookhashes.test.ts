@@ -7,6 +7,9 @@ describe("generated book source hashes", () => {
     [1, 7],
     [2, 5],
     [3, 12],
+    [4, 13],
+    [5, 7],
+    [6, 7],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
@@ -21,6 +24,6 @@ describe("generated book source hashes", () => {
       lesson.id === "ES-C01-hola" ? { ...lesson, sourceHash: "fnv1a64:changed" } : lesson,
     );
     expect(bookHashStatus(changed, "spanish", 1)).toBe("stale");
-    expect(bookHashStatus(lessons, "spanish", 4)).toBe("not-generated");
+    expect(bookHashStatus(lessons, "spanish", 7)).toBe("not-generated");
   });
 });
