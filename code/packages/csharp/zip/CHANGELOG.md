@@ -105,6 +105,7 @@ fixed here, with adversarial regression tests added for each:
   to `[Fact(Timeout = 1000)]`, which sits far below the buggy runtime and far above the
   fixed one. Verified by reverting each production fix again and confirming both tests now
   fail as expected, then re-applying the fixes and confirming the full suite passes.
+- **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,
   so a raw value ≥ `0x80000000` could go negative and slip past `offset + n > data.Length`-
