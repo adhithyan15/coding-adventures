@@ -12,9 +12,9 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 982,
+    "totalLessons": 983,
     "authoredBooks": 20,
-    "durationViolations": 455,
+    "durationViolations": 445,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
@@ -4891,167 +4891,6 @@
         ]
       },
       {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 163,
-        "effectiveSeconds": 300,
-        "wordCount": 198,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C01-sat-sri-akal",
-        "language": "punjabi",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 166,
-        "effectiveSeconds": 300,
-        "wordCount": 260,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C01-shukriya",
-        "language": "punjabi",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 160,
-        "effectiveSeconds": 300,
-        "wordCount": 249,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C02-practice",
-        "language": "punjabi",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 117,
-        "effectiveSeconds": 300,
-        "wordCount": 149,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 143,
-        "effectiveSeconds": 300,
-        "wordCount": 164,
-        "promptCount": 4,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C04-practice",
-        "language": "punjabi",
-        "chapter": 4,
-        "declaredSeconds": 300,
-        "computedSeconds": 107,
-        "effectiveSeconds": 300,
-        "wordCount": 149,
-        "promptCount": 0,
-        "repeatCueCount": 2,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C05-kamm-karna",
-        "language": "punjabi",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 136,
-        "effectiveSeconds": 300,
-        "wordCount": 224,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C05-main-punjabi-bolda-han",
-        "language": "punjabi",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 172,
-        "effectiveSeconds": 300,
-        "wordCount": 285,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C05-practice",
-        "language": "punjabi",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 106,
-        "effectiveSeconds": 300,
-        "wordCount": 164,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "PA-C06-numbers-1-5",
-        "language": "punjabi",
-        "chapter": 6,
-        "declaredSeconds": 300,
-        "computedSeconds": 405,
-        "effectiveSeconds": 405,
-        "wordCount": 611,
-        "promptCount": 5,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
-        ]
-      },
-      {
         "lessonId": "SA-C01-namaste",
         "language": "sanskrit",
         "chapter": 1,
@@ -8966,9 +8805,9 @@
       {
         "language": "punjabi",
         "status": "legacy",
-        "lessonCount": 32,
+        "lessonCount": 33,
         "versions": {
-          "1": 32
+          "1": 33
         }
       },
       {
