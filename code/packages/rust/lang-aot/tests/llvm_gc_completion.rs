@@ -168,7 +168,7 @@ fn alloc_on_llvm_auto_collects_under_real_allocation_pressure() {
     // auto-collect-before-alloc check must fire purely from allocation
     // pressure, with no explicit gc_collect call anywhere in this module.
     let module = garbage_loop_module(70_000);
-    // The module itself computes `gc_live_bytes() < 10_000` and returns that
+    // The module itself computes `gc_live_bytes() < 300_000` and returns that
     // boolean (see `garbage_loop_module`'s `collected_ok` comparison) rather
     // than the raw byte count, precisely so this assertion can't be
     // satisfied by an exit-code truncation coincidence: `collected_ok` is
