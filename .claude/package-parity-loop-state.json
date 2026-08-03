@@ -11,7 +11,11 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9832,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9832",
+    "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution"
+  },
   "last_inventory": {
     "revision": "88772e0dc3fce6f7303ea381076e6eeaa3c30b1c",
     "schema_version": 3,
@@ -415,11 +419,11 @@
     {
       "id": "build-tool-haskell-post-python-field-aware-manifest-resolution",
       "title": "Make Haskell Rust manifest resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-non-cabal-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-rust-field-aware-manifest-resolution",
-      "pr_number": null,
-      "notes": "Narrowed from the post-Python umbrella after guarded PR #9817 auto-merged exact head 2444811586 as b608f29c45 on 2026-08-03. The post-merge collision-checked inventory initially held 1,247 identities and 4,400 slots, 173 high-consensus packages with 272 missing slots, 797 singletons with 11,158 missing slots, 602 Rust singletons, and zero collisions or unknown buckets. The selection audit identified Rust as the largest clean dependency-shaped repair: its then-current 945-package snapshot had 3,201 Haskell edges versus 2,353 canonical Go edges, 848 false edges, and zero missing edges. TypeScript has larger two-sided drift (147 false and 948 missing), while Ruby has 123 false and zero missing; resolving Rust first removes the most false-cycle risk without mixing alias discovery and missing-edge work. The implementation now reads only inline path entries in Cargo's top-level dependencies table and ignores every non-authoritative table. Full-graph validation exposed two valid renamed-package edges that the Go oracle itself omitted, so the shared contract and both engines now honor Cargo package overrides before alias lookup. After conflict-free rebases through merged parity PR #9829 at 88772e0d, both engines discover 948 packages and match exactly at 2,373 edges with zero differences; the Haskell front door completes the lane with zero failures. The refreshed collision-checked inventory has 1,249 identities and 4,403 slots, 173 high-consensus packages with 271 missing slots, 799 singletons with 11,186 missing slots, 604 Rust singletons, and zero collisions or unknown buckets. Haskell ZIP fills an existing identity. The new chief-of-staff-daemon-credential and chief-of-staff-daemon singletons own concrete native authority and have newly logged excluded native-authority reviews. PR #9829 changes existing SPICE packages only, leaves inventory unchanged, and does not displace this selected repair."
+      "pr_number": 9832,
+      "notes": "Narrowed from the post-Python umbrella after guarded PR #9817 auto-merged exact head 2444811586 as b608f29c45 on 2026-08-03. The post-merge collision-checked inventory initially held 1,247 identities and 4,400 slots, 173 high-consensus packages with 272 missing slots, 797 singletons with 11,158 missing slots, 602 Rust singletons, and zero collisions or unknown buckets. The selection audit identified Rust as the largest clean dependency-shaped repair: its then-current 945-package snapshot had 3,201 Haskell edges versus 2,353 canonical Go edges, 848 false edges, and zero missing edges. TypeScript has larger two-sided drift (147 false and 948 missing), while Ruby has 123 false and zero missing; resolving Rust first removes the most false-cycle risk without mixing alias discovery and missing-edge work. The implementation now reads only inline path entries in Cargo's top-level dependencies table and ignores every non-authoritative table. Full-graph validation exposed two valid renamed-package edges that the Go oracle itself omitted, so the shared contract and both engines now honor Cargo package overrides before alias lookup. After conflict-free rebases through merged parity PR #9829 at 88772e0d, both engines discover 948 packages and match exactly at 2,373 edges with zero differences; the Haskell front door completes the lane with zero failures. The refreshed collision-checked inventory has 1,249 identities and 4,403 slots, 173 high-consensus packages with 271 missing slots, 799 singletons with 11,186 missing slots, 604 Rust singletons, and zero collisions or unknown buckets. Haskell ZIP fills an existing identity. The new chief-of-staff-daemon-credential and chief-of-staff-daemon singletons own concrete native authority and have newly logged excluded native-authority reviews. PR #9829 changes existing SPICE packages only, leaves inventory unchanged, and does not displace this selected repair. Ready-for-review PR #9832 is open with the complete validation summary."
     },
     {
       "id": "build-tool-haskell-post-rust-field-aware-manifest-resolution",
