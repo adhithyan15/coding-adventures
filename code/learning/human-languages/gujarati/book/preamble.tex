@@ -33,7 +33,13 @@
 
 % Vendored Gujarati font (../../_fonts/ from <lang>/book/); \gu{...} = inline
 % Gujarati snippet.
-\newfontfamily\gujaratifont[Path=../../_fonts/, Script=Gujarati]{NotoSansGujarati-Static.ttf}
+\newfontfamily\gujaratifont[
+  Path=../../_fonts/,
+  Script=Gujarati,
+  BoldFont=NotoSansGujarati-Static.ttf,
+  ItalicFont=NotoSansGujarati-Static.ttf,
+  BoldItalicFont=NotoSansGujarati-Static.ttf
+]{NotoSansGujarati-Static.ttf}
 \newcommand{\gu}[1]{{\gujaratifont #1}}
 
 \hypersetup{
@@ -42,6 +48,14 @@
   pdfsubject={Etymology-driven Gujarati curriculum},
   pdfkeywords={Gujarati, Gandhi, Indo-Aryan, language learning}
 }
+\pdfstringdefDisableCommands{%
+  \def\gu#1{#1}% Keep Gujarati text while dropping font-only presentation.
+  \def\gujaratifont{}%
+}
+
+% Lesson callouts are deliberately kept together when they fit. Let short pages
+% end naturally instead of stretching their vertical glue around those boxes.
+\raggedbottom
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,

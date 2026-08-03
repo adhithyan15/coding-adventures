@@ -73,9 +73,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-V03 | Queued | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
-| HL-B06 | Complete in this PR | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
-| HL-B07 | Next | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
-| HL-B08 | Queued | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
+| HL-B06 | Complete (#9669) | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
+| HL-B07 | Complete in this PR | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | Canonical recap labels, main-font punctuation, bookmark-safe Gujarati, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
+| HL-B08 | Next | Publish Punjabi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B09 | Queued | Remove Punjabi's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B10 | Queued | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B11 | Queued | Remove Sanskrit's LaTeX layout, duplicate-label, and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs but reports three overfull boxes, six underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
@@ -340,6 +340,29 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The generated chapter adds no new missing-glyph, overfull, underfull,
   duplicate-label, bookmark, or font warnings. HL-B07 remains the bounded cleanup
   for warnings already present in the five handwritten chapters.
+
+## Findings from HL-B07
+
+- Each handwritten recap now uses its canonical lesson id (`GU-C01-practice`
+  through `GU-C05-practice`) instead of five copies of `lesson:practice`.
+- Latin commas and the ellipsis now sit outside `\gu`, so the Gujarati-only
+  static font is asked to shape only Gujarati characters while the visible
+  punctuation remains unchanged.
+- Hyperref's PDF-string fallback strips only the `\gu` / `\gujaratifont`
+  presentation wrapper. The inspected outline keeps readable Gujarati and
+  romanization across all handwritten sections, including `મારું નામ…છે`, while
+  generated Chapter 6 keeps its intentionally Latin short titles.
+- `\raggedbottom` lets pages around unbreakable lesson callouts end naturally.
+  Visual inspection of all four formerly underfull pages plus the repaired
+  Chapter 5 recap found no clipping, collision, or awkward box spacing.
+- The vendored static Gujarati file is now explicitly selected for regular,
+  bold, italic, and bold-italic requests. This preserves the prior glyph
+  appearance without reporting unavailable font shapes.
+- Rephrasing the three copula forms gives TeX natural breakpoints without
+  changing the recap's meaning. The forced 27-page XeLaTeX build now reports
+  zero package or LaTeX warnings, missing glyphs, overfull boxes, underfull
+  boxes, and duplicate destinations. HL-B08 is next: publish Punjabi Chapter 6
+  through the same canonical pipeline.
 
 ## Findings from HL-D01C
 
