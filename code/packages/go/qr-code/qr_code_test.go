@@ -13,7 +13,9 @@
 package qrcode
 
 import (
+	"bytes"
 	"fmt"
+	"sync"
 	"testing"
 
 	barcode2d "github.com/adhithyan15/coding-adventures/code/packages/go/barcode-2d"
@@ -82,6 +84,36 @@ func TestBuildQRGeneratorDegree10(t *testing.T) {
 		if gen[i] != w {
 			t.Errorf("gen[%d] = %d, want %d", i, gen[i], w)
 		}
+	}
+}
+
+// TestGetGeneratorConcurrentCache verifies that the shared generator cache is
+// safe when independent QR encodes request Reed-Solomon polynomials in parallel.
+func TestGetGeneratorConcurrentCache(t *testing.T) {
+	t.Parallel()
+
+	degrees := []int{7, 10, 13, 16, 17, 18, 20, 22, 24, 26, 28, 30}
+	var wg sync.WaitGroup
+	errors := make(chan string, 32*len(degrees))
+
+	for worker := 0; worker < 32; worker++ {
+		for _, degree := range degrees {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				got := getGenerator(degree)
+				want := buildQRGenerator(degree)
+				if !bytes.Equal(got, want) {
+					errors <- fmt.Sprintf("degree %d generator = %v, want %v", degree, got, want)
+				}
+			}()
+		}
+	}
+
+	wg.Wait()
+	close(errors)
+	for message := range errors {
+		t.Error(message)
 	}
 }
 
