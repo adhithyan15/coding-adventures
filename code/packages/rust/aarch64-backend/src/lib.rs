@@ -1362,16 +1362,15 @@ fn emit_instr(
 
     // ── LANG-FULL E5 — bounds-checked arrays (static, length-prefixed) ─────────
     //
-    // An array is a single `__twig_alloc_ref_array_bytes` block laid out as
-    // `[i64 length][elem 0][elem 1]…`; the IIR *handle* is the block base. The
-    // native target has no managed runtime, so `array_get`/`array_set` emit an
-    // EXPLICIT unsigned bounds compare and trap with `udf` — the aarch64 twin
-    // of the LLVM `icmp uge`+`llvm.trap` and WASM `i64.ge_u`+`unreachable`
-    // lowerings.
+    // An array is a single `__twig_alloc_bytes` block laid out as `[i64 length]
+    // [elem 0][elem 1]…`; the IIR *handle* is the block base. The native target
+    // has no managed runtime, so `array_get`/`array_set` emit an EXPLICIT
+    // unsigned bounds compare and trap with `udf` — the aarch64 twin of the LLVM
+    // `icmp uge`+`llvm.trap` and WASM `i64.ge_u`+`unreachable` lowerings.
 
     // `alloc_array <count> -> <dest>` (ty = `array<i64>`). Allocate `8 + count*8`
     // bytes via the shared runtime helper, store the length header, return base.
-    //   x0 = count ; x0 = count<<3 ; x0 += 8 ; bl __twig_alloc_ref_array_bytes ; [x0]=count
+    //   x0 = count ; x0 = count<<3 ; x0 += 8 ; bl __twig_alloc_bytes ; [x0]=count
     if op == "alloc_array" {
         let dest = require_dest(instr)?;
         let count_src = instr.srcs.first().ok_or_else(|| {
@@ -1380,26 +1379,15 @@ fn emit_instr(
         // The AOT specialiser collapses the `array<T>` result type to `any` (it
         // is not in the scalar allowlist), so `instr.ty` no longer carries the
         // element type here. The native backend supports 8-byte elements
-        // (`i64`/`u64`/`f64`, or a `str`/`any`/`symbol`/`ref<T>` handle — all
-        // uniformly one word), so the stride is a fixed 8 — the per-access ops
+        // (`i64`/`u64`/`f64`), so the stride is a fixed 8 — the per-access ops
         // validate the element width.
-        //
-        // Array reference-tracing fix (Twig GC completion round): since the
-        // element type is unavailable here, this always allocates under
-        // `__twig_alloc_ref_array_bytes` (registers a `__gc_register_ref_array_kind`
-        // HeapKind, `tail_from = 8` to skip the length header) rather than the
-        // no-ref `__twig_alloc_bytes` this used to call — the LLVM twin of the
-        // identical fix, see `iir-to-llvm::lower_alloc_array`'s doc comment for
-        // why this is sound even for a genuinely scalar `i64`/`f64` array (a
-        // look-alike scalar value is resolved through `FlatHeap::find_header`
-        // and simply ignored if it isn't a real live block).
         let elem_size: i32 = 8;
         load_operand(asm, alloc, Reg::X0, count_src)?;
         // total = count*8 + 8 → count<<3, then +8.
         asm.mov_imm64(Reg::X1, elem_size.trailing_zeros() as u64); // log2(8)=3
         asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1);
         asm.add_imm(Reg::X0, Reg::X0, 8)?;
-        asm.bl_external("__twig_alloc_ref_array_bytes");
+        asm.bl_external("__twig_alloc_bytes");
         // dest = base (x0); then write the length header [base+0] = count.
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
@@ -2283,8 +2271,8 @@ mod tests {
     // L3b: the cons heap ops (`alloc`/`field_store`/`field_load`/`is_null`)
     // that `lower_heap_builtins` produces from `cons`/`car`/`cdr`/`null?`.
 
-    // LANG-FULL E5 — bounds-checked arrays lower to a `__twig_alloc_ref_array_bytes`
-    // call, an explicit `cmp`+`b.lo`+`udf` bounds trap, and base+idx*8 loads/stores.
+    // LANG-FULL E5 — bounds-checked arrays lower to a `__twig_alloc_bytes` call,
+    // an explicit `cmp`+`b.lo`+`udf` bounds trap, and base+idx*8 loads/stores.
     #[test]
     fn array_ops_lower_with_bounds_trap() {
         let cir = vec![
@@ -2306,36 +2294,6 @@ mod tests {
         let traps = words.iter().filter(|&&w| w == 0x0000DEAD).count();
         assert!(traps >= 2, "expected ≥2 udf bounds traps, got {traps} in {words:?}");
         assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
-    }
-
-    /// Array reference-tracing fix (Twig GC completion round): `alloc_array`
-    /// must relocate to `__twig_alloc_ref_array_bytes`, NOT the no-ref
-    /// `__twig_alloc_bytes` (which `alloc_bytes`, the unrelated Brainfuck op,
-    /// still correctly uses) — see `iir-to-llvm::lower_alloc_array`'s doc
-    /// comment for why: an array element may itself carry a GC reference
-    /// (`str`/`any`/`symbol`/`ref<T>`), and `array<T>`'s element type is not
-    /// even available here (the AOT specialiser already collapsed it to
-    /// `any`), so this must ALWAYS use the reference-tracing allocator.
-    #[test]
-    fn alloc_array_emits_bl_to_ref_array_runtime_not_plain_alloc_bytes() {
-        let cir = vec![
-            const_u64("n", 3),
-            heap("alloc_array", Some("a"), vec![CIROperand::Var("n".into())], "any"),
-            ret_u64("a"),
-        ];
-        let (_bytes, ext_relocs, _) = compile_with_globals(
-            &ctx("arr_reloc", &[], "u64"), &cir, &HashMap::new(),
-        )
-        .expect("alloc_array should compile");
-        let symbols: Vec<&str> = ext_relocs.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(
-            symbols.contains(&"__twig_alloc_ref_array_bytes"),
-            "alloc_array must relocate to __twig_alloc_ref_array_bytes: {symbols:?}"
-        );
-        assert!(
-            !symbols.contains(&"__twig_alloc_bytes"),
-            "alloc_array must NOT use the no-ref __twig_alloc_bytes: {symbols:?}"
-        );
     }
 
     /// `f64` array elements lower as raw 8-byte loads/stores; f64 math reads

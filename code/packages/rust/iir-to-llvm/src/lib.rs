@@ -887,7 +887,7 @@ pub fn lower_iir_to_llvm(
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
         || used_gc_live_bytes {
         out.push('\n');
-        if used_alloc_bytes {
+        if used_alloc_bytes || used_arrays {
             // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
             // used to call raw `@calloc`, which is never freed and never
             // traced — a genuine, permanent leak, confirmed by investigation
@@ -897,30 +897,33 @@ pub fn lower_iir_to_llvm(
             // (twig_runtime.c, already used by aarch64/x86_64-backend for the
             // identical op, and internally by this same runtime's own
             // string-concat/-slice helpers) routes through that same
-            // GC-tracked allocator instead. `alloc_array` (LANG-FULL E5) used
-            // to share this same no-ref allocator too, but now uses the
-            // reference-tracing `@__twig_alloc_ref_array_bytes` below instead
-            // — see that declare's comment for why.
+            // GC-tracked allocator instead. `alloc_array` (LANG-FULL E5) also
+            // declares this — a scalar-element array (`array<i64>`/
+            // `array<f64>`) still allocates its backing block through this
+            // same no-ref allocator; see `@__twig_alloc_ref_array_bytes`
+            // below for the reference-element case and why the two must stay
+            // distinct rather than one allocator covering every element type.
             out.push_str("declare i64 @__twig_alloc_bytes(i64)\n");
         }
         if used_arrays {
-            // Twig GC completion round (array reference-tracing fix):
-            // `alloc_array`'s block used to be registered under
-            // `@__twig_alloc_bytes`'s no-ref HeapKind unconditionally — sound
-            // only for genuinely scalar (`i64`/`f64`) elements. A `str`/
-            // `any`/`symbol`/`ref<T>` element is itself a GC reference, and
-            // the collector's precise tracer never scanned an array's
-            // payload for handles stored inside it — a string/symbol
-            // reachable ONLY via an array element (no other live reference)
-            // could be collected while the array still held a now-dangling
-            // handle. `@__twig_alloc_ref_array_bytes` (twig_runtime.c)
-            // registers under `__gc_register_ref_array_kind(NULL, 0, 8)`
-            // instead: `tail_from = 8` skips the length header, so every
-            // element slot is traced as a possible reference — sound even for
-            // scalar arrays (a look-alike scalar value is resolved through
-            // `find_header` and simply ignored if it isn't a real live
-            // block; see `gc-core::flat_heap::FlatHeap::mark_word`), so one
-            // allocator now covers every `array<T>` regardless of `T`.
+            // Twig GC completion round (array reference-tracing fix,
+            // corrected after security review — see `elem_is_gc_reference`
+            // and `lower_alloc_array`'s doc comment for the full mechanism
+            // and why this is LLVM-only/conditional, not applied
+            // unconditionally or on the native backends). A `str`/`any`/
+            // `symbol`/`ref<T>` array element is itself a GC handle; a scalar
+            // (`i64`/`f64`) element is not. `alloc_array` picks its allocator
+            // per-array based on the *original* IIR element type: a
+            // reference-typed array calls this allocator, which registers
+            // under `__gc_register_ref_array_kind(NULL, 0, 8)` so every
+            // element slot is traced as a possible reference (`tail_from = 8`
+            // skips the length header) — otherwise a string/symbol reachable
+            // ONLY via an array element could be collected out from under a
+            // live array. A scalar-element array instead keeps calling the
+            // plain `@__twig_alloc_bytes` above, registered under the no-ref
+            // HeapKind — this is declared unconditionally whenever any array
+            // exists (a single module may contain both kinds of array), and
+            // an unused `declare` is harmless.
             out.push_str("declare i64 @__twig_alloc_ref_array_bytes(i64)\n");
         }
         if used_gc_alloc {
@@ -2909,7 +2912,7 @@ fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIR
 /// ```llvm
 /// %sz    = mul i64 <count>, <elemsize>
 /// %total = add i64 %sz, 8
-/// %raw   = call i64 @__twig_alloc_ref_array_bytes(i64 %total)
+/// %raw   = call i64 @__twig_alloc_ref_array_bytes(i64 %total)   ; or @__twig_alloc_bytes for scalar T
 /// %base  = inttoptr i64 %raw to ptr
 /// store i64 <count>, ptr %base                 ; length header
 /// %dest  = getelementptr i8, ptr %base, i64 8  ; handle = payload
@@ -2937,20 +2940,43 @@ fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIR
 /// elsewhere) could be collected while the array still held a now-dangling
 /// handle.
 ///
-/// Fixed by switching to `@__twig_alloc_ref_array_bytes` (`twig_runtime.c`),
-/// which registers under `__gc_register_ref_array_kind(NULL, 0, 8)` —
-/// `tail_from = 8` skips this array's own length header and traces every
-/// word after it as a reference, the same primitive McCarthy Lisp's
-/// variable-length ref arrays already use. This is used **unconditionally**,
-/// not only when the frontend declares a reference-typed element: it is
-/// always sound, because the collector validates every traced "reference"
-/// word through `FlatHeap::find_header` before treating it as live, so a
-/// genuinely scalar `i64`/`f64` element that happens to look like a heap
-/// address is simply ignored (the same conservative-is-safe principle the
-/// collector's own stack scan already relies on) rather than followed — see
-/// `__twig_alloc_ref_array_bytes`'s doc comment in `twig_runtime.c`. This
-/// closes the gap cross-backend: `aarch64-backend`/`x86_64-backend`'s
-/// `alloc_array` now call the same `__twig_alloc_ref_array_bytes` symbol.
+/// Fixed by checking the *original IIR element type* (`elem`, before
+/// `array_elem_llvm` collapses it) via [`elem_is_gc_reference`] and calling
+/// `@__twig_alloc_ref_array_bytes` (`twig_runtime.c`) — registers under
+/// `__gc_register_ref_array_kind(NULL, 0, 8)`, `tail_from = 8` skipping the
+/// length header, tracing every element slot as a reference, the same
+/// primitive McCarthy Lisp's variable-length ref arrays already use — only
+/// when the element genuinely carries a reference; a scalar-element array
+/// keeps calling the original no-ref `@__twig_alloc_bytes`.
+///
+/// **This distinction is not just a micro-optimisation — it is required for
+/// soundness, found by a second security-review round on an earlier draft of
+/// this very fix.** This backend's collector also has a real, live, exposed
+/// *compacting* collector (`gc_collect_compacting`, callable directly from
+/// Twig source). Its mobility classifier treats every word of a
+/// ref-array-kind object's tail as a candidate reference edge; if a **scalar**
+/// array's element bits coincidentally equal some *other* live, movable
+/// object's exact base address, that unrelated object would be pulled into
+/// the "reachable via this array" set and, if actually relocated during
+/// compaction, the array's own scalar word would be silently **overwritten**
+/// with the object's new (forwarded) address by `fixup_ref_fields` — real
+/// data corruption, not mere harmless over-retention (over-retention *is*
+/// sound for the non-moving mark/sweep path alone, which is why an earlier
+/// draft of this fix mistakenly applied the reference-tracing allocator
+/// unconditionally). Restricting it to genuinely reference-typed elements
+/// avoids ever registering a scalar array under a kind the compactor may
+/// relocate through, so this corruption path cannot occur for `array<T>`
+/// where `T` is a real scalar. The native backends (`aarch64-backend`/
+/// `x86_64-backend`) do **not** get this precise fix: the AOT specialiser
+/// collapses `array<T>`'s element type to `any` before native codegen ever
+/// sees it, so there is no reliable way to conditionally select the
+/// reference-tracing allocator there without risking the same corruption on
+/// a genuinely scalar array — they keep calling `@__twig_alloc_bytes`
+/// unconditionally, same as before this round, leaving the narrower
+/// (dangling-reference, not corruption) bug in place for reference-typed
+/// arrays on those two backends until element-type information can be
+/// threaded through the specialiser. See
+/// `AOT00-T7-array-reference-tracing.md` for the full writeup.
 ///
 /// **Trust boundary (size overflow).** `count` is a *compiler-produced* operand
 /// (a constant or a bounded length expression from a frontend), not an
@@ -2975,6 +3001,8 @@ fn lower_alloc_array(
         detail: format!("alloc_array type_hint must be array<T>, got {:?}", instr.type_hint),
     })?;
     let (_, elem_size) = array_elem_llvm(&elem, state.fn_name)?;
+    let alloc_fn =
+        if elem_is_gc_reference(&elem) { "__twig_alloc_ref_array_bytes" } else { "__twig_alloc_bytes" };
     let count = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
     let sz = state.fresh("asz");
     let total = state.fresh("atot");
@@ -2982,12 +3010,26 @@ fn lower_alloc_array(
     let base = state.fresh("abase");
     out.push_str(&format!("  {sz} = mul i64 {count}, {elem_size}\n"));
     out.push_str(&format!("  {total} = add i64 {sz}, 8\n"));
-    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_ref_array_bytes(i64 {total})\n"));
+    out.push_str(&format!("  {raw} = call i64 @{alloc_fn}(i64 {total})\n"));
     out.push_str(&format!("  {base} = inttoptr i64 {raw} to ptr\n"));
     out.push_str(&format!("  store i64 {count}, ptr {base}\n"));
     out.push_str(&format!("  %{dest} = getelementptr i8, ptr {base}, i64 8\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
+}
+
+/// Whether an `array<T>` element type `elem` (the *original* IIR type string,
+/// before `array_elem_llvm`/`llvm_type_for` collapse it to a plain LLVM
+/// type) itself carries a GC reference — a heap handle the collector must
+/// trace, not an inline scalar. Mirrors exactly the set `llvm_type_for`
+/// collapses to `"i64"` for non-scalar reasons: `"str"`, `"any"`,
+/// `"ref<any>"`, `"symbol"`, and any `"ref<Lispy...>"`. Used by
+/// `lower_alloc_array` to choose between the reference-tracing
+/// `@__twig_alloc_ref_array_bytes` and the plain no-ref `@__twig_alloc_bytes`
+/// — see that function's doc comment for why this distinction is required
+/// for soundness (not just precision) under the compacting collector.
+fn elem_is_gc_reference(elem: &str) -> bool {
+    matches!(elem, "str" | "any" | "ref<any>" | "symbol") || elem.starts_with("ref<Lispy")
 }
 
 /// Emit the bounds check shared by `array_get`/`array_set`: load the length from

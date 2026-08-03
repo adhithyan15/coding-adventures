@@ -34,11 +34,21 @@
 //! a `str` element type, combined with real GC allocation pressure (forcing
 //! at least one actual auto-collect), still compiles, links, and runs to the
 //! correct answer through the real LLVM pipeline — a functional integration
-//! smoke test, not a reclamation proof. Codegen-shape tests
-//! (`iir-to-llvm/tests/test_backend.rs`,
-//! `aarch64-backend`/`x86_64-backend`'s own `#[cfg(test)]` modules) separately
-//! confirm all three backends actually wire `alloc_array` to
-//! `__twig_alloc_ref_array_bytes`, not the old no-ref allocator.
+//! smoke test, not a reclamation proof.
+//!
+//! **This fix is LLVM-only, and conditional on the element type** (see
+//! `iir-to-llvm::lower_alloc_array`'s doc comment and
+//! `code/specs/AOT00-T7-array-reference-tracing.md`): a security review
+//! found that applying the reference-tracing allocator unconditionally,
+//! regardless of element type, is unsound against the compacting collector.
+//! `array<str>` (used here) is a reference-typed element, so it continues to
+//! exercise the `__twig_alloc_ref_array_bytes` path under the corrected,
+//! conditional logic — `iir-to-llvm/tests/test_backend.rs`'s
+//! `array_of_str_elements_emits_twig_alloc_ref_array_bytes` /
+//! `array_ops_emit_twig_alloc_bytes_trap_and_gep` cover the codegen-shape
+//! split precisely. `aarch64-backend`/`x86_64-backend` do NOT get this fix
+//! in this round — they are unchanged from before it started, still calling
+//! the plain `__twig_alloc_bytes` unconditionally for every `alloc_array`.
 
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};

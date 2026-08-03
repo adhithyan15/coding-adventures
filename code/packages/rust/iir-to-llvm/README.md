@@ -105,45 +105,62 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.24.0 | **Literal string comparison** (LANG-FULL E4). Literal-only `str_cmp` lowers to the shared `-1`/`0`/`1` ordering result. |
 | v0.42.0 | **Structural heap ops + name quoting** (LANG-FULL E6d-6). `alloc`→`call i64 @__twig_gc_alloc`, `field_store`/`field_load`→`inttoptr`+`getelementptr i64`+`store`/`load` (a field is at `idx*8`), `is_null`→`icmp eq …, 0`+`zext` — the native backend's word-granular model. `llvm_fn_ident` quotes special-char names (`@"point-x"`, `@"Some?"`). **Twig records run on LLVM** (exit 42). Union `match` on native/LLVM is a documented follow-up (E6d-6b). |
 | v0.48.0 | **Twig GC completion, Part 2.** `alloc_bytes`/`alloc_array`→`call i64 @__twig_alloc_bytes` (GC-tracked, replacing raw never-freed `@calloc` — a confirmed leak). New `gc_live_bytes` `call_builtin`→`@__twig_gc_live_bytes()`, proving (by an actual running end-to-end test, not by reading C source) that `alloc`/`gc_alloc` already auto-collect under real allocation pressure via `gc-core-capi`'s pre-allocation `should_collect` check. |
-| v0.49.0 | **Array reference-tracing fix** (LANG-FULL E5, cross-backend). `alloc_array`→`call i64 @__twig_alloc_ref_array_bytes` instead of the no-ref `@__twig_alloc_bytes` — closes the gap v0.48.0 flagged: an `array<str>`/`array<any>`/`array<ref<T>>` element carries a GC reference the collector previously never traced. `aarch64-backend`/`x86_64-backend` get the identical fix. |
+| v0.49.0 | **Array reference-tracing fix** (LANG-FULL E5, LLVM-only, conditional). `alloc_array`→`call i64 @__twig_alloc_ref_array_bytes` instead of the no-ref `@__twig_alloc_bytes`, but only when the array's original element type genuinely carries a GC reference (`str`/`any`/`symbol`/`ref<T>`) — closes the gap v0.48.0 flagged. A scalar element (`i64`/`f64`/…) keeps allocating via `@__twig_alloc_bytes`. LLVM-only: `aarch64-backend`/`x86_64-backend` are unchanged (an earlier draft applied the new allocator unconditionally on all three backends; security review found that unsound against the compacting collector — see below). |
 | (later) | Debug info via `!dbg`. |
 
-### Bounds-checked arrays (v0.14.0; GC-tracked since v0.48.0; reference-traced since v0.49.0)
+### Bounds-checked arrays (v0.14.0; GC-tracked since v0.48.0; conditionally reference-traced since v0.49.0)
 
-An IIR array (LANG-FULL E5) is a single `@__twig_alloc_ref_array_bytes`-allocated
-block laid out as a length header followed by the elements; the **handle** is a
-`ptr` to the payload (`base + 8`), so element access is a typed
-`getelementptr <T>` and the length lives at `handle − 8`:
+An IIR array (LANG-FULL E5) is a single allocated block laid out as a length
+header followed by the elements; the **handle** is a `ptr` to the payload
+(`base + 8`), so element access is a typed `getelementptr <T>` and the
+length lives at `handle − 8`:
 
 ```
 base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
          └─ 8 bytes ──┘ ▲ handle
 ```
 
-`@__twig_alloc_ref_array_bytes` returns an i64 handle (`inttoptr`'d to `base`
-immediately, the same convention `alloc`'s own handle uses) rather than the
-`@calloc` this called through v0.47.0 (never freed or traced, a genuine,
-confirmed leak) or the no-ref `@__twig_alloc_bytes` this called through
-v0.48.0. `find_header` resolves the `base + 8` interior handle back to its
-enclosing block correctly, so this stays a valid, collectible root.
+The allocator returns an i64 handle (`inttoptr`'d to `base` immediately, the
+same convention `alloc`'s own handle uses) rather than the `@calloc` this
+called through v0.47.0 (never freed or traced, a genuine, confirmed leak).
+`find_header` resolves the `base + 8` interior handle back to its enclosing
+block correctly, so this stays a valid, collectible root.
 
 **Array reference-tracing fix (v0.49.0; was a known, documented gap in
-v0.48.0, now closed):** the array's block was registered under
+v0.48.0, now closed for LLVM):** the array's block was registered under
 `__twig_alloc_bytes`'s no-ref `HeapKind`, only correct for genuinely scalar
 element types. `array<str>`/`array<any>`/`array<symbol>` elements are i64
 *handles* to separately GC-managed blocks — `llvm_type_for` maps all of
 these down to the same `"i64"` LLVM type plain integers use, so they passed
 `array_elem_llvm`'s check too, and a string/symbol reachable only via such
 an array element wasn't traced as a root and could be reclaimed while the
-array still held a now-dangling handle. Fixed cross-backend
-(`aarch64-backend`/`x86_64-backend` too): `alloc_array` now registers under
-`__gc_register_ref_array_kind(NULL, 0, 8)` (`tail_from = 8` skips the length
-header) via the new `@__twig_alloc_ref_array_bytes`, unconditionally for
-every array regardless of declared element type — sound even for scalar
-arrays, since `FlatHeap::mark_word` validates every traced "reference" word
-through `find_header` before treating it as live. See
-`code/specs/AOT00-T7-array-reference-tracing.md` for the full writeup and
-the regression proof.
+array still held a now-dangling handle.
+
+Fixed on LLVM by checking the *original* IIR element type (before
+`array_elem_llvm`/`llvm_type_for` collapse it) via `elem_is_gc_reference`:
+a reference-typed array registers under `__gc_register_ref_array_kind(NULL,
+0, 8)` (`tail_from = 8` skips the length header) via
+`@__twig_alloc_ref_array_bytes`; a scalar-element array keeps using the
+plain `@__twig_alloc_bytes`. This is conditional, not unconditional — an
+earlier draft applied the reference-tracing allocator to every array
+regardless of element type (reasoning that `FlatHeap::mark_word` validates
+every traced "reference" word through `find_header` before treating it as
+live, so over-tracing a scalar array seemed always safe). A security review
+found that reasoning doesn't hold against `FlatHeap`'s COMPACTING collector:
+a scalar element that coincidentally matches another live object's address
+can have that object's post-move address silently written into it by
+`fixup_ref_fields` during a `gc_collect_compacting` cycle — real data
+corruption, not harmless over-retention. The conditional design avoids this
+by only ever tracing an array's elements when they genuinely are references.
+
+This fix is **LLVM-only**: `aarch64-backend`/`x86_64-backend` are unchanged
+from before this round (they keep calling `@__twig_alloc_bytes`
+unconditionally for `alloc_array`), because the AOT specialiser collapses
+`array<T>`'s result type to `any` before native codegen ever sees
+`alloc_array` — the element type genuinely isn't available there, so
+neither backend can make the same conditional choice yet. See
+`code/specs/AOT00-T7-array-reference-tracing.md` for the full writeup, the
+regression proof, and the native-backend follow-up this leaves open.
 
 Unlike the JVM/CLR managed-array backends (whose runtime bounds-checks every
 element access for free), the native/LLVM target has no such runtime, so each

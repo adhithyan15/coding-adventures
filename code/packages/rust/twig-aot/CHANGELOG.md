@@ -1,20 +1,32 @@
 # Changelog — `twig-aot`
 
-## 0.50.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, runtime)
+## 0.50.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, runtime, LLVM-only)
 
 `runtime/twig_runtime.c` gains `__twig_alloc_ref_array_bytes(int64_t n)` —
 mirrors `__twig_alloc_bytes`'s lazy-registration shape but registers under
 `__gc_register_ref_array_kind(NULL, 0, 8)` instead of the no-ref
 `__gc_register_kind(NULL, 0)`, so every 8-byte word past the length header
 (i.e. every array element slot) is traced as a possible GC reference. Fixes
-a confirmed cross-backend bug: an `array<str>`/`array<any>`/`array<ref<T>>`
-element was invisible to the collector, so a value reachable only via an
-array element could be reclaimed while the array still held a now-dangling
-handle. `aarch64-backend`/`x86_64-backend`/`iir-to-llvm` all now call this
-new allocator for `alloc_array`, unconditionally (element type isn't
-reliably available at any of their call sites). See
-`AOT00-T7-array-reference-tracing.md` for the full writeup and the primary
-regression proof (`gc-core`'s
+a confirmed bug: an `array<str>`/`array<any>`/`array<ref<T>>` element was
+invisible to the collector, so a value reachable only via an array element
+could be reclaimed while the array still held a now-dangling handle.
+
+Only `iir-to-llvm` calls this new allocator, and only CONDITIONALLY — when
+the array's original element type genuinely carries a GC reference; a
+scalar-element array keeps calling the plain `__twig_alloc_bytes`. An
+earlier draft had all three backends (`aarch64-backend`/`x86_64-backend`/
+`iir-to-llvm`) call the new allocator unconditionally for every array,
+reasoning that `FlatHeap::mark_word`'s `find_header` validation makes
+over-tracing always sound. Security review found that reasoning breaks
+against `FlatHeap`'s COMPACTING collector (exposed as the
+`gc_collect_compacting` builtin): a scalar element that coincidentally
+matches another live object's address can be silently overwritten with that
+object's post-move address by `fixup_ref_fields` — real data corruption.
+`aarch64-backend`/`x86_64-backend` are therefore unchanged from before this
+round (the AOT specialiser erases the element type before native codegen
+sees `alloc_array`, so neither can make the same conditional choice yet —
+tracked as a follow-up). See `AOT00-T7-array-reference-tracing.md` for the
+full writeup and the primary regression proof (`gc-core`'s
 `array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`).
 
 ## 0.49.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
