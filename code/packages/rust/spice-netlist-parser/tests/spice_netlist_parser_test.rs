@@ -1,6 +1,7 @@
 use spice_engine::{
-    ac_sweep, dc_op, dc_op_with_options, mc_dc, noise_ac, sens_dc, tf, transient_adaptive,
-    BjtPolarity, Element, JfetPolarity, McDistribution, McOptions, MosfetType, TransientMethod,
+    ac_sweep, dc_op, dc_op_with_options, mc_dc, mosfet_from_model_card, noise_ac,
+    normalize_model_card, sens_dc, tf, transient_adaptive, BjtPolarity, Element, JfetPolarity,
+    McDistribution, McOptions, MosfetType, TransientMethod,
 };
 use spice_netlist_parser::{
     berkeley_app_package_manifest, berkeley_app_package_manifest_json, build_analysis_plan,
@@ -1482,7 +1483,7 @@ Jpull drain gate source pch
 fn parses_mosfet_models_into_operating_point_circuits() {
     let parsed = parse_netlist(
         r#"
-.model nch NMOS(VTO=0.45 KP=250u UO=500 LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
+.model nch NMOS(VTO=0.45 KP=250u UO=500 LAMBDA=0.02 GAMMA=0.3 PHI=0.8 W=2u L=180n LD=10n TOX=20n RD=10 RS=20 RSH=250 IS=4p JS=2m NSUB=1.5e16 TNOM=300 CGSO=3p CGDO=4p CGBO=5p CBS=6p CBD=7p CJ=2m CJSW=5u PB=0.9 MJ=0.45 MJSW=0.25 FC=0.4 KF=1p AF=1.2)
 Vdd vdd 0 DC 5
 Vgate gate 0 DC 2.5
 M1 vdd gate out 0 nch W=4u L=200n NRD=2 NRS=3 AD=3n AS=4n PD=6u PS=7u
@@ -1537,7 +1538,7 @@ Rload out 0 1k
     assert_close(mosfet.params.forward_bias_depletion_coefficient, 0.4);
     assert_close(mosfet.params.flicker_noise_coefficient, 1.0e-12);
     assert_close(mosfet.params.flicker_noise_exponent, 1.2);
-    assert_close(mosfet.params.n_sub, 1.5);
+    assert_close(mosfet.params.n_sub, 1.5e16);
     assert_close(mosfet.params.t_nom, 300.0);
     assert_close(mosfet.params.gate_source_overlap_capacitance, 3.0e-12);
     assert_close(mosfet.params.gate_drain_overlap_capacitance, 4.0e-12);
@@ -2435,6 +2436,64 @@ fn preserves_supported_and_implicit_mosfet_model_level_one() {
 
         assert!(matches!(parsed.circuit.elements()[0], Element::Mosfet(_)));
     }
+}
+
+#[test]
+fn rejects_invalid_mosfet_model_electrostatic_default_inputs() {
+    for (parameter, reason) in [
+        ("NSS=-1", "MOSFET NSS must be finite and non-negative"),
+        ("NSS=1e999", "MOSFET NSS must be finite and non-negative"),
+        ("TPG=0.5", "MOSFET TPG must be -1, 0, or 1"),
+        ("TPG=1e999", "MOSFET TPG must be -1, 0, or 1"),
+    ] {
+        let error = parse_netlist(&format!(
+            ".model electrostatic NMOS({parameter})\nM1 d g s b electrostatic"
+        ))
+        .unwrap_err();
+
+        assert!(error.to_string().contains(reason));
+    }
+}
+
+#[test]
+fn rejects_mosfet_model_substrate_doping_below_intrinsic_density_with_oxide() {
+    let error =
+        parse_netlist(".model electrostatic NMOS(NSUB=1e9 TOX=20n)\nM1 d g s b electrostatic")
+            .unwrap_err();
+
+    assert!(error
+        .to_string()
+        .contains("MOSFET NSUB must exceed the intrinsic carrier density"));
+}
+
+#[test]
+fn lowers_mosfet_model_electrostatic_defaults_through_shared_engine_semantics() {
+    let parsed = parse_netlist(
+        ".model electrostatic NMOS(NSUB=1e16 TOX=20n TNOM=325 NSS=1e11 TPG=-1)\n\
+         M1 d g s b electrostatic",
+    )
+    .unwrap();
+    let Element::Mosfet(actual) = &parsed.circuit.elements()[0] else {
+        panic!("expected MOSFET");
+    };
+
+    let normalized = normalize_model_card(
+        "electrostatic",
+        "NMOS",
+        &[
+            ("NSUB", 1.0e16),
+            ("TOX", 20.0e-9),
+            ("TNOM", 325.0),
+            ("NSS", 1.0e11),
+            ("TPG", -1.0),
+        ],
+    )
+    .unwrap();
+    let expected = mosfet_from_model_card("M1", "d", "g", "s", "b", &normalized).unwrap();
+
+    assert_close(actual.params.vt0, expected.params.vt0);
+    assert_close(actual.params.gamma, expected.params.gamma);
+    assert_close(actual.params.phi, expected.params.phi);
 }
 
 #[test]

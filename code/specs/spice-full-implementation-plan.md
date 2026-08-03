@@ -33,11 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley SPICE MOS model-card level validation.
+1. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
    - Status: current PR completion candidate.
-   - Reject non-finite and non-Level-1 model-card `LEVEL` values before lowering
-     MOS elements into engine parameters.
-   - Preserve explicit `LEVEL=1` model cards and cards that omit `LEVEL`.
+   - Validate `NSS` and `TPG` before lowering MOS elements into engine
+     parameters.
+   - Reuse shared engine semantics for `N_SUB` / `TOX` derived `VT0`, `GAMMA`,
+     and `PHI` defaults instead of silently dropping supported inputs.
 
 ## Completed Slices
 
@@ -4107,17 +4108,24 @@ the Rust, Python, and TypeScript surfaces together.
      rejected before lowering MOS elements into engine parameters.
    - Positive nominal temperatures remain accepted across both aliases.
 
+365. Rust Berkeley SPICE MOS model-card level validation.
+   - Status: completed in PR 9570.
+   - Non-finite and non-Level-1 model-card `LEVEL` values are rejected before
+     lowering MOS elements into engine parameters.
+   - Explicit `LEVEL=1` model cards and cards that omit `LEVEL` remain accepted.
+
 ## Backlog
 
-1. Rust Berkeley SPICE MOS model-card level validation.
-   - Reject non-finite and non-Level-1 model-card `LEVEL` values before lowering
-     MOS elements into engine parameters.
-   - Preserve explicit `LEVEL=1` model cards and cards that omit `LEVEL`.
+1. Rust Berkeley SPICE MOS model-card electrostatic-default lowering parity.
+   - Validate `NSS` and `TPG` before lowering MOS elements into engine
+     parameters.
+   - Reuse shared engine semantics for `N_SUB` / `TOX` derived `VT0`, `GAMMA`,
+     and `PHI` defaults instead of silently dropping supported inputs.
 
 2. Rust Berkeley SPICE MOS model-card validation audit.
-   - Re-audit supported model-card parameters after the `LEVEL` facade gap
-     lands, recording any newly confirmed gaps here before selecting another
-     slice.
+   - Re-audit supported model-card parameters after the electrostatic-default
+     facade gap lands, recording any newly confirmed gaps here before selecting
+     another slice.
    - Reuse contracts and diagnostics already aligned across the Rust, Python,
      and TypeScript engines whenever the missing behavior is facade-only.
 

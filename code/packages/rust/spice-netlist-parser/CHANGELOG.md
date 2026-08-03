@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate Level-1 MOS model-card `NSS` and `TPG` values, then lower `N_SUB` /
+  `TOX` electrostatic defaults through the shared engine model-card semantics.
 - Reject non-finite and non-Level-1 MOS model-card `LEVEL` values before
   lowering netlist elements into the engine.
 - Reject zero, negative, and non-finite Level-1 MOS model-card `T_NOM` / `TNOM`
