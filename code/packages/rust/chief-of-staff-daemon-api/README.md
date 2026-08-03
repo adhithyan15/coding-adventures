@@ -10,6 +10,11 @@ fallible depth-capped parser, rejects duplicate or unknown fields, and encodes
 64-bit revisions and timestamps as strings. It does not retain credentials or
 expose adapter diagnostics.
 
+`DaemonClient` provides the matching blocking client for operator adapters. It
+constructs typed host-lifecycle requests, checks response versions and IDs, and
+retains stable remote error codes without exposing remote details through its
+diagnostic display.
+
 ## Validation
 
 ```sh

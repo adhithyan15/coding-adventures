@@ -20,6 +20,11 @@ the runnable core. Pipeline manifests, channel-key distribution, daemon
 installation, background scheduling, streaming logs, and the final CLI remain
 later adapters.
 
+The same package also provides the typed blocking client used by the operator
+CLI. Keeping request construction, response validation, request-ID matching,
+and remote-error decoding beside the server codec prevents the two sides from
+silently drifting.
+
 ## Listener Boundary
 
 The production daemon binds the WebSocket server only to an explicitly supplied
@@ -76,6 +81,26 @@ One request produces one response on the same connection. There are no server
 push messages in this slice, so the synchronous reactor handler is sufficient.
 Long-running work and streaming operations will use an explicit typed mailbox
 in a later slice rather than blocking the reactor.
+
+## Typed Client
+
+`DaemonClient` wraps `websocket-runtime`'s blocking client and exposes the same
+seven host operations plus authentication. It generates a fresh decimal request
+ID for every call, requires the response ID and protocol version to match, and
+returns only the successful `result` value or a typed payload-blind client
+failure.
+
+The client applies the same 64 KiB response bound, fallible depth-capped JSON
+parser, recursive duplicate-key rejection, and strict response-envelope field
+sets as the server. A binary message, control message in place of a response,
+unknown field, malformed remote error, or mismatched request ID is a protocol
+failure. Remote error codes are retained for programmatic CLI exit handling;
+their messages are bounded but never included in the client's `Display`
+diagnostic.
+
+The client accepts an opaque credential for one immediate authentication call
+and never stores it. Secure terminal input remains the responsibility of the
+CLI's injected credential provider.
 
 ## Methods
 
@@ -176,7 +201,8 @@ The package must cover:
 - all seven host lifecycle operations through an injected control plane;
 - typed mapping from `OrchestratorCore` into public API errors;
 - text-only WebSocket behavior and connection-local session teardown; and
-- a real loopback WebSocket client/server exchange.
+- strict client response validation and request-ID matching; and
+- a real typed-client loopback WebSocket exchange.
 
 The implementation forbids unsafe code and targets at least 95 percent line
 coverage.

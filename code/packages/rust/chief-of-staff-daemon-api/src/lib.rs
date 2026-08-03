@@ -22,8 +22,8 @@ use std::sync::{Arc, Mutex};
 use transport_platform::TransportPlatform;
 use websocket_core::{Frame, MessageEvent};
 use websocket_runtime::{
-    WebSocketConnectionInfo, WebSocketHandlerResult, WebSocketRuntime, WebSocketRuntimeError,
-    WebSocketServerOptions,
+    WebSocketClient, WebSocketClientOptions, WebSocketConnectionInfo, WebSocketHandlerResult,
+    WebSocketRuntime, WebSocketRuntimeError, WebSocketServerOptions,
 };
 
 pub use tcp_runtime::BindAddress;
@@ -334,6 +334,306 @@ where
         move |_info: WebSocketConnectionInfo, session, event| handler_api.handle(session, event),
         |_info, _session| {},
     )
+}
+
+/// Blocking typed client for the authenticated Chief daemon protocol.
+pub struct DaemonClient {
+    socket: WebSocketClient,
+    next_request_id: u64,
+}
+
+impl DaemonClient {
+    /// Connect and complete the RFC 6455 upgrade without authenticating yet.
+    pub fn connect(
+        host: &str,
+        port: u16,
+        target: &str,
+        mut options: WebSocketClientOptions,
+    ) -> Result<Self, DaemonClientError> {
+        options.max_frame_payload = options.max_frame_payload.min(MAX_REQUEST_BYTES);
+        options.max_message_payload = options.max_message_payload.min(MAX_REQUEST_BYTES);
+        let socket = WebSocketClient::connect(host, port, target, options)
+            .map_err(DaemonClientError::Transport)?;
+        Ok(Self {
+            socket,
+            next_request_id: 1,
+        })
+    }
+
+    /// Exchange one opaque bounded credential for connection-local authority.
+    pub fn authenticate(&mut self, credential: &str) -> Result<JsonValue, DaemonClientError> {
+        if credential.is_empty() || credential.len() > MAX_CREDENTIAL_BYTES {
+            return Err(DaemonClientError::InvalidCredential);
+        }
+        self.call(
+            "authenticate",
+            object(vec![(
+                "credential",
+                JsonValue::String(credential.to_string()),
+            )]),
+        )
+    }
+
+    /// Register one immutable host package identity and its initial intent.
+    pub fn register_host(
+        &mut self,
+        registration: &HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "register_host",
+            object(vec![
+                (
+                    "host_name",
+                    JsonValue::String(registration.host_name().as_str().to_string()),
+                ),
+                (
+                    "package_path",
+                    JsonValue::String(registration.package_path().as_str().to_string()),
+                ),
+                (
+                    "package_hash",
+                    JsonValue::String(hex_bytes(registration.package_hash())),
+                ),
+                (
+                    "restart_policy",
+                    JsonValue::String(
+                        restart_policy_name(registration.restart_policy()).to_string(),
+                    ),
+                ),
+                (
+                    "desired_state",
+                    JsonValue::String(desired_state_name(desired_state).to_string()),
+                ),
+            ]),
+        )
+    }
+
+    /// List all durable host entries in stable host-name order.
+    pub fn list_hosts(&mut self) -> Result<JsonValue, DaemonClientError> {
+        self.call("list_hosts", object(Vec::new()))
+    }
+
+    /// Change one host's durable desired lifecycle state.
+    pub fn set_desired_state(
+        &mut self,
+        host_name: &HostName,
+        desired_state: DesiredState,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "set_desired_state",
+            object(vec![
+                (
+                    "host_name",
+                    JsonValue::String(host_name.as_str().to_string()),
+                ),
+                (
+                    "desired_state",
+                    JsonValue::String(desired_state_name(desired_state).to_string()),
+                ),
+            ]),
+        )
+    }
+
+    /// Run one bounded deterministic reconciliation tick.
+    pub fn reconcile_once(&mut self) -> Result<JsonValue, DaemonClientError> {
+        self.call("reconcile_once", object(Vec::new()))
+    }
+
+    /// Inspect durable intent and fresh process authority separately.
+    pub fn health_check(&mut self, host_name: &HostName) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "health_check",
+            object(vec![(
+                "host_name",
+                JsonValue::String(host_name.as_str().to_string()),
+            )]),
+        )
+    }
+
+    /// Safely delete stopped intent for an absent or exited host.
+    pub fn deregister_host(
+        &mut self,
+        host_name: &HostName,
+    ) -> Result<JsonValue, DaemonClientError> {
+        self.call(
+            "deregister_host",
+            object(vec![(
+                "host_name",
+                JsonValue::String(host_name.as_str().to_string()),
+            )]),
+        )
+    }
+
+    /// Begin a normal WebSocket closing handshake.
+    pub fn close(&mut self) -> Result<(), DaemonClientError> {
+        self.socket
+            .close(Some(1000), "done")
+            .map_err(DaemonClientError::Transport)
+    }
+
+    fn call(&mut self, method: &str, params: JsonValue) -> Result<JsonValue, DaemonClientError> {
+        let request_id = self.next_request_id.to_string();
+        self.next_request_id = self
+            .next_request_id
+            .checked_add(1)
+            .ok_or(DaemonClientError::RequestIdExhausted)?;
+        let request = object(vec![
+            (
+                "version",
+                JsonValue::Number(JsonNumber::Integer(PROTOCOL_VERSION)),
+            ),
+            ("id", JsonValue::String(request_id.clone())),
+            ("method", JsonValue::String(method.to_string())),
+            ("params", params),
+        ]);
+        let wire = serialize(&request).map_err(|_| DaemonClientError::InvalidResponse)?;
+        self.socket
+            .send_text(wire)
+            .map_err(DaemonClientError::Transport)?;
+        match self
+            .socket
+            .receive()
+            .map_err(DaemonClientError::Transport)?
+        {
+            MessageEvent::Text(text) => decode_client_response(&text, &request_id),
+            MessageEvent::Binary(_)
+            | MessageEvent::Ping(_)
+            | MessageEvent::Pong(_)
+            | MessageEvent::Close(_) => Err(DaemonClientError::InvalidResponse),
+        }
+    }
+}
+
+/// Stable failure from the typed blocking daemon client.
+#[derive(Debug)]
+pub enum DaemonClientError {
+    /// TCP, handshake, WebSocket, entropy, or close failure.
+    Transport(WebSocketRuntimeError),
+    /// Credential violates the public client bound.
+    InvalidCredential,
+    /// The local request-ID counter cannot advance without reuse.
+    RequestIdExhausted,
+    /// The daemon returned a malformed, mismatched, or unexpected response.
+    InvalidResponse,
+    /// The daemon returned one valid public error envelope.
+    Remote {
+        /// Stable machine-readable remote error code.
+        code: String,
+        /// Bounded public remote message. It is not included in `Display`.
+        message: String,
+    },
+}
+
+impl DaemonClientError {
+    /// Borrow the remote machine-readable error code, when present.
+    pub fn remote_code(&self) -> Option<&str> {
+        match self {
+            Self::Remote { code, .. } => Some(code),
+            _ => None,
+        }
+    }
+
+    /// Borrow the bounded public remote message, when present.
+    pub fn remote_message(&self) -> Option<&str> {
+        match self {
+            Self::Remote { message, .. } => Some(message),
+            _ => None,
+        }
+    }
+}
+
+impl Display for DaemonClientError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::Transport(_) => "chief daemon client transport failed",
+            Self::InvalidCredential => "chief daemon client credential is invalid",
+            Self::RequestIdExhausted => "chief daemon client request IDs exhausted",
+            Self::InvalidResponse => "chief daemon client received an invalid response",
+            Self::Remote { .. } => "chief daemon rejected the request",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for DaemonClientError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Transport(error) => Some(error),
+            Self::InvalidCredential
+            | Self::RequestIdExhausted
+            | Self::InvalidResponse
+            | Self::Remote { .. } => None,
+        }
+    }
+}
+
+fn decode_client_response(
+    text: &str,
+    expected_request_id: &str,
+) -> Result<JsonValue, DaemonClientError> {
+    if text.len() > MAX_REQUEST_BYTES {
+        return Err(DaemonClientError::InvalidResponse);
+    }
+    let ast = try_parse_json(text).map_err(|_| DaemonClientError::InvalidResponse)?;
+    let value = from_ast(&ast).map_err(|_| DaemonClientError::InvalidResponse)?;
+    if has_duplicate_object_keys(&value) {
+        return Err(DaemonClientError::InvalidResponse);
+    }
+    let JsonValue::Object(fields) = value else {
+        return Err(DaemonClientError::InvalidResponse);
+    };
+    if !matches!(
+        field(&fields, "version"),
+        Some(JsonValue::Number(JsonNumber::Integer(PROTOCOL_VERSION)))
+    ) || !matches!(field(&fields, "id"), Some(JsonValue::String(id)) if id == expected_request_id)
+    {
+        return Err(DaemonClientError::InvalidResponse);
+    }
+    match field(&fields, "ok") {
+        Some(JsonValue::Bool(true))
+            if has_exact_fields(&fields, &["version", "id", "ok", "result"]) =>
+        {
+            field(&fields, "result")
+                .cloned()
+                .ok_or(DaemonClientError::InvalidResponse)
+        }
+        Some(JsonValue::Bool(false))
+            if has_exact_fields(&fields, &["version", "id", "ok", "error"]) =>
+        {
+            decode_remote_error(field(&fields, "error"))
+        }
+        _ => Err(DaemonClientError::InvalidResponse),
+    }
+}
+
+fn decode_remote_error(value: Option<&JsonValue>) -> Result<JsonValue, DaemonClientError> {
+    let Some(JsonValue::Object(fields)) = value else {
+        return Err(DaemonClientError::InvalidResponse);
+    };
+    if !has_exact_fields(fields, &["code", "message"]) {
+        return Err(DaemonClientError::InvalidResponse);
+    }
+    let (Some(JsonValue::String(code)), Some(JsonValue::String(message))) =
+        (field(fields, "code"), field(fields, "message"))
+    else {
+        return Err(DaemonClientError::InvalidResponse);
+    };
+    if code.is_empty()
+        || code.len() > 64
+        || !code
+            .bytes()
+            .all(|byte| byte.is_ascii_lowercase() || byte == b'_')
+        || message.is_empty()
+        || message.len() > 512
+        || message.chars().any(char::is_control)
+    {
+        return Err(DaemonClientError::InvalidResponse);
+    }
+    Err(DaemonClientError::Remote {
+        code: code.clone(),
+        message: message.clone(),
+    })
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1454,6 +1754,191 @@ mod tests {
         let _ = client.receive();
         stop.stop();
         server.join().unwrap();
+    }
+
+    #[test]
+    fn typed_client_constructs_all_requests_and_decodes_remote_errors() {
+        let calls = Arc::new(Mutex::new(Vec::new()));
+        struct RecordingControlPlane(Arc<Mutex<Vec<&'static str>>>);
+        impl RecordingControlPlane {
+            fn record(&self, operation: &'static str) {
+                self.0.lock().unwrap().push(operation);
+            }
+        }
+        impl ChiefControlPlane for RecordingControlPlane {
+            fn register_host(
+                &mut self,
+                registration: HostRegistration,
+                desired_state: DesiredState,
+            ) -> Result<LoadedHost, ControlPlaneError> {
+                assert_eq!(registration.host_name().as_str(), "typed-host");
+                assert_eq!(registration.package_path().as_str(), "/agents/typed");
+                assert_eq!(registration.package_hash(), &[0xab; 32]);
+                assert_eq!(registration.restart_policy(), RestartPolicy::OnFailure);
+                assert_eq!(desired_state, DesiredState::Stopped);
+                self.record("register");
+                Err(ControlPlaneError::Internal)
+            }
+
+            fn list_hosts(&mut self) -> Result<Vec<LoadedHost>, ControlPlaneError> {
+                self.record("list");
+                Ok(Vec::new())
+            }
+
+            fn set_desired_state(
+                &mut self,
+                host_name: &HostName,
+                desired_state: DesiredState,
+            ) -> Result<LoadedHost, ControlPlaneError> {
+                assert_eq!(host_name.as_str(), "typed-host");
+                assert_eq!(desired_state, DesiredState::Running);
+                self.record("set");
+                Err(ControlPlaneError::Conflict)
+            }
+
+            fn reconcile_once(&mut self) -> Result<ReconcileReport, ControlPlaneError> {
+                self.record("reconcile");
+                Err(ControlPlaneError::Internal)
+            }
+
+            fn health_check(
+                &mut self,
+                host_name: &HostName,
+            ) -> Result<HostHealth, ControlPlaneError> {
+                assert_eq!(host_name.as_str(), "typed-host");
+                self.record("health");
+                Err(ControlPlaneError::NotFound)
+            }
+
+            fn deregister_host(&mut self, host_name: &HostName) -> Result<(), ControlPlaneError> {
+                assert_eq!(host_name.as_str(), "typed-host");
+                self.record("deregister");
+                Err(ControlPlaneError::Forbidden)
+            }
+        }
+
+        let api = Arc::new(DaemonApi::new(
+            RecordingControlPlane(Arc::clone(&calls)),
+            TestAuthorizer::allowing(),
+        ));
+        let mut runtime = bind_daemon(
+            host_platform(),
+            BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+            WebSocketServerOptions::default(),
+            api,
+        )
+        .unwrap();
+        let address = runtime.local_addr();
+        let stop = runtime.stop_handle();
+        let server = thread::spawn(move || runtime.serve().unwrap());
+        let mut client = DaemonClient::connect(
+            "127.0.0.1",
+            address.port(),
+            "/chief",
+            WebSocketClientOptions::default(),
+        )
+        .unwrap();
+        assert!(matches!(
+            client.authenticate(""),
+            Err(DaemonClientError::InvalidCredential)
+        ));
+        let auth = client.authenticate("secret").unwrap();
+        assert!(matches!(auth, JsonValue::Object(_)));
+        assert_eq!(client.list_hosts().unwrap(), JsonValue::Array(Vec::new()));
+
+        let host_name = HostName::new("typed-host").unwrap();
+        let registration = HostRegistration::new(
+            host_name.clone(),
+            PackagePath::new("/agents/typed").unwrap(),
+            [0xab; 32],
+            RestartPolicy::OnFailure,
+        );
+        let register = client
+            .register_host(&registration, DesiredState::Stopped)
+            .unwrap_err();
+        assert_eq!(register.remote_code(), Some("internal"));
+        assert_eq!(register.remote_message(), Some("operation failed"));
+        assert_eq!(register.to_string(), "chief daemon rejected the request");
+
+        assert_eq!(
+            client
+                .set_desired_state(&host_name, DesiredState::Running)
+                .unwrap_err()
+                .remote_code(),
+            Some("conflict")
+        );
+        assert_eq!(
+            client.reconcile_once().unwrap_err().remote_code(),
+            Some("internal")
+        );
+        assert_eq!(
+            client.health_check(&host_name).unwrap_err().remote_code(),
+            Some("not_found")
+        );
+        assert_eq!(
+            client
+                .deregister_host(&host_name)
+                .unwrap_err()
+                .remote_code(),
+            Some("forbidden")
+        );
+        assert_eq!(
+            *calls.lock().unwrap(),
+            [
+                "list",
+                "register",
+                "set",
+                "reconcile",
+                "health",
+                "deregister"
+            ]
+        );
+        client.close().unwrap();
+        stop.stop();
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn typed_client_rejects_malformed_or_mismatched_responses() {
+        let invalid = [
+            "not json".to_string(),
+            "[]".to_string(),
+            r#"{"version":2,"id":"1","ok":true,"result":{}}"#.to_string(),
+            r#"{"version":1,"id":"2","ok":true,"result":{}}"#.to_string(),
+            r#"{"version":1,"id":"1","ok":true,"result":{},"extra":1}"#.to_string(),
+            r#"{"version":1,"id":"1","ok":true,"result":{"x":1,"x":2}}"#.to_string(),
+            r#"{"version":1,"id":"1","ok":false,"error":[]}"#.to_string(),
+            r#"{"version":1,"id":"1","ok":false,"error":{"code":"BAD","message":"bad"}}"#
+                .to_string(),
+            r#"{"version":1,"id":"1","ok":false,"error":{"code":"bad","message":"line\nfeed"}}"#
+                .to_string(),
+        ];
+        for response in invalid {
+            assert!(matches!(
+                decode_client_response(&response, "1"),
+                Err(DaemonClientError::InvalidResponse)
+            ));
+        }
+        assert!(matches!(
+            decode_client_response(&"x".repeat(MAX_REQUEST_BYTES + 1), "1"),
+            Err(DaemonClientError::InvalidResponse)
+        ));
+        let remote = decode_client_response(
+            r#"{"version":1,"id":"1","ok":false,"error":{"code":"forbidden","message":"operation is not authorized"}}"#,
+            "1",
+        )
+        .unwrap_err();
+        assert_eq!(remote.remote_code(), Some("forbidden"));
+        assert_eq!(remote.remote_message(), Some("operation is not authorized"));
+        assert!(std::error::Error::source(&remote).is_none());
+        assert_eq!(
+            DaemonClientError::RequestIdExhausted.to_string(),
+            "chief daemon client request IDs exhausted"
+        );
+        assert_eq!(
+            DaemonClientError::InvalidResponse.to_string(),
+            "chief daemon client received an invalid response"
+        );
     }
 
     #[test]
