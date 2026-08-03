@@ -4,15 +4,16 @@
 
 use serde_json::{Map as JsonMap, Value as JsonValue};
 use smart_home_core::{
-    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode, Device,
-    DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EntityKind, EventId, Health,
-    IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool, StateConfidence,
-    StateDelta, StateSnapshot, StateSource, Value, ValueKind,
+    AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
+    CommandResult, CommandType, Device, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
+    EntityKind, EventId, Health, IntegrationId, MediaCommandType, Metadata, ProtocolFamily,
+    ProtocolIdentifier, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource,
+    Value, ValueKind,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
 };
-use smart_home_runtime::{RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, BufRead, BufReader, Write};
@@ -21,7 +22,7 @@ use std::time::Duration;
 use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpError, UdpOptions};
 use url_parser::{Url, UrlError};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 pub const INTEGRATION_ID: &str = "heos";
 pub const PROTOCOL_ID: &str = "heos_cli";
 pub const SSDP_SEARCH_TARGET: &str = "urn:schemas-denon-com:device:ACT-Denon:1";
@@ -39,10 +40,21 @@ pub enum HeosError {
     Udp(UdpError),
     Io(String),
     Json(serde_json::Error),
-    ResponseTooLarge { limit: usize },
+    ResponseTooLarge {
+        limit: usize,
+    },
     MissingField(&'static str),
-    CommandFailed { command: String, message: String },
+    CommandFailed {
+        command: String,
+        message: String,
+    },
     NoPlayers,
+    UnknownEntity(EntityId),
+    UnsupportedCommand(CommandType),
+    InvalidCommandArguments {
+        command_type: CommandType,
+        expected: &'static str,
+    },
     Runtime(RuntimeError),
 }
 
@@ -62,6 +74,19 @@ impl fmt::Display for HeosError {
                 write!(formatter, "HEOS command {command} failed: {message}")
             }
             Self::NoPlayers => formatter.write_str("HEOS system returned no players"),
+            Self::UnknownEntity(entity_id) => {
+                write!(formatter, "HEOS player entity {entity_id} is not installed")
+            }
+            Self::UnsupportedCommand(command_type) => {
+                write!(formatter, "HEOS does not support command {command_type:?}")
+            }
+            Self::InvalidCommandArguments {
+                command_type,
+                expected,
+            } => write!(
+                formatter,
+                "HEOS command {command_type:?} expects {expected}"
+            ),
             Self::Runtime(error) => error.fmt(formatter),
         }
     }
@@ -566,11 +591,15 @@ pub struct InstalledHeosSystem {
 
 pub struct HeosRuntimeIntegration<T> {
     client: HeosClient<T>,
+    player_ids: BTreeMap<EntityId, String>,
 }
 
 impl<T: HeosTransport> HeosRuntimeIntegration<T> {
     pub fn new(client: HeosClient<T>) -> Self {
-        Self { client }
+        Self {
+            client,
+            player_ids: BTreeMap::new(),
+        }
     }
 
     pub fn inspect_and_install_authorized(
@@ -581,7 +610,53 @@ impl<T: HeosTransport> HeosRuntimeIntegration<T> {
     ) -> Result<InstalledHeosSystem, HeosError> {
         authorize_read(runtime, principal_id, observed_at_ms)?;
         let snapshot = self.client.inspect()?;
-        install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)
+        let installed = install_snapshot(runtime, &self.client.config, &snapshot, observed_at_ms)?;
+        self.player_ids = snapshot
+            .players
+            .iter()
+            .zip(installed.entity_ids.iter())
+            .map(|(player, entity_id)| (entity_id.clone(), player.player.pid.clone()))
+            .collect();
+        Ok(installed)
+    }
+
+    pub fn dispatch_command_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<CommandResult, HeosError> {
+        let plan = heos_command_plan(&self.player_ids, &request)?;
+        let result = if let CommandType::Media(MediaCommandType::SetGroup) = request.command_type {
+            let mut target_result = None;
+            for entity_id in &plan.affected_entities {
+                let mut member_request = request.clone();
+                member_request.entity_id = entity_id.clone();
+                let result =
+                    runtime.execute_command_tool(principal_id.clone(), member_request, now_ms)?;
+                if entity_id == &request.entity_id {
+                    target_result = Some(result);
+                }
+            }
+            target_result.ok_or(HeosError::InvalidCommandArguments {
+                command_type: request.command_type,
+                expected: "a group containing the target entity",
+            })?
+        } else {
+            runtime.execute_command_tool(principal_id, request, now_ms)?
+        };
+        let responses = self.client.transport.exchange(
+            &self.client.config.host,
+            self.client.config.port,
+            std::slice::from_ref(&plan.command),
+            self.client.config.timeout,
+        )?;
+        let response = responses
+            .first()
+            .ok_or(HeosError::MissingField("command response"))?;
+        successful_response(response, plan.response_command)?;
+        Ok(result)
     }
 
     pub fn collect_and_apply_change_events_authorized<E: HeosChangeEventTransport>(
@@ -608,6 +683,220 @@ impl<T: HeosTransport> HeosRuntimeIntegration<T> {
             received_at_ms,
         )
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct HeosCommandPlan {
+    command: String,
+    response_command: &'static str,
+    affected_entities: Vec<EntityId>,
+}
+
+fn heos_command_plan(
+    player_ids: &BTreeMap<EntityId, String>,
+    request: &RuntimeCommandToolRequest,
+) -> Result<HeosCommandPlan, HeosError> {
+    let pid = player_ids
+        .get(&request.entity_id)
+        .ok_or_else(|| HeosError::UnknownEntity(request.entity_id.clone()))?;
+    let encoded_pid = encode_argument(pid);
+    let (command, response_command, affected_entities) = match request.command_type {
+        CommandType::Media(MediaCommandType::SetPlaybackState) => {
+            let Value::Text(state) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "play, pause, or stop text",
+                );
+            };
+            if !matches!(state.as_str(), "play" | "pause" | "stop") {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "play, pause, or stop text",
+                );
+            }
+            (
+                format!("heos://player/set_play_state?pid={encoded_pid}&state={state}"),
+                "player/set_play_state",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::PlayNext) => {
+            require_null_arguments(request)?;
+            (
+                format!("heos://player/play_next?pid={encoded_pid}"),
+                "player/play_next",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::PlayPrevious) => {
+            require_null_arguments(request)?;
+            (
+                format!("heos://player/play_previous?pid={encoded_pid}"),
+                "player/play_previous",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::SetVolume) => {
+            let Value::Percentage(level) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a percentage volume");
+            };
+            (
+                format!("heos://player/set_volume?pid={encoded_pid}&level={level}"),
+                "player/set_volume",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::SetMute) => {
+            let Value::Bool(muted) = request.arguments else {
+                return invalid_command_arguments(request.command_type, "a boolean mute state");
+            };
+            let state = if muted { "on" } else { "off" };
+            (
+                format!("heos://player/set_mute?pid={encoded_pid}&state={state}"),
+                "player/set_mute",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::SetGroup) => {
+            let Value::Array(entity_values) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "an array of installed HEOS player entity ids",
+                );
+            };
+            let mut members = BTreeMap::new();
+            for value in entity_values {
+                let Value::Text(entity_id) = value else {
+                    return invalid_command_arguments(
+                        request.command_type,
+                        "an array of installed HEOS player entity ids",
+                    );
+                };
+                let entity_id = EntityId::new(entity_id.clone()).map_err(|_| {
+                    HeosError::InvalidCommandArguments {
+                        command_type: request.command_type,
+                        expected: "an array of installed HEOS player entity ids",
+                    }
+                })?;
+                let member_pid = player_ids
+                    .get(&entity_id)
+                    .ok_or_else(|| HeosError::UnknownEntity(entity_id.clone()))?;
+                members.insert(entity_id, member_pid.clone());
+            }
+            if members.is_empty() || !members.contains_key(&request.entity_id) {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "a non-empty group containing the target entity",
+                );
+            }
+            if members.len() > DEFAULT_MAX_PLAYERS {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "at most 64 installed HEOS player entity ids",
+                );
+            }
+            let pids = members
+                .values()
+                .map(|pid| encode_argument(pid))
+                .collect::<Vec<_>>()
+                .join(",");
+            (
+                format!("heos://group/set_group?pid={pids}"),
+                "group/set_group",
+                members.into_keys().collect(),
+            )
+        }
+        CommandType::Media(MediaCommandType::ClearQueue) => {
+            require_null_arguments(request)?;
+            (
+                format!("heos://player/clear_queue?pid={encoded_pid}"),
+                "player/clear_queue",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::PlayQueueItem) => {
+            let qid = queue_item_argument(request)?;
+            (
+                format!("heos://player/play_queue?pid={encoded_pid}&qid={qid}"),
+                "player/play_queue",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::RemoveQueueItem) => {
+            let qid = queue_item_argument(request)?;
+            (
+                format!("heos://player/remove_queue_item?pid={encoded_pid}&qid={qid}"),
+                "player/remove_queue_item",
+                vec![request.entity_id.clone()],
+            )
+        }
+        CommandType::Media(MediaCommandType::MoveQueueItem) => {
+            let Value::Object(arguments) = &request.arguments else {
+                return invalid_command_arguments(
+                    request.command_type,
+                    "an object with positive qid and new_qid integers",
+                );
+            };
+            let qid = positive_object_integer(arguments, "qid", request.command_type)?;
+            let new_qid = positive_object_integer(arguments, "new_qid", request.command_type)?;
+            (
+                format!(
+                    "heos://player/move_queue_item?pid={encoded_pid}&qid={qid}&new_qid={new_qid}"
+                ),
+                "player/move_queue_item",
+                vec![request.entity_id.clone()],
+            )
+        }
+        command_type => return Err(HeosError::UnsupportedCommand(command_type)),
+    };
+    Ok(HeosCommandPlan {
+        command,
+        response_command,
+        affected_entities,
+    })
+}
+
+fn require_null_arguments(request: &RuntimeCommandToolRequest) -> Result<(), HeosError> {
+    if request.arguments == Value::Null {
+        Ok(())
+    } else {
+        invalid_command_arguments(request.command_type, "null arguments")
+    }
+}
+
+fn queue_item_argument(request: &RuntimeCommandToolRequest) -> Result<i64, HeosError> {
+    match request.arguments {
+        Value::Integer(qid) if qid > 0 => Ok(qid),
+        _ => invalid_command_arguments(request.command_type, "a positive queue item integer"),
+    }
+}
+
+fn positive_object_integer(
+    arguments: &[(String, Value)],
+    field: &'static str,
+    command_type: CommandType,
+) -> Result<i64, HeosError> {
+    arguments
+        .iter()
+        .find_map(|(name, value)| (name == field).then_some(value))
+        .and_then(|value| match value {
+            Value::Integer(value) if *value > 0 => Some(*value),
+            _ => None,
+        })
+        .ok_or(HeosError::InvalidCommandArguments {
+            command_type,
+            expected: "an object with positive qid and new_qid integers",
+        })
+}
+
+fn invalid_command_arguments<T>(
+    command_type: CommandType,
+    expected: &'static str,
+) -> Result<T, HeosError> {
+    Err(HeosError::InvalidCommandArguments {
+        command_type,
+        expected,
+    })
 }
 
 fn authorize_read(
@@ -880,11 +1169,17 @@ pub fn install_snapshot(
             device_id: device_id.clone(),
             kind: EntityKind::Unknown,
             name: snapshot.player.name.clone(),
-            capabilities: vec![Capability::new(
-                CapabilityId::trusted("media.player_state"),
-                CapabilityMode::Observe,
-                ValueKind::Object,
-            )],
+            capabilities: vec![
+                Capability::new(
+                    CapabilityId::trusted("media.player_state"),
+                    CapabilityMode::Observe,
+                    ValueKind::Object,
+                ),
+                Capability::media_playback(),
+                Capability::media_volume(),
+                Capability::media_grouping(),
+                Capability::media_queue(),
+            ],
             state: Some(StateSnapshot {
                 entity_id: entity_id.clone(),
                 value: player_value(snapshot),
@@ -894,7 +1189,7 @@ pub fn install_snapshot(
                 expires_at_ms: None,
                 confidence: StateConfidence::Confirmed,
             }),
-            metadata: vec![Metadata::new("heos.control_surface", "read_only_player")],
+            metadata: vec![Metadata::new("heos.control_surface", "media_player")],
         })?;
         device_ids.push(device_id);
         entity_ids.push(entity_id);
@@ -1196,6 +1491,7 @@ fn read_line_with_timeout(
 mod tests {
     use super::*;
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use std::collections::VecDeque;
     use std::io::Cursor;
     use std::net::{TcpListener, UdpSocket};
     use std::sync::atomic::{AtomicUsize, Ordering};
@@ -1432,6 +1728,22 @@ mod tests {
             entity.capabilities[0].capability_id.as_str(),
             "media.player_state"
         );
+        assert!(entity.capabilities.iter().any(|capability| {
+            capability.capability_id.as_str() == "media.playback"
+                && capability.mode == CapabilityMode::ObserveAndCommand
+        }));
+        assert!(entity
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "media.volume"));
+        assert!(entity
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "media.grouping"));
+        assert!(entity
+            .capabilities
+            .iter()
+            .any(|capability| capability.capability_id.as_str() == "media.queue"));
         assert_eq!(
             entity.state.as_ref().unwrap().confidence,
             StateConfidence::Confirmed
@@ -1534,5 +1846,196 @@ mod tests {
             successful_response(&failed, "player/get_players"),
             Err(HeosError::CommandFailed { .. })
         ));
+    }
+
+    #[test]
+    fn loopback_authorized_media_commands_reach_the_native_tcp_host() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let commands = [
+            (
+                "heos://player/set_play_state?pid=1&state=pause",
+                "player/set_play_state",
+            ),
+            ("heos://player/play_next?pid=1", "player/play_next"),
+            ("heos://player/play_previous?pid=1", "player/play_previous"),
+            (
+                "heos://player/set_volume?pid=1&level=42",
+                "player/set_volume",
+            ),
+            ("heos://player/set_mute?pid=1&state=on", "player/set_mute"),
+            ("heos://group/set_group?pid=1", "group/set_group"),
+            ("heos://player/clear_queue?pid=1", "player/clear_queue"),
+            ("heos://player/play_queue?pid=1&qid=2", "player/play_queue"),
+            (
+                "heos://player/remove_queue_item?pid=1&qid=2",
+                "player/remove_queue_item",
+            ),
+            (
+                "heos://player/move_queue_item?pid=1&qid=2&new_qid=3",
+                "player/move_queue_item",
+            ),
+        ];
+        let handle = thread::spawn(move || {
+            let (stream, _) = listener.accept().unwrap();
+            write_responses(stream, &[PLAYERS]);
+            let (stream, _) = listener.accept().unwrap();
+            write_responses(stream, &[STATE, MEDIA, VOLUME, MUTE]);
+            for (expected, response_command) in commands {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut reader = BufReader::new(stream.try_clone().unwrap());
+                let mut command = String::new();
+                reader.read_line(&mut command).unwrap();
+                assert_eq!(command.trim(), expected);
+                writeln!(
+                    stream,
+                    "{{\"heos\":{{\"command\":\"{response_command}\",\"result\":\"success\",\"message\":\"\"}}}}\r"
+                )
+                .unwrap();
+            }
+        });
+
+        let config = HeosConfig::new(BridgeId::trusted("heos:controls"), "127.0.0.1")
+            .unwrap()
+            .with_port(address.port())
+            .with_timeout(Duration::from_secs(1));
+        let client = HeosClient::new(config, HeosLanTransport::default());
+        let mut integration = HeosRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:heos-controls");
+        grant(&mut runtime, &principal);
+        let installed = integration
+            .inspect_and_install_authorized(&mut runtime, principal.clone(), 10)
+            .unwrap();
+        let entity_id = installed.entity_ids[0].clone();
+        let requests = [
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetPlaybackState),
+                Value::Text("pause".to_string()),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::PlayNext),
+                Value::Null,
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::PlayPrevious),
+                Value::Null,
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetVolume),
+                Value::Percentage(42),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetMute),
+                Value::Bool(true),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::SetGroup),
+                Value::Array(vec![Value::Text(entity_id.as_str().to_string())]),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::ClearQueue),
+                Value::Null,
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::PlayQueueItem),
+                Value::Integer(2),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id.clone(),
+                CommandType::Media(MediaCommandType::RemoveQueueItem),
+                Value::Integer(2),
+            ),
+            RuntimeCommandToolRequest::new(
+                entity_id,
+                CommandType::Media(MediaCommandType::MoveQueueItem),
+                Value::Object(vec![
+                    ("qid".to_string(), Value::Integer(2)),
+                    ("new_qid".to_string(), Value::Integer(3)),
+                ]),
+            ),
+        ];
+        for (sequence, request) in requests.into_iter().enumerate() {
+            let result = integration
+                .dispatch_command_authorized(
+                    &mut runtime,
+                    principal.clone(),
+                    request,
+                    20 + sequence as u64,
+                )
+                .unwrap();
+            assert!(result.is_accepted());
+        }
+        handle.join().unwrap();
+    }
+
+    #[derive(Debug)]
+    struct ScriptedTransport {
+        calls: Arc<AtomicUsize>,
+        responses: VecDeque<Vec<JsonValue>>,
+    }
+
+    impl HeosTransport for ScriptedTransport {
+        fn exchange(
+            &mut self,
+            _host: &str,
+            _port: u16,
+            _commands: &[String],
+            _timeout: Duration,
+        ) -> Result<Vec<JsonValue>, HeosError> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            self.responses
+                .pop_front()
+                .ok_or_else(|| HeosError::Io("unexpected scripted transport call".to_string()))
+        }
+    }
+
+    #[test]
+    fn denied_media_command_reaches_no_transport() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let responses = VecDeque::from([
+            vec![serde_json::from_str(PLAYERS).unwrap()],
+            [STATE, MEDIA, VOLUME, MUTE]
+                .into_iter()
+                .map(|value| serde_json::from_str(value).unwrap())
+                .collect(),
+        ]);
+        let client = HeosClient::new(
+            HeosConfig::new(BridgeId::trusted("heos:denied-control"), "127.0.0.1").unwrap(),
+            ScriptedTransport {
+                calls: Arc::clone(&calls),
+                responses,
+            },
+        );
+        let mut integration = HeosRuntimeIntegration::new(client);
+        let mut runtime = SmartHomeRuntime::new();
+        let installer = AgentId::trusted("agent:heos-installer");
+        grant(&mut runtime, &installer);
+        let installed = integration
+            .inspect_and_install_authorized(&mut runtime, installer, 10)
+            .unwrap();
+        assert_eq!(calls.load(Ordering::SeqCst), 2);
+        assert!(matches!(
+            integration.dispatch_command_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:denied-control"),
+                RuntimeCommandToolRequest::new(
+                    installed.entity_ids[0].clone(),
+                    CommandType::Media(MediaCommandType::SetVolume),
+                    Value::Percentage(20),
+                ),
+                20,
+            ),
+            Err(HeosError::Runtime(_))
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 2);
     }
 }

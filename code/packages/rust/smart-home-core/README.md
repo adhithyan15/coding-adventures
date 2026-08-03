@@ -33,8 +33,10 @@ Current scope:
 - capability and value typing
 - capability-surface summaries for describe-capabilities tools
 - inventory summaries for bridge/device health and entity state coverage
-- canonical capability catalog entries for light, scene, lock, climate, sensor,
-  and input families
+- canonical capability catalog entries for light, scene, lock, climate, media,
+  sensor, and input families
+- typed media playback, volume, grouping, and queue operations inside the
+  existing authorized device-command envelope
 - canonical integration descriptors for Hue, Zigbee, Z-Wave, Thread, Matter,
   and MQTT bootstrap families
 - compact integration catalog summaries for runtime, discovery, pairing, and

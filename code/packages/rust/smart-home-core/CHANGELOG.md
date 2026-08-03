@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Typed media playback, volume, grouping, and queue command operations plus
+  canonical command-capability mappings.
 - A first-class `LanTcp` bridge transport for local stream protocols.
 - A first-class `LanUdp` bridge transport for local UDP discovery, polling,
   and command integrations.

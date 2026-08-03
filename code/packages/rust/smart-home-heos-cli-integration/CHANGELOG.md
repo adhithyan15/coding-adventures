@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Add authorized HEOS playback, next/previous, volume, mute, grouping, and
+  queue mutation commands over the production TCP host.
+- Require every affected grouping entity to pass D23 command authorization
+  before transport I/O and validate command-correlated success responses.
+- Advertise explicit media playback, volume, grouping, and queue capabilities.
+
 ## 0.2.0
 
 - Add bounded HEOS change-event registration and collection over a dedicated

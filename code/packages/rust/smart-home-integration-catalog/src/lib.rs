@@ -45143,14 +45143,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "heos",
             "HEOS",
-            "Local Denon and Marantz HEOS CLI player discovery, inspection, and change events.",
+            "Local Denon and Marantz HEOS CLI player discovery, inspection, change events, and media control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPush,
             ImplementationStatus::FirstPartyRuntime,
             2,
             "heos",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command.media"])
         .with_entities(&[EntityKind::Unknown])
         .with_discovery(&[DiscoveryMechanism::Ssdp, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
@@ -45162,11 +45162,12 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::Udp,
             PrimitiveFamily::Tcp,
             PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::Supervision,
             PrimitiveFamily::TestSimulator,
         ])
         .with_notes(&[
-            "Current runtime support is read-only; account access and authorized media, grouping, and queue commands remain separate work.",
+            "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
         ]),
         media_entry(
             "cast",
@@ -81114,7 +81115,7 @@ mod tests {
     }
 
     #[test]
-    fn heos_entry_exposes_ssdp_and_read_only_tcp_push_runtime() {
+    fn heos_entry_exposes_ssdp_tcp_push_and_media_command_runtime() {
         let catalog = first_party_catalog();
         let heos = find_entry(&catalog, &IntegrationId::trusted("heos")).unwrap();
 
@@ -81130,13 +81131,17 @@ mod tests {
         );
         assert_eq!(
             heos.required_capabilities,
-            vec![CapabilityId::trusted("smart_home.read")]
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.media"),
+            ]
         );
         for primitive in [
             PrimitiveFamily::Ssdp,
             PrimitiveFamily::Udp,
             PrimitiveFamily::Tcp,
             PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(heos.required_primitives.contains(&primitive));

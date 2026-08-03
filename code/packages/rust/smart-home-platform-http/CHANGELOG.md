@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added round-trippable local API labels for D23 media playback, volume,
+  grouping, and queue command types.
 - Added `lan_tcp` bridge transport projection and request parsing.
 - Added `lan_udp` bridge transport projection and request parsing.
 - Added camera entity labels and Home Assistant-compatible `camera` domains to

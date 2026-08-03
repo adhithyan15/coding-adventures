@@ -5,6 +5,8 @@
 
 ## Unreleased
 
+- Upgraded HEOS runtime coverage with D23-authorized local playback, volume,
+  grouping, and queue controls over the existing TCP command host.
 - Upgraded HEOS CLI runtime coverage from polling-only inspection to local
   push through authorized, bounded change-event subscriptions.
 - Added first-party HEOS CLI runtime coverage for SSDP/manual discovery and
