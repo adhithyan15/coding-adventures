@@ -68,14 +68,22 @@ reviews_of: []
 # A real body
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Recall what you know.
 
+## You'll want to know
+<!-- hl-knowledge: introduces=[${introduces.join(", ")}]; assesses=[] -->
+
+Meet the new material.
+
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[${practises.join(", ")}] -->
 
 Say hello.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[${practises.join(", ")}] -->
 
 Say hello once.
 `;
@@ -145,6 +153,108 @@ describe("schema-v2 lesson validation", () => {
     const codes = validateCurriculum({ registry, taxonomy, spine, lessons }).map((issue) => issue.code);
     expect(codes).toContain("schema-v2-knowledge-not-closed");
     expect(codes).toContain("schema-v2-practice-before-introduction");
+  });
+
+  it("rejects block assessments before their atoms reach the block frontier", () => {
+    const premature = sourceV2(
+      "A",
+      10,
+      [],
+      [],
+      ["TEST-LEX-HELLO"],
+      ["TEST-LEX-HELLO"],
+    ).replace(
+      "<!-- hl-knowledge: introduces=[]; assesses=[] -->",
+      "<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->",
+    );
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(premature, "test")],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("schema-v2-block-knowledge-not-closed");
+  });
+
+  it("rejects assessed atoms omitted from lesson-level practice declarations", () => {
+    const undeclared = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace(
+        "assesses=[TEST-LEX-HELLO]",
+        "assesses=[TEST-LEX-HELLO, TEST-LEX-UNDECLARED]",
+      );
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(undeclared, "test")],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("schema-v2-block-undeclared-assessment");
+    expect(codes).toContain("schema-v2-block-knowledge-not-closed");
+  });
+
+  it("requires every schema-v2 body block to declare its knowledge boundary", () => {
+    const missing = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace("<!-- hl-knowledge: introduces=[]; assesses=[] -->\n", "");
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(missing, "test")],
+    }).map((issue) => issue.code)).toContain("schema-v2-missing-block-knowledge");
+  });
+
+  it("requires production and recall blocks to name what they assess", () => {
+    const empty = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replaceAll("assesses=[TEST-LEX-HELLO]", "assesses=[]");
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(empty, "test")],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("schema-v2-empty-block-assessment");
+    expect(codes).toContain("schema-v2-block-assessment-missing");
+  });
+
+  it("requires block introductions to exactly account for lesson introductions", () => {
+    const base = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"]);
+    const missing = base.replace(
+      "introduces=[TEST-LEX-HELLO]",
+      "introduces=[]",
+    );
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(missing, "test")],
+    }).map((issue) => issue.code)).toContain("schema-v2-block-introduction-missing");
+
+    const undeclaredAndDuplicate = base.replace(
+      "introduces=[]; assesses=[]",
+      "introduces=[TEST-LEX-HELLO, TEST-LEX-UNDECLARED]; assesses=[]",
+    );
+    const codes = validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(undeclaredAndDuplicate, "test")],
+    }).map((issue) => issue.code);
+    expect(codes).toContain("schema-v2-block-undeclared-introduction");
+    expect(codes).toContain("schema-v2-duplicate-block-introduction");
+  });
+
+  it("rejects a malformed authored block-knowledge directive", () => {
+    const malformed = sourceV2("A", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-LEX-HELLO"])
+      .replace(
+        "<!-- hl-knowledge: introduces=[]; assesses=[] -->",
+        "<!-- hl-knowledge: assesses=[] -->",
+      );
+    expect(validateCurriculum({
+      registry,
+      taxonomy,
+      spine,
+      lessons: [parseLesson(malformed, "test")],
+    }).map((issue) => issue.code)).toContain("schema-v2-invalid-block-knowledge");
   });
 
   it("rejects malformed duration, coverage, sequence, and body blocks", () => {

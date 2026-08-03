@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-DE-NADA, ES-ETYMON-NATA]
 practises:
-  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA]
+  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-ETYMON-NATA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,6 +31,7 @@ reviews_of: [ES-C04-gracias]
 # de nada — "you're welcome," or "it was nothing"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Someone says **gracias**. You need the reply that closes the loop:
 **de nada** — literally *"of nothing."* You're waving the favour off as no
@@ -38,12 +39,14 @@ trouble at all — the same move English makes with *"it's nothing"* / *"no
 problem."*
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `d-soft` — the *d* in *nada* is soft, almost the *th* of *this* (**NAH-thah**),
   not a hard English *d*. Spanish *d* between vowels always softens.
 - `vowel-a` — three clean *ah* sounds: *deh NAH-thah*.
 
 ## The word, taken apart — the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-DE-NADA, ES-ETYMON-NATA]; assesses=[] -->
 
 - **de** = "of / from" (Latin **dē**) — the same *de* hiding in English
   **de**part, **de**duct, **de**scend.
@@ -62,17 +65,20 @@ all." French did the identical trick with **rien** ("nothing") — which is Lati
 into the word for *nothing*.
 
 ## Grammar Lens: the courtesy pair
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *gracias* → *de nada* is a fixed **adjacency pair**: one turn expects the other.
 Learn them as a unit, the way English glues *thank you* → *you're welcome*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gracias" … "de nada" — the full exchange, both voices]
 - [YOU SAY: "de nada" then English "native, nature, natal" — nada's true family]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-ETYMON-NATA] -->
 
 [PAUSE 3s] *nada* ("nothing") started life as the Latin word for a *born* —
 what? (A *thing* — *rēs nāta*, a born thing.) What English words share that

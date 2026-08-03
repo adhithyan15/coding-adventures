@@ -16,9 +16,9 @@ duration:
 requires:
   knowledge: [ES-LEX-MUCHO, ES-LEX-COMO-SE-LLAMA]
 introduces:
-  knowledge: [ES-LEX-MUCHO-GUSTO]
+  knowledge: [ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO]
 practises:
-  knowledge: [ES-LEX-MUCHO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA]
+  knowledge: [ES-LEX-MUCHO, ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,16 +30,19 @@ reviews_of: [ES-C03-como-se-llama, ES-C03-mucho]
 # gusto → mucho gusto — "much pleasure"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The line you say when you shake someone's hand. First the noun
 *gusto*, then snap *mucho* onto it, and you've got it.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO]; assesses=[] -->
 
 - [mucho](./ES-C03-mucho.md) — "much," about to modify
   *gusto*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **el gusto** (masculine) — "taste; pleasure, liking." Root: Latin **gustus**
 ("a tasting, a taste"). The English cousins:
@@ -57,20 +60,21 @@ masculine (*el gusto*), and *mucho* is in its plain masculine form to match
 it: another quiet piece of the agreement you've been building.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Spanish greets a new acquaintance by naming the *pleasure* of it — "much
 pleasure" — where English names the *person* ("pleased to meet **you**").
-There's a stock reply that volleys it back: **"El gusto es mío"** — "the
-pleasure is mine."
+The phrase works by itself, so this first exchange needs no extra reply formula.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUCHO, ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gusto" then "gusto" (English), "disgust", "gustatory"]
 - [YOU SAY: "mucho gusto" — on meeting someone]
-- [YOU SAY: the reply — "el gusto es mío"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-MUCHO, ES-LEX-GUSTO, ES-LEX-MUCHO-GUSTO, ES-LEX-COMO-SE-LLAMA] -->
 
 [PAUSE 3s] What does *mucho gusto* literally mean? ("Much pleasure.") Is *el
 gusto* masculine or feminine? (Masculine.) And the English cousin of *gusto*

@@ -2,6 +2,8 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+- Hide canonical `hl-knowledge` comments from learner-facing lesson sections;
+  the shared parser and source hash still retain their block-boundary meaning.
 - Keep the browser's lightweight dataset adapter compatible with the canonical
   typed lesson AST.
 - Derive the lesson-card minute label from schema-v2 `duration.max_seconds`,

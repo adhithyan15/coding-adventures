@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE]
 practises:
-  knowledge: [ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+  knowledge: [ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-STUDERE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,18 +31,21 @@ reviews_of: [ES-C06-trabajar]
 # estudiar — "to study," and the eagerness inside it
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your third **-ar** verb. By now the pattern should feel automatic —
 that's exactly what we want. *estudiar* also hides a nicer feeling than the
 classroom suggests: at root it means **eagerness.**
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - `st-no-e` — Spanish props up *st-* with an *e*: **es-tudiar** (the same reflex
   behind *estar*, *España*, *escuela*). *es-too-DYAR*.
 - `diphthong-io` — the *-iar* glides: *es-too-**DYAR***.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE]; assesses=[] -->
 
 **estudiar** comes from Latin **studēre**, *"to be eager, to apply oneself
 zealously."* A *studium* was **zeal, enthusiasm, devotion** — only later "study."
@@ -58,6 +61,7 @@ So *Estudio español* is "I *devote myself eagerly* to Spanish" — a nicer pict
 than mere schoolwork.
 
 ## Grammar Lens: the template holds
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Drop **-ar**, add the ending — for the third time:
 
@@ -71,6 +75,7 @@ Three verbs, one pattern: *hablo, trabajo, estudio*. The singular regular
 **-ar** present is now reusable rather than memorized verb by verb.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-STUDERE] -->
 
 [PAUSE 1s]
 - [YOU SAY: "estudiar" — *es-too-DYAR*]
@@ -78,6 +83,7 @@ Three verbs, one pattern: *hablo, trabajo, estudio*. The singular regular
 - [YOU SAY: "estudiar" then English "student, studio" — the *studēre* "eagerness"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-ETYMON-STUDERE] -->
 
 [PAUSE 3s] What did *studēre* originally mean? ("To be eager / apply oneself.")
 Its English cousins? (Student, studio, studious.) Say "I study" — and notice it

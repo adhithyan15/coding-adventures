@@ -5,7 +5,7 @@
     {
       "language": "spanish",
       "chapter": 1,
-      "sourceHash": "fnv1a64:746d660c5f9ec3cd",
+      "sourceHash": "fnv1a64:ad881fd61b3c4d60",
       "lessonIds": [
         "ES-C01-hola",
         "ES-C01-bien",
@@ -20,7 +20,7 @@
     {
       "language": "spanish",
       "chapter": 2,
-      "sourceHash": "fnv1a64:25b110167a9b669e",
+      "sourceHash": "fnv1a64:462a506683c04c7f",
       "lessonIds": [
         "ES-C02-tarde",
         "ES-C02-buenas-tardes",
@@ -33,7 +33,7 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:394498f9947f7389",
+      "sourceHash": "fnv1a64:11a05b47aeca6e6d",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -53,7 +53,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:a8f2ef77f4c94859",
+      "sourceHash": "fnv1a64:d12c066ed597921d",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -74,7 +74,7 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:3008dfa4a25b0bd2",
+      "sourceHash": "fnv1a64:6b08d82baacfa774",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -89,7 +89,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:081983e1f50e4d6c",
+      "sourceHash": "fnv1a64:57e2a578e9dbb2a1",
       "lessonIds": [
         "ES-C06-cafe",
         "ES-C06-por-favor",

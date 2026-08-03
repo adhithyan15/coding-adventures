@@ -29,6 +29,7 @@ reviews_of: [ES-C03-como, ES-C04-regular]
 # á é í ó ú — the acute accent, and the two jobs it does
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've been reading accented words since your very first noun —
 **dí**a, **có**mo, es**tá**, **má**s. Time to make that little stroke make
@@ -37,6 +38,7 @@ sense. Spanish uses one mark to write exceptional stress — the *acute* accent,
 stress job now; the next lesson adds its grammar-label job.
 
 ## Script — shape and stroke
+<!-- hl-knowledge: introduces=[ES-SCRIPT-ACUTE-ACCENT]; assesses=[] -->
 
 A short stroke rising **left-to-right**, sitting on top of a vowel:
 **á é í ó ú**. (On the *í*, it replaces the dot.) One clean up-stroke — the
@@ -44,6 +46,7 @@ opposite lean from the French *grave* accent `à`. Spanish never uses grave or
 circumflex; if it leans the wrong way, it isn't Spanish.
 
 ## Grammar Lens: the mark records exceptional stress
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-DEFAULT-STRESS, ES-GRAMMAR-STRESS-EXCEPTION]; assesses=[] -->
 
 Spanish stress is regular, so most words need **no** mark. The default:
 
@@ -59,6 +62,7 @@ is stressed *CÓ-mo*, so it gets the mark. The accent is a **spoken stress you
 can see** — it never changes the vowel's sound, only which syllable you hit.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-DEFAULT-STRESS, ES-GRAMMAR-STRESS-EXCEPTION] -->
 
 [PAUSE 1s]
 - [YOU SAY: “hola, llamo, gusto” — second-to-last stress]
@@ -66,6 +70,7 @@ can see** — it never changes the vowel's sound, only which syllable you hit.
 - [YOU SAY: "está, cómo" — the accent overrides the default]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-SCRIPT-ACUTE-ACCENT, ES-GRAMMAR-DEFAULT-STRESS, ES-GRAMMAR-STRESS-EXCEPTION] -->
 
 [PAUSE 3s] How many accent marks does Spanish have, and which way does it lean?
 (One — the acute, `´`, rising left-to-right.) Its two jobs? (Mark irregular

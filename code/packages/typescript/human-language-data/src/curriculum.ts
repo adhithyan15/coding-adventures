@@ -370,6 +370,92 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         );
       }
     }
+
+    const lessonIntroduces = new Set(stringList(lesson.frontmatter["introduces.knowledge"]));
+    const lessonPractises = new Set(stringList(lesson.frontmatter["practises.knowledge"]));
+    const blockFrontier = new Set(known);
+    const introducedInBlocks = new Set<string>();
+    const assessedInBlocks = new Set<string>();
+    for (const block of lesson.blocks) {
+      if (block.knowledgeDirectiveError) {
+        error(
+          "schema-v2-invalid-block-knowledge",
+          `${id}: block '${block.title}' ${block.knowledgeDirectiveError}`,
+        );
+        continue;
+      }
+      if (!block.knowledge) {
+        error(
+          "schema-v2-missing-block-knowledge",
+          `${id}: block '${block.title}' must declare block-boundary knowledge`,
+        );
+        continue;
+      }
+      for (const atom of [...block.knowledge.introduces, ...block.knowledge.assesses]) {
+        if (!KNOWLEDGE_ATOM.test(atom)) {
+          error(
+            "schema-v2-invalid-block-knowledge-atom",
+            `${id}: block '${block.title}' contains invalid knowledge atom '${atom}'`,
+          );
+        }
+      }
+      for (const atom of block.knowledge.assesses) {
+        assessedInBlocks.add(atom);
+        if (!lessonPractises.has(atom)) {
+          error(
+            "schema-v2-block-undeclared-assessment",
+            `${id}: block '${block.title}' assesses '${atom}' without declaring it in practises.knowledge`,
+          );
+        }
+        if (!blockFrontier.has(atom)) {
+          error(
+            "schema-v2-block-knowledge-not-closed",
+            `${id}: block '${block.title}' assesses '${atom}' before it is available`,
+          );
+        }
+      }
+      if (
+        (block.type === "guided-production" || block.type === "recall") &&
+        block.knowledge.assesses.length === 0
+      ) {
+        error(
+          "schema-v2-empty-block-assessment",
+          `${id}: ${block.type} block '${block.title}' must declare assessed knowledge`,
+        );
+      }
+      for (const atom of block.knowledge.introduces) {
+        if (!lessonIntroduces.has(atom)) {
+          error(
+            "schema-v2-block-undeclared-introduction",
+            `${id}: block '${block.title}' introduces '${atom}' without declaring it in introduces.knowledge`,
+          );
+        }
+        if (introducedInBlocks.has(atom)) {
+          error(
+            "schema-v2-duplicate-block-introduction",
+            `${id}: '${atom}' is introduced by more than one body block`,
+          );
+        }
+        introducedInBlocks.add(atom);
+        blockFrontier.add(atom);
+      }
+    }
+    for (const atom of lessonIntroduces) {
+      if (!introducedInBlocks.has(atom)) {
+        error(
+          "schema-v2-block-introduction-missing",
+          `${id}: introduced atom '${atom}' has no body-block introduction`,
+        );
+      }
+    }
+    for (const atom of lessonPractises) {
+      if (!assessedInBlocks.has(atom)) {
+        error(
+          "schema-v2-block-assessment-missing",
+          `${id}: practised atom '${atom}' is not assessed by any body block`,
+        );
+      }
+    }
   }
 
   const spineConcepts = new Set(conceptOwner.keys());

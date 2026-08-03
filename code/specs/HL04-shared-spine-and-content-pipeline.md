@@ -211,11 +211,31 @@ sources: [rae-gracias, dle-gracia, de-vries-gratia]
 ---
 ```
 
+Each level-two body block begins with a compact metadata comment. The comment is
+part of the canonical AST and source hash, but renderers omit it from learner
+copy:
+
+```markdown
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-GRACIAS-PRODUCTIVE]; assesses=[] -->
+
+**gracias** is the everyday way to say "thank you."
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS-PRODUCTIVE] -->
+
+- [YOU SAY: "gracias"]
+```
+
 The body is parsed into stable, named blocks: `warmup`, `input`, `notice`,
 `pronunciation`, `script`, `etymology`, `grammar`, `culture-pragmatics`,
 `guided-production`, `comprehension`, `fluency`, and `recall`. A block may declare
 prompts, accepted answers, feedback, and response time. The app and book render the
 same block; medium-specific presentation belongs in renderers, not a second copy.
+Every schema-v2 block authors both lists, including explicit empty lists. The
+union of block introductions must equal `introduces.knowledge`; every assessed
+atom must be declared in `practises.knowledge`; and guided-production and recall
+blocks must name at least one assessed atom.
 
 ### Knowledge closure
 
@@ -224,10 +244,13 @@ introduced by a transitive prerequisite. During the lesson, assessed material ma
 use only previously introduced atoms, atoms introduced earlier in this lesson, and
 transparent English instructions.
 
-The validator computes this set at every block boundary. Unknown atoms, cycles,
-forward references, and assessed undeclared forms are errors. Runtime scheduling
-fails closed and reports a curriculum defect; it never unlocks everything as a
-fallback.
+The validator computes this set at every block boundary. It checks assessments
+before adding that block's introductions, so a form must be established by a
+prerequisite or by an earlier block rather than introduced and tested in one
+opaque step. Unknown atoms, cycles, forward references, missing or malformed
+directives, undeclared assessments, and assessed unavailable forms are errors.
+Runtime scheduling fails closed and reports a curriculum defect; it never unlocks
+everything as a fallback.
 
 ### Five-minute contract
 

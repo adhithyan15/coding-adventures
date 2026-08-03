@@ -33,6 +33,7 @@ export function lessonSections(markdown: string): LessonSection[] {
   for (const raw of markdown.replace(/\r\n/g, "\n").split("\n")) {
     const line = raw.trim();
     if (/^#\s+/.test(line)) continue; // card already displays the lesson title
+    if (/^<!--\s*hl-knowledge:/.test(line)) continue; // canonical AST metadata, not learner copy
     const heading = /^##\s+(.+)$/.exec(line);
     if (heading) {
       flushSection();

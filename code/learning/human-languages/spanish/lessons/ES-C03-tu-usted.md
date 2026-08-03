@@ -30,12 +30,14 @@ reviews_of: [ES-C03-me-llamo]
 # tú and usted — two words for "you," and why you must choose
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] English has one word for "you." Spanish has two, and picking the
 wrong one can send the wrong social signal. This lesson gives you both and
 shows the everyday choice. The remarkable history of *usted* comes next.
 
 ## The two words
+<!-- hl-knowledge: introduces=[ES-LEX-TU, ES-LEX-USTED, ES-ETYMON-TU-THOU]; assesses=[] -->
 
 **tú** — "you," **informal**. For friends, family, children, peers, anyone
 you're on easy terms with.
@@ -50,6 +52,7 @@ you're on easy terms with.
 anyone you're showing respect or keeping distance with.
 
 ## Grammar Lens: the choice English lost
+<!-- hl-knowledge: introduces=[ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON]; assesses=[] -->
 
 Both are **subject pronouns** — the "doer" word, like *yo* ("I"). But they
 carry a second layer English dropped when *thou* died: **social register**.
@@ -64,6 +67,7 @@ and not *te llamas*. The next micro-lesson explains the history behind that
 third-person pattern.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tú" — for a close friend]
@@ -71,6 +75,7 @@ third-person pattern.
 - [YOU SAY: "tú" then English "thou" — the retired twin]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-USTED-THIRD-PERSON] -->
 
 [PAUSE 3s] Which is formal, *tú* or *usted*? (*usted*.) What English pronoun
 is the lost twin of *tú*? (*Thou*.) Which verb pattern does *usted* take?

@@ -105,7 +105,11 @@ For a lesson declaring `schema_version: 2`, `validateCurriculum()` additionally
 enforces its canonical spine node, unique per-language sequence, 1–299 second
 declared and computed duration, stable typed body sections, explicit
 skill/mode/strand/register/variety metadata, same-language prerequisites, and
-transitive knowledge closure. Schema-v1 tracks remain readable during migration.
+transitive knowledge closure. Each typed block must also author an
+`hl-knowledge` directive. Block introductions must exactly account for the
+lesson's introduced atoms; production and recall assessments must be declared by
+the lesson and available from transitive prerequisites or an earlier block.
+Schema-v1 tracks remain readable during migration.
 
 ## Scope note
 

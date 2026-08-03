@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -30,11 +30,13 @@ reviews_of: [ES-C01-hola, ES-C01-buenos-dias, ES-C02-buenas-tardes, ES-C02-buena
 # Practice — the four greetings
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can now greet at any hour of the day. Let's make the choice —
 and the grammar behind it — automatic.
 
 ## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **hola** — any time, casual.
 - **buenos días** — morning (*días* masculine → *buenos*).
@@ -46,6 +48,7 @@ word copies the gender of the time-of-day word. That's why it's *buen**os**
 días* but *buen**as** tardes* and *buen**as** noches*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
 
 [PAUSE 1s]
 - [YOU SAY: greet for the actual current time of day, correctly]
@@ -57,6 +60,7 @@ días* but *buen**as** tardes* and *buen**as** noches*.
 *buenos* vs *buenas*.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-BUENAS-TARDES, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
 
 [PAUSE 3s] Quick: is it *buenos* or *buenas* noches, and why? (*buenas* —
 *noche* is feminine.) Next chapter, someone finally greets *you* back — and

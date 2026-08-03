@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,18 +31,21 @@ reviews_of: [ES-C06-por-favor]
 # hablar — "to speak," and the engine of Spanish sentences
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Fixed phrases got you this far. **Hablar** (“to speak”) gives you a
 reusable singular **-ar** pattern. One ending swap says “I speak,” asks a
 friend, or addresses someone formally.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SOUND-F-TO-H]; assesses=[] -->
 
 - `silent-h` — the **h is completely silent**: *hablar* = *ah-BLAR*. (Spanish *h*
   never makes a sound.)
 - `v-b` — the *b* is a soft *b*; *hablo* = *AH-bloh*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-HABLAR, ES-ETYMON-FABULARI]; assesses=[] -->
 
 **hablar** comes from Latin **fābulārī**, *"to chat, to tell tales"* — from
 **fābula**, "a story." So to *speak*, in Spanish, is at root to *tell stories*.
@@ -55,6 +58,7 @@ is **fābulārī → hablar**; later words will let you test how broadly the sam
 historical pattern reaches.
 
 ## Grammar Lens: the -ar present tense (the big one)
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP]; assesses=[] -->
 
 **Hablar** belongs to the **-ar** family. To conjugate the three singular
 forms you need now, **drop -ar** and add the ending for the person:
@@ -72,6 +76,7 @@ pronoun unstated. That is **pro-drop**: *hablo* is a complete “I speak.”
 verbs straight into it.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hablar" — *ah-BLAR*, silent *h*]
@@ -79,6 +84,7 @@ verbs straight into it.
 - [YOU SAY: "hablar" then English "fable, fabulous, ineffable" — the *fābula* root]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-SOUND-F-TO-H, ES-ETYMON-FABULARI] -->
 
 [PAUSE 3s] What Latin word is *hablar* from, and what English word shares it?
 (*fābulārī* ← *fābula* — fable.) What happened to its initial Latin *f-*?

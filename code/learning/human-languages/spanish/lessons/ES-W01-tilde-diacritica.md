@@ -29,11 +29,13 @@ reviews_of: [ES-W01-acento, ES-C03-como, ES-C03-tu-usted]
 # el or él? — the accent as a meaning label
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You know **el** as the article “the.” Add one acute accent and the
 same two letters do a different job.
 
 ## Grammar Lens: one mark, two grammatical jobs
+<!-- hl-knowledge: introduces=[ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT]; assesses=[] -->
 
 The **tilde diacrítica** separates words that otherwise look alike:
 
@@ -46,6 +48,7 @@ labels meaning and grammar. Other pairs will arrive only when you know both
 words, so this lesson asks you to hold one contrast, not memorize a list.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT] -->
 
 [PAUSE 1s]
 - [YOU SAY: “el” — the]
@@ -53,6 +56,7 @@ words, so this lesson asks you to hold one contrast, not memorize a list.
 - [YOU WRITE: **el / él**, adding the meaning-label accent only to the pronoun]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-LEX-EL-PRONOUN, ES-GRAMMAR-DIACRITIC-ACCENT] -->
 
 [PAUSE 3s] What is the accent's second job? (**Separate look-alike words.**)
 Which means “the”? (**El**, no accent.) Which means “he”? (**Él**, with the

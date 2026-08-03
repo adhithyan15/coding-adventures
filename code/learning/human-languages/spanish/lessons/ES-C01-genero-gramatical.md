@@ -29,15 +29,18 @@ reviews_of: [ES-C01-el-la]
 # Grammatical gender — the two noun classes behind *el* and *la*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You know that *el* and *la* both mean "the." Now give their two
 labels: *el* is masculine; *la* is feminine.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - [el / la](./ES-C01-el-la.md) — the two definite articles.
 
 ## Grammar Lens: grammatical gender
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NOUN-GENDER]; assesses=[] -->
 
 Every Spanish noun belongs to one of two **grammatical classes**, traditionally
 called masculine and feminine. This is not a claim about biological sex. It is
@@ -51,6 +54,7 @@ You cannot always predict a noun's class from its ending. Learn each new noun
 with its article, as one small unit: *el + noun* or *la + noun*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 1s]
 - [YOU SAY: the article for a noun labelled masculine]
@@ -58,6 +62,7 @@ with its article, as one small unit: *el + noun* or *la + noun*.
 - [YOU SAY: what grammatical gender classifies — nouns, not people]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 3s] How many noun classes did Latin have? (Three.) How many does
 Spanish keep? (Two.) What should travel with every new noun you learn? (Its

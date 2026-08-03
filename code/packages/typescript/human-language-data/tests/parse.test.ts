@@ -103,6 +103,35 @@ describe("parseLesson", () => {
       { type: "unknown", title: "A surprising section", markdown: "Keep me." },
     ]);
   });
+
+  it("parses block-boundary knowledge without rendering the directive", () => {
+    const parsed = parseBodyBlocks([
+      "## Guided Practice",
+      "<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-SOUND-H-SILENT] -->",
+      "",
+      "Say *hola*.",
+    ].join("\n"));
+    expect(parsed.blocks).toEqual([{
+      type: "guided-production",
+      title: "Guided Practice",
+      markdown: "Say *hola*.",
+      knowledge: {
+        introduces: [],
+        assesses: ["ES-LEX-HOLA", "ES-SOUND-H-SILENT"],
+      },
+    }]);
+  });
+
+  it("preserves and flags a malformed or misplaced block knowledge directive", () => {
+    const [block] = parseBodyBlocks([
+      "## Guided Practice",
+      "Say *hola*.",
+      "<!-- hl-knowledge: assesses=[ES-LEX-HOLA] -->",
+    ].join("\n")).blocks;
+    expect(block?.knowledge).toBeUndefined();
+    expect(block?.knowledgeDirectiveError).toMatch(/expected one first-line/);
+    expect(block?.markdown).toContain("hl-knowledge");
+  });
 });
 
 describe("buildDataset", () => {

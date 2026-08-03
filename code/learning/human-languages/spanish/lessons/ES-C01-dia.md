@@ -30,22 +30,26 @@ reviews_of: [ES-C01-el-la]
 # día — your first noun
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You just learned how Spanish tags gender with *el* / *la*. Now put
 it to work on your very first noun — *día*, "day."
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-DIA]; assesses=[] -->
 
 - [el / la](./ES-C01-el-la.md) — grammatical gender and the two "the"s;
   *día* is where you apply them.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SOUND-WRITTEN-ACCENT]; assesses=[] -->
 
 - `accent-i` — the accent sits on the **í**: *día* is *DEE-a*, two beats. →
   [reference](../pronunciation-reference.md)
 - `d-soft` — the **d** between vowels is soft, toward the *th* in *this*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **el día** — "the day." Root: Latin **dies** ("day"). The family fans across
 English, mostly through French:
@@ -57,6 +61,7 @@ English, mostly through French:
   (*dies mali*, "evil days").
 
 ## Its two tags: gender and number
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NOUN-NUMBER]; assesses=[] -->
 
 You already know gender from the last lesson; here's how *día* wears it.
 
@@ -71,6 +76,7 @@ the word, not guessed from the ending — and it's the first of several
 días* ("days"). (Consonant endings take *-es* — later.)
 
 ## Grammar Lens: why the gender matters next
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Gender isn't a passive label — it *forces* the words around the noun to match.
 The very next lesson, *buenos días*, turns *bueno* ("good") into *buen**os***
@@ -78,6 +84,7 @@ precisely because *día* is masculine and plural. So the gender you just
 attached to *día* is about to earn its keep.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DIA, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "el día" — with its masculine "the"]
@@ -86,6 +93,7 @@ attached to *día* is about to earn its keep.
   *dies*, despite the *-a*)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-DIA, ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 3s] Which "the" goes with *día*, and why? (*el* — masculine, inherited
 from Latin *dies*, despite the *-a* ending.) How do you make it plural?

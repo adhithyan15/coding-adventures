@@ -29,15 +29,18 @@ reviews_of: [ES-C03-como]
 # The *qu-* question family — one ancient pattern, many clues
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You traced *cómo* back to Latin *quomodo*. Focus now on its first
 piece, *qu-*, without trying to use a whole set of new question words yet.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - [cómo](./ES-C03-como.md) — "how," from Latin *quomodo*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-ETYMON-QUESTION-QU]; assesses=[] -->
 
 Latin used a recurring *qu-* stem in questions. Spanish preserves that family,
 although centuries of sound change gave the modern forms different shapes:
@@ -57,6 +60,7 @@ continue the same Latin pattern. *Dónde*, "where," is an exception from Latin
 *de unde*, "from where."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU] -->
 
 [PAUSE 1s]
 - [YOU SAY: the Latin source of *cómo*]
@@ -64,6 +68,7 @@ continue the same Latin pattern. *Dónde*, "where," is an exception from Latin
 - [YOU SAY: whether the table is today's production list or a preview]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU] -->
 
 [PAUSE 3s] Which old stem connects *qué, quién, cuándo,* and *cómo*? (*qu-*.)
 Which word in the preview is the exception? (*Dónde*.)

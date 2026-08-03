@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]
 practises:
-  knowledge: [ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO]
+  knowledge: [ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,16 +31,19 @@ reviews_of: [ES-C05-hasta-luego, ES-C05-hasta-manana]
 # hasta pronto — "see you soon"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The last of the "hasta …" trio: **hasta pronto**, "until soon" — for
 when you genuinely expect to meet again shortly. One new word, **pronto**, and
 it's hiding in plain sight in English.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **hasta pronto** = *AHS-tah PRON-toh* — a clean *pr*, a pure *o*.
 
 ## The word, taken apart — the phrase
+<!-- hl-knowledge: introduces=[ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS]; assesses=[] -->
 
 > **hasta pronto** = "until soon" → "see you soon."
 
@@ -55,6 +58,7 @@ for input). Italian borrowed *pronto* too — it's what Italians say when they p
 up the phone (*"Pronto!"* = "Ready!").
 
 ## Grammar Lens: the "hasta …" trio, complete
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 You now have Spanish's three soft goodbyes, sharpest to vaguest in time:
 
@@ -67,6 +71,7 @@ You now have Spanish's three soft goodbyes, sharpest to vaguest in time:
 …and **adiós** for the long or final goodbye.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hasta pronto" — *AHS-tah PRON-toh*]
@@ -74,6 +79,7 @@ You now have Spanish's three soft goodbyes, sharpest to vaguest in time:
 - [YOU SAY: the trio — hasta pronto / hasta luego / hasta mañana]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HASTA, ES-LEX-PRONTO, ES-LEX-HASTA-PRONTO, ES-ETYMON-PROMPTUS] -->
 
 [PAUSE 3s] What does *hasta pronto* mean, and *pronto*'s English twin? ("Until
 soon"; *prompt*.) What Latin word is it from, and its literal sense? (*promptus*,

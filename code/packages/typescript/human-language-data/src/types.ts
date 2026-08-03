@@ -150,12 +150,29 @@ export type LessonBlockType =
   | "recall"
   | "unknown";
 
+/**
+ * Knowledge made available or assessed at one lesson-body boundary.
+ *
+ * Schema-v2 authors place this metadata in the first line after a level-two
+ * heading. Keeping it beside the prose lets the validator follow the same
+ * order that the book and app render instead of treating every lesson-level
+ * introduction as if it were available from the opening sentence.
+ */
+export interface LessonBlockKnowledge {
+  introduces: string[];
+  assesses: string[];
+}
+
 export interface LessonBodyBlock {
   type: LessonBlockType;
   /** Original level-two heading, kept for book/app presentation. */
   title: string;
-  /** Lossless Markdown between this heading and the next typed block. */
+  /** Display Markdown between headings, excluding the parsed metadata directive. */
   markdown: string;
+  /** Authored `hl-knowledge` directive, omitted by legacy lesson bodies. */
+  knowledge?: LessonBlockKnowledge;
+  /** Present when an author attempted a directive whose shape is invalid. */
+  knowledgeDirectiveError?: string;
 }
 
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----

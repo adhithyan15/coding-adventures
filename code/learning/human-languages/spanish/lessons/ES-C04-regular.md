@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-ETYMON-REGULA]
 practises:
-  knowledge: [ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-BIEN, ES-LEX-COMO-ESTAS]
+  knowledge: [ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-BIEN, ES-LEX-COMO-ESTAS, ES-ETYMON-REGULA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,18 +31,21 @@ reviews_of: [ES-C01-bien, ES-C04-como-estas-register, ES-C04-como-esta]
 # regular / más o menos — the honest "so-so"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You asked *¿cómo estás?* Now you can answer three ways: great,
 middling, or a wave of the hand. You already have **bien** ("well," Chapter 1).
 Today, the *middling* answers — because nobody is *bien* every day.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS]; assesses=[] -->
 
 [PAUSE 2s] Recall from Chapter 1: **bien** — "well." Root? (Latin *bene*, "well"
 — same as *bene*fit, *bene*volent.) So *estoy bien* = "I'm well." Now the answer
 for when you're *not* quite bien.
 
 ## The word, taken apart — two answers
+<!-- hl-knowledge: introduces=[ES-ETYMON-REGULA]; assesses=[] -->
 
 **regular** — as an answer to "how are you?", it means **"so-so, average, not
 great."** (A famous false-friend trap: it does **not** mean English "regular /
@@ -65,6 +68,7 @@ So *más o menos* is literally **"more or less"** — the exact phrase, root for
 root, that English uses for the same shrug.
 
 ## Grammar Lens: a small answer set
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 You now have a scale to answer *¿cómo estás?*:
 
@@ -75,6 +79,7 @@ You now have a scale to answer *¿cómo estás?*:
 | **más o menos** | more or less / meh |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-BIEN, ES-LEX-COMO-ESTAS, ES-ETYMON-REGULA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "regular" — *reh-goo-LAR*, soft tap on both *r*'s]
@@ -82,6 +87,7 @@ You now have a scale to answer *¿cómo estás?*:
 - [YOU SAY: answer "¿cómo estás?" three ways — bien / regular / más o menos]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS, ES-LEX-BIEN, ES-LEX-COMO-ESTAS, ES-ETYMON-REGULA] -->
 
 [PAUSE 3s] As an answer, does *regular* mean "normal" or "so-so"? (So-so — the
 false-friend trap.) What straight-rod Latin word is it from, and what English

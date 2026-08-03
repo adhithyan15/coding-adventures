@@ -30,11 +30,13 @@ reviews_of: [ES-C04-como-esta, ES-C03-tu-usted]
 # ¿cómo está usted? / ¿cómo estás? — choose the register
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You can already ask a stranger **¿Cómo está usted?** Now change
 only the relationship: ask the same question of a friend.
 
 ## Grammar Lens: one question, two relationships
+<!-- hl-knowledge: introduces=[ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST]; assesses=[] -->
 
 | register | question |
 |---|---|
@@ -47,6 +49,7 @@ This is the same relationship contrast you drilled with **se llama / te
 llamas**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST] -->
 
 [PAUSE 1s]
 - [YOU SAY: to a doctor you just met — "¿Cómo está usted?"]
@@ -56,6 +59,7 @@ llamas**.
 [REPEAT x2] Ask both versions until the ending swap is automatic.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO-ESTA-USTED, ES-LEX-COMO-ESTAS, ES-GRAMMAR-ESTAR-REGISTER-CONTRAST] -->
 
 [PAUSE 3s] Which version fits a stranger? (**¿Cómo está usted?**)
 Which fits a friend? (**¿Cómo estás?**) What two things change?

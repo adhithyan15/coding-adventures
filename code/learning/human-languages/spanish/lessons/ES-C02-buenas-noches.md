@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-BUENAS-NOCHES]
 practises:
-  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES]
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,17 +30,20 @@ reviews_of: [ES-C01-bien, ES-C02-noche]
 # buenas noches — good evening *and* good night
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The fourth greeting, assembled the way you now expect — and it has
 one quirk the others don't: it works both coming and going.
 
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[ES-LEX-BUENAS-NOCHES]; assesses=[] -->
 
 - [buenas tardes](./ES-C02-buenas-tardes.md) — feminine
   agreement (*buenas*); *noche* is feminine too, so the same shape applies.
 - [noche](./ES-C02-noche.md) — the noun *noches*.
 
 ## The word, taken apart — by assembling it
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **buenas noches** = **buena** ("good") + **noches** ("nights"). *noche* is
 **feminine** (*la noche*), plural here, so — exactly like *tardes* — the
@@ -49,6 +52,7 @@ agreement you learned two lessons ago: masculine *días* → *buenos*, feminine
 *tardes*/*noches* → *buenas*.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 The same amputated blessing (*"Buenas noches os dé Dios"*) — but with a
 twist. *buenas noches* is both a **greeting** and a **farewell**:
@@ -61,6 +65,7 @@ tell you the direction. The blessing doesn't care which way you're going —
 you're wishing good hours either way.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
 
 [PAUSE 1s]
 - [YOU SAY: "buenas noches" arriving somewhere]
@@ -69,6 +74,7 @@ you're wishing good hours either way.
   noches" — and notice which take *buenos* vs *buenas* and why]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
 
 [PAUSE 3s] What's unusual about when you can use *buenas noches*? (Both hello
 and goodbye.) And why *buenas*, not *buenos*? (*noche* is feminine.)

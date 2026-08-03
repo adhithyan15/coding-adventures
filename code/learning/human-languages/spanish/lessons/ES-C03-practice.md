@@ -8,17 +8,17 @@ type: practice-mix
 headword: (practice)
 gloss: a full introduction, formal and informal
 concept_tag: CH3-PRACTICE
-prerequisites: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
+prerequisites: [ES-C02-practice, ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gusto]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-ME-LLAMO, ES-REGISTER-TU-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-MUCHO-GUSTO]
+  knowledge: [ES-LEX-ME-LLAMO, ES-REGISTER-TU-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-MUCHO-GUSTO]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -30,18 +30,19 @@ reviews_of: [ES-C03-me-llamo, ES-C03-tu-usted, ES-C03-como-se-llama, ES-C03-gust
 # Practice — introducing yourself
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Ten lessons of atoms now assemble into a real conversation. No new
 words — just the exchange, run both formally and informally until the *tú* /
 *usted* choice is automatic.
 
 ## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **Formal** (a stranger, an elder, a customer):
 
 > — Buenos días. Me llamo Susana. **¿Cómo se llama usted?**
 > — Me llamo David. **Mucho gusto.**
-> — El gusto es mío.
 
 **Informal** (a friend, a peer): only two words change, and they're the ones
 that carry the whole social difference:
@@ -50,6 +51,7 @@ that carry the whole social difference:
 > — Me llamo David. Mucho gusto.
 
 ## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 - **me llamo** — introduce yourself ("I call myself").
 - **tú / usted** — the informal vs. formal "you," and *why* (the retired
@@ -59,6 +61,7 @@ that carry the whole social difference:
 - **mucho gusto** — "much pleasure," pleased to meet you.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both parts]
@@ -70,8 +73,8 @@ that carry the whole social difference:
 [REPEAT x2] Run the formal version start to finish without stopping.
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
 
 [PAUSE 3s] Which two words change between the formal and informal
-introduction? (*se llama usted* → *te llamas*.) Next chapter: they answer
-your *"¿cómo está usted?"* — "how are you?" — and you learn to say how you're
-doing.
+introduction? (*se llama usted* → *te llamas*.) Next chapter, you will learn
+how to ask how someone is doing.

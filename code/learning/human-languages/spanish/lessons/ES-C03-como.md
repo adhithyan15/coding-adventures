@@ -30,12 +30,14 @@ reviews_of: [ES-C01-dia]
 # cómo — "how," your first question word
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] To ask someone's name or how they are, you need this word first.
 *cómo* — "how" — and it carries a little word for "manner" you already own in
 English.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[ES-SCRIPT-INVERTED-QUESTION]; assesses=[] -->
 
 - `inverted-marks` — Spanish questions open with an upside-down **¿** so you
   see the question coming: *¿cómo…?*
@@ -43,6 +45,7 @@ English.
   question word (see below): *CÓ-mo*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[ES-LEX-COMO, ES-ETYMON-QUOMODO]; assesses=[] -->
 
 **cómo** — "how." Root: Latin **quomodo** — a fused little phrase, *quo modo*,
 "in what **manner**."
@@ -67,6 +70,7 @@ river. The same erosion gave Italian *come*, Portuguese *como*, French
 to mark the question (vs. accent-less *como*, "like / as").
 
 ## Grammar Lens: the accent that marks a question
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-QUESTION-ACCENT]; assesses=[] -->
 
 Watch the accent mark do real work. **cómo** (with the accent) = "how?", the
 question word. **como** (no accent) = "like / as," or "I eat." Same letters,
@@ -80,12 +84,14 @@ puts a visible flag on the question word. Every question word you'll learn
 (*qué, dónde, cuándo, quién…*) carries this accent for the same reason.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
 
 [PAUSE 1s]
 - [YOU SAY: "¿cómo?" — with question intonation]
 - [YOU SAY: "cómo" then English "mode", "model" — the *modo* root]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
 
 [PAUSE 3s] Walk the erosion: *quomodo* → ? → *cómo* (*quomo* → *como*, then
 the question-accent). What changes when the accent disappears? (*como* is no

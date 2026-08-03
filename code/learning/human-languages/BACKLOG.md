@@ -5,13 +5,13 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after Spanish Chapters 4–6
-canonical generation: 20 registered tracks, 1,065 Markdown lessons, 20
-downloadable LaTeX books, and zero duration violations. HL-V01 keeps the
-remaining migration debt reproducible in both JSON and human-readable reports;
-the first 51 Spanish lessons now prove one typed source across Language Ladder
-and six generated book chapters, and the completed HL-D01 tranches prove
-duration remediation without discarding deep content.
+Last prioritized: 2026-08-03. Current baseline after schema-v2 block-boundary
+validation: 20 registered tracks, 1,065 Markdown lessons, 20 downloadable LaTeX
+books, and zero duration violations. HL-V01 keeps the remaining migration debt
+reproducible in both JSON and human-readable reports; the first 51 Spanish
+lessons now prove one typed, knowledge-closed source across Language Ladder and
+six generated book chapters, and the completed HL-D01 tranches prove duration
+remediation without discarding deep content.
 
 ## Priority rules
 
@@ -68,9 +68,10 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01R | Complete (#9624) | Remove all fifty-five remaining sub-five-minute violations from the Spanish track. | The report measures zero Spanish violations; twelve new prerequisite-ordered lessons preserve the grammar, etymology, usage, writing, and practice depth from the genuinely long lessons. |
 | HL-D01 | Complete (#9624) | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The deterministic report now reaches zero effective-duration violations across all twenty tracks. |
 | HL-S02 | Complete (#9634) | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | All 27 lessons have typed blocks, unique sequence, transitive knowledge closure, and sub-five-minute duration guarantees. |
-| HL-G03 | Complete in this PR | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
-| HL-V02 | Next | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
-| HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
+| HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
+| HL-V02 | Complete in this PR | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
+| HL-V03 | Queued | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Every compiled activity names a non-empty subset of its block's assessed atoms and resolves all answer variants without scraping prose. |
+| HL-B04 | Next | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B05 | Queued | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | A forced build succeeds but reports four repeated `lesson:practice` labels, 32 Hyperref PDF-string warnings, and two underfull boxes; the clean-build signal is zero of each. |
 | HL-B06 | Queued | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B07 | Queued | Remove Gujarati's missing punctuation glyphs and LaTeX layout/bookmark warnings. | A forced build succeeds but reports four missing punctuation glyphs, one overfull box, four underfull boxes, four duplicate practice labels, and 28 Hyperref warnings; the clean-build signal is zero of each. |
@@ -214,6 +215,27 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   explicit in HL-B37. HL-V02 is next because the HL-S02 editorial audit showed
   that lesson-level atom closure alone cannot detect undeclared target-language
   tokens inside learner production and recall prompts.
+
+## Findings from HL-V02
+
+- All 51 schema-v2 Spanish lessons now declare introductions and assessments at
+  every one of their typed body boundaries. Production and recall blocks require
+  non-empty assessment declarations, and all other blocks retain explicit empty
+  lists when they change no knowledge state.
+- Validation follows rendered order: assessed atoms must already belong to the
+  lesson's transitive prerequisite frontier or an earlier block, block
+  introductions must account exactly for `introduces.knowledge`, and assessed
+  atoms must be declared in `practises.knowledge`.
+- The editorial migration removed premature *muy bien*, *¿y usted?*, *el gusto
+  es mío*, *ojalá*, and next-chapter question-form production. It promoted *te
+  llamas* and *gusto* to explicit atoms and completed grammar, script,
+  etymology, and phrase practice declarations exposed by the boundary audit.
+- Block metadata changes the shared canonical hashes but not learner copy. The
+  six generated Spanish chapters omit the directives, and Language Ladder now
+  explicitly filters them from its lightweight Markdown view.
+- Individual prompt/answer/variant/feedback records remain prose rather than a
+  compiled activity schema. HL-V03 records that next validation layer; HL-B04
+  is the next bounded learner-visible publication gap.
 
 ## Findings from HL-D01A
 
