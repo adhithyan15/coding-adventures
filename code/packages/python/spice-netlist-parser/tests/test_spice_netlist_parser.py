@@ -2060,6 +2060,38 @@ def test_lowers_mosfet_junction_capacitance_aliases(
     assert isclose(getattr(mosfet.model.model.params, canonical), 2.0e-12)
 
 
+@pytest.mark.parametrize("parameter", ["NSS=-1", "NSS=1e999", "TPG=0.5"])
+def test_rejects_invalid_mosfet_electrostatic_process_parameters(
+    parameter: str,
+) -> None:
+    message = (
+        "MOSFET NSS must be finite and non-negative"
+        if parameter.startswith("NSS")
+        else "MOSFET TPG must be -1, 0, or 1"
+    )
+    with pytest.raises(NetlistParseError, match=message):
+        parse_netlist(f".model nfast NMOS({parameter})\nM1 d g s b nfast\n")
+
+
+def test_derives_mosfet_electrostatic_defaults_with_explicit_precedence() -> None:
+    derived = parse_netlist(
+        ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1)\n"
+        "M1 d g s b nfast\n"
+    ).circuit.elements[0]
+    explicit = parse_netlist(
+        ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1 "
+        "VT0=0.61 GAMMA=0.42 PHI=0.73)\nM1 d g s b nfast\n"
+    ).circuit.elements[0]
+    assert isinstance(derived, Mosfet)
+    assert derived.model.model.params.GAMMA > 0.0
+    assert derived.model.model.params.PHI > 0.0
+    assert not isclose(derived.model.model.params.VT0, 0.7)
+    assert isinstance(explicit, Mosfet)
+    assert isclose(explicit.model.model.params.VT0, 0.61)
+    assert isclose(explicit.model.model.params.GAMMA, 0.42)
+    assert isclose(explicit.model.model.params.PHI, 0.73)
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

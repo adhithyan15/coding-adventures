@@ -1912,6 +1912,20 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
                 raise NetlistParseError("only MOS LEVEL=1 model cards are supported")
         if "TOX" in params and (not math.isfinite(params["TOX"]) or params["TOX"] <= 0.0):
             raise NetlistParseError("MOSFET TOX must be finite and positive")
+        substrate_doping = next(
+            (params[name] for name in ("N_SUB", "NSUB", "N") if name in params),
+            None,
+        )
+        if substrate_doping is not None and (
+            not math.isfinite(substrate_doping) or substrate_doping <= 0.0
+        ):
+            raise NetlistParseError("MOSFET NSUB must be finite and positive")
+        if "NSS" in params and (
+            not math.isfinite(params["NSS"]) or params["NSS"] < 0.0
+        ):
+            raise NetlistParseError("MOSFET NSS must be finite and non-negative")
+        if "TPG" in params and params["TPG"] not in {-1.0, 0.0, 1.0}:
+            raise NetlistParseError("MOSFET TPG must be -1, 0, or 1")
         mobility = params.get("U0", params.get("UO"))
         if mobility is not None and (not math.isfinite(mobility) or mobility < 0.0):
             raise NetlistParseError("MOSFET U0 must be finite and non-negative")
@@ -2081,13 +2095,15 @@ def _build_mosfet_model(model: ModelCard, instance_params: dict[str, float]) -> 
         param_name = _LEVEL1_PARAM_ALIASES.get(name, name)
         if param_name in values and not isinstance(values[param_name], bool):
             values[param_name] = value
-    if "KP" not in params and "TOX" in model.params:
-        derivation_params = {"TOX": model.params["TOX"]}
-        if "U0" in values:
-            derivation_params["U0"] = values["U0"]
+    canonical_params = {_LEVEL1_PARAM_ALIASES.get(name, name) for name in params}
+    if "TOX" in model.params:
+        derivation_params = dict(model.params)
+        derivation_params["U0"] = values["U0"]
         normalized = normalize_model_card(model.name, model.kind, derivation_params)
         derived = mosfet_from_model_card("M", "d", "g", "s", "b", normalized)
-        values["KP"] = derived.model.model.params.KP
+        for field_name in ("KP", "VT0", "GAMMA", "PHI"):
+            if field_name not in canonical_params:
+                values[field_name] = getattr(derived.model.model.params, field_name)
     return MOSFET(
         type=MosfetType[model.kind],
         model=Level1Model(Level1Params(**values)),

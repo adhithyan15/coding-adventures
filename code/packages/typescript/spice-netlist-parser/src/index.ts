@@ -1166,6 +1166,32 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET TOX must be finite and positive");
   }
+  const substrateDoping = params.get("N_SUB") ?? params.get("NSUB") ?? params.get("N");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    substrateDoping !== undefined &&
+    (!Number.isFinite(substrateDoping) || substrateDoping <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET NSUB must be finite and positive");
+  }
+  const surfaceStateDensity = params.get("NSS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    surfaceStateDensity !== undefined &&
+    (!Number.isFinite(surfaceStateDensity) || surfaceStateDensity < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET NSS must be finite and non-negative");
+  }
+  const gateType = params.get("TPG");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    gateType !== undefined &&
+    gateType !== -1.0 &&
+    gateType !== 0.0 &&
+    gateType !== 1.0
+  ) {
+    throw new NetlistParseError("MOSFET TPG must be -1, 0, or 1");
+  }
   const surfaceMobility = params.get("U0") ?? params.get("UO");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1435,13 +1461,17 @@ function mosfetParams(
       params[key] = value;
     }
   }
-  if (!modelParams.has("KP") && !instanceParams.has("KP") && modelParams.has("TOX")) {
-    const derivationParams: Record<string, number> = { TOX: modelParams.get("TOX")! };
-    if (params.U0 !== undefined) {
-      derivationParams.U0 = params.U0;
-    }
+  const canonicalParams = new Set(
+    [...modelParams, ...instanceParams].map(([name]) => MOSFET_PARAM_ALIASES.get(name) ?? name),
+  );
+  if (modelParams.has("TOX")) {
+    const derivationParams = Object.fromEntries(modelParams);
+    derivationParams.U0 = params.U0 ?? 600.0;
     const normalized = normalizeModelCard(model.name, model.kind, derivationParams);
-    params.KP = mosfetFromModelCard("M", "d", "g", "s", "b", normalized).params.KP;
+    const derived = mosfetFromModelCard("M", "d", "g", "s", "b", normalized).params;
+    for (const key of ["KP", "VT0", "GAMMA", "PHI"] as const) {
+      if (!canonicalParams.has(key)) params[key] = derived[key];
+    }
   }
   return params;
 }

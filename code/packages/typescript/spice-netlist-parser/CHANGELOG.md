@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate MOS model-card `NSS` and `TPG` process parameters and derive missing
+  `VT0`, `GAMMA`, and `PHI` values from `N_SUB` / `TOX` through shared engine semantics.
 - Validate and lower MOS model-card `CJS` and `CJD` aliases as canonical `CBS`
   and `CBD` junction capacitances.
 - Reject negative and non-finite MOS model-card `AF` values and lower valid
