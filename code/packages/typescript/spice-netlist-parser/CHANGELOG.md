@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `MJSW` values and lower valid
+  sidewall-junction grading coefficients instead of silently dropping them.
 - Reject negative and non-finite MOS model-card `MJ` values and lower valid
   bottom-junction grading coefficients instead of silently dropping them.
 - Reject zero, negative, and non-finite MOS model-card `PB` values and lower
