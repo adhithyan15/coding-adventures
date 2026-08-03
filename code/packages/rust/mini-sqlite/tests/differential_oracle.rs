@@ -2527,6 +2527,22 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT cast(1 AS TEXT) AS a, Cast(3.9 As Integer) AS b, CAST('3.5' as real) AS c, cAsT(42 aS tExT) AS d",
     },
+    // Date/time INTERPRETATION modifiers: a leading `unixepoch`/`julianday`/`auto`
+    // reinterprets the raw numeric time value. `unixepoch` reads it as Unix
+    // seconds (number or numeric string, negative and fractional allowed; further
+    // modifiers still apply; a non-numeric value like an ISO date is NULL).
+    Case {
+        id: "datetime_unixepoch_modifier",
+        setup: &[],
+        query: "SELECT datetime(1234567890,'unixepoch') AS a, datetime('1234567890','unixepoch') AS b, date(1751328000,'unixepoch') AS c, datetime(1234567890,'unixepoch','+1 day') AS d, datetime(-100,'unixepoch') AS e, datetime('2026-07-30','unixepoch') AS f",
+    },
+    // `julianday` forces the Julian-day reading (the default for a number); `auto`
+    // picks Julian when the number is inside the Julian-day window, else Unix.
+    Case {
+        id: "datetime_julianday_auto_modifier",
+        setup: &[],
+        query: "SELECT datetime(2451545.0,'julianday') AS a, datetime(2451545.0,'auto') AS b, datetime(1234567890,'auto') AS c",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

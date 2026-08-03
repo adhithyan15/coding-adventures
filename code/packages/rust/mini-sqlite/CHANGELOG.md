@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.76 — date/time `unixepoch` / `julianday` / `auto` interpretation modifiers
+
+A leading `unixepoch`/`julianday`/`auto` modifier now reinterprets the raw
+numeric time value, matching SQLite:
+
+- `datetime(1234567890, 'unixepoch')` → `2009-02-13 23:31:30` (reads the number as
+  Unix epoch seconds; numeric strings, negatives, and fractions work too, and
+  further modifiers still apply: `datetime(1234567890,'unixepoch','+1 day')`).
+- `datetime(2451545.0, 'julianday')` forces the Julian-day reading; `'auto'`
+  picks Julian when the value is inside the Julian-day window, else Unix.
+- A non-numeric value (e.g. an ISO date) with one of these → NULL.
+
+`localtime`/`utc` remain unimplemented (they need a timezone database) — like any
+unknown modifier they yield NULL. Two new differential-oracle cases pin this
+against bundled real SQLite; the ledger stays empty. Spans sql-vm 0.4.45.
+
 ## 0.5.75 — `cast(…)` is case-insensitive
 
 `cast(x AS t)`, `Cast(…)`, `cAsT(…)`, and `CAST(…)` all parse now, matching
