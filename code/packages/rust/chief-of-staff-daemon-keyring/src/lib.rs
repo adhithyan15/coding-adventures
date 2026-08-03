@@ -169,7 +169,10 @@ mod tests {
             r#"
 [orchestrator]
 bind = "127.0.0.1"
+port = 7463
 packages_dir = "~/agents"
+state_dir = "~/state"
+credential_path = "~/run/operator.credential"
 
 [keyring]
 trusted_keys = [{keys}]
@@ -177,6 +180,9 @@ trusted_keys = [{keys}]
 [hosts.defaults]
 restart_policy = "on-failure"
 health_check_interval = 5000
+executable = "~/bin/chief-of-staff-host"
+bootstrap_timeout = 10000
+graceful_stop_timeout = 5000
 
 [vault]
 storage_path = "~/vault"
