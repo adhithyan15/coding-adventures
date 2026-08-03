@@ -1369,6 +1369,16 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("JFET PB must be finite and positive");
   }
+  const jfetDepletionCoefficient = params.get("FC");
+  if (
+    (kind === "NJF" || kind === "PJF") &&
+    jfetDepletionCoefficient !== undefined &&
+    (!Number.isFinite(jfetDepletionCoefficient) ||
+      jfetDepletionCoefficient < 0.0 ||
+      jfetDepletionCoefficient >= 1.0)
+  ) {
+    throw new NetlistParseError("JFET FC must be finite and in [0, 1)");
+  }
   const level = params.get("LEVEL");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1959,6 +1969,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       model.params.get("KF") ?? 0.0,
       model.params.get("AF") ?? 1.0,
       model.params.get("PB") ?? model.params.get("VJ") ?? 1.0,
+      model.params.get("FC") ?? 0.5,
     );
   }
   if (prefix === "M") {
