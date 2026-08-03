@@ -1745,6 +1745,13 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
         // lowers to `_sir_minus(1, x)` with no new runtime code, matching the
         // Go/Rust/Python runtimes that gained `neg` in SIR21 §E3.
         "neg" => "_sir_minus",
+        // `<<` -- Ruby's shift operator (Array push, Integer bitwise
+        // shift, String concat). See `_sir_shift_left_v`'s doc comment in
+        // runtime.rs for the full polymorphic dispatch and the two
+        // documented divergences from true Ruby (String#<< returns a NEW
+        // string rather than mutating in place; a non-String/Symbol RHS
+        // is silently dropped rather than codepoint-converted).
+        "<<" => "_sir_shift_left",
         "print" => "_sir_print",
         "puts" => "_sir_puts",
         _ => return None,

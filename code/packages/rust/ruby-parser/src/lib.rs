@@ -1406,16 +1406,21 @@ mod tests {
         let ast = parse_ruby("5 < 10");
         // Phase 6m moved the comparison op chain from `expression`
         // down to the new `comparison` rule (the old expression body).
-        // Now `expression → logical_or → logical_and → logical_not →
-        // comparison → sum { CMP_OP sum }`.  Walk to the comparison.
+        // The `<<` phase later inserted a `shift` level BETWEEN
+        // `comparison` and `sum` (real Ruby: `<<` binds looser than `+`/`-`
+        // but tighter than comparison), so the chain is now
+        // `expression → logical_or → logical_and → logical_not →
+        // comparison → shift { CMP_OP shift } → sum { "<<" sum }`.  A bare
+        // `sum` with no `<<` passes through `shift` transparently, so
+        // `comparison`'s direct children are `shift` nodes, not `sum`.
         let cmp = find_descendant(&ast, "comparison")
             .expect("expected comparison subnode");
-        let sum_count = cmp
+        let shift_count = cmp
             .children
             .iter()
-            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "sum"))
+            .filter(|c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "shift"))
             .count();
-        assert_eq!(sum_count, 2);
+        assert_eq!(shift_count, 2);
         let has_lt = cmp
             .children
             .iter()
@@ -1471,19 +1476,30 @@ mod tests {
     #[test]
     fn test_parse_plus_has_lower_precedence_than_comparison() {
         let ast = parse_ruby("1 + 2 < 5");
-        // Phase 6m: comparison subnode wraps the two `sum`s.
+        // Phase 6m: comparison subnode wraps the two operands, now `shift`
+        // nodes (see the `shift`-level comment above) rather than `sum`
+        // directly. A bare `sum` (no `<<`) passes through `shift`
+        // transparently, so `sum` is still findable one level deeper.
         let cmp = find_descendant(&ast, "comparison")
             .expect("expected comparison subnode");
-        let sums: Vec<&GrammarASTNode> = cmp
+        let shifts: Vec<&GrammarASTNode> = cmp
             .children
             .iter()
             .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                ASTNodeOrToken::Node(n) if n.rule_name == "shift" => Some(n),
                 _ => None,
             })
             .collect();
-        assert_eq!(sums.len(), 2);
-        let lhs_has_plus = sums[0]
+        assert_eq!(shifts.len(), 2);
+        let lhs_sum = shifts[0]
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .expect("shift wraps a sum");
+        let lhs_has_plus = lhs_sum
             .children
             .iter()
             .any(|c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)));
@@ -5088,17 +5104,20 @@ mod tests {
         }
     }
 
-    /// `**`/`<<`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule at
+    /// `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule at
     /// all in this Ruby subset (only used elsewhere: `**`/`&` as call-arg
-    /// prefixes, `<<` for singleton-class, `|` for block params, `^` for pin
-    /// patterns) — so the fix does NOT guard them; there is no correct
-    /// fallback parse to preserve for e.g. `x << 2`. This pins that they are
-    /// UNCHANGED (still split into three statements), so a future
-    /// contributor doesn't assume this fix silently added bitwise-operator
-    /// support.
+    /// prefixes, `|` for block params, `^` for pin patterns) — so the fix
+    /// does NOT guard them; there is no correct fallback parse to preserve
+    /// for e.g. `x ^ 2`. This pins that they are UNCHANGED (still split
+    /// into three statements), so a future contributor doesn't assume this
+    /// fix silently added bitwise-operator support. (`<<` USED to be in
+    /// this list too — it's now a supported binary operator, see
+    /// `test_shift_operator_statement_parses_as_one_statement` below, which
+    /// is the `<<` analogue of `test_bare_comparison_statement_parses_as_
+    /// one_statement` just above.)
     #[test]
     fn test_unsupported_bitwise_operators_still_split_unchanged() {
-        for op in ["**", "<<", ">>", "^", "&", "|"] {
+        for op in ["**", ">>", "^", "&", "|"] {
             let ast = parse_ruby(&format!("x = 3\nx {op} 2\n"));
             assert_program_root(&ast);
             assert_eq!(
@@ -5108,6 +5127,82 @@ mod tests {
                  should still split into three statements (unchanged)"
             );
         }
+    }
+
+    // -------------------------------------------------------------------
+    // `<<` added as a binary operator, its own `shift` precedence level
+    // between `comparison` and `sum` (real Ruby: `<<` binds looser than
+    // `+`/`-`, tighter than comparison — `1 + 2 << 3` parses as
+    // `(1 + 2) << 3`). The lexer already fuses `<<` into one token (needed
+    // pre-existingly for heredoc-vs-operator disambiguation), so this is
+    // purely a grammar/lowering addition, not a lexer change.
+    // -------------------------------------------------------------------
+
+    /// The `<<` analogue of `test_bare_comparison_statement_parses_as_one_
+    /// statement`: a bare `x << 2` must parse as ONE statement via the new
+    /// `shift` rule, not mis-split by `method_call_no_paren` (which needed
+    /// its own `!"<<"` guard, the same fix class as `<`/`>`/`&&`/`||`).
+    #[test]
+    fn test_shift_operator_statement_parses_as_one_statement() {
+        let ast = parse_ruby("x = 3\nx << 2\n");
+        assert_program_root(&ast);
+        assert_eq!(
+            count_statements(&ast),
+            2,
+            "`x = 3` then `x << 2` should be exactly two statements, not \
+             three (a mis-parsed call plus a leftover operand)"
+        );
+    }
+
+    #[test]
+    fn test_shift_binds_looser_than_plus() {
+        // `1 + 2 << 3` should parse as `(1 + 2) << 3`: the outermost node
+        // is a `shift` wrapping two `sum` OPERANDS (not raw `factor`s) —
+        // if `+` bound looser than `<<`, the left operand would be a bare
+        // `1` instead.
+        let ast = parse_ruby("puts(1 + 2 << 3)");
+        let shift = find_descendant(&ast, "shift").expect("expected shift subnode");
+        let has_lt_lt = shift
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<<"));
+        assert!(has_lt_lt, "shift node carries the << token");
+        let sums: Vec<&GrammarASTNode> = shift
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "sum" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(sums.len(), 2, "shift wraps exactly two sum operands");
+        let lhs_has_plus = sums[0].children.iter().any(
+            |c| matches!(c, ASTNodeOrToken::Token(t) if matches!(t.type_, lexer::token::TokenType::Plus)),
+        );
+        assert!(lhs_has_plus, "the left sum operand still carries the +");
+    }
+
+    #[test]
+    fn test_shift_binds_tighter_than_comparison() {
+        // `x << 1 == y` should parse as `(x << 1) == y`: `comparison`
+        // wraps two `shift` operands (not raw `sum`s) — the left one
+        // carries the `<<` token.
+        let ast = parse_ruby("puts(x << 1 == y)");
+        let cmp = find_descendant(&ast, "comparison").expect("expected comparison subnode");
+        let shifts: Vec<&GrammarASTNode> = cmp
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "shift" => Some(n),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(shifts.len(), 2, "comparison wraps exactly two shift operands");
+        let lhs_has_lt_lt = shifts[0]
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "<<"));
+        assert!(lhs_has_lt_lt, "the left shift operand carries the <<");
     }
 
     // -------------------------------------------------------------------

@@ -7915,6 +7915,12 @@ impl Lowerer {
             // Phase 6m — the comparison chain rule (renamed from the
             // old `expression`).  Same lowering as before.
             "comparison" => self.lower_comparison_chain(node),
+            // `<<` — inserted between `comparison` and `sum` (see the
+            // grammar's `shift` rule comment). Like comparison operators,
+            // `<<` has no dedicated `TokenType` (the lexer's catch-all
+            // leaves it on `Name`), so it's matched by lexeme, the same
+            // technique `lower_comparison_chain` uses just below.
+            "shift" => self.lower_shift_chain(node),
             "sum" => self.lower_binary_chain(node, &["PLUS", "MINUS"]),
             "term" => self.lower_binary_chain(node, &["STAR", "SLASH"]),
             "factor" => self.lower_factor(node),
@@ -8079,6 +8085,56 @@ impl Lowerer {
         }
         acc.ok_or_else(|| RubyLowerError {
             message: "comparison chain had no operands".to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        })
+    }
+
+    /// Lower the `shift` chain (`<<`) — a left-associative chain over
+    /// `sum` operands, modeled directly on `lower_comparison_chain`
+    /// (matches its single operator by LEXEME, since `<<` has no
+    /// dedicated `TokenType` either). Emits `BuiltinCall("<<", [lhs, rhs])`
+    /// — same op-name-keyed protocol `+`/`-`/`*`/`/` use, NOT the
+    /// `__method__` dispatch protocol Collections methods use, since `<<`
+    /// is a binary-operator EXPRESSION, not a dot-call.
+    fn lower_shift_chain(&mut self, node: &GrammarASTNode) -> Result<Expr, RubyLowerError> {
+        const SHIFT_OP: &str = "<<";
+        let mut acc: Option<Expr> = None;
+        let mut pending_op_span: Option<Span> = None;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(sub) => {
+                    let expr = self.lower_expression(sub)?;
+                    acc = Some(match (acc.take(), pending_op_span.take()) {
+                        (None, _) => expr,
+                        (Some(lhs), Some(op_span)) => Expr::BuiltinCall {
+                            name: SHIFT_OP.to_string(),
+                            args: vec![lhs, expr],
+                            effects: EffectSet::PURE,
+                            span: op_span,
+                        },
+                        (Some(lhs), None) => {
+                            return Err(RubyLowerError {
+                                message: "two consecutive sum sub-expressions without a `<<` \
+                                          operator between them"
+                                    .to_string(),
+                                line: sub.start_line.unwrap_or(0),
+                                column: sub.start_column.unwrap_or(0),
+                            }
+                            .also(lhs));
+                        }
+                    });
+                }
+                ASTNodeOrToken::Token(tok) => {
+                    if tok.value == SHIFT_OP {
+                        pending_op_span = Some(self.span_of_token(tok));
+                    }
+                    // Whitespace/newline tokens fall through silently.
+                }
+            }
+        }
+        acc.ok_or_else(|| RubyLowerError {
+            message: "shift chain had no operands".to_string(),
             line: node.start_line.unwrap_or(0),
             column: node.start_column.unwrap_or(0),
         })

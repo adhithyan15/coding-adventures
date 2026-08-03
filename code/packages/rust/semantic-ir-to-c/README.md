@@ -259,6 +259,20 @@ receiver-TYPE-only answer — no per-object mutability tracking in this v0);
 only via an explicit dot-call (`true.&(x)`) since `&&`/`||` lower to `If`
 and never reach a method dispatch.
 
+`<<` (Ruby's shift operator) is a top-level `BuiltinCall`, not a
+`__method__` dispatch, so it's wired through `variadic_helper` alongside
+`+`/`-`/`*`/`/` rather than `_sir_builtin_method_v`. Polymorphic over
+Array (push in place, returns self, chains — reuses the slice-4 `push`
+growth helper), Integer (bitwise shift; a negative amount REVERSES
+direction, and an out-of-range left shift SATURATES rather than growing a
+bignum or hitting C's shift-amount-exceeds-width UB), and String
+(concatenates and returns a NEW string — a documented divergence, since
+this runtime's `SIR_STR` has no shared pointer identity to mutate in
+place, unlike `SIR_SEQ`). Only the C backend has a `<<` runtime
+implementation so far; Python/JS/Go/Rust/Ruby accept it at emit time but
+raise a clean runtime error (the same shape of gap as `[]`/`[]=`),
+tracked as its own follow-up.
+
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
