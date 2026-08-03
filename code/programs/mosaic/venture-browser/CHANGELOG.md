@@ -7,6 +7,9 @@
 - Repair cross-platform acceptance discovered after native scrollbar
   projection: keep the scroll-metrics type import Apple-only, and reset the
   WinUI viewport to document start before hover/click link acceptance.
+- Add direct generated Flutter interaction acceptance through an injectable
+  Mosaic host, covering initial prop hydration, disabled controls, address
+  editing, native Return submission, Go dispatch, and host response refresh.
 - Add shared viewport-metric projection and native NSScroller/WinUI ScrollBar
   bindings inside the generated HostSurface adapters, including direct app
   interaction acceptance.

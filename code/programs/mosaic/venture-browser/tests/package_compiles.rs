@@ -89,7 +89,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     let package = mosaic_package_manifest::parse(&manifest).expect("parse manifest");
     assert_eq!(package.package.name, "venture-browser");
     assert_eq!(package.components.exports, ["VentureChrome"]);
-    assert_eq!(package.host_assets.files.len(), 2);
+    assert_eq!(package.host_assets.files.len(), 3);
     assert_eq!(package.host_assets.files[0].backend, "swiftui");
     assert_eq!(
         package.host_assets.files[0].target,
@@ -101,6 +101,15 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "host/xaml/MosaicHost.cs"
     );
     assert_eq!(package.host_assets.files[1].target, "MosaicHost.cs");
+    assert_eq!(package.host_assets.files[2].backend, "flutter");
+    assert_eq!(
+        package.host_assets.files[2].source,
+        "host/flutter/venture_chrome_interaction_test.dart"
+    );
+    assert_eq!(
+        package.host_assets.files[2].target,
+        "test/venture_chrome_interaction_test.dart"
+    );
 
     let host = read_package_file("host/swiftui/MosaicHost.swift");
     for symbol in [
@@ -235,6 +244,21 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             "XAML host omits shared scroll command {command}"
         );
     }
+
+    let flutter_acceptance =
+        read_package_file("host/flutter/venture_chrome_interaction_test.dart");
+    for symbol in [
+        "MosaicApp(mosaicHost: host)",
+        "disabled native controls suppress Mosaic dispatch",
+        "address edit, Return, and Go cross the Mosaic host seam",
+        "tester.testTextInput.receiveAction(TextInputAction.done)",
+        "Navigated through MosaicHost",
+    ] {
+        assert!(
+            flutter_acceptance.contains(symbol),
+            "Flutter interaction acceptance omits {symbol}"
+        );
+    }
 }
 
 #[test]
@@ -276,6 +300,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "cmake --build",
         "dotnet build",
         "flutter build",
+        "flutter test test/venture_chrome_interaction_test.dart",
         "gradle --no-daemon build",
         "--strict",
     ] {
@@ -294,6 +319,7 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         "cmake",
         "dotnet",
         "flutter",
+        "venture_chrome_interaction_test.dart",
         "gradle",
         "$Strict",
     ] {

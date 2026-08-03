@@ -75,7 +75,10 @@ backend on the current machine:
 
 React and Electron run their production builds; HTML and Web Components run
 JavaScript syntax checks; SwiftUI, Qt, XAML, Flutter, and Compose invoke their
-native toolchains. Platform-exclusive builds are explicitly deferred to their
+native toolchains. The Flutter gate additionally pumps the emitted `MosaicApp`
+with a recording host and drives the generated native controls, including
+disabled buttons, address editing, Return, Go, and host-driven prop refresh.
+Platform-exclusive builds are explicitly deferred to their
 native host; missing host-applicable toolchains are reported as skips. Pass
 `--strict` on POSIX or `-Strict` on PowerShell to reject those missing
 toolchains in a provisioned macOS, Windows, or Linux build job. `--emit-only` /

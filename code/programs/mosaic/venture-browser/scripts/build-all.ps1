@@ -215,6 +215,7 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
     try {
         Invoke-Checked -Command "flutter" -Arguments @("pub", "get")
         Invoke-Checked -Command "flutter" -Arguments @("analyze", "lib")
+        Invoke-Checked -Command "flutter" -Arguments @("test", "test/venture_chrome_interaction_test.dart")
         if (-not (Test-Path -LiteralPath $flutterPlatform)) {
             Invoke-Checked -Command "flutter" -Arguments @("create", "--platforms=$flutterPlatform", ".")
         }

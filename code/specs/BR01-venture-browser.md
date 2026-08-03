@@ -120,10 +120,12 @@ complete.
    extent as target-neutral state, then bind generated native scrollbars to the
    same Mosaic-hosted content surface without recreating browser chrome in
    AppKit or Win32.
-3. **P2 — remaining generated-host interaction gates.** Promote the existing
-   build/host-object checks for Qt, Flutter, Compose, and the web-family shells
-   to direct interaction acceptance where their provisioned CI toolchains can
-   launch them.
+3. **P2 — remaining generated-host interaction gates (Flutter completed).**
+   Flutter now hydrates the emitted shell through an injected Mosaic host and
+   directly drives native disabled controls, address editing, Return, Go, and
+   host-response refresh. Promote the remaining Qt, Compose, and web-family
+   build/host-object checks to direct interaction acceptance where their
+   provisioned CI toolchains can launch them.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
