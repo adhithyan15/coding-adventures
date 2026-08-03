@@ -67,6 +67,11 @@ Sans Hebrew fonts (`../../_fonts/`), loaded by relative path — so Arabic scrip
 and Semitic comparisons build identically locally and in CI, with no system-font
 dependency. `latexmk -xelatex book.tex`.
 
+The complete 104-page artifact builds with zero missing glyphs, layout,
+duplicate-destination, bookmark, LaTeX, or font-shape warnings. Open-right blank
+versos are intentionally retained for print and contain no running header or
+page number.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
