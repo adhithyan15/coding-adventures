@@ -13,13 +13,18 @@ package zstd
 //   TC-8  Repeat-offset alternating pattern
 //   TC-9  Deterministic output
 //   TC-10 Wire-format validation (manual frame)
+//   TC-11 Real `zstd` CLI interop, both directions (see lessons.md Lesson 96)
 //
 // Plus unit tests for each internal helper, ensuring high coverage of
 // every codepath including the FSE codec, bit writer/reader, and the
 // literals/sequences section encode/decode.
 
 import (
-	"math/bits"
+	"bytes"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -582,6 +587,18 @@ func TestSeqCountRoundtrip(t *testing.T) {
 
 // TestFSETwoSequenceRoundtrip encodes and decodes two sequences to verify that
 // FSE state transitions work correctly with multiple sequences.
+//
+// This deliberately calls the PRODUCTION encodeSequencesSection/
+// decodeSequencesSection functions rather than hand-rolling a parallel
+// encode/decode loop inline. lessons.md Lesson 96 documents exactly why a
+// hand-rolled parallel loop is dangerous here: an earlier revision of this
+// test built its own decode loop that happened to use the same (wrong)
+// field ordering as the encoder of the time, so it passed regardless of
+// which of three compounding wire-format bugs were present — only an
+// independent decoder (the real `zstd` CLI, exercised by the CLI-interop
+// tests below) could catch that class of bug. Routing this test through the
+// real functions means it can never again silently drift from what
+// decompressBlock actually does.
 func TestFSETwoSequenceRoundtrip(t *testing.T) {
 	seqs := []seq{
 		{ll: 2, ml: 4, off: 1},
@@ -589,117 +606,47 @@ func TestFSETwoSequenceRoundtrip(t *testing.T) {
 	}
 	bitstream := encodeSequencesSection(seqs)
 
-	dtLL := buildDecodeTable(llNorm[:], llAccLog)
-	dtML := buildDecodeTable(mlNorm[:], mlAccLog)
-	dtOF := buildDecodeTable(ofNorm[:], ofAccLog)
-
-	br, err := newRevBitReader(bitstream)
+	decoded, err := decodeSequencesSection(bitstream, len(seqs))
 	if err != nil {
-		t.Fatalf("newRevBitReader: %v", err)
+		t.Fatalf("decodeSequencesSection: %v", err)
 	}
-	stateLL := uint16(br.readBits(llAccLog))
-	stateML := uint16(br.readBits(mlAccLog))
-	stateOF := uint16(br.readBits(ofAccLog))
 
 	for i, expected := range seqs {
-		llCode := fseDecodeSym(&stateLL, dtLL, br)
-		ofCode := fseDecodeSym(&stateOF, dtOF, br)
-		mlCode := fseDecodeSym(&stateML, dtML, br)
-
-		llInfo := llCodes[llCode]
-		mlInfo := mlCodes[mlCode]
-		llDec := llInfo[0] + uint32(br.readBits(uint8(llInfo[1])))
-		mlDec := mlInfo[0] + uint32(br.readBits(uint8(mlInfo[1])))
-		ofRaw := (uint32(1) << ofCode) | uint32(br.readBits(ofCode))
-		offDec := ofRaw - 3
-
-		if llDec != expected.ll {
-			t.Errorf("seq %d LL: got %d, want %d", i, llDec, expected.ll)
+		got := decoded[i]
+		if got.ll != expected.ll {
+			t.Errorf("seq %d LL: got %d, want %d", i, got.ll, expected.ll)
 		}
-		if mlDec != expected.ml {
-			t.Errorf("seq %d ML: got %d, want %d", i, mlDec, expected.ml)
+		if got.ml != expected.ml {
+			t.Errorf("seq %d ML: got %d, want %d", i, got.ml, expected.ml)
 		}
-		if offDec != expected.off {
-			t.Errorf("seq %d OFF: got %d, want %d", i, offDec, expected.off)
+		if got.off != expected.off {
+			t.Errorf("seq %d OFF: got %d, want %d", i, got.off, expected.off)
 		}
 	}
 }
 
 // TestFSESingleSequenceRoundtrip encodes a single sequence and verifies that
 // decoding it gives back the exact same (ll, ml, off) values. This isolates
-// the FSE codec from the block-level encode/decode.
+// the FSE codec from the block-level literal/match-copy logic, but — per the
+// comment on TestFSETwoSequenceRoundtrip above — still goes through the real
+// encode/decode functions rather than a hand-rolled duplicate.
 func TestFSESingleSequenceRoundtrip(t *testing.T) {
 	seqs := []seq{{ll: 3, ml: 5, off: 2}}
+	bitstream := encodeSequencesSection(seqs)
 
-	eeLL, stLL := buildEncodeTable(llNorm[:], llAccLog)
-	eeML, stML := buildEncodeTable(mlNorm[:], mlAccLog)
-	eeOF, stOF := buildEncodeTable(ofNorm[:], ofAccLog)
-
-	szLL := uint32(1) << llAccLog
-	szML := uint32(1) << mlAccLog
-	szOF := uint32(1) << ofAccLog
-
-	stateLL := szLL
-	stateML := szML
-	stateOF := szOF
-	bw := &revBitWriter{}
-
-	for i := len(seqs) - 1; i >= 0; i-- {
-		s := seqs[i]
-		llCode := llToCode(s.ll)
-		mlCode := mlToCode(s.ml)
-		rawOff := s.off + 3
-		ofCode := uint8(31 - bits.LeadingZeros32(rawOff))
-		ofExtra := rawOff - (uint32(1) << ofCode)
-
-		bw.addBits(uint64(ofExtra), ofCode)
-		mlExtra := s.ml - mlCodes[mlCode][0]
-		bw.addBits(uint64(mlExtra), uint8(mlCodes[mlCode][1]))
-		llExtra := s.ll - llCodes[llCode][0]
-		bw.addBits(uint64(llExtra), uint8(llCodes[llCode][1]))
-
-		fseEncodeSym(&stateOF, ofCode, eeOF, stOF, bw)
-		fseEncodeSym(&stateML, uint8(mlCode), eeML, stML, bw)
-		fseEncodeSym(&stateLL, uint8(llCode), eeLL, stLL, bw)
-	}
-
-	bw.addBits(uint64(stateOF-szOF), ofAccLog)
-	bw.addBits(uint64(stateML-szML), mlAccLog)
-	bw.addBits(uint64(stateLL-szLL), llAccLog)
-	bw.flush()
-	bitstream := bw.finish()
-
-	dtLL := buildDecodeTable(llNorm[:], llAccLog)
-	dtML := buildDecodeTable(mlNorm[:], mlAccLog)
-	dtOF := buildDecodeTable(ofNorm[:], ofAccLog)
-
-	br, err := newRevBitReader(bitstream)
+	decoded, err := decodeSequencesSection(bitstream, len(seqs))
 	if err != nil {
-		t.Fatalf("newRevBitReader: %v", err)
+		t.Fatalf("decodeSequencesSection: %v", err)
 	}
-	stateLLd := uint16(br.readBits(llAccLog))
-	stateMLd := uint16(br.readBits(mlAccLog))
-	stateOFd := uint16(br.readBits(ofAccLog))
 
-	llCode := fseDecodeSym(&stateLLd, dtLL, br)
-	ofCode := fseDecodeSym(&stateOFd, dtOF, br)
-	mlCode := fseDecodeSym(&stateMLd, dtML, br)
-
-	llInfo := llCodes[llCode]
-	mlInfo := mlCodes[mlCode]
-	llDec := llInfo[0] + uint32(br.readBits(uint8(llInfo[1])))
-	mlDec := mlInfo[0] + uint32(br.readBits(uint8(mlInfo[1])))
-	ofRaw := (uint32(1) << ofCode) | uint32(br.readBits(ofCode))
-	offDec := ofRaw - 3
-
-	if llDec != 3 {
-		t.Errorf("LL: got %d, want 3", llDec)
+	if decoded[0].ll != 3 {
+		t.Errorf("LL: got %d, want 3", decoded[0].ll)
 	}
-	if mlDec != 5 {
-		t.Errorf("ML: got %d, want 5", mlDec)
+	if decoded[0].ml != 5 {
+		t.Errorf("ML: got %d, want 5", decoded[0].ml)
 	}
-	if offDec != 2 {
-		t.Errorf("OFF: got %d, want 2", offDec)
+	if decoded[0].off != 2 {
+		t.Errorf("OFF: got %d, want 2", decoded[0].off)
 	}
 }
 
@@ -947,4 +894,120 @@ func TestLargerCompressionRatio(t *testing.T) {
 	if len(compressed) >= len(text) {
 		t.Errorf("high-ratio: compressed %d >= input %d", len(compressed), len(text))
 	}
+}
+
+// ─── TC-11: real `zstd` CLI interoperability ───────────────────────────────────
+//
+// Every other test in this file round-trips exclusively through this
+// package's OWN Compress/Decompress pair. lessons.md Lesson 96 documents why
+// that is fundamentally insufficient for a codec that claims wire-format
+// compatibility with an external spec: three compounding bugs in the FSE
+// sequences codec (a fabricated two-pass table-spread algorithm, wrong
+// per-sequence field order, and a missing last-sequence special case) were
+// all self-cancelling as long as our encoder and decoder agreed with each
+// other — every purely-internal round-trip test (including the low-level
+// TestFSE*Roundtrip tests above) passed regardless of which of the three
+// bugs were present. Only comparing against an INDEPENDENT, spec-conformant
+// implementation — the real `zstd` CLI — could catch it. That is exactly
+// what these tests do, in both directions.
+//
+// Skipped (not failed) when the `zstd` binary isn't on PATH, since CI/dev
+// environments vary.
+
+// zstdCLIAvailable reports whether the real `zstd` binary is reachable on
+// PATH and runnable.
+func zstdCLIAvailable(t *testing.T) bool {
+	t.Helper()
+	path, err := exec.LookPath("zstd")
+	if err != nil {
+		return false
+	}
+	cmd := exec.Command(path, "--version")
+	return cmd.Run() == nil
+}
+
+// runZstdCLI runs the real `zstd` binary with the given arguments, feeding
+// stdin (if non-nil) and returning captured stdout. Fails the test on a
+// non-zero exit or a timeout.
+func runZstdCLI(t *testing.T, stdin []byte, args ...string) []byte {
+	t.Helper()
+	cmd := exec.Command("zstd", args...)
+	if stdin != nil {
+		cmd.Stdin = bytes.NewReader(stdin)
+	}
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("zstd %s failed: %v\nstderr: %s", strings.Join(args, " "), err, stderr.String())
+	}
+	return stdout.Bytes()
+}
+
+// TestTC11CliInterop cross-checks this package's wire format against the
+// real `zstd` CLI in both directions:
+//
+//  1. Compress with our Compress(), decompress with `zstd -d`.
+//  2. Compress with `zstd`, decompress with our Decompress().
+//
+// This is the test that actually proves the wire format is real RFC 8878,
+// not just a self-consistent internal format.
+func TestTC11CliInterop(t *testing.T) {
+	if !zstdCLIAvailable(t) {
+		t.Skip("zstd CLI not found on PATH — skipping interop test")
+	}
+
+	original := []byte(strings.Repeat("the quick brown fox jumps over the lazy dog ", 25))
+	dir := t.TempDir()
+
+	// ── Direction 1: compress with ours, decompress with `zstd -d` ──────────
+	ourCompressed := Compress(original)
+	oursZst := filepath.Join(dir, "ours.zst")
+	if err := os.WriteFile(oursZst, ourCompressed, 0o644); err != nil {
+		t.Fatalf("write ours.zst: %v", err)
+	}
+	decodedByCLI := runZstdCLI(t, nil, "-d", "-q", "-c", oursZst)
+	if !bytes.Equal(decodedByCLI, original) {
+		t.Fatalf("real `zstd -d` failed to decode our compressed output "+
+			"(got %d bytes, want %d bytes)", len(decodedByCLI), len(original))
+	}
+
+	// ── Direction 2: compress with `zstd`, decompress with ours ─────────────
+	theirCompressed := runZstdCLI(t, original, "-q", "-c")
+	decodedByUs, err := Decompress(theirCompressed)
+	if err != nil {
+		t.Fatalf("our Decompress() failed to decode real `zstd`'s compressed output: %v", err)
+	}
+	assertBytes(t, decodedByUs, original, "CLI-compressed, us-decoded")
+}
+
+// TestTC11CliInteropHighSequenceCount pushes our compressor's single-block
+// sequence count past 128 — the exact boundary where the sequence-count
+// wire encoding (RFC 8878 §3.1.1.3.1) switches from its 1-byte form to its
+// 2-byte form — and verifies the real `zstd -d` CLI can still decode our
+// output. A byte-order bug in that 2-byte form would round-trip fine against
+// ourselves but silently produce a non-conformant frame, so only a real
+// cross-implementation check like this one can catch it.
+func TestTC11CliInteropHighSequenceCount(t *testing.T) {
+	if !zstdCLIAvailable(t) {
+		t.Skip("zstd CLI not found on PATH — skipping interop test")
+	}
+
+	// A repeating 6-byte cycle across ~9 KB gives LZSS plenty of short,
+	// distinct matches — comfortably more than 128 sequences in one block,
+	// while staying well under the 128 KB block cap.
+	src := []byte("ABCDEF")
+	original := make([]byte, 9000)
+	for i := range original {
+		original[i] = src[i%len(src)]
+	}
+
+	ourCompressed := Compress(original)
+	dir := t.TempDir()
+	oursZst := filepath.Join(dir, "ours-highseq.zst")
+	if err := os.WriteFile(oursZst, ourCompressed, 0o644); err != nil {
+		t.Fatalf("write ours-highseq.zst: %v", err)
+	}
+	decodedByCLI := runZstdCLI(t, nil, "-d", "-q", "-c", oursZst)
+	assertBytes(t, decodedByCLI, original, "high-sequence-count CLI decode")
 }
