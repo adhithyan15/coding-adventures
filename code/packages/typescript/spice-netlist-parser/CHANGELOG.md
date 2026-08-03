@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject non-finite MOS model-card `LAMBDA` / `LAM` values and lower the `LAM`
+  alias into Level-1 channel-length modulation.
 - Reject non-finite MOS model-card `VT0` / `VTO` / `VTH` values and lower the
   `VTH` alias into Level-1 threshold voltage.
 - Reject zero, negative, and non-finite explicit MOS model-card `KP` values.

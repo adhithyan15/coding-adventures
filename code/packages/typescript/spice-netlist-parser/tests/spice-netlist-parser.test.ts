@@ -1396,6 +1396,28 @@ Xright c d load
     },
   );
 
+  it.each(["LAMBDA", "LAM"])(
+    "rejects non-finite MOSFET model channel-modulation alias %s",
+    (alias) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(${alias}=1e999)\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET LAMBDA must be finite");
+    },
+  );
+
+  it.each(["LAMBDA", "LAM"])(
+    "lowers finite MOSFET model channel-modulation alias %s",
+    (alias) => {
+      const parsed = parseNetlist(`.model nfast NMOS(${alias}=-0.02)\nM1 d g s b nfast\n`);
+      const element = parsed.circuit.elements()[0];
+      expect(element.kind).toBe("mosfet");
+      if (element.kind !== "mosfet") {
+        throw new Error("unexpected element kind");
+      }
+      expect(element.params.LAMBDA).toBe(-0.02);
+    },
+  );
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
