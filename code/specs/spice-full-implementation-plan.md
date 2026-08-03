@@ -4249,11 +4249,17 @@ the Rust, Python, and TypeScript surfaces together.
      diagnostic while zero and positive drain diffusion perimeters lower into
      Level-1 parameters.
 
+389. Python and TypeScript Berkeley SPICE MOS source-perimeter parity.
+   - Status: completed in PR 9684.
+   - Negative and non-finite instance `PS` values are rejected with the shared
+     diagnostic while zero and positive source diffusion perimeters lower into
+     Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `PS`, `CJ`, `CJSW`, `JS`,
-     `PB`, `MJ`,
+   - TypeScript still needs canonical lowering for `CJ`, `CJSW`, `JS`, `PB`,
+     `MJ`,
      `MJSW`, `FC`, `KF`, and `AF`; Python already lowers these canonical fields
      but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `CJ` values before lowering
+  valid bottom-junction capacitance densities.
 - Reject negative and non-finite MOS instance `PS` values before lowering
   valid source diffusion perimeters.
 - Reject negative and non-finite MOS instance `PD` values before lowering
