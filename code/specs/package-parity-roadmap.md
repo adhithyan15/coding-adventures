@@ -122,10 +122,13 @@ The loop must not start by attempting 10,976 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`3258981ff15dab492786783787a4403d54bb3888` is collision-clean at 1,234
-normalized implementation identities, 4,382 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 784 singletons, 589
+`c9e4cb2a3877f91c0087675c7fd7e42eeecc7c26` is collision-clean at 1,235
+normalized implementation identities, 4,383 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 785 singletons, 590
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
+The new `websocket-runtime` identity has a native-authority review owner; the
+intervening parser, CI, and curriculum fixes changed no canonical package
+identity.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
@@ -271,11 +274,23 @@ close semantics are portable. The selected first child now provides a closed
 Draft 2020-12 schema and 39 shared cases across all seven API families, with
 Rust consuming the fixture records directly as the reference implementation.
 The package passes its 23 unit tests, 7 shared-fixture tests, package-local
-format/lint/docs gates, and 99.81% line coverage. A second dependency-blocked
-child expands the core through every established lane after shared HTTP
-framing and the Java/Kotlin/Dart HTTP prerequisites land. Sockets, DNS, TLS,
-clocks, random mask-key generation, event loops, retries, and application
-dispatch remain native runtime-adapter concerns.
+format/lint/docs gates, and 99.81% line coverage. The real repository build
+plan selects and builds exactly `sha1`, `http-core`, `http1`, and
+`websocket-core`; the full validator adds no WebSocket finding to its existing
+73-gap debt gate. A second dependency-blocked child expands the core through
+every established lane after shared HTTP framing and the Java/Kotlin/Dart HTTP
+prerequisites land. Sockets, DNS, TLS, clocks, random mask-key generation,
+event loops, retries, and application dispatch remain native runtime-adapter
+concerns.
+
+The `c9e4cb2a` refresh adds `websocket-runtime`, a concrete TCP adapter over
+`tcp-client`, `tcp-runtime`, `transport-platform`, OS entropy, and the portable
+WebSocket core. Its DNS, connect, listen, entropy, stream, loopback, and
+platform behavior is host-native and must not enter the all-language portable
+denominator. A dedicated review item owns the minimum truthful capability
+profile, platform-CI evidence, and the guard that deterministic RFC 6455 logic
+stays in `websocket-core`; policy excludes that native-runtime review from
+autonomous selection.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

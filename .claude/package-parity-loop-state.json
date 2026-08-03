@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "3258981ff15dab492786783787a4403d54bb3888",
+    "revision": "c9e4cb2a3877f91c0087675c7fd7e42eeecc7c26",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1234,
-    "implementation_package_slots": 4382,
+    "implementation_identities": 1235,
+    "implementation_package_slots": 4383,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 784,
-    "singleton_missing_slots": 10976,
-    "rust_singletons": 589,
+    "singleton_packages": 785,
+    "singleton_missing_slots": 10990,
+    "rust_singletons": 590,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -1621,7 +1621,16 @@
       "depends_on": [],
       "branch": "codex/websocket-core-portable-conformance",
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 3258981f inventory after PR #9704 added Rust-only websocket-core. The package and governing spec explicitly define a zero-capability, transport-independent RFC 6455 state machine intended for later Python, Go, Ruby, TypeScript, and Elixir ports. Selected after PR #9703 merged because this unblocked fixture foundation is the dependency for every WebSocket port and D18 runtime consumer; the already unblocked Elixir resolver semantic and Haskell/Elixir UTF-8 items remain next-ranked independent build-tool work. Implemented a closed Draft 2020-12 schema plus 39 bounded language-neutral cases across all seven portable API families, with 23 existing Rust unit tests and 7 shared-fixture consumer tests passing. The first consumer covers exact handshake and wire outputs, incremental decoding, limits, canonical lengths, masking, fragmentation, controls, split UTF-8, close state, typed errors, and payload-free diagnostics. Package-local rustfmt, clippy -D warnings, rustdoc -D warnings, RustSec audit, fixture-schema tests, capability-taxonomy tests, and collision checks pass; direct LLVM reporting records 99.81% line and 100% function coverage for src/lib.rs. Sockets, DNS, TLS, clocks, randomness, event loops, retries, and runtime dispatch remain outside the contract."
+      "notes": "Discovered in the collision-clean 3258981f inventory after PR #9704 added Rust-only websocket-core. The package and governing spec explicitly define a zero-capability, transport-independent RFC 6455 state machine intended for later Python, Go, Ruby, TypeScript, and Elixir ports. Selected after PR #9703 merged because this unblocked fixture foundation is the dependency for every WebSocket port and D18 runtime consumer; the already unblocked Elixir resolver semantic and Haskell/Elixir UTF-8 items remain next-ranked independent build-tool work. Implemented a closed Draft 2020-12 schema plus 39 bounded language-neutral cases across all seven portable API families, with 23 existing Rust unit tests and 7 shared-fixture consumer tests passing. The first consumer covers exact handshake and wire outputs, incremental decoding, limits, canonical lengths, masking, fragmentation, controls, split UTF-8, close state, typed errors, and payload-free diagnostics. Package-local rustfmt, clippy -D warnings, rustdoc -D warnings, RustSec audit, fixture-schema tests, capability-taxonomy tests, and collision checks pass; direct LLVM reporting records 99.81% line and 100% function coverage for src/lib.rs. After rebasing onto collision-clean c9e4cb2a, the repository build tool selects and builds exactly websocket-core plus sha1, http-core, and http1. The full validator reproduces only the separately owned 73-gap debt gate (12 Python, 3 Swift, and 58 TypeScript), with no WebSocket finding. Sockets, DNS, TLS, clocks, randomness, event loops, retries, and runtime dispatch remain outside the contract."
+    },
+    {
+      "id": "websocket-runtime-native-authority-review",
+      "title": "Review the native WebSocket TCP runtime authority boundary",
+      "status": "pending",
+      "depends_on": ["websocket-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean c9e4cb2a inventory after PR #9712 added Rust-only websocket-runtime. The package is a concrete host adapter over tcp-client, tcp-runtime, transport-platform, OS entropy, and websocket-core; its declared net:dns, net:connect, and net:listen authority and real loopback/platform behavior make it a reviewed native-runtime exception rather than an all-language port target. Audit that the manifest is the minimum truthful profile including inherited entropy and stream authority, that Linux/macOS/Windows CI exercises the promised adapters, and that all deterministic RFC 6455 parsing/state remains in websocket-core. This item records the exception but is excluded from autonomous delivery selection by the parity policy."
     },
     {
       "id": "websocket-core-established-lane-parity",
