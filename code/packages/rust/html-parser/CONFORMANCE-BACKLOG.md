@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the specialized paragraph foreign-content diagnostic slice, 2,009 of
-those cases emit at least one lexer or parser diagnostic and 174 remain
+After the specialized formatting/table-scope diagnostic slice, 2,011 of those
+cases emit at least one lexer or parser diagnostic and 172 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -55,11 +55,12 @@ original mode; synthetic text fragment contexts remain diagnostic-free.
 The in-body "any other end tag" parse error is now reported when implied end
 tags leave the matching open element non-current, including special-element
 scope stops and nested formatting recovery. Remaining in-body work covers
-adoption-agency and formatting-reconstruction branches. Heading end tags report
+formatting-reconstruction and stray-tag branches. Heading end tags report
 the specialized parse error when no heading is in scope or the current heading
 does not match the token. A `li` start tag reports when its implied-end-tag
 recovery closes a non-current list item, and a paragraph end tag reports when it
-breaks out of MathML foreign content.
+breaks out of MathML foreign content. A formatting end tag also reports when an
+open table blocks adoption-agency recovery.
 
 Prioritized work items:
 
