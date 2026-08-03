@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.24.0 — Collections slice 3: 0-arg Array query/transform methods
+
+Third Collections slice — the first to cover **Array** (`SIR_SEQ`) receivers
+beyond the polymorphic `length`/`size`/`empty?` from slice 1. No new `Feature`.
+
+- New 0-arg methods on `is_builtin_method`/`_sir_builtin_method`: `count`,
+  `first`, `last`, `sort`, `min`, `max`, `sum`, `uniq`, `compact`, `flatten`,
+  `to_a`. `reverse` (already allowlisted for String in slice 1) gains a
+  `SIR_SEQ` arm. `count` is polymorphic over Array/Hash, mirroring slice 1's
+  `length`/`size`.
+- Each returns a **fresh** sequence (or scalar) — the receiver's backing array
+  is never mutated, unlike `SeqSet`. `sort`/`min`/`max` reuse `_sir_lt`/
+  `_sir_gt` (the same comparators `<`/`>` use); `uniq` reuses `_sir_value_eq`
+  (structural, so nested-array elements dedup correctly); `sum` reuses
+  `_sir_plus_v`'s existing int/float promotion, defaulting the accumulator to
+  `0` (Ruby's `Array#sum` default). `first`/`last`/`min`/`max` return `nil` on
+  an empty array (matching Ruby); `sum` returns `0`.
+- `flatten` recursively unwraps nested arrays fully (Ruby's default, no depth
+  limit in the *language* semantics) but the **implementation** shares
+  `SIR_MAX_EQ_DEPTH` — the same cap `_sir_value_eq`/`_sir_fmt` use — so a
+  self-referential array (`a[0] = a`, constructible via `SeqSet`) terminates
+  (an element past the cap is taken as-is) instead of a stack-overflow DoS.
+  Two-pass count-then-fill avoids a growable buffer.
+- A wrong-type receiver (e.g. `"str".sort`) still raises `NoMethodError` via
+  the existing fallthrough — no new guard needed, since every new arm only
+  matches on `SIR_SEQ`.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
+
 ## 0.23.1 — fix: cyclic-map/seq display + equality no longer overflow the stack on Windows
 
 Fixes `cyclic_map_does_not_stack_overflow` (and the sibling cyclic-sequence
