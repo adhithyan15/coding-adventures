@@ -33,9 +33,9 @@ reviews_of: [PT-C04-ate-logo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Same frame — *até* + a "when." **Até amanhã**, "until tomorrow." And
-*amanhã* is the Portuguese cousin of a Spanish word you already know, wearing a
-heavy nasal ending.
+[PAUSE 2s] Same frame — *até* + a “when.” **Até amanhã** means “until tomorrow.”
+Its second word is the Portuguese cousin of a Spanish word you already know,
+wearing a heavy nasal ending.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[PT-SOUND-ATE-AMANHA-02]; assesses=[] -->

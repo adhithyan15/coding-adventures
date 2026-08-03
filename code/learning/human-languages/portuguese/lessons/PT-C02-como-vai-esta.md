@@ -33,8 +33,8 @@ reviews_of: [PT-C02-tudo-bem, PT-C02-como]
 ## Warm-up
 <!-- hl-knowledge: introduces=[PT-LEX-COMO-VAI-ESTA-01]; assesses=[] -->
 
-[PAUSE 2s] **Tudo bem?** needs no verb. Portuguese also offers two familiar
-metaphors, using the **como** (“how”) you already know.
+[PAUSE 2s] **Tudo bem?** needs no verb. **Como** (“how”) also builds two
+familiar metaphors.
 
 | question | literally | verb |
 |---|---|---|

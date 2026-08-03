@@ -211,7 +211,7 @@
     {
       "language": "portuguese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:b1f0b2f2afaf849c",
+      "sourceHash": "fnv1a64:d1d8358ae18c96af",
       "lessonIds": [
         "PT-C02-de-nada",
         "PT-C02-como",
@@ -227,7 +227,7 @@
     {
       "language": "portuguese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:fe554312c9530dd0",
+      "sourceHash": "fnv1a64:cbeaa2b81cbf1c89",
       "lessonIds": [
         "PT-C03-eu",
         "PT-C03-me-chamo",
@@ -240,7 +240,7 @@
     {
       "language": "portuguese",
       "chapter": 4,
-      "sourceHash": "fnv1a64:5525ef6075d2060a",
+      "sourceHash": "fnv1a64:66911b57472a9ba2",
       "lessonIds": [
         "PT-C04-adeus",
         "PT-C04-ate-logo",
@@ -253,7 +253,7 @@
     {
       "language": "portuguese",
       "chapter": 5,
-      "sourceHash": "fnv1a64:fca2fd8fd1da3e96",
+      "sourceHash": "fnv1a64:dc1f079cde196fa2",
       "lessonIds": [
         "PT-C05-falar",
         "PT-C05-morar",
@@ -286,7 +286,7 @@
     {
       "language": "portuguese",
       "chapter": 8,
-      "sourceHash": "fnv1a64:074f8f7eba5b6b2a",
+      "sourceHash": "fnv1a64:bcad5cb560fb13f6",
       "lessonIds": [
         "PT-C08-hora",
         "PT-C08-meio-dia-meia-noite"
@@ -378,7 +378,7 @@
     {
       "language": "portuguese",
       "chapter": 17,
-      "sourceHash": "fnv1a64:dff69b7e6fc4d902",
+      "sourceHash": "fnv1a64:05efdf7fd1a723f5",
       "lessonIds": [
         "PT-C17-cabeca",
         "PT-C17-cabeca-caput",

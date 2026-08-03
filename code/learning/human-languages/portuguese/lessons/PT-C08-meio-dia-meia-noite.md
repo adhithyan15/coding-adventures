@@ -33,15 +33,15 @@ reviews_of: [PT-C08-hora, PT-C06-numeros-6-10, PT-C07-dias-2]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The two named hours. **meio-dia** (noon) and **meia-noite** (midnight)
-are the **middle** of the day and the night — and *meia-noite* hides a sound-shift
-you already met back in the numbers.
+[PAUSE 2s] Two named hours: **meio-dia** is noon; **meia-noite** is midnight.
+Each names the **middle** of the day or night, and *meia-noite* hides a
+sound-shift you already met in the numbers.
 
 ## The two words, taken apart
 <!-- hl-knowledge: introduces=[PT-ETYMON-MEIO-DIA-MEIA-NOITE-02]; assesses=[] -->
 
-The front piece is **meio/meia**, "half, middle," from Latin **medius/media**
-(cousin of English *mid, medium* and of Spanish *medio*):
+Both phrases begin with **meio/meia**, “half, middle.” It comes from Latin
+**medius/media**, cousin of English *mid, medium* and Spanish *medio*:
 
 | Portuguese | = | ← Latin | literally |
 |---|---|---|---|

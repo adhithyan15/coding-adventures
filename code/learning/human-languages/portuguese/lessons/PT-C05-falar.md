@@ -33,9 +33,11 @@ reviews_of: [PT-C03-practice, PT-C04-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Until now you've assembled fixed phrases. **falar** ("to speak") is
-your first real **verb** — the model for the big **-ar** family — and it hides a
-beautiful contrast with Spanish, right at its first letter.
+[PAUSE 2s]
+
+Until now you've assembled fixed phrases. **Falar** (“to speak”) is
+your first real **verb** and the model for the large **-ar** family. Its first
+letter also hides a beautiful contrast with Spanish.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[PT-SOUND-FALAR-02]; assesses=[] -->

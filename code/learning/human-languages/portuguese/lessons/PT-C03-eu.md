@@ -28,7 +28,7 @@ variety: standard-contemporary
 reviews_of: [PT-C04-adeus]
 ---
 
-# eu — "I," the pronoun Portuguese usually drops
+# eu — “I,” often dropped in Portuguese
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
