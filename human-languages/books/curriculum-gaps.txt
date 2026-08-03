@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 1045 lessons, 20 books
-98 lessons at or above 300 effective seconds
+20 tracks, 1051 lessons, 20 books
+55 lessons at or above 300 effective seconds
 0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
 19 legacy, 1 mixed, 0 version-2 schema tracks
@@ -11,20 +11,20 @@ Longest effective lessons:
   ES-C18-practice: 500s (declared 360s, computed 500s; declared+computed)
   ES-C18-quiero-que: 456s (declared 360s, computed 456s; declared+computed)
   ES-C17-practice: 398s (declared 300s, computed 398s; declared+computed)
-  LA-C19-quid-agis: 370s (declared 360s, computed 370s; declared+computed)
   ES-C31-numeros-11-20: 360s (declared 360s, computed 245s; declared)
   ES-C32-perro-gato: 360s (declared 360s, computed 265s; declared)
   ES-C33-verde-amarillo: 360s (declared 360s, computed 205s; declared)
-  LA-C11-menses: 360s (declared 360s, computed 258s; declared)
-  LA-C13-hora: 360s (declared 360s, computed 248s; declared)
-  LA-C14-annos-natus: 360s (declared 360s, computed 271s; declared)
-  LA-C15-tempestas-pluit: 360s (declared 360s, computed 321s; declared+computed)
-  LA-C16-undecim-viginti: 360s (declared 360s, computed 213s; declared)
-  LA-C17-canis-feles-cattus: 360s (declared 360s, computed 297s; declared)
-  LA-C18-viridis-flavus: 360s (declared 360s, computed 279s; declared)
-  LA-C20-quid-tibi-nomen: 360s (declared 360s, computed 309s; declared+computed)
-  LA-C21-volup-est-convenisse: 360s (declared 360s, computed 309s; declared+computed)
-  LA-C24-propediem-te-videbo: 360s (declared 360s, computed 250s; declared)
-  LA-C25-cras-te-videbo: 360s (declared 360s, computed 263s; declared)
-  LA-C26-quomodo: 360s (declared 360s, computed 272s; declared)
+  ES-W01-acento: 339s (declared 240s, computed 339s; computed)
+  ES-W03-inverted: 331s (declared 180s, computed 331s; computed)
+  ES-C05-hasta: 327s (declared 240s, computed 327s; computed)
+  ES-C09-practice: 324s (declared 300s, computed 324s; declared+computed)
+  ES-C04-como-esta: 312s (declared 240s, computed 312s; computed)
+  ES-C21-lunes-viernes: 312s (declared 300s, computed 312s; declared+computed)
+  ES-C16-practice: 305s (declared 300s, computed 305s; declared+computed)
+  ES-C11-practice: 304s (declared 300s, computed 304s; declared+computed)
+  ES-C15-practice: 303s (declared 300s, computed 303s; declared+computed)
+  ES-C17-futuro: 302s (declared 300s, computed 302s; declared+computed)
+  ES-C04-practice: 300s (declared 300s, computed 275s; declared)
+  ES-C05-practice: 300s (declared 300s, computed 240s; declared)
+  ES-C06-hablar: 300s (declared 300s, computed 258s; declared)
 
