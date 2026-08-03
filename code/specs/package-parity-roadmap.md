@@ -106,10 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `0455cea8` after
-merged PR #9548 added the mixed Rust AirGradient local integration and merged
-PR #9537 completed the Swift build-tool UTF-8 slice without creating another
-implementation package directory. The inventory contains
+working inventory was regenerated on August 2, 2026 from `0cbae0ca` after
+merged PR #9553 completed the Swift build-tool identity registry and subsequent
+merges added no implementation package directory. The inventory contains
 1,222 normalized implementation identities across 4,370 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
@@ -124,7 +123,7 @@ The loop must not start by attempting 10,780 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`0455cea8e0c0ddc078040ea109ea59dbaf8403fa` is collision-clean at 1,222
+`0cbae0ca3799671ca7db79e92c5f38b957c2c27e` is collision-clean at 1,222
 normalized implementation identities, 4,370 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 772 singletons, 577
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -236,16 +235,18 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   is tracked separately from the Python full-scan blocker. Merged PR #9504
   completed the Go operational-oracle child, and merged PR #9510 completed
   Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
-  byte fixtures plus real CLI exit-2 coverage;
+  byte fixtures plus real CLI exit-2 coverage. TypeScript is the selected next
+  dependency-shaped child because its replacement decoder cannot report
+  malformed bytes faithfully;
 - make Swift build-tool file options recognize Windows drive-letter absolute
   paths. The UTF-8 validation run discovered that `--emit-plan` reaches
   resolution but then joins an absolute Windows path under the repository;
   cover `--emit-plan`, `--plan-file`, and `--cache-file` in a separate slice;
 - align Swift build-tool discovery with the canonical language and identity
-  registry. Its full release plan currently emits 4,768 entries but only 4,594
-  unique names, including 143 duplicate identity groups and 397 `unknown`
-  entries. This is the selected post-UTF-8 child; consume the shared registry
-  and duplicate-identity fixtures without widening into file-option handling;
+  registry. Merged PR #9553 consumes the shared registry and duplicate-identity
+  fixtures; its full release plan emits 4,768 unique identities, zero duplicate
+  groups, and only the intentional language-neutral `unknown/blog`, without
+  widening into file-option handling;
 - merged PR #9521 makes the Rust build tool reject resolver self-edges with a
   stable diagnostic and preserves distinct package/program identities for
   `elixir/grammar_tools`;
