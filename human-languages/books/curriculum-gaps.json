@@ -18,9 +18,9 @@
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
-    "lessonChaptersWithoutBooks": 257,
-    "legacySchemaTracks": 19,
-    "mixedSchemaTracks": 1,
+    "lessonChaptersWithoutBooks": 256,
+    "legacySchemaTracks": 18,
+    "mixedSchemaTracks": 2,
     "version2SchemaTracks": 0
   },
   "duration": {
@@ -1309,13 +1309,12 @@
           2,
           3,
           4,
-          5
-        ],
-        "missingBookChapters": [
+          5,
           6
         ],
+        "missingBookChapters": [],
         "orphanBookChapters": [],
-        "coveragePercent": 83
+        "coveragePercent": 100
       },
       {
         "language": "punjabi",
@@ -1561,10 +1560,11 @@
       },
       {
         "language": "marathi",
-        "status": "legacy",
+        "status": "mixed",
         "lessonCount": 35,
         "versions": {
-          "1": 35
+          "1": 33,
+          "2": 2
         }
       },
       {
