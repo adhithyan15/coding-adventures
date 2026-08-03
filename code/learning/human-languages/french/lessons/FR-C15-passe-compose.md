@@ -9,7 +9,7 @@ prerequisites: [FR-C14-avoir, FR-C05-parler]
 sounds: [participle-e-acute, silent-endings]
 roots: [latin-habere-participle]
 etymology_hook: "j'ai parlé was once literally 'I HAVE [a thing] spoken' — Latin habeō litterās scriptās, 'I have letters written', where the participle was an ADJECTIVE agreeing with the object; that lost meaning is exactly why the participle still agrees with a preceding object today"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C14-avoir, FR-C05-parler, FR-C05-travailler]
 ---
 

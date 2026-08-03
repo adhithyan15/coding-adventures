@@ -5,11 +5,11 @@ type: practice-mix
 headword: (practice)
 gloss: the full "how are you?" exchange, formal and informal
 concept_tag: CH3-PRACTICE
-prerequisites: [FR-C03-merci, FR-C03-de-rien, FR-C03-aller, FR-C03-comment-ca-va, FR-C03-comme-ci-comme-ca]
+prerequisites: [FR-C03-merci, FR-C03-de-rien, FR-C03-aller, FR-C03-comment-ca-va, FR-C03-comment-registers, FR-C03-comme-ci-comme-ca]
 sounds: []
 roots: []
-est_minutes: 5
-reviews_of: [FR-C03-merci, FR-C03-de-rien, FR-C03-comment-ca-va, FR-C03-comme-ci-comme-ca, FR-C02-practice]
+est_minutes: 4
+reviews_of: [FR-C03-merci, FR-C03-de-rien, FR-C03-comment-ca-va, FR-C03-comment-registers, FR-C03-comme-ci-comme-ca, FR-C02-practice]
 ---
 
 # Practice — "comment ça va ?", start to finish

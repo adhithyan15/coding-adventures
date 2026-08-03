@@ -8,7 +8,7 @@ concept_tag: CH4-PRACTICE
 prerequisites: [FR-C04-au-revoir, FR-C04-a-plus-tard, FR-C04-a-bientot, FR-C04-a-demain]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C04-au-revoir, FR-C04-a-plus-tard, FR-C04-a-bientot, FR-C04-a-demain, FR-C03-practice]
 ---
 

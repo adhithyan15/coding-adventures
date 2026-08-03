@@ -9,7 +9,7 @@ prerequisites: [FR-C06-nombres-6-10, FR-C11-eau-vin]
 sounds: [nasal-on, z-voiced]
 roots: [latin-decim]
 etymology_hook: "onze…seize ← Latin ūndecim, duodecim … sēdecim — 'one-ten, two-ten … six-ten'; the -ze is a worn-down decem ('ten'), the same ten hiding in dix and décembre"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C06-nombres-6-10, FR-C11-eau-vin]
 ---
 

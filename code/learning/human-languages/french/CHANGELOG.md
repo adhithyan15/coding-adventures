@@ -1,5 +1,17 @@
 # Changelog
 
+## Sub-five-minute remediation — 2026-08-02
+
+- Corrected twenty-two declared five- or six-minute estimates whose lesson
+  bodies already compute below 300 seconds.
+- Replaced three computed violations with three prerequisite-ordered support
+  lessons for explicit register/liaison, *être* suppletion, and pronominal past
+  agreement.
+- Preserved the vocabulary, grammar, etymology, exceptions, and cross-language
+  depth. The shared report now measures zero French duration violations.
+- `FR-C03-practice` at 293 computed seconds and `FR-C15-passe-simple` at 291 are
+  the tightest remaining French lessons and should be watched during copy edits.
+
 ## The book catches up -- Chapters 3-16 typeset
 
 The lessons had run ahead of the published artifact: 61 authored lessons through
@@ -64,11 +76,12 @@ English form (the Norse cognate is Tyr), so it now reads "the Germanic war-god"
 
 ## Chapter 16 — *être*, and the half of the past Chapter 15 couldn't reach
 
-- **Chapter 16 authored** (`FR-C16-etre`, `-passe-compose-etre`). Chapter 15
+- **Chapter 16 authored** (`FR-C16-etre`, `-etre-roots`,
+  `-passe-compose-etre`, `-pronominal-past`). Chapter 15
   could only teach the *avoir* half of the compound past, because ***être* was
   taught in no lesson of any track**. This chapter supplies it and closes the
   other half.
-- **être** (`FR-C16-etre`): the six present forms, presented honestly as
+- **être / its roots** (`FR-C16-etre`, `-etre-roots`): the six present forms, presented honestly as
   unpatternable, and then explained. *être* is **suppletive across three stems**:
   - *es-* — *suis/es/est/sommes/êtes/sont* **and the infinitive** *être*
     (← \**essere*), all from Latin ***esse***
@@ -86,7 +99,8 @@ English form (the Norse cognate is Tyr), so it now reads "the Germanic war-god"
     *être* (*rester* ← *re-stāre*, *coûter* ← *constāre*) — what it didn't do is
     survive as a **separate** "to be" the way *estar* did. Anchored to English
     *go/went* so "suppletion" names something the learner already does.
-- **passé composé with être** (`FR-C16-passe-compose-etre`): verbs of **motion
+- **passé composé with être / pronominal agreement**
+  (`FR-C16-passe-compose-etre`, `-pronominal-past`): verbs of **motion
   and change of state** take *être* — taught as a **shape** (going, coming, being
   born, dying) rather than a list to memorise — built on *aller* from Ch. 3,
   **plus all pronominal verbs**. Then the visible part: the participle **agrees
@@ -343,7 +357,8 @@ English form (the Norse cognate is Tyr), so it now reads "the Germanic war-god"
 ## Chapter 3 — "Comment ça va ?" (the parallel of Spanish Ch. 4)
 
 - **Chapter 3 authored** (`FR-C03-merci`, `-de-rien`, `-aller`,
-  `-comment-ca-va`, `-comme-ci-comme-ca`, `-practice`): the "how are you?"
+  `-comment-ca-va`, `-comment-registers`, `-comme-ci-comme-ca`, `-practice`):
+  the "how are you?"
   exchange, atom-first, reviewing Chapter 2 throughout. Built deliberately as the
   cross-language mirror of the Spanish Chapter 4 shipped in the same PR — same
   canonical concepts (`STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`, `WORD-SOSO`),

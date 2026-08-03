@@ -9,7 +9,7 @@ prerequisites: [FR-C14-age]
 sounds: [nasal-en, silent-final]
 roots: [tempus-latin, pluere-latin]
 etymology_hook: "le temps means BOTH 'time' and 'weather' — the exact same Latin tempus double sense as Spanish's tiempo (this widening happened within Latin itself, shared by both languages, not a Spanish-only development); il fait chaud/froid reuse faire ('to make'), just like Spanish's hacer; il pleut ('it's raining') KEEPS Latin pluere's pl- unchanged, unlike Spanish's llueve, which underwent the pl-→ll- shift"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C14-age]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [FR-C12-nombres-17-20]
 sounds: [nasal-an, silent-c]
 roots: [latin-niger, germanic-blank]
 etymology_hook: "noir ← Latin niger, but blanc is NOT from Latin albus — it's Frankish *blank 'shining', borrowed INTO French, the reverse of the usual flow; albus survives only in aube ('dawn') and album"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C12-nombres-17-20, FR-C11-eau-vin]
 ---
 

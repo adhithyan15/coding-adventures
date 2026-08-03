@@ -9,7 +9,7 @@ prerequisites: [FR-C06-nombres-1-5]
 sounds: [nasal-eu, final-consonant]
 roots: [sex-septem-octo-latin]
 etymology_hook: "sept/huit/neuf/dix ← septem/octō/novem/decem → septembre/octobre/novembre/décembre (= Spanish siete/ocho/nueve/diez)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C06-nombres-1-5]
 ---
 
