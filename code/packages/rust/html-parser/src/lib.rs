@@ -6986,6 +6986,12 @@ impl HtmlParser {
                 return;
             }
             if is_formatting_element(name) && self.has_table_context_above(index) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-formatting-end-tag-in-table",
+                    format!(
+                        "end tag `</{name}>` could not close a formatting element across table scope"
+                    ),
+                ));
                 if self.open_element_is_fostered_before_open_table(index) {
                     self.capture_formatting_above(index);
                     self.open_elements.truncate(index);
@@ -33285,6 +33291,20 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-p-end-tag-in-foreign-content",
                 "end tag `</p>` in MathML foreign content forced HTML recovery"
+            )]
+        );
+    }
+
+    #[test]
+    fn reports_formatting_end_tag_recovery_across_table_scope() {
+        let output =
+            parse_html_with_diagnostics("<!DOCTYPE html><font><table></font></table></font>")
+                .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-formatting-end-tag-in-table",
+                "end tag `</font>` could not close a formatting element across table scope"
             )]
         );
     }
