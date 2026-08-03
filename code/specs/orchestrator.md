@@ -243,6 +243,13 @@ survive orchestrator restarts and are not split across two authorities.
 
 ### Service Registry
 
+The transport-independent daemon composition is specified in
+[`runnable-orchestrator-core.md`](runnable-orchestrator-core.md). It binds this
+registry to deterministic reconciliation, authoritative process supervision,
+and authorized channel-topology mutation while remaining keyless and
+payload-blind. WebSocket serving, CLI parsing, daemon installation, and loop
+scheduling remain outer adapters.
+
 A durable registry of host intent plus the orchestrator's last observation:
 
 ```rust

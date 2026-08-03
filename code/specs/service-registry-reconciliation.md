@@ -45,6 +45,8 @@ channel, the authenticated lifecycle messages defined in
 [`host-control-protocol.md`](host-control-protocol.md), and a concrete OS-process
 supervisor specified in
 [`process-host-supervisor.md`](process-host-supervisor.md).
+The minimal transport-independent composition is specified in
+[`runnable-orchestrator-core.md`](runnable-orchestrator-core.md).
 
 ## Authoritative Supervisor Contract
 

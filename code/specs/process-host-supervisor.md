@@ -18,7 +18,8 @@ child messages.
 
 The adapter implements `chief_of_staff_service_reconciler::HostSupervisor`. It
 does not implement scheduling, restart policy, backoff, or durable state; those
-remain responsibilities of the reconciler and runnable orchestrator.
+remain responsibilities of the reconciler and
+[`runnable-orchestrator-core.md`](runnable-orchestrator-core.md).
 
 ## Process Contract
 
