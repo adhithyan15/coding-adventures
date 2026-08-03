@@ -7,11 +7,31 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from subprocess import run
 
 import audit_html5lib_coverage as audit
 
 
 class HtmlConformanceCoverageAuditTest(unittest.TestCase):
+    def test_resolves_revision_from_nested_checkout_path(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="html-conformance-audit-") as temp_dir:
+            root = Path(temp_dir)
+            nested = root / "html" / "syntax" / "parsing" / "resources"
+            nested.mkdir(parents=True)
+            run(["git", "init", "--quiet", str(root)], check=True)
+            run(["git", "-C", str(root), "config", "user.name", "Audit Test"], check=True)
+            run(
+                ["git", "-C", str(root), "config", "user.email", "audit@example.com"],
+                check=True,
+            )
+            (nested / "sample.dat").write_text("#data\n\n#errors\n#document\n")
+            run(["git", "-C", str(root), "add", "."], check=True)
+            run(["git", "-C", str(root), "commit", "--quiet", "-m", "fixture"], check=True)
+
+            revision = audit.git_revision(nested)
+
+            self.assertRegex(revision, r"^[0-9a-f]{40}$")
+
     def test_resolves_current_wpt_and_html5lib_layouts(self) -> None:
         with tempfile.TemporaryDirectory(prefix="html-conformance-audit-") as temp_dir:
             root = Path(temp_dir)
