@@ -70,32 +70,78 @@ fn build_native_bridge(output: &Path) -> PathBuf {
     library
 }
 
-fn serve_html() -> String {
+struct AcceptanceUrls {
+    start: String,
+    target: String,
+    link: String,
+}
+
+fn serve_html() -> AcceptanceUrls {
     let listener = TcpListener::bind("127.0.0.1:0").expect("bind Qt acceptance server");
     let address = listener.local_addr().expect("read Qt acceptance address");
+    let base = format!("http://{address}");
+    let urls = AcceptanceUrls {
+        start: format!("{base}/start"),
+        target: format!("{base}/target"),
+        link: format!("{base}/link"),
+    };
+    let link_url = urls.link.clone();
     thread::spawn(move || {
-        let (mut stream, _) = listener.accept().expect("accept Venture Qt request");
-        let mut request = [0_u8; 1024];
-        let _ = stream.read(&mut request);
-        let body = "<!doctype html><title>Venture Qt launch acceptance</title><main><h1>Venture Qt live page</h1><p>Rendered by the shared browser pipeline.</p></main>";
-        write!(
-            stream,
-            "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
-            body.len()
-        )
-        .expect("write Qt acceptance response headers");
-        stream
-            .write_all(body.as_bytes())
-            .expect("write Qt acceptance response body");
+        for _ in 0..8 {
+            let (mut stream, _) = listener.accept().expect("accept Venture Qt request");
+            let mut request = [0_u8; 2048];
+            let request_len = stream.read(&mut request).unwrap_or_default();
+            let request = String::from_utf8_lossy(&request[..request_len]);
+            let path = request
+                .lines()
+                .next()
+                .and_then(|line| line.split_whitespace().nth(1))
+                .unwrap_or("/");
+            let (status, body) = match path {
+                "/start" => (
+                    "200 OK",
+                    format!(
+                        "<!doctype html><title>Venture Qt launch acceptance</title><main><a href=\"{link_url}\">Open the linked page</a><h1>Venture Qt live page</h1>{}</main>",
+                        "<p>Scrollable live content.</p>".repeat(120)
+                    ),
+                ),
+                "/target" => (
+                    "200 OK",
+                    "<!doctype html><title>Venture Qt interaction acceptance</title><main><h1>Native address navigation</h1></main>".to_string(),
+                ),
+                "/link" => (
+                    "200 OK",
+                    "<!doctype html><title>Venture Qt link acceptance</title><main><h1>Native link activation</h1></main>".to_string(),
+                ),
+                _ => (
+                    "404 Not Found",
+                    "<!doctype html><title>Not found</title>".to_string(),
+                ),
+            };
+            write!(
+                stream,
+                "HTTP/1.0 {status}\r\nContent-Type: text/html\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            )
+            .expect("write Qt acceptance response headers");
+            stream
+                .write_all(body.as_bytes())
+                .expect("write Qt acceptance response body");
+        }
     });
-    format!("http://{address}/")
+    urls
 }
 
 fn generated_executable(project: &Path) -> PathBuf {
+    let plain = project.join("build/VentureChrome");
     #[cfg(target_os = "macos")]
-    return project.join("build/VentureChrome.app/Contents/MacOS/VentureChrome");
-    #[cfg(target_os = "linux")]
-    return project.join("build/VentureChrome");
+    {
+        let bundled = project.join("build/VentureChrome.app/Contents/MacOS/VentureChrome");
+        if bundled.exists() {
+            return bundled;
+        }
+    }
+    plain
 }
 
 fn wait_for_marker(child: &mut Child, marker: &Path, log: &Path) {
@@ -117,7 +163,7 @@ fn wait_for_marker(child: &mut Child, marker: &Path, log: &Path) {
 }
 
 #[test]
-fn package_owned_qt_project_launches_and_renders_live_page() {
+fn package_owned_qt_project_launches_and_drives_live_interactions() {
     let required = std::env::var_os("VENTURE_QT_ACCEPTANCE_REQUIRED").is_some();
     if !qt_build_available() {
         assert!(
@@ -182,10 +228,13 @@ fn package_owned_qt_project_launches_and_renders_live_page() {
     let marker = output.join("qt-ready.json");
     let app_log = output.join("qt-app.log");
     let log = File::create(&app_log).expect("create Qt app log");
+    let urls = serve_html();
     let mut child = Command::new(&executable)
         .current_dir(&project)
         .env("QT_QPA_PLATFORM", "offscreen")
-        .env("VENTURE_START_URL", serve_html())
+        .env("VENTURE_START_URL", &urls.start)
+        .env("VENTURE_BROWSER_INTERACTION_URL", &urls.target)
+        .env("VENTURE_BROWSER_INTERACTION_LINK_URL", &urls.link)
         .env("VENTURE_BROWSER_LIBRARY", &library)
         .env("VENTURE_BROWSER_ACCEPTANCE_PATH", &marker)
         .stdout(Stdio::from(log.try_clone().expect("clone Qt app log")))
@@ -204,10 +253,15 @@ fn package_owned_qt_project_launches_and_renders_live_page() {
         report.contains("\"ok\":true"),
         "unexpected marker: {report}"
     );
-    assert!(report.contains("Venture Qt launch acceptance"));
+    assert!(report.contains("\"status\":\"interacted\""));
+    assert!(report.contains("\"addressCommit\":\"native-return\""));
+    assert!(report.contains("\"historyControls\":\"back-forward\""));
+    assert!(report.contains("\"surfaceWheel\":\"scroll\""));
+    assert!(report.contains("\"surfaceHover\":\"status\""));
+    assert!(report.contains("\"surfacePointer\":\"link\""));
+    assert!(report.contains("Venture Qt link acceptance"));
+    assert!(report.contains(&urls.link));
     assert!(report.contains("\"rendered\":true"));
-    assert!(report.contains("\"componentReady\":true"));
-    assert!(report.contains("\"surfaceMounted\":true"));
 
     fs::remove_dir_all(&output).expect("remove clean Qt acceptance output");
 }

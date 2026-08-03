@@ -53,6 +53,9 @@ recreating the surrounding chrome in backend-specific UI code.
   chrome contract and mounts a Cairo-rendered `QQuickPaintedItem`; resize,
   wheel, keyboard scroll, hover, and link activation all delegate to the
   shared `BrowserHostController` instead of owning Qt-specific browser state.
+  Its direct generated-app gate edits the Mosaic-emitted address field, drives
+  Back and Forward with native key input, scrolls the real painted item, and
+  activates a live HTML link through Qt hover and pointer events.
 - The native content surfaces are keyboard focus targets. Arrow, Page,
   Space/Shift-Space, Home, and End keys use the exact semantic scroll-command
   contract owned by `venture-browser-core`; Command-Left/Right on macOS and
@@ -101,10 +104,13 @@ disabled dispatch suppression, node-slot mounting, Return, Go, and
 with a recording host and drives the generated native controls, including
 disabled buttons, address editing, Return, Go, and host-driven prop refresh.
 The Qt gate runs the same chrome contract through Qt Quick Test against the
-emitted part-backed native controls and its generated `mosaicHost` seam. On
-Linux and macOS with Qt and CMake available, it also directly launches the
-generated application against a deterministic HTTP page and requires the real
-Rust/Cairo bridge and mounted QML content surface to render before success.
+emitted part-backed native controls and a recording `mosaicHost` seam as a
+fast emitter-contract test. On Linux and macOS with Qt and CMake available,
+the authoritative interaction gate directly launches the generated
+application against deterministic HTTP pages. It requires the real Rust/Cairo
+bridge, native address and history control input, shared viewport scrolling,
+live-link hover projection, pointer activation, and a final rendered frame
+before success.
 The Compose gate uses the emitted Mosaic-part test tags to drive native
 Compose controls through the generated injectable `MosaicComposeHost` seam,
 including disabled buttons, address editing, Return, Go, and host prop refresh.
@@ -132,7 +138,7 @@ layer.
 On Qt-capable Linux and macOS hosts, both matrix scripts build
 `venture-browser-qt`, copy its native library into the generated Qt project,
 compile the C++/QML shell, and run `qt_project_launch` with the direct-launch
-gate required. Other workspace test environments may skip that one native
+interaction gate required. Other workspace test environments may skip that one native
 launch test when CMake or Qt6 is unavailable; the package matrix does not.
 Repository CI provisions those Qt6 dependencies on its Linux Venture lane so
 the generated project build and direct launch are mandatory there.

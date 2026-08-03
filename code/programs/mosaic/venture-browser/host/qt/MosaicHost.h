@@ -59,6 +59,7 @@ private:
   using HandleEventFn = char *(*)(void *, const char *, const char *);
   using ScrollFn = unsigned char (*)(void *, double);
   using ScrollCommandFn = unsigned char (*)(void *, const char *);
+  using ScrollMetricsFn = unsigned char (*)(void *, double *, double *, double *, double *);
   using PointFn = unsigned char (*)(void *, double, double);
   using ResizeFn = unsigned char (*)(void *, double, double);
   using RenderFn = size_t (*)(void *, unsigned char *, size_t, unsigned int *, unsigned int *);
@@ -66,6 +67,10 @@ private:
 
   bool loadBridge();
   void scheduleAcceptance();
+  void runInteractionAcceptance(const QByteArray &markerPath,
+                                const QByteArray &targetUrl,
+                                const QByteArray &linkUrl);
+  bool scrollOffset(double *offsetY) const;
   QVariantMap response(char *json) const;
   QVariantMap withContentSurface(QVariantMap response) const;
   static QVariantMap normalizeProps(const QVariantMap &props);
@@ -81,6 +86,7 @@ private:
   HandleEventFn handleEvent_ = nullptr;
   ScrollFn scroll_ = nullptr;
   ScrollCommandFn scrollCommand_ = nullptr;
+  ScrollMetricsFn scrollMetrics_ = nullptr;
   PointFn activateLink_ = nullptr;
   PointFn updateHover_ = nullptr;
   ResizeFn resize_ = nullptr;

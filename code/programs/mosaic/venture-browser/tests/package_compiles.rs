@@ -117,10 +117,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
     );
     assert_eq!(package.host_assets.files[3].target, "MosaicHost.cpp");
     assert_eq!(package.host_assets.files[4].backend, "qt");
-    assert_eq!(
-        package.host_assets.files[4].source,
-        "host/qt/MosaicHost.h"
-    );
+    assert_eq!(package.host_assets.files[4].source, "host/qt/MosaicHost.h");
     assert_eq!(package.host_assets.files[4].target, "MosaicHost.h");
     assert_eq!(package.host_assets.files[5].backend, "qt");
     assert_eq!(
@@ -345,8 +342,16 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "MosaicHost::publishProps",
         "MosaicHost::activateLink",
         "MosaicHost::scrollCommand",
+        "MosaicHost::scrollOffset",
+        "MosaicHost::runInteractionAcceptance",
         "MosaicHost::scheduleAcceptance",
         "VENTURE_BROWSER_ACCEPTANCE_PATH",
+        "VENTURE_BROWSER_INTERACTION_URL",
+        "VENTURE_BROWSER_INTERACTION_LINK_URL",
+        "generated address/history controls or live surface are unavailable",
+        "native wheel did not scroll the shared viewport",
+        "native hover did not project the live link URL",
+        "historyControls",
         "surfaceMounted",
     ] {
         assert!(qt_host.contains(symbol), "Qt live host omits {symbol}");

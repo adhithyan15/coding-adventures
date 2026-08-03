@@ -16,6 +16,10 @@
 - Add a generated Qt direct-launch gate that fetches a deterministic HTTP
   page, mounts the real QML content surface, renders through Cairo, and only
   then writes its acceptance marker.
+- Promote that Qt gate through live interactions: native Return in the
+  Mosaic-emitted address field, Back/Forward key activation, painted-surface
+  wheel scrolling, link hover projection, and pointer navigation all cross the
+  package-owned C++ adapter into the shared Rust browser session.
 - Provision the Linux Venture CI lane with Qt6 Quick/QML/Widgets and Quick
   Test so that gate is required rather than reported as a missing-tool skip.
 - Run the primary generated SwiftUI and WinUI direct-launch interaction tests

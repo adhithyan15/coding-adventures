@@ -11,6 +11,10 @@ surface as a QML type, and forwards generated Mosaic events and native surface
 input to the same Rust session. Its direct-launch test emits and builds the
 real Qt project when CMake and Qt6 are present, serves a deterministic page,
 and requires a mounted Cairo frame before the application can report success.
+The same direct gate drives native Return through the generated address field,
+Back/Forward through the emitted buttons, and wheel/hover/click input through
+the real `QQuickPaintedItem`, verifying every transition through the shared
+Rust session rather than a recording Qt host.
 
 ```sh
 cargo test -p venture-browser-qt
