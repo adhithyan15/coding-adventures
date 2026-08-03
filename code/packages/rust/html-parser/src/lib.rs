@@ -5193,6 +5193,10 @@ impl HtmlParser {
                 || self.document_has_non_frameset_compatible_body_content())
             && self.has_open_element("body")
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-frameset-start-tag",
+                "start tag `<frameset>` was ignored after body content",
+            ));
             return;
         }
 
@@ -31782,6 +31786,28 @@ mod tests {
         assert_eq!(nested_frameset.name, "frameset");
         assert_eq!(element(&nested_frameset.children[0]).name, "frame");
         assert_eq!(element(&frameset.children[2]).name, "noframes");
+    }
+
+    #[test]
+    fn reports_frameset_start_tags_rejected_after_body_content() {
+        for source in [
+            "<!doctype html><body><frameset>",
+            "<!doctype html><input><frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-frameset-start-tag",
+                    "start tag `<frameset>` was ignored after body content"
+                )],
+                "source {source:?}"
+            );
+            assert!(body(&output.document)
+                .children
+                .iter()
+                .all(|node| !matches!(node, Node::Element(element) if element.name == "frameset")));
+        }
     }
 
     #[test]
