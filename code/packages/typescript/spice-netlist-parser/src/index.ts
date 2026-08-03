@@ -1175,6 +1175,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode CJO must be finite and non-negative");
   }
+  const diodeTransitTime = params.get("TT");
+  if (
+    kind === "D" &&
+    diodeTransitTime !== undefined &&
+    (!Number.isFinite(diodeTransitTime) || diodeTransitTime < 0.0)
+  ) {
+    throw new NetlistParseError("diode TT must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??

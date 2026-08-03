@@ -4378,12 +4378,24 @@ the Rust, Python, and TypeScript surfaces together.
    - Both parser facades validate finite non-negative `TF` / `TR` values before
      lowering them into the shared engine BJT transit-time fields.
 
+412. Python and TypeScript Berkeley SPICE BJT saturation-current validation parity.
+   - Status: completed in PR 9778.
+   - Both parser facades validate positive finite `IS` values before lowering
+     them into the shared engine BJT saturation-current field.
+
+413. Python and TypeScript Berkeley SPICE diode transit-time validation parity.
+   - Status: completed in this diode transit-time validation slice.
+   - Both parser facades validate finite non-negative `TT` values before
+     lowering them into the shared engine diode transit-time field.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Complete a fresh parser-to-engine validation audit after the directly
-     lowerable BJT fields, starting with finite non-negative diode `TT` transit
-     time validation.
+   - Continue the parser-to-engine validation audit with positive finite diode
+     emission coefficient `N`, followed by positive finite breakdown voltage
+     `BV` and breakdown current `IBV`.
+   - Audit remaining directly lowerable diode fields before moving to model
+     parameters that require new parser-to-engine lowering surfaces.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
