@@ -10335,6 +10335,7 @@ fn value_kind_label(kind: ValueKind) -> &'static str {
 fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
     match transport {
         BridgeTransport::LanHttp => "lan_http",
+        BridgeTransport::LanTcp => "lan_tcp",
         BridgeTransport::LanUdp => "lan_udp",
         BridgeTransport::Mdns => "mdns",
         BridgeTransport::Serial => "serial",
@@ -10347,6 +10348,7 @@ fn bridge_transport_label(transport: BridgeTransport) -> &'static str {
 fn bridge_transport_from_label(transport: &str) -> Result<BridgeTransport, ApiError> {
     match transport {
         "lan_http" | "lan-http" | "http" => Ok(BridgeTransport::LanHttp),
+        "lan_tcp" | "lan-tcp" | "tcp" => Ok(BridgeTransport::LanTcp),
         "lan_udp" | "lan-udp" | "udp" => Ok(BridgeTransport::LanUdp),
         "mdns" => Ok(BridgeTransport::Mdns),
         "serial" => Ok(BridgeTransport::Serial),
@@ -13710,6 +13712,19 @@ mod tests {
         assert_eq!(
             bridge_transport_from_label("udp").unwrap(),
             BridgeTransport::LanUdp
+        );
+    }
+
+    #[test]
+    fn lan_tcp_bridge_transport_round_trips_through_api_labels() {
+        assert_eq!(bridge_transport_label(BridgeTransport::LanTcp), "lan_tcp");
+        assert_eq!(
+            bridge_transport_from_label("lan_tcp").unwrap(),
+            BridgeTransport::LanTcp
+        );
+        assert_eq!(
+            bridge_transport_from_label("tcp").unwrap(),
+            BridgeTransport::LanTcp
         );
     }
 }

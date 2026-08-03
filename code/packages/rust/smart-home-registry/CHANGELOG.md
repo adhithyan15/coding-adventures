@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- LAN TCP bridge counts in topology summaries.
 - LAN UDP bridge counts in topology summaries.
 - Camera entity and ONVIF protocol-family counts in topology and protocol-source
   summaries.

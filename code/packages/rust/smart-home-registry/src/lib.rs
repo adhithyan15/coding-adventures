@@ -257,6 +257,7 @@ pub struct RegistryTopologySummary {
     pub entities: usize,
     pub scenes: usize,
     pub lan_http_bridges: usize,
+    pub lan_tcp_bridges: usize,
     pub lan_udp_bridges: usize,
     pub mdns_bridges: usize,
     pub serial_bridges: usize,
@@ -329,6 +330,7 @@ impl RegistryTopologySummary {
     pub fn has_multi_transport_bridges(&self) -> bool {
         [
             self.lan_http_bridges,
+            self.lan_tcp_bridges,
             self.lan_udp_bridges,
             self.mdns_bridges,
             self.serial_bridges,
@@ -346,6 +348,7 @@ impl RegistryTopologySummary {
         self.bridges += 1;
         match bridge.transport {
             BridgeTransport::LanHttp => self.lan_http_bridges += 1,
+            BridgeTransport::LanTcp => self.lan_tcp_bridges += 1,
             BridgeTransport::LanUdp => self.lan_udp_bridges += 1,
             BridgeTransport::Mdns => self.mdns_bridges += 1,
             BridgeTransport::Serial => self.serial_bridges += 1,
@@ -2564,9 +2567,13 @@ mod tests {
         let mut cloud_bridge = bridge_with_native("bridge-3", "bridge-native-3");
         cloud_bridge.transport = BridgeTransport::Cloud;
         cloud_bridge.health = Health::AuthFailed;
+        let mut tcp_bridge = bridge_with_native("bridge-4", "bridge-native-4");
+        tcp_bridge.transport = BridgeTransport::LanTcp;
+        tcp_bridge.health = Health::Online;
         registry.upsert_bridge(lan_bridge).unwrap();
         registry.upsert_bridge(mdns_bridge).unwrap();
         registry.upsert_bridge(cloud_bridge).unwrap();
+        registry.upsert_bridge(tcp_bridge).unwrap();
 
         let mut kitchen_light = device_with_native("device-1", "bridge-1", "device-native-1");
         kitchen_light.room_id = Some("kitchen".to_string());
@@ -2646,18 +2653,19 @@ mod tests {
         assert_eq!(
             summary,
             RegistryTopologySummary {
-                bridges: 3,
+                bridges: 4,
                 devices: 4,
                 entities: 3,
                 scenes: 2,
                 lan_http_bridges: 1,
+                lan_tcp_bridges: 1,
                 lan_udp_bridges: 0,
                 mdns_bridges: 1,
                 serial_bridges: 0,
                 ble_bridges: 0,
                 cloud_bridges: 1,
                 local_process_bridges: 0,
-                online_bridges: 1,
+                online_bridges: 2,
                 pairing_candidate_bridges: 1,
                 attention_bridges: 1,
                 online_devices: 2,
