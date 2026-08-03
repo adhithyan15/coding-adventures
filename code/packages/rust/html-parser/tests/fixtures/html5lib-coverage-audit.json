@@ -14,7 +14,7 @@
     "missing": 0,
     "missing_sources": [],
     "upstream_cases": 1934,
-    "upstream_revision": "34174a4a37b1c0b8570fd816600191aaa7a5d7f7",
+    "upstream_revision": "8ff51b7de9b569733c5be7d0636c92c258ffdd27",
     "upstream_source": "wpt/html/syntax/parsing/resources"
   }
 }

@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Initial doctypes now report the Standard's parse error when their name,
+  public identifier, or system identifier does not match the allowed HTML
+  forms, closing 14 previously silent malformed corpus cases.
 - Full-document parsing now reports the in-body EOF parse error when disallowed
   elements remain on the stack, closing 335 previously silent malformed corpus
   cases without changing DOM recovery or fragment diagnostics.
