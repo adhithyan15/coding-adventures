@@ -1025,4 +1025,5 @@ members = [
   "chief-of-staff-daemon",
   "chief-of-staff-daemon-service-files",
   "chief-of-staff-daemon-installer",
+  "chief-of-staff-cli",
 ]
