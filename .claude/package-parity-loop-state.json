@@ -11,22 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9717,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9717",
-    "branch": "codex/websocket-core-portable-conformance"
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "5ceb7cafcb22ed70e096df281e12d10347113c2a",
+    "revision": "479ba6d78c2168ad36f02a1da020d7b91f6e4ef8",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1235,
-    "implementation_package_slots": 4383,
+    "implementation_identities": 1237,
+    "implementation_package_slots": 4385,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 785,
-    "singleton_missing_slots": 10990,
-    "rust_singletons": 590,
+    "singleton_packages": 787,
+    "singleton_missing_slots": 11018,
+    "rust_singletons": 592,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -374,11 +370,11 @@
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
       "title": "Make the Haskell build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
-      "branch": null,
+      "branch": "codex/build-tool-haskell-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized after merged PR #9632. Replace locale-sensitive lazy text I/O at the rockspec boundary with explicit strict UTF-8 decoding, consume both exact shared fixtures, preserve exact dependency edges, propagate typed METADATA_INVALID_UTF8 identity, and cover the real executable exit/stderr contract. Schedule after Ruby because the Haskell toolchain and lazy-I/O boundary require a broader build and resource audit."
+      "notes": "Materialized after merged PR #9632. Replace locale-sensitive lazy text I/O at the rockspec boundary with explicit strict UTF-8 decoding, consume both exact shared fixtures, preserve exact dependency edges, propagate typed METADATA_INVALID_UTF8 identity, and cover the real executable exit/stderr contract. Selected after PR #9717 merged because Ruby strict decoding and its dependent canonical resolver repairs are complete, the Haskell boundary is the next unblocked established-language build-tool gap, and its result will provide a stronger reference before the position-dependent Elixir repair."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1621,11 +1617,11 @@
     {
       "id": "websocket-core-portable-conformance",
       "title": "Define language-neutral WebSocket core conformance",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/websocket-core-portable-conformance",
       "pr_number": 9717,
-      "notes": "Discovered in the collision-clean 3258981f inventory after PR #9704 added Rust-only websocket-core. The package and governing spec explicitly define a zero-capability, transport-independent RFC 6455 state machine intended for later Python, Go, Ruby, TypeScript, and Elixir ports. Selected after PR #9703 merged because this unblocked fixture foundation is the dependency for every WebSocket port and D18 runtime consumer; the already unblocked Elixir resolver semantic and Haskell/Elixir UTF-8 items remain next-ranked independent build-tool work. Implemented a closed Draft 2020-12 schema plus 39 bounded language-neutral cases across all seven portable API families, with 23 existing Rust unit tests and 7 shared-fixture consumer tests passing. The first consumer covers exact handshake and wire outputs, incremental decoding, limits, canonical lengths, masking, fragmentation, controls, split UTF-8, close state, typed errors, and payload-free diagnostics. Package-local rustfmt, clippy -D warnings, rustdoc -D warnings, RustSec audit, fixture-schema tests, capability-taxonomy tests, and collision checks pass; direct LLVM reporting records 99.81% line and 100% function coverage for src/lib.rs. After rebasing onto collision-clean 5ceb7caf, the repository build tool selects and builds the complete 13-package prerequisite/downstream closure through the newly landed websocket-runtime. Current Rust 1.97 exposed only three pre-existing Windows-target maintenance points in iocp, transport-platform, and tcp-runtime; narrowly documented opaque-pointer/platform dead-code contracts plus canonical clamp/formatting now make all 13 packages pass tests and clippy without changing behavior. The full validator reproduces only the separately owned 73-gap debt gate (12 Python, 3 Swift, and 58 TypeScript), with no WebSocket finding. Sockets, DNS, TLS, clocks, randomness, event loops, retries, and runtime dispatch remain outside the portable contract."
+      "notes": "Discovered in the collision-clean 3258981f inventory after PR #9704 added Rust-only websocket-core. The package and governing spec explicitly define a zero-capability, transport-independent RFC 6455 state machine intended for later Python, Go, Ruby, TypeScript, and Elixir ports. Selected after PR #9703 merged because this unblocked fixture foundation is the dependency for every WebSocket port and D18 runtime consumer; the already unblocked Elixir resolver semantic and Haskell/Elixir UTF-8 items remain next-ranked independent build-tool work. Implemented a closed Draft 2020-12 schema plus 39 bounded language-neutral cases across all seven portable API families, with 23 existing Rust unit tests and 7 shared-fixture consumer tests passing. The first consumer covers exact handshake and wire outputs, incremental decoding, limits, canonical lengths, masking, fragmentation, controls, split UTF-8, close state, typed errors, and payload-free diagnostics. Package-local rustfmt, clippy -D warnings, rustdoc -D warnings, RustSec audit, fixture-schema tests, capability-taxonomy tests, and collision checks pass; direct LLVM reporting records 99.81% line and 100% function coverage for src/lib.rs. After rebasing onto collision-clean 5ceb7caf, the repository build tool selects and builds the complete 13-package prerequisite/downstream closure through the newly landed websocket-runtime. Current Rust 1.97 exposed only three pre-existing Windows-target maintenance points in iocp, transport-platform, and tcp-runtime; narrowly documented opaque-pointer/platform dead-code contracts plus canonical clamp/formatting now make all 13 packages pass tests and clippy without changing behavior. The full validator reproduces only the separately owned 73-gap debt gate (12 Python, 3 Swift, and 58 TypeScript), with no WebSocket finding. Sockets, DNS, TLS, clocks, randomness, event loops, retries, and runtime dispatch remain outside the portable contract. PR #9717 auto-completed as 479ba6d78c2168ad36f02a1da020d7b91f6e4ef8 after all 17 exact-head checks were terminal: eleven passed, three irrelevant analyzers skipped, and the CodeQL aggregate was neutral."
     },
     {
       "id": "websocket-runtime-native-authority-review",
@@ -1644,6 +1640,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "After the shared WebSocket fixture oracle lands and HTTP framing prerequisites are consistent, port the authority-free core through all established implementation lanes with local idioms, empty capability manifests, real BUILD/BUILD_windows files, coverage, and downstream tests. The broad Java/Kotlin and Swift/Dart waves already own their currently missing http-core/http1 prerequisites; do not duplicate or bypass those dependency gaps. Runtime transport, TLS, mask-key generation, timers, event loops, and application dispatch remain separately reviewed native adapters."
+    },
+    {
+      "id": "chief-daemon-api-native-authority-review",
+      "title": "Review the Chief daemon API native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-orchestrator-core-portable-conformance", "websocket-runtime-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 479ba6d7 inventory after chief-of-staff-daemon-api landed as a Rust-only authenticated WebSocket control surface. It couples bounded JSON protocol handling to Chief host lifecycle operations and an optional concrete listener through websocket-runtime, and declares net:listen authority. Review the minimum truthful inherited listener, stream, authentication, and host-lifecycle authority; keep reusable bounded DTO, version, duplicate-field, stable-error, and redaction semantics in portable injected contracts; and record the residual daemon transport as a native-runtime exception rather than manufacturing all-language host-control servers. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-axis-vapix-native-authority-review",
+      "title": "Review the Axis VAPIX integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 479ba6d7 inventory after smart-home-axis-vapix-integration landed as a Rust-only production adapter. The crate performs mDNS discovery, credential-referenced authenticated HTTPS, TLS, endpoint policy, runtime authorization, and concrete network effects, so the package is not an all-language portable target. Review truthful DNS/discovery/connect/TLS/Vault-derived authority and platform evidence; keep bounded VAPIX response validation, identity normalization, stable projection, and request planning in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
     }
   ]
 }
