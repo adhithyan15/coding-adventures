@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.54.0] - 2026-08-02 - NUM-7c: `adj-verify` recheck of the sqrt Real companion
+
+- `recheck_narrowing` gains two new `DerivationNode::Op` arms: `real: None` is not a narrowing
+  (unchanged catch-all behavior); `real: Some(rc)` re-promotes and re-derives `rc.source` via
+  `BigDouble::from_rational(..).sqrt(..)` at `rc`'s own recorded precision/mode and compares
+  against the recorded `BigDouble` (value-based `PartialEq`), reporting `ReChecked` or a
+  `Mismatch{why:"real_differs"}`. Reuses the existing `NarrowingCheck` machinery — a `Real`
+  companion is technically a *widening* (exact source → approximate), not a narrowing, but the
+  re-derive-and-compare shape is identical.
+- No changes to the tree-walker (`collect_narrowings`) or the `adj-verify` binary — both are
+  already generic over `DerivationNode`/`NarrowingCheck`, so this falls out of the existing
+  recursion for free. This closes NUM-7 (ADJ-NUMERIC-SUBSTRATE §8): the sqrt `Real` companion is
+  now audited, not just computed.
+
 ## [0.53.0] - 2026-08-02 - NUM-7b: the sqrt `Real`/`BigDouble` audit companion
 
 - `DerivationNode::Op` gains an additive `real: Option<RealCompanion>` field (new public types
