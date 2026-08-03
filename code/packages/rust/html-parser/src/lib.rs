@@ -7002,6 +7002,16 @@ impl HtmlParser {
             {
                 return;
             }
+            let reports_scope_error = !matches!(name, "body" | "html")
+                && special_scope_blocks_end_tag(name)
+                && self
+                    .has_element_above(index, |candidate| !is_implied_end_tag_element(candidate));
+            if reports_scope_error {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    format!("end tag `</{name}>` was seen before its open element was current"),
+                ));
+            }
             if special_scope_blocks_end_tag(name)
                 && self.has_special_element_above(index)
                 && !(is_paragraph_boundary_element(name)
@@ -33166,6 +33176,32 @@ mod tests {
         for source in ["<!doctype html><p>", "<!doctype html><head>"] {
             let allowed = parse_html_with_diagnostics(source).unwrap();
             assert!(allowed.parser_diagnostics.is_empty(), "source {source:?}");
+        }
+    }
+
+    #[test]
+    fn reports_in_body_end_tags_seen_before_their_open_element_is_current() {
+        for (source, end_tag) in [
+            (
+                "<!doctype html><figcaption><article></figcaption>a",
+                "figcaption",
+            ),
+            ("<!doctype html><address><button></address>a", "address"),
+            ("<!doctype html><font><p><b>test</font>", "font"),
+            ("<!doctype html><select><menuitem></select>", "select"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let expected = ParserDiagnostic::new(
+                "unexpected-non-current-end-tag",
+                format!("end tag `</{end_tag}>` was seen before its open element was current"),
+            );
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .any(|diagnostic| diagnostic == &expected),
+                "source {source:?}"
+            );
         }
     }
 
