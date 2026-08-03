@@ -51,6 +51,11 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 Chapter 6 is generated from the canonical lesson; its Bengali-script runs use
 that font while its section bookmarks use authored romanization.
 
+The forced six-chapter build is warning-free: main-font punctuation,
+chapter-qualified recap anchors, bookmark-safe Bengali, natural page bottoms,
+explicit static-font shapes, and a breakable long title keep the downloadable
+PDF and its outline clean.
+
 ## Files
 
 - [`lessons/`](./lessons/) · [`pronunciation-reference.md`](./pronunciation-reference.md)
