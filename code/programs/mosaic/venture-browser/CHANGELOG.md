@@ -9,6 +9,10 @@
 
 ### Added
 
+- Extract the Qt/Flutter/Compose browser controller and Cairo C ABI into the
+  backend-neutral `venture-browser-cairo` package. The generated hosts retain
+  their stable library and symbol names as thin compatibility surfaces.
+
 - Add a package-owned Compose Desktop `MosaicHost` that loads the shared Rust
   browser session through JNA, mounts Cairo-rendered RGBA pixels as a native
   Compose `Image`, and forwards native wheel, hover, and pointer activation.

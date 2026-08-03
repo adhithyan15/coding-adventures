@@ -1,0 +1,16 @@
+[package]
+name = "venture-browser-cairo"
+version = "0.1.0"
+edition = "2021"
+description = "Backend-neutral Cairo content bridge for Venture's Mosaic-generated native hosts."
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+html-to-layout = { path = "../html-to-layout" }
+html-to-paint = { path = "../html-to-paint" }
+layout-text-measure-native = { path = "../layout-text-measure-native" }
+paint-vm-cairo = { path = "../paint-vm-cairo" }
+text-native = { path = "../text-native" }
+venture-browser-core = { path = "../venture-browser-core" }

@@ -27,6 +27,20 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             )
         )
 
+    def test_cairo_bridge_requires_acceptance(self) -> None:
+        self.assertTrue(
+            MODULE.requires_venture_windows(
+                {"affected_packages": ["rust/venture-browser-cairo"]}
+            )
+        )
+
+    def test_qt_bridge_requires_acceptance(self) -> None:
+        self.assertTrue(
+            MODULE.requires_venture_windows(
+                {"affected_packages": ["rust/venture-browser-qt"]}
+            )
+        )
+
     def test_macos_bridge_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_venture_windows(
@@ -118,7 +132,7 @@ class VentureWindowsCIAcceptanceTests(unittest.TestCase):
             3,
         )
         self.assertIn(
-            "cargo test -p paint-vm-cairo -p venture-browser-qt "
+            "cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt "
             "-p venture-browser-windows",
             workflow,
         )

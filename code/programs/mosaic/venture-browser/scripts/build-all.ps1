@@ -180,7 +180,7 @@ if ($isMacOS -and (Test-Command "swift")) {
 
 if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
     Write-Host "==> Building Venture Qt native bridge"
-    $qtBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $qtBridgeArgs = @("build", "-p", "venture-browser-cairo")
     $qtBridgeProfile = "debug"
     if ($Release) {
         $qtBridgeArgs += "--release"
@@ -192,6 +192,13 @@ if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
     } finally {
         Pop-Location
     }
+    $cairoBridgeName = if ($isWindows) {
+        "venture_browser_cairo.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_cairo.dylib"
+    } else {
+        "libventure_browser_cairo.so"
+    }
     $qtBridgeName = if ($isWindows) {
         "venture_browser_qt.dll"
     } elseif ($isMacOS) {
@@ -200,7 +207,7 @@ if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
         "libventure_browser_qt.so"
     }
     Copy-Item -Force `
-        (Join-Path $rustWorkspace "target/$qtBridgeProfile/$qtBridgeName") `
+        (Join-Path $rustWorkspace "target/$qtBridgeProfile/$cairoBridgeName") `
         (Join-Path $outputRoot "qt/$qtBridgeName")
     Write-Host "==> Building qt"
     Push-Location (Join-Path $outputRoot "qt")
@@ -282,7 +289,7 @@ if ($isWindows -and (Test-Command "dotnet")) {
 $flutterPlatform = if ($isMacOS) { "macos" } elseif ($isWindows) { "windows" } elseif ($isLinux) { "linux" } else { $null }
 if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
     Write-Host "==> Building Venture Flutter native bridge"
-    $flutterBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $flutterBridgeArgs = @("build", "-p", "venture-browser-cairo")
     $flutterBridgeProfile = "debug"
     if ($Release) {
         $flutterBridgeArgs += "--release"
@@ -295,11 +302,11 @@ if ($null -ne $flutterPlatform -and (Test-Command "flutter")) {
         Pop-Location
     }
     $flutterBridgeSource = if ($isWindows) {
-        "venture_browser_qt.dll"
+        "venture_browser_cairo.dll"
     } elseif ($isMacOS) {
-        "libventure_browser_qt.dylib"
+        "libventure_browser_cairo.dylib"
     } else {
-        "libventure_browser_qt.so"
+        "libventure_browser_cairo.so"
     }
     $flutterBridgeName = if ($isWindows) {
         "venture_browser_flutter.dll"
@@ -350,7 +357,7 @@ if (-not (Test-Command "gradle")) {
     Skip-Backend -Backend "compose" -Reason "JDK 21 or newer is not installed"
 } else {
     Write-Host "==> Building Venture Compose native bridge"
-    $composeBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $composeBridgeArgs = @("build", "-p", "venture-browser-cairo")
     $composeBridgeProfile = "debug"
     if ($Release) {
         $composeBridgeArgs += "--release"
@@ -363,11 +370,11 @@ if (-not (Test-Command "gradle")) {
         Pop-Location
     }
     $composeBridgeSource = if ($isWindows) {
-        "venture_browser_qt.dll"
+        "venture_browser_cairo.dll"
     } elseif ($isMacOS) {
-        "libventure_browser_qt.dylib"
+        "libventure_browser_cairo.dylib"
     } else {
-        "libventure_browser_qt.so"
+        "libventure_browser_cairo.so"
     }
     $composeBridgeName = if ($isWindows) {
         "venture_browser_compose.dll"

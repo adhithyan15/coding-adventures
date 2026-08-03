@@ -1,16 +1,10 @@
 # venture-browser-qt
 
-This crate supplies the live page-content bridge used by Venture's
-Mosaic-generated Qt Quick shell. Mosaic remains the source of truth for the
-browser chrome; this library projects the shared `BrowserHostController`
-through a C ABI and renders the retained page to RGBA pixels with Cairo for a
-`QQuickPaintedItem` host surface.
-
-The crate also exports Flutter-named wrappers over that exact controller and
-Cairo session. Venture's Dart FFI host uses those wrappers to consume RGBA
-frames and native input without introducing a second browser implementation.
-Compose-named wrappers expose the same session to the generated Kotlin/JNA
-host, with explicit 64-bit frame lengths at the JVM native boundary.
+This crate is the thin Qt facade over `venture-browser-cairo`, which owns the
+live shared browser session, C ABI compatibility exports, and Cairo RGBA
+renderer used by Venture's Mosaic-generated Qt, Flutter, and Compose shells.
+Mosaic remains the source of truth for browser chrome, while the Qt adapter
+only loads the shared library into a `QQuickPaintedItem` host surface.
 
 The package-owned C++ adapter dynamically loads this library, registers the
 surface as a QML type, and forwards generated Mosaic events and native surface
@@ -23,5 +17,5 @@ the real `QQuickPaintedItem`, verifying every transition through the shared
 Rust session rather than a recording Qt host.
 
 ```sh
-cargo test -p venture-browser-qt
+cargo test -p venture-browser-cairo -p venture-browser-qt
 ```
