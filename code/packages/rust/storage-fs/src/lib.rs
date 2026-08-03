@@ -500,6 +500,7 @@ impl StorageBackend for FsStorageBackend {
     }
 
     fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError> {
+        input.validate()?;
         let _guard = self.write_lock.lock().map_err(|_| StorageError::Backend {
             message: "write lock poisoned".into(),
         })?;
@@ -509,6 +510,16 @@ impl StorageBackend for FsStorageBackend {
 
         // CAS check.
         let existing = read_record_full(&path)?;
+        if input.if_absent {
+            if let Some((meta, _)) = &existing {
+                return Err(StorageError::Conflict {
+                    namespace: input.namespace.clone(),
+                    key: input.key.clone(),
+                    expected_revision: None,
+                    actual_revision: Some(meta.revision.as_str().to_string()),
+                });
+            }
+        }
         match (&input.if_revision, &existing) {
             (Some(expected), Some((meta, _))) if meta.revision != *expected => {
                 return Err(StorageError::Conflict {
@@ -723,6 +734,7 @@ mod tests {
             content_type: "vault/login/v1".to_string(),
             metadata: JsonValue::Object(Vec::new()),
             body: body.to_vec(),
+            if_absent: false,
             if_revision: None,
         }
     }
@@ -770,6 +782,24 @@ mod tests {
     #[test]
     fn conformance_stale_revision_is_rejected() {
         with_backend(|be| conformance::stale_revision_is_rejected(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_create_if_absent_rejects_existing() {
+        with_backend(|be| conformance::create_if_absent_rejects_existing(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_concurrent_create_if_absent_has_one_winner() {
+        let root = temp_root();
+        let backend = std::sync::Arc::new(FsStorageBackend::new(&root));
+        conformance::concurrent_create_if_absent_has_one_winner(backend).unwrap();
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn conformance_multiple_write_conditions_are_rejected() {
+        with_backend(|be| conformance::multiple_write_conditions_are_rejected(be).unwrap());
     }
 
     #[test]
@@ -853,11 +883,7 @@ mod tests {
             Err(StorageError::Conflict { .. }) => {}
             other => panic!(
                 "expected Conflict, got {}",
-                if other.is_ok() {
-                    "Ok"
-                } else {
-                    "different Err"
-                }
+                if other.is_ok() { "Ok" } else { "different Err" }
             ),
         }
         let _ = fs::remove_dir_all(&root);

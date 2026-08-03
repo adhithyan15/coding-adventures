@@ -27,6 +27,7 @@ let rec = be.put(StoragePutInput {
     content_type: "vault/login/v1".into(),
     metadata:  JsonValue::Object(Vec::new()),
     body:      ciphertext,             // encrypted by VLT01 above
+    if_absent: false,
     if_revision: None,
 })?;
 ```
@@ -58,10 +59,10 @@ durability on filesystems that need it.
 in-memory revision counter from the highest revision on disk so
 monotonic numbering survives process restart.
 
-The backend also runs the shared `storage-core` conformance suite,
-so its point reads, conditional writes, stable prefix listing,
-idempotent deletes, and advisory leases are checked against the same
-contract as the in-memory backend.
+The backend also runs the shared `storage-core` conformance suite, so its point
+reads, create-if-absent and revision-conditional writes, stable prefix listing,
+idempotent deletes, and advisory leases are checked against the same contract as
+the in-memory backend.
 
 ## Surface summary
 

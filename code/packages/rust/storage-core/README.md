@@ -8,7 +8,7 @@ It is deliberately more structured than the existing CAS `BlobStore` trait:
 
 - point reads by `(namespace, key)`
 - opaque blob bodies plus JSON metadata
-- compare-and-swap revisions
+- atomic create-if-absent writes and compare-and-swap revisions
 - stable prefix listing
 - advisory leases for background work
 

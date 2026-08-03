@@ -33,7 +33,7 @@
 //! Callers can rely on:
 //!
 //! - point reads by `(namespace, key)`
-//! - compare-and-swap writes via `if_revision`
+//! - conditional writes via `if_absent` and compare-and-swap `if_revision`
 //! - stable prefix listing
 //! - JSON metadata plus opaque byte bodies
 //! - advisory leases for background maintenance
@@ -127,6 +127,7 @@ pub struct StoragePutInput {
     pub content_type: String,
     pub metadata: StorageMetadata,
     pub body: Vec<u8>,
+    pub if_absent: bool,
     pub if_revision: Option<Revision>,
 }
 
@@ -145,6 +146,7 @@ impl StoragePutInput {
             content_type: content_type.into(),
             metadata,
             body,
+            if_absent: false,
             if_revision: None,
         };
         input.validate()?;
@@ -157,6 +159,12 @@ impl StoragePutInput {
         self
     }
 
+    /// Require the record to be absent when the write is committed.
+    pub fn with_if_absent(mut self) -> Self {
+        self.if_absent = true;
+        self
+    }
+
     /// Validate the input according to the repository-owned storage rules.
     pub fn validate(&self) -> Result<(), StorageError> {
         validate_namespace(&self.namespace)?;
@@ -165,6 +173,12 @@ impl StoragePutInput {
         validate_metadata_object(&self.metadata)?;
         if let Some(revision) = &self.if_revision {
             validate_single_line_token("if_revision", revision.as_str())?;
+        }
+        if self.if_absent && self.if_revision.is_some() {
+            return Err(StorageError::Validation {
+                field: "write_condition".to_string(),
+                message: "if_absent and if_revision are mutually exclusive".to_string(),
+            });
         }
         Ok(())
     }
@@ -814,7 +828,11 @@ pub trait StorageBackend: Send + Sync {
     /// Fetch the full record for `(namespace, key)`.
     fn get(&self, namespace: &str, key: &str) -> Result<Option<StorageRecord>, StorageError>;
 
-    /// Store a record body plus metadata, optionally guarded by `if_revision`.
+    /// Store a record body plus metadata, optionally guarded by `if_absent` or
+    /// `if_revision`.
+    ///
+    /// The condition check and write must be atomic relative to other writes
+    /// through the same backend instance.
     fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError>;
 
     /// Delete a record. Deleting a missing record must succeed.
@@ -924,6 +942,17 @@ impl StorageBackend for InMemoryStorageBackend {
         let mut records = self.records.lock().expect("records mutex poisoned");
         let map_key = (input.namespace.clone(), input.key.clone());
         let existing = records.get(&map_key).cloned();
+
+        if input.if_absent {
+            if let Some(record) = &existing {
+                return Err(StorageError::Conflict {
+                    namespace: input.namespace,
+                    key: input.key,
+                    expected_revision: None,
+                    actual_revision: Some(record.revision.to_string()),
+                });
+            }
+        }
 
         if let Some(expected) = &input.if_revision {
             match &existing {
@@ -1150,6 +1179,120 @@ pub mod conformance {
         assert_eq!(latest.revision, second.revision);
         assert_eq!(latest.body, b"v2");
         Ok(())
+    }
+
+    /// A create-if-absent write must succeed once, reject a duplicate, and
+    /// leave the first record unchanged.
+    pub fn create_if_absent_rejects_existing<B: StorageBackend>(
+        backend: &B,
+    ) -> Result<(), StorageError> {
+        backend.initialize()?;
+        let first = backend.put(
+            StoragePutInput::new(
+                "artifacts",
+                "indexes/unique.json",
+                "application/json",
+                JsonValue::Object(vec![]),
+                br#"{"writer":"first"}"#.to_vec(),
+            )?
+            .with_if_absent(),
+        )?;
+
+        let duplicate = backend.put(
+            StoragePutInput::new(
+                "artifacts",
+                "indexes/unique.json",
+                "application/json",
+                JsonValue::Object(vec![]),
+                br#"{"writer":"second"}"#.to_vec(),
+            )?
+            .with_if_absent(),
+        );
+
+        match duplicate {
+            Err(StorageError::Conflict {
+                expected_revision: None,
+                actual_revision: Some(actual),
+                ..
+            }) if actual == first.revision.as_str() => {}
+            other => panic!("expected create-if-absent conflict, got {:?}", other),
+        }
+
+        let stored = backend
+            .get("artifacts", "indexes/unique.json")?
+            .expect("first record must remain present");
+        assert_eq!(stored.revision, first.revision);
+        assert_eq!(stored.body, br#"{"writer":"first"}"#);
+        Ok(())
+    }
+
+    /// Two concurrent create-if-absent writes must produce exactly one winner.
+    pub fn concurrent_create_if_absent_has_one_winner<B: StorageBackend + 'static>(
+        backend: std::sync::Arc<B>,
+    ) -> Result<(), StorageError> {
+        backend.initialize()?;
+        let barrier = std::sync::Arc::new(std::sync::Barrier::new(3));
+        let handles = ["first", "second"].map(|writer| {
+            let backend = std::sync::Arc::clone(&backend);
+            let barrier = std::sync::Arc::clone(&barrier);
+            std::thread::spawn(move || {
+                barrier.wait();
+                backend.put(
+                    StoragePutInput::new(
+                        "artifacts",
+                        "indexes/race.json",
+                        "application/json",
+                        JsonValue::Object(vec![]),
+                        writer.as_bytes().to_vec(),
+                    )?
+                    .with_if_absent(),
+                )
+            })
+        });
+
+        barrier.wait();
+        let results = handles.map(|handle| handle.join().expect("writer thread must not panic"));
+        let winner = results
+            .iter()
+            .filter_map(|result| result.as_ref().ok())
+            .next()
+            .expect("one writer must win");
+        assert_eq!(results.iter().filter(|result| result.is_ok()).count(), 1);
+        assert_eq!(
+            results
+                .iter()
+                .filter(|result| matches!(result, Err(StorageError::Conflict { .. })))
+                .count(),
+            1
+        );
+
+        let stored = backend
+            .get("artifacts", "indexes/race.json")?
+            .expect("winner must be persisted");
+        assert_eq!(stored.revision, winner.revision);
+        assert_eq!(stored.body, winner.body);
+        Ok(())
+    }
+
+    /// Backends must reject inputs carrying both supported write conditions.
+    pub fn multiple_write_conditions_are_rejected<B: StorageBackend>(
+        backend: &B,
+    ) -> Result<(), StorageError> {
+        backend.initialize()?;
+        let input = StoragePutInput::new(
+            "artifacts",
+            "indexes/invalid.json",
+            "application/json",
+            JsonValue::Object(vec![]),
+            b"{}".to_vec(),
+        )?
+        .with_if_absent()
+        .with_if_revision(Some(Revision::new("r1")?));
+
+        match backend.put(input) {
+            Err(StorageError::Validation { field, .. }) if field == "write_condition" => Ok(()),
+            other => panic!("expected write-condition validation error, got {:?}", other),
+        }
     }
 
     /// Deleting a missing record must succeed without error.
@@ -1473,6 +1616,28 @@ mod tests {
     }
 
     #[test]
+    fn storage_put_input_rejects_multiple_write_conditions() {
+        let input = StoragePutInput::new(
+            "artifacts",
+            "plans/demo.txt",
+            "text/plain",
+            metadata(),
+            b"hello".to_vec(),
+        )
+        .unwrap()
+        .with_if_absent()
+        .with_if_revision(Some(Revision::new("r1").unwrap()));
+
+        let error = input
+            .validate()
+            .expect_err("write conditions must be mutually exclusive");
+        assert!(matches!(
+            error,
+            StorageError::Validation { field, .. } if field == "write_condition"
+        ));
+    }
+
+    #[test]
     fn storage_record_stat_matches_record_fields() {
         let record = StorageRecord::new(
             "skills",
@@ -1758,6 +1923,24 @@ mod tests {
     fn conformance_stale_revision_is_rejected() {
         let backend = InMemoryStorageBackend::default();
         conformance::stale_revision_is_rejected(&backend).unwrap();
+    }
+
+    #[test]
+    fn conformance_create_if_absent_rejects_existing() {
+        let backend = InMemoryStorageBackend::default();
+        conformance::create_if_absent_rejects_existing(&backend).unwrap();
+    }
+
+    #[test]
+    fn concurrent_create_if_absent_has_exactly_one_winner() {
+        let backend = std::sync::Arc::new(InMemoryStorageBackend::default());
+        conformance::concurrent_create_if_absent_has_one_winner(backend).unwrap();
+    }
+
+    #[test]
+    fn conformance_multiple_write_conditions_are_rejected() {
+        let backend = InMemoryStorageBackend::default();
+        conformance::multiple_write_conditions_are_rejected(&backend).unwrap();
     }
 
     #[test]
