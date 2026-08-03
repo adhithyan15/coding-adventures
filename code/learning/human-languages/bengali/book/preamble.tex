@@ -29,7 +29,13 @@
 
 % Vendored Bengali font (../../_fonts/ from <lang>/book/); \bn{...} = inline
 % Bengali snippet.
-\newfontfamily\bengalifont[Path=../../_fonts/, Script=Bengali]{NotoSansBengali-Static.ttf}
+\newfontfamily\bengalifont[
+  Path=../../_fonts/,
+  Script=Bengali,
+  BoldFont=NotoSansBengali-Static.ttf,
+  ItalicFont=NotoSansBengali-Static.ttf,
+  BoldItalicFont=NotoSansBengali-Static.ttf
+]{NotoSansBengali-Static.ttf}
 \newcommand{\bn}[1]{{\bengalifont #1}}
 
 \hypersetup{
@@ -38,6 +44,14 @@
   pdfsubject={Etymology-driven Bengali curriculum},
   pdfkeywords={Bengali, Bangla, Sanskrit, language learning}
 }
+\pdfstringdefDisableCommands{%
+  \def\bn#1{#1}% Keep Bengali text while dropping font-only presentation.
+  \def\bengalifont{}%
+}
+
+% Lesson callouts are deliberately kept together when they fit. Let short pages
+% end naturally instead of stretching their vertical glue around those boxes.
+\raggedbottom
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,

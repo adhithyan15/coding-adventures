@@ -79,9 +79,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B09 | Complete (#9683) | Remove Punjabi's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Gurmukhi, natural page bottoms, explicit static-font shapes, and a shorter running title make the forced six-chapter build warning-free. |
 | HL-B10 | Complete (#9690) | Publish Sanskrit Chapter 6 from its three canonical lessons rather than hand-copying another book chapter. | All three schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B11 | Complete (#9698) | Remove Sanskrit's LaTeX layout, duplicate-label, font-shape, and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, explicit static-font shapes, and shorter running titles make the forced six-chapter build warning-free. |
-| HL-B12 | Complete in this PR | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
-| HL-B13 | Next | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | A forced six-chapter build succeeds but reports six missing glyphs, one overfull box, five underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and three font-shape warnings; the clean-build signal is zero of each. |
-| HL-I01 | Queued | Reduce unified all-books workflow setup time without splitting the single publication bundle. | The exact-merge Sanskrit cleanup run spent seven minutes installing TeX Live, while a redundant PR run remained there beyond eighteen minutes; cache or pre-bake the toolchain and keep all 20 books plus bundle verification in one job. |
+| HL-B12 | Complete (#9705) | Publish Bengali Chapter 6 from its canonical lesson rather than hand-copying another book chapter. | The schema-v2 lesson now generates the PDF chapter from the same source hash independently verified by Language Ladder. |
+| HL-B13 | Complete in this PR | Remove Bengali's missing glyphs and LaTeX layout/bookmark warnings. | Main-font punctuation, stable recap labels, bookmark-safe Bengali, natural page bottoms, explicit static-font shapes, and a breakable long title make the forced six-chapter build warning-free. |
+| HL-I01 | Next | Reduce unified all-books workflow setup time without splitting the single publication bundle. | The exact-merge Sanskrit cleanup run spent seven minutes installing TeX Live, while a redundant PR run remained there beyond eighteen minutes; cache or pre-bake the toolchain and keep all 20 books plus bundle verification in one job. |
 | HL-B14 | Queued | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Italian has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B16 | Queued | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Portuguese has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
@@ -476,6 +476,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   full build's six missing glyphs, one overfull box, five underfull boxes, four
   duplicate recap labels, 27 Hyperref warnings, and three font-shape warnings
   are recorded accurately in HL-B13.
+
+## Findings from HL-B13
+
+- Bengali's five authored recap anchors now use stable chapter-qualified ids
+  (`BN-C01-practice` through `BN-C05-practice`) instead of five copies of
+  `lesson:practice`.
+- Ellipsis, comma, and morpheme-boundary hyphen punctuation now stays in the
+  Latin main font instead of being asked of the Bengali-only static font.
+  Bengali remains visible in the PDF outline while the presentation-only font
+  command is suppressed there, and all requested font shapes resolve to the
+  vendored static file.
+- Short pages end naturally around kept-together callouts, and the long
+  “we'll meet again” title has a safe line-break point. The forced 29-page
+  XeLaTeX build reports zero package or LaTeX warnings, missing glyphs,
+  overfull boxes, underfull boxes, and duplicate destinations. HL-I01 is next:
+  reduce successful unified-publication setup latency without splitting the
+  single all-books job.
+- Visual regression inspection covered nine formerly affected pages: Bengali
+  shaping and main-font punctuation remain intact, the bilingual farewell title
+  breaks cleanly, split callouts are unclipped, and short pages have deliberate
+  natural bottoms. All 39 PDF outline entries remain readable, ending with the
+  generated romanized Chapter 6 title.
 
 ## Findings from HL-D01C
 
