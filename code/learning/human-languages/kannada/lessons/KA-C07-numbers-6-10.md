@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C07-numbers-6-10
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 350
 chapter: 7
 type: word
 headword: ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಹತ್ತು
@@ -9,18 +12,32 @@ prerequisites: [KA-C07-numbers-1-5]
 sounds: [kannada-inherent-a, anusvara, retroflex-la]
 roots: [proto-dravidian-numbers]
 etymology_hook: "ten shows Kannada's signature p→h shift — Tamil pattu becomes hattu, as pāl (milk) becomes hālu"
-est_minutes: 4
 reviews_of: [KA-C07-numbers-1-5]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C07-NUMBERS-1-5-01, KA-ETYMON-C07-NUMBERS-1-5-02, KA-GRAMMAR-C07-NUMBERS-1-5-03]
+introduces:
+  knowledge: [KA-LEX-C07-NUMBERS-6-10-01, KA-ETYMON-C07-NUMBERS-6-10-02, KA-ETYMON-C07-NUMBERS-6-10-03]
+practises:
+  knowledge: [KA-LEX-C07-NUMBERS-1-5-01, KA-ETYMON-C07-NUMBERS-1-5-02, KA-GRAMMAR-C07-NUMBERS-1-5-03, KA-LEX-C07-NUMBERS-6-10-01, KA-ETYMON-C07-NUMBERS-6-10-02, KA-ETYMON-C07-NUMBERS-6-10-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # ಆರು, ಏಳು, ಎಂಟು, ಒಂಬತ್ತು, ಹತ್ತು — six to ten
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NUMBERS-1-5-01, KA-ETYMON-C07-NUMBERS-1-5-02, KA-GRAMMAR-C07-NUMBERS-1-5-03] -->
 
 [PAUSE 2s] Five more — and the last one shows the single sound-change that most
 makes Kannada *sound* like Kannada.
 
-## The five
+## You'll want to know: The five
+<!-- hl-knowledge: introduces=[KA-LEX-C07-NUMBERS-6-10-01]; assesses=[] -->
 
 | | numeral | word | said |
 |---|---|---|---|
@@ -32,7 +49,8 @@ makes Kannada *sound* like Kannada.
 
 (Ten needs two digits — **೧೦**, a one and a zero — just like *10*.)
 
-## Ten reveals the p → h shift
+## The word, taken apart: Ten reveals the p → h shift
+<!-- hl-knowledge: introduces=[KA-ETYMON-C07-NUMBERS-6-10-02]; assesses=[] -->
 
 Put ten beside Tamil:
 
@@ -50,7 +68,8 @@ a one-off: it runs right through the language —
 Once you know the rule, a Kannada *h‑* word often hands you its Tamil cousin for
 free: hide the *h‑*, restore a *p‑*.
 
-## Where the family parts
+## The word, taken apart: Where the family parts
+<!-- hl-knowledge: introduces=[KA-ETYMON-C07-NUMBERS-6-10-03]; assesses=[] -->
 
 Six and seven stay close cousins (Tamil *āṟu* / Kannada *āru*; Tamil *ēḻu* /
 Kannada *ēḷu* — note Kannada hardened Tamil's rare **ḻ** into an ordinary
@@ -59,6 +78,7 @@ are still relatives of Tamil *eṭṭu* and *oṉpatu*, but **Telugu** leaves th
 family entirely there (*enimidi*, *tommidi*) — so treat 8–9 as the loose cells.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NUMBERS-1-5-01, KA-ETYMON-C07-NUMBERS-1-5-02, KA-GRAMMAR-C07-NUMBERS-1-5-03, KA-LEX-C07-NUMBERS-6-10-01, KA-ETYMON-C07-NUMBERS-6-10-02, KA-ETYMON-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āru, ēḷu, eṇṭu, ombattu, hattu"]
@@ -66,6 +86,7 @@ family entirely there (*enimidi*, *tommidi*) — so treat 8–9 as the loose cel
 - [YOU SAY: read the digits — ೬ ೭ ೮ ೯ ೧೦]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NUMBERS-1-5-01, KA-ETYMON-C07-NUMBERS-1-5-02, KA-GRAMMAR-C07-NUMBERS-1-5-03, KA-LEX-C07-NUMBERS-6-10-01, KA-ETYMON-C07-NUMBERS-6-10-02, KA-ETYMON-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 3s] Count six to ten in Kannada. (*Āru, ēḷu, eṇṭu, ombattu, hattu*.) What
 regular shift turns Tamil *pattu* into Kannada *hattu*? (Word-initial **p‑ → h‑**

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C23-dina
+spine_node: SPINE-TIME-OF-DAY
+sequence: 520
 chapter: 23
 type: word
 headword: ದಿನ
@@ -9,25 +12,40 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-vowel-sign-i, kannada-na]
 roots: [sanskrit-dina, dravidian-hagalu-daytime]
 etymology_hook: "ದಿನ (dina, 'day') is a Sanskrit tatsama word, borrowed whole and unworn — the SAME Sanskrit दिन already behind Hindi's own दिन (din), but Hindi's din is a tadbhava form, eroded by centuries of ordinary sound change (Sanskrit dina → Prakrit → din), while Kannada's dina keeps the full, unshortened Sanskrit shape; Kannada also has a genuine native Dravidian word, ಹಗಲು (hagalu), but it specifically means 'daytime' (as opposed to night), not 'a day' as a calendar unit"
-est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03]
+introduces:
+  knowledge: [KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03]
+practises:
+  knowledge: [KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # ದಿನ (dina) — "day," Sanskrit kept whole
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03] -->
 
 [PAUSE 2s] You've already met Sanskrit's "middle" compounds for noon and
 midnight. Here's the plain word for "day" itself — and a genuinely
 interesting twist on how borrowing works.
 
-## ದಿನ — "day"
+## The word, taken apart: ದಿನ — "day"
+<!-- hl-knowledge: introduces=[KA-ETYMON-C23-DINA-01]; assesses=[] -->
 
 **ದಿನ** (**dina**) — "**day**" — is a Sanskrit **tatsama** word: borrowed
 **whole**, unchanged, the same way *madhyāhna*/*madhyarātri* were
 (Chapter 17). It's Kannada's ordinary, everyday word for "a day."
 
-## The same word as Hindi's din — but a different kind of relative
+## The word, taken apart: The same word as Hindi's din — but a different kind of relative
+<!-- hl-knowledge: introduces=[KA-ETYMON-C23-DINA-02]; assesses=[] -->
 
 Here's the honest twist: Kannada's *dina* and Hindi's **दिन** (*din*) trace
 to the **exact same** Sanskrit word, **दिन** (*dina*) — but they got there
@@ -40,7 +58,8 @@ but one is an unbroken **inheritance** (eroded), the other a **later
 borrowing** (kept whole) — genuinely different histories landing on nearly
 the same modern word.
 
-## A real native word — but for a different sense
+## The word, taken apart: A real native word — but for a different sense
+<!-- hl-knowledge: introduces=[KA-ETYMON-C23-DINA-03]; assesses=[] -->
 
 Kannada does have a genuine **native Dravidian** word here too: **ಹಗಲು**
 (*hagalu*) — but be careful, it means specifically "**daytime**" (the
@@ -48,6 +67,7 @@ daylight hours, as opposed to night), not "**a day**" as a calendar unit.
 It's not a synonym for *dina*; it's a different sense of "day" entirely.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dina" — "day," Sanskrit tatsama, kept whole]
@@ -57,6 +77,7 @@ It's not a synonym for *dina*; it's a different sense of "day" entirely.
   dina]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-ETYMON-C23-DINA-01, KA-ETYMON-C23-DINA-02, KA-ETYMON-C23-DINA-03] -->
 
 [PAUSE 3s] Is Kannada's **ದಿನ** a tatsama borrowing or a tadbhava
 inheritance? (**Tatsama** — borrowed whole from Sanskrit.) How does this

@@ -8,6 +8,14 @@
       { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
       { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "kannada-comparisons": [
+      { "unicodeScript": "Kannada", "scriptCommand": "kn" },
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
     ]
   },
   "targets": [
@@ -584,6 +592,214 @@
       "label": "ch:te-good-afternoon",
       "output": "telugu/book/chapters/ch31-good-afternoon.tex",
       "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ka-dative-case",
+      "output": "kannada/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ka-numbers-one-to-ten",
+      "output": "kannada/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ka-please",
+      "output": "kannada/book/chapters/ch08-please.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ka-sorry",
+      "output": "kannada/book/chapters/ch09-sorry.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ka-days-of-the-week",
+      "output": "kannada/book/chapters/ch10-days.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:ka-core-colours",
+      "output": "kannada/book/chapters/ch11-colours.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ka-family",
+      "output": "kannada/book/chapters/ch12-family.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:ka-head-and-hand",
+      "output": "kannada/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ka-seasons",
+      "output": "kannada/book/chapters/ch14-seasons.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ka-water-and-rice",
+      "output": "kannada/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:ka-traditional-months",
+      "output": "kannada/book/chapters/ch16-months.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ka-noon-and-midnight",
+      "output": "kannada/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ka-telling-time",
+      "output": "kannada/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ka-asking-age",
+      "output": "kannada/book/chapters/ch19-age.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ka-numbers-and-weather",
+      "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ka-dog-and-cat",
+      "output": "kannada/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ka-green-and-yellow",
+      "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ka-day",
+      "output": "kannada/book/chapters/ch23-day.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ka-night",
+      "output": "kannada/book/chapters/ch24-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ka-good-night",
+      "output": "kannada/book/chapters/ch25-good-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ka-morning",
+      "output": "kannada/book/chapters/ch26-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ka-evening",
+      "output": "kannada/book/chapters/ch27-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ka-afternoon",
+      "output": "kannada/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ka-good-morning",
+      "output": "kannada/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ka-good-evening",
+      "output": "kannada/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ka-good-afternoon",
+      "output": "kannada/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
     },
     {
       "language": "bengali",

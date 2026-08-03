@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C12-kutumba
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 400
 chapter: 12
 type: word
 headword: ಅಪ್ಪ ಅಮ್ಮ ಅಣ್ಣ ತಮ್ಮ ಅಕ್ಕ ತಂಗಿ
@@ -9,24 +12,39 @@ prerequisites: [KA-C11-bannagalu]
 sounds: [kannada-retroflex-nna, kannada-anusvara]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "ಅಪ್ಪ appa/ಅಮ್ಮ amma and the four sibling words (ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ) match Tamil's set almost word-for-word — Kannada splits siblings by age too"
-est_minutes: 4
 reviews_of: [KA-C11-bannagalu]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02]
+introduces:
+  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
+practises:
+  knowledge: [KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # ಅಪ್ಪ, ಅಮ್ಮ, and four sibling words — the same system as Tamil
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->
 
 [PAUSE 2s] Kannada asks the same question Tamil does about any sibling:
 **older, or younger?** — and the words for answering it are almost
 identical.
 
-## Parents — native, and matching Tamil
+## The word, taken apart: Parents — native, and matching Tamil
+<!-- hl-knowledge: introduces=[KA-ETYMON-C12-KUTUMBA-01]; assesses=[] -->
 
 - **ಅಪ್ಪ** (*appa*) = "**father**" — matches Tamil *appā* closely.
 - **ಅಮ್ಮ** (*amma*) = "**mother**" — matches Tamil *ammā* closely.
 
-## Four sibling words, age before gender
+## The word, taken apart: Four sibling words, age before gender
+<!-- hl-knowledge: introduces=[KA-ETYMON-C12-KUTUMBA-02]; assesses=[] -->
 
 | Kannada | meaning | compare Tamil |
 |---|---|---|
@@ -41,6 +59,7 @@ their gender. This age-first system runs across the whole Dravidian family,
 not just one language.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "appa, amma" — father, mother]
@@ -48,6 +67,7 @@ not just one language.
 - [YOU SAY: "akka, tangi" — older/younger sister]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
 
 [PAUSE 3s] How many Kannada sibling words are there, and what do they split
 on? (**Four** — ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ — split by **relative age**, not just

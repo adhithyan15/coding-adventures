@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C06-dative-stacking
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 320
 chapter: 6
 type: grammar
 headword: -ಗೆ — stacking
@@ -10,18 +13,32 @@ prerequisites: [KA-C06-dative-ge]
 sounds: []
 roots: [dravidian-dative-ku]
 etymology_hook: "Kannada -ge carries one unambiguous case meaning at a visible seam; Latin -īs fuses case, number, and declension and can name two cases"
-est_minutes: 4
 reviews_of: [KA-C06-dative-ge, KA-C05-practice]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02]
+introduces:
+  knowledge: [KA-GRAMMAR-C06-DATIVE-STACKING-01]
+practises:
+  knowledge: [KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02, KA-GRAMMAR-C06-DATIVE-STACKING-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
 # -ಗೆ — one suffix, one job
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02] -->
 
 [PAUSE 2s] You can now attach **-ಗೆ** and make **ನನಗೆ** “to me.” Look at what
 that visible seam tells you about how Kannada builds longer words.
 
-## Stacking versus fusion
+## Grammar Lens: Stacking versus fusion
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C06-DATIVE-STACKING-01]; assesses=[] -->
 
 | | Kannada **-ge** | a Latin ending like **-īs** |
 |---|---|---|
@@ -40,6 +57,7 @@ and declension class at once—and it does not even settle whether the case is
 dative or ablative. Kannada **-ಗೆ** carries one unambiguous job: “to/for.”
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02, KA-GRAMMAR-C06-DATIVE-STACKING-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *hesar* + *ige* — a visible noun-plus-case seam]
@@ -47,6 +65,7 @@ dative or ablative. Kannada **-ಗೆ** carries one unambiguous job: “to/for.�
 - [YOU SAY: Latin *-īs* — case, plural, and declension fused]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C06-DATIVE-GE-01, KA-ETYMON-C06-DATIVE-GE-02, KA-GRAMMAR-C06-DATIVE-STACKING-01] -->
 
 [PAUSE 3s] Why is Kannada called agglutinative? (**It stacks visible pieces,
 each with one job.**) How many jobs can Latin *-īs* fuse? (**Case, number, and
