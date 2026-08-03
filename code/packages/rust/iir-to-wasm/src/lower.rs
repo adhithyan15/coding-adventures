@@ -582,29 +582,54 @@ impl std::error::Error for IIRWasmError {}
 // ---------------------------------------------------------------------------
 
 /// Configuration for the IIR → WASM lowering pass.
-///
-/// Currently only carries the module name (written into a WASM custom section
-/// or used for debugging).  Additional options (e.g. optimisation level,
-/// memory model) can be added here in future versions.
 #[derive(Debug, Clone)]
 pub struct IIRWasmConfig {
     /// The name embedded in the WASM module (used for identification).
     pub module_name: String,
+    /// The declared `max` (in 64 KiB pages) for a memory-using module's linear
+    /// memory — the ceiling `$__ensure_capacity`'s `memory.grow` calls can
+    /// reach before returning `-1` (OOM) and trapping. Clamped to the WASM
+    /// spec's absolute ceiling (`MAX_WASM_MEMORY_PAGES` = 65536 = 4 GiB)
+    /// regardless of what's configured here.
+    ///
+    /// Defaults far below the spec ceiling (see `DEFAULT_MAX_MEMORY_PAGES`):
+    /// this backend's bump allocator never frees (reclamation is a tracked
+    /// follow-up, not yet built — see `AOT00-T1x-wasm-linear-memory-growth.md`),
+    /// so an unbounded cap on a long-running or malicious/malformed IIR module
+    /// would let it monotonically grow linear memory toward 4 GiB of real
+    /// host-committed memory before ever trapping. A caller running trusted,
+    /// bounded programs (typical `lang-aot` test/build usage) can raise this;
+    /// a caller running untrusted input should keep it low.
+    pub max_memory_pages: u32,
 }
+
+/// The WASM spec's absolute linear-memory ceiling: 65536 pages × 64 KiB = 4 GiB.
+/// `wasm-execution`'s `LinearMemory::grow` already enforces this regardless of
+/// what a module declares; `max_memory_pages` is clamped to it too so a
+/// misconfigured caller can't declare something the spec itself would reject.
+const MAX_WASM_MEMORY_PAGES: u32 = 65536;
+
+/// Default `max_memory_pages`: 1024 pages = 64 MiB. Generous for any real
+/// test/build program (the largest program in this crate's own test suite
+/// reserves well under 1 MiB total) while still bounding a runaway
+/// allocation loop to a small fraction of the 4 GiB spec ceiling.
+const DEFAULT_MAX_MEMORY_PAGES: u32 = 1024;
 
 impl Default for IIRWasmConfig {
     fn default() -> Self {
         Self {
             module_name: "iir_module".to_string(),
+            max_memory_pages: DEFAULT_MAX_MEMORY_PAGES,
         }
     }
 }
 
 impl IIRWasmConfig {
-    /// Create a new config with the given module name.
+    /// Create a new config with the given module name (default memory cap).
     pub fn new(name: impl Into<String>) -> Self {
         Self {
             module_name: name.into(),
+            ..Self::default()
         }
     }
 }
@@ -4942,7 +4967,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
 /// `wasm_module_encoder::encode_module` to produce raw `.wasm` bytes.
 pub fn lower_iir_to_wasm(
     module: &IIRModule,
-    _config: &IIRWasmConfig,
+    config: &IIRWasmConfig,
 ) -> Result<WasmModule, IIRWasmError> {
     // ── Step 1: Validate ─────────────────────────────────────────────────────
     let errors = validate_for_wasm(module);
@@ -5490,17 +5515,20 @@ pub fn lower_iir_to_wasm(
     // (`alloc_array`/`str_concat`/`str_slice`/`input_str`) that outgrew the
     // single page had nowhere to grow into. `$__ensure_capacity` now emits
     // real `memory.grow` calls at every one of those sites, so the declared
-    // `max` must allow growth up to the WASM spec's absolute ceiling (65536
-    // pages / 4 GiB) — `memory.grow`'s own return-`-1`-on-failure contract,
-    // already implemented and enforced generically by `wasm-execution`'s
-    // `LinearMemory::grow`, is what actually stops a runaway allocation.
-    const WASM_MAX_PAGES: u32 = 65536;
+    // `max` must allow real growth — `config.max_memory_pages`, clamped to
+    // the WASM spec's absolute ceiling. This backend's allocator is
+    // bump-only and never frees (reclamation is a tracked follow-up, not yet
+    // built), so the cap stays a config-provided bound rather than
+    // unconditionally jumping to the full 4 GiB spec ceiling — a caller
+    // running untrusted or unbounded-loop input keeps a real backstop
+    // instead of relying solely on `wasm-execution`'s own OOM handling.
+    let max_memory_pages = config.max_memory_pages.min(MAX_WASM_MEMORY_PAGES);
     let memories: Vec<wasm_types::MemoryType> = if uses_memory
         || uses_print_str
         || !string_data.is_empty()
     {
         vec![wasm_types::MemoryType {
-            limits: wasm_types::Limits { min: 1, max: Some(WASM_MAX_PAGES) },
+            limits: wasm_types::Limits { min: 1, max: Some(max_memory_pages) },
         }]
     } else {
         vec![]

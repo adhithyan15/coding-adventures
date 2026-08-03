@@ -64,10 +64,19 @@ $__ensure_capacity(needed_end: i64) -> ()
 - `call_builtin "input_str"`: `bump + 4 + INPUT_STR_MAX` (256).
 
 The module's own declared `Limits.max` was raised from the hardcoded `1` to
-`65536` (the WASM spec's absolute page ceiling) — the same ceiling
-`LinearMemory::grow` already enforces, so the `unreachable` in
-`$__ensure_capacity` is reached only on genuine, spec-legitimate exhaustion,
-not a self-inflicted cap.
+a new `IIRWasmConfig::max_memory_pages` field (default `1024` pages = 64
+MiB), clamped to `65536` (the WASM spec's absolute page ceiling) regardless
+of what's configured. **Security review caught that unconditionally jumping
+straight to the 4 GiB spec ceiling would be a real regression**: this
+backend's allocator is bump-only and never frees (stage 2 below), so an
+unbounded cap combined with, say, a simple `input_str`-in-a-loop program
+would let any long-running or malformed module monotonically grow real
+host-committed memory toward 4 GiB with no backstop — where before this fix
+it hit a hard (if accidental) 64 KiB trap almost immediately. Making the cap
+a real, clamped, caller-configured knob keeps `$__ensure_capacity`'s
+`unreachable` reachable on a much smaller, sane bound by default, while
+still letting a caller that genuinely needs more (or needs untrusted-input
+hardening down to an even smaller bound) ask for it explicitly.
 
 Two opcode encoders were added to `iir-to-wasm/src/codegen.rs`:
 `encode_memory_size()` (0x3F 0x00) and `encode_memory_grow()` (0x40 0x00) —
@@ -104,6 +113,16 @@ only ever declares one memory).
   clean (also fixed one pre-existing, unrelated `doc_lazy_continuation`
   failure in `lang-aot/tests/e6d2b_dynamic_arith.rs`, hit only because it's
   in the same clippy invocation — not touched otherwise).
+- `/security-review` (Rust-specialist sub-agent): found one MEDIUM
+  (unconditional 4 GiB memory ceiling with no configurable bound and no
+  reclamation — fixed via `IIRWasmConfig::max_memory_pages`, see above) and
+  one LOW/INFO (non-overflow-checked `needed_end` arithmetic — confirmed
+  pre-existing, not a regression introduced by this diff, and already
+  covered by the same documented trust-boundary trade-off the rest of this
+  backend's bump-allocation arithmetic accepts). Two new tests
+  (`max_memory_pages_is_clamped_to_the_wasm_spec_ceiling`,
+  `max_memory_pages_smaller_than_default_is_honored`) prove the clamp is
+  real in both directions.
 
 ## 4. Explicitly out of scope here (stage 2, tracked as a follow-up)
 

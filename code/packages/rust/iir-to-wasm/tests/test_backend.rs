@@ -2237,7 +2237,11 @@ fn input_str_lowers_and_declares_env_import() {
 /// first 64 KiB page had no path forward. `$__ensure_capacity` (called from
 /// every bump-allocation site) now emits real `memory.grow`; this asserts the
 /// *other* half of the fix — the module's own declared `max` must actually
-/// permit that growth up to the WASM spec's absolute ceiling.
+/// permit growth (not stay capped at 1 page), while still being a
+/// caller-configured, non-4-GiB-by-default bound (this backend's allocator
+/// never frees, so an unconditional jump to the full spec ceiling would let
+/// an unbounded allocation loop consume real host memory with no backstop —
+/// see the security-review finding this addressed).
 #[test]
 fn alloc_array_module_declares_growable_memory_not_capped_at_one_page() {
     let m = module_one("main", vec![], "void", vec![
@@ -2250,10 +2254,46 @@ fn alloc_array_module_declares_growable_memory_not_capped_at_one_page() {
     assert_eq!(mem.limits.min, 1, "still starts at a single 64 KiB page");
     assert_eq!(
         mem.limits.max,
-        Some(65536),
-        "max must allow growth to the WASM spec ceiling, not stay capped at 1 page"
+        Some(1024),
+        "default max must allow real growth (1024 pages = 64 MiB), not stay capped at 1 page"
     );
     encode_module(&wm).expect("encoding failed");
+}
+
+/// `max_memory_pages` is a real caller-facing knob: a config asking for more
+/// pages than the WASM spec allows is clamped down, never passed through
+/// verbatim (a misconfigured caller can't accidentally exceed the spec).
+#[test]
+fn max_memory_pages_is_clamped_to_the_wasm_spec_ceiling() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: u32::MAX, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(
+        mem.limits.max,
+        Some(65536),
+        "an oversized configured cap must clamp to the WASM spec's 65536-page ceiling"
+    );
+}
+
+/// And a smaller-than-default configured cap is honored verbatim (not
+/// silently widened) — the config is a real, respected bound in both
+/// directions.
+#[test]
+fn max_memory_pages_smaller_than_default_is_honored() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: 2, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.max, Some(2), "a smaller configured cap must be honored, not widened");
 }
 
 /// The companion codegen-shape check: an `alloc_array` module must actually

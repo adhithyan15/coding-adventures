@@ -17,9 +17,15 @@ out-of-page write.
   `str_concat`'s runtime path, `str_slice`'s runtime path, and
   `call_builtin "input_str"` — before each one writes past the current
   `__array_bump` offset.
-- Raised the module's declared memory `max` from `1` to `65536` (the WASM
-  spec's absolute page ceiling), matching the ceiling `wasm-execution`'s
-  `LinearMemory::grow` already enforced.
+- Raised the module's declared memory `max` from the hardcoded `1` to a new
+  `IIRWasmConfig::max_memory_pages` field (default `1024` pages = 64 MiB),
+  clamped to `65536` (the WASM spec's absolute page ceiling) regardless of
+  configuration. **Security review caught that jumping straight to the 4
+  GiB ceiling unconditionally would itself be a regression**: this backend's
+  allocator never frees, so an unbounded cap would let a long-running or
+  malformed module monotonically consume real host memory with no
+  backstop — a real, caller-configured bound (not the raw spec maximum) is
+  the fix.
 - New `encode_memory_size()`/`encode_memory_grow()` opcode encoders in
   `codegen.rs` (0x3F/0x40, both followed by the reserved memory-index byte).
 - See `AOT00-T1x-wasm-linear-memory-growth.md` for the full writeup,
