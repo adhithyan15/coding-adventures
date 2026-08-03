@@ -1036,6 +1036,30 @@ def test_rejects_invalid_bjt_base_collector_capacitance(
         parse_netlist(f".model fast NPN({parameter}={value})")
 
 
+@pytest.mark.parametrize("parameter", ["TF", "TR"])
+@pytest.mark.parametrize("value", ["-1n", "1e999"])
+def test_rejects_invalid_bjt_transit_time(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=f"BJT {parameter} must be finite and non-negative",
+    ):
+        parse_netlist(f".model fast NPN({parameter}={value})")
+
+
+def test_preserves_valid_bjt_transit_times() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NPN(TF=4n TR=5n)
+Q1 col base emit fast
+"""
+    )
+
+    transistor = parsed.circuit.elements[0]
+    assert isinstance(transistor, BJT)
+    assert transistor.Tf == 4.0e-9
+    assert transistor.Tr == 5.0e-9
+
+
 def test_parse_jfet_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """

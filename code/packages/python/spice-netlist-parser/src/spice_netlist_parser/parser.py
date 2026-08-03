@@ -1973,6 +1973,14 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or base_collector_capacitance < 0.0
         ):
             raise NetlistParseError("BJT CJC must be finite and non-negative")
+        for parameter_name in ("TF", "TR"):
+            transit_time = params.get(parameter_name)
+            if transit_time is not None and (
+                not math.isfinite(transit_time) or transit_time < 0.0
+            ):
+                raise NetlistParseError(
+                    f"BJT {parameter_name} must be finite and non-negative"
+                )
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (

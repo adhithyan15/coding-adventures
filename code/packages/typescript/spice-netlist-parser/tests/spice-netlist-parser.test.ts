@@ -1051,6 +1051,30 @@ Q2 col base emit slow
     );
   });
 
+  it.each([
+    ["TF", "-1n"],
+    ["TF", "1e999"],
+    ["TR", "-1n"],
+    ["TR", "1e999"],
+  ])("rejects invalid BJT %s transit time %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      `BJT ${parameter} must be finite and non-negative`,
+    );
+  });
+
+  it("preserves valid BJT transit times", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(TF=4n TR=5n)
+Q1 col base emit fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardTransitTime: 4.0e-9,
+      reverseTransitTime: 5.0e-9,
+    });
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)
