@@ -14,6 +14,14 @@ cross-platform proving application. Items are ordered by risk and dependency.
   adapters backed by the shared Venture session and page renderer, starting
   with Qt on Linux and reusing the same controller rather than introducing
   backend-specific browser behavior.
+  - [x] Qt bridge foundation: generated Qt shells load the shared Rust session,
+    mount a Cairo-backed `QQuickPaintedItem`, and directly launch against a
+    deterministic live page before reporting render acceptance.
+  - [ ] Qt live interaction promotion: drive the generated address and history
+    controls plus native scroll/link input through the real bridge, replacing
+    the remaining recording host in the Qt interaction gate.
+  - [ ] Flutter live page bridge and direct acceptance.
+  - [ ] Compose Desktop live page bridge and direct acceptance.
 - [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
   compatible with the repository build tool's `/bin/sh` executor while it
   delegates the backend matrix to the Bash-specific implementation script.

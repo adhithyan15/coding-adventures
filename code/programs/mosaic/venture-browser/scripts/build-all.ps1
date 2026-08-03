@@ -179,6 +179,29 @@ if ($isMacOS -and (Test-Command "swift")) {
 }
 
 if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
+    Write-Host "==> Building Venture Qt native bridge"
+    $qtBridgeArgs = @("build", "-p", "venture-browser-qt")
+    $qtBridgeProfile = "debug"
+    if ($Release) {
+        $qtBridgeArgs += "--release"
+        $qtBridgeProfile = "release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $qtBridgeArgs
+    } finally {
+        Pop-Location
+    }
+    $qtBridgeName = if ($isWindows) {
+        "venture_browser_qt.dll"
+    } elseif ($isMacOS) {
+        "libventure_browser_qt.dylib"
+    } else {
+        "libventure_browser_qt.so"
+    }
+    Copy-Item -Force `
+        (Join-Path $rustWorkspace "target/$qtBridgeProfile/$qtBridgeName") `
+        (Join-Path $outputRoot "qt/$qtBridgeName")
     Write-Host "==> Building qt"
     Push-Location (Join-Path $outputRoot "qt")
     try {
@@ -192,6 +215,22 @@ if ((Test-Command "cmake") -and (Test-Command "qmltestrunner")) {
         Invoke-Checked -Command "qmltestrunner" -Arguments @("-platform", "offscreen", "-style", "Basic", "-input", "test", "-import", ".")
     } finally {
         Pop-Location
+    }
+    if (-not $isWindows) {
+        Write-Host "==> Testing qt direct launch and live page render"
+        $qtAcceptanceArgs = @("test", "-p", "venture-browser-qt", "--test", "qt_project_launch")
+        if ($Release) {
+            $qtAcceptanceArgs += "--release"
+        }
+        Push-Location $rustWorkspace
+        try {
+            $previousQtAcceptance = $env:VENTURE_QT_ACCEPTANCE_REQUIRED
+            $env:VENTURE_QT_ACCEPTANCE_REQUIRED = "1"
+            Invoke-Checked -Command "cargo" -Arguments $qtAcceptanceArgs
+        } finally {
+            $env:VENTURE_QT_ACCEPTANCE_REQUIRED = $previousQtAcceptance
+            Pop-Location
+        }
     }
 } elseif (-not (Test-Command "cmake")) {
     Skip-Backend -Backend "qt" -Reason "cmake is not installed"

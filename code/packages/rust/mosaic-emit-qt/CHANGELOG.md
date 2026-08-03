@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - live native page-host attachment
+
+Generated Qt shells now register optional host-owned QML types before loading
+the component and call `MosaicHost::attach` after root creation. Project builds
+also copy colocated `venture_browser_qt` dynamic libraries beside the emitted
+executable, allowing one Mosaic-authored chrome tree to mount Venture's native
+page surface without handwritten Qt chrome.
+
 ### Added - part-backed native control identity
 
 `HostButton` and `HostInput` now project their Mosaic part names through QML

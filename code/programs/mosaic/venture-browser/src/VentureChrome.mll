@@ -1,7 +1,7 @@
 // VentureChrome — shared browser-chrome layout.
 //
-// `content-surface` mounts the host-owned Metal or Direct2D viewport through
-// Mosaic's typed node-slot boundary; browser chrome remains authored once here.
+// `content-surface` mounts the host-owned native page viewport through Mosaic's
+// typed node-slot boundary; browser chrome remains authored once here.
 
 layout VentureChrome {
   Column [ app-shell ] {
