@@ -19,6 +19,7 @@ const PRIVILEGE: &[&str] = &["privilege"];
 const MAX_CONFIG_BYTES: usize = 256 * 1024;
 const MAX_PATH_BYTES: usize = 4096;
 const MAX_TRUSTED_KEYS: usize = 256;
+const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
 
 /// Stable payload-blind configuration failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -156,7 +157,10 @@ impl TrustedKey {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OrchestratorConfig {
     bind: IpAddr,
+    port: u16,
     packages_dir: ConfigPath,
+    state_dir: ConfigPath,
+    credential_path: ConfigPath,
 }
 
 impl OrchestratorConfig {
@@ -165,9 +169,24 @@ impl OrchestratorConfig {
         self.bind
     }
 
+    /// Return the non-zero TCP listener port.
+    pub fn port(&self) -> u16 {
+        self.port
+    }
+
     /// Return the package installation root.
     pub fn packages_dir(&self) -> &ConfigPath {
         &self.packages_dir
+    }
+
+    /// Return the durable orchestrator state root.
+    pub fn state_dir(&self) -> &ConfigPath {
+        &self.state_dir
+    }
+
+    /// Return the local operator credential file path.
+    pub fn credential_path(&self) -> &ConfigPath {
+        &self.credential_path
     }
 }
 
@@ -196,21 +215,39 @@ pub enum HostRestartPolicy {
 }
 
 /// Default lifecycle policy for registered hosts.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HostDefaultsConfig {
     restart_policy: HostRestartPolicy,
     health_check_interval: Duration,
+    executable: ConfigPath,
+    bootstrap_timeout: Duration,
+    graceful_stop_timeout: Duration,
 }
 
 impl HostDefaultsConfig {
     /// Return the default restart policy.
-    pub fn restart_policy(self) -> HostRestartPolicy {
+    pub fn restart_policy(&self) -> HostRestartPolicy {
         self.restart_policy
     }
 
     /// Return the non-zero health-check interval.
-    pub fn health_check_interval(self) -> Duration {
+    pub fn health_check_interval(&self) -> Duration {
         self.health_check_interval
+    }
+
+    /// Return the shell-free host runtime executable path.
+    pub fn executable(&self) -> &ConfigPath {
+        &self.executable
+    }
+
+    /// Return the bounded secure-bootstrap deadline.
+    pub fn bootstrap_timeout(&self) -> Duration {
+        self.bootstrap_timeout
+    }
+
+    /// Return the bounded graceful-stop deadline.
+    pub fn graceful_stop_timeout(&self) -> Duration {
+        self.graceful_stop_timeout
     }
 }
 
@@ -286,8 +323,8 @@ impl ChiefConfig {
     }
 
     /// Return default host lifecycle settings.
-    pub fn host_defaults(&self) -> HostDefaultsConfig {
-        self.host_defaults
+    pub fn host_defaults(&self) -> &HostDefaultsConfig {
+        &self.host_defaults
     }
 
     /// Return vault coordination settings.
@@ -316,12 +353,23 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     if !bind.is_loopback() {
         return Err(ConfigError::NonLoopbackBind);
     }
+    let port = parse_port(document.take(ORCHESTRATOR, "port")?)?;
     let packages_dir =
         ConfigPath::parse(expect_string(document.take(ORCHESTRATOR, "packages_dir")?)?)?;
+    let state_dir = ConfigPath::parse(expect_string(document.take(ORCHESTRATOR, "state_dir")?)?)?;
+    let credential_path = ConfigPath::parse(expect_string(
+        document.take(ORCHESTRATOR, "credential_path")?,
+    )?)?;
     let trusted_keys = parse_trusted_keys(document.take(KEYRING, "trusted_keys")?)?;
     let restart_policy = parse_restart_policy(document.take(HOST_DEFAULTS, "restart_policy")?)?;
     let health_check_interval =
         positive_millis(document.take(HOST_DEFAULTS, "health_check_interval")?)?;
+    let executable =
+        ConfigPath::parse(expect_string(document.take(HOST_DEFAULTS, "executable")?)?)?;
+    let bootstrap_timeout =
+        bounded_process_millis(document.take(HOST_DEFAULTS, "bootstrap_timeout")?)?;
+    let graceful_stop_timeout =
+        bounded_process_millis(document.take(HOST_DEFAULTS, "graceful_stop_timeout")?)?;
     let storage_path = ConfigPath::parse(expect_string(document.take(VAULT, "storage_path")?)?)?;
     let default_lease_ttl = positive_secs(document.take(VAULT, "default_lease_ttl")?)?;
     let container = expect_bool(document.take(VAULT, "container")?)?;
@@ -334,11 +382,20 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     }
 
     Ok(ChiefConfig {
-        orchestrator: OrchestratorConfig { bind, packages_dir },
+        orchestrator: OrchestratorConfig {
+            bind,
+            port,
+            packages_dir,
+            state_dir,
+            credential_path,
+        },
         keyring: KeyringConfig { trusted_keys },
         host_defaults: HostDefaultsConfig {
             restart_policy,
             health_check_interval,
+            executable,
+            bootstrap_timeout,
+            graceful_stop_timeout,
         },
         vault: VaultConfig {
             storage_path,
@@ -351,6 +408,16 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             hardware_key_timeout,
         },
     })
+}
+
+fn parse_port(value: RawValue) -> Result<u16, ConfigError> {
+    let RawValue::Integer(value) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    u16::try_from(value)
+        .ok()
+        .filter(|port| *port != 0)
+        .ok_or(ConfigError::InvalidValue)
 }
 
 fn parse_restart_policy(value: RawValue) -> Result<HostRestartPolicy, ConfigError> {
@@ -413,6 +480,14 @@ fn take_inline(
 
 fn positive_millis(value: RawValue) -> Result<Duration, ConfigError> {
     positive_integer(value).map(Duration::from_millis)
+}
+
+fn bounded_process_millis(value: RawValue) -> Result<Duration, ConfigError> {
+    let millis = positive_integer(value)?;
+    if millis > MAX_PROCESS_TIMEOUT_MILLIS {
+        return Err(ConfigError::InvalidValue);
+    }
+    Ok(Duration::from_millis(millis))
 }
 
 fn positive_secs(value: RawValue) -> Result<Duration, ConfigError> {
@@ -659,7 +734,10 @@ mod tests {
     const VALID: &str = r#"
 [orchestrator]
 bind = "127.0.0.1"
+port = 7463
 packages_dir = "~/.chief-of-staff/agents/"
+state_dir = "~/.chief-of-staff/state/"
+credential_path = "~/.chief-of-staff/run/operator.credential"
 
 [keyring]
 trusted_keys = [
@@ -670,6 +748,9 @@ trusted_keys = [
 [hosts.defaults]
 restart_policy = "on-failure"
 health_check_interval = 5_000
+executable = "~/.chief-of-staff/bin/chief-of-staff-host"
+bootstrap_timeout = 10_000
+graceful_stop_timeout = 5_000
 
 [vault]
 storage_path = "~/.chief-of-staff/vault/"
@@ -689,9 +770,18 @@ hardware_key_timeout = 60
             config.orchestrator().bind(),
             "127.0.0.1".parse::<IpAddr>().unwrap()
         );
+        assert_eq!(config.orchestrator().port(), 7463);
         assert_eq!(
             config.orchestrator().packages_dir().as_str(),
             "~/.chief-of-staff/agents/"
+        );
+        assert_eq!(
+            config.orchestrator().state_dir().as_str(),
+            "~/.chief-of-staff/state/"
+        );
+        assert_eq!(
+            config.orchestrator().credential_path().as_str(),
+            "~/.chief-of-staff/run/operator.credential"
         );
         assert_eq!(config.keyring().trusted_keys().len(), 2);
         assert_eq!(config.keyring().trusted_keys()[0].id(), "prod-001");
@@ -705,6 +795,18 @@ hardware_key_timeout = 60
         );
         assert_eq!(
             config.host_defaults().health_check_interval(),
+            Duration::from_secs(5)
+        );
+        assert_eq!(
+            config.host_defaults().executable().as_str(),
+            "~/.chief-of-staff/bin/chief-of-staff-host"
+        );
+        assert_eq!(
+            config.host_defaults().bootstrap_timeout(),
+            Duration::from_secs(10)
+        );
+        assert_eq!(
+            config.host_defaults().graceful_stop_timeout(),
             Duration::from_secs(5)
         );
         assert_eq!(config.vault().default_lease_ttl(), Duration::from_secs(30));
@@ -722,6 +824,22 @@ hardware_key_timeout = 60
         assert_eq!(
             config.orchestrator().packages_dir().resolve(&home).unwrap(),
             home.join(".chief-of-staff/agents/")
+        );
+        assert_eq!(
+            config.orchestrator().state_dir().resolve(&home).unwrap(),
+            home.join(".chief-of-staff/state/")
+        );
+        assert_eq!(
+            config
+                .orchestrator()
+                .credential_path()
+                .resolve(&home)
+                .unwrap(),
+            home.join(".chief-of-staff/run/operator.credential")
+        );
+        assert_eq!(
+            config.host_defaults().executable().resolve(&home).unwrap(),
+            home.join(".chief-of-staff/bin/chief-of-staff-host")
         );
         assert_eq!(
             config.keyring().trusted_keys()[1]
@@ -774,6 +892,18 @@ hardware_key_timeout = 60
             Err(ConfigError::InvalidValue)
         );
         assert_eq!(
+            parse_config(&VALID.replace("port = 7463", "port = 0")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&VALID.replace("port = 7463", "port = 65536")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&VALID.replace("port = 7463", "port = \"7463\"")),
+            Err(ConfigError::InvalidType)
+        );
+        assert_eq!(
             parse_config(&VALID.replace("~/.chief-of-staff/agents/", "relative/agents")),
             Err(ConfigError::UnsafePath)
         );
@@ -784,6 +914,16 @@ hardware_key_timeout = 60
         assert_eq!(
             parse_config(
                 &VALID.replace("health_check_interval = 5_000", "health_check_interval = 0")
+            ),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&VALID.replace("bootstrap_timeout = 10_000", "bootstrap_timeout = 0")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(
+                &VALID.replace("bootstrap_timeout = 10_000", "bootstrap_timeout = 300_001")
             ),
             Err(ConfigError::InvalidValue)
         );
