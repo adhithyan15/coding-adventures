@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- In-body end tags now report the Standard's parse error when implied-end-tag
+  recovery leaves their matching open element non-current, closing 18
+  previously silent malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - EOF in the tree builder's text insertion mode now reports the Standard's
   parse error, pops the authored text element, and reprocesses EOF in the
   original mode, closing 92 previously silent malformed corpus cases without
