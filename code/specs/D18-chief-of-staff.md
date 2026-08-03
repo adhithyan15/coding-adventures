@@ -1993,6 +1993,12 @@ creation, atomic writes, and shell-free native registration. The rendered
 definitions use `RunAtLoad` plus unsuccessful-exit `KeepAlive` on launchd,
 `Type=simple` plus `Restart=on-failure` under systemd, and a least-privilege,
 single-instance logon task with bounded failure restarts on Windows.
+`chief-of-staff-daemon-installer` is the corresponding local mutation boundary:
+it publishes an absent definition atomically, permits only byte-identical
+registration retries, preserves conflicting files, and invokes an explicit
+absolute native supervisor executable through tokenized arguments without a
+shell. Installation plans are reviewable before mutation and cannot be applied
+on a different operating system.
 
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 
