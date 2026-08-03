@@ -343,9 +343,9 @@
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
       "title": "Make the TypeScript build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
-      "branch": null,
+      "branch": "codex/build-tool-typescript-rockspec-utf8",
       "pr_number": null,
       "notes": "Materialized from the remaining-engine UTF-8 umbrella after merged PR #9553. TypeScript's current TextDecoder replacement behavior cannot distinguish malformed rockspec bytes from valid replacement characters. Bind the resolver and real CLI to the shared resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, preserve the exact expected edges, reject malformed bytes before parsing with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, and exit 2, and keep the slice separate from other engine ports."
     },
