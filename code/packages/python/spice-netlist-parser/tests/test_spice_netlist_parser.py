@@ -1967,6 +1967,29 @@ def test_lowers_valid_mosfet_model_sidewall_grading(
     assert isclose(mosfet.model.model.params.MJSW, float(grading_coefficient))
 
 
+@pytest.mark.parametrize("coefficient", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_mosfet_model_forward_bias_coefficient(
+    coefficient: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match=r"MOSFET FC must be finite and in \[0, 1\)",
+    ):
+        parse_netlist(f".model nfast NMOS(FC={coefficient})\nM1 d g s b nfast\n")
+
+
+@pytest.mark.parametrize("coefficient", ["0", "0.5"])
+def test_lowers_valid_mosfet_model_forward_bias_coefficient(
+    coefficient: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(FC={coefficient})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert isclose(mosfet.model.model.params.FC, float(coefficient))
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")

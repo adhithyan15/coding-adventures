@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject MOS model-card `FC` values outside `[0, 1)` or non-finite values
+  before lowering valid forward-bias depletion coefficients.
 - Reject negative and non-finite MOS model-card `MJSW` values before lowering
   valid sidewall-junction grading coefficients.
 - Reject negative and non-finite MOS model-card `MJ` values before lowering
