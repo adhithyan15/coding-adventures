@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added first-party HomeWizard Energy API v1 local runtime coverage for verified
+  mDNS/manual discovery and read-only device and external-meter telemetry.
 - Added first-party Fronius Solar API v1 local runtime coverage for mDNS/manual
   discovery and read-only site and inverter power and energy telemetry.
 - Added a first-party native Tasmota local HTTP path for mDNS/manual discovery,
