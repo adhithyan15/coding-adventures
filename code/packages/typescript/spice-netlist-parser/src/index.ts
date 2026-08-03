@@ -1245,6 +1245,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET RD must be finite and non-negative");
   }
+  const sourceResistance = params.get("RS");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sourceResistance !== undefined &&
+    (!Number.isFinite(sourceResistance) || sourceResistance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET RS must be finite and non-negative");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1336,6 +1344,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "TOX",
     "U0",
     "RD",
+    "RS",
     "IS",
     "N_SUB",
     "T_NOM",

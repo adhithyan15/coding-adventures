@@ -1613,6 +1613,31 @@ def test_lowers_valid_mosfet_model_drain_resistance(
     assert float(drain_resistance) == mosfet.model.model.params.RD
 
 
+@pytest.mark.parametrize("source_resistance", ["-1", "1e999"])
+def test_rejects_invalid_mosfet_model_source_resistance(
+    source_resistance: str,
+) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="MOSFET RS must be finite and non-negative",
+    ):
+        parse_netlist(
+            f".model nfast NMOS(RS={source_resistance})\nM1 d g s b nfast\n"
+        )
+
+
+@pytest.mark.parametrize("source_resistance", ["0", "9.75"])
+def test_lowers_valid_mosfet_model_source_resistance(
+    source_resistance: str,
+) -> None:
+    parsed = parse_netlist(
+        f".model nfast NMOS(RS={source_resistance})\nM1 d g s b nfast\n"
+    )
+    mosfet = parsed.circuit.elements[0]
+    assert isinstance(mosfet, Mosfet)
+    assert float(source_resistance) == mosfet.model.model.params.RS
+
+
 def test_rejects_unbalanced_waveform_parenthesis() -> None:
     with pytest.raises(NetlistParseError, match="unclosed parenthesis"):
         parse_netlist("V1 in 0 PULSE(0 1\n")
