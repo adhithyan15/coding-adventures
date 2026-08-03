@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C04-practice
+spine_node: SPINE-TAKE-LEAVE
+sequence: 430
 chapter: 4
 type: practice
 headword: (dialogue)
@@ -8,18 +11,32 @@ concept_tag: REVIEW
 prerequisites: [AR-C04-maa-salama, AR-C04-ila-liqaa]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02]
+practises:
+  knowledge: [AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C04-maa-with, AR-C04-al-salama, AR-C04-maa-salama, AR-C04-ila-liqaa, AR-C03-practice, AR-C02-practice, AR-C01-practice]
 ---
 
 # Practice — the whole conversation
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Four chapters. Greet, introduce, ask after someone, part. Here it all
 is in one piece.
 
-## The full exchange
+## You'll want to know — The full exchange
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-PRACTICE-01]; assesses=[] -->
 
 | | Arabic | literally |
 |---|---|---|
@@ -35,7 +52,8 @@ is in one piece.
 Read the right-hand column top to bottom. **Not one line contains a verb "to
 be."** The zero copula has held for four chapters.
 
-## The root ledger
+## Why it's said this way — The root ledger
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-PRACTICE-02]; assesses=[] -->
 
 Everything you have learned sits on a handful of three-consonant roots:
 
@@ -50,7 +68,8 @@ Everything you have learned sits on a handful of three-consonant roots:
 
 Six roots. A whole conversation.
 
-## The small attaching pieces
+## Grammar Lens — The small attaching pieces
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 | piece | job | example |
 |---|---|---|
@@ -63,6 +82,7 @@ Six roots. A whole conversation.
 And **مع** *maʿa*, the one that **doesn't** attach.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full dialogue, both parts, addressing a **man**]
@@ -71,6 +91,7 @@ And **مع** *maʿa*, the one that **doesn't** attach.
 - [YOU SAY: the bookend — "**السلام** to open, **السلامة** to close"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02] -->
 
 [PAUSE 3s] Give a complete greeting-to-farewell exchange. (The dialogue above.)
 Which root opens **and** closes it? (**s–l–m**.) Which piece of the chapter

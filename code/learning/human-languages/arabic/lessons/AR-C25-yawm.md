@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C25-yawm
+spine_node: SPINE-TIME-OF-DAY
+sequence: 690
 chapter: 25
 type: word
 headword: يوم
@@ -9,18 +12,32 @@ prerequisites: [AR-C08-al-ahad-al-khamis]
 sounds: [waw-glide, meem]
 roots: [y-w-m]
 etymology_hook: "يوم (yawm, 'day') ← Proto-Semitic *yawm-, a genuine Common Semitic word shared with Hebrew יוֹם (yōm, as in Yom Kippur), Akkadian ūmum, and Aramaic yawmā; further back, some scholars connect it to Proto-Afroasiatic *yam- ('day'), possibly related to Egyptian ỉmy ('sun, as an eye') — a speculative but genuinely proposed deep link, not settled fact"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02]
+practises:
+  knowledge: [AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C08-al-ahad-al-khamis]
 ---
 
 # يوم (yawm) — "day," a word shared across the whole Semitic family
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] This word is bigger than Arabic — it's one of the oldest,
 most widely shared words across the entire Semitic language family.
 
-## يوم — "day"
+## You'll want to know — يوم — "day"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C25-YAWM-01]; assesses=[] -->
 
 **يوم** (**yawm**) — "**day**" — root **y-w-m**. Arabic's day-names can
 compound with *yawm* — **يوم الجمعة** (*yawm al-jumʿa*, "day of the
@@ -30,7 +47,8 @@ colloquially, the bare day-name alone (*al-jumʿa*, *as-sabt*, already
 taught earlier) is just as common. *Yawm* itself is also the ordinary,
 standalone word for "a day."
 
-## A true Common Semitic word
+## Why it's said this way — A true Common Semitic word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C25-YAWM-02]; assesses=[] -->
 
 **Yawm** traces to **Proto-Semitic** ***\*yawm-*** — and this isn't just an
 Arabic word with foreign relatives, it's a genuinely **Common Semitic**
@@ -39,7 +57,8 @@ Hebrew **יוֹם** (*yōm* — yes, the *yom* in **Yom Kippur**, "Day of
 Atonement"), Akkadian **ūmum**, and Aramaic **yawmā**. Four different
 Semitic languages, one shared ancient word for "day."
 
-## A speculative deeper link — honestly flagged
+## Why it's said this way — A speculative deeper link — honestly flagged
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Some scholars push the trail back even further, to a proposed
 **Proto-Afroasiatic** root, ***\*yam-*** ("day") — and speculatively connect
@@ -52,6 +71,7 @@ and ordinary Egyptian for "day" is an unrelated word, *ḥrw*). Not settled
 fact the way the Semitic-family cognates are.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "yawm" — "day"]
@@ -60,6 +80,7 @@ fact the way the Semitic-family cognates are.
   settled]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C25-YAWM-01, AR-CONCEPT-C25-YAWM-02] -->
 
 [PAUSE 3s] What Hebrew word, familiar from a well-known holiday name, is
 **yawm**'s direct cognate? (**Yōm**, as in **Yom Kippur**.) Name two other

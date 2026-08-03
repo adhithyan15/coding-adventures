@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C20-ahada-ashar-ishrun
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 640
 chapter: 20
 type: word
 headword: أحد عشر — عشرون
@@ -9,19 +12,33 @@ prerequisites: [AR-C19-wahid-khamsa]
 sounds: [arabic-ain-shiin, arabic-teh-marbuta]
 roots: [arabic-ashar-ten, arabic-ishrun-twenty]
 etymology_hook: "أحد عشر through خمسة عشر (11-15) are plain 'X and ten' compounds, X + عشر (ʿashar, 'ten') — but عشرون (ʿishrūn, 'twenty') is NOT 'two-ten'; it's its OWN distinct plural-like form built directly on the 'ten' root, the same root behind Hebrew's eser and English's own '-teen'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02]
+practises:
+  knowledge: [AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C19-wahid-khamsa]
 ---
 
 # أحد عشر, عشرون — plain compounds, then a genuinely different twenty
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Eleven through fifteen build the same simple way every time. Then
 twenty breaks the pattern completely — it isn't built the way you'd expect at
 all.
 
-## أحد عشر – خمسة عشر — "X and ten"
+## You'll want to know — أحد عشر – خمسة عشر — "X and ten"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01]; assesses=[] -->
 
 | Arabic | literally |
 |---|---|
@@ -36,7 +53,8 @@ plus **عشر** (*ʿashar*, "**ten**") — a straightforward additive compound, 
 same shape you've now seen in Spanish's *once*-*quince* and Latin's
 *ūndecim*-*quīndecim*.
 
-## عشرون — NOT "two-ten," a genuinely different word
+## You'll want to know — عشرون — NOT "two-ten," a genuinely different word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02]; assesses=[] -->
 
 Here's the honest surprise: **twenty** is **not** built from "two" + "ten" the
 way 11-15 were built. **عشرون** (*ʿishrūn*, "twenty") is its **own**, distinct
@@ -50,6 +68,7 @@ two entirely separate language families, so this is a parallel, not a shared
 borrowing or common ancestor.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "aḥada ʿashar, ithnā ʿashar, thalāthata ʿashar" — 11, 12, 13, "X
@@ -57,6 +76,7 @@ borrowing or common ancestor.
 - [YOU SAY: "ʿishrūn" — twenty, its OWN word, not "two-ten"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-01, AR-CONCEPT-C20-AHADA-ASHAR-ISHRUN-02] -->
 
 [PAUSE 3s] How are 11-15 built in Arabic? (**X + ʿashar** — "one-ten,"
 "two-ten," and so on, a plain additive compound.) Is **عشرون** (twenty) built

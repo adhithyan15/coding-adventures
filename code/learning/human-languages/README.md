@@ -65,7 +65,7 @@ edition is authored.
 | [German](./german/README.md) | Germanic / Latin | Chapters 1-2 authored (lessons + book) |
 | [Italian](./italian/README.md) | Romance / Latin | Chapters 1–17 authored; Chapters 2–17 canonical/generated for app + book |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
-| [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1-2 authored (script inline) |
+| [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1–27 authored; Chapters 3–27 canonical/generated for app + book |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1-2 authored (lessons + book) |
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | Chapters 1-6 authored (lessons + book) |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi (vendored font) | Chapters 1-6 authored (lessons + book, script inline) |

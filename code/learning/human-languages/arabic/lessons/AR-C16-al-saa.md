@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C16-al-saa
+spine_node: SPINE-TIME-OF-DAY
+sequence: 600
 chapter: 16
 type: word
 headword: الساعة
@@ -9,18 +12,32 @@ prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl]
 sounds: [arabic-ain, teh-marbuta]
 roots: [aramaic-shaata-hour]
 etymology_hook: "ساعة (sāʿa, 'hour') is a loanword from Aramaic شָׁעְתָא/ܫܳܥܬܳܐ (šāʿəṯā) — the same Semitic root behind Hebrew's שָׁעָה (šāʿā), borrowed into Arabic long before Islam; ساعة does triple duty for 'hour,' 'clock,' and 'a while, a moment'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02]
+practises:
+  knowledge: [AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C15-ad-duhr-muntasaf-al-layl]
 ---
 
 # الساعة — one word for "hour," "clock," and "a moment"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Arabic's word for "hour" isn't native Arabic at all — it's a very old
 borrowing, and it still carries three meanings at once.
 
-## ساعة — borrowed from Aramaic, long ago
+## Why it's said this way — ساعة
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C16-AL-SAA-01]; assesses=[] -->
 
 **ساعة** (*sāʿa*) = "**hour**" — but also "**clock/watch**" (as an object) and
 "**a while, a moment**" (as in "wait a *sāʿa*"). According to the historical
@@ -32,6 +49,7 @@ vocabulary you've seen (like *aẓ-ẓuhr*), *sāʿa* is simply an old, everyday
 carrying no special religious weight.
 
 ## Grammar Lens: كم الساعة؟ — "how much is the hour?"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C16-AL-SAA-02]; assesses=[] -->
 
 Arabic asks the time with **كم الساعة؟** (*kam as-sāʿa?*), literally "**how much/
 how many is the hour**" — and answers with **الساعة** + an **ordinal** number
@@ -50,6 +68,7 @@ una*/*las dos* or French's *une heure*/*deux heures*, both of which use plain
 cardinal numbers throughout, with no ordinal/cardinal split at all.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "sāʿa" — hour, clock, or a while, depending on context]
@@ -59,6 +78,7 @@ cardinal numbers throughout, with no ordinal/cardinal split at all.
   cardinal "one" instead]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C16-AL-SAA-01, AR-CONCEPT-C16-AL-SAA-02] -->
 
 [PAUSE 3s] What language did Arabic borrow **ساعة** from, and what Hebrew word is
 its cousin? (**Aramaic** *šāʿəṯā*; cousin of Hebrew *šāʿā*.) What three things can

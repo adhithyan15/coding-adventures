@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C08-al-ahad-al-khamis
+spine_node: SPINE-TIME-OF-DAY
+sequence: 480
 chapter: 8
 type: word
 headword: الأحد الإثنين الثلاثاء الأربعاء الخميس
@@ -9,19 +12,33 @@ prerequisites: [AR-C07-asif]
 sounds: [arabic-rtl, hamza-variants, definite-article-al]
 roots: [ahad-wahid, ithnayn, thalatha, arbaa, khamsa]
 etymology_hook: "Arabic weekdays are literally ordinal numbers — al-aḥad 'the first,' al-ithnayn 'the second' — a genuinely different system from Rome's planet-week"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02]
+practises:
+  knowledge: [AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C07-asif]
 ---
 
 # الأحد to الخميس (al-aḥad to al-khamīs) — Sunday to Thursday, by the numbers
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Every language so far in this course names its weekdays for
 planet-gods. Arabic does something completely different: it just **counts**
 them.
 
-## The pattern: definite article + ordinal number
+## Grammar Lens — The pattern: definite article + ordinal number
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02]; assesses=[] -->
 
 Five of Arabic's seven days are simply **"the [number]th"** — the definite
 article **ال** (*al-*) plus an ordinal built on the number word:
@@ -41,6 +58,7 @@ Jewish and much of the Christian calendar tradition, begins where the
 European Monday-first convention doesn't.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "al-aḥad" — the first, Sunday]
@@ -49,6 +67,7 @@ European Monday-first convention doesn't.
 - [YOU SAY: contrast — no planet-gods here, just numbers]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-01, AR-CONCEPT-C08-AL-AHAD-AL-KHAMIS-02] -->
 
 [PAUSE 3s] How does Arabic name Sunday through Thursday? (**As ordinal
 numbers** — "the first" through "the fifth," not planet-gods.) Which number

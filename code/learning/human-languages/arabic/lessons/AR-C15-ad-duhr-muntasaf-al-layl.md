@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C15-ad-duhr-muntasaf-al-layl
+spine_node: SPINE-TIME-OF-DAY
+sequence: 590
 chapter: 15
 type: phrase
 headword: الظهر منتصف الليل
@@ -9,18 +12,32 @@ prerequisites: [AR-C14-ashhur]
 sounds: [arabic-rtl, emphatic-zaa]
 roots: [zahara-appear, nisf-half]
 etymology_hook: "الظهر (adh-dhuhr) 'noon' is also the name of the midday prayer, salat al-zuhr — Arabic's word for noon is bound up with the daily prayer schedule, not a neutral clock-time word; منتصف الليل (muntasaf al-layl) 'the half of the night' is fully transparent, from nisf 'half'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02]
+practises:
+  knowledge: [AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C14-ashhur]
 ---
 
 # الظهر, منتصف الليل — noon and midnight
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Noon in Arabic isn't just a clock-time word — it's tied
 directly into the rhythm of daily prayer.
 
-## الظهر — noon, and a prayer
+## You'll want to know — الظهر — noon, and a prayer
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01]; assesses=[] -->
 
 **الظهر** (*aẓ-ẓuhr* or *adh-dhuhr*) = "**noon**" — from the root
 **ظ-ه-ر** (*ẓ-h-r*), "**to appear, become visible**" (the sun standing at
@@ -31,7 +48,8 @@ the noon prayer" are the same word — this isn't a neutral clock-time term
 the way "noon" or *mediodía* are in cultures where the day isn't organized
 around five fixed prayer times.
 
-## منتصف الليل — a transparent "half of the night"
+## You'll want to know — منتصف الليل — a transparent "half of the night"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02]; assesses=[] -->
 
 **منتصف الليل** (*muntaṣaf al-layl*) = "**midnight**," literally "**the
 half of the night**." **منتصف** (*muntaṣaf*) comes from the root **ن-ص-ف**
@@ -41,6 +59,7 @@ transparent — no erosion, no double meaning, just "the middle of the
 night," structurally exactly like Latin's *media nox*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "aẓ-ẓuhr" — noon, also the midday prayer]
@@ -49,6 +68,7 @@ night," structurally exactly like Latin's *media nox*.
   mediodía doesn't]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-01, AR-CONCEPT-C15-AD-DUHR-MUNTASAF-AL-LAYL-02] -->
 
 [PAUSE 3s] What does **الظهر** name besides the time of day? (**The midday
 Islamic prayer**, *ṣalāt al-ẓuhr*.) What does **منتصف الليل** literally

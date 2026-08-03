@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C06-min-fadlik
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 460
 chapter: 6
 type: phrase
 headword: من فضلك
@@ -9,17 +12,31 @@ prerequisites: [AR-C01-shukran]
 sounds: [dad-emphatic, arabic-rtl, gendered-ending]
 roots: [fadl]
 etymology_hook: "من فضلك min faḍlik is literally 'from your grace' — faḍl 'grace, bounty', the same courtesy Hindi's kṛpayā invokes"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02]
+practises:
+  knowledge: [AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C01-shukran]
 ---
 
 # من فضلك (min faḍlik) — please
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Arabic doesn't say "please" — it asks for something *from your grace.*
 
-## The phrase
+## You'll want to know — The phrase
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C06-MIN-FADLIK-01]; assesses=[] -->
 
 **من فضلك** — read right to left, **min faḍlik** — is two pieces:
 
@@ -30,7 +47,8 @@ reviews_of: [AR-C01-shukran]
 it as the name *Faḍl*). Saying *min faḍlik* casts the request as drawing on the
 other person's generosity — not a command, a courtesy.
 
-## A gender note (Arabic marks "you")
+## Grammar Lens — A gender note (Arabic marks "you")
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C06-MIN-FADLIK-02]; assesses=[] -->
 
 The ending changes with **whom you address** — and, unwritten, only the vowel
 moves:
@@ -42,7 +60,8 @@ The spelling **فضلك** is the same for both; the short vowel that distinguish
 them isn't normally written. One sound to respect: the **ض** (*ḍ*) is an
 **emphatic** d, said with a heavier, deeper tongue than a plain *d*.
 
-## Another everyday "please"
+## You'll want to know — Another everyday "please"
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Just as common, especially getting someone's attention:
 
@@ -51,6 +70,7 @@ Just as common, especially getting someone's attention:
 > rather than grace.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "min faḍlik" — feel the heavy ض]
@@ -58,6 +78,7 @@ Just as common, especially getting someone's attention:
 - [YOU SAY: the alternative — "law samaḥt" = "if you permit"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C06-MIN-FADLIK-01, AR-CONCEPT-C06-MIN-FADLIK-02] -->
 
 [PAUSE 3s] How do you say please in Arabic? (**min faḍlik**, من فضلك.) What does
 it literally mean? ("**From your grace**" — *faḍl* = grace/bounty.) What changes

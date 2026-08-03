@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C05-la
+spine_node: SPINE-RESPOND-BASIC
+sequence: 450
 chapter: 5
 type: word
 headword: لا
@@ -9,25 +12,40 @@ prerequisites: [AR-C05-naam]
 sounds: [lam-alif-ligature, arabic-rtl]
 roots: [la-negation]
 etymology_hook: "لا lā is the great Arabic 'no' — the same word that opens the shahada, lā ilāha illā llāh, 'there is no god but God'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C05-LA-01, AR-CONCEPT-C05-LA-02]
+practises:
+  knowledge: [AR-CONCEPT-C05-LA-01, AR-CONCEPT-C05-LA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C05-naam, AR-C01-salam]
 ---
 
 # لا (lā) — no
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two letters, one long vowel — and one of the most recognisable words
 in the language.
 
-## The word
+## You'll want to know — The word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C05-LA-01]; assesses=[] -->
 
 **لا** = **no**, said **lā** (a long *aah*). It's just two letters — **ل** (l) +
 **ا** (the long *ā*, *alif*) — but they're written joined into one sweeping
 shape, **لا**, a *lam‑alif* that Arabic always writes as a single unit. It's one
 of the first letter-joins learners recognise on sight.
 
-## More than an answer
+## You'll want to know — More than an answer
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C05-LA-02]; assesses=[] -->
 
 **lā** isn't only the reply "no." It is Arabic's great word of **negation**, and
 it opens the most-spoken sentence in the language — the first half of the
@@ -39,7 +57,8 @@ That opening **lā** is your word. The same *lā* also negates present-tense
 verbs — **لا أعرف** *lā aʿrif*, "I do **not** know" — so, like Spanish *no*, one
 little word is both the answer "no" and the sentence's "not."
 
-## Yes and no, together
+## Grammar Lens — Yes and no, together
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 You now have the pair:
 
@@ -49,6 +68,7 @@ You now have the pair:
 | no | **لا** | *lā* |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C05-LA-01, AR-CONCEPT-C05-LA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lā" — a long, open *aah*]
@@ -56,6 +76,7 @@ You now have the pair:
 - [YOU SAY: the pair — "naʿam / lā"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C05-LA-01, AR-CONCEPT-C05-LA-02] -->
 
 [PAUSE 3s] How do you say no in Arabic? (**lā**, لا.) What two letters make it,
 and how are they written? (**ل** + **ا**, joined as a single *lam‑alif* لا.)

@@ -25,6 +25,7 @@
 \tcbuselibrary{skins,breakable}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
@@ -35,6 +36,7 @@
 
 % Vendored Arabic font (static instance; ../../_fonts/ from <lang>/book/).
 \newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
+\newfontfamily\hebrewfont[Path=../../_fonts/, Script=Hebrew]{NotoSansHebrew-Static.ttf}
 
 \hypersetup{
   pdftitle={Arabic, Step by Step, Root by Root},
@@ -45,6 +47,7 @@
 
 % Convenience: inline Arabic snippet (RTL, Arabic font) within English text.
 \newcommand{\ar}[1]{\textarabic{#1}}
+\newcommand{\he}[1]{{\hebrewfont #1}}
 
 % Cousin/Root box: the root family + connections.
 \newtcolorbox{cousinweb}{
@@ -57,10 +60,10 @@
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
   fonttitle=\bfseries, title={Why it's said this way}
 }
-\newtcolorbox{grammarlens}{
+\newtcolorbox{grammarlens}[1][]{
   breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
-  fonttitle=\bfseries, title={Grammar Lens}
+  fonttitle=\bfseries, title={Grammar Lens}, #1
 }
 \newtcolorbox{sounds}{
   breakable, skin=enhanced, colback=green!6, colframe=green!30!black,

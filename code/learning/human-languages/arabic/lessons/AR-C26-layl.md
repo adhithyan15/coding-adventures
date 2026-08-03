@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C26-layl
+spine_node: SPINE-TIME-OF-DAY
+sequence: 700
 chapter: 26
 type: word
 headword: ليل
@@ -9,25 +12,40 @@ prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl, AR-C25-yawm]
 sounds: [lam-yeh-lam, long-i-glide]
 roots: [l-y-l]
 etymology_hook: "ليل (layl, 'night') ← Proto-Semitic *layl-, cognate with Hebrew לילה (layla/laylah — as in the Passover question 'mah nishtana ha-layla ha-zeh,' 'why is this NIGHT different'), Aramaic/Syriac lēlyā, and Akkadian līliātum; scholars genuinely debate whether Proto-Semitic had this simple triradical *layl- or a reduplicated *laylay- form — an open question, not settled"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02]
+practises:
+  knowledge: [AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C15-ad-duhr-muntasaf-al-layl, AR-C25-yawm]
 ---
 
 # ليل (layl) — "night," yawm's partner across the whole Semitic family
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've already met *layl* once, tucked inside *muntaṣaf al-layl*
 ("midnight"). Now it gets the same standalone treatment *yawm* just did —
 and the same pan-Semitic family story.
 
-## ليل — "night"
+## You'll want to know — ليل — "night"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C26-LAYL-01]; assesses=[] -->
 
 **ليل** (**layl**) — "**night**" — is the word already hiding inside
 **muntaṣaf al-layl** ("midnight," Chapter 15, literally "the half of the
 night"). Root **l-y-l**.
 
-## Another true Common Semitic word
+## Why it's said this way — Another true Common Semitic word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C26-LAYL-02]; assesses=[] -->
 
 Just like *yawm*, **layl** is a genuine **Common Semitic** word, not an
 Arabic-only term with distant relatives. It traces to **Proto-Semitic**
@@ -37,7 +55,8 @@ word in the famous Passover question, "*mah nishtana ha-layla ha-zeh*,"
 **līliātum**. Day and night, *yawm* and *layl*, are **both** words the
 whole Semitic family has shared for millennia.
 
-## An honest open question
+## Why it's said this way — An honest open question
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Be honest about one genuine scholarly debate: linguists don't fully agree
 on whether Proto-Semitic had this simple **triradical** *\*layl-* form, or a
@@ -47,6 +66,7 @@ open question in comparative Semitics — not settled the way the basic
 Hebrew/Aramaic/Akkadian cognate set is.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "layl" — "night," already met inside muntaṣaf al-layl]
@@ -54,6 +74,7 @@ Hebrew/Aramaic/Akkadian cognate set is.
 - [YOU SAY: yawm and layl — day and night, both pan-Semitic words]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C26-LAYL-01, AR-CONCEPT-C26-LAYL-02] -->
 
 [PAUSE 3s] Where have you already met **layl** before this lesson?
 (**Muntaṣaf al-layl**, "midnight.") What Hebrew word, from a famous

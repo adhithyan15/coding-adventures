@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C27-tusbih-ala-khayr
+spine_node: SPINE-TAKE-LEAVE
+sequence: 710
 chapter: 27
 type: phrase
 headword: تصبح على خير
@@ -10,19 +13,33 @@ prerequisites: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 sounds: [sad-emphatic, kha]
 roots: [ṣ-b-ḥ, kh-y-r]
 etymology_hook: "تصبح على خير (tuṣbiḥ ʿalā khayr), the everyday Arabic 'good night,' literally means 'may you WAKE UP into goodness' — tuṣbiḥ is the ordinary imperfect of aṣbaḥa ('to become morning'), used performatively as a blessing (no special subjunctive/jussive marking), the same ṣ-b-ḥ root as ṣabāḥ al-khayr ('good morning'), plus khayr ('goodness') already met in masāʾ al-khayr; unlike every other language in this arc, Arabic's night-parting phrase points FORWARD to the morning, not to the night itself"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]
+practises:
+  knowledge: [AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C01-sabah-al-khayr, AR-C01-masa-al-khayr, AR-C26-layl]
 ---
 
 # تصبح على خير (tuṣbiḥ ʿalā khayr) — wishing the morning, not the night
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Every "good night" you've learned in other languages wishes a
 peaceful **night**. Arabic's everyday version does something completely
 different — it skips the night and wishes the **morning** instead.
 
-## تصبح على خير — "may you wake into goodness"
+## You'll want to know — تصبح على خير — "may you wake into goodness"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01]; assesses=[] -->
 
 **تصبح على خير** (**tuṣbiḥ ʿalā khayr**) is the most common everyday
 Arabic "good night" — but it literally means "**may you wake up into
@@ -43,7 +60,8 @@ Put together: not "sleep well," but "**may your waking be good**." (This
 particular form, *tuṣbiḥ*, addresses one **man**; a woman is *tuṣbiḥī*
 [تصبحي], a group is *tuṣbiḥū* [تصبحوا].)
 
-## Be honest: this points forward, not backward
+## Why it's said this way — Be honest: this points forward, not backward
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02]; assesses=[] -->
 
 Here's the genuinely different part: **every** other "good night" in this
 arc — English, French, German, Spanish — wishes something about the
@@ -56,6 +74,7 @@ points them at a **different moment in time** than every other language's
 farewell.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tuṣbiḥ ʿalā khayr" — literally "may you wake into goodness"]
@@ -64,6 +83,7 @@ farewell.
   morning, not the night]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-01, AR-CONCEPT-C27-TUSBIH-ALA-KHAYR-02] -->
 
 [PAUSE 3s] What does **تصبح على خير** literally mean? ("**May you wake up
 into goodness**.") What root does *tuṣbiḥ* share with *ṣabāḥ al-khayr*?
