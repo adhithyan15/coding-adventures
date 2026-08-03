@@ -240,8 +240,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
-  POSIX-only `/repo` path fixtures; this is tracked as a separate test-
-  portability slice rather than widening the metadata decoder change;
+  POSIX-only `/repo` path fixtures. Ready PR #9592 is the selected slice: it
+  uses direct Git argument vectors and native temporary roots, and normalizes
+  relative package paths at the Git boundary without changing selection
+  semantics. Its exact Windows suite is green at 282/282 tests;
 - align TypeScript build-tool discovery with the canonical language and identity
   registry. Merged PR #9582 consumes the shared registry and duplicate-
   identity fixtures, preserves package/program identity, excludes spec fixtures,
@@ -250,7 +252,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   from 655 unknown records and 217 duplicate groups;
 - make TypeScript build-plan package paths portable on Windows. The identity-
   registry validation found that `rel_path` values still use host backslashes;
-  ready PR #9589 is the selected fixture-driven slice because every one of the
+  merged PR #9589 is the fixture-driven slice because every one of the
   real plan's 4,768 package records is affected on Windows. Normalize serialized
   repository-relative paths without widening discovery behavior;
 - make Swift build-tool file options recognize Windows drive-letter absolute

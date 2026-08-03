@@ -54,6 +54,11 @@ Emitted build plans use repository-relative forward-slash package paths on
 every platform, including Windows, so downstream jobs receive the same logical
 plan regardless of the producer host.
 
+Git-diff package matching uses the same repository-relative forward-slash
+paths on every platform. Its integration tests create native temporary Git
+repositories and invoke Git with direct argument vectors, so the package suite
+runs without a POSIX shell on Windows.
+
 ## Platform-specific BUILD files
 
 The discovery system supports platform-specific BUILD files with the following priority:

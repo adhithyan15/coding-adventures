@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9589,
+  "active_pr": 9592,
   "last_inventory": {
-    "revision": "3f8eb7b8a94db122c05ec4ffe1de59e0a052f515",
+    "revision": "b70e9b7dd03198973ceadbc4d5d272f101d99afa",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1222,
@@ -352,11 +352,11 @@
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
       "title": "Make TypeScript build-tool git-diff tests portable on Windows",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered while running the full TypeScript build-tool suite for the strict rockspec UTF-8 slice. On Windows, gitdiff.test.ts hardcodes /bin/sh for two git commits and uses /repo POSIX fake roots for path-mapping tests, producing two spawnSync /bin/sh ENOENT failures plus five empty affected-package sets. The failure is pre-existing and unrelated to metadata decoding. Add platform-native command invocation and temporary-directory path fixtures in a separate small slice, then require the full package suite and coverage on Windows."
+      "branch": "codex/build-tool-typescript-windows-gitdiff",
+      "pr_number": 9592,
+      "notes": "Ready PR #9592 is the sole active parity PR. It replaces two /bin/sh-dependent fixture commits with direct git argument vectors, uses native temporary-directory package roots, and normalizes path.relative package roots to Git's forward-slash repository paths without changing diff-selection semantics. The red Windows baseline was 275 passing plus the exact seven owned failures; exact-head validation after a conflict-free rebase onto b70e9b7dd passed all 282 tests, 96.77% gitdiff line and 95% branch coverage, 89.36%/82.06% full-suite line/branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, and zero-advisory npm audit. The real plan contains 4,768 packages, 4,768 unique names, zero duplicate groups, 7,243 edges, and zero backslash paths. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets; BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
     },
     {
       "id": "build-tool-typescript-language-identity-registry",
@@ -370,11 +370,11 @@
     {
       "id": "build-tool-typescript-windows-plan-rel-path-portability",
       "title": "Emit portable TypeScript build-plan package paths on Windows",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-typescript-language-identity-registry"],
       "branch": "codex/build-tool-typescript-windows-plan-rel-path",
       "pr_number": 9589,
-      "notes": "Ready PR #9589 is the sole active parity PR. It adds the language-neutral plan/portable-package-path plan_v1_write fixture, consumes it through a real TypeScript CLI subprocess with exact emitted-plan equality, and normalizes only serialized package rel_path values to forward slashes. Exact-head validation after a conflict-free rebase onto 0ef57c15 passed 18 plan tests, 272 unaffected tests, 100% plan line/statement/function and 88.88% branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, zero-advisory npm audit, and a real 4,768-record/7,243-edge full plan with 4,768 unique names, zero duplicate groups, and zero backslash paths. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets. Full local Windows testing separately reproduced only the exact seven owned gitdiff portability failures, and BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
+      "notes": "Merged PR #9589 at 3c9fe557ea8e060064eff9c0bcf16b29baafa848 on 2026-08-02 after both detection runs, both fixture-consumer runs, both Ubuntu builds, macOS, Windows, CodeQL language detection, and JavaScript/TypeScript analysis passed; irrelevant CodeQL lanes skipped and the aggregate CodeQL result was neutral. It adds the language-neutral plan/portable-package-path plan_v1_write fixture, consumes it through a real TypeScript CLI subprocess with exact emitted-plan equality, and normalizes only serialized package rel_path values to forward slashes. Exact-head validation passed 18 plan tests, 272 unaffected tests, 100% plan line/statement/function and 88.88% branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, zero-advisory npm audit, and a real 4,768-record/7,243-edge full plan with 4,768 unique names, zero duplicate groups, and zero backslash paths. The post-merge collision-checked inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets. Full local Windows testing separately reproduced only the exact seven owned gitdiff portability failures, and BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
     },
     {
       "id": "build-tool-go-rockspec-utf8-conformance",
