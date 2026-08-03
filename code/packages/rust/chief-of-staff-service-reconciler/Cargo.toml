@@ -1,0 +1,13 @@
+[package]
+name = "chief-of-staff-service-reconciler"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic registry-to-supervisor reconciliation for the D18 Chief orchestrator"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+
+[dev-dependencies]
+storage-core = { path = "../storage-core" }

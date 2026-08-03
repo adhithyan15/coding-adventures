@@ -77,8 +77,10 @@ Each host tick follows this sequence:
 4. For `Start` or `Stop`, CAS a transitional registry observation before the
    external mutation.
 5. Perform exactly one idempotent supervisor mutation.
-6. Leave final liveness discovery to the next tick. If the mutation fails,
-   best-effort CAS an inactive failure observation so a later tick can recover.
+6. Leave final liveness discovery to the next tick. If start fails, best-effort
+   CAS an inactive failure observation. If stop fails, restore the authoritative
+   live observation, except that a durable quarantine remains in force. A later
+   tick retries convergence.
 
 A concurrent registry edit can make either CAS fail. No supervisor mutation is
 performed if the transition claim loses its CAS. If desired state changes after
@@ -111,7 +113,9 @@ impossible cross-system atomic transaction.
 - `Absent` after failure: restart for `Always` and `OnFailure`.
 - Cached `Starting` or `Restarting` with no authoritative instance: retry the
   interrupted launch.
-- Unexpired `Quarantined`: defer. At expiry, restart only if policy permits.
+- Unexpired `Quarantined`: defer while absent and drain any unexpectedly active
+  instance without clearing the quarantine. At expiry, restart only if policy
+  permits.
 
 `restart_count` increments only when relaunching a previously started or failed
 host, not on its first launch. Overflow fails closed into a permanent
