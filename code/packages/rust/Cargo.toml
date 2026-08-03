@@ -726,6 +726,7 @@ members = [
     "ieee802154-security",
     "http1",
     "websocket-core",
+    "websocket-runtime",
     "http1-client",
     "storage-core",
     "storage-local-folder",
