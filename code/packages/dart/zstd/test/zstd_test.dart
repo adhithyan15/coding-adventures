@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:test/test.dart';
 import 'package:coding_adventures_zstd/coding_adventures_zstd.dart';
@@ -13,6 +14,20 @@ Uint8List bytes(List<int> values) => Uint8List.fromList(values);
 /// Repeat a string [n] times and return as Uint8List.
 Uint8List strBytes(String s, int n) =>
     Uint8List.fromList(List.generate(s.length * n, (i) => s.codeUnitAt(i % s.length)));
+
+/// Checks whether the `zstd` CLI binary is reachable on PATH.
+///
+/// Returns `true` iff `zstd --version` runs and exits 0. Used to skip the
+/// CLI-interop tests gracefully in environments without the real `zstd`
+/// binary installed (CI/dev environments vary).
+bool _isZstdCliAvailable() {
+  try {
+    final r = Process.runSync('zstd', ['--version']);
+    return r.exitCode == 0;
+  } catch (_) {
+    return false;
+  }
+}
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -129,10 +144,14 @@ void main() {
     expect(rt(data), equals(data));
   });
 
-  // ── TC-9: bad magic → throws ──────────────────────────────────────────────
+  // ── Edge: bad magic → throws ───────────────────────────────────────────────
   //
   // A frame with the wrong magic number must be rejected with a FormatException.
-  test('TC-9: bad magic throws FormatException', () {
+  //
+  // (This test used to be mislabelled "TC-9" even though it has nothing to do
+  // with the spec's TC-9 — Cross-language / interoperability — which was a
+  // stub. See the real "TC-9: CLI interoperability" tests below.)
+  test('Edge: bad magic throws FormatException', () {
     final garbage = bytes([
       0x00, 0x00, 0x00, 0x00, // wrong magic
       0xE0,                   // FHD
@@ -143,6 +162,129 @@ void main() {
       () => decompress(garbage),
       throwsA(isA<FormatException>()),
     );
+  });
+
+  // ── TC-9: Cross-language / interoperability (real `zstd` CLI) ─────────────
+  //
+  // Both directions must round-trip exactly against the REAL `zstd` binary:
+  //   1. Compress with ours, decompress with `zstd -d`.
+  //   2. Compress with `zstd`, decompress with ours.
+  //
+  // This is the test that actually proves the wire format is real RFC 8878,
+  // not just a self-consistent internal format — a codec whose encoder and
+  // decoder always agree with each other can still be silently wrong. This
+  // package had exactly that: the FSE sequences-section codec (table-spread
+  // algorithm, per-sequence field order, last-sequence state-init special
+  // case) was internally self-consistent but non-conformant, and every
+  // in-process round-trip test above passed regardless. Only a real
+  // cross-implementation check like this one catches that class of bug. See
+  // lessons.md Lesson 95/96. Skipped (not failed) when the `zstd` binary
+  // isn't on PATH.
+  test('TC-9: CLI interoperability — both directions round-trip exactly', () {
+    if (!_isZstdCliAvailable()) {
+      markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+      return;
+    }
+
+    const sentence = 'the quick brown fox jumps over the lazy dog ';
+    final original = strBytes(sentence, 25);
+
+    // Direction 1: compress with ours, decompress with real `zstd -d`.
+    final ourCompressed = compress(original);
+    final oursZst = Directory.systemTemp.createTempSync('zstd-dart-tc9-ours-');
+    final oursZstFile = File('${oursZst.path}/out.zst');
+    try {
+      oursZstFile.writeAsBytesSync(ourCompressed);
+      final result = Process.runSync(
+        'zstd',
+        ['-d', '-q', '-c', oursZstFile.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd -d` failed to decode our compressed output: '
+            '${result.stderr}',
+      );
+      expect(
+        Uint8List.fromList(result.stdout as List<int>),
+        equals(original),
+        reason: 'real `zstd -d` decoded our output to different bytes',
+      );
+    } finally {
+      oursZst.deleteSync(recursive: true);
+    }
+
+    // Direction 2: compress with real `zstd`, decompress with ours.
+    final theirsDir = Directory.systemTemp.createTempSync('zstd-dart-tc9-theirs-');
+    final theirsInput = File('${theirsDir.path}/in.txt');
+    try {
+      theirsInput.writeAsBytesSync(original);
+      final result = Process.runSync(
+        'zstd',
+        ['-q', '-c', theirsInput.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd` failed to compress the test input',
+      );
+      final theirCompressed = Uint8List.fromList(result.stdout as List<int>);
+      final decodedByUs = decompress(theirCompressed);
+      expect(
+        decodedByUs,
+        equals(original),
+        reason: 'our decompress() failed to decode real `zstd`\'s output',
+      );
+    } finally {
+      theirsDir.deleteSync(recursive: true);
+    }
+  });
+
+  // ── RT: CLI interop with a high sequence count ────────────────────────────
+  //
+  // Real `zstd` CLI interop on an input large enough to push our compressor's
+  // single-block sequence count past 128 — the exact boundary where the
+  // sequence-count wire encoding switches from its 1-byte form to its 2-byte
+  // form (RFC 8878 §3.1.1.3.1). Extra regression coverage for the FSE fix,
+  // beyond the spec's 10 mandatory TCs: many sequences means many FSE state
+  // transitions, so this exercises the corrected per-sequence field order and
+  // last-sequence special case far more heavily than a single-sequence input
+  // would.
+  test('RT: CLI interop — high sequence count (2-byte seq-count form)', () {
+    if (!_isZstdCliAvailable()) {
+      markTestSkipped('zstd CLI not found on PATH — skipping interop test');
+      return;
+    }
+
+    const src = [0x41, 0x42, 0x43, 0x44, 0x45, 0x46]; // 'ABCDEF'
+    final original = bytes(List.generate(9000, (i) => src[i % src.length]));
+
+    final ourCompressed = compress(original);
+    final tmpDir = Directory.systemTemp.createTempSync('zstd-dart-rt-highseq-');
+    final zstFile = File('${tmpDir.path}/out.zst');
+    try {
+      zstFile.writeAsBytesSync(ourCompressed);
+      final result = Process.runSync(
+        'zstd',
+        ['-d', '-q', '-c', zstFile.path],
+        stdoutEncoding: null,
+      );
+      expect(
+        result.exitCode,
+        equals(0),
+        reason: 'real `zstd -d` failed to decode our high-sequence-count '
+            'output (likely a sequence-count wire-format regression): '
+            '${result.stderr}',
+      );
+      expect(
+        Uint8List.fromList(result.stdout as List<int>),
+        equals(original),
+      );
+    } finally {
+      tmpDir.deleteSync(recursive: true);
+    }
   });
 
   // ── Additional round-trip tests ────────────────────────────────────────────
@@ -189,7 +331,7 @@ void main() {
     expect(compress(data), equals(compress(data)));
   });
 
-  // ── Wire format decoding ──────────────────────────────────────────────────
+  // ── TC-10: Wire format — minimal raw-block frame ───────────────────────────
   //
   // Manually construct a minimal ZStd frame to verify the decoder reads the
   // RFC 8878 wire format correctly, independent of our encoder.
@@ -199,13 +341,16 @@ void main() {
   //   [4]     FHD = 0x20:
   //             bits [7:6] = 00 → FCS_flag = 0
   //             bit  [5]   = 1  → Single_Segment = 1 → FCS is 1 byte
-  //             bits [4:0] = 0  → no checksum, no dict
+  //             bit  [4]   = 0  → Unused_bit
+  //             bit  [3]   = 0  → Reserved_bit
+  //             bit  [2]   = 0  → Content_Checksum_Flag = 0 (no checksum)
+  //             bits [1:0] = 0  → Dictionary_ID_Flag = 0 (no dict)
   //   [5]     FCS = 5 (content size = 5 bytes)
   //   [6..8]  Block header: Last=1, Type=Raw(00), Size=5
   //             = (5 << 3) | 0 | 1 = 41 = 0x29
   //             = [0x29, 0x00, 0x00]
   //   [9..13] b'hello'
-  test('Wire format: hand-crafted raw-block frame decodes correctly', () {
+  test('TC-10: hand-crafted raw-block frame decodes correctly', () {
     final frame = bytes([
       0x28, 0xB5, 0x2F, 0xFD, // magic
       0x20,                   // FHD: Single_Segment=1, FCS=1 byte

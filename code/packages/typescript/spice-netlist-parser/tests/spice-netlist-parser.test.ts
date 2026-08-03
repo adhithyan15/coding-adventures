@@ -825,6 +825,24 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["4n", 4.0e-9],
+  ])("accepts valid diode TT transit time %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(TT=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      transitTime: expected,
+    });
+  });
+
+  it.each(["-1n", "1e999"])("rejects invalid diode TT transit time %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(TT=${value})`)).toThrow(
+      "diode TT must be finite and non-negative",
+    );
+  });
+
   it("parses the diode V_T thermal-voltage alias", () => {
     const parsed = parseNetlist(`
 .model clamp D(V_T=27m)
@@ -893,6 +911,15 @@ Q1 col base 0 fast
     expect(result.voltage("col")).toBeGreaterThan(0.0);
     expect(result.voltage("col")).toBeLessThan(5.0);
   });
+
+  it.each(["0", "-1p", "1e999"])(
+    "rejects invalid BJT saturation current %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NPN(IS=${value})`)).toThrow(
+        "BJT IS must be finite and positive",
+      );
+    },
+  );
 
   it("parses PNP BJT model aliases", () => {
     const parsed = parseNetlist(`

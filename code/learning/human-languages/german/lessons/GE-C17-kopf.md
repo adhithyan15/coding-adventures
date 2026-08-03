@@ -86,6 +86,6 @@ in French.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05] -->
 
-[PAUSE 3s] Say “the head.” (**Der Kopf**.) What gender? (**Masculine**.) Why the
-capital? (It is a **noun**.) What did *Kopf* first mean? (A **cup or bowl**.)
-Which English word is related? (**Cup**.) Next: find the inherited word *Haupt*.
+[PAUSE 3s] Say “the head.” (**Der Kopf**.) Give its gender. (**Masculine**.) Why
+the capital? (It is a **noun**.) What did *Kopf* first mean? (A **cup or bowl**.)
+Name the related English word. (**Cup**.) Next: find the inherited word *Haupt*.

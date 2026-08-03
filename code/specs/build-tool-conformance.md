@@ -271,6 +271,9 @@ The canonical graph edge `[from, to]` means "`to` depends on `from`". Resolution
 MUST:
 
 - ignore external dependencies;
+- read local dependency candidates only from the ecosystem's authoritative
+  dependency fields or sections; package identity, descriptions, source/build
+  metadata, comments, and unrelated quoted strings MUST NOT create edges;
 - recognize repository-supported legacy and current package-name aliases;
 - keep dependency scope within the implementation ecosystem unless metadata
   explicitly names another qualified package;

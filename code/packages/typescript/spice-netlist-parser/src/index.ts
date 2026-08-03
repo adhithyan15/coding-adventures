@@ -1175,11 +1175,27 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode CJO must be finite and non-negative");
   }
+  const diodeTransitTime = params.get("TT");
+  if (
+    kind === "D" &&
+    diodeTransitTime !== undefined &&
+    (!Number.isFinite(diodeTransitTime) || diodeTransitTime < 0.0)
+  ) {
+    throw new NetlistParseError("diode TT must be finite and non-negative");
+  }
   const bjtForwardBeta =
     params.get("BF") ??
     params.get("BETA") ??
     params.get("BETA_F") ??
     params.get("HFE");
+  const bjtSaturationCurrent = params.get("IS");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtSaturationCurrent !== undefined &&
+    (!Number.isFinite(bjtSaturationCurrent) || bjtSaturationCurrent <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT IS must be finite and positive");
+  }
   if (
     (kind === "NPN" || kind === "PNP") &&
     bjtForwardBeta !== undefined &&

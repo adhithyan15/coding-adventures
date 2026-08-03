@@ -1,5 +1,7 @@
 # Changelog
 
+- Add first-party Synology Surveillance Station Web API discovery, isolated
+  authenticated sessions, and privilege-filtered camera health inspection.
 - Add first-party authenticated Frigate NVR and camera health inspection over
   the bounded local HTTPS API session host.
 - Upgrade Blue Iris with permission-probed, readback-verified manual recording
