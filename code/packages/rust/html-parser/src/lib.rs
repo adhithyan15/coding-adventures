@@ -6709,6 +6709,12 @@ impl HtmlParser {
                 || self.current_namespace() == Some("svg")
                 || (self.current_namespace() == Some("math") && name == "p"))
         {
+            if self.current_namespace() == Some("math") && name == "p" {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag-in-foreign-content",
+                    "end tag `</p>` in MathML foreign content forced HTML recovery",
+                ));
+            }
             self.pop_foreign_elements();
         } else if self.current_namespace().is_some()
             && !self.current_element_is(name)
@@ -33269,6 +33275,18 @@ mod tests {
             .parser_diagnostics
             .iter()
             .any(|diagnostic| diagnostic.code == "unexpected-li-start-tag"));
+    }
+
+    #[test]
+    fn reports_paragraph_end_tag_recovery_from_mathml_foreign_content() {
+        let output = parse_html_with_diagnostics("<!doctype html><p><math></p>a").unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-p-end-tag-in-foreign-content",
+                "end tag `</p>` in MathML foreign content forced HTML recovery"
+            )]
+        );
     }
 
     #[test]
