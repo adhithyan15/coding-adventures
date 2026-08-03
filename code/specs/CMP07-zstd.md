@@ -143,9 +143,20 @@ Bits 7–6:  Frame_Content_Size_Flag
            10 → FCS is 4 bytes
            11 → FCS is 8 bytes
 Bits 5:    Single_Segment_Flag — if 1, no Window_Descriptor; FCS always present
-Bit  4:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
-Bit  3:    Reserved (must be 0)
-Bit  2:    Reserved (must be 0)
+Bit  4:    Unused_bit (reserved by the format, must be 0)
+Bit  3:    Reserved_bit (must be 0)
+Bit  2:    Content_Checksum_Flag — if 1, 4-byte checksum appended after last block
+           (CORRECTED 2026-08-03: an earlier revision of this spec placed
+           Content_Checksum_Flag at bit 4. RFC 8878 §3.1.1.1 places it at
+           bit 2; bit 4 is Unused_bit. At least one language port had
+           already copied the wrong bit position into a code comment
+           before this was caught — see lessons.md Lesson 95/96. The
+           encoder side was functionally unaffected everywhere audited so
+           far (every port always emits 0 for both bits, i.e. no
+           checksum), but the DECODE side must check the correct bit to
+           know whether to skip a trailing checksum on frames produced by
+           other encoders, e.g. the real `zstd` CLI, which sets it by
+           default.)
 Bits 1–0:  Dictionary_ID_Flag
            00 → no dictionary ID
            01 → 1-byte dict ID

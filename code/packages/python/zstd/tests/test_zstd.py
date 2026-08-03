@@ -10,6 +10,10 @@ Tests cover:
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+from pathlib import Path
+
 import pytest
 
 from coding_adventures_zstd import (
@@ -28,7 +32,6 @@ from coding_adventures_zstd import (
     _encode_literals_section,
     _encode_seq_count,
     _encode_sequences_section,
-    _fse_decode_sym,
     _ll_to_code,
     _ml_to_code,
     _RevBitReader,
@@ -476,13 +479,12 @@ class TestSeqCount:
     """Verify sequence count encode/decode symmetry."""
 
     @pytest.mark.parametrize(
-        "count", [0, 1, 50, 127, 128, 200, 256, 300, 515, 1000, 0x7F7E]
+        "count", [0, 1, 50, 127, 128, 200, 256, 300, 515, 1000, 0x7EFF, 0x7F00, 40000]
     )
     def test_roundtrip(self, count: int) -> None:
-        """Sequence count round-trips correctly, including multiples-of-256.
-
-        The 2-byte encoding supports counts 128..32639 (0x7F7F).
-        The 3-byte encoding handles larger counts.
+        """Sequence count round-trips correctly, including multiples-of-256
+        and the 2-byte/3-byte boundary (0x7EFF is the last 2-byte value,
+        0x7F00 is the first 3-byte value).
         """
         enc = _encode_seq_count(count)
         dec, _ = _decode_seq_count(enc)
@@ -492,6 +494,85 @@ class TestSeqCount:
         """Empty data raises ValueError."""
         with pytest.raises(ValueError, match="empty"):
             _decode_seq_count(b"")
+
+    @pytest.mark.parametrize(
+        ("count", "expected"),
+        [
+            (200, bytes([0x80, 0xC8])),
+            (300, bytes([0x81, 0x2C])),
+            (515, bytes([0x82, 0x03])),
+            (768, bytes([0x83, 0x00])),
+        ],
+    )
+    def test_wire_bytes_exact(self, count: int, expected: bytes) -> None:
+        """Exact wire-byte assertions for the 2-byte Number_of_Sequences
+        form, cross-checked against the real zstd wire format (RFC 8878
+        §3.1.1.3.1: byte0 = 0x80 | (count >> 8), byte1 = count & 0xFF — NO
+        additive offset).
+
+        An earlier revision of this codec applied a spurious "-0x80"
+        adjustment before splitting into bytes. That version would have
+        encoded 200 as [0x80, 0x48] instead of the correct [0x80, 0xC8] —
+        internally self-consistent (its own decoder undid the same
+        offset) but rejected by the real `zstd` CLI as corrupt. See
+        lessons.md Lesson 95/96.
+        """
+        assert _encode_seq_count(count) == expected, f"count {count}"
+
+
+def _decode_seqs_reference(bitstream: bytes, seqs: list) -> list[tuple[int, int, int]]:
+    """Decode a sequences-section bitstream using the CORRECT (RFC 8878 /
+    real-`zstd`-verified) peek/read/update ordering.
+
+    This mirrors ``_decompress_block``'s sequence loop exactly, but as a
+    standalone helper so unit tests can exercise the low-level FSE
+    primitives directly without constructing a full compressed block.
+    Duplicated here (rather than imported) so a regression in
+    ``_decompress_block`` doesn't silently make this helper "agree" with a
+    broken implementation — this is the independent spec-shaped version.
+
+    Returns:
+        List of (ll, ml, off) tuples, one per sequence, in decode order.
+    """
+    dt_ll = _build_decode_table(LL_NORM, LL_ACC_LOG)
+    dt_ml = _build_decode_table(ML_NORM, ML_ACC_LOG)
+    dt_of = _build_decode_table(OF_NORM, OF_ACC_LOG)
+
+    br = _RevBitReader(bitstream)
+    # Initial states are read in order LL, OF, ML (RFC 8878 §3.1.1.3.2.1.2).
+    state_ll = br.read_bits(LL_ACC_LOG)
+    state_of = br.read_bits(OF_ACC_LOG)
+    state_ml = br.read_bits(ML_ACC_LOG)
+
+    n = len(seqs)
+    results = []
+    for i in range(n):
+        # Step 1: peek symbols (no bits consumed).
+        ll_entry = dt_ll[state_ll]
+        ml_entry = dt_ml[state_ml]
+        of_entry = dt_of[state_of]
+        ll_code = ll_entry["sym"]
+        ml_code = ml_entry["sym"]
+        of_code = of_entry["sym"]
+
+        ll_base, ll_extra_bits = LL_CODES[ll_code]
+        ml_base, ml_extra_bits = ML_CODES[ml_code]
+
+        # Step 2: extra bits, order OF, ML, LL.
+        of_extra = br.read_bits(of_code)
+        of_raw = (1 << of_code) | of_extra
+        off_dec = of_raw - 3
+        ml_dec = ml_base + br.read_bits(ml_extra_bits)
+        ll_dec = ll_base + br.read_bits(ll_extra_bits)
+
+        # Step 3: update states, order LL, ML, OF — skipped for the last seq.
+        if i != n - 1:
+            state_ll = ll_entry["base"] + br.read_bits(ll_entry["nb"])
+            state_ml = ml_entry["base"] + br.read_bits(ml_entry["nb"])
+            state_of = of_entry["base"] + br.read_bits(of_entry["nb"])
+
+        results.append((ll_dec, ml_dec, off_dec))
+    return results
 
 
 class TestFSEEncodeDecode:
@@ -504,30 +585,11 @@ class TestFSEEncodeDecode:
             _Seq(ll=0, ml=3, off=2),
         ]
         bitstream = _encode_sequences_section(seqs)
+        decoded = _decode_seqs_reference(bitstream, seqs)
 
-        dt_ll = _build_decode_table(LL_NORM, LL_ACC_LOG)
-        dt_ml = _build_decode_table(ML_NORM, ML_ACC_LOG)
-        dt_of = _build_decode_table(OF_NORM, OF_ACC_LOG)
-
-        br = _RevBitReader(bitstream)
-        state_ll = br.read_bits(LL_ACC_LOG)
-        state_ml = br.read_bits(ML_ACC_LOG)
-        state_of = br.read_bits(OF_ACC_LOG)
-
-        for i, expected in enumerate(seqs):
-            ll_code, state_ll = _fse_decode_sym(state_ll, dt_ll, br)
-            of_code, state_of = _fse_decode_sym(state_of, dt_of, br)
-            ml_code, state_ml = _fse_decode_sym(state_ml, dt_ml, br)
-
-            ll_base, ll_extra_bits = LL_CODES[ll_code]
-            ml_base, ml_extra_bits = ML_CODES[ml_code]
-
-            ll_dec = ll_base + br.read_bits(ll_extra_bits)
-            ml_dec = ml_base + br.read_bits(ml_extra_bits)
-            of_extra = br.read_bits(of_code)
-            of_raw = (1 << of_code) | of_extra
-            off_dec = of_raw - 3
-
+        for i, (expected, (ll_dec, ml_dec, off_dec)) in enumerate(
+            zip(seqs, decoded, strict=True)
+        ):
             assert ll_dec == expected.ll, f"seq {i} LL"
             assert ml_dec == expected.ml, f"seq {i} ML"
             assert off_dec == expected.off, f"seq {i} OFF"
@@ -536,32 +598,31 @@ class TestFSEEncodeDecode:
         """Encoding one sequence and decoding gives back the original values."""
         seqs = [_Seq(ll=3, ml=5, off=2)]
         bitstream = _encode_sequences_section(seqs)
-
-        dt_ll = _build_decode_table(LL_NORM, LL_ACC_LOG)
-        dt_ml = _build_decode_table(ML_NORM, ML_ACC_LOG)
-        dt_of = _build_decode_table(OF_NORM, OF_ACC_LOG)
-
-        br = _RevBitReader(bitstream)
-        state_ll = br.read_bits(LL_ACC_LOG)
-        state_ml = br.read_bits(ML_ACC_LOG)
-        state_of = br.read_bits(OF_ACC_LOG)
-
-        ll_code, state_ll = _fse_decode_sym(state_ll, dt_ll, br)
-        of_code, state_of = _fse_decode_sym(state_of, dt_of, br)
-        ml_code, state_ml = _fse_decode_sym(state_ml, dt_ml, br)
-
-        ll_base, ll_extra_bits = LL_CODES[ll_code]
-        ml_base, ml_extra_bits = ML_CODES[ml_code]
-
-        ll_dec = ll_base + br.read_bits(ll_extra_bits)
-        ml_dec = ml_base + br.read_bits(ml_extra_bits)
-        of_extra = br.read_bits(of_code)
-        of_raw = (1 << of_code) | of_extra
-        off_dec = of_raw - 3
+        (ll_dec, ml_dec, off_dec), = _decode_seqs_reference(bitstream, seqs)
 
         assert ll_dec == 3
         assert ml_dec == 5
         assert off_dec == 2
+
+    def test_many_sequence_roundtrip(self) -> None:
+        """A longer sequence list (exercising the last-sequence special case
+        across multiple non-last sequences too) round-trips correctly."""
+        seqs = [
+            _Seq(ll=0, ml=3, off=1),
+            _Seq(ll=5, ml=10, off=100),
+            _Seq(ll=1, ml=3, off=4),
+            _Seq(ll=20, ml=40, off=2000),
+            _Seq(ll=0, ml=3, off=1),
+        ]
+        bitstream = _encode_sequences_section(seqs)
+        decoded = _decode_seqs_reference(bitstream, seqs)
+
+        for i, (expected, (ll_dec, ml_dec, off_dec)) in enumerate(
+            zip(seqs, decoded, strict=True)
+        ):
+            assert ll_dec == expected.ll, f"seq {i} LL"
+            assert ml_dec == expected.ml, f"seq {i} ML"
+            assert off_dec == expected.off, f"seq {i} OFF"
 
 
 class TestWireFormat:
@@ -618,3 +679,179 @@ class TestDeterminism:
         """Compressing the same data twice produces identical bytes."""
         data = b"hello, ZStd world! " * 50
         assert compress(data) == compress(data)
+
+
+# =============================================================================
+# TC-9 (spec): Cross-language / interoperability with the real `zstd` CLI
+# =============================================================================
+#
+# code/specs/CMP07-zstd.md ("Test Cases" section) defines TC-9 as: compress
+# with the real `zstd` CLI and decompress with ours, AND compress with ours
+# and decompress with the real `zstd -d` CLI — both directions must round-
+# trip exactly. This was previously MISSING from this package's test suite
+# (the numeric labels TC-1..TC-12 further up this file predate alignment
+# with the shared cross-language spec and cover a different, python-specific
+# set of scenarios — they are not renumbered here to avoid unrelated churn).
+#
+# Why this matters: purely-internal round-trip tests (compress-then-
+# decompress using only this package's own code) can pass even when the
+# wire format is flat-out wrong, because a self-consistent bug in the
+# encoder is invisible to a decoder built from the same wrong assumptions.
+# That is exactly what happened here — see lessons.md Lesson 95/96 and the
+# sibling `java/zstd` (#9780) and `rust/zstd` audits. Three real bugs were
+# found ONLY by decompressing our output with the actual `zstd` binary:
+#
+#   1. FSE table-spread algorithm used a fabricated two-pass split instead
+#      of the real single-pass algorithm (_build_decode_table /
+#      _build_encode_sym).
+#   2. Per-sequence FSE field order was wrong: symbols must be PEEKED (no
+#      bits consumed) before any bits are read, extra bits are read in
+#      order OF/ML/LL, state updates happen in order LL/ML/OF, and the
+#      state update is skipped entirely for a block's last sequence
+#      (_encode_sequences_section / _decompress_block).
+#   3. The Number_of_Sequences 2-byte wire encoding applied a spurious
+#      -0x80/+0x80 offset not present in the real format
+#      (_encode_seq_count / _decode_seq_count) — this one hid behind the
+#      1-byte encoding for any input producing < 128 LZ77 sequences, so it
+#      only surfaced on inputs large/repetitive enough to cross that
+#      boundary.
+#
+# All three were internally self-consistent (our decoder mirrored our own
+# encoder) and therefore invisible to every pre-existing round-trip test in
+# this file — the real `zstd` CLI was the only thing that caught them.
+#
+# Gracefully skipped (not failed) when `zstd` isn't on PATH, matching the
+# convention used by the java/zstd and rust/zstd sibling packages.
+
+_ZSTD_CLI = shutil.which("zstd")
+_ZSTD_SKIP_REASON = "real `zstd` CLI not found on PATH"
+
+
+def _zstd_cli_decompress(compressed: bytes, tmp_path: Path) -> bytes:
+    """Decompress ``compressed`` bytes using the real `zstd -d` CLI."""
+    in_path = tmp_path / "cli_in.zst"
+    out_path = tmp_path / "cli_out.bin"
+    in_path.write_bytes(compressed)
+    result = subprocess.run(
+        [_ZSTD_CLI, "-d", "-f", str(in_path), "-o", str(out_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, (
+        f"real `zstd -d` rejected our compressed output: {result.stderr.strip()}"
+    )
+    return out_path.read_bytes()
+
+
+def _zstd_cli_compress(data: bytes, tmp_path: Path) -> bytes:
+    """Compress ``data`` bytes using the real `zstd` CLI (default settings:
+    includes a trailing content checksum, per real zstd's default)."""
+    in_path = tmp_path / "cli_orig.bin"
+    out_path = tmp_path / "cli_orig.zst"
+    in_path.write_bytes(data)
+    result = subprocess.run(
+        [_ZSTD_CLI, "-f", str(in_path), "-o", str(out_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, (
+        f"real `zstd` CLI failed to compress: {result.stderr.strip()}"
+    )
+    return out_path.read_bytes()
+
+
+@pytest.mark.skipif(_ZSTD_CLI is None, reason=_ZSTD_SKIP_REASON)
+class TestCliInterop:
+    """TC-9 (spec): real `zstd` CLI interoperability, both directions."""
+
+    def test_our_compress_real_decompress_spec_text(self, tmp_path: Path) -> None:
+        """The exact TC-9 spec payload: our compress(), decompressed by the
+        real `zstd -d` CLI, must match byte-for-byte."""
+        text = "the quick brown fox jumps over the lazy dog " * 25
+        data = text.encode("utf-8")
+        compressed = compress(data)
+        assert _zstd_cli_decompress(compressed, tmp_path) == data
+
+    def test_real_compress_our_decompress_spec_text(self, tmp_path: Path) -> None:
+        """The exact TC-9 spec payload, compressed by the real `zstd` CLI
+        (which by default appends a content checksum), decompressed by
+        ours, must match byte-for-byte. Exercises the FHD
+        Content_Checksum_Flag (bit 2) skip-logic in decompress()."""
+        text = "the quick brown fox jumps over the lazy dog " * 25
+        data = text.encode("utf-8")
+        compressed = _zstd_cli_compress(data, tmp_path)
+        assert decompress(compressed) == data
+
+    @pytest.mark.parametrize(
+        "data",
+        [
+            b"",
+            b"\x42",
+            bytes(range(256)),
+            b"A" * 1024,
+            bytes(i % 251 for i in range(4000)),
+        ],
+        ids=["empty", "single_byte", "all_bytes", "rle", "binary_pattern"],
+    )
+    def test_our_compress_real_decompress_various(
+        self, data: bytes, tmp_path: Path
+    ) -> None:
+        """A spread of TC-1..TC-6-shaped payloads, all verified against the
+        real `zstd -d` CLI rather than only our own decompress()."""
+        compressed = compress(data)
+        assert _zstd_cli_decompress(compressed, tmp_path) == data
+
+    def test_our_compress_real_decompress_crosses_seq_count_boundary(
+        self, tmp_path: Path
+    ) -> None:
+        """Regression test for the Number_of_Sequences wire-encoding bug
+        (see the module comment above, bug 3): pick an input whose LZ77 pass
+        produces >= 128 sequences, forcing the 2-byte Number_of_Sequences
+        encoding. Before the fix, this crossed silently in our own
+        round-trip tests but was rejected by the real `zstd` CLI with
+        "Data corruption detected"."""
+        data = b"the quick brown fox jumps over the lazy dog " * 800
+        compressed = compress(data)
+        assert _zstd_cli_decompress(compressed, tmp_path) == data
+
+    def test_our_compress_real_decompress_multiblock(self, tmp_path: Path) -> None:
+        """A >128 KB input (multiple compressed blocks) round-trips through
+        the real `zstd -d` CLI.
+
+        Sized just past the 128 KB block boundary (not e.g. 300 KB like the
+        internal-only TC-8 test above) to keep LZSS-pass runtime bounded —
+        see lessons.md Lesson 92 (LZSS/LZ77 passes are CPU-heavy and CI
+        runners run ~25x slower than local); this still forces exactly 2
+        blocks, which is what the multi-block wire format needs exercised.
+        """
+        unit = b"ABCDEFGHIJ" * 50 + b"ZYXWVUTSRQ" * 50
+        size = 132 * 1024  # 128 KB + a bit, forces exactly 2 blocks
+        data = (unit * (size // len(unit) + 1))[:size]
+        compressed = compress(data)
+        assert _zstd_cli_decompress(compressed, tmp_path) == data
+
+    def test_real_compress_our_decompress_binary(self, tmp_path: Path) -> None:
+        """Binary data compressed by the real `zstd` CLI, decompressed by
+        ours."""
+        data = bytes(i % 251 for i in range(4000))
+        compressed = _zstd_cli_compress(data, tmp_path)
+        assert decompress(compressed) == data
+
+    def test_real_compress_our_decompress_rejects_unsupported_features(
+        self, tmp_path: Path
+    ) -> None:
+        """Some real-`zstd`-compressed frames use features outside this
+        educational codec's supported subset — Repeat_Offset (R1/R2/R3)
+        shortcuts and Huffman-coded literals in particular (see the
+        'Educational simplification' note in the sibling java/zstd package
+        and code/specs/CMP07-zstd.md). Our decoder must REJECT these with a
+        clear ValueError, not crash or silently produce wrong output. This
+        was itself a real bug found via this same CLI-interop exercise: an
+        unchecked negative offset (from a Repeat_Offset code) caused an
+        uncaught IndexError instead of a clean error."""
+        data = b"A" * 500  # real zstd encodes this via a Repeat_Offset shortcut
+        compressed = _zstd_cli_compress(data, tmp_path)
+        with pytest.raises(ValueError):
+            decompress(compressed)
