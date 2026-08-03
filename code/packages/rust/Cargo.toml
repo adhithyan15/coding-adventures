@@ -749,6 +749,7 @@ members = [
     "vault-import-export",
     "storage-fs",
     "chief-of-staff-channel-crypto",
+    "chief-of-staff-channel-store",
     "chief-of-staff-tool-api",
     "chief-of-staff-host-runtime",
     "chief-of-staff-smart-home-tools",
