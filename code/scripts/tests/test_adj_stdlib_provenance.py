@@ -590,6 +590,529 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
             self.assertFalse(changed_path.exists())
 
+    def test_explicit_root_replacement_prunes_only_superseded_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+
+            with provenance.BundleRootReplacementTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = (
+                    "corrected fixture definition accepted as a primitive root"
+                )
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="corrected arithmetic fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                result = transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual(result["bundle_hashes"], [changed_hash])
+            self.assertEqual(result["pruned_sha256s"], [hashes["bundle"]])
+            self.assertFalse(
+                provenance.Cas(cas_root).object_path(hashes["bundle"]).exists()
+            )
+            self.assertTrue(provenance.Cas(cas_root).object_path(changed_hash).exists())
+            self.assertTrue(
+                provenance.validate_repository(
+                    cas_root, manifest_path, workspace_root=root
+                )["valid"]
+            )
+
+    def test_root_replacement_preserves_old_root_reachable_as_dependency(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            with provenance.BundleRegistrationTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                consumer = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                consumer["bundle_id"] = "test.consumer.v1"
+                consumer["dependencies"] = [hashes["bundle"]]
+                consumer_hash = transaction.cas.put_json(
+                    consumer,
+                    kind="provenance_bundle",
+                    label="consumer fixture bundle",
+                    links=provenance._bundle_declared_links(consumer),
+                )
+                transaction.commit({"test.consumer.v1": consumer_hash})
+
+            with provenance.BundleRootReplacementTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = "replacement root"
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="replacement fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                result = transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual(
+                result["bundle_hashes"], sorted([changed_hash, consumer_hash])
+            )
+            self.assertEqual(result["pruned_sha256s"], [])
+            self.assertTrue(
+                provenance.Cas(cas_root).object_path(hashes["bundle"]).exists()
+            )
+
+    def test_root_replacement_updates_multiple_roots_in_one_compare_and_swap(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            with provenance.BundleRegistrationTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                second = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                second["bundle_id"] = "test.second.v1"
+                second_hash = transaction.cas.put_json(
+                    second,
+                    kind="provenance_bundle",
+                    label="second fixture bundle",
+                    links=provenance._bundle_declared_links(second),
+                )
+                transaction.commit({"test.second.v1": second_hash})
+
+            with provenance.BundleRootReplacementTransaction(
+                cas_root,
+                manifest_path,
+                expected_manifest_id="test.provenance.v1",
+                workspace_root=root,
+            ) as transaction:
+                first_new = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                first_new["clauses"][0]["resolution"]["reason"] = "first replacement"
+                first_new_hash = transaction.cas.put_json(
+                    first_new,
+                    kind="provenance_bundle",
+                    label="first replacement bundle",
+                    links=provenance._bundle_declared_links(first_new),
+                )
+                second_new = provenance._json_object(
+                    transaction.cas, second_hash, "provenance_bundle"
+                )
+                second_new["clauses"][0]["resolution"]["reason"] = "second replacement"
+                second_new_hash = transaction.cas.put_json(
+                    second_new,
+                    kind="provenance_bundle",
+                    label="second replacement bundle",
+                    links=provenance._bundle_declared_links(second_new),
+                )
+                result = transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": first_new_hash,
+                        },
+                        "test.second.v1": {
+                            "expected_old_sha256": second_hash,
+                            "new_sha256": second_new_hash,
+                        },
+                    }
+                )
+
+            self.assertEqual(
+                result["bundle_hashes"], sorted([first_new_hash, second_new_hash])
+            )
+            self.assertEqual(
+                result["pruned_sha256s"], sorted([hashes["bundle"], second_hash])
+            )
+
+    def test_root_replacement_rejects_new_strays_and_restores_baseline(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "staged unreferenced new objects"
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = "replacement root"
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="replacement fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                stray_hash = transaction.cas.put(
+                    b"unreachable replacement bytes",
+                    kind="raw_source",
+                    label="replacement stray",
+                )
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            cas = provenance.Cas(cas_root)
+            self.assertFalse(cas.object_path(changed_hash).exists())
+            self.assertFalse(cas.object_path(stray_hash).exists())
+
+    def test_root_replacement_cannot_add_an_unregistered_bundle_id(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "stale root replacement for test.new-root.v1",
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                added = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                added["bundle_id"] = "test.new-root.v1"
+                added_hash = transaction.cas.put_json(
+                    added,
+                    kind="provenance_bundle",
+                    label="invalid replacement addition",
+                    links=provenance._bundle_declared_links(added),
+                )
+                transaction.replace_roots(
+                    {
+                        "test.new-root.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": added_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertFalse(provenance.Cas(cas_root).object_path(added_hash).exists())
+
+    def test_root_replacement_rejects_a_stale_expected_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "stale root replacement for test.arithmetic.v1",
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = "stale replacement"
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="stale replacement fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": "0" * 64,
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertFalse(
+                provenance.Cas(cas_root).object_path(changed_hash).exists()
+            )
+
+    def test_root_replacement_restores_pruned_objects_on_final_validation_failure(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            validate = provenance._validate_repository_unlocked
+            calls = 0
+
+            def fail_final_validation(
+                *args: object, **kwargs: object
+            ) -> dict[str, object]:
+                nonlocal calls
+                calls += 1
+                if calls == 3:
+                    raise provenance.ProvenanceError(
+                        "injected final validation failure"
+                    )
+                return validate(*args, **kwargs)
+
+            with (
+                mock.patch.object(
+                    provenance,
+                    "_validate_repository_unlocked",
+                    fail_final_validation,
+                ),
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "injected final validation failure"
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = "replacement root"
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="replacement fixture bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertTrue(
+                provenance.Cas(cas_root).object_path(hashes["bundle"]).exists()
+            )
+            self.assertFalse(
+                provenance.Cas(cas_root).object_path(changed_hash).exists()
+            )
+
+    def assert_root_replacement_publication_failure(self, failure_stage: str) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            baseline_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            write_index = provenance.Cas.write_index
+            write_atomic = provenance._write_atomic
+            index_writes = 0
+            manifest_failed = False
+
+            def fail_index_publication(cas: provenance.Cas) -> None:
+                nonlocal index_writes
+                index_writes += 1
+                failing_write = 1 if failure_stage == "candidate index" else 2
+                if failure_stage != "manifest" and index_writes == failing_write:
+                    raise OSError(f"injected {failure_stage} publication failure")
+                write_index(cas)
+
+            def fail_manifest_publication(path: Path, data: bytes) -> None:
+                nonlocal manifest_failed
+                if (
+                    failure_stage == "manifest"
+                    and path == manifest_path
+                    and not manifest_failed
+                ):
+                    manifest_failed = True
+                    raise OSError("injected manifest publication failure")
+                write_atomic(path, data)
+
+            with (
+                mock.patch.object(
+                    provenance.Cas,
+                    "write_index",
+                    fail_index_publication,
+                ),
+                mock.patch.object(
+                    provenance,
+                    "_write_atomic",
+                    fail_manifest_publication,
+                ),
+                self.assertRaisesRegex(
+                    OSError, f"injected {failure_stage} publication failure"
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = (
+                    f"replacement before {failure_stage} failure"
+                )
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="publication failure replacement bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            restored_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertEqual(restored_objects, baseline_objects)
+
+    def test_root_replacement_restores_bytes_after_publication_failures(self) -> None:
+        for failure_stage in ("candidate index", "filtered index", "manifest"):
+            with self.subTest(failure_stage=failure_stage):
+                self.assert_root_replacement_publication_failure(failure_stage)
+
+    def test_root_replacement_restores_bytes_after_partial_prune_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            baseline_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            old_root_path = provenance.Cas(cas_root).object_path(hashes["bundle"])
+            unlink = Path.unlink
+            prune_failed = False
+
+            def fail_after_prune(path: Path, *args: object, **kwargs: object) -> None:
+                nonlocal prune_failed
+                unlink(path, *args, **kwargs)
+                if path == old_root_path and not prune_failed:
+                    prune_failed = True
+                    raise OSError("injected partial prune failure")
+
+            with (
+                mock.patch.object(Path, "unlink", fail_after_prune),
+                self.assertRaisesRegex(OSError, "injected partial prune failure"),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                ) as transaction,
+            ):
+                changed = provenance._json_object(
+                    transaction.cas, hashes["bundle"], "provenance_bundle"
+                )
+                changed["clauses"][0]["resolution"]["reason"] = (
+                    "replacement before partial prune failure"
+                )
+                changed_hash = transaction.cas.put_json(
+                    changed,
+                    kind="provenance_bundle",
+                    label="partial prune failure replacement bundle",
+                    links=provenance._bundle_declared_links(changed),
+                )
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": changed_hash,
+                        }
+                    }
+                )
+
+            restored_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertEqual(restored_objects, baseline_objects)
+
     def test_manifest_registration_rejects_malformed_contracts(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
