@@ -16,6 +16,9 @@ TLS choices.
 - `TlsConnector` and `TlsStream` traits for future OS backends
 - Default bundled WebPKI root trust store in the Rustls backend
 - Server-name validation before any socket is opened
+- Address-pinned connection support that retains a separate reviewed server
+  name for certificate verification and SNI, normalizing bracketed IPv6 URL
+  literals to certificate-verifier IP identities
 - Configurable ALPN protocols, with a `https_default()` helper for `http/1.1`
 - Read/write implementations for the secured stream
 - Redacted endpoint and connection summaries for telemetry

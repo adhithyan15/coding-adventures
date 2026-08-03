@@ -95,6 +95,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_manifest.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_provenance.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_onvif_origin_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_runner.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_execution_schema.py'

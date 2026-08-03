@@ -1,7 +1,7 @@
 use serde_json::json;
 use smart_home_onvif_integration::{
     scan_ws_discovery, ws_discovery_ipv4_destination, OnvifClient, OnvifCredentials,
-    OnvifLanTransport, DEFAULT_MAX_DISCOVERY_RESPONSES,
+    OnvifLanTransport, OnvifOriginPolicy, DEFAULT_MAX_DISCOVERY_RESPONSES,
 };
 use std::env;
 use std::process::ExitCode;
@@ -52,7 +52,9 @@ fn run() -> Result<(), String> {
                 env::var("ONVIF_PASSWORD").map_err(|_| "ONVIF_PASSWORD is required".to_string())?;
             let credentials =
                 OnvifCredentials::new(username, password).map_err(|error| error.to_string())?;
-            let mut client = OnvifClient::new(OnvifLanTransport::default());
+            let origin_policy = OnvifOriginPolicy::review_with_system_resolver(endpoint, false)
+                .map_err(|error| error.to_string())?;
+            let mut client = OnvifClient::new(OnvifLanTransport::default(), origin_policy);
             let snapshot = client
                 .inspect_camera(endpoint, &credentials)
                 .map_err(|error| error.to_string())?;

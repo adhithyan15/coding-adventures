@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+- Retain an optional reviewed canonical host and pinned socket with registered
+  endpoints and expose that binding only to the trusted executor during lease
+  redemption, preventing origin-reviewed integrations from losing DNS-rebinding
+  defenses at the camera-media boundary.
+- Reject IP-literal endpoint registrations whose reviewed pinned address does
+  not equal the URI literal.
+
 ## 0.2.0
 
 - Replaced raw endpoint redemption with a host-owned `CameraMediaService` that
