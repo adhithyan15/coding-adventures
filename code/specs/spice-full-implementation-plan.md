@@ -4340,11 +4340,17 @@ the Rust, Python, and TypeScript surfaces together.
    - Both parser facades validate positive finite `VT` / `V_T` values and
      lower `V_T` into the shared engine diode thermal-voltage field.
 
+405. Python and TypeScript Berkeley SPICE diode junction-capacitance alias parity.
+   - Status: completed in PR 9745.
+   - Both parser facades validate non-negative finite `CJO` / `CJ` / `CJ0`
+     values and lower `CJ` into the shared engine diode junction-capacitance
+     field.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE BJT model-card alias parity.
    - Align parser validation and lowering with the shared engine aliases,
-     starting with `BETA` as a forward-beta alias for `BF`.
+     continuing with `HFE` as a forward-beta alias for `BF` after `BETA`.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
