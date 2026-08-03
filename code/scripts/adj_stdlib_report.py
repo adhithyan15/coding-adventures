@@ -222,6 +222,9 @@ def build_report(
         cas_root = root / adj_stdlib_provenance.DEFAULT_ROOT
         manifest_path = root / adj_stdlib_provenance.DEFAULT_MANIFEST
         with adj_stdlib_provenance.CasRootLock(cas_root):
+            adj_stdlib_provenance._recover_transaction(
+                cas_root, expected_manifest_path=manifest_path
+            )
             adj_stdlib_provenance._validate_repository_unlocked(
                 cas_root,
                 manifest_path,

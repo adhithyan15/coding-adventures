@@ -48,6 +48,183 @@ def acquire_cas_lock_with_alternate_temp(
         release.wait(10)
 
 
+def crash_registration_transaction(
+    cas_root_text: str,
+    manifest_path_text: str,
+    workspace_root_text: str,
+    stage: str,
+) -> None:
+    cas_root = Path(cas_root_text)
+    manifest_path = Path(manifest_path_text)
+    workspace_root = Path(workspace_root_text)
+    original_write_index = provenance.Cas.write_index
+    original_write_atomic = provenance._write_atomic
+    original_replace = provenance.os.replace
+
+    def write_index_then_exit(cas: object) -> None:
+        original_write_index(cas)
+        if stage == "index":
+            os._exit(91)
+
+    def write_atomic_then_exit(path: Path, data: bytes) -> None:
+        original_write_atomic(path, data)
+        if stage == "manifest" and path == manifest_path:
+            os._exit(91)
+
+    def replace_or_exit(source: object, destination: object) -> None:
+        selected = Path(destination)
+        if stage == "index_temp" and selected == cas_root / "index.json":
+            os._exit(91)
+        if stage == "manifest_temp" and selected == manifest_path:
+            os._exit(91)
+        original_replace(source, destination)
+
+    with (
+        mock.patch.object(provenance.Cas, "write_index", write_index_then_exit),
+        mock.patch.object(provenance, "_write_atomic", write_atomic_then_exit),
+        mock.patch.object(provenance.os, "replace", replace_or_exit),
+        provenance.BundleRegistrationTransaction(
+            cas_root,
+            manifest_path,
+            expected_manifest_id="test.provenance.v1",
+            workspace_root=workspace_root,
+        ) as transaction,
+    ):
+        original_hash = json.loads(manifest_path.read_text(encoding="utf-8"))[
+            "bundle_hashes"
+        ][0]
+        added = provenance._json_object(
+            transaction.cas, original_hash, "provenance_bundle"
+        )
+        added["bundle_id"] = "test.crash.registration.v1"
+        added_hash = transaction.cas.put_json(
+            added,
+            kind="provenance_bundle",
+            label="crashing registration bundle",
+            links=provenance._bundle_declared_links(added),
+        )
+        if stage == "object":
+            os._exit(91)
+        transaction.commit({"test.crash.registration.v1": added_hash})
+
+
+def crash_index_only_transaction(cas_root_text: str, stage: str) -> None:
+    cas_root = Path(cas_root_text)
+    original_write_index = provenance.Cas.write_index
+    original_link = provenance.os.link
+
+    def write_index_then_exit(cas: object) -> None:
+        original_write_index(cas)
+        os._exit(91)
+
+    def link_or_exit(source: object, destination: object) -> None:
+        if stage == "object_temp":
+            os._exit(91)
+        original_link(source, destination)
+
+    with (
+        mock.patch.object(provenance.Cas, "write_index", write_index_then_exit),
+        mock.patch.object(provenance.os, "link", link_or_exit),
+        provenance.CasMutationTransaction(cas_root) as transaction,
+    ):
+        transaction.cas.put(
+            f"crashing index-only {stage}".encode(),
+            kind="raw_source",
+            label="crashing index-only object",
+        )
+        if stage == "object":
+            os._exit(91)
+        transaction.commit()
+
+
+def crash_journal_preparation(cas_root_text: str) -> None:
+    cas_root = Path(cas_root_text)
+    journal_path = cas_root / provenance.TRANSACTION_JOURNAL_NAME
+    original_replace = provenance.os.replace
+
+    def replace_or_exit(source: object, destination: object) -> None:
+        if Path(destination) == journal_path:
+            os._exit(91)
+        original_replace(source, destination)
+
+    with (
+        mock.patch.object(provenance.os, "replace", replace_or_exit),
+        provenance.CasMutationTransaction(cas_root),
+    ):
+        raise AssertionError("journal crash fixture reached its body")
+
+
+def crash_root_replacement_transaction(
+    cas_root_text: str,
+    manifest_path_text: str,
+    workspace_root_text: str,
+    stage: str,
+) -> None:
+    cas_root = Path(cas_root_text)
+    manifest_path = Path(manifest_path_text)
+    workspace_root = Path(workspace_root_text)
+    original_stage_prune = provenance.BundleRootReplacementTransaction._stage_prune
+    original_write_index = provenance.Cas.write_index
+    original_write_atomic = provenance._write_atomic
+    index_writes = 0
+
+    def prune_then_exit(transaction: object, digests: set[str]) -> None:
+        original_stage_prune(transaction, digests)
+        if stage == "prune":
+            os._exit(91)
+
+    def write_index_then_exit(cas: object) -> None:
+        nonlocal index_writes
+        original_write_index(cas)
+        index_writes += 1
+        if stage == "filtered_index" and index_writes == 2:
+            os._exit(91)
+
+    def write_atomic_then_exit(path: Path, data: bytes) -> None:
+        original_write_atomic(path, data)
+        if stage == "manifest" and path == manifest_path:
+            os._exit(91)
+
+    with (
+        mock.patch.object(
+            provenance.BundleRootReplacementTransaction,
+            "_stage_prune",
+            prune_then_exit,
+        ),
+        mock.patch.object(provenance.Cas, "write_index", write_index_then_exit),
+        mock.patch.object(provenance, "_write_atomic", write_atomic_then_exit),
+        provenance.BundleRootReplacementTransaction(
+            cas_root,
+            manifest_path,
+            expected_manifest_id="test.provenance.v1",
+            workspace_root=workspace_root,
+        ) as transaction,
+    ):
+        old_hash = json.loads(manifest_path.read_text(encoding="utf-8"))[
+            "bundle_hashes"
+        ][0]
+        changed = provenance._json_object(
+            transaction.cas, old_hash, "provenance_bundle"
+        )
+        changed["clauses"][0]["resolution"]["reason"] = (
+            f"crashing root replacement at {stage}"
+        )
+        changed_hash = transaction.cas.put_json(
+            changed,
+            kind="provenance_bundle",
+            label="crashing replacement bundle",
+            links=provenance._bundle_declared_links(changed),
+        )
+        transaction.replace_roots(
+            {
+                "test.arithmetic.v1": {
+                    "expected_old_sha256": old_hash,
+                    "new_sha256": changed_hash,
+                }
+            }
+        )
+
+
 class AdjStdlibProvenanceTests(unittest.TestCase):
     class FakePosixGuardian:
         CONTRACT = "adj-stdlib/process-guardian/v1"
@@ -4835,6 +5012,74 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertEqual(first, second)
             self.assertEqual(len(cas.index), 1)
 
+    def test_publication_helpers_sync_the_containing_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            atomic_path = root / "index.json"
+            exclusive_path = root / "object"
+            with mock.patch.object(provenance, "_sync_directory") as sync:
+                provenance._write_atomic(atomic_path, b"atomic")
+                provenance._write_exclusive(exclusive_path, b"exclusive")
+
+            self.assertEqual(sync.call_args_list, [mock.call(root), mock.call(root)])
+
+    def test_directory_creation_syncs_each_new_parent_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            first = root / "first"
+            target = first / "second"
+
+            with mock.patch.object(provenance, "_sync_directory") as sync:
+                provenance._ensure_real_directory(target)
+
+            self.assertEqual(sync.call_args_list, [mock.call(root), mock.call(first)])
+
+    def test_directory_creation_rejects_an_unavailable_filesystem_root(self) -> None:
+        with (
+            mock.patch.object(Path, "exists", return_value=False),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError, "unavailable filesystem root"
+            ),
+        ):
+            provenance._ensure_real_directory(Path("unavailable") / "child")
+
+    def test_commit_sync_failure_does_not_report_a_false_rollback(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, _manifest_path, _hashes = self.build_repository(root)
+            journal = cas_root / provenance.TRANSACTION_JOURNAL_NAME
+            sync_directory = provenance._sync_directory
+            failed = False
+
+            def fail_after_commit_point(path: Path) -> None:
+                nonlocal failed
+                if path == cas_root and not journal.exists() and not failed:
+                    failed = True
+                    raise OSError("injected commit directory sync failure")
+                sync_directory(path)
+
+            with (
+                mock.patch.object(
+                    provenance, "_sync_directory", fail_after_commit_point
+                ),
+                provenance.CasMutationTransaction(cas_root) as transaction,
+            ):
+                digest = transaction.cas.put(
+                    b"committed despite sync failure",
+                    kind="raw_source",
+                    label="commit-point fixture",
+                )
+                transaction.commit()
+
+            self.assertTrue(failed)
+            recovered = provenance.Cas(cas_root)
+            recovered.load()
+            self.assertIn(digest, recovered.index)
+            self.assertEqual(
+                recovered.object_path(digest).read_bytes(),
+                b"committed despite sync failure",
+            )
+
     def test_manifest_registration_preserves_unowned_bundle_roots(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -5375,6 +5620,406 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         for failure_stage in ("candidate index", "filtered index", "manifest"):
             with self.subTest(failure_stage=failure_stage):
                 self.assert_root_replacement_publication_failure(failure_stage)
+
+    def assert_process_crash_restores_repository(
+        self,
+        worker: object,
+        stage: str,
+        *,
+        replacement: bool = False,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            baseline_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            context = multiprocessing.get_context("spawn")
+            arguments = (
+                str(cas_root),
+                str(manifest_path),
+                str(root),
+                stage,
+            )
+            if not replacement:
+                arguments = arguments[:3] + (stage,)
+            process = context.Process(target=worker, args=arguments)
+            process.start()
+            process.join(30)
+            self.assertFalse(process.is_alive(), "crash worker did not terminate")
+            self.assertEqual(process.exitcode, 91)
+            self.assertTrue((cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists())
+
+            result = provenance.validate_repository(
+                cas_root, manifest_path, workspace_root=root
+            )
+
+            restored_objects = {
+                path.relative_to(cas_root): path.read_bytes()
+                for path in (cas_root / "objects").rglob("*")
+                if path.is_file()
+            }
+            self.assertTrue(result["valid"])
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertEqual(restored_objects, baseline_objects)
+            self.assertFalse(
+                (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+            )
+            self.assertFalse(
+                (cas_root / provenance.TRANSACTION_PRUNE_DIRECTORY).exists()
+            )
+
+    def test_registration_recovers_after_process_death_at_each_publication(
+        self,
+    ) -> None:
+        for stage in (
+            "object",
+            "index_temp",
+            "index",
+            "manifest_temp",
+            "manifest",
+        ):
+            with self.subTest(stage=stage):
+                self.assert_process_crash_restores_repository(
+                    crash_registration_transaction, stage
+                )
+
+    def test_index_only_mutation_recovers_after_process_death(self) -> None:
+        for stage in ("object_temp", "object", "index"):
+            with (
+                self.subTest(stage=stage),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                cas_root, manifest_path, _hashes = self.build_repository(root)
+                baseline_index = (cas_root / "index.json").read_bytes()
+                baseline_manifest = manifest_path.read_bytes()
+                baseline_objects = {
+                    path.relative_to(cas_root): path.read_bytes()
+                    for path in (cas_root / "objects").rglob("*")
+                    if path.is_file()
+                }
+                context = multiprocessing.get_context("spawn")
+                process = context.Process(
+                    target=crash_index_only_transaction,
+                    args=(str(cas_root), stage),
+                )
+                process.start()
+                process.join(30)
+                self.assertEqual(process.exitcode, 91)
+
+                provenance.validate_repository(
+                    cas_root, manifest_path, workspace_root=root
+                )
+
+                restored_objects = {
+                    path.relative_to(cas_root): path.read_bytes()
+                    for path in (cas_root / "objects").rglob("*")
+                    if path.is_file()
+                }
+                self.assertEqual(
+                    (cas_root / "index.json").read_bytes(), baseline_index
+                )
+                self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+                self.assertEqual(restored_objects, baseline_objects)
+                self.assertFalse(
+                    (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+                )
+
+    def test_first_index_publication_recovers_into_an_empty_cas(self) -> None:
+        for stage in ("object_temp", "object", "index"):
+            with (
+                self.subTest(stage=stage),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                cas_root = Path(directory) / "cas"
+                context = multiprocessing.get_context("spawn")
+                process = context.Process(
+                    target=crash_index_only_transaction,
+                    args=(str(cas_root), stage),
+                )
+                process.start()
+                process.join(30)
+                self.assertEqual(process.exitcode, 91)
+
+                with provenance.CasRootLock(cas_root):
+                    self.assertTrue(provenance._recover_transaction(cas_root))
+
+                self.assertFalse((cas_root / "index.json").exists())
+                self.assertFalse(
+                    (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+                )
+                self.assertEqual(provenance._scan_cas_object_files(cas_root), {})
+
+    def test_index_free_journal_rejects_claimed_baseline_objects_before_mutation(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas_root = Path(directory) / "cas"
+            context = multiprocessing.get_context("spawn")
+            process = context.Process(
+                target=crash_index_only_transaction,
+                args=(str(cas_root), "index"),
+            )
+            process.start()
+            process.join(30)
+            self.assertEqual(process.exitcode, 91)
+            journal_path = cas_root / provenance.TRANSACTION_JOURNAL_NAME
+            journal = json.loads(journal_path.read_text(encoding="utf-8"))
+            objects = provenance._scan_cas_object_files(cas_root)
+            self.assertEqual(len(objects), 1)
+            digest = next(iter(objects))
+            journal["baseline_object_sha256s"] = [digest]
+            journal_path.write_bytes(provenance.canonical_json_bytes(journal))
+            before_index = (cas_root / "index.json").read_bytes()
+            before_object = objects[digest].read_bytes()
+
+            with provenance.CasRootLock(cas_root), self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "index-free journal cannot claim baseline CAS objects",
+            ):
+                provenance._recover_transaction(cas_root)
+
+            self.assertEqual((cas_root / "index.json").read_bytes(), before_index)
+            self.assertEqual(objects[digest].read_bytes(), before_object)
+            self.assertTrue(journal_path.exists())
+
+    def test_journal_preparation_crash_leaves_no_owned_temporary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _hashes = self.build_repository(root)
+            context = multiprocessing.get_context("spawn")
+            process = context.Process(
+                target=crash_journal_preparation,
+                args=(str(cas_root),),
+            )
+            process.start()
+            process.join(30)
+            self.assertEqual(process.exitcode, 91)
+            self.assertTrue(
+                list(
+                    cas_root.glob(
+                        f".{provenance.TRANSACTION_JOURNAL_NAME}-*"
+                    )
+                )
+            )
+
+            result = provenance.validate_repository(
+                cas_root, manifest_path, workspace_root=root
+            )
+
+            self.assertTrue(result["valid"])
+            self.assertFalse(
+                list(
+                    cas_root.glob(
+                        f".{provenance.TRANSACTION_JOURNAL_NAME}-*"
+                    )
+                )
+            )
+
+    def test_recovery_is_idempotent_after_interrupted_baseline_restore(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _hashes = self.build_repository(root)
+            baseline_index = (cas_root / "index.json").read_bytes()
+            baseline_manifest = manifest_path.read_bytes()
+            context = multiprocessing.get_context("spawn")
+            process = context.Process(
+                target=crash_registration_transaction,
+                args=(str(cas_root), str(manifest_path), str(root), "index"),
+            )
+            process.start()
+            process.join(30)
+            self.assertEqual(process.exitcode, 91)
+            write_atomic = provenance._write_atomic
+            failed = False
+
+            def fail_after_index_restore(path: Path, data: bytes) -> None:
+                nonlocal failed
+                write_atomic(path, data)
+                if path == cas_root / "index.json" and not failed:
+                    failed = True
+                    raise OSError("injected recovery interruption")
+
+            with (
+                mock.patch.object(
+                    provenance, "_write_atomic", fail_after_index_restore
+                ),
+                self.assertRaisesRegex(OSError, "injected recovery interruption"),
+            ):
+                provenance.validate_repository(
+                    cas_root, manifest_path, workspace_root=root
+                )
+            self.assertTrue((cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists())
+
+            result = provenance.validate_repository(
+                cas_root, manifest_path, workspace_root=root
+            )
+
+            self.assertTrue(result["valid"])
+            self.assertEqual((cas_root / "index.json").read_bytes(), baseline_index)
+            self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+            self.assertFalse(
+                (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+            )
+
+    def test_recovery_refuses_unauthorized_canonical_publication_bytes(self) -> None:
+        for selected in ("index", "manifest"):
+            with (
+                self.subTest(selected=selected),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                cas_root, manifest_path, _hashes = self.build_repository(root)
+                context = multiprocessing.get_context("spawn")
+                process = context.Process(
+                    target=crash_registration_transaction,
+                    args=(str(cas_root), str(manifest_path), str(root), "object"),
+                )
+                process.start()
+                process.join(30)
+                self.assertEqual(process.exitcode, 91)
+                if selected == "index":
+                    selected_path = cas_root / "index.json"
+                    selected_path.write_bytes(provenance.canonical_json_bytes({}))
+                else:
+                    selected_path = manifest_path
+                    selected_path.write_bytes(
+                        provenance.canonical_json_bytes(
+                            {
+                                "algorithm": "sha256",
+                                "bundle_hashes": [],
+                                "manifest_id": "unauthorized.v1",
+                                "schema_version": 1,
+                            }
+                        )
+                    )
+                before_index = (cas_root / "index.json").read_bytes()
+                before_manifest = manifest_path.read_bytes()
+                before_objects = {
+                    path.relative_to(cas_root): path.read_bytes()
+                    for path in (cas_root / "objects").rglob("*")
+                    if path.is_file()
+                }
+
+                with self.assertRaisesRegex(
+                    provenance.ProvenanceError, "not authorized"
+                ):
+                    provenance.validate_repository(
+                        cas_root, manifest_path, workspace_root=root
+                    )
+
+                after_objects = {
+                    path.relative_to(cas_root): path.read_bytes()
+                    for path in (cas_root / "objects").rglob("*")
+                    if path.is_file()
+                }
+                self.assertEqual((cas_root / "index.json").read_bytes(), before_index)
+                self.assertEqual(manifest_path.read_bytes(), before_manifest)
+                self.assertEqual(after_objects, before_objects)
+                self.assertTrue(
+                    (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+                )
+
+    @unittest.skipIf(
+        os.name == "nt", "creating symlinks is not reliably permitted on Windows"
+    )
+    def test_recovery_rejects_a_symlinked_manifest_path(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, _hashes = self.build_repository(root)
+            context = multiprocessing.get_context("spawn")
+            process = context.Process(
+                target=crash_registration_transaction,
+                args=(str(cas_root), str(manifest_path), str(root), "object"),
+            )
+            process.start()
+            process.join(30)
+            self.assertEqual(process.exitcode, 91)
+            redirected = root / "redirected-manifest.json"
+            redirected.write_bytes(manifest_path.read_bytes())
+            manifest_path.unlink()
+            manifest_path.symlink_to(redirected)
+            before = redirected.read_bytes()
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "link or reparse"
+            ):
+                provenance.validate_repository(
+                    cas_root, manifest_path, workspace_root=root
+                )
+
+            self.assertEqual(redirected.read_bytes(), before)
+            self.assertTrue(
+                (cas_root / provenance.TRANSACTION_JOURNAL_NAME).exists()
+            )
+
+    @unittest.skipIf(
+        os.name == "nt", "creating symlinks is not reliably permitted on Windows"
+    )
+    def test_recovery_rejects_dangling_journal_and_backup_symlinks(self) -> None:
+        for selected in ("journal", "backup"):
+            with (
+                self.subTest(selected=selected),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                cas_root, manifest_path, _hashes = self.build_repository(root)
+                if selected == "journal":
+                    context = multiprocessing.get_context("spawn")
+                    process = context.Process(
+                        target=crash_registration_transaction,
+                        args=(
+                            str(cas_root),
+                            str(manifest_path),
+                            str(root),
+                            "object",
+                        ),
+                    )
+                    process.start()
+                    process.join(30)
+                    self.assertEqual(process.exitcode, 91)
+                    selected_path = (
+                        cas_root / provenance.TRANSACTION_JOURNAL_NAME
+                    )
+                    selected_path.unlink()
+                    expected_error = "non-file CAS transaction journal"
+                else:
+                    selected_path = (
+                        cas_root / provenance.TRANSACTION_PRUNE_DIRECTORY
+                    )
+                    expected_error = "non-directory transaction backup path"
+                selected_path.symlink_to(root / "missing-target")
+                baseline_index = (cas_root / "index.json").read_bytes()
+                baseline_manifest = manifest_path.read_bytes()
+
+                with self.assertRaisesRegex(
+                    provenance.ProvenanceError, expected_error
+                ):
+                    provenance.validate_repository(
+                        cas_root, manifest_path, workspace_root=root
+                    )
+
+                self.assertEqual(
+                    (cas_root / "index.json").read_bytes(), baseline_index
+                )
+                self.assertEqual(manifest_path.read_bytes(), baseline_manifest)
+
+    def test_root_replacement_recovers_pruned_bytes_after_process_death(
+        self,
+    ) -> None:
+        for stage in ("prune", "filtered_index", "manifest"):
+            with self.subTest(stage=stage):
+                self.assert_process_crash_restores_repository(
+                    crash_root_replacement_transaction,
+                    stage,
+                    replacement=True,
+                )
 
     def test_root_replacement_restores_bytes_after_partial_prune_failure(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

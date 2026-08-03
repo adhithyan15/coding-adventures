@@ -42,6 +42,21 @@ fn lock_cas(root: &Path) -> File {
     file
 }
 
+fn refuse_pending_transaction(root: &Path) {
+    let journal = root.join("code/specs/data/adj-stdlib-provenance/cas/.transaction-journal.json");
+    match std::fs::symlink_metadata(&journal) {
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Ok(_) => panic!(
+            "pending CAS transaction journal requires Python recovery before Rust projection: {}",
+            journal.display()
+        ),
+        Err(error) => panic!(
+            "cannot inspect CAS transaction journal {}: {error}",
+            journal.display()
+        ),
+    }
+}
+
 fn read_bundle(root: &Path, digest: &str) -> serde_json::Value {
     serde_json::from_slice(&read_cas_object(root, digest)).expect("parse provenance bundle")
 }
@@ -79,6 +94,7 @@ fn collect_bundle_snapshots(
 
 fn project_bundle_snapshots(root: &Path, snapshots: &Path, bundle_id: &str) -> usize {
     let _cas_lock = lock_cas(root);
+    refuse_pending_transaction(root);
     let manifest_path = root.join("code/specs/data/adj-stdlib-provenance/manifest.json");
     let manifest: serde_json::Value =
         serde_json::from_slice(&std::fs::read(&manifest_path).expect("read provenance manifest"))
@@ -114,6 +130,68 @@ fn rust_reader_uses_the_repository_cas_lock() {
         .try_lock()
         .expect_err("a second reader must not bypass the CAS lock");
     assert!(matches!(error, std::fs::TryLockError::WouldBlock));
+}
+
+#[test]
+fn rust_reader_refuses_a_pending_transaction_journal() {
+    let root = std::env::temp_dir().join(format!(
+        "adj_pending_provenance_{}_{}",
+        std::process::id(),
+        std::thread::current().name().unwrap_or("unnamed")
+    ));
+    let cas_root = root.join("code/specs/data/adj-stdlib-provenance/cas");
+    let snapshots = root.join("snapshots");
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&cas_root).expect("create temporary CAS root");
+    std::fs::write(cas_root.join("lock"), b"").expect("create CAS lock");
+    std::fs::write(cas_root.join(".transaction-journal.json"), b"pending")
+        .expect("create pending journal");
+
+    let failure = std::panic::catch_unwind(|| {
+        project_bundle_snapshots(&root, &snapshots, "unreachable.bundle")
+    })
+    .expect_err("Rust projection must refuse a pending journal");
+    let message = failure
+        .downcast_ref::<String>()
+        .map(String::as_str)
+        .or_else(|| failure.downcast_ref::<&str>().copied())
+        .unwrap_or("");
+    assert!(message.contains("pending CAS transaction journal"));
+    std::fs::remove_dir_all(&root).expect("remove temporary CAS root");
+}
+
+#[cfg(unix)]
+#[test]
+fn rust_reader_refuses_a_dangling_transaction_journal_symlink() {
+    use std::os::unix::fs::symlink;
+
+    let root = std::env::temp_dir().join(format!(
+        "adj_pending_symlink_{}_{}",
+        std::process::id(),
+        std::thread::current().name().unwrap_or("unnamed")
+    ));
+    let cas_root = root.join("code/specs/data/adj-stdlib-provenance/cas");
+    let snapshots = root.join("snapshots");
+    let _ = std::fs::remove_dir_all(&root);
+    std::fs::create_dir_all(&cas_root).expect("create temporary CAS root");
+    std::fs::write(cas_root.join("lock"), b"").expect("create CAS lock");
+    symlink(
+        "missing-transaction-journal",
+        cas_root.join(".transaction-journal.json"),
+    )
+    .expect("create dangling journal symlink");
+
+    let failure = std::panic::catch_unwind(|| {
+        project_bundle_snapshots(&root, &snapshots, "unreachable.bundle")
+    })
+    .expect_err("Rust projection must refuse a dangling journal symlink");
+    let message = failure
+        .downcast_ref::<String>()
+        .map(String::as_str)
+        .or_else(|| failure.downcast_ref::<&str>().copied())
+        .unwrap_or("");
+    assert!(message.contains("pending CAS transaction journal"));
+    std::fs::remove_dir_all(&root).expect("remove temporary CAS root");
 }
 
 #[test]

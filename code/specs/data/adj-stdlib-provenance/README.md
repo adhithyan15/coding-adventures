@@ -109,11 +109,31 @@ transaction protected by the tracked `cas/lock` file and an OS-released lock.
 Because the stable lock identity is inside the CAS, it cannot diverge with
 process-specific temporary-directory settings. Authoritative Python and Rust
 readers and every CLI writer participate in the same lock, so neither split
-publication nor a lost index update is externally visible. Registration
-validates both the old and proposed graphs, is additive and idempotent, and
-rolls back newly written objects on failure. A different hash for an already
-registered bundle ID fails closed until an explicit root-replacement migration
-can prune the old unreachable graph.
+publication nor a lost index update is externally visible. Python readers recover
+a pending journal before loading canonical state; the Rust projection reader fails
+closed until Python recovery completes. Before mutation, the
+writer publishes a canonical `adj-stdlib/cas-transaction-journal/v1` record under
+that lock. It stores the exact baseline index and manifest bytes, the complete
+baseline object set, every authorized publication hash, and the hash of each
+CAS-local prune backup. A journal that remains after process termination is a
+durable rollback decision: the next reader or writer restores the baseline byte
+for byte, removes only canonical post-baseline objects, validates the restored
+index, and clears the journal last. Unknown index or manifest bytes fail closed
+without canonical-state recovery mutation; owned temporary cleanup may already
+have occurred. Registration validates both the old and proposed
+graphs, is additive and idempotent, and rolls back newly written objects on
+ordinary failure or process death. A different hash for an already registered
+bundle ID fails closed until an explicit root-replacement migration can prune the
+old unreachable graph.
+
+New directory entries, object links, and atomic replacements fsync their containing
+directories on POSIX, as do journal, index, manifest, prune, and recovery removals.
+This release proves process-termination recovery, not recovery after storage or
+power failure. Windows exercises the same spawned-process termination matrix, but
+portable Python does not expose an equivalent directory-flush primitive.
+Atomic-write temporary files have path-specific names;
+recovery removes only those owned names and hash-checks every CAS temporary or
+backup before deletion.
 
 This separation prevents an untrusted source locator from turning the verifier
 into a network or SSRF primitive. Reads are bounded and reject links and Windows
