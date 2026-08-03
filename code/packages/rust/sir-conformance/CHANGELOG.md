@@ -2,6 +2,38 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.21.0] - Collections cascade corpus + Linux link fix
+
+Adds six new corpus programs proving the C-backend Collections slices
+(3-10: Array/Hash/String/Numeric/Symbol methods) agree across Python,
+JavaScript, Go, Rust, and C — `array_reduce` (a block method, proving
+closures round-trip identically through every backend's calling
+convention), `array_count_sum`, `hash_length_fetch`, `string_gsub_sub`,
+`numeric_abs_gcd`, `symbol_upcase_length`. All six print scalars only
+(never a bare Array/Hash) to sidestep a separate, real bug this batch
+surfaced: `puts` on an Array bracket-displays it on the C backend
+(`[1, 2, 3]`) but correctly unpacks one element per line on
+Python/JS/Go/Rust, matching real Ruby — tracked as its own follow-up, not
+fixed here. The Ruby target (as expected) skips every one of them: it has
+no Collections method dispatch at all yet, also tracked as its own
+follow-up.
+
+Also updates the `array_length` doc comment: the frontend bugs that used
+to block bracket-index (`a[1]`) from this corpus are now fixed (PR
+#9686), but bracket-index still isn't added here — Python/JS/Go/Rust's
+runtime catalogs have no `[]`/`[]=` dispatch yet, so it would fail (not
+skip) on four of six targets. Tracked as its own follow-up.
+
+### Fixed (CI — Linux link failure)
+
+- `run_c`'s compile command didn't link `-lm`. Harmless until
+  `semantic-ir-to-c`'s Numeric Collections slice (0.31.0) made
+  `floor`/`ceil`/`round`/`abs` the first `<math.h>` calls the embedded
+  runtime template makes — pasted into every generated `.c` file
+  regardless of source content, so every C-target conformance run failed
+  to link on Linux (`undefined reference to 'floor'`) without it. Fixed
+  alongside the same gap in `c-to-semantic-ir` and `sir-bench`.
+
 ## [0.20.0] - Comparison-operator frontier
 
 Adds `comparison_operators_match_ruby_on_every_backend`: `==`, `!=`, `<=`, `>=`

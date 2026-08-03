@@ -326,6 +326,7 @@ fn compile_target(
                 .args(["-std=c99", "-O2", "-o"])
                 .arg(bin_path)
                 .arg(source_path)
+                .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
                 .output()
         }
         Target::Rust => Command::new("rustc")

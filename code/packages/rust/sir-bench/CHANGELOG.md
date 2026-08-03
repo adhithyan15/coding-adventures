@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — fix: Linux link failure benchmarking the C target
+
+The C-target compile step didn't link `-lm`. Harmless until
+`semantic-ir-to-c`'s Numeric Collections slice (0.31.0) made
+`floor`/`ceil`/`round`/`abs` the first `<math.h>` calls the embedded
+runtime template makes — pasted into every generated `.c` file regardless
+of source content, so benchmarking the C target now fails to link on
+Linux (`undefined reference to 'floor'`) without it. Fixed alongside the
+same gap in `sir-conformance` and `c-to-semantic-ir`.
+
 ## 0.1.0 — initial cross-backend performance benchmark harness
 
 First cut of `sir-bench`: measures how fast the code each backend *generates*

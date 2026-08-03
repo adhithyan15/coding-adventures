@@ -830,6 +830,7 @@ mod tests {
             .arg("-o")
             .arg(&exe)
             .arg(&cpath)
+            .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
             .output()
             .ok()?;
         assert!(

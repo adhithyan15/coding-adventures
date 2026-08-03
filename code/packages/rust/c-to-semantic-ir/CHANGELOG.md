@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Fixed (CI — Linux link failure)
+
+- Three C-compiling test helpers (`tests/three_way_conformance.rs`'s two,
+  plus `src/lib.rs`'s inline unit-test `run_c`) didn't link `-lm`. Harmless
+  until `semantic-ir-to-c`'s Numeric Collections slice
+  (0.31.0) made `floor`/`ceil`/`round`/`abs` the first `<math.h>` calls the
+  embedded runtime template makes — pasted into every generated `.c` file
+  regardless of source content, so any program compiled through this
+  crate's C round-trip now fails to link on Linux (`undefined reference to
+  'floor'`) without it. Fixed alongside the same gap in `sir-conformance`
+  and `sir-bench`.
+
 ### Milestone 11 — fixed-size arrays
 
 The first of the four aggregate axes (arrays → structs → pointers → strings).

@@ -402,6 +402,9 @@ fn run_c(name: &str, module: &Module) -> RunOutcome {
         .arg("-o")
         .arg(&bin)
         .arg(&src)
+        // Linux needs -lm to link floor/ceil/fabs (Numeric methods, slice 9);
+        // macOS's libSystem folds libm in, so this is a no-op there.
+        .arg("-lm")
         .output();
     match compiled {
         Ok(o) if o.status.success() => {

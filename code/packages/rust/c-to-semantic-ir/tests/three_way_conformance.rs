@@ -119,6 +119,7 @@ fn run_reference(cc: &str, src: &str) -> String {
         .args(["-std=c99", "-fwrapv", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("reference compiler runs");
     assert!(
@@ -164,6 +165,7 @@ fn run_emitted_c(cc: &str, src: &str) -> String {
         .args(["-std=c99", "-o"])
         .arg(&exe)
         .arg(&cpath)
+        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
         .output()
         .expect("emitted C compiler runs");
     assert!(
