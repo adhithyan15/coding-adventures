@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate diode model-card `VT` / `V_T` thermal voltage and lower the `V_T`
+  alias instead of silently dropping it.
 - Validate diode model-card `IS` / `JS` saturation current and lower the `JS`
   alias instead of silently dropping it.
 - Validate and lower JFET model-card `CGD` and `CGD0` gate-drain capacitance

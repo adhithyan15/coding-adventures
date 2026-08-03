@@ -800,6 +800,31 @@ D1 in out clamp
     );
   });
 
+  it("parses the diode V_T thermal-voltage alias", () => {
+    const parsed = parseNetlist(`
+.model clamp D(V_T=27m)
+D1 in out clamp
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      thermalVoltage: 27.0e-3,
+    });
+  });
+
+  it.each([
+    ["VT", "0"],
+    ["VT", "-1m"],
+    ["VT", "1e999"],
+    ["V_T", "0"],
+    ["V_T", "-1m"],
+    ["V_T", "1e999"],
+  ])("rejects invalid diode %s thermal voltage %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode VT must be finite and positive",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

@@ -820,6 +820,28 @@ def test_rejects_invalid_diode_saturation_current(
         parse_netlist(f".model clamp D({parameter}={value})")
 
 
+def test_parse_diode_thermal_voltage_alias() -> None:
+    parsed = parse_netlist(
+        """
+.model clamp D(V_T=27m)
+D1 in out clamp
+"""
+    )
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert isclose(diode.Vt, 27.0e-3)
+
+
+@pytest.mark.parametrize("parameter", ["VT", "V_T"])
+@pytest.mark.parametrize("value", ["0", "-1m", "1e999"])
+def test_rejects_invalid_diode_thermal_voltage(parameter: str, value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode VT must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
 def test_parse_bjt_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
