@@ -8,6 +8,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Versioned binary codecs and stable storage-record key derivation.
+pub mod wire;
+
 use std::collections::BTreeMap;
 
 use coding_adventures_chacha20_poly1305::{

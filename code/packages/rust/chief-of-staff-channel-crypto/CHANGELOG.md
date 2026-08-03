@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add versioned, bounded binary codecs for sealed key grants and encrypted
+  channel-log messages.
+- Add stable storage keys for messages, key grants, sequence state, and
+  receiver acknowledgements.
+
 ## 0.1.0
 
 - Add zeroizing channel master, X25519 receiver, and Ed25519 originator key types.
