@@ -40,7 +40,7 @@ import {
   analyzeCIWorkflowChanges,
   sortedToolchains,
 } from "./ci-workflow.js";
-import { resolveDependencies } from "./resolver.js";
+import { MetadataEncodingError, resolveDependencies } from "./resolver.js";
 import { getChangedFiles, mapFilesToPackages } from "./gitdiff.js";
 import { hashPackage, hashDeps } from "./hasher.js";
 import { BuildCache } from "./cache.js";
@@ -404,4 +404,12 @@ Options:
 // Run the CLI.
 main().then((code) => {
   process.exit(code);
+}).catch((error: unknown) => {
+  if (error instanceof MetadataEncodingError) {
+    console.error(error.message);
+    process.exit(2);
+  }
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Error: ${message}`);
+  process.exit(1);
 });

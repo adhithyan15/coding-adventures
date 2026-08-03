@@ -350,6 +350,24 @@
       "notes": "Materialized from the remaining-engine UTF-8 umbrella after merged PR #9553. TypeScript's current TextDecoder replacement behavior cannot distinguish malformed rockspec bytes from valid replacement characters. Bind the resolver and real CLI to the shared resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, preserve the exact expected edges, reject malformed bytes before parsing with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, and exit 2, and keep the slice separate from other engine ports."
     },
     {
+      "id": "build-tool-typescript-windows-gitdiff-portability",
+      "title": "Make TypeScript build-tool git-diff tests portable on Windows",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while running the full TypeScript build-tool suite for the strict rockspec UTF-8 slice. On Windows, gitdiff.test.ts hardcodes /bin/sh for two git commits and uses /repo POSIX fake roots for path-mapping tests, producing two spawnSync /bin/sh ENOENT failures plus five empty affected-package sets. The failure is pre-existing and unrelated to metadata decoding. Add platform-native command invocation and temporary-directory path fixtures in a separate small slice, then require the full package suite and coverage on Windows."
+    },
+    {
+      "id": "build-tool-typescript-language-identity-registry",
+      "title": "Bring TypeScript build-tool discovery to the canonical language and identity registry",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the real full-repository plan during the TypeScript UTF-8 slice. The engine emits 4,770 package records but only 4,383 unique names, including 655 unknown-language records and 217 duplicate identity groups; common C, C++, Dart, Java, and Kotlin packages collapse together under unknown/<basename>. Consume the shared discovery language-registry and duplicate-identity fixtures, classify exact package/program lane boundaries, preserve package versus program identity, exclude spec fixtures, and fail closed on residual duplicate qualified names in a separate focused slice."
+    },
+    {
       "id": "build-tool-go-rockspec-utf8-conformance",
       "title": "Make the Go build tool enforce strict UTF-8 rockspec metadata",
       "status": "merged",

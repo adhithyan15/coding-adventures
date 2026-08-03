@@ -238,6 +238,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   byte fixtures plus real CLI exit-2 coverage. TypeScript is the selected next
   dependency-shaped child because its replacement decoder cannot report
   malformed bytes faithfully;
+- make the TypeScript build-tool git-diff suite portable on Windows. The strict-
+  UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
+  POSIX-only `/repo` path fixtures; this is tracked as a separate test-
+  portability slice rather than widening the metadata decoder change;
+- align TypeScript build-tool discovery with the canonical language and identity
+  registry. Its real full plan currently emits 4,770 records but only 4,383
+  unique names, including 655 `unknown` records and 217 duplicate identity
+  groups that collapse C, C++, Dart, Java, Kotlin, and other lanes by basename;
 - make Swift build-tool file options recognize Windows drive-letter absolute
   paths. The UTF-8 validation run discovered that `--emit-plan` reaches
   resolution but then joins an absolute Windows path under the repository;
