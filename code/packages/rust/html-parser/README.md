@@ -195,7 +195,9 @@ loader retains those rows and the main tree-construction test ratchets whether
 each malformed case produces any lexer or parser diagnostic. Exact legacy
 error strings are not treated as a public WHATWG taxonomy; they are used to
 identify missing diagnostic coverage while DOM output remains independently
-checked.
+checked. Full-document parsing follows the Standard's initial insertion mode:
+whitespace, comments, and processing instructions may precede a doctype, while
+any other token first emits `missing-doctype` and enters quirks handling.
 
 For sharper parser regression reporting, the generated
 `tests/fixtures/whatwg-tree-insertion-audit.json` fixture indexes the
