@@ -5,6 +5,15 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 architecture — shared native host controller.** Move Mosaic event
+  reduction, status/chrome synchronization, scrolling, scrollbar projection,
+  link activation, and hover state into one host-neutral Rust controller used
+  by both the SwiftUI/Metal and WinUI/Direct2D adapters.
+- [ ] **P1 — live page bridges for the remaining generated hosts.** Replace the
+  recording-only content hosts in Qt, Flutter, and Compose acceptance with
+  adapters backed by the shared Venture session and page renderer, starting
+  with Qt on Linux and reusing the same controller rather than introducing
+  backend-specific browser behavior.
 - [x] **P0 regression — POSIX entry-point shell compatibility.** Keep `BUILD`
   compatible with the repository build tool's `/bin/sh` executor while it
   delegates the backend matrix to the Bash-specific implementation script.

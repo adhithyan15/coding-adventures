@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Delegate generated-host browser state and interaction behavior to the shared
+  `venture-browser-core::BrowserHostController`, retaining only native page
+  composition and Metal presentation in this adapter.
 - Bind a generated-host `NSScroller` to shared Rust viewport metrics and
   absolute offset control, with direct app acceptance.
 - Project shared link-hover URLs into Mosaic status and drive the generated
