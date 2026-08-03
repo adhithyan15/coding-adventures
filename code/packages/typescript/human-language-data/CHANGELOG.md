@@ -17,6 +17,9 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   Gujarati-script runs and bookmark-safe romanization from the shared AST.
 - Generate Punjabi Chapter 6 from its two strict canonical lessons, preserving
   Gurmukhi runs and bookmark-safe romanization from the shared AST.
+- Generate Sanskrit Chapter 6 from its three strict canonical lessons,
+  preserving Devanagari forms, comparison tables, and romanized bookmarks from
+  the shared AST.
 
 ### Added — block-boundary knowledge closure
 

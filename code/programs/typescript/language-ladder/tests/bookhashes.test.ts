@@ -18,12 +18,17 @@ describe("generated book source hashes", () => {
     expect(bookHashStatus(lessons, "spanish", chapter)).toBe("synced");
   });
 
-  it.each(["gujarati", "marathi", "punjabi"])(
-    "matches the browser-loaded %s Chapter 6 AST across both lessons",
-    (language) => {
+  it.each([
+    ["gujarati", 2],
+    ["marathi", 2],
+    ["punjabi", 2],
+    ["sanskrit", 3],
+  ])(
+    "matches the browser-loaded %s Chapter 6 AST across %i lessons",
+    (language, count) => {
       const lessons = loadLessons();
       const expected = expectedBookHash(language, 6);
-      expect(expected?.lessonIds).toHaveLength(2);
+      expect(expected?.lessonIds).toHaveLength(count);
       expect(actualChapterHash(lessons, language, 6)).toBe(expected?.sourceHash);
       expect(bookHashStatus(lessons, language, 6)).toBe("synced");
     },

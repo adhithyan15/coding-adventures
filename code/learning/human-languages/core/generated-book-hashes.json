@@ -33,6 +33,17 @@
       "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:578064b0aec01cee",
+      "lessonIds": [
+        "SA-C06-numbers-1-5",
+        "SA-C06-number-cognates",
+        "SA-C06-pancha-travels"
+      ],
+      "tex": "sanskrit/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:ad881fd61b3c4d60",

@@ -1,28 +1,47 @@
 ---
+schema_version: 2
 id: SA-C06-numbers-1-5
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 340
 chapter: 6
 type: word
 headword: एक द्व त्रि चतुर् पञ्च
-gloss: one to five — the ancestors of every Indo-Aryan number, and cousins of the English ones
+romanization: eka dva tri catur pañca
+gloss: one to five — Old Indo-Aryan ancestors preserved in Sanskrit, and cousins of the English ones
 concept_tag: SA-NUMBERS-1-5
 prerequisites: [SA-C01-namaskara]
 sounds: [inherent-a, visarga, long-aa]
 roots: [pie-oyko, pie-dwoh, pie-treyes, pie-kwetwores, pie-penkwe]
 etymology_hook: "Learn the five Sanskrit stems and their gendered forms first; the next two short lessons trace their Indo-European cousins and pancha's travels"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR]
+practises:
+  knowledge: [SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR]
+skills: [listening, speaking, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [SA-C01-namaskara]
 ---
 
 # एक, द्व, त्रि, चतुर्, पञ्च — one to five
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR]; assesses=[] -->
 
 [PAUSE 2s] This chapter does something the other Indic chapters can't do alone.
-Sanskrit's numbers are the **source** of the Hindi, Marathi, Bengali, Gujarati
-and Punjabi ones — and, at the same time, the **cousins** of the English ones.
-Learn these five and you get a foothold in both directions.
+Sanskrit preserves the **Old Indo-Aryan forms behind** the Hindi, Marathi,
+Bengali, Gujarati and Punjabi ones — and, at the same time, these forms are
+**cousins** of the English ones. Learn five and you get a foothold in both
+directions.
 
-## The five
+## You'll want to know: the five
+<!-- hl-knowledge: introduces=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS]; assesses=[] -->
 
 | | stem | masculine | **neuter** |
 |---|---|---|---|
@@ -45,13 +64,15 @@ these words again in Hindi, Marathi, Bengali, Gujarati or Punjabi, they will
 mostly descend from the **neuter** forms — *trī́ṇi* and *catvā́ri*, not *tráyaḥ*
 and *catvā́raḥ*. Keep that column in view; the daughter lessons depend on it.
 
-## What comes next
+## What you've built: two directions
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR] -->
 
 These five forms point in two directions. The next lesson lines them up with
 Latin and English and explains the sound laws. A final short lesson follows
 *pañca* into *Punjab*, *pentagon*, and the qualified history of *punch*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR] -->
 
 [PAUSE 1s]
 - [YOU SAY: "eka, dva, tri, catur, pañca"]
@@ -59,6 +80,7 @@ Latin and English and explains the sound laws. A final short lesson follows
 - [YOU SAY: the daughter-language column — neuter]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NUMBERS-ONE-TO-FIVE, SA-GRAMMAR-NUMERAL-DUAL, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS, SA-HISTORY-SANSKRIT-NUMERAL-ANCHOR] -->
 
 [PAUSE 3s] Give one to five in Sanskrit. (*Eka, dva, tri, catur, pañca*.) Why
 does "two" look unusual? (Sanskrit has a **dual** — a form for exactly two.)
