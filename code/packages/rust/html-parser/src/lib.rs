@@ -4921,6 +4921,10 @@ impl HtmlParser {
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-html-start-tag-in-foreign-content",
+                format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+            ));
             if self.has_open_svg_html_integration_point() {
                 while self.current_namespace().is_some()
                     && !self.current_node_is_svg_html_integration_point()
@@ -33407,6 +33411,29 @@ mod tests {
     }
 
     #[test]
+    fn reports_html_start_tags_that_break_out_of_foreign_content() {
+        for source in [
+            "<!doctype html><svg><g><p>x",
+            "<!doctype html><math><mrow><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let integration_point =
+            parse_html_with_diagnostics("<!doctype html><svg><foreignObject><p>x").unwrap();
+        assert!(integration_point
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-html-start-tag-in-foreign-content"));
+    }
+
+    #[test]
     fn reports_fragment_eof_with_authored_disallowed_open_elements() {
         for (context, source) in [
             ("body", "<div>"),
@@ -33414,12 +33441,20 @@ mod tests {
             ("svg path", "<nobr>X"),
         ] {
             let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            let mut expected = Vec::new();
+            if context == "svg path" {
+                expected.push(ParserDiagnostic::new(
+                    "unexpected-html-start-tag-in-foreign-content",
+                    "HTML start tag `<nobr>` forced recovery from foreign content",
+                ));
+            }
+            expected.push(ParserDiagnostic::new(
+                "eof-with-unclosed-elements",
+                "end of file was reached with disallowed open elements",
+            ));
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                )],
+                expected,
                 "context {context:?}, source {source:?}"
             );
         }

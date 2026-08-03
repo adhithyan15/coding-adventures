@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- HTML start tags that force recovery from SVG or MathML foreign content now
+  report the foreign-content parse error, covering 15 previously silent
+  malformed corpus cases without changing DOM recovery or
+  undeclared-diagnostic coverage.
 - SVG and MathML start tags foster-parented out of table structure now report
   the table insertion-mode parse error, covering 26 previously silent malformed
   corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
