@@ -1834,6 +1834,23 @@ Xright c d load
     expect(element.params.FC).toBe(Number(coefficient));
   });
 
+  it.each(["-1e-18", "1e999"])(
+    "rejects invalid MOSFET model KF=%s",
+    (coefficient) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(KF=${coefficient})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET KF must be finite and non-negative");
+    },
+  );
+
+  it.each(["0", "2e-18"])("lowers valid MOSFET model KF=%s", (coefficient) => {
+    const parsed = parseNetlist(`.model nfast NMOS(KF=${coefficient})\nM1 d g s b nfast\n`);
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") throw new Error("unexpected element kind");
+    expect(element.params.KF).toBe(Number(coefficient));
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
