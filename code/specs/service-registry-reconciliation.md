@@ -41,7 +41,9 @@ The reconciler does not:
 
 Time, storage, and process authority remain injected. The runnable
 orchestrator composes this kernel with package verification, the secure host
-channel, and a concrete OS-process supervisor.
+channel, the authenticated lifecycle messages defined in
+[`host-control-protocol.md`](host-control-protocol.md), and a concrete OS-process
+supervisor.
 
 ## Authoritative Supervisor Contract
 
@@ -63,6 +65,11 @@ heartbeat timestamps later than the caller-provided monotonic `now_ns`.
 `HostSupervisor::inspect` must derive this evidence from an owned process
 handle, authenticated control channel, or equivalent authoritative source. PID
 existence alone is insufficient because PIDs can be reused.
+
+For D18 host processes, `Running` begins only after a matching authenticated
+`Ready(package_hash)` control message. Heartbeat time is the supervisor's trusted
+monotonic receipt time for an authenticated `Heartbeat`; it is never a timestamp
+asserted by the child.
 
 ## Reconciliation Tick
 

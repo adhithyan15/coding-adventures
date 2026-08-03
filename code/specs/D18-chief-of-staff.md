@@ -408,14 +408,20 @@ by the security escort (host process), not the Chief of Staff.
 3. Orchestrator spawns: Host Actor process
    argument: path to the sealed package (./email-reader.agent/)
 4. Orchestrator records: host PID, agent name, "starting" status
-5. Orchestrator monitors: is the host actor alive? (heartbeat)
-6. Done. Orchestrator does NOT:
+5. Host independently verifies the package and sends authenticated
+   Ready(package_hash) over its per-spawn control channel.
+6. Orchestrator marks Running only when that hash matches the registration.
+7. Orchestrator monitors authenticated heartbeats using trusted receipt time.
+8. Done. Orchestrator does NOT:
    • read manifest.json
    • know what capabilities the agent has
    • know what Deno flags are used
    • know what channels the agent reads/writes
    • know what vault secrets the agent can access
 ```
+
+The strict readiness, heartbeat, and termination state machine is specified in
+[`host-control-protocol.md`](host-control-protocol.md).
 
 ```
 ┌────────────────────────────────────────────────────────────────┐

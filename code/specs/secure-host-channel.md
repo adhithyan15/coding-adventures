@@ -8,6 +8,11 @@ methods, their params and results, the error model). This spec defines
 channel that carries every `host.*` message between an orchestrator, a host,
 and an agent runtime.
 
+The minimal authenticated lifecycle plaintext carried by this byte channel is
+defined separately in [`host-control-protocol.md`](host-control-protocol.md).
+That protocol binds readiness to the registered package hash and turns
+authenticated heartbeat receipt into supervisor evidence.
+
 Three guarantees this channel provides, in order of when each one bites:
 
 1. **Confidentiality and integrity per message.** Every byte that crosses
