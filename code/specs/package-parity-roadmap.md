@@ -122,7 +122,7 @@ The loop must not start by attempting 10,920 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`fbd52e79858402f7162a6a36cf6e1e849ed21f54` is collision-clean at 1,230
+`29d78677fe65719e0b84e2441e9a568a67e7f4f4` is collision-clean at 1,230
 normalized implementation identities, 4,378 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 780 singletons, 585
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -348,9 +348,16 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   GitHub's guarded squash auto-complete merged the exact head after 17 terminal
   checks as `d96d518b0f`. The comparison separately found Ruby's package
   identities omit the canonical `programs` segment in dependency edges. The
-  dependency/leverage pass selected that now-unblocked registry migration next
-  because it repairs canonical identity and edge semantics across Lua, Elixir,
-  Go, and Rust without widening the completed evaluator repair;
+  dependency/leverage pass selected that now-unblocked registry migration next.
+  The Ruby slice now consumes the complete registry, preserves package/program
+  identities, excludes specification trees, rejects duplicate identities, and
+  honors qualified legacy BUILD dependency comments. Its real 4,776-package
+  plan has unique forward-slash identities; Go, Rust, and Lua package/edge sets
+  exactly match the Go engine at 301/936, 928/2,250, and 258/383. Validation on
+  rebased `29d78677` passes 307 Ruby tests at 89.43% line and 72.55% branch
+  coverage, all shared fixture consumers, the valid 38-case/61-file corpus,
+  Go test/vet/build, dependency and security checks, and the collision-clean
+  1,230-identity inventory without widening the completed evaluator repair;
 - adjudicate the residual Ruby/Go Elixir resolver semantics after canonical
   identities remove the structural drift. The real 282-package plans differ
   on eleven Go-only and two Ruby-only edges; the Ruby-only pair corresponds to
