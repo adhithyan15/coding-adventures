@@ -868,6 +868,30 @@ J1 drain gate source fast
     });
   });
 
+  it.each(["CGS", "CGS0"])(
+    "parses the JFET %s gate-source capacitance alias",
+    (parameter) => {
+      const parsed = parseNetlist(`
+.model fast NJF(${parameter}=3p)
+J1 drain gate source fast
+`);
+
+      expect(parsed.circuit.elements()[0]).toMatchObject({
+        kind: "jfet",
+        gateSourceCapacitance: 3.0e-12,
+      });
+    },
+  );
+
+  it.each(["-1p", "1e999"])(
+    "rejects invalid JFET gate-source capacitance %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(CGS=${value})`)).toThrow(
+        "JFET CGS must be finite and non-negative",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)

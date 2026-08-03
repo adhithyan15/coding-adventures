@@ -4314,11 +4314,17 @@ the Rust, Python, and TypeScript surfaces together.
    - `CJS` and `CJD` are validated and lowered as canonical `CBS` and `CBD`
      bottom-junction capacitances in both parser facades.
 
+400. Python and TypeScript Berkeley SPICE MOS electrostatic defaults.
+   - Status: completed in PR 9729.
+   - Both parser facades validate `NSS` and `TPG`, then reuse the shared engine
+     normalizer to derive missing `KP`, `VT0`, `GAMMA`, and `PHI` values from
+     process parameters while preserving explicit model and instance values.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE MOS electrostatic-default parity.
-   - Validate and consume `NSS` / `TPG`, then derive `VT0`, `GAMMA`, and `PHI`
-     from `N_SUB` / `TOX` with shared engine semantics.
+1. Python and TypeScript Berkeley SPICE JFET remaining parameter-lowering parity.
+   - Validate and lower `CGD` / `CGD0` gate-drain capacitance instead of
+     silently dropping the shared engine parameter.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust
