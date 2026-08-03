@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## [0.8.2] - 2026-08-03
+
+### Fixed — a string literal matching an operator lexeme crashed the parser
+
+The actual bug lived in the shared `parser` crate (0.4.3): its
+`GrammarElement::Literal` matcher compared only a token's `value`, never
+its `type_`, so a `String`-typed token whose CONTENT happened to equal an
+operator lexeme satisfied a `Literal` match just as readily as a real
+operator token. This grammar's `call_arg = NAME COLON expression |
+[ "*" | "**" | "&" ] expression` has exactly that shape: a Ruby program
+like `foo(1, "*")` had its `"*"` STRING ARGUMENT silently swallowed by the
+splat-marker alternative, leaving `expression` with nothing to consume —
+a confusing parse failure, and in a panic-on-parse-error caller (this
+crate's own `compile_source`, and `ruby-to-semantic-ir`'s), a hard crash
+for a perfectly ordinary program. Also affected padding-character
+arguments like `"hello".ljust(8, "*")`.
+
+New `test_string_argument_matching_an_operator_lexeme_parses_correctly`
+proves the concrete Ruby-level fix; see `parser`'s own changelog for the
+engine-level fix and its regression test.
+
+`coding-adventures-ruby-parser` 0.8.1 -> 0.8.2.
+
 ## [0.8.1] - 2026-08-03
 
 ### Widened — bracket-index WRITE (`recv[expr] = value`) to a dotted/chained receiver

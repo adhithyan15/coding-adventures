@@ -789,7 +789,29 @@ impl GrammarParser {
                     }
                 }
 
-                if self.current().value == *value {
+                // A `Literal` element matches an OPERATOR/KEYWORD lexeme by
+                // its literal spelling -- the trick every grammar comment
+                // in this codebase describes as "the parser dispatches by
+                // value" for tokens the lexer leaves on a catch-all type
+                // (`<`, `<<`, `&&`, `and`, …). But `TokenType::String`
+                // carries arbitrary user-supplied STRING-LITERAL CONTENT,
+                // not a lexeme — its `value` is whatever text sat between
+                // the quotes. Without this guard, a Ruby program containing
+                // a string literal whose CONTENT happens to equal an
+                // operator spelling (e.g. `foo(1, "*")`, `x = "&&"`) gets
+                // that string token silently swallowed by an unrelated
+                // `Literal { value: "*" }` element (e.g. the splat marker
+                // in `call_arg`'s `[ "*" | "**" | "&" ] expression`),
+                // leaving the REST of that rule with nothing to match and
+                // producing a confusing parse failure (or, in a
+                // panic-on-parse-error caller, a hard crash) for a
+                // perfectly ordinary Ruby program. Excluding `String` here
+                // is a pure narrowing of what `Literal` can match: no
+                // grammar's `Literal` element is ever intended to match
+                // arbitrary string-literal content, so this can only fix
+                // previously-incorrect matches, never reject a
+                // previously-correct one.
+                if self.current().type_ != TokenType::String && self.current().value == *value {
                     let tok = self.current().clone();
                     self.pos += 1;
                     Some(vec![ASTNodeOrToken::Token(tok)])
@@ -1372,6 +1394,44 @@ mod tests {
         let mut parser = GrammarParser::new(tokens, grammar);
         let result = parser.parse().unwrap();
         assert_eq!(result.rule_name, "greeting");
+    }
+
+    /// Bug fix: a `Literal` element matches an operator/keyword LEXEME by
+    /// its spelling -- the "dispatches by value" trick every grammar
+    /// comment describes for tokens the lexer leaves on a catch-all type
+    /// (`<`, `<<`, `&&`, `and`, …). But `TokenType::String` carries
+    /// arbitrary user-supplied string-LITERAL CONTENT, not a lexeme.
+    /// Before this fix, `Literal { value: "hello" }` matched a `String`
+    /// token whose CONTENT happened to be `"hello"` just as readily as a
+    /// `Name`-typed operator token spelled `hello` -- e.g. Ruby's
+    /// `foo(1, "*")` had its `"*"` STRING ARGUMENT silently swallowed by
+    /// `call_arg`'s `[ "*" | "**" | "&" ] expression` splat-marker
+    /// alternative, leaving the actual `expression` with nothing to
+    /// consume and producing a confusing parse failure for an ordinary
+    /// Ruby program.
+    #[test]
+    fn test_literal_does_not_match_a_string_token_with_the_same_content() {
+        let grammar = ParserGrammar {
+            rules: vec![GrammarRule {
+                name: "greeting".to_string(),
+                body: GrammarElement::Literal {
+                    value: "hello".to_string(),
+                },
+                line_number: 1,
+            }],
+            version: 0,
+        };
+        // A STRING token whose CONTENT is "hello" (e.g. Ruby source
+        // `"hello"`) must NOT satisfy a `Literal { value: "hello" }`
+        // element -- only a non-String token spelled `hello` (the
+        // catch-all-Name-typed operator/keyword case this element exists
+        // for) should.
+        let tokens = vec![tok(TokenType::String, "hello"), tok(TokenType::Eof, "")];
+        let mut parser = GrammarParser::new(tokens, grammar);
+        assert!(
+            parser.parse().is_err(),
+            "a String-typed token must not satisfy a Literal match on its content"
+        );
     }
 
     #[test]
