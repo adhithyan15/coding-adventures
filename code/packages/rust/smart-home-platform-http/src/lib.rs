@@ -19,8 +19,8 @@ use smart_home_core::{
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
     DeviceCommand, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health,
-    IntegrationId, PrivilegeTier, Scene, SceneScope, SmartHomeTool, StateConfidence, StateDelta,
-    StateSource, Value, ValueKind,
+    IntegrationId, MediaCommandType, PrivilegeTier, Scene, SceneScope, SmartHomeTool,
+    StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_dashboard_core::NativeDashboardManifest;
 use smart_home_runtime::{
@@ -10258,6 +10258,16 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+        CommandType::Media(MediaCommandType::SetPlaybackState) => "media_set_playback_state",
+        CommandType::Media(MediaCommandType::PlayNext) => "media_play_next",
+        CommandType::Media(MediaCommandType::PlayPrevious) => "media_play_previous",
+        CommandType::Media(MediaCommandType::SetVolume) => "media_set_volume",
+        CommandType::Media(MediaCommandType::SetMute) => "media_set_mute",
+        CommandType::Media(MediaCommandType::SetGroup) => "media_set_group",
+        CommandType::Media(MediaCommandType::ClearQueue) => "media_clear_queue",
+        CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
+        CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
+        CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
     }
 }
 
@@ -10271,6 +10281,16 @@ fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> 
         "recall_scene" => Ok(CommandType::RecallScene),
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        "media_set_playback_state" => Ok(CommandType::Media(MediaCommandType::SetPlaybackState)),
+        "media_play_next" => Ok(CommandType::Media(MediaCommandType::PlayNext)),
+        "media_play_previous" => Ok(CommandType::Media(MediaCommandType::PlayPrevious)),
+        "media_set_volume" => Ok(CommandType::Media(MediaCommandType::SetVolume)),
+        "media_set_mute" => Ok(CommandType::Media(MediaCommandType::SetMute)),
+        "media_set_group" => Ok(CommandType::Media(MediaCommandType::SetGroup)),
+        "media_clear_queue" => Ok(CommandType::Media(MediaCommandType::ClearQueue)),
+        "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
+        "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
+        "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
         other => Err(ApiError::bad_request(format!(
             "unsupported command_type `{other}`"
         ))),
@@ -13726,5 +13746,26 @@ mod tests {
             bridge_transport_from_label("tcp").unwrap(),
             BridgeTransport::LanTcp
         );
+    }
+
+    #[test]
+    fn media_command_labels_round_trip_through_local_api_labels() {
+        let commands = [
+            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            ("media_play_next", MediaCommandType::PlayNext),
+            ("media_play_previous", MediaCommandType::PlayPrevious),
+            ("media_set_volume", MediaCommandType::SetVolume),
+            ("media_set_mute", MediaCommandType::SetMute),
+            ("media_set_group", MediaCommandType::SetGroup),
+            ("media_clear_queue", MediaCommandType::ClearQueue),
+            ("media_play_queue_item", MediaCommandType::PlayQueueItem),
+            ("media_remove_queue_item", MediaCommandType::RemoveQueueItem),
+            ("media_move_queue_item", MediaCommandType::MoveQueueItem),
+        ];
+        for (label, media_command) in commands {
+            let command = CommandType::Media(media_command);
+            assert_eq!(command_type_from_label(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
     }
 }

@@ -15,7 +15,8 @@ use smart_home_core::{
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
     DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId, Health,
     IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
-    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
+    MediaCommandType, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError,
@@ -6341,7 +6342,8 @@ fn command_for_desired_state(
         | CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => desired.value.clone(),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(_) => desired.value.clone(),
         CommandType::RecallScene => Value::Null,
     };
     let command_id = CommandId::trusted(format!(
@@ -6422,8 +6424,13 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
         | CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => command.arguments.clone(),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(MediaCommandType::SetPlaybackState)
+        | CommandType::Media(MediaCommandType::SetVolume)
+        | CommandType::Media(MediaCommandType::SetMute)
+        | CommandType::Media(MediaCommandType::SetGroup) => command.arguments.clone(),
         CommandType::RecallScene => return None,
+        CommandType::Media(_) => return None,
     };
 
     Some(StateSnapshot {

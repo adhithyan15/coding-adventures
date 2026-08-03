@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Authorization and optimistic-state routing for typed D23 media commands.
 - `RuntimeDurableSnapshot` plus snapshot and restore helpers for normalized
   registry, state, history, pairing, optimistic, and desired-state data.
 - `RuntimeEventDeliverySummary` plus delivery-batch `summary()` helpers for

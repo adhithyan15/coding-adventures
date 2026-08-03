@@ -26,7 +26,8 @@ use smart_home_core::{
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
     DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health,
-    IntegrationCatalogSummary, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
+    IntegrationCatalogSummary, IntegrationId, MediaCommandType, Metadata, PrivilegeTier,
+    ProtocolFamily,
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope,
     SmartHomeToolCatalogSummary, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
     VaultRef,
@@ -89719,18 +89720,26 @@ fn json_to_smart_value_for_command(
     value: &JsonValue,
 ) -> Result<Value, ToolCallError> {
     match command_type {
-        CommandType::TurnOn | CommandType::TurnOff | CommandType::RecallScene => Ok(Value::Null),
-        CommandType::SetBrightness => match json_to_smart_value(value)? {
-            Value::Integer(value) if (0..=100).contains(&value) => {
-                Ok(Value::Percentage(value as u8))
+        CommandType::TurnOn
+        | CommandType::TurnOff
+        | CommandType::RecallScene
+        | CommandType::Media(MediaCommandType::PlayNext)
+        | CommandType::Media(MediaCommandType::PlayPrevious)
+        | CommandType::Media(MediaCommandType::ClearQueue) => Ok(Value::Null),
+        CommandType::SetBrightness | CommandType::Media(MediaCommandType::SetVolume) => {
+            match json_to_smart_value(value)? {
+                Value::Integer(value) if (0..=100).contains(&value) => {
+                    Ok(Value::Percentage(value as u8))
+                }
+                Value::Percentage(value) => Ok(Value::Percentage(value)),
+                other => Ok(other),
             }
-            Value::Percentage(value) => Ok(Value::Percentage(value)),
-            other => Ok(other),
-        },
+        }
         CommandType::SetColor
         | CommandType::SetColorTemperature
         | CommandType::SetLock
-        | CommandType::SetThermostatSetpoint => json_to_smart_value(value),
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(_) => json_to_smart_value(value),
     }
 }
 
@@ -90122,6 +90131,16 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "recall_scene" => Ok(CommandType::RecallScene),
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        "media_set_playback_state" => Ok(CommandType::Media(MediaCommandType::SetPlaybackState)),
+        "media_play_next" => Ok(CommandType::Media(MediaCommandType::PlayNext)),
+        "media_play_previous" => Ok(CommandType::Media(MediaCommandType::PlayPrevious)),
+        "media_set_volume" => Ok(CommandType::Media(MediaCommandType::SetVolume)),
+        "media_set_mute" => Ok(CommandType::Media(MediaCommandType::SetMute)),
+        "media_set_group" => Ok(CommandType::Media(MediaCommandType::SetGroup)),
+        "media_clear_queue" => Ok(CommandType::Media(MediaCommandType::ClearQueue)),
+        "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
+        "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
+        "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
     }
 }
@@ -92488,6 +92507,16 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::RecallScene => "recall_scene",
         CommandType::SetLock => "set_lock",
         CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+        CommandType::Media(MediaCommandType::SetPlaybackState) => "media_set_playback_state",
+        CommandType::Media(MediaCommandType::PlayNext) => "media_play_next",
+        CommandType::Media(MediaCommandType::PlayPrevious) => "media_play_previous",
+        CommandType::Media(MediaCommandType::SetVolume) => "media_set_volume",
+        CommandType::Media(MediaCommandType::SetMute) => "media_set_mute",
+        CommandType::Media(MediaCommandType::SetGroup) => "media_set_group",
+        CommandType::Media(MediaCommandType::ClearQueue) => "media_clear_queue",
+        CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
+        CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
+        CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
     }
 }
 
@@ -121368,5 +121397,26 @@ mod tests {
             return None;
         };
         Some(*value)
+    }
+
+    #[test]
+    fn media_command_labels_round_trip_through_the_chief_boundary() {
+        let commands = [
+            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            ("media_play_next", MediaCommandType::PlayNext),
+            ("media_play_previous", MediaCommandType::PlayPrevious),
+            ("media_set_volume", MediaCommandType::SetVolume),
+            ("media_set_mute", MediaCommandType::SetMute),
+            ("media_set_group", MediaCommandType::SetGroup),
+            ("media_clear_queue", MediaCommandType::ClearQueue),
+            ("media_play_queue_item", MediaCommandType::PlayQueueItem),
+            ("media_remove_queue_item", MediaCommandType::RemoveQueueItem),
+            ("media_move_queue_item", MediaCommandType::MoveQueueItem),
+        ];
+        for (label, media_command) in commands {
+            let command = CommandType::Media(media_command);
+            assert_eq!(parse_command_type(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
     }
 }

@@ -295,6 +295,38 @@ impl Capability {
         .with_unit("temperature")
     }
 
+    pub fn media_playback() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.playback"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Text,
+        )
+    }
+
+    pub fn media_volume() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.volume"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
+    pub fn media_grouping() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.grouping"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Array,
+        )
+    }
+
+    pub fn media_queue() -> Self {
+        Self::new(
+            CapabilityId::trusted("media.queue"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
     pub fn sensor_occupancy() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.occupancy"),
@@ -365,6 +397,10 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::scene_recall(),
         Capability::lock_state(),
         Capability::climate_setpoint(),
+        Capability::media_playback(),
+        Capability::media_volume(),
+        Capability::media_grouping(),
+        Capability::media_queue(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
         Capability::sensor_temperature(),
@@ -1217,6 +1253,21 @@ pub enum CommandType {
     RecallScene,
     SetLock,
     SetThermostatSetpoint,
+    Media(MediaCommandType),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MediaCommandType {
+    SetPlaybackState,
+    PlayNext,
+    PlayPrevious,
+    SetVolume,
+    SetMute,
+    SetGroup,
+    ClearQueue,
+    PlayQueueItem,
+    RemoveQueueItem,
+    MoveQueueItem,
 }
 
 impl CommandType {
@@ -1229,6 +1280,23 @@ impl CommandType {
             Self::RecallScene => Some(CapabilityId::trusted("scene.recall")),
             Self::SetLock => Some(CapabilityId::trusted("lock.state")),
             Self::SetThermostatSetpoint => Some(CapabilityId::trusted("climate.setpoint")),
+            Self::Media(command) => Some(command.canonical_capability_id()),
+        }
+    }
+}
+
+impl MediaCommandType {
+    pub fn canonical_capability_id(self) -> CapabilityId {
+        match self {
+            Self::SetPlaybackState | Self::PlayNext | Self::PlayPrevious => {
+                CapabilityId::trusted("media.playback")
+            }
+            Self::SetVolume | Self::SetMute => CapabilityId::trusted("media.volume"),
+            Self::SetGroup => CapabilityId::trusted("media.grouping"),
+            Self::ClearQueue
+            | Self::PlayQueueItem
+            | Self::RemoveQueueItem
+            | Self::MoveQueueItem => CapabilityId::trusted("media.queue"),
         }
     }
 }
@@ -1291,7 +1359,8 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
         | CommandType::SetBrightness
         | CommandType::SetColor
         | CommandType::SetColorTemperature
-        | CommandType::RecallScene => PrivilegeTier::LowRisk,
+        | CommandType::RecallScene
+        | CommandType::Media(_) => PrivilegeTier::LowRisk,
     }
 }
 
@@ -4132,12 +4201,16 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 14);
+        assert_eq!(catalog.len(), 18);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
         assert!(ids.contains(&"lock.state"));
         assert!(ids.contains(&"climate.setpoint"));
+        assert!(ids.contains(&"media.playback"));
+        assert!(ids.contains(&"media.volume"));
+        assert!(ids.contains(&"media.grouping"));
+        assert!(ids.contains(&"media.queue"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
         assert!(ids.contains(&"sensor.humidity"));
@@ -4173,6 +4246,16 @@ mod tests {
             CommandType::RecallScene,
             CommandType::SetLock,
             CommandType::SetThermostatSetpoint,
+            CommandType::Media(MediaCommandType::SetPlaybackState),
+            CommandType::Media(MediaCommandType::PlayNext),
+            CommandType::Media(MediaCommandType::PlayPrevious),
+            CommandType::Media(MediaCommandType::SetVolume),
+            CommandType::Media(MediaCommandType::SetMute),
+            CommandType::Media(MediaCommandType::SetGroup),
+            CommandType::Media(MediaCommandType::ClearQueue),
+            CommandType::Media(MediaCommandType::PlayQueueItem),
+            CommandType::Media(MediaCommandType::RemoveQueueItem),
+            CommandType::Media(MediaCommandType::MoveQueueItem),
         ];
 
         for command_type in command_types {

@@ -672,7 +672,10 @@ pub fn matter_command_for_device_command(
             endpoint_id,
             expect_lock_command(command)?,
         )),
-        CommandType::SetColor | CommandType::RecallScene | CommandType::SetThermostatSetpoint => {
+        CommandType::SetColor
+        | CommandType::RecallScene
+        | CommandType::SetThermostatSetpoint
+        | CommandType::Media(_) => {
             Err(MatterError::UnsupportedCommand {
                 command_type: command.command_type,
             })

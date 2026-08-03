@@ -811,16 +811,34 @@ without inventing a media command model prematurely:
 - A real loopback TCP test proves registration, event framing, parsing, and D23
   runtime application over the production transport.
 
+## Current HEOS Media Control Slice
+
+This slice turns the credential-free HEOS player path into an authorized local
+control surface without borrowing command semantics from unrelated domains:
+
+- D23 now has typed media playback, volume, grouping, and queue operations in
+  the canonical device-command envelope, with explicit capability mappings and
+  low-risk policy tiers.
+- HEOS player entities advertise commandable playback, volume, grouping, and
+  queue capabilities alongside their detailed observed player state.
+- The production TCP host supports play/pause/stop, next/previous, volume,
+  mute, group membership, queue clearing, queue playback, removal, and
+  reordering with exact command-response correlation.
+- Grouping authorizes every affected installed player entity before opening a
+  socket. Invalid player references and malformed queue identifiers fail before
+  transport I/O.
+- A real loopback TCP test proves all ten native command transfers, while a
+  denial test proves unauthorized media commands never reach the transport.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-1. Add explicit D23 media command types and capability mappings, then implement
-   authorized HEOS playback, volume, grouping, and queue controls over the
-   existing production TCP host.
-2. Add authorized AirGradient local configuration, LED/display control, and CO2
+1. Add authorized AirGradient local configuration, LED/display control, and CO2
    calibration while keeping cloud-controlled configuration conflicts explicit.
+2. Add authenticated HEOS source browsing and queue insertion only after the
+   account/session and Vault-leasing prerequisites are concrete.
 3. Extend authenticated Reolink CGI support with concrete camera/NVR control,
    media, recording, and push-event operations supported by the current host.
 4. Add another vendor-specific camera or NVR integration where authenticated
