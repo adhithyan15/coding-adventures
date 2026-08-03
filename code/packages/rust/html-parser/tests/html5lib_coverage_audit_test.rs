@@ -20,6 +20,7 @@ struct CoverageAudit {
 #[derive(Debug, Deserialize)]
 struct TreeConstructionAudit {
     upstream_source: String,
+    upstream_revision: String,
     upstream_cases: usize,
     local_cases: usize,
     missing: usize,
@@ -29,6 +30,7 @@ struct TreeConstructionAudit {
 #[derive(Debug, Deserialize)]
 struct TokenizerAudit {
     upstream_source: String,
+    upstream_revision: String,
     upstream_cases: usize,
     local_raw_cases: usize,
     missing: usize,
@@ -72,6 +74,14 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
         audit.tree_construction.upstream_source,
         "wpt/html/syntax/parsing/resources"
     );
+    assert_eq!(audit.tree_construction.upstream_revision.len(), 40);
+    assert!(
+        audit
+            .tree_construction
+            .upstream_revision
+            .chars()
+            .all(|character| character.is_ascii_hexdigit())
+    );
     assert_eq!(audit.tree_construction.upstream_cases, 1934);
     assert_eq!(audit.tree_construction.local_cases, tree_cases.len());
     assert_eq!(audit.tree_construction.local_cases, 2637);
@@ -106,6 +116,14 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     );
 
     assert_eq!(audit.tokenizer.upstream_source, "html5lib-tests/tokenizer");
+    assert_eq!(audit.tokenizer.upstream_revision.len(), 40);
+    assert!(
+        audit
+            .tokenizer
+            .upstream_revision
+            .chars()
+            .all(|character| character.is_ascii_hexdigit())
+    );
     assert_eq!(audit.tokenizer.upstream_cases, 6806);
     assert_eq!(audit.tokenizer.local_raw_cases, raw_tokenizer.tests.len());
     assert_eq!(audit.tokenizer.local_raw_cases, 7015);

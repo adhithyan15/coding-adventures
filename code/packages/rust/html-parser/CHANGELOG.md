@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- The conformance coverage report now pins the exact upstream WPT and
+  html5lib-tests commits, and the package owns an explicit prioritized backlog
+  and zero-debt completion boundary for future upstream drift.
 - Browser render-tree extraction can now accept the fetched document URL as
   the fallback base, including resolution of relative authored `<base href>`
   values, so Venture can fetch relative links and inline images after HTTP

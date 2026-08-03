@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -96,6 +97,7 @@ def main() -> int:
     report = {
         "tree_construction": {
             "upstream_source": upstream_tree_source,
+            "upstream_revision": git_revision(upstream_tree_path),
             "upstream_cases": len(upstream_tree),
             "local_cases": len(local_tree),
             "missing": len(missing_tree),
@@ -103,6 +105,7 @@ def main() -> int:
         },
         "tokenizer": {
             "upstream_source": "html5lib-tests/tokenizer",
+            "upstream_revision": git_revision(html5lib_root),
             "upstream_cases": len(upstream_tokenizer),
             "local_raw_cases": len(local_tokenizer),
             "missing": len(missing_tokenizer),
@@ -286,6 +289,21 @@ def resolve_upstream_tree_path(
         "Current html5lib-tests no longer contains tree-construction tests. "
         "Provide WPT via --wpt-root or WPT_ROOT."
     )
+
+
+def git_revision(path: Path) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(path), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError) as error:
+        raise SystemExit(
+            f"{path} must be inside a Git checkout so the audit can pin its revision"
+        ) from error
+    return result.stdout.strip()
 
 
 def load_tree_cases(path: Path) -> list[TreeCase]:
@@ -511,6 +529,7 @@ def print_report(
     print("")
     print("tree-construction:")
     print(f"  upstream:       {upstream_tree_path}")
+    print(f"  revision:       {tree['upstream_revision']}")
     print(f"  upstream cases: {tree['upstream_cases']}")
     print(f"  local cases:    {tree['local_cases']}")
     print(f"  missing:        {tree['missing']}")
@@ -518,6 +537,7 @@ def print_report(
     print("")
     print("tokenizer:")
     print(f"  upstream:           {upstream_tokenizer_path}")
+    print(f"  revision:           {tokenizer['upstream_revision']}")
     print(f"  upstream cases:     {tokenizer['upstream_cases']}")
     print(f"  local raw cases:    {tokenizer['local_raw_cases']}")
     print(f"  missing:            {tokenizer['missing']}")
