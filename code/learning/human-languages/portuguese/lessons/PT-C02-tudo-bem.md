@@ -3,66 +3,57 @@ id: PT-C02-tudo-bem
 chapter: 2
 type: phrase
 headword: Tudo bem?
-gloss: how are you? (also Como vai? / Como está?)
+gloss: everything well? — the verb-free everyday “how are you?”
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [PT-C02-tudo, PT-C02-como]
 sounds: [nasal-em]
-roots: [totus-latin, ire-latin, stare-latin]
-etymology_hook: "Tudo bem? = 'everything well?' (no verb); Como vai? (ir 'to go') / Como está? (estar 'to stand')"
+roots: [totus-latin]
+etymology_hook: "Tudo bem? literally asks 'everything well?' and needs neither a verb nor a pronoun"
 est_minutes: 4
 reviews_of: [PT-C02-tudo, PT-C02-como]
 ---
 
-# Tudo bem? — "how are you?", three ways
+# Tudo bem? — “everything well?”
 
 ## Warm-up
 
-[PAUSE 2s] Portuguese gives you three everyday ways to ask *how are you?* — one
-with no verb at all, one on "to go," one on "to stand." All three pieces are
-already yours.
+[PAUSE 2s] You know **tudo**, “everything.” Add **bem**, “well,” and Portuguese
+gives you an everyday check-in with no verb at all.
 
-## The three forms
+> **Tudo bem?** — “Everything well?” / “How are you?”
 
-| form | literally | verb |
-|---|---|---|
-| **Tudo bem?** (also *Tudo bom?*) | "everything well?" | *(none — tudo + bem)* |
-| **Como vai?** | "how do you **go**?" | *ir*, "to go" (vai = "goes") |
-| **Como está?** | "how are you / **stand**?" | *estar*, "to be/stand" |
+The friendly answer can be identical:
 
-- **Tudo bem?** is the friendly default — **no pronoun, no verb**, so it dodges
-  the register question entirely. Answer with the same words: *Tudo bem.*
-- **Como vai?** puts Portuguese with **French and German** (state as *going* —
-  *vai* is from **ir**, "to go," ← Latin *īre*, English *exit/transit*).
-- **Como está?** puts it with **Spanish and Italian** (state as *standing* —
-  *está* is from **estar**, ← Latin *stāre*). Portuguese, like Italian, does
-  **both.**
+> **Tudo bem.** — “Everything’s well.”
 
-## Grammar Lens: the "you" you're skipping
+Because the question contains no “you” and no verb, it avoids choosing a social
+register. That simplicity is exactly why it is everywhere.
 
-When you *do* want a pronoun, everyday Portuguese uses **você** ("you," worn down
-from *vossa mercê*, "your mercy" — the very same "your grace" origin as Spanish
-*usted*!). For respect, **o senhor / a senhora** ("the gentleman / the lady").
-But *Tudo bem?* lets you greet anyone without choosing — which is exactly why
-it's everywhere.
+## Add the listener only when useful
 
-## The full five-language map (this PR)
+To bounce the question back, say:
 
-- **Stand** (*estar/stare*): Spanish, Italian, Portuguese (*Como está?*)
-- **Go** (*aller/gehen/ir*): French, German, Portuguese (*Como vai?*), Italian (*Come va?*)
-- **Neither** — just "everything well?": Portuguese *Tudo bem?*
+> **Tudo bem, e você?** — “All well, and you?”
+
+Everyday **você** comes from *vossa mercê*, “your mercy.” Centuries of fast
+speech wore a respectful title into the ordinary pronoun “you,” much as Spanish
+*usted* grew from a form meaning “your grace.” For more explicit respect,
+Portuguese can use **o senhor / a senhora**, “the gentleman / the lady.”
+
+You do not need either pronoun for the basic pair: **Tudo bem? — Tudo bem.**
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "Tudo bem?" — the no-pronoun favourite]
-- [YOU SAY: "Como vai?" (go) and "Como está?" (stand)]
-- [YOU SAY: "Tudo bem? — Tudo bem, e você?" — bounce it back with *e você?*]
+- [YOU SAY: “Tudo bem?”]
+- [YOU SAY: the answer — “Tudo bem.”]
+- [YOU SAY: “Tudo bem, e você?”]
 
-[REPEAT x2] "Tudo bem? — Tudo bem!" question and answer, same two words.
+[REPEAT x2] “Tudo bem? — Tudo bem!”
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Why is *Tudo bem?* so handy? (No pronoun/verb — skips the register
-choice.) *Como vai?* and *Como está?* use which two verbs, and which metaphors?
-(*ir* = go; *estar* = stand.) Where does *você* come from? (*vossa mercê*, "your
-mercy" — like Spanish *usted*.) Next: the so-so answer, **mais ou menos**.
+[PAUSE 3s] What does *Tudo bem?* literally ask? (“Everything well?”) Why can it
+fit almost any listener? (It has **no verb and no pronoun**.) How do you bounce
+it back? (**E você?**) Where did *você* come from? (*Vossa mercê*, “your
+mercy.”) Next: two questions that do use verbs.

@@ -9,7 +9,7 @@ prerequisites: [PT-C09-estacoes, PT-C01-ola]
 sounds: [nasal-ae, diphthong-ai]
 roots: [pater-latin, mater-latin]
 etymology_hook: "Portuguese wore pater/māter down further than any sister — to one-syllable pai and nasal mãe (the intervocalic -t- vanished, pater→pae→pai); os pais means both 'the parents' and, literally, 'the fathers'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C09-estacoes, PT-C01-ola]
 ---
 

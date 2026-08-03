@@ -3,83 +3,57 @@ id: PT-C17-cabeca
 chapter: 17
 type: word
 headword: a cabeça
-gloss: the head — the one that kept the Latin word for head
+gloss: the head — feminine, with cedilla ç pronounced s
 concept_tag: PT-BODY-HEAD
 prerequisites: [PT-C01-o-a]
 sounds: [cedilla-s]
 roots: [latin-caput]
-etymology_hook: "where French and Italian replaced caput with a pot-word (tête, testa) and German with a cup-word (Kopf), Iberian Romance KEPT it: cabeça ← Late Latin capitia ← caput, so Portuguese and Spanish are the ones still calling the head a head"
+etymology_hook: "cabeça continues Late Latin capitia from caput, so Portuguese kept the older head-word"
 est_minutes: 4
 reviews_of: [PT-C01-o-a, PT-C09-meses]
 ---
 
-# a cabeça — "the head"
+# a cabeça — “the head”
 
 ## Warm-up
 
-[PAUSE 2s] Three of the languages in this course threw away the Latin word for
-"head" and replaced it with a **container**. Portuguese didn't.
+[PAUSE 2s] Learn one body word and one reading rule together.
 
-## The word
+> **a cabeça** — the head, feminine
 
-> **a cabeça** — the head. Feminine.
+## Read the cedilla
 
-The **ç** is the **cedilla**. It marks a *c* that is said **s** in front of *a*,
-*o* or *u* — where a plain *c* would be a hard **k**. So *cabeça* ends "-essa",
-not "-eka".
+The **ç** is a **cedilla**. It marks a *c* pronounced **s** before *a*, *o*, or
+*u*, where plain *c* would normally be hard **k**. So *cabeça* ends roughly
+“-essa,” not “-eka.”
 
-(The mark is a tiny **z** written under the letter: medieval scribes wrote *ç* as
-shorthand for *cz*. The Portuguese track has no handwriting chapters yet, so
-this is a reading note rather than something you have been taught to draw.)
+The mark began as a tiny **z** under the letter: medieval scribes used *ç* as
+shorthand for *cz*. Treat that as a recognition hook; this track has not yet
+asked you to write the mark by hand.
 
-## The word that survived
+## The inherited word
 
-**Cabeça** comes from Late Latin ***capitia***, from ***caput***, "head." So the
-Iberian languages are simply still saying the Latin word.
+**Cabeça** comes from Late Latin ***capitia***, built from ***caput***, “head.”
+Portuguese wore the word down in ordinary speech but kept the old root.
 
-Now put all five side by side, because this is the point of the chapter:
+A useful sentence is:
 
-| | "head" | from | literally |
-|---|---|---|---|
-| **Portuguese** | *cabeça* | *caput* | **head** |
-| **Spanish** | *cabeza* | *caput* | **head** |
-| French | *tête* | *testa* | a **pot** |
-| Italian | *testa* | *testa* | a **pot** |
-| German | *Kopf* | \**kuppaz* | a **cup** |
+> **Dói-me a cabeça.** — “My head hurts.” (European Portuguese)
 
-Three of the five replaced the word with a **vessel** — and French/Italian and
-German did it **independently**, from unrelated words. A head looks like a bowl
-in any language, and soldiers' slang is the same everywhere.
-
-Portuguese and Spanish didn't quite sit the joke out, though — they **narrowed** it. *Testa* is alive in Portuguese; it just means the **forehead** rather than the whole head.
-
-## caput is elsewhere too
-
-Even in Portuguese, *caput* turns up in its learned form:
-
-- **capital** (the head city, and the head sum of money)
-- **capítulo** (chapter — a "little head" of a text)
-- **capitão** (captain — the head of a company)
-
-So the same Latin root appears twice in the language: once worn down by everyday
-use into *cabeça*, and once borrowed back intact from written Latin as *capital*.
-That doubling — one inherited, one re-imported — is extremely common, and worth
-recognising when you see it.
+In Brazilian Portuguese you may hear **Minha cabeça está doendo**. Both begin
+with the same feminine noun **a cabeça**.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "a cabeça" — the **ç** is an **s**]
-- [YOU SAY: "dói-me a cabeça" — European; Brazil says "minha cabeça está doendo"]
-- [YOU SAY: the five-way — "cabeça, cabeza … tête, testa … Kopf"]
-- [YOU SAY: the doubling — "**cabeça** inherited, **capital** re-borrowed"]
+- [YOU SAY: “a cabeça” — make **ç** an **s**]
+- [YOU SAY: “Dói-me a cabeça.”]
+- [YOU SAY: “cabeça ← caput”]
+
+[REPEAT x2] “A cabeça — feminine; ç sounds s.”
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Say "the head." (*A cabeça* — feminine.) What does the **ç** do?
-(Marks a **c** said as **s** before *a/o/u*.) Where is *cabeça* from? (Late Latin
-***capitia***, from ***caput*** — Portuguese kept the real word.) What did French,
-Italian and German do instead? (Replaced it with a **container** — *testa* a
-pot, *Kopf* a cup — and did so **independently**.) What is the doubling in
-*cabeça* / *capital*? (**One inherited** and worn down, **one re-borrowed**
-intact from written Latin.) Next: the hand.
+[PAUSE 3s] Say “the head.” (**A cabeça**.) What does the cedilla do? (Marks *c*
+as **s** before *a/o/u*.) What is the Latin root? (***Caput***.) Next: compare
+the head-words and find that root a second time in learned vocabulary.

@@ -1,10 +1,23 @@
 # Changelog
 
+## Sub-five-minute remediation — 2026-08-02
+
+- Corrected eighteen declared five-minute estimates whose lesson bodies already
+  compute below 300 seconds.
+- Replaced five computed violations with five prerequisite-ordered support
+  lessons spanning question register, *ser* suppletion, *ser/estar* meaning,
+  and the inherited/re-borrowed *caput* pair.
+- Preserved the full vocabulary, grammar, etymology, and cross-language depth.
+  The shared report now measures zero Portuguese duration violations.
+- `PT-C17-mao` at 293 computed seconds is the tightest remaining Portuguese
+  lesson and should be watched during copy edits.
+
 ## Chapter 17 — The body: the head that stayed a head, and the *n* that dissolved
 
-- **Chapter 17 authored** (`PT-C17-cabeca`, `-mao`) — the **body**, the theme the
+- **Chapter 17 authored** (`PT-C17-cabeca`, `-cabeca-caput`, `-mao`) — the **body**, the theme the
   parallel-track roadmaps name next.
-- **a cabeça** (`PT-C17-cabeca`): the chapter's role in the four-way set is that
+- **a cabeça / the *caput* map** (`PT-C17-cabeca`, `-cabeca-caput`): the
+  chapter's role in the four-way set is that
   **Portuguese kept the Latin word**. *Cabeça* ← Late Latin *capitia* ← ***caput***,
   where French and Italian replaced "head" with a **pot** (*testa*) and German
   with a **cup** (*Kopf*) — independently of each other. The five-language table
@@ -34,10 +47,12 @@
 
 ## Chapter 16 — *ser* and *estar*: sitting against standing
 
-- **Chapter 16 authored** (`PT-C16-ser`, `-ser-vs-estar`). Portuguese had **no
+- **Chapter 16 authored** (`PT-C16-ser`, `-ser-roots`, `-ser-vs-estar`,
+  `-ser-estar-meaning`). Portuguese had **no
   "to be" lesson at all** — no *ser*, and *estar* only overheard inside Ch. 2's
   *Como está?*. This is the largest single gap in the track, now closed.
-- **ser** (`PT-C16-ser`): present, preterite and imperfect, and then why *sou*,
+- **ser / its roots** (`PT-C16-ser`, `-ser-roots`): present, preterite and
+  imperfect, and then why *sou*,
   *fui* and *era* have nothing in common — **two Latin verbs but three stems**:
   *esse* (for *sou/é/são* and for *era*), *esse*'s **own** ancient perfect
   ***fuī*** (PIE \**bʰuH-*, the root of English **be** and German **bin/bist**),
@@ -55,7 +70,8 @@
     way.) Framed as a **gift to the learner**: *ir*'s preterite needs no separate
     lesson — which is also why this chapter closes the set **without** the
     motion-verb lesson French and German required.
-- **ser vs estar** (`PT-C16-ser-vs-estar`): *estar*'s forms named at last, with
+- **ser vs estar / meaning shifts** (`PT-C16-ser-vs-estar`,
+  `-ser-estar-meaning`): *estar*'s forms named at last, with
   the spoken reductions (*tou bem*, *tá bem*) flagged as recognise-don't-write,
   and *tá bom* labelled as characteristically **Brazilian** (*tá bem* is heard in
   both) rather than left to imply that an otherwise European-leaning lesson says
@@ -328,7 +344,8 @@
 ## Chapter 2 — "Tudo bem?" (the how-are-you chapter)
 
 - **Chapter 2 authored** (`PT-C02-de-nada`, `-como`, `-tudo`, `-tudo-bem`,
-  `-mais-ou-menos`, `-practice`): the "how are you?" exchange, atom-first,
+  `-como-vai-esta`, `-mais-ou-menos`, `-practice`, `-formal-practice`): the
+  "how are you?" exchange, atom-first,
   reviewing Chapter 1. Fifth and final track in the PR's cross-language
   how-are-you set, reusing `STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`,
   `WORD-SOSO`. Reordered ahead of introductions to widen the set (register

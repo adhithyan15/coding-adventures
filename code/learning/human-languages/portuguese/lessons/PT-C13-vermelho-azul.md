@@ -9,7 +9,7 @@ prerequisites: [PT-C13-preto-branco]
 sounds: [lh-palatal, final-l]
 roots: [latin-vermiculus, arabic-lazaward]
 etymology_hook: "vermelho ← vermiculus 'little worm' — the kermes insect crushed for scarlet dye (→ English vermilion), so PT alone doesn't use the ancient red root; azul ← Arabic lāzaward 'lapis lazuli' → English azure"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C13-preto-branco, PT-C12-numeros-16-20]
 ---
 

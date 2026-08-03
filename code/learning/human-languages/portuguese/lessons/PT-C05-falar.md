@@ -9,7 +9,7 @@ prerequisites: [PT-C03-eu, PT-C02-como]
 sounds: [final-r, final-a-reduces]
 roots: [fabulari-latin]
 etymology_hook: "falar ← Latin fabulārī 'to chat' (← fābula 'story' → fable); Portuguese KEPT the f- where Spanish shifted f→h"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C03-practice, PT-C04-practice]
 ---
 

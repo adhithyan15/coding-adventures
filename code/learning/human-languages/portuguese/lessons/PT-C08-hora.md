@@ -9,7 +9,7 @@ prerequisites: [PT-C06-numeros-1-5]
 sounds: [silent-h, open-o]
 roots: [hora-latin, hora-greek]
 etymology_hook: "hora ← Latin hōra ← Greek hṓrā → hour; 'são duas horas' keeps 'horas' explicit and plural"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C06-numeros-1-5, PT-C07-dias-2]
 ---
 

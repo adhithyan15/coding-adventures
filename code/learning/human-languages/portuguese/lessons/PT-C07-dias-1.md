@@ -9,7 +9,7 @@ prerequisites: [PT-C06-numeros-1-5]
 sounds: [nasal-none, open-e]
 roots: [feria-latin, ordinals-latin]
 etymology_hook: "Portuguese is the ONLY Romance language to drop the pagan planet-gods: its weekdays are numbered 'feiras' — segunda-feira '2nd feast-day', built from the ordinals of the numbers you just learned"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C06-numeros-1-5, PT-C06-numeros-6-10]
 ---
 

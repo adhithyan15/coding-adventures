@@ -9,7 +9,7 @@ prerequisites: [PT-C12-numeros-16-20]
 sounds: [closed-e, nasal-an]
 roots: [latin-pressus, latin-niger, germanic-blank]
 etymology_hook: "Portuguese keeps TWO blacks — negro ← niger and everyday preto ← Latin pressus 'pressed, dense' (dense → dark); branco is Germanic *blank 'shining', and Latin albus survives in alvorada ('dawn')"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [PT-C12-numeros-16-20, PT-C11-pao-agua]
 ---
 
