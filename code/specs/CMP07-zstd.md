@@ -162,7 +162,9 @@ Bits 1–0:  Dictionary_ID_Flag
 > is Content_Checksum_Flag. A decoder that reads bit 4 for the checksum flag
 > will misparse any real-world frame that has a trailing checksum (which is
 > the common case — most encoders, including the reference `zstd` CLI, enable
-> it by default) as having trailing garbage after the last block.
+> it by default) as having trailing garbage after the last block. At least one
+> language port had already copied the wrong bit position into a code comment
+> before this was caught — see `lessons.md` Lesson 95/96.
 
 ### Window Descriptor (1 byte, present when Single_Segment_Flag=0)
 
