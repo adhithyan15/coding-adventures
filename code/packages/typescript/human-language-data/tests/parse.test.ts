@@ -82,6 +82,9 @@ describe("parseLesson", () => {
       "## The word, taken apart",
       "A root note.",
       "",
+      "## Script — shape and stroke",
+      "A writing note.",
+      "",
       "## Wrap-up Recall",
       "Say it once.",
     ].join("\n");
@@ -90,6 +93,7 @@ describe("parseLesson", () => {
     expect(parsed.blocks).toEqual([
       { type: "warmup", title: "Warm-up", markdown: "Remember yesterday." },
       { type: "etymology", title: "The word, taken apart", markdown: "A root note." },
+      { type: "script", title: "Script — shape and stroke", markdown: "A writing note." },
       { type: "recall", title: "Wrap-up Recall", markdown: "Say it once." },
     ]);
   });

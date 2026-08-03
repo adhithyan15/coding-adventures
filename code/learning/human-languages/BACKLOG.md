@@ -5,12 +5,12 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Spanish duration
-tranche: 20 registered tracks, 1,063 Markdown lessons, 20 downloadable LaTeX
-books, and zero duration violations. HL-V01 keeps the remaining migration debt
-reproducible in both JSON and human-readable reports; HL-S01 proves the strict
-schema on the first 24 Spanish lessons, and the completed HL-D01 tranches prove
-duration remediation without discarding deep content.
+Last prioritized: 2026-08-02. Current baseline after the Spanish Chapters 4–6
+schema tranche: 20 registered tracks, 1,065 Markdown lessons, 20 downloadable
+LaTeX books, and zero duration violations. HL-V01 keeps the remaining migration
+debt reproducible in both JSON and human-readable reports; HL-S01 and HL-S02
+prove the strict schema on the first 51 Spanish lessons, and the completed
+HL-D01 tranches prove duration remediation without discarding deep content.
 
 ## Priority rules
 
@@ -62,12 +62,13 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01M | Complete in the Malayalam duration PR | Remove all thirty-seven sub-five-minute violations from the Malayalam track. | The report measures zero Malayalam violations; four new prerequisite-ordered micro-lessons separate vocabulary from etymology, register, and cross-language comparison. |
 | HL-D01N | Complete in the Arabic duration PR | Remove all thirty-nine sub-five-minute violations from the Arabic track. | The report measures zero Arabic violations; four new prerequisite-ordered writing steps preserve the abjad, joining, whole-word assembly, and hamza content. |
 | HL-D01O | Complete in the Hindi duration PR | Remove all forty sub-five-minute violations from the Hindi track. | The report measures zero Hindi violations; thirteen new prerequisite-ordered lessons preserve its script, etymology, grammar, and register depth. |
-| HL-D01P | Complete in this PR | Remove all forty-two sub-five-minute violations from the Tamil track. | The report measures zero Tamil violations; twenty new prerequisite-ordered lessons preserve its script, etymology, grammar, register, and source-evidence depth. |
-| HL-D01Q | Complete in this PR | Remove all forty-three sub-five-minute violations from the Latin track. | The report measures zero Latin violations; six new prerequisite-ordered lessons preserve its grammar, etymology, usage, and attestation depth. |
-| HL-D01R | Complete in this PR | Remove all fifty-five remaining sub-five-minute violations from the Spanish track. | The report measures zero Spanish violations; twelve new prerequisite-ordered lessons preserve the grammar, etymology, usage, writing, and practice depth from the genuinely long lessons. |
-| HL-D01 | Complete in this PR | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The deterministic report now reaches zero effective-duration violations across all twenty tracks. |
-| HL-S02 | Next | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
-| HL-G03 | Queued | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | Replaces the first three handwritten post-pilot chapters and extends app/book source-hash parity. |
+| HL-D01P | Complete (#9604) | Remove all forty-two sub-five-minute violations from the Tamil track. | The report measures zero Tamil violations; twenty new prerequisite-ordered lessons preserve its script, etymology, grammar, register, and source-evidence depth. |
+| HL-D01Q | Complete (#9610) | Remove all forty-three sub-five-minute violations from the Latin track. | The report measures zero Latin violations; six new prerequisite-ordered lessons preserve its grammar, etymology, usage, and attestation depth. |
+| HL-D01R | Complete (#9624) | Remove all fifty-five remaining sub-five-minute violations from the Spanish track. | The report measures zero Spanish violations; twelve new prerequisite-ordered lessons preserve the grammar, etymology, usage, writing, and practice depth from the genuinely long lessons. |
+| HL-D01 | Complete (#9624) | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The deterministic report now reaches zero effective-duration violations across all twenty tracks. |
+| HL-S02 | Complete in this PR | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | All 27 lessons have typed blocks, unique sequence, transitive knowledge closure, and sub-five-minute duration guarantees. |
+| HL-G03 | Next | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | Replaces the first three handwritten post-pilot chapters and extends app/book source-hash parity. |
+| HL-V02 | Queued | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
 | HL-B05 | Queued | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | A forced build succeeds but reports four repeated `lesson:practice` labels, 32 Hyperref PDF-string warnings, and two underfull boxes; the clean-build signal is zero of each. |
 | HL-B06 | Queued | Publish Gujarati Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -138,6 +139,29 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   typed body blocks, explicit coverage metadata, same-language prerequisites,
   and transitive knowledge closure. Block-boundary prompt/answer knowledge
   declarations remain a later refinement; this slice does not claim them.
+
+## Findings from HL-S02
+
+- Spanish Chapters 4–6 now contain 27 schema-v2 lessons: the 25 existing
+  vocabulary, grammar, practice, and writing lessons plus two short repair
+  lessons that teach **y** and **café** before later dialogue asks learners to
+  use them. Spanish now has 51 schema-v2 lessons and 77 legacy lessons.
+- Every migrated lesson has a unique sequence from 250 through 510, begins with
+  a typed warm-up, ends with typed recall, closes all declared knowledge over
+  its transitive prerequisites, and remains below 300 effective seconds.
+- Forward references to later material such as *sí*, *un poco*, *ojalá*, and
+  untaught future farewells were removed from production prompts. The surviving
+  dialogues and script exercises require only what the learner already knows.
+- The editorial audit also caught undeclared prompt tokens that lesson-level
+  atom closure cannot see. HL-V02 records block-level prompt closure as the
+  next validation enhancement before schema migration expands beyond this
+  carefully audited slice.
+- The typed-block parser now recognizes `Script` sections explicitly, so the
+  accent, eñe, and inverted-question lessons remain first-class canonical app
+  content rather than falling into an unknown presentation bucket.
+- This tranche deliberately does not replace the handwritten LaTeX chapters.
+  HL-G03 is next and will generate Chapters 4–6 only after this canonical
+  content contract has merged.
 
 ## Findings from HL-G01
 

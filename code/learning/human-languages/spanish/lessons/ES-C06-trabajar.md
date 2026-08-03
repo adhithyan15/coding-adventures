@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C06-trabajar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 480
 chapter: 6
 type: word
 headword: trabajar
@@ -9,7 +12,19 @@ prerequisites: [ES-C06-hablar]
 sounds: [r-tap, j-jota, b-soft]
 roots: [tripalium-latin]
 etymology_hook: "trabajar ← Latin tripaliāre 'to torture' (← tripalium, a 3-stake device) → English travail, travel"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+introduces:
+  knowledge: [ES-LEX-TRABAJAR, ES-ETYMON-TRIPALIUM]
+practises:
+  knowledge: [ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C06-hablar]
 ---
 
@@ -24,7 +39,7 @@ as a word for **torture**, and it's the secret origin of English **travel**.
 ## Sounds you'll need
 
 - `j-jota` — the **j** is a raspy *h*-from-the-throat (the *jota*): *trabajar* =
-  *tra-ba-**HAR***. (Same sound as the *j* in *jamón*.)
+  *tra-ba-**HAR***.
 - `r-tap`, `b-soft` — tapped *r*, soft *b*.
 
 ## The word, taken apart
@@ -42,19 +57,19 @@ road:
   became **travel** (to make a journey). Every time you *travel*, you're
   etymologically being *tortured*.
 
-So *Trabajo mucho* ("I work a lot") is, at the root, "I am tortured a lot" — a
-joke every Spanish learner should enjoy.
+So even plain **trabajo**, “I work,” hides the old idea of toil as torment — a
+dark little joke inside an everyday verb.
 
 ## Grammar Lens: same -ar template
 
 Drop **-ar**, add the ending — identical to *hablar*:
 
-| yo | **trabajo** | I work |
+| I (ending carries the subject) | **trabajo** | I work |
 | tú | **trabajas** | you work |
-| él/ella/usted | **trabaja** | he/she works / you (formal) work |
+| usted | **trabaja** | you (formal) work |
 
-Notice you didn't learn anything new — that's the point. **One template, every
--ar verb.**
+Notice you didn't learn a new ending — that's the point. **One template, every
+regular -ar verb.**
 
 ## Guided Practice
 

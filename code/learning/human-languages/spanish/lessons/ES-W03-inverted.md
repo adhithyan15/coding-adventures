@@ -1,13 +1,28 @@
 ---
+schema_version: 2
 id: ES-W03-inverted
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 350
 chapter: 4
 type: writing
 headword: "¿ ¡"
 gloss: the inverted opening marks — an early cue for question or exclamation intonation
-prerequisites: [ES-C04-como-estas-register]
+prerequisites: [ES-W02-enye]
 sounds: []
 roots: []
-est_minutes: 3
+duration:
+  max_seconds: 290
+requires:
+  knowledge: [ES-SCRIPT-INVERTED-QUESTION, ES-LEX-COMO-ESTAS, ES-LEX-BUENOS-DIAS]
+introduces:
+  knowledge: [ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION, ES-HISTORY-RAE-INVERTED-MARKS]
+practises:
+  knowledge: [ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION, ES-ORTHOGRAPHY-OPENING-PUNCTUATION]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C04-como-estas-register, ES-C04-como-esta, ES-W01-acento]
 ---
 
@@ -20,7 +35,7 @@ major language that puts an **upside-down** question or exclamation mark at the
 **start** of the sentence, as well as the normal one at the end. It looks exotic;
 the reason is purely practical.
 
-## What they are
+## Script — the two opening marks
 
 - **¿ … ?** wraps a question: *¿Cómo estás?*
 - **¡ … !** wraps an exclamation: *¡Hola!* *¡Gracias!*
@@ -29,7 +44,7 @@ The opening mark is just the closing mark **flipped 180°** — turned upside do
 *and* left-right. To write **¿**, draw a normal *?* and rotate it half a turn:
 the hook ends up at the bottom, the dot on top.
 
-## Why open a question at all?
+## Why it's said this way — the opening mark is an early cue
 
 English lets you read most of a sentence before the final **?** reveals it was a
 question — fine, because English usually flags a question early with word order

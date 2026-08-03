@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-W02-enye
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 340
 chapter: 4
 type: writing
 headword: "ñ"
@@ -7,7 +10,19 @@ gloss: the letter eñe — a tiny second n riding on the first
 prerequisites: [ES-W01-tilde-diacritica]
 sounds: [ny-palatal]
 roots: [annus-latin]
-est_minutes: 3
+duration:
+  max_seconds: 270
+requires:
+  knowledge: [ES-SCRIPT-ACUTE-ACCENT]
+introduces:
+  knowledge: [ES-SCRIPT-ENYE, ES-SOUND-ENYE, ES-FORM-MANANA, ES-FORM-ESPANOL, ES-ETYMON-DOUBLE-N]
+practises:
+  knowledge: [ES-SCRIPT-ENYE, ES-SOUND-ENYE, ES-FORM-MANANA, ES-FORM-ESPANOL]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-W01-tilde-diacritica, ES-W01-acento]
 ---
 
@@ -20,14 +35,14 @@ origin story in the alphabet. That wavy hat (`~`, a *tilde*) is not decoration.
 It is **a tiny second *n*, written on top to save space.** Once you know that,
 you know both how to write it *and* why it sounds the way it does.
 
-## The sound
+## Sounds you'll need
 
 **ñ** = the *ny* in "ca**ny**on" or "o**ni**on" — one squished sound, tongue
 flat against the roof of the mouth. English *canyon* is, in fact, Spanish
 **cañón** with the *ñ* spelled out as *ny*. Say "onion," freeze on the middle:
 that's ñ.
 
-## How to write it, and where the hat came from
+## Script — how to write it, and where the hat came from
 
 Write a normal **n**, then a small wavy **~** floating above it. That wave is a
 **medieval shorthand**. Scribes copying Latin were forever writing double
@@ -40,7 +55,7 @@ Spanish is full of words where a Latin **-nn-** did exactly this:
 
 - Latin **annus** ("year") → *anno* → **año** — the *nn* collapsed into *ñ*.
   (That same *annus* gives English **ann**ual, **ann**iversary, bi-**enn**ial.)
-- Latin **cannon** → *caña* → **cañón**; Latin *domina* line → *doña*.
+- Latin **canna** (“reed”) → **caña**; Latin *domina* → *donna* → **doña**.
 
 So the tilde on **ñ** is a **frozen abbreviation**: a thousand-year-old note
 that says "there used to be two *n*'s here." You are writing a scribe's
@@ -55,8 +70,7 @@ shortcut.
 [PAUSE 1s]
 - [YOU SAY: "año" — *AH-nyo*, one squished *ny*; then English "annual" — same
   Latin *annus*]
-- [YOU SAY: "señor", "mañana", "España" — the ñ in three everyday words you'll
-  meet soon]
+- [YOU SAY: “año, mañana, español” — the ñ in three forms from this lesson]
 
 ## Wrap-up Recall
 

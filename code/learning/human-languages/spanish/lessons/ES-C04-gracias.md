@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C04-gracias
+spine_node: SPINE-COURTESY-THANK
+sequence: 250
 chapter: 4
 type: word
 headword: gracias
 gloss: thank you
 concept_tag: COURTESY-THANKS
-prerequisites: []
+prerequisites: [ES-C03-practice]
 sounds: [vowel-a, r-tap, ci-th-s]
 roots: [gratia-latin]
 etymology_hook: "gracias ← Latin gratia 'favour, grace' → English grace, grateful, gratis, congratulate"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C03-practice]
 ---
 

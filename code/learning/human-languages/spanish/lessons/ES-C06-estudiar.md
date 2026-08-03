@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C06-estudiar
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 490
 chapter: 6
 type: word
 headword: estudiar
 gloss: to study (a third -ar verb — the pattern is automatic now)
 concept_tag: ES-VERB-ESTUDIAR
-prerequisites: [ES-C06-hablar]
+prerequisites: [ES-C06-trabajar]
 sounds: [st-no-e, r-tap, diphthong-io]
 roots: [studere-latin]
 etymology_hook: "estudiar ← Latin studēre 'to be eager, apply oneself' → English student, studio, studious"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+introduces:
+  knowledge: [ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE]
+practises:
+  knowledge: [ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C06-trabajar]
 ---
 
@@ -46,12 +61,12 @@ than mere schoolwork.
 
 Drop **-ar**, add the ending — for the third time:
 
-| yo | **estudio** | I study |
+| I (ending carries the subject) | **estudio** | I study |
 | tú | **estudias** | you study |
-| él/ella/usted | **estudia** | he/she studies / you (formal) study |
+| usted | **estudia** | you (formal) study |
 
-Three verbs, one pattern: *hablo, trabajo, estudio*. You've internalized the
-whole regular **-ar** present tense.
+Three verbs, one pattern: *hablo, trabajo, estudio*. The singular regular
+**-ar** present is now reusable rather than memorized verb by verb.
 
 ## Guided Practice
 

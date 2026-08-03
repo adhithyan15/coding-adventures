@@ -1,15 +1,30 @@
 ---
+schema_version: 2
 id: ES-C05-adios
+spine_node: SPINE-TAKE-LEAVE
+sequence: 380
 chapter: 5
 type: word
 headword: adiós
 gloss: goodbye
 concept_tag: FAREWELL
-prerequisites: []
+prerequisites: [ES-C04-practice]
 sounds: [vowel-a, diphthong-io, s-final]
 roots: [a-dios-latin]
 etymology_hook: "adiós ← 'a Dios' — '(I commend you) to God'; twin of French adieu, and of English goodbye ← 'God be with ye'"
-est_minutes: 3
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-COMO-ESTA-USTED]
+introduces:
+  knowledge: [ES-LEX-ADIOS, ES-PRAGMATICS-FINAL-FAREWELL, ES-ETYMON-A-DIOS]
+practises:
+  knowledge: [ES-LEX-ADIOS, ES-PRAGMATICS-FINAL-FAREWELL]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C04-practice]
 ---
 
