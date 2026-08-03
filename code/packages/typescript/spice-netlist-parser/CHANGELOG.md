@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `GDSNOI` channel-noise coefficient.
 - Validate and lower JFET model-card `NLEV` noise equation level.
 - Validate and lower JFET model-card `EG` energy gap.
 - Validate and lower JFET model-card `XTI` temperature exponent.

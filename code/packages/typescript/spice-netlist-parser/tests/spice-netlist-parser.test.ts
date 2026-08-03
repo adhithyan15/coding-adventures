@@ -1584,6 +1584,30 @@ J1 drain gate source fast
     );
   });
 
+  it.each([
+    ["0", 0.0],
+    ["1.5", 1.5],
+  ])("parses JFET channel noise coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(GDSNOI=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      channelNoiseCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])(
+    "rejects invalid JFET channel noise coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(GDSNOI=${value})`)).toThrow(
+        "JFET GDSNOI must be finite and non-negative",
+      );
+    },
+  );
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)

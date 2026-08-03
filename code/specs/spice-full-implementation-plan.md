@@ -4482,9 +4482,14 @@ the Rust, Python, and TypeScript surfaces together.
      into the shared engine JFET bandgap-voltage field.
 
 432. Python and TypeScript Berkeley SPICE JFET noise-level parity.
-   - Status: implemented in this JFET noise-level parity slice.
+   - Status: completed in PR 9853.
    - Both parser facades validate `NLEV` as a finite integer greater than or
      equal to 1 and lower it into the shared engine noise-equation-level field.
+
+433. Python and TypeScript Berkeley SPICE JFET channel-noise parity.
+   - Status: implemented in this JFET channel-noise parity slice.
+   - Both parser facades validate finite, non-negative `GDSNOI` values and
+     lower them into the shared engine channel-noise-coefficient field.
 
 ## Backlog
 
@@ -4493,7 +4498,7 @@ the Rust, Python, and TypeScript surfaces together.
      currently use `B` as a legacy beta alias, while the engine model uses `B`
      for Parker-Skellern doping-tail shaping. Do not assign one card value to
      both fields silently.
-   - Continue the unambiguous audited JFET gaps with `GDSNOI`, `RD`, `RS`,
+   - Continue the unambiguous audited JFET gaps with `RD`, `RS`,
      `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
    - Continue the audited BJT model-card gaps after the smaller JFET fields;
      prioritize direct engine fields before adding new model surfaces.
