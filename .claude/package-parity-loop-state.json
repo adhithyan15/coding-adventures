@@ -11,7 +11,11 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9863,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9863",
+    "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution"
+  },
   "last_inventory": {
     "revision": "24f64fedd8694b6a08580ddaafe21cf9eca6aaf6",
     "schema_version": 3,
@@ -442,11 +446,11 @@
     {
       "id": "build-tool-haskell-post-ruby-field-aware-manifest-resolution",
       "title": "Make Haskell Perl manifest resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-post-rust-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution",
-      "pr_number": null,
-      "notes": "Materialized after the post-Rust leverage audit selected Ruby's clean 123-false-edge repair. Guarded PR #9846 then merged exact head 38c449d322 as 45c40fb750. The quick post-Ruby resolver leverage pass selected Perl: its exact initial graph delta was 95 Haskell-only and 2 Go-only edges across 256 packages, larger and more nearly field-local than Swift's 65 false-only edges; TypeScript's 147 false and 948 missing edges remain entangled with much broader manifest semantics and separately owned BUILD_windows debt. Corpus inspection found 245 root cpanfiles and 247 root Makefile.PL files. The shared contract now treats only top-level cpanfile requires declarations as runtime edges, excludes nine internal test-phase declarations and all Makefile dependency/metadata fields, and registers declared module names plus current and legacy distribution aliases. Haskell and Go now match exactly across all 256 packages and 213 total edges, comprising 212 authoritative manifest edges and one qualified BUILD dependency, with zero one-sided edges. The aes-modes BUILD now carries the newly authoritative AES prerequisite so Linux detect validation remains standalone-correct; five inert Windows-only REM inventories are separately owned by build-file-standalone-integrity-perl. After two clean rebases, most recently onto 24f64fedd8, the refreshed collision-checked inventory has 1,258 identities and 4,412 slots, 173 high-consensus packages with 271 missing slots, 808 singletons with 11,312 missing slots, 612 Rust singletons, and zero collisions or unknown buckets. Three new identities are classified before publication: authority-free chief-of-staff-skill-runtime and chief-of-staff-sdk have portable-conformance owners, while the credentialed HTTPS smart-home-zoneminder-integration has an excluded native-authority review. They do not displace this already implemented and validated resolver repair."
+      "pr_number": 9863,
+      "notes": "Materialized after the post-Rust leverage audit selected Ruby's clean 123-false-edge repair. Guarded PR #9846 then merged exact head 38c449d322 as 45c40fb750. The quick post-Ruby resolver leverage pass selected Perl: its exact initial graph delta was 95 Haskell-only and 2 Go-only edges across 256 packages, larger and more nearly field-local than Swift's 65 false-only edges; TypeScript's 147 false and 948 missing edges remain entangled with much broader manifest semantics and separately owned BUILD_windows debt. Corpus inspection found 245 root cpanfiles and 247 root Makefile.PL files. The shared contract now treats only top-level cpanfile requires declarations as runtime edges, excludes nine internal test-phase declarations and all Makefile dependency/metadata fields, and registers declared module names plus current and legacy distribution aliases. Haskell and Go now match exactly across all 256 packages and 213 total edges, comprising 212 authoritative manifest edges and one qualified BUILD dependency, with zero one-sided edges. The aes-modes BUILD now carries the newly authoritative AES prerequisite so Linux detect validation remains standalone-correct; five inert Windows-only REM inventories are separately owned by build-file-standalone-integrity-perl. After two clean rebases, most recently onto 24f64fedd8, the refreshed collision-checked inventory has 1,258 identities and 4,412 slots, 173 high-consensus packages with 271 missing slots, 808 singletons with 11,312 missing slots, 612 Rust singletons, and zero collisions or unknown buckets. Three new identities are classified before publication: authority-free chief-of-staff-skill-runtime and chief-of-staff-sdk have portable-conformance owners, while the credentialed HTTPS smart-home-zoneminder-integration has an excluded native-authority review. They do not displace this already implemented and validated resolver repair. Ready-for-review PR #9863 opened at exact implementation head e0325c7b6b with the complete package, graph, coverage, corpus, collision, state, diff, and security validation summary."
     },
     {
       "id": "build-tool-haskell-post-perl-field-aware-manifest-resolution",
