@@ -58,13 +58,15 @@ jobs:
       # and publishing collections. texlive-xetex pulls the LaTeX base,
       # recommended, and extra layers used by every preamble. The Arabic
       # collection supplies bidi.sty for Arabic, Persian, and Urdu; every
-      # non-Latin book font is vendored under human-languages/_fonts.
+      # non-Latin book font is vendored under human-languages/_fonts. The
+      # recommended font collection supplies Hyperref's Zapf Dingbats metric.
       - name: Install focused TeX toolchain
         run: |
           setup_started_at=$(date +%s)
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            fontconfig latexmk lmodern texlive-lang-arabic texlive-xetex
+            fontconfig latexmk lmodern texlive-fonts-recommended \
+            texlive-lang-arabic texlive-xetex
 
           setup_seconds=$(($(date +%s) - setup_started_at))
           echo "TeX toolchain setup completed in ${setup_seconds}s"
@@ -81,7 +83,7 @@ jobs:
           for tex_asset in \
             book.cls fontspec.sty newunicodechar.sty xcolor.sty \
             tcolorbox.sty booktabs.sty longtable.sty tabularx.sty array.sty \
-            hyperref.sty titlesec.sty polyglossia.sty bidi.sty; do
+            hyperref.sty titlesec.sty polyglossia.sty bidi.sty pzdr.tfm; do
             asset_path=$(kpsewhich "$tex_asset")
             test -n "$asset_path"
             echo "$tex_asset -> $asset_path"

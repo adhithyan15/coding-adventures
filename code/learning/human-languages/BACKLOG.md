@@ -508,7 +508,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   packages. Ubuntu's `texlive-xetex` dependency closure provides the LaTeX base,
   recommended, and extra collections containing those packages; the focused
   install adds `texlive-lang-arabic` for `bidi.sty`, `lmodern` for the named
-  Latin Modern faces, and `latexmk` as the build driver.
+  Latin Modern faces, `texlive-fonts-recommended` for Hyperref's `pzdr.tfm`,
+  and `latexmk` as the build driver.
 - All non-Latin faces are repository-vendored static fonts, so the system-wide
   Noto font collections are unrelated to the current builds. A fail-closed
   preflight now resolves the engine, driver, all eleven packages, the class,
