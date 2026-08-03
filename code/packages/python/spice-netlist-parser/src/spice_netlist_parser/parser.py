@@ -1910,6 +1910,10 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(params["PHI"]) or params["PHI"] <= 0.0
         ):
             raise NetlistParseError("MOSFET PHI must be finite and positive")
+        if "W" in params and (
+            not math.isfinite(params["W"]) or params["W"] <= 0.0
+        ):
+            raise NetlistParseError("MOSFET W must be finite and positive")
     return ModelCard(name=name, kind=kind, params=params)
 
 

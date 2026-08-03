@@ -1213,6 +1213,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET PHI must be finite and positive");
   }
+  const width = params.get("W");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    width !== undefined &&
+    (!Number.isFinite(width) || width <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET W must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,
