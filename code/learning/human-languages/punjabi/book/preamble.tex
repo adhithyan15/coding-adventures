@@ -29,7 +29,13 @@
 
 % Vendored Gurmukhi font (../../_fonts/ from <lang>/book/); \pa{...} = inline
 % Punjabi snippet.
-\newfontfamily\punjabifont[Path=../../_fonts/, Script=Gurmukhi]{NotoSansGurmukhi-Static.ttf}
+\newfontfamily\punjabifont[
+  Path=../../_fonts/,
+  Script=Gurmukhi,
+  BoldFont=NotoSansGurmukhi-Static.ttf,
+  ItalicFont=NotoSansGurmukhi-Static.ttf,
+  BoldItalicFont=NotoSansGurmukhi-Static.ttf
+]{NotoSansGurmukhi-Static.ttf}
 \newcommand{\pa}[1]{{\punjabifont #1}}
 
 \hypersetup{
@@ -38,6 +44,14 @@
   pdfsubject={Etymology-driven Punjabi curriculum},
   pdfkeywords={Punjabi, Gurmukhi, Sanskrit, language learning}
 }
+\pdfstringdefDisableCommands{%
+  \def\pa#1{#1}% Keep Gurmukhi text while dropping font-only presentation.
+  \def\punjabifont{}%
+}
+
+% Lesson callouts are deliberately kept together when they fit. Let short pages
+% end naturally instead of stretching their vertical glue around those boxes.
+\raggedbottom
 
 \newtcolorbox{cousinweb}{
   breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,

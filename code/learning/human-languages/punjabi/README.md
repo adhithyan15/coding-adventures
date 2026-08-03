@@ -50,7 +50,8 @@ first five chapters retain their authored long-form narrative during migration.
 Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
 (`../../_fonts/NotoSansGurmukhi-Static.ttf`). `latexmk -xelatex book.tex`.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
-Latin romanization.
+Latin romanization. A forced six-chapter build is warning-free, and the
+handwritten section bookmarks retain readable Gurmukhi plus romanization.
 
 ## Files
 
