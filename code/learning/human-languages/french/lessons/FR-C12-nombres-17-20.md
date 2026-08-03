@@ -9,7 +9,7 @@ prerequisites: [FR-C12-nombres-11-16]
 sounds: [liaison-t, nasal-in]
 roots: [latin-decim, viginti-latin]
 etymology_hook: "at 17 French abandons the Latin fusion and goes transparent: dix-sept = literally 'ten-seven' — you can watch the language change strategy mid-count; vingt ← vīgintī → English vigesimal"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C12-nombres-11-16, FR-C06-nombres-6-10]
 ---
 

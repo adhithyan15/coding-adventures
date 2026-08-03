@@ -5,8 +5,8 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-02. Current baseline after the Portuguese duration
-tranche: 20 registered tracks, 994 Markdown lessons, and 20 downloadable LaTeX
+Last prioritized: 2026-08-02. Current baseline after the French duration
+tranche: 20 registered tracks, 997 Markdown lessons, and 20 downloadable LaTeX
 books. HL-V01 makes the remaining migration debt reproducible in both JSON and
 human-readable reports; HL-S01 proves the strict schema on the first 24 Spanish
 lessons, and the HL-D01 tranches prove duration remediation without discarding
@@ -55,7 +55,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01F | Complete in the Bengali duration PR | Remove all eleven sub-five-minute violations from the Bengali track. | The report measures zero Bengali violations; all eleven lesson bodies remain unchanged because their computed durations were already below 300 seconds. |
 | HL-D01G | Complete in the Italian duration PR | Remove all twenty sub-five-minute violations from the Italian track. | The report measures zero Italian violations; four new prerequisite-ordered micro-lessons preserve the register, metaphor, suppletion, and agreement content that did not fit safely in the original lessons. |
 | HL-D01H | Complete in the Portuguese duration PR | Remove all twenty-three sub-five-minute violations from the Portuguese track. | The report measures zero Portuguese violations; five new prerequisite-ordered micro-lessons preserve the register, suppletion, grammar-choice, and etymology content from the five computed violations. |
-| HL-D01I | Next | Remove all twenty-five sub-five-minute violations from the French track. | French is now the smallest remaining set: twenty-two declaration-only lessons and three genuinely computed violations, with a 489-second maximum. |
+| HL-D01I | Complete in the French duration PR | Remove all twenty-five sub-five-minute violations from the French track. | The report measures zero French violations; three new prerequisite-ordered micro-lessons preserve register, suppletion, and pronominal-agreement depth. |
+| HL-D01J | Next | Remove all twenty-seven sub-five-minute violations from the German track. | German is now the smallest remaining set: twenty-two declaration-only lessons and five genuinely computed violations, with a 360-second maximum. |
 | HL-D01 | Queued | Split or rewrite every lesson whose computed duration is at least 300 seconds. | Deliver in measured track-sized tranches, beginning with HL-D01A, until the report reaches zero. |
 | HL-S02 | Queued | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | Chapters 1–3 prove generation; the next source slice must earn the same prerequisite and duration guarantees first. |
 | HL-B04 | Queued | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | The duration audit exposed authored app content beyond the current five-chapter PDF; schema-v2 migration plus generation should close that drift safely. |
@@ -72,6 +73,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B15 | Queued | Remove Italian's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds but reports one underfull box and three Hyperref warnings; the clean-build signal is zero of each. |
 | HL-B16 | Queued | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Portuguese has canonical app content through Chapter 17, but its downloadable PDF contains only Chapter 1; schema-v2 migration plus generation should close that drift safely. |
 | HL-B17 | Queued | Remove Portuguese's LaTeX layout warnings. | A forced build succeeds with no missing glyphs, overfull boxes, duplicate labels, or Hyperref warnings, but reports three underfull boxes; the clean-build signal is zero. |
+| HL-B18 | Queued | Publish French Chapters 17–23 from their canonical lessons rather than hand-copying seven book chapters. | The French PDF reaches Chapter 16 while canonical app content continues through Chapter 23; schema-v2 migration plus generation should close that drift safely. |
+| HL-B19 | Queued | Remove French's LaTeX layout and Unicode bookmark warnings. | A forced build succeeds with no missing glyphs or duplicate labels but reports sixteen overfull boxes, nine underfull boxes, and six Hyperref warnings; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
@@ -309,6 +312,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - French's twenty-five violations are now the smallest remaining set.
   Twenty-two are declaration-only and three genuinely compute above the limit,
   with a 489-second maximum, so HL-D01I is next.
+
+## Findings from HL-D01I
+
+- French now has zero duration violations. The corpus grows from 994 to 997
+  lessons and drops from 381 to 356 violations overall; unknown prerequisites
+  remain at zero.
+- Twenty-two lessons needed only honest declared-budget corrections. Three new
+  prerequisite-ordered lessons preserve the longer content: neutral `Ça va?` →
+  explicit `tu/vous` register and liaison; `être` forms → its `es-/fu-/ét-`
+  roots; motion/change agreement → pronominal direct-object agreement.
+- The new and rewritten lessons compute between 147 and 244 seconds.
+  `FR-C03-practice` at 293 seconds and `FR-C15-passe-simple` at 291 are the
+  tightest remaining French lessons and should be watched during copy edits.
+- The French PDF builds successfully at 79 pages through Chapter 16 while
+  canonical lessons continue through Chapter 23. HL-B18 records the schema-v2
+  migration and generated publication work for Chapters 17–23.
+- The build has no missing glyphs or duplicate labels, but reports sixteen
+  overfull boxes, nine underfull boxes, and six Hyperref warnings. HL-B19 records
+  that pre-existing clean-build debt.
+- German's twenty-seven violations are now the smallest remaining set.
+  Twenty-two are declaration-only and five genuinely compute above the limit,
+  with a 360-second maximum, so HL-D01J is next.
 
 ## Completed foundations
 

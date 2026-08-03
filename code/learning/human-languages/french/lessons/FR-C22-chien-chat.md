@@ -9,7 +9,7 @@ prerequisites: [FR-C14-age]
 sounds: [ca-to-cha-shift, nasal-en]
 roots: [latin-canis-dog, latin-cattus-afroasiatic]
 etymology_hook: "chien is the fully REGULAR French descendant of Latin canis — the same ca- → cha- palatalization that also gives champ (← campus) and chanter (← cantāre) — unlike Spanish, which replaced canis-derived can with the still-unexplained perro; chat continues cattus, the same word (probably Afro-Asiatic, traveling with the cat out of Egypt) behind Spanish's gato and Italian's gatto"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [FR-C14-age]
 ---
 

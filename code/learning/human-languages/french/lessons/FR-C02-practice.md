@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [FR-C02-je-mappelle, FR-C02-comment-vous-appelez-vous, FR-C02-enchante]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C02-je, FR-C02-me, FR-C02-appeler, FR-C02-je-mappelle, FR-C02-tu-vous, FR-C02-comment, FR-C02-comment-vous-appelez-vous, FR-C02-enchante]
 ---
 

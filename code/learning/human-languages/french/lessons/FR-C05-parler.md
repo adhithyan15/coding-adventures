@@ -9,7 +9,7 @@ prerequisites: [FR-C02-je, FR-C02-tu-vous]
 sounds: [er-ending, r-uvular]
 roots: [parabolare-latin]
 etymology_hook: "parler ← Late Latin parabolāre 'to tell parables, to talk' (← parabola) → English parable, parole, palaver"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [FR-C03-comment-ca-va, FR-C02-practice]
 ---
 
