@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9537,
   "last_inventory": {
     "revision": "613717e22fe7b65c37eebb35a84a5b440a55ddb1",
     "schema_version": 3,
@@ -361,11 +361,11 @@
     {
       "id": "build-tool-swift-rockspec-utf8-conformance",
       "title": "Make the Swift build tool enforce strict UTF-8 rockspec metadata",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-swift-rockspec-utf8",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9527 because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The implementation decodes Lua rockspec bytes strictly before parsing, propagates a typed METADATA_INVALID_UTF8 error with package and repository-relative manifest identity, writes a platform-stable diagnostic without the checkout root, and returns CLI exit 2. Shared positive and invalid-byte fixtures require the exact success edge set and are exercised through the resolver, CLI entry point, and a real subprocess. Exact-base validation on 613717e2 passed 22 Swift tests, production build, measured 39.74% overall and 42.94% resolver line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, a 258-package/382-edge Lua plan, a 4,768-package/7,458-edge full plan, collision-clean 1,220-identity parity inventory, JSON/diff/secret checks, and an exact 10-to-10 Lua BUILD_windows debt comparison with untouched main. The full-plan audit separately logged Swift absolute file-option and language/identity-registry children, and the post-rebase inventory logged the new HomeWizard portable telemetry core. TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate encoding children."
+      "pr_number": 9537,
+      "notes": "Ready PR #9537. Selected after merged PR #9527 because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The implementation decodes Lua rockspec bytes strictly before parsing, propagates a typed METADATA_INVALID_UTF8 error with package and repository-relative manifest identity, writes a platform-stable diagnostic without the checkout root, and returns CLI exit 2. Shared positive and invalid-byte fixtures require the exact success edge set and are exercised through the resolver, CLI entry point, and a real subprocess. Exact-base validation on 613717e2 passed 22 Swift tests, production build, measured 39.74% overall and 42.94% resolver line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, a 258-package/382-edge Lua plan, a 4,768-package/7,458-edge full plan, collision-clean 1,220-identity parity inventory, JSON/diff/secret checks, and an exact 10-to-10 Lua BUILD_windows debt comparison with untouched main. The full-plan audit separately logged Swift absolute file-option and language/identity-registry children, and the post-rebase inventory logged the new HomeWizard portable telemetry core. TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate encoding children."
     },
     {
       "id": "build-tool-swift-windows-absolute-file-options",
