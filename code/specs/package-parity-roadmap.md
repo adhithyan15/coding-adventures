@@ -116,15 +116,15 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 776 | 10,864 |
+| Present in one language | 777 | 10,878 |
 
-The loop must not start by attempting 10,864 singleton ports. It should finish
+The loop must not start by attempting 10,878 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`2c740cd5f41f57d014c28ae7260c7c71668efa6e` is collision-clean at 1,226
-normalized implementation identities, 4,374 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 776 singletons, 581
+`bce05ed6abe668df1339c4169e63fa1ed3c8d666` is collision-clean at 1,227
+normalized implementation identities, 4,375 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 777 singletons, 582
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -200,6 +200,16 @@ receipts, and publish/grant/read/acknowledge orchestration are portable fixture
 candidates. Storage I/O, durability, clocks, randomness, key custody, and actor
 routing stay injected or native. Its dedicated backlog owner depends on the
 channel-store contract and therefore cannot bypass the crypto/store sequence.
+
+The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
+capability deterministic registry over an injected `StorageBackend`. Its
+bounded versioned host-record codec, identity and lifecycle invariants, stable
+keys and ordering, idempotent registration, revision-CAS updates/deletes,
+corrupt-record rejection, and restart-recovery plans are portable fixture
+candidates. Filesystem durability, process liveness and supervision, trusted
+clocks, spawning, effectful reconciliation, and secure-channel handshakes stay
+injected or native. Its dedicated backlog owner depends on the shared channel-
+crypto identifier vectors and cannot bypass that prerequisite.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
