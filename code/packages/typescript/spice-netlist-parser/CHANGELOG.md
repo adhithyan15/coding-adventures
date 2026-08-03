@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower diode model-card `EG` energy gap.
 - Validate and lower diode model-card `XTI` temperature exponent.
 - Validate and lower diode model-card `FC` depletion coefficient.
 - Validate and lower diode model-card `M` / `MJ` grading coefficient.

@@ -1044,6 +1044,24 @@ D1 in out clamp
     );
   });
 
+  it.each([
+    ["0.5", 0.5],
+    ["1.2", 1.2],
+  ])("lowers positive diode EG energy gap %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(EG=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      energyGapElectronVolts: expected,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])("rejects invalid diode EG %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(EG=${value})`)).toThrow(
+      "diode EG must be finite and positive",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

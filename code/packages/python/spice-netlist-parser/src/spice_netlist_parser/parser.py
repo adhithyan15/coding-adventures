@@ -1278,6 +1278,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             M=model.params.get("M", model.params.get("MJ", 0.5)),
             Fc=model.params.get("FC", 0.5),
             Xti=model.params.get("XTI", 3.0),
+            Eg=model.params.get("EG", 1.11),
             Rs=model.params.get("RS", 0.0),
         )
     if prefix == "Q":
@@ -1989,6 +1990,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             temperature_exponent
         ):
             raise NetlistParseError("diode XTI must be finite")
+        energy_gap = params.get("EG")
+        if energy_gap is not None and (
+            not math.isfinite(energy_gap) or energy_gap <= 0.0
+        ):
+            raise NetlistParseError("diode EG must be finite and positive")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (
