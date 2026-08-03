@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [KA-C03-niivu-hegiddiira, KA-C03-cennaagi, KA-C03-paravaagilla]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C03-hege, KA-C03-niivu-hegiddiira, KA-C03-naanu, KA-C03-cennaagi, KA-C03-paravaagilla]
 ---
 

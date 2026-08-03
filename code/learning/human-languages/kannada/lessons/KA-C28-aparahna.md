@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-conjunct-hna, kannada-vowel-sign-aa]
 roots: [sanskrit-apara-latter, sanskrit-ahna-day]
 etymology_hook: "ಅಪರಾಹ್ನ (aparāhna, 'afternoon') is a genuine Sanskrit tatsama, distinct from ಮಧ್ಯಾಹ್ನ (madhyāhna, 'noon,' already met in Chapter 17) — both share the SAME '-ahna' suffix ('day,' related to ahan), differing only in the first piece: ಅಪರ (apara, 'latter, further') vs ಮಧ್ಯ (madhya, 'middle') — the classical five-part Sanskrit day division (prāta/saṅgava/madhyāhna/aparāhna/sāyāhna) kept this distinction sharp; in practice, though, some sources describe ಮಧ್ಯಾಹ್ನ ALSO being stretched loosely to cover the whole afternoon in casual modern speech — a MUCH more thinly sourced echo of Hindi's clearer दोपहर-widening story, worth flagging honestly rather than asserting as settled"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri]
 ---
 

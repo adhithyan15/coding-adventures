@@ -9,7 +9,7 @@ prerequisites: [KA-C10-vaara]
 sounds: [kannada-anusvara, kannada-virama-geminate]
 roots: [dravidian-native-colors, sanskrit-nila]
 etymology_hook: "ಕಪ್ಪು/ಬಿಳಿ/ಕೆಂಪು (black/white/red) are native Dravidian, unlike Kannada's fully-Sanskritic day-names — but ನೀಲಿ (blue) is Sanskrit, same root as Tamil/Hindi/Malayalam"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C10-vaara]
 ---
 

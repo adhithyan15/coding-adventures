@@ -9,7 +9,7 @@ prerequisites: [KA-C09-kshamisi]
 sounds: [kannada-anusvara, kannada-conjunct-kra]
 roots: [sanskrit-planet-words]
 etymology_hook: "Kannada's week is fully Sanskritic like Hindi's — Somavāra, Maṅgaḷavāra… — but Sunday is Bhānuvāra ('day of light'), a different Sanskrit sun-name than Hindi's Ravivāra"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C09-kshamisi]
 ---
 

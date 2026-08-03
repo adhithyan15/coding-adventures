@@ -1,8 +1,26 @@
 # Changelog
 
+## Sub-five-minute lesson remediation (2026-08-02)
+
+- All thirty-seven Kannada duration violations are resolved. Thirty-six lessons
+  already computed below five minutes and now declare an honest four-minute
+  budget without changing their teaching content.
+- The genuinely long Chapter 6 lesson becomes two prerequisite-ordered steps:
+  learn **-ಗೆ/-ಿಗೆ/-ಕ್ಕೆ**, **ನಾನು → ನನಗೆ**, and the family *k → g* history;
+  then contrast transparent Dravidian suffix stacking with fused Latin endings
+  before applying the dative in **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು**.
+- The rewritten suffix lesson computes to 205 seconds and the new stacking
+  lesson to 196. The support lesson brings the Kannada track to 60 lessons with
+  zero unknown prerequisite ids.
+- A forced book build succeeds at 29 pages with no missing glyphs. Canonical
+  lessons continue through Chapter 31 while the book stops at Chapter 5
+  (`HL-B24`); existing layout, bookmark, duplicate-label, and font warnings are
+  tracked in `HL-B25`; roadmap and session-map drift is tracked in `HL-M03`.
+
 ## Chapter 6 — Case endings, and the sentence with no subject
 
-- **Chapter 6 authored** (`KA-C06-dative-ge`, `-dative-subject`): the track's first
+- **Chapter 6 authored** (`KA-C06-dative-ge`, `-dative-stacking`,
+  `-dative-subject`): the track's first
   **case ending** — reviewing Ch.2/3/5 via `reviews_of`.
 - **-ಗೆ** (`KA-C06-dative-ge`): the dative "to/for," taught as the doorway to
   **agglutination**. Kannada **adds** a suffix carrying **one** meaning with the
@@ -13,6 +31,9 @@
   sisters kept the hard consonant — while the
   *-kke* form (*kelasakke*) preserves the original hard doubled consonant. Includes
   *nānu* → **ನನಗೆ** *nanage*.
+- **Stacking** (`KA-C06-dative-stacking`): the visible Kannada noun-plus-case
+  seam and one-suffix/one-job principle now get their own micro-lesson before
+  the contrast with Latin *-īs*, which fuses case, number, and declension.
 - **ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು** (`KA-C06-dative-subject`): "I know Kannada" — literally
   "**to-me Kannada known**," with **no nominative subject** (contrast Ch.5's *nānu
   kannaḍa mātanāḍuttēne*), and with the further observation that ***gottu* isn't an

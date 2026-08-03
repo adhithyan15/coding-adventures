@@ -9,7 +9,7 @@ prerequisites: [KA-C01-namaskara]
 sounds: [kannada-inherent-a, anusvara, retroflex-series]
 roots: [proto-dravidian-numbers]
 etymology_hook: "Kannada shares Tamil's native Dravidian numbers — 2–5 the same word in a Kannada coat (iraṇṭu ↔ eraḍu)"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C01-namaskara]
 ---
 

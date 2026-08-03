@@ -9,7 +9,7 @@ prerequisites: [KA-C26-belagge]
 sounds: [kannada-vowel-sign-oo, kannada-bha]
 roots: [su-good, udaya-sanskrit-rise]
 etymology_hook: "ಶುಭೋದಯ (śubhōdaya, 'good morning') = ಶುಭ (śubha, 'good, auspicious') + ಉದಯ (udaya, 'rising, sunrise,' ← Sanskrit ud- 'up' + i 'to go' — the same root behind sūryodaya, 'sunrise') — a COMPLETELY DIFFERENT root from ಬೆಳಗ್ಗೆ (beḷagge, KA-C26's native word for 'morning'); be honest about register: sources genuinely CONFLICT here — some describe ಶುಭೋದಯ as common in everyday speech, but a more careful source describes it as reserved for formal or written contexts (speeches, greeting cards, WhatsApp images) and 'not as frequently used in daily conversations' as ನಮಸ್ಕಾರ/ನಮಸ್ತೆ, with at least one native-speaker account suggesting casual spoken Kannada often reaches for English 'good morning' instead — the SAME formal/written skew pattern already found for Hindi's सुप्रभात, not a genuine cross-language contrast"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C26-belagge]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [KA-C16-tingalugalu]
 sounds: [kannada-conjunct-dhya, kannada-vowel-sign-aa]
 roots: [sanskrit-madhya-middle]
 etymology_hook: "ಮಧ್ಯಾಹ್ನ (madhyāhna, noon) and ಮಧ್ಯರಾತ್ರಿ (madhyarātri, midnight) are both direct Sanskrit tatsama compounds on madhya, 'middle' — Kannada's everyday words for these times are the SAME Sanskrit-formal register that Hindi keeps as a bookish alternate to its own colloquial dopahar / aadhi raat"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C16-tingalugalu]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [KA-C18-gante]
 sounds: [kannada-vowel-sign-aa, kannada-compound-word]
 roots: [persian-hava-air, sanskrit-maana-measure]
 etymology_hook: "ಹವಾಮಾನ (havāmāna, 'weather') is a genuine hybrid compound: ಹವಾ (hava, 'air') is itself a Persian/Arabic loan (havā ← Arabic hawāʾ, the SAME root behind Hindi's hawa), fused with ಮಾನ (māna, 'measure,' native Sanskrit) — literally 'air-measure'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C18-gante]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: KA-VERB-MAADU
 prerequisites: [KA-C05-maatanaadu]
 sounds: [long-aa]
 roots: [maadu-do-dravidian, kelasa-work-dravidian]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C05-maatanaadu, KA-C05-iru]
 ---
 

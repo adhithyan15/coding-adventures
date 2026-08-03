@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C28-aparahna, KA-C30-shubha-s
 sounds: [kannada-conjunct-dhya, kannada-vowel-sign-aa]
 roots: [su-good, sanskrit-madhya-middle]
 etymology_hook: "ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna, 'good afternoon') is the standard afternoon greeting — but notice which noun it reuses: ಮಧ್ಯಾಹ್ನ (madhyāhna, 'noon,' KA-C17), NOT ಅಪರಾಹ್ನ (aparāhna, the more precisely-'afternoon' word from KA-C28) — a real-world data point for KA-C28's own hedge about whether madhyāhna has loosely widened to cover the afternoon too; be careful with the register claim here: one source, fetched directly rather than trusted from a search summary, describes ಶುಭ ಮಧ್ಯಾಹ್ನ as leaning FORMAL or semi-formal, workplaces and official meetings — but this wasn't cross-corroborated by a second source the way ನಮಸ್ಕಾರ's genuinely universal, any-time-of-day status was (confirmed independently across multiple fetched sources), so treat the workplace/formal framing as a single data point, not a settled fact"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri, KA-C28-aparahna, KA-C30-shubha-sanje]
 ---
 

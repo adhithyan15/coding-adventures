@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-vowel-sign-i, kannada-na]
 roots: [sanskrit-dina, dravidian-hagalu-daytime]
 etymology_hook: "ದಿನ (dina, 'day') is a Sanskrit tatsama word, borrowed whole and unworn — the SAME Sanskrit दिन already behind Hindi's own दिन (din), but Hindi's din is a tadbhava form, eroded by centuries of ordinary sound change (Sanskrit dina → Prakrit → din), while Kannada's dina keeps the full, unshortened Sanskrit shape; Kannada also has a genuine native Dravidian word, ಹಗಲು (hagalu), but it specifically means 'daytime' (as opposed to night), not 'a day' as a calendar unit"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri]
 ---
 

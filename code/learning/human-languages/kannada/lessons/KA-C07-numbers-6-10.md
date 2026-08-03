@@ -9,7 +9,7 @@ prerequisites: [KA-C07-numbers-1-5]
 sounds: [kannada-inherent-a, anusvara, retroflex-la]
 roots: [proto-dravidian-numbers]
 etymology_hook: "ten shows Kannada's signature p→h shift — Tamil pattu becomes hattu, as pāl (milk) becomes hālu"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C07-numbers-1-5]
 ---
 

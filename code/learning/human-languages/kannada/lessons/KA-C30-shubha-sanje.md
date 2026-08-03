@@ -10,7 +10,7 @@ sounds: [kannada-sha, kannada-anusvara]
 roots: [su-good, sanskrit-sandhya-junction]
 reviews_of: [KA-C27-sanje, KA-C29-shubhodaya]
 etymology_hook: "ಶುಭ ಸಂಜೆ (śubha sañje, 'good evening') pairs śubha with ಸಂಜೆ (sañje, 'evening,' already met in Chapter 27 as a Sanskrit tatsama borrowed via Maharashtri Prakrit — NOT native Dravidian, despite a plausible-sounding claim you might encounter elsewhere that it's a native word); register evidence here is genuinely thin — a general, leans-formal impression (with ನಮಸ್ಕಾರ or, among younger urban speakers, English 'hello,' likely covering casual use) rather than a specific, well-sourced usage-context claim; this echoes, cautiously, the same formal-skew QUESTION already raised (not settled) for Hindi's सुप्रभात and Kannada's own ಶುಭೋದಯ, without overstating either lesson's own hedged conclusion into flat fact"
-est_minutes: 6
+est_minutes: 4
 ---
 
 # ಶುಭ ಸಂಜೆ (śubha sañje) — formal, and correctly citing where ಸಂಜೆ comes from

@@ -9,7 +9,7 @@ prerequisites: [KA-C24-ratri, KA-C26-belagge]
 sounds: [kannada-anusvara, kannada-ja]
 roots: [sanskrit-sandhya-junction]
 etymology_hook: "ಸಂಜೆ (sañje, 'evening') is borrowed — from Maharashtri Prakrit ಸಂಝಾ (sañjhā), itself from Sanskrit ಸಂಧ್ಯಾ (saṃdhyā, 'twilight, junction of day and night'); unlike dina/ratri/madhyāhna (fresh Sanskrit TATSAMA, taken whole and unworn), ಸಂಜೆ arrived already eroded, in its Prakrit-worn shape; Hindi's साँझ (sāñjh) descends from the SAME Sanskrit word, but via a DIFFERENT, sister Middle Indo-Aryan dialect, Śauraseni Prakrit — two independent erosion paths off one Sanskrit root, converging on near-identical modern forms across two different language families"
-est_minutes: 6
+est_minutes: 4
 reviews_of: [KA-C24-ratri, KA-C26-belagge]
 ---
 

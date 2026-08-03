@@ -9,7 +9,7 @@ prerequisites: [KA-C15-niiru-akki]
 sounds: [kannada-conjunct-shtha, kannada-anusvara]
 roots: [sanskrit-lunisolar-chaitra-system]
 etymology_hook: "Unlike Tamil and Malayalam, which built their OWN solar calendars, Kannada uses the same pan-Indian Sanskritic lunisolar calendar as Hindi's Vikram Samvat — Ugadi falls on Chaitra Shukla Pratipada, the SAME calendar Telugu uses too"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C15-niiru-akki]
 ---
 

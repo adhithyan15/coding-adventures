@@ -9,7 +9,7 @@ prerequisites: [KA-C13-dehada-bhagagalu]
 sounds: [kannada-vocalic-r, kannada-anusvara]
 roots: [dravidian-besige-male-chali, sanskrit-vasanta]
 etymology_hook: "ಬೇಸಿಗೆ besige (summer) and ಮಳೆ male (rain) are native Dravidian; ವಸಂತ ಋತು vasanta rutu (spring) uses the same Sanskrit vasanta AND the Sanskrit word rutu itself, 'season' — a double Sanskrit loan where Tamil/Malayalam just say kaalam"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C13-dehada-bhagagalu]
 ---
 

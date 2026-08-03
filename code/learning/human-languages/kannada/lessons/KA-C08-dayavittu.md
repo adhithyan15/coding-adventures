@@ -9,7 +9,7 @@ prerequisites: [KA-C01-dhanyavada]
 sounds: [kannada-vowel-sign-i, kannada-virama-ottu, kannada-geminate-tta]
 roots: [daya-compassion]
 etymology_hook: "ದಯವಿಟ್ಟು = 'having placed compassion' — Kannada asks please with daya, like Tamil, Arabic faḍl and Hindi kṛpā"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C01-dhanyavada]
 ---
 

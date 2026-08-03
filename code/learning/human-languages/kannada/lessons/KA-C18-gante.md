@@ -9,7 +9,7 @@ prerequisites: [KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-anusvara, kannada-vowel-sign-e]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "ಗಂಟೆ (gaṇṭe, 'hour') is related to Sanskrit घण्टा (ghaṇṭā, 'bell') — the SAME word and the SAME bell-strikes-the-hour logic as Hindi's ghanṭā, unlike Tamil's most-likely-native maṇi"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C17-madhyaahna-madhyaraatri]
 ---
 

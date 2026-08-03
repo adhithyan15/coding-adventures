@@ -9,7 +9,7 @@ prerequisites: [KA-C08-dayavittu]
 sounds: [kannada-conjunct-kssa, kannada-vowel-sign-i]
 roots: [kshama-sanskrit]
 etymology_hook: "ಕ್ಷಮಿಸಿ kṣamisi ← Sanskrit kṣamā 'patience/forgiveness' + Kannada verb-making -isu — the same trick Kannada uses to borrow Sanskrit nouns as verbs"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C08-dayavittu]
 ---
 

@@ -8,7 +8,7 @@ concept_tag: KA-WORD-KANNADA
 prerequisites: [KA-C05-maatanaadu, KA-C03-naanu]
 sounds: [double-nn]
 roots: [kannada]
-est_minutes: 5
+est_minutes: 4
 reviews_of: [KA-C05-maatanaadu, KA-C03-naanu]
 ---
 
