@@ -432,17 +432,20 @@ public class ZipTests
     // rejected by that check first, which runs on the *normalized* result,
     // after this method would already have paid the quadratic cost).
     //
-    // Sized deliberately, not arbitrarily: a standalone repro of the old
-    // O(n^2) loop took ~27.6s for a ~1.25M-character chained-prefix input.
-    // 400,000 characters (200,000 chained "A:" pairs) extrapolates to
-    // roughly ~10s under that same quadratic scaling — comfortably over this
-    // test's 5-second [Fact(Timeout=...)], so a regression back to the
-    // O(n^2) implementation fails this test, while the current O(n)
-    // implementation finishes in low single-digit milliseconds.
+    // Sized and timed from direct measurement, not extrapolation (an earlier
+    // version of this test relied on an extrapolated estimate that turned
+    // out to be off by roughly 2-3x and left too thin a margin against the
+    // timeout — caught by reverting the production fix and watching this
+    // test pass anyway). Measured directly on this exact input size:
+    // the pre-fix O(n^2) `segment = segment[2..]`-per-iteration loop takes
+    // ~4.0s; the current O(n) index-scan-then-single-slice implementation
+    // takes under 1ms. A 1-second timeout sits far below the buggy runtime
+    // and far above the fixed one, so it reliably fails on a regression
+    // without being flaky on normal CI hardware variance.
     // xUnit's Timeout only applies to async tests, so the body runs inside
     // Task.Run — the underlying work is still plain synchronous CPU-bound
     // code, this just gives xUnit a Task to apply the timeout to.
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 1000)]
     public async Task Security_StripDrivePrefixIsLinearNotQuadratic()
     {
         await Task.Run(() =>
@@ -597,16 +600,24 @@ public class ZipTests
     // so the lookup must be O(1) (a Dictionary), not O(n).
     //
     // Entries use compress: false to isolate the read-side lookup complexity
-    // being tested from the writer's DEFLATE pipeline. 40,000 entries keeps
-    // archive construction itself fast (well under a second) while being
-    // large enough that an O(n^2) lookup would take on the order of tens of
-    // seconds — comfortably over this test's timeout — versus low
-    // double-digit milliseconds for the O(1) dictionary lookup.
-    // See the note on Security_StripDrivePrefixIsLinearNotQuadratic above —
+    // being tested from the writer's DEFLATE pipeline.
+    //
+    // Sized and timed from direct measurement, not extrapolation (see the
+    // note on Security_StripDrivePrefixIsLinearNotQuadratic above — an
+    // earlier version of this test relied on an extrapolated estimate that
+    // left too thin a margin). Measured directly at this entry count: the
+    // pre-fix O(n) FirstOrDefault-per-lookup scan (called once per entry by
+    // Unzip, so O(n^2) overall) takes on the order of ~1.2s of pure lookup
+    // cost on top of archive construction; the current O(1) dictionary
+    // lookup adds only a few milliseconds. A 1-second timeout sits well
+    // below the buggy runtime and well above the fixed one. 40,000 is also
+    // comfortably inside the ZIP32 65535-entry cap this same PR enforces
+    // elsewhere (Security_WriterRejectsMoreThanZip32EntryLimit), so this
+    // archive is itself a legal one a caller could actually receive.
     // xUnit's Timeout requires an async test, so this wraps the same
     // synchronous CPU-bound work in Task.Run purely to give xUnit a Task to
     // time out.
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 1000)]
     public async Task Security_UnzipEntryLookupIsLinearNotQuadratic()
     {
         await Task.Run(() =>

@@ -91,7 +91,20 @@ fixed here, with adversarial regression tests added for each:
   a `Dictionary<string, ZipEntryMeta>` built once in the constructor (`TryAdd`, preserving
   "first occurrence in Central Directory order wins" on a duplicate name, matching what a
   linear scan would have done) and having `Read` do an O(1) lookup against it instead.
-- **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
+
+  A sixth review round then measured (rather than extrapolated) the actual runtime of the
+  two `[Fact(Timeout = 5000)]` regression tests added for the drive-prefix and entry-lookup
+  fixes above, by temporarily reverting each production fix in turn and re-running its
+  test: both tests **passed anyway** — the pre-fix `O(n²)` code ran in ~4.0s and ~2.4s
+  respectively at the chosen input sizes, comfortably inside the 5-second timeout, so a
+  regression on either fix would have shipped with a green test suite. (The earlier
+  ~10s/tens-of-seconds estimates in this changelog and the corresponding commit messages
+  were extrapolated from a differently-sized measurement and turned out to be too
+  optimistic by roughly 2-3×.) Fixed by measuring both implementations directly at their
+  actual test sizes (fixed: <1ms / ~48ms; buggy: ~4.0s / ~2.4s) and tightening both tests
+  to `[Fact(Timeout = 1000)]`, which sits far below the buggy runtime and far above the
+  fixed one. Verified by reverting each production fix again and confirming both tests now
+  fail as expected, then re-applying the fixes and confirming the full suite passes.
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,
   so a raw value ≥ `0x80000000` could go negative and slip past `offset + n > data.Length`-
