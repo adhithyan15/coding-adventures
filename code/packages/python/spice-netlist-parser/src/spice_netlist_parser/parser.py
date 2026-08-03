@@ -1298,7 +1298,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 ),
             ),
             Vt=model.params.get("VT", model.params.get("V_T", 0.02585)),
-            Cje=model.params.get("CJE", model.params.get("CBE", 0.0)),
+            Cje=model.params.get(
+                "CJE", model.params.get("CJE0", model.params.get("CBE", 0.0))
+            ),
             Cjc=model.params.get("CJC", model.params.get("CBC", 0.0)),
             Tf=model.params.get("TF", 0.0),
             Tr=model.params.get("TR", 0.0),
@@ -1951,6 +1953,15 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(thermal_voltage) or thermal_voltage <= 0.0
         ):
             raise NetlistParseError("BJT VT must be finite and positive")
+        base_emitter_capacitance = next(
+            (params[name] for name in ("CJE", "CJE0", "CBE") if name in params),
+            None,
+        )
+        if base_emitter_capacitance is not None and (
+            not math.isfinite(base_emitter_capacitance)
+            or base_emitter_capacitance < 0.0
+        ):
+            raise NetlistParseError("BJT CJE must be finite and non-negative")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
