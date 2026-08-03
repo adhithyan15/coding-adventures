@@ -120,14 +120,15 @@ complete.
    extent as target-neutral state, then bind generated native scrollbars to the
    same Mosaic-hosted content surface without recreating browser chrome in
    AppKit or Win32.
-3. **P2 — remaining generated-host interaction gates (Flutter and Qt completed).**
+3. **P2 — generated-host interaction gates (completed).**
    Flutter now hydrates the emitted shell through an injected Mosaic host and
    directly drives native disabled controls, address editing, Return, Go, and
    host-response refresh. Qt Quick now exercises the same contract through
-   part-backed native controls and a package-owned QML test. Promote the
-   remaining Compose and web-family build/host-object checks to direct
-   interaction acceptance where their provisioned CI toolchains can launch
-   them.
+   part-backed native controls and a package-owned QML test. Compose,
+   React/Electron, HTML, and Web Components now drive the same shared contract
+   through their generated host seams. The authoritative package entry points
+   run that matrix and additionally launch the generated SwiftUI or WinUI app
+   on its native host.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

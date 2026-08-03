@@ -223,6 +223,17 @@ if ($isWindows -and (Test-Command "dotnet")) {
     } finally {
         Pop-Location
     }
+    Write-Host "==> Testing xaml direct launch and interactions"
+    $acceptanceArgs = @("test", "-p", "venture-browser-windows", "--test", "xaml_project_build")
+    if ($Release) {
+        $acceptanceArgs += "--release"
+    }
+    Push-Location $rustWorkspace
+    try {
+        Invoke-Checked -Command "cargo" -Arguments $acceptanceArgs
+    } finally {
+        Pop-Location
+    }
 } elseif (-not $isWindows) {
     Defer-Backend -Backend "xaml" -Reason "WinUI builds require Windows"
 } else {
