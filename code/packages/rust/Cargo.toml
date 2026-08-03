@@ -936,6 +936,7 @@ members = [
     "smart-home-axis-vapix-integration",
     "smart-home-blue-iris-integration",
     "smart-home-frigate-integration",
+    "smart-home-synology-surveillance-integration",
     "smart-home-roku-ecp-integration",
     "smart-home-sonos-upnp-integration",
     "smart-home-heos-cli-integration",

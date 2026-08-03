@@ -45290,6 +45290,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "Configuration, events, snapshots, recordings, exports, playback, and mutations remain separate host- or capability-specific work.",
         ]),
         base_entry(
+            "synology-surveillance",
+            "Synology Surveillance Station",
+            "Authenticated local Surveillance Station package and camera health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "synology_surveillance_webapi",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "synology_surveillance_webapi".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection discovers Web API paths and versions, then uses an isolated SID-format SurveillanceStation session over HTTPS; plain HTTP is test-only on loopback.",
+            "Credentials, SID values, SynoToken values, and login payloads remain inside the bounded transport and every successful login explicitly logs out.",
+            "OTP/device-token authentication, events, snapshots, recordings, playback, export, PTZ, external recording, and configuration remain separate lifecycle- or capability-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
             "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
@@ -81142,6 +81172,43 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
         assert!(!frigate
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn synology_surveillance_entry_exposes_discovered_session_primitives() {
+        let catalog = first_party_catalog();
+        let synology =
+            find_entry(&catalog, &IntegrationId::trusted("synology-surveillance")).unwrap();
+
+        assert_eq!(
+            synology.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(synology.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            synology.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "synology_surveillance_webapi".to_string()
+            )]
+        );
+        assert_eq!(synology.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(synology.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            synology.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert!(synology
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(synology
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(synology
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!synology
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
