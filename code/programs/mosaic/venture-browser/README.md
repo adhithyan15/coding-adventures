@@ -111,10 +111,12 @@ Forward, Reload, and Home controls. They then focus the emitted native content
 surface. After the Go-button path returns Home, the gates edit the address
 again and send native Return/Enter input, requiring Mosaic's shared
 `HostInput onCommit` lowering to dispatch `onNavigate` before they return Home
-again. They then require a wheel delta followed by an End-key command to scroll the
-shared Rust viewport. Before surface input begins, each host must prove that
-focus moved from generated chrome into the real native content surface. From
-that scrolled state, each host must return to
+again. They then require a wheel delta, project the shared viewport metrics
+into an NSScroller or WinUI ScrollBar, drive an absolute Rust scroll offset
+through that native control, and finally send an End-key command. Before
+surface input begins, each host must prove that focus moved from generated
+chrome into the real native content surface. From that scrolled state, each
+host must return to
 document start, activate a real HTML link through the native surface pointer
 path, first requiring shared link hit-testing to project its URL into Mosaic's
 status slot and select the native pointing-hand cursor, and then observe the

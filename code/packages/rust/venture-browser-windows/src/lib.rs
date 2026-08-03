@@ -11,7 +11,7 @@ use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use venture_browser_core::{
     BrowserChromeController, BrowserChromeEvent, BrowserChromeProps, BrowserFetchResponse,
     BrowserLoadError, BrowserNavigation, BrowserPagePipeline, BrowserResourceFetcher,
-    BrowserScrollCommand, BrowserSession, HttpBrowserFetcher,
+    BrowserScrollCommand, BrowserScrollMetrics, BrowserSession, HttpBrowserFetcher,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -183,6 +183,22 @@ impl WindowsBrowserHost {
         let before = viewport.scroll_state().offset_y();
         viewport.scroll_command(command);
         viewport.scroll_state().offset_y() != before
+    }
+
+    pub fn scroll_metrics(&self) -> Option<BrowserScrollMetrics> {
+        self.session.scroll_metrics()
+    }
+
+    pub fn scroll_to(&mut self, offset_y: f64) -> bool {
+        self.hovered_link_url = None;
+        let before = self
+            .session
+            .scroll_metrics()
+            .map(|metrics| metrics.offset_y);
+        let after = self.session.set_scroll_offset_y(offset_y);
+        before
+            .zip(after)
+            .is_some_and(|(before, after)| before != after)
     }
 
     pub fn activate_link(&mut self, x: f64, y: f64) -> Result<bool, BrowserLoadError> {
@@ -427,6 +443,48 @@ mod ffi {
     }
 
     #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_scroll_metrics(
+        host: *mut WindowsBrowserHost,
+        offset_y: *mut f64,
+        viewport_height: *mut f64,
+        content_height: *mut f64,
+        max_offset_y: *mut f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            let Some(metrics) = host.as_ref().and_then(WindowsBrowserHost::scroll_metrics) else {
+                return 0;
+            };
+            if !offset_y.is_null() {
+                *offset_y = metrics.offset_y;
+            }
+            if !viewport_height.is_null() {
+                *viewport_height = metrics.viewport_height;
+            }
+            if !content_height.is_null() {
+                *content_height = metrics.content_height;
+            }
+            if !max_offset_y.is_null() {
+                *max_offset_y = metrics.max_offset_y;
+            }
+            1
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
+    pub unsafe extern "C" fn venture_browser_windows_scroll_to(
+        host: *mut WindowsBrowserHost,
+        offset_y: f64,
+    ) -> u8 {
+        catch_unwind(AssertUnwindSafe(|| {
+            host.as_mut()
+                .map(|host| host.scroll_to(offset_y) as u8)
+                .unwrap_or(0)
+        }))
+        .unwrap_or(0)
+    }
+
+    #[no_mangle]
     pub unsafe extern "C" fn venture_browser_windows_resize(
         host: *mut WindowsBrowserHost,
         width: f64,
@@ -588,6 +646,16 @@ mod tests {
             Box::new(fetcher),
         )
         .expect("initial page loads");
+
+        let metrics = host
+            .scroll_metrics()
+            .expect("scroll metrics should project");
+        assert!(metrics.max_offset_y > 0.0);
+        assert!(host.scroll_to(metrics.max_offset_y / 2.0));
+        assert_eq!(
+            host.scroll_metrics().unwrap().offset_y,
+            metrics.max_offset_y / 2.0
+        );
 
         assert_eq!(
             host.session.viewport().unwrap().viewport_scene().width,
