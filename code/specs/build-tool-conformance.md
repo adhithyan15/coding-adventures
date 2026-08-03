@@ -305,6 +305,15 @@ source directories, compiler options, and every other field. A new stanza may
 introduce another `build-depends:` field; reaching a sibling field or stanza
 ends the current field before scanning continues.
 
+For Python `pyproject.toml` manifests, dependency candidates come only from the
+PEP 621 `[project]` table's `dependencies = [...]` array. Resolvers ignore
+package identity and descriptive metadata, `[build-system]`,
+`[project.optional-dependencies]`, tool-specific tables, comments, and every
+other field. Distribution names are matched case-insensitively after PEP 503
+normalization: each run of hyphens, underscores, or periods becomes one hyphen
+before internal-package lookup. Extras, version specifiers, and environment
+markers do not form part of the normalized distribution name.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,

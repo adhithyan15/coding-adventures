@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
   and package/program alias precedence.
 - Shared Cabal resolution coverage for inline and multiline `build-depends`
   fields plus misleading package names in metadata, options, and comments.
+- Haskell consumption of the shared Python dependency diamond plus a PEP 621
+  field-boundary and distribution-name normalization fixture.
 
 ### Changed
 
@@ -34,6 +36,8 @@ All notable changes to this package will be documented in this file.
   same-basename program aliases.
 - Resolve Haskell package edges only from Cabal `build-depends` fields across
   stanzas, ignoring comments and every non-authoritative manifest field.
+- Resolve Python edges only from PEP 621 `[project].dependencies`, with PEP 503
+  case and separator normalization before internal-package lookup.
 
 ## [0.1.0] - 2026-04-05
 

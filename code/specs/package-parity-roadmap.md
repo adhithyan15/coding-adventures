@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `bd73c3f1` after
-the latest Spice parser repair merged. The inventory contains 1,245 normalized
-implementation identities across 4,398 established-lane package slots and
+working inventory was regenerated on August 3, 2026 from `9441f4c7` after
+rebasing the Haskell Python-resolution slice. The inventory contains 1,247 normalized
+implementation identities across 4,400 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -323,16 +323,26 @@ cycle failure in Haskell's whole-manifest token resolver. PR #9777 repaired the
 Lua reader: it distinguishes genuine cycles from false alias matches, parses
 only authoritative rockspec dependency fields, preserves BUILD-declared
 program edges and identities, and matches the Go oracle exactly. That repair
-exposed the same generic-token debt in the real 205-package Haskell lane. The
-selected direct child is now the dependency-shaped Cabal slice: its baseline
-has all 486 canonical edges plus 43 false edges from non-authoritative manifest
-text, and it replaces whole-file tokenization with `build-depends` parsing.
-The remaining non-Cabal readers have a separate dependent backlog owner. The
-post-rebase `bd73c3f1` collision-checked inventory has 1,245
-identities and 4,398 implementation slots across 15 established lanes, with
-173 high-consensus packages and 272 missing slots, 795 singleton packages and
-11,130 missing slots, 600 Rust singletons, and zero collisions or unknown
-buckets. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill existing identities; ZStd
+exposed the same generic-token debt in the real 205-package Haskell lane. PR
+#9806 completed the dependency-shaped Cabal slice: it replaced 43 false edges
+from non-authoritative manifest text with `build-depends` parsing and now
+matches all 486 canonical edges. The post-merge leverage audit selects Python
+next because it is the largest affected lane: 488 real packages collapse into
+an all-node cycle, with 1,492 Haskell edges versus 1,118 canonical edges, 383
+false edges, and nine missing PEP 503-normalized edges. A dependent backlog
+owner carries the remaining post-Python readers. The post-rebase `9441f4c7`
+collision-checked inventory has 1,247
+identities and 4,400 implementation slots across 15 established lanes, with
+173 high-consensus packages and 272 missing slots, 797 singleton packages and
+11,158 missing slots, 602 Rust singletons, and zero collisions or unknown
+buckets. The Python slice now reads only PEP 621
+`[project].dependencies` and applies PEP 503 distribution-name normalization.
+Its full 488-package lane completes without failures, and the repaired
+1,118-edge graph matches the Go oracle exactly: zero Haskell-only edges and
+zero Go-only edges. The two unrelated Python `BUILD_windows` prerequisite gaps
+exposed by the full validator remain owned by
+`build-file-standalone-integrity`. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill
+existing identities; ZStd
 is complete across all 15 lanes and ZIP now spans 12. The new Chief daemon
 keyring and Synology Surveillance singleton packages own concrete filesystem or
 credentialed network authority and have excluded native-authority review
@@ -343,7 +353,11 @@ of treating that host integration as an all-language portability gap. The new
 `smart-home-frigate-integration` singleton likewise owns concrete TCP/TLS,
 authenticated HTTPS, JWT cookies, Vault identity, and runtime authorization;
 it has an excluded native-authority review rather than a fabricated portable
-lane gap.
+lane gap. The new `process-shutdown` and
+`smart-home-unifi-network-integration` singletons likewise own native process
+signal/FFI authority or concrete authenticated LAN/TLS authority. Both have
+excluded native-authority review owners and do not displace the active portable
+resolver repair.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
