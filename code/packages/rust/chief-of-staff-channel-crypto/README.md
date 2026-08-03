@@ -20,6 +20,11 @@ Secret key material is held in `Zeroizing` containers. Receiver epoch state
 accepts a byte-identical retry of the current grant, rejects conflicts and
 decreasing epochs, and retains older CMKs so historic messages remain readable.
 
+The `wire` module provides bounded, versioned binary records for grants and
+encrypted messages. Its stable storage keys sort messages by sequence and hash
+receiver IDs before putting them into path-like keys, so an external identity
+cannot inject storage path segments.
+
 This crate deliberately does not implement storage or actor routing. The caller
 must persist a sequence advance before calling message encryption; `SequenceCursor`
 provides a fail-closed recovery and reservation protocol for that integration.
