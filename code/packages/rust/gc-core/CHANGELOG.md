@@ -1,5 +1,18 @@
 # Changelog — gc-core
 
+## 0.27.1 — 2026-08-03 — regression test: array elements need a ref-array kind, not a no-ref one
+
+No production code change — adds
+`array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`,
+a deterministic (explicit-roots, no conservative-stack noise) reproduction
+of the confirmed cross-backend bug this round's `iir-to-llvm`/
+`aarch64-backend`/`x86_64-backend` fix closes: a native/Twig `alloc_array`
+block registered under `register_kind(&[])` (the old no-ref kind) loses
+every element only reachable through it, exactly mirroring the existing
+`ref_array_traces_elements_precisely` precedent but with the array's OWN
+kind swapped to the pre-fix shape. See
+`AOT00-T7-array-reference-tracing.md` for the full writeup.
+
 ## 0.27.0 — 2026-08-02 — `FlatHeap::should_compact` — the shared automatic-compaction policy
 
 - **`FlatHeap::should_compact(&self) -> bool`** — whether the *next*

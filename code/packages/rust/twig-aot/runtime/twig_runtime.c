@@ -75,6 +75,15 @@
  * and linked into the AOT image via `libgc_core_capi.a`. */
 extern int64_t __gc_register_kind(const int64_t *field_offsets, int64_t count);
 extern int64_t __gc_alloc_kind(int64_t n, uint16_t kind);
+/* `__gc_register_ref_array_kind(fixed, fixed_count, tail_from)`: registers a
+ * variable-length REFERENCE-array HeapKind -- every aligned 8-byte word in
+ * `[tail_from, size)` of the allocated instance is traced as a possible heap
+ * reference (validated against the live-block table before being followed,
+ * so this can only ever over-retain, never crash or under-trace -- see
+ * `__twig_alloc_ref_array_bytes` below). Used by `alloc_array` (LANG-FULL E5)
+ * so an array whose element type carries a GC reference (`str`/`any`/
+ * `symbol`/`ref<T>`) doesn't leave its elements invisible to the collector. */
+extern int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count, int64_t tail_from);
 
 /* __twig_print_i64 — print a signed 64-bit integer followed by a newline.
  *
@@ -230,6 +239,50 @@ int64_t __twig_alloc_bytes(int64_t n) {
         blob_kind = __gc_register_kind(NULL, 0); /* 1-based id */
     }
     return __gc_alloc_kind(n, (uint16_t)blob_kind);
+}
+
+/* __twig_alloc_ref_array_bytes -- like `__twig_alloc_bytes`, but for a
+ * LANG-FULL E5 `alloc_array` block whose ELEMENTS may themselves be GC
+ * references (a `str`/`any`/`symbol`/`ref<T>` element, each stored as an
+ * 8-byte handle at `[8, 8 + count*8)`, past the 8-byte length header).
+ *
+ * Confirmed correctness gap this closes (found during LLVM's `alloc_bytes`/
+ * `alloc_array` calloc-leak fix, tracked as a follow-up rather than silently
+ * left unmentioned): `alloc_array` previously always registered its block
+ * under `__twig_alloc_bytes`'s no-ref HeapKind, correct only for genuinely
+ * scalar elements (`i64`/`f64`). For a reference-carrying element, the
+ * collector's precise tracer never scanned the array's payload for the
+ * handles stored inside it, so a string/symbol reachable ONLY via an array
+ * element (no separate long-lived reference elsewhere) could be collected
+ * while the array still held a now-dangling handle.
+ *
+ * Fix: register under `__gc_register_ref_array_kind(NULL, 0, 8)` instead --
+ * `tail_from = 8` skips this block's own length header, so every aligned
+ * 8-byte word from offset 8 onward (i.e. every element slot) is traced as a
+ * reference. This is registered UNCONDITIONALLY for every `alloc_array`
+ * block, not only ones the frontend declares as reference-typed: on the
+ * native/LLVM backends the element type is not reliably available at this
+ * call site (the AOT specialiser collapses `array<T>` to `any` before native
+ * codegen sees it -- see `aarch64-backend`/`x86_64-backend`'s `alloc_array`
+ * lowering), so there is no way to select the no-ref kind only for scalar
+ * arrays without risking silently missing a reference-typed one. This is
+ * always SOUND, never just a convenient shortcut: `mark_word` resolves every
+ * traced "reference" word through `find_header` before treating it as live
+ * (`gc-core::flat_heap::FlatHeap::mark_word`), so a genuinely-scalar `i64`/
+ * `f64` element that happens to look like a heap address is simply ignored
+ * (returns null) rather than followed -- the same conservative-is-safe
+ * principle the collector's own stack scan already relies on. The only cost
+ * is over-tracing a handful of extra words per array (never corruption,
+ * never under-tracing, at most a coincidental false-positive keeping some
+ * unrelated object alive one cycle longer than strictly necessary).
+ */
+int64_t __twig_alloc_ref_array_bytes(int64_t n) {
+    if (n <= 0) return 0;
+    static int64_t ref_array_kind = 0; /* 0 = not yet registered */
+    if (ref_array_kind == 0) {
+        ref_array_kind = __gc_register_ref_array_kind(NULL, 0, 8);
+    }
+    return __gc_alloc_kind(n, (uint16_t)ref_array_kind);
 }
 
 /* __twig_input_str — read one line from stdin as an E4-dyn runtime string

@@ -1904,11 +1904,14 @@ fn integer_local_still_gets_i64_slot() {
 // ===========================================================================
 
 /// `alloc_array`/`array_set`/`array_get`/`array_len` lower to a length-prefixed
-/// `@__twig_alloc_bytes` block (Twig GC completion round — no longer the raw,
-/// never-freed `@calloc` this used to emit) with an explicit `icmp uge`/
-/// `llvm.trap` bounds check and a typed `getelementptr`+`load`/`store`.
+/// `@__twig_alloc_ref_array_bytes` block (Twig GC completion round — no
+/// longer the raw, never-freed `@calloc` this used to emit, and no longer
+/// the no-ref `@__twig_alloc_bytes` either, since an array element may itself
+/// carry a GC reference — see the array reference-tracing fix) with an
+/// explicit `icmp uge`/`llvm.trap` bounds check and a typed
+/// `getelementptr`+`load`/`store`.
 #[test]
-fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
+fn array_ops_emit_twig_alloc_ref_array_bytes_trap_and_gep() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1927,13 +1930,19 @@ fn array_ops_emit_twig_alloc_bytes_trap_and_gep() {
         ],
     );
     let ll = lower(&module_with(f));
-    // Allocation: length-prefixed, GC-tracked block.
+    // Allocation: length-prefixed, GC-tracked, REFERENCE-TRACED block — not
+    // the plain no-ref `__twig_alloc_bytes` allocator, since an array's
+    // element type may carry a GC reference that must stay visible to the
+    // collector even when this particular instantiation's T is scalar i64.
     assert!(
-        ll.contains("declare i64 @__twig_alloc_bytes(i64)"),
-        "__twig_alloc_bytes declared; got:\n{ll}"
+        ll.contains("declare i64 @__twig_alloc_ref_array_bytes(i64)"),
+        "__twig_alloc_ref_array_bytes declared; got:\n{ll}"
     );
     assert!(!ll.contains("@calloc"), "calloc must no longer be called; got:\n{ll}");
-    assert!(ll.contains("call i64 @__twig_alloc_bytes(i64"), "alloc_array uses __twig_alloc_bytes");
+    assert!(
+        ll.contains("call i64 @__twig_alloc_ref_array_bytes(i64"),
+        "alloc_array uses __twig_alloc_ref_array_bytes"
+    );
     assert!(
         ll.contains("inttoptr i64 ") && ll.contains(" to ptr"),
         "the i64 handle must be recovered as a ptr for the length store/element GEPs"

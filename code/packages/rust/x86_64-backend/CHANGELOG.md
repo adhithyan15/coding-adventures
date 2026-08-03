@@ -1,5 +1,18 @@
 # Changelog — `x86_64-backend`
 
+## 0.38.1 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5)
+
+`alloc_array` now calls `__twig_alloc_ref_array_bytes` instead of the
+no-ref `__twig_alloc_bytes`, so an array element carrying a GC reference
+(`str`/`any`/`symbol`/`ref<T>`) is no longer invisible to the collector — a
+string reachable only via an array element used to get collected while the
+array still held a now-dangling handle. Used unconditionally (not gated on
+element type): the AOT specialiser already collapses `array<T>`'s result
+type to `any` before this backend sees it, so there is no reliable way to
+pick the old no-ref allocator only for scalar arrays. Sound regardless — see
+`iir-to-llvm` 0.49.0 / `AOT00-T7-array-reference-tracing.md` for the full
+cross-backend writeup and the primary regression proof.
+
 ## 0.38.0 - 2026-07-31 - boolean array elements
 
 The native array element-size helper now accepts `bool`, using the backend's

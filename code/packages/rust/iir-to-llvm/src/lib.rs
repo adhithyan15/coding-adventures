@@ -887,18 +887,41 @@ pub fn lower_iir_to_llvm(
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
         || used_gc_live_bytes {
         out.push('\n');
-        if used_alloc_bytes || used_arrays {
+        if used_alloc_bytes {
             // Twig GC completion round: `alloc_bytes` (Brainfuck's byte tape)
-            // and `alloc_array` (LANG-FULL E5) used to call raw `@calloc`,
-            // which is never freed and never traced — a genuine, permanent
-            // leak, confirmed by investigation to be the one remaining gap
-            // once `alloc`/`gc_alloc` (records/cons cells) were confirmed to
-            // already auto-collect via `__gc_alloc_kind`'s pre-allocation
-            // check. `@__twig_alloc_bytes` (twig_runtime.c, already used by
-            // aarch64/x86_64-backend for the identical ops, and internally by
-            // this same runtime's own string-concat/-slice helpers) routes
-            // through that same GC-tracked allocator instead.
+            // used to call raw `@calloc`, which is never freed and never
+            // traced — a genuine, permanent leak, confirmed by investigation
+            // to be the one remaining gap once `alloc`/`gc_alloc` (records/
+            // cons cells) were confirmed to already auto-collect via
+            // `__gc_alloc_kind`'s pre-allocation check. `@__twig_alloc_bytes`
+            // (twig_runtime.c, already used by aarch64/x86_64-backend for the
+            // identical op, and internally by this same runtime's own
+            // string-concat/-slice helpers) routes through that same
+            // GC-tracked allocator instead. `alloc_array` (LANG-FULL E5) used
+            // to share this same no-ref allocator too, but now uses the
+            // reference-tracing `@__twig_alloc_ref_array_bytes` below instead
+            // — see that declare's comment for why.
             out.push_str("declare i64 @__twig_alloc_bytes(i64)\n");
+        }
+        if used_arrays {
+            // Twig GC completion round (array reference-tracing fix):
+            // `alloc_array`'s block used to be registered under
+            // `@__twig_alloc_bytes`'s no-ref HeapKind unconditionally — sound
+            // only for genuinely scalar (`i64`/`f64`) elements. A `str`/
+            // `any`/`symbol`/`ref<T>` element is itself a GC reference, and
+            // the collector's precise tracer never scanned an array's
+            // payload for handles stored inside it — a string/symbol
+            // reachable ONLY via an array element (no other live reference)
+            // could be collected while the array still held a now-dangling
+            // handle. `@__twig_alloc_ref_array_bytes` (twig_runtime.c)
+            // registers under `__gc_register_ref_array_kind(NULL, 0, 8)`
+            // instead: `tail_from = 8` skips the length header, so every
+            // element slot is traced as a possible reference — sound even for
+            // scalar arrays (a look-alike scalar value is resolved through
+            // `find_header` and simply ignored if it isn't a real live
+            // block; see `gc-core::flat_heap::FlatHeap::mark_word`), so one
+            // allocator now covers every `array<T>` regardless of `T`.
+            out.push_str("declare i64 @__twig_alloc_ref_array_bytes(i64)\n");
         }
         if used_gc_alloc {
             // E6d-6-LLVM: the GC allocator (twig_gc.c), shared with the native
@@ -2886,49 +2909,48 @@ fn array_elem_llvm(elem: &str, fn_name: &str) -> Result<(&'static str, u32), IIR
 /// ```llvm
 /// %sz    = mul i64 <count>, <elemsize>
 /// %total = add i64 %sz, 8
-/// %raw   = call i64 @__twig_alloc_bytes(i64 %total)
+/// %raw   = call i64 @__twig_alloc_ref_array_bytes(i64 %total)
 /// %base  = inttoptr i64 %raw to ptr
 /// store i64 <count>, ptr %base                 ; length header
 /// %dest  = getelementptr i8, ptr %base, i64 8  ; handle = payload
 /// ```
 ///
-/// `@__twig_alloc_bytes` replaces the raw `@calloc` this used to call — a
-/// genuine, permanent leak (never freed, never traced), confirmed by
-/// investigation to be the one remaining Twig-GC gap on this backend once
-/// `alloc`/`gc_alloc` (records/cons cells) were confirmed to already
-/// auto-collect. `dest`'s bounds-checked handle model (a `ptr` 8 bytes into
-/// the block, past the length header) is unchanged — `FlatHeap::find_header`
-/// resolves an *interior* address to its enclosing block, so this offset
-/// pointer stays a valid, collectible root exactly like a base-address one.
+/// `dest`'s bounds-checked handle model (a `ptr` 8 bytes into the block, past
+/// the length header) is unchanged — `FlatHeap::find_header` resolves an
+/// *interior* address to its enclosing block, so this offset pointer stays a
+/// valid, collectible root exactly like a base-address one.
 ///
-/// **A real, pre-existing correctness gap this fix does *not* close (found
-/// by a security review, not assumed away):** `array_elem_llvm` maps
-/// `llvm_type_for`'s *LLVM* type, not the original IIR type — and
-/// `llvm_type_for` maps several heap-*handle* types (`"str"`, `"any"`,
-/// `"symbol"`, `"ref<Lispy...>"`) down to the same `"i64"` LLVM type plain
-/// integers use, so `array<str>`/`array<any>`/`array<symbol>` elements pass
-/// this function's checks today (`algol-iir-compiler`'s `string array`
-/// feature already emits exactly this shape). Registering the array's block
-/// under `__twig_alloc_bytes`'s no-ref `HeapKind` is only sound for genuinely
-/// scalar elements (`i1`/`i8`/`i16`/`i32`/`i64`/`float`/`double` holding no
-/// reference semantics) — for a heap-handle element type, the collector's
-/// precise tracer never scans the array's payload for the handles stored
-/// inside it, so a string/symbol reachable *only* via an array element (no
-/// separate long-lived reference elsewhere) can be collected while the
-/// array still holds a now-dangling handle. This is **not new** here: the
-/// old `@calloc` block was equally invisible to the collector (calloc'd
-/// memory was never a GC-managed object, so nothing inside it was ever
-/// traced either) — what's new is that this fix is the first point where
-/// the array's *own* block becomes collector-managed, which is exactly the
-/// moment this gap should be closed but isn't yet. The fix is understood
-/// (register such arrays under a **ref-array** `HeapKind` via the already-
-/// exposed `__gc_register_ref_array_kind`/`__twig_gc_register_ref_array_kind`
-/// — `tail_from = 8` to skip this array's own length header and trace every
-/// word after it as a reference — the same primitive McCarthy Lisp's
-/// variable-length ref arrays already use) but is cross-backend (aarch64/
-/// x86_64 share the identical gap, calling the same `__twig_alloc_bytes` for
-/// `alloc_array` with no ref-kind distinction) and out of scope for this
-/// round; tracked separately rather than silently left unmentioned.
+/// **Reference-tracing fix (was a real, pre-existing correctness gap, found
+/// by a security review during the `@calloc`→`@__twig_alloc_bytes` fix and
+/// tracked as a follow-up rather than silently assumed away):**
+/// `array_elem_llvm` maps `llvm_type_for`'s *LLVM* type, not the original IIR
+/// type — and `llvm_type_for` maps several heap-*handle* types (`"str"`,
+/// `"any"`, `"symbol"`, `"ref<Lispy...>"`) down to the same `"i64"` LLVM type
+/// plain integers use, so `array<str>`/`array<any>`/`array<symbol>` elements
+/// pass this function's checks (`algol-iir-compiler`'s `string array` feature
+/// already emits exactly this shape). Registering the array's block under
+/// `@__twig_alloc_bytes`'s no-ref `HeapKind` was only sound for genuinely
+/// scalar elements (`i1`/`i8`/`i16`/`i32`/`i64`/`float`/`double`) — for a
+/// heap-handle element type, the collector's precise tracer never scanned the
+/// array's payload for the handles stored inside it, so a string/symbol
+/// reachable *only* via an array element (no separate long-lived reference
+/// elsewhere) could be collected while the array still held a now-dangling
+/// handle.
+///
+/// Fixed by switching to `@__twig_alloc_ref_array_bytes` (`twig_runtime.c`),
+/// which registers under `__gc_register_ref_array_kind(NULL, 0, 8)` —
+/// `tail_from = 8` skips this array's own length header and traces every
+/// word after it as a reference, the same primitive McCarthy Lisp's
+/// variable-length ref arrays already use. This is used **unconditionally**,
+/// not only when the frontend declares a reference-typed element: it is
+/// always sound, because the collector validates every traced "reference"
+/// word through `FlatHeap::find_header` before treating it as live, so a
+/// genuinely scalar `i64`/`f64` element that happens to look like a heap
+/// address is simply ignored (the same conservative-is-safe principle the
+/// collector's own stack scan already relies on) rather than followed — see
+/// `__twig_alloc_ref_array_bytes`'s doc comment in `twig_runtime.c`. This
+/// closes the gap cross-backend: `aarch64-backend`/`x86_64-backend`'s
+/// `alloc_array` now call the same `__twig_alloc_ref_array_bytes` symbol.
 ///
 /// **Trust boundary (size overflow).** `count` is a *compiler-produced* operand
 /// (a constant or a bounded length expression from a frontend), not an
@@ -2960,7 +2982,7 @@ fn lower_alloc_array(
     let base = state.fresh("abase");
     out.push_str(&format!("  {sz} = mul i64 {count}, {elem_size}\n"));
     out.push_str(&format!("  {total} = add i64 {sz}, 8\n"));
-    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_bytes(i64 {total})\n"));
+    out.push_str(&format!("  {raw} = call i64 @__twig_alloc_ref_array_bytes(i64 {total})\n"));
     out.push_str(&format!("  {base} = inttoptr i64 {raw} to ptr\n"));
     out.push_str(&format!("  store i64 {count}, ptr {base}\n"));
     out.push_str(&format!("  %{dest} = getelementptr i8, ptr {base}, i64 8\n"));

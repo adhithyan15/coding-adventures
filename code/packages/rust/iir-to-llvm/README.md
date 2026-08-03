@@ -105,12 +105,13 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.24.0 | **Literal string comparison** (LANG-FULL E4). Literal-only `str_cmp` lowers to the shared `-1`/`0`/`1` ordering result. |
 | v0.42.0 | **Structural heap ops + name quoting** (LANG-FULL E6d-6). `alloc`→`call i64 @__twig_gc_alloc`, `field_store`/`field_load`→`inttoptr`+`getelementptr i64`+`store`/`load` (a field is at `idx*8`), `is_null`→`icmp eq …, 0`+`zext` — the native backend's word-granular model. `llvm_fn_ident` quotes special-char names (`@"point-x"`, `@"Some?"`). **Twig records run on LLVM** (exit 42). Union `match` on native/LLVM is a documented follow-up (E6d-6b). |
 | v0.48.0 | **Twig GC completion, Part 2.** `alloc_bytes`/`alloc_array`→`call i64 @__twig_alloc_bytes` (GC-tracked, replacing raw never-freed `@calloc` — a confirmed leak). New `gc_live_bytes` `call_builtin`→`@__twig_gc_live_bytes()`, proving (by an actual running end-to-end test, not by reading C source) that `alloc`/`gc_alloc` already auto-collect under real allocation pressure via `gc-core-capi`'s pre-allocation `should_collect` check. |
+| v0.49.0 | **Array reference-tracing fix** (LANG-FULL E5, cross-backend). `alloc_array`→`call i64 @__twig_alloc_ref_array_bytes` instead of the no-ref `@__twig_alloc_bytes` — closes the gap v0.48.0 flagged: an `array<str>`/`array<any>`/`array<ref<T>>` element carries a GC reference the collector previously never traced. `aarch64-backend`/`x86_64-backend` get the identical fix. |
 | (later) | Debug info via `!dbg`. |
 
-### Bounds-checked arrays (v0.14.0; GC-tracked since v0.48.0)
+### Bounds-checked arrays (v0.14.0; GC-tracked since v0.48.0; reference-traced since v0.49.0)
 
-An IIR array (LANG-FULL E5) is a single `@__twig_alloc_bytes`-allocated block
-laid out as a length header followed by the elements; the **handle** is a
+An IIR array (LANG-FULL E5) is a single `@__twig_alloc_ref_array_bytes`-allocated
+block laid out as a length header followed by the elements; the **handle** is a
 `ptr` to the payload (`base + 8`), so element access is a typed
 `getelementptr <T>` and the length lives at `handle − 8`:
 
@@ -119,24 +120,30 @@ base ──► [ i64 length | element 0 | element 1 | … ]   (zero-filled)
          └─ 8 bytes ──┘ ▲ handle
 ```
 
-`@__twig_alloc_bytes` returns an i64 handle (`inttoptr`'d to `base`
+`@__twig_alloc_ref_array_bytes` returns an i64 handle (`inttoptr`'d to `base`
 immediately, the same convention `alloc`'s own handle uses) rather than the
-`@calloc` this called through v0.47.0 — `@calloc` was never freed or traced,
-a genuine, confirmed leak. `find_header` resolves the `base + 8` interior
-handle back to its enclosing block correctly, so this stays a valid,
-collectible root.
+`@calloc` this called through v0.47.0 (never freed or traced, a genuine,
+confirmed leak) or the no-ref `@__twig_alloc_bytes` this called through
+v0.48.0. `find_header` resolves the `base + 8` interior handle back to its
+enclosing block correctly, so this stays a valid, collectible root.
 
-**Known gap (found by security review, not fixed):** the array's block is
-always registered under `__twig_alloc_bytes`'s no-ref `HeapKind`, which is
-only correct for genuinely scalar element types. `array<str>`/`array<any>`/
-`array<symbol>` elements are i64 *handles* to separately GC-managed blocks —
-`llvm_type_for` maps all of these down to the same `"i64"` LLVM type plain
-integers use, so they pass `array_elem_llvm`'s check too, and a
-string/symbol reachable only via such an array element isn't traced as a
-root. Pre-existing (the old `@calloc` block was equally untraced) and
-cross-backend (`aarch64-backend`/`x86_64-backend` share it); tracked
-separately, not attempted here. See `code/specs/AOT00-T1w-llvm-gc-completion.md`
-§5.
+**Array reference-tracing fix (v0.49.0; was a known, documented gap in
+v0.48.0, now closed):** the array's block was registered under
+`__twig_alloc_bytes`'s no-ref `HeapKind`, only correct for genuinely scalar
+element types. `array<str>`/`array<any>`/`array<symbol>` elements are i64
+*handles* to separately GC-managed blocks — `llvm_type_for` maps all of
+these down to the same `"i64"` LLVM type plain integers use, so they passed
+`array_elem_llvm`'s check too, and a string/symbol reachable only via such
+an array element wasn't traced as a root and could be reclaimed while the
+array still held a now-dangling handle. Fixed cross-backend
+(`aarch64-backend`/`x86_64-backend` too): `alloc_array` now registers under
+`__gc_register_ref_array_kind(NULL, 0, 8)` (`tail_from = 8` skips the length
+header) via the new `@__twig_alloc_ref_array_bytes`, unconditionally for
+every array regardless of declared element type — sound even for scalar
+arrays, since `FlatHeap::mark_word` validates every traced "reference" word
+through `find_header` before treating it as live. See
+`code/specs/AOT00-T7-array-reference-tracing.md` for the full writeup and
+the regression proof.
 
 Unlike the JVM/CLR managed-array backends (whose runtime bounds-checks every
 element access for free), the native/LLVM target has no such runtime, so each

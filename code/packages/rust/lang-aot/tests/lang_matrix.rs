@@ -4003,21 +4003,31 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // Link the tagged-value lisp runtime iff the program calls a `__dyn_*`
     // primitive (cons/car/box_int/… — McCarthy Lisp + Twig dynamic values,
     // E6d-2b), OR a plain `__twig_gc_alloc`/`__twig_alloc_bytes`/
-    // `__twig_gc_live_bytes` call with no `__dyn_*` alongside it — the shape
-    // introduced by routing `alloc_bytes`/`alloc_array` (Brainfuck's tape /
-    // LANG-FULL E5 arrays, including plain typed-language arrays like
-    // ALGOL's that never touch a `__dyn_*` primitive) through the same
-    // GC-tracked allocator records/cons cells already used (Twig GC
-    // completion round). `dynval_runtime.c` implements the tagged-word
-    // model and calls the conservative GC, which now lives in the
-    // `gc-core-capi` staticlib (twig_gc.c was retired in #118b-2b);
-    // `twig_runtime.c` supplies `__twig_alloc_bytes` itself, *and* its own
-    // `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
+    // `__twig_alloc_ref_array_bytes`/`__twig_gc_live_bytes` call with no
+    // `__dyn_*` alongside it — the shape introduced by routing
+    // `alloc_bytes`/`alloc_array` (Brainfuck's tape / LANG-FULL E5 arrays,
+    // including plain typed-language arrays like ALGOL's that never touch a
+    // `__dyn_*` primitive) through the same GC-tracked allocator records/cons
+    // cells already used (Twig GC completion round). `dynval_runtime.c`
+    // implements the tagged-word model and calls the conservative GC, which
+    // now lives in the `gc-core-capi` staticlib (twig_gc.c was retired in
+    // #118b-2b); `twig_runtime.c` supplies `__twig_alloc_bytes` itself, *and*
+    // its own `__twig_input_i64`/`__twig_input_str`/`__twig_str_concat`/
     // `__twig_str_eq`/`__twig_str_cmp` — the same five functions
     // `PRINT_RUNTIME_C` below also defines a simpler standalone version of.
+    //
+    // `__twig_alloc_ref_array_bytes` (array reference-tracing fix, Twig GC
+    // completion round) is `alloc_array`'s new allocator — a fresh symbol
+    // `__twig_alloc_bytes`'s own check above never catches, so every ALGOL/
+    // Twig program using an array (which no longer emits `@__twig_alloc_bytes`
+    // at all) would silently link WITHOUT `twig_runtime.c` and fail with an
+    // undefined-symbol linker error, misreported by this harness as "did not
+    // complete" rather than a clear link failure. Found by running the full
+    // matrix after the array reference-tracing fix, not assumed.
     let uses_gc_runtime = ll.contains("@__dyn_")
         || ll.contains("@__twig_gc_alloc")
         || ll.contains("@__twig_alloc_bytes")
+        || ll.contains("@__twig_alloc_ref_array_bytes")
         || ll.contains("@__twig_gc_live_bytes");
     if uses_gc_runtime {
         let rt = |name: &str| {

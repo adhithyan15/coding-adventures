@@ -69,12 +69,22 @@ int64_t __twig_str_eq(int64_t, int64_t);
  * `twig_runtime.c` standalone to exercise string *logic*, not the collector, so
  * we back those two symbols with a trivial `calloc` stub — the `[len][bytes]`
  * behaviour is identical.  (End-to-end GC reclamation is proven by the
- * `*_smoke.rs` tests, which link the real `libgc_core_capi.a`.) */
+ * `*_smoke.rs` tests, which link the real `libgc_core_capi.a`.)
+ *
+ * Array reference-tracing fix (Twig GC completion round): `twig_runtime.c`
+ * also declares `__gc_register_ref_array_kind` now (for `alloc_array`'s new
+ * `__twig_alloc_ref_array_bytes` allocator) — none of these string tests
+ * exercise it, but standalone-compiling `twig_runtime.c` still needs every
+ * `extern` it references to resolve at link time, so it gets the same
+ * trivial stub treatment. */
 int64_t __gc_register_kind(const int64_t *offsets, int64_t count) {
     (void)offsets; (void)count; return 1;
 }
 int64_t __gc_alloc_kind(int64_t n, uint16_t kind) {
     (void)kind; return (int64_t)(intptr_t)calloc(1, (size_t)n);
+}
+int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_count, int64_t tail_from) {
+    (void)fixed; (void)fixed_count; (void)tail_from; return 2;
 }
 
 /* Build a [i64 len][bytes] heap block, the E5/E4-dyn string layout. */

@@ -1,5 +1,33 @@
 # Changelog — iir-to-llvm
 
+## 0.49.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, cross-backend)
+
+Closes the reference-tracing gap `lower_alloc_array`'s own 0.48.0 doc comment
+flagged and deliberately left open: `alloc_array` was registering every
+block under `__twig_alloc_bytes`'s no-ref `HeapKind`, correct only for
+scalar (`i64`/`f64`) elements — a `str`/`any`/`symbol`/`ref<T>` element (e.g.
+`algol-iir-compiler`'s `string array`) is itself a GC reference, and the
+collector's precise tracer never scanned an array's payload for the handles
+stored inside it. A string reachable ONLY via an array element (no other
+live reference) could be collected while the array still held a now-dangling
+handle.
+
+`lower_alloc_array` now calls the new `@__twig_alloc_ref_array_bytes`
+(`twig-aot/runtime/twig_runtime.c`) unconditionally for every array,
+regardless of declared element type — registers under
+`__gc_register_ref_array_kind(NULL, 0, 8)` (`tail_from = 8` skips the length
+header) instead of the no-ref kind. Sound even for genuinely scalar arrays:
+`FlatHeap::mark_word` validates every traced "reference" word through
+`find_header` before treating it as live, so a look-alike scalar value is
+simply ignored, never followed. Confirmed cross-backend: `aarch64-backend`
+and `x86_64-backend` get the identical fix in the same round. See
+`AOT00-T7-array-reference-tracing.md` for the full writeup, including the
+real regression proof (`gc-core`'s
+`array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`)
+and a real test-harness bug this fix's own verification found (`lang_matrix.rs`'s
+LLVM-linking heuristic missing the new symbol name, breaking 24 matrix
+tests until fixed).
+
 ## 0.48.0 - 2026-08-03 - Twig GC completion, Part 2: alloc_bytes/alloc_array stop leaking, gc_live_bytes added
 
 A harder verification pass across Twig's GC story found two things on the

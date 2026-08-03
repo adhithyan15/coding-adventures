@@ -1,5 +1,22 @@
 # Changelog — `twig-aot`
 
+## 0.50.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, runtime)
+
+`runtime/twig_runtime.c` gains `__twig_alloc_ref_array_bytes(int64_t n)` —
+mirrors `__twig_alloc_bytes`'s lazy-registration shape but registers under
+`__gc_register_ref_array_kind(NULL, 0, 8)` instead of the no-ref
+`__gc_register_kind(NULL, 0)`, so every 8-byte word past the length header
+(i.e. every array element slot) is traced as a possible GC reference. Fixes
+a confirmed cross-backend bug: an `array<str>`/`array<any>`/`array<ref<T>>`
+element was invisible to the collector, so a value reachable only via an
+array element could be reclaimed while the array still held a now-dangling
+handle. `aarch64-backend`/`x86_64-backend`/`iir-to-llvm` all now call this
+new allocator for `alloc_array`, unconditionally (element type isn't
+reliably available at any of their call sites). See
+`AOT00-T7-array-reference-tracing.md` for the full writeup and the primary
+regression proof (`gc-core`'s
+`array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it`).
+
 ## 0.49.0 - 2026-07-30 - LANG-FULL E4-dyn runtime string ordering
 
 Native AOT now lowers a nonliteral `str_cmp` to `call_builtin "str_cmp"`,
