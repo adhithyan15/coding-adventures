@@ -18,7 +18,8 @@ use smart_home_core::{
     BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
-    DeviceCommand, DeviceEvent, DeviceEventType, Entity, EntityId, EntityKind, EventId, Health,
+    DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, Entity, EntityId,
+    EntityKind, EventId, Health,
     IntegrationId, MediaCommandType, PrivilegeTier, Scene, SceneScope, SmartHomeTool,
     StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
@@ -10268,6 +10269,18 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::Media(MediaCommandType::PlayQueueItem) => "media_play_queue_item",
         CommandType::Media(MediaCommandType::RemoveQueueItem) => "media_remove_queue_item",
         CommandType::Media(MediaCommandType::MoveQueueItem) => "media_move_queue_item",
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorMode) => {
+            "device_set_indicator_mode"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetIndicatorBrightness) => {
+            "device_set_indicator_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
+            "device_set_display_brightness"
+        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
+            "sensor_calibrate"
+        }
     }
 }
 
@@ -10291,6 +10304,18 @@ fn command_type_from_label(command_type: &str) -> Result<CommandType, ApiError> 
         "media_play_queue_item" => Ok(CommandType::Media(MediaCommandType::PlayQueueItem)),
         "media_remove_queue_item" => Ok(CommandType::Media(MediaCommandType::RemoveQueueItem)),
         "media_move_queue_item" => Ok(CommandType::Media(MediaCommandType::MoveQueueItem)),
+        "device_set_indicator_mode" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorMode,
+        )),
+        "device_set_indicator_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetIndicatorBrightness,
+        )),
+        "device_set_display_brightness" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::SetDisplayBrightness,
+        )),
+        "sensor_calibrate" => Ok(CommandType::DeviceControl(
+            DeviceControlCommandType::CalibrateSensor,
+        )),
         other => Err(ApiError::bad_request(format!(
             "unsupported command_type `{other}`"
         ))),
@@ -13764,6 +13789,33 @@ mod tests {
         ];
         for (label, media_command) in commands {
             let command = CommandType::Media(media_command);
+            assert_eq!(command_type_from_label(label).unwrap(), command);
+            assert_eq!(command_type_label(command), label);
+        }
+    }
+
+    #[test]
+    fn device_control_command_labels_round_trip_through_local_api_labels() {
+        let commands = [
+            (
+                "device_set_indicator_mode",
+                DeviceControlCommandType::SetIndicatorMode,
+            ),
+            (
+                "device_set_indicator_brightness",
+                DeviceControlCommandType::SetIndicatorBrightness,
+            ),
+            (
+                "device_set_display_brightness",
+                DeviceControlCommandType::SetDisplayBrightness,
+            ),
+            (
+                "sensor_calibrate",
+                DeviceControlCommandType::CalibrateSensor,
+            ),
+        ];
+        for (label, device_command) in commands {
+            let command = CommandType::DeviceControl(device_command);
             assert_eq!(command_type_from_label(label).unwrap(), command);
             assert_eq!(command_type_label(command), label);
         }

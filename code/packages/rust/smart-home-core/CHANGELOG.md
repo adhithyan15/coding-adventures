@@ -1,5 +1,8 @@
 # Changelog
 
+- Add canonical device indicator, display, and sensor calibration capabilities
+  with explicit device-control command types and risk tiers.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased

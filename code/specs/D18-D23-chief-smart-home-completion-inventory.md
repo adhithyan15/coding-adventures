@@ -830,32 +830,56 @@ control surface without borrowing command semantics from unrelated domains:
 - A real loopback TCP test proves all ten native command transfers, while a
   denial test proves unauthorized media commands never reach the transport.
 
+## Current AirGradient Local Control Slice
+
+This slice extends the verified local telemetry path through the monitor's
+documented `/config` contract without hiding cloud ownership conflicts:
+
+- D23 now has reusable indicator-mode, indicator-brightness,
+  display-brightness, and sensor-calibration command types with canonical
+  capability mappings. Calibration requires human-approval policy.
+- AirGradient inspection reads the current configuration and installs an
+  indicator/display control entity plus a calibration capability on the CO2
+  sensor.
+- Authorized local commands support LED-bar mode, LED-bar brightness, display
+  brightness, and the 400 ppm CO2 calibration trigger. Persistent settings are
+  read back and verified after each PUT.
+- `configurationControl=cloud` fails with an explicit local-control conflict;
+  `both` succeeds with an explicit warning that a later cloud update can
+  overwrite the value.
+- A real loopback HTTP test proves all four native controls, while denial and
+  cloud-conflict tests prove no unauthorized or cloud-rejected PUT reaches the
+  monitor.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-1. Add authorized AirGradient local configuration, LED/display control, and CO2
-   calibration while keeping cloud-controlled configuration conflicts explicit.
-2. Add authenticated HEOS source browsing and queue insertion only after the
+1. Extend typed AirGradient local settings with temperature unit, particulate
+   display standard, automatic CO2 baseline days, gas-sensor learning offsets,
+   compensated-value display, LED self-test, and validated correction profiles.
+2. Add AirGradient MQTT broker and custom HTTP routing settings only after
+   credential-bearing values use Vault leasing and destination validation.
+3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-3. Extend authenticated Reolink CGI support with concrete camera/NVR control,
+4. Extend authenticated Reolink CGI support with concrete camera/NVR control,
    media, recording, and push-event operations supported by the current host.
-4. Add another vendor-specific camera or NVR integration where authenticated
+5. Add another vendor-specific camera or NVR integration where authenticated
    protocol and transport primitives are concrete.
-5. Add authenticated KLAP/Tapo devices and other broader-device families only
+6. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-6. Add ONVIF PullPoint events once a concrete event host and subscription
+7. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-7. Add RTSP media transfer and recording once concrete media transfer and
+8. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-8. Add a production Matter commissioning, secure-session, and network host only
+9. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-9. Add a Thread border-router host only after an actual host transport exists.
-10. Add a production Zigbee coordinator, join, and security host only after
+10. Add a Thread border-router host only after an actual host transport exists.
+11. Add a production Zigbee coordinator, join, and security host only after
     concrete coordinator transport and security primitives exist.
-11. Add production Z-Wave inclusion and S2 only after concrete host transport
+12. Add production Z-Wave inclusion and S2 only after concrete host transport
     and security primitives exist.
 
 ## End-To-End Definition

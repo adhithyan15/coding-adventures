@@ -1,8 +1,14 @@
 # Changelog
 
+- Support explicit device-control commands in runtime policy and optimistic
+  state handling while keeping sensor calibration non-optimistic.
+
 All notable changes to this package will be documented in this file.
 
 ## Unreleased
+
+- Split command-tool authorization from submission so integrations can perform
+  authorized conflict checks before publishing accepted optimistic state.
 
 ### Added
 
