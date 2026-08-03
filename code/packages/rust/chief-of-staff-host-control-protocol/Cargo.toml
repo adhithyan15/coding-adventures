@@ -1,0 +1,12 @@
+[package]
+name = "chief-of-staff-host-control-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Authenticated readiness, heartbeat, and termination protocol for D18 Chief hosts"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
+
+[dev-dependencies]
+coding_adventures_x3dh = { path = "../x3dh" }
