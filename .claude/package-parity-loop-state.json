@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 9592,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "b70e9b7dd03198973ceadbc4d5d272f101d99afa",
+    "revision": "5042eadeb84f9f992634a160590938e4453dba2d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1222,
@@ -338,7 +338,16 @@
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the Python encoding-blocker audit. Go was remediated in merged PR #9504 and Rust in merged PR #9510. Of the seven engines that remain, Swift silently drops invalid rockspec dependencies; TypeScript replaces invalid bytes; Lua and Perl accept them; Ruby and Haskell use locale-sensitive text decoding; and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity."
+      "notes": "Discovered by the Python encoding-blocker audit. Go, Rust, Swift, and TypeScript were remediated in merged PRs #9504, #9510, #9537, and #9572. Five engines remain: Lua and Perl accept malformed bytes, Ruby and Haskell use locale-sensitive text decoding, and Elixir is position-dependent. Remediate each engine against resolution/lua-utf8 and resolution/lua-invalid-utf8 in small dependency-shaped slices, preserving METADATA_INVALID_UTF8 with repository-relative path and package identity. The Lua engine is materialized as the next pending child because its raw byte-string boundary is narrow and its local toolchain is available."
+    },
+    {
+      "id": "build-tool-lua-engine-rockspec-utf8-conformance",
+      "title": "Make the Lua build tool enforce strict UTF-8 rockspec metadata",
+      "status": "pending",
+      "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Materialized in the post-#9592 prioritization pass as the first of five remaining engine children. Consume the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, validate raw rockspec bytes before pattern parsing, preserve the exact success edge set, fail closed with METADATA_INVALID_UTF8 plus package and repository-relative manifest identity, and exercise the real Lua CLI exit contract without disclosing the checkout root."
     },
     {
       "id": "build-tool-typescript-rockspec-utf8-conformance",
@@ -352,11 +361,11 @@
     {
       "id": "build-tool-typescript-windows-gitdiff-portability",
       "title": "Make TypeScript build-tool git-diff tests portable on Windows",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-typescript-windows-gitdiff",
       "pr_number": 9592,
-      "notes": "Ready PR #9592 is the sole active parity PR. It replaces two /bin/sh-dependent fixture commits with direct git argument vectors, uses native temporary-directory package roots, and normalizes path.relative package roots to Git's forward-slash repository paths without changing diff-selection semantics. The red Windows baseline was 275 passing plus the exact seven owned failures; exact-head validation after a conflict-free rebase onto b70e9b7dd passed all 282 tests, 96.77% gitdiff line and 95% branch coverage, 89.36%/82.06% full-suite line/branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, and zero-advisory npm audit. The real plan contains 4,768 packages, 4,768 unique names, zero duplicate groups, 7,243 edges, and zero backslash paths. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets; BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
+      "notes": "Merged PR #9592 at 5042eadeb84f9f992634a160590938e4453dba2d on 2026-08-02 after both detection runs, both fixture-consumer runs, both Ubuntu builds, macOS, Windows, CodeQL language detection, and JavaScript/TypeScript analysis passed; irrelevant CodeQL lanes skipped. It replaces two /bin/sh-dependent fixture commits with direct git argument vectors, uses native temporary-directory package roots, and normalizes path.relative package roots to Git's forward-slash repository paths without changing diff-selection semantics. The red Windows baseline was 275 passing plus the exact seven owned failures; exact-head validation passed all 282 tests, 96.77% gitdiff line and 95% branch coverage, 89.36%/82.06% full-suite line/branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 37-case/56-file corpus, and zero-advisory npm audit. The real plan contains 4,768 packages, 4,768 unique names, zero duplicate groups, 7,243 edges, and zero backslash paths. The post-merge collision-checked inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets; BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts."
     },
     {
       "id": "build-tool-typescript-language-identity-registry",

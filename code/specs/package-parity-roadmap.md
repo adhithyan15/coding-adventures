@@ -229,7 +229,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
   succeeds across 4,765 packages and 7,100 edges;
-- bring the remaining TypeScript, Lua, Perl, Ruby, Elixir, and Haskell
+- bring the remaining Lua, Perl, Ruby, Elixir, and Haskell
   build-tool resolvers to the shared strict-UTF-8 rockspec contract.
   Their current byte, replacement, silent-drop, and locale-sensitive behavior
   is tracked separately from the Python full-scan blocker. Merged PR #9504
@@ -237,10 +237,12 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   Rust. Merged PR #9537 completed Swift with exact shared success and invalid-
   byte fixtures plus real CLI exit-2 coverage. Merged PR #9572 completed
   TypeScript with strict decoding, exact shared-fixture coverage, and green
-  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks;
+  Ubuntu, macOS, Windows, and JavaScript/TypeScript CodeQL checks. The Lua
+  engine is now materialized as the next pending child because its raw-byte
+  parser boundary is narrow and the local Lua 5.4 toolchain is available;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
-  POSIX-only `/repo` path fixtures. Ready PR #9592 is the selected slice: it
+  POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it
   uses direct Git argument vectors and native temporary roots, and normalizes
   relative package paths at the Git boundary without changing selection
   semantics. Its exact Windows suite is green at 282/282 tests;
