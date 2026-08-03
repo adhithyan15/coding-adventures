@@ -2519,6 +2519,14 @@ const CASES: &[Case] = &[
         setup: &[],
         query: "SELECT strftime('%Z','2026-07-30') AS a, strftime(NULL,'2026-07-30') AS b, strftime('%Y','bad') AS c, strftime('%Y-%m-%d','2026-07-30','+1 month') AS d, typeof(strftime('%Y','now')) AS e",
     },
+    // CAST keyword is case-insensitive (SQLite keywords are); `cast`/`Cast`/`CAST`
+    // all parse. (Before, only uppercase CAST parsed — lowercase fell through to
+    // function-call parsing and errored on the inner `AS`.)
+    Case {
+        id: "cast_case_insensitive",
+        setup: &[],
+        query: "SELECT cast(1 AS TEXT) AS a, Cast(3.9 As Integer) AS b, CAST('3.5' as real) AS c, cAsT(42 aS tExT) AS d",
+    },
 ];
 
 /// Documented divergences: `(case id, reason)`. Ledger cases are executed but

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - Unreleased
+
+### Added
+
+- **`CAST` recognised as a keyword.** Added `CAST` to the case-insensitive
+  keyword list so `cast(x AS t)`, `Cast(…)`, and `CAST(…)` all tokenize the same
+  way. Previously only uppercase `CAST` matched the grammar's `Literal "CAST"`;
+  lowercase/mixed `cast` came through as a plain `NAME` and the parser rejected
+  the inner `AS`. Like SQLite, keywords are case-insensitive; this brings `CAST`
+  in line with the other keywords (`SELECT`, `CASE`, …). NB: as with those, `CAST`
+  now cannot be used as a bare unquoted identifier — a follow-up will make it a
+  context-sensitive (soft) keyword to restore that narrow SQLite behavior.
+
 ## [0.1.5] - Unreleased
 
 ### Added

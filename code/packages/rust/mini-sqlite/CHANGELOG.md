@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.75 — `cast(…)` is case-insensitive
+
+`cast(x AS t)`, `Cast(…)`, `cAsT(…)`, and `CAST(…)` all parse now, matching
+SQLite (SQL keywords are case-insensitive). Before, only uppercase `CAST` parsed;
+lowercase/mixed `cast` fell through to function-call parsing and errored on the
+inner `AS`. Achieved by adding `CAST` to the lexer's keyword list (sql-lexer
+0.1.6). Consistent with how the other keywords (`SELECT`, `CASE`, …) are handled;
+one consequence — shared with those keywords — is that `CAST` can no longer be a
+bare unquoted identifier (a rare anti-pattern; a follow-up will make it a
+context-sensitive soft keyword to restore that narrow SQLite behavior). One new
+differential-oracle case; the ledger stays empty.
+
 ## 0.5.74 — strftime (phase 3)
 
 `strftime(FORMAT, X, …)` renders a time value through a `printf`-style format of
