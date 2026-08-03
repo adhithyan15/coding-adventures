@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject negative and non-finite MOS model-card `RSH` values and lower valid
+  Level-1 sheet resistance instead of silently dropping it.
 - Reject negative and non-finite MOS model-card `RS` values and lower valid
   Level-1 source resistance instead of silently dropping it.
 - Reject negative and non-finite MOS model-card `RD` values and lower valid

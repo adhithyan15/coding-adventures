@@ -1253,6 +1253,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET RS must be finite and non-negative");
   }
+  const sheetResistance = params.get("RSH");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sheetResistance !== undefined &&
+    (!Number.isFinite(sheetResistance) || sheetResistance < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET RSH must be finite and non-negative");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1345,6 +1353,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "U0",
     "RD",
     "RS",
+    "RSH",
     "IS",
     "N_SUB",
     "T_NOM",
