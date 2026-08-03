@@ -401,6 +401,7 @@ members = [
     "ipc",
     "network-stack",
     "process-manager",
+    "process-shutdown",
     "toml-lexer",
     "toml-parser",
     "transistors",

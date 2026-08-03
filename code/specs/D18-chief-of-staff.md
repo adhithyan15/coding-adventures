@@ -2121,6 +2121,14 @@ hardware_key_timeout = 60        # seconds
 - 95%+ for all library code (message, channel, vault, trust checker, host middleware)
 - 80%+ for daemon code (health loops, signal handling, process supervision)
 
+The daemon binary MUST translate Unix `SIGINT`/`SIGTERM` and Windows console
+termination events into cooperative runtime shutdown. Native callbacks MUST NOT
+perform reconciliation, transport, child-process, allocation, or locking work;
+they only notify an ordinary execution context, which stops the listener and
+allows supervised children to terminate and be reaped. The binary itself keeps
+`unsafe` forbidden; platform handler installation is isolated behind a safe,
+repository-owned package boundary.
+
 ---
 
 ## Dependencies

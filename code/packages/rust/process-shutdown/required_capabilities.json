@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/process-shutdown",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "self",
+      "justification": "Receives operating-system termination notifications for cooperative process shutdown."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc sigaction / Windows SetConsoleCtrlHandler",
+      "justification": "Installs and restores the native process-level termination handlers behind a safe Rust API."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "10ms shutdown polling interval",
+      "justification": "Moves callback execution out of the restricted native signal-handler context with bounded latency."
+    }
+  ],
+  "justification": "Portable trust-boundary adapter that converts native process termination events into one cooperative Rust callback."
+}
