@@ -1763,10 +1763,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// widens to accept an Array receiver too, alongside its slice-1 String arm);
 /// slice 5 = Array methods taking a trailing BLOCK argument (`each`/`map`/
 /// `select`/`reject`/`any?`/`all?`/`none?`/`sort_by`/`each_with_index`/
-/// `reduce`/`inject`; `count` also widens to accept its block form). The
-/// dispatcher raises `NoMethodError` on an unsupported receiver type or a
-/// malformed call (missing/extra args, a non-closure block position),
-/// matching Ruby.
+/// `reduce`/`inject`; `count` also widens to accept its block form); slice 4
+/// = Array mutation (`push`/`pop`/`shift`) + 1-arg query methods (`fetch`/
+/// `values_at`/`rotate`/`zip`; `include?`/`index` widen to accept an Array
+/// receiver alongside their slice-2 String arms). The dispatcher raises
+/// `NoMethodError` on an unsupported receiver type or a malformed call
+/// (missing/extra args, a non-closure block position), matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
         name,
@@ -1780,6 +1782,8 @@ fn is_builtin_method(name: &str) -> bool {
         // slice 5 — Array block methods
         | "each" | "map" | "select" | "reject" | "any?" | "all?" | "none?"
         | "sort_by" | "each_with_index" | "reduce" | "inject"
+        // slice 4 — Array mutation + 1-arg query methods
+        | "push" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
     )
 }
 

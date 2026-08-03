@@ -1583,44 +1583,79 @@ static SirValue _sir_array_flatten(SirValue recv) {
  * `Proc`/`sir_apply(f, ...)` call already uses — so a block is called
  * exactly like any other closure value; no new calling convention. */
 
+/* SECURITY (retrofitted for slice 4's `push`/`pop`/`shift`, which made
+ * `SirSeq.items`/`.len` MUTABLE after construction — see `_sir_array_push`/
+ * `_sir_array_pop`/`_sir_array_shift` below): every helper here that invokes
+ * a block MUST snapshot BOTH `s->len` AND `s->items` into locals (`n`/
+ * `items`) ONCE, before its loop, and use ONLY those locals — never
+ * `s->len`/`s->items` directly — for the output-buffer size and every
+ * element read. Snapshotting `len` alone is NOT enough: `push` reallocates
+ * its NEW buffer sized to the CURRENT (live) `s->len`, so if a block first
+ * shrinks the receiver (`pop`/`shift`, in place, no reallocation) and THEN
+ * pushes, the fresh buffer `push` allocates is sized to the SHRUNK length —
+ * smaller than a `len` this helper already snapshotted before the block ran.
+ * Continuing to read the LIVE `s->items[i]` for `i` up to the stale, larger
+ * `n` would then run past that fresh (smaller) allocation — a heap
+ * out-of-bounds read (caught by security review; a real, exploitable gap in
+ * an earlier draft of this fix that only snapshotted `len`). Snapshotting
+ * the ITEMS POINTER too closes it: `items[i]` for `i < n` always reads the
+ * buffer that existed AT SNAPSHOT TIME, which `push`'s copy-then-append
+ * preserves byte-for-byte at indices `0..old_len-1` — and since this arena
+ * never frees, that original buffer stays validly allocated for the whole
+ * loop regardless of what `s->items` is reassigned to afterward. Matches the
+ * "iterate a snapshot" convention `_sir_seq_iter` already uses for
+ * `ForEach`. */
+
 static SirValue _sir_array_each(SirSeq *s, SirValue block) {
-    for (int64_t i = 0; i < s->len; i++) _sir_apply(block, 1, s->items[i]);
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 1, items[i]);
     return _sir_seq_wrap(s);  /* Array#each returns the receiver */
 }
 static SirValue _sir_array_map(SirSeq *s, SirValue block) {
+    int64_t n = s->len;
+    SirValue *items = s->items;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
-    r->len = s->len;
-    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
-    for (int64_t i = 0; i < s->len; i++) r->items[i] = _sir_apply(block, 1, s->items[i]);
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 1, items[i]);
     return _sir_seq_wrap(r);
 }
 /* Shared by `select` (keep_if_truthy=1) and `reject` (keep_if_truthy=0). */
 static SirValue _sir_array_filter(SirSeq *s, SirValue block, int keep_if_truthy) {
+    int64_t n = s->len;
+    SirValue *items = s->items;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
-    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     int64_t k = 0;
-    for (int64_t i = 0; i < s->len; i++) {
-        int truthy = _sir_truthy(_sir_apply(block, 1, s->items[i]));
-        if (truthy == keep_if_truthy) r->items[k++] = s->items[i];
+    for (int64_t i = 0; i < n; i++) {
+        int truthy = _sir_truthy(_sir_apply(block, 1, items[i]));
+        if (truthy == keep_if_truthy) r->items[k++] = items[i];
     }
     r->len = k;
     return _sir_seq_wrap(r);
 }
 static SirValue _sir_array_any(SirSeq *s, SirValue block) {
-    for (int64_t i = 0; i < s->len; i++) {
-        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(1);
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) {
+        if (_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(1);
     }
     return _sir_bool(0);
 }
 static SirValue _sir_array_all(SirSeq *s, SirValue block) {
-    for (int64_t i = 0; i < s->len; i++) {
-        if (!_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) {
+        if (!_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(0);
     }
     return _sir_bool(1);
 }
 static SirValue _sir_array_none(SirSeq *s, SirValue block) {
-    for (int64_t i = 0; i < s->len; i++) {
-        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) {
+        if (_sir_truthy(_sir_apply(block, 1, items[i]))) return _sir_bool(0);
     }
     return _sir_bool(1);
 }
@@ -1630,15 +1665,17 @@ static SirValue _sir_array_none(SirSeq *s, SirValue block) {
  * `_sir_lt` -- the SAME comparator plain `sort` uses -- and return the values in
  * the new order. */
 static SirValue _sir_array_sort_by(SirSeq *s, SirValue block) {
-    SirValue *keys = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    SirValue *keys = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
-    r->len = s->len;
-    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
-    for (int64_t i = 0; i < s->len; i++) {
-        keys[i] = _sir_apply(block, 1, s->items[i]);
-        r->items[i] = s->items[i];
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    for (int64_t i = 0; i < n; i++) {
+        keys[i] = _sir_apply(block, 1, items[i]);
+        r->items[i] = items[i];
     }
-    for (int64_t i = 1; i < r->len; i++) {
+    for (int64_t i = 1; i < n; i++) {
         SirValue key = keys[i], val = r->items[i];
         int64_t j = i - 1;
         while (j >= 0 && _sir_truthy(_sir_lt(key, keys[j]))) {
@@ -1652,7 +1689,9 @@ static SirValue _sir_array_sort_by(SirSeq *s, SirValue block) {
     return _sir_seq_wrap(r);
 }
 static SirValue _sir_array_each_with_index(SirSeq *s, SirValue block) {
-    for (int64_t i = 0; i < s->len; i++) _sir_apply(block, 2, s->items[i], _sir_int(i));
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, items[i], _sir_int(i));
     return _sir_seq_wrap(s);
 }
 /* `reduce`/`inject`: `argc==1` is block-only (Ruby seeds the accumulator with
@@ -1661,6 +1700,8 @@ static SirValue _sir_array_each_with_index(SirSeq *s, SirValue block) {
  * just returns `initial` untouched, matching Ruby). `args[argc-1]` is always
  * the block (the caller already checked it's a closure before calling in). */
 static SirValue _sir_array_reduce(SirSeq *s, int argc, SirValue *args) {
+    int64_t n = s->len;
+    SirValue *items = s->items;
     SirValue block = args[argc - 1];
     SirValue acc;
     int64_t start;
@@ -1668,12 +1709,125 @@ static SirValue _sir_array_reduce(SirSeq *s, int argc, SirValue *args) {
         acc = args[argc - 2];
         start = 0;
     } else {
-        if (s->len == 0) return _sir_nil();
-        acc = s->items[0];
+        if (n == 0) return _sir_nil();
+        acc = items[0];
         start = 1;
     }
-    for (int64_t i = start; i < s->len; i++) acc = _sir_apply(block, 2, acc, s->items[i]);
+    for (int64_t i = start; i < n; i++) acc = _sir_apply(block, 2, acc, items[i]);
     return acc;
+}
+
+/* ---- Collections slice 4: Array mutation (push/<</pop/shift) + 1-arg
+ * query methods -----------------------------------------------------------
+ *
+ * `push`/`<<` are the FIRST operations that grow a `SirSeq` after
+ * construction. Each call reallocates a fresh buffer sized to the exact new
+ * length (no spare capacity tracked) rather than adding a `cap` field to the
+ * shared `SirSeq` struct — that would require auditing and updating every
+ * existing `_sir_alloc(sizeof(SirSeq))` call site (uninitialized-`cap` risk
+ * for any missed one) for an amortized-growth win this v0 runtime doesn't
+ * need; O(n) per push matches the rest of this backend's "correctness over
+ * micro-perf" stance (see `sort`'s insertion sort, `sort_by`'s Schwartzian
+ * transform). `pop`/`shift` mutate `len` (and, for `shift`, shift elements
+ * down) IN PLACE with no reallocation. All three mutate the EXISTING SirSeq
+ * box, like `SeqSet` — every binding sharing this array sees the change. */
+static void _sir_array_push_one(SirSeq *s, SirValue v) {
+    SirValue *ni = (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)(s->len + 1));
+    for (int64_t i = 0; i < s->len; i++) ni[i] = s->items[i];
+    ni[s->len] = v;
+    s->items = ni;
+    s->len++;
+}
+static SirValue _sir_array_pop(SirSeq *s) {
+    if (s->len == 0) return _sir_nil();
+    SirValue v = s->items[s->len - 1];
+    s->len--;
+    return v;
+}
+static SirValue _sir_array_shift(SirSeq *s) {
+    if (s->len == 0) return _sir_nil();
+    SirValue v = s->items[0];
+    for (int64_t i = 1; i < s->len; i++) s->items[i - 1] = s->items[i];
+    s->len--;
+    return v;
+}
+static SirValue _sir_array_include(SirSeq *s, SirValue needle) {
+    int64_t n = s->len;
+    for (int64_t i = 0; i < n; i++) {
+        if (_sir_value_eq(s->items[i], needle)) return _sir_bool(1);
+    }
+    return _sir_bool(0);
+}
+static SirValue _sir_array_index(SirSeq *s, SirValue needle) {
+    int64_t n = s->len;
+    for (int64_t i = 0; i < n; i++) {
+        if (_sir_value_eq(s->items[i], needle)) return _sir_int(i);
+    }
+    return _sir_nil();
+}
+/* `fetch(i)` — like `a[i]` but RAISES on an out-of-range index instead of
+ * returning nil (matching Ruby's `Array#fetch`, and this backend's
+ * `_sir_seq_set`, which already traps rather than silently no-ops). Supports
+ * the same negative-from-end indexing `_sir_seq_index` does. */
+static SirValue _sir_array_fetch(SirSeq *s, SirValue idx) {
+    int64_t n = s->len;
+    int64_t i = _sir_as_int(idx);
+    if (i < 0) i += n;
+    if (i < 0 || i >= n) {
+        return _sir_raise(_sir_error("IndexError", _sir_str("index out of range")));
+    }
+    return s->items[i];
+}
+/* `values_at(i0, i1, ...)` — a fresh array of the elements at each given
+ * index (each independently negative-from-end and nil-on-OOB, exactly like
+ * `_sir_seq_index`, NOT `fetch`'s raising form — matching Ruby). */
+static SirValue _sir_array_values_at(SirSeq *s, int argc, SirValue *args) {
+    SirValue seq_val = _sir_seq_wrap(s);
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = argc;
+    r->items = (argc > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)argc) : NULL;
+    for (int i = 0; i < argc; i++) r->items[i] = _sir_seq_index(seq_val, args[i]);
+    return _sir_seq_wrap(r);
+}
+/* `rotate(n = 1)` — a FRESH array with elements shifted left by `n`
+ * (negative `n` rotates right), matching Ruby (never mutates the
+ * receiver). `n` is reduced modulo the length first (Ruby allows any
+ * magnitude); an empty array rotates to itself. */
+static SirValue _sir_array_rotate(SirSeq *s, int64_t by) {
+    int64_t n = s->len;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    if (n > 0) {
+        int64_t k = ((by % n) + n) % n;  /* normalise to [0, n) even for negative `by` */
+        for (int64_t i = 0; i < n; i++) r->items[i] = s->items[(i + k) % n];
+    }
+    return _sir_seq_wrap(r);
+}
+/* `zip(other1, other2, ...)` — a fresh array of arrays, pairing `self[i]`
+ * with each `otherN[i]`; a shorter `other` pads with nil past its own
+ * length (matching Ruby). Non-Array `other` arguments are treated as
+ * length-0 (every pairing position is nil), the same lenient-nil-on-OOB
+ * convention `_sir_seq_index` already uses for a non-sequence. */
+static SirValue _sir_array_zip(SirSeq *s, int argc, SirValue *args) {
+    int64_t n = s->len;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = n;
+    r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
+    for (int64_t i = 0; i < n; i++) {
+        SirSeq *row = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+        row->len = argc + 1;
+        row->items = (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)(argc + 1));
+        row->items[0] = s->items[i];
+        for (int a = 0; a < argc; a++) {
+            SirValue other = args[a];
+            row->items[a + 1] = (other.tag == SIR_SEQ && i < other.as.seq->len)
+                ? other.as.seq->items[i]
+                : _sir_nil();
+        }
+        r->items[i] = _sir_seq_wrap(row);
+    }
+    return _sir_seq_wrap(r);
 }
 
 /* ---- Collections slice 1: built-in String methods --------------------------
@@ -1719,9 +1873,16 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ) {
             if (argc == 0) return _sir_int(recv.as.seq->len);
             if (argc == 1 && args[0].tag == SIR_CLOSURE) {
+                /* SECURITY (slice 4): snapshot len/items BEFORE the loop, like
+                   every other block-taking helper -- see the doc comment on
+                   the slice-5 helpers above. `push` (slice 4) can grow this
+                   same receiver from inside the block; a live `recv.as.seq->
+                   len` read in the loop condition would never terminate. */
+                int64_t cnt_len = recv.as.seq->len;
+                SirValue *cnt_items = recv.as.seq->items;
                 int64_t n = 0;
-                for (int64_t i = 0; i < recv.as.seq->len; i++) {
-                    if (_sir_truthy(_sir_apply(args[0], 1, recv.as.seq->items[i]))) n++;
+                for (int64_t i = 0; i < cnt_len; i++) {
+                    if (_sir_truthy(_sir_apply(args[0], 1, cnt_items[i]))) n++;
                 }
                 return _sir_int(n);
             }
@@ -1787,10 +1948,34 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ && argc >= 1 && argc <= 2 && args[argc - 1].tag == SIR_CLOSURE)
             return _sir_array_reduce(recv.as.seq, argc, args);
     }
-    /* Collections slice 2: 1-arg String queries (arg is a String). */
+    /* Collections slice 4: Array mutation + 1-arg query methods. */
+    else if (strcmp(m, "push") == 0) {
+        if (recv.tag == SIR_SEQ) {
+            for (int i = 0; i < argc; i++) _sir_array_push_one(recv.as.seq, args[i]);
+            return recv;  /* Array#push returns the (mutated) receiver */
+        }
+    } else if (strcmp(m, "pop") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 0) return _sir_array_pop(recv.as.seq);
+    } else if (strcmp(m, "shift") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 0) return _sir_array_shift(recv.as.seq);
+    } else if (strcmp(m, "fetch") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1) return _sir_array_fetch(recv.as.seq, args[0]);
+    } else if (strcmp(m, "values_at") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_values_at(recv.as.seq, argc, args);
+    } else if (strcmp(m, "rotate") == 0) {
+        if (recv.tag == SIR_SEQ) {
+            int64_t by = (argc >= 1) ? _sir_as_int(args[0]) : 1;
+            return _sir_array_rotate(recv.as.seq, by);
+        }
+    } else if (strcmp(m, "zip") == 0) {
+        if (recv.tag == SIR_SEQ) return _sir_array_zip(recv.as.seq, argc, args);
+    }
+    /* Collections slice 2: 1-arg String queries (arg is a String); slice 4
+       widens `include?`/`index` to accept an Array receiver too. */
     else if (strcmp(m, "include?") == 0) {
         if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR)
             return _sir_bool(strstr(recv.as.s, args[0].as.s) != NULL);
+        if (recv.tag == SIR_SEQ && argc >= 1) return _sir_array_include(recv.as.seq, args[0]);
     } else if (strcmp(m, "start_with?") == 0) {
         if (recv.tag == SIR_STR && argc >= 1 && args[0].tag == SIR_STR) {
             size_t pl = strlen(args[0].as.s);
@@ -1806,6 +1991,7 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             const char *p = strstr(recv.as.s, args[0].as.s);
             return p ? _sir_int((int64_t)(p - recv.as.s)) : _sir_nil();
         }
+        if (recv.tag == SIR_SEQ && argc >= 1) return _sir_array_index(recv.as.seq, args[0]);
     }
     return _sir_raise(
         _sir_error("NoMethodError", _sir_str(_sir_cat("undefined method ", m))));

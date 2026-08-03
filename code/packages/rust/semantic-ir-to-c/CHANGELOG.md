@@ -1,5 +1,72 @@
 # Changelog
 
+## 0.26.0 — Collections slice 4: Array mutation + 1-arg query methods
+
+`push`/`pop`/`shift` are the FIRST Array methods that mutate the receiver
+after construction. No new `Feature`.
+
+- `push(v1, v2, ...)` appends one or more values (each call reallocates a
+  fresh buffer sized to the exact new length — no `cap` field added to the
+  shared `SirSeq` struct, which would have required auditing every existing
+  `_sir_alloc(sizeof(SirSeq))` call site for an amortized-growth win this v0
+  runtime doesn't need); `pop`/`shift` remove and return the last/first
+  element (`nil` on empty, matching Ruby), mutating `len` in place with no
+  reallocation (`shift` also shifts the remaining elements down). All three
+  mutate the EXISTING `SirSeq` box, like `SeqSet` — every binding sharing the
+  array sees the change.
+- New 1-arg query methods: `fetch(i)` (like `a[i]` but RAISES `IndexError`
+  out of range, instead of returning nil), `values_at(i0, i1, ...)` (a fresh
+  array of the elements at each index, nil-on-OOB per index), `rotate(n = 1)`
+  (a fresh array shifted left by `n`, negative rotates right, never mutates
+  the receiver), `zip(other1, other2, ...)` (a fresh array of arrays pairing
+  elements positionally, padding a shorter `other` with nil). `include?` and
+  `index` (both already allowlisted for String since slice 2) widen to accept
+  an Array receiver too.
+- **Security retrofit** (two rounds; see below): `push` is the first
+  operation that can change `SirSeq.len`/`.items` AFTER a block-taking helper
+  (slice 3/5's `map`/`select`/`reject`/`sort_by`/`each`/`any?`/`all?`/`none?`/
+  `each_with_index`/`reduce`/`inject`, plus `count`'s block form) has already
+  started iterating — e.g. `arr.map { |x| arr.push(x); x }`. Every such
+  helper now snapshots BOTH `s->len` AND `s->items` into locals ONCE before
+  its loop/allocation and uses only those locals — never `s->len`/`s->items`
+  directly — for the output-buffer size and every element read, so a block
+  that mutates the receiver mid-iteration can't run unbounded, read/write
+  past a buffer sized at the OLD length, or read past a buffer `push`
+  reallocated smaller than an outer snapshot (see below). Since this arena
+  never frees, a snapshotted buffer stays valid indefinitely regardless of
+  what `s->items` is reassigned to afterward — the same "iterate a snapshot"
+  convention `_sir_seq_iter` (`ForEach`) already uses.
+
+  Security review round 1 caught that snapshotting `s->len` ALONE (the
+  initial draft) is insufficient in two ways, both now fixed:
+  1. The `count` block-form arm (added in slice 5, before `push` existed)
+     was missed by the retrofit entirely — a block that pushes to its own
+     receiver inside `arr.count { |x| ... }` never terminated (unbounded
+     loop + unbounded reallocation, a real DoS/OOM).
+  2. `push` reallocates its new buffer sized to the CURRENT (live) `s->len`;
+     if a block first shrinks the receiver (`pop`/`shift`, in place, no
+     reallocation) and THEN pushes, the fresh buffer is smaller than a `len`
+     an outer helper already snapshotted — continuing to read the LIVE
+     `s->items` up to that stale, larger count then reads past the new,
+     smaller allocation (a genuine heap out-of-bounds read). Fixed by
+     snapshotting the ITEMS POINTER too, not just the length (see above).
+
+  Pinned by four tests: `each`/`count` pushing to their own receiver
+  terminate instead of looping forever; `map` pushing to its own receiver
+  returns output reflecting only the original elements (not a heap
+  overflow); and a receiver shrunk-then-regrown mid-`each` still yields the
+  ORIGINAL snapshotted elements without over-reading.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection.
+
+**Out of scope:** `<<` (Ruby's shove/append operator) is NOT implemented
+here — `ruby-to-semantic-ir` has no grammar rule for `<<` as a binary infix
+operator at all yet (a separate, pre-existing frontend gap, found while
+fixing the comparison-in-block-tail-position bug), so `a << x` can't reach
+`__method__` to dispatch to `push` regardless. `arr.push(x)` (an ordinary
+dot-call) is unaffected and fully supported.
+
 ## 0.25.0 — Collections slice 5: Array block methods (closure-calling)
 
 The first Collections slice covering methods that take a trailing **block**

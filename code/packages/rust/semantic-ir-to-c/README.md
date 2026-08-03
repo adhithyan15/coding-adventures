@@ -164,7 +164,18 @@ instead of overflowing the stack; **slice 5** (Array block methods): `each`,
 `each_with_index`, `reduce`/`inject` — the block the Ruby frontend appends as
 the trailing `__method__` arg reaches this runtime as an ordinary `SIR_CLOSURE`
 value, so each element-wise call goes through the SAME `_sir_apply` a
-first-class closure call already uses (no new calling convention).  A
+first-class closure call already uses (no new calling convention); **slice 4**
+(Array mutation + 1-arg queries): `push`/`pop`/`shift` — the FIRST methods
+that mutate a `SirSeq` after construction (`push` reallocates to grow,
+`pop`/`shift` shrink `len` in place) — plus `fetch`/`values_at`/`rotate`/
+`zip`, and `include?`/`index` widen to accept an Array alongside their
+slice-2 String forms.  Because a block can now grow/shrink the very receiver
+it's iterating, every block-taking helper (slice 3/5) snapshots BOTH the
+array's length AND its items pointer once before its loop/allocation instead
+of re-reading either — length alone isn't enough, since `push` reallocates
+relative to the CURRENT length, which can be smaller than an outer snapshot
+after a `pop`/`shift` — the same "iterate a snapshot" convention
+`_sir_seq_iter`'s `ForEach` already uses.  A
 wrong-type receiver or argument raises `NoMethodError`; a built-in method not
 lowered yet is still rejected cleanly.
 
