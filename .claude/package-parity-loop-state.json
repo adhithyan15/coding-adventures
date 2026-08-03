@@ -11,7 +11,11 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9817,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9817",
+    "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution"
+  },
   "last_inventory": {
     "revision": "9441f4c74344f5e3fcba0b58e838af81fd512f63",
     "schema_version": 3,
@@ -406,10 +410,10 @@
     {
       "id": "build-tool-haskell-non-cabal-field-aware-manifest-resolution",
       "title": "Make Haskell Python manifest resolution field-aware and name-normalized",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-remaining-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-python-field-aware-manifest-resolution",
-      "pr_number": null,
+      "pr_number": 9817,
       "notes": "Split from the Cabal repair after a complete real-lane oracle comparison showed that whole-manifest tokenization remains reachable across every non-Lua/non-Cabal ecosystem. Selected immediately after guarded PR #9806 merged because Python is the largest affected established lane and its exact failure is already reproduced: both engines discover 488 Python packages; the Haskell engine reports an all-node cycle, while a resolution-only Go plan succeeds. The complete graph comparison has 1,492 Haskell edges versus 1,118 canonical edges, with 383 false edges and nine missing edges. The implementation now parses only authoritative PEP 621 project dependencies, normalizes Python distribution names per PEP 503, and consumes both the existing diamond and a new language-neutral field-boundary fixture. The repaired real lane skips all 488 unchanged packages with zero failures, and its complete 1,118-edge graph matches the Go oracle exactly with zero edges unique to either engine. Final local validation covers 43 corpus cases and 92 validated files, 40 Python runner tests, 19 Haskell build-tool examples plus the seven graph examples, cabal check, Haddock generation, 41/50/54 percent Haskell definition/alternative/expression coverage, and canonical Go test/vet/build. The post-merge 4e9fc62c collision-checked inventory is unchanged at 1,245 identities and 4,398 slots, 173 high-consensus packages with 272 missing slots, 795 singletons, 600 Rust singletons, and zero collisions or unknown buckets; no new identity required classification. The canonical Go build-file validator separately reports existing missing BUILD_windows prerequisite refs in python/sir-runtime-oop and python/swi-prolog-parser; the existing build-file-standalone-integrity item owns that debt, so this resolver-semantic slice does not duplicate or widen it."
     },
     {
