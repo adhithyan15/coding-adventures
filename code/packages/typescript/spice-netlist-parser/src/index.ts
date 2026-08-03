@@ -1187,6 +1187,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT BF must be finite and positive");
   }
+  const bjtThermalVoltage = params.get("VT") ?? params.get("V_T");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtThermalVoltage !== undefined &&
+    (!Number.isFinite(bjtThermalVoltage) || bjtThermalVoltage <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT VT must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -1742,7 +1750,7 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
         model.params.get("BETA_F") ??
         model.params.get("HFE") ??
         100.0,
-      model.params.get("VT") ?? 0.02585,
+      model.params.get("VT") ?? model.params.get("V_T") ?? 0.02585,
       model.params.get("CJE") ?? model.params.get("CBE") ?? 0.0,
       model.params.get("CJC") ?? model.params.get("CBC") ?? 0.0,
       model.params.get("TF") ?? 0.0,
