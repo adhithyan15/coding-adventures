@@ -1977,6 +1977,26 @@ pub fn recheck_narrowing(node: &DerivationNode) -> NarrowingCheck {
                 check_rendered(&format!("{code} {amount}"), narrowed.to_f64(), rendered, *result)
             }
         },
+        // NUM-7c: a sqrt's Real/BigDouble companion is technically a *widening* (exact →
+        // approximate), not a narrowing — but it reuses this same machinery (recorded exact
+        // source + recorded spec/mode, re-derived and compared) for the identical reason: turn
+        // the engine's own claim about its precision into independently-checked evidence.
+        DerivationNode::Op { real: None, .. } => NarrowingCheck::NotANarrowing,
+        DerivationNode::Op {
+            real: Some(rc), ..
+        } => {
+            let prec = rc.value.precision_bits();
+            let recomputed = BigDouble::from_rational(rc.source.as_ratio(), prec, rc.mode).sqrt(prec, rc.mode);
+            if recomputed == *rc.value.as_big_double() {
+                NarrowingCheck::ReChecked
+            } else {
+                NarrowingCheck::Mismatch {
+                    why: "real_differs",
+                    recorded: rc.value.as_big_double().to_string(),
+                    recomputed: recomputed.to_string(),
+                }
+            }
+        }
         _ => NarrowingCheck::NotANarrowing,
     }
 }
@@ -3960,6 +3980,50 @@ mod tests {
     fn recheck_a_non_narrowing_node_is_inert() {
         let node = DerivationNode::Lit { value: 1.0 };
         assert_eq!(recheck_narrowing(&node), NarrowingCheck::NotANarrowing);
+    }
+
+    // ---- NUM-7c: adj-verify recheck of the sqrt Real companion ----------
+
+    #[test]
+    fn real_companion_rechecks_from_its_exact_source() {
+        let d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(recheck_narrowing(&d.tree), NarrowingCheck::ReChecked);
+    }
+
+    #[test]
+    fn a_tampered_real_companion_is_a_mismatch() {
+        let mut d = compute(
+            "root",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(0.5)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        if let DerivationNode::Op { real: Some(rc), .. } = &mut d.tree {
+            rc.value = ApproxReal(BigDouble::from_i64(999));
+        } else {
+            panic!("expected an Op node with a real companion");
+        }
+        match recheck_narrowing(&d.tree) {
+            NarrowingCheck::Mismatch { why, .. } => assert_eq!(why, "real_differs"),
+            other => panic!("expected a real_differs mismatch, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn an_op_with_no_real_companion_is_not_a_narrowing() {
+        // A regression guard: ordinary Op nodes (no sqrt involved) stay unaffected.
+        let d = compute(
+            "p",
+            &bin(ComputeOp::Pow, ComputeExpr::Lit(2.0), ComputeExpr::Lit(3.0)),
+            &kb_with(vec![]),
+        )
+        .unwrap();
+        assert_eq!(recheck_narrowing(&d.tree), NarrowingCheck::NotANarrowing);
     }
 
     #[test]

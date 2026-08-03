@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.35.0] - 2026-08-02 - NUM-7c: adj-verify rechecks the sqrt Real companion
+
+- No CLI code changes — `adj-verify` already walks every `DerivationNode` generically via
+  `recheck_narrowings`, so logic-engine's new `real` recheck arm is picked up for free.
+- New e2e coverage (`tests/num7c_verify_real_e2e.rs`): a bare sqrt's real companion rechecks
+  (`narrowings_rechecked:1`); a `round_to(sqrt(x), n)` shows both audit channels independently —
+  the inner sqrt's real companion rechecks while the outer `round_to` is honestly reported
+  `unverifiable` (its own operand's exact sidecar is `None`, since sqrt is irrational) — matching
+  NUM-6v's "never a pass" standard for an inexact source.
+
 ## [0.34.0] - 2026-08-02 - NUM-7b: render the sqrt Real/BigDouble audit companion
 
 - The `op` node's JSON audit gains an additive `"real":{"precision_bits":…,"mode":…,"value":…}`

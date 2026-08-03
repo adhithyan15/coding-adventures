@@ -277,8 +277,10 @@ Big arithmetic; a constraint solves over exact rationals where the backend allow
   NOT the full NUM-5 tower swap (see the naming note in §4.4) — a small, additive first rung
   that wires `bignum-core::BigDouble` into `compute.rs` for `sqrt` only, alongside the existing
   `f64` value and `ExactRational` sidecar (nothing existing changes shape). See §8 for the full
-  design; sub-staged **NUM-7a** (bignum-core primitive + KB setting) → **NUM-7b** (engine wiring
-  + audit JSON) → **NUM-7c** (`adj-verify` recheck).
+  design. ✅ **shipped in full**: **NUM-7a** (bignum-core `from_rational` primitive + per-KB
+  `real_precision_bits` setting) → **NUM-7b** (engine wiring — the `real` companion field, CLI
+  JSON, `--explain`; includes a security fix for a negative-underflowed-base edge case that could
+  otherwise panic `BigDouble::sqrt`) → **NUM-7c** (`adj-verify` recheck) all landed.
 - **Later — retire `numeric-tower`'s `num-bigint`** onto `bignum-core` (pays down the
   existing third-party debt; out of this spec's critical path).
 - **Later still — the full NUM-5 tower swap** (§5) and transcendentals (`ln`/`exp`/`sin`/`cos`/…)
@@ -340,18 +342,22 @@ per-`KnowledgeBase` precision promise, **additively**: nothing about the existin
   though a promotion to `Real` is technically a *widening* (exact → approximate) rather than a
   narrowing.
 
-**Sub-staging** (each: spec-sync → tests → impl → security-review → babysit):
+**Sub-staging** (each: spec-sync → tests → impl → security-review → babysit) — ✅ **all shipped**:
 
-- **NUM-7a** — `bignum-core::BigDouble::from_rational` (the exact-rational → `BigDouble`
+- **NUM-7a** ✅ — `bignum-core::BigDouble::from_rational` (the exact-rational → `BigDouble`
   promotion primitive, generalizing the existing private-use pattern inside
   `BigRational::to_f64()` to a caller-supplied precision) + `KnowledgeBase::real_precision_bits`
   (default 256, clamped to `bignum_core::MAX_PRECISION` since `BigDouble`'s internal precision
   guard panics outside range).
-- **NUM-7b** — engine wiring: a new `real: Option<RealCompanion>` field on
+- **NUM-7b** ✅ — engine wiring: a new `real: Option<RealCompanion>` field on
   `DerivationNode::Op` (additive; `Round`/`ToScientific`/`ToPercent`/`ToCurrency` and their
   `ExactRational`-typed audit fields are untouched), populated when a `Pow` node's evaluated
   exponent is bit-exactly `0.5` and its base carried an exact sidecar. CLI JSON gains an additive
-  `"real"` key when present.
-- **NUM-7c** — `adj-verify` recheck: an `Op` node with a `Real` companion is re-promoted and
+  `"real"` key when present. **Security-reviewed fix included**: the `f64` finiteness guard alone
+  does not exclude every negative base — an exact rational whose magnitude underflows the `f64`
+  path rounds to `-0.0`, and IEEE-754 `powf(-0.0, 0.5) == +0.0` (finite), which would otherwise
+  let a negative exact sidecar reach `BigDouble::sqrt` (which panics on a negative operand). The
+  exact sidecar's own sign is now checked explicitly before promoting.
+- **NUM-7c** ✅ — `adj-verify` recheck: an `Op` node with a `Real` companion is re-promoted and
   re-`sqrt`'d at its recorded precision/mode and compared, reported through the existing
   `NarrowingCheck` machinery.
