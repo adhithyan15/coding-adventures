@@ -112,7 +112,8 @@ impl PackageKeyring {
         Ok(())
     }
 
-    fn get(&self, key_id: &str) -> Option<&TrustedPackageKey> {
+    /// Return one trusted public key by its stable package key identifier.
+    pub fn trusted_key(&self, key_id: &str) -> Option<&TrustedPackageKey> {
         self.keys.get(key_id)
     }
 }
@@ -162,7 +163,7 @@ pub fn verify_agent_package(
         .to_string();
     validate_key_id(&key_id)?;
     let key = keyring
-        .get(&key_id)
+        .trusted_key(&key_id)
         .ok_or_else(|| PackageVerificationError::UntrustedKey(key_id.clone()))?;
     let signature_bytes =
         fs::read(package_path.join(SIGNATURE_FILE)).map_err(PackageVerificationError::Io)?;
