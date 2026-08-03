@@ -396,6 +396,16 @@ fn fe_eq(a: &Fe, b: &Fe) -> bool {
     a.reduce().to_bytes() == b.reduce().to_bytes()
 }
 
+/// Check two extended points for affine equality without inversion.
+fn point_eq(left: &ExtPoint, right: &ExtPoint) -> bool {
+    let left_x_right_z = left.x.mul(&right.z);
+    let right_x_left_z = right.x.mul(&left.z);
+    let left_y_right_z = left.y.mul(&right.z);
+    let right_y_left_z = right.y.mul(&left.z);
+
+    fe_eq(&left_x_right_z, &right_x_left_z) && fe_eq(&left_y_right_z, &right_y_left_z)
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SECTION 3: EXTENDED TWISTED EDWARDS POINT OPERATIONS
@@ -854,6 +864,36 @@ pub fn sign(message: &[u8], secret_key: &[u8; 64]) -> [u8; 64] {
     sig
 }
 
+/// Return whether bytes encode a canonical, non-identity prime-order Ed25519
+/// public key.
+///
+/// Generated Ed25519 public keys live in the large prime-order subgroup. This
+/// check rejects non-canonical encodings, low-order points, and points with a
+/// torsion component before an external key is granted verification authority.
+pub fn is_valid_public_key(public_key: &[u8; 32]) -> bool {
+    decode_prime_order_non_identity(public_key).is_some()
+}
+
+fn decode_prime_order_non_identity(encoded: &[u8; 32]) -> Option<ExtPoint> {
+    let point = ExtPoint::decode(encoded)?;
+    let identity = ExtPoint::identity();
+    if point_eq(&point, &identity) || !point_eq(&point.scalar_mul(&L_BYTES), &identity) {
+        return None;
+    }
+    Some(point)
+}
+
+fn decode_non_small_order(encoded: &[u8; 32]) -> Option<ExtPoint> {
+    let point = ExtPoint::decode(encoded)?;
+    // Edwards25519 has cofactor 8. Use three doublings instead of the generic
+    // scalar-multiplication routine, which deliberately walks all 256 bits.
+    let multiplied_by_cofactor = point.double().double().double();
+    if point_eq(&multiplied_by_cofactor, &ExtPoint::identity()) {
+        return None;
+    }
+    Some(point)
+}
+
 /// Verify an Ed25519 signature.
 ///
 /// Returns `true` if the signature is valid. Never panics on invalid input.
@@ -875,12 +915,12 @@ pub fn verify(message: &[u8], signature: &[u8; 64], public_key: &[u8; 32]) -> bo
         return false;
     }
 
-    let big_r = match ExtPoint::decode(&r_bytes) {
+    let big_r = match decode_non_small_order(&r_bytes) {
         Some(pt) => pt,
         None => return false,
     };
 
-    let big_a = match ExtPoint::decode(public_key) {
+    let big_a = match decode_non_small_order(public_key) {
         Some(pt) => pt,
         None => return false,
     };
@@ -895,12 +935,7 @@ pub fn verify(message: &[u8], signature: &[u8; 64], public_key: &[u8; 32]) -> bo
     let lhs = ExtPoint::base().scalar_mul(&s_bytes);
     let rhs = big_r.add(&big_a.scalar_mul(&k));
 
-    let lx_rz = lhs.x.mul(&rhs.z);
-    let rx_lz = rhs.x.mul(&lhs.z);
-    let ly_rz = lhs.y.mul(&rhs.z);
-    let ry_lz = rhs.y.mul(&lhs.z);
-
-    fe_eq(&lx_rz, &rx_lz) && fe_eq(&ly_rz, &ry_lz)
+    point_eq(&lhs, &rhs)
 }
 
 
@@ -1211,6 +1246,37 @@ mod tests {
         let mut sig = sign(b"hello", &sec_key);
         sig[32..].copy_from_slice(&L_BYTES);
         assert!(!verify(b"hello", &sig, &pub_key));
+    }
+
+    #[test]
+    fn identity_key_cannot_verify_an_identity_signature() {
+        let identity = ExtPoint::identity().encode();
+        let mut forged = [0u8; 64];
+        forged[..32].copy_from_slice(&identity);
+
+        assert!(!is_valid_public_key(&identity));
+        assert!(!verify(b"arbitrary package digest", &forged, &identity));
+    }
+
+    #[test]
+    fn public_key_validation_rejects_torsion_and_mixed_order_points() {
+        let identity = ExtPoint::identity();
+        let order_two = {
+            let mut encoded = [0xff; 32];
+            encoded[0] = 0xec;
+            encoded[31] = 0x7f;
+            ExtPoint::decode(&encoded).unwrap()
+        };
+        assert!(point_eq(&order_two.double(), &identity));
+        assert!(!point_eq(&order_two, &identity));
+
+        let (valid, _) = generate_keypair(&[42; 32]);
+        let valid_point = ExtPoint::decode(&valid).unwrap();
+        let mixed_order = valid_point.add(&order_two).encode();
+
+        assert!(is_valid_public_key(&valid));
+        assert!(!is_valid_public_key(&order_two.encode()));
+        assert!(!is_valid_public_key(&mixed_order));
     }
 
     // ── Key Generation ──
