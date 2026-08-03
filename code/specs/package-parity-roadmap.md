@@ -120,17 +120,17 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 769 | 10,766 |
+| Present in one language | 770 | 10,780 |
 
-The loop must not start by attempting 10,766 singleton ports. It should finish
+The loop must not start by attempting 10,780 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`4d0a98e02bec862a5b852329426d01c8996a19c6` is collision-clean at 1,219
-normalized implementation identities, 4,367 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 769 singletons, 574
+`613717e22fe7b65c37eebb35a84a5b440a55ddb1` is collision-clean at 1,220
+normalized implementation identities, 4,368 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 770 singletons, 575
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The fourteen newest mixed Rust identities are `smart-home-camera-media`,
+The fifteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
@@ -138,7 +138,8 @@ The fourteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-wemo-upnp-integration`, `smart-home-sonos-upnp-integration`,
 `smart-home-nanoleaf-local-integration`,
 `smart-home-tasmota-local-integration`, and
-`smart-home-fronius-local-integration`. All are
+`smart-home-fronius-local-integration`, plus
+`smart-home-homewizard-energy-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -152,10 +153,11 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, Wemo, Sonos, Nanoleaf, Tasmota, and Fronius contribute deterministic
-codecs, bounded parsers and DTO validation, normalization, projection, stable
-identities/errors, command planning, and language-neutral fixtures to the
-parity backlog. Wemo specifically contributes SSDP header parsing, bounded
+Roku, Wemo, Sonos, Nanoleaf, Tasmota, Fronius, and HomeWizard contribute
+deterministic codecs, bounded parsers and DTO validation, normalization,
+projection, stable identities/errors, command planning, and language-neutral
+fixtures to the parity backlog. Wemo specifically contributes SSDP header
+parsing, bounded
 setup/SOAP XML, service/device
 normalization, and switch/light command planning. Sonos additionally contributes
 credential-free URL/control-path validation, AVTransport, RenderingControl,
@@ -234,7 +236,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   resolution but then joins an absolute Windows path under the repository;
   cover `--emit-plan`, `--plan-file`, and `--cache-file` in a separate slice;
 - align Swift build-tool discovery with the canonical language and identity
-  registry. Its full release plan currently emits 4,767 entries but only 4,593
+  registry. Its full release plan currently emits 4,768 entries but only 4,594
   unique names, including 143 duplicate identity groups and 397 `unknown`
   entries; consume the shared registry and duplicate-identity fixtures in a
   separate post-UTF-8 slice;

@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "eabfc1a3f60571f3b0f2e01d0861a695a418a9cb",
+    "revision": "613717e22fe7b65c37eebb35a84a5b440a55ddb1",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1219,
     "implementation_package_slots": 4367,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 769,
-    "singleton_missing_slots": 10766,
-    "rust_singletons": 574,
+    "singleton_packages": 770,
+    "singleton_missing_slots": 10780,
+    "rust_singletons": 575,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -365,7 +365,7 @@
       "depends_on": ["build-tool-rust-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-swift-rockspec-utf8",
       "pr_number": null,
-      "notes": "Selected after merged PR #9527 and the eabfc1a3 collision-clean reprioritization because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The Swift build tool currently converts a failed UTF-8 decode into an empty Lua dependency list. Bind the engine to the exact resolution/lua-utf8 and resolution/lua-invalid-utf8 fixtures, require exact success edges, and fail closed with METADATA_INVALID_UTF8, package identity, repository-relative manifest path, real CLI exit 2, and no host-path disclosure. This slice changes only the Swift engine; TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate children."
+      "notes": "Selected after merged PR #9527 because this is the highest-severity remaining fail-open engine and one bounded child of the shared UTF-8 contract. The implementation decodes Lua rockspec bytes strictly before parsing, propagates a typed METADATA_INVALID_UTF8 error with package and repository-relative manifest identity, writes a platform-stable diagnostic without the checkout root, and returns CLI exit 2. Shared positive and invalid-byte fixtures require the exact success edge set and are exercised through the resolver, CLI entry point, and a real subprocess. Exact-base validation on 613717e2 passed 22 Swift tests, production build, measured 39.74% overall and 42.94% resolver line coverage, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, a 258-package/382-edge Lua plan, a 4,768-package/7,458-edge full plan, collision-clean 1,220-identity parity inventory, JSON/diff/secret checks, and an exact 10-to-10 Lua BUILD_windows debt comparison with untouched main. The full-plan audit separately logged Swift absolute file-option and language/identity-registry children, and the post-rebase inventory logged the new HomeWizard portable telemetry core. TypeScript, Lua, Perl, Ruby, Haskell, and Elixir remain separate encoding children."
     },
     {
       "id": "build-tool-swift-windows-absolute-file-options",
@@ -383,7 +383,7 @@
       "depends_on": ["build-tool-swift-rockspec-utf8-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the full-repository release-plan audit in the Swift UTF-8 slice. The Swift engine emits 4,767 package entries but only 4,593 unique names: 143 identity groups contain 317 entries, and 397 entries across 228 names are classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding."
+      "notes": "Discovered by the full-repository release-plan audit in the Swift UTF-8 slice and refreshed after rebasing onto 613717e2. The Swift engine emits 4,768 package entries but only 4,594 unique names: 143 identity groups contain 317 entries, and 397 entries across 228 names are classified as unknown. Reuse the shared discovery-language-registry and discovery-duplicate-identity fixtures to recognize established, emerging, execution-target, domain, and build-language buckets from the exact packages/programs boundary, preserve package/program identities, exclude spec fixtures, and fail closed on residual duplicate qualified names. Keep this separate from metadata decoding."
     },
     {
       "id": "build-tool-rust-self-edge-diagnostic",
@@ -1205,6 +1205,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered after merged PR #9513 added the Rust-only Fronius Solar API v1 host. Share bounded Power Flow response and API-status validation, site and inverter measurement normalization, stable identities and errors, deterministic entity projection, and language-neutral telemetry fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, endpoint authorization, trusted time, console I/O, and runtime mutation are excluded native-host responsibilities."
+    },
+    {
+      "id": "smart-home-homewizard-energy-portable-core-extraction-and-conformance",
+      "title": "Extract and port the portable HomeWizard Energy telemetry core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #9526 added the Rust-only HomeWizard Energy API v1 host. Share bounded device-information and measurement response validation, API-version checks, device and external-meter normalization, units, stable identities and errors, deterministic sensor projection, and language-neutral telemetry fixtures. mDNS, DNS/TCP, plaintext LAN HTTP execution, endpoint authorization, trusted time, console I/O, and runtime mutation are excluded native-host responsibilities."
     },
     {
       "id": "smart-home-reolink-portable-core-extraction-and-conformance",
