@@ -47,8 +47,8 @@ fixed here, with adversarial regression tests added for each:
   callers writing extracted entries to disk remain responsible for sanitizing them, same
   as with any other ZIP reader.
 
-  The drive-prefix stripping took two follow-up rounds to get right, both caught in
-  review rather than by the initial implementation:
+  The drive-prefix stripping took three follow-up rounds to get right, each caught in
+  review rather than by the prior implementation:
   - Round 2 found that a segment-equality check (`s == "C:"`) misses the common
     `C:\...`/`C:/...` shape's own edge cases at other split points, and more importantly
     doesn't generalize.
@@ -60,6 +60,12 @@ fixed here, with adversarial regression tests added for each:
     "C:evil.dll")` would still have silently discarded `outDir`. Fixed by stripping a
     two-character `<letter>:` prefix from the *start* of each segment (keeping whatever
     follows) rather than only matching segments that are the drive letter and nothing else.
+  - Self-caught before the next review round: the round-3 fix stripped a drive prefix only
+    *once* per segment. A chained input in a single segment with no separators at all —
+    `C:D:evil.dll` — had `"C:"` stripped to leave `"D:evil.dll"`, which is itself still a
+    rooted-looking drive-relative path (the check doesn't care that the string was just
+    produced by our own stripping rather than received as input). `StripDrivePrefix` now
+    loops until no drive prefix remains, however many are glued together.
 - **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,

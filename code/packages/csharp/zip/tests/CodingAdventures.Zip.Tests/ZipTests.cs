@@ -406,6 +406,25 @@ public class ZipTests
         Assert.False(Path.IsPathRooted(entries[0].Name));
     }
 
+    // A chained drive prefix in a single segment ("C:D:evil.dll", no
+    // separators at all): stripping "C:" only once leaves "D:evil.dll",
+    // which is ITSELF still a rooted-looking drive-relative path. The
+    // stripping must repeat until no drive prefix remains, however many are
+    // glued together, or this degenerates back into Finding 1's bypass one
+    // layer deeper.
+    [Fact]
+    public void Security_WriterStripsChainedDrivePrefixes()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile("C:D:evil.dll", "x"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.Equal("evil.dll", entries[0].Name);
+        Assert.False(Path.IsPathRooted(entries[0].Name));
+    }
+
     // A directory entry's trailing slash must survive normalization.
     [Fact]
     public void Security_WriterNormalizationPreservesTrailingSlashForDirectories()

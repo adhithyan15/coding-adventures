@@ -767,7 +767,7 @@ public sealed class ZipWriter
             // before the empty/./ .. filter below, so e.g. "C:" alone becomes
             // "" (and gets filtered out) and "C:evil.dll" becomes "evil.dll"
             // rather than passing through untouched.
-            .Select(s => s.Length >= 2 && s[1] == ':' && char.IsAsciiLetter(s[0]) ? s[2..] : s)
+            .Select(StripDrivePrefix)
             .Where(s => s.Length > 0 && s != "." && s != "..")
             .ToArray();
         if (segments.Length == 0)
@@ -776,6 +776,22 @@ public sealed class ZipWriter
                 nameof(name));
         var normalized = string.Join("/", segments);
         return isDirectory ? normalized + "/" : normalized;
+    }
+
+    // Strip a leading "<letter>:" drive prefix from `segment`, repeatedly.
+    // A *single* strip is not enough: a chained/pathological input like
+    // "C:D:evil.dll" (one segment, no separators at all) has "C:" stripped
+    // by a one-shot strip to leave "D:evil.dll" — which is itself still a
+    // rooted-looking drive-relative path (Path.IsPathRooted only inspects the
+    // first two characters, so it doesn't care that we just produced this
+    // string rather than received it). Looping until no prefix remains closes
+    // that chaining bypass regardless of how many drive-letter segments are
+    // glued together.
+    private static string StripDrivePrefix(string segment)
+    {
+        while (segment.Length >= 2 && segment[1] == ':' && char.IsAsciiLetter(segment[0]))
+            segment = segment[2..];
+        return segment;
     }
 
     // Internal: write one entry (file or directory) with the given Unix mode.
