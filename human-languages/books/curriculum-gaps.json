@@ -12,9 +12,9 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 981,
+    "totalLessons": 982,
     "authoredBooks": 20,
-    "durationViolations": 464,
+    "durationViolations": 455,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
@@ -1663,151 +1663,6 @@
         "authoredAudioSeconds": 0,
         "reasons": [
           "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C01-namaste",
-        "language": "gujarati",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 184,
-        "effectiveSeconds": 300,
-        "wordCount": 259,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C01-practice",
-        "language": "gujarati",
-        "chapter": 1,
-        "declaredSeconds": 300,
-        "computedSeconds": 112,
-        "effectiveSeconds": 300,
-        "wordCount": 150,
-        "promptCount": 0,
-        "repeatCueCount": 3,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "declaredSeconds": 300,
-        "computedSeconds": 119,
-        "effectiveSeconds": 300,
-        "wordCount": 153,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "declaredSeconds": 300,
-        "computedSeconds": 133,
-        "effectiveSeconds": 300,
-        "wordCount": 161,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C04-practice",
-        "language": "gujarati",
-        "chapter": 4,
-        "declaredSeconds": 300,
-        "computedSeconds": 110,
-        "effectiveSeconds": 300,
-        "wordCount": 137,
-        "promptCount": 0,
-        "repeatCueCount": 4,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C05-hun-gujarati-bolun-chhun",
-        "language": "gujarati",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 164,
-        "effectiveSeconds": 300,
-        "wordCount": 255,
-        "promptCount": 1,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C05-kaam-karvun",
-        "language": "gujarati",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 157,
-        "effectiveSeconds": 300,
-        "wordCount": 227,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C05-practice",
-        "language": "gujarati",
-        "chapter": 5,
-        "declaredSeconds": 300,
-        "computedSeconds": 112,
-        "effectiveSeconds": 300,
-        "wordCount": 173,
-        "promptCount": 0,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 10,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared"
-        ]
-      },
-      {
-        "lessonId": "GU-C06-numbers-1-5",
-        "language": "gujarati",
-        "chapter": 6,
-        "declaredSeconds": 300,
-        "computedSeconds": 370,
-        "effectiveSeconds": 370,
-        "wordCount": 550,
-        "promptCount": 4,
-        "repeatCueCount": 2,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "reasons": [
-          "declared",
-          "computed"
         ]
       },
       {
@@ -9127,9 +8982,9 @@
       {
         "language": "gujarati",
         "status": "legacy",
-        "lessonCount": 32,
+        "lessonCount": 33,
         "versions": {
-          "1": 32
+          "1": 33
         }
       },
       {
