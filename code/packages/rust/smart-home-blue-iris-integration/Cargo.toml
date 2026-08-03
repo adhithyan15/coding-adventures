@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-blue-iris-integration"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Authenticated local Blue Iris NVR inspection"
+description = "Authenticated local Blue Iris NVR inspection and bounded camera controls"
 license = "MIT"
 
 [dependencies]

@@ -45233,14 +45233,14 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "blue_iris",
             "Blue Iris",
-            "Authenticated local Blue Iris NVR and managed-camera health inspection.",
+            "Authenticated local Blue Iris NVR inspection with verified manual recording and bounded PTZ control.",
             IntegrationCategory::CameraMedia,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
             3,
             "blue_iris_json",
         )
-        .with_capabilities(&["smart_home.read"])
+        .with_capabilities(&["smart_home.read", "smart_home.command.device"])
         .with_entities(&[EntityKind::Camera])
         .with_discovery(&[DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::UsernamePassword])
@@ -45256,7 +45256,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Production inspection uses the documented JSON challenge-response login over local HTTPS; plain HTTP is test-only on loopback.",
             "Credentials, challenge hashes, sessions, and the server license value remain outside normalized state and request-plan debug output.",
-            "PTZ, recording changes, snapshots, clips, media transfer, alerts, and administrative configuration remain separate permission-specific work.",
+            "Session permissions and camera capability gate readback-verified manual recording plus preset and bounded directional PTZ control.",
+            "Snapshots, clips, media transfer, broader camera configuration, and administrative changes remain separate permission-specific work.",
         ]),
         base_entry(
             "reolink",
@@ -81051,7 +81052,7 @@ mod tests {
     }
 
     #[test]
-    fn blue_iris_entry_exposes_authenticated_json_inspection_primitives() {
+    fn blue_iris_entry_exposes_authenticated_json_control_primitives() {
         let catalog = first_party_catalog();
         let blue_iris = find_entry(&catalog, &IntegrationId::trusted("blue_iris")).unwrap();
 
@@ -81065,6 +81066,9 @@ mod tests {
             vec![ProtocolFamily::Vendor("blue_iris_json".to_string())]
         );
         assert_eq!(blue_iris.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert!(blue_iris
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.device")));
         assert_eq!(blue_iris.target_entity_kinds, vec![EntityKind::Camera]);
         assert_eq!(blue_iris.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
         assert!(blue_iris
