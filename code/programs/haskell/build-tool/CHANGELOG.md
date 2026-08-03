@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - Shared valid and invalid Lua rockspec fixture coverage, typed
   `METADATA_INVALID_UTF8` diagnostics, representative malformed-sequence
   checks, literal U+FFFD coverage, and front-door exit-code validation.
+- An exact package-hash regression covering non-ASCII UTF-8, NUL, and malformed
+  source bytes against a fixed Git blob digest.
 
 ### Changed
 
@@ -16,6 +18,9 @@ All notable changes to this package will be documented in this file.
   resolution, with repository-relative diagnostics and no checkout-root leak.
 - Force existing lazy text reads to EOF before parsing so Windows file handles
   close deterministically after discovery and validation.
+- Hash source and manifest contents as raw bytes, normalize relative paths to
+  portable UTF-8, and feed `git hash-object` through binary pipes instead of
+  locale-sensitive text handles.
 - Exercise the Haskell build tool from `BUILD_windows` whenever Cabal is
   available instead of unconditionally skipping the package.
 

@@ -37,6 +37,7 @@ test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     other-modules:    BuildToolSpec
+                    , HashingSpec
                     , ResolutionUtf8Spec
     build-depends:    aeson >=2.0 && <3
                     , base >=4.14 && <5

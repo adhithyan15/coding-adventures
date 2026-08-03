@@ -22,6 +22,13 @@ The package tests consume the shared `resolution/lua-utf8` and
 `resolution/lua-invalid-utf8` fixtures, cover representative malformed UTF-8
 classes, and distinguish a valid literal U+FFFD from a decoder replacement.
 
+Package hashing reads included files as raw bytes. Repository-relative paths
+are normalized to `/`, encoded explicitly as UTF-8, and combined with those
+bytes using the existing boundary framing before `git hash-object` receives
+the payload through binary standard input. Source bytes therefore do not pass
+through the host locale: valid Unicode, NUL, and malformed text bytes hash
+deterministically on Windows, macOS, and Linux.
+
 ## Development
 
 ```bash

@@ -327,6 +327,10 @@ Required behavior:
 - sort normalized relative paths before hashing;
 - exclude generated, dependency, VCS, cache, and temporary directories;
 - include applicable BUILD and manifest files;
+- hash source and manifest contents as raw bytes without decoding them through
+  the host locale, and encode normalized relative paths explicitly as UTF-8;
+- when a subprocess supplies the digest primitive, write its standard input in
+  binary mode so NUL, non-ASCII, and malformed text bytes are preserved;
 - preserve file boundaries unambiguously;
 - combine dependency hashes in deterministic graph order;
 - invalidate dependents when a prerequisite hash changes; and

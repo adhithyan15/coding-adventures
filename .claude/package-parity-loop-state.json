@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9742,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9742",
-    "branch": "codex/build-tool-haskell-rockspec-utf8"
+    "number": 9756,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9756",
+    "branch": "codex/build-tool-haskell-binary-safe-hashing"
   },
   "last_inventory": {
-    "revision": "3445da42b281fe7af366d92bc589db5fa3951cfa",
+    "revision": "93c0a7b60a2da3e81e8da9fd33e9919e3492cfd3",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1238,
-    "implementation_package_slots": 4386,
+    "implementation_identities": 1240,
+    "implementation_package_slots": 4388,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 788,
-    "singleton_missing_slots": 11032,
-    "rust_singletons": 593,
+    "singleton_packages": 790,
+    "singleton_missing_slots": 11060,
+    "rust_singletons": 595,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -374,20 +374,29 @@
     {
       "id": "build-tool-haskell-engine-rockspec-utf8-conformance",
       "title": "Make the Haskell build tool enforce strict UTF-8 rockspec metadata",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-haskell-rockspec-utf8",
       "pr_number": 9742,
-      "notes": "Materialized after merged PR #9632 and selected after PR #9717 because Ruby strict decoding and its dependent canonical resolver repairs are complete, making Haskell the next unblocked established-language build-tool boundary and a stronger reference for the position-dependent Elixir repair. The implementation strictly reads rockspec bytes, decodes UTF-8 before token parsing, propagates typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, preserves the exact lua/other -> lua/pkg shared-fixture edge, accepts literal U+FFFD, rejects five malformed-sequence classes, maps the real executable to exit 2 with empty stdout and stable root-redacted stderr, and closes lazy Windows read handles deterministically. Local validation passes 10 build-tool examples plus the graph and directed-graph suites, the exact Windows BUILD command, GHC -Wall -Werror build, Cabal check, publishability bounds, all-package Haddock generation, direct changed-boundary HPC ticks with 30% whole-engine expression coverage, the real invalid-fixture process contract, 57 shared conformance schema/runner tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible major versions beyond the declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, while the changed-file credential scan is clean. Real Lua-package validation separately exposed the dependent Windows binary-safe source-hashing item now logged in state and roadmap rather than widening this metadata slice. Ready PR #9742 opened after a conflict-free rebase onto collision-clean 3445da42 and an exact-head rerun of all scoped gates."
+      "notes": "Materialized after merged PR #9632 and selected after PR #9717 because Ruby strict decoding and its dependent canonical resolver repairs are complete, making Haskell the next unblocked established-language build-tool boundary and a stronger reference for the position-dependent Elixir repair. The implementation strictly reads rockspec bytes, decodes UTF-8 before token parsing, propagates typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, preserves the exact lua/other -> lua/pkg shared-fixture edge, accepts literal U+FFFD, rejects five malformed-sequence classes, maps the real executable to exit 2 with empty stdout and stable root-redacted stderr, and closes lazy Windows read handles deterministically. Local validation passes 10 build-tool examples plus the graph and directed-graph suites, the exact Windows BUILD command, GHC -Wall -Werror build, Cabal check, publishability bounds, all-package Haddock generation, direct changed-boundary HPC ticks with 30% whole-engine expression coverage, the real invalid-fixture process contract, 57 shared conformance schema/runner tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible major versions beyond the declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, while the changed-file credential scan is clean. Real Lua-package validation separately exposed the dependent Windows binary-safe source-hashing item now logged in state and roadmap rather than widening this metadata slice. Ready PR #9742 opened after a conflict-free rebase onto collision-clean 3445da42 and an exact-head rerun of all scoped gates. Guarded squash auto-completion merged it as 8eafdc1410 on 2026-08-03 after all 16 exact-head checks were terminal: eleven succeeded and five irrelevant CodeQL analyzers skipped."
     },
     {
       "id": "build-tool-haskell-binary-safe-source-hashing",
       "title": "Make Haskell build-tool source hashing binary-safe on Windows",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-engine-rockspec-utf8-conformance"],
+      "branch": "codex/build-tool-haskell-binary-safe-hashing",
+      "pr_number": 9756,
+      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic while preserving graph semantics and valid UTF-8 Git blob identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding. Selected immediately after PR #9742 merged because it is the newly unblocked direct child, the exact Windows failure and real two-package downstream are already minimized, and repairing the supported Haskell engine's deterministic cache boundary has higher immediate leverage than switching toolchains to the independent Elixir UTF-8 slice. The implementation now reads package sources and manifests as strict bytes, normalizes relative paths to portable UTF-8, writes the exact framed payload to git hash-object through binary pipes, and falls back to a deterministic byte fold if Git is unavailable. A fixed digest fixture covers UTF-8, NUL, and malformed bytes, while the actual lua/logic_gates -> lua/arithmetic closure exits 0 with built=0, skipped=2, failed=0. Local validation passes 12 focused build-tool examples and all 19 Haskell graph/build-tool examples, GHC -Wall -Werror build, Cabal check, Cabal bounds review, package Haddock generation, 39% whole-engine expression coverage with both Git and fallback hash paths ticked, 57 shared conformance tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible versions beyond declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, and the changed-diff credential scan is clean. The full 258-package Lua lane now gets past hashing and exposes a separate field-aware resolver cycle item recorded as the dependent next owner rather than widening this byte-boundary slice. Ready PR #9756 opened after two conflict-free rebases, a collision-clean 93c0a7b6 inventory, and exact-head reruns of all scoped build-tool, shared-conformance, canonical-Go, state, diff, and security gates. Ubuntu CI showed that an empty PATH invokes POSIX's default executable search, so the fallback test now uses the scoped temporary package directory as a nonempty Git-free PATH; the production hash path was already passing, and the corrected test passes locally on Windows."
+    },
+    {
+      "id": "build-tool-haskell-field-aware-manifest-resolution",
+      "title": "Make Haskell manifest resolution field-aware and acyclic",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-binary-safe-source-hashing"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic without changing graph or cache identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding."
+      "notes": "Discovered after the binary-safe hashing repair let the Haskell engine traverse the full real Lua lane. The exact lua/logic_gates -> lua/arithmetic closure resolves and dry-runs, but the 258-package lane reaches graph scheduling and marks every package failed with the generic cycle-detected diagnostic. Adjudicate genuine cycles versus aliases found by whole-manifest tokenization, minimize the responsible records into language-neutral resolution fixtures, parse only authoritative dependency fields, preserve canonical identities and valid cycles-as-errors, compare the complete edge set with the Go oracle, and keep this semantic repair separate from byte hashing."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1673,6 +1682,15 @@
       "notes": "Discovered in the collision-clean 3445da42 inventory after chief-of-staff-cli-core landed as a Rust-only zero-capability command layer. Its declarative argv grammar, conservative registration defaults, host/path/hash validation, typed injected-client dispatch, payload-blind daemon errors, deterministic JSON rendering, and exclusion of credential-bearing arguments are portable fixture candidates. Define language-neutral command/result/error cases, preserve the authenticated daemon client as an injected interface, expand only after the service-registry contract and daemon authority split are adjudicated, and keep sockets, credentials, terminal input, and process exit policy in native adapters."
     },
     {
+      "id": "chief-daemon-runtime-native-authority-review",
+      "title": "Review the Chief daemon runtime native-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-daemon-api-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 8eafdc14 inventory after chief-of-staff-daemon-runtime landed as a Rust-only listener and reconciliation scheduler. Its declared net:listen, time:read, and time:sleep authority, continuous serving, interruptible waits, and fail-closed shutdown make the concrete runtime a native adapter rather than an all-language portable target. Review the minimum truthful inherited listener/control-plane/time profile and platform-CI evidence, keep bounded tick ordering and stop-on-failure semantics in injected portable seams, and do not select this native-runtime review for autonomous delivery."
+    },
+    {
       "id": "smart-home-axis-vapix-native-authority-review",
       "title": "Review the Axis VAPIX integration native-authority exception",
       "status": "pending",
@@ -1680,6 +1698,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 479ba6d7 inventory after smart-home-axis-vapix-integration landed as a Rust-only production adapter. The crate performs mDNS discovery, credential-referenced authenticated HTTPS, TLS, endpoint policy, runtime authorization, and concrete network effects, so the package is not an all-language portable target. Review truthful DNS/discovery/connect/TLS/Vault-derived authority and platform evidence; keep bounded VAPIX response validation, identity normalization, stable projection, and request planning in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-blue-iris-native-authority-review",
+      "title": "Review the Blue Iris integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 45e01cc2 inventory after smart-home-blue-iris-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP/TLS transport, credential challenge-response, Vault-referenced authentication, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Blue Iris JSON validation, stable camera/server projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
     }
   ]
 }
