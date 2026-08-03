@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9527,
   "last_inventory": {
     "revision": "4d0a98e02bec862a5b852329426d01c8996a19c6",
     "schema_version": 3,
@@ -370,11 +370,11 @@
     {
       "id": "build-tool-rust-language-identity-registry",
       "title": "Bring Rust build-tool discovery to the canonical language and identity registry",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-rust-self-edge-diagnostic"],
       "branch": "codex/build-tool-rust-language-identity-registry",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9521 satisfied the sole dependency and rebased cleanly onto collision-clean 4d0a98e0. The implementation adds language-neutral canonical-registry and duplicate-identity discovery fixtures, classifies every established, emerging, execution-target, domain, and build-language bucket plus the shared dotnet program host, skips specification fixture trees, and rejects any residual duplicate qualified name with DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths, CLI exit 2, and no host-path disclosure. Validation passed 140 unit tests plus three real CLI integrations, strict Clippy, release build, 79.39% region and 79.49% line coverage with 94.03% discovery lines, 17 schema tests, 40 runner tests, the valid 36-case/55-file corpus, a zero-advisory RustSec audit, collision-clean 1,219-identity parity inventory, and a real full plan that now exits zero with 4,765 entries, 4,765 unique names, zero duplicates, the new Fronius package, and only the intentional unknown/blog site package. The known 10-item Lua BUILD_windows debt remains unchanged and separately owned."
+      "pr_number": 9527,
+      "notes": "Ready PR #9527 opened from collision-clean 4d0a98e0. The implementation adds language-neutral canonical-registry and duplicate-identity discovery fixtures, classifies every established, emerging, execution-target, domain, and build-language bucket plus the shared dotnet program host, skips specification fixture trees, and rejects any residual duplicate qualified name with DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths, CLI exit 2, and no host-path disclosure. Validation passed 140 unit tests plus three real CLI integrations, strict Clippy, release build, 79.39% region and 79.49% line coverage with 94.03% discovery lines, 17 schema tests, 40 runner tests, the valid 36-case/55-file corpus, a zero-advisory RustSec audit, collision-clean 1,219-identity parity inventory, and a real full plan that now exits zero with 4,765 entries, 4,765 unique names, zero duplicates, the new Fronius package, and only the intentional unknown/blog site package. The known 10-item Lua BUILD_windows debt remains unchanged and separately owned."
     },
     {
       "id": "build-tool-python-haskell-language-filter",
