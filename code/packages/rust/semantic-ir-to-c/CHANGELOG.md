@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.28.1 — fix: `Array#sum` ignored a block argument
+
+The 0-arg `sum` dispatch arm (slice 3) never checked `argc`/`args`, so
+`arr.sum { |x| .. }` — Ruby's block form, which sums the block's
+*transformed* values (`[1, 2].sum { |x| x * 2 }` == `6`) — silently summed
+the raw elements instead, ignoring the block entirely. Same latent-shadowing
+shape as the slice-3 `count` gap (fixed in slice 5), found while
+implementing `Hash#sum`'s block form (slice 7), which correctly guarded on
+`argc`/the closure tag from the start. Fixed with a new `_sir_array_sum_by`
+helper (snapshotting `len`/`items` before its loop, like every other
+block-taking helper here), dispatched only when `argc == 1` and the arg is
+a closure; the 0-arg form is now itself gated on `argc == 0`.
+
 ## 0.28.0 — Collections slice 7: Hash block methods
 
 No new `Feature`.

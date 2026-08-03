@@ -1498,6 +1498,25 @@ static SirValue _sir_array_sum(SirSeq *s) {
     }
     return acc;
 }
+/* `sum { |x| ... }` — Ruby's `Array#sum` accepts an optional block that
+ * transforms each element before summing (`[1, 2].sum { |x| x * 2 }` == 6).
+ * The 0-arg form above ignored `argc`/`args` entirely, so a block call
+ * silently fell through to it and summed the RAW elements instead — the
+ * same latent-shadowing shape the slice-3 `count` gap had (fixed in slice
+ * 5) before this one was ever exercised with a block. Snapshots `len`/
+ * `items` before the loop like every other block-taking helper here. */
+static SirValue _sir_array_sum_by(SirSeq *s, SirValue block) {
+    int64_t n = s->len;
+    SirValue *items = s->items;
+    SirValue acc = _sir_int(0);
+    for (int64_t i = 0; i < n; i++) {
+        SirValue pair[2];
+        pair[0] = acc;
+        pair[1] = _sir_apply(block, 1, items[i]);
+        acc = _sir_plus_v(pair, 2);
+    }
+    return acc;
+}
 /* First-occurrence order preserved (matches Ruby); dedup via `_sir_value_eq`
  * (structural, so `[[1], [1]].uniq` collapses to one `[1]`) — O(n^2), same
  * trade-off as `sort` above. Over-allocates to `s->len` (a safe upper bound on
@@ -2189,7 +2208,10 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
     } else if (strcmp(m, "max") == 0) {
         if (recv.tag == SIR_SEQ) return _sir_array_max(recv.as.seq);
     } else if (strcmp(m, "sum") == 0) {
-        if (recv.tag == SIR_SEQ) return _sir_array_sum(recv.as.seq);
+        if (recv.tag == SIR_SEQ) {
+            if (argc == 0) return _sir_array_sum(recv.as.seq);
+            if (argc == 1 && args[0].tag == SIR_CLOSURE) return _sir_array_sum_by(recv.as.seq, args[0]);
+        }
         if (recv.tag == SIR_MAP && argc == 1 && args[0].tag == SIR_CLOSURE)
             return _sir_hash_sum(recv.as.map, args[0]);
     } else if (strcmp(m, "uniq") == 0) {
