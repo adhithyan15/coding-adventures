@@ -1,5 +1,19 @@
 # Changelog
 
+## Warning-free 104-page book — 2026-08-03
+
+- Taught the shared inline renderer to preserve backslash-escaped Markdown
+  punctuation, repairing the reconstructed `*parabolāvit` form in Chapter 15,
+  and added regression coverage for the exact bold form.
+- Removed paragraph indentation before generated tables, added a bookmark-safe
+  Chapter 1 title, and made intentionally short lesson pages ragged-bottom.
+- Tightened only the canonical prose and table cells responsible for horizontal
+  layout warnings, then recalculated their sub-five-minute duration budgets.
+- Forced a clean XeLaTeX build with zero missing glyphs, overfull or underfull
+  boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. All 104
+  rendered pages and the complete Preface/pronunciation/Chapter 1–17 outline
+  were inspected successfully.
+
 ## Canonical book Chapters 2–17 — 2026-08-03
 
 - Migrated all 49 lessons in Chapters 2–17 to the strict schema-v2 shared-spine
@@ -24,7 +38,7 @@
   each register, metaphor, suppletive stem, and grammar rule independently
   learnable in under five minutes. The shared report now measures zero Italian
   duration violations.
-- `IT-C02-practice` at 297 computed seconds and `IT-C17-mano` at 296 are the
+- `IT-C02-practice` at 297 computed seconds and `IT-C17-mano` at 298 are the
   tightest remaining Italian lessons and should be watched during copy edits.
 
 ## Chapter 17 — The body: the pot kept whole, and a noun that breaks the rule

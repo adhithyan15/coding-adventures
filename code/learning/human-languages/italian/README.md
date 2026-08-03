@@ -34,7 +34,9 @@ and Italian kept the final vowels French dropped. The showpiece etymology:
 The 104-page volume compiles with XeLaTeX (Latin Modern, no vendored font
 needed): `latexmk -xelatex book.tex`. Chapters 2–17 are generated from the
 canonical lessons by `npm run generate:books` in the
-`human-language-data` package; do not edit those chapter files by hand.
+`human-language-data` package; do not edit those chapter files by hand. A
+forced clean build reports zero missing glyphs, layout boxes, duplicate
+destinations, Hyperref warnings, or LaTeX warnings.
 
 ## Files
 

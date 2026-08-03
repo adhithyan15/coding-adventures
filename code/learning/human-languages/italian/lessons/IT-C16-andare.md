@@ -13,7 +13,7 @@ sounds: [double-consonant, open-a]
 roots: [latin-vadere, disputed-ambitare]
 etymology_hook: "vado/vai/va/vanno continue Latin vadere, while andare/andiamo/andate/andato probably continue a different root"
 duration:
-  max_seconds: 195
+  max_seconds: 194
 requires:
   knowledge: [IT-GRAMMAR-ESSERE-STATO-02, IT-NOTICE-ESSERE-STATO-03, IT-GRAMMAR-COME-VA-02]
 introduces:
@@ -52,7 +52,7 @@ The table has a visible seam:
 | stem | forms | history |
 |---|---|---|
 | **vad- / va-** | vado, vai, va, **vanno** | Latin *vādere*, “to stride” |
-| **and-** | andare, andiamo, andate, andato | disputed; probably *ambitāre*, “go around” |
+| **and-** | andare, andiamo, andate, andato | origin disputed; perhaps *ambitāre* |
 
 Notice that **vanno** belongs with **vado**, not with *andiamo*. The split is not
 “singular versus plural.” It is two old verbs patched into one modern paradigm —

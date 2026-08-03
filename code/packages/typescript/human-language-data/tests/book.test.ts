@@ -82,6 +82,7 @@ describe("canonical LaTeX chapter rendering", () => {
       "test",
     );
     const generated = renderBookChapter(target, [lesson]);
+    expect(generated.tex).toContain("\\noindent\n\\begin{tabularx}{\\linewidth}");
     expect(generated.tex).toContain("\\begin{tabularx}{\\linewidth}");
     expect(generated.tex).toContain("\\textbf{person} & \\textbf{form} \\\\");
     expect(generated.tex).toContain("I & \\textbf{hablo} \\\\");
@@ -97,6 +98,9 @@ describe("canonical LaTeX chapter rendering", () => {
     );
     expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
       "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
+    );
+    expect(renderInlineMarkdown("**\\*parabolāvit**")).toBe(
+      "\\textbf{*parabolāvit}",
     );
   });
 

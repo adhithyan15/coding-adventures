@@ -66,7 +66,7 @@
     {
       "language": "italian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:fc48d491a87398dc",
+      "sourceHash": "fnv1a64:428b548f8b6d4ad0",
       "lessonIds": [
         "IT-C05-parlare",
         "IT-C05-abitare",
@@ -79,7 +79,7 @@
     {
       "language": "italian",
       "chapter": 6,
-      "sourceHash": "fnv1a64:23d44140d0f55101",
+      "sourceHash": "fnv1a64:e98372b21a44469a",
       "lessonIds": [
         "IT-C06-numeri-1-5",
         "IT-C06-numeri-6-10"
@@ -119,7 +119,7 @@
     {
       "language": "italian",
       "chapter": 10,
-      "sourceHash": "fnv1a64:c6b580550c4c7454",
+      "sourceHash": "fnv1a64:408622844a141e06",
       "lessonIds": [
         "IT-C10-genitori",
         "IT-C10-fratello-sorella"
@@ -169,7 +169,7 @@
     {
       "language": "italian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:9dfc5c16142e4a8d",
+      "sourceHash": "fnv1a64:0b856b51ba3decfd",
       "lessonIds": [
         "IT-C15-passato-prossimo",
         "IT-C15-passato-remoto"
@@ -179,7 +179,7 @@
     {
       "language": "italian",
       "chapter": 16,
-      "sourceHash": "fnv1a64:46629a0359aec030",
+      "sourceHash": "fnv1a64:bea08cde852eca81",
       "lessonIds": [
         "IT-C16-essere",
         "IT-C16-essere-stato",
@@ -191,7 +191,7 @@
     {
       "language": "italian",
       "chapter": 17,
-      "sourceHash": "fnv1a64:28edfc484982a197",
+      "sourceHash": "fnv1a64:8f8245bda887a5a8",
       "lessonIds": [
         "IT-C17-testa",
         "IT-C17-mano"

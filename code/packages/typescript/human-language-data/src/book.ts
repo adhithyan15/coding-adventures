@@ -85,6 +85,14 @@ export function renderInlineMarkdown(
   while (cursor < markdown.length) {
     const codePoint = markdown.codePointAt(cursor);
     const character = codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+    if (character === "\\" && cursor + 1 < markdown.length) {
+      const escaped = markdown[cursor + 1] ?? "";
+      if (`!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`.includes(escaped)) {
+        output.push(escapeLatexCharacter(escaped));
+        cursor += 2;
+        continue;
+      }
+    }
     if (script?.test(character)) {
       const run: string[] = [];
       while (cursor < markdown.length) {
@@ -211,6 +219,7 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptions): string
         renderInlineMarkdown(row[index] ?? "", options),
       );
     output.push(
+      "\\noindent",
       `\\begin{tabularx}{\\linewidth}{@{}${columns}@{}}`,
       "\\toprule",
       `${cells(header)
