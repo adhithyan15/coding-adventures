@@ -1213,6 +1213,16 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("BJT CJC must be finite and non-negative");
   }
+  for (const name of ["TF", "TR"] as const) {
+    const transitTime = params.get(name);
+    if (
+      (kind === "NPN" || kind === "PNP") &&
+      transitTime !== undefined &&
+      (!Number.isFinite(transitTime) || transitTime < 0.0)
+    ) {
+      throw new NetlistParseError(`BJT ${name} must be finite and non-negative`);
+    }
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
