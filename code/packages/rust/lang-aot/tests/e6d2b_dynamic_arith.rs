@@ -3,11 +3,11 @@
 //! `(+ (car (cons 41 0)) 1)` forces `+` over a **boxed** operand: `car`'s result
 //! is a `ref<any>` tagged word, not a machine int. `lower_dynamic_arith` expands
 //! it to `unbox → add → box`; on the **tagged-i64** world (native aarch64/x86_64
-//! and LLVM) `lower_box_unbox_to_runtime_calls` rewrites those generic ops to
-//! `dyn_box_int` / `dyn_unbox_int` runtime calls, which the backends dispatch to
-//! `__dyn_box_int` / `__dyn_unbox_int` in `dynval_runtime.c`. The final tagged
-//! result is exit-unboxed (`dyn_repr` recognises the `ref<any>` result even for
-//! a **Twig** program, whose bare-`any` params stay gated). Exit 42.
+//! + LLVM) `lower_box_unbox_to_runtime_calls` rewrites those generic ops to
+//!   `dyn_box_int` / `dyn_unbox_int` runtime calls, which the backends dispatch to
+//!   `__dyn_box_int` / `__dyn_unbox_int` in `dynval_runtime.c`. The final tagged
+//!   result is exit-unboxed (`dyn_repr` recognises the `ref<any>` result even for
+//!   a **Twig** program, whose bare-`any` params stay gated). Exit 42.
 //!
 //! **Verified by RUNNING**: emit host IR / native object, link the C runtime,
 //! execute — the exit code is the arithmetic result.

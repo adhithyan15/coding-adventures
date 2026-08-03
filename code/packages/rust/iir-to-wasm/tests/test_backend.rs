@@ -2228,3 +2228,115 @@ fn input_str_lowers_and_declares_env_import() {
         "encoded module must declare the env.__input_str import"
     );
 }
+
+/// Twig GC completion round (Part 3): a module that bump-allocates (here, a
+/// single `alloc_array`) must declare linear memory with room to actually
+/// grow — the confirmed bug this round fixes was `Limits { min: 1, max:
+/// Some(1) }` hardcoded on every memory-using module, with no `memory.grow`
+/// call anywhere in the emitted bytecode, so any program allocating past the
+/// first 64 KiB page had no path forward. `$__ensure_capacity` (called from
+/// every bump-allocation site) now emits real `memory.grow`; this asserts the
+/// *other* half of the fix — the module's own declared `max` must actually
+/// permit growth (not stay capped at 1 page), while still being a
+/// caller-configured, non-4-GiB-by-default bound (this backend's allocator
+/// never frees, so an unconditional jump to the full spec ceiling would let
+/// an unbounded allocation loop consume real host memory with no backstop —
+/// see the security-review finding this addressed).
+#[test]
+fn alloc_array_module_declares_growable_memory_not_capped_at_one_page() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.min, 1, "still starts at a single 64 KiB page");
+    assert_eq!(
+        mem.limits.max,
+        Some(1024),
+        "default max must allow real growth (1024 pages = 64 MiB), not stay capped at 1 page"
+    );
+    encode_module(&wm).expect("encoding failed");
+}
+
+/// `max_memory_pages` is a real caller-facing knob: a config asking for more
+/// pages than the WASM spec allows is clamped down, never passed through
+/// verbatim (a misconfigured caller can't accidentally exceed the spec).
+#[test]
+fn max_memory_pages_is_clamped_to_the_wasm_spec_ceiling() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: u32::MAX, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(
+        mem.limits.max,
+        Some(65536),
+        "an oversized configured cap must clamp to the WASM spec's 65536-page ceiling"
+    );
+}
+
+/// And a smaller-than-default configured cap is honored verbatim (not
+/// silently widened) — the config is a real, respected bound in both
+/// directions.
+#[test]
+fn max_memory_pages_smaller_than_default_is_honored() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: 2, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.max, Some(2), "a smaller configured cap must be honored, not widened");
+}
+
+/// Round-2 security-review finding: a degenerate `max_memory_pages: 0` must
+/// never produce a spec-invalid `Limits { min: 1, max: Some(0) }` (min > max).
+/// The declared max is floored at 1, matching the always-present `min: 1`.
+#[test]
+fn max_memory_pages_zero_is_floored_to_stay_spec_valid() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let config = IIRWasmConfig { max_memory_pages: 0, ..IIRWasmConfig::default() };
+    let wm = lower_iir_to_wasm(&m, &config).expect("lowering failed");
+    let mem = wm.memories.first().expect("alloc_array module must declare linear memory");
+    assert_eq!(mem.limits.min, 1);
+    assert_eq!(
+        mem.limits.max,
+        Some(1),
+        "max_memory_pages: 0 must floor to 1 (== min), never produce min > max"
+    );
+}
+
+/// The companion codegen-shape check: an `alloc_array` module must actually
+/// emit `memory.grow` (0x40) and `memory.size` (0x3F) somewhere in its code —
+/// not just declare a growable memory section. Both opcodes are followed by
+/// the reserved memory-index byte `0x00` (this backend only ever declares one
+/// memory), so the two-byte pairs are unambiguous needles.
+#[test]
+fn alloc_array_emits_memory_grow_and_memory_size_opcodes() {
+    let m = module_one("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("count".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("h".into()), vec![Operand::Var("count".into())], "array<i64>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let ensure_capacity_code = wm.code.last().expect("$__ensure_capacity body appended").code.as_slice();
+    assert!(
+        ensure_capacity_code.windows(2).any(|w| w == [0x3F, 0x00]),
+        "$__ensure_capacity must call memory.size"
+    );
+    assert!(
+        ensure_capacity_code.windows(2).any(|w| w == [0x40, 0x00]),
+        "$__ensure_capacity must call memory.grow"
+    );
+}

@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.44.0"
+version = "0.45.0"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.43.0: runtime str_concat now reserves linear memory and __array_bump even without arrays; v0.42.0: runtime str_slice i64 index truncation guard; v0.39.0: runtime str_cmp; v0.36.0: array<str>; v0.30.0: runtime string call results and parameters."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.45.0: linear memory actually grows past 64 KiB (memory.grow + $__ensure_capacity) instead of trapping; v0.43.0: runtime str_concat now reserves linear memory and __array_bump even without arrays; v0.42.0: runtime str_slice i64 index truncation guard; v0.39.0: runtime str_cmp; v0.36.0: array<str>; v0.30.0: runtime string call results and parameters."
 
 [lib]
 name = "iir_to_wasm"
