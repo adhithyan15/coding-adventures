@@ -694,6 +694,18 @@ type ZipWriter() =
     /// Finish writing: append the Central Directory and EOCD record, then
     /// return the complete archive as a byte array.
     member _.Finish() : byte[] =
+        // Num_Entries_Total (EOCD) is a 16-bit field (max 65535), same as
+        // File_Name_Length. Without this check, `uint16 entries.Count` on an
+        // archive with more than 65535 entries would silently wrap (e.g.
+        // 65536 -> 0): every Local Header and Central Directory record would
+        // still be written correctly, but the EOCD's declared entry count
+        // would be wrong, so a reader that trusts the EOCD count instead of
+        // walking the Central Directory by cd_size would disagree with this
+        // library's own reader about what the archive contains.
+        if entries.Count > 0xFFFF then
+            raise (InvalidOperationException(
+                sprintf "zip: %d entries exceeds the 65535-entry limit of a non-ZIP64 archive" entries.Count))
+
         let cdOffset = uint buf.Count
 
         // ── Central Directory Headers ─────────────────────────────────────────

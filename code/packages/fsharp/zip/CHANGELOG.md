@@ -38,11 +38,18 @@ in `ZipWriter.AddFile`/`AddDirectory` — File_Name_Length is a 16-bit field,
 and writing one without a check would silently truncate it, corrupting the
 archive rather than failing closed.
 
-Added four "Hardening" xUnit tests covering: a corrupted `Compressed_Size`,
+Also rejects more than 65535 entries in `ZipWriter.Finish()` (caught in
+security review) — the EOCD's `Num_Entries_Total` is likewise a 16-bit
+field, and a 65536th entry would silently wrap `uint16 entries.Count` to 0
+while every Local Header and Central Directory record for it is still
+written, producing an archive whose declared entry count and actual
+contents disagree.
+
+Added five "Hardening" xUnit tests covering: a corrupted `Compressed_Size`,
 a corrupted `Relative_Offset_Of_Local_Header`, a corrupted
-`Uncompressed_Size` that must NOT spuriously trigger the trim step, and an
-oversized entry name — bringing the suite to 16 tests (85.1% line coverage,
-up from 84.1%).
+`Uncompressed_Size` that must NOT spuriously trigger the trim step, an
+oversized entry name, and more than 65535 entries — bringing the suite to
+17 tests (85.2% line coverage, up from 84.1%).
 
 ## [0.1.0] — 2026-04-24
 

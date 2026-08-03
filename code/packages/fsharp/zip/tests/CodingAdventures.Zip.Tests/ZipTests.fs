@@ -379,3 +379,16 @@ let ``Hardening oversized entry name rejected`` () =
     let oversizedName = String.replicate 70_000 "a"
     let writer = ZipWriter()
     Assert.Throws<ArgumentException>(fun () -> writer.AddFile(oversizedName, [| 1uy |])) |> ignore
+
+[<Fact>]
+let ``Hardening too many entries rejected`` () =
+    // Num_Entries_Total (EOCD) is also a 16-bit field (max 65535). Without a
+    // guard, `uint16 entries.Count` on a 65536th entry would wrap to 0,
+    // producing an archive whose Central Directory has 65536 real records
+    // but whose EOCD claims 0 entries — a divergence a "trust the EOCD
+    // count" reader and this library's own "walk the Central Directory by
+    // cd_size" reader would disagree on. Finish() must fail closed instead.
+    let writer = ZipWriter()
+    for i in 0 .. 65535 do
+        writer.AddFile(sprintf "f%d" i, [| byte (i % 256) |], compress = false)
+    Assert.Throws<InvalidOperationException>(fun () -> writer.Finish() |> ignore) |> ignore
