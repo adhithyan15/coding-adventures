@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject non-finite and non-Level-1 MOS model-card `LEVEL` values while
+  preserving explicit and implicit Level 1 cards.
 - Parse `.save`, scoped or global `.probe`, and `.measure` / `.meas` cards,
   and expose `selectOutputs()` / `measureResults()` helpers plus matching
   `ParsedNetlist` methods for analysis-plan results.

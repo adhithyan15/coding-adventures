@@ -1145,10 +1145,20 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   if (paramsText.startsWith("(") && paramsText.endsWith(")")) {
     paramsText = paramsText.slice(1, -1);
   }
+  const kind = match[1].toUpperCase();
+  const params = parseModelParams(paramsText);
+  const level = params.get("LEVEL");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    level !== undefined &&
+    (!Number.isFinite(level) || Math.abs(level - 1.0) > 1.0e-12)
+  ) {
+    throw new NetlistParseError("only MOS LEVEL=1 model cards are supported");
+  }
   return {
     name: fields[1],
-    kind: match[1].toUpperCase(),
-    params: parseModelParams(paramsText),
+    kind,
+    params,
   };
 }
 

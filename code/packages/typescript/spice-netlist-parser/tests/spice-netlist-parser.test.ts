@@ -1289,6 +1289,23 @@ Xright c d load
     );
   });
 
+  it.each(["0", "2", "1.000000000002", "1e999"])(
+    "rejects unsupported MOSFET model LEVEL=%s",
+    (level) => {
+      expect(() => parseNetlist(`.model nfast NMOS(LEVEL=${level})\nM1 d g s b nfast\n`)).toThrow(
+        "only MOS LEVEL=1 model cards are supported",
+      );
+    },
+  );
+
+  it.each(["LEVEL=1", "LEVEL=1.0000000000005", ""])(
+    "preserves supported MOSFET model parameters %s",
+    (parameters) => {
+      const parsed = parseNetlist(`.model nfast NMOS(${parameters})\nM1 d g s b nfast\n`);
+      expect(parsed.circuit.elements()[0].kind).toBe("mosfet");
+    },
+  );
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
