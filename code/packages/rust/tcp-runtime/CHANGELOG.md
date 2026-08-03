@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Keep the BSD-only accept fan-out state clean under Rust 1.97 when compiling
+  the Windows transport dependency closure.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

@@ -9,3 +9,6 @@ license = "MIT"
 coding_adventures_sha1 = { path = "../sha1" }
 http-core = { path = "../http-core" }
 http1 = { path = "../http1" }
+
+[dev-dependencies]
+serde_json = "1"

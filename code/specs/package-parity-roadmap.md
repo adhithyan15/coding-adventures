@@ -116,16 +116,19 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 783 | 10,962 |
+| Present in one language | 784 | 10,976 |
 
-The loop must not start by attempting 10,962 singleton ports. It should finish
+The loop must not start by attempting 10,976 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`b42d1683d85daa9fd26cb96da3d928612034aa24` is collision-clean at 1,233
-normalized implementation identities, 4,381 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 783 singletons, 588
+`5ceb7cafcb22ed70e096df281e12d10347113c2a` is collision-clean at 1,235
+normalized implementation identities, 4,383 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 785 singletons, 590
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
+The new `websocket-runtime` identity has a native-authority review owner; the
+intervening parser, CI, and curriculum fixes changed no canonical package
+identity.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
@@ -262,6 +265,35 @@ Flutter, and Compose C ABIs around `venture-browser-core`; its reusable event,
 navigation, scrolling, hover, link, and projection behavior joins the existing
 Venture bridge owner, while Cairo rendering, pointers, buffers, dynamic
 libraries, and toolkit launch remain native exceptions.
+
+The `3258981f` refresh adds `websocket-core`. Its spec, empty capability
+manifest, and implementation all define a bounded, transport-independent RFC
+6455 state machine: handshake validation, accept derivation, frame masking and
+canonical lengths, incremental decoding, fragmentation, UTF-8, ping/pong, and
+close semantics are portable. The selected first child now provides a closed
+Draft 2020-12 schema and 39 shared cases across all seven API families, with
+Rust consuming the fixture records directly as the reference implementation.
+The package passes its 23 unit tests, 7 shared-fixture tests, package-local
+format/lint/docs gates, and 99.81% line coverage. The real repository build
+plan selects and builds the complete 13-package prerequisite/downstream closure
+through `websocket-runtime`. Current Rust 1.97 exposed three pre-existing
+Windows-target lint/format points in `iocp`, `transport-platform`, and
+`tcp-runtime`; narrowly documented platform contracts and mechanical
+clamp/formatting updates make the full closure clean without changing behavior.
+The full validator adds no WebSocket finding to its existing 73-gap debt gate.
+A second dependency-blocked child expands the core through every established
+lane after shared HTTP framing and the Java/Kotlin/Dart HTTP prerequisites
+land. Sockets, DNS, TLS, clocks, random mask-key generation, event loops,
+retries, and application dispatch remain native runtime-adapter concerns.
+
+The `c9e4cb2a` refresh adds `websocket-runtime`, a concrete TCP adapter over
+`tcp-client`, `tcp-runtime`, `transport-platform`, OS entropy, and the portable
+WebSocket core. Its DNS, connect, listen, entropy, stream, loopback, and
+platform behavior is host-native and must not enter the all-language portable
+denominator. A dedicated review item owns the minimum truthful capability
+profile, platform-CI evidence, and the guard that deterministic RFC 6455 logic
+stays in `websocket-core`; policy excludes that native-runtime review from
+autonomous selection.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
@@ -402,7 +434,10 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   conformance suites, and the valid 38-case/61-file corpus. The committed Go-
   lane dry-run selects 13 of 301 packages and skips 288. The full validator
   separately reproduces the owned 73-gap BUILD debt gate: 12 Python, 3 Swift,
-  and 58 TypeScript. Resolver-semantic work remains a separate child;
+  and 58 TypeScript. Resolver-semantic work remains a separate child. Guarded
+  squash auto-completion merged PR #9703 as `3258981ff1` after all 17 exact-
+  head checks were terminal: twelve succeeded, four skipped, and one completed
+  neutrally;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

@@ -12,21 +12,21 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9703,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9703",
-    "branch": "codex/build-tool-go-language-identity-registry"
+    "number": 9717,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9717",
+    "branch": "codex/websocket-core-portable-conformance"
   },
   "last_inventory": {
-    "revision": "b42d1683d85daa9fd26cb96da3d928612034aa24",
+    "revision": "5ceb7cafcb22ed70e096df281e12d10347113c2a",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1233,
-    "implementation_package_slots": 4381,
+    "implementation_identities": 1235,
+    "implementation_package_slots": 4383,
     "high_consensus_packages": 172,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 783,
-    "singleton_missing_slots": 10962,
-    "rust_singletons": 588,
+    "singleton_packages": 785,
+    "singleton_missing_slots": 10990,
+    "rust_singletons": 590,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -428,11 +428,11 @@
     {
       "id": "build-tool-go-language-identity-registry",
       "title": "Bring Go build-tool discovery to the complete canonical language registry",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-fixtures"],
       "branch": "codex/build-tool-go-language-identity-registry",
       "pr_number": 9703,
-      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discovered 4,776 packages, but Go classified all fourteen Mosaic packages and programs as unknown while Ruby followed the shared canonical registry and preserved mosaic/programs identities. Selected after PR #9691 merged and the collision-clean 9ad8105f inventory because this unblocked, shared-fixture-backed repository primitive precedes the independent Elixir semantic, Haskell/Elixir UTF-8, and leaf-package items. The implementation now recognizes every canonical, emerging, target, domain, build, and retained host bucket only at an exact packages/programs boundary; preserves program identities; excludes specification and build-artifact trees; and rejects collisions with the typed, root-redacted DUPLICATE_PACKAGE_IDENTITY contract and CLI exit 2. On rebased base b42d1683, exact-head validation passes gofmt, all Go tests at 73.6% aggregate coverage and 93.9% discovery coverage, go vet, the race detector, trimpath build, module verification, govulncheck with zero reachable vulnerabilities, 17 schema tests, 40 runner tests, and the valid 38-case/61-file fixture corpus. Independent Go and Ruby real plans match all 4,779 (name, language, rel_path) tuples with zero duplicates or backslashes, all 14 Mosaic identities canonical, and only the intentional unknown/blog bucket. The committed Go-lane dry-run selects 13 of 301 packages and skips 288. The full standalone validator reproduces the separately owned 73-gap debt gate: 12 Python, 3 Swift, and 58 TypeScript. Ready PR #9703 opened at initial head d58b29bb after the exact-base validation; the state-only PR transition will establish the monitored exact head."
+      "notes": "Discovered by the real full-plan comparison for the Ruby identity slice. Ruby and Go both discovered 4,776 packages, but Go classified all fourteen Mosaic packages and programs as unknown while Ruby followed the shared canonical registry and preserved mosaic/programs identities. Selected after PR #9691 merged and the collision-clean 9ad8105f inventory because this unblocked, shared-fixture-backed repository primitive precedes the independent Elixir semantic, Haskell/Elixir UTF-8, and leaf-package items. The implementation now recognizes every canonical, emerging, target, domain, build, and retained host bucket only at an exact packages/programs boundary; preserves program identities; excludes specification and build-artifact trees; and rejects collisions with the typed, root-redacted DUPLICATE_PACKAGE_IDENTITY contract and CLI exit 2. On rebased base b42d1683, exact-head validation passes gofmt, all Go tests at 73.6% aggregate coverage and 93.9% discovery coverage, go vet, the race detector, trimpath build, module verification, govulncheck with zero reachable vulnerabilities, 17 schema tests, 40 runner tests, and the valid 38-case/61-file fixture corpus. Independent Go and Ruby real plans match all 4,779 (name, language, rel_path) tuples with zero duplicates or backslashes, all 14 Mosaic identities canonical, and only the intentional unknown/blog bucket. The committed Go-lane dry-run selects 13 of 301 packages and skips 288. The full standalone validator reproduces the separately owned 73-gap debt gate: 12 Python, 3 Swift, and 58 TypeScript. Ready PR #9703 opened at initial head d58b29bb and established final exact head aab1454a after its state transition. GitHub's guarded squash auto-completion merged it as 3258981ff1 on 2026-08-03 after all 17 exact-head checks were terminal: twelve succeeded, four skipped, and one completed neutrally."
     },
     {
       "id": "build-tool-perl-runtime-security-floor",
@@ -1617,6 +1617,33 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 481a30c3 inventory after PR #9696 added Rust-only chief-of-staff-orchestrator-core. The zero-capability, transport-independent core composes injected storage, supervisor, channel authorization, and monotonic time. Define language-neutral fixtures for stable host registration/listing, desired-state transitions, bounded one-tick reconciliation, clock regression, health inspection, safe deregistration, authorize-before-mutate channel creation/destruction, idempotency, stable errors, and payload-blind/keyless behavior. Expand only after the channel endpoint and service reconciler contracts land and the concrete process supervisor has a reviewed native-authority exception."
+    },
+    {
+      "id": "websocket-core-portable-conformance",
+      "title": "Define language-neutral WebSocket core conformance",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/websocket-core-portable-conformance",
+      "pr_number": 9717,
+      "notes": "Discovered in the collision-clean 3258981f inventory after PR #9704 added Rust-only websocket-core. The package and governing spec explicitly define a zero-capability, transport-independent RFC 6455 state machine intended for later Python, Go, Ruby, TypeScript, and Elixir ports. Selected after PR #9703 merged because this unblocked fixture foundation is the dependency for every WebSocket port and D18 runtime consumer; the already unblocked Elixir resolver semantic and Haskell/Elixir UTF-8 items remain next-ranked independent build-tool work. Implemented a closed Draft 2020-12 schema plus 39 bounded language-neutral cases across all seven portable API families, with 23 existing Rust unit tests and 7 shared-fixture consumer tests passing. The first consumer covers exact handshake and wire outputs, incremental decoding, limits, canonical lengths, masking, fragmentation, controls, split UTF-8, close state, typed errors, and payload-free diagnostics. Package-local rustfmt, clippy -D warnings, rustdoc -D warnings, RustSec audit, fixture-schema tests, capability-taxonomy tests, and collision checks pass; direct LLVM reporting records 99.81% line and 100% function coverage for src/lib.rs. After rebasing onto collision-clean 5ceb7caf, the repository build tool selects and builds the complete 13-package prerequisite/downstream closure through the newly landed websocket-runtime. Current Rust 1.97 exposed only three pre-existing Windows-target maintenance points in iocp, transport-platform, and tcp-runtime; narrowly documented opaque-pointer/platform dead-code contracts plus canonical clamp/formatting now make all 13 packages pass tests and clippy without changing behavior. The full validator reproduces only the separately owned 73-gap debt gate (12 Python, 3 Swift, and 58 TypeScript), with no WebSocket finding. Sockets, DNS, TLS, clocks, randomness, event loops, retries, and runtime dispatch remain outside the portable contract."
+    },
+    {
+      "id": "websocket-runtime-native-authority-review",
+      "title": "Review the native WebSocket TCP runtime authority boundary",
+      "status": "pending",
+      "depends_on": ["websocket-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean c9e4cb2a inventory after PR #9712 added Rust-only websocket-runtime. The package is a concrete host adapter over tcp-client, tcp-runtime, transport-platform, OS entropy, and websocket-core; its declared net:dns, net:connect, and net:listen authority and real loopback/platform behavior make it a reviewed native-runtime exception rather than an all-language port target. Audit that the manifest is the minimum truthful profile including inherited entropy and stream authority, that Linux/macOS/Windows CI exercises the promised adapters, and that all deterministic RFC 6455 parsing/state remains in websocket-core. This item records the exception but is excluded from autonomous delivery selection by the parity policy."
+    },
+    {
+      "id": "websocket-core-established-lane-parity",
+      "title": "Expand WebSocket core through every established lane",
+      "status": "pending",
+      "depends_on": ["websocket-core-portable-conformance", "http1-safe-framing-backfill", "java-kotlin-high-consensus", "swift-dart-high-consensus"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the shared WebSocket fixture oracle lands and HTTP framing prerequisites are consistent, port the authority-free core through all established implementation lanes with local idioms, empty capability manifests, real BUILD/BUILD_windows files, coverage, and downstream tests. The broad Java/Kotlin and Swift/Dart waves already own their currently missing http-core/http1 prerequisites; do not duplicate or bypass those dependency gaps. Runtime transport, TLS, mask-key generation, timers, event loops, and application dispatch remain separately reviewed native adapters."
     }
   ]
 }
