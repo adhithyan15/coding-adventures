@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPerlSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -234,6 +234,26 @@ resolutionRubySpec = describe "Ruby resolution conformance" $ do
                     Right
                         [ ["ruby/beta", "ruby/delta", "ruby/gamma"]
                         , ["ruby/alpha"]
+                        ]
+
+resolutionPerlSpec :: Spec
+resolutionPerlSpec = describe "Perl resolution conformance" $ do
+    it "reads only top-level cpanfile requirements through authoritative aliases" $
+        withFixture "resolution-perl-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "perl" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "perl/alpha"
+                    , "perl/beta-helper"
+                    , "perl/delta_name"
+                    , "perl/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["perl/beta-helper", "perl/delta_name", "perl/gamma"]
+                        , ["perl/alpha"]
                         ]
 
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation

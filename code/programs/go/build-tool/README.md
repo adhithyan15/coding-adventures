@@ -91,6 +91,14 @@ names are registered alongside directory-derived aliases, so valid
 hyphen/underscore naming differences resolve deterministically. The shared
 field-boundary fixture and complete 301-package lane resolve exactly 454 edges.
 
+Perl dependency resolution reads only top-level runtime `requires`
+declarations from each root `cpanfile`. Requirements inside test or other
+phase blocks, `Makefile.PL` dependency tables, metadata, and comments remain
+outside the graph. Exact `Makefile.PL` `NAME` values and current and legacy
+distribution spellings are aliases only. The shared field-boundary fixture and
+complete 256-package lane resolve exactly 213 total edges: 212 from
+authoritative manifests and one qualified BUILD dependency.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

@@ -64,6 +64,14 @@ are accepted, and declared gem names provide authoritative aliases when a
 directory-derived name differs. The shared field-boundary fixture and complete
 301-package lane match the canonical Go resolver exactly at 454 edges.
 
+Perl dependency resolution reads only top-level runtime `requires`
+declarations from each root `cpanfile`. Requirements inside test or other
+phase blocks, `Makefile.PL` dependency tables, metadata, and comments cannot
+invent graph edges. Exact `Makefile.PL` `NAME` values and current and legacy
+distribution spellings are aliases only. The shared field-boundary fixture and
+complete 256-package lane match the canonical Go resolver exactly at 213 total
+edges: 212 from authoritative manifests and one qualified BUILD dependency.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

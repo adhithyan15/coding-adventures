@@ -778,9 +778,9 @@ func mapLuaDep(depStr string, knownNames map[string]string, deps *[]string) {
 //	    requires 'Test2::V0';
 //	};
 //
-// We scan for lines matching `requires 'coding-adventures-...'` and map
-// them to internal package names. External dependencies (e.g., 'Moo',
-// 'Test2::V0') are silently skipped. Comments are ignored.
+// Only top-level runtime declarations are authoritative. Requirements inside
+// `on ... => sub { ... }` phase blocks are ignored, as are comments and all
+// Makefile.PL dependency tables. External dependencies are silently skipped.
 func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	cpanfile := filepath.Join(pkg.Path, "cpanfile")
 	data, err := os.ReadFile(cpanfile)
@@ -788,31 +788,106 @@ func parsePerlDeps(pkg discovery.Package, knownNames map[string]string) []string
 		return nil
 	}
 
-	text := string(data)
 	var internalDeps []string
+	blockDepth := 0
+	for _, line := range strings.Split(string(data), "\n") {
+		uncommented := stripPerlComment(line)
+		trimmed := strings.TrimSpace(uncommented)
 
-	// Match: requires 'coding-adventures-logic-gates';
-	// Or:    requires "coding-adventures-bitset", '>= 0.01';
-	re := regexp.MustCompile(`requires\s+['"]coding-adventures-([^'"]+)['"]`)
-
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-
-		// Skip blank lines and comments.
-		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
-			continue
+		if blockDepth == 0 {
+			if matches := perlRequiresPattern.FindStringSubmatch(trimmed); len(matches) == 2 {
+				depName := strings.ToLower(strings.TrimSpace(matches[1]))
+				if pkgName, ok := knownNames[depName]; ok {
+					internalDeps = append(internalDeps, pkgName)
+				}
+			}
 		}
 
-		matches := re.FindStringSubmatch(trimmed)
-		if len(matches) >= 2 {
-			depName := "coding-adventures-" + strings.ToLower(matches[1])
-			if pkgName, ok := knownNames[depName]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		structure := hidePerlStringContents(uncommented)
+		blockDepth += strings.Count(structure, "{") - strings.Count(structure, "}")
+		if blockDepth < 0 {
+			blockDepth = 0
 		}
 	}
 
 	return internalDeps
+}
+
+var perlRequiresPattern = regexp.MustCompile(`^requires\s+['"]([^'"]+)['"]`)
+
+func stripPerlComment(line string) string {
+	quote := byte(0)
+	escaped := false
+	for index := 0; index < len(line); index++ {
+		character := line[index]
+		if escaped {
+			escaped = false
+			continue
+		}
+		if quote != 0 && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '\'' || character == '"' {
+			if quote == 0 {
+				quote = character
+			} else if quote == character {
+				quote = 0
+			}
+			continue
+		}
+		if quote == 0 && character == '#' {
+			return line[:index]
+		}
+	}
+	return line
+}
+
+func hidePerlStringContents(line string) string {
+	visible := []byte(line)
+	quote := byte(0)
+	escaped := false
+	for index, character := range visible {
+		if escaped {
+			visible[index] = ' '
+			escaped = false
+			continue
+		}
+		if quote != 0 && character == '\\' {
+			visible[index] = ' '
+			escaped = true
+			continue
+		}
+		if character == '\'' || character == '"' {
+			visible[index] = ' '
+			if quote == 0 {
+				quote = character
+			} else if quote == character {
+				quote = 0
+			}
+			continue
+		}
+		if quote != 0 {
+			visible[index] = ' '
+		}
+	}
+	return string(visible)
+}
+
+var perlNamePattern = regexp.MustCompile(`\bNAME\s*=>\s*['"]([^'"]+)['"]`)
+
+func perlPackageNames(packagePath string) []string {
+	data, err := os.ReadFile(filepath.Join(packagePath, "Makefile.PL"))
+	if err != nil {
+		return nil
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		match := perlNamePattern.FindStringSubmatch(stripPerlComment(line))
+		if len(match) == 2 {
+			return []string{strings.ToLower(strings.TrimSpace(match[1]))}
+		}
+	}
+	return nil
 }
 
 // swiftDepRe matches .package(path: "...") in Package.swift.
@@ -1263,10 +1338,22 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			setKnown(rockspecName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "perl":
-			// Perl CPAN distribution names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
-			// This matches the Python convention exactly.
-			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(cpanName, pkg.Name, pkg.Path, pkg.Language)
+			baseName := strings.ToLower(filepath.Base(pkg.Path))
+			kebabName := strings.ReplaceAll(baseName, "_", "-")
+			snakeName := strings.ReplaceAll(baseName, "-", "_")
+			for _, alias := range []string{
+				baseName,
+				kebabName,
+				snakeName,
+				"coding-adventures-" + baseName,
+				"coding-adventures-" + kebabName,
+				"coding_adventures_" + snakeName,
+			} {
+				setKnown(alias, pkg.Name, pkg.Path, pkg.Language)
+			}
+			for _, declaredName := range perlPackageNames(pkg.Path) {
+				setKnown(declaredName, pkg.Name, pkg.Path, pkg.Language)
+			}
 
 		case "swift":
 			// Swift SPM package names are the kebab-case directory name, matching

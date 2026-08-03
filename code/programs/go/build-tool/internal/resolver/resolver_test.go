@@ -1202,6 +1202,22 @@ func TestParsePerlDepsDoubleQuotes(t *testing.T) {
 	}
 }
 
+func TestPerlResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-perl-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
 func TestBuildKnownNamesPerl(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "perl/logic-gates", Path: "/repo/code/packages/perl/logic-gates", Language: "perl"},

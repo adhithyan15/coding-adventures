@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `fd103586` after the
-latest Chief operator CLI merge. The inventory contains 1,254 normalized
-implementation identities across 4,408 established-lane package slots and
+working inventory was regenerated on August 3, 2026 from `24f64fed` after the
+Perl resolver branch rebased onto current main. The inventory contains 1,258
+normalized implementation identities across 4,412 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,9 +116,9 @@ found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 173 | 271 |
 | Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 804 | 11,256 |
+| Present in one language | 808 | 11,312 |
 
-The loop must not start by attempting 11,256 singleton ports. It should finish
+The loop must not start by attempting 11,312 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -356,14 +356,31 @@ slice: 469 packages have 147 false and 948 missing edges, and the canonical
 audit also encounters separately owned `BUILD_windows` prerequisite debt.
 Ruby therefore removes the largest remaining clean false-cycle risk while
 repairing its oracle without mixing unrelated manifest grammars or build-file
-remediation. The
-`fd103586` collision-checked inventory has 1,254
-identities and 4,408 implementation slots across 15 established lanes, with
-173 high-consensus packages and 271 missing slots, 804 singleton packages and
-11,256 missing slots, 609 Rust singletons, and zero collisions or unknown
-buckets. The two unrelated Python `BUILD_windows` prerequisite gaps
-exposed by the full validator remain owned by
-`build-file-standalone-integrity`. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill
+remediation. Guarded PR #9846 then merged exact head `38c449d322` after all 17
+checks were terminal and two consecutive mergeability readings were clean. The
+post-Ruby leverage pass selects Perl next: its 256-package lane retains 95 false
+and two missing edges, ahead of Swift's 65 false-only edges. TypeScript remains
+larger at 147 false and 948 missing edges, but still crosses much broader
+manifest semantics and separately owned `BUILD_windows` debt. Perl's 245 root
+cpanfiles and 247 root `Makefile.PL` files expose one coherent boundary: runtime
+`requires` declarations and authoritative internal distribution/module aliases
+must drive graph edges, while test phases and package metadata must not. The
+shared repair removes nine internal test-phase declarations, registers exact
+module names plus current and legacy distribution aliases, and leaves Haskell
+and Go identical across all 256 packages and 213 total edges: 212 authoritative
+manifest edges plus one qualified BUILD dependency, with zero one-sided edges.
+The rebased `24f64fed` collision-checked inventory has 1,258
+identities and 4,412 implementation slots across 15 established lanes, with
+173 high-consensus packages and 271 missing slots, 808 singleton packages and
+11,312 missing slots, 612 Rust singletons, and zero collisions or unknown
+buckets. The resolver slice adds the newly authoritative AES prerequisite to
+aes-modes so Linux detect validation remains standalone-correct. The Windows
+validator also makes five existing Perl standalone gaps concrete in
+WASM/compiler packages; the new `build-file-standalone-integrity-perl` child
+owns that dependency-shaped wave, so resolver semantics do not absorb broader
+build-recipe remediation. The two
+unrelated Python `BUILD_windows` prerequisite gaps remain owned by the parent
+`build-file-standalone-integrity` item. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill
 existing identities; ZStd
 is complete across all 15 lanes and ZIP now spans 13. The Chief daemon keyring,
 new Chief daemon credential persistence adapter, Chief daemon composition root,
@@ -393,6 +410,12 @@ supervisor execution. Its deterministic command grammar, typed dispatch,
 result rendering, install planning, and service-file rendering already have
 portable owners; the residual executable now has an excluded native-authority
 review rather than expanding the all-language denominator. The previously
+discovered `chief-of-staff-skill-parser` singleton is zero-capability
+deterministic parsing, validation, manifest generation, and permission
+planning over caller-provided text. It now has a portable-conformance owner for
+frontmatter, CommonMark structure, capability taxonomy, stable diagnostics,
+canonical manifest JSON, and sorted Deno flags; runtime launch and host approval
+remain outside that contract. The previously
 discovered singleton,
 `smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR
 adapter; the state backlog records an excluded native-authority review instead
@@ -404,7 +427,15 @@ lane gap. The new `process-shutdown` and
 `smart-home-unifi-network-integration` singletons likewise own native process
 signal/FFI authority or concrete authenticated LAN/TLS authority. Both have
 excluded native-authority review owners and do not displace the active portable
-resolver repair.
+resolver repair. The same rebase adds three classified singleton identities.
+The zero-capability Rust `chief-of-staff-skill-runtime` coordinator and the
+authority-free TypeScript `chief-of-staff-sdk` now have dependency-ordered
+portable-conformance owners over injected channel, LLM, and JSON-line
+interfaces. The Rust `smart-home-zoneminder-integration` package owns concrete
+credentialed HTTPS login, short-lived JWT custody, TLS, and runtime effects, so
+it has an excluded native-authority review rather than an artificial
+all-language port target. None broadens or displaces the completed Perl
+field-boundary slice.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

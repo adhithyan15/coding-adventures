@@ -32,6 +32,11 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Perl dependency resolution now reads only top-level runtime `requires`
+  declarations from root `cpanfile`s, excludes test and other phase blocks and
+  `Makefile.PL` dependency tables, and registers exact declared module names
+  plus current and legacy distribution aliases. The aes-modes BUILD recipe now
+  declares the newly authoritative local AES prerequisite.
 - Ruby dependency resolution now reads only runtime dependency calls on the
   gem specification receiver, treats `add_dependency` and
   `add_runtime_dependency` as synonyms, ignores development dependencies and
