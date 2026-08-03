@@ -1,6 +1,7 @@
 module BuildTool
     ( BuildResult(..)
     , Config(..)
+    , MetadataEncodingError(..)
     , Package(..)
     , ParsedArgs(..)
     , defaultConfig
@@ -8,10 +9,14 @@ module BuildTool
     , findRepoRoot
     , inferLanguage
     , parseArgs
+    , renderMetadataEncodingError
+    , resolveDependencies
     , runWithArgs
     ) where
 
-import Control.Monad (filterM, foldM, forM, unless, when)
+import Control.Exception (Exception, catch, evaluate, throwIO)
+import Control.Monad (filterM, foldM, forM, when)
+import qualified Data.ByteString as BS
 import Data.Char (isAlphaNum, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
@@ -19,6 +24,8 @@ import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import qualified Data.Set as Set
 import Data.Set (Set)
+import qualified Data.Text as Text
+import qualified Data.Text.Encoding as TextEncoding
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import Data.Time.Format (defaultTimeLocale, formatTime)
 import qualified DirectedGraph as DG
@@ -43,6 +50,7 @@ import System.FilePath
     , takeExtension
     , takeFileName
     )
+import System.IO (hPutStrLn, stderr)
 import qualified System.Info as SystemInfo
 import System.Process (CreateProcess(..), proc, readCreateProcessWithExitCode)
 import Text.Read (readMaybe)
@@ -69,6 +77,29 @@ data ParsedArgs
     | ParsedVersion
     | ParsedRun Config
     deriving (Eq, Show)
+
+data MetadataEncodingError = MetadataEncodingError
+    { metadataErrorCode :: String
+    , metadataErrorPackage :: String
+    , metadataErrorManifest :: FilePath
+    , metadataErrorEncoding :: String
+    }
+    deriving (Eq)
+
+instance Show MetadataEncodingError where
+    show = renderMetadataEncodingError
+
+instance Exception MetadataEncodingError
+
+renderMetadataEncodingError :: MetadataEncodingError -> String
+renderMetadataEncodingError metadataError =
+    intercalate
+        " "
+        [ metadataErrorCode metadataError ++ ":"
+        , "package=" ++ metadataErrorPackage metadataError
+        , "manifest=" ++ metadataErrorManifest metadataError
+        , "encoding=" ++ metadataErrorEncoding metadataError
+        ]
 
 data Package = Package
     { packageName :: String
@@ -205,7 +236,12 @@ runWithArgs rawArgs =
         Right ParsedVersion -> do
             putStrLn versionString
             pure 0
-        Right (ParsedRun cfg) -> runBuild cfg
+        Right (ParsedRun cfg) -> runBuild cfg `catch` handleMetadataEncodingError
+
+handleMetadataEncodingError :: MetadataEncodingError -> IO Int
+handleMetadataEncodingError metadataError = do
+    hPutStrLn stderr (renderMetadataEncodingError metadataError)
+    pure 2
 
 runBuild :: Config -> IO Int
 runBuild cfg = do
@@ -428,7 +464,7 @@ hostOS = map toLower osName
 
 readBuildCommands :: FilePath -> IO [String]
 readBuildCommands path = do
-    contents <- readFile path
+    contents <- readFileStrict path
     pure
         [ trim line
         | line <- lines contents
@@ -436,6 +472,15 @@ readBuildCommands path = do
         , not (null stripped)
         , not ("#" `isPrefixOf` stripped)
         ]
+
+-- Prelude.readFile is lazy and can retain a Windows file handle after package
+-- discovery has returned. Force the complete text before handing it to a
+-- parser so the handle reaches EOF and closes deterministically.
+readFileStrict :: FilePath -> IO String
+readFileStrict path = do
+    contents <- readFile path
+    _ <- evaluate (length contents)
+    pure contents
 
 validatePackages :: [Package] -> IO [String]
 validatePackages packages =
@@ -545,7 +590,7 @@ readCargoNames root = do
     if not exists
         then pure []
         else do
-            contents <- readFile cargoPath
+            contents <- readFileStrict cargoPath
             pure (parseQuotedField "name" contents)
 
 readPyprojectNames :: FilePath -> IO [String]
@@ -555,7 +600,7 @@ readPyprojectNames root = do
     if not exists
         then pure []
         else do
-            contents <- readFile pyprojectPath
+            contents <- readFileStrict pyprojectPath
             pure (parseAssignmentField "name" contents)
 
 readGoModuleNames :: FilePath -> IO [String]
@@ -565,7 +610,7 @@ readGoModuleNames root = do
     if not exists
         then pure []
         else do
-            contents <- readFile goModPath
+            contents <- readFileStrict goModPath
             pure
                 [ map toLower (trim (drop (length ("module" :: String)) stripped))
                 | line <- lines contents
@@ -580,7 +625,7 @@ readPackageJsonNames root = do
     if not exists
         then pure []
         else do
-            contents <- readFile packageJson
+            contents <- readFileStrict packageJson
             pure (parseJsonLikeField "name" contents)
 
 readGemspecNames :: FilePath -> IO [String]
@@ -589,7 +634,7 @@ readGemspecNames root = do
     let gemspecs = [root </> entry | entry <- entries, takeExtension entry == ".gemspec"]
     fmap concat $
         forM gemspecs $ \path -> do
-            contents <- readFile path
+            contents <- readFileStrict path
             pure
                 [ map toLower (takeWhile (\char -> char /= '"' && char /= '\'') after)
                 | line <- lines contents
@@ -603,7 +648,7 @@ readGemspecNames root = do
 
 readSimpleFieldName :: FilePath -> IO (Maybe String)
 readSimpleFieldName path = do
-    contents <- readFile path
+    contents <- readFileStrict path
     pure $
         listToMaybe
             [ map toLower (trim (drop 1 rest))
@@ -693,8 +738,35 @@ readManifestTokens pkg = do
     existingFiles <- filterM doesFileExist rootFiles
     fmap (nub . concat) $
         forM existingFiles $ \path -> do
-            contents <- readFile path
+            contents <-
+                if map toLower (takeExtension path) == ".rockspec"
+                    then readRockspecUtf8 pkg path
+                    else readFileStrict path
             pure (tokenize contents)
+
+readRockspecUtf8 :: Package -> FilePath -> IO String
+readRockspecUtf8 pkg path = do
+    bytes <- BS.readFile path
+    case TextEncoding.decodeUtf8' bytes of
+        Left _ ->
+            throwIO
+                MetadataEncodingError
+                    { metadataErrorCode = "METADATA_INVALID_UTF8"
+                    , metadataErrorPackage = packageName pkg
+                    , metadataErrorManifest = repositoryRelativeManifest pkg path
+                    , metadataErrorEncoding = "UTF-8"
+                    }
+        Right contents -> pure (Text.unpack contents)
+
+repositoryRelativeManifest :: Package -> FilePath -> FilePath
+repositoryRelativeManifest pkg path =
+    intercalate
+        "/"
+        [ "code"
+        , "packages"
+        , packageName pkg
+        , takeFileName path
+        ]
 
 tokenize :: String -> [String]
 tokenize contents =
@@ -726,7 +798,7 @@ hashPackage pkg = do
     files <- packageRelevantFiles pkg
     filePayloads <-
         forM files $ \path -> do
-            contents <- readFile path
+            contents <- readFileStrict path
             let relative = makeRelative (packagePath pkg) path
             pure (relative ++ "\n" ++ contents ++ "\n")
     hashString (concat filePayloads)
@@ -831,7 +903,7 @@ loadCache path = do
     if not exists
         then pure emptyCache
         else do
-            contents <- readFile path
+            contents <- readFileStrict path
             pure (fromMaybe emptyCache (readMaybe contents))
 
 saveCache :: FilePath -> BuildCache -> IO ()

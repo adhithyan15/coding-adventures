@@ -288,6 +288,9 @@ MUST:
   locale fallback;
 - report invalid rockspec encoding as `METADATA_INVALID_UTF8`, including the
   repository-relative manifest path and package identity;
+- surface that failure from a standalone build-tool front door as unsafe or
+  malformed input: exit `2`, write the stable diagnostic to standard error,
+  write no success output, and never disclose the absolute checkout root;
 - emit sorted, unique internal edges; and
 - report malformed metadata with stable diagnostics instead of silently
   inventing a partial graph.

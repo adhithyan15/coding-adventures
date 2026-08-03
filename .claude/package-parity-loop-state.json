@@ -374,7 +374,16 @@
       "depends_on": ["build-tool-perl-engine-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-haskell-rockspec-utf8",
       "pr_number": null,
-      "notes": "Materialized after merged PR #9632. Replace locale-sensitive lazy text I/O at the rockspec boundary with explicit strict UTF-8 decoding, consume both exact shared fixtures, preserve exact dependency edges, propagate typed METADATA_INVALID_UTF8 identity, and cover the real executable exit/stderr contract. Selected after PR #9717 merged because Ruby strict decoding and its dependent canonical resolver repairs are complete, the Haskell boundary is the next unblocked established-language build-tool gap, and its result will provide a stronger reference before the position-dependent Elixir repair."
+      "notes": "Materialized after merged PR #9632 and selected after PR #9717 because Ruby strict decoding and its dependent canonical resolver repairs are complete, making Haskell the next unblocked established-language build-tool boundary and a stronger reference for the position-dependent Elixir repair. The implementation strictly reads rockspec bytes, decodes UTF-8 before token parsing, propagates typed METADATA_INVALID_UTF8 with package and repository-relative manifest identity, preserves the exact lua/other -> lua/pkg shared-fixture edge, accepts literal U+FFFD, rejects five malformed-sequence classes, maps the real executable to exit 2 with empty stdout and stable root-redacted stderr, and closes lazy Windows read handles deterministically. Local validation passes 10 build-tool examples plus the graph and directed-graph suites, the exact Windows BUILD command, GHC -Wall -Werror build, Cabal check, publishability bounds, all-package Haddock generation, direct changed-boundary HPC ticks with 30% whole-engine expression coverage, the real invalid-fixture process contract, 57 shared conformance schema/runner tests, canonical Go test/vet/trimpath build, and a 205-package Haskell plan/BUILD validation. Cabal reports only newer incompatible major versions beyond the declared upper bounds; OSV Scanner, HLint, and Fourmolu are unavailable, while the changed-file credential scan is clean. Real Lua-package validation separately exposed the dependent Windows binary-safe source-hashing item now logged in state and roadmap rather than widening this metadata slice."
+    },
+    {
+      "id": "build-tool-haskell-binary-safe-source-hashing",
+      "title": "Make Haskell build-tool source hashing binary-safe on Windows",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-engine-rockspec-utf8-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while validating the real Lua lane for the Haskell strict-rockspec slice. The engine resolves the exact UTF-8 fixtures and maps malformed rockspec bytes correctly, but hashing real Lua packages on Windows aborts before reporting with GHC handle commitBuffer error 0xc000014b when source text is sent through the locale-sensitive git hash-object stdin boundary. Reproduce with the actual lua/logic_gates -> lua/arithmetic pair, make source hashing raw-byte deterministic without changing graph or cache identities, add non-ASCII source fixtures and a real front-door dry run, and keep this separate from rockspec metadata decoding."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",

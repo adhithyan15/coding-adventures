@@ -384,7 +384,11 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   CI-gate, and Ruby CodeQL checks. The post-#9717 leverage pass selects Haskell
   next because it is the remaining locale-sensitive established-language
   boundary and will provide a stronger reference for the position-dependent
-  Elixir repair; Elixir remains pending;
+  Elixir repair; Elixir remains pending. The Haskell real-package validation
+  also exposed a separate Windows source-hashing boundary: locale-sensitive
+  child-process stdin aborts with GHC `commitBuffer` error `0xc000014b` when
+  hashing non-ASCII package text. That binary-safe hashing repair is logged as
+  a dependent child rather than widening the rockspec metadata slice;
 - close the Ruby build tool's Starlark source-tree execution gaps. The Ruby
   UTF-8 validation found that a clean real plan cannot load the undeclared
   `coding_adventures_starlark_interpreter` runtime until repository library

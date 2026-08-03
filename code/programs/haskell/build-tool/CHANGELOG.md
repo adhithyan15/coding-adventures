@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Shared valid and invalid Lua rockspec fixture coverage, typed
+  `METADATA_INVALID_UTF8` diagnostics, representative malformed-sequence
+  checks, literal U+FFFD coverage, and front-door exit-code validation.
+
+### Changed
+
+- Read rockspecs as raw bytes and decode strict UTF-8 before dependency
+  resolution, with repository-relative diagnostics and no checkout-root leak.
+- Force existing lazy text reads to EOF before parsing so Windows file handles
+  close deterministically after discovery and validation.
+- Exercise the Haskell build tool from `BUILD_windows` whenever Cabal is
+  available instead of unconditionally skipping the package.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added
