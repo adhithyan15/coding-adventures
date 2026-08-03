@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-axiom-runtime"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Axiom runtime — lowers Axiom's arithmetic to symbolic-ir/symbolic-vm, and adds a fixed domain/category layer for `:`/`::`/`has`"
 license = "MIT"

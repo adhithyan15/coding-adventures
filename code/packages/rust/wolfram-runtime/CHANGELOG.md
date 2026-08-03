@@ -4,6 +4,33 @@ All notable changes to `wolfram-runtime` are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/) and this project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.19.6] — 2026-08-02
+
+### Fixed
+
+- **CRITICAL — self-referential reassignment DoS, shared fix (no bypass
+  here).** A security audit found and directly reproduced (against the
+  `derive-repl` binary) an unbounded value-growth denial-of-service in
+  `symbolic-vm`'s shared `handlers::assign_handler`: `a = a * a` / `a = a
+  + a` (Wolfram's `Set`), repeated even a handful of times, doubles the
+  bound value's node count and/or nesting depth every step, reaching
+  millions of nodes from a few hundred bytes of source. Fixed at the
+  shared choke point (`symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`/
+  `MAX_BOUND_VALUE_DEPTH`, see that crate's own changelog for the full
+  mechanism). Verified `Set`/`SetDelayed` lower straight to
+  `symbolic_ir::ASSIGN` and evaluate through the shared `vm.eval`
+  (`eval_source`'s per-statement loop) — `WolframBackend::handler_for`
+  checks the W-5 builtin table first but has no entry for `Assign`, so it
+  always falls through to the shared handler — no crate-specific bypass,
+  so no code change was needed here, just proof of coverage. Added
+  regression tests reproducing the exact audited scenario end-to-end
+  through a real `WolframSession` (both the node-count-tripping `a = a *
+  a` shape and the depth-tripping `a = a + a` shape — the shared `Add`
+  handler's flatten-then-left-associate canonicalization makes that shape
+  independently dangerous, see `symbolic-vm`'s changelog), plus a
+  non-false-positive check that a handful of self-multiplications under
+  the caps still evaluates correctly.
+
 ## [0.19.5] — 2026-07-17
 
 ### Added (W-22 — `Integrate`, fifth `cas-*` head)

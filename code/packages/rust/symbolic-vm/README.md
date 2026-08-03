@@ -96,6 +96,31 @@ The `handlers` module uses a `Numeric` enum (`Int(i64)`, `Rat(i64, i64)`,
 
 Integer overflow falls back to `Float`.
 
+## Security: self-referential-reassignment DoS guard
+
+`handlers::assign_handler` — the shared implementation behind every
+consuming CAS runtime's `:=`/`=` — rejects a value before binding it if
+either of two budgets is exceeded:
+
+| Budget | Constant | Why |
+|--------|----------|-----|
+| Total `IRNode` count | `handlers::MAX_BOUND_VALUE_NODES` (100,000) | `a := a * a`, repeated, clones the whole current value into both operand positions, roughly *doubling* node count every step |
+| Nesting depth | `handlers::MAX_BOUND_VALUE_DEPTH` (128) | `a := a + a`, repeated, additionally hits `Add`'s own flatten-then-left-associate canonicalization, whose rebuilt chain's depth equals its leaf count — also doubling, and dangerous *sooner* than node count because `VM::eval_symbol` natively re-walks a symbol's whole bound value on every lookup |
+
+Both checks use an explicit-work-stack iterative walk
+(`handlers::count_nodes_within_cap`/`handlers::depth_within_cap`, both
+`pub`), never native recursion, so checking a pathological value can never
+itself overflow the stack. On trip, `assign_handler` panics with a
+descriptive message — the same failure shape it already uses for a
+malformed (non-symbol) assignment target — which every consuming runtime's
+own worker-thread `catch_unwind` boundary converts into a clean error.
+
+A consuming runtime that bypasses `assign_handler` for its own plain
+assignment (`axiom-runtime` is the one example in this repo — it binds
+directly through `Backend::bind` rather than lowering to
+`symbolic_ir::ASSIGN`) must apply the identical two checks at its own bind
+site; both functions and constants are exported specifically for that.
+
 ## Stack position
 
 ```

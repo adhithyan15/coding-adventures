@@ -624,6 +624,74 @@ mod tests {
         assert_eq!(s.feed("2 + 2;\n").unwrap(), "4\n");
     }
 
+    // --- Self-referential-reassignment DoS guard (a security audit's
+    // finding, shared with every consumer of `symbolic-vm`'s
+    // `assign_handler` -- see `symbolic_vm::handlers::MAX_BOUND_VALUE_NODES`
+    // / `MAX_BOUND_VALUE_DEPTH`'s own doc comments) -- `a := a * a` /
+    // `a := a + a`, repeated even a handful of times, doubles the bound
+    // value's node count and/or nesting depth every step, reaching millions
+    // of nodes from a few hundred bytes of source. Reduce lowers its own
+    // `:=` straight to `symbolic_ir::ASSIGN` and evaluates through the
+    // shared `vm.eval`, so it is protected by the same choke-point fix with
+    // no crate-specific bypass work needed -- these tests prove that
+    // end-to-end through a real `ReduceSession`.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn self_referential_multiplication_worksheet_is_rejected_cleanly() {
+        // The exact audited scenario, as a Reduce worksheet
+        // (reduce.grammar's `program = { statement_line } [ statement ]`
+        // accepts many `;`-terminated statements in ONE `feed` call):
+        // `a := x + y` then `a := a * a` repeated. 30 repetitions is far
+        // past the real trip point (~15th step) -- without the guard this
+        // reaches billions of nodes; with it, a clean `Err` in well under a
+        // second.
+        let mut src = String::from("a := x + y;\n");
+        for _ in 0..30 {
+            src.push_str("a := a * a;\n");
+        }
+        assert!(src.len() < 500, "source should stay tiny: {} bytes", src.len());
+
+        let mut s = ReduceSession::new();
+        let err = s.feed(&src).unwrap_err();
+        assert!(err.contains("nodes"), "expected a node-count rejection, got {err:?}");
+        // The worker-thread `catch_unwind` rebuilds the session on panic —
+        // it must remain usable afterward.
+        assert_eq!(s.feed("2 + 2;\n").unwrap(), "4\n");
+    }
+
+    #[test]
+    fn self_referential_addition_worksheet_is_rejected_cleanly() {
+        // Same attack shape via the audit's other named example, `a := a +
+        // a`. This one trips the DEPTH guard, not the node-count guard --
+        // `Add`'s own flatten-then-left-associate canonicalization rebuilds
+        // a chain whose depth equals its leaf count, and leaf count doubles
+        // too. Without a depth guard this reproduces a genuine, uncatchable
+        // native stack overflow on a later statement's symbol lookup, not
+        // merely a slow hang.
+        let mut src = String::from("a := x + y;\n");
+        for _ in 0..30 {
+            src.push_str("a := a + a;\n");
+        }
+
+        let mut s = ReduceSession::new();
+        let err = s.feed(&src).unwrap_err();
+        assert!(
+            err.contains("levels"),
+            "expected a nesting-depth rejection, got {err:?}"
+        );
+        assert_eq!(s.feed("2 + 2;\n").unwrap(), "4\n");
+    }
+
+    #[test]
+    fn a_handful_of_self_multiplications_under_the_cap_still_evaluate_correctly() {
+        // Non-false-positive check: a FEW self-referential reassignments,
+        // comfortably under the caps, must still evaluate normally.
+        let mut s = ReduceSession::new();
+        s.feed("a := 2;\na := a * a;\na := a * a;\n").unwrap(); // 2 -> 4 -> 16
+        assert_eq!(s.feed("a;\n").unwrap(), "16\n");
+    }
+
     #[test]
     fn the_one_shot_eval_helper_matches_a_session() {
         let one = eval("2 + 3;\n").unwrap();

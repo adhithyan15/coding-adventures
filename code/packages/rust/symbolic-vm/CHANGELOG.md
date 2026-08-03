@@ -1,5 +1,77 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.20.4] — 2026-08-02
+
+### Fixed
+
+- **CRITICAL — self-referential reassignment DoS.** A security audit found
+  and directly reproduced (built and ran the real `axiom`/`derive-repl`
+  binaries) an unbounded value-growth denial-of-service in the shared
+  `handlers::assign_handler`: a self-referential reassignment like
+  `a := a * a` or `a := a + a`, repeated even a handful of times — all
+  inside one ~250-byte program — clones the entire current value of `a`
+  into BOTH operand positions of the new node, roughly DOUBLING its total
+  `IRNode` count on every step (measured directly against this crate:
+  10, 22, 46, 94, 190, 382, 766, 1534, ..., 98,302 by the 14th step),
+  reaching millions of nodes and hanging/OOMing the process. Neither of
+  this repo's other two DoS guards catches this — parser `MAX_RULE_DEPTH`
+  bounds *nesting* in the source text, `MAX_STATEMENT_TOKENS`/
+  `MAX_INPUT_LEN` bound *chain length* in the source text — both bound
+  source-text size, not the size of a value already sitting bound in the
+  environment.
+- Added `handlers::MAX_BOUND_VALUE_NODES` (100,000) and
+  `handlers::count_nodes_within_cap` (a `pub`, iterative — explicit
+  work-stack, never native recursion — node-counting walk), checked in
+  `assign_handler` immediately after `vm.eval(rhs)` and before
+  `vm.backend.bind(...)`. Trips by the 15th self-multiplication step, well
+  before any legitimate CAS value (an expanded polynomial, an explicit
+  literal list/matrix a user types by hand) would ever approach it.
+- **A second, independent growth axis, found while writing the `a := a +
+  a` regression test**: that shape does NOT reach `MAX_BOUND_VALUE_NODES`
+  first — it hits this crate's own `Add` handler's flatten-then-left-
+  associate canonicalization (Phase 47), which rebuilds a chain whose
+  DEPTH equals its leaf count. Leaf count doubles too, so depth grows
+  exponentially — and because `VM::eval_symbol` natively re-walks (via a
+  recursive `self.eval` call) a symbol's entire bound value on every
+  lookup, a sufficiently deep bound value overflows the native call stack
+  on the very NEXT statement that looks it up: an uncatchable process
+  abort (`SIGABRT`), not a catchable panic, and it happens *inside* the
+  next statement's `vm.eval(rhs)` call — before this handler's own
+  node-count check on that later statement's result ever runs. Confirmed
+  by direct reproduction against this crate before the fix. Added
+  `handlers::MAX_BOUND_VALUE_DEPTH` (128 — reuses this repo's own already-
+  vetted native-recursion safety threshold, `parser::DEFAULT_MAX_RULE_
+  DEPTH`) and `handlers::depth_within_cap` (same iterative-walk shape),
+  checked alongside the node-count cap in `assign_handler`.
+- Both new pub functions/constants are exposed specifically so a
+  consuming runtime with its own bypass of `assign_handler` can apply the
+  identical checks at its own bind site — see `axiom-runtime`'s changelog:
+  its plain `NAME ASSIGN expr` assignment binds directly through
+  `Backend::bind`, never routing through this handler.
+- On trip: a clean `panic!` with a descriptive message (matching this
+  handler's existing malformed-lhs panic convention), caught by every
+  consuming runtime's own worker-thread `catch_unwind` boundary and
+  surfaced as a clean REPL/CLI error, never a process crash.
+- Verified every confirmed consumer of `symbolic-vm::handlers::
+  assign_handler` — `derive-runtime`, `reduce-runtime`, `maple-runtime`,
+  `wolfram-runtime`, `macsyma-runtime` (via `macsyma-wasm`'s
+  `catch_parser_panics` boundary) — all lower their own `:=`/`=` straight
+  to `symbolic_ir::ASSIGN` and evaluate through the shared `vm.eval`, so
+  all are protected by this one choke-point fix with no crate-specific
+  bypass work needed. `axiom-runtime` is the one exception (see its own
+  changelog). `cas-summation`/`task-core` (other `symbolic-vm` consumers)
+  re-tested with no regressions.
+- Added regression tests: exact-scenario reproduction for both
+  `a := a * a` and `a := a + a` (30 repetitions, far past the real trip
+  point), a non-false-positive check that a handful of self-multiplications
+  under the caps still evaluate correctly, a non-false-positive check that
+  a large single-step literal (a 2000-element list) is not rejected, and
+  unit tests directly on `count_nodes_within_cap` (leaf counting, head+args
+  counting, cap-boundary exactness, and a 50,000-deep tree proving the walk
+  is genuinely iterative — torn down iteratively too, to avoid
+  reintroducing a recursive-`Drop`-overflows-the-stack bug in the test's
+  own cleanup).
+
 ## [0.20.3] — 2026-07-17
 
 ### Changed

@@ -109,8 +109,8 @@ plain text.
 ## Robustness
 
 `feed`/`eval_to_outputs` are the trust boundary for arbitrary Reduce source.
-Two independent deep-recursion vectors are closed (see the crate doc
-comment for the full rationale):
+Three independent deep-recursion/growth vectors are closed (see the crate
+doc comment for the full rationale):
 
 1. **Deeply nested source** (parenthesised, or a right-recursive
    `:=`/`if`-`else`/cons/power chain) — already rejected by
@@ -126,13 +126,26 @@ comment for the full rationale):
    group statement embedded as one operand of a much larger enclosing
    chain (`1 + 1 + (<<0;0>>) + 1 + 1 + ...`) — see `check_statement_token_
    counts`'s doc comment for the full accounting.
+3. **Unbounded self-referential-reassignment growth** — `a := a * a` / `a
+   := a + a`, repeated even a handful of times, doubles the bound value's
+   node count and/or nesting depth every step (a security audit's
+   finding). Neither guard above bounds the size of a value already
+   sitting in the environment before it gets combined with itself again.
+   This one is closed in the shared `symbolic-vm` crate itself
+   (`handlers::assign_handler`'s `MAX_BOUND_VALUE_NODES`/
+   `MAX_BOUND_VALUE_DEPTH` checks, run before every `:=` durably binds) —
+   this crate's own `:=` lowers straight to `symbolic_ir::ASSIGN` and
+   evaluates through that same shared handler with no bypass, so it is
+   protected automatically; see `symbolic-vm`'s own README/changelog for
+   the full mechanism.
 
 Evaluation itself runs on a worker thread with a large bounded stack inside
-`catch_unwind`, so a reused-handler panic (e.g. a malformed `Assign` LHS)
-becomes a clean `Err` and the session is rebuilt rather than left corrupted.
-A thread-spawn failure itself (OS thread-count/memory pressure) is also
-handled as an ordinary `Err`, not a caller-thread panic — a second
-`/security-review` finding against an earlier `.expect()`-based version.
+`catch_unwind`, so a reused-handler panic (e.g. a malformed `Assign` LHS,
+or the self-referential-reassignment guard tripping) becomes a clean `Err`
+and the session is rebuilt rather than left corrupted. A thread-spawn
+failure itself (OS thread-count/memory pressure) is also handled as an
+ordinary `Err`, not a caller-thread panic — a second `/security-review`
+finding against an earlier `.expect()`-based version.
 
 ## Tests
 

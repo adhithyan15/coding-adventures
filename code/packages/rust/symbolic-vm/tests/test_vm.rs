@@ -2587,6 +2587,192 @@ fn assign_binds_and_returns_value() {
 }
 
 // ---------------------------------------------------------------------------
+// Assign — self-referential-reassignment DoS guard
+// (MAX_BOUND_VALUE_NODES / MAX_BOUND_VALUE_DEPTH)
+//
+// A security audit found that `a := a * a` (or `a := a + a`), repeated even
+// a handful of times, clones `a`'s entire current value into BOTH operand
+// positions of the new node. When the value can't numerically collapse
+// (started from free symbols, e.g. `a := x + y`), this roughly DOUBLES the
+// bound value's total node count on every step — measured directly against
+// this crate: 10, 22, 46, 94, 190, 382, 766, 1534, 3070, 6142, 12286,
+// 24574, 49150, 98302, ... — reaching ~100,000 nodes from ~250 bytes of
+// source by the 15th self-multiplication. Neither of this repo's other two
+// DoS guards (parser `MAX_RULE_DEPTH` for deep NESTING, `MAX_STATEMENT_
+// TOKENS`/`MAX_INPUT_LEN` for long flat CHAINS) catches this, because both
+// bound source-text size, not the size of a value already sitting in the
+// environment. See `MAX_BOUND_VALUE_NODES`'s own doc comment for the full
+// reasoning and the cap's derivation.
+//
+// `a := a + a` specifically ALSO hits a second, independent growth axis:
+// the shared `Add` handler's flatten-then-left-associate canonicalization
+// (Phase 47) rebuilds a chain whose DEPTH equals its leaf count, and leaf
+// count doubles too — so depth grows exponentially, which is dangerous
+// even sooner than node count because a too-deep bound value can overflow
+// the native stack (an uncatchable process abort) the moment it's next
+// looked up, before a node-count check on that later statement's result
+// would ever run. See `MAX_BOUND_VALUE_DEPTH`'s own doc comment.
+// ---------------------------------------------------------------------------
+
+#[test]
+#[should_panic(expected = "exceeding 100000 nodes")]
+fn assign_rejects_self_referential_multiplication_before_unbounded_growth() {
+    // Exact reported scenario: `a := x + y;` then `a := a * a;` repeated.
+    // 30 repetitions is far past the real trip point (~15th step) — if the
+    // guard were missing, 30 doublings from a 10-node seed would reach
+    // roughly 10 * 2^30 ≈ 10 BILLION nodes; with the guard this panics in
+    // a handful of milliseconds around step 15, proving both that the
+    // guard fires and that it fires before any unbounded growth happens.
+    let mut vm = symbolic();
+    let mut statements = vec![apply(
+        sym(ASSIGN),
+        vec![sym("a"), apply(sym(ADD), vec![sym("x"), sym("y")])],
+    )];
+    for _ in 0..30 {
+        statements.push(apply(
+            sym(ASSIGN),
+            vec![sym("a"), apply(sym(MUL), vec![sym("a"), sym("a")])],
+        ));
+    }
+    vm.eval_program(statements);
+}
+
+#[test]
+#[should_panic(expected = "nested deeper than 128 levels")]
+fn assign_rejects_self_referential_addition_before_unbounded_growth() {
+    // Same self-referential-reassignment attack shape via the task's other
+    // named example, `a := a + a` instead of `a := a * a` -- but this one
+    // trips the DEPTH cap first, not the node-count cap: `Add`'s own
+    // flatten-then-left-associate canonicalization (Phase 47) rebuilds a
+    // chain whose depth equals its leaf count, and leaf count doubles just
+    // like node count does. Depth becomes dangerous (native stack overflow
+    // on the next lookup) well before node count alone would reach
+    // MAX_BOUND_VALUE_NODES -- see `MAX_BOUND_VALUE_DEPTH`'s own doc
+    // comment for the full mechanism. Without BOTH caps this reproduces an
+    // actual `SIGABRT` (uncatchable native stack overflow), not merely a
+    // slow/hanging process -- confirmed by removing the depth check
+    // locally and observing the abort while writing this test.
+    let mut vm = symbolic();
+    let mut statements = vec![apply(
+        sym(ASSIGN),
+        vec![sym("a"), apply(sym(ADD), vec![sym("x"), sym("y")])],
+    )];
+    for _ in 0..30 {
+        statements.push(apply(
+            sym(ASSIGN),
+            vec![sym("a"), apply(sym(ADD), vec![sym("a"), sym("a")])],
+        ));
+    }
+    vm.eval_program(statements);
+}
+
+#[test]
+fn assign_still_allows_a_handful_of_self_multiplications_under_the_cap() {
+    // Non-false-positive check: a FEW self-referential reassignments,
+    // comfortably under MAX_BOUND_VALUE_NODES, must still evaluate
+    // normally and produce the mathematically correct result — the guard
+    // must trip on VALUE SIZE, not merely on a variable referencing itself.
+    let mut vm = symbolic();
+    vm.eval(apply(sym(ASSIGN), vec![sym("a"), int(2)]));
+    vm.eval(apply(
+        sym(ASSIGN),
+        vec![sym("a"), apply(sym(MUL), vec![sym("a"), sym("a")])],
+    )); // a = 4
+    let result = vm.eval(apply(
+        sym(ASSIGN),
+        vec![sym("a"), apply(sym(MUL), vec![sym("a"), sym("a")])],
+    )); // a = 16
+    assert_eq!(result, int(16));
+    assert_eq!(vm.backend.lookup("a"), Some(int(16)));
+}
+
+#[test]
+fn assign_allows_a_large_explicit_literal_built_in_one_step() {
+    // Non-false-positive check on the other axis the doc comment calls
+    // out: a single large literal a real user might type by hand (a
+    // 2000-element list), built directly with no self-reference at all,
+    // must not be rejected — it sits nowhere near the cap.
+    let mut vm = symbolic();
+    let elems: Vec<_> = (0..2000).map(int).collect();
+    let expr = apply(sym(ASSIGN), vec![sym("big"), apply(sym(LIST), elems)]);
+    let result = vm.eval(expr);
+    // LIST Apply node + LIST head symbol + 2000 elements = 2002 nodes.
+    assert_eq!(
+        symbolic_vm::handlers::count_nodes_within_cap(
+            &result,
+            symbolic_vm::handlers::MAX_BOUND_VALUE_NODES
+        ),
+        Some(2002)
+    );
+}
+
+// ---------------------------------------------------------------------------
+// count_nodes_within_cap — the shared, DoS-safe node-counting walk itself
+// ---------------------------------------------------------------------------
+
+#[test]
+fn count_nodes_within_cap_counts_a_leaf_as_one() {
+    use symbolic_vm::handlers::count_nodes_within_cap;
+    assert_eq!(count_nodes_within_cap(&int(5), 10), Some(1));
+    assert_eq!(count_nodes_within_cap(&sym("x"), 10), Some(1));
+}
+
+#[test]
+fn count_nodes_within_cap_counts_the_apply_node_head_and_args() {
+    use symbolic_vm::handlers::count_nodes_within_cap;
+    // Add(x, y): the Apply node itself + the Add head symbol + x + y = 4.
+    let expr = apply(sym(ADD), vec![sym("x"), sym("y")]);
+    assert_eq!(count_nodes_within_cap(&expr, 10), Some(4));
+}
+
+#[test]
+fn count_nodes_within_cap_returns_none_when_over_cap() {
+    use symbolic_vm::handlers::count_nodes_within_cap;
+    let expr = apply(sym(ADD), vec![sym("x"), sym("y")]); // 4 nodes
+    assert_eq!(count_nodes_within_cap(&expr, 3), None);
+}
+
+#[test]
+fn count_nodes_within_cap_returns_exact_count_at_the_cap_boundary() {
+    use symbolic_vm::handlers::count_nodes_within_cap;
+    let expr = apply(sym(ADD), vec![sym("x"), sym("y")]); // 4 nodes
+    assert_eq!(count_nodes_within_cap(&expr, 4), Some(4));
+    assert_eq!(count_nodes_within_cap(&expr, 3), None);
+}
+
+#[test]
+fn count_nodes_within_cap_handles_a_deeply_nested_tree_without_recursing_natively() {
+    // Build a 50,000-deep right-leaning chain (Add(1, Add(1, Add(1, ...))))
+    // to prove the counting walk is genuinely iterative — a native-
+    // recursive counter would risk overflowing the test thread's stack
+    // well before this depth (see this repo's own lessons.md entries on
+    // "flat repetition chains fold into a deep tree").
+    let mut expr = int(0);
+    for _ in 0..50_000 {
+        expr = apply(sym(ADD), vec![int(1), expr]);
+    }
+    // 3 new nodes per level (Apply + ADD head + literal 1) + 1 for the
+    // int(0) base case = 3 * 50_000 + 1.
+    use symbolic_vm::handlers::count_nodes_within_cap;
+    assert_eq!(count_nodes_within_cap(&expr, 200_000), Some(150_001));
+
+    // Tear the tree down iteratively too — mirrors `axiom-to-semantic-ir`'s
+    // `drop_iterative` idiom — so this test's own cleanup doesn't
+    // reintroduce the exact "recursive Drop of a deep Box tree overflows
+    // the stack" class of bug the counting walk above was written to
+    // avoid. `count_nodes_within_cap` only guarantees iterative COUNTING;
+    // it says nothing about how Rust drops the tree afterward.
+    let mut stack = vec![expr];
+    while let Some(current) = stack.pop() {
+        if let symbolic_ir::IRNode::Apply(boxed) = current {
+            let symbolic_ir::IRApply { head, args } = *boxed;
+            stack.push(head);
+            stack.extend(args);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Define / user-defined functions
 // ---------------------------------------------------------------------------
 

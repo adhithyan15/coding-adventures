@@ -344,6 +344,58 @@ fn eval_assignment(ctx: &mut EvalContext, node: &GrammarASTNode) -> Result<Axiom
         (rhs.node, rhs.domain)
     };
 
+    // Self-referential reassignment guard -- see `symbolic_vm::handlers::
+    // MAX_BOUND_VALUE_NODES`/`MAX_BOUND_VALUE_DEPTH`'s own doc comments for
+    // the full incident this closes: repeated `a := a * a` doubles the
+    // bound value's node count every step (reaching millions of nodes from
+    // a few hundred bytes of source); repeated `a := a + a` ALSO doubles
+    // nesting depth (via the shared `Add` handler's flatten-then-left-
+    // associate canonicalization), which is independently dangerous
+    // because a too-deep bound value can overflow the native stack on the
+    // very NEXT lookup -- an uncatchable process abort, not a catchable
+    // error -- before a node-count check on that next statement's result
+    // would ever get a chance to run.
+    //
+    // This crate's plain `NAME ASSIGN expr` assignment does NOT lower to
+    // `symbolic_ir::ASSIGN` and go through `symbolic_vm`'s shared
+    // `assign_handler` the way every other CAS-family runtime's does (see
+    // this module's own doc comment for why: Axiom is an eager AST-walking
+    // interpreter, not a lower-then-`VM::eval`-once pipeline) -- it binds
+    // directly through `ctx.vm.backend.bind` below, bypassing that shared
+    // choke point entirely. Axiom's own `+`/`*`/etc. still fold through
+    // `symbolic_vm::VM::eval` one step at a time (this module's own doc
+    // comment, "Pure arithmetic ... is still reused unchanged"), so it hits
+    // the identical shared `Add`/`Mul` handlers and is equally exposed to
+    // both growth axes -- applying the identical, shared budget checks here
+    // closes the same hole at Axiom's own bind site rather than leaving it
+    // open behind a guard that only covers the other runtimes.
+    if symbolic_vm::handlers::count_nodes_within_cap(
+        &stored_node,
+        symbolic_vm::handlers::MAX_BOUND_VALUE_NODES,
+    )
+    .is_none()
+    {
+        return Err(EvalError::new(format!(
+            "Assign target '{name}' would bind a value exceeding {} nodes -- rejecting to \
+             prevent unbounded growth from self-referential reassignment (e.g. repeated \
+             '{name} := {name} * {name}')",
+            symbolic_vm::handlers::MAX_BOUND_VALUE_NODES
+        )));
+    }
+    if symbolic_vm::handlers::depth_within_cap(
+        &stored_node,
+        symbolic_vm::handlers::MAX_BOUND_VALUE_DEPTH,
+    )
+    .is_none()
+    {
+        return Err(EvalError::new(format!(
+            "Assign target '{name}' would bind a value nested deeper than {} levels -- \
+             rejecting to prevent unbounded growth from self-referential reassignment \
+             (e.g. repeated '{name} := {name} + {name}')",
+            symbolic_vm::handlers::MAX_BOUND_VALUE_DEPTH
+        )));
+    }
+
     ctx.vm.backend.bind(&name, stored_node.clone());
     Ok(AxiomValue {
         node: stored_node,
@@ -513,7 +565,21 @@ fn eval_binary_chain(
     let first = children
         .next()
         .ok_or_else(|| EvalError::new("empty binary chain"))?;
-    let mut acc = eval_expr_child(ctx, first)?;
+    // Carry the bare `IRNode` through the fold, not a domain-inferred
+    // `AxiomValue` -- a review-caught O(N^2) cost: `AxiomValue::inferred`
+    // calls `domains::is_polynomial_over_integers`, which walks the WHOLE
+    // node structurally. Calling it on the accumulator at every one of N
+    // fold steps re-walks an accumulator that grows by one step each time,
+    // giving O(N^2) total work for one N-term chain -- despite this
+    // function's own iterative, one-fold-at-a-time shape already being O(N)
+    // for the actual arithmetic (the shape this module's doc comment
+    // credits with "sidestepping the flat-repetition DoS vector by
+    // construction" -- true for native-recursion STACK DEPTH, which this
+    // fix doesn't change, but not for total CPU work, which it does).
+    // Every intermediate accumulator's `.domain` is discarded anyway (only
+    // `.node` ever feeds the next fold step), so there is no behavior
+    // change: domain inference now runs exactly ONCE, on the final result.
+    let mut acc = eval_expr_child(ctx, first)?.node;
     while let Some(op_child) = children.next() {
         let head = as_token(op_child)
             .and_then(|t| head_of(token_type(t)))
@@ -522,10 +588,9 @@ fn eval_binary_chain(
             .next()
             .ok_or_else(|| EvalError::new("binary operator with no right operand"))?;
         let rhs = eval_expr_child(ctx, rhs_child)?;
-        let result = ctx.vm.eval(apply(sym(head), vec![acc.node, rhs.node]));
-        acc = AxiomValue::inferred(result);
+        acc = ctx.vm.eval(apply(sym(head), vec![acc, rhs.node]));
     }
-    Ok(acc)
+    Ok(AxiomValue::inferred(acc))
 }
 
 // ---------------------------------------------------------------------------
