@@ -4279,11 +4279,17 @@ the Rust, Python, and TypeScript surfaces together.
      the shared diagnostic while positive bulk-junction potentials lower into
      Level-1 parameters.
 
+394. Python and TypeScript Berkeley SPICE MOS junction-grading parity.
+   - Status: completed in PR 9706.
+   - Negative and non-finite model-card `MJ` values are rejected with the
+     shared diagnostic while zero and positive bottom-junction grading
+     coefficients lower into Level-1 parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
-   - TypeScript still needs canonical lowering for `MJ`, `MJSW`, `FC`, `KF`,
-     and `AF`; Python already lowers these canonical fields
+   - TypeScript still needs canonical lowering for `MJSW`, `FC`, `KF`, and
+     `AF`; Python already lowers these canonical fields
      but still needs matching facade validation coverage.
    - Align the `CJS` and `CJD` aliases with canonical `CBS` and `CBD` in both
      facades after the canonical-field slices.

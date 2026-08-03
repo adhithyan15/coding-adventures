@@ -1316,6 +1316,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET MJ must be finite and non-negative");
   }
+  const sidewallGradingCoefficient = params.get("MJSW");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    sidewallGradingCoefficient !== undefined &&
+    (!Number.isFinite(sidewallGradingCoefficient) || sidewallGradingCoefficient < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET MJSW must be finite and non-negative");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1421,6 +1429,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "JS",
     "PB",
     "MJ",
+    "MJSW",
     "IS",
     "N_SUB",
     "T_NOM",
