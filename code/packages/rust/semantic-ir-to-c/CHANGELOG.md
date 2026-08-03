@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.25.0 — Collections slice 5: Array block methods (closure-calling)
+
+The first Collections slice covering methods that take a trailing **block**
+argument. No new `Feature`.
+
+- The Ruby frontend already appends a block as the last `__method__` call arg
+  (a `MakeClosure`, RB1), so it reaches this runtime as an ordinary
+  `SIR_CLOSURE` value — no new calling convention needed. Every element-wise
+  call goes through the EXISTING `_sir_apply` (the same dispatcher a
+  first-class `Proc`/`sir_apply` call already uses).
+- New Array methods: `each`, `map`, `select`, `reject`, `any?`, `all?`,
+  `none?`, `sort_by`, `each_with_index`, `reduce`/`inject` (`argc==1`
+  block-only, seeding the accumulator with the first element; `argc==2`
+  `(initial, block)`). `sort_by` computes each key once (Schwartzian
+  transform) rather than re-invoking the block per comparison.
+- **Fix (found while wiring this slice):** slice 3's 0-arg `count` ignored
+  `argc`/`args` entirely, so `arr.count { |x| .. }` (Ruby's block form, which
+  counts only matching elements) silently returned the total length instead —
+  wrong, not just unsupported. `count` now checks `argc` and dispatches to a
+  real block-counting loop for the 1-arg closure form.
+- Each block-taking arm requires the exact shape the frontend emits
+  (`argc == 1` and a closure, except `reduce`/`inject`'s `argc` 1–2); anything
+  else (missing block, extra args, a non-closure last arg) falls through to
+  the existing `NoMethodError`, matching every other malformed-call case here.
+
+**Anti-RCE preserved:** the method name is a compiler-emitted quoted C literal
+used only as a `strcmp` target — never reflection. Calling the block itself
+goes through `_sir_apply`, which only ever invokes a `SIR_CLOSURE`'s
+compiler-emitted function pointer — never a name-based lookup.
+
 ## 0.24.0 — Collections slice 3: 0-arg Array query/transform methods
 
 Third Collections slice — the first to cover **Array** (`SIR_SEQ`) receivers
