@@ -1026,6 +1026,24 @@ D1 in out clamp
     },
   );
 
+  it.each([
+    ["-1", -1.0],
+    ["4", 4.0],
+  ])("lowers finite diode XTI temperature exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(XTI=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      saturationCurrentTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects non-finite diode XTI temperature exponent", () => {
+    expect(() => parseNetlist(`.model clamp D(XTI=1e999)`)).toThrow(
+      "diode XTI must be finite",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

@@ -4421,15 +4421,20 @@ the Rust, Python, and TypeScript surfaces together.
      canonical `M` precedence.
 
 420. Python and TypeScript Berkeley SPICE diode depletion-coefficient parity.
-   - Status: completed in this diode depletion-coefficient parity slice.
+   - Status: completed in PR 9822.
    - Both parser facades validate finite `FC` values in `[0, 1)` and lower
      them into the shared engine diode depletion-coefficient field.
+
+421. Python and TypeScript Berkeley SPICE diode temperature-exponent parity.
+   - Status: completed in this diode temperature-exponent parity slice.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine diode saturation-current temperature-exponent field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the audited diode model-card lowering surfaces with `XTI`, `EG`,
-     `KF`, and `AF` validation and lowering parity.
+   - Continue the audited diode model-card lowering surfaces with `EG`, `KF`,
+     and `AF` validation and lowering parity.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

@@ -983,6 +983,22 @@ def test_rejects_invalid_diode_depletion_coefficient(value: str) -> None:
         parse_netlist(f".model clamp D(FC={value})")
 
 
+@pytest.mark.parametrize(("value", "expected"), [("-1", -1.0), ("4", 4.0)])
+def test_lowers_finite_diode_temperature_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(XTI={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Xti == expected
+
+
+def test_rejects_non_finite_diode_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="diode XTI must be finite"):
+        parse_netlist(".model clamp D(XTI=1e999)")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """
