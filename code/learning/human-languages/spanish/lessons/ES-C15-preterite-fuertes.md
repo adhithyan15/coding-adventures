@@ -9,7 +9,7 @@ prerequisites: [ES-C15-comer-vivir-preterite, ES-C08-tener, ES-C12-hacer, ES-C04
 sounds: [stress-stem, spelling-c-z]
 roots: [latin-perfect-strong]
 etymology_hook: "'strong' = the stress lives in the STEM, not the ending — TUve, HIce, so no written accent, the exact reverse of hablÉ/hablÓ; these are the Latin strong perfects (tenuī, fēcī, stetī) inherited whole instead of rebuilt"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C15-comer-vivir-preterite, ES-C14-hablar-preterite, ES-C08-tener, ES-C12-hacer]
 ---
 

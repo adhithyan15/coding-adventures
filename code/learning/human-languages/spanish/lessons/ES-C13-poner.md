@@ -9,7 +9,7 @@ prerequisites: [ES-C12-yo-go, ES-C12-hacer]
 sounds: [g-hard, r-tap]
 roots: [ponere-latin]
 etymology_hook: "poner ← Latin pōnere 'to put, place' → position, compose, deposit, component, opponent, postpone; the -go yo-form pongo joins tengo/hago/digo"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C12-yo-go, ES-C12-hacer, ES-C08-tener]
 ---
 

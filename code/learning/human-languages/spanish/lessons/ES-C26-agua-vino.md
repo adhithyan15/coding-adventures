@@ -9,7 +9,7 @@ prerequisites: [ES-C25-las-estaciones]
 sounds: [stressed-a-el-not-la, nasal-none]
 roots: [aqua-latin, vinum-latin]
 etymology_hook: "agua ← Latin aqua, barely changed at all — where French wore aqua all the way down to just 'eau' (a bare 'oh'); agua also takes EL despite being feminine, a purely phonological rule (avoiding la agua), not a gender change like mano's"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C25-las-estaciones]
 ---
 

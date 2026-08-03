@@ -9,7 +9,7 @@ prerequisites: [ES-C28-mediodia-medianoche]
 sounds: [silent-h, article-la-las]
 roots: [hora-latin, hora-greek]
 etymology_hook: "hora ← Latin hōra ← Greek hṓrā, 'a season, a time of day' — Spanish inherited it almost unchanged, with a silent h that's a fossil of an already-weak Latin h (NOT the same story as hijo/hacer's silent h, which comes from Spanish's own later f- → h- sound change); the same Latin source as French heure, German's separately-borrowed Uhr, and English hour"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C28-mediodia-medianoche]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [ES-C13-poner]
 sounds: [g-hard, l-clear]
 roots: [salire-latin]
 etymology_hook: "salir ← Latin salīre 'to leap, jump' → sally, salient, somersault, salmon (the leaping fish); the -go yo-form salgo joins pongo/tengo — 'going out' as an old 'leaping out'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C13-poner, ES-C12-yo-go]
 ---
 

@@ -64,7 +64,7 @@ describe("real curriculum", () => {
     expect(report.summary.registeredTracks).toBe(20);
     expect(report.summary.totalLessons).toBe(lessons.length);
     expect(report.summary.authoredBooks).toBe(20);
-    expect(report.summary.durationViolations).toBeGreaterThan(0);
+    expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
     expect(report.schemas.tracks).toHaveLength(20);
     expect(report.books.tracks).toHaveLength(20);

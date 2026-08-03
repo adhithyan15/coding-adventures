@@ -9,7 +9,7 @@ prerequisites: [ES-C16-practice, ES-C10-ir-a-futuro]
 sounds: [accent-acute, stress-final]
 roots: [latin-infinitive-habere]
 etymology_hook: "hablaré is hablar + he — the infinitive plus the present of haber, 'I HAVE to speak' → 'I will speak'; Latin's own future (amābō) died and Romance built a compound to replace it, which then FUSED into a single word, so the endings -é/-ás/-á/-emos/-án are a whole verb worn down to a suffix"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
 ---
 
@@ -17,8 +17,7 @@ reviews_of: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 10 gave you one future (*voy a hablar*). Here is the other —
-and it has the best origin story of any Spanish tense.
+[PAUSE 2s] Chapter 10 gave you one future (*voy a hablar*). Here is the other.
 
 ## The forms
 

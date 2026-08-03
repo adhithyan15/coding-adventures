@@ -9,7 +9,7 @@ prerequisites: [ES-C22-negro-blanco]
 sounds: [r-tap, palatal-j]
 roots: [pie-rewdh-russus, arabic-lazaward]
 etymology_hook: "rojo ← Latin russus, a cousin (not a copy) of French's rouge (← rubeus) — both ultimately from PIE *h₁rewdʰ-; azul ← Arabic lāzaward, and unlike French, this IS Spanish's everyday word for blue"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C22-negro-blanco]
 ---
 

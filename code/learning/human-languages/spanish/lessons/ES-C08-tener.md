@@ -9,7 +9,7 @@ prerequisites: [ES-C06-hablar]
 sounds: [diphthong-ie, r-tap]
 roots: [tenere-latin]
 etymology_hook: "tener ← Latin tenēre 'to hold' → English tenant, tenacious, contain, retain, maintain, sustain"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C07-comer, ES-C06-practice]
 ---
 

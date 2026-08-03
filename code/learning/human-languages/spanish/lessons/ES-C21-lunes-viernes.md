@@ -9,7 +9,7 @@ prerequisites: [ES-C08-numeros-6-10]
 sounds: [r-tap, diphthong-ie]
 roots: [dies-latin, planet-gods]
 etymology_hook: "Spanish weekdays mostly just DROPPED diēs 'day' — martes 'Mars's [day]' keeps its trailing -s from Martis itself, not from diēs — where French still spells 'day' out loud as -di"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C08-numeros-6-10]
 ---
 
@@ -47,11 +47,6 @@ its five weekdays. **miércoles** is the odd one out: some historians of the
 language think its extra "**‑coles**" is a genuine surviving trace of *diēs*
 itself (fused in and reshaped) — though the exact sound changes are debated,
 unlike the plainer, better-understood story for its four siblings.
-
-And once again: **martes and Tuesday are the same day** — both "the war-god's
-day" — Latin naming **Mars**, the Germanic tribes naming **their** war-god
-**Tiw** instead (*interpretatio germanica*, the same swap French's *mardi*
-shows).
 
 ## Guided Practice
 

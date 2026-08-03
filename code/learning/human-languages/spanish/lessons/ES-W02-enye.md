@@ -4,11 +4,11 @@ chapter: 4
 type: writing
 headword: "ñ"
 gloss: the letter eñe — a tiny second n riding on the first
-prerequisites: [ES-W01-acento]
+prerequisites: [ES-W01-tilde-diacritica]
 sounds: [ny-palatal]
 roots: [annus-latin]
 est_minutes: 3
-reviews_of: [ES-W01-acento]
+reviews_of: [ES-W01-tilde-diacritica, ES-W01-acento]
 ---
 
 # ñ — the letter that remembers a doubled n

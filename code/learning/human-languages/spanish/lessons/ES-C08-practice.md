@@ -8,7 +8,7 @@ concept_tag: CH8-PRACTICE
 prerequisites: [ES-C08-numeros-1-5, ES-C08-numeros-6-10, ES-C08-tener, ES-C08-cuantos-anos]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C08-tener, ES-C08-cuantos-anos, ES-C08-numeros-6-10, ES-C07-practice]
 ---
 

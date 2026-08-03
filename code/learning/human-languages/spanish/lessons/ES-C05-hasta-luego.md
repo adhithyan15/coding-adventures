@@ -5,12 +5,12 @@ type: phrase
 headword: hasta luego
 gloss: see you later (literally "until later")
 concept_tag: FAREWELL-LATER
-prerequisites: [ES-C05-hasta]
+prerequisites: [ES-C05-hasta-limits]
 sounds: [diphthong-ue, g-soft-gw]
 roots: [hatta-arabic, loco-latin]
 etymology_hook: "hasta (Arabic) + luego (← Latin loco 'at the place' → then/soon) — 'until soon'"
 est_minutes: 3
-reviews_of: [ES-C05-hasta, ES-C05-adios]
+reviews_of: [ES-C05-hasta-limits, ES-C05-hasta, ES-C05-adios]
 ---
 
 # hasta luego — the everyday "see you later"

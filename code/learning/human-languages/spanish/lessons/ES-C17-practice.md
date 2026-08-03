@@ -3,12 +3,12 @@ id: ES-C17-practice
 chapter: 17
 type: practice-mix
 headword: (practice)
-gloss: the ten irregular stems that serve both tenses — and the future that isn't about the future
+gloss: the ten irregular stems that serve both future and conditional
 concept_tag: CH17-PRACTICE
 prerequisites: [ES-C17-futuro, ES-C17-condicional]
 sounds: [epenthetic-d]
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C17-futuro, ES-C17-condicional, ES-C13-practice, ES-C12-yo-go]
 ---
 
@@ -67,31 +67,12 @@ Every irregular here is irregular in the **stem only**. The endings never change
 
 > **irregular stem + the same -é/-ás/-á… or -ía/-ías…**
 
-## The future that isn't about the future
-
-One more use, and it surprises everyone. Spanish uses the **future** to express
-**present guessing**:
-
-| Spanish | means |
-|---|---|
-| *¿Dónde **estará** Juan?* | "Where **can** Juan be?" (right now) |
-| ***Serán** las tres.* | "It **must be** three o'clock." |
-| *¿Quién **será**?* | "Who **could** that be?" |
-
-And the **conditional** does the same for the **past**:
-
-> ***Serían** las tres cuando llegó.* — "It **must have been** three when he arrived."
-
-If you remember that these tenses were built from "**I have to…**," the leap makes
-sense: *have to* is about **obligation and likelihood**, not only time.
-
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: the d-group — "tendré, pondré, vendré, saldré"]
 - [YOU SAY: the choppers — "diré, haré"]
 - [YOU SAY: one verb, both tenses — "tendré … tendría"]
-- [YOU SAY: the guess — "¿Dónde estará?" ("Where can he be?")]
 
 ## Wrap-up Recall
 
@@ -100,6 +81,4 @@ Why does *tener* become *tendr-*? (Dropping the vowel squeezed *-n'r-* together,
 and a **d** wedged in to fix it — medieval Spanish also tried *terné*.) How do the
 **-go club** verbs fare here? (**All six are irregular** — four take the *-dr-*,
 and *hacer/decir* chop instead.) Which two verbs chop hardest? (**Decir → diré**,
-**hacer → haré**.) What does *Serán las tres* mean? ("It **must be** three" — the
-future used for **guessing**.) Next chapter: the subjunctive — the mood for
-things that aren't facts.
+**hacer → haré**.) Do irregular stems change the endings? (**No.**)

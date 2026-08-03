@@ -9,7 +9,7 @@ prerequisites: [ES-C08-tener, ES-C06-hablar]
 sounds: [diphthong-ie, r-tap]
 roots: [quaerere-latin]
 etymology_hook: "querer ← Latin quaerere 'to seek, ask' → query, quest, question, inquire, require, conquer; the stressed e breaks to ie (quiero) — the same crack you met in tener"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C08-tener, ES-C10-practice]
 ---
 

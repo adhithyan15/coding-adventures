@@ -9,7 +9,7 @@ prerequisites: [ES-C11-querer, ES-C06-hablar]
 sounds: [diphthong-ue, r-tap]
 roots: [potere-latin]
 etymology_hook: "poder ← Latin potēre 'to be able' → power, potent, possible, potential; the stressed o breaks to ue (puedo) — the second stem-change pattern"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C11-querer, ES-C10-ir-a-futuro]
 ---
 

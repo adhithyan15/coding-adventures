@@ -5,11 +5,11 @@ type: practice-mix
 headword: (practice)
 gloss: the full "how are you?" exchange, formal and informal
 concept_tag: CH4-PRACTICE
-prerequisites: [ES-C04-gracias, ES-C04-de-nada, ES-C04-estar, ES-C04-como-esta, ES-C04-regular]
+prerequisites: [ES-C04-gracias, ES-C04-de-nada, ES-C04-estar, ES-C04-como-estas-register, ES-C04-regular]
 sounds: []
 roots: []
-est_minutes: 5
-reviews_of: [ES-C04-gracias, ES-C04-de-nada, ES-C04-como-esta, ES-C04-regular, ES-C03-practice]
+est_minutes: 4
+reviews_of: [ES-C04-gracias, ES-C04-de-nada, ES-C04-como-estas-register, ES-C04-como-esta, ES-C04-regular, ES-C03-practice]
 ---
 
 # Practice — "how are you?", start to finish

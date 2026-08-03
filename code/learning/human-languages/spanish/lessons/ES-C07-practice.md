@@ -8,7 +8,7 @@ concept_tag: CH7-PRACTICE
 prerequisites: [ES-C07-comer, ES-C07-vivir, ES-C07-beber, ES-C07-que, ES-C07-donde]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C07-comer, ES-C07-vivir, ES-C07-que, ES-C07-donde, ES-C06-practice]
 ---
 

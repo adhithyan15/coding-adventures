@@ -9,7 +9,7 @@ prerequisites: [ES-C23-padre-madre]
 sounds: [silent-h, r-tap]
 roots: [germanus-latin, germen-latin]
 etymology_hook: "hermano is NOT Spanish for frater — it's from germanus, 'of the same stock/seed' (→ English germ, germinate, germane); its initial g simply dropped in an unstressed syllable, and the h you see today was added later, purely in spelling"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C23-padre-madre]
 ---
 

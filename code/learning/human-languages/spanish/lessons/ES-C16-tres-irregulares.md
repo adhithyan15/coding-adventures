@@ -9,7 +9,7 @@ prerequisites: [ES-C16-imperfecto, ES-C09-ser, ES-C10-ir]
 sounds: [accent-acute, stress-antepenultimate]
 roots: [latin-eram, latin-ibam, latin-videre]
 etymology_hook: "iba ← Latin ībam — the imperfect is the ONE tense where ir uses its own original verb īre; its present came from vādere and its preterite from fuī, so ir's three tenses come from THREE different Latin verbs"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C16-imperfecto, ES-C09-ser, ES-C10-ir, ES-C14-ser-ir-preterite]
 ---
 

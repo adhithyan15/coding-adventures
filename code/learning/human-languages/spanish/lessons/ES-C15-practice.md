@@ -8,7 +8,7 @@ concept_tag: CH15-PRACTICE
 prerequisites: [ES-C15-comer-vivir-preterite, ES-C15-preterite-fuertes]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C15-comer-vivir-preterite, ES-C15-preterite-fuertes, ES-C14-practice]
 ---
 
@@ -29,11 +29,8 @@ one question sorts them: **where does the stress land?**
 | strong *tener* | **tuve** | **tuviste** | **tuvo** | **tuvimos** | **tuvieron** |
 | ser / ir | **fui** | **fuiste** | **fue** | **fuimos** | **fueron** |
 
-Two things to notice:
-
-1. Rows 2 and 3 are the **same** — *-er* and *-ir* merged.
-2. Only rows 1–3 carry accents, and only on *yo* and *él*. Those are exactly the
-   forms where **the stress is on the ending**.
+Rows 2 and 3 are the **same**: *-er* and *-ir* merged. Rows 1–3 carry
+accents only on *yo* and *él*, where **the ending is stressed**.
 
 ## The stress test
 
@@ -44,7 +41,7 @@ Read any preterite and ask: is the loud syllable the **last** one?
 
 ## Drill — past or present?
 
-Some forms live in both tenses. Decide by context:
+Use context for forms shared by two tenses:
 
 | form | could be | which? |
 |---|---|---|

@@ -8,7 +8,7 @@ concept_tag: CH13-PRACTICE
 prerequisites: [ES-C13-poner, ES-C13-salir, ES-C13-venir]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C13-poner, ES-C13-salir, ES-C13-venir, ES-C12-practice]
 ---
 

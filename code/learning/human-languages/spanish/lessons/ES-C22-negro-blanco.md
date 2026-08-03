@@ -9,7 +9,7 @@ prerequisites: [ES-C21-sabado-domingo]
 sounds: [r-tap, nasal-n]
 roots: [latin-niger, germanic-blank]
 etymology_hook: "negro ← Latin niger, but blanco is NOT from Latin albus — it's Germanic *blank 'shining', traditionally linked to Visigothic-era contact, the same word French borrowed (more firmly attested) via the Franks"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C21-sabado-domingo, ES-C21-lunes-viernes]
 ---
 

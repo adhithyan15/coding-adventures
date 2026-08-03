@@ -9,7 +9,7 @@ prerequisites: [ES-C17-futuro, ES-C16-imperfecto]
 sounds: [hiatus-ia, accent-acute]
 roots: [latin-infinitive-habere]
 etymology_hook: "hablaría = hablar + ía (← the old reduced imperfect avía) — the SAME infinitive weld as the future, but with the IMPERFECT of haber instead of the present, which is why its endings are exactly the -ía endings of Ch.16's imperfect; two tenses, one trick, two tenses of haber"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [ES-C17-futuro, ES-C16-imperfecto, ES-C11-querer]
 ---
 

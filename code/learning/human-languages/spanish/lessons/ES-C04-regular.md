@@ -5,12 +5,12 @@ type: word
 headword: regular
 gloss: so-so / not great (also "más o menos")
 concept_tag: WORD-SOSO
-prerequisites: [ES-C04-como-esta]
+prerequisites: [ES-C04-como-estas-register]
 sounds: [vowel-e, r-tap, l-clear]
 roots: [regula-latin, magis-minus-latin]
 etymology_hook: "regular ← Latin regula 'straight rod, rule'; the middling answer — 'on the rule / average'"
 est_minutes: 4
-reviews_of: [ES-C01-bien, ES-C04-como-esta]
+reviews_of: [ES-C01-bien, ES-C04-como-estas-register, ES-C04-como-esta]
 ---
 
 # regular / más o menos — the honest "so-so"
