@@ -1,30 +1,30 @@
 Human Languages curriculum gap report
 ====================================
-20 tracks, 1012 lessons, 20 books
-180 lessons at or above 300 effective seconds
+20 tracks, 1025 lessons, 20 books
+140 lessons at or above 300 effective seconds
 0 unknown prerequisites; 40 later-chapter lessons without prerequisites
 0 tracks without books; 257 lesson chapters without book chapters
 19 legacy, 1 mixed, 0 version-2 schema tracks
 
 Longest effective lessons:
   ES-C18-subjuntivo: 731s (declared 360s, computed 731s; declared+computed)
-  HI-W05-virama-namaste: 501s (declared 300s, computed 501s; declared+computed)
   ES-C18-practice: 500s (declared 360s, computed 500s; declared+computed)
-  HI-W02-abugida-ka-ta: 465s (declared 300s, computed 465s; declared+computed)
   ES-C18-quiero-que: 456s (declared 360s, computed 456s; declared+computed)
   TA-W04-vowel-signs-nandri: 441s (declared 360s, computed 441s; declared+computed)
-  HI-C06-numbers-1-5: 426s (declared 300s, computed 426s; declared+computed)
   TA-W02-ma-retroflex-na: 401s (declared 300s, computed 401s; declared+computed)
   TA-W01-curves-va-ka: 400s (declared 300s, computed 400s; declared+computed)
   ES-C17-practice: 398s (declared 300s, computed 398s; declared+computed)
   TA-W03-pulli-vanakkam: 398s (declared 300s, computed 398s; declared+computed)
-  HI-W04-ra-sa-mera-naam: 385s (declared 300s, computed 385s; declared+computed)
-  HI-W01-shirorekha-na-ma: 381s (declared 240s, computed 381s; computed)
   TA-C24-iravu: 377s (declared 360s, computed 377s; declared+computed)
   LA-C19-quid-agis: 370s (declared 360s, computed 370s; declared+computed)
   ES-C31-numeros-11-20: 360s (declared 360s, computed 245s; declared)
   ES-C32-perro-gato: 360s (declared 360s, computed 265s; declared)
   ES-C33-verde-amarillo: 360s (declared 360s, computed 205s; declared)
-  HI-C14-ritu: 360s (declared 360s, computed 253s; declared)
-  HI-C16-mahine: 360s (declared 360s, computed 253s; declared)
+  LA-C11-menses: 360s (declared 360s, computed 258s; declared)
+  LA-C13-hora: 360s (declared 360s, computed 248s; declared)
+  LA-C14-annos-natus: 360s (declared 360s, computed 271s; declared)
+  LA-C15-tempestas-pluit: 360s (declared 360s, computed 321s; declared+computed)
+  LA-C16-undecim-viginti: 360s (declared 360s, computed 213s; declared)
+  LA-C17-canis-feles-cattus: 360s (declared 360s, computed 297s; declared)
+  LA-C18-viridis-flavus: 360s (declared 360s, computed 279s; declared)
 
