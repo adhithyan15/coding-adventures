@@ -96,6 +96,22 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_manifest.py'
+          ADJ_CGROUP_ORIGINAL=$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)
+          ADJ_CGROUP_ROOT="/sys/fs/cgroup/adj-provenance-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ADJ_CGROUP_SHELL_PID=$$
+          cleanup_adj_cgroup() {
+            printf '%s\n' "$ADJ_CGROUP_SHELL_PID" | sudo tee "/sys/fs/cgroup${ADJ_CGROUP_ORIGINAL}/cgroup.procs" >/dev/null
+            sudo rmdir "$ADJ_CGROUP_ROOT"
+          }
+          sudo mkdir "$ADJ_CGROUP_ROOT"
+          sudo chown "$(id -u):$(id -g)" \
+            "$ADJ_CGROUP_ROOT" \
+            "$ADJ_CGROUP_ROOT/cgroup.procs" \
+            "$ADJ_CGROUP_ROOT/cgroup.threads" \
+            "$ADJ_CGROUP_ROOT/cgroup.subtree_control"
+          printf '%s\n' "$ADJ_CGROUP_SHELL_PID" | sudo tee "$ADJ_CGROUP_ROOT/cgroup.procs" >/dev/null
+          export ADJ_PROVENANCE_CGROUP_ROOT="$ADJ_CGROUP_ROOT"
+          trap cleanup_adj_cgroup EXIT
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_provenance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_onvif_origin_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_schema.py'
@@ -122,6 +138,9 @@ jobs:
             --formula-inventory-binary code/packages/rust/target/debug/adj-formula-inventory \
             --formula-audit-binary code/packages/rust/target/debug/adj-formula-audit \
             > /tmp/adj-stdlib-provenance.json
+          cleanup_adj_cgroup
+          trap - EXIT
+          unset ADJ_PROVENANCE_CGROUP_ROOT
           (cd code/programs/go/capability-cage-generator && go test ./...)
           (cd code/packages/go/ca-capability-analyzer && go test ./...)
           (cd code/packages/go/capability-cage && go test ./...)
@@ -360,11 +379,11 @@ jobs:
       - name: Test ADJ Windows Job containment
         if: runner.os == 'Windows'
         shell: pwsh
-        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job -k process_tree -k windows_containment -k job_close_root
+        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job -k process_tree -k windows_containment -k job_close_root -k raw_pipe_close -k stuck_stdout -k stuck_drain
 
-      - name: Test ADJ POSIX process-group containment
+      - name: Test ADJ macOS strict-containment boundary
         if: runner.os == 'macOS'
-        run: python3 -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k posix_process -k process_tree
+        run: python3 -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k posix_process -k process_tree -k guardian -k drain -k raw_pipe_close
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'

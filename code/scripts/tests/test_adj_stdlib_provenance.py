@@ -7,6 +7,7 @@ import json
 import multiprocessing
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -23,6 +24,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 provenance = importlib.import_module("adj_stdlib_provenance")
+guardian = importlib.import_module("adj_process_guardian")
 arithmetic_builder = importlib.import_module("build_adj_arithmetic_provenance")
 ratio_builder = importlib.import_module("build_adj_ratio_provenance")
 percent_of_builder = importlib.import_module("build_adj_percent_of_provenance")
@@ -47,6 +49,50 @@ def acquire_cas_lock_with_alternate_temp(
 
 
 class AdjStdlibProvenanceTests(unittest.TestCase):
+    class FakePosixGuardian:
+        CONTRACT = "adj-stdlib/process-guardian/v1"
+
+        def __init__(
+            self,
+            command: object,
+            cleanup_timeout_seconds: float,
+            *,
+            status: dict[str, object] | None = None,
+        ) -> None:
+            self.command = ["guardian", *command]
+            self.cleanup_timeout_seconds = cleanup_timeout_seconds
+            self.popen_options = {"start_new_session": True}
+            self.status = status or {
+                "cleanup_confirmed": True,
+                "contract": self.CONTRACT,
+                "returncode": 0,
+                "verifier_gone": False,
+            }
+            self.cleanup_requests = 0
+            self.parent_started_calls = 0
+            self.launch_failed_calls = 0
+            self.close_calls = 0
+
+        def parent_started(self) -> None:
+            self.parent_started_calls += 1
+
+        def launch_failed(self) -> None:
+            self.launch_failed_calls += 1
+
+        def request_cleanup(self) -> bool:
+            if self.cleanup_requests:
+                return False
+            self.cleanup_requests = 1
+            return True
+
+        def read_status(self, timeout_seconds: float) -> dict[str, object]:
+            self.assert_positive_timeout = timeout_seconds > 0
+            self.request_cleanup()
+            return self.status
+
+        def close(self) -> None:
+            self.close_calls += 1
+
     def test_lifecycle_failure_is_immutable_and_canonical(self) -> None:
         cleanup = provenance.LifecycleFailure(
             stage="job.close",
@@ -70,12 +116,14 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     "error_code": 6,
                     "message": "close failed",
                     "stage": "job.close",
+                    "status_code": None,
                 }
             ],
-            "contract": "adj-stdlib/process-lifecycle-failure/v1",
+            "contract": "adj-stdlib/process-lifecycle-failure/v2",
             "error_code": 87,
             "message": "configuration failed",
             "stage": "job.configure",
+            "status_code": None,
         }
 
         self.assertEqual(failure.to_dict(), expected)
@@ -105,6 +153,11 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ("message", "", "message must be a non-empty string"),
             ("api", "", "API must be null or a non-empty string"),
             ("error_code", True, "error code must be an integer or null"),
+            (
+                "status_code",
+                "",
+                "status code must be null or a non-empty string",
+            ),
             (
                 "cleanup_causes",
                 [cleanup],
@@ -352,6 +405,27 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 return
             time.sleep(0.05)
         self.fail(f"process {pid} remained alive")
+
+    def linux_process_starttime(self, pid: int) -> str | None:
+        try:
+            raw = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
+        except (OSError, UnicodeDecodeError):
+            return None
+        tail = raw.rsplit(")", 1)
+        if len(tail) != 2:
+            return None
+        fields = tail[1].split()
+        return fields[19] if len(fields) > 19 else None
+
+    def assert_linux_process_identity_exits(
+        self, pid: int, starttime: str, *, timeout: float = 5
+    ) -> None:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if self.linux_process_starttime(pid) != starttime:
+                return
+            time.sleep(0.05)
+        self.fail(f"Linux process identity {pid}:{starttime} remained alive")
 
     def rust_binary_command(self, name: str) -> list[str]:
         suffix = ".exe" if os.name == "nt" else ""
@@ -1626,6 +1700,621 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         killpg.assert_called_once_with(process.pid, provenance.POSIX_SIGKILL)
         process.kill.assert_called_once_with()
 
+    def test_posix_process_guardian_configuration_fails_before_launch(self) -> None:
+        failure = provenance._lifecycle_error(
+            "containment.configure",
+            "delegated cgroup unavailable",
+            api="cgroup.kill",
+        )
+        factory = mock.Mock(side_effect=failure)
+
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(provenance.subprocess, "Popen") as popen,
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "failed to configure strict process containment",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                ["fixture"],
+                [],
+                label="guardian setup fixture",
+                posix_guardian_factory=factory,
+            )
+
+        self.assertEqual(raised.exception.lifecycle.stage, "containment.configure")
+        popen.assert_not_called()
+
+    def test_posix_process_strict_containment_rejects_unsupported_platform(
+        self,
+    ) -> None:
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(provenance.sys, "platform", "darwin"),
+            mock.patch.object(provenance.subprocess, "Popen") as popen,
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "strict process containment is unavailable",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                ["fixture"], [], label="unsupported containment fixture"
+            )
+
+        self.assertEqual(raised.exception.lifecycle.stage, "containment.configure")
+        popen.assert_not_called()
+
+    def test_posix_guardian_partial_pipe_setup_closes_owned_descriptors(self) -> None:
+        with (
+            mock.patch.object(provenance.sys, "platform", "linux"),
+            mock.patch.dict(
+                provenance.os.environ,
+                {provenance._PosixGuardian.CGROUP_ENV: "/delegated"},
+            ),
+            mock.patch.object(
+                provenance.os,
+                "pipe",
+                side_effect=[(10, 11), OSError(24, "too many open files")],
+            ),
+            mock.patch.object(provenance.os, "close") as close,
+            self.assertRaisesRegex(OSError, "too many open files"),
+        ):
+            provenance._PosixGuardian(["fixture"], 1)
+
+        self.assertEqual(
+            close.call_args_list,
+            [mock.call(10), mock.call(11)],
+        )
+
+    def test_posix_guardian_inheritability_failure_closes_all_pipes(self) -> None:
+        with (
+            mock.patch.object(provenance.sys, "platform", "linux"),
+            mock.patch.dict(
+                provenance.os.environ,
+                {provenance._PosixGuardian.CGROUP_ENV: "/delegated"},
+            ),
+            mock.patch.object(
+                provenance.os,
+                "pipe",
+                side_effect=[(10, 11), (12, 13)],
+            ),
+            mock.patch.object(
+                provenance.os,
+                "set_inheritable",
+                side_effect=[None, None, OSError(5, "injected inherit failure")],
+            ),
+            mock.patch.object(provenance.os, "close") as close,
+            self.assertRaisesRegex(OSError, "injected inherit failure"),
+        ):
+            provenance._PosixGuardian(["fixture"], 1)
+
+        self.assertEqual(
+            close.call_args_list,
+            [mock.call(10), mock.call(11), mock.call(12), mock.call(13)],
+        )
+
+    def test_posix_guardian_handoff_failure_requests_cleanup(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = 125
+        fake = self.FakePosixGuardian(
+            [],
+            0.1,
+            status={
+                "cleanup_confirmed": False,
+                "contract": self.FakePosixGuardian.CONTRACT,
+                "cleanup_causes": [
+                    {
+                        "cleanup_causes": [],
+                        "error": "child release failed",
+                        "error_code": "CHILD_RELEASE_FAILED",
+                    }
+                ],
+                "error": "cgroup remained populated",
+                "error_code": "CGROUP_CLEANUP_TIMEOUT",
+            },
+        )
+        fake.parent_started = mock.Mock(
+            side_effect=OSError(5, "injected parent handoff failure")
+        )
+        close_attempt = mock.Mock()
+        close_attempt.observe.return_value = None
+
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "failed to complete process guardian handoff",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                ["fixture"],
+                [],
+                label="guardian handoff fixture",
+                drain_timeout_seconds=0.1,
+                posix_guardian_factory=lambda *_args, **_kwargs: fake,
+                raw_close_attempt_factory=mock.Mock(return_value=close_attempt),
+            )
+
+        self.assertEqual(raised.exception.lifecycle.stage, "containment.configure")
+        self.assertEqual(raised.exception.lifecycle.api, "guardian.parent_handoff")
+        self.assertEqual(fake.cleanup_requests, 1)
+        self.assertEqual(fake.close_calls, 1)
+        process.wait.assert_called_once_with(timeout=0.2)
+        containment = raised.exception.lifecycle.cleanup_causes[0]
+        self.assertEqual(containment.status_code, "CGROUP_CLEANUP_TIMEOUT")
+        self.assertEqual(
+            containment.cleanup_causes[0].status_code, "CHILD_RELEASE_FAILED"
+        )
+
+    def test_posix_process_guardian_attests_child_returncode(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = 0
+        process.stdout.read.side_effect = [b"{}\n", b""]
+        process.stderr.read.return_value = b""
+        created: list[AdjStdlibProvenanceTests.FakePosixGuardian] = []
+
+        def factory(command: object, cleanup_timeout_seconds: float) -> object:
+            result = self.FakePosixGuardian(command, cleanup_timeout_seconds)
+            created.append(result)
+            return result
+
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(
+                provenance.subprocess, "Popen", return_value=process
+            ) as popen,
+        ):
+            result = provenance._run_json_command(
+                ["fixture"],
+                ["argument"],
+                label="guardian success fixture",
+                posix_guardian_factory=factory,
+            )
+
+        self.assertEqual(result, {})
+        self.assertEqual(created[0].parent_started_calls, 1)
+        self.assertEqual(created[0].cleanup_requests, 1)
+        self.assertEqual(created[0].close_calls, 1)
+        self.assertTrue(created[0].assert_positive_timeout)
+        self.assertEqual(popen.call_args.args[0], ["guardian", "fixture", "argument"])
+
+    def test_posix_process_guardian_failure_rejects_valid_json(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = 125
+        process.stdout.read.side_effect = [b"{}\n", b""]
+        process.stderr.read.return_value = b""
+        status = {
+            "cleanup_confirmed": False,
+            "contract": self.FakePosixGuardian.CONTRACT,
+            "cleanup_causes": [
+                {
+                    "cleanup_causes": [],
+                    "error": "child release failed",
+                    "error_code": "CHILD_RELEASE_FAILED",
+                }
+            ],
+            "error": "cgroup remained populated",
+            "error_code": "CGROUP_CLEANUP_TIMEOUT",
+        }
+        fake = self.FakePosixGuardian([], 1, status=status)
+
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "CGROUP_CLEANUP_TIMEOUT",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                ["fixture"],
+                [],
+                label="guardian failure fixture",
+                posix_guardian_factory=lambda *_args, **_kwargs: fake,
+            )
+
+        self.assertEqual(raised.exception.lifecycle.stage, "containment.confirm")
+        self.assertEqual(raised.exception.lifecycle.api, "guardian.status")
+        self.assertEqual(
+            raised.exception.lifecycle.status_code,
+            "CGROUP_CLEANUP_TIMEOUT",
+        )
+        self.assertEqual(
+            raised.exception.lifecycle.cleanup_causes[0].status_code,
+            "CHILD_RELEASE_FAILED",
+        )
+
+    def test_posix_process_timeout_escalates_after_guardian_request(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.side_effect = [
+            subprocess.TimeoutExpired(["fixture"], 0.2),
+            subprocess.TimeoutExpired(["fixture"], 0.1),
+            0,
+        ]
+        process.stdout.read.return_value = b""
+        process.stderr.read.return_value = b""
+        fake = self.FakePosixGuardian(
+            [],
+            0.1,
+            status={
+                "cleanup_confirmed": True,
+                "contract": self.FakePosixGuardian.CONTRACT,
+                "returncode": -9,
+                "verifier_gone": True,
+            },
+        )
+        terminator = mock.Mock()
+
+        with (
+            mock.patch.object(provenance.os, "name", "posix"),
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            self.assertRaisesRegex(provenance.ProvenanceError, "timed out"),
+        ):
+            provenance._run_json_command(
+                ["fixture"],
+                [],
+                label="guardian timeout fixture",
+                timeout_seconds=0.2,
+                drain_timeout_seconds=0.1,
+                posix_guardian_factory=lambda *_args, **_kwargs: fake,
+                process_tree_terminator=terminator,
+            )
+
+        self.assertGreaterEqual(fake.cleanup_requests, 1)
+        terminator.assert_not_called()
+
+    def test_guardian_cgroup_events_require_one_exact_populated_field(self) -> None:
+        self.assertTrue(guardian.cgroup_is_empty(b"populated 0\nfrozen 0\n"))
+        self.assertFalse(guardian.cgroup_is_empty(b"populated 1\n"))
+        for raw in (
+            b"",
+            b"populated 0\npopulated 1\n",
+            b"populated maybe\n",
+            b"populated 0 extra\n",
+            b"populated \xff\n",
+        ):
+            with self.subTest(raw=raw), self.assertRaises(guardian.GuardianError):
+                guardian.cgroup_is_empty(raw)
+
+    def test_guardian_error_status_preserves_cleanup_causality(self) -> None:
+        primary = guardian.GuardianError(
+            "CHILD_RELEASE_FAILED", "child release failed"
+        )
+        cleanup = guardian.GuardianError(
+            "CGROUP_CLEANUP_TIMEOUT", "cgroup remained populated"
+        ).with_cleanup(primary)
+
+        self.assertEqual(
+            cleanup.to_dict(),
+            {
+                "cleanup_causes": [
+                    {
+                        "cleanup_causes": [],
+                        "error": "child release failed",
+                        "error_code": "CHILD_RELEASE_FAILED",
+                    }
+                ],
+                "error": "cgroup remained populated",
+                "error_code": "CGROUP_CLEANUP_TIMEOUT",
+            },
+        )
+
+    def test_guardian_main_serializes_compound_cleanup_failure(self) -> None:
+        control_read, control_write = os.pipe()
+        status_read, status_write = os.pipe()
+        primary = guardian.GuardianError(
+            "CHILD_RELEASE_FAILED", "child release failed"
+        )
+        cleanup = guardian.GuardianError(
+            "CGROUP_CLEANUP_TIMEOUT", "cgroup remained populated"
+        ).with_cleanup(primary)
+        try:
+            with mock.patch.object(guardian, "supervise", side_effect=cleanup):
+                returncode = guardian.main(
+                    [
+                        "--control-fd",
+                        str(control_read),
+                        "--status-fd",
+                        str(status_write),
+                        "--cgroup-root",
+                        "/delegated",
+                        "--cleanup-timeout-seconds",
+                        "1",
+                        "--",
+                        "fixture",
+                    ]
+                )
+            control_read = -1
+            status_write = -1
+            raw = os.read(status_read, guardian.MAX_CONTROL_BYTES + 1)
+            status = json.loads(raw.decode("utf-8"))
+            self.assertEqual(returncode, 125)
+            self.assertEqual(status["error_code"], "CGROUP_CLEANUP_TIMEOUT")
+            self.assertEqual(
+                status["cleanup_causes"][0]["error_code"],
+                "CHILD_RELEASE_FAILED",
+            )
+        finally:
+            for descriptor in (
+                control_read,
+                control_write,
+                status_read,
+                status_write,
+            ):
+                if descriptor >= 0:
+                    os.close(descriptor)
+
+    def test_guardian_reaping_respects_cleanup_deadline(self) -> None:
+        with (
+            mock.patch.object(guardian.time, "monotonic", return_value=1.0),
+            mock.patch.object(guardian.os, "waitpid") as waitpid,
+        ):
+            self.assertFalse(guardian._reap_children(1.0))
+
+        waitpid.assert_not_called()
+
+    def test_guardian_status_bytes_round_trip_through_verifier_contract(self) -> None:
+        status = {
+            "cleanup_confirmed": True,
+            "contract": provenance._PosixGuardian.CONTRACT,
+            "returncode": -9,
+            "verifier_gone": True,
+        }
+        control_read, control_write = os.pipe()
+        status_read, status_write = os.pipe()
+        verifier = provenance._PosixGuardian.__new__(provenance._PosixGuardian)
+        verifier._control_read = -1
+        verifier._control_write = control_write
+        verifier._status_read = status_read
+        verifier._status_write = -1
+        verifier._cleanup_requested = False
+
+        selector = mock.Mock()
+        selector.select.return_value = [(mock.Mock(), provenance.selectors.EVENT_READ)]
+        try:
+            raw = guardian.canonical_json_bytes(status)
+            self.assertEqual(raw, provenance.canonical_json_bytes(status))
+            os.write(status_write, raw)
+            os.close(status_write)
+            status_write = -1
+            with (
+                mock.patch.object(provenance.os, "set_blocking", create=True),
+                mock.patch.object(
+                    provenance.selectors, "DefaultSelector", return_value=selector
+                ),
+            ):
+                self.assertEqual(verifier.read_status(1), status)
+            self.assertEqual(os.read(control_read, 1), b"")
+        finally:
+            verifier.close()
+            for descriptor in (control_read, status_write):
+                if descriptor >= 0:
+                    os.close(descriptor)
+
+    def test_guardian_cleanup_requires_empty_cgroup_before_removal(self) -> None:
+        cgroup = guardian.CgroupHandle(root_fd=10, child_fd=11, name="known")
+        with (
+            mock.patch.object(guardian, "_write_small_at") as write,
+            mock.patch.object(
+                guardian, "_read_small_at", return_value=b"populated 0\n"
+            ) as read,
+            mock.patch.object(guardian.os, "killpg", create=True) as kill_group,
+            mock.patch.object(guardian.os, "close") as close,
+            mock.patch.object(guardian.os, "rmdir") as remove,
+        ):
+            guardian.cleanup_command_cgroup(
+                cgroup, time.monotonic() + 1, process_group=123
+            )
+
+        write.assert_called_once_with(11, "cgroup.kill", b"1\n")
+        kill_group.assert_called_once_with(123, guardian.POSIX_SIGKILL)
+        read.assert_called_once_with(11, "cgroup.events")
+        close.assert_called_once_with(11)
+        remove.assert_called_once_with("known", dir_fd=10)
+
+    def test_guardian_cgroup_open_failure_preserves_rollback_failure(self) -> None:
+        with (
+            mock.patch.object(guardian, "validate_cgroup2_descriptor"),
+            mock.patch.object(guardian.os, "mkdir"),
+            mock.patch.object(
+                guardian, "_open_at", side_effect=OSError(5, "open failed")
+            ),
+            mock.patch.object(
+                guardian.os, "rmdir", side_effect=OSError(16, "remove failed")
+            ),
+            self.assertRaisesRegex(
+                guardian.GuardianError, "fresh command cgroup could not be created"
+            ) as raised,
+        ):
+            guardian.create_command_cgroup(10)
+
+        self.assertEqual(raised.exception.code, "CGROUP_CREATE_FAILED")
+        self.assertEqual(
+            [cause.code for cause in raised.exception.cleanup_causes],
+            ["CGROUP_ROLLBACK_REMOVE_FAILED"],
+        )
+
+    def test_guardian_cgroup_validation_preserves_all_rollback_failures(self) -> None:
+        validation_error = guardian.GuardianError(
+            "CONTROL_OPEN_FAILED", "control open failed"
+        )
+        with (
+            mock.patch.object(guardian, "validate_cgroup2_descriptor"),
+            mock.patch.object(guardian.os, "mkdir"),
+            mock.patch.object(guardian, "_open_at", side_effect=[11, validation_error]),
+            mock.patch.object(
+                guardian.os, "close", side_effect=OSError(5, "close failed")
+            ),
+            mock.patch.object(
+                guardian.os, "rmdir", side_effect=OSError(16, "remove failed")
+            ),
+            self.assertRaisesRegex(
+                guardian.GuardianError, "control open failed"
+            ) as raised,
+        ):
+            guardian.create_command_cgroup(10)
+
+        self.assertEqual(raised.exception.code, "CONTROL_OPEN_FAILED")
+        self.assertEqual(
+            [cause.code for cause in raised.exception.cleanup_causes],
+            ["CGROUP_ROLLBACK_CLOSE_FAILED", "CGROUP_ROLLBACK_REMOVE_FAILED"],
+        )
+
+    def test_guardian_cleanup_failure_never_removes_unproven_cgroup(self) -> None:
+        cgroup = guardian.CgroupHandle(root_fd=10, child_fd=11, name="known")
+        with (
+            mock.patch.object(
+                guardian,
+                "_write_small_at",
+                side_effect=guardian.GuardianError("KILL_FAILED", "kill failed"),
+            ),
+            mock.patch.object(
+                guardian, "_read_small_at", return_value=b"populated 1\n"
+            ),
+            mock.patch.object(
+                guardian.time,
+                "monotonic",
+                side_effect=[0.0, 0.0, 1.0],
+            ),
+            mock.patch.object(guardian.time, "sleep"),
+            mock.patch.object(guardian.os, "close"),
+            mock.patch.object(guardian.os, "rmdir") as remove,
+            self.assertRaisesRegex(
+                guardian.GuardianError, "kill failed"
+            ) as raised,
+        ):
+            guardian.cleanup_command_cgroup(cgroup, 0.5)
+
+        remove.assert_not_called()
+        self.assertEqual(raised.exception.code, "KILL_FAILED")
+        self.assertEqual(
+            [cause.code for cause in raised.exception.cleanup_causes],
+            ["CGROUP_CLEANUP_TIMEOUT"],
+        )
+
+    def test_guardian_reap_timeout_appends_to_cleanup_failure(self) -> None:
+        cgroup = guardian.CgroupHandle(root_fd=10, child_fd=11, name="known")
+        cleanup_error = guardian.GuardianError(
+            "CGROUP_CLEANUP_TIMEOUT", "cgroup remained populated"
+        )
+        with (
+            mock.patch.object(guardian.sys, "platform", "linux"),
+            mock.patch.object(guardian.os, "O_CLOEXEC", 0, create=True),
+            mock.patch.object(guardian.os, "WNOHANG", 1, create=True),
+            mock.patch.object(guardian.os, "open", return_value=10),
+            mock.patch.object(guardian, "_enable_subreaper"),
+            mock.patch.object(
+                guardian, "create_command_cgroup", return_value=cgroup
+            ),
+            mock.patch.object(
+                guardian.os, "pipe2", return_value=(20, 21), create=True
+            ),
+            mock.patch.object(guardian.os, "fork", return_value=321, create=True),
+            mock.patch.object(guardian.os, "close"),
+            mock.patch.object(guardian, "_write_small_at"),
+            mock.patch.object(guardian.os, "write", return_value=1),
+            mock.patch.object(guardian, "_monitor", return_value=(0, False)),
+            mock.patch.object(
+                guardian, "cleanup_command_cgroup", side_effect=cleanup_error
+            ),
+            mock.patch.object(
+                guardian.os, "waitpid", side_effect=ChildProcessError
+            ),
+            mock.patch.object(guardian, "_reap_children", return_value=False),
+            self.assertRaisesRegex(
+                guardian.GuardianError, "cgroup remained populated"
+            ) as raised,
+        ):
+            guardian.supervise(
+                ["fixture"],
+                control_fd=5,
+                cgroup_root="/delegated",
+                cleanup_timeout_seconds=1,
+            )
+
+        self.assertEqual(raised.exception.code, "CGROUP_CLEANUP_TIMEOUT")
+        self.assertEqual(
+            [cause.code for cause in raised.exception.cleanup_causes],
+            ["ADOPTED_REAP_TIMEOUT"],
+        )
+
+    def test_guardian_assigns_cgroup_before_releasing_child(self) -> None:
+        cgroup = guardian.CgroupHandle(root_fd=10, child_fd=11, name="known")
+        events: list[str] = []
+
+        def write_control(root_fd: int, name: str, value: bytes) -> None:
+            self.assertEqual((root_fd, name, value), (11, "cgroup.procs", b"321\n"))
+            events.append("assign")
+
+        def release(descriptor: int, value: bytes) -> int:
+            self.assertEqual((descriptor, value), (21, b"1"))
+            events.append("release")
+            return 1
+
+        with (
+            mock.patch.object(guardian.sys, "platform", "linux"),
+            mock.patch.object(guardian.os, "O_CLOEXEC", 0, create=True),
+            mock.patch.object(guardian.os, "WNOHANG", 1, create=True),
+            mock.patch.object(guardian.os, "open", return_value=10),
+            mock.patch.object(guardian, "_enable_subreaper"),
+            mock.patch.object(
+                guardian, "create_command_cgroup", return_value=cgroup
+            ),
+            mock.patch.object(
+                guardian.os, "pipe2", return_value=(20, 21), create=True
+            ),
+            mock.patch.object(guardian.os, "fork", return_value=321, create=True),
+            mock.patch.object(guardian.os, "close"),
+            mock.patch.object(guardian, "_write_small_at", side_effect=write_control),
+            mock.patch.object(guardian.os, "write", side_effect=release),
+            mock.patch.object(guardian, "_monitor", return_value=(0, False)),
+            mock.patch.object(guardian, "cleanup_command_cgroup") as cleanup,
+            mock.patch.object(
+                guardian.os, "waitpid", side_effect=ChildProcessError
+            ),
+            mock.patch.object(guardian, "_reap_children") as reap,
+        ):
+            status = guardian.supervise(
+                ["fixture"],
+                control_fd=5,
+                cgroup_root="/delegated",
+                cleanup_timeout_seconds=1,
+            )
+
+        self.assertEqual(events, ["assign", "release"])
+        self.assertEqual(status["returncode"], 0)
+        self.assertTrue(status["cleanup_confirmed"])
+        cleanup.assert_called_once()
+        reap.assert_called_once()
+
+    def test_guardian_cgroup_setup_failure_precedes_fork(self) -> None:
+        setup_error = guardian.GuardianError(
+            "CGROUP_DELEGATION_INVALID", "delegation invalid"
+        )
+        with (
+            mock.patch.object(guardian.sys, "platform", "linux"),
+            mock.patch.object(guardian.os, "O_CLOEXEC", 0, create=True),
+            mock.patch.object(guardian.os, "open", return_value=10),
+            mock.patch.object(guardian, "_enable_subreaper"),
+            mock.patch.object(
+                guardian, "create_command_cgroup", side_effect=setup_error
+            ),
+            mock.patch.object(guardian.os, "fork", create=True) as fork,
+            mock.patch.object(guardian.os, "close"),
+            mock.patch.object(guardian, "_reap_children"),
+            self.assertRaisesRegex(guardian.GuardianError, "delegation invalid"),
+        ):
+            guardian.supervise(
+                ["fixture"],
+                control_fd=5,
+                cgroup_root="/delegated",
+                cleanup_timeout_seconds=1,
+            )
+
+        fork.assert_not_called()
+
     def test_posix_process_group_permission_failure_is_structured(self) -> None:
         process = self.windows_process()
         process.poll.return_value = None
@@ -1710,6 +2399,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         process.kill.assert_called_once_with()
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_repeated_termination_failures_are_ordered(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -1764,6 +2454,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(process.wait.call_count, 3)
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_unreaped_timeout_does_not_claim_exit(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -1797,6 +2488,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertFalse(any("exited None" in cause.message for cause in failure.cleanup_causes))
         self.assertEqual(process.wait.call_count, 3)
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_posix_process_failure_preserves_both_pipe_close_causes(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2097,6 +2789,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ["job.terminate", "job.close"],
         )
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_timeout_preserves_stuck_drain_failure(self) -> None:
         process = mock.Mock()
         process.stdout = mock.Mock()
@@ -2108,6 +2801,8 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         threads = [mock.Mock(), mock.Mock()]
         for thread in threads:
             thread.is_alive.return_value = True
+        raw_attempt = mock.Mock()
+        raw_attempt.observe.return_value = None
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
@@ -2127,6 +2822,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 timeout_seconds=0.1,
                 drain_timeout_seconds=0.1,
                 windows_job_factory=mock.Mock,
+                raw_close_attempt_factory=mock.Mock(return_value=raw_attempt),
             )
 
         failure = raised.exception.lifecycle
@@ -2139,6 +2835,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.stdout.close.assert_not_called()
         process.stderr.close.assert_not_called()
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_primary_stuck_drain_is_not_self_causal(self) -> None:
         process = mock.Mock(pid=404)
         process.stdout = mock.Mock()
@@ -2147,6 +2844,8 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         threads = [mock.Mock(), mock.Mock()]
         for thread in threads:
             thread.is_alive.return_value = True
+        raw_attempt = mock.Mock()
+        raw_attempt.observe.return_value = None
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
@@ -2165,6 +2864,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 drain_timeout_seconds=0.1,
                 windows_job_factory=mock.Mock,
                 process_tree_terminator=mock.Mock(),
+                raw_close_attempt_factory=mock.Mock(return_value=raw_attempt),
             )
 
         failure = raised.exception.lifecycle
@@ -2172,6 +2872,118 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.cleanup_causes, ())
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
+    def test_stuck_stdout_raw_close_does_not_skip_healthy_stderr(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = 0
+        stdout_thread = mock.Mock()
+        stdout_thread.is_alive.return_value = True
+        stderr_thread = mock.Mock()
+        stderr_thread.is_alive.return_value = False
+        raw_failure = provenance.LifecycleFailure(
+            stage="pipe.close",
+            api="Popen.stdout.raw.close",
+            error_code=None,
+            message="stdout raw pipe close timed out after 0.1 seconds",
+        )
+        raw_attempt = mock.Mock()
+        raw_attempt.observe.return_value = raw_failure
+        raw_factory = mock.Mock(return_value=raw_attempt)
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(
+                provenance.threading,
+                "Thread",
+                side_effect=[stdout_thread, stderr_thread],
+            ),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "output pipes did not close within bounds.*raw pipe close timed out",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="one stuck drain fixture",
+                drain_timeout_seconds=0.1,
+                raw_close_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=mock.Mock(),
+                raw_close_attempt_factory=raw_factory,
+            )
+
+        failure = raised.exception.lifecycle
+        self.assertEqual(failure.stage, "pipe.drain")
+        self.assertEqual(
+            [(cause.stage, cause.api) for cause in failure.cleanup_causes],
+            [("pipe.close", "Popen.stdout.raw.close")],
+        )
+        self.assertEqual(raw_factory.call_args.args[0].name, "stdout")
+        process.stdout.close.assert_not_called()
+        process.stderr.close.assert_called_once_with()
+
+    def test_raw_pipe_close_attempt_has_independent_observation_bound(self) -> None:
+        release = threading.Event()
+        raw = mock.Mock()
+
+        def blocked_close() -> None:
+            release.wait(5)
+            raise OSError(5, "late close failure")
+
+        raw.close.side_effect = blocked_close
+        stream = mock.Mock(raw=raw)
+        endpoint = provenance._DrainEndpoint(
+            "stdout", stream, bytearray(), 1, 0
+        )
+        attempt = provenance._RawPipeCloseAttempt(endpoint)
+        started = time.monotonic()
+        failure = attempt.observe(0.05)
+
+        self.assertLess(time.monotonic() - started, 0.5)
+        self.assertIsNotNone(failure)
+        assert failure is not None
+        self.assertEqual(failure.stage, "pipe.close")
+        self.assertIn("timed out", failure.message)
+        release.set()
+        self.assertTrue(attempt._done.wait(1))
+        self.assertIn("timed out", failure.message)
+
+    @mock.patch.object(provenance.os, "name", "nt")
+    def test_raw_pipe_close_start_failure_is_ordered_after_drain(self) -> None:
+        process = mock.Mock(pid=404)
+        process.wait.return_value = 0
+        threads = [mock.Mock(), mock.Mock()]
+        for thread in threads:
+            thread.is_alive.return_value = True
+
+        with (
+            mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.threading, "Thread", side_effect=threads),
+            self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "output pipes did not close within bounds.*could not start",
+            ) as raised,
+        ):
+            provenance._run_json_command(
+                [sys.executable],
+                [],
+                label="raw close start fixture",
+                drain_timeout_seconds=0.1,
+                windows_job_factory=mock.Mock,
+                process_tree_terminator=mock.Mock(),
+                raw_close_attempt_factory=mock.Mock(
+                    side_effect=OSError(5, "injected raw close start failure")
+                ),
+            )
+
+        self.assertEqual(raised.exception.lifecycle.stage, "pipe.drain")
+        self.assertEqual(
+            [cause.stage for cause in raised.exception.lifecycle.cleanup_causes],
+            ["pipe.close", "pipe.close"],
+        )
+
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_read_failure_fails_closed(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -2210,6 +3022,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_child_exit_precedes_later_pipe_read_failure(self) -> None:
         process = mock.Mock()
         process.wait.return_value = 7
@@ -2248,6 +3061,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_reader_primary_follows_event_order(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -2295,6 +3109,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             ],
         )
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_read_preserves_poll_failure(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.return_value = -9
@@ -2331,6 +3146,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_wait_failure_and_retry_are_structured(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2369,6 +3185,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_wait_failure_preserves_retry_timeout(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2415,6 +3232,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_timeout_preserves_recovery_wait_timeout(self) -> None:
         process = mock.Mock(pid=404)
         process.wait.side_effect = [
@@ -2459,6 +3277,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         )
         self.assertEqual(failure.message, str(raised.exception))
 
+    @mock.patch.object(provenance.os, "name", "nt")
     def test_json_command_pipe_close_failure_is_structured(self) -> None:
         process = mock.Mock()
         process.wait.return_value = 0
@@ -2644,6 +3463,10 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 )
                 self.assertEqual(close_calls, 2)
 
+    @unittest.skipUnless(
+        os.name == "nt" or sys.platform.startswith("linux"),
+        "strict process containment backend",
+    )
     def test_process_tree_timeout_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
@@ -2677,6 +3500,10 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertLess(time.monotonic() - started, 8)
             self.assert_process_exits(int(pid_path.read_text()))
 
+    @unittest.skipUnless(
+        os.name == "nt" or sys.platform.startswith("linux"),
+        "strict process containment backend",
+    )
     def test_process_tree_parent_exit_kills_descendant_pipe_holders(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             pid_path = Path(directory) / "child.pid"
@@ -2708,6 +3535,196 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             self.assertTrue(pid_path.exists(), "descendant never reached readiness")
             self.assertLess(time.monotonic() - started, 4)
             self.assert_process_exits(int(pid_path.read_text()))
+
+    @unittest.skipUnless(
+        sys.platform.startswith("linux")
+        and bool(os.environ.get("ADJ_PROVENANCE_CGROUP_ROOT")),
+        "delegated Linux cgroup v2 fixture",
+    )
+    def test_posix_guardian_contains_new_session_descendant(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            identity_path = Path(directory) / "child.identity"
+            child = (
+                "import os, pathlib, time; "
+                "raw=pathlib.Path(f'/proc/{os.getpid()}/stat').read_text(); "
+                "start=raw.rsplit(')',1)[1].split()[19]; "
+                f"pathlib.Path({str(identity_path)!r}).write_text(f'{{os.getpid()}} {{start}}'); "
+                "time.sleep(30)"
+            )
+            parent = (
+                "import pathlib, subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}], start_new_session=True); "
+                f"p=pathlib.Path({str(identity_path)!r}); "
+                "deadline=time.monotonic()+5; "
+                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\"); "
+                "sys.stdout.buffer.write(b'{}\\n'); sys.stdout.buffer.flush()"
+            )
+
+            result = provenance._run_json_command(
+                [sys.executable, "-c", parent],
+                [],
+                label="new-session descendant fixture",
+                timeout_seconds=5,
+                drain_timeout_seconds=2,
+            )
+
+            self.assertEqual(result, {})
+            pid_text, starttime = identity_path.read_text().split()
+            self.assert_linux_process_identity_exits(int(pid_text), starttime)
+
+    @unittest.skipUnless(
+        sys.platform.startswith("linux")
+        and bool(os.environ.get("ADJ_PROVENANCE_CGROUP_ROOT")),
+        "delegated Linux cgroup v2 fixture",
+    )
+    def test_posix_guardian_timeout_contains_new_session_descendant(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            identity_path = Path(directory) / "child.identity"
+            child = (
+                "import os, pathlib, time; "
+                "raw=pathlib.Path(f'/proc/{os.getpid()}/stat').read_text(); "
+                "start=raw.rsplit(')',1)[1].split()[19]; "
+                f"pathlib.Path({str(identity_path)!r}).write_text(f'{{os.getpid()}} {{start}}'); "
+                "time.sleep(30)"
+            )
+            parent = (
+                "import pathlib, subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}], start_new_session=True); "
+                f"p=pathlib.Path({str(identity_path)!r}); "
+                "deadline=time.monotonic()+5; "
+                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\"); "
+                "time.sleep(30)"
+            )
+
+            cgroup_root = Path(os.environ["ADJ_PROVENANCE_CGROUP_ROOT"])
+            baseline = {path.name for path in cgroup_root.glob("adj-provenance-*")}
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "timed out"
+            ) as raised:
+                provenance._run_json_command(
+                    [sys.executable, "-c", parent],
+                    [],
+                    label="new-session timeout fixture",
+                    timeout_seconds=1,
+                    drain_timeout_seconds=2,
+                )
+
+            pid_text, starttime = identity_path.read_text().split()
+            self.assert_linux_process_identity_exits(int(pid_text), starttime)
+            self.assertEqual(raised.exception.lifecycle.stage, "command.timeout")
+
+            def lifecycle_stages(failure: object) -> list[str]:
+                if failure is None:
+                    return []
+                result = [failure.stage]
+                for cause in failure.cleanup_causes:
+                    result.extend(lifecycle_stages(cause))
+                return result
+
+            self.assertNotIn(
+                "containment.confirm", lifecycle_stages(raised.exception.lifecycle)
+            )
+            current = {path.name for path in cgroup_root.glob("adj-provenance-*")}
+            deadline = time.monotonic() + 5
+            while current != baseline and time.monotonic() < deadline:
+                time.sleep(0.05)
+                current = {
+                    path.name for path in cgroup_root.glob("adj-provenance-*")
+                }
+            self.assertEqual(current, baseline)
+
+    @unittest.skipUnless(
+        sys.platform.startswith("linux")
+        and bool(os.environ.get("ADJ_PROVENANCE_CGROUP_ROOT")),
+        "delegated Linux cgroup v2 fixture",
+    )
+    def test_posix_guardian_closes_protocol_descriptors_before_exec(self) -> None:
+        command = (
+            "import json, os; "
+            "scan=os.scandir('/proc/self/fd'); "
+            "candidates=[int(entry.name) for entry in scan if int(entry.name)>2]; "
+            "scan.close(); fds=[]; "
+            "exec(\"for fd in candidates:\\n"
+            " try:\\n  os.fstat(fd); fds.append(fd)\\n"
+            " except OSError:\\n  pass\"); "
+            "print(json.dumps({'fds':fds}, indent=2, sort_keys=True))"
+        )
+
+        result = provenance._run_json_command(
+            [sys.executable, "-c", command],
+            [],
+            label="guardian descriptor fixture",
+            timeout_seconds=5,
+            drain_timeout_seconds=2,
+        )
+
+        self.assertEqual(result, {"fds": []})
+
+    @unittest.skipUnless(
+        sys.platform.startswith("linux")
+        and bool(os.environ.get("ADJ_PROVENANCE_CGROUP_ROOT")),
+        "delegated Linux cgroup v2 fixture",
+    )
+    def test_posix_guardian_cleans_after_verifier_sigkill(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            identity_path = root / "child.identity"
+            child = (
+                "import os, pathlib, time; "
+                "raw=pathlib.Path(f'/proc/{os.getpid()}/stat').read_text(); "
+                "start=raw.rsplit(')',1)[1].split()[19]; "
+                f"pathlib.Path({str(identity_path)!r}).write_text(f'{{os.getpid()}} {{start}}'); "
+                "time.sleep(30)"
+            )
+            guarded = (
+                "import pathlib, subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}], start_new_session=True); "
+                f"p=pathlib.Path({str(identity_path)!r}); "
+                "deadline=time.monotonic()+5; "
+                "exec(\"while not p.exists() and time.monotonic() < deadline:\\n time.sleep(0.01)\"); "
+                "time.sleep(30)"
+            )
+            harness = (
+                "import sys; "
+                f"sys.path.insert(0, {str(SCRIPTS_DIR)!r}); "
+                "import adj_stdlib_provenance as p; "
+                f"p._run_json_command([sys.executable, '-c', {guarded!r}], [], "
+                "label='crash fixture', timeout_seconds=30, drain_timeout_seconds=2)"
+            )
+            cgroup_root = Path(os.environ["ADJ_PROVENANCE_CGROUP_ROOT"])
+            baseline = {path.name for path in cgroup_root.glob("adj-provenance-*")}
+            verifier = subprocess.Popen(
+                [sys.executable, "-c", harness],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            current = baseline
+            try:
+                deadline = time.monotonic() + 8
+                while not identity_path.exists() and time.monotonic() < deadline:
+                    time.sleep(0.05)
+                self.assertTrue(identity_path.exists(), "guarded child never started")
+                pid_text, starttime = identity_path.read_text().split()
+                os.kill(verifier.pid, signal.SIGKILL)
+                verifier.wait(timeout=5)
+                self.assert_linux_process_identity_exits(int(pid_text), starttime)
+                deadline = time.monotonic() + 5
+                while time.monotonic() < deadline:
+                    current = {
+                        path.name for path in cgroup_root.glob("adj-provenance-*")
+                    }
+                    if current == baseline:
+                        break
+                    time.sleep(0.05)
+                self.assertEqual(current, baseline)
+            finally:
+                if verifier.poll() is None:
+                    verifier.kill()
+                    verifier.wait(timeout=5)
+                assert verifier.stdout is not None
+                assert verifier.stderr is not None
+                verifier.stdout.close()
+                verifier.stderr.close()
 
     @unittest.skipUnless(os.name == "nt", "Windows Job Object behavior")
     def test_windows_job_assigns_before_process_execution(self) -> None:
