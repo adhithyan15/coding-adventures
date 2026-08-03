@@ -5,6 +5,18 @@ All notable changes to the `bignum-core` package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-08-02
+
+### Added
+
+- **`BigDouble::from_rational(r: &BigRational, prec: u32, mode: RoundingMode) -> BigDouble`** (NUM-7a)
+  — the promotion primitive from the exact `BigRational` world into the approximate `BigDouble`
+  world: the counterpart to `BigRational::to_f64`, generalized from a fixed 53-bit `f64` target to a
+  caller-requested precision. Both parts enter exactly (each at its own bit length, capped at
+  `MAX_PRECISION`), and the quotient is taken at `prec` bits so the result is the correctly rounded
+  `BigDouble` for any rational of practical size. Introduced so the logic engine can wire a
+  per-`KnowledgeBase`-configurable `Real`/`BigDouble` audit companion (ADJ-NUMERIC-SUBSTRATE §8).
+
 ## [0.7.0] - 2026-07-14
 
 ### Added

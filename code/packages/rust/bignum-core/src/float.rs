@@ -49,7 +49,7 @@
 //! Transcendental functions (`ln`, `exp`, `sin`, …) are a separate later effort that builds on
 //! this core; NUM-4 here is the representation plus correctly-rounded `+ − × ÷` and `√`.
 
-use crate::{BigDecimal, BigInteger, RoundingMode};
+use crate::{BigDecimal, BigInteger, BigRational, RoundingMode};
 use std::cmp::Ordering;
 use std::fmt;
 
@@ -355,6 +355,29 @@ impl BigDouble {
     /// Re-round this value to a different precision under `mode`.
     pub fn with_precision(&self, prec: u32, mode: RoundingMode) -> BigDouble {
         BigDouble::from_parts(self.mant.clone(), self.exp, prec, mode)
+    }
+
+    /// Promote an exact rational to a `BigDouble`, correctly rounded to `prec` bits under `mode`
+    /// — the promotion primitive from the exact `BigRational` world into the approximate
+    /// `BigDouble` world (NUM-7). It is the same shape as [`BigRational::to_f64`], generalized
+    /// from a fixed 64-bit division target to a caller-requested precision: both parts enter
+    /// exactly (each at its own bit length, capped at [`MAX_PRECISION`]), and the quotient is
+    /// taken at `prec` bits so the result is the correctly rounded `BigDouble` for any rational
+    /// of practical size.
+    pub fn from_rational(r: &BigRational, prec: u32, mode: RoundingMode) -> BigDouble {
+        let prec = check_prec(prec);
+        if r.numerator().is_zero() {
+            return BigDouble::zero(prec);
+        }
+        let np = u32::try_from(r.numerator().bit_len())
+            .unwrap_or(MAX_PRECISION)
+            .clamp(1, MAX_PRECISION);
+        let dp = u32::try_from(r.denominator().bit_len())
+            .unwrap_or(MAX_PRECISION)
+            .clamp(1, MAX_PRECISION);
+        let n = BigDouble::from_bigint(r.numerator().clone(), np, mode);
+        let d = BigDouble::from_bigint(r.denominator().clone(), dp, mode);
+        n.div(&d, prec, mode)
     }
 
     /// The signed significand.
@@ -1025,5 +1048,56 @@ mod tests {
         // negative tie: -3 → -4 under Floor, -2 under Ceiling.
         assert_eq!(BigDouble::from_i64(-3).with_precision(1, Floor).to_f64(), -4.0);
         assert_eq!(BigDouble::from_i64(-3).with_precision(1, Ceiling).to_f64(), -2.0);
+    }
+
+    // ---- from_rational: the exact-rational → BigDouble promotion (NUM-7a) ----
+
+    #[test]
+    fn from_rational_of_an_integer_is_exact() {
+        let r = BigRational::from_ints(3, 1);
+        assert_eq!(BigDouble::from_rational(&r, 64, HalfEven).to_decimal().unwrap().to_string(), "3");
+    }
+
+    #[test]
+    fn from_rational_of_zero_is_zero() {
+        let r = BigRational::from_ints(0, 5);
+        assert!(BigDouble::from_rational(&r, 64, HalfEven).is_zero());
+    }
+
+    #[test]
+    fn from_rational_is_negative_for_a_negative_rational() {
+        let r = BigRational::from_ints(-3, 4);
+        assert!(BigDouble::from_rational(&r, 64, HalfEven).is_negative());
+    }
+
+    #[test]
+    fn from_rational_matches_to_f64_at_53_bits() {
+        // Differential: at f64 width, from_rational should agree with BigRational's own,
+        // independently-implemented to_f64 (rational.rs) for a spread of rationals.
+        for (n, d) in [(1, 3), (22, 7), (1, 1_000_000), (-5, 8), (7, 2), (1, 2)] {
+            let r = BigRational::from_ints(n, d);
+            let via_from_rational = BigDouble::from_rational(&r, 53, HalfEven).to_f64();
+            assert_eq!(via_from_rational, r.to_f64(), "{n}/{d}");
+        }
+    }
+
+    #[test]
+    fn from_rational_one_third_at_high_precision_matches_known_digits() {
+        let third = BigRational::from_ints(1, 3);
+        let rendered = BigDouble::from_rational(&third, 200, HalfEven).to_decimal().unwrap().to_string();
+        assert!(rendered.starts_with("0.3333333333333333333"), "got {rendered}");
+    }
+
+    #[test]
+    fn from_rational_handles_a_numerator_far_larger_than_the_requested_precision() {
+        // The numerator's own bit length (thousands of bits, from repeated squaring) vastly
+        // exceeds the requested working `prec` (64) — `np`/`dp` are derived from the operands'
+        // own bit lengths, not `prec`, and must not panic or silently misbehave when they differ
+        // this much.
+        let big = BigInteger::from_i64(2).pow(4000);
+        let r = BigRational::new(big, BigInteger::from_i64(3));
+        let result = BigDouble::from_rational(&r, 64, HalfEven);
+        assert!(!result.is_zero());
+        assert!(!result.is_negative());
     }
 }

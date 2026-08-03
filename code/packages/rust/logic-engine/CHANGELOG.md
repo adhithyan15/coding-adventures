@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.52.0] - 2026-08-02 - NUM-7a: per-KnowledgeBase `Real`/`BigDouble` precision setting
+
+- Added `KnowledgeBase::real_precision_bits()`/`with_real_precision_bits(u32)`/
+  `set_real_precision_bits(u32)`, backed by a new `RealPrecisionBits` type (default 256 bits,
+  per ADJ-NUMERIC-SUBSTRATE §3). This is `KnowledgeBase`'s first per-KB configuration field —
+  every prior field was data (facts/rules/derived values/etc). Clamped to
+  `[1, bignum_core::MAX_PRECISION]`, since `BigDouble`'s internal precision guard panics outside
+  that range. No engine wiring yet (§8, NUM-7b) — this PR only lands the setting itself.
+
 ## [0.51.0] - 2026-08-02 - computed-answer verification
 
 - Added `verify_derived`, which re-evaluates a compiler-owned expression stored separately

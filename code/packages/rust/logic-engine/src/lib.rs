@@ -393,6 +393,35 @@ pub struct ObservedEvidence {
     pub confidence: f64,
 }
 
+/// The working precision, in mantissa bits, for `BigDouble`-backed `Real` audit companions
+/// (NUM-7 — see [`compute::RealCompanion`]) computed within a [`KnowledgeBase`]. Wrapped in its
+/// own type, rather than a bare `u32` field, purely so a non-1 default can be expressed via
+/// `#[derive(Default)]` on `KnowledgeBase`.
+///
+/// This is `KnowledgeBase`'s **first** per-KB configuration field — previously every field was
+/// data (facts/rules/derived values/etc), with no settings knob. Always in `[1,
+/// bignum_core::MAX_PRECISION]`: `BigDouble`'s internal precision guard *panics* outside that
+/// range, so every constructor here clamps rather than passing an unchecked value through.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RealPrecisionBits(u32);
+
+impl Default for RealPrecisionBits {
+    /// 256 bits ≈ 77 significant decimal digits — ADJ-NUMERIC-SUBSTRATE §3's stated default.
+    fn default() -> Self {
+        RealPrecisionBits(256)
+    }
+}
+
+impl RealPrecisionBits {
+    fn clamped(bits: u32) -> Self {
+        RealPrecisionBits(bits.clamp(1, bignum_core::MAX_PRECISION))
+    }
+
+    pub fn get(self) -> u32 {
+        self.0
+    }
+}
+
 /// A collection of Facts and Rules, indexed for clause selection by
 /// the head's functor/arity. Per LP19e, also stores prior /
 /// contribution / joint-contribution clauses in parallel maps; the
@@ -452,6 +481,8 @@ pub struct KnowledgeBase {
     /// the two so both feed [`crate::govern::enumerate_governing`], which consults the order
     /// BEFORE the priority tier (lex superior). Transitive reach is computed cycle-safely.
     context_order: Vec<(String, String)>,
+    /// NUM-7: the working precision for this KB's `Real`/`BigDouble` audit companions.
+    real_precision_bits: RealPrecisionBits,
     next_fact_id: u64,
     next_rule_id: u64,
     next_prior_id: u64,
@@ -464,6 +495,26 @@ pub struct KnowledgeBase {
 impl KnowledgeBase {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Consuming builder for [`RealPrecisionBits`] (NUM-7), matching the `with_*` naming
+    /// convention `Fact`/`Rule` already use for their own (per-clause) builders — this is the
+    /// first per-KB one. Clamped to `[1, bignum_core::MAX_PRECISION]`.
+    pub fn with_real_precision_bits(mut self, bits: u32) -> Self {
+        self.set_real_precision_bits(bits);
+        self
+    }
+
+    /// In-place setter for [`RealPrecisionBits`] (NUM-7), for a KB already under construction.
+    /// Clamped to `[1, bignum_core::MAX_PRECISION]`.
+    pub fn set_real_precision_bits(&mut self, bits: u32) {
+        self.real_precision_bits = RealPrecisionBits::clamped(bits);
+    }
+
+    /// This KB's working precision, in mantissa bits, for `Real`/`BigDouble` audit companions
+    /// (NUM-7). Defaults to 256 (ADJ-NUMERIC-SUBSTRATE §3).
+    pub fn real_precision_bits(&self) -> u32 {
+        self.real_precision_bits.get()
     }
 
     /// Insert a Fact, assigning it a fresh `FactId`.
@@ -1461,6 +1512,31 @@ mod tests {
 
     fn empty_kb() -> KnowledgeBase {
         KnowledgeBase::new()
+    }
+
+    // ---- NUM-7a: per-KB real_precision_bits --------------------------------
+
+    #[test]
+    fn real_precision_bits_defaults_to_256() {
+        assert_eq!(empty_kb().real_precision_bits(), 256);
+    }
+
+    #[test]
+    fn with_real_precision_bits_is_clamped_to_the_bignum_core_budget() {
+        assert_eq!(empty_kb().with_real_precision_bits(0).real_precision_bits(), 1);
+        assert_eq!(
+            empty_kb().with_real_precision_bits(u32::MAX).real_precision_bits(),
+            bignum_core::MAX_PRECISION
+        );
+        assert_eq!(empty_kb().with_real_precision_bits(512).real_precision_bits(), 512);
+    }
+
+    #[test]
+    fn set_real_precision_bits_mutates_an_existing_kb() {
+        let mut kb = empty_kb();
+        assert_eq!(kb.real_precision_bits(), 256);
+        kb.set_real_precision_bits(64);
+        assert_eq!(kb.real_precision_bits(), 64);
     }
 
     #[test]
