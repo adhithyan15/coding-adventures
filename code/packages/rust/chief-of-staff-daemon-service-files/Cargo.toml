@@ -1,0 +1,10 @@
+[package]
+name = "chief-of-staff-daemon-service-files"
+version = "0.1.0"
+edition = "2021"
+description = "Pure renderers for user-scoped Chief daemon service definitions"
+license = "MIT"
+
+[lib]
+name = "chief_of_staff_daemon_service_files"
+path = "src/lib.rs"
