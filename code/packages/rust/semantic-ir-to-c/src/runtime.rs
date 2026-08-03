@@ -1573,6 +1573,109 @@ static SirValue _sir_array_flatten(SirValue recv) {
     return _sir_seq_wrap(r);
 }
 
+/* ---- Collections slice 5: Array block methods (closure-calling) -----------
+ *
+ * The first Array methods that take a trailing BLOCK argument: the Ruby
+ * frontend appends a `MakeClosure` as the LAST `__method__` call arg for
+ * `recv.meth { |x| ... }` (RB1 in `ruby-to-semantic-ir`), so it reaches this
+ * runtime as an ordinary `SIR_CLOSURE` value. Each element-wise call goes
+ * through the EXISTING `_sir_apply` — the same dispatcher a first-class
+ * `Proc`/`sir_apply(f, ...)` call already uses — so a block is called
+ * exactly like any other closure value; no new calling convention. */
+
+static SirValue _sir_array_each(SirSeq *s, SirValue block) {
+    for (int64_t i = 0; i < s->len; i++) _sir_apply(block, 1, s->items[i]);
+    return _sir_seq_wrap(s);  /* Array#each returns the receiver */
+}
+static SirValue _sir_array_map(SirSeq *s, SirValue block) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = s->len;
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    for (int64_t i = 0; i < s->len; i++) r->items[i] = _sir_apply(block, 1, s->items[i]);
+    return _sir_seq_wrap(r);
+}
+/* Shared by `select` (keep_if_truthy=1) and `reject` (keep_if_truthy=0). */
+static SirValue _sir_array_filter(SirSeq *s, SirValue block, int keep_if_truthy) {
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    int64_t k = 0;
+    for (int64_t i = 0; i < s->len; i++) {
+        int truthy = _sir_truthy(_sir_apply(block, 1, s->items[i]));
+        if (truthy == keep_if_truthy) r->items[k++] = s->items[i];
+    }
+    r->len = k;
+    return _sir_seq_wrap(r);
+}
+static SirValue _sir_array_any(SirSeq *s, SirValue block) {
+    for (int64_t i = 0; i < s->len; i++) {
+        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(1);
+    }
+    return _sir_bool(0);
+}
+static SirValue _sir_array_all(SirSeq *s, SirValue block) {
+    for (int64_t i = 0; i < s->len; i++) {
+        if (!_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+    }
+    return _sir_bool(1);
+}
+static SirValue _sir_array_none(SirSeq *s, SirValue block) {
+    for (int64_t i = 0; i < s->len; i++) {
+        if (_sir_truthy(_sir_apply(block, 1, s->items[i]))) return _sir_bool(0);
+    }
+    return _sir_bool(1);
+}
+/* Schwartzian transform: compute each element's sort key ONCE (a naive
+ * `_sir_lt(block(a), block(b))` comparator would re-invoke the block O(n log n)
+ * or worse per comparison), then insertion-sort (key, value) pairs together via
+ * `_sir_lt` -- the SAME comparator plain `sort` uses -- and return the values in
+ * the new order. */
+static SirValue _sir_array_sort_by(SirSeq *s, SirValue block) {
+    SirValue *keys = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+    r->len = s->len;
+    r->items = (s->len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)s->len) : NULL;
+    for (int64_t i = 0; i < s->len; i++) {
+        keys[i] = _sir_apply(block, 1, s->items[i]);
+        r->items[i] = s->items[i];
+    }
+    for (int64_t i = 1; i < r->len; i++) {
+        SirValue key = keys[i], val = r->items[i];
+        int64_t j = i - 1;
+        while (j >= 0 && _sir_truthy(_sir_lt(key, keys[j]))) {
+            keys[j + 1] = keys[j];
+            r->items[j + 1] = r->items[j];
+            j--;
+        }
+        keys[j + 1] = key;
+        r->items[j + 1] = val;
+    }
+    return _sir_seq_wrap(r);
+}
+static SirValue _sir_array_each_with_index(SirSeq *s, SirValue block) {
+    for (int64_t i = 0; i < s->len; i++) _sir_apply(block, 2, s->items[i], _sir_int(i));
+    return _sir_seq_wrap(s);
+}
+/* `reduce`/`inject`: `argc==1` is block-only (Ruby seeds the accumulator with
+ * the FIRST element and folds from the second -- `[].reduce { }` => nil, no
+ * element to seed with); `argc==2` is `(initial, block)` (an empty receiver
+ * just returns `initial` untouched, matching Ruby). `args[argc-1]` is always
+ * the block (the caller already checked it's a closure before calling in). */
+static SirValue _sir_array_reduce(SirSeq *s, int argc, SirValue *args) {
+    SirValue block = args[argc - 1];
+    SirValue acc;
+    int64_t start;
+    if (argc >= 2) {
+        acc = args[argc - 2];
+        start = 0;
+    } else {
+        if (s->len == 0) return _sir_nil();
+        acc = s->items[0];
+        start = 1;
+    }
+    for (int64_t i = start; i < s->len; i++) acc = _sir_apply(block, 2, acc, s->items[i]);
+    return acc;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -1608,8 +1711,22 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
     }
     /* Collections slice 3: 0-arg Array query/transform methods. */
     else if (strcmp(m, "count") == 0) {
-        if (recv.tag == SIR_SEQ) return _sir_int(recv.as.seq->len);
-        if (recv.tag == SIR_MAP) return _sir_int(recv.as.map->len);
+        /* Slice 5 fix: `count` also has a BLOCK form (`arr.count { |x| .. }`,
+           counting only matching elements) -- the slice-3 arm below ignored
+           `argc`/`args` entirely, so it silently returned the total length
+           for a block call too (wrong, not just unsupported). Guard on argc
+           so the two forms route correctly instead of one shadowing. */
+        if (recv.tag == SIR_SEQ) {
+            if (argc == 0) return _sir_int(recv.as.seq->len);
+            if (argc == 1 && args[0].tag == SIR_CLOSURE) {
+                int64_t n = 0;
+                for (int64_t i = 0; i < recv.as.seq->len; i++) {
+                    if (_sir_truthy(_sir_apply(args[0], 1, recv.as.seq->items[i]))) n++;
+                }
+                return _sir_int(n);
+            }
+        }
+        if (recv.tag == SIR_MAP && argc == 0) return _sir_int(recv.as.map->len);
     } else if (strcmp(m, "first") == 0) {
         if (recv.tag == SIR_SEQ) return recv.as.seq->len > 0 ? recv.as.seq->items[0] : _sir_nil();
     } else if (strcmp(m, "last") == 0) {
@@ -1633,6 +1750,42 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SEQ) return _sir_array_flatten(recv);
     } else if (strcmp(m, "to_a") == 0) {
         if (recv.tag == SIR_SEQ) return recv;  /* Array#to_a is the array itself */
+    }
+    /* Collections slice 5: Array block methods. Each requires exactly the
+       trailing-block shape the frontend emits (`argc==1`, a closure) except
+       `reduce`/`inject` (`argc` 1 or 2) -- anything else (missing/extra args,
+       a non-closure last arg) falls through to the NoMethodError below rather
+       than misbehaving on a malformed call. */
+    else if (strcmp(m, "each") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_each(recv.as.seq, args[0]);
+    } else if (strcmp(m, "map") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_map(recv.as.seq, args[0]);
+    } else if (strcmp(m, "select") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_filter(recv.as.seq, args[0], 1);
+    } else if (strcmp(m, "reject") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_filter(recv.as.seq, args[0], 0);
+    } else if (strcmp(m, "any?") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_any(recv.as.seq, args[0]);
+    } else if (strcmp(m, "all?") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_all(recv.as.seq, args[0]);
+    } else if (strcmp(m, "none?") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_none(recv.as.seq, args[0]);
+    } else if (strcmp(m, "sort_by") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_sort_by(recv.as.seq, args[0]);
+    } else if (strcmp(m, "each_with_index") == 0) {
+        if (recv.tag == SIR_SEQ && argc == 1 && args[0].tag == SIR_CLOSURE)
+            return _sir_array_each_with_index(recv.as.seq, args[0]);
+    } else if (strcmp(m, "reduce") == 0 || strcmp(m, "inject") == 0) {
+        if (recv.tag == SIR_SEQ && argc >= 1 && argc <= 2 && args[argc - 1].tag == SIR_CLOSURE)
+            return _sir_array_reduce(recv.as.seq, argc, args);
     }
     /* Collections slice 2: 1-arg String queries (arg is a String). */
     else if (strcmp(m, "include?") == 0) {

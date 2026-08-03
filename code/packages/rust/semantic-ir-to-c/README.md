@@ -159,8 +159,14 @@ returns a **fresh** sequence (or scalar), never mutating the receiver;
 ordering/equality reuse the runtime's own `<`/`>`/`==` (`_sir_lt`/`_sir_gt`/
 `_sir_value_eq`), and `flatten` shares the same recursion-depth cap as
 `_sir_fmt`/`_sir_value_eq` so a self-referential array (`a[0] = a`) terminates
-instead of overflowing the stack.  A wrong-type receiver or argument raises
-`NoMethodError`; a built-in method not lowered yet is still rejected cleanly.
+instead of overflowing the stack; **slice 5** (Array block methods): `each`,
+`map`, `select`, `reject`, `any?`, `all?`, `none?`, `sort_by`,
+`each_with_index`, `reduce`/`inject` — the block the Ruby frontend appends as
+the trailing `__method__` arg reaches this runtime as an ordinary `SIR_CLOSURE`
+value, so each element-wise call goes through the SAME `_sir_apply` a
+first-class closure call already uses (no new calling convention).  A
+wrong-type receiver or argument raises `NoMethodError`; a built-in method not
+lowered yet is still rejected cleanly.
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and

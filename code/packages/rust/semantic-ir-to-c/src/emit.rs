@@ -1760,8 +1760,12 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
 /// = 1-arg String queries (`include?`/`start_with?`/`end_with?`/`index`, the arg
 /// a String); slice 3 = 0-arg Array query/transform methods (`count`/`first`/
 /// `last`/`sort`/`min`/`max`/`sum`/`uniq`/`compact`/`flatten`/`to_a`; `reverse`
-/// widens to accept an Array receiver too, alongside its slice-1 String arm).
-/// The dispatcher raises `NoMethodError` on an unsupported receiver type,
+/// widens to accept an Array receiver too, alongside its slice-1 String arm);
+/// slice 5 = Array methods taking a trailing BLOCK argument (`each`/`map`/
+/// `select`/`reject`/`any?`/`all?`/`none?`/`sort_by`/`each_with_index`/
+/// `reduce`/`inject`; `count` also widens to accept its block form). The
+/// dispatcher raises `NoMethodError` on an unsupported receiver type or a
+/// malformed call (missing/extra args, a non-closure block position),
 /// matching Ruby.
 fn is_builtin_method(name: &str) -> bool {
     matches!(
@@ -1773,6 +1777,9 @@ fn is_builtin_method(name: &str) -> bool {
         // slice 3 — 0-arg Array query/transform methods
         | "count" | "first" | "last" | "sort" | "min" | "max" | "sum" | "uniq"
         | "compact" | "flatten" | "to_a"
+        // slice 5 — Array block methods
+        | "each" | "map" | "select" | "reject" | "any?" | "all?" | "none?"
+        | "sort_by" | "each_with_index" | "reduce" | "inject"
     )
 }
 
