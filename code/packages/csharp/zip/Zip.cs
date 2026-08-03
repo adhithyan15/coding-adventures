@@ -775,7 +775,22 @@ public sealed class ZipWriter
                 $"zip: entry name '{name}' contains no safe path segments after normalization",
                 nameof(name));
         var normalized = string.Join("/", segments);
-        return isDirectory ? normalized + "/" : normalized;
+        var result = isDirectory ? normalized + "/" : normalized;
+
+        // Fail-closed backstop: after everything above, the result must not
+        // be a rooted path by .NET's own definition (leading '/' or '\', or a
+        // "<letter>:" drive prefix). This should never trip given the logic
+        // above, but a backstop that re-derives the invariant from .NET's own
+        // Path.IsPathRooted — rather than re-deriving it from our own
+        // segment-stripping logic — turns any future refactor that
+        // accidentally reopens a zip-slip gap into an immediate, loud
+        // exception instead of a silently corrupted safety guarantee.
+        if (Path.IsPathRooted(result))
+            throw new ArgumentException(
+                $"zip: entry name '{name}' normalized to '{result}', which is still a rooted path",
+                nameof(name));
+
+        return result;
     }
 
     // Strip a leading "<letter>:" drive prefix from `segment`, repeatedly.
@@ -787,11 +802,21 @@ public sealed class ZipWriter
     // string rather than received it). Looping until no prefix remains closes
     // that chaining bypass regardless of how many drive-letter segments are
     // glued together.
+    //
+    // Scans with an index rather than repeatedly re-slicing the string:
+    // `segment = segment[2..]` is an O(remaining length) copy, so a loop that
+    // reassigns `segment` on every iteration costs O(n^2) on a segment made
+    // of k chained "<letter>:" prefixes (n = 2k) — trivially reachable via a
+    // single AddFile call with a multi-megabyte glued name, since nothing
+    // bounds the raw `name` length *before* this method runs (the ZIP32
+    // name-length cap in AddEntry only fires afterward). Advancing an index
+    // and slicing once at the end is O(n) total.
     private static string StripDrivePrefix(string segment)
     {
-        while (segment.Length >= 2 && segment[1] == ':' && char.IsAsciiLetter(segment[0]))
-            segment = segment[2..];
-        return segment;
+        var i = 0;
+        while (i + 1 < segment.Length && segment[i + 1] == ':' && char.IsAsciiLetter(segment[i]))
+            i += 2;
+        return i == 0 ? segment : segment[i..];
     }
 
     // Internal: write one entry (file or directory) with the given Unix mode.

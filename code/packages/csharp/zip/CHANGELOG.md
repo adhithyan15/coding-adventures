@@ -66,6 +66,20 @@ fixed here, with adversarial regression tests added for each:
     rooted-looking drive-relative path (the check doesn't care that the string was just
     produced by our own stripping rather than received as input). `StripDrivePrefix` now
     loops until no drive prefix remains, however many are glued together.
+  - Round 4 found that the looped `StripDrivePrefix` (`segment = segment[2..]` on every
+    iteration) was `O(n²)` on a segment made of many chained prefixes — each `[2..]` is a
+    fresh `O(remaining length)` copy, so stripping *k* prefixes from a `2k`-character
+    segment costs `Σ(n − 2i) = O(n²)`. Nothing bounds the raw `name` length *before*
+    `NormalizeEntryName` runs (the ZIP32 name-length cap only fires on the *normalized*
+    result, afterward), so a single `AddFile` call with a several-hundred-KB glued-prefix
+    name — plausible if `name` is ever derived from user/network input, exactly the
+    threat model this method's own doc comment describes — could hang the calling thread
+    for a meaningful amount of time. Measured standalone: a ~1.25 MB crafted name took
+    ~27.6s with the naive loop. Rewrote `StripDrivePrefix` to scan with an index and slice
+    once at the end (`O(n)` total, identical stripping semantics), and added a fail-closed
+    backstop — `if (Path.IsPathRooted(result)) throw ...` — right before
+    `NormalizeEntryName` returns, so any *future* refactor that reopens a gap in this logic
+    fails loudly and immediately instead of silently reintroducing zip-slip.
 - **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,

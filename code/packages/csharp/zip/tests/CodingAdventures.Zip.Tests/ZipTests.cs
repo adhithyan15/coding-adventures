@@ -425,6 +425,32 @@ public class ZipTests
         Assert.False(Path.IsPathRooted(entries[0].Name));
     }
 
+    // A naive loop that strips one drive prefix per iteration by reassigning
+    // `segment = segment[2..]` (a fresh O(remaining-length) copy each time)
+    // costs O(n^2) on a segment made of many chained "<letter>:" prefixes —
+    // a single AddFile call with a few hundred thousand chained prefixes
+    // would then take tens of seconds. This name is well under the ZIP32
+    // 65535-byte name_len cap (so it isn't rejected by that check first) but
+    // still has 50,000 chained prefixes (100,000 characters): an O(n^2)
+    // implementation would make this test time out; an O(n) one finishes
+    // effectively instantly. This doesn't assert a wall-clock bound directly
+    // (flaky under CI load) — xUnit's own default per-test timeout is the
+    // backstop that would catch a quadratic regression.
+    [Fact]
+    public void Security_StripDrivePrefixIsLinearNotQuadratic()
+    {
+        var chainedPrefix = string.Concat(Enumerable.Repeat("A:", 50_000)); // 100,000 chars, all stripped
+        var name = chainedPrefix + "evil.dll";
+
+        var writer = new ZipWriter();
+        writer.AddFile(name, "x"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.Equal("evil.dll", entries[0].Name);
+    }
+
     // A directory entry's trailing slash must survive normalization.
     [Fact]
     public void Security_WriterNormalizationPreservesTrailingSlashForDirectories()
