@@ -160,14 +160,56 @@
       "type": "object"
     },
     "formula_input_reference": {
-      "additionalProperties": false,
-      "properties": {
-        "claim_id": { "minLength": 1, "type": "string" },
-        "identity": { "$ref": "#/$defs/formula_fact_identity" },
-        "source_ir_sha256": { "$ref": "#/$defs/hash" }
-      },
-      "required": ["claim_id", "identity", "source_ir_sha256"],
-      "type": "object"
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claim_id": { "minLength": 1, "type": "string" },
+            "identity": { "$ref": "#/$defs/formula_fact_identity" },
+            "source_ir_sha256": { "$ref": "#/$defs/hash" }
+          },
+          "required": ["claim_id", "identity", "source_ir_sha256"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claim_id": { "minLength": 1, "type": "string" },
+            "identity": { "$ref": "#/$defs/formula_fact_identity" },
+            "owner": { "$ref": "#/$defs/formula_input_owner" },
+            "owner_source_ir_sha256": { "$ref": "#/$defs/hash" },
+            "owner_source_sha256": { "$ref": "#/$defs/hash" },
+            "schema_version": { "const": 2 },
+            "snapshot_sha256": { "$ref": "#/$defs/hash" },
+            "source_ir_sha256": { "$ref": "#/$defs/hash" }
+          },
+          "required": ["claim_id", "identity", "owner", "owner_source_ir_sha256", "owner_source_sha256", "schema_version", "snapshot_sha256", "source_ir_sha256"],
+          "type": "object"
+        }
+      ]
+    },
+    "formula_input_owner": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "bundle_id": { "minLength": 1, "type": "string" },
+            "kind": { "const": "query" }
+          },
+          "required": ["bundle_id", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "bundle_id": { "minLength": 1, "type": "string" },
+            "bundle_sha256": { "$ref": "#/$defs/hash" },
+            "kind": { "const": "dependency" }
+          },
+          "required": ["bundle_id", "bundle_sha256", "kind"],
+          "type": "object"
+        }
+      ]
     },
     "formula_plan": {
       "additionalProperties": false,

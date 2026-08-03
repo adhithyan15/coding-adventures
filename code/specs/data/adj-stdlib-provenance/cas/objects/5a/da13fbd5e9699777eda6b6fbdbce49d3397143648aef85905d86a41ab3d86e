@@ -93,6 +93,14 @@
         },
         "term": "numerator(3)"
       },
+      "owner": {
+        "bundle_id": "adj.math.arithmetic.ratio.query.v1",
+        "kind": "query"
+      },
+      "owner_source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+      "owner_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+      "schema_version": 2,
+      "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
       "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
     },
     {
@@ -112,6 +120,14 @@
         },
         "term": "denominator(4)"
       },
+      "owner": {
+        "bundle_id": "adj.math.arithmetic.ratio.query.v1",
+        "kind": "query"
+      },
+      "owner_source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+      "owner_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+      "schema_version": 2,
+      "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
       "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
     }
   ],
@@ -300,6 +316,14 @@
             },
             "term": "numerator(3)"
           },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.ratio.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+          "owner_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+          "schema_version": 2,
+          "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
           "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
         },
         "quote": {
@@ -327,6 +351,14 @@
             },
             "term": "denominator(4)"
           },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.ratio.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+          "owner_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+          "schema_version": 2,
+          "snapshot_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",
           "source_ir_sha256": "e46c97e3a88aec14373ca324238cb68b91fd2a8ff76a6bb58037434c846403f4"
         },
         "quote": {

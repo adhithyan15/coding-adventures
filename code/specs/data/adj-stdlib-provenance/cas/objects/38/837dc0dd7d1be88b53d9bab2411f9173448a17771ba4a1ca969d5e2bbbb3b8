@@ -117,6 +117,14 @@
         },
         "term": "whole(50)"
       },
+      "owner": {
+        "bundle_id": "adj.math.arithmetic.percent_of.query.v1",
+        "kind": "query"
+      },
+      "owner_source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4",
+      "owner_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+      "schema_version": 2,
+      "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
       "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f"
     },
     {
@@ -136,6 +144,14 @@
         },
         "term": "rate(20)"
       },
+      "owner": {
+        "bundle_id": "adj.math.arithmetic.percent_of.query.v1",
+        "kind": "query"
+      },
+      "owner_source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4",
+      "owner_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+      "schema_version": 2,
+      "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
       "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f"
     }
   ],
@@ -379,6 +395,14 @@
             },
             "term": "whole(50)"
           },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.percent_of.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4",
+          "owner_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+          "schema_version": 2,
+          "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
           "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f"
         },
         "quote": {
@@ -406,6 +430,14 @@
             },
             "term": "rate(20)"
           },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.percent_of.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4",
+          "owner_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
+          "schema_version": 2,
+          "snapshot_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",
           "source_ir_sha256": "2d410045ded097e65b15987bf77e832d64a17de487378f43256d426565192f9f"
         },
         "quote": {

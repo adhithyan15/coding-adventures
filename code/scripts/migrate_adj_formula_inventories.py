@@ -56,6 +56,7 @@ def migrate(
         formula_inventory_command=formula_inventory_command,
         formula_audit_command=formula_audit_command,
         allow_unwitnessed_baseline=True,
+        allow_migration_formula_inputs_baseline=True,
     ) as transaction:
         old_roots = _registered_roots(transaction.cas, manifest_path)
         missing = sorted(ROOT_IDS - set(old_roots))
