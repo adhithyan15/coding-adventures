@@ -6477,7 +6477,8 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
             | DeviceControlCommandType::SetGasLearningOffsets
             | DeviceControlCommandType::SetCompensatedDisplay
             | DeviceControlCommandType::TestIndicator
-            | DeviceControlCommandType::SetCorrectionProfile,
+            | DeviceControlCommandType::SetCorrectionProfile
+            | DeviceControlCommandType::SetCameraRecording,
         ) => return None,
     };
 

@@ -869,6 +869,22 @@ non-credential settings while keeping configuration values strongly typed:
 - A real loopback HTTP test proves all seven native setting transfers and
   readbacks, while malformed correction-profile tests stop before transport.
 
+## Current Reolink Recording Control Slice
+
+This slice extends the authenticated Reolink CGI inspection host with one
+bounded camera/NVR control that the current transport can verify:
+
+- D23 exposes a reusable boolean `camera.recording` capability and typed
+  recording command with a human-approval policy tier.
+- Online channels probe `GetRecV20`; only channels that return native recording
+  state advertise the commandable capability.
+- Authorized `SetRecV20` changes use the existing login-token lifecycle and are
+  followed by an exact `GetRecV20` readback before runtime state is confirmed.
+- Malformed, unsupported, and unauthorized commands fail before credentials or
+  transport I/O. Recording changes remain non-optimistic until device readback.
+- A real loopback HTTP test proves inspection, capability detection, denial,
+  native recording control, readback verification, logout, and D23 state update.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -880,23 +896,27 @@ and then by prerequisite readiness:
    credential-bearing values use Vault leasing and destination validation.
 3. Add authenticated HEOS source browsing and queue insertion only after the
    account/session and Vault-leasing prerequisites are concrete.
-4. Extend authenticated Reolink CGI support with concrete camera/NVR control,
-   media, recording, and push-event operations supported by the current host.
-5. Add another vendor-specific camera or NVR integration where authenticated
+4. Add capability-probed Reolink PTZ preset and bounded movement controls over
+   the existing authenticated CGI host.
+5. Add Reolink snapshot, recording search/download, and playback operations only
+   through the existing camera-media lease and a concrete media executor.
+6. Add Reolink push events only after a concrete webhook or event-stream host
+   and subscription lifecycle exist.
+7. Add another vendor-specific camera or NVR integration where authenticated
    protocol and transport primitives are concrete.
-6. Add authenticated KLAP/Tapo devices and other broader-device families only
+8. Add authenticated KLAP/Tapo devices and other broader-device families only
    after their authentication and session prerequisites are concrete.
-7. Add ONVIF PullPoint events once a concrete event host and subscription
+9. Add ONVIF PullPoint events once a concrete event host and subscription
    lifecycle exist.
-8. Add RTSP media transfer and recording once concrete media transfer and
+10. Add RTSP media transfer and recording once concrete media transfer and
    recorder host primitives exist.
-9. Add a production Matter commissioning, secure-session, and network host only
+11. Add a production Matter commissioning, secure-session, and network host only
    after certificate, fabric, Interaction Model encoding, subscription, and
    transport prerequisites exist.
-10. Add a Thread border-router host only after an actual host transport exists.
-11. Add a production Zigbee coordinator, join, and security host only after
+12. Add a Thread border-router host only after an actual host transport exists.
+13. Add a production Zigbee coordinator, join, and security host only after
     concrete coordinator transport and security primitives exist.
-12. Add production Z-Wave inclusion and S2 only after concrete host transport
+14. Add production Z-Wave inclusion and S2 only after concrete host transport
     and security primitives exist.
 
 ## End-To-End Definition

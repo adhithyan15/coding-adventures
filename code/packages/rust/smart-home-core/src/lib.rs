@@ -352,6 +352,14 @@ impl Capability {
         )
     }
 
+    pub fn camera_recording() -> Self {
+        Self::new(
+            CapabilityId::trusted("camera.recording"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Boolean,
+        )
+    }
+
     pub fn sensor_calibration() -> Self {
         Self::new(
             CapabilityId::trusted("sensor.calibration"),
@@ -437,6 +445,7 @@ pub fn canonical_capability_catalog() -> Vec<Capability> {
         Capability::device_indicator(),
         Capability::device_display(),
         Capability::device_configuration(),
+        Capability::camera_recording(),
         Capability::sensor_calibration(),
         Capability::sensor_occupancy(),
         Capability::sensor_contact(),
@@ -1321,6 +1330,7 @@ pub enum DeviceControlCommandType {
     SetCompensatedDisplay,
     TestIndicator,
     SetCorrectionProfile,
+    SetCameraRecording,
 }
 
 impl CommandType {
@@ -1370,6 +1380,7 @@ impl DeviceControlCommandType {
             | Self::SetGasLearningOffsets
             | Self::SetCompensatedDisplay
             | Self::SetCorrectionProfile => CapabilityId::trusted("device.configuration"),
+            Self::SetCameraRecording => CapabilityId::trusted("camera.recording"),
         }
     }
 }
@@ -1430,7 +1441,8 @@ pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
         | CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor)
         | CommandType::DeviceControl(DeviceControlCommandType::SetAutomaticCo2BaselineDays)
         | CommandType::DeviceControl(DeviceControlCommandType::SetGasLearningOffsets)
-        | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile) => {
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile)
+        | CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording) => {
             PrivilegeTier::HumanApproval
         }
         CommandType::TurnOn
@@ -4293,7 +4305,7 @@ mod tests {
             .map(|capability| capability.capability_id.as_str())
             .collect::<Vec<_>>();
 
-        assert_eq!(catalog.len(), 22);
+        assert_eq!(catalog.len(), 23);
         assert_eq!(ids[0], "light.on_off");
         assert!(ids.contains(&"light.color"));
         assert!(ids.contains(&"scene.recall"));
@@ -4306,6 +4318,7 @@ mod tests {
         assert!(ids.contains(&"device.indicator"));
         assert!(ids.contains(&"device.display"));
         assert!(ids.contains(&"device.configuration"));
+        assert!(ids.contains(&"camera.recording"));
         assert!(ids.contains(&"sensor.calibration"));
         assert!(ids.contains(&"sensor.contact"));
         assert!(ids.contains(&"sensor.temperature"));
@@ -4365,6 +4378,7 @@ mod tests {
             CommandType::DeviceControl(DeviceControlCommandType::SetCompensatedDisplay),
             CommandType::DeviceControl(DeviceControlCommandType::TestIndicator),
             CommandType::DeviceControl(DeviceControlCommandType::SetCorrectionProfile),
+            CommandType::DeviceControl(DeviceControlCommandType::SetCameraRecording),
         ];
 
         for command_type in command_types {

@@ -1,5 +1,8 @@
 # Changelog
 
+- Upgrade Reolink with capability-probed recording state and authorized,
+  readback-verified recording enable/disable over the authenticated CGI host.
+
 - Record AirGradient's typed non-credential configuration entity and validated
   correction-profile surface.
 
