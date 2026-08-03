@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Validate BJT model-card `BF` / `BETA` / `BETA_F` forward beta and lower the
+  `BETA` alias instead of silently dropping it.
 - Validate diode model-card `CJO` / `CJ` / `CJ0` junction capacitance and
   lower the `CJ` alias instead of silently dropping it.
 - Validate diode model-card `VT` / `V_T` thermal voltage and lower the `V_T`

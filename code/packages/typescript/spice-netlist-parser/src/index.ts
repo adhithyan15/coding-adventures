@@ -1175,6 +1175,15 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("diode CJO must be finite and non-negative");
   }
+  const bjtForwardBeta =
+    params.get("BF") ?? params.get("BETA") ?? params.get("BETA_F");
+  if (
+    (kind === "NPN" || kind === "PNP") &&
+    bjtForwardBeta !== undefined &&
+    (!Number.isFinite(bjtForwardBeta) || bjtForwardBeta <= 0.0)
+  ) {
+    throw new NetlistParseError("BJT BF must be finite and positive");
+  }
   const gateSourceCapacitance = params.get("CGS") ?? params.get("CGS0");
   if (
     (kind === "NJF" || kind === "PJF") &&
@@ -1725,7 +1734,10 @@ function parseElement(fields: readonly string[], models: ReadonlyMap<string, Mod
       fields[3],
       model.kind,
       model.params.get("IS") ?? 1.0e-14,
-      model.params.get("BF") ?? model.params.get("BETA_F") ?? 100.0,
+      model.params.get("BF") ??
+        model.params.get("BETA") ??
+        model.params.get("BETA_F") ??
+        100.0,
       model.params.get("VT") ?? 0.02585,
       model.params.get("CJE") ?? model.params.get("CBE") ?? 0.0,
       model.params.get("CJC") ?? model.params.get("CBC") ?? 0.0,

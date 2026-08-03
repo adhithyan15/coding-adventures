@@ -915,6 +915,40 @@ Q2 out base emit slow
     expect(element.thermalVoltage).toBeCloseTo(26.0e-3, 12);
   });
 
+  it("parses the BJT BETA forward-beta alias with canonical precedence", () => {
+    const parsed = parseNetlist(`
+.model fast NPN(BF=120 BETA=90 BETA_F=80)
+Q1 col base emit fast
+.model slow PNP(BETA=75)
+Q2 col base emit slow
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "bjt",
+      forwardBeta: 120.0,
+    });
+    expect(parsed.circuit.elements()[1]).toMatchObject({
+      kind: "bjt",
+      forwardBeta: 75.0,
+    });
+  });
+
+  it.each([
+    ["BF", "0"],
+    ["BF", "-1"],
+    ["BF", "1e999"],
+    ["BETA", "0"],
+    ["BETA", "-1"],
+    ["BETA", "1e999"],
+    ["BETA_F", "0"],
+    ["BETA_F", "-1"],
+    ["BETA_F", "1e999"],
+  ])("rejects invalid BJT %s forward beta %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model fast NPN(${parameter}=${value})`)).toThrow(
+      "BJT BF must be finite and positive",
+    );
+  });
+
   it("parses JFET models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NJF(BETA=2m VTO=-3 LAMBDA=0.02)

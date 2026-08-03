@@ -1291,7 +1291,9 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             fields[3],
             polarity=model.kind,
             Is=model.params.get("IS", 1e-14),
-            beta_f=model.params.get("BETA_F", model.params.get("BF", 100.0)),
+            beta_f=model.params.get(
+                "BF", model.params.get("BETA", model.params.get("BETA_F", 100.0))
+            ),
             Vt=model.params.get("VT", 0.02585),
             Cje=model.params.get("CJE", model.params.get("CBE", 0.0)),
             Cjc=model.params.get("CJC", model.params.get("CBC", 0.0)),
@@ -1928,6 +1930,15 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(junction_capacitance) or junction_capacitance < 0.0
         ):
             raise NetlistParseError("diode CJO must be finite and non-negative")
+    if kind in {"NPN", "PNP"}:
+        forward_beta = next(
+            (params[name] for name in ("BF", "BETA", "BETA_F") if name in params),
+            None,
+        )
+        if forward_beta is not None and (
+            not math.isfinite(forward_beta) or forward_beta <= 0.0
+        ):
+            raise NetlistParseError("BJT BF must be finite and positive")
     if kind in {"NJF", "PJF"}:
         gate_source_capacitance = params.get("CGS", params.get("CGS0"))
         if gate_source_capacitance is not None and (
