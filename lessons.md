@@ -472,7 +472,7 @@ The same check belongs in every language port. A strict decoder is far safer —
 
 ---
 
-## Lesson 95 — `code/packages/haskell/zstd` inherited the same repo-wide FSE sequences-codec + FHD checksum-bit bugs as java/rust, confirmed via real `zstd` CLI interop (TC-9)
+## Lesson 97 — `code/packages/haskell/zstd` inherited the same repo-wide FSE sequences-codec + FHD checksum-bit bugs as java/rust, confirmed via real `zstd` CLI interop (TC-9)
 
 **Date:** 2026-08-03
 

@@ -174,9 +174,11 @@ Bits 1–0:  Dictionary_ID_Flag
 > is Content_Checksum_Flag. A decoder that reads bit 4 for the checksum flag
 > will misparse any real-world frame that has a trailing checksum (which is
 > the common case — most encoders, including the reference `zstd` CLI, enable
-> it by default) as having trailing garbage after the last block. At least one
-> language port had already copied the wrong bit position into a code comment
-> before this was caught — see `lessons.md` Lesson 95/96.
+> it by default) as having trailing garbage after the last block. This
+> mistake was repo-wide (spec, Go, and Rust) — several language ports had
+> already copied the wrong bit position into a code comment before this was
+> caught; see `lessons.md` Lesson 95/96 and the `rust/zstd` conformance fix
+> that corrected this table.
 
 ### Window Descriptor (1 byte, present when Single_Segment_Flag=0)
 
@@ -261,13 +263,15 @@ This allows the encoder to determine state transitions without lookahead.
 #### Exact decode algorithm (bit-consumption order)
 
 This is the part every language port in this repo got wrong on the first pass
-(discovered during the `java/zstd` rescue, 2026-08, and reproduced identically
-against the Rust reference — see `lessons.md` Lesson 96). It is NOT
-recoverable from a self-round-trip test: an encoder/decoder pair that agree
-with each other on a wrong order will still round-trip correctly against
-themselves. It is only detectable by decoding with (or encoding for) an
-independent, spec-conformant implementation — i.e. `zstd -d` on the CLI
-(test case 9). Verified against RFC 8878 §3.1.1.3.2.1.2 and the actual
+(discovered during a repo-wide zstd conformance audit, 2026-08 — first found
+during the `java/zstd` rescue and reproduced identically against the Rust
+reference and multiple other independent implementations across this repo —
+see `lessons.md`). It is NOT recoverable from a same-codebase round-trip
+test: an encoder/decoder pair that agree with each other on a wrong order
+will still round-trip correctly against themselves. It is only detectable by
+decoding with (or encoding for) an independent, spec-conformant
+implementation — i.e. `zstd -d` on the CLI (TC-9, aka test case 9). Verified
+against RFC 8878 §3.1.1.3.2.1.2 and the actual
 reference C source (`ZSTD_decodeSequence`, `FSE_encodeSymbol`,
 `FSE_initCState2` in `github.com/facebook/zstd`):
 
@@ -325,9 +329,19 @@ normalizedCount[s] copies of s, advancing by `step = (tableSize>>1) +
 claimed by a -1-probability symbol`). There is no "handle count>1 symbols in
 one pass, then count==1 symbols in a second pass" — that is NOT part of the
 real algorithm; it produces a different (but internally self-consistent)
-table and was one of the three bugs found in `java/zstd`'s first pass. See
+table and was one of several such bugs found independently across this
+repo's language ports (first in `java/zstd`'s first pass). See
 `FSE_buildDTable_internal` in `github.com/facebook/zstd`'s `fse_decompress.c`
 for the canonical version.
+
+#### Number_of_Sequences wire encoding
+
+The 2-byte form of `Number_of_Sequences` (values 128–32511) is **not** a
+plain little-endian `u16` with the high bit set — the marker/high byte comes
+FIRST on the wire regardless of host endianness: `byte0 = (count >> 8) |
+0x80`, `byte1 = count & 0xFF`. A little-endian-style encoding that writes the
+low byte first is self-consistent (round-trips against itself) but produces a
+non-conformant frame for any block with 128+ sequences.
 
 ## Educational Simplification
 
@@ -472,7 +486,12 @@ assert decompress(frame) == b"hello"
 ## Security Considerations
 
 - **Bomb protection**: the `Content_Size` field is an untrusted hint — do not pre-allocate
-  `Content_Size` bytes; grow output incrementally.
+  `Content_Size` bytes; grow output incrementally. Enforce a hard cap on total decompressed
+  output size, checked incrementally at every point output can grow — including inside the
+  per-sequence loop of Compressed-block decoding, not just once per top-level Raw/RLE block.
+  A Compressed block's *wire* size is capped (see Block size cap below), but that says
+  nothing about how large it can LZ77-expand to: a single sequence's match length can be
+  tens of KB, and one block can carry tens of thousands of sequences.
 - **Block size cap**: reject blocks claiming `Block_Size > 1 << 17` (128 KB + 1) as malformed.
 - **FSE table validation**: verify that normalised counts sum to the declared table size;
   reject tables with negative counts or counts that overflow.
