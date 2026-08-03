@@ -1506,6 +1506,24 @@ J1 drain gate source fast
     },
   );
 
+  it("parses the JFET gate saturation current", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(IS=2p)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      gateSaturationCurrent: 2.0e-12,
+    });
+  });
+
+  it.each(["0", "-1p", "1e999"])("rejects invalid JFET gate saturation current %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(IS=${value})`)).toThrow(
+      "JFET IS must be finite and positive",
+    );
+  });
+
   it("parses PJF model beta aliases", () => {
     const parsed = parseNetlist(`
 .model pslow PJF(B=750u)
