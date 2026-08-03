@@ -122,9 +122,9 @@ The loop must not start by attempting 10,878 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`bce05ed6abe668df1339c4169e63fa1ed3c8d666` is collision-clean at 1,227
-normalized implementation identities, 4,375 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 777 singletons, 582
+`4a66c66dfde5eb1cf1f39283bf71d2ae6396edca` is collision-clean at 1,228
+normalized implementation identities, 4,376 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 778 singletons, 583
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
 The seventeen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
@@ -210,6 +210,17 @@ candidates. Filesystem durability, process liveness and supervision, trusted
 clocks, spawning, effectful reconciliation, and secure-channel handshakes stay
 injected or native. Its dedicated backlog owner depends on the shared channel-
 crypto identifier vectors and cannot bypass that prerequisite.
+
+The `4a66c66d` refresh added `chief-of-staff-secure-host-channel`, a zero-
+capability, transport-independent protocol kernel. Its bounded bootstrap and
+hello records, exact `D18F` framing, AAD construction, sequencing, malformed-
+frame rejection, and terminal authentication-failure state are portable
+fixture candidates. The implementation depends on the Rust-only X3DH, Double
+Ratchet, and Vault secure-channel stack, so a separate prerequisite owner first
+defines safe vectors, injected entropy and key boundaries, and reviewed lane
+exceptions. Process spawning, pipes, sockets, key custody, and supervisor
+lifecycle remain native; the host-channel item cannot bypass its primitive
+stack dependency.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
@@ -301,8 +312,22 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   canonical Go test/vet/build and a 300-package Ruby plan, the 17+40
   conformance suites and 37-case/56-file corpus, and a real 258-package Ruby-
   engine plan with zero LoadErrors while preserving all 44 separately owned
-  canonical Starlark parse fallbacks. Ready PR #9660 is the sole active parity
-  PR;
+  canonical Starlark parse fallbacks. PR #9660 merged as `bfe5131115` after all
+  17 rebased exact-head checks passed, skipped, or completed neutrally. The
+  refreshed leverage pass selected the now-unblocked canonical BUILD
+  compatibility child next because it removes all 44 silent fallbacks using
+  the already-validated Ruby and interpreter toolchains. The current slice now
+  parses the canonical multiline return shape, preserves loaded-module globals
+  and keyword-call structure, injects the normalized v1 context, validates
+  structured commands, and fails closed with a root-redacted diagnostic. The
+  exact real-plan comparison matches every field for all 9 Elixir, 6 Go, and
+  29 Rust Starlark records and the 258-package Lua plan emits zero Starlark
+  warnings. Validation passes 302 Ruby build-tool runs/614 assertions at
+  88.04% line and 71.11% branch coverage, all six downstream Ruby language
+  suites, canonical Go test/vet/build, and the valid 37-case/56-file corpus.
+  The comparison separately found Ruby's package identities omit the canonical
+  `programs` segment in dependency edges; that registry migration is logged as
+  a dependent pending child rather than widening this evaluator repair;
 - make the TypeScript build-tool git-diff suite portable on Windows. The strict-
   UTF-8 validation run found two hard-coded `/bin/sh` invocations and five
   POSIX-only `/repo` path fixtures. Merged PR #9592 is the completed slice: it

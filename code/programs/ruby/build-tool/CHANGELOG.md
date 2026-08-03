@@ -6,6 +6,14 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Canonical multiline Starlark `BUILD` files now parse and evaluate without a
+  raw-command fallback. The evaluator injects the normalized v1 context,
+  supports nested loaded rule functions and keyword arguments, and extracts
+  validated structured commands deterministically.
+- Once a `BUILD` file is classified as Starlark, parse, load, evaluation,
+  target-selection, and structured-command errors fail closed instead of being
+  downgraded to warnings and reinterpreted as shell lines.
+- Starlark evaluation failures redact the checkout root from CLI diagnostics.
 - The build-tool Gemfile now imports the repository-owned Starlark
   interpreter's authoritative dependency closure. Clean `bundle exec` source-
   tree runs load the evaluator without manual `RUBYLIB`, and tests no longer

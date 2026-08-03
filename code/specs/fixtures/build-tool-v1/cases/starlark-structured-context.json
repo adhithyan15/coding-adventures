@@ -19,7 +19,7 @@
       },
       {
         "path": "code/build/defs.star",
-        "content_utf8": "load(\"code/build/cmd.star\", \"test_command\")\ndef demo_target(name):\n    return {\"rule\": \"python_library\", \"name\": name, \"srcs\": [\"src/demo.py\"], \"deps\": [], \"commands\": [test_command()]}\n"
+        "content_utf8": "load(\"code/build/cmd.star\", \"test_command\")\ndef demo_target(name):\n    return {\n        \"rule\": \"python_library\",\n        \"name\": name,\n        \"srcs\": [\"src/demo.py\"],\n        \"deps\": [],\n        \"commands\": [test_command()],\n    }\n"
       },
       {
         "path": "code/build/cmd.star",

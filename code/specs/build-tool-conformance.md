@@ -342,6 +342,13 @@ Final parity requires:
 - a declared fallback for legacy targets that do not yet expose structured
   commands.
 
+Once a selected canonical `BUILD` is identified as Starlark, parse, load,
+evaluation, target-shape, and structured-command errors are fatal. An
+implementation MUST NOT reinterpret that source as legacy shell commands or
+retain raw `BUILD` lines after an evaluation error. The declared legacy
+fallback applies only after successful evaluation of a valid target that does
+not expose structured commands.
+
 Starlark evaluation MUST NOT read undeclared host files, environment variables,
 network resources, clocks, random sources, or process APIs.
 

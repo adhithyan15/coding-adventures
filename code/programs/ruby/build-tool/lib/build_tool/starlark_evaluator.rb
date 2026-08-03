@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "etc"
+require "json"
+require "rbconfig"
+
 # ==========================================================================
 # starlark_evaluator.rb -- Starlark BUILD File Evaluation
 # ==========================================================================
@@ -86,8 +90,10 @@ module BuildTool
   #     entry_point: ""
   #   )
   # --------------------------------------------------------------------------
-  Target = Data.define(:rule, :name, :srcs, :deps, :test_runner, :entry_point) do
-    def initialize(rule:, name:, srcs: [], deps: [], test_runner: "", entry_point: "")
+  StructuredCommand = Data.define(:program, :args)
+
+  Target = Data.define(:rule, :name, :srcs, :deps, :test_runner, :entry_point, :commands) do
+    def initialize(rule:, name:, srcs: [], deps: [], test_runner: "", entry_point: "", commands: nil)
       super
     end
   end
@@ -189,9 +195,10 @@ module BuildTool
     # @param build_file_path [String] Path to the BUILD file.
     # @param pkg_dir [String] Package directory (for future glob() support).
     # @param repo_root [String] Repository root (for resolving load() paths).
+    # @param context [Hash, nil] Optional normalized v1 context (fixtures).
     # @return [BuildFileResult] The extracted targets.
     # @raise [RuntimeError] If the file cannot be read or evaluated.
-    def evaluate_build_file(build_file_path, pkg_dir, repo_root)
+    def evaluate_build_file(build_file_path, _pkg_dir, repo_root, context: nil)
       # Step 1: Read the BUILD file.
       content = File.read(build_file_path)
 
@@ -225,7 +232,8 @@ module BuildTool
       # the file_resolver and runs the full pipeline.
       result = CodingAdventures::StarlarkInterpreter.interpret(
         content,
-        file_resolver: file_resolver
+        file_resolver: file_resolver,
+        globals: {"_ctx" => context || evaluation_context(repo_root)}
       )
 
       # Step 4: Extract targets from the result.
@@ -233,9 +241,45 @@ module BuildTool
 
       BuildFileResult.new(targets: targets)
     rescue Errno::ENOENT => e
-      raise "reading BUILD file: #{e.message}"
+      raise "reading BUILD file: #{redact_repo_root(e.message, repo_root)}"
     rescue StandardError => e
-      raise "evaluating BUILD file #{build_file_path}: #{e.message}"
+      raise "evaluating BUILD file: #{redact_repo_root(e.message, repo_root)}"
+    end
+
+    # Build the runner-owned v1 context injected into every loaded module.
+    def evaluation_context(repo_root)
+      {
+        "version" => 1,
+        "os" => normalized_os,
+        "arch" => normalized_arch,
+        "cpu_count" => Etc.nprocessors,
+        "ci" => %w[1 true yes].include?(ENV.fetch("CI", "").downcase),
+        "repo_root" => File.expand_path(repo_root).tr("\\", "/")
+      }
+    end
+
+    def normalized_os
+      host_os = RbConfig::CONFIG.fetch("host_os", "").downcase
+      return "windows" if host_os.match?(/mswin|mingw|cygwin/)
+      return "darwin" if host_os.include?("darwin")
+      return "linux" if host_os.include?("linux")
+      return "freebsd" if host_os.include?("freebsd")
+
+      host_os.split("-").first
+    end
+
+    def normalized_arch
+      host_cpu = RbConfig::CONFIG.fetch("host_cpu", "").downcase
+      return "amd64" if %w[x86_64 x64 amd64].include?(host_cpu)
+      return "arm64" if %w[aarch64 arm64].include?(host_cpu)
+
+      host_cpu
+    end
+
+    def redact_repo_root(message, repo_root)
+      expanded = File.expand_path(repo_root)
+      variants = [expanded, expanded.tr("\\", "/"), expanded.tr("/", "\\")].uniq
+      variants.reduce(message.to_s) { |redacted, path| redacted.gsub(path, "<repo>") }
     end
 
     # generate_commands -- Convert a Target into shell commands.
@@ -260,6 +304,12 @@ module BuildTool
     # @param target [Target] The target to generate commands for.
     # @return [Array<String>] Shell commands to execute.
     def generate_commands(target)
+      unless target.commands.nil?
+        return target.commands.map do |command|
+          ([command.program] + command.args).map { |token| render_command_token(token) }.join(" ")
+        end
+      end
+
       case target.rule
       when "py_library"
         runner = target.test_runner.empty? ? "pytest" : target.test_runner
@@ -353,9 +403,43 @@ module BuildTool
           srcs: get_string_list(raw, "srcs"),
           deps: get_string_list(raw, "deps"),
           test_runner: get_string(raw, "test_runner"),
-          entry_point: get_string(raw, "entry_point")
+          entry_point: get_string(raw, "entry_point"),
+          commands: extract_commands(raw, i)
         )
       end
+    end
+
+    def extract_commands(raw_target, target_index)
+      return nil unless raw_target.key?("commands")
+
+      raw_commands = raw_target["commands"]
+      unless raw_commands.is_a?(Array)
+        raise "_targets[#{target_index}].commands is not a list"
+      end
+
+      raw_commands.each_with_index.filter_map do |raw_command, command_index|
+        next if raw_command.nil?
+
+        prefix = "_targets[#{target_index}].commands[#{command_index}]"
+        raise "#{prefix} is not a dict" unless raw_command.is_a?(Hash)
+        raise "#{prefix}.type must be cmd" unless raw_command["type"] == "cmd"
+
+        program = raw_command["program"]
+        raise "#{prefix}.program must be a non-empty string" unless program.is_a?(String) && !program.empty?
+
+        args = raw_command.fetch("args", [])
+        unless args.is_a?(Array) && args.all? { |arg| arg.is_a?(String) }
+          raise "#{prefix}.args must be a list of strings"
+        end
+
+        StructuredCommand.new(program: program, args: args)
+      end
+    end
+
+    def render_command_token(token)
+      return token if token.match?(/\A[A-Za-z0-9_@%+=:,\.\/-]+\z/)
+
+      JSON.generate(token)
     end
 
     # get_string -- Safely extract a string value from a hash.

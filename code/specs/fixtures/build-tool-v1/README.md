@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 36-case bootstrap corpus covers every process-free v1 domain:
+The 37-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical membership and language-registry classification, fixture-tree
   exclusion, fail-closed duplicate package identities, plus Windows, macOS,

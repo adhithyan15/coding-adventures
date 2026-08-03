@@ -2,6 +2,15 @@
 
 All notable changes to `coding_adventures_starlark_vm` will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Function calls bind positional and keyword arguments independently, reject
+  unknown, duplicate, and missing arguments, and apply declared defaults.
+- Functions retain their defining module globals, so a function imported with
+  `load()` can call helpers and builtins from its own module without leaking or
+  overwriting the caller's global scope.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

@@ -43,6 +43,21 @@ The resolver never inserts replacement characters and never includes the host
 checkout root in this error. A literal U+FFFD character encoded correctly as
 UTF-8 remains valid metadata.
 
+## Canonical Starlark BUILD Files
+
+Canonical Starlark files are evaluated with the normalized build-tool v1
+context (`version`, `os`, `arch`, `cpu_count`, `ci`, and `repo_root`). Loaded
+rule functions retain their defining module globals, and returned structured
+commands are validated as `program` plus string `args` before being rendered
+deterministically for the existing executor boundary.
+
+After discovery classifies a file as Starlark, parsing, loading, evaluation,
+target selection, and structured-command extraction are fail-closed. The tool
+does not reinterpret a failed Starlark file as legacy shell commands. Legacy
+fallback remains available only when a valid selected target intentionally
+provides no structured command list. Failure diagnostics redact the checkout
+root while retaining the package identity and stable evaluation detail.
+
 ## Testing
 
 ```bash

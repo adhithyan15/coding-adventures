@@ -588,7 +588,11 @@ module CodingAdventures
             defaults: defaults,
             name: param_names.empty? ? "<lambda>" : "<function>",
             param_count: param_names.length,
-            param_names: param_names
+            param_names: param_names,
+            # Capture the defining module namespace by reference. Loaded
+            # functions must resolve globals from their own module, including
+            # symbols imported before the function definition.
+            globals: v.variables
           )
           v.push(func)
           v.advance_pc
@@ -632,26 +636,34 @@ module CodingAdventures
 
         # CALL_FUNCTION_KW: Call a function with keyword arguments.
         #
-        # The operand is the total number of arguments (positional + keyword).
+        # The operand is [positional_count, keyword_count].
         # Keyword arguments are interleaved on the stack as name-value pairs:
         #
         #   [callable, pos_arg0, ..., kw_name0, kw_val0, kw_name1, kw_val1, ...]
         #
-        # We detect keyword args by checking if a value is a string that
-        # matches a parameter name. The compiler pushes LOAD_CONST for the
-        # keyword name followed by the expression value.
+        # Keeping both counts is necessary because every keyword occupies two
+        # stack slots while a positional argument occupies one.
         vm.register_opcode(op::CALL_FUNCTION_KW, ->(v, instr, c) {
-          arg_count = instr.operand
-          # Pop all args as a flat list
-          all_args = []
-          arg_count.times { all_args.unshift(v.pop) }
+          positional_count, keyword_count = instr.operand
+
+          keyword_pairs = []
+          keyword_count.times do
+            value = v.pop
+            name = v.pop
+            keyword_pairs.unshift([name, value])
+          end
+
+          positional = []
+          positional_count.times { positional.unshift(v.pop) }
           callable = v.pop
 
           if callable.is_a?(StarlarkFunction)
             # call_starlark_function_kw handles PC advancement internally
-            call_starlark_function_kw(v, callable, all_args, c)
+            call_starlark_function_kw(v, callable, positional, keyword_pairs, c)
           elsif callable.is_a?(CodingAdventures::VirtualMachine::BuiltinFunction)
-            result = callable.implementation.call(all_args)
+            raise "TypeError: builtin keyword arguments are not supported" unless keyword_pairs.empty?
+
+            result = callable.implementation.call(positional)
             v.push(result)
             v.advance_pc
           else
@@ -1051,7 +1063,7 @@ module CodingAdventures
       #   3. Set up local variables with parameter bindings
       #   4. Execute the function body
       #   5. The RETURN_VALUE handler restores the caller's state
-      def self.call_starlark_function(vm, func, args, code)
+      def self.call_starlark_function(vm, func, args, _code)
         param_count = func.param_count
         default_count = func.defaults.length
 
@@ -1073,7 +1085,7 @@ module CodingAdventures
         # everything on the Ruby stack (this method's local variables).
         saved_pc = vm.pc
         saved_halted = vm.halted
-        saved_variables = vm.variables.dup
+        saved_variables = vm.variables
         saved_locals = vm.locals
         saved_stack = vm.stack.dup
 
@@ -1091,6 +1103,7 @@ module CodingAdventures
           new_locals[name] = args[i] if i < args.length
         end
         vm.locals = new_locals
+        vm.variables = func.globals
         vm.stack = []
         vm.pc = 0
         vm.halted = false
@@ -1127,44 +1140,45 @@ module CodingAdventures
 
       # Call a StarlarkFunction with keyword arguments.
       #
-      # Keyword arguments arrive as alternating name-value pairs mixed
-      # with positional arguments. We match them to parameter names.
-      def self.call_starlark_function_kw(vm, func, all_args, code)
-        # The compiler pushes keyword name strings before their values.
-        # We need to separate positional from keyword args.
-        # Keyword args: if an arg is a string that matches a param name
-        # and the next arg exists, treat as keyword.
+      # Keyword arguments arrive as explicit name-value pairs alongside a
+      # separate positional list. We bind them to declared parameter slots.
+      def self.call_starlark_function_kw(vm, func, positional, keyword_pairs, code)
         param_names = func.param_names
-        positional = []
-        kwargs = {}
-
-        i = 0
-        while i < all_args.length
-          val = all_args[i]
-          if val.is_a?(String) && param_names.include?(val) && i + 1 < all_args.length
-            kwargs[val] = all_args[i + 1]
-            i += 2
-          else
-            positional << val
-            i += 1
-          end
+        if positional.length > func.param_count
+          raise "TypeError: #{func.name}() takes #{func.param_count} " \
+                "arguments (#{positional.length} given)"
         end
 
-        # Build final args array matching parameter order
-        final_args = Array.new(func.param_count)
+        missing = Object.new
+        final_args = Array.new(func.param_count, missing)
         positional.each_with_index { |val, idx| final_args[idx] = val }
-        kwargs.each do |name, val|
+
+        keyword_pairs.each do |name, val|
+          unless name.is_a?(String) && param_names.include?(name)
+            raise "TypeError: #{func.name}() got an unexpected keyword argument #{name.inspect}"
+          end
+
           idx = param_names.index(name)
-          final_args[idx] = val if idx
+          unless final_args[idx].equal?(missing)
+            raise "TypeError: #{func.name}() got multiple values for argument #{name.inspect}"
+          end
+          final_args[idx] = val
         end
 
-        # Fill remaining with defaults
-        func.param_names.each_with_index do |name, idx|
-          next unless final_args[idx].nil?
+        func.param_names.each_index do |idx|
+          next unless final_args[idx].equal?(missing)
+
           default_offset = idx - (func.param_count - func.defaults.length)
           if default_offset >= 0 && default_offset < func.defaults.length
             final_args[idx] = func.defaults[default_offset]
           end
+        end
+
+        missing_names = param_names.each_index.filter_map do |idx|
+          param_names[idx] if final_args[idx].equal?(missing)
+        end
+        unless missing_names.empty?
+          raise "TypeError: #{func.name}() missing required arguments: #{missing_names.join(', ')}"
         end
 
         call_starlark_function(vm, func, final_args, code)

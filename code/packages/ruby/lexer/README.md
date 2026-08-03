@@ -11,6 +11,10 @@ Breaks source code into tokens -- the smallest meaningful units of a programming
 
 Both produce identical `Token` objects so downstream tools (parser) don't care which one generated the tokens.
 
+For indentation-sensitive grammars, the stream closes with the final logical
+`NEWLINE`, any remaining `DEDENT` tokens, and then `EOF`. This order lets a
+parser finish the last suite before it reaches end of input.
+
 ## Usage
 
 ```ruby

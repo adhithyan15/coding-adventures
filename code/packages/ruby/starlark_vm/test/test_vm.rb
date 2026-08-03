@@ -339,6 +339,30 @@ class TestStarlarkVM < Minitest::Test
     assert_equal "Hi world", result.variables["result"]
   end
 
+  def test_function_keyword_arguments_use_declared_parameter_names
+    source = <<~STARLARK
+      def target(name, srcs = [], deps = []):
+          return [name, srcs, deps]
+      result = target(name = "demo", srcs = ["src.py"], deps = ["python/base"])
+    STARLARK
+
+    result = exec(source)
+
+    assert_equal ["demo", ["src.py"], ["python/base"]], result.variables["result"]
+  end
+
+  def test_function_mixed_positional_and_keyword_arguments
+    source = <<~STARLARK
+      def target(name, srcs = [], deps = []):
+          return [name, srcs, deps]
+      result = target("demo", deps = ["python/base"])
+    STARLARK
+
+    result = exec(source)
+
+    assert_equal ["demo", [], ["python/base"]], result.variables["result"]
+  end
+
   def test_function_returning_none
     source = <<~STARLARK
       def noop():
@@ -733,6 +757,7 @@ class TestStarlarkVM < Minitest::Test
     assert_equal 2, func.param_count
     assert_equal ["a", "b"], func.param_names
     assert_equal [], func.defaults
+    assert_equal({}, func.globals)
   end
 
   # ================================================================
