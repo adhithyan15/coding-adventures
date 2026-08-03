@@ -1342,6 +1342,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET KF must be finite and non-negative");
   }
+  const flickerNoiseExponent = params.get("AF");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    flickerNoiseExponent !== undefined &&
+    (!Number.isFinite(flickerNoiseExponent) || flickerNoiseExponent < 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET AF must be finite and non-negative");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1450,6 +1458,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "MJSW",
     "FC",
     "KF",
+    "AF",
     "IS",
     "N_SUB",
     "T_NOM",
