@@ -1,0 +1,275 @@
+{
+  "contract": "adj-lang/formula_execution/v1",
+  "export": {
+    "body": {
+      "end": 5327,
+      "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+      "start": 5309
+    },
+    "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+    "claim_id": "adj.math.arithmetic.quotient",
+    "declaration": {
+      "end": 5753,
+      "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+      "start": 5271
+    },
+    "formula": "quotient",
+    "formulabook": "elementary_arithmetic",
+    "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+    "parameters": [
+      "dividend",
+      "divisor"
+    ],
+    "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+    "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+    "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+  },
+  "formula_derivation_sha256": "6e39c14a55dac01f6debf338e2abea2c431f3bda6e2923c9ff1f970746407fa3",
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 5327,
+        "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+        "start": 5309
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.quotient",
+      "declaration": {
+        "end": 5753,
+        "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+        "start": 5271
+      },
+      "formula": "quotient",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "dividend",
+        "divisor"
+      ],
+      "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "inputs": [
+    {
+      "claim_id": "adj.input.arithmetic.dividend",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 15,
+            "byte_offset": 99,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "2058e458a31ce8088f354176979d18d2473255a360413e66519b1662676ef7d9"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "dividend(20)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    },
+    {
+      "claim_id": "adj.input.arithmetic.divisor",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 13,
+            "byte_offset": 115,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "8fc94d5df57f41a91e70596d3c389b56138c89b92e9555e69025b36cbd3e6b03"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "divisor(5)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    }
+  ],
+  "kind": "execution_witness",
+  "question": {
+    "claim_id": "adj.question.arithmetic.quotient",
+    "declaration": {
+      "end": 2525,
+      "sha256": "c96582d76b379dd86b36e6c2373fc52711903c4e581a2b6296629e5a1656d87d",
+      "start": 2496
+    },
+    "name": "quotient",
+    "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe",
+    "source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde"
+  },
+  "result": {
+    "dimension": "scalar",
+    "exact_rational": {
+      "denominator": "1",
+      "numerator": "4"
+    },
+    "f64_bits": "4010000000000000"
+  },
+  "schema_version": 1,
+  "tree": {
+    "f64_bits": "4010000000000000",
+    "kind": "operation",
+    "operands": [
+      {
+        "f64_bits": "4034000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 15,
+              "byte_offset": 99,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "2058e458a31ce8088f354176979d18d2473255a360413e66519b1662676ef7d9"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "dividend(20)"
+        },
+        "kind": "leaf",
+        "slot": "dividend"
+      },
+      {
+        "f64_bits": "4014000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 13,
+              "byte_offset": 115,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "8fc94d5df57f41a91e70596d3c389b56138c89b92e9555e69025b36cbd3e6b03"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "divisor(5)"
+        },
+        "kind": "leaf",
+        "slot": "divisor"
+      }
+    ],
+    "operator": "/"
+  },
+  "verification": {
+    "computation": {
+      "reason": null,
+      "recomputed_f64_bits": null,
+      "recorded_f64_bits": null,
+      "status": "rechecked"
+    },
+    "formula_quotes": [
+      {
+        "identity": {
+          "body": {
+            "end": 5327,
+            "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+            "start": 5309
+          },
+          "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+          "claim_id": "adj.math.arithmetic.quotient",
+          "declaration": {
+            "end": 5753,
+            "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+            "start": 5271
+          },
+          "formula": "quotient",
+          "formulabook": "elementary_arithmetic",
+          "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+          "parameters": [
+            "dividend",
+            "divisor"
+          ],
+          "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+          "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+          "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+        },
+        "provenance": {
+          "corroborations": [],
+          "locator": "https://mathworld.wolfram.com/Quotient.html",
+          "quote": {
+            "byte_len": 108,
+            "byte_offset": 0,
+            "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+            "text_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29"
+          },
+          "source": "The term \"quotient\" is most commonly used to refer to the ratio q=r/s of two quantities r and s, where s!=0.",
+          "trust": "authoritative"
+        },
+        "quote": {
+          "byte_len": 108,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "fully_verified": true,
+    "input_quotes": [
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.dividend",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 15,
+                "byte_offset": 99,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "2058e458a31ce8088f354176979d18d2473255a360413e66519b1662676ef7d9"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "dividend(20)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 15,
+          "byte_offset": 99,
+          "reason": null,
+          "status": "verified"
+        }
+      },
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.divisor",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 13,
+                "byte_offset": 115,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "8fc94d5df57f41a91e70596d3c389b56138c89b92e9555e69025b36cbd3e6b03"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "divisor(5)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 13,
+          "byte_offset": 115,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "is_query_answer": true,
+    "passed": true
+  }
+}

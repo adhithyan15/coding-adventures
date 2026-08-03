@@ -3,9 +3,29 @@
   "segments": [
     {
       "disposition": "discarded",
-      "end": 91,
+      "end": 66,
       "reason": "spacing or syntax outside the selected input claim",
       "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.import.arithmetic.primitives",
+          "end": 90,
+          "quote": "import \"arithmetic.adj\"\n",
+          "quote_sha256": "967650df942445e6134491a1ff88fbdd91b2ebd6e304d52399c84bb290a4f0db",
+          "start": 66
+        }
+      ],
+      "disposition": "represented",
+      "end": 90,
+      "start": 66
+    },
+    {
+      "disposition": "discarded",
+      "end": 91,
+      "reason": "spacing or syntax outside the selected input claim",
+      "start": 90
     },
     {
       "claims": [
@@ -36,10 +56,24 @@
       "start": 375
     },
     {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.sum",
+          "end": 703,
+          "quote": "? sum(addend_one, addend_two)  % expect 12\n",
+          "quote_sha256": "d5e768c9ff1957b13a8e1ac5b4c5ec7082662909138a0dc70ee2d4ca26a9c37f",
+          "start": 660
+        }
+      ],
+      "disposition": "represented",
+      "end": 703,
+      "start": 660
+    },
+    {
       "disposition": "discarded",
       "end": 704,
       "reason": "spacing or syntax outside the selected input claim",
-      "start": 660
+      "start": 703
     },
     {
       "claims": [
@@ -70,10 +104,24 @@
       "start": 983
     },
     {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.difference",
+          "end": 1314,
+          "quote": "? difference(minuend, subtrahend)  % expect 2\n",
+          "quote_sha256": "904d20b5c7725492bbe6857bfceb3e7b1fa973e492b132e165f9dfd7034bb153",
+          "start": 1268
+        }
+      ],
+      "disposition": "represented",
+      "end": 1314,
+      "start": 1268
+    },
+    {
       "disposition": "discarded",
       "end": 1315,
       "reason": "spacing or syntax outside the selected input claim",
-      "start": 1268
+      "start": 1314
     },
     {
       "claims": [
@@ -104,10 +152,24 @@
       "start": 1600
     },
     {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.product",
+          "end": 1932,
+          "quote": "? product(factor_one, factor_two)  % expect 42\n",
+          "quote_sha256": "980219e58f39ddd539572566f862b232ca5104a6cd63cb0f7b86e9a9feaaedec",
+          "start": 1885
+        }
+      ],
+      "disposition": "represented",
+      "end": 1932,
+      "start": 1885
+    },
+    {
       "disposition": "discarded",
       "end": 1933,
       "reason": "spacing or syntax outside the selected input claim",
-      "start": 1885
+      "start": 1932
     },
     {
       "claims": [
@@ -138,9 +200,17 @@
       "start": 2216
     },
     {
-      "disposition": "discarded",
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.quotient",
+          "end": 2538,
+          "quote": "? quotient(dividend, divisor)  % expect 4\n",
+          "quote_sha256": "b4278e12e1aa644598ee74c736aa44fab2398dd4ac1d7ef2d2e5493c4623d29c",
+          "start": 2496
+        }
+      ],
+      "disposition": "represented",
       "end": 2538,
-      "reason": "spacing or syntax outside the selected input claim",
       "start": 2496
     }
   ],

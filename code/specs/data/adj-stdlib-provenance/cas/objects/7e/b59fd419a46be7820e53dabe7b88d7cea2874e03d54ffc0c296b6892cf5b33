@@ -51,10 +51,16 @@
   "dependencies": [
     "a548a44417fb48afcd04834675860c432a11fbc96b31ab79521a5db8910a1eeb"
   ],
+  "execution_witness_sha256s": [
+    "876e8a5b512a9d55b31bb5087a1d576721822d399058ad6f1e7123b807c3e3b1"
+  ],
+  "formula_derivation_sha256s": [
+    "edf74555a245c8e00dae7e4edec93a60316c9d5b3c7267161fc2be96d3292668"
+  ],
   "input": {
     "raw_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
     "receipt_sha256": "bb91bde708681949c46105a74a3da8b93e48f718ed1781916e5d6d0dd3d7e8ad",
-    "source_ir_sha256": "46764c7358a78dc14d3fcce8b350c18b80a87d0272ca3ec45b87583a6f1e4ddd"
+    "source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4"
   },
   "kind": "provenance_bundle",
   "library": "code/specs/data/adj-formula-stdlib/arithmetic/percent-of.query.adj",
@@ -63,7 +69,7 @@
       "raw_source_sha256": "c439b5784c20ba5fd474c539a8b39b3839a678372c6593be7705b54b6760440d",
       "receipt_sha256": "bb91bde708681949c46105a74a3da8b93e48f718ed1781916e5d6d0dd3d7e8ad",
       "representations": [],
-      "source_ir_sha256": "46764c7358a78dc14d3fcce8b350c18b80a87d0272ca3ec45b87583a6f1e4ddd"
+      "source_ir_sha256": "ae60258332e76c049fd07a0be6c43e4aac9622cd6c1b2e260fbf42ca7c97d5b4"
     },
     {
       "raw_source_sha256": "3630d00c1fec29b7db62594a4f867b48f8dc7d5b5813bef30abc45afc0de5c28",

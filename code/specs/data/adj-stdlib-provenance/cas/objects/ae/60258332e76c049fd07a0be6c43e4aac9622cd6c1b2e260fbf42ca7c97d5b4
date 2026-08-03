@@ -65,21 +65,21 @@
       "claims": [
         {
           "claim_id": "adj.question.arithmetic.percent_of.compute",
-          "end": 1266,
-          "quote": "? percent_of(whole, rate)",
-          "quote_sha256": "1ccace450557b9a0dd9b4ec17f436d14d51f827375d876143d7da7166ae79ec4",
+          "end": 1280,
+          "quote": "? percent_of(whole, rate)  % expect 10\n",
+          "quote_sha256": "cb560bb1bc6cea541027ae83a3668ac1d606d1156f68ab5ec09f1dde43e377a0",
           "start": 1241
         }
       ],
       "disposition": "represented",
-      "end": 1266,
+      "end": 1280,
       "start": 1241
     },
     {
       "disposition": "discarded",
       "end": 1281,
       "reason": "introductory comment, spacing, or human-readable test oracle outside the selected import, facts, and executable question",
-      "start": 1266
+      "start": 1280
     },
     {
       "disposition": "discarded",

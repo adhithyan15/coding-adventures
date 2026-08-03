@@ -1,0 +1,275 @@
+{
+  "contract": "adj-lang/formula_execution/v1",
+  "export": {
+    "body": {
+      "end": 4306,
+      "sha256": "c5ae1eba1cc3632483cf1ee70e8c89877a87c804d8af8273046f4eff38967a48",
+      "start": 4286
+    },
+    "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+    "claim_id": "adj.math.arithmetic.difference",
+    "declaration": {
+      "end": 4704,
+      "sha256": "5660451549422290b7050ea1e4da7687362dc33d3ab6346b99a031d7bce44287",
+      "start": 4244
+    },
+    "formula": "difference",
+    "formulabook": "elementary_arithmetic",
+    "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+    "parameters": [
+      "minuend",
+      "subtrahend"
+    ],
+    "snapshot_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+    "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+    "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+  },
+  "formula_derivation_sha256": "859b99376056706a1bfa83996a8279d7b019fb44ee8124f71fff04af6d6a467b",
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 4306,
+        "sha256": "c5ae1eba1cc3632483cf1ee70e8c89877a87c804d8af8273046f4eff38967a48",
+        "start": 4286
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.difference",
+      "declaration": {
+        "end": 4704,
+        "sha256": "5660451549422290b7050ea1e4da7687362dc33d3ab6346b99a031d7bce44287",
+        "start": 4244
+      },
+      "formula": "difference",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "minuend",
+        "subtrahend"
+      ],
+      "snapshot_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "inputs": [
+    {
+      "claim_id": "adj.input.arithmetic.minuend",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 13,
+            "byte_offset": 34,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "e9f54e2839bb7c80fa51d2cbefed070ad7075ff8de1b1d5007413d35c4e829bd"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "minuend(7)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    },
+    {
+      "claim_id": "adj.input.arithmetic.subtrahend",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 16,
+            "byte_offset": 48,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "e728ef2c3a03768f21d83fa007e57f309a9f1be9e1f70966f6fe5562285b3bf6"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "subtrahend(5)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    }
+  ],
+  "kind": "execution_witness",
+  "question": {
+    "claim_id": "adj.question.arithmetic.difference",
+    "declaration": {
+      "end": 1301,
+      "sha256": "dc049d8c8ee691d9dbd8163d99b93914fa578f0c0a1587b7bc140cc76dc745f6",
+      "start": 1268
+    },
+    "name": "difference",
+    "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe",
+    "source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde"
+  },
+  "result": {
+    "dimension": "scalar",
+    "exact_rational": {
+      "denominator": "1",
+      "numerator": "2"
+    },
+    "f64_bits": "4000000000000000"
+  },
+  "schema_version": 1,
+  "tree": {
+    "f64_bits": "4000000000000000",
+    "kind": "operation",
+    "operands": [
+      {
+        "f64_bits": "401c000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 13,
+              "byte_offset": 34,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "e9f54e2839bb7c80fa51d2cbefed070ad7075ff8de1b1d5007413d35c4e829bd"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "minuend(7)"
+        },
+        "kind": "leaf",
+        "slot": "minuend"
+      },
+      {
+        "f64_bits": "4014000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 16,
+              "byte_offset": 48,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "e728ef2c3a03768f21d83fa007e57f309a9f1be9e1f70966f6fe5562285b3bf6"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "subtrahend(5)"
+        },
+        "kind": "leaf",
+        "slot": "subtrahend"
+      }
+    ],
+    "operator": "-"
+  },
+  "verification": {
+    "computation": {
+      "reason": null,
+      "recomputed_f64_bits": null,
+      "recorded_f64_bits": null,
+      "status": "rechecked"
+    },
+    "formula_quotes": [
+      {
+        "identity": {
+          "body": {
+            "end": 4306,
+            "sha256": "c5ae1eba1cc3632483cf1ee70e8c89877a87c804d8af8273046f4eff38967a48",
+            "start": 4286
+          },
+          "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+          "claim_id": "adj.math.arithmetic.difference",
+          "declaration": {
+            "end": 4704,
+            "sha256": "5660451549422290b7050ea1e4da7687362dc33d3ab6346b99a031d7bce44287",
+            "start": 4244
+          },
+          "formula": "difference",
+          "formulabook": "elementary_arithmetic",
+          "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+          "parameters": [
+            "minuend",
+            "subtrahend"
+          ],
+          "snapshot_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+          "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+          "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+        },
+        "provenance": {
+          "corroborations": [],
+          "locator": "https://mathworld.wolfram.com/Difference.html",
+          "quote": {
+            "byte_len": 95,
+            "byte_offset": 0,
+            "snapshot_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a",
+            "text_sha256": "f6afa42fffdc2433453ebedd515e6c771e14359b07dff9cf7fb74372f99c819a"
+          },
+          "source": "The difference of two numbers n_1 and n_2 is n_1-n_2, where the minus sign denotes subtraction.",
+          "trust": "authoritative"
+        },
+        "quote": {
+          "byte_len": 95,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "fully_verified": true,
+    "input_quotes": [
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.minuend",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 13,
+                "byte_offset": 34,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "e9f54e2839bb7c80fa51d2cbefed070ad7075ff8de1b1d5007413d35c4e829bd"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "minuend(7)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 13,
+          "byte_offset": 34,
+          "reason": null,
+          "status": "verified"
+        }
+      },
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.subtrahend",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 16,
+                "byte_offset": 48,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "e728ef2c3a03768f21d83fa007e57f309a9f1be9e1f70966f6fe5562285b3bf6"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "subtrahend(5)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 16,
+          "byte_offset": 48,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "is_query_answer": true,
+    "passed": true
+  }
+}

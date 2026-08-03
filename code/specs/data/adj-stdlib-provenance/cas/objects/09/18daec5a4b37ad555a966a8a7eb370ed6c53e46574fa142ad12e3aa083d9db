@@ -51,10 +51,16 @@
   "dependencies": [
     "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb"
   ],
+  "execution_witness_sha256s": [
+    "0c3a4777aee8e21a26c6035ea6201d2e8b862bf334f921e02ac9b6c39b5b56e0"
+  ],
+  "formula_derivation_sha256s": [
+    "f21fbb006f6011cc44237d99917614623ff1e78b1401adba09732ef4f4d90c3e"
+  ],
   "input": {
     "raw_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
     "receipt_sha256": "3f1bd9828a7b63fe6762cbbbd584a99242eb2f11974310f5d74ad25f70412113",
-    "source_ir_sha256": "cb0ab4d3166774f8a85e73a9566757b4c87a1099d5613b0f7b6f448b2fad2568"
+    "source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32"
   },
   "kind": "provenance_bundle",
   "library": "code/specs/data/adj-formula-stdlib/arithmetic/ratio.query.adj",
@@ -63,7 +69,7 @@
       "raw_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
       "receipt_sha256": "3f1bd9828a7b63fe6762cbbbd584a99242eb2f11974310f5d74ad25f70412113",
       "representations": [],
-      "source_ir_sha256": "cb0ab4d3166774f8a85e73a9566757b4c87a1099d5613b0f7b6f448b2fad2568"
+      "source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32"
     },
     {
       "raw_source_sha256": "192a5bb5978b842c87999e9fe9dabc90b3ca735f5e7fba33b047640add2e6bc7",

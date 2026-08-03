@@ -158,7 +158,10 @@ def local_source(
 
 
 def build(
-    cas: provenance.Cas, *, formula_inventory_command: Sequence[str]
+    cas: provenance.Cas,
+    *,
+    formula_inventory_command: Sequence[str],
+    formula_audit_command: Sequence[str],
 ) -> dict[str, str]:
     source_entries = []
     clauses = []
@@ -396,6 +399,15 @@ def build(
         trust = query_bytes.index(b"    trust authoritative", query_start)
         query_end = query_bytes.index(b"\n", trust) + 1
         query_ranges.append((claim_id, query_start, query_end))
+    import_start = query_bytes.index(b'import "arithmetic.adj"')
+    import_end = query_bytes.index(b"\n", import_start) + 1
+    query_ranges.append(("adj.import.arithmetic.primitives", import_start, import_end))
+    for name in ("sum", "difference", "product", "quotient"):
+        question_start = query_bytes.index(f"? {name}(".encode())
+        question_end = query_bytes.index(b"\n", question_start) + 1
+        query_ranges.append(
+            (f"adj.question.arithmetic.{name}", question_start, question_end)
+        )
     fixture_source, fixture_claims = local_source(
         cas, fixture_path, fixture_ranges, "arithmetic input fixture"
     )
@@ -442,6 +454,14 @@ def build(
         "library": query_path,
         "sources": [query_source, fixture_source],
     }
+    derivations, witnesses = provenance.put_formula_execution_evidence(
+        cas,
+        query_bundle,
+        formula_audit_command,
+        label="arithmetic.query.adj execution witness",
+    )
+    query_bundle["formula_derivation_sha256s"] = derivations
+    query_bundle["execution_witness_sha256s"] = witnesses
     query_bundle_hash = cas.put_json(
         query_bundle,
         kind="provenance_bundle",
@@ -457,8 +477,10 @@ def build(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    parser.add_argument("--formula-audit-binary", type=Path, required=True)
     args = parser.parse_args()
     formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
+    formula_audit_command = [str(args.formula_audit_binary.resolve())]
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
         REPO_ROOT / provenance.DEFAULT_MANIFEST,
@@ -466,11 +488,13 @@ def main() -> None:
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
         formula_inventory_command=formula_inventory_command,
+        formula_audit_command=formula_audit_command,
     ) as transaction:
         transaction.commit(
             build(
                 transaction.cas,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
         )
 

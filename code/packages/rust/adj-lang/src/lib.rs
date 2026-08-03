@@ -100,6 +100,28 @@ pub struct FormulaSource {
     pub body_span: SourceSpan,
 }
 
+/// One ordinary `? term` query and the exact bytes that declared it.
+#[derive(Debug, Clone, PartialEq)]
+pub struct QuerySource {
+    pub conclusion: ast::Term,
+    pub declaration_span: SourceSpan,
+}
+
+/// One `import "..."` declaration and its exact source-byte envelope.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ImportSource {
+    pub literal: String,
+    pub declaration_span: SourceSpan,
+}
+
+/// Parser-backed source locations for the program elements used by formula audit.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProgramSourceMap {
+    pub formulas: Vec<FormulaSource>,
+    pub imports: Vec<ImportSource>,
+    pub queries: Vec<QuerySource>,
+}
+
 /// Failure to construct a trustworthy formula source map.
 #[derive(Debug)]
 pub enum FormulaSourceMapError {
@@ -190,6 +212,11 @@ pub fn parse(src: &str) -> Result<Program, CompileError> {
 /// or prove that an external source expression is equivalent to the body; those
 /// remain separate validation stages.
 pub fn formula_source_map(src: &str) -> Result<Vec<FormulaSource>, FormulaSourceMapError> {
+    Ok(program_source_map(src)?.formulas)
+}
+
+/// Parse one source and locate formulas, ordinary queries, and imports in exact bytes.
+pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMapError> {
     let tree = parse_grammar_ast(src)?;
     let program = adapt_program(&tree).map_err(CompileError::Adapt)?;
     let locator = SourceLocator::new(src);
@@ -249,7 +276,56 @@ pub fn formula_source_map(src: &str) -> Result<Vec<FormulaSource>, FormulaSource
             });
         }
     }
-    Ok(inventory)
+    let parsed_imports = collect_nodes(&tree, "import_decl");
+    let mut typed_imports = Vec::new();
+    collect_typed_imports(&program.statements, &mut typed_imports);
+    if parsed_imports.len() != typed_imports.len() {
+        return Err(FormulaSourceMapError::Inconsistent(format!(
+            "parser found {} imports but adapter produced {}",
+            parsed_imports.len(),
+            typed_imports.len()
+        )));
+    }
+    let imports = parsed_imports
+        .into_iter()
+        .zip(typed_imports)
+        .map(|(node, literal)| {
+            Ok(ImportSource {
+                literal: literal.clone(),
+                declaration_span: locator.node_span(node)?,
+            })
+        })
+        .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
+
+    let parsed_queries: Vec<_> = collect_nodes(&tree, "query_decl")
+        .into_iter()
+        .filter(|node| direct_child(node, "term").is_some())
+        .collect();
+    let mut typed_queries = Vec::new();
+    collect_typed_queries(&program.statements, &mut typed_queries);
+    if parsed_queries.len() != typed_queries.len() {
+        return Err(FormulaSourceMapError::Inconsistent(format!(
+            "parser found {} ordinary queries but adapter produced {}",
+            parsed_queries.len(),
+            typed_queries.len()
+        )));
+    }
+    let queries = parsed_queries
+        .into_iter()
+        .zip(typed_queries)
+        .map(|(node, conclusion)| {
+            Ok(QuerySource {
+                conclusion: conclusion.clone(),
+                declaration_span: locator.node_span(node)?,
+            })
+        })
+        .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
+
+    Ok(ProgramSourceMap {
+        formulas: inventory,
+        imports,
+        queries,
+    })
 }
 
 fn collect_nodes<'a>(node: &'a GrammarASTNode, rule_name: &str) -> Vec<&'a GrammarASTNode> {
@@ -275,6 +351,30 @@ fn collect_typed_formulabooks<'a>(
             ast::Statement::Formulabook { name, formulas, .. } => found.push((name, formulas)),
             ast::Statement::Rulebook { statements, .. } => {
                 collect_typed_formulabooks(statements, found);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn collect_typed_imports<'a>(statements: &'a [ast::Statement], found: &mut Vec<&'a String>) {
+    for statement in statements {
+        match statement {
+            ast::Statement::Import(literal) => found.push(literal),
+            ast::Statement::Rulebook { statements, .. } => {
+                collect_typed_imports(statements, found);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn collect_typed_queries<'a>(statements: &'a [ast::Statement], found: &mut Vec<&'a ast::Term>) {
+    for statement in statements {
+        match statement {
+            ast::Statement::Query { conclusion } => found.push(conclusion),
+            ast::Statement::Rulebook { statements, .. } => {
+                collect_typed_queries(statements, found);
             }
             _ => {}
         }
@@ -433,6 +533,13 @@ impl<'a> SourceLocator<'a> {
 pub fn compile(src: &str) -> Result<LoweredProgram, CompileError> {
     let program = parse(src)?;
     lower(&program).map_err(CompileError::Lower)
+}
+
+/// Return the provenance object the lowerer assigns to a formula definition.
+pub fn formula_provenance(
+    formula: &ast::FormulaDef,
+) -> Result<logic_engine::Provenance, LowerError> {
+    lower::formula_provenance(formula)
 }
 
 /// Result of compiling a program that may `import` other files: either an

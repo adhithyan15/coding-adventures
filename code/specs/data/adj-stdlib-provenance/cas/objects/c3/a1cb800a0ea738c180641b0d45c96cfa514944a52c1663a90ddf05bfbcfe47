@@ -189,10 +189,22 @@
   "dependencies": [
     "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390"
   ],
+  "execution_witness_sha256s": [
+    "30003fcf0690ddf46bbfa76e264957b7f084e97f716aa893b6afe8062366b016",
+    "6250fc74ea1bfc53415e317e20030f751616544a6615c120413bb527ce3b772c",
+    "a818a3cacfb4630227bc5300b5a5d2e73b55eeda2582b690603ed4e5ded1be95",
+    "f2735a2f15668439d542b6b0358a03284836de03d58d320441893c25f6d0acac"
+  ],
+  "formula_derivation_sha256s": [
+    "3902ea008383faeda05bf7f1efbe0722ab460a90b89a9b6ae8b502038b451cec",
+    "6e39c14a55dac01f6debf338e2abea2c431f3bda6e2923c9ff1f970746407fa3",
+    "859b99376056706a1bfa83996a8279d7b019fb44ee8124f71fff04af6d6a467b",
+    "c3178566079c40e111003b25b3950cfe77079281327a0e6c7d55d104965aae10"
+  ],
   "input": {
     "raw_source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde",
     "receipt_sha256": "7b8f79647554db71122013becbd8b28bc7b2029be59e30b1b8263b1078c2cf4d",
-    "source_ir_sha256": "a08f9a4c0c014f980640e04c404b5e82b682e2336d8a17f1fad6a6d186d2b2d9"
+    "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe"
   },
   "kind": "provenance_bundle",
   "library": "code/specs/data/adj-formula-stdlib/arithmetic/arithmetic.query.adj",
@@ -201,7 +213,7 @@
       "raw_source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde",
       "receipt_sha256": "7b8f79647554db71122013becbd8b28bc7b2029be59e30b1b8263b1078c2cf4d",
       "representations": [],
-      "source_ir_sha256": "a08f9a4c0c014f980640e04c404b5e82b682e2336d8a17f1fad6a6d186d2b2d9"
+      "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe"
     },
     {
       "raw_source_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",

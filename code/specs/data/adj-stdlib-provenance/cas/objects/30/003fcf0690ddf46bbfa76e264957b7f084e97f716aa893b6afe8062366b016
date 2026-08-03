@@ -1,0 +1,275 @@
+{
+  "contract": "adj-lang/formula_execution/v1",
+  "export": {
+    "body": {
+      "end": 4843,
+      "sha256": "6f5490b92f7782d4fedd5b803c0dd05bad061b0f30ecda0e34a1c02cf3534ffd",
+      "start": 4820
+    },
+    "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+    "claim_id": "adj.math.arithmetic.product",
+    "declaration": {
+      "end": 5194,
+      "sha256": "b602175a41e073a27fd369640810bfc2821566089773749548948ad267c2c2d0",
+      "start": 4778
+    },
+    "formula": "product",
+    "formulabook": "elementary_arithmetic",
+    "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+    "parameters": [
+      "factor_one",
+      "factor_two"
+    ],
+    "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+    "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+    "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+  },
+  "formula_derivation_sha256": "3902ea008383faeda05bf7f1efbe0722ab460a90b89a9b6ae8b502038b451cec",
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 4843,
+        "sha256": "6f5490b92f7782d4fedd5b803c0dd05bad061b0f30ecda0e34a1c02cf3534ffd",
+        "start": 4820
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.product",
+      "declaration": {
+        "end": 5194,
+        "sha256": "b602175a41e073a27fd369640810bfc2821566089773749548948ad267c2c2d0",
+        "start": 4778
+      },
+      "formula": "product",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "factor_one",
+        "factor_two"
+      ],
+      "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "inputs": [
+    {
+      "claim_id": "adj.input.arithmetic.factor_one",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 16,
+            "byte_offset": 65,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "9115f76426eb8aaeea1006a1263b83ef62928340236cd7c871f5f2139f4fb69d"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "factor_one(6)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    },
+    {
+      "claim_id": "adj.input.arithmetic.factor_two",
+      "identity": {
+        "provenance": {
+          "corroborations": [],
+          "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+          "quote": {
+            "byte_len": 16,
+            "byte_offset": 82,
+            "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+            "text_sha256": "9bed8956ef838f37f71d65d8a0d2e343baa0978d6f586097c8f9507b036f758e"
+          },
+          "source": "arithmetic input fixture",
+          "trust": "authoritative"
+        },
+        "term": "factor_two(7)"
+      },
+      "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+    }
+  ],
+  "kind": "execution_witness",
+  "question": {
+    "claim_id": "adj.question.arithmetic.product",
+    "declaration": {
+      "end": 1918,
+      "sha256": "faf51f03e5d9e1f440ffd4a82369ff3a6a42c45c0f65fed7ef6592f4786bd79e",
+      "start": 1885
+    },
+    "name": "product",
+    "source_ir_sha256": "ce607d67a95e800d8d19100eb7e4e47f2884b07d3f1d98c2b9804cc8e9bc1efe",
+    "source_sha256": "4178dfaf831d102a43ded7ab380e563d1426cffd9bfde8808440e2bef4be1cde"
+  },
+  "result": {
+    "dimension": "scalar",
+    "exact_rational": {
+      "denominator": "1",
+      "numerator": "42"
+    },
+    "f64_bits": "4045000000000000"
+  },
+  "schema_version": 1,
+  "tree": {
+    "f64_bits": "4045000000000000",
+    "kind": "operation",
+    "operands": [
+      {
+        "f64_bits": "4018000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 16,
+              "byte_offset": 65,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "9115f76426eb8aaeea1006a1263b83ef62928340236cd7c871f5f2139f4fb69d"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "factor_one(6)"
+        },
+        "kind": "leaf",
+        "slot": "factor_one"
+      },
+      {
+        "f64_bits": "401c000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+            "quote": {
+              "byte_len": 16,
+              "byte_offset": 82,
+              "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+              "text_sha256": "9bed8956ef838f37f71d65d8a0d2e343baa0978d6f586097c8f9507b036f758e"
+            },
+            "source": "arithmetic input fixture",
+            "trust": "authoritative"
+          },
+          "term": "factor_two(7)"
+        },
+        "kind": "leaf",
+        "slot": "factor_two"
+      }
+    ],
+    "operator": "*"
+  },
+  "verification": {
+    "computation": {
+      "reason": null,
+      "recomputed_f64_bits": null,
+      "recorded_f64_bits": null,
+      "status": "rechecked"
+    },
+    "formula_quotes": [
+      {
+        "identity": {
+          "body": {
+            "end": 4843,
+            "sha256": "6f5490b92f7782d4fedd5b803c0dd05bad061b0f30ecda0e34a1c02cf3534ffd",
+            "start": 4820
+          },
+          "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+          "claim_id": "adj.math.arithmetic.product",
+          "declaration": {
+            "end": 5194,
+            "sha256": "b602175a41e073a27fd369640810bfc2821566089773749548948ad267c2c2d0",
+            "start": 4778
+          },
+          "formula": "product",
+          "formulabook": "elementary_arithmetic",
+          "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+          "parameters": [
+            "factor_one",
+            "factor_two"
+          ],
+          "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+          "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+          "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+        },
+        "provenance": {
+          "corroborations": [],
+          "locator": "https://mathworld.wolfram.com/Product.html",
+          "quote": {
+            "byte_len": 71,
+            "byte_offset": 0,
+            "snapshot_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b",
+            "text_sha256": "d1debfa5f08a42e046eaf3313d5dea0812a98a7e9fe595f7979bf060d379ad6b"
+          },
+          "source": "The term \"product\" refers to the result of one or more multiplications.",
+          "trust": "authoritative"
+        },
+        "quote": {
+          "byte_len": 71,
+          "byte_offset": 0,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "fully_verified": true,
+    "input_quotes": [
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.factor_one",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 16,
+                "byte_offset": 65,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "9115f76426eb8aaeea1006a1263b83ef62928340236cd7c871f5f2139f4fb69d"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "factor_one(6)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 16,
+          "byte_offset": 65,
+          "reason": null,
+          "status": "verified"
+        }
+      },
+      {
+        "identity": {
+          "claim_id": "adj.input.arithmetic.factor_two",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/arithmetic-inputs.txt",
+              "quote": {
+                "byte_len": 16,
+                "byte_offset": 82,
+                "snapshot_sha256": "594d7c13fb82094d612ad0eb22d6b5d0de6e94921929ff9767376949a7b4b5ba",
+                "text_sha256": "9bed8956ef838f37f71d65d8a0d2e343baa0978d6f586097c8f9507b036f758e"
+              },
+              "source": "arithmetic input fixture",
+              "trust": "authoritative"
+            },
+            "term": "factor_two(7)"
+          },
+          "source_ir_sha256": "e66263d058de84a0f028d46d5ebca702ff3da51ae01f2a1df503056ae4b03e38"
+        },
+        "quote": {
+          "byte_len": 16,
+          "byte_offset": 82,
+          "reason": null,
+          "status": "verified"
+        }
+      }
+    ],
+    "is_query_answer": true,
+    "passed": true
+  }
+}

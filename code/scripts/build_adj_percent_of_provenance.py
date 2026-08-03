@@ -311,6 +311,7 @@ def build(
     *,
     arithmetic_bundle_sha256: str,
     formula_inventory_command: Sequence[str],
+    formula_audit_command: Sequence[str] | None = None,
 ) -> dict[str, str]:
     arithmetic_bundle_sha256 = provenance._require_hash(
         arithmetic_bundle_sha256, "arithmetic_bundle_sha256"
@@ -427,7 +428,7 @@ def build(
         )
     )
     question_start = query_bytes.index(b"? percent_of(")
-    question_end = query_bytes.index(b"  % expect", question_start)
+    question_end = query_bytes.index(b"\n", question_start) + 1
     query_ranges.append((QUESTION_CLAIM, question_start, question_end))
     disabled_start = query_bytes.index(
         b"% ----------------------------------------------------------------------------",
@@ -497,6 +498,14 @@ def build(
         "library": QUERY,
         "sources": [query_source, fixture_source],
     }
+    derivations, witnesses = provenance.put_formula_execution_evidence(
+        cas,
+        query_bundle,
+        formula_audit_command,
+        label="percent-of.query.adj execution witness",
+    )
+    query_bundle["formula_derivation_sha256s"] = derivations
+    query_bundle["execution_witness_sha256s"] = witnesses
     query_bundle_hash = cas.put_json(
         query_bundle,
         kind="provenance_bundle",
@@ -525,8 +534,10 @@ def main() -> None:
         help="verified current primitive arithmetic provenance root",
     )
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
+    parser.add_argument("--formula-audit-binary", type=Path, required=True)
     args = parser.parse_args()
     formula_inventory_command = [str(args.formula_inventory_binary.resolve())]
+    formula_audit_command = [str(args.formula_audit_binary.resolve())]
     with provenance.BundleRegistrationTransaction(
         REPO_ROOT / provenance.DEFAULT_ROOT,
         REPO_ROOT / provenance.DEFAULT_MANIFEST,
@@ -534,6 +545,7 @@ def main() -> None:
         schema_path=REPO_ROOT / provenance.DEFAULT_SCHEMA,
         workspace_root=REPO_ROOT,
         formula_inventory_command=formula_inventory_command,
+        formula_audit_command=formula_audit_command,
     ) as transaction:
         transaction.commit(
             build(
@@ -541,6 +553,7 @@ def main() -> None:
                 args.captured_source,
                 arithmetic_bundle_sha256=args.arithmetic_bundle_sha256,
                 formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
             )
         )
 

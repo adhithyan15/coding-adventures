@@ -82,6 +82,7 @@ class AdjStdlibManifestTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             command = ["trusted-parser"]
+            audit_command = ["trusted-audit"]
             with mock.patch.object(
                 manifest_module.adj_stdlib_provenance,
                 "_validate_repository_unlocked",
@@ -89,13 +90,77 @@ class AdjStdlibManifestTests(unittest.TestCase):
                     "injected replay stop"
                 ),
             ) as validate:
-                bundles, errors = manifest_module.load_provenance_bundles(root, command)
+                bundles, errors = manifest_module.load_provenance_bundles(
+                    root, command, audit_command
+                )
 
         self.assertEqual(bundles, {})
         self.assertEqual(errors, ["provenance CAS: injected replay stop"])
         self.assertEqual(
             validate.call_args.kwargs["formula_inventory_command"], command
         )
+        self.assertEqual(
+            validate.call_args.kwargs["formula_audit_command"], audit_command
+        )
+
+    def test_query_bundle_is_execution_companion_of_listed_library(self) -> None:
+        value = valid_manifest(self.library)
+        objective = value["objectives"][0]
+        formula_hash = "a" * 64
+        query_hash = "b" * 64
+        formula_source = "c" * 64
+        query_source = "d" * 64
+        objective["provenance_bundle_hashes"] = [formula_hash, query_hash]
+        objective["source_cas_hashes"] = [formula_source, query_source]
+        objective["status"]["provenance"] = "fully_verified"
+        bundles = {
+            formula_hash: {
+                "library": self.library,
+                "sources": [{"raw_source_sha256": formula_source}],
+            },
+            query_hash: {
+                "library": self.library.removesuffix(".adj") + ".query.adj",
+                "sources": [{"raw_source_sha256": query_source}],
+                "dependencies": [formula_hash],
+                "execution_witness_sha256s": ["e" * 64],
+            },
+        }
+
+        library_evidence = evidence(self.library, pinned=True)
+        library_evidence["byte_verified"] = True
+        errors = manifest_module.validate_manifest(
+            Path("."),
+            value,
+            {self.library: library_evidence},
+            provenance_bundles=bundles,
+        )
+
+        self.assertEqual(errors, [])
+
+    def test_fully_verified_rejects_formula_bundle_without_witnessed_query(self) -> None:
+        value = valid_manifest(self.library)
+        objective = value["objectives"][0]
+        formula_hash = "a" * 64
+        formula_source = "c" * 64
+        objective["provenance_bundle_hashes"] = [formula_hash]
+        objective["source_cas_hashes"] = [formula_source]
+        objective["status"]["provenance"] = "fully_verified"
+        library_evidence = evidence(self.library, pinned=True)
+        library_evidence["byte_verified"] = True
+
+        errors = manifest_module.validate_manifest(
+            Path("."),
+            value,
+            {self.library: library_evidence},
+            provenance_bundles={
+                formula_hash: {
+                    "library": self.library,
+                    "sources": [{"raw_source_sha256": formula_source}],
+                }
+            },
+        )
+
+        self.assertTrue(any("witness-bearing query companion" in e for e in errors))
 
     def test_rejects_duplicate_ids_and_unknown_prerequisites(self) -> None:
         value = valid_manifest(self.library)

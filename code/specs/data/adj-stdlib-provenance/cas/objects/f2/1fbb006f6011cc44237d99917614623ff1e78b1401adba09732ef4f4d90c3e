@@ -1,0 +1,137 @@
+{
+  "contract": "adj-lang/formula_derivation/v1",
+  "export": {
+    "body": {
+      "end": 3355,
+      "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+      "start": 3323
+    },
+    "bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+    "claim_id": "adj.math.arithmetic.ratio",
+    "declaration": {
+      "end": 3866,
+      "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+      "start": 3283
+    },
+    "formula": "ratio",
+    "formulabook": "ratios",
+    "inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
+    "parameters": [
+      "numerator",
+      "denominator"
+    ],
+    "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+    "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+    "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"
+  },
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 3355,
+        "sha256": "850f30b1df7c2a69841ecf752e1cca118c32ecb159e75342e02b909482cd284f",
+        "start": 3323
+      },
+      "bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+      "claim_id": "adj.math.arithmetic.ratio",
+      "declaration": {
+        "end": 3866,
+        "sha256": "621181500c39863ebcc023148ac6958a71599b5ed8dd1cb80a2753cd9af2186d",
+        "start": 3283
+      },
+      "formula": "ratio",
+      "formulabook": "ratios",
+      "inventory_sha256": "dad85a13f28bcabdc31f52f13af4a500bf20e4d137151039ef6c6005f4182c48",
+      "parameters": [
+        "numerator",
+        "denominator"
+      ],
+      "snapshot_sha256": "93fd49105b8236bd47254e1da7e378388acba6468a1188a76fe4e3c22767be73",
+      "source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+      "source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b"
+    },
+    {
+      "body": {
+        "end": 5327,
+        "sha256": "d09f74832adbaab901498f634378884df9b0150a69e888c061ebde03f707856c",
+        "start": 5309
+      },
+      "bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "claim_id": "adj.math.arithmetic.quotient",
+      "declaration": {
+        "end": 5753,
+        "sha256": "158b706340d69d16241e2977814a2d965c6128931ac2d49e45a03ae9f11ba4d2",
+        "start": 5271
+      },
+      "formula": "quotient",
+      "formulabook": "elementary_arithmetic",
+      "inventory_sha256": "57e90dbc0cfeefd3fbe29cce6942eabd68281722972c1994f811b1b92d98d6f6",
+      "parameters": [
+        "dividend",
+        "divisor"
+      ],
+      "snapshot_sha256": "b1c165c30eaebb36248353c43ab0d04999ac70dc2c9ec9fbe2056cb0c2a07f29",
+      "source_ir_sha256": "5a357914bbd14f6eb10c200f969065239d353284eacfcbf30c661cda40246caf",
+      "source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0"
+    }
+  ],
+  "imports": [
+    {
+      "claim_id": "adj.code.arithmetic.ratio.query.import",
+      "declaration": {
+        "end": 86,
+        "sha256": "de37f89dd7911a0649d254fb69258d9cdaa7028416dfe47eeb6099795e9bb04b",
+        "start": 68
+      },
+      "imported_bundle_sha256": "7a20751cefb93279080fabc344066ccb72cd1962b5aa5065a43a1640ee6113bb",
+      "imported_source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+      "importer_source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+      "importer_source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7",
+      "literal": "ratio.adj"
+    },
+    {
+      "claim_id": "adj.code.arithmetic.ratio.import.arithmetic",
+      "declaration": {
+        "end": 1866,
+        "sha256": "6e2baf610eafda5b9940e63c4e957c8e99366137d3789bc1cf51e73cb3e3a894",
+        "start": 1843
+      },
+      "imported_bundle_sha256": "586bdeef4ce8aba4241cbd0cb234583d1e64868e200ad827514148d9d8c33390",
+      "imported_source_sha256": "08c1c54bc51c2a73e3bc9880125bbda2d3c89e558c3e8f3aa08e696a1218edd0",
+      "importer_source_ir_sha256": "31890fda49f695ac7ae7ee5fe4356b7a91c9d06707079f4f56263a3a3c97ebdf",
+      "importer_source_sha256": "d2e0802dc3ae4d99e2eb9859e121145e4f52ca19ce666081d2c4949166d3ad3b",
+      "literal": "arithmetic.adj"
+    }
+  ],
+  "kind": "formula_derivation",
+  "plan": {
+    "expression": {
+      "kind": "binary",
+      "left": {
+        "kind": "reference",
+        "name": "numerator"
+      },
+      "operator": "/",
+      "right": {
+        "kind": "reference",
+        "name": "denominator"
+      }
+    },
+    "is_query_answer": true,
+    "scope": {
+      "derived_limit": 0,
+      "fact_limit": 2
+    }
+  },
+  "question": {
+    "claim_id": "adj.question.arithmetic.ratio.compute",
+    "declaration": {
+      "end": 669,
+      "sha256": "4fa4bb1e52b3711b06a3f46f4fcfd6e3b0cecd2b6013f5866c8673a717823b82",
+      "start": 638
+    },
+    "name": "ratio",
+    "source_ir_sha256": "b7043331646d759d470f0053f760b837892b5140e47c912347f17ee88b2c9b32",
+    "source_sha256": "318ddeff05e8e34647c5aeb5aa2817df7f3798a5884f5ce45783723cd3ceccc7"
+  },
+  "schema_version": 1
+}
