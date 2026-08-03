@@ -97,13 +97,20 @@ This package parses and produces archives that may cross a trust boundary
 (untrusted uploads, third-party `.zip` files), so it defends against a few
 adversarial-input classes beyond simple format conformance:
 
-- **Zip-slip / path traversal**: `ZipWriter.AddFile`/`AddDirectory` normalize
-  every entry name before writing it — backslashes become forward slashes,
-  and empty, `.`, and `..` segments are dropped — the same
-  `normalize_part_name` pattern used by `rust/opc-writer`. This package
-  performs no filesystem I/O itself, but a downstream extractor that does
-  `File.WriteAllBytes(Path.Combine(outDir, entry.Name), entry.Data)` on the
-  round-tripped entries can never receive a `..`-shaped or absolute name.
+- **Zip-slip / path traversal — write side**: `ZipWriter.AddFile`/`AddDirectory`
+  normalize every entry name before writing it — backslashes become forward
+  slashes, a leading Windows drive letter (`C:`) is dropped, and empty, `.`,
+  and `..` segments are dropped — the same `normalize_part_name` pattern used
+  by `rust/opc-writer`. An archive *produced by this package* can therefore
+  never contain a `..`-shaped, absolute, or drive-rooted entry name.
+  **This does not cover the read side.** Per `code/specs/CMP09-zip.md`'s
+  Security Considerations, `ZipReader`/`ZipArchive.Unzip` return entry names
+  from a third-party archive verbatim and unsanitized — the in-memory API
+  itself performs no filesystem I/O so it is "not directly vulnerable," but
+  any caller that writes extracted entries to disk (e.g.
+  `File.WriteAllBytes(Path.Combine(outDir, entry.Name), entry.Data)`) is
+  responsible for sanitizing `entry.Name` first, exactly as it would be with
+  any other ZIP reader.
 - **Integer-overflow-safe bounds checking**: every offset/size field read
   from an untrusted archive (`cd_offset`, `cd_size`, `local_offset`,
   `compressed_size`, `uncompressed_size`) is attacker-controlled and can be

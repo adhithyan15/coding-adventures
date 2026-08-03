@@ -33,13 +33,22 @@ gaps, three of which mirror bug classes this repo already hardened against in si
 packages (`ruby/zip`'s parser, `rust/opc-writer`'s part-name normalization). All four are
 fixed here, with adversarial regression tests added for each:
 
-- **Zip-slip (defense-in-depth)**: `ZipWriter.AddFile`/`AddDirectory` now normalize entry
-  names before writing them — backslashes become forward slashes, and empty, `.`, `..`
-  segments are dropped — mirroring `rust/opc-writer`'s `normalize_part_name`. This package
+- **Zip-slip (write-side defense-in-depth)**: `ZipWriter.AddFile`/`AddDirectory` now
+  normalize entry names before writing them — backslashes become forward slashes, a
+  leading Windows drive letter (`C:`) is dropped, and empty, `.`, `..` segments are
+  dropped — mirroring `rust/opc-writer`'s `normalize_part_name`. (The initial version of
+  this fix missed the drive-letter case — caught in a second review round: `"C:/evil.dll"`
+  is still `Path.IsPathRooted`-true on Windows even without a leading slash, so
+  `Path.Combine(outDir, ...)` would have silently discarded `outDir`.) This package
   performs no filesystem I/O itself, so this isn't directly exploitable by the package's
-  own code, but it prevents a `..`-shaped or absolute name from ever reaching a downstream
-  extractor that naively does `File.WriteAllBytes(Path.Combine(outDir, entry.Name), ...)`.
-  A name that normalizes away to nothing (e.g. pure `..` segments) is rejected outright.
+  own code, but it prevents a `..`-shaped, absolute, or drive-rooted name from ever
+  reaching a downstream extractor that naively does
+  `File.WriteAllBytes(Path.Combine(outDir, entry.Name), ...)`. A name that normalizes away
+  to nothing (e.g. pure `..` segments) is rejected outright. Per
+  `code/specs/CMP09-zip.md`'s Security Considerations, this is intentionally write-side
+  only — `ZipReader`/`ZipArchive.Unzip` return third-party entry names verbatim, and
+  callers writing extracted entries to disk remain responsible for sanitizing them, same
+  as with any other ZIP reader.
 - **Integer overflow on untrusted offset/size fields bypassing bounds checks**: `cd_offset`,
   `cd_size`, `local_offset`, `compressed_size`, and `uncompressed_size` are attacker-
   controlled `uint` values that were narrowed to `int` before their governing bounds check,

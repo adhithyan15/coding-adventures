@@ -353,6 +353,24 @@ public class ZipTests
         Assert.DoesNotContain(names, n => n.StartsWith('/'));
     }
 
+    // A Windows drive-letter prefix ("C:\...") is a rooted path on Windows
+    // even without a leading slash — Path.Combine(outDir, "C:/evil.dll")
+    // silently discards outDir and returns the rooted second argument
+    // verbatim. Splitting on separators alone doesn't touch a "C:" segment
+    // (it contains neither "/" nor "\"), so it must be dropped explicitly.
+    [Fact]
+    public void Security_WriterStripsWindowsDriveLetterPrefix()
+    {
+        var writer = new ZipWriter();
+        writer.AddFile(@"C:\Windows\System32\evil.dll", "x"u8.ToArray());
+        var archive = writer.Finish();
+
+        var entries = ZipArchive.Unzip(archive);
+        Assert.Single(entries);
+        Assert.Equal("Windows/System32/evil.dll", entries[0].Name);
+        Assert.False(Path.IsPathRooted(entries[0].Name));
+    }
+
     // A directory entry's trailing slash must survive normalization.
     [Fact]
     public void Security_WriterNormalizationPreservesTrailingSlashForDirectories()
