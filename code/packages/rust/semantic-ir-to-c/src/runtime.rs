@@ -2644,9 +2644,14 @@ static SirValue _sir_num_round_ndigits(SirValue recv, int64_t ndigits) {
             return _sir_float(r / factor);
         }
         {
-            int64_t k = -ndigits;
+            /* `-ndigits` is signed-overflow UB when `ndigits == INT64_MIN`
+               (reachable: `_sir_round_ndigits_arg` saturates a hostile
+               huge-negative Float ndigits argument to exactly INT64_MIN) --
+               the SAME hazard the Integer branch above avoids via
+               `_sir_i64_abs_u` instead of a bare unary `-`. */
+            uint64_t k = _sir_i64_abs_u(ndigits);
             if (k > 18) return _sir_int(0);
-            factor = pow(10.0, (double)k);
+            factor = pow(10.0, (double)(int)k);
             scaled = f / factor;
             r = (scaled >= 0.0) ? floor(scaled + 0.5) : ceil(scaled - 0.5);
             return _sir_int(_sir_f64_to_i64_saturating(r * factor));

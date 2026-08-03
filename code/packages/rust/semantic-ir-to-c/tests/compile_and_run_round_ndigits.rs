@@ -131,3 +131,21 @@ fn ndigits_far_beyond_precision_returns_the_receiver_unchanged_or_dwarfs_to_zero
         None => eprintln!("skip: no cc"),
     }
 }
+
+#[test]
+fn a_hostile_extreme_float_ndigits_argument_saturates_instead_of_overflowing() {
+    // Security-review regression: `_sir_round_ndigits_arg` saturates a huge-
+    // magnitude-negative Float ndigits argument to exactly `INT64_MIN` (via
+    // `_sir_f64_to_i64_saturating`). A bare `-ndigits` on that value is
+    // signed-overflow UB -- the SAME hazard already fixed for the Integer
+    // branch via `_sir_i64_abs_u`, just missed on the Float branch's own
+    // negative-ndigits arm. This exercises exactly that input on BOTH a
+    // Float and an Integer receiver -- neither should crash or misbehave,
+    // both dwarf to 0 (real Ruby raises RangeError here instead; this
+    // backend saturates rather than raises, the same convention `to_i` on
+    // a non-finite Float already uses).
+    match run_ruby("puts 3.14.round(-1.0e300)\nputs 42.round(-1.0e300)\n") {
+        Some(out) => assert_eq!(out, "0\n0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}

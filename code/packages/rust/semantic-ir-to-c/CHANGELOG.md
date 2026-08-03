@@ -36,6 +36,12 @@ saturate-rather-than-wrap-or-UB discipline:
   digits, "beyond `double`'s ~17 significant digits" for Floats) to a
   bound proven safe by construction, rather than depending on incidental
   floating-point behavior (e.g. `0 * Infinity == NaN`) for correctness.
+- (Security review) The Float branch's negative-`ndigits` arm originally
+  computed `int64_t k = -ndigits` directly — signed-overflow UB when
+  `ndigits == INT64_MIN`, reachable because `_sir_round_ndigits_arg`
+  saturates a hostile huge-negative Float ndigits argument to exactly that
+  value (e.g. `3.14.round(-1.0e300)`). Fixed to reuse `_sir_i64_abs_u`,
+  the same overflow-safe magnitude helper the Integer branch already used.
 
 ## 0.33.0 — fix: `puts` on an Array bracket-displayed instead of unpacking
 
