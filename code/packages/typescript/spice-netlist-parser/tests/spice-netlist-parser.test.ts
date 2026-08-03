@@ -1879,6 +1879,37 @@ Xright c d load
     expect(element.params[canonical]).toBeCloseTo(2.0e-12, 18);
   });
 
+  it.each([
+    ["NSS=-1", "MOSFET NSS must be finite and non-negative"],
+    ["NSS=1e999", "MOSFET NSS must be finite and non-negative"],
+    ["TPG=0.5", "MOSFET TPG must be -1, 0, or 1"],
+  ])("rejects invalid MOSFET process parameter %s", (parameter, message) => {
+    expect(() =>
+      parseNetlist(`.model nfast NMOS(${parameter})\nM1 d g s b nfast\n`),
+    ).toThrow(message);
+  });
+
+  it("derives MOSFET electrostatic defaults with explicit precedence", () => {
+    const derived = parseNetlist(
+      ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1)\nM1 d g s b nfast\n",
+    ).circuit.elements()[0];
+    const explicit = parseNetlist(
+      ".model nfast NMOS(NSUB=4e15 TOX=100n NSS=1e10 TPG=-1 " +
+        "VT0=0.61 GAMMA=0.42 PHI=0.73)\nM1 d g s b nfast\n",
+    ).circuit.elements()[0];
+    expect(derived.kind).toBe("mosfet");
+    expect(explicit.kind).toBe("mosfet");
+    if (derived.kind !== "mosfet" || explicit.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(derived.params.GAMMA).toBeGreaterThan(0.0);
+    expect(derived.params.PHI).toBeGreaterThan(0.0);
+    expect(derived.params.VT0).not.toBeCloseTo(0.7, 12);
+    expect(explicit.params.VT0).toBeCloseTo(0.61, 15);
+    expect(explicit.params.GAMMA).toBeCloseTo(0.42, 15);
+    expect(explicit.params.PHI).toBeCloseTo(0.73, 15);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
