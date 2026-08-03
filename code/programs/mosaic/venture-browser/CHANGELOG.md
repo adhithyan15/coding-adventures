@@ -4,6 +4,8 @@
 
 ### Added
 
+- Run the primary generated SwiftUI and WinUI direct-launch interaction tests
+  from the shared backend build matrix on their native hosts.
 - Route the authoritative POSIX and Windows package build entry points through
   the complete generated-shell acceptance matrix after Rust contract tests.
 - Add one package-owned jsdom interaction gate shared by the generated HTML

@@ -167,6 +167,12 @@ if [[ "$host_os" == Darwin ]] && has_command swift; then
     "$output_root/swiftui/libventure_browser_macos.dylib"
   echo "==> Building swiftui"
   (cd "$output_root/swiftui" && swift build)
+  echo "==> Testing swiftui direct launch and interactions"
+  acceptance_args=(test -p venture-browser-macos --test swiftui_project_launch)
+  if ((release)); then
+    acceptance_args+=(--release)
+  fi
+  (cd "$rust_workspace" && cargo "${acceptance_args[@]}")
 elif [[ "$host_os" != Darwin ]]; then
   defer_backend swiftui "SwiftUI builds require macOS"
 else

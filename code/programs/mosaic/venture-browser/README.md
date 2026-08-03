@@ -92,6 +92,9 @@ part-backed native controls and its generated `mosaicHost` seam.
 The Compose gate uses the emitted Mosaic-part test tags to drive native
 Compose controls through the generated injectable `MosaicComposeHost` seam,
 including disabled buttons, address editing, Return, Go, and host prop refresh.
+On macOS and Windows, the matrix also runs the generated SwiftUI or WinUI
+application's direct launch-and-interaction test after compiling its emitted
+project, so package-level CI cannot stop at a shell-only build.
 Platform-exclusive builds are explicitly deferred to their
 native host; missing host-applicable toolchains are reported as skips. Pass
 `--strict` on POSIX or `-Strict` on PowerShell to reject those missing

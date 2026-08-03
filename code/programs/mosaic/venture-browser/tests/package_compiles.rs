@@ -383,6 +383,14 @@ fn backend_build_scripts_cover_the_complete_matrix_and_direct_builds() {
         build_windows.contains("scripts\\build-all.ps1"),
         "Windows BUILD must execute the generated-shell matrix"
     );
+    assert!(
+        shell.contains("venture-browser-macos") && shell.contains("swiftui_project_launch"),
+        "POSIX matrix must run the primary macOS direct-launch gate"
+    );
+    assert!(
+        powershell.contains("venture-browser-windows") && powershell.contains("xaml_project_build"),
+        "Windows matrix must run the primary Windows direct-launch gate"
+    );
     let backends = [
         "react",
         "electron",
