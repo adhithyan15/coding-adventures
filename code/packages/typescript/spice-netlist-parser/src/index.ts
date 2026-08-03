@@ -1300,6 +1300,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET JS must be finite and non-negative");
   }
+  const bulkPotential = params.get("PB");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    bulkPotential !== undefined &&
+    (!Number.isFinite(bulkPotential) || bulkPotential <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET PB must be finite and positive");
+  }
   const nominalTemperature = params.get("T_NOM") ?? params.get("TNOM");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1403,6 +1411,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "CJ",
     "CJSW",
     "JS",
+    "PB",
     "IS",
     "N_SUB",
     "T_NOM",
