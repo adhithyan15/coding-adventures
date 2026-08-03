@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased - formula audit v2 guard witnesses
+
+- `adj-formula-audit` emits `adj-lang/formula_audit/v2` for executed guards or plans containing
+  exact literals. V2 records ordered query executions, parser-backed guard byte identities, exact
+  comparisons, stable consumed-fact identities, independent direct-observation rechecks, and a
+  tagged evaluated or withheld body.
+- Guarded v2 audits fail closed on unresolved, derived, lossy, ambiguous, or structurally
+  inconsistent operands until transitive derived-predicate verification lands. Truly legacy plans
+  retain the existing v1 shape and serialization path.
+- V2 independently replays parameter binding and nested application order from parser-owned source,
+  follows runtime guard short-circuiting and built-in precedence, requires a complete
+  declaration-ordered guard prefix, reports quote mismatches truthfully, and serializes recursively
+  sorted ASCII-only canonical JSON bytes.
+
 ## [0.36.0] - 2026-08-03 - formula-domain abstentions and inventory v2
 
 - `adj-lang-cli` emits `formula_abstentions` for failed or unresolved formula preconditions,

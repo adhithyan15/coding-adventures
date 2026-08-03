@@ -323,14 +323,17 @@ option mapping, or judge/evaluation failure.
    `proportion.adj` requires nonzero `a`, `b`, and `c`, and E2E coverage proves
    each zero position withholds the answer before body evaluation. CAS migration
    remains separate until the worked query's observed inputs receive source IR.
-9b. Add versioned formula-audit guard outcomes and CAS execution witnesses that
-    independently replay both passed and failed guards, exact compared values,
-    consumed facts, guard source spans, and the presence or absence of the body
-    result. Every consumed fact must bind a stable owner source, source-IR claim,
-    and exact observation-byte span rather than relying on a runtime `FactId`.
-    The v2 contract must also encode exact-literal plans directly; v1 compatibility
-    must be selected by the declared contract rather than heuristic projection.
-    Guarded formulas must not migrate to CAS before this lands.
+9b. **Complete.** Formula-audit v2 independently replays parser-owned parameter
+    binding, nested application order, and every declaration-ordered guard through
+    the first failure. The CAS witnesses exact compared values, consumed direct
+    facts, guard spans, truthful quote status, and evaluated versus withheld bodies.
+    Input-reference v3 binds each fact to its stable owner source and source IR,
+    cited snapshot/IR, exact owning ADJ observation span, and the exact numeric value
+    parsed from those authored bytes. Declared v1 rejects v2 exact-literal nodes;
+    only the explicit one-time migration bridge projects an already authenticated
+    unguarded v2 replay to the frozen v1 shape. The checked-in CAS now includes one
+    positive and three independently failed proportion executions. Derived guard
+    inputs continue to fail closed pending 9c.
 9c. Bind predicate contributions over derived slots to their computation IDs,
     transitive input facts, formula sources, and `verify_derived` results. Direct
     observed predicate inputs are fact-bound and quote-checked now; derived inputs

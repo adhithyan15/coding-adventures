@@ -24,10 +24,10 @@ use logic_core::{
     Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContentHash,
-    ContributionClause, ExactRational, Fact, FactId, JointContributionClause, KbError,
-    KnowledgeBase, PredicateContributionClause, PriorClause, Priority, Provenance, Rule, TrustTier,
-    UncertaintyMarker,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputationScope, ComputeExpr, ComputeOp,
+    ContentHash, ContributionClause, DerivationNode, ExactRational, Fact, FactId,
+    JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
+    Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
 use std::collections::{HashMap, HashSet};
@@ -435,11 +435,111 @@ pub struct FormulaAbstention {
     /// The evaluated argument for a false predicate. `None` means evaluation
     /// could not resolve the requirement from the current KB.
     pub actual: Option<f64>,
+    /// Exact rational identity of `actual` when arithmetic stayed exact.
+    pub actual_exact: Option<ExactRational>,
     pub detail: Option<String>,
     /// Ground facts consumed while evaluating the guard, preserving byte-level
     /// input provenance for the CLI and future negative-witness replay.
     pub fact_ids: Vec<FactId>,
     pub provenance: Provenance,
+    /// Complete ordered guard trace accumulated before the refusal. This keeps
+    /// earlier successful guards when a later direct or nested guard fails.
+    pub guards: Vec<FormulaGuardTrace>,
+    /// Formula applications reached before the refusal, outermost first.
+    pub formula_sequence: Vec<FormulaApplicationTrace>,
+}
+
+/// One formula application reached while expanding a query body.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaApplicationTrace {
+    pub formula: String,
+    pub provenance: Provenance,
+}
+
+/// The runtime result of evaluating one declared formula precondition.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FormulaGuardOutcome {
+    Passed,
+    Failed,
+    Unresolved,
+}
+
+/// Replayable runtime evidence for one executed formula precondition.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaGuardTrace {
+    pub formula: String,
+    pub predicate: String,
+    pub precondition_index: usize,
+    pub parameter: Option<String>,
+    pub outcome: FormulaGuardOutcome,
+    pub value: Option<f64>,
+    pub exact: Option<ExactRational>,
+    pub precision_loss: bool,
+    pub plan: Option<ComputeExpr>,
+    pub tree: Option<DerivationNode>,
+    pub scope: Option<ComputationScope>,
+    pub fact_ids: Vec<FactId>,
+    pub detail: Option<String>,
+    pub provenance: Provenance,
+}
+
+/// Whether a direct formula query published its body computation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FormulaBodyTrace {
+    Evaluated,
+    WithheldPreconditionFailed,
+}
+
+/// Ordered runtime evidence for one direct formula query.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaExecutionTrace {
+    pub export: String,
+    pub formula_sequence: Vec<FormulaApplicationTrace>,
+    pub guards: Vec<FormulaGuardTrace>,
+    pub body: FormulaBodyTrace,
+}
+
+/// Parser-derived formula expansion used by independent execution-audit replay.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaSourceReplay {
+    pub body: ExprAst,
+    pub preconditions: Vec<(String, Vec<ExprAst>)>,
+}
+
+/// Bind source formula parameters without consulting runtime execution traces.
+pub fn replay_formula_source(
+    formula: &FormulaDef,
+    arguments: &[ExprAst],
+) -> Result<FormulaSourceReplay, LowerError> {
+    if formula.params.len() != arguments.len() {
+        return Err(LowerError::FormulaArity {
+            formula: formula.name.clone(),
+            expected: formula.params.len(),
+            got: arguments.len(),
+        });
+    }
+    let substitution: HashMap<String, ExprAst> = formula
+        .params
+        .iter()
+        .cloned()
+        .zip(arguments.iter().cloned())
+        .collect();
+    let mut preconditions = Vec::with_capacity(formula.preconditions.len());
+    for precondition in &formula.preconditions {
+        let mut budget = 0;
+        let mut bound = Vec::with_capacity(precondition.arguments.len());
+        for argument in &precondition.arguments {
+            bound.push(substitute_expr(argument, &substitution, &mut budget, 0)?);
+        }
+        preconditions.push((precondition.predicate.clone(), bound));
+    }
+    let mut budget = 0;
+    let effective = effective_body(formula, &mut budget, 0)?;
+    let body = substitute_expr(&effective, &substitution, &mut budget, 0)?;
+    Ok(FormulaSourceReplay {
+        body,
+        preconditions,
+    })
 }
 
 /// One lowered RANGE / BRACKET lookup (ADJ-TABLES RS-5c) — the validated,
@@ -564,6 +664,9 @@ pub struct LoweredProgram {
     /// Formula-domain refusals, in source execution order. A refusal publishes
     /// no derived value and does not make an otherwise valid program fail to compile.
     pub formula_abstentions: Vec<FormulaAbstention>,
+    /// Direct formula-query executions in source order. Unlike derived bindings,
+    /// this records both evaluated and withheld bodies.
+    pub formula_executions: Vec<FormulaExecutionTrace>,
 }
 
 /// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
@@ -573,6 +676,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
     let mut formula_abstentions = Vec::new();
+    let mut formula_executions = Vec::new();
     let mut unavailable_bindings: HashMap<String, FormulaAbstention> = HashMap::new();
     // ADJ-STATEMACHINE RS-3b: each `statemachine` lowers to a validated,
     // provenance-stamped structure here (no driver yet — that is RS-3c).
@@ -815,35 +919,67 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // named after the formula, carrying the formula's cited provenance so
                 // the computed answer is auditable back to WHY its formula is trusted.
                 if let Some(fd) = formula_for_query(conclusion, &formulas)? {
+                    let primary = annotations_to_provenance(&fd.annotations)?;
+                    let mut applications = vec![FormulaApplicationTrace {
+                        formula: fd.name.clone(),
+                        provenance: primary.clone(),
+                    }];
+                    let mut guards = Vec::new();
                     if let Some(mut abstention) =
                         unavailable_query_argument(conclusion, &unavailable_bindings)
                     {
                         abstention.name = fd.name.clone();
+                        formula_executions.push(FormulaExecutionTrace {
+                            export: fd.name.clone(),
+                            formula_sequence: abstention.formula_sequence.clone(),
+                            guards: abstention.guards.clone(),
+                            body: FormulaBodyTrace::WithheldPreconditionFailed,
+                        });
                         formula_abstentions.push(abstention);
                         continue;
                     }
-                    let substituted = match apply_formula(fd, conclusion, &kb) {
-                        Ok(value) => value,
-                        Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
-                            let mut abstention = *abstention;
-                            abstention.name = fd.name.clone();
-                            unavailable_bindings.insert(fd.name.clone(), abstention.clone());
-                            formula_abstentions.push(abstention);
-                            continue;
-                        }
-                        Err(error) => return Err(error),
-                    };
+                    let substituted =
+                        match apply_formula(fd, conclusion, &kb, &applications, &mut guards) {
+                            Ok(value) => value,
+                            Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
+                                let mut abstention = *abstention;
+                                abstention.name = fd.name.clone();
+                                formula_executions.push(FormulaExecutionTrace {
+                                    export: fd.name.clone(),
+                                    formula_sequence: abstention.formula_sequence.clone(),
+                                    guards: abstention.guards.clone(),
+                                    body: FormulaBodyTrace::WithheldPreconditionFailed,
+                                });
+                                unavailable_bindings.insert(fd.name.clone(), abstention.clone());
+                                formula_abstentions.push(abstention);
+                                continue;
+                            }
+                            Err(error) => return Err(error),
+                        };
                     // RS-1 composition: the substituted body may ITSELF apply other
                     // formulas (`ratio(n, d) = quotient(n, d)`). Expand every nested
                     // application recursively — with the depth guard — collecting the
                     // provenance chain of each applied formula, then lower the
                     // fully-expanded (application-free) expression through the SAME
                     // `compute` path a `let` uses.
-                    let (expanded, chain) = match expand_applies(&substituted, &formulas, &kb, 0) {
+                    let (expanded, chain) = match expand_applies_traced(
+                        &substituted,
+                        &formulas,
+                        &kb,
+                        0,
+                        &mut applications,
+                        &mut guards,
+                    ) {
                         Ok(value) => value,
                         Err(LowerError::FormulaPreconditionAbstained { abstention }) => {
                             let mut abstention = *abstention;
                             abstention.name = fd.name.clone();
+                            formula_executions.push(FormulaExecutionTrace {
+                                export: fd.name.clone(),
+                                formula_sequence: abstention.formula_sequence.clone(),
+                                guards: abstention.guards.clone(),
+                                body: FormulaBodyTrace::WithheldPreconditionFailed,
+                            });
                             unavailable_bindings.insert(fd.name.clone(), abstention.clone());
                             formula_abstentions.push(abstention);
                             continue;
@@ -863,7 +999,6 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     // `quotient` carries BOTH `ratio`'s cite (primary) and
                     // `quotient`'s (a corroboration). The derivation is auditable
                     // back to every formula that produced it.
-                    let primary = annotations_to_provenance(&fd.annotations)?;
                     let prov = compose_provenance(primary.clone(), &chain);
                     let mut formula_sources = vec![primary];
                     formula_sources.extend(chain.iter().cloned());
@@ -873,6 +1008,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                             .with_formula_sources(prov, formula_sources)
                             .as_query_answer(),
                     );
+                    formula_executions.push(FormulaExecutionTrace {
+                        export: fd.name.clone(),
+                        formula_sequence: applications,
+                        guards,
+                        body: FormulaBodyTrace::Evaluated,
+                    });
                 } else {
                     // An ordinary query. Lower with a per-query variable scope so
                     // repeated `$Var`s in one goal share identity (Prolog clause-scope
@@ -1462,6 +1603,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
         constraints,
         dictionary,
         formula_abstentions,
+        formula_executions,
     })
 }
 
@@ -2516,12 +2658,24 @@ fn expand_applies(
     kb: &KnowledgeBase,
     depth: usize,
 ) -> Result<(ExprAst, Vec<Provenance>), LowerError> {
+    let mut applications = Vec::new();
+    let mut guards = Vec::new();
+    expand_applies_traced(expr, formulas, kb, depth, &mut applications, &mut guards)
+}
+
+fn expand_applies_traced(
+    expr: &ExprAst,
+    formulas: &HashMap<&str, &FormulaDef>,
+    kb: &KnowledgeBase,
+    depth: usize,
+    applications: &mut Vec<FormulaApplicationTrace>,
+    guards: &mut Vec<FormulaGuardTrace>,
+) -> Result<(ExprAst, Vec<Provenance>), LowerError> {
     let mut chain = Vec::new();
     // One shared node budget for the WHOLE expansion. The depth guard bounds
     // recursion LEVELS; this bounds total expanded SIZE, so a body that reuses a
     // parameter (`x * x`) composed n deep cannot balloon to 2^n nodes — the cap
     // trips first, in O(cap) time, with a clean `FormulaExpansionTooLarge`.
-    let mut budget: usize = 0;
     // The names of the formulas currently OPEN on the expansion path (a stack). A
     // formula that names itself — directly (`loop(x) = loop(x)`) or through a cycle
     // (`a = b`, `b = a`) — reappears on this path at the moment it re-enters, so we
@@ -2530,23 +2684,29 @@ fn expand_applies(
     // trips. This is path-scoped: a formula legitimately applied twice in SIBLING
     // positions (`f(x) = g(x) + g(x)`) is popped off the path between the two uses,
     // so reuse is never mistaken for recursion.
-    let mut active: Vec<String> = Vec::new();
     let context = FormulaExpansionContext { formulas, kb };
-    let expanded = expand_rec(
-        expr,
-        &context,
-        depth,
-        &mut chain,
-        &mut active,
-        &mut budget,
-        0,
-    )?;
+    let mut state = FormulaExpansionState {
+        chain: &mut chain,
+        applications,
+        guards,
+        active: Vec::new(),
+        budget: 0,
+    };
+    let expanded = expand_rec(expr, &context, depth, &mut state, 0)?;
     Ok((expanded, chain))
 }
 
 struct FormulaExpansionContext<'context, 'formula> {
     formulas: &'context HashMap<&'formula str, &'formula FormulaDef>,
     kb: &'context KnowledgeBase,
+}
+
+struct FormulaExpansionState<'state> {
+    chain: &'state mut Vec<Provenance>,
+    applications: &'state mut Vec<FormulaApplicationTrace>,
+    guards: &'state mut Vec<FormulaGuardTrace>,
+    active: Vec<String>,
+    budget: usize,
 }
 
 /// The recursive worker for [`expand_applies`]. Walks the expression; at an
@@ -2559,9 +2719,7 @@ fn expand_rec(
     expr: &ExprAst,
     context: &FormulaExpansionContext<'_, '_>,
     depth: usize,
-    chain: &mut Vec<Provenance>,
-    active: &mut Vec<String>,
-    budget: &mut usize,
+    state: &mut FormulaExpansionState<'_>,
     node_depth: usize,
 ) -> Result<ExprAst, LowerError> {
     // Charge one node for every node we visit/emit. This is the SIZE guard: the
@@ -2570,7 +2728,7 @@ fn expand_rec(
     // `FORMULA_MAX_EXPANSION_NODES` visits — in O(cap) time — instead of building
     // a 2ⁿ tree. The depth guard alone cannot bound this (depth grows linearly
     // while size grows exponentially).
-    charge(budget)?;
+    charge(&mut state.budget)?;
     // The DEPTH guard, orthogonal to both the size budget and the formula-apply
     // depth: this walker descends one native stack frame per AST level, so a deep
     // operator spine (`x + 0 + 0 + …`) — small in size, huge in depth — would
@@ -2611,7 +2769,7 @@ fn expand_rec(
                 } else {
                     logic_engine::RoundSpec::Places(n)
                 };
-                let value = expand_rec(&args[0], context, depth, chain, active, budget, d)?;
+                let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::RoundTo(Box::new(value), spec));
             }
             // NUM-6c built-in: `to_scientific(x [, figures])` — the scientific-notation
@@ -2639,7 +2797,7 @@ fn expand_rec(
                 } else {
                     DEFAULT_SCI_FIGURES
                 };
-                let value = expand_rec(&args[0], context, depth, chain, active, budget, d)?;
+                let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::ToScientific(Box::new(value), figures));
             }
             // NUM-6c built-in: `to_percent(x [, places])` — the percentage rendering.
@@ -2667,7 +2825,7 @@ fn expand_rec(
                 } else {
                     DEFAULT_PERCENT_PLACES
                 };
-                let value = expand_rec(&args[0], context, depth, chain, active, budget, d)?;
+                let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::ToPercent(Box::new(value), places));
             }
             // NUM-6c built-in: `to_currency(x, code [, places])` — the money rendering.
@@ -2709,7 +2867,7 @@ fn expand_rec(
                 } else {
                     DEFAULT_CURRENCY_PLACES
                 };
-                let value = expand_rec(&args[0], context, depth, chain, active, budget, d)?;
+                let value = expand_rec(&args[0], context, depth, state, d)?;
                 return Ok(ExprAst::ToCurrency(Box::new(value), code, places));
             }
             // Resolve the callee against the SAME registry the top-level query path
@@ -2732,18 +2890,20 @@ fn expand_rec(
             // expand at the SAME depth (they are not a deeper formula body).
             let mut subst: HashMap<String, ExprAst> = HashMap::new();
             for (param, arg) in fd.params.iter().zip(args.iter()) {
-                subst.insert(
-                    param.clone(),
-                    expand_rec(arg, context, depth, chain, active, budget, d)?,
-                );
+                subst.insert(param.clone(), expand_rec(arg, context, depth, state, d)?);
             }
-            enforce_preconditions(fd, &subst, context.kb)?;
+            let provenance = annotations_to_provenance(&fd.annotations)?;
+            state.applications.push(FormulaApplicationTrace {
+                formula: fd.name.clone(),
+                provenance: provenance.clone(),
+            });
+            enforce_preconditions(fd, &subst, context.kb, state.applications, state.guards)?;
             // The cycle guard: if this formula is already OPEN on the expansion path,
             // re-entering it is (directly or mutually) recursive. ADJ formulas have
             // no base case, so a cycle can only diverge — reject it here, in O(1), at
             // the moment of re-entry, so we never nest deep enough to overflow the
             // stack.
-            if active.iter().any(|n| n == name) {
+            if state.active.iter().any(|n| n == name) {
                 return Err(LowerError::FormulaRecursionTooDeep {
                     formula: name.clone(),
                     limit: FORMULA_MAX_APPLY_DEPTH,
@@ -2759,7 +2919,7 @@ fn expand_rec(
             }
             // Record this formula's provenance in the composition chain (outer
             // formulas appear before the inner formulas they call).
-            chain.push(annotations_to_provenance(&fd.annotations)?);
+            state.chain.push(provenance);
             // Bind params → expanded args, substitute into the callee body (charged
             // against the same budget), and expand that body in turn
             // (formula-calls-formula) at depth + 1. The callee is pushed onto the
@@ -2768,11 +2928,11 @@ fn expand_rec(
             // Fold the callee's `let`-steps (RS-2) into its effective body FIRST
             // so a multi-step callee composes correctly when called from another
             // formula, then substitute the caller's args into it.
-            let callee_body = effective_body(fd, budget, d)?;
-            let substituted = substitute_expr(&callee_body, &subst, budget, d)?;
-            active.push(name.clone());
-            let expanded = expand_rec(&substituted, context, depth + 1, chain, active, budget, d);
-            active.pop();
+            let callee_body = effective_body(fd, &mut state.budget, d)?;
+            let substituted = substitute_expr(&callee_body, &subst, &mut state.budget, d)?;
+            state.active.push(name.clone());
+            let expanded = expand_rec(&substituted, context, depth + 1, state, d);
+            state.active.pop();
             expanded
         }
         // Leaves carry no application.
@@ -2782,53 +2942,53 @@ fn expand_rec(
         // Binary nodes: expand both operands at the same depth.
         ExprAst::Bin(op, a, b) => Ok(ExprAst::Bin(
             *op,
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
-            Box::new(expand_rec(b, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            Box::new(expand_rec(b, context, depth, state, d)?),
         )),
         ExprAst::Call2(f, a, b) => Ok(ExprAst::Call2(
             *f,
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
-            Box::new(expand_rec(b, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
+            Box::new(expand_rec(b, context, depth, state, d)?),
         )),
         // Unary nodes: expand the single operand.
         ExprAst::Abs(a) => Ok(ExprAst::Abs(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::Floor(a) => Ok(ExprAst::Floor(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::Ceil(a) => Ok(ExprAst::Ceil(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::Round(a) => Ok(ExprAst::Round(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::RoundTo(a, n) => Ok(ExprAst::RoundTo(
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
             *n,
         )),
         ExprAst::ToScientific(a, n) => Ok(ExprAst::ToScientific(
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
             *n,
         )),
         ExprAst::ToPercent(a, n) => Ok(ExprAst::ToPercent(
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
             *n,
         )),
         ExprAst::ToCurrency(a, code, n) => Ok(ExprAst::ToCurrency(
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
             code.clone(),
             *n,
         )),
         ExprAst::Trunc(a) => Ok(ExprAst::Trunc(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::Sign(a) => Ok(ExprAst::Sign(Box::new(expand_rec(
-            a, context, depth, chain, active, budget, d,
+            a, context, depth, state, d,
         )?))),
         ExprAst::Call(f, a) => Ok(ExprAst::Call(
             *f,
-            Box::new(expand_rec(a, context, depth, chain, active, budget, d)?),
+            Box::new(expand_rec(a, context, depth, state, d)?),
         )),
     }
 }
@@ -2897,6 +3057,8 @@ fn apply_formula(
     fd: &FormulaDef,
     goal: &AstTerm,
     kb: &KnowledgeBase,
+    applications: &[FormulaApplicationTrace],
+    guards: &mut Vec<FormulaGuardTrace>,
 ) -> Result<ExprAst, LowerError> {
     let args: &[AstTerm] = match goal {
         AstTerm::Compound { args, .. } => args,
@@ -2918,7 +3080,7 @@ fn apply_formula(
         };
         subst.insert(param.clone(), bound);
     }
-    enforce_preconditions(fd, &subst, kb)?;
+    enforce_preconditions(fd, &subst, kb, applications, guards)?;
     // A shallow, one-level substitution of leaf bindings (a query's args are atoms
     // or numbers) — its own local budget guards a body that reuses a parameter; the
     // deeper formula-calls-formula expansion of the resulting body runs later, in
@@ -2939,6 +3101,8 @@ fn enforce_preconditions(
     fd: &FormulaDef,
     subst: &HashMap<String, ExprAst>,
     kb: &KnowledgeBase,
+    applications: &[FormulaApplicationTrace],
+    guards: &mut Vec<FormulaGuardTrace>,
 ) -> Result<(), LowerError> {
     for (
         precondition_index,
@@ -2948,6 +3112,7 @@ fn enforce_preconditions(
         },
     ) in fd.preconditions.iter().enumerate()
     {
+        let provenance = annotations_to_provenance(&fd.annotations)?;
         let parameter = match &arguments[0] {
             ExprAst::Ref(name) => Some(name.clone()),
             _ => None,
@@ -2962,6 +3127,23 @@ fn enforce_preconditions(
             Ok(value) => value,
             Err(error @ logic_engine::compute::ComputeError::UnknownSlot { .. })
             | Err(error @ logic_engine::compute::ComputeError::EmptyAggregation { .. }) => {
+                let detail = format!("{error:?}");
+                guards.push(FormulaGuardTrace {
+                    formula: fd.name.clone(),
+                    predicate: predicate.clone(),
+                    precondition_index,
+                    parameter: parameter.clone(),
+                    outcome: FormulaGuardOutcome::Unresolved,
+                    value: None,
+                    exact: None,
+                    precision_loss: false,
+                    plan: None,
+                    tree: None,
+                    scope: None,
+                    fact_ids: Vec::new(),
+                    detail: Some(detail.clone()),
+                    provenance: provenance.clone(),
+                });
                 return Err(LowerError::FormulaPreconditionAbstained {
                     abstention: Box::new(FormulaAbstention {
                         name: fd.name.clone(),
@@ -2970,9 +3152,12 @@ fn enforce_preconditions(
                         precondition_index,
                         parameter,
                         actual: None,
-                        detail: Some(format!("{error:?}")),
+                        actual_exact: None,
+                        detail: Some(detail),
                         fact_ids: Vec::new(),
-                        provenance: annotations_to_provenance(&fd.annotations)?,
+                        provenance,
+                        guards: guards.clone(),
+                        formula_sequence: applications.to_vec(),
                     }),
                 });
             }
@@ -2996,7 +3181,38 @@ fn enforce_preconditions(
             .as_ref()
             .map(|value| value.numerator().is_zero())
             .unwrap_or(computed.value == 0.0);
-        if predicate == "nonzero" && is_zero {
+        let fact_ids = precondition_fact_ids(
+            &computed.tree,
+            computed.scope.fact_limit,
+            computed.scope.derived_limit,
+            kb,
+        )
+        .map_err(|detail| LowerError::ComputationFailed {
+            name: format!("{} precondition {precondition_index}", fd.name),
+            detail,
+        })?;
+        let failed = predicate == "nonzero" && is_zero;
+        guards.push(FormulaGuardTrace {
+            formula: fd.name.clone(),
+            predicate: predicate.clone(),
+            precondition_index,
+            parameter: parameter.clone(),
+            outcome: if failed {
+                FormulaGuardOutcome::Failed
+            } else {
+                FormulaGuardOutcome::Passed
+            },
+            value: Some(computed.value),
+            exact: computed.exact.clone(),
+            precision_loss: computed.precision_loss,
+            plan: Some(computed.expr.clone()),
+            tree: Some(computed.tree.clone()),
+            scope: Some(computed.scope),
+            fact_ids: fact_ids.clone(),
+            detail: None,
+            provenance: provenance.clone(),
+        });
+        if failed {
             return Err(LowerError::FormulaPreconditionAbstained {
                 abstention: Box::new(FormulaAbstention {
                     name: fd.name.clone(),
@@ -3005,18 +3221,12 @@ fn enforce_preconditions(
                     precondition_index,
                     parameter,
                     actual: Some(computed.value),
+                    actual_exact: computed.exact,
                     detail: None,
-                    fact_ids: precondition_fact_ids(
-                        &computed.tree,
-                        computed.scope.fact_limit,
-                        computed.scope.derived_limit,
-                        kb,
-                    )
-                    .map_err(|detail| LowerError::ComputationFailed {
-                        name: format!("{} precondition {precondition_index}", fd.name),
-                        detail,
-                    })?,
-                    provenance: annotations_to_provenance(&fd.annotations)?,
+                    fact_ids,
+                    provenance,
+                    guards: guards.clone(),
+                    formula_sequence: applications.to_vec(),
                 }),
             });
         }
@@ -6494,6 +6704,107 @@ rule { head: r(a) when: x(t) }";
             .detail
             .as_deref()
             .is_some_and(|detail| detail.contains("UnknownSlot")));
+    }
+
+    #[test]
+    fn guard_trace_retains_exact_underflowing_direct_observation() {
+        let src = r#"
+            formulabook guarded {
+                formula identity(x) = x
+                    requires nonzero(x)
+                    source "identity domain" trust authoritative
+            }
+            observe tiny(1e-400)
+            ? identity(tiny)
+        "#;
+
+        let lowered = compile(src).expect("exact nonzero observation must pass");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(execution.body, FormulaBodyTrace::Evaluated);
+        assert_eq!(execution.guards.len(), 1);
+        let guard = &execution.guards[0];
+        assert_eq!(guard.outcome, FormulaGuardOutcome::Passed);
+        assert_eq!(guard.value, Some(0.0));
+        assert!(guard
+            .exact
+            .as_ref()
+            .is_some_and(|value| !value.numerator().is_zero()));
+        assert!(matches!(guard.plan.as_ref(), Some(ComputeExpr::Ref(slot)) if slot == "tiny"));
+        assert!(matches!(
+            guard.tree.as_ref(),
+            Some(DerivationNode::Leaf {
+                fact_id: FactId(0),
+                ..
+            })
+        ));
+    }
+
+    #[test]
+    fn guard_trace_keeps_earlier_pass_when_later_guard_fails() {
+        let src = r#"
+            formulabook guarded {
+                formula first(a, b) = a
+                    requires nonzero(a), nonzero(b)
+                    source "two-input domain" trust authoritative
+            }
+            observe left(2)
+            observe right(0)
+            ? first(left, right)
+        "#;
+
+        let lowered = compile(src).expect("false guard is a typed abstention");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(execution.body, FormulaBodyTrace::WithheldPreconditionFailed);
+        assert_eq!(
+            execution
+                .guards
+                .iter()
+                .map(|guard| guard.outcome)
+                .collect::<Vec<_>>(),
+            [FormulaGuardOutcome::Passed, FormulaGuardOutcome::Failed]
+        );
+        assert!(lowered.kb.derived_for("first").is_none());
+        assert_eq!(lowered.formula_abstentions[0].guards, execution.guards);
+    }
+
+    #[test]
+    fn nested_guard_trace_preserves_outer_pass_before_inner_failure() {
+        let src = r#"
+            formulabook guarded {
+                formula inner(a, b) = a / b
+                    requires nonzero(b)
+                    source "inner domain" trust authoritative
+                formula outer(a, b) = inner(a, b)
+                    requires nonzero(a)
+                    source "outer domain" trust authoritative
+            }
+            observe numerator(8)
+            observe denominator(0)
+            ? outer(numerator, denominator)
+        "#;
+
+        let lowered = compile(src).expect("nested false guard is a typed abstention");
+        let execution = &lowered.formula_executions[0];
+        assert_eq!(
+            execution
+                .formula_sequence
+                .iter()
+                .map(|application| application.formula.as_str())
+                .collect::<Vec<_>>(),
+            ["outer", "inner"]
+        );
+        assert_eq!(
+            execution
+                .guards
+                .iter()
+                .map(|guard| (guard.formula.as_str(), guard.outcome))
+                .collect::<Vec<_>>(),
+            [
+                ("outer", FormulaGuardOutcome::Passed),
+                ("inner", FormulaGuardOutcome::Failed),
+            ]
+        );
+        assert!(lowered.kb.derived_for("outer").is_none());
     }
 
     #[test]

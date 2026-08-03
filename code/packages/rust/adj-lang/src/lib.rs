@@ -64,9 +64,10 @@ pub use ast::{
     Term as AstTerm,
 };
 pub use lower::{
-    lower, ConstraintSystem, FormulaAbstention, LowerError, LoweredConstraint, LoweredExit,
-    LoweredGuard, LoweredProgram, LoweredRangeLookup, LoweredState, LoweredStateMachine,
-    LoweredTransition,
+    lower, replay_formula_source, ConstraintSystem, FormulaAbstention, FormulaApplicationTrace,
+    FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome, FormulaGuardTrace,
+    FormulaSourceReplay, LowerError, LoweredConstraint, LoweredExit, LoweredGuard, LoweredProgram,
+    LoweredRangeLookup, LoweredState, LoweredStateMachine, LoweredTransition,
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 pub use statemachine::{

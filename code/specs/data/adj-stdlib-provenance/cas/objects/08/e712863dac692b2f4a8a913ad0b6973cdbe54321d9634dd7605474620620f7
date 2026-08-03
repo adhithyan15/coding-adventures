@@ -1,0 +1,127 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+          "end": 16,
+          "quote": "first term is 2.",
+          "quote_sha256": "1e9023fc7049f1f3baf70ace6b2466cf2cdb3a60e064ab22aa77c10f62a0f245",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 16,
+      "start": 0
+    },
+    {
+      "disposition": "discarded",
+      "end": 17,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 16
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.second_term.3",
+          "end": 34,
+          "quote": "second term is 3.",
+          "quote_sha256": "ab3820a90085619b85f0c85d11efecab08c501a09936a5a7404a722ec4c94a66",
+          "start": 17
+        }
+      ],
+      "disposition": "represented",
+      "end": 34,
+      "start": 17
+    },
+    {
+      "disposition": "discarded",
+      "end": 35,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 34
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.third_term.4",
+          "end": 51,
+          "quote": "third term is 4.",
+          "quote_sha256": "6758cb9682cd020068713d99e320b094806fb4caaee549300401e8bdb68bf296",
+          "start": 35
+        }
+      ],
+      "disposition": "represented",
+      "end": 51,
+      "start": 35
+    },
+    {
+      "disposition": "discarded",
+      "end": 52,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 51
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.first_term.0",
+          "end": 68,
+          "quote": "first term is 0.",
+          "quote_sha256": "890eb0ba1f5423cef6defdedceac623454698e37caddab8a8db57518637b8ec2",
+          "start": 52
+        }
+      ],
+      "disposition": "represented",
+      "end": 68,
+      "start": 52
+    },
+    {
+      "disposition": "discarded",
+      "end": 69,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 68
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+          "end": 86,
+          "quote": "second term is 0.",
+          "quote_sha256": "368d2632ca2b9faaf432f8c1362ab0856b7fc28337939f3b8d050738f5812ad9",
+          "start": 69
+        }
+      ],
+      "disposition": "represented",
+      "end": 86,
+      "start": 69
+    },
+    {
+      "disposition": "discarded",
+      "end": 87,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 86
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.third_term.0",
+          "end": 103,
+          "quote": "third term is 0.",
+          "quote_sha256": "5669873f425e7a71332f281ba3dfb33324bdf6477d8a9b782e97c8ffb3685269",
+          "start": 87
+        }
+      ],
+      "disposition": "represented",
+      "end": 103,
+      "start": 87
+    },
+    {
+      "disposition": "discarded",
+      "end": 104,
+      "reason": "newline record separators outside the accepted fact bytes",
+      "start": 103
+    }
+  ],
+  "source_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+  "source_size": 104
+}
