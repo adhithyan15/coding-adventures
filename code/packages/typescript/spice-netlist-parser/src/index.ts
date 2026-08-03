@@ -1173,6 +1173,14 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET U0 must be finite and non-negative");
   }
+  const transconductance = params.get("KP");
+  if (
+    (kind === "NMOS" || kind === "PMOS") &&
+    transconductance !== undefined &&
+    (!Number.isFinite(transconductance) || transconductance <= 0.0)
+  ) {
+    throw new NetlistParseError("MOSFET KP must be finite and positive");
+  }
   return {
     name: fields[1],
     kind,

@@ -33,12 +33,12 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
+1. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
    - Status: current PR completion candidate.
-   - Lower `U0` / `UO` and reject negative or non-finite values with the shared
-     diagnostic.
-   - Reuse shared engine semantics to derive `KP` from surface mobility and
-     `TOX` when no explicit transconductance is supplied.
+   - Reject zero, negative, and non-finite explicit model-card `KP` values with
+     the shared diagnostic.
+   - Preserve positive explicit `KP` and the derived-`KP` behavior completed in
+     the preceding slice.
 
 ## Completed Slices
 
@@ -4138,14 +4138,21 @@ the Rust, Python, and TypeScript surfaces together.
      the shared diagnostic.
    - Valid `TOX` values reach Level-1 oxide thickness in both facades.
 
+370. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
+   - Status: completed in PR 9591.
+   - `U0` / `UO` values are lowered and validated with the shared finite
+     non-negative domain.
+   - Shared engine semantics derive `KP` from surface mobility and `TOX` while
+     preserving explicit `KP` precedence.
+
 ## Backlog
 
-1. Python and TypeScript Berkeley SPICE MOS surface-mobility and derived-`KP` parity.
-   - Lower `U0` / `UO`, validate its finite non-negative domain, and derive `KP`
-     from `U0` and `TOX` when `KP` is omitted.
+1. Python and TypeScript Berkeley SPICE MOS model-card transconductance validation.
+   - Reject zero, negative, and non-finite explicit `KP` values with the shared
+     diagnostic while preserving derived transconductance behavior.
 
 2. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
-   - Apply Rust-aligned domains and diagnostics to already lowered `KP`, `VT0`,
+   - Apply Rust-aligned domains and diagnostics to already lowered `VT0`,
      `LAMBDA`, `GAMMA`, `PHI`, `W`, `L`, `IS`, and nominal-temperature fields.
 
 3. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.

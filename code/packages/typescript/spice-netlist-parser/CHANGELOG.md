@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Reject zero, negative, and non-finite explicit MOS model-card `KP` values.
 - Lower and validate MOS model-card `U0` / `UO`, deriving `KP` from surface
   mobility and `TOX` when no explicit transconductance is supplied.
 - Validate and lower MOS model-card `TOX` into Level-1 oxide thickness instead
