@@ -9,7 +9,7 @@ prerequisites: [IT-C15-passato-prossimo]
 sounds: [final-stress-o]
 roots: [latin-perfect]
 etymology_hook: "parlò ← Vulgar Latin perfect *parabolāvit, the same inheritance as Spanish habló and Portuguese falou — but in Italian its survival is GEOGRAPHIC: everyday speech in Sicily and much of the south, literature-only in the north"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C15-passato-prossimo, IT-C05-parlare]
 ---
 

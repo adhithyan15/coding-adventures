@@ -9,7 +9,7 @@ prerequisites: [IT-C06-numeri-6-10, IT-C11-acqua-vino]
 sounds: [c-soft-dici, double-consonant]
 roots: [latin-decim]
 etymology_hook: "undici…sedici ← ūndecim…sēdecim, with -dici still visibly Latin decem ('ten') — clearer than French's worn-down -ze; and dieci (10) sits right there beside it"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C06-numeri-6-10, IT-C11-acqua-vino]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [IT-C12-numeri-11-16]
 sounds: [double-ss, c-soft-dici]
 roots: [latin-decim, viginti-latin]
 etymology_hook: "at 17 Italian reverses itself — sedici is 'six-ten' but diciassette is 'ten-and-seven' (dici + e + sette); the same ten, moved to the front, mid-count; venti ← vīgintī"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C12-numeri-11-16, IT-C06-numeri-6-10]
 ---
 

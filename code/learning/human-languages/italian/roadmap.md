@@ -15,8 +15,9 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
 - **Ch. 1 — Greetings**: ciao → buono → **il/la/lo** (gender) → giorno →
   **buongiorno** → sera/buonasera → notte/buonanotte → grazie → practice.
 - **Ch. 2 — "Come stai?"**: prego (← *pregare* "to pray") → come (← *quōmodo*) →
-  **stare** ("to be" from *stand* = Spanish *estar*; vs *essere*) → come stai /
-  sta / **va** (also *andare* "to go") → così così → practice. **Authored.**
+  **stare** ("to be" from *stand* = Spanish *estar*; vs *essere*) → informal
+  **come stai** → formal **come sta** → register-neutral **come va** (also
+  *andare* "to go") → così così → practice. **Authored.**
   *(Reordered ahead of introductions to widen the cross-language how-are-you set;
   register tu/Lei introduced inline.)*
 - **Ch. 4 — Farewells**: arrivederci (← *a + rivedere + ci*, "to our re-seeing";
@@ -107,16 +108,16 @@ and Italian's habit of keeping final vowels Latin's other children dropped.
   Italian's solution to the Latin *esse*/*stāre* pair is the one **between** its
   sisters: it kept **both** verbs alive (unlike French, which kept *esse* as
   *être* and absorbed *stāre*'s whole *ét-* limb) but let them **share a
-  participle** — *essere*'s own didn't survive, so
-  it borrowed **stare**'s, and ***sono stato*** means both "I have **been**" and
+  participle** — a dedicated `IT-C16-essere-stato` step shows that *essere*'s
+  own didn't survive, so it borrowed **stare**'s, and ***sono stato*** means both "I have **been**" and
   "I have **stayed**". Plus the accent that separates *è* ("is") from *e* ("and")
-  → the ***passato prossimo* with *essere*** (`IT-C16-passato-prossimo-essere`):
-  starts from **`sono stato`** — an *essere*-past needing **zero new vocabulary**
-  — then introduces ***andare*** as a named new verb (itself suppletive:
+  → ***andare*** (`IT-C16-andare`) as its own named atom (itself suppletive:
   *vado/vai/va/**vanno*** ← *vādere* "stride" against *andiamo/andate/andare/
   andato*, whose origin is genuinely disputed — most likely *ambitāre*; note
   *vanno* files with *vado*, so the split is **not** singular-vs-plural — exactly
-  the trick behind Spanish *voy* against *andar*). The participle **agrees with
+  the trick behind Spanish *voy* against *andar*) → the ***passato prossimo*
+  with *essere*** (`IT-C16-passato-prossimo-essere`), starting from **`sono
+  stato`** with no new vocabulary. The participle **agrees with
   the subject** in all four
   endings (*andato/-a/-i/-e*), same adjective fossil as French. Closes the
   three-way table: French and Italian **keep** the agreement, German **drops**

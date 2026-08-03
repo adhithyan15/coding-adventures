@@ -3,119 +3,74 @@ id: IT-C16-passato-prossimo-essere
 chapter: 16
 type: phrase
 headword: sono andato
-gloss: "the passato prossimo built on essere — motion and change-of-state verbs, with the participle agreeing with the subject"
+gloss: the passato prossimo built on essere, with the participle agreeing with the subject
 concept_tag: IT-PAST-PROSSIMO-ESSERE
-prerequisites: [IT-C16-essere, IT-C15-passato-prossimo, IT-C02-stare]
+prerequisites: [IT-C16-andare, IT-C16-essere-stato, IT-C15-passato-prossimo]
 sounds: [double-consonant, final-vowel]
 roots: [latin-esse-participle, latin-andare]
-etymology_hook: "the participle agrees with the subject in gender and number — sono andato / sono andata — the same adjective-fossil as French elle est allée; Italian keeps the agreement French keeps and German lost"
-est_minutes: 6
-reviews_of: [IT-C16-essere, IT-C15-passato-prossimo, IT-C02-stare]
+etymology_hook: "sono andato / sono andata preserves the participle's older job as an adjective describing the subject"
+est_minutes: 4
+reviews_of: [IT-C16-andare, IT-C16-essere-stato, IT-C15-passato-prossimo]
 ---
 
-# sono andato — the past built on "essere"
+# sono andato — the past built on essere
 
 ## Warm-up
 
-[PAUSE 2s] Chapter 15 built the past with *avere*: *ho parlato*. One family of
-verbs takes **essere** instead — and with *essere*, the participle starts
-changing its ending.
+[PAUSE 2s] Chapter 15 built the past with *avere*: **ho parlato**. You now know
+the other auxiliary, **essere**, plus the participles **stato** and **andato**.
+Combine them, then watch the participle’s ending change.
 
-## Start with a verb you already have
-
-You met *essere*'s participle last lesson: **stato**. So the very first
-*essere*-past you can build needs **no new vocabulary at all**:
+## Start with stato
 
 | | |
 |---|---|
-| **sono stato** | I have been / I have stayed |
-| **sei stato** | you have been |
-| **è stato** | he has been |
-| **siamo stati** | we have been |
+| **sono stato** | I have been / stayed |
+| **sei stato** | you have been / stayed |
+| **è stato** | he has been / stayed |
+| **siamo stati** | we have been / stayed |
 
-Both *essere* and *stare* run on *essere*: *sono stato* covers both, exactly as
-the last lesson said.
+The plural **stati** is the first clue: with *essere*, the participle describes
+the subject and therefore agrees with it.
 
-## A new verb: andare, "to go"
+## Motion, change, and agreement
 
-The headline member of this family is **andare** — the verb Italian uses for
-"go," and one you have not met before. Learn it now:
+Many verbs of motion or change of state take **essere**: *andare* (go), *venire*
+(come), *arrivare* (arrive), *partire* (leave), *nascere* (be born), *morire*
+(die), *diventare* (become), plus *essere* and *stare*.
 
-| | |
+Use the four adjective endings you already know:
+
+| subject | sentence |
 |---|---|
-| io **vado** | noi **andiamo** |
-| tu **vai** | voi **andate** |
-| lui/lei **va** | loro **vanno** |
+| Marco | Marco è **andato**. |
+| Anna | Anna è **andata**. |
+| the boys | I ragazzi sono **andati**. |
+| the girls | Le ragazze sono **andate**. |
 
-Participle: **andato**.
+A woman therefore says **sono andata**, not *sono andato*. The ending agrees
+with the **subject**, in gender and number: *-o, -a, -i, -e*.
 
-*Andare* is itself suppletive, and you can see the seam right in that table:
+## Why agreement survives
 
-| stem | forms | from |
-|---|---|---|
-| **vad-** | vado, vai, va, **vanno** | Latin *vādere*, "to stride" |
-| **and-** | andiamo, andate, andare, andato | origin genuinely **disputed** — most likely *ambitāre*, "to go around" |
-
-Four present forms from the first stem, two from the second — plus the infinitive
-and the participle. Note that **vanno** goes with *vado*, not with *andiamo*:
-the split is **not** simply "singular versus plural."
-
-Two stems, one verb: the same trick as *essere*, in a smaller verb. Spanish does
-exactly this too — *voy* against *andar*.
-
-## The rule, and the agreement
-
-> **Verbs of motion and change of state take *essere*.**
-
-*andare* (go) · *venire* (come) · *arrivare* (arrive) · *partire* (leave) ·
-*entrare* · *uscire* (go out) · *nascere* (be born) · *morire* (die) ·
-*restare* (stay) · *diventare* (become) · *essere* · *stare*.
-
-And now the visible part:
-
-| | |
-|---|---|
-| Marco è **andato**. | Marco went. |
-| Anna è **andat*a***. | Anna went. |
-| I ragazzi sono **andat*i***. | The boys went. |
-| Le ragazze sono **andat*e***. | The girls went. |
-
-The participle takes the **subject's** gender and number — *-o, -a, -i, -e*, the
-same four endings as any Italian adjective. A woman says *sono andat**a***.
-
-**Why?** Because it *was* an adjective. *Anna è andata* began as a plain
-description — "Anna **is** gone-away," *gone* describing her state, the way
-*Anna è stanca* ("Anna is tired") describes her. It was never an action done to
-something else. So it agreed with her, and it still does.
-
-## Where the three languages landed
-
-| | auxiliary split | participle agrees? |
-|---|---|---|
-| **French** | *avoir* / *être* | **yes** — *elle est allé**e*** |
-| **Italian** | *avere* / *essere* | **yes** — *è andat**a*** |
-| **German** | *haben* / *sein* | **no** — *sie ist gegangen* |
-
-The same system, and the same motion/change-of-state line — but not all from one
-source. French and Italian **inherited** theirs together, as sisters. German
-arrived at the same line **in parallel**: a native Germanic development that grew
-up alongside the Romance ones through centuries of contact. And French and
-Italian kept the agreement; German dropped it.
+The participle began as an adjective: **Anna è andata** was “Anna is
+gone-away,” with *andata* describing Anna just as *stanca* (“tired”) would.
+French keeps the same agreement (*elle est allée*); German uses a similar
+auxiliary split but no agreement (*sie ist gegangen*). The systems developed
+alongside one another, but only the Romance sisters preserve this adjective
+fossil visibly.
 
 ## Guided Practice
 
 [PAUSE 1s]
-- [YOU SAY: "sono stato, sei stato, siamo stati"]
-- [YOU SAY: "vado, vai, va, andiamo, andate, vanno"]
-- [YOU SAY: the four endings — "andat**o**, andat**a**, andat**i**, andat**e**"]
-- [YOU SAY: the contrast — "ho parlato … **sono** andato"]
-- [YOU SAY: the reason — "**Anna is gone-away** — it describes **her**"]
+- [YOU SAY: “sono stato, sei stato, siamo stati”]
+- [YOU SAY: “sono andato” — then, as a woman, “sono andata”]
+- [YOU SAY: “andato, andata, andati, andate”]
+- [YOU SAY: the contrast — “ho parlato; sono andato”]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Which verbs take *essere*? (**Motion** and **change of state**.) Say
-"I have been." (*Sono stato*.) Give the present of *andare*. (*Vado, vai, va,
-andiamo, andate, vanno*.) A woman says "I went" — how? (*Sono andat**a***.) What
-does the participle agree with? (**The subject**, in gender and number.) Which of
-the three languages drops that agreement? (**German**.) Next chapter: describing
-what you see.
+[PAUSE 3s] Which auxiliary do many motion and change verbs take? (**Essere**.)
+What does the participle agree with? (**The subject**.) Give all four endings.
+(***-o, -a, -i, -e***.) How does a woman say “I went”? (**Sono andata**.) Why
+does agreement survive? (The participle began as an **adjective**.)

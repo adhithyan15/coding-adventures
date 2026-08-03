@@ -9,7 +9,7 @@ prerequisites: [IT-C06-numeri-6-10, IT-C07-giorni-1]
 sounds: [double-gg, c-before-i]
 roots: [latin-months, roman-gods]
 etymology_hook: "Italy kept the months closest to Latin: gennaio←Januarius, marzo←Mars (= martedì!), settembre–dicembre = the Latin 7–10 you learned as numbers"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C06-numeri-6-10, IT-C07-giorni-1]
 ---
 

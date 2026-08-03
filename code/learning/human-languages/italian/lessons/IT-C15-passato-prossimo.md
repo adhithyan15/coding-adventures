@@ -9,7 +9,7 @@ prerequisites: [IT-C14-avere, IT-C05-parlare]
 sounds: [silent-h, double-t]
 roots: [latin-habere-participle]
 etymology_hook: "ho parlato was once literally 'I HAVE [a thing] spoken' — Latin habeō litterās scriptās, a possessive with the participle as an ADJECTIVE agreeing with the object; the agreement survives when the object comes first (le ho viste), a fossil of the lost meaning"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C14-avere, IT-C05-parlare, IT-C05-lavorare]
 ---
 

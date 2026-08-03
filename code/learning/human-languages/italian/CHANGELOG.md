@@ -1,5 +1,19 @@
 # Changelog
 
+## Sub-five-minute remediation — 2026-08-02
+
+- Corrected seventeen declared five-minute estimates whose lesson bodies
+  already compute below 300 seconds.
+- Replaced the three computed violations with four prerequisite-ordered
+  micro-lessons: informal → formal → register-neutral wellbeing questions, then
+  *essere* forms → borrowed *stato* → *andare* → participle agreement.
+- Preserved the original etymology and cross-language comparisons while making
+  each register, metaphor, suppletive stem, and grammar rule independently
+  learnable in under five minutes. The shared report now measures zero Italian
+  duration violations.
+- `IT-C02-practice` at 297 computed seconds and `IT-C17-mano` at 296 are the
+  tightest remaining Italian lessons and should be watched during copy edits.
+
 ## Chapter 17 — The body: the pot kept whole, and a noun that breaks the rule
 
 - **Chapter 17 authored** (`IT-C17-testa`, `-mano`) — the **body**, the theme the
@@ -33,7 +47,8 @@
 
 ## Chapter 16 — *essere*, and the participle it borrowed from *stare*
 
-- **Chapter 16 authored** (`IT-C16-essere`, `-passato-prossimo-essere`).
+- **Chapter 16 authored** (`IT-C16-essere`, `-essere-stato`, `-andare`,
+  `-passato-prossimo-essere`).
   Ch. 15 taught only the *avere* half of the passato prossimo; *essere* existed
   in no lesson. This supplies it — and Italian turns out to have the most
   interesting version of the story, because **Ch. 2 already taught *stare***.
@@ -41,22 +56,20 @@
   (*Marco **è** italiano* vs *Marco **e** Anna* — one accent, two different
   words), and the *io sono* / *loro sono* collision that is one of the few places
   a pro-drop language has to keep its pronoun.
-  - **The chapter's centrepiece**: Latin's *esse* and *stāre* both survived into
-    Italian as separate living verbs — but *essere*'s own participle did not, so
-    Italian filled the gap with ***stare*'s**. Both verbs' participle is
-    **stato**, and ***sono stato*** therefore means both "I have **been**" and "I
-    have **stayed**", separable only by context.
-  - Set against the sisters in one table: **Spanish** split the pair fully (*ser*
-    / *estar*), **French** kept *esse* as *être* and absorbed *stāre*'s whole
-    *ét-* limb (*été*, *étant*, *étais*; *stāre* survives elsewhere in French too
-    — *rester*, *coûter* — just not as a separate "to be"), **Italian** kept both
-    but let them **overlap**. Italian sits
-    exactly between the other two — a genuinely new comparative row rather than a
-    restatement of the French lesson.
-- **passato prossimo with essere** (`IT-C16-passato-prossimo-essere`): opens with
-  **`sono stato`** so the first *essere*-past costs **no new vocabulary**, then
-  introduces ***andare*** explicitly as a new verb (`vado/vai/va/andiamo/andate/
-  vanno`) rather than smuggling it in — it is itself suppletive, shown as a
+- **borrowed *stato*** (`IT-C16-essere-stato`) holds the chapter's centrepiece:
+  Latin's *esse* and *stāre* both survived into Italian as separate living verbs
+  — but *essere*'s own participle did not, so Italian filled the gap with
+  ***stare*'s**. Both verbs' participle is **stato**, and ***sono stato***
+  therefore means both "I have **been**" and "I have **stayed**", separable only
+  by context.
+- Set against the sisters in one table: **Spanish** split the pair fully (*ser*
+  / *estar*), **French** kept *esse* as *être* and absorbed *stāre*'s whole
+  *ét-* limb (*été*, *étant*, *étais*; *stāre* survives elsewhere in French too
+  — *rester*, *coûter* — just not as a separate "to be"), **Italian** kept both
+  but let them **overlap**. Italian sits exactly between the other two.
+- **andare** (`IT-C16-andare`) is introduced explicitly as a new verb
+  (`vado/vai/va/andiamo/andate/vanno`) rather than smuggled into the past. It is
+  itself suppletive, shown as a
   stem table rather than prose so no form is left unaccounted for: **vad-**
   (*vado, vai, va, **vanno*** ← *vādere* "to stride") against **and-**
   (*andiamo, andate, andare, andato*, origin genuinely disputed, most likely
@@ -64,6 +77,9 @@
   second, plus the infinitive and participle. The lesson flags that ***vanno*
   files with *vado***, so the split is *not* singular-versus-plural — the same two-stem trick as *essere*, and the
   one behind Spanish *voy* vs *andar*.
+- **passato prossimo with essere** (`IT-C16-passato-prossimo-essere`): after the
+  dedicated atoms, opens with **`sono stato`** so the first *essere*-past costs
+  **no new vocabulary**.
   - The **subject agreement** in all four endings (*andato / -a / -i / -e*), with
     the note that a woman says *sono andat**a***; explained via the same
     adjective fossil as French (*Anna è andata* ← "Anna **is** gone-away",
@@ -300,7 +316,8 @@
 ## Chapter 2 — "Come stai?" (the how-are-you chapter)
 
 - **Chapter 2 authored** (`IT-C02-prego`, `-come`, `-stare`, `-come-stai`,
-  `-cosi-cosi`, `-practice`): the "how are you?" exchange, atom-first, reviewing
+  `-come-sta`, `-come-va`, `-cosi-cosi`, `-practice`): the "how are you?"
+  exchange, atom-first, reviewing
   Chapter 1. Fourth track in the PR's cross-language how-are-you set, reusing the
   canonical concepts `STATE-HOW-ARE-YOU`, `COURTESY-YOUREWELCOME`, `WORD-SOSO`.
   Register (tu/Lei) and the question word (come) are introduced inline, since the

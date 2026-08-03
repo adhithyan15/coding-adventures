@@ -9,7 +9,7 @@ prerequisites: [IT-C13-nero-bianco]
 sounds: [double-s, final-stress-u]
 roots: [pie-rewdh, germanic-blao, arabic-lazaward]
 etymology_hook: "rosso ← russus ← PIE *h₁rewdʰ-, cousin of English red and German rot; blu is a SECOND Germanic loan, while azzurro ← Arabic lāzaward 'lapis lazuli' → English azure — the colour Italy's teams are named for"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C13-nero-bianco, IT-C12-numeri-17-20]
 ---
 

@@ -9,7 +9,7 @@ prerequisites: [IT-C06-numeri-1-5]
 sounds: [open-o, r-single]
 roots: [hora-latin, hora-greek]
 etymology_hook: "ora ← Latin hōra ← Greek hṓrā → hour; time is told with the feminine article: 'sono le due' = 'it is the two [hours]'"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C06-numeri-1-5, IT-C07-giorni-2]
 ---
 

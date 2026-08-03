@@ -9,7 +9,7 @@ prerequisites: [IT-C17-testa, IT-C01-il-la-lo]
 sounds: [final-vowel, open-o]
 roots: [latin-manus]
 etymology_hook: "la mano is FEMININE while ending in -o, and plural le mani — because Latin manus was a fourth-declension feminine, a class whose nouns ended in -us like the masculines; the gender is two thousand years old and the ending is a fossil of a declension Italian no longer has"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [IT-C17-testa, IT-C01-il-la-lo]
 ---
 
