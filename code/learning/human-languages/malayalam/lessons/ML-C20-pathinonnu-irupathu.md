@@ -40,10 +40,10 @@ identically to its closest cousin, Tamil.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-01]; assesses=[] -->
 
-Malayalam's teens echo **പത്ത്** (*pathu*, "**ten**") plus each digit —
-**പതിനൊന്ന്** (*pathinonnu*, 11), **പന്ത്രണ്ട്** (*panthraṇṭŭ*, 12), and
-onward through **പത്തൊമ്പത്** (*pathompathu*, 19) — the same
-digit-plus-ten-echo compounding as its Dravidian cousins.
+Malayalam's teens echo **പത്ത്** (*pathu*, "**ten**") plus each digit.
+**പതിനൊന്ന്** (*pathinonnu*) is 11, **പന്ത്രണ്ട്** (*panthraṇṭŭ*) is 12,
+and the pattern continues through **പത്തൊമ്പത്** (*pathompathu*, 19) — the
+same digit-plus-ten-echo compounding as its Dravidian cousins.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C20-PATHINONNU-IRUPATHU-02]; assesses=[] -->

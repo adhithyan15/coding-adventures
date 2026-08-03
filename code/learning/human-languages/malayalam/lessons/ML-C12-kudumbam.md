@@ -76,7 +76,7 @@ languages, even where the specific words diverge.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
 
 [PAUSE 3s] Do Malayalam's sibling words closely match Tamil's? (**No** —
-Malayalam built its own distinct set (cēṭṭan/aniyan/cēcci/aniyatti), unlike
+Malayalam built its own distinct set (cēṭṭan, aniyan, cēcci, and aniyatti), unlike
 how closely Kannada and Telugu track Tamil.) Does Malayalam still split
 siblings by age? (**Yes** — four words, older vs. younger, the same
 structural pattern across the whole Dravidian family.)
