@@ -21,13 +21,20 @@ and Italian kept the final vowels French dropped. The showpiece etymology:
 
 - **Chapter 1 — Greetings** ([`lessons/IT-C01-*`](./lessons/)): ciao, buono,
   il/la/lo (gender), giorno, buongiorno, sera/buonasera, notte/buonanotte,
-  grazie, practice. In the book.
-- **Chapter 2 — Introducing Yourself** (planned): *mi chiamo…*, *tu* vs. *Lei*.
+  grazie, practice. Hand-authored in the book and still readable as legacy
+  curriculum content.
+- **Chapters 2–17**: 49 prerequisite-ordered lessons move from wellbeing and
+  introductions through farewells, the first verbs, numbers, calendar and time,
+  family, food, colours, age, two pasts, *essere/andare*, and the body. All are
+  strict schema-v2 lessons and generate the corresponding book chapters from
+  the same hashed AST that Language Ladder loads.
 
 ## Book
 
-Compiles with XeLaTeX (Latin Modern, no vendored font needed). `latexmk
--xelatex book.tex`.
+The 104-page volume compiles with XeLaTeX (Latin Modern, no vendored font
+needed): `latexmk -xelatex book.tex`. Chapters 2–17 are generated from the
+canonical lessons by `npm run generate:books` in the
+`human-language-data` package; do not edit those chapter files by hand.
 
 ## Files
 

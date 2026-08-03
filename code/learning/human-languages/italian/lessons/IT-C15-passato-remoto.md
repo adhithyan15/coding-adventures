@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C15-passato-remoto
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 520
 chapter: 15
 type: word
 headword: parlò
@@ -9,19 +12,32 @@ prerequisites: [IT-C15-passato-prossimo]
 sounds: [final-stress-o]
 roots: [latin-perfect]
 etymology_hook: "parlò ← Vulgar Latin perfect *parabolāvit, the same inheritance as Spanish habló and Portuguese falou — but in Italian its survival is GEOGRAPHIC: everyday speech in Sicily and much of the south, literature-only in the north"
-est_minutes: 4
+duration:
+  max_seconds: 264
+requires:
+  knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
+introduces:
+  knowledge: [IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05]
+practises:
+  knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C15-passato-prossimo, IT-C05-parlare]
 ---
-
 # parlò — the past that depends where you are
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Italian's other past tense. Whether it sounds normal or bookish
 depends on **which part of Italy you are standing in** — the clearest case of
 geography deciding grammar in this course.
 
-## What it looks like
+## You'll want to know: the remote past
+<!-- hl-knowledge: introduces=[IT-LEX-PASSATO-REMOTO-02]; assesses=[] -->
 
 | | passato remoto | passato prossimo |
 |---|---|---|
@@ -32,7 +48,8 @@ geography deciding grammar in this course.
 Note the final stress: *parl**ò***, with the accent written. Compare Chapter 12's
 numbers — Italian marks a stressed final vowel the same way.
 
-## The direct inheritance
+## The word, taken apart: the inherited past
+<!-- hl-knowledge: introduces=[IT-ETYMON-PASSATO-REMOTO-03]; assesses=[] -->
 
 **parlò** ← Vulgar Latin **\*parabolāvit**, the plain Latin perfect, handed straight down.
 Which makes it the **same tense** as:
@@ -46,7 +63,8 @@ Which makes it the **same tense** as:
 
 One Latin ancestor, four descendants — and four different fates in daily life.
 
-## Geography, not grammar
+## Why it's said this way: geography
+<!-- hl-knowledge: introduces=[IT-PRAGMATICS-PASSATO-REMOTO-04]; assesses=[] -->
 
 This is what makes Italian interesting here:
 
@@ -60,7 +78,8 @@ So the "correct" answer changes as you travel. In the north the *passato remoto*
 has retreated to books, exactly as French's *passé simple* and German's
 *Präteritum* did. In the south it never left.
 
-## The same retreat, three times — and two holdouts
+## What you've built: three retreats and two holdouts
+<!-- hl-knowledge: introduces=[IT-NOTICE-PASSATO-REMOTO-05]; assesses=[] -->
 
 | language | simple past | status in speech |
 |---|---|---|
@@ -75,6 +94,7 @@ conversation; Italian is the one caught **mid-process**, with the old tense stil
 holding half the country.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05] -->
 
 [PAUSE 1s]
 - [YOU SAY: the pair — "parl**ò** … **ha** parlato"]
@@ -82,6 +102,7 @@ holding half the country.
 - [YOU SAY: the geography — "in **Palermo** ordinary; in **Milano** literary"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05] -->
 
 [PAUSE 3s] What is *parlò* descended from? (Vulgar Latin **\*parabolāvit**.) What decides
 whether it sounds normal or bookish? (**Where in Italy you are** — everyday in the

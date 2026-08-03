@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C02-come
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 110
 chapter: 2
 type: word
 headword: come
@@ -9,24 +12,38 @@ prerequisites: [IT-C01-ciao]
 sounds: [soft-c]
 roots: [quomodo-latin]
 etymology_hook: "come ← Latin quōmodo 'in what manner' — the same root as Spanish cómo and French comment"
-est_minutes: 3
+duration:
+  max_seconds: 186
+requires:
+  knowledge: []
+introduces:
+  knowledge: [IT-SOUND-COME-02, IT-ETYMON-COME-03]
+practises:
+  knowledge: [IT-SOUND-COME-02, IT-ETYMON-COME-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C02-prego]
 ---
-
 # come — "how," the third *quomodo* cousin
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] To ask *how are you?* you need "how." In Italian it's **come** — and
 if you've seen the Spanish or French tracks, you already know its family.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-COME-02]; assesses=[] -->
 
 - `soft-c` — **come** = *KOH-meh*. Here *c* is before *o*, so it's a **hard** *k*
   (Italian *c* only softens to *ch* before *e/i*). Final *-e* is sounded:
   *KOH-meh*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-COME-03]; assesses=[] -->
 
 **come** = "how / like / as." Root: Latin **quōmodo**, "in what manner" — two
 words (*quō* "in what way" + *modo* "manner") fused and worn down. It is the
@@ -45,6 +62,7 @@ them apart only by context, not spelling: *Come stai?* ("**How** are you?") vs
 *bianco come la neve* ("white **as** snow").
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-COME-02, IT-ETYMON-COME-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "come" — *KOH-meh*]
@@ -52,6 +70,7 @@ them apart only by context, not spelling: *Come stai?* ("**How** are you?") vs
 - [YOU SAY: English *mode, model* share the *modo* piece]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-COME-02, IT-ETYMON-COME-03] -->
 
 [PAUSE 3s] What Latin word gives *come*, and which Spanish and French words are
 its siblings? (*quōmodo* → *cómo*, *comment*.) What two jobs does *come* do?

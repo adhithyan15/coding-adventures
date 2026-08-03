@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C07-giorni-2
+spine_node: SPINE-TIME-OF-DAY
+sequence: 360
 chapter: 7
 type: word
 headword: sabato, domenica
@@ -9,19 +12,32 @@ prerequisites: [IT-C07-giorni-1]
 sounds: [double-none, stress-first]
 roots: [sabbatum-latin, dominica-latin]
 etymology_hook: "sabato ← Sabbatum (Sabbath), domenica ← diēs Dominica ('the Lord's day') — Italy's weekend keeps the religious names, twins of Spanish sábado/domingo"
-est_minutes: 4
+duration:
+  max_seconds: 157
+requires:
+  knowledge: [IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03]
+introduces:
+  knowledge: [IT-ETYMON-GIORNI-2-02]
+practises:
+  knowledge: [IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-GIORNI-2-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C07-giorni-1, IT-C06-numeri-6-10]
 ---
-
 # sabato and domenica — the religious weekend
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The five weekdays were planets; the two weekend days are **faith**. Here
 the accented *-dì* disappears, because these names never came from *diēs* + a god
 — they came from the Sabbath and the Lord.
 
 ## The two days, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-GIORNI-2-02]; assesses=[] -->
 
 | Italian | ← Latin | meaning | Spanish twin |
 |---|---|---|---|
@@ -39,6 +55,7 @@ the accented *-dì* disappears, because these names never came from *diēs* + a 
   *diēs* went feminine here.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-GIORNI-2-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full week — "lunedì … venerdì, sabato, domenica"]
@@ -46,6 +63,7 @@ the accented *-dì* disappears, because these names never came from *diēs* + a 
 - [YOU SAY: the sisters — "sabato / sábado", "domenica / domingo"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03, IT-ETYMON-GIORNI-2-02] -->
 
 [PAUSE 3s] Give all seven Italian days. (*Lunedì … domenica*.) Where does *sabato*
 come from? (The **Sabbath**, *Sabbatum* ← Hebrew *shabbāt*.) What does *domenica*

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C02-come-va
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 150
 chapter: 2
 type: phrase
 headword: Come va?
@@ -9,13 +12,25 @@ prerequisites: [IT-C02-come-sta]
 sounds: [open-a]
 roots: [andare-latin]
 etymology_hook: "Come va? changes the wellbeing metaphor from stare, 'stand', to andare, 'go'"
-est_minutes: 4
+duration:
+  max_seconds: 250
+requires:
+  knowledge: [IT-GRAMMAR-COME-STA-02]
+introduces:
+  knowledge: [IT-GRAMMAR-COME-VA-02]
+practises:
+  knowledge: [IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C02-come-stai, IT-C02-come-sta]
 ---
-
 # Come va? — “how is it going?”
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **Come stai?** pictures wellbeing as standing. Italian also has the
 same “going” picture as English.
@@ -26,7 +41,8 @@ same “going” picture as English.
 not force you to choose an informal or formal ending, so it is useful in either
 setting.
 
-## Two pictures
+## Grammar Lens: standing and going
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-COME-VA-02]; assesses=[] -->
 
 - **Come stai?** — “How do you **stand**?”
 - **Come va?** — “How does it **go**?”
@@ -40,6 +56,7 @@ You will learn all six forms of *andare* much later. For now, **va** is one
 ready-made piece inside this question.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the standing question — “Come stai?”]
@@ -49,6 +66,7 @@ ready-made piece inside this question.
 [REPEAT x2] “Come stai? — Come va?”
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-COME-STA-02, IT-GRAMMAR-COME-VA-02] -->
 
 [PAUSE 3s] Which question uses “stand”? (**Come stai?**) Which uses “go”?
 (**Come va?**) What infinitive owns **va**? (**Andare**.) Must *Come va?* choose

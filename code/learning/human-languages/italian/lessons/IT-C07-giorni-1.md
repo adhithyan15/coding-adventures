@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C07-giorni-1
+spine_node: SPINE-TIME-OF-DAY
+sequence: 350
 chapter: 7
 type: word
 headword: lunedì, martedì, mercoledì, giovedì, venerdì
@@ -9,26 +12,40 @@ prerequisites: [IT-C06-numeri-6-10]
 sounds: [final-stress-i, c-before-i]
 roots: [dies-latin, planet-gods]
 etymology_hook: "lunedì/martedì… = [planet] + dì (← diēs 'day'); same Roman planet-week as French, with the accented -dì kept audible; Spanish twins lunes/martes"
-est_minutes: 4
+duration:
+  max_seconds: 196
+requires:
+  knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04]
+introduces:
+  knowledge: [IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03]
+practises:
+  knowledge: [IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C06-numeri-6-10]
 ---
-
 # lunedì to venerdì — the planet-week, Italian-style
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Italy sat at the centre of the Roman world, so its weekday names are
 the **planet-week** almost undisturbed — the same map of the sky French uses. The
 tell is the little accented **-dì** at the end of each.
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-GIORNI-1-02]; assesses=[] -->
 
 - `final-stress-i` — the **-dì** carries a **written accent** and the **stress**:
   *lu-ne-DÌ*, *mar-te-DÌ*. That accent marks "day" (*diēs*) and where your voice
   lands.
 - `c-before-i` — **mercoledì** = *mer-co-le-DÌ* (hard *c* here, before *o*).
 
-## The pattern: [planet] + dì
+## Grammar Lens: [planet] + dì
+<!-- hl-knowledge: introduces=[IT-GRAMMAR-GIORNI-1-03]; assesses=[] -->
 
 **dì** is Latin **diēs**, "day" — the same *-di* you'd hear in French *lundi*.
 Before it sits a **planet-god**:
@@ -48,6 +65,7 @@ And *giovedì* wears **Giove**, the Italian name of Jupiter — the same king-go
 English honours as Thor in *Thursday*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lunedì, martedì, mercoledì, giovedì, venerdì" — mind the final stress]
@@ -56,6 +74,7 @@ English honours as Thor in *Thursday*.
 - [YOU SAY: "-dì = diēs = day" — the accented tail]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-NUMERI-6-10-02, IT-ETYMON-NUMERI-6-10-03, IT-GRAMMAR-NUMERI-6-10-04, IT-SOUND-GIORNI-1-02, IT-GRAMMAR-GIORNI-1-03] -->
 
 [PAUSE 3s] What is the accented *-dì*, and from what Latin word? ("Day," ← *diēs*.)
 Which planet is *giovedì*? (Jupiter — *Giove*.) How do Italian/French treat the

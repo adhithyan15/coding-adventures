@@ -92,6 +92,9 @@ describe("canonical LaTeX chapter rendering", () => {
       "\\textbf{A\\&B} costs \\$5 and uses \\texttt{x\\_y}",
     );
     expect(renderInlineMarkdown("favor ≈ fah-BOR")).toBe("favor $\\approx$ fah-BOR");
+    expect(renderInlineMarkdown("hṓrā ↔ h₁rewdʰ")).toBe(
+      "h\\'{\\={o}}rā $\\leftrightarrow$ h\\textsubscript{1}rewd\\textsuperscript{h}",
+    );
     expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
       "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
     );

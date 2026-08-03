@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C08-mezzogiorno-mezzanotte
+spine_node: SPINE-TIME-OF-DAY
+sequence: 380
 chapter: 8
 type: word
 headword: mezzogiorno, mezzanotte
@@ -9,23 +12,37 @@ prerequisites: [IT-C08-ora]
 sounds: [double-zz, gli-none]
 roots: [medius-latin, diurnum-noctem-latin]
 etymology_hook: "mezzogiorno = mezzo + giorno ('mid-day'), mezzanotte = mezza + notte ('mid-night'); mezzo ← medius, twin of French midi/minuit"
-est_minutes: 4
+duration:
+  max_seconds: 196
+requires:
+  knowledge: [IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04]
+introduces:
+  knowledge: [IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03]
+practises:
+  knowledge: [IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04, IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C08-ora, IT-C07-giorni-2]
 ---
-
 # mezzogiorno and mezzanotte — Italy's noon and midnight
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The two unnumbered hours. **mezzogiorno** (noon) and **mezzanotte**
 (midnight) are, like their French cousins, the **middle** of the day and the night —
 built from *mezzo* "half/middle" plus *giorno* "day" and *notte* "night."
 
 ## Sounds you'll need
+<!-- hl-knowledge: introduces=[IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02]; assesses=[] -->
 
 - `double-zz` — **mezzo** = *MED-dzo*, the doubled *zz* a hard "ts/dz" — lean on it.
 
 ## The two words, taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03]; assesses=[] -->
 
 The front piece is **mezzo/mezza**, "half, middle," from Latin **medius** (cousin
 of English *medium, mid*, and of French *mi-* in *midi*):
@@ -48,6 +65,7 @@ To use them, they *are* the hour:
 > **È mezzogiorno.** — "It is noon." **È mezzanotte.** — "It is midnight."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04, IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mezzogiorno" (noon), "mezzanotte" (midnight)]
@@ -55,6 +73,7 @@ To use them, they *are* the hour:
 - [YOU SAY: "È mezzogiorno. È mezzanotte." — singular *è*, no number]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-SOUND-ORA-02, IT-ETYMON-ORA-03, IT-GRAMMAR-ORA-04, IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02, IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03] -->
 
 [PAUSE 3s] What do *mezzogiorno* and *mezzanotte* literally mean? ("Mid-day" and
 "mid-night.") What is *mezzo/mezza* from, and its French cousin? (Latin *medius*;

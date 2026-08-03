@@ -63,7 +63,7 @@ edition is authored.
 | [Spanish](./spanish/README.md) | Romance / Latin | Pilot — Chapters 1-3 authored (lessons + book); ~30 lessons |
 | [French](./french/README.md) | Romance / Latin | Chapters 1-2 authored (lessons + book) |
 | [German](./german/README.md) | Germanic / Latin | Chapters 1-2 authored (lessons + book) |
-| [Italian](./italian/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
+| [Italian](./italian/README.md) | Romance / Latin | Chapters 1–17 authored; Chapters 2–17 canonical/generated for app + book |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | Chapter 1 (Greetings) authored (lessons + book) |
 | [Arabic](./arabic/README.md) | Semitic / Arabic (vendored font) | Chapters 1-2 authored (script inline) |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | Chapters 1-2 authored (lessons + book) |

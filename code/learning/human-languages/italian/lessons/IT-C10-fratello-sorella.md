@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: IT-C10-fratello-sorella
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 420
 chapter: 10
 type: word
 headword: il fratello, la sorella
@@ -9,13 +12,25 @@ prerequisites: [IT-C10-genitori]
 sounds: [double-ll, r-tap]
 roots: [frater-latin, soror-latin]
 etymology_hook: "fratello ← frater + the diminutive -ellus, sorella ← soror + -ella; Italian rebuilt 'brother/sister' as 'little brother/little sister', keeping frat-/soror- (→ fraternal, sorority)"
-est_minutes: 4
+duration:
+  max_seconds: 136
+requires:
+  knowledge: [IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03]
+introduces:
+  knowledge: [IT-ETYMON-FRATELLO-SORELLA-02]
+practises:
+  knowledge: [IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03, IT-ETYMON-FRATELLO-SORELLA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [IT-C10-genitori, IT-C09-stagioni]
 ---
-
 # il fratello, la sorella — brother and sister, with a little-ending
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Here Italian does something charming. Where French kept *frère* and
 *sœur* bare, Italian rebuilt "brother" and "sister" with its beloved
@@ -23,6 +38,7 @@ reviews_of: [IT-C10-genitori, IT-C09-stagioni]
 and those forms became the everyday words.
 
 ## Taken apart
+<!-- hl-knowledge: introduces=[IT-ETYMON-FRATELLO-SORELLA-02]; assesses=[] -->
 
 - **il fratello** ("brother") ← Latin **frāter** + the diminutive **-ellus** →
   *fraterellus* → *fratello*, once "little brother."
@@ -36,6 +52,7 @@ cousins across the language (*-ello* on *poverello* "poor little one," *-ella* o
 countless names).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03, IT-ETYMON-FRATELLO-SORELLA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: all four — "il padre, la madre, il fratello, la sorella"]
@@ -43,6 +60,7 @@ countless names).
 - [YOU SAY: "fratello → fraternal; sorella → sorority"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-GENITORI-02, IT-ETYMON-GENITORI-03, IT-ETYMON-FRATELLO-SORELLA-02] -->
 
 [PAUSE 3s] Give "brother" and "sister" with articles. (**il fratello, la
 sorella**.) What did Italian **add** to Latin *frāter/soror* to make them?
