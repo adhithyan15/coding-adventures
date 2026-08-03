@@ -243,7 +243,7 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   POSIX-only `/repo` path fixtures; this is tracked as a separate test-
   portability slice rather than widening the metadata decoder change;
 - align TypeScript build-tool discovery with the canonical language and identity
-  registry. The in-progress slice consumes the shared registry and duplicate-
+  registry. Ready PR #9582 consumes the shared registry and duplicate-
   identity fixtures, preserves package/program identity, excludes spec fixtures,
   and fails closed on collisions. Its real Windows plan now emits 4,768 unique
   identities, zero duplicate groups, and only intentional `unknown/blog`, down

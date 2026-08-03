@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 9582,
   "last_inventory": {
     "revision": "6141793a9c29cd1177b3b201565e4f8537e77585",
     "schema_version": 3,
@@ -361,11 +361,11 @@
     {
       "id": "build-tool-typescript-language-identity-registry",
       "title": "Bring TypeScript build-tool discovery to the canonical language and identity registry",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-typescript-rockspec-utf8-conformance"],
       "branch": "codex/build-tool-typescript-language-identity-registry",
-      "pr_number": null,
-      "notes": "Selected after merged PR #9572 and the collision-clean 6141793a inventory because the dependency is satisfied and real full-plan identity corruption affects every downstream graph consumer. The engine emits 4,770 package records but only 4,383 unique names, including 655 unknown-language records and 217 duplicate identity groups; common C, C++, Dart, Java, and Kotlin packages collapse together under unknown/<basename>. Consume the shared discovery language-registry and duplicate-identity fixtures, classify exact package/program lane boundaries, preserve package versus program identity, exclude spec fixtures, and fail closed on residual duplicate qualified names. This outranks the local-only Windows gitdiff fixture debt and the next single-engine UTF-8 child on dependency leverage."
+      "pr_number": 9582,
+      "notes": "Ready PR #9582 is the sole active parity PR. It consumes the shared discovery language-registry and duplicate-identity fixtures, classifies only exact package/program lane boundaries, preserves language/programs/name identity, excludes spec fixtures, and fails closed with DUPLICATE_PACKAGE_IDENTITY, sorted repository-relative paths, real CLI exit 2, and no checkout-root disclosure. Exact-head validation after a conflict-free rebase onto fc27dd48 passed 37 discovery tests, 271 unaffected tests, 93.40% discovery line and 89.23% branch coverage, production bundling, 17 schema plus 40 runner tests, the valid 36-case/55-file corpus, zero-advisory npm audit, and a real 4,768-record/7,242-edge full plan with 4,768 unique names, zero duplicate groups, and only intentional unknown/blog. The collision-checked parity inventory remains 1,222 identities/4,370 slots with zero collisions or unknown inventory buckets. Full local Windows testing separately reproduced only the exact seven owned gitdiff portability failures, and BUILD validation reproduced only the exact ten owned Lua BUILD_windows debts. The newly discovered Windows plan rel_path normalization is logged as its own pending child."
     },
     {
       "id": "build-tool-typescript-windows-plan-rel-path-portability",
