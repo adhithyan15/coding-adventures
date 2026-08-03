@@ -8,7 +8,7 @@ concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-o, hasanta-conjunct, s-to-sh]
 roots: [namas, kara]
-est_minutes: 5
+est_minutes: 4
 reviews_of: []
 ---
 

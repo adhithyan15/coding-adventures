@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [BN-C02-amar-naam, BN-C02-tomar-naam-ki, BN-C02-alaap]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C02-naam, BN-C02-amar, BN-C02-amar-naam, BN-C02-tumi-apni, BN-C02-ki, BN-C02-tomar-naam-ki, BN-C02-alaap]
 ---
 

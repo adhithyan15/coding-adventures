@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora, BN-C03-ami]
 ---
 

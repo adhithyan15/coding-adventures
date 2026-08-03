@@ -9,7 +9,7 @@ prerequisites: [BN-C01-nomoshkar]
 sounds: [long-aa, chandrabindu-nasal, i-sign]
 roots: [sanskrit-dvi, sanskrit-panca]
 etymology_hook: "Bengali দুই dui keeps a trace of the vowel following the old dv- that Hindi and Marathi flattened into do/don — which is why it has two syllables where they have one; it shares this with Assamese, Odia and Nepali, and is unusual only among the four languages compared here"
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C01-nomoshkar]
 ---
 

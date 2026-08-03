@@ -8,7 +8,7 @@ concept_tag: REVIEW
 prerequisites: [BN-C04-abar-dekha-hobe, BN-C04-kal-dekha-hobe]
 sounds: []
 roots: []
-est_minutes: 5
+est_minutes: 4
 reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe, BN-C04-kal-dekha-hobe]
 ---
 
