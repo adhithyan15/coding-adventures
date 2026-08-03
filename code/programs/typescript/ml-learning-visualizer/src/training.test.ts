@@ -66,6 +66,12 @@ import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { InitializationWorkbench } from "./InitializationWorkbench.js";
 import { initializerScale, traceInitializationDistributions } from "./initialization-distribution-lab.js";
+import { ImplementationCoverageWorkbench } from "./ImplementationCoverageWorkbench.js";
+import {
+  implementationCoverageCatalog,
+  parseImplementationCoverageCatalog,
+  traceImplementationCoverage,
+} from "./implementation-coverage.js";
 import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
 import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -87,6 +93,7 @@ import precisionResidencyDocument from "../../../../specs/fixtures/precision-res
 import referenceCatalogDocument from "../../../../specs/fixtures/reference-validation-v1/catalog.json";
 import consumerCatalogDocument from "../../../../specs/fixtures/cross-language-consumers-v1/catalog.json";
 import cAbiCatalogDocument from "../../../../specs/fixtures/neural-learning-rust-cabi-v1/catalog.json";
+import implementationCoverageCatalogDocument from "../../../../specs/fixtures/neural-learning-implementation-coverage-v1/catalog.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
@@ -2726,5 +2733,49 @@ describe("neural-learning Rust C ABI", () => {
     expect(screen.getByLabelText("Selected C ABI trace").textContent)
       .toMatch(/NEURAL_LEARNING_NON_FINITE.*status 5.*byte-for-byte unchanged/s);
     expect(screen.getByText(/Python validator dynamically loads the compiled native library/)).toBeTruthy();
+  });
+});
+
+describe("neural-learning implementation coverage", () => {
+  it("distinguishes three native owners from one Rust-core binding", () => {
+    const binding = traceImplementationCoverage("python-ctypes-rust-core");
+
+    expect(implementationCoverageCatalog.handCheck.contributions).toEqual([1, 0.25]);
+    expect(implementationCoverageCatalog.handCheck.prediction).toBe(1.35);
+    expect(binding.nativeLaneIds).toEqual(["go-native", "ruby-native", "rust-native"]);
+    expect(binding.bindingLaneIds).toEqual(["python-ctypes-rust-core"]);
+    expect(binding.lane.arithmeticOwner).toBe("Rust");
+    expect(binding.nativeFraction).toBe("3 / 4");
+  });
+
+  it("fails closed on reclassified lanes and dishonest counts", () => {
+    expect(() => parseImplementationCoverageCatalog({})).toThrow(/unexpected keys/);
+
+    const reclassified = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    reclassified.lanes[0].implementation = "rust-core-binding";
+    expect(() => parseImplementationCoverageCatalog(reclassified)).toThrow(/wrong values/);
+
+    const dishonest = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    dishonest.hand_check.rust_core_bindings = 2;
+    expect(() => parseImplementationCoverageCatalog(dishonest)).toThrow(/dishonest coverage count/);
+
+    const crossWired = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    crossWired.hand_check.inputs[0] = 3;
+    crossWired.hand_check.contributions[0] = 1.5;
+    crossWired.hand_check.prediction = 1.85;
+    expect(() => parseImplementationCoverageCatalog(crossWired)).toThrow(/disagrees with NN03/);
+  });
+
+  it("shows the ownership boundary without claiming browser execution", () => {
+    render(React.createElement(ImplementationCoverageWorkbench));
+    expect(screen.getByRole("heading", { name: "Implementation coverage" })).toBeTruthy();
+    expect(screen.getAllByText("3 native + 1 binding")).toHaveLength(2);
+    expect(screen.getByLabelText("Implementation coverage hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*1\.0.*-1\.0 \* -0\.25.*0\.25.*3 native \+ 1 binding.*4 lanes/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect Python rust-core-binding coverage lane" }));
+    expect(screen.getByLabelText("Selected implementation coverage contract").textContent)
+      .toMatch(/Python ctypes to versioned C ABI.*rust-core-binding.*Rust.*validate_neural_learning_rust_cabi\.py/s);
+    expect(screen.getByText(/does not execute Go, Ruby, Python, or the native library/)).toBeTruthy();
   });
 });

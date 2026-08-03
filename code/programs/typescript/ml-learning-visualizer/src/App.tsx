@@ -11,6 +11,7 @@ import { ForwardLoweringWorkbench } from "./ForwardLoweringWorkbench.js";
 import { GradientAccumulationWorkbench } from "./GradientAccumulationWorkbench.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
+import { ImplementationCoverageWorkbench } from "./ImplementationCoverageWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
 import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -187,7 +188,7 @@ function groupColor(group: string | undefined, groups: string[]): string {
 
 export function App() {
   const [workbench, setWorkbench] = useState<
-    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation" | "language-consumers" | "rust-c-abi"
+    "microscope" | "optimization" | "linear" | "hidden" | "convolution" | "image-cnn" | "residual" | "recurrent" | "attention" | "representation" | "structured" | "deep" | "tensor" | "autograd" | "gradient-buffer" | "forward-lowering" | "training-lowering" | "backend-parity" | "precision-residency" | "reference-validation" | "language-consumers" | "rust-c-abi" | "implementation-coverage"
   >("microscope");
   const [selectedLabId, setSelectedLabId] = useState(LABS[0]!.id);
   const selectedLab = LABS.find((lab) => lab.id === selectedLabId) ?? LABS[0]!;
@@ -330,6 +331,8 @@ export function App() {
                 ? "One fixture can cross language boundaries"
               : workbench === "rust-c-abi"
                 ? "One stable seam can cross runtime boundaries"
+              : workbench === "implementation-coverage"
+                ? "Coverage should reveal who owns the arithmetic"
               : workbench === "linear"
                 ? "100-lab foundation"
                 : "Hidden-layer playground"}
@@ -492,6 +495,13 @@ export function App() {
             >
               Rust C ABI
             </button>
+            <button
+              className={workbench === "implementation-coverage" ? "mode-button mode-button--active" : "mode-button"}
+              type="button"
+              onClick={() => setWorkbench("implementation-coverage")}
+            >
+              Implementation Coverage
+            </button>
           </div>
           <div className="formula">
             {workbench === "microscope" ? (
@@ -534,6 +544,8 @@ export function App() {
               <>one fixture {"->"} <strong>registered CLI contracts</strong> {"->"} expected receipts</>
             ) : workbench === "rust-c-abi" ? (
               <>caller buffers {"->"} <strong>stable Rust C ABI</strong> {"->"} status + outputs</>
+            ) : workbench === "implementation-coverage" ? (
+              <>same fixture {"->"} <strong>native or Rust-core owner</strong> {"->"} verified lane count</>
             ) : workbench === "linear" ? (
               <>y = <strong>{formatNumber(model.weight)}</strong>x + <strong>{formatNumber(model.bias)}</strong></>
             ) : (
@@ -583,6 +595,8 @@ export function App() {
         <CrossLanguageConsumerWorkbench />
       ) : workbench === "rust-c-abi" ? (
         <RustCAbiWorkbench />
+      ) : workbench === "implementation-coverage" ? (
+        <ImplementationCoverageWorkbench />
       ) : workbench === "hidden" ? <HiddenLayerWorkbench /> : (
       <main className="workspace workspace--lab">
         <nav className="lab-rail" aria-label="ML lab examples">

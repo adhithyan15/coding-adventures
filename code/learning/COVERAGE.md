@@ -10,7 +10,7 @@ mention provides a complete lesson.
 
 | Concepts | Documents | Dedicated | Related | Index only | Missing |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1285 | 1282 | 99 | 61 | 8 | 1117 |
+| 1287 | 1283 | 99 | 62 | 8 | 1118 |
 
 ## Method
 
@@ -27,7 +27,7 @@ mention provides a complete lesson.
 | P0 | 86 | 26 | 6 | 55 |
 | P1 | 9 | 21 | 0 | 90 |
 | P2 | 1 | 3 | 1 | 152 |
-| P3 | 3 | 11 | 1 | 820 |
+| P3 | 3 | 12 | 1 | 821 |
 
 ## P0 Backlog
 
@@ -925,6 +925,7 @@ mention provides a complete lesson.
 | `cfb-writer` | 1 | missing |
 | `chief-of-staff-channel-endpoints` | 1 | missing |
 | `chief-of-staff-channel-store` | 1 | missing |
+| `chief-of-staff-cli` | 1 | missing |
 | `chief-of-staff-cli-core` | 1 | missing |
 | `chief-of-staff-daemon` | 1 | missing |
 | `chief-of-staff-daemon-api` | 1 | missing |
@@ -1207,6 +1208,7 @@ mention provides a complete lesson.
 | `smart-home-dashboard-core` | 1 | missing |
 | `smart-home-discovery` | 1 | missing |
 | `smart-home-discovery-service` | 1 | missing |
+| `smart-home-enphase-envoy-integration` | 1 | missing |
 | `smart-home-event-streams` | 1 | missing |
 | `smart-home-frigate-integration` | 1 | missing |
 | `smart-home-fronius-local-integration` | 1 | missing |
@@ -1252,7 +1254,6 @@ mention provides a complete lesson.
 | `tetrad-type-checker` | 1 | missing |
 | `text-core` | 1 | index-only |
 | `text-interfaces` | 1 | missing |
-| `text-native` | 1 | missing |
 | `text-native-coretext` | 1 | missing |
 | `thread-mle` | 1 | missing |
 | `transport-platform` | 1 | missing |
