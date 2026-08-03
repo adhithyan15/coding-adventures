@@ -264,6 +264,7 @@ where
 /// instead one acceptor owns the listener and hands each accepted socket to a
 /// worker via [`StreamMailbox::adopt_connection`].  On Linux the kernel already
 /// balances the reuseport group, so this is unused there.
+#[cfg_attr(not(unix), allow(dead_code))]
 struct FanoutAcceptor {
     /// The single listener clients connect to (set non-blocking so the loop can
     /// poll the stop flag).
@@ -567,8 +568,9 @@ where
     // The handler is an owned callback trait object; its signature is the runtime's
     // public per-connection contract, not a type worth aliasing away.
     #[allow(clippy::type_complexity)]
-    let handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync> =
-        Arc::new(handler);
+    let handler: Arc<
+        dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync,
+    > = Arc::new(handler);
     let on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync> = Arc::new(on_close);
 
     // macOS/BSD: plain `SO_REUSEPORT` does not load-balance accepts, so instead of

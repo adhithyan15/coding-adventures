@@ -89,6 +89,9 @@ mod imp {
             }
         }
 
+        // A Windows HANDLE is an opaque kernel token. CreateIoCompletionPort
+        // consumes its value and does not dereference caller-owned memory.
+        #[allow(clippy::not_unsafe_ptr_arg_deref)]
         pub fn associate_handle(&self, handle: Handle, key: usize) -> io::Result<()> {
             let result = unsafe { CreateIoCompletionPort(handle, self.handle, key, 0) };
             if result.is_null() {
@@ -98,6 +101,9 @@ mod imp {
             }
         }
 
+        // PostQueuedCompletionStatus enqueues the OVERLAPPED pointer value for
+        // later identity recovery; it does not dereference the pointed-to data.
+        #[allow(clippy::not_unsafe_ptr_arg_deref)]
         pub fn post(
             &self,
             bytes_transferred: u32,

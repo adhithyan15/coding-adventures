@@ -122,7 +122,7 @@ The loop must not start by attempting 10,976 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`c9e4cb2a3877f91c0087675c7fd7e42eeecc7c26` is collision-clean at 1,235
+`5ceb7cafcb22ed70e096df281e12d10347113c2a` is collision-clean at 1,235
 normalized implementation identities, 4,383 implementation slots, 172
 high-consensus packages, 271 high-consensus missing slots, 785 singletons, 590
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
@@ -275,13 +275,16 @@ Draft 2020-12 schema and 39 shared cases across all seven API families, with
 Rust consuming the fixture records directly as the reference implementation.
 The package passes its 23 unit tests, 7 shared-fixture tests, package-local
 format/lint/docs gates, and 99.81% line coverage. The real repository build
-plan selects and builds exactly `sha1`, `http-core`, `http1`, and
-`websocket-core`; the full validator adds no WebSocket finding to its existing
-73-gap debt gate. A second dependency-blocked child expands the core through
-every established lane after shared HTTP framing and the Java/Kotlin/Dart HTTP
-prerequisites land. Sockets, DNS, TLS, clocks, random mask-key generation,
-event loops, retries, and application dispatch remain native runtime-adapter
-concerns.
+plan selects and builds the complete 13-package prerequisite/downstream closure
+through `websocket-runtime`. Current Rust 1.97 exposed three pre-existing
+Windows-target lint/format points in `iocp`, `transport-platform`, and
+`tcp-runtime`; narrowly documented platform contracts and mechanical
+clamp/formatting updates make the full closure clean without changing behavior.
+The full validator adds no WebSocket finding to its existing 73-gap debt gate.
+A second dependency-blocked child expands the core through every established
+lane after shared HTTP framing and the Java/Kotlin/Dart HTTP prerequisites
+land. Sockets, DNS, TLS, clocks, random mask-key generation, event loops,
+retries, and application dispatch remain native runtime-adapter concerns.
 
 The `c9e4cb2a` refresh adds `websocket-runtime`, a concrete TCP adapter over
 `tcp-client`, `tcp-runtime`, `transport-platform`, OS entropy, and the portable
