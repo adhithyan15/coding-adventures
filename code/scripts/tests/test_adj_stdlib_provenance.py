@@ -721,6 +721,31 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     formula_audit_command=self.formula_audit_command(),
                 )
 
+    def test_formula_execution_rejects_swapped_verified_provenance(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        query_hash = self.registered_bundle_hash(
+            cas_root, manifest_path, "adj.math.arithmetic.ratio.query.v1"
+        )
+        query = provenance._json_object(cas, query_hash, "provenance_bundle")
+        audit = provenance._materialize_formula_audit(
+            cas, query, self.formula_audit_command()
+        )
+        formula_quotes = audit["derivations"][0]["verification"]["formula_quotes"]
+        self.assertGreaterEqual(len(formula_quotes), 2)
+        formula_quotes[0]["provenance"], formula_quotes[1]["provenance"] = (
+            formula_quotes[1]["provenance"],
+            formula_quotes[0]["provenance"],
+        )
+
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError,
+            "formula audit provenance does not match its CAS clause",
+        ):
+            provenance._normalized_formula_evidence(cas, query, audit)
+
     def test_formula_inventory_migration_replaces_the_complete_closure(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             workspace = Path(directory)

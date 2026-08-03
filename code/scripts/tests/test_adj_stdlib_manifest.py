@@ -121,6 +121,8 @@ class AdjStdlibManifestTests(unittest.TestCase):
             query_hash: {
                 "library": self.library.removesuffix(".adj") + ".query.adj",
                 "sources": [{"raw_source_sha256": query_source}],
+                "dependencies": [formula_hash],
+                "execution_witness_sha256s": ["e" * 64],
             },
         }
 
@@ -134,6 +136,31 @@ class AdjStdlibManifestTests(unittest.TestCase):
         )
 
         self.assertEqual(errors, [])
+
+    def test_fully_verified_rejects_formula_bundle_without_witnessed_query(self) -> None:
+        value = valid_manifest(self.library)
+        objective = value["objectives"][0]
+        formula_hash = "a" * 64
+        formula_source = "c" * 64
+        objective["provenance_bundle_hashes"] = [formula_hash]
+        objective["source_cas_hashes"] = [formula_source]
+        objective["status"]["provenance"] = "fully_verified"
+        library_evidence = evidence(self.library, pinned=True)
+        library_evidence["byte_verified"] = True
+
+        errors = manifest_module.validate_manifest(
+            Path("."),
+            value,
+            {self.library: library_evidence},
+            provenance_bundles={
+                formula_hash: {
+                    "library": self.library,
+                    "sources": [{"raw_source_sha256": formula_source}],
+                }
+            },
+        )
+
+        self.assertTrue(any("witness-bearing query companion" in e for e in errors))
 
     def test_rejects_duplicate_ids_and_unknown_prerequisites(self) -> None:
         value = valid_manifest(self.library)

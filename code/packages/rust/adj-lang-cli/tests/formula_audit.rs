@@ -114,3 +114,54 @@ fn formula_audit_rejects_provenance_that_maps_to_multiple_exports() {
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
+
+#[test]
+fn formula_audit_accepts_a_zero_input_constant_formula() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_constant_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    let snapshots = directory.join("snapshots");
+    fs::create_dir_all(&snapshots).expect("create temporary snapshot directory");
+    let source_bytes = b"The answer is 42.";
+    let snapshot = coding_adventures_sha256::sha256_hex(source_bytes);
+    fs::write(snapshots.join(&snapshot), source_bytes).expect("write source snapshot");
+    let program = directory.join("constant.adj");
+    fs::write(
+        &program,
+        format!(
+            "formulabook constants {{\n\
+                 formula answer(seed) = 42\n\
+                   quote \"The answer is 42.\" at 0 snapshot \"{snapshot}\"\n\
+                   source \"The answer is 42.\"\n\
+                   locator \"https://example.test/constant\"\n\
+                   trust authoritative\n\
+             }}\n\
+             ? answer(0)\n"
+        ),
+    )
+    .expect("write constant program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg("--snapshots")
+        .arg(&snapshots)
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value =
+        serde_json::from_slice(&output.stdout).expect("constant audit JSON");
+    let derivation = &audit["derivations"][0];
+    assert_eq!(derivation["export"]["name"], "answer");
+    assert_eq!(derivation["inputs"], serde_json::json!([]));
+    assert_eq!(derivation["verification"]["input_quotes"], serde_json::json!([]));
+    assert_eq!(derivation["verification"]["fully_verified"], true);
+    assert!(audit["imports"].as_array().expect("imports").is_empty());
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}

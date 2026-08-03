@@ -71,7 +71,7 @@
         "export": { "$ref": "#/$defs/formula_reference" },
         "formula_derivation_sha256": { "$ref": "#/$defs/hash" },
         "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
-        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference" }, "minItems": 1, "type": "array" },
+        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference" }, "type": "array" },
         "kind": { "const": "execution_witness" },
         "question": { "$ref": "#/$defs/formula_question_reference" },
         "result": { "$ref": "#/$defs/formula_result" },
@@ -104,7 +104,7 @@
         "contract": { "const": "adj-lang/formula_derivation/v1" },
         "export": { "$ref": "#/$defs/formula_reference" },
         "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
-        "imports": { "items": { "$ref": "#/$defs/formula_import" }, "minItems": 1, "type": "array" },
+        "imports": { "items": { "$ref": "#/$defs/formula_import" }, "type": "array" },
         "kind": { "const": "formula_derivation" },
         "plan": { "$ref": "#/$defs/formula_plan" },
         "question": { "$ref": "#/$defs/formula_question_reference" },
@@ -577,7 +577,6 @@
             "required": ["identity", "quote"],
             "type": "object"
           },
-          "minItems": 1,
           "type": "array"
         },
         "is_query_answer": { "const": true },

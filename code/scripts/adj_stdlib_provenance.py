@@ -1142,6 +1142,48 @@ def _formula_reference(
     }
 
 
+def _formula_clause(cas: Cas, reference: dict[str, Any]) -> dict[str, Any]:
+    bundle = _json_object(cas, reference["bundle_sha256"], "provenance_bundle")
+    matches = [
+        clause
+        for clause in bundle["clauses"]
+        if clause["claim_id"] == reference["claim_id"]
+    ]
+    if len(matches) != 1:
+        raise ProvenanceError("formula reference must resolve to exactly one CAS clause")
+    return matches[0]
+
+
+def _validate_formula_check_binding(
+    cas: Cas,
+    reference: dict[str, Any],
+    provenance: Any,
+    quote_status: Any,
+) -> None:
+    if not isinstance(provenance, dict) or not isinstance(quote_status, dict):
+        raise ProvenanceError("formula audit formula provenance is malformed")
+    clause = _formula_clause(cas, reference)
+    expected_quote = {
+        "byte_len": clause["end"] - clause["start"],
+        "byte_offset": clause["start"],
+        "snapshot_sha256": clause["snapshot_sha256"],
+        "text_sha256": clause["quote_sha256"],
+    }
+    expected_status = {
+        "byte_len": expected_quote["byte_len"],
+        "byte_offset": expected_quote["byte_offset"],
+        "reason": None,
+        "status": "verified",
+    }
+    if (
+        provenance.get("source") != clause["quote"]
+        or provenance.get("locator") != clause["locator"]
+        or provenance.get("quote") != expected_quote
+        or quote_status != expected_status
+    ):
+        raise ProvenanceError("formula audit provenance does not match its CAS clause")
+
+
 def _question_reference(
     cas: Cas, query_bundle: dict[str, Any], question: Any
 ) -> tuple[dict[str, Any], set[str]]:
@@ -1295,8 +1337,9 @@ def _normalized_formula_evidence(
             }:
                 raise ProvenanceError("formula audit formula quote has the wrong schema")
             reference, links = _formula_reference(cas, check["identity"], formula_bundles)
-            if check["quote"].get("status") != "verified":
-                raise ProvenanceError("formula audit formula quote is not verified")
+            _validate_formula_check_binding(
+                cas, reference, check["provenance"], check["quote"]
+            )
             normalized_formula_checks.append(
                 {
                     "identity": reference,

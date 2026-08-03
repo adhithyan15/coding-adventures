@@ -357,6 +357,7 @@ def validate_manifest(
             )
             bundle_hashes = []
         resolved_bundles: list[dict[str, Any]] = []
+        resolved_bundle_pairs: list[tuple[str, dict[str, Any]]] = []
         for bundle_hash in bundle_hashes:
             if not isinstance(bundle_hash, str) or not SHA256_RE.fullmatch(bundle_hash):
                 errors.append(
@@ -383,6 +384,7 @@ def validate_manifest(
                     )
                 elif bundle is not None:
                     resolved_bundles.append(bundle)
+                    resolved_bundle_pairs.append((bundle_hash, bundle))
         if resolved_bundles:
             bundle_sources = {
                 source["raw_source_sha256"]
@@ -408,6 +410,27 @@ def validate_manifest(
                 errors.append(
                     f"{prefix} fully_verified bundles do not cover every listed library"
                 )
+            for library in sorted(expected_libraries):
+                formula_hashes = [
+                    digest
+                    for digest, bundle in resolved_bundle_pairs
+                    if bundle["library"] == library
+                ]
+                query_library = library.removesuffix(".adj") + ".query.adj"
+                witnessed_queries = [
+                    bundle
+                    for _digest, bundle in resolved_bundle_pairs
+                    if bundle["library"] == query_library
+                    and isinstance(bundle.get("execution_witness_sha256s"), list)
+                    and bool(bundle["execution_witness_sha256s"])
+                    and bundle.get("dependencies") == formula_hashes
+                ]
+                if len(formula_hashes) != 1 or not witnessed_queries:
+                    errors.append(
+                        f"{prefix} fully_verified library {library} requires exactly "
+                        "one formula bundle and a witness-bearing query companion "
+                        "that depends on it"
+                    )
         for benchmark_path in item.get("benchmark_paths", []):
             if (
                 not _safe_repo_path(benchmark_path)
