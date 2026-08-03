@@ -106,13 +106,13 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `c840af78` after
-merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PRs
-#9502, #9505, #9506, #9510, #9512, #9514, #9515, #9516, and #9521 changed
-existing packages or learning assets without creating another implementation
-package directory.
+working inventory was regenerated on August 2, 2026 from `4d0a98e0` after
+merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PR
+#9513 added the Rust-only Fronius local integration. PRs #9517, #9520, #9522,
+#9523, and #9524 changed existing packages or learning assets without creating
+another implementation package directory.
 The inventory contains
-1,218 normalized implementation identities across 4,366 established-lane
+1,219 normalized implementation identities across 4,367 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -120,24 +120,25 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 768 | 10,752 |
+| Present in one language | 769 | 10,766 |
 
-The loop must not start by attempting 10,752 singleton ports. It should finish
+The loop must not start by attempting 10,766 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`c840af78378a1597134694e1008c922f4e355f95` is collision-clean at 1,218
-normalized implementation identities, 4,366 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 768 singletons, 573
+`4d0a98e02bec862a5b852329426d01c8996a19c6` is collision-clean at 1,219
+normalized implementation identities, 4,367 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 769 singletons, 574
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The thirteen newest mixed Rust identities are `smart-home-camera-media`,
+The fourteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
 `smart-home-reolink-integration`, `smart-home-roku-ecp-integration`,
 `smart-home-wemo-upnp-integration`, `smart-home-sonos-upnp-integration`,
-`smart-home-nanoleaf-local-integration`, and
-`smart-home-tasmota-local-integration`. All are
+`smart-home-nanoleaf-local-integration`,
+`smart-home-tasmota-local-integration`, and
+`smart-home-fronius-local-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -151,11 +152,11 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, Wemo, Sonos, Nanoleaf, and Tasmota contribute deterministic codecs,
-bounded parsers and DTO validation, normalization, projection, stable
+Roku, Wemo, Sonos, Nanoleaf, Tasmota, and Fronius contribute deterministic
+codecs, bounded parsers and DTO validation, normalization, projection, stable
 identities/errors, command planning, and language-neutral fixtures to the
-parity backlog. Wemo specifically
-contributes SSDP header parsing, bounded setup/SOAP XML, service/device
+parity backlog. Wemo specifically contributes SSDP header parsing, bounded
+setup/SOAP XML, service/device
 normalization, and switch/light command planning. Sonos additionally contributes
 credential-free URL/control-path validation, AVTransport, RenderingControl,
 DIDL metadata normalization, deterministic inspection planning, and
@@ -163,11 +164,12 @@ protocol-neutral media-player projection. Nanoleaf adds credential syntax and
 origin-configuration validation, bounded snapshot/state validation, stable
 identity and capability projection, RGB/HSV and mirek conversion, command
 planning, and verification. Tasmota adds bounded Status 0 JSON validation,
-relay/light/sensor normalization,
-state and capability projection, command planning, color conversion, and
-verification fixtures. UDP multicast, DNS/TCP, LAN HTTP
-execution, timeouts, endpoint approval, CLI I/O, authorization, and runtime
-mutation remain native-host responsibilities.
+relay/light/sensor normalization, state and capability projection, command
+planning, color conversion, and verification fixtures. Fronius adds bounded
+Power Flow and API-status validation, site/inverter measurement normalization,
+and deterministic sensor projection. UDP multicast, DNS/TCP, LAN HTTP execution,
+timeouts, endpoint approval, CLI I/O, authorization, and runtime mutation remain
+native-host responsibilities.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
