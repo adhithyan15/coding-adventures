@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-heos-cli-integration"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "HEOS CLI discovery and read-only player inspection for the smart-home runtime"
+description = "HEOS CLI discovery, player inspection, and change events for the smart-home runtime"
 license = "MIT"
 
 [dependencies]

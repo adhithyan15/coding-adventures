@@ -795,35 +795,50 @@ plugs, switches, and lights:
   over the production transport. This path accepts no cloud credentials and
   does not claim newer authenticated KLAP/Tapo devices.
 
+## Current HEOS Change Event Slice
+
+This slice upgrades the existing read-only HEOS inspection path to local push
+without inventing a media command model prematurely:
+
+- A dedicated bounded TCP connection registers through the documented
+  `system/register_for_change_events` command before collecting unsolicited
+  HEOS JSON frames.
+- Player state, volume, mute, progress, repeat, shuffle, queue, topology, and
+  playback-error events become normalized D23 device events with stable player
+  identity and refresh-required metadata where the protocol sends no payload.
+- D23 subscribe authorization is checked before the event socket opens.
+  Account usernames are excluded from event metadata.
+- A real loopback TCP test proves registration, event framing, parsing, and D23
+  runtime application over the production transport.
+
 ## Smart Home Remaining Work
 
-These items move toward retiring an existing Home Assistant install:
+The remaining backlog is ordered by the strongest executable production path
+and then by prerequisite readiness:
 
-- Continue platform integrations beyond Hue, MQTT, ONVIF, Shelly Gen2/Gen3,
-  WLED, Govee LAN, LIFX LAN, Kasa legacy LAN, authenticated Reolink CGI
-  device/channel/motion inspection, Roku ECP discovery and read-only device/app
-  inspection, Wemo UPnP discovery/state inspection/light-switch control,
-  Sonos UPnP discovery and read-only player-state inspection, Nanoleaf local
-  mDNS discovery, physical-presence token pairing, state inspection, and
-  verified light control, Tasmota native local HTTP discovery, optional
-  authenticated relay/light/sensor inspection, and verified control, Fronius
-  Solar API v1 local discovery and site/inverter power and energy telemetry,
-  HomeWizard Energy API v1 local discovery and device/utility telemetry, HEOS
-  SSDP discovery and read-only CLI player inspection, AirGradient local mDNS
-  identity and environmental telemetry, and the Z-Wave, Zigbee, and Matter
-  runtime adapters: ONVIF PullPoint camera
-  events, RTSP media transfer and recording,
-  Reolink and other vendor-specific camera/NVR media, recording, control, and
-  push-event integrations, authenticated KLAP/Tapo devices and other broader
-  device families, a production Matter
-  commissioning/secure-session/network host, a Thread border-router host, a
-  production Zigbee coordinator/join/security host, and production Z-Wave
-  inclusion and S2.
-- Prioritized follow-ups discovered while delivering the broader-device slices:
-  1. HEOS change-event subscriptions and authorized playback, volume, grouping,
-     and queue controls.
-  2. AirGradient authorized local configuration, LED/display control, and CO2
-     calibration, with cloud-controlled configuration conflicts kept explicit.
+1. Add explicit D23 media command types and capability mappings, then implement
+   authorized HEOS playback, volume, grouping, and queue controls over the
+   existing production TCP host.
+2. Add authorized AirGradient local configuration, LED/display control, and CO2
+   calibration while keeping cloud-controlled configuration conflicts explicit.
+3. Extend authenticated Reolink CGI support with concrete camera/NVR control,
+   media, recording, and push-event operations supported by the current host.
+4. Add another vendor-specific camera or NVR integration where authenticated
+   protocol and transport primitives are concrete.
+5. Add authenticated KLAP/Tapo devices and other broader-device families only
+   after their authentication and session prerequisites are concrete.
+6. Add ONVIF PullPoint events once a concrete event host and subscription
+   lifecycle exist.
+7. Add RTSP media transfer and recording once concrete media transfer and
+   recorder host primitives exist.
+8. Add a production Matter commissioning, secure-session, and network host only
+   after certificate, fabric, Interaction Model encoding, subscription, and
+   transport prerequisites exist.
+9. Add a Thread border-router host only after an actual host transport exists.
+10. Add a production Zigbee coordinator, join, and security host only after
+    concrete coordinator transport and security primitives exist.
+11. Add production Z-Wave inclusion and S2 only after concrete host transport
+    and security primitives exist.
 
 ## End-To-End Definition
 
