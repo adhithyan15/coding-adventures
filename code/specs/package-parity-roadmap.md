@@ -334,6 +334,12 @@ closure dry-run successfully. The full 258-package Lua lane then reaches a
 separate all-node cycle failure in Haskell's whole-manifest token resolver; a
 dependent field-aware resolution owner will distinguish genuine cycles from
 false alias matches and compare the exact edge set with the Go oracle.
+After rebasing this slice onto `93c0a7b6`, the collision-checked inventory has
+1,240 identities and 4,388 implementation slots across 15 established lanes,
+with zero collisions or unknown buckets. Its sole new singleton,
+`smart-home-blue-iris-integration`, is a concrete TCP/TLS and credentialed NVR
+adapter; the state backlog records an excluded native-authority review instead
+of treating that host integration as an all-language portability gap.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

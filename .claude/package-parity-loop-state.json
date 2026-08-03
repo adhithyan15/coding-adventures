@@ -1694,6 +1694,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 479ba6d7 inventory after smart-home-axis-vapix-integration landed as a Rust-only production adapter. The crate performs mDNS discovery, credential-referenced authenticated HTTPS, TLS, endpoint policy, runtime authorization, and concrete network effects, so the package is not an all-language portable target. Review truthful DNS/discovery/connect/TLS/Vault-derived authority and platform evidence; keep bounded VAPIX response validation, identity normalization, stable projection, and request planning in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-blue-iris-native-authority-review",
+      "title": "Review the Blue Iris integration native-authority exception",
+      "status": "pending",
+      "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 45e01cc2 inventory after smart-home-blue-iris-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP/TLS transport, credential challenge-response, Vault-referenced authentication, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Blue Iris JSON validation, stable camera/server projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
     }
   ]
 }
