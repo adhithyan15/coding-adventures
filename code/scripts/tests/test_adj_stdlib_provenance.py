@@ -1597,7 +1597,10 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.poll.side_effect = OSError(6, "injected poll failure")
         job = mock.Mock()
 
-        with self.assertRaisesRegex(OSError, "injected poll failure") as raised:
+        with (
+            mock.patch.object(provenance.os, "killpg", create=True),
+            self.assertRaisesRegex(OSError, "injected poll failure") as raised,
+        ):
             provenance._terminate_process_tree(process, job)
 
         failure = raised.exception.failure
@@ -1895,7 +1898,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         process.stderr.close.assert_not_called()
 
     def test_json_command_pipe_read_failure_fails_closed(self) -> None:
-        process = mock.Mock()
+        process = mock.Mock(pid=404)
         process.wait.return_value = -9
         process.poll.return_value = None
         process.stdout.read.side_effect = [
@@ -1906,6 +1909,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.os, "killpg", create=True),
             self.assertRaisesRegex(
                 provenance.ProvenanceError, "stdout pipe read failed"
             ) as raised,
@@ -1966,7 +1970,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.message, str(raised.exception))
 
     def test_json_command_pipe_read_preserves_poll_failure(self) -> None:
-        process = mock.Mock()
+        process = mock.Mock(pid=404)
         process.wait.return_value = -9
         process.poll.side_effect = [OSError(6, "injected poll failure"), None]
         process.stdout.read.side_effect = OSError(5, "injected stdout read failure")
@@ -1974,6 +1978,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.os, "killpg", create=True),
             self.assertRaisesRegex(
                 provenance.ProvenanceError,
                 "stdout pipe read failed.*process exited -9",
@@ -2001,7 +2006,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.message, str(raised.exception))
 
     def test_json_command_wait_failure_and_retry_are_structured(self) -> None:
-        process = mock.Mock()
+        process = mock.Mock(pid=404)
         process.wait.side_effect = [
             OSError(5, "injected wait failure"),
             OSError(6, "injected wait retry failure"),
@@ -2011,6 +2016,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.os, "killpg", create=True),
             self.assertRaisesRegex(
                 provenance.ProvenanceError, "process wait failed"
             ) as raised,
@@ -2037,7 +2043,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.message, str(raised.exception))
 
     def test_json_command_wait_failure_preserves_retry_timeout(self) -> None:
-        process = mock.Mock()
+        process = mock.Mock(pid=404)
         process.wait.side_effect = [
             OSError(5, "injected wait failure"),
             subprocess.TimeoutExpired(["fixture"], 0.1),
@@ -2047,6 +2053,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.os, "killpg", create=True),
             self.assertRaisesRegex(
                 provenance.ProvenanceError, "process wait failed"
             ) as raised,
@@ -2081,7 +2088,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
         self.assertEqual(failure.message, str(raised.exception))
 
     def test_json_command_timeout_preserves_recovery_wait_timeout(self) -> None:
-        process = mock.Mock()
+        process = mock.Mock(pid=404)
         process.wait.side_effect = [
             subprocess.TimeoutExpired(["fixture"], 0.2),
             subprocess.TimeoutExpired(["fixture"], 0.1),
@@ -2091,6 +2098,7 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
 
         with (
             mock.patch.object(provenance.subprocess, "Popen", return_value=process),
+            mock.patch.object(provenance.os, "killpg", create=True),
             self.assertRaisesRegex(
                 provenance.ProvenanceError, "timed out after 0.2 seconds"
             ) as raised,
