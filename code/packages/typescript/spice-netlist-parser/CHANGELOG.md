@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject MOS model-card `LD` values that are non-finite, negative, or leave a
+  non-positive effective Level-1 channel length, and lower valid values.
 - Reject negative and non-finite MOS model-card `RSH` values and lower valid
   Level-1 sheet resistance instead of silently dropping it.
 - Reject negative and non-finite MOS model-card `RS` values and lower valid

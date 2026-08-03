@@ -15,6 +15,7 @@ import {
   acSweep,
   dcOp,
   dcSweep,
+  defaultMosfetLevel1Params,
   inductorWithInitialCurrent,
   jfet,
   mosfet,
@@ -1229,6 +1230,20 @@ function parseModelCard(fields: readonly string[]): ModelCard {
   ) {
     throw new NetlistParseError("MOSFET L must be finite and positive");
   }
+  const lateralDiffusion = params.get("LD");
+  if (kind === "NMOS" || kind === "PMOS") {
+    const effectiveLength = length ?? defaultMosfetLevel1Params().L;
+    if (
+      lateralDiffusion !== undefined &&
+      (!Number.isFinite(lateralDiffusion) ||
+        lateralDiffusion < 0.0 ||
+        effectiveLength - 2.0 * lateralDiffusion <= 0.0)
+    ) {
+      throw new NetlistParseError(
+        "MOSFET LD must be finite and non-negative with L - 2*LD > 0",
+      );
+    }
+  }
   const saturationCurrent = params.get("IS");
   if (
     (kind === "NMOS" || kind === "PMOS") &&
@@ -1349,6 +1364,7 @@ function isMosfetParam(name: keyof MosfetLevel1Params): boolean {
     "PHI",
     "W",
     "L",
+    "LD",
     "TOX",
     "U0",
     "RD",
