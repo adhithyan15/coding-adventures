@@ -22,18 +22,18 @@ exact upstream commits used for the latest completed audit.
 ## Prioritized Queue
 
 The 2026-08-03 upstream audit at WPT
-`d6c801946a63a6c5fec07c3d476b8b021e5eca34` and html5lib-tests
+`8a26b31d60d0f1831bb1711b7587ac125b8d2bf0` and html5lib-tests
 `224991ec10db04f056a89eed8b0bd8695fd2950e` covered all 1,934 WPT
 tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the in-body non-current end-tag diagnostic slice, 2,001 of those cases
-emit at least one lexer or parser diagnostic and 182 remain uncovered. Another 139
-cases emit diagnostics despite having no legacy `#errors` rows. These are
-reviewed rather than automatically removed: 89 are full-document inputs for
-which the legacy fixtures omit the Standard-required missing-doctype error,
-including the current processing-instruction cases.
+After the specialized in-body heading end-tag diagnostic slice, 2,005 of those
+cases emit at least one lexer or parser diagnostic and 178 remain uncovered.
+Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
+These are reviewed rather than automatically removed: 89 are full-document
+inputs for which the legacy fixtures omit the Standard-required missing-doctype
+error, including the current processing-instruction cases.
 
 The concrete document-shell insertion-mode inventory is complete: missing and
 nonconforming doctypes, duplicate shell tags, body/html boundary errors,
@@ -54,13 +54,14 @@ original mode; synthetic text fragment contexts remain diagnostic-free.
 The in-body "any other end tag" parse error is now reported when implied end
 tags leave the matching open element non-current, including special-element
 scope stops and nested formatting recovery. Remaining in-body work covers
-specialized heading, list-item, paragraph, and adoption-agency branches.
+specialized list-item, paragraph, and adoption-agency branches. Heading end
+tags now report the specialized parse error when no heading is in scope or the
+current heading does not match the token.
 
 Prioritized work items:
 
-1. **In-body insertion mode.** Cover specialized heading, list-item,
-   paragraph, adoption-agency, formatting-reconstruction, and stray-tag
-   diagnostics.
+1. **In-body insertion mode.** Cover specialized list-item, paragraph,
+   adoption-agency, formatting-reconstruction, and stray-tag diagnostics.
 2. **Table, select, and template insertion modes.** Cover foster parenting,
    table scopes, select recovery, and template mode-stack errors. The remaining
    fragment EOF inventory includes fostered-anchor `eof-in-table` rows and
