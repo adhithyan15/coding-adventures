@@ -33,11 +33,11 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Python and TypeScript Berkeley SPICE MOS body-effect validation parity.
+1. Python and TypeScript Berkeley SPICE MOS surface-potential validation parity.
    - Status: current PR completion candidate.
-   - Reject negative and non-finite `GAMMA` values with the shared diagnostic.
-   - Preserve zero and positive body-effect coefficients through canonical
-     Level-1 lowering.
+   - Reject zero, negative, and non-finite `PHI` values with the shared
+     diagnostic.
+   - Preserve positive surface potentials through canonical Level-1 lowering.
 
 ## Completed Slices
 
@@ -4161,11 +4161,18 @@ the Rust, Python, and TypeScript surfaces together.
    - Non-finite `LAMBDA` / `LAM` values are rejected with the shared diagnostic.
    - Finite `LAM` values lower into canonical Level-1 channel modulation.
 
+374. Python and TypeScript Berkeley SPICE MOS body-effect validation parity.
+   - Status: completed in PR 9608.
+   - Negative and non-finite `GAMMA` values are rejected with the shared
+     diagnostic.
+   - Zero and positive body-effect coefficients lower into canonical Level-1
+     parameters.
+
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE MOS core model-card validation parity.
-   - Apply Rust-aligned domains and diagnostics to already lowered `PHI`, `W`,
-     `L`, `IS`, and nominal-temperature fields.
+   - Apply Rust-aligned domains and diagnostics to already lowered `W`, `L`,
+     `IS`, and nominal-temperature fields.
 
 2. Python and TypeScript Berkeley SPICE MOS remaining parameter lowering parity.
    - Lower missing canonical resistance, geometry, capacitance, junction, and

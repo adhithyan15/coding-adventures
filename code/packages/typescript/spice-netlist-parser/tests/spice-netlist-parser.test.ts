@@ -1436,6 +1436,25 @@ Xright c d load
     expect(element.params.GAMMA).toBe(Number(bodyEffect));
   });
 
+  it.each(["0", "-0.01", "1e999"])(
+    "rejects invalid MOSFET model PHI=%s",
+    (surfacePotential) => {
+      expect(() =>
+        parseNetlist(`.model nfast NMOS(PHI=${surfacePotential})\nM1 d g s b nfast\n`),
+      ).toThrow("MOSFET PHI must be finite and positive");
+    },
+  );
+
+  it("lowers positive MOSFET model surface potential", () => {
+    const parsed = parseNetlist(".model nfast NMOS(PHI=0.65)\nM1 d g s b nfast\n");
+    const element = parsed.circuit.elements()[0];
+    expect(element.kind).toBe("mosfet");
+    if (element.kind !== "mosfet") {
+      throw new Error("unexpected element kind");
+    }
+    expect(element.params.PHI).toBe(0.65);
+  });
+
   it("rejects unbalanced waveform parentheses", () => {
     expect(() => parseNetlist("V1 in 0 PULSE(0 1\n")).toThrow("unclosed parenthesis");
   });
