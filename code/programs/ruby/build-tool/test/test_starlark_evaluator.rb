@@ -16,6 +16,8 @@
 
 require_relative "test_helper"
 require_relative "../lib/build_tool/starlark_evaluator"
+require "open3"
+require "rbconfig"
 
 class TestStarlarkEvaluator < Minitest::Test
   include TestHelper
@@ -484,9 +486,37 @@ class TestStarlarkEvaluator < Minitest::Test
   # evaluate_build_file tests
   # ==========================================================================
   #
-  # These tests require the starlark_interpreter gem. We test with simple
-  # Starlark source that sets _targets directly, avoiding the need for
-  # load() and complex rule definitions.
+  # These tests require the repository-local starlark_interpreter runtime.
+  # We test with simple Starlark source that sets _targets directly, avoiding
+  # the need for load() and complex rule definitions.
+
+  def test_bundle_loads_repository_starlark_runtime_without_rubylib
+    gemfile = Pathname(__dir__).parent / "Gemfile"
+    env = {
+      "BUNDLE_GEMFILE" => gemfile.to_s,
+      "HTTP_PROXY" => "http://127.0.0.1:9",
+      "HTTPS_PROXY" => "http://127.0.0.1:9",
+      "RUBYLIB" => nil,
+      "RUBYOPT" => nil
+    }
+    script = 'require "coding_adventures_starlark_interpreter"; ' \
+             'feature = $LOADED_FEATURES.find { |path| ' \
+             'File.basename(path) == "coding_adventures_starlark_interpreter.rb" }; ' \
+             'abort "interpreter feature path missing" unless feature; print feature'
+
+    stdout, stderr, status = Open3.capture3(
+      env,
+      "bundle", "exec", RbConfig.ruby, "-e", script,
+      chdir: gemfile.dirname.to_s
+    )
+
+    assert status.success?, "clean bundle load failed: #{stderr}"
+    expected = (
+      gemfile.dirname / "../../../packages/ruby/starlark_interpreter" /
+      "lib/coding_adventures_starlark_interpreter.rb"
+    ).expand_path
+    assert_equal expected.to_s.tr("\\", "/"), stdout.tr("\\", "/")
+  end
 
   def test_evaluate_build_file_raises_for_missing_file
     assert_raises(RuntimeError) do
@@ -497,15 +527,6 @@ class TestStarlarkEvaluator < Minitest::Test
   end
 
   def test_evaluate_build_file_returns_empty_when_no_targets
-    # This test requires the starlark_interpreter gem. If it's not
-    # installed, we skip rather than fail -- the gem is only available
-    # when the full dependency chain is set up.
-    begin
-      require "coding_adventures_starlark_interpreter"
-    rescue LoadError
-      skip "starlark_interpreter gem not available"
-    end
-
     dir = create_temp_dir
     build_file = dir / "BUILD"
     # A valid Starlark file that doesn't declare any targets.

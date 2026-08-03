@@ -345,6 +345,12 @@ Final parity requires:
 Starlark evaluation MUST NOT read undeclared host files, environment variables,
 network resources, clocks, random sources, or process APIs.
 
+An executable front door that delegates evaluation to repository packages MUST
+declare its complete repository-local runtime closure through its supported
+dependency or bootstrap manifest. A clean source-tree test MUST remove ambient
+language search-path injection, load the evaluator without skipping, and prove
+that build execution does not need network resolution.
+
 ### 7. Build-plan v1
 
 `build-plan-v1.md` remains the interchange schema. Fixtures require:

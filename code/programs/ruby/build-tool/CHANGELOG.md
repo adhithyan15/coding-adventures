@@ -6,6 +6,10 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- The build-tool Gemfile now imports the repository-owned Starlark
+  interpreter's authoritative dependency closure. Clean `bundle exec` source-
+  tree runs load the evaluator without manual `RUBYLIB`, and tests no longer
+  skip when that runtime is unavailable.
 - Lua rockspecs are decoded from raw bytes as strict UTF-8 before dependency
   parsing. Malformed metadata raises a typed `METADATA_INVALID_UTF8` error with
   stable package and repository-relative manifest identity.
