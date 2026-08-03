@@ -6744,6 +6744,7 @@ impl HtmlParser {
                 self.append_implied_element("html");
                 self.append_implied_element("body");
                 self.open_elements.clear();
+                self.document_tail_mode = DocumentTailMode::AfterBody;
             }
             "br" => {
                 self.diagnostics.push(ParserDiagnostic::new(
@@ -33061,6 +33062,18 @@ mod tests {
             (
                 "<!doctype html><body></body></html>text<p>x</p>",
                 "unexpected-token-after-html",
+            ),
+            (
+                "<!doctype html></body><meta>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html></body><title>x</title>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html></body><frameset>",
+                "unexpected-token-after-body",
             ),
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
