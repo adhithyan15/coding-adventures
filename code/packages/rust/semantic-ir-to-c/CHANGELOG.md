@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.36.4 — string interpolation (`"a#{x}b"`)
+
+Filed as its own backlog item ("C backend: support string interpolation").
+The Ruby frontend already lowers `"a#{x}b"` to `Expr::StrConcat { parts }`
+for every backend (Python/TypeScript already had real emit arms; Go/JS/Rust
+reject it with a deferred-node message); the C backend rejected
+`Feature::StringInterpolation` outright — no emitter arm existed at all.
+
+New runtime helper `_sir_display_str(SirValue) -> char*` (plus
+`_sir_display_seq`/`_sir_display_map`/`_sir_display_pair`/
+`_sir_display_float`) renders a value Ruby's `to_s` way into a fresh
+string — a STRING-RETURNING PARALLEL to the existing `puts`/`print`
+`FILE*`-writing `_sir_fmt` family, not a refactor of it, so that
+already-tested path is completely untouched (the two are kept in
+lockstep by inspection: same tag list, same per-tag text, same recursion
+structure and depth cap, so `#{arr}` and `puts arr` always agree).
+
+`Expr::StrConcat`'s emitter arm folds each part through
+`_sir_display_str` and pairwise through `_sir_cat` (which takes exactly
+two operands) into one `_sir_str(...)` — `emit_str_concat` for the
+simple-operand case (inline, mirroring `SeqLit`'s simple path) and
+`emit_str_concat_names` for the compound-operand case (over
+`hoist_operands`-hoisted temps, mirroring `SeqLit`'s hoisted path).
+`Feature::StringInterpolation` added to `ACCEPTED_FEATURES`.
+
+`semantic-ir-to-c` 0.36.3 -> 0.36.4.
+
 ## 0.36.2 — fix: `<<` builtin name collided between C's bitwise shift and Ruby's operator
 
 `variadic_helper`'s `"<<" => "_sir_shift_left"` entry (added when Ruby's

@@ -940,6 +940,21 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
                 let _ = writeln!(out, "{pad}{dst} = _sir_convert({dst}, {bits}, {signed});");
             }
         }
+        // SIR18 string interpolation with a compound part: hoist parts into
+        // temps (preserving left-to-right evaluation order, matching every
+        // other compound-operand form here), then fold them via
+        // `emit_str_concat_names`.
+        Expr::StrConcat { parts, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let ops: Vec<&Expr> = parts.iter().collect();
+            let names = hoist_operands(out, &ops, inner);
+            let _ = write!(out, "{ipad}{dst} = ");
+            emit_str_concat_names(out, &names);
+            out.push_str(";\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
         // SIR16 sequences with a compound operand: hoist operands into temps
         // (preserving left-to-right order), then build/read the sequence.
         Expr::SeqLit { items, .. } => {
@@ -1303,6 +1318,10 @@ fn is_simple(e: &Expr) -> bool {
             .iter()
             .all(|e| is_simple(&e.key) && is_simple(&e.value)),
         Expr::MapGet { map, key, .. } => is_simple(map) && is_simple(key),
+        // SIR18 string interpolation: a `_sir_str(_sir_cat(...))` fold is
+        // simple iff every part is (they render inline as fold operands);
+        // otherwise `emit_assign` hoists them, mirroring `SeqLit`.
+        Expr::StrConcat { parts, .. } => parts.iter().all(is_simple),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,
@@ -1407,8 +1426,66 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, key, indent);
             out.push(')');
         }
+        // SIR18 string interpolation (simple-operand form; a compound part is
+        // hoisted by `emit_assign` via `emit_str_concat_names`).
+        Expr::StrConcat { parts, .. } => emit_str_concat(out, parts, indent),
         other => unreachable!("emit_expr on compound/unsupported node: {other:?}"),
     }
+}
+
+/// SIR18 string interpolation (`"a#{x}b"` -> `Expr::StrConcat { parts }`).
+/// Each part renders through `_sir_display_str` (Ruby's `to_s`-style
+/// display, a string-returning parallel to the `puts`/`print` FILE*-writing
+/// `_sir_fmt` — see the runtime) and the results fold pairwise through
+/// `_sir_cat` (which takes exactly two operands) into one `_sir_str(...)`.
+/// An empty `parts` (`""` with no literal segments — the frontend does not
+/// emit this today, but nothing prevents a hand-built module from it) folds
+/// to the empty string rather than reaching the loop with nothing to fold.
+fn emit_str_concat(out: &mut String, parts: &[Expr], indent: usize) {
+    out.push_str("_sir_str(");
+    if parts.is_empty() {
+        out.push_str("\"\"");
+    } else {
+        for _ in 1..parts.len() {
+            out.push_str("_sir_cat(");
+        }
+        for (i, p) in parts.iter().enumerate() {
+            out.push_str("_sir_display_str(");
+            emit_expr(out, p, indent);
+            out.push(')');
+            if i > 0 {
+                out.push(')');
+            }
+            if i + 1 < parts.len() {
+                out.push_str(", ");
+            }
+        }
+    }
+    out.push(')');
+}
+
+/// Same fold as [`emit_str_concat`], but over already-hoisted temp names —
+/// `emit_assign`'s compound-operand path (mirroring how `SeqLit`/`MapLit`
+/// hoist their own compound operands via `hoist_operands`).
+fn emit_str_concat_names(out: &mut String, names: &[String]) {
+    out.push_str("_sir_str(");
+    if names.is_empty() {
+        out.push_str("\"\"");
+    } else {
+        for _ in 1..names.len() {
+            out.push_str("_sir_cat(");
+        }
+        for (i, n) in names.iter().enumerate() {
+            let _ = write!(out, "_sir_display_str({n})");
+            if i > 0 {
+                out.push(')');
+            }
+            if i + 1 < names.len() {
+                out.push_str(", ");
+            }
+        }
+    }
+    out.push(')');
 }
 
 /// SIR26 integer conversion → the portable `_sir_convert(v, bits, signed)`

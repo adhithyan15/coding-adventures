@@ -191,6 +191,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // CLASS-method resolution.  Names are quoted C string literals (no injection).
     // This completes the C backend's OOP surface (full 6-backend OOP parity).
     Feature::Modules,
+    // `Feature::StringInterpolation` — `"a#{x}b"` lowers to `Expr::StrConcat
+    // { parts }` (the frontend already does this for every backend). Each
+    // part renders through the new `_sir_display_str` runtime helper (a
+    // string-returning parallel to the existing `puts`/`print` FILE*-writing
+    // `_sir_fmt`, not a refactor of it — so that already-tested path is
+    // untouched) and the results are concatenated with `_sir_cat`.
+    Feature::StringInterpolation,
 ];
 
 impl Backend for CBackend {

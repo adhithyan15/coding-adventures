@@ -966,6 +966,111 @@ void _sir_fmt(FILE *out, SirValue v) {
     _sir_fmt_depth--;
 }
 
+/* ---- SIR18 string interpolation: value display AS A STRING -- */
+
+/* `"a#{x}b"` needs each part's Ruby `to_s`-style display rendered into a
+ * fresh string to concatenate, not written to a `FILE*` — so this is a
+ * SEPARATE function from `_sir_fmt` above, not a refactor of it: `_sir_fmt`
+ * backs the already-tested `puts`/`print` path, and duplicating its per-tag
+ * rendering here (into `_sir_cat`-built strings instead of `fputs` calls)
+ * keeps that path completely untouched. The two are kept in lockstep by
+ * inspection — same tag list, same per-tag text, same recursion structure —
+ * so `#{arr}` and `puts arr` always agree. */
+char *_sir_display_str(SirValue v);
+
+char *_sir_display_seq(SirValue v) {
+    char *acc = _sir_dup("[");
+    int64_t i;
+    for (i = 0; i < v.as.seq->len; i++) {
+        if (i) acc = _sir_cat(acc, ", ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.seq->items[i]));
+    }
+    return _sir_cat(acc, "]");
+}
+
+char *_sir_display_map(SirValue v) {
+    char *acc = _sir_dup("{");
+    int64_t i;
+    for (i = 0; i < v.as.map->len; i++) {
+        if (i) acc = _sir_cat(acc, ", ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].key));
+        acc = _sir_cat(acc, ": ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].val));
+    }
+    return _sir_cat(acc, "}");
+}
+
+char *_sir_display_float(double f) {
+    char buf[64];
+    if (f != f)                    return _sir_dup("NaN");
+    if (f == f * 0.5 && f != 0.0)  return _sir_dup(f < 0 ? "-Infinity" : "Infinity");
+    snprintf(buf, sizeof(buf), "%.17g", f);
+    if (!strchr(buf, '.') && !strchr(buf, 'e') && !strchr(buf, 'E') &&
+        !strchr(buf, 'n') && !strchr(buf, 'N')) {
+        size_t L = strlen(buf);
+        if (L + 2 < sizeof(buf)) { buf[L] = '.'; buf[L + 1] = '0'; buf[L + 2] = '\0'; }
+    }
+    return _sir_dup(buf);
+}
+
+char *_sir_display_pair(SirValue v) {
+    SirValue cur = v;
+    char *acc = _sir_dup("(");
+    int first = 1;
+    for (;;) {
+        if (cur.tag == SIR_PAIR) {
+            if (!first) acc = _sir_cat(acc, " ");
+            first = 0;
+            acc = _sir_cat(acc, _sir_display_str(cur.as.pair->car));
+            cur = cur.as.pair->cdr;
+        } else if (cur.tag == SIR_NIL) {
+            break;
+        } else {
+            acc = _sir_cat(acc, " . ");
+            acc = _sir_cat(acc, _sir_display_str(cur));
+            break;
+        }
+    }
+    return _sir_cat(acc, ")");
+}
+
+/* Bounded exactly like `_sir_fmt_depth`/`SIR_MAX_FMT_DEPTH` above — a
+ * self-referential sequence/map (constructible via `SeqSet`/`MapSet`) would
+ * otherwise recurse forever. */
+#define SIR_MAX_DISPLAY_DEPTH 500
+static int _sir_display_depth = 0;
+
+char *_sir_display_str(SirValue v) {
+    char buf[32];
+    char *result;
+    if (_sir_display_depth > SIR_MAX_DISPLAY_DEPTH) return _sir_dup("[...]");
+    _sir_display_depth++;
+    switch (v.tag) {
+        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : "nil"); break;
+        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
+                                                  : (SIR_DISPLAY_RUBY ? "false" : "#f")); break;
+        case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); result = _sir_dup(buf); break;
+        case SIR_FLOAT: result = _sir_display_float(v.as.f); break;
+        case SIR_STR:   result = _sir_dup(v.as.s); break;
+        case SIR_SYM:   result = _sir_dup(v.as.s); break;
+        case SIR_PAIR:  result = _sir_display_pair(v); break;
+        case SIR_SEQ:   result = _sir_display_seq(v); break;
+        case SIR_MAP:   result = _sir_display_map(v); break;
+        case SIR_CLOSURE: result = _sir_dup("#<closure>"); break;
+        case SIR_ERROR:
+            result = (v.as.err->msg.tag == SIR_NIL)
+                ? _sir_dup(v.as.err->sir_class)
+                : _sir_display_str(v.as.err->msg);
+            break;
+        case SIR_INSTANCE:
+            result = _sir_cat(_sir_cat("#<", v.as.inst->sir_class), ">");
+            break;
+        default: result = _sir_dup("");
+    }
+    _sir_display_depth--;
+    return result;
+}
+
 /* ---- SIR17 exceptions (setjmp/longjmp handler stack) -------- */
 
 /* Construct an exception value.  `class` is interned; `msg` is a `SIR_STR` (or
