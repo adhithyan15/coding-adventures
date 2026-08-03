@@ -865,6 +865,10 @@ def _registered_manifest(
     manifest_bytes: bytes,
     registrations: dict[str, str],
     expected_manifest_id: str,
+    *,
+    allow_replacements: bool = False,
+    require_existing: bool = False,
+    expected_current: dict[str, str] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     if not isinstance(registrations, dict) or not registrations:
         raise ProvenanceError("bundle registrations must be a non-empty object")
@@ -913,6 +917,18 @@ def _registered_manifest(
             )
         by_id[bundle_id] = digest
 
+    for bundle_id, expected_digest in (expected_current or {}).items():
+        normalized_id = _require_nonempty(bundle_id, "expected bundle_id")
+        normalized_digest = _require_hash(
+            expected_digest, f"expected current root {normalized_id}"
+        )
+        actual_digest = by_id.get(normalized_id)
+        if actual_digest != normalized_digest:
+            raise ProvenanceError(
+                f"stale root replacement for {normalized_id}: expected "
+                f"{normalized_digest}, found {actual_digest or 'unregistered'}"
+            )
+
     for expected_id, digest_value in registrations.items():
         bundle_id = _require_nonempty(expected_id, "registration bundle_id")
         digest = _require_hash(digest_value, f"registration {bundle_id}")
@@ -923,7 +939,9 @@ def _registered_manifest(
                 f"registration {bundle_id} points to bundle_id {actual_id}"
             )
         previous = by_id.get(bundle_id)
-        if previous is not None and previous != digest:
+        if require_existing and previous is None:
+            raise ProvenanceError(f"cannot replace unregistered bundle_id {bundle_id}")
+        if previous is not None and previous != digest and not allow_replacements:
             raise ProvenanceError(
                 f"refusing to replace registered bundle_id {bundle_id}; "
                 "use an explicit root-replacement migration"
@@ -1144,6 +1162,163 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         if self._baseline_manifest:
             _write_atomic(self.manifest_path, self._baseline_manifest)
         super()._rollback()
+
+
+class BundleRootReplacementTransaction(BundleRegistrationTransaction):
+    """Explicitly replace owned roots and prune only newly unreachable objects."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self._baseline_digests: set[str] = set()
+        self._pruned_digests: list[str] = []
+        self._prune_backup: tempfile.TemporaryDirectory[str] | None = None
+
+    def __enter__(self):
+        super().__enter__()
+        self._baseline_digests = set(self.cas.index)
+        return self
+
+    def _stage_prune(self, digests: set[str]) -> None:
+        backup = tempfile.TemporaryDirectory(prefix="adj-provenance-prune-")
+        backup_root = Path(backup.name)
+        try:
+            for digest in sorted(digests):
+                data = _read_regular_file(self.cas.object_path(digest))
+                if sha256_bytes(data) != digest:
+                    raise ProvenanceError(
+                        f"refusing to prune mismatched CAS object {digest}"
+                    )
+                _write_exclusive(backup_root / digest, data)
+            for digest in sorted(digests):
+                path = self.cas.object_path(digest)
+                _reject_link_components(path)
+                self._pruned_digests.append(digest)
+                path.unlink()
+                try:
+                    path.parent.rmdir()
+                except OSError:
+                    pass
+        except Exception:
+            self._prune_backup = backup
+            self._restore_pruned()
+            raise
+        self._prune_backup = backup
+
+    def _restore_pruned(self) -> None:
+        if self._prune_backup is None:
+            return
+        backup_root = Path(self._prune_backup.name)
+        for digest in self._pruned_digests:
+            destination = self.cas.object_path(digest)
+            if destination.exists():
+                if sha256_bytes(_read_regular_file(destination)) != digest:
+                    raise ProvenanceError(
+                        f"cannot restore over mismatched CAS object {digest}"
+                    )
+                continue
+            _write_exclusive(destination, _read_regular_file(backup_root / digest))
+        self._pruned_digests.clear()
+
+    def commit(self, registrations: dict[str, str]) -> list[str]:
+        del registrations
+        raise ProvenanceError(
+            "root replacement transactions require replace_roots with expected hashes"
+        )
+
+    def replace_roots(self, replacements: dict[str, dict[str, str]]) -> dict[str, Any]:
+        if not self._entered or self._committed:
+            raise ProvenanceError("root replacement transaction is not open")
+        if not isinstance(replacements, dict) or not replacements:
+            raise ProvenanceError("root replacements must be a non-empty object")
+        expected_current: dict[str, str] = {}
+        new_roots: dict[str, str] = {}
+        for bundle_id, replacement in replacements.items():
+            normalized_id = _require_nonempty(bundle_id, "replacement bundle_id")
+            if not isinstance(replacement, dict) or set(replacement) != {
+                "expected_old_sha256",
+                "new_sha256",
+            }:
+                raise ProvenanceError(
+                    f"replacement {normalized_id} must name expected_old_sha256 "
+                    "and new_sha256"
+                )
+            expected_current[normalized_id] = _require_hash(
+                replacement["expected_old_sha256"],
+                f"replacement {normalized_id}.expected_old_sha256",
+            )
+            new_roots[normalized_id] = _require_hash(
+                replacement["new_sha256"],
+                f"replacement {normalized_id}.new_sha256",
+            )
+        manifest, registered = _registered_manifest(
+            self.cas,
+            self._baseline_manifest,
+            new_roots,
+            self.expected_manifest_id,
+            allow_replacements=True,
+            require_existing=True,
+            expected_current=expected_current,
+        )
+        try:
+            self.cas.write_index()
+            with tempfile.TemporaryDirectory(
+                prefix="adj-provenance-candidate-"
+            ) as candidate_directory:
+                candidate_manifest = Path(candidate_directory) / "manifest.json"
+                _write_exclusive(candidate_manifest, canonical_json_bytes(manifest))
+                _validate_repository_unlocked(
+                    self.cas.root,
+                    candidate_manifest,
+                    self.schema_path,
+                    workspace_root=self.workspace_root or self.manifest_path.parent,
+                    formula_inventory_command=self.formula_inventory_command,
+                    _allow_unreferenced=True,
+                )
+            reachable = _reachable(self.cas, registered)
+            unreachable = set(self.cas.index) - reachable
+            staged_strays = unreachable - self._baseline_digests
+            if staged_strays:
+                raise ProvenanceError(
+                    "root replacement staged unreferenced new objects: "
+                    + ", ".join(sorted(staged_strays))
+                )
+            self._stage_prune(unreachable)
+            self.cas.index = {
+                digest: record
+                for digest, record in self.cas.index.items()
+                if digest in reachable
+            }
+            self.cas.write_index()
+            _write_atomic(self.manifest_path, canonical_json_bytes(manifest))
+            _validate_repository_unlocked(
+                self.cas.root,
+                self.manifest_path,
+                self.schema_path,
+                workspace_root=self.workspace_root,
+                formula_inventory_command=self.formula_inventory_command,
+            )
+        except Exception:
+            self._rollback()
+            raise
+        self._committed = True
+        pruned = sorted(unreachable)
+        if self._prune_backup is not None:
+            try:
+                self._prune_backup.cleanup()
+            except OSError:
+                pass
+            self._prune_backup = None
+        return {"bundle_hashes": registered, "pruned_sha256s": pruned}
+
+    def _rollback(self) -> None:
+        self._restore_pruned()
+        super()._rollback()
+        if self._prune_backup is not None:
+            try:
+                self._prune_backup.cleanup()
+            except OSError:
+                pass
+            self._prune_backup = None
 
 
 def _validate_index(cas: Cas) -> None:
@@ -1814,6 +1989,7 @@ def _validate_repository_unlocked(
     schema_path: Path | None = None,
     workspace_root: Path | None = None,
     formula_inventory_command: Sequence[str] | None = None,
+    _allow_unreferenced: bool = False,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -1871,7 +2047,7 @@ def _validate_repository_unlocked(
             )
     reachable = _reachable(cas, normalized_bundles)
     unreferenced = sorted(set(cas.index) - reachable)
-    if unreferenced:
+    if unreferenced and not _allow_unreferenced:
         raise ProvenanceError(f"unreferenced CAS objects: {', '.join(unreferenced)}")
     return {
         "bundles": len(validated),

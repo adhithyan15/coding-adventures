@@ -272,8 +272,10 @@ option mapping, or judge/evaluation failure.
     authoritative readers and every CLI writer. Registration is additive and
     idempotent, preserves unrelated roots, and rolls back newly materialized
     objects and index changes on failure.
-7c. Add an explicit transactional root-replacement migration that validates the
-    replacement graph and prunes only objects unreachable from every new root.
+7c. **Complete:** add an explicit transactional root-replacement migration that
+    compares each expected old root hash before publishing, validates the replacement
+    graph, rejects staged stray objects, preserves shared dependencies, and reports the
+    exact baseline objects pruned because no final root reaches them.
 7d. Add a write-ahead recovery journal for process termination between the
     atomic CAS-index and manifest publications.
 7e. **Complete:** scope native snapshot projection to a named bundle and its
@@ -310,7 +312,8 @@ option mapping, or judge/evaluation failure.
      each formula requires its own enclosing input-IR claim. The isolated bridge is
      schema-checked; current manifest roots remain explicitly unmigrated.
 13b. Migrate parser inventories into every formula-bearing provenance root, add
-     `formula_derivation` and execution-witness objects, then enforce set equality
+     explicit dependency-hash inputs to dependent builders, then add
+     `formula_derivation` and execution-witness objects and enforce set equality
      across parsed exports, replayed derivations, and fully verified query executions.
 
 ### Wave 2: complete K-8 foundations
