@@ -910,6 +910,32 @@ def test_rejects_invalid_diode_series_resistance(value: str) -> None:
         parse_netlist(f".model clamp D(RS={value})")
 
 
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+def test_lowers_diode_junction_potential_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.8)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.8
+
+
+def test_diode_junction_potential_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(PB=0.8 VJ=0.7)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.7
+
+
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_junction_potential(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="diode VJ must be finite and positive"):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
 def test_parse_diode_junction_capacitance_alias() -> None:
     parsed = parse_netlist(
         """

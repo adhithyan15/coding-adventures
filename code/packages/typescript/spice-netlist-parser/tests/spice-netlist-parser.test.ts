@@ -945,6 +945,37 @@ D1 in out clamp
     );
   });
 
+  it.each(["VJ", "PB"])("lowers diode %s junction potential alias", (parameter) => {
+    const parsed = parseNetlist(`.model clamp D(${parameter}=0.8)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      junctionPotential: 0.8,
+    });
+  });
+
+  it("prefers canonical diode VJ over PB", () => {
+    const parsed = parseNetlist(`.model clamp D(PB=0.8 VJ=0.7)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      junctionPotential: 0.7,
+    });
+  });
+
+  it.each([
+    ["VJ", "0"],
+    ["VJ", "-0.1"],
+    ["VJ", "1e999"],
+    ["PB", "0"],
+    ["PB", "-0.1"],
+    ["PB", "1e999"],
+  ])("rejects invalid diode %s junction potential %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode VJ must be finite and positive",
+    );
+  });
+
   it("parses BJT models into operating-point circuits", () => {
     const parsed = parseNetlist(`
 .model fast NPN(IS=1e-14 BF=120 VT=25m CJE=2p CJC=3p TF=4n TR=5n)

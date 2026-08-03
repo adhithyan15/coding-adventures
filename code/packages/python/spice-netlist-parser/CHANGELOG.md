@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate and lower diode model-card `VJ` / `PB` junction potential.
 - Validate and lower finite, non-negative diode model-card `RS` series resistance.
 - Validate positive finite diode model-card `IBV` breakdown current.
 - Validate positive finite diode model-card `BV` breakdown voltage.

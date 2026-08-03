@@ -1274,6 +1274,7 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 "CJO", model.params.get("CJ", model.params.get("CJ0", 0.0))
             ),
             Tt=model.params.get("TT", 0.0),
+            Vj=model.params.get("VJ", model.params.get("PB", 1.0)),
             Rs=model.params.get("RS", 0.0),
         )
     if prefix == "Q":
@@ -1963,6 +1964,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(series_resistance) or series_resistance < 0.0
         ):
             raise NetlistParseError("diode RS must be finite and non-negative")
+        junction_potential = params.get("VJ", params.get("PB"))
+        if junction_potential is not None and (
+            not math.isfinite(junction_potential) or junction_potential <= 0.0
+        ):
+            raise NetlistParseError("diode VJ must be finite and positive")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (
