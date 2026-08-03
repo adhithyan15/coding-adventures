@@ -128,12 +128,138 @@ defmodule CodingAdventures.ZstdTest do
       "300KB repetitive text: compressed #{byte_size(compressed)}, expected < #{threshold}"
   end
 
-  # ── TC-9: bad magic → {:error, _} ───────────────────────────────────────────
+  # ── TC-9: Cross-language / interoperability (real `zstd` CLI) ──────────────
+  #
+  # code/specs/CMP07-zstd.md designates TC-9 as cross-implementation
+  # round-trip against the real `zstd` CLI, in BOTH directions:
+  #
+  #   1. Compress with `Zstd.compress/1`, decompress with `zstd -d`.
+  #   2. Compress with `zstd`, decompress with `Zstd.decompress/1`.
+  #
+  # This is the ONLY kind of test that can catch a systematic, symmetric
+  # protocol deviation: a same-codebase round-trip test (`rt/1` above) is
+  # necessary but never sufficient, because if the encoder and decoder agree
+  # with each other on a WRONG convention, every internal round-trip still
+  # passes. That is exactly what happened here — three compounding bugs in
+  # the FSE sequences-section codec (a fabricated two-pass symbol-table
+  # spread, a wrong per-sequence field order, and an unconditional final
+  # state-transition flush that should have been skipped for the block's
+  # last sequence) survived undetected because this package had no
+  # independent, spec-conformant interop check. See lessons.md Lesson 96.
+  #
+  # `previously_broken_fse_repro/0` below is the minimal case from that bug
+  # report (`compress("ababababab" * 3)`, one sequence: ll=2, ml=28,
+  # offset=2) — it alone is enough to reproduce the "Data corruption
+  # detected" failure against a pre-fix build of this codec.
+  #
+  # Skipped (not failed) when the `zstd` binary isn't on PATH, since CI/dev
+  # environments vary — mirrors the approach taken in the java/zstd and
+  # rust/zstd ports of this same test.
+  #
+  # Repeat-offset inputs (where the SAME 8-byte pattern recurs at a FIXED
+  # distance) are deliberately avoided here: per code/specs/CMP07-zstd.md's
+  # "Educational Simplification" note, this implementation's decoder does
+  # not resolve the real zstd Repeat_Offset_1/2/3 mechanism, so a frame the
+  # real `zstd` CLI compresses USING repeat-offset shortcuts cannot be
+  # decoded by `Zstd.decompress/1` — that is a pre-existing, spec-documented
+  # limitation shared by every language port in this repo, not part of the
+  # FSE-codec bug this test targets.
+
+  defp zstd_cli_available? do
+    case System.cmd("zstd", ["--version"], stderr_to_stdout: true) do
+      {_, 0} -> true
+      _ -> false
+    end
+  rescue
+    ErlangError -> false
+  end
+
+  defp previously_broken_fse_repro, do: String.duplicate("ababababab", 3)
+
+  # Unique, hard-to-predict temp-file name: mixes a monotonic counter (for
+  # human-readable ordering) with 8 bytes of CSPRNG output, so a co-resident
+  # local user can't pre-guess the path and race it with a symlink between
+  # our File.write!/2 and the `zstd` CLI's read (or vice versa). This is
+  # belt-and-suspenders for test-only temp files with no sensitive content —
+  # not a defense against a privileged attacker.
+  defp unique_tmp_name(prefix) do
+    counter = :erlang.unique_integer([:positive])
+    rand = :crypto.strong_rand_bytes(8) |> Base.encode16(case: :lower)
+    "#{prefix}-#{counter}-#{rand}"
+  end
+
+  @tag :cli_interop
+  test "TC-9: CLI interoperability — compress ours, decompress with real `zstd -d`" do
+    if zstd_cli_available?() do
+      for input <- [
+            previously_broken_fse_repro(),
+            String.duplicate("the quick brown fox jumps over the lazy dog ", 25),
+            # ~9 KB of a repeating 6-byte cycle: comfortably pushes the
+            # single-block sequence count past 128, the exact boundary where
+            # Number_of_Sequences switches from its 1-byte to 2-byte wire
+            # form (RFC 8878 §3.1.1.3.1) — regression coverage for the
+            # sequence-count byte-order bug noted elsewhere in this file.
+            String.duplicate("ABCDEF", 1500) |> binary_part(0, 9000)
+          ] do
+        compressed = Zstd.compress(input)
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique_tmp_name("ex-zstd-tc9")}.zst")
+        File.write!(tmp_zst, compressed)
+
+        try do
+          {output, exit_code} = System.cmd("zstd", ["-d", "-q", "-c", tmp_zst], stderr_to_stdout: true)
+          assert exit_code == 0,
+            "real `zstd -d` failed to decode our compressed output (#{byte_size(input)} bytes): #{output}"
+          assert output == input,
+            "real `zstd -d` decoded our output but got different bytes back"
+        after
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping TC-9 interop test")
+    end
+  end
+
+  @tag :cli_interop
+  test "TC-9: CLI interoperability — compress with real `zstd`, decompress ours" do
+    if zstd_cli_available?() do
+      for input <- [
+            previously_broken_fse_repro(),
+            String.duplicate("the quick brown fox jumps over the lazy dog ", 25),
+            String.duplicate("ABCDEF", 1500) |> binary_part(0, 9000)
+          ] do
+        unique = unique_tmp_name("ex-zstd-tc9")
+        tmp_txt = Path.join(System.tmp_dir!(), "#{unique}.txt")
+        tmp_zst = Path.join(System.tmp_dir!(), "#{unique}.zst")
+        File.write!(tmp_txt, input)
+
+        try do
+          {_output, exit_code} = System.cmd("zstd", ["-q", "-f", "-o", tmp_zst, tmp_txt], stderr_to_stdout: true)
+          assert exit_code == 0, "real `zstd` CLI failed to compress the test input"
+
+          cli_compressed = File.read!(tmp_zst)
+          assert {:ok, ^input} = Zstd.decompress(cli_compressed),
+            "our decompress/1 failed to decode real `zstd`'s compressed output (#{byte_size(input)} bytes)"
+        after
+          File.rm(tmp_txt)
+          File.rm(tmp_zst)
+        end
+      end
+    else
+      IO.puts(:stderr, "zstd CLI not found on PATH — skipping TC-9 interop test")
+    end
+  end
+
+  # ── Error handling: bad magic → {:error, _} ─────────────────────────────────
   #
   # Any input that does not start with the ZStd magic 0xFD2FB528 must return
   # {:error, _}. We test several common cases.
+  #
+  # (Not one of the spec's 10 mandatory TCs — TC-9 is Cross-language /
+  # interoperability, above. An earlier revision of this file mislabelled
+  # this test "TC-9", which collided with the spec's numbering.)
 
-  test "TC-9: bad magic returns error" do
+  test "bad magic returns error" do
     assert {:error, msg} = Zstd.decompress("not a zstd frame")
     assert String.contains?(msg, "bad magic") or String.contains?(msg, "frame too short")
 
