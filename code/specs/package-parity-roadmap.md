@@ -106,13 +106,11 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 2, 2026 from `4d0a98e0` after
-merged PR #9498 added the mixed Rust Tasmota local HTTP identity. Merged PR
-#9513 added the Rust-only Fronius local integration. PRs #9517, #9520, #9522,
-#9523, and #9524 changed existing packages or learning assets without creating
-another implementation package directory.
-The inventory contains
-1,219 normalized implementation identities across 4,367 established-lane
+working inventory was regenerated on August 2, 2026 from `80612eb7` after
+merged PR #9539 added the mixed Rust HEOS read-only integration and merged PR
+#9537 completed the Swift build-tool UTF-8 slice without creating another
+implementation package directory. The inventory contains
+1,221 normalized implementation identities across 4,369 established-lane
 package slots and found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -120,17 +118,17 @@ package slots and found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 172 | 271 |
 | Present in 5-9 languages | 121 | 911 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 770 | 10,780 |
+| Present in one language | 771 | 10,794 |
 
 The loop must not start by attempting 10,780 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
 
 The current working inventory on
-`613717e22fe7b65c37eebb35a84a5b440a55ddb1` is collision-clean at 1,220
-normalized implementation identities, 4,368 implementation slots, 172
-high-consensus packages, 271 high-consensus missing slots, 770 singletons, 575
+`80612eb7ba39d864c5ffa27f2cb3ae78e92705c1` is collision-clean at 1,221
+normalized implementation identities, 4,369 implementation slots, 172
+high-consensus packages, 271 high-consensus missing slots, 771 singletons, 576
 Rust singletons, zero canonical collisions, and zero unknown language buckets.
-The fifteen newest mixed Rust identities are `smart-home-camera-media`,
+The sixteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
@@ -139,7 +137,8 @@ The fifteen newest mixed Rust identities are `smart-home-camera-media`,
 `smart-home-nanoleaf-local-integration`,
 `smart-home-tasmota-local-integration`, and
 `smart-home-fronius-local-integration`, plus
-`smart-home-homewizard-energy-integration`. All are
+`smart-home-homewizard-energy-integration`, plus
+`smart-home-heos-cli-integration`. All are
 mixed splits rather than blind parity ports: camera grant policy,
 generation-bound lease state, quotas, and redacted audit are portable, while
 authenticated host context and media delivery remain native mediation; ONVIF
@@ -153,7 +152,7 @@ WLED DTO validation, master/segment projection, capability-bit interpretation,
 state normalization, and command planning are portable, while mDNS, DNS/TCP,
 plaintext LAN HTTP, trusted time, console I/O, pairing/origin policy, runtime
 effects, and capability profiles remain native. Govee, LIFX, Kasa, Reolink,
-Roku, Wemo, Sonos, Nanoleaf, Tasmota, Fronius, and HomeWizard contribute
+Roku, Wemo, Sonos, Nanoleaf, Tasmota, Fronius, HomeWizard, and HEOS contribute
 deterministic codecs, bounded parsers and DTO validation, normalization,
 projection, stable identities/errors, command planning, and language-neutral
 fixtures to the parity backlog. Wemo specifically contributes SSDP header
@@ -169,7 +168,10 @@ planning, and verification. Tasmota adds bounded Status 0 JSON validation,
 relay/light/sensor normalization, state and capability projection, command
 planning, color conversion, and verification fixtures. Fronius adds bounded
 Power Flow and API-status validation, site/inverter measurement normalization,
-and deterministic sensor projection. UDP multicast, DNS/TCP, LAN HTTP execution,
+and deterministic sensor projection. HEOS adds bounded command-result and
+response-envelope validation, player/now-playing/volume/mute normalization,
+HEOS escaping, stable identities/errors, and deterministic read-only media
+projection. UDP multicast, DNS/TCP, LAN HTTP and HEOS TCP execution,
 timeouts, endpoint approval, CLI I/O, authorization, and runtime mutation remain
 native-host responsibilities.
 
