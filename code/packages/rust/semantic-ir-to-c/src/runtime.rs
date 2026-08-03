@@ -2559,6 +2559,102 @@ static uint64_t _sir_i64_abs_u(int64_t n) {
     return (n < 0) ? (uint64_t)0 - (uint64_t)n : (uint64_t)n;
 }
 
+/* Extracts a `round(ndigits)` argument as a plain `int64_t`, WITHOUT going
+ * through `_sir_as_int`'s bare `(int64_t)v.as.f` cast (UB for a non-finite
+ * or out-of-range Float -- see `_sir_f64_to_i64_saturating`'s doc comment
+ * above). A hostile NaN/Infinity argument saturates to 0/`INT64_MAX`/
+ * `INT64_MIN` instead, each of which the bounds checks in
+ * `_sir_num_round_ndigits` below turn into a safe, harmless outcome. */
+static int64_t _sir_round_ndigits_arg(SirValue v) {
+    if (v.tag == SIR_INT) return v.as.i;
+    if (v.tag == SIR_FLOAT) return _sir_f64_to_i64_saturating(v.as.f);
+    return 0;
+}
+
+/* Ten-to-the-`k` as a `uint64_t`. Every caller below only ever passes `k` in
+   `0..=18` (each checks a "dwarfs the value" bound first), so this never
+   approaches `UINT64_MAX` (~1.8e19) -- the largest value returned is 10^18,
+   comfortably inside both `uint64_t` and `int64_t` range. */
+static uint64_t _sir_pow10_u(int k) {
+    uint64_t r = 1;
+    while (k-- > 0) r *= 10;
+    return r;
+}
+
+/* `round(ndigits)` -- the multi-digit form. Ruby dispatches on BOTH the
+ * receiver's own type and the sign of `ndigits`:
+ *
+ *   Integer, ndigits >= 0  -> receiver unchanged (already exact at any
+ *                             decimal place an Integer could round to)
+ *   Integer, ndigits <  0  -> round to the nearest 10^(-ndigits), e.g.
+ *                             1234.round(-2) == 1200
+ *   Float,   ndigits >  0  -> round to `ndigits` decimal places, stays a
+ *                             Float, e.g. 3.14159.round(2) == 3.14
+ *   Float,   ndigits <= 0  -> round to the nearest 10^(-ndigits) and
+ *                             CONVERT to an Integer, e.g.
+ *                             1234.5.round(-2) == 1200 (Integer, not Float)
+ *
+ * Magnitude caps keep every path inside `int64_t`/`double` range without a
+ * bignum, mirroring `_sir_num_digits`'s "no separate DoS cap needed"
+ * reasoning:
+ *   - Integer negative-`ndigits` path: `|recv|` is always < 10^19 (an
+ *     `int64_t` magnitude has at most 19 decimal digits), so once the
+ *     rounding place reaches 10^19 the result is unconditionally 0 --
+ *     capped at `-ndigits >= 19` rather than computed per-receiver, and
+ *     kept to a `factor` of at most 10^18 so a carry from rounding up
+ *     (e.g. `9223372036854775807.round(-1)`, which would need one MORE
+ *     digit than `int64_t` holds) is caught by the explicit saturating
+ *     check below rather than silently wrapping.
+ *   - Float paths (either sign of `ndigits`): capped at the ~17
+ *     significant decimal digits a `double` can actually represent --
+ *     beyond that, rounding is meaningless (the receiver is already exact
+ *     at that many digits, or precision was lost upstream of this call),
+ *     so the receiver is returned unchanged / dwarfed to 0 rather than
+ *     manufacturing false precision or calling `pow()` with a wild
+ *     exponent.
+ */
+static SirValue _sir_num_round_ndigits(SirValue recv, int64_t ndigits) {
+    if (recv.tag == SIR_INT) {
+        uint64_t k, factor, mag, q, rem, result;
+        int neg;
+        if (ndigits >= 0) return recv;
+        k = _sir_i64_abs_u(ndigits);
+        if (k >= 19) return _sir_int(0);
+        factor = _sir_pow10_u((int)k);
+        mag = _sir_i64_abs_u(recv.as.i);
+        q = mag / factor;
+        rem = mag % factor;
+        if (rem >= factor - rem) q += 1;  /* half-away-from-zero; no `rem*2` overflow */
+        result = q * factor;
+        neg = recv.as.i < 0;
+        if (neg) {
+            if (result >= (uint64_t)INT64_MAX + 1u) return _sir_int(INT64_MIN);
+            return _sir_int(-(int64_t)result);
+        }
+        if (result > (uint64_t)INT64_MAX) return _sir_int(INT64_MAX);
+        return _sir_int((int64_t)result);
+    }
+    if (recv.tag == SIR_FLOAT) {
+        double f = recv.as.f, factor, scaled, r;
+        if (ndigits > 0) {
+            if (ndigits > 17) return recv;
+            factor = pow(10.0, (double)ndigits);
+            scaled = f * factor;
+            r = (scaled >= 0.0) ? floor(scaled + 0.5) : ceil(scaled - 0.5);
+            return _sir_float(r / factor);
+        }
+        {
+            int64_t k = -ndigits;
+            if (k > 18) return _sir_int(0);
+            factor = pow(10.0, (double)k);
+            scaled = f / factor;
+            r = (scaled >= 0.0) ? floor(scaled + 0.5) : ceil(scaled - 0.5);
+            return _sir_int(_sir_f64_to_i64_saturating(r * factor));
+        }
+    }
+    return recv;
+}
+
 static SirValue _sir_num_gcd(SirValue recv, SirValue other) {
     uint64_t a = _sir_i64_abs_u(_sir_as_int(recv));
     uint64_t b = _sir_i64_abs_u(_sir_as_int(other));
@@ -3061,6 +3157,8 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (_sir_is_num(recv)) return _sir_num_ceil(recv);
     } else if (strcmp(m, "round") == 0) {
         if (_sir_is_num(recv) && argc == 0) return _sir_num_round(recv);
+        if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
+            return _sir_num_round_ndigits(recv, _sir_round_ndigits_arg(args[0]));
     } else if (strcmp(m, "divmod") == 0) {
         if (_sir_is_num(recv) && argc == 1 && _sir_is_num(args[0]))
             return _sir_num_divmod(recv, args[0]);
