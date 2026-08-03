@@ -11,7 +11,11 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9806,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9806",
+    "branch": "codex/build-tool-haskell-remaining-field-aware-manifest-resolution"
+  },
   "last_inventory": {
     "revision": "bd73c3f160c2ccc0640577ae57ff39cc7d3149b3",
     "schema_version": 3,
@@ -397,10 +401,10 @@
     {
       "id": "build-tool-haskell-remaining-field-aware-manifest-resolution",
       "title": "Make Haskell Cabal manifest resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-haskell-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-remaining-field-aware-manifest-resolution",
-      "pr_number": null,
+      "pr_number": 9806,
       "notes": "Discovered while validating the Lua field-aware resolver slice. The repaired Lua lane is acyclic and exactly matches the Go oracle, but a real --language haskell --force --dry-run --validate-build-files run still reached graph scheduling and marked all 205 Haskell packages failed because the generic non-Lua whole-manifest tokenizer remained active. Selected immediately after PR #9777 merged because it is the direct unblocked child with an exact real-lane failure and extends the same Haskell engine without switching toolchains. The post-merge d640805a collision-checked inventory remained unchanged at 1,243 identities and 4,391 slots across 15 established lanes, 172 high-consensus packages with 271 missing slots, 793 singletons, 598 Rust singletons, and zero collisions or unknown buckets. A complete Go-oracle comparison found 486 canonical edges, zero missing edges, and 43 Haskell-only false edges, all caused by whole-file Cabal tokenization. This dependency-shaped slice now reads only build-depends fields and indented comma continuations across Cabal stanzas, ignores comments and non-authoritative fields, consumes a language-neutral field-boundary fixture, resolves the real 205-package Haskell lane with zero failures, and matches the Go oracle exactly at 486 edges. The generic reader remains reachable for other ecosystems, so the dependent build-tool-haskell-non-cabal-field-aware-manifest-resolution item was logged and reprioritized separately instead of widening this Cabal repair. Final validation passes the changed 17-example Haskell build-tool suite under -Wall -Werror, all 24 build-tool/graph/downstream examples, Cabal check, focused Haddock generation with existing documentation/link warnings only, and 36% top-level, 43% alternative, and 48% expression coverage. The 42-case/84-file language-neutral corpus and all 40 conformance-runner tests pass. Canonical Go test, vet, and trimpath build pass; both engines dry-run all 205 Haskell packages with zero failures, and Go validates all 44 Starlark BUILD files. Cabal outdated reports only containers 0.8 and time 1.16.0.1 beyond declared upper bounds; HLint, Fourmolu, and OSV Scanner are unavailable. State/dependency validation, git diff --check, direct security review, and the changed-diff credential scan are clean; no dependency or authority surface was added. After rebasing through 8967ff8c, the collision-checked refresh reports 1,245 identities and 4,398 slots, 173 high-consensus packages with 272 missing slots, 795 singletons, 600 Rust singletons, and zero collisions or unknown buckets. Java/Kotlin/F# ZIP and Java/Kotlin ZStd fill existing identities; ZStd is complete across all 15 lanes and ZIP now spans 12. The two new Rust identities are classified under excluded native-authority reviews, and the later ZStd conformance/dependency updates add no identity or Cabal graph drift, so none displace this exact Cabal repair."
     },
     {
