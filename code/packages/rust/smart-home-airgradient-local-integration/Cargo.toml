@@ -1,8 +1,8 @@
 [package]
 name = "smart-home-airgradient-local-integration"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "AirGradient local monitor telemetry and control integration for the smart-home runtime"
+description = "AirGradient local monitor telemetry and typed configuration integration for the smart-home runtime"
 license = "MIT"
 
 [dependencies]

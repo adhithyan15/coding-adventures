@@ -45368,7 +45368,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "airgradient",
             "AirGradient",
-            "Local AirGradient monitor telemetry, indicator/display control, and CO2 calibration.",
+            "Local AirGradient telemetry, indicator/display control, calibration, and typed non-credential configuration.",
             IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
             ImplementationStatus::FirstPartyRuntime,
@@ -45376,7 +45376,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "airgradient",
         )
         .with_capabilities(&["smart_home.read", "smart_home.command.device"])
-        .with_entities(&[EntityKind::Sensor, EntityKind::Light])
+        .with_entities(&[EntityKind::Sensor, EntityKind::Light, EntityKind::Input])
         .with_discovery(&[DiscoveryMechanism::Mdns, DiscoveryMechanism::Manual])
         .with_auth(&[AuthMode::None])
         .with_protocols(vec![ProtocolFamily::Vendor(
@@ -45395,7 +45395,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         ])
         .with_notes(&[
             "Cloud-only configuration is rejected locally; dual local/cloud control returns an explicit overwrite warning.",
-            "Advanced AirGradient configuration fields remain separate typed work, especially credential-bearing MQTT settings and correction profiles.",
+            "Typed local settings validate documented ranges and sensor-specific correction algorithms before transport I/O.",
+            "Credential-bearing MQTT and custom HTTP destinations remain blocked on Vault leasing and destination policy.",
         ]),
         energy_entry(
             "tesla_powerwall",
@@ -81268,6 +81269,7 @@ mod tests {
                 CapabilityId::trusted("smart_home.command.device")
             ]
         );
+        assert!(airgradient.target_entity_kinds.contains(&EntityKind::Input));
         for primitive in [
             PrimitiveFamily::Mdns,
             PrimitiveFamily::LocalHttp,

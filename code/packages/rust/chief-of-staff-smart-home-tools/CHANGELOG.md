@@ -7,6 +7,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Expose labels for typed non-credential device-configuration commands.
+
 - Added explicit labels and argument conversion for D23 media playback,
   volume, grouping, and queue commands.
 - Added `udp_multicast` discovery, `lan_udp` transport, and LAN UDP topology
