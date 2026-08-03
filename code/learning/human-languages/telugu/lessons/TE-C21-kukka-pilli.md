@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TE-C21-kukka-pilli
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 490
 chapter: 21
 type: word
 headword: కుక్క, పిల్లి
@@ -9,19 +12,33 @@ prerequisites: [TE-C20-padakondu-iravai]
 sounds: [telugu-geminate-kk, telugu-geminate-ll]
 roots: [uncertain-kukka, dravidian-pillu-cat]
 etymology_hook: "కుక్క (kukka, 'dog') genuinely breaks from Kannada/Malayalam/Tamil's shared naayi root — debated between an onomatopoeic origin (imitating a bark) and a Sanskrit loan (कुक्कुर, kukkura); పిల్లి (pilli, 'cat') is Proto-Dravidian *pillV, and most likely closes this WHOLE arc's cat-word loop — the probable Dravidian source Sanskrit borrowed as बिडाल (biḍāla), giving Hindi's बिल्ली (billī)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02]
+introduces:
+  knowledge: [TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02]
+practises:
+  knowledge: [TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02, TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TE-C20-padakondu-iravai]
 ---
 
 # కుక్క, పిల్లి — the odd one out, and the word that most likely closes the loop
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02] -->
 
 [PAUSE 2s] Kannada just gave you a rock-solid native dog-word. Telugu breaks
 from that pattern — but its cat-word may be the single most important word
 in this whole arc.
 
-## కుక్క — genuinely the odd one out
+## The word, taken apart - కుక్క — genuinely the odd one out
+<!-- hl-knowledge: introduces=[TE-ETYMON-C21-KUKKA-PILLI-01]; assesses=[] -->
 
 **కుక్క** (*kukka*, "**dog**") does **not** clearly continue the same
 **నాయి**-family root shared by Kannada, Malayalam, and Tamil. Its origin is
@@ -31,7 +48,8 @@ the sound of a bark; others propose a borrowing from **Sanskrit**
 settled — but either way, Telugu's everyday dog-word genuinely doesn't
 match its closest cousins.
 
-## పిల్లి — most likely closing the whole arc's loop
+## The word, taken apart - పిల్లి — most likely closing the whole arc's loop
+<!-- hl-knowledge: introduces=[TE-ETYMON-C21-KUKKA-PILLI-02]; assesses=[] -->
 
 **పిల్లి** (*pilli*, "**cat**") is a real, documented **Proto-Dravidian**
 root, ***\*pillV*** — with cognates surviving as **rarer, alternate** words
@@ -45,12 +63,14 @@ tying together Latin's *cattus*/Arabic's *qiṭṭ* story on one side and
 Hindi's *billī* story on the other, all within this single course.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02, TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kukka" — dog, genuinely different from its Dravidian cousins]
 - [YOU SAY: "pilli" — cat, most likely the source behind Hindi's billī]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-ETYMON-C20-PADAKONDU-IRAVAI-01, TE-ETYMON-C20-PADAKONDU-IRAVAI-02, TE-ETYMON-C21-KUKKA-PILLI-01, TE-ETYMON-C21-KUKKA-PILLI-02] -->
 
 [PAUSE 3s] Does **కుక్క** continue the same root as Kannada's *nāyi*? (**No**
 — genuinely different, debated between onomatopoeia and a Sanskrit loan.)

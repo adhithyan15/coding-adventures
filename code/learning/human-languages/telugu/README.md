@@ -45,6 +45,12 @@ book.
 - **Chapter 5 — First Verbs** ([`lessons/TE-C05-*`](./lessons/)): māṭlāḍu, **nēnu
   telugu māṭlāḍatānu**, uṇḍu, pani cēyu, practice. Stem + tense + person; no
   1st-person gender. In the book.
+- **Chapters 6–31 — Cases, numbers, courtesy, calendar, family, body, food,
+  time, weather, animals, colours, and greetings**
+  ([`lessons/TE-C{06..31}-*`](./lessons/)): thirty prerequisite-ordered
+  micro-lessons continue the same inline script, grammar, and etymology method.
+  All are schema v2, stay below five minutes, and generate twenty-six book
+  chapters from the exact canonical sources consumed by Language Ladder.
 
 ## Book / fonts
 
@@ -59,4 +65,6 @@ and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
   · [`book/`](./book/)
 
 Lessons are slug-named (e.g. `TE-C01-namaskaram`); order lives in the book and
-`session-map.md`.
+canonical prerequisite metadata. The roadmap and authoritative session map
+currently stop before the full Chapter 31 sequence; that explicit metadata debt
+is tracked as `HL-M02` in the shared backlog.

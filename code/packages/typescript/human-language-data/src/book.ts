@@ -12,12 +12,16 @@ export interface BookGenerationTarget {
   unicodeScript?: string;
   /** LaTeX command name, without the leading backslash, used for those runs. */
   scriptCommand?: string;
+  /** Multiple script/font mappings for lessons that compare writing systems inline. */
+  inlineScripts?: InlineRenderOptions[];
 }
 
 export interface InlineRenderOptions {
   unicodeScript: string;
   scriptCommand: string;
 }
+
+type InlineRenderOptionsInput = InlineRenderOptions | readonly InlineRenderOptions[];
 
 export interface GeneratedBookChapter {
   tex: string;
@@ -54,25 +58,39 @@ function escapeLatexCharacter(character: string): string {
   return escaped[character] ?? character;
 }
 
-function scriptMatcher(options: InlineRenderOptions | undefined): RegExp | undefined {
-  if (!options) return undefined;
-  if (!/^[A-Za-z_]+$/.test(options.unicodeScript)) {
-    throw new Error(`invalid Unicode script '${options.unicodeScript}'`);
-  }
-  if (!/^[A-Za-z@]+$/.test(options.scriptCommand)) {
-    throw new Error(`invalid LaTeX script command '${options.scriptCommand}'`);
-  }
-  return new RegExp(`^\\p{Script_Extensions=${options.unicodeScript}}$`, "u");
+function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
+  matcher: RegExp;
+  scriptCommand: string;
+}> {
+  if (!options) return [];
+  const mappings = Array.isArray(options) ? options : [options];
+  const seen = new Set<string>();
+  return mappings.map((mapping) => {
+    if (!/^[A-Za-z_]+$/.test(mapping.unicodeScript)) {
+      throw new Error(`invalid Unicode script '${mapping.unicodeScript}'`);
+    }
+    if (!/^[A-Za-z@]+$/.test(mapping.scriptCommand)) {
+      throw new Error(`invalid LaTeX script command '${mapping.scriptCommand}'`);
+    }
+    if (seen.has(mapping.unicodeScript)) {
+      throw new Error(`duplicate Unicode script '${mapping.unicodeScript}'`);
+    }
+    seen.add(mapping.unicodeScript);
+    return {
+      matcher: new RegExp(`^\\p{Script_Extensions=${mapping.unicodeScript}}$`, "u"),
+      scriptCommand: mapping.scriptCommand,
+    };
+  });
 }
 
 /** Render the deliberately small inline subset used by schema-v2 lessons. */
 export function renderInlineMarkdown(
   markdown: string,
-  options?: InlineRenderOptions,
+  options?: InlineRenderOptionsInput,
 ): string {
   const output: string[] = [];
   const emphasis: Array<"italic" | "bold"> = [];
-  const script = scriptMatcher(options);
+  const scripts = scriptMatchers(options);
   let cursor = 0;
   const open = (kind: "italic" | "bold"): void => {
     output.push(kind === "italic" ? "\\emph{" : "\\textbf{");
@@ -93,16 +111,17 @@ export function renderInlineMarkdown(
         continue;
       }
     }
-    if (script?.test(character)) {
+    const script = scripts.find((candidate) => candidate.matcher.test(character));
+    if (script) {
       const run: string[] = [];
       while (cursor < markdown.length) {
         const nextCodePoint = markdown.codePointAt(cursor);
         const next = nextCodePoint === undefined ? "" : String.fromCodePoint(nextCodePoint);
-        if (!script.test(next)) break;
+        if (!script.matcher.test(next)) break;
         run.push(escapeLatexCharacter(next));
         cursor += next.length;
       }
-      output.push(`\\${options!.scriptCommand}{${run.join("")}}`);
+      output.push(`\\${script.scriptCommand}{${run.join("")}}`);
       continue;
     }
     if (markdown[cursor] === "`") {
@@ -159,7 +178,7 @@ export function renderInlineMarkdown(
   return output.join("");
 }
 
-function renderMarkdown(markdown: string, options?: InlineRenderOptions): string {
+function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): string {
   const output: string[] = [];
   const paragraph: string[] = [];
   const quote: string[] = [];
@@ -290,7 +309,7 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptions): string
   return output.join("\n").trimEnd();
 }
 
-function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptions): string {
+function renderBlock(block: LessonBodyBlock, options?: InlineRenderOptionsInput): string {
   const content = renderMarkdown(block.markdown, options);
   const title = renderInlineMarkdown(block.title, options);
   if (block.type === "pronunciation") return `\\begin{sounds}\n${content}\n\\end{sounds}`;
@@ -321,7 +340,7 @@ function lessonSequence(lesson: ParsedLesson): number {
   return Number(stringValue(lesson.frontmatter.sequence));
 }
 
-function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptions): string {
+function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsInput): string {
   const title = lesson.realization.type.startsWith("practice")
     ? "Practice"
     : options && stringValue(lesson.frontmatter.romanization).trim() !== ""
@@ -333,7 +352,18 @@ function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptions):
   );
 }
 
-function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptions | undefined {
+function targetRenderOptions(target: BookGenerationTarget): InlineRenderOptionsInput | undefined {
+  if (target.inlineScripts !== undefined) {
+    if (target.unicodeScript !== undefined || target.scriptCommand !== undefined) {
+      throw new Error(
+        `${target.language} chapter ${target.chapter}: inlineScripts cannot be combined with unicodeScript or scriptCommand`,
+      );
+    }
+    if (target.inlineScripts.length === 0) {
+      throw new Error(`${target.language} chapter ${target.chapter}: inlineScripts must not be empty`);
+    }
+    return target.inlineScripts;
+  }
   if (target.unicodeScript === undefined && target.scriptCommand === undefined) return undefined;
   if (target.unicodeScript === undefined || target.scriptCommand === undefined) {
     throw new Error(
