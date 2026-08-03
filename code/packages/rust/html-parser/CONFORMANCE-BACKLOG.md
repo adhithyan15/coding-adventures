@@ -28,8 +28,8 @@ tree-construction cases and all 6,806 html5lib tokenizer cases with zero missing
 signatures and zero normalized skips. DOM output is complete, but diagnostic
 coverage is not:
 the checked 2,637-case tree corpus declares 6,243 errors across 2,183 cases.
-After the specialized obsolete-`menuitem` end-tag diagnostic slice, 2,015 of
-those cases emit at least one lexer or parser diagnostic and 168 remain
+After the specialized foster-parented table-text diagnostic slice, 2,029 of
+those cases emit at least one lexer or parser diagnostic and 154 remain
 uncovered.
 Another 139 cases emit diagnostics despite having no legacy `#errors` rows.
 These are reviewed rather than automatically removed: 89 are full-document
@@ -63,14 +63,20 @@ recovery closes a non-current list item, and a paragraph end tag reports when it
 breaks out of MathML foreign content. A formatting end tag also reports when an
 open table blocks adoption-agency recovery.
 
+The fresh 154-case residual inventory keeps the next concrete groups in the
+existing priority order: table foster-parenting and table-scope boundaries;
+select/template recovery; script-tokenizer EOF recovery; plaintext/frameset
+boundaries; and foreign-fragment stray tags plus MathML/SVG table integration.
+
 Prioritized work items:
 
 1. **In-body insertion mode.** Cover the remaining formatting-reconstruction
    and stray-tag diagnostics.
-2. **Table, select, and template insertion modes.** Cover foster parenting,
-   table scopes, select recovery, and template mode-stack errors. The remaining
-   fragment EOF inventory includes fostered-anchor `eof-in-table` rows and
-   MathML/SVG table-boundary scope recovery.
+2. **Table, select, and template insertion modes.** Cover the remaining foster
+   parenting, table scopes, select recovery, and template mode-stack errors.
+   Non-whitespace table text now reports when it is foster-parented. The
+   remaining fragment EOF inventory includes fostered-anchor `eof-in-table`
+   rows and MathML/SVG table-boundary scope recovery.
 3. **Adoption agency and active formatting.** Cover malformed formatting cases
    without changing their now-conforming DOM output.
 4. **Foreign content and fragment parsing.** Cover SVG/MathML integration

@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-whitespace character data foster-parented out of table structure now
+  reports the table-text parse error, covering 14 previously silent malformed
+  corpus cases without changing DOM recovery or undeclared-diagnostic coverage.
 - Obsolete `menuitem` end tags now report the in-body parse error when no
   matching `menuitem` is current, covering 4 previously silent malformed
   corpus cases without changing DOM recovery or undeclared-diagnostic coverage.

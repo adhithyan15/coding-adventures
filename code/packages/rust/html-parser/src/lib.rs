@@ -5789,6 +5789,10 @@ impl HtmlParser {
                 return;
             }
             let pending = std::mem::take(&mut self.pending_table_text);
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-character-in-table",
+                "non-whitespace character data in a table context was foster parented",
+            ));
             if self.foster_text_before_open_table(pending) {
                 return;
             }
@@ -33340,6 +33344,33 @@ mod tests {
 
         let matching = parse_html_with_diagnostics("<!doctype html><menuitem></menuitem>").unwrap();
         assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn reports_non_whitespace_character_data_fostered_from_tables() {
+        for source in [
+            "<!doctype html><table> x</table>",
+            "<!doctype html><table><tr> x</table>",
+            "<!doctype html><div><table><a>foo</a> <tr><td>bar</td></tr></table></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic
+                        == &ParserDiagnostic::new(
+                            "unexpected-character-in-table",
+                            "non-whitespace character data in a table context was foster parented",
+                        )
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let whitespace = parse_html_with_diagnostics("<!doctype html><table> \n</table>").unwrap();
+        assert!(whitespace
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-character-in-table"));
     }
 
     #[test]
