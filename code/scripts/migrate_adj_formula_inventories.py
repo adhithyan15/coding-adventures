@@ -35,6 +35,12 @@ PROPORTION_ROOT_IDS = {
     "adj.math.arithmetic.proportion.zero_second.query.v1",
     "adj.math.arithmetic.proportion.zero_third.query.v1",
 }
+PROPORTION_POSITIVE_QUERY = (
+    "code/specs/data/adj-formula-stdlib/arithmetic/proportion.query.adj"
+)
+PROPORTION_POSITIVE_QUERY_SHA256 = (
+    "444a92a243093539b8dad35a4219f958a8280847bafd3cea48facc04840e979d"
+)
 
 
 def _registered_roots(cas: provenance.Cas, manifest_path: Path) -> dict[str, str]:
@@ -61,6 +67,25 @@ def migrate(
     formula_audit_command: Sequence[str],
     captured_proportion_source: Path | None = None,
 ) -> dict[str, object]:
+    baseline_cas = provenance.Cas(cas_root)
+    baseline_cas.load()
+    baseline_roots = _registered_roots(baseline_cas, manifest_path)
+    proportion_query_bytes = provenance._read_regular_file(
+        workspace_root / PROPORTION_POSITIVE_QUERY
+    )
+    source_hash = provenance.sha256_bytes(proportion_query_bytes)
+    if source_hash != PROPORTION_POSITIVE_QUERY_SHA256:
+        raise provenance.ProvenanceError(
+            "reviewed proportion query bytes changed before migration"
+        )
+    workspace_input_snapshots = {
+        PROPORTION_POSITIVE_QUERY: proportion_query_bytes,
+    }
+    planned_workspace_input_hashes = {}
+    if "adj.math.arithmetic.proportion.query.v1" in baseline_roots:
+        planned_workspace_input_hashes[PROPORTION_POSITIVE_QUERY] = (
+            PROPORTION_POSITIVE_QUERY_SHA256
+        )
     with provenance.BundleRootReplacementTransaction(
         cas_root,
         manifest_path,
@@ -71,6 +96,9 @@ def migrate(
         formula_audit_command=formula_audit_command,
         allow_unwitnessed_baseline=True,
         allow_migration_formula_inputs_baseline=True,
+        allow_migration_derived_bindings_baseline=True,
+        planned_workspace_input_hashes=planned_workspace_input_hashes,
+        workspace_input_snapshots=workspace_input_snapshots,
     ) as transaction:
         old_roots = _registered_roots(transaction.cas, manifest_path)
         missing = sorted(ROOT_IDS - set(old_roots))
@@ -112,6 +140,7 @@ def migrate(
                 arithmetic_bundle_sha256=arithmetic_hash,
                 formula_inventory_command=formula_inventory_command,
                 formula_audit_command=formula_audit_command,
+                workspace_input_snapshots=workspace_input_snapshots,
             )
         )
         if set(new_roots) != ROOT_IDS:

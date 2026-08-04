@@ -4723,6 +4723,39 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas, query, extra_body_field
                 )
 
+    def test_formula_verification_v2_schema_enforces_query_semantics(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            cas, query, audit = self.guarded_v2_fixture(Path(directory))
+            _derivation, _links, witness, _witness_links = (
+                provenance._normalized_formula_evidence(cas, query, audit)[0]
+            )
+            verification = witness["body"]["derivation"]["verification"]
+            from jsonschema import Draft202012Validator
+
+            schema = json.loads(
+                (formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_SCHEMA)
+                .read_text(encoding="utf-8")
+            )
+            validator = Draft202012Validator(
+                {
+                    "$defs": schema["$defs"],
+                    "$ref": "#/$defs/formula_verification_v2",
+                    "$schema": "https://json-schema.org/draft/2020-12/schema",
+                }
+            )
+            self.assertEqual(list(validator.iter_errors(verification)), [])
+
+            unquoted_query = deepcopy(verification)
+            unquoted_query["formula_quotes"] = []
+            self.assertTrue(list(validator.iter_errors(unquoted_query)))
+
+            formula_free_derived = deepcopy(unquoted_query)
+            formula_free_derived["fully_verified"] = False
+            formula_free_derived["is_query_answer"] = False
+            self.assertEqual(
+                list(validator.iter_errors(formula_free_derived)), []
+            )
+
     def test_guarded_formula_v2_distinguishes_parameters_from_caller_slots(
         self,
     ) -> None:
@@ -5079,6 +5112,271 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             provenance.ProvenanceError, "quote status disagrees"
         ):
             provenance._normalized_formula_evidence(cas, query, audit)
+
+    def test_derived_guard_witness_is_byte_complete_and_fails_closed(self) -> None:
+        cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
+        manifest_path = (
+            formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_MANIFEST
+        )
+        cas = provenance.Cas(cas_root)
+        cas.load()
+        query_hash = self.registered_bundle_hash(
+            cas_root,
+            manifest_path,
+            "adj.math.arithmetic.proportion.query.v1",
+        )
+        query = provenance._json_object(cas, query_hash, "provenance_bundle")
+        audit = provenance._materialize_formula_audit(
+            cas, query, self.formula_audit_command()
+        )
+
+        _derivation, _derivation_links, witness, witness_links = (
+            provenance._normalized_formula_evidence(cas, query, audit)[0]
+        )
+        guard = witness["guards"][2]
+        derived = guard["derived"]
+        computation = derived["computations"][0]
+        self.assertEqual(derived["root_computation_id"], 0)
+        self.assertEqual(computation["name"], "checked_third_term")
+        self.assertEqual(
+            computation["binding"]["claim_id"],
+            "adj.math.arithmetic.proportion.query.v1.binding.0",
+        )
+        self.assertEqual(
+            [item["identity"]["formula"] for item in derived["verification"]["formula_quotes"]],
+            ["product"],
+        )
+        self.assertEqual(
+            [
+                item["identity"]["identity"]["term"]
+                for item in derived["verification"]["input_quotes"]
+            ],
+            ["third_term(4)"],
+        )
+        self.assertTrue(
+            {
+                computation["binding"]["source_sha256"],
+                computation["binding"]["source_ir_sha256"],
+                derived["formula_sequence"][0]["source_sha256"],
+                derived["inputs"][0]["owner_source_sha256"],
+                derived["inputs"][0]["owner_source_ir_sha256"],
+                derived["inputs"][0]["snapshot_sha256"],
+                derived["inputs"][0]["source_ir_sha256"],
+            }.issubset(witness_links)
+        )
+
+        def mutate_coordinated_result(item: dict[str, object]) -> None:
+            wrong_value = {
+                "exact_rational": {"denominator": "1", "numerator": "8"},
+                "f64_bits": "4020000000000000",
+            }
+            item["comparison"]["observed"] = deepcopy(wrong_value)
+            wrong_computation = item["derived"]["computations"][0]
+            wrong_computation["result"].update(wrong_value)
+            wrong_computation["tree"]["f64_bits"] = wrong_value["f64_bits"]
+
+        def mutate_expression_to_identifier(item: dict[str, object]) -> None:
+            binding = item["derived"]["computations"][0]["binding"]
+            declaration = binding["declaration"]
+            source = provenance._read_regular_file(
+                cas.object_path(binding["source_sha256"])
+            )
+            declaration_bytes = source[declaration["start"] : declaration["end"]]
+            relative_start = declaration_bytes.index(binding["name"].encode("utf-8"))
+            identifier = binding["name"].encode("utf-8")
+            expression = binding["expression"]
+            expression["start"] = declaration["start"] + relative_start
+            expression["end"] = expression["start"] + len(identifier)
+            expression["sha256"] = provenance.sha256_bytes(identifier)
+
+        def mutate_coordinated_plan(item: dict[str, object]) -> None:
+            mutate_coordinated_result(item)
+            computation = item["derived"]["computations"][0]
+            computation["plan"]["expression"]["right"] = {
+                "exact_rational": {"denominator": "1", "numerator": "2"},
+                "f64_bits": "4000000000000000",
+                "kind": "exact_literal",
+            }
+            computation["tree"]["operands"][1]["f64_bits"] = "4000000000000000"
+
+        def mutate_dimension(item: dict[str, object]) -> None:
+            item["derived"]["computations"][0]["result"]["dimension"] = "days"
+
+        mutations = {
+            "root computation identity": lambda item: item["derived"].__setitem__(
+                "root_computation_id", 1
+            ),
+            "binding bytes": lambda item: item["derived"]["computations"][0][
+                "binding"
+            ]["expression"].__setitem__("sha256", "0" * 64),
+            "computation identity": lambda item: item["derived"]["computations"][
+                0
+            ].__setitem__("computation_id", 1),
+            "dependency closure": lambda item: item["derived"]["computations"][
+                0
+            ].__setitem__("referenced_computation_ids", [0]),
+            "transitive inputs": lambda item: item["derived"].__setitem__(
+                "inputs", []
+            ),
+            "formula source": lambda item: item["derived"]["formula_sequence"][
+                0
+            ].__setitem__("source_sha256", "0" * 64),
+            "compiler plan": lambda item: item["derived"]["computations"][0][
+                "plan"
+            ]["expression"]["left"].__setitem__("name", "second_term"),
+            "runtime tree": lambda item: item["derived"]["computations"][0][
+                "tree"
+            ]["operands"][0]["fact"].__setitem__("term", "second_term(4)"),
+            "verified inputs": lambda item: item["derived"]["verification"].__setitem__(
+                "input_quotes", []
+            ),
+            "coordinated false result": mutate_coordinated_result,
+            "coordinated false plan": mutate_coordinated_plan,
+            "false result dimension": mutate_dimension,
+            "contained non-RHS binding span": mutate_expression_to_identifier,
+        }
+        for label, mutate in mutations.items():
+            with self.subTest(label=label):
+                candidate = deepcopy(audit)
+                mutate(candidate["executions"][0]["guards"][2])
+                with self.assertRaises(provenance.ProvenanceError):
+                    provenance._normalized_formula_evidence(cas, query, candidate)
+
+        duplicated_body_input = deepcopy(audit)
+        derivation = duplicated_body_input["executions"][0]["body"]["derivation"]
+        derivation["inputs"].append(deepcopy(derivation["inputs"][0]))
+        derivation["verification"]["input_quotes"].append(
+            deepcopy(derivation["verification"]["input_quotes"][0])
+        )
+        with self.assertRaisesRegex(
+            provenance.ProvenanceError, "body repeats a consumed input"
+        ):
+            provenance._normalized_formula_evidence(
+                cas, query, duplicated_body_input
+            )
+
+    def test_exact_plan_replay_supports_shaped_operations(self) -> None:
+        def bits(value: Fraction) -> str:
+            return struct.pack(">d", float(value)).hex()
+
+        def literal(value: Fraction) -> tuple[dict[str, object], dict[str, object]]:
+            rational = {
+                "denominator": str(value.denominator),
+                "numerator": str(value.numerator),
+            }
+            return (
+                {
+                    "exact_rational": rational,
+                    "f64_bits": bits(value),
+                    "kind": "exact_literal",
+                },
+                {"f64_bits": bits(value), "kind": "literal"},
+            )
+
+        cases = []
+        operand_plan, operand_tree = literal(Fraction(1, 3))
+        cases.append(
+            (
+                {
+                    "expression": operand_plan,
+                    "kind": "round",
+                    "mode": "half_even",
+                    "precision": {"kind": "places", "value": 2},
+                },
+                {
+                    "f64_bits": bits(Fraction(33, 100)),
+                    "kind": "round",
+                    "mode": "half_even",
+                    "operand": operand_tree,
+                    "operand_exact": {
+                        "denominator": "3",
+                        "numerator": "1",
+                    },
+                    "precision": {"kind": "places", "value": 2},
+                },
+                Fraction(33, 100),
+            )
+        )
+        operand_plan, operand_tree = literal(Fraction(1, 3))
+        cases.append(
+            (
+                {
+                    "expression": operand_plan,
+                    "kind": "to_percent",
+                    "mode": "half_even",
+                    "places": 2,
+                },
+                {
+                    "f64_bits": bits(Fraction(3333, 10000)),
+                    "kind": "to_percent",
+                    "mode": "half_even",
+                    "operand": operand_tree,
+                    "operand_exact": {"denominator": "3", "numerator": "1"},
+                    "places": 2,
+                    "rendered": "33.33%",
+                },
+                Fraction(3333, 10000),
+            )
+        )
+        operand_plan, operand_tree = literal(Fraction(2469, 2))
+        cases.append(
+            (
+                {
+                    "code": "USD",
+                    "expression": operand_plan,
+                    "kind": "to_currency",
+                    "mode": "half_even",
+                    "places": 2,
+                },
+                {
+                    "code": "USD",
+                    "f64_bits": bits(Fraction(2469, 2)),
+                    "kind": "to_currency",
+                    "mode": "half_even",
+                    "operand": operand_tree,
+                    "operand_exact": {
+                        "denominator": "2",
+                        "numerator": "2469",
+                    },
+                    "places": 2,
+                    "rendered": "USD 1234.50",
+                },
+                Fraction(2469, 2),
+            )
+        )
+        operand_plan, operand_tree = literal(Fraction(12345))
+        cases.append(
+            (
+                {
+                    "expression": operand_plan,
+                    "figures": 3,
+                    "kind": "to_scientific",
+                    "mode": "half_even",
+                },
+                {
+                    "f64_bits": bits(Fraction(12300)),
+                    "figures": 3,
+                    "kind": "to_scientific",
+                    "mode": "half_even",
+                    "operand": operand_tree,
+                    "operand_exact": {
+                        "denominator": "1",
+                        "numerator": "12345",
+                    },
+                    "rendered": "1.23e4",
+                },
+                Fraction(12300),
+            )
+        )
+        for plan, tree, expected in cases:
+            with self.subTest(kind=plan["kind"]):
+                provenance._validate_plan_tree(plan, tree, "shaped fixture")
+                self.assertEqual(
+                    provenance._evaluate_exact_plan_tree(
+                        plan, tree, {}, "shaped fixture"
+                    ),
+                    expected,
+                )
 
     def test_formula_audit_import_requires_a_direct_cas_edge(self) -> None:
         cas_root = formula_inventory_migration.REPO_ROOT / provenance.DEFAULT_ROOT
@@ -5800,6 +6098,25 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
             percent_of_builder.REPO_ROOT = workspace
             proportion_builder.REPO_ROOT = workspace
             try:
+                reviewed_query = (
+                    workspace / formula_inventory_migration.PROPORTION_POSITIVE_QUERY
+                )
+                reviewed_query_bytes = reviewed_query.read_bytes()
+                reviewed_query.write_bytes(reviewed_query_bytes + b"\n")
+                with self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "reviewed proportion query bytes changed",
+                ):
+                    formula_inventory_migration.migrate(
+                        cas_root,
+                        manifest_path,
+                        schema_path,
+                        workspace,
+                        formula_inventory_command=formula_command,
+                        formula_audit_command=formula_audit_command,
+                        captured_proportion_source=captured_proportion_source,
+                    )
+                reviewed_query.write_bytes(reviewed_query_bytes)
                 result = formula_inventory_migration.migrate(
                     cas_root,
                     manifest_path,
@@ -5932,6 +6249,36 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                 self.assertTrue(
                     all("% expect" in claim["quote"] for claim in question_claims)
                 )
+            proportion_query = provenance._json_object(
+                cas,
+                new_roots["adj.math.arithmetic.proportion.query.v1"],
+                "provenance_bundle",
+            )
+            proportion_witnesses = [
+                provenance._json_object(cas, digest, "execution_witness")
+                for digest in proportion_query["execution_witness_sha256s"]
+            ]
+            derived_guards = [
+                guard
+                for witness in proportion_witnesses
+                if witness["contract"] == "adj-lang/formula_execution/v2"
+                for guard in witness["guards"]
+                if "derived" in guard
+            ]
+            self.assertEqual(len(derived_guards), 1)
+            self.assertEqual(
+                derived_guards[0]["derived"]["computations"][0]["binding"][
+                    "claim_id"
+                ],
+                "adj.math.arithmetic.proportion.query.v1.binding.0",
+            )
+            self.assertEqual(
+                [
+                    item["identity"]["term"]
+                    for item in derived_guards[0]["derived"]["inputs"]
+                ],
+                ["third_term(4)"],
+            )
             self.assertTrue(
                 provenance.validate_repository(
                     cas_root,
@@ -6150,6 +6497,107 @@ class AdjStdlibProvenanceTests(unittest.TestCase):
                     cas_root, manifest_path, workspace_root=root
                 )["valid"]
             )
+
+    def test_root_replacement_workspace_override_is_exact_and_baseline_only(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cas_root, manifest_path, hashes = self.build_repository(root)
+            input_path = root / "code/example/arithmetic.adj"
+            changed = input_path.read_bytes() + b"\n"
+            input_path.write_bytes(changed)
+            changed_hash = provenance.sha256_bytes(changed)
+
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "workspace input bytes disagree"
+            ):
+                provenance._validate_repository_unlocked(
+                    cas_root, manifest_path, workspace_root=root
+                )
+            self.assertTrue(
+                provenance._validate_repository_unlocked(
+                    cas_root,
+                    manifest_path,
+                    workspace_root=root,
+                    _workspace_input_overrides={
+                        "code/example/arithmetic.adj": changed_hash
+                    },
+                )["valid"]
+            )
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError, "workspace input bytes disagree"
+            ):
+                provenance._validate_repository_unlocked(
+                    cas_root,
+                    manifest_path,
+                    workspace_root=root,
+                    _workspace_input_overrides={
+                        "code/example/arithmetic.adj": "0" * 64
+                    },
+                )
+            with self.assertRaisesRegex(
+                provenance.ProvenanceError,
+                "workspace input overrides do not name baseline bundle inputs",
+            ):
+                provenance._validate_repository_unlocked(
+                    cas_root,
+                    manifest_path,
+                    workspace_root=root,
+                    _workspace_input_overrides={
+                        "code/example/not-a-bundle-input.adj": changed_hash,
+                        "code/example/arithmetic.adj": changed_hash,
+                    },
+                )
+
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError, "workspace input bytes disagree"
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                    planned_workspace_input_hashes={
+                        "code/example/arithmetic.adj": changed_hash
+                    },
+                ) as transaction,
+            ):
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": hashes["bundle"],
+                        }
+                    }
+                )
+
+            input_path.write_bytes(changed)
+            with (
+                self.assertRaisesRegex(
+                    provenance.ProvenanceError,
+                    "planned workspace input bytes changed",
+                ),
+                provenance.BundleRootReplacementTransaction(
+                    cas_root,
+                    manifest_path,
+                    expected_manifest_id="test.provenance.v1",
+                    workspace_root=root,
+                    planned_workspace_input_hashes={
+                        "code/example/arithmetic.adj": changed_hash
+                    },
+                ) as transaction,
+            ):
+                input_path.write_bytes(changed + b"post-preflight mutation")
+                transaction.replace_roots(
+                    {
+                        "test.arithmetic.v1": {
+                            "expected_old_sha256": hashes["bundle"],
+                            "new_sha256": hashes["bundle"],
+                        }
+                    }
+                )
 
     def test_root_replacement_rejects_an_unmigrated_same_id_dependency(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

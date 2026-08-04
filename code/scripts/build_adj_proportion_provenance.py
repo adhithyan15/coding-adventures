@@ -160,9 +160,11 @@ def local_source(
     label: str,
     *,
     discarded_reason: str,
+    data: bytes | None = None,
     reasoned_discards: list[tuple[int, int, str]] | None = None,
 ) -> tuple[dict, dict[str, dict]]:
-    data = provenance._read_regular_file(REPO_ROOT / repo_path)
+    if data is None:
+        data = provenance._read_regular_file(REPO_ROOT / repo_path)
     raw_hash = cas.put(data, kind="raw_source", label=label)
     receipt = provenance.build_input_receipt(
         repo_path=repo_path,
@@ -436,8 +438,10 @@ def _query_bundle(
     fixture_source: dict,
     fixture_claims: dict[str, dict],
     formula_audit_command: Sequence[str],
+    query_bytes: bytes | None = None,
 ) -> tuple[str, str]:
-    query_bytes = provenance._read_regular_file(REPO_ROOT / query_path)
+    if query_bytes is None:
+        query_bytes = provenance._read_regular_file(REPO_ROOT / query_path)
     query_ranges = []
     for name, value in facts:
         claim_id = f"adj.input.arithmetic.proportion.{name}.{value}"
@@ -453,6 +457,18 @@ def _query_bundle(
     question_start = query_bytes.index(b"? fourth_proportional(")
     question_end = query_bytes.index(b"\n", question_start) + 1
     query_ranges.append((QUESTION_CLAIM, question_start, question_end))
+    binding_cursor = 0
+    binding_index = 0
+    while True:
+        binding_start = query_bytes.find(b"let ", binding_cursor)
+        if binding_start < 0:
+            break
+        binding_end = query_bytes.index(b"\n", binding_start) + 1
+        query_ranges.append(
+            (f"{bundle_id}.binding.{binding_index}", binding_start, binding_end)
+        )
+        binding_cursor = binding_end
+        binding_index += 1
     query_source, query_claims = local_source(
         cas,
         query_path,
@@ -462,6 +478,7 @@ def _query_bundle(
             "comments, spacing, or human-readable explanation outside the selected "
             "import, observations, and executable question"
         ),
+        data=query_bytes,
     )
     fixture_locator = f"repo://{FIXTURE}"
     clauses = []
@@ -522,6 +539,7 @@ def build(
     arithmetic_bundle_sha256: str,
     formula_inventory_command: Sequence[str],
     formula_audit_command: Sequence[str],
+    workspace_input_snapshots: dict[str, bytes] | None = None,
 ) -> dict[str, str]:
     if not formula_audit_command:
         raise provenance.ProvenanceError(
@@ -635,6 +653,7 @@ def build(
             fixture_source=fixture_source,
             fixture_claims=fixture_claims,
             formula_audit_command=formula_audit_command,
+            query_bytes=(workspace_input_snapshots or {}).get(query_path),
         )
         roots[root_id] = root_hash
     return roots

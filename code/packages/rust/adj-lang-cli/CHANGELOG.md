@@ -6,9 +6,11 @@
   exact literals. V2 records ordered query executions, parser-backed guard byte identities, exact
   comparisons, stable consumed-fact identities, independent direct-observation rechecks, and a
   tagged evaluated or withheld body.
-- Guarded v2 audits fail closed on unresolved, derived, lossy, ambiguous, or structurally
-  inconsistent operands until transitive derived-predicate verification lands. Truly legacy plans
-  retain the existing v1 shape and serialization path.
+- Guarded v2 audits fail closed on unresolved, lossy, ambiguous, or structurally inconsistent
+  operands. Derived guards emit a root-first computation closure with stable IDs, parser-backed
+  binding spans carried by the compiler across imports and withheld bindings, compiler plans and
+  scopes, transitive fact and formula provenance, and an independent `verify_derived` result. Truly
+  legacy plans retain the existing v1 shape and serialization path.
 - V2 independently replays parameter binding and nested application order from parser-owned source,
   follows runtime guard short-circuiting and built-in precedence, requires a complete
   declaration-ordered guard prefix, reports quote mismatches truthfully, and serializes recursively

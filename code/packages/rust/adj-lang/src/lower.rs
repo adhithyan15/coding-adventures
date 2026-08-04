@@ -24,10 +24,10 @@ use logic_core::{
     Term as CoreTerm,
 };
 use logic_engine::{
-    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputationScope, ComputeExpr, ComputeOp,
-    ContentHash, ContributionClause, DerivationNode, ExactRational, Fact, FactId,
-    JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
-    Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
+    compute, BodyLiteral, Citation, CmpOp as EngineCmpOp, ComputationId, ComputationScope,
+    ComputeExpr, ComputeOp, ContentHash, ContributionClause, DerivationNode, ExactRational, Fact,
+    FactId, JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause,
+    PriorClause, Priority, Provenance, Rule, TrustTier, UncertaintyMarker,
 };
 
 use std::collections::{HashMap, HashSet};
@@ -37,6 +37,7 @@ use crate::ast::{
     FormulaPrecondition, NamedFn, NumLit, OptDir, Program, RelOp, SmAction, SmGuard, Statement,
     Term as AstTerm, TrustTierName,
 };
+use crate::BindingOrigin;
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
 /// **unevaluated** [`ComputeExpr`] trees (they reference symbols the solver
@@ -124,6 +125,9 @@ pub enum LowerError {
     /// the engine's [`logic_engine::ComputeError`] rendered for the audit.
     ComputationFailed {
         name: String,
+        detail: String,
+    },
+    BindingOriginMismatch {
         detail: String,
     },
     /// A finding / hypothesis term used in a clause is not `define`d in the
@@ -441,6 +445,9 @@ pub struct FormulaAbstention {
     /// Ground facts consumed while evaluating the guard, preserving byte-level
     /// input provenance for the CLI and future negative-witness replay.
     pub fact_ids: Vec<FactId>,
+    /// Root-first, deduplicated identities of every derived computation consumed
+    /// by the guard. Empty for a direct observation or literal.
+    pub computation_ids: Vec<ComputationId>,
     pub provenance: Provenance,
     /// Complete ordered guard trace accumulated before the refusal. This keeps
     /// earlier successful guards when a later direct or nested guard fails.
@@ -479,8 +486,15 @@ pub struct FormulaGuardTrace {
     pub tree: Option<DerivationNode>,
     pub scope: Option<ComputationScope>,
     pub fact_ids: Vec<FactId>,
+    pub computation_ids: Vec<ComputationId>,
     pub detail: Option<String>,
     pub provenance: Provenance,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct FormulaGuardDependencies {
+    computation_ids: Vec<ComputationId>,
+    fact_ids: Vec<FactId>,
 }
 
 /// Whether a direct formula query published its body computation.
@@ -632,6 +646,14 @@ pub struct LoweredGuard {
     pub comparison: Option<(EngineCmpOp, ComputeExpr)>,
 }
 
+/// Parser-owned identity and lowering attestation for one retained `let`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ComputationBinding {
+    pub origin: BindingOrigin,
+    pub source_plan: ComputeExpr,
+    pub source_dimension: String,
+}
+
 /// One lowered transition action (ADJ-STATEMACHINE §2). The RS-3b minimal subset
 /// is `assert <term>` — lowered to the ground [`CoreTerm`] the driver adds to the
 /// KB when the transition fires.
@@ -667,16 +689,29 @@ pub struct LoweredProgram {
     /// Direct formula-query executions in source order. Unlike derived bindings,
     /// this records both evaluated and withheld bodies.
     pub formula_executions: Vec<FormulaExecutionTrace>,
+    /// Exact parser-owned source identity for each retained computation, aligned
+    /// by [`ComputationId`]. Non-`let` computations and non-import-aware callers
+    /// have `None`; a withheld `let` consumes its source identity but no slot.
+    pub computation_bindings: Vec<Option<ComputationBinding>>,
 }
 
 /// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
 pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
+    lower_with_binding_origins(program, None)
+}
+
+pub(crate) fn lower_with_binding_origins(
+    program: &Program,
+    binding_origins: Option<&[BindingOrigin]>,
+) -> Result<LoweredProgram, LowerError> {
     let mut kb = KnowledgeBase::new();
     let mut queries = Vec::new();
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
     let mut formula_abstentions = Vec::new();
     let mut formula_executions = Vec::new();
+    let mut binding_cursor = 0usize;
+    let mut computation_bindings = HashMap::new();
     let mut unavailable_bindings: HashMap<String, FormulaAbstention> = HashMap::new();
     // ADJ-STATEMACHINE RS-3b: each `statemachine` lowers to a validated,
     // provenance-stamped structure here (no driver yet — that is RS-3c).
@@ -1103,6 +1138,25 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 });
             }
             Statement::Let { name, expr } => {
+                let binding_origin = match binding_origins {
+                    Some(origins) => {
+                        let origin = origins.get(binding_cursor).ok_or_else(|| {
+                            LowerError::BindingOriginMismatch {
+                                detail: format!("missing parser origin for let {name}"),
+                            }
+                        })?;
+                        if origin.binding.name != *name || origin.binding.expression != *expr {
+                            return Err(LowerError::BindingOriginMismatch {
+                                detail: format!(
+                                    "parser origin disagrees with lowered let {name}"
+                                ),
+                            });
+                        }
+                        Some(origin.clone())
+                    }
+                    None => None,
+                };
+                binding_cursor += 1;
                 // Evaluate the formula against the facts (and any earlier
                 // `let`s) seen so far — statements lower in source order, so a
                 // `let` sees every `observe` above it. The engine builds the
@@ -1143,7 +1197,19 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                     None => derived,
                 };
                 unavailable_bindings.remove(name);
+                let computation_id = kb.derived_bindings().len();
+                let source_dimension = derived.dim.tag();
                 kb.add_derived(derived);
+                if let Some(origin) = binding_origin {
+                    computation_bindings.insert(
+                        computation_id,
+                        ComputationBinding {
+                            origin,
+                            source_plan: cexpr,
+                            source_dimension,
+                        },
+                    );
+                }
             }
             Statement::Uncertain {
                 domain,
@@ -1595,6 +1661,17 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
         enforce_vocabulary(flat.iter().copied(), &dictionary, &formulas)?;
     }
 
+    if binding_origins.is_some_and(|origins| binding_cursor != origins.len()) {
+        return Err(LowerError::BindingOriginMismatch {
+            detail: format!(
+                "lowerer consumed {binding_cursor} parser binding origins, expected {}",
+                binding_origins.map_or(0, |origins| origins.len())
+            ),
+        });
+    }
+    let computation_bindings = (0..kb.derived_bindings().len())
+        .map(|index| computation_bindings.remove(&index))
+        .collect();
     Ok(LoweredProgram {
         kb,
         queries,
@@ -1604,6 +1681,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
         dictionary,
         formula_abstentions,
         formula_executions,
+        computation_bindings,
     })
 }
 
@@ -3141,6 +3219,7 @@ fn enforce_preconditions(
                     tree: None,
                     scope: None,
                     fact_ids: Vec::new(),
+                    computation_ids: Vec::new(),
                     detail: Some(detail.clone()),
                     provenance: provenance.clone(),
                 });
@@ -3155,6 +3234,7 @@ fn enforce_preconditions(
                         actual_exact: None,
                         detail: Some(detail),
                         fact_ids: Vec::new(),
+                        computation_ids: Vec::new(),
                         provenance,
                         guards: guards.clone(),
                         formula_sequence: applications.to_vec(),
@@ -3181,7 +3261,7 @@ fn enforce_preconditions(
             .as_ref()
             .map(|value| value.numerator().is_zero())
             .unwrap_or(computed.value == 0.0);
-        let fact_ids = precondition_fact_ids(
+        let dependencies = precondition_dependencies(
             &computed.tree,
             computed.scope.fact_limit,
             computed.scope.derived_limit,
@@ -3208,7 +3288,8 @@ fn enforce_preconditions(
             plan: Some(computed.expr.clone()),
             tree: Some(computed.tree.clone()),
             scope: Some(computed.scope),
-            fact_ids: fact_ids.clone(),
+            fact_ids: dependencies.fact_ids.clone(),
+            computation_ids: dependencies.computation_ids.clone(),
             detail: None,
             provenance: provenance.clone(),
         });
@@ -3223,7 +3304,8 @@ fn enforce_preconditions(
                     actual: Some(computed.value),
                     actual_exact: computed.exact,
                     detail: None,
-                    fact_ids,
+                    fact_ids: dependencies.fact_ids,
+                    computation_ids: dependencies.computation_ids,
                     provenance,
                     guards: guards.clone(),
                     formula_sequence: applications.to_vec(),
@@ -3234,110 +3316,129 @@ fn enforce_preconditions(
     Ok(())
 }
 
-fn precondition_fact_ids(
+fn precondition_dependencies(
     tree: &logic_engine::compute::DerivationNode,
     fact_limit: u64,
     derived_limit: usize,
     kb: &KnowledgeBase,
-) -> Result<Vec<FactId>, String> {
-    fn collect_derived(
-        index: usize,
-        kb: &KnowledgeBase,
-        visiting: &mut HashSet<usize>,
-        output: &mut Vec<FactId>,
-    ) -> Result<(), String> {
-        if !visiting.insert(index) {
-            return Err("cycle in precondition derived references".to_string());
-        }
-        let derived = kb
-            .derived_bindings()
-            .get(index)
-            .ok_or_else(|| format!("precondition derived index {index} is outside the KB"))?;
-        let plan = kb.computation_plan_for(derived).ok_or_else(|| {
-            format!(
-                "precondition derived value {} has no trusted plan",
-                derived.name
-            )
-        })?;
-        collect(
-            &derived.tree,
-            plan.scope.fact_limit,
-            plan.scope.derived_limit,
-            kb,
-            visiting,
-            output,
-        )?;
-        visiting.remove(&index);
-        Ok(())
+) -> Result<FormulaGuardDependencies, String> {
+    struct DependencyCollector<'a> {
+        kb: &'a KnowledgeBase,
+        visiting: HashSet<usize>,
+        completed: HashSet<usize>,
+        computation_ids: Vec<ComputationId>,
+        fact_ids: Vec<FactId>,
     }
 
-    fn collect(
-        node: &logic_engine::compute::DerivationNode,
-        fact_limit: u64,
-        before: usize,
-        kb: &KnowledgeBase,
-        visiting: &mut HashSet<usize>,
-        output: &mut Vec<FactId>,
-    ) -> Result<(), String> {
-        use logic_engine::compute::DerivationNode as Node;
-        match node {
-            Node::Leaf { fact_id, .. } => {
-                if fact_id.0 >= fact_limit {
-                    return Err(format!(
-                        "precondition fact {} is outside computation scope {fact_limit}",
-                        fact_id.0
-                    ));
-                }
-                if kb.fact(*fact_id).is_none() {
-                    return Err(format!(
-                        "precondition fact {} is absent from the KB",
-                        fact_id.0
-                    ));
-                }
-                if !output.contains(fact_id) {
-                    output.push(*fact_id);
-                }
+    impl DependencyCollector<'_> {
+        fn collect_derived(&mut self, index: usize) -> Result<(), String> {
+            if self.completed.contains(&index) {
+                return Ok(());
             }
-            Node::Op { operands, .. } => {
-                for operand in operands {
-                    collect(operand, fact_limit, before, kb, visiting, output)?;
-                }
+            if !self.visiting.insert(index) {
+                return Err("cycle in precondition derived references".to_string());
             }
-            Node::Round { operand, .. }
-            | Node::ToScientific { operand, .. }
-            | Node::ToPercent { operand, .. }
-            | Node::ToCurrency { operand, .. } => {
-                collect(operand, fact_limit, before, kb, visiting, output)?;
+            let derived = self.kb.derived_bindings().get(index).ok_or_else(|| {
+                format!("precondition derived index {index} is outside the KB")
+            })?;
+            let plan = self.kb.computation_plan_for(derived).ok_or_else(|| {
+                format!(
+                    "precondition derived value {} has no trusted plan",
+                    derived.name
+                )
+            })?;
+            let id = self.kb.computation_id_for(derived).ok_or_else(|| {
+                format!(
+                    "precondition derived value {} has no stable computation identity",
+                    derived.name
+                )
+            })?;
+            if id.0 != index {
+                return Err(format!(
+                    "precondition derived value {} has mismatched computation identity {}",
+                    derived.name, id.0
+                ));
             }
-            Node::DerivedRef { name, .. } => {
-                let visible = kb.derived_bindings().get(..before).ok_or_else(|| {
-                    format!(
-                        "precondition derived scope {before} exceeds {} bindings",
-                        kb.derived_bindings().len()
-                    )
-                })?;
-                let dependency = visible
-                    .iter()
-                    .rposition(|candidate| candidate.name == *name)
-                    .ok_or_else(|| {
-                        format!("precondition derived reference {name} has no predecessor")
-                    })?;
-                collect_derived(dependency, kb, visiting, output)?;
-            }
-            Node::Lit { .. } => {}
+            self.computation_ids.push(id);
+            self.collect(
+                &derived.tree,
+                plan.scope.fact_limit,
+                plan.scope.derived_limit,
+            )?;
+            self.visiting.remove(&index);
+            self.completed.insert(index);
+            Ok(())
         }
-        Ok(())
+
+        fn collect(
+            &mut self,
+            node: &logic_engine::compute::DerivationNode,
+            fact_limit: u64,
+            before: usize,
+        ) -> Result<(), String> {
+            use logic_engine::compute::DerivationNode as Node;
+            match node {
+                Node::Leaf { fact_id, .. } => {
+                    if fact_id.0 >= fact_limit {
+                        return Err(format!(
+                            "precondition fact {} is outside computation scope {fact_limit}",
+                            fact_id.0
+                        ));
+                    }
+                    if self.kb.fact(*fact_id).is_none() {
+                        return Err(format!(
+                            "precondition fact {} is absent from the KB",
+                            fact_id.0
+                        ));
+                    }
+                    if !self.fact_ids.contains(fact_id) {
+                        self.fact_ids.push(*fact_id);
+                    }
+                }
+                Node::Op { operands, .. } => {
+                    for operand in operands {
+                        self.collect(operand, fact_limit, before)?;
+                    }
+                }
+                Node::Round { operand, .. }
+                | Node::ToScientific { operand, .. }
+                | Node::ToPercent { operand, .. }
+                | Node::ToCurrency { operand, .. } => {
+                    self.collect(operand, fact_limit, before)?;
+                }
+                Node::DerivedRef { name, .. } => {
+                    let visible = self.kb.derived_bindings().get(..before).ok_or_else(|| {
+                        format!(
+                            "precondition derived scope {before} exceeds {} bindings",
+                            self.kb.derived_bindings().len()
+                        )
+                    })?;
+                    let dependency = visible
+                        .iter()
+                        .rposition(|candidate| candidate.name == *name)
+                        .ok_or_else(|| {
+                            format!("precondition derived reference {name} has no predecessor")
+                        })?;
+                    self.collect_derived(dependency)?;
+                }
+                Node::Lit { .. } => {}
+            }
+            Ok(())
+        }
     }
-    let mut output = Vec::new();
-    collect(
-        tree,
-        fact_limit,
-        derived_limit,
+
+    let mut collector = DependencyCollector {
         kb,
-        &mut HashSet::new(),
-        &mut output,
-    )?;
-    Ok(output)
+        visiting: HashSet::new(),
+        completed: HashSet::new(),
+        computation_ids: Vec::new(),
+        fact_ids: Vec::new(),
+    };
+    collector.collect(tree, fact_limit, derived_limit)?;
+    Ok(FormulaGuardDependencies {
+        computation_ids: collector.computation_ids,
+        fact_ids: collector.fact_ids,
+    })
 }
 
 /// Fold a formula's multi-step `let`-bindings (RS-2) into a SINGLE effective
@@ -6463,7 +6564,7 @@ rule { head: r(a) when: x(t) }";
     }
 
     #[test]
-    fn precondition_fact_ids_reject_out_of_scope_and_absent_leaves() {
+    fn precondition_dependencies_reject_out_of_scope_and_absent_leaves() {
         use logic_engine::compute::DerivationNode;
 
         let leaf = DerivationNode::Leaf {
@@ -6472,11 +6573,11 @@ rule { head: r(a) when: x(t) }";
             fact_id: FactId(0),
         };
         let kb = KnowledgeBase::new();
-        let out_of_scope =
-            precondition_fact_ids(&leaf, 0, 0, &kb).expect_err("the snapshot excludes fact zero");
+        let out_of_scope = precondition_dependencies(&leaf, 0, 0, &kb)
+            .expect_err("the snapshot excludes fact zero");
         assert!(out_of_scope.contains("outside computation scope"));
 
-        let absent = precondition_fact_ids(&leaf, 1, 0, &kb)
+        let absent = precondition_dependencies(&leaf, 1, 0, &kb)
             .expect_err("a visible ID still has to resolve to a stored fact");
         assert!(absent.contains("absent from the KB"));
     }
@@ -7137,6 +7238,15 @@ rule { head: r(a) when: x(t) }";
             lowered.formula_abstentions[0].fact_ids,
             vec![FactId(0), FactId(1)],
             "the old x binding consumed both a and b; the later x must not shadow it"
+        );
+        assert_eq!(
+            lowered.formula_abstentions[0]
+                .computation_ids
+                .iter()
+                .map(|id| id.0)
+                .collect::<Vec<_>>(),
+            vec![2, 1, 0],
+            "the root-first closure must retain the old x computation, not rebinding 3"
         );
     }
 

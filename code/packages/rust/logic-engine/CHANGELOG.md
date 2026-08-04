@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - derived computation identities
+
+- `KnowledgeBase::computation_id_for` exposes the stable compiler-owned identity of an exact
+  stored derived artifact while rejecting clones and similarly named values. Audit consumers can
+  now bind a derived predicate operand to the same immutable plan that `verify_derived` replays.
+
 ## [0.55.0] - 2026-08-03 - derived precision markers and transactional staging
 
 - `Derived` retains whether an exact source crossed a value-changing `f64` boundary, and that

@@ -1,0 +1,121 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 875,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.proportion.query.import",
+          "end": 899,
+          "quote": "import \"proportion.adj\"\n",
+          "quote_sha256": "ecaecbe04883e222f9b5fd2bcde8e2847b2c8f68d181e15bcc68a6e0538f8c0a",
+          "start": 875
+        }
+      ],
+      "disposition": "represented",
+      "end": 899,
+      "start": 875
+    },
+    {
+      "disposition": "discarded",
+      "end": 900,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 899
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+          "end": 1184,
+          "quote": "observe first_term(2)\n    quote \"first term is 2.\" at 0 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "c73783e99072cb0ac85e515a0e7d7b0c95b371f47a47592fc913399051bcaeb3",
+          "start": 900
+        }
+      ],
+      "disposition": "represented",
+      "end": 1184,
+      "start": 900
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.second_term.3",
+          "end": 1471,
+          "quote": "observe second_term(3)\n    quote \"second term is 3.\" at 17 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "a1672c3412783c8c8b43ffc40f3b8dd17523ce341b4c342e4d890594627cfa07",
+          "start": 1184
+        }
+      ],
+      "disposition": "represented",
+      "end": 1471,
+      "start": 1184
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.third_term.4",
+          "end": 1756,
+          "quote": "observe third_term(4)\n    quote \"third term is 4.\" at 35 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "eebea0fad60adaec55fa4821780cee63f83f077305851c3b2f5de02c0e9f4a40",
+          "start": 1471
+        }
+      ],
+      "disposition": "represented",
+      "end": 1756,
+      "start": 1471
+    },
+    {
+      "disposition": "discarded",
+      "end": 2059,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 1756
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion.query.v1.binding.0",
+          "end": 2107,
+          "quote": "let checked_third_term = product(third_term, 1)\n",
+          "quote_sha256": "ba76e4e2db212fb14403d707f9bc48db0a12188604bf3ceaf4d0b4f34a542d08",
+          "start": 2059
+        }
+      ],
+      "disposition": "represented",
+      "end": 2107,
+      "start": 2059
+    },
+    {
+      "disposition": "discarded",
+      "end": 2108,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 2107
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.proportion.compute",
+          "end": 2175,
+          "quote": "? fourth_proportional(first_term, second_term, checked_third_term)\n",
+          "quote_sha256": "e84743a5808897682403a4d6f3f731bb9ceed2e3b3ddf4216610b66e57bc0f71",
+          "start": 2108
+        }
+      ],
+      "disposition": "represented",
+      "end": 2175,
+      "start": 2108
+    },
+    {
+      "disposition": "discarded",
+      "end": 2759,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 2175
+    }
+  ],
+  "source_sha256": "444a92a243093539b8dad35a4219f958a8280847bafd3cea48facc04840e979d",
+  "source_size": 2759
+}

@@ -17,6 +17,7 @@ import ctypes
 import hashlib
 import html
 import json
+import math
 import os
 import re
 import selectors
@@ -3103,6 +3104,107 @@ def _question_reference(
     }, {source_hash, source_ir_hash}
 
 
+def _verified_source_span(
+    cas: Cas, source_hash: str, span: Any, label: str
+) -> dict[str, Any]:
+    if not isinstance(span, dict) or set(span) != {"end", "sha256", "start"}:
+        raise ProvenanceError(f"{label} has the wrong span schema")
+    start = span["start"]
+    end = span["end"]
+    if (
+        not isinstance(start, int)
+        or isinstance(start, bool)
+        or not isinstance(end, int)
+        or isinstance(end, bool)
+        or start < 0
+        or end <= start
+    ):
+        raise ProvenanceError(f"{label} has an invalid byte range")
+    source = _read_regular_file(cas.object_path(source_hash))
+    if end > len(source) or sha256_bytes(source[start:end]) != span["sha256"]:
+        raise ProvenanceError(f"{label} disagrees with its source bytes")
+    return span
+
+
+def _binding_reference(
+    cas: Cas,
+    by_source: dict[str, tuple[str | None, dict[str, Any]]],
+    identity: Any,
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(identity, dict) or set(identity) != {
+        "declaration",
+        "expression",
+        "name",
+        "source_dimension",
+        "source_plan",
+        "source_sha256",
+    }:
+        raise ProvenanceError("formula derived binding has the wrong schema")
+    name = identity["name"]
+    if not isinstance(name, str) or not name:
+        raise ProvenanceError("formula derived binding has no name")
+    source_hash = _require_hash(identity["source_sha256"], "formula derived binding source")
+    owner = by_source.get(source_hash)
+    if owner is None:
+        raise ProvenanceError("formula derived binding escapes the execution graph")
+    source_ir_hash = _require_hash(
+        owner[1]["input"]["source_ir_sha256"], "formula derived binding source IR"
+    )
+    declaration = _verified_source_span(
+        cas, source_hash, identity["declaration"], "formula derived binding declaration"
+    )
+    expression = _verified_source_span(
+        cas, source_hash, identity["expression"], "formula derived binding expression"
+    )
+    if not (
+        declaration["start"] <= expression["start"]
+        and expression["end"] <= declaration["end"]
+    ):
+        raise ProvenanceError("formula derived binding expression escapes its declaration")
+    source = _read_regular_file(cas.object_path(source_hash))
+    declaration_bytes = source[declaration["start"] : declaration["end"]]
+    try:
+        declaration_text = declaration_bytes.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise ProvenanceError("formula derived binding declaration is not UTF-8") from error
+    if re.match(rf"[ \t\r\n]*let[ \t\r\n]+{re.escape(name)}[ \t\r\n]*=", declaration_text) is None:
+        raise ProvenanceError("formula derived binding name disagrees with authored bytes")
+    equals = declaration_bytes.find(b"=")
+    expression_start = equals + 1
+    while (
+        expression_start < len(declaration_bytes)
+        and declaration_bytes[expression_start] in b" \t\r\n"
+    ):
+        expression_start += 1
+    expression_end = len(declaration_bytes)
+    while (
+        expression_end > expression_start
+        and declaration_bytes[expression_end - 1] in b" \t\r\n"
+    ):
+        expression_end -= 1
+    if expression != {
+        "end": declaration["start"] + expression_end,
+        "sha256": sha256_bytes(declaration_bytes[expression_start:expression_end]),
+        "start": declaration["start"] + expression_start,
+    }:
+        raise ProvenanceError(
+            "formula derived binding expression is not its complete authored RHS"
+        )
+    declaration_claim_id, _claim = _enclosing_claim(
+        cas, source_hash, source_ir_hash, declaration, "formula derived binding declaration"
+    )
+    expression_claim_id, _claim = _enclosing_claim(
+        cas, source_hash, source_ir_hash, expression, "formula derived binding expression"
+    )
+    if declaration_claim_id != expression_claim_id:
+        raise ProvenanceError("formula derived binding spans cross source IR claims")
+    return {
+        **identity,
+        "claim_id": declaration_claim_id,
+        "source_ir_sha256": source_ir_hash,
+    }, {source_hash, source_ir_hash}
+
+
 def _input_reference(
     execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
     identity: Any,
@@ -3631,6 +3733,645 @@ def _tree_fact_identities(tree: Any, label: str) -> list[dict[str, Any]]:
     return identities
 
 
+def _tree_derived_names(tree: Any, label: str) -> list[str]:
+    if not isinstance(tree, dict):
+        raise ProvenanceError(f"{label} tree is malformed")
+    if tree.get("kind") == "derived_reference":
+        name = tree.get("name")
+        if not isinstance(name, str) or not name:
+            raise ProvenanceError(f"{label} derived reference has no name")
+        return [name]
+    names: list[str] = []
+    children = tree.get("operands")
+    if isinstance(children, list):
+        for child in children:
+            names.extend(_tree_derived_names(child, label))
+    child = tree.get("operand")
+    if isinstance(child, dict):
+        names.extend(_tree_derived_names(child, label))
+    return names
+
+
+def _validate_plan_tree(plan: Any, tree: Any, label: str) -> None:
+    if not isinstance(plan, dict) or not isinstance(tree, dict):
+        raise ProvenanceError(f"{label} plan/tree is malformed")
+    kind = plan.get("kind")
+    tree_kind = tree.get("kind")
+    if kind == "reference":
+        if set(plan) != {"kind", "name"} or not isinstance(plan["name"], str):
+            raise ProvenanceError(f"{label} reference plan is malformed")
+        expected_tree_fields = {
+            "derived_reference": {"f64_bits", "kind", "name"},
+            "leaf": {"f64_bits", "fact", "kind", "slot"},
+        }.get(tree_kind)
+        tree_name = tree.get("name") if tree_kind == "derived_reference" else tree.get("slot")
+        if expected_tree_fields is None or set(tree) != expected_tree_fields or tree_name != plan["name"]:
+            raise ProvenanceError(f"{label} reference plan disagrees with its tree")
+        return
+    if kind in {"literal", "exact_literal"}:
+        expected = {"f64_bits", "kind"}
+        if kind == "exact_literal":
+            expected.add("exact_rational")
+        if set(plan) != expected or set(tree) != {"f64_bits", "kind"} or tree_kind != "literal":
+            raise ProvenanceError(f"{label} literal plan disagrees with its tree")
+        if plan["f64_bits"] != tree["f64_bits"]:
+            raise ProvenanceError(f"{label} literal bits disagree with its tree")
+        if kind == "exact_literal":
+            exact = _canonical_rational(plan["exact_rational"], f"{label} literal")
+            if struct.pack(">d", float(exact)).hex() != plan["f64_bits"]:
+                raise ProvenanceError(f"{label} literal exact value and bits disagree")
+        return
+    if kind in {"binary", "unary", "aggregate"}:
+        expected_plan_fields = {
+            "binary": {"kind", "left", "operator", "right"},
+            "unary": {"expression", "kind", "operator"},
+            "aggregate": {"kind", "operator", "slot"},
+        }[kind]
+        if (
+            set(plan) != expected_plan_fields
+            or set(tree) != {"f64_bits", "kind", "operands", "operator"}
+            or tree_kind != "operation"
+            or plan["operator"] != tree["operator"]
+            or not isinstance(tree["operands"], list)
+        ):
+            raise ProvenanceError(f"{label} operation plan disagrees with its tree")
+        if kind == "binary":
+            if len(tree["operands"]) != 2:
+                raise ProvenanceError(f"{label} binary tree has the wrong arity")
+            _validate_plan_tree(plan["left"], tree["operands"][0], label)
+            _validate_plan_tree(plan["right"], tree["operands"][1], label)
+        elif kind == "unary":
+            if len(tree["operands"]) != 1:
+                raise ProvenanceError(f"{label} unary tree has the wrong arity")
+            _validate_plan_tree(plan["expression"], tree["operands"][0], label)
+        else:
+            if not tree["operands"]:
+                raise ProvenanceError(f"{label} aggregate tree has no operands")
+            for operand in tree["operands"]:
+                _validate_plan_tree(
+                    {"kind": "reference", "name": plan["slot"]}, operand, label
+                )
+        return
+    shaped = {
+        "round": ({"expression", "kind", "mode", "precision"}, {"mode", "precision"}),
+        "to_currency": (
+            {"code", "expression", "kind", "mode", "places"},
+            {"code", "mode", "places"},
+        ),
+        "to_percent": (
+            {"expression", "kind", "mode", "places"},
+            {"mode", "places"},
+        ),
+        "to_scientific": (
+            {"expression", "figures", "kind", "mode"},
+            {"figures", "mode"},
+        ),
+    }.get(kind)
+    if shaped is None:
+        raise ProvenanceError(f"{label} plan kind is unsupported")
+    plan_fields, shared_fields = shaped
+    expected_tree_fields = {
+        "f64_bits",
+        "kind",
+        "operand",
+        "operand_exact",
+        *shared_fields,
+    }
+    if kind != "round":
+        expected_tree_fields.add("rendered")
+    if (
+        set(plan) != plan_fields
+        or tree_kind != kind
+        or set(tree) != expected_tree_fields
+        or any(plan[field] != tree[field] for field in shared_fields)
+    ):
+        raise ProvenanceError(f"{label} shaped plan disagrees with its tree")
+    _validate_plan_tree(plan["expression"], tree["operand"], label)
+
+
+def _tree_exact_bits(tree: dict[str, Any], value: Fraction, label: str) -> None:
+    bits = tree.get("f64_bits")
+    try:
+        expected = struct.pack(">d", float(value)).hex()
+    except OverflowError as error:
+        raise ProvenanceError(f"{label} exact value exceeds f64") from error
+    if bits != expected:
+        raise ProvenanceError(f"{label} recomputed value disagrees with tree bits")
+
+
+def _f64_fraction(bits: Any, label: str) -> Fraction:
+    if not isinstance(bits, str) or re.fullmatch(r"[0-9a-f]{16}", bits) is None:
+        raise ProvenanceError(f"{label} f64 bits are malformed")
+    value = struct.unpack(">d", bytes.fromhex(bits))[0]
+    if not math.isfinite(value):
+        raise ProvenanceError(f"{label} f64 value is not finite")
+    return Fraction(value)
+
+
+def _trunc_fraction(value: Fraction) -> int:
+    magnitude = abs(value.numerator) // value.denominator
+    return -magnitude if value < 0 else magnitude
+
+
+def _round_fraction(value: Fraction) -> int:
+    truncated = _trunc_fraction(value)
+    remainder = abs(value - truncated)
+    if remainder < Fraction(1, 2):
+        return truncated
+    return truncated + (-1 if value < 0 else 1)
+
+
+def _round_fraction_mode(value: Fraction, mode: Any, label: str) -> int:
+    if mode not in {
+        "ceiling",
+        "down",
+        "floor",
+        "half_down",
+        "half_even",
+        "half_up",
+        "up",
+    }:
+        raise ProvenanceError(f"{label} rounding mode is unsupported")
+    truncated = _trunc_fraction(value)
+    remainder = abs(value - truncated)
+    if remainder == 0:
+        return truncated
+    direction = -1 if value < 0 else 1
+    if mode == "down":
+        return truncated
+    if mode == "up":
+        return truncated + direction
+    if mode == "floor":
+        return value.numerator // value.denominator
+    if mode == "ceiling":
+        return -((-value.numerator) // value.denominator)
+    if remainder < Fraction(1, 2):
+        return truncated
+    if remainder > Fraction(1, 2) or mode == "half_up":
+        return truncated + direction
+    if mode == "half_down" or truncated % 2 == 0:
+        return truncated
+    return truncated + direction
+
+
+def _decimal_round(
+    value: Fraction, places: int, mode: str, label: str
+) -> Fraction:
+    if abs(places) > 100:
+        raise ProvenanceError(f"{label} precision exceeds the language limit")
+    if places >= 0:
+        scale = 10**places
+        return Fraction(_round_fraction_mode(value * scale, mode, label), scale)
+    scale = 10 ** (-places)
+    return Fraction(_round_fraction_mode(value / scale, mode, label) * scale)
+
+
+def _decimal_exponent(value: Fraction, label: str) -> int:
+    if value == 0:
+        raise ProvenanceError(f"{label} zero has no decimal exponent")
+    numerator = abs(value.numerator)
+    denominator = value.denominator
+    exponent = len(str(numerator)) - len(str(denominator))
+    if exponent >= 0:
+        at_least = numerator >= denominator * 10**exponent
+    else:
+        at_least = numerator * 10 ** (-exponent) >= denominator
+    return exponent if at_least else exponent - 1
+
+
+def _fixed_decimal(value: Fraction, places: int, mode: str, label: str) -> tuple[str, Fraction]:
+    narrowed = _decimal_round(value, places, mode, label)
+    scaled = narrowed * 10**places
+    if scaled.denominator != 1:
+        raise ProvenanceError(f"{label} decimal rendering is not integral")
+    integer = scaled.numerator
+    digits = str(abs(integer))
+    if places:
+        digits = digits.zfill(places + 1)
+        digits = f"{digits[:-places]}.{digits[-places:]}"
+    if integer < 0:
+        digits = "-" + digits
+    return digits, narrowed
+
+
+def _scientific(
+    value: Fraction, figures: int, mode: str, label: str
+) -> tuple[str, Fraction]:
+    if not 1 <= figures <= 100:
+        raise ProvenanceError(f"{label} significant figures are outside the language limit")
+    if value == 0:
+        return "0e0", Fraction()
+    negative = value < 0
+    magnitude = abs(value)
+    exponent = _decimal_exponent(magnitude, label)
+    power = figures - 1 - exponent
+    scaled = magnitude * 10**power if power >= 0 else magnitude / 10 ** (-power)
+    coefficient = _round_fraction_mode(scaled, mode, label)
+    if coefficient >= 10**figures:
+        coefficient = 10 ** (figures - 1)
+        exponent += 1
+    digits = str(coefficient).zfill(figures)
+    mantissa = digits if figures == 1 else f"{digits[0]}.{digits[1:]}"
+    sign = "-" if negative else ""
+    place = exponent - figures + 1
+    narrowed = Fraction(coefficient * (-1 if negative else 1))
+    narrowed = narrowed * 10**place if place >= 0 else narrowed / 10 ** (-place)
+    return f"{sign}{mantissa}e{exponent}", narrowed
+
+
+def _evaluate_exact_plan_tree(
+    plan: dict[str, Any],
+    tree: dict[str, Any],
+    dependencies: dict[str, Fraction],
+    label: str,
+) -> Fraction:
+    kind = plan["kind"]
+    if kind == "reference":
+        if tree["kind"] == "leaf":
+            slot, value = _observed_numeric_term(tree["fact"]["term"])
+            if slot != plan["name"] or tree["slot"] != slot:
+                raise ProvenanceError(f"{label} fact reference disagrees with its tree")
+        else:
+            value = dependencies.get(plan["name"])
+            if value is None:
+                raise ProvenanceError(f"{label} derived reference has no verified dependency")
+        _tree_exact_bits(tree, value, label)
+        return value
+    if kind == "exact_literal":
+        value = _canonical_rational(plan["exact_rational"], label)
+        _tree_exact_bits(tree, value, label)
+        return value
+    if kind == "literal":
+        value = _f64_fraction(plan["f64_bits"], label)
+        _tree_exact_bits(tree, value, label)
+        return value
+    if kind in {"binary", "unary", "aggregate"}:
+        if kind == "binary":
+            values = [
+                _evaluate_exact_plan_tree(
+                    plan["left"], tree["operands"][0], dependencies, label
+                ),
+                _evaluate_exact_plan_tree(
+                    plan["right"], tree["operands"][1], dependencies, label
+                ),
+            ]
+        elif kind == "unary":
+            values = [
+                _evaluate_exact_plan_tree(
+                    plan["expression"], tree["operands"][0], dependencies, label
+                )
+            ]
+        else:
+            values = [
+                _evaluate_exact_plan_tree(
+                    {"kind": "reference", "name": plan["slot"]},
+                    operand,
+                    dependencies,
+                    label,
+                )
+                for operand in tree["operands"]
+            ]
+        operator = plan["operator"]
+        if operator == "+":
+            result = values[0] + values[1]
+        elif operator == "-":
+            result = values[0] - values[1]
+        elif operator == "*":
+            result = values[0] * values[1]
+        elif operator == "/":
+            if values[1] == 0:
+                raise ProvenanceError(f"{label} divides by zero")
+            result = values[0] / values[1]
+        elif operator == "^":
+            if values[1].denominator != 1:
+                raise ProvenanceError(f"{label} exact power has a fractional exponent")
+            result = values[0] ** values[1].numerator
+        elif operator == "abs":
+            result = abs(values[0])
+        elif operator == "floor":
+            result = Fraction(values[0].numerator // values[0].denominator)
+        elif operator == "ceil":
+            result = Fraction(-((-values[0].numerator) // values[0].denominator))
+        elif operator == "round":
+            result = Fraction(_round_fraction(values[0]))
+        elif operator == "trunc":
+            result = Fraction(_trunc_fraction(values[0]))
+        elif operator == "sgn":
+            result = Fraction((values[0] > 0) - (values[0] < 0))
+        elif operator == "min":
+            result = min(values)
+        elif operator == "max":
+            result = max(values)
+        elif operator == "sum":
+            result = sum(values, Fraction())
+        elif operator == "count":
+            result = Fraction(len(values))
+        elif operator == "avg":
+            result = sum(values, Fraction()) / len(values)
+        elif operator in {"gcd", "lcm"}:
+            if any(value.denominator != 1 for value in values):
+                raise ProvenanceError(f"{label} {operator} operands are not integers")
+            left, right = (abs(value.numerator) for value in values)
+            gcd = math.gcd(left, right)
+            result = Fraction(gcd if operator == "gcd" else 0 if gcd == 0 else left // gcd * right)
+        elif operator == "mod":
+            if values[1] == 0:
+                raise ProvenanceError(f"{label} modulo divides by zero")
+            result = values[0] - _trunc_fraction(values[0] / values[1]) * values[1]
+        else:
+            raise ProvenanceError(f"{label} operator {operator} is not exact-replayable")
+        _tree_exact_bits(tree, result, label)
+        return result
+    if kind in {"round", "to_currency", "to_percent", "to_scientific"}:
+        operand = _evaluate_exact_plan_tree(
+            plan["expression"], tree["operand"], dependencies, label
+        )
+        if tree["operand_exact"] is None or _canonical_rational(
+            tree["operand_exact"], f"{label} shaped operand"
+        ) != operand:
+            raise ProvenanceError(f"{label} shaped operand exact value disagrees")
+        mode = plan["mode"]
+        if kind == "round":
+            precision = plan["precision"]
+            if (
+                not isinstance(precision, dict)
+                or set(precision) != {"kind", "value"}
+                or not isinstance(precision["value"], int)
+                or isinstance(precision["value"], bool)
+            ):
+                raise ProvenanceError(f"{label} rounding precision is malformed")
+            places = precision["value"]
+            if precision["kind"] == "significant_figures":
+                if not 1 <= places <= 100:
+                    raise ProvenanceError(
+                        f"{label} significant figures are outside the language limit"
+                    )
+                places = 0 if operand == 0 else places - 1 - _decimal_exponent(
+                    operand, label
+                )
+            elif precision["kind"] != "places":
+                raise ProvenanceError(f"{label} rounding precision kind is unsupported")
+            result = _decimal_round(operand, places, mode, label)
+        elif kind == "to_scientific":
+            rendered, result = _scientific(operand, plan["figures"], mode, label)
+            if tree["rendered"] != rendered:
+                raise ProvenanceError(f"{label} scientific rendering disagrees")
+        elif kind == "to_percent":
+            rendered, result = _fixed_decimal(
+                operand * 100, plan["places"], mode, label
+            )
+            result /= 100
+            if tree["rendered"] != rendered + "%":
+                raise ProvenanceError(f"{label} percent rendering disagrees")
+        else:
+            rendered, result = _fixed_decimal(
+                operand, plan["places"], mode, label
+            )
+            if tree["rendered"] != f"{plan['code']} {rendered}":
+                raise ProvenanceError(f"{label} currency rendering disagrees")
+        _tree_exact_bits(tree, result, label)
+        return result
+    raise ProvenanceError(f"{label} shaped operation is unsupported")
+
+
+def _normalized_derived_guard_v2(
+    cas: Cas,
+    derived: Any,
+    *,
+    by_source: dict[str, tuple[str | None, dict[str, Any]]],
+    execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
+    expected_inputs: list[dict[str, Any]],
+    formula_bundles: list[tuple[str, dict[str, Any]]],
+    guard_name: str,
+    observed: Fraction,
+    observed_bits: str,
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(derived, dict) or set(derived) != {
+        "computations",
+        "formula_sequence",
+        "inputs",
+        "root_computation_id",
+        "verification",
+    }:
+        raise ProvenanceError("formula derived guard has the wrong schema")
+    root_id = derived["root_computation_id"]
+    if not isinstance(root_id, int) or isinstance(root_id, bool) or root_id < 0:
+        raise ProvenanceError("formula derived guard root computation ID is invalid")
+    computations = derived["computations"]
+    if not isinstance(computations, list) or not computations:
+        raise ProvenanceError("formula derived guard has no computation graph")
+    normalized_computations = []
+    by_id: dict[int, dict[str, Any]] = {}
+    links: set[str] = set()
+    for position, computation in enumerate(computations):
+        if not isinstance(computation, dict) or set(computation) != {
+            "binding",
+            "computation_id",
+            "name",
+            "plan",
+            "referenced_computation_ids",
+            "result",
+            "tree",
+        }:
+            raise ProvenanceError("formula derived computation has the wrong schema")
+        computation_id = computation["computation_id"]
+        if (
+            not isinstance(computation_id, int)
+            or isinstance(computation_id, bool)
+            or computation_id < 0
+            or computation_id in by_id
+        ):
+            raise ProvenanceError("formula derived computation ID is invalid or repeated")
+        name = computation["name"]
+        if not isinstance(name, str) or not name:
+            raise ProvenanceError("formula derived computation has no name")
+        binding, binding_links = _binding_reference(cas, by_source, computation["binding"])
+        if binding["name"] != name:
+            raise ProvenanceError("formula derived computation disagrees with binding name")
+        links.update(binding_links)
+        plan = computation["plan"]
+        if not isinstance(plan, dict) or set(plan) != {
+            "expression",
+            "is_query_answer",
+            "scope",
+        }:
+            raise ProvenanceError("formula derived computation plan has the wrong schema")
+        if binding["source_plan"] != plan["expression"]:
+            raise ProvenanceError(
+                "formula derived computation plan disagrees with its authored binding"
+            )
+        scope = plan["scope"]
+        if (
+            plan["is_query_answer"] is not False
+            or not isinstance(scope, dict)
+            or set(scope) != {"derived_limit", "fact_limit"}
+            or not isinstance(scope["derived_limit"], int)
+            or isinstance(scope["derived_limit"], bool)
+            or scope["derived_limit"] != computation_id
+            or not isinstance(scope["fact_limit"], int)
+            or isinstance(scope["fact_limit"], bool)
+            or scope["fact_limit"] < 0
+        ):
+            raise ProvenanceError("formula derived computation plan scope is invalid")
+        references = computation["referenced_computation_ids"]
+        if (
+            not isinstance(references, list)
+            or any(
+                not isinstance(item, int)
+                or isinstance(item, bool)
+                or item < 0
+                or item >= computation_id
+                for item in references
+            )
+            or len(set(references)) != len(references)
+        ):
+            raise ProvenanceError("formula derived computation references are invalid")
+        result = computation["result"]
+        if not isinstance(result, dict) or set(result) != {
+            "dimension",
+            "exact_rational",
+            "f64_bits",
+        }:
+            raise ProvenanceError("formula derived computation result has the wrong schema")
+        exact = _canonical_rational(
+            result["exact_rational"], "formula derived computation result"
+        )
+        if binding["source_dimension"] != result["dimension"]:
+            raise ProvenanceError(
+                "formula derived computation dimension disagrees with its authored binding"
+            )
+        expected_bits = struct.pack(">d", float(exact)).hex()
+        if result["f64_bits"] != expected_bits:
+            raise ProvenanceError("formula derived computation exact result and bits disagree")
+        tree_names = _tree_derived_names(
+            computation["tree"], "formula derived computation"
+        )
+        _validate_plan_tree(
+            plan["expression"], computation["tree"], "formula derived computation"
+        )
+        if computation["tree"].get("f64_bits") != result["f64_bits"]:
+            raise ProvenanceError("formula derived computation result disagrees with its tree")
+        unique_tree_names = list(dict.fromkeys(tree_names))
+        if len(unique_tree_names) != len(references):
+            raise ProvenanceError("formula derived computation tree/reference count differs")
+        normalized = {
+            **computation,
+            "binding": binding,
+        }
+        normalized_computations.append(normalized)
+        by_id[computation_id] = {
+            "item": normalized,
+            "position": position,
+            "tree_names": unique_tree_names,
+        }
+    if normalized_computations[0]["computation_id"] != root_id:
+        raise ProvenanceError("formula derived computation graph is not root-first")
+    for computation_id, record in by_id.items():
+        references = record["item"]["referenced_computation_ids"]
+        for reference_id, tree_name in zip(references, record["tree_names"], strict=True):
+            dependency = by_id.get(reference_id)
+            if dependency is None or dependency["position"] <= record["position"]:
+                raise ProvenanceError("formula derived dependency is absent or out of order")
+            if dependency["item"]["name"] != tree_name:
+                raise ProvenanceError("formula derived dependency name disagrees with its tree")
+    order: list[int] = []
+    visiting: set[int] = set()
+    visited: set[int] = set()
+
+    def visit(computation_id: int) -> None:
+        if computation_id in visited:
+            return
+        if computation_id in visiting:
+            raise ProvenanceError("formula derived computation graph contains a cycle")
+        item = by_id.get(computation_id)
+        if item is None:
+            raise ProvenanceError("formula derived computation graph has a missing dependency")
+        visiting.add(computation_id)
+        order.append(computation_id)
+        for dependency_id in item["item"]["referenced_computation_ids"]:
+            visit(dependency_id)
+        visiting.remove(computation_id)
+        visited.add(computation_id)
+
+    visit(root_id)
+    if order != [item["computation_id"] for item in normalized_computations]:
+        raise ProvenanceError("formula derived computation graph is not canonical DFS order")
+    recomputed: dict[int, Fraction] = {}
+    for computation in reversed(normalized_computations):
+        computation_id = computation["computation_id"]
+        dependencies = {
+            by_id[dependency_id]["item"]["name"]: recomputed[dependency_id]
+            for dependency_id in computation["referenced_computation_ids"]
+        }
+        exact = _evaluate_exact_plan_tree(
+            computation["plan"]["expression"],
+            computation["tree"],
+            dependencies,
+            "formula derived computation",
+        )
+        if exact != _canonical_rational(
+            computation["result"]["exact_rational"],
+            "formula derived computation result",
+        ):
+            raise ProvenanceError("formula derived computation did not independently replay")
+        recomputed[computation_id] = exact
+    root = by_id[root_id]["item"]
+    if (
+        root["name"] != guard_name
+        or root["result"]["f64_bits"] != observed_bits
+        or _canonical_rational(root["result"]["exact_rational"], "formula derived root")
+        != observed
+    ):
+        raise ProvenanceError("formula derived root disagrees with guard comparison")
+    raw_inputs = derived["inputs"]
+    if not isinstance(raw_inputs, list) or not raw_inputs:
+        raise ProvenanceError("formula derived guard has no transitive inputs")
+    normalized_inputs = []
+    for identity in raw_inputs:
+        reference, input_links = _input_reference(
+            execution_bundles, identity, cas=cas, schema_version=3
+        )
+        normalized_inputs.append(reference)
+        links.update(input_links)
+    if normalized_inputs != expected_inputs:
+        raise ProvenanceError("formula derived guard inputs disagree with guard inputs")
+    raw_input_keys = [canonical_json_bytes(item) for item in raw_inputs]
+    if len(set(raw_input_keys)) != len(raw_input_keys):
+        raise ProvenanceError("formula derived guard repeats an input")
+    tree_input_keys = {
+        canonical_json_bytes(identity)
+        for computation in computations
+        for identity in _tree_fact_identities(
+            computation["tree"], "formula derived computation"
+        )
+    }
+    if tree_input_keys != set(raw_input_keys):
+        raise ProvenanceError("formula derived computation trees and inputs disagree")
+    formula_sequence = []
+    for identity in derived["formula_sequence"]:
+        reference, formula_links = _formula_reference(cas, identity, formula_bundles)
+        formula_sequence.append(reference)
+        links.update(formula_links)
+    verification, verification_links = _normalized_formula_verification_v2(
+        cas,
+        derived["verification"],
+        formula_bundles,
+        execution_bundles,
+        formula_sequence,
+        normalized_inputs,
+        allow_formula_less=True,
+        is_query_answer=False,
+    )
+    links.update(verification_links)
+    return {
+        **derived,
+        "computations": normalized_computations,
+        "formula_sequence": formula_sequence,
+        "inputs": normalized_inputs,
+        "verification": verification,
+    }, links
+
+
 def _normalized_formula_verification_v2(
     cas: Cas,
     verification: Any,
@@ -3639,6 +4380,7 @@ def _normalized_formula_verification_v2(
     expected_formulas: list[dict[str, Any]],
     expected_inputs: list[dict[str, Any]],
     *,
+    allow_formula_less: bool = False,
     is_query_answer: bool,
 ) -> tuple[dict[str, Any], set[str]]:
     if not isinstance(verification, dict) or set(verification) != {
@@ -3650,8 +4392,11 @@ def _normalized_formula_verification_v2(
         "passed",
     }:
         raise ProvenanceError("formula audit verification has the wrong schema")
+    expected_fully_verified = True
+    if allow_formula_less and not expected_formulas:
+        expected_fully_verified = False
     if (
-        verification["fully_verified"] is not True
+        verification["fully_verified"] is not expected_fully_verified
         or verification["passed"] is not True
         or verification["is_query_answer"] is not is_query_answer
         or verification["computation"]
@@ -3853,6 +4598,7 @@ def _normalized_formula_evidence_v2(
         guard_plan = []
         guard_links: set[str] = set()
         consumed_guard_inputs: set[bytes] = set()
+        derived_guard_inputs: dict[str, set[bytes]] = {}
         failed = False
         for position, guard in enumerate(guards):
             expected_formula, expected_index, expected_precondition = expected_guards[
@@ -3871,6 +4617,9 @@ def _normalized_formula_evidence_v2(
                 "tree",
                 "verification",
             }
+            raw_derived = guard.get("derived")
+            if raw_derived is not None:
+                evaluated_fields.add("derived")
             if outcome not in {"passed", "failed"} or set(guard) != evaluated_fields:
                 raise ProvenanceError(f"formula audit guard {position} has the wrong schema")
             if failed:
@@ -3893,14 +4642,20 @@ def _normalized_formula_evidence_v2(
             if precondition["predicate"] != "nonzero" or len(
                 precondition["arguments"]
             ) != 1:
-                raise ProvenanceError("formula audit v2 supports only direct unary nonzero guards")
+                raise ProvenanceError("formula audit v2 supports only unary nonzero guards")
             raw_inputs = guard["inputs"]
-            if not isinstance(raw_inputs, list) or len(raw_inputs) != 1:
-                raise ProvenanceError("formula audit guard must consume one direct input")
-            input_reference, input_links = _input_reference(
-                execution_bundles, raw_inputs[0], cas=cas, schema_version=3
-            )
-            guard_links.update(input_links)
+            if not isinstance(raw_inputs, list) or not raw_inputs:
+                raise ProvenanceError("formula audit guard must consume input facts")
+            input_references = []
+            for raw_input in raw_inputs:
+                input_reference, input_links = _input_reference(
+                    execution_bundles, raw_input, cas=cas, schema_version=3
+                )
+                input_references.append(input_reference)
+                guard_links.update(input_links)
+            input_keys = [canonical_json_bytes(item) for item in input_references]
+            if len(set(input_keys)) != len(input_keys):
+                raise ProvenanceError("formula audit guard repeats a consumed input")
             comparison = guard["comparison"]
             if not isinstance(comparison, dict) or set(comparison) != {
                 "observed",
@@ -3911,18 +4666,6 @@ def _normalized_formula_evidence_v2(
             observed, observed_bits = _exact_value(
                 comparison["observed"], "formula guard observed"
             )
-            slot, _runtime_value = _observed_numeric_term(raw_inputs[0]["term"])
-            source_slot, input_value = _input_reference_numeric_term(
-                cas, input_reference
-            )
-            if source_slot != slot:
-                raise ProvenanceError(
-                    "formula audit guard slot disagrees with observation bytes"
-                )
-            if observed != input_value:
-                raise ProvenanceError(
-                    "formula audit guard value disagrees with its consumed fact"
-                )
             threshold, threshold_bits = _exact_value(
                 comparison["threshold"], "formula guard threshold"
             )
@@ -3945,42 +4688,92 @@ def _normalized_formula_evidence_v2(
             if (
                 not isinstance(plan, dict)
                 or set(plan) != {"expression", "is_query_answer", "scope"}
-                or plan["expression"] != {"kind": "reference", "name": slot}
                 or plan["is_query_answer"] is not False
+                or not isinstance(plan["expression"], dict)
+                or set(plan["expression"]) != {"kind", "name"}
+                or plan["expression"].get("kind") != "reference"
+                or not isinstance(plan["expression"].get("name"), str)
+                or not plan["expression"]["name"]
             ):
-                raise ProvenanceError("formula audit guard is not a direct observed plan")
+                raise ProvenanceError("formula audit guard is not a bound-reference plan")
+            slot = plan["expression"]["name"]
             tree = guard["tree"]
-            if (
-                not isinstance(tree, dict)
-                or set(tree) != {"f64_bits", "fact", "kind", "slot"}
-                or tree["kind"] != "leaf"
-                or tree["slot"] != slot
-                or tree["fact"] != raw_inputs[0]
-                or tree["f64_bits"] != observed_bits
-            ):
-                raise ProvenanceError("formula audit guard tree is not its direct observed input")
+            normalized_derived = None
+            if raw_derived is None:
+                if len(raw_inputs) != 1:
+                    raise ProvenanceError("formula audit direct guard must consume one input")
+                source_slot, input_value = _input_reference_numeric_term(
+                    cas, input_references[0]
+                )
+                runtime_slot, _runtime_value = _observed_numeric_term(raw_inputs[0]["term"])
+                if source_slot != runtime_slot or runtime_slot != slot:
+                    raise ProvenanceError(
+                        "formula audit guard slot disagrees with observation bytes"
+                    )
+                if observed != input_value:
+                    raise ProvenanceError(
+                        "formula audit guard value disagrees with its consumed fact"
+                    )
+                if (
+                    not isinstance(tree, dict)
+                    or set(tree) != {"f64_bits", "fact", "kind", "slot"}
+                    or tree["kind"] != "leaf"
+                    or tree["slot"] != slot
+                    or tree["fact"] != raw_inputs[0]
+                    or tree["f64_bits"] != observed_bits
+                ):
+                    raise ProvenanceError(
+                        "formula audit guard tree is not its direct observed input"
+                    )
+            else:
+                if (
+                    not isinstance(tree, dict)
+                    or set(tree) != {"f64_bits", "kind", "name"}
+                    or tree["kind"] != "derived_reference"
+                    or tree["name"] != slot
+                    or tree["f64_bits"] != observed_bits
+                ):
+                    raise ProvenanceError(
+                        "formula audit guard tree is not its derived input"
+                    )
+                normalized_derived, derived_links = _normalized_derived_guard_v2(
+                    cas,
+                    raw_derived,
+                    by_source=by_source,
+                    execution_bundles=execution_bundles,
+                    expected_inputs=input_references,
+                    formula_bundles=formula_bundles,
+                    guard_name=slot,
+                    observed=observed,
+                    observed_bits=observed_bits,
+                )
+                guard_links.update(derived_links)
+                if slot in derived_guard_inputs:
+                    raise ProvenanceError("formula audit repeats one derived guard binding")
+                derived_guard_inputs[slot] = set(input_keys)
             verification, verification_links = _normalized_guard_verification_v2(
                 cas,
                 guard["verification"],
                 formula_bundles,
                 execution_bundles,
                 formula,
-                [input_reference],
+                input_references,
             )
             guard_links.update(verification_links)
-            consumed_guard_inputs.add(canonical_json_bytes(input_reference))
-            normalized_guards.append(
-                {
-                    "comparison": comparison,
-                    "formula": formula,
-                    "inputs": [input_reference],
-                    "outcome": outcome,
-                    "plan": plan,
-                    "precondition": precondition,
-                    "tree": tree,
-                    "verification": verification,
-                }
-            )
+            consumed_guard_inputs.update(input_keys)
+            normalized_guard = {
+                "comparison": comparison,
+                "formula": formula,
+                "inputs": input_references,
+                "outcome": outcome,
+                "plan": plan,
+                "precondition": precondition,
+                "tree": tree,
+                "verification": verification,
+            }
+            if normalized_derived is not None:
+                normalized_guard["derived"] = normalized_derived
+            normalized_guards.append(normalized_guard)
             failed = outcome == "failed"
         if not failed and len(guards) != len(expected_guards):
             raise ProvenanceError("formula audit guard prefix ended before all guards passed")
@@ -4010,9 +4803,14 @@ def _normalized_formula_evidence_v2(
                 "verification",
             }:
                 raise ProvenanceError("formula audit evaluated derivation has the wrong schema")
+            body_sequence = []
+            for identity in body_derivation["formula_sequence"]:
+                reference, links = _formula_reference(cas, identity, formula_bundles)
+                body_sequence.append(reference)
+                body_links.update(links)
             if (
                 body_derivation["export"] != item["export"]
-                or body_derivation["formula_sequence"] != item["formula_sequence"]
+                or body_sequence[: len(sequence)] != sequence
                 or body_derivation["question"] != item["question"]
             ):
                 raise ProvenanceError("formula audit body identity disagrees with its execution")
@@ -4026,18 +4824,31 @@ def _normalized_formula_evidence_v2(
                 )
                 body_inputs.append(reference)
                 body_links.update(links)
-            tree_inputs = {
-                canonical_json_bytes(identity)
-                for identity in _tree_fact_identities(
-                    body_derivation["tree"], "formula body"
+            body_input_keys = [canonical_json_bytes(reference) for reference in body_inputs]
+            if len(set(body_input_keys)) != len(body_input_keys):
+                raise ProvenanceError("formula audit body repeats a consumed input")
+            tree_inputs: set[bytes] = set()
+            for identity in _tree_fact_identities(
+                body_derivation["tree"], "formula body"
+            ):
+                reference, links = _input_reference(
+                    execution_bundles, identity, cas=cas, schema_version=3
                 )
-            }
-            if tree_inputs != {
-                canonical_json_bytes(identity) for identity in raw_body_inputs
-            }:
+                tree_inputs.add(canonical_json_bytes(reference))
+                body_links.update(links)
+            for name in dict.fromkeys(
+                _tree_derived_names(body_derivation["tree"], "formula body")
+            ):
+                expanded = derived_guard_inputs.get(name)
+                if expanded is None:
+                    raise ProvenanceError(
+                        "formula audit body has an unwitnessed derived reference"
+                    )
+                tree_inputs.update(expanded)
+            if tree_inputs != set(body_input_keys):
                 raise ProvenanceError("formula audit body tree and input set disagree")
             if not consumed_guard_inputs.issubset(
-                {canonical_json_bytes(reference) for reference in body_inputs}
+                set(body_input_keys)
             ):
                 raise ProvenanceError("formula audit body omits a guard-consumed input")
             verification, links = _normalized_formula_verification_v2(
@@ -4045,7 +4856,7 @@ def _normalized_formula_evidence_v2(
                 body_derivation["verification"],
                 formula_bundles,
                 execution_bundles,
-                sequence,
+                body_sequence,
                 body_inputs,
                 is_query_answer=True,
             )
@@ -4054,7 +4865,7 @@ def _normalized_formula_evidence_v2(
                 "derivation": {
                     **body_derivation,
                     "export": export,
-                    "formula_sequence": sequence,
+                    "formula_sequence": body_sequence,
                     "inputs": body_inputs,
                     "question": question,
                     "verification": verification,
@@ -4229,6 +5040,7 @@ def _validate_formula_execution_evidence(
     audit_command: Sequence[str] | None,
     *,
     allow_migration_input_references: bool = False,
+    allow_migration_derived_bindings: bool = False,
 ) -> set[str]:
     if audit_command is None:
         raise ProvenanceError("formula evidence replay requires --formula-audit-binary")
@@ -4302,6 +5114,27 @@ def _validate_formula_execution_evidence(
         ):
             raise ProvenanceError("stored execution witness contract disagrees with audit")
     expected_derivations, expected_witnesses = expected_hashes(expected)
+    if (
+        allow_migration_derived_bindings
+        and sorted(expected_witnesses) != stored_witnesses
+    ):
+        legacy_expected = [
+            (
+                derivation,
+                derivation_links,
+                _project_legacy_derived_bindings(witness, enrich=False),
+                witness_links,
+            )
+            for derivation, derivation_links, witness, witness_links in expected
+        ]
+        legacy_derivations, legacy_witnesses = expected_hashes(legacy_expected)
+        if (
+            sorted(legacy_derivations) == stored_derivations
+            and sorted(legacy_witnesses) == stored_witnesses
+        ):
+            expected = legacy_expected
+            expected_derivations = legacy_derivations
+            expected_witnesses = legacy_witnesses
     if (
         sorted(expected_derivations) != stored_derivations
         or sorted(expected_witnesses) != stored_witnesses
@@ -4974,6 +5807,8 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         formula_audit_command: Sequence[str] | None = None,
         allow_unwitnessed_baseline: bool = False,
         allow_migration_formula_inputs_baseline: bool = False,
+        allow_migration_derived_bindings_baseline: bool = False,
+        _baseline_workspace_input_overrides: dict[str, str] | None = None,
     ) -> None:
         super().__init__(
             cas_root,
@@ -4990,6 +5825,12 @@ class BundleRegistrationTransaction(CasMutationTransaction):
         self.allow_migration_formula_inputs_baseline = (
             allow_migration_formula_inputs_baseline
         )
+        self.allow_migration_derived_bindings_baseline = (
+            allow_migration_derived_bindings_baseline
+        )
+        self._baseline_workspace_input_overrides = dict(
+            _baseline_workspace_input_overrides or {}
+        )
 
     def __enter__(self):
         try:
@@ -5005,6 +5846,10 @@ class BundleRegistrationTransaction(CasMutationTransaction):
                 _allow_migration_formula_inputs=(
                     self.allow_migration_formula_inputs_baseline
                 ),
+                _allow_migration_derived_bindings=(
+                    self.allow_migration_derived_bindings_baseline
+                ),
+                _workspace_input_overrides=self._baseline_workspace_input_overrides,
             )
             assert self._baseline_manifest is not None
             return self
@@ -5042,14 +5887,60 @@ class BundleRegistrationTransaction(CasMutationTransaction):
 class BundleRootReplacementTransaction(BundleRegistrationTransaction):
     """Explicitly replace owned roots and prune only newly unreachable objects."""
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        *args: Any,
+        planned_workspace_input_hashes: dict[str, str] | None = None,
+        workspace_input_snapshots: dict[str, bytes] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        self._planned_workspace_input_hashes = {
+            _require_repo_path(path, "planned workspace input path"): _require_hash(
+                digest, f"planned workspace input {path}"
+            )
+            for path, digest in (planned_workspace_input_hashes or {}).items()
+        }
+        self._workspace_input_snapshots = {
+            _require_repo_path(path, "workspace input snapshot path"): bytes(data)
+            for path, data in (workspace_input_snapshots or {}).items()
+        }
+        for path, data in self._workspace_input_snapshots.items():
+            planned = self._planned_workspace_input_hashes.get(path)
+            if planned is not None and sha256_bytes(data) != planned:
+                raise ProvenanceError(
+                    f"workspace input snapshot disagrees with plan for {path}"
+                )
+        super().__init__(
+            *args,
+            _baseline_workspace_input_overrides=self._planned_workspace_input_hashes,
+            **kwargs,
+        )
         self._baseline_digests: set[str] = set()
 
+    def _validate_planned_workspace_inputs(self) -> None:
+        root = self.workspace_root or self.manifest_path.parent
+        for repo_path, expected_hash in sorted(
+            self._planned_workspace_input_hashes.items()
+        ):
+            actual_hash = sha256_bytes(
+                _read_regular_file(root / PurePosixPath(repo_path))
+            )
+            if actual_hash != expected_hash:
+                raise ProvenanceError(
+                    f"planned workspace input bytes changed for {repo_path}"
+                )
+
     def __enter__(self):
-        super().__enter__()
-        self._baseline_digests = set(self.cas.index)
-        return self
+        self._validate_planned_workspace_inputs()
+        try:
+            super().__enter__()
+            self._validate_planned_workspace_inputs()
+            self._baseline_digests = set(self.cas.index)
+            return self
+        except Exception:
+            if self._entered:
+                super().__exit__(Exception, None, None)
+            raise
 
     def _stage_prune(self, digests: set[str]) -> None:
         try:
@@ -5087,6 +5978,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
     def replace_roots(self, replacements: dict[str, dict[str, Any]]) -> dict[str, Any]:
         if not self._entered or self._committed:
             raise ProvenanceError("root replacement transaction is not open")
+        self._validate_planned_workspace_inputs()
         if not isinstance(replacements, dict) or not replacements:
             raise ProvenanceError("root replacements must be a non-empty object")
         expected_current: dict[str, str] = {}
@@ -5125,6 +6017,7 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
             expected_absent=expected_absent,
         )
         try:
+            self._validate_planned_workspace_inputs()
             self._publish_index()
             with tempfile.TemporaryDirectory(
                 prefix="adj-provenance-candidate-"
@@ -5139,7 +6032,10 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                     formula_inventory_command=self.formula_inventory_command,
                     formula_audit_command=self.formula_audit_command,
                     _allow_unreferenced=True,
+                    _allow_migration_derived_bindings=True,
+                    _workspace_input_snapshots=self._workspace_input_snapshots,
                 )
+            self._validate_planned_workspace_inputs()
             reachable = _reachable(self.cas, registered)
             unreachable = set(self.cas.index) - reachable
             staged_strays = unreachable - self._baseline_digests
@@ -5154,8 +6050,10 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                 for digest, record in self.cas.index.items()
                 if digest in reachable
             }
+            self._validate_planned_workspace_inputs()
             self._publish_index()
             self._publish_manifest(canonical_json_bytes(manifest))
+            self._validate_planned_workspace_inputs()
             _validate_repository_unlocked(
                 self.cas.root,
                 self.manifest_path,
@@ -5163,7 +6061,9 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                 workspace_root=self.workspace_root,
                 formula_inventory_command=self.formula_inventory_command,
                 formula_audit_command=self.formula_audit_command,
+                _workspace_input_snapshots=self._workspace_input_snapshots,
             )
+            self._validate_planned_workspace_inputs()
             self._finish_commit()
         except Exception:
             self._rollback()
@@ -5274,7 +6174,46 @@ def _validate_manifest_schema(schema_path: Path, manifest: dict[str, Any]) -> No
         raise ProvenanceError("manifest JSON Schema: " + failures[0].lstrip(": "))
 
 
-def _validate_cas_schemas(schema_path: Path, cas: Cas) -> None:
+def _project_legacy_derived_bindings(
+    value: dict[str, Any], *, enrich: bool
+) -> dict[str, Any]:
+    projected = copy.deepcopy(value)
+    if projected.get("contract") != "adj-lang/formula_execution/v2":
+        return projected
+    for guard in projected.get("guards", []):
+        derived = guard.get("derived") if isinstance(guard, dict) else None
+        if not isinstance(derived, dict):
+            continue
+        for computation in derived.get("computations", []):
+            if not isinstance(computation, dict):
+                continue
+            binding = computation.get("binding")
+            plan = computation.get("plan")
+            result = computation.get("result")
+            if not all(isinstance(item, dict) for item in (binding, plan, result)):
+                raise ProvenanceError("legacy derived binding projection is malformed")
+            if enrich:
+                binding["source_plan"] = copy.deepcopy(plan.get("expression"))
+                binding["source_dimension"] = result.get("dimension")
+            else:
+                if (
+                    binding.get("source_plan") != plan.get("expression")
+                    or binding.get("source_dimension") != result.get("dimension")
+                ):
+                    raise ProvenanceError(
+                        "derived binding attestation cannot project to legacy"
+                    )
+                binding.pop("source_plan")
+                binding.pop("source_dimension")
+    return projected
+
+
+def _validate_cas_schemas(
+    schema_path: Path,
+    cas: Cas,
+    *,
+    allow_legacy_derived_bindings: bool = False,
+) -> None:
     from jsonschema import Draft202012Validator
 
     schema = json.loads(_read_regular_file(schema_path).decode("utf-8"))
@@ -5305,6 +6244,14 @@ def _validate_cas_schemas(schema_path: Path, cas: Cas) -> None:
                 + issue.message
                 for issue in validator.iter_errors(value)
             )
+            if failures and allow_legacy_derived_bindings and kind == "execution_witness":
+                projected = _project_legacy_derived_bindings(value, enrich=True)
+                failures = sorted(
+                    ".".join(str(part) for part in issue.absolute_path)
+                    + ": "
+                    + issue.message
+                    for issue in validator.iter_errors(projected)
+                )
             if failures:
                 raise ProvenanceError(
                     f"CAS {kind} {digest} JSON Schema: {failures[0].lstrip(': ')}"
@@ -5569,6 +6516,7 @@ def _validate_bundle(
     formula_inventory_command: Sequence[str] | None,
     formula_audit_command: Sequence[str] | None,
     allow_migration_formula_inputs: bool,
+    allow_migration_derived_bindings: bool,
 ) -> None:
     if digest in validated:
         return
@@ -5621,6 +6569,7 @@ def _validate_bundle(
             formula_inventory_command=formula_inventory_command,
             formula_audit_command=formula_audit_command,
             allow_migration_formula_inputs=allow_migration_formula_inputs,
+            allow_migration_derived_bindings=allow_migration_derived_bindings,
         )
     sources = bundle["sources"]
     if not isinstance(sources, list) or not sources:
@@ -5859,6 +6808,7 @@ def _validate_bundle(
                 bundle,
                 formula_audit_command,
                 allow_migration_input_references=allow_migration_formula_inputs,
+                allow_migration_derived_bindings=allow_migration_derived_bindings,
             )
         )
     if cas.index[digest]["links"] != sorted(expected_links):
@@ -5880,6 +6830,9 @@ def _validate_repository_unlocked(
     _allow_unreferenced: bool = False,
     _allow_unwitnessed: bool = False,
     _allow_migration_formula_inputs: bool = False,
+    _allow_migration_derived_bindings: bool = False,
+    _workspace_input_overrides: dict[str, str] | None = None,
+    _workspace_input_snapshots: dict[str, bytes] | None = None,
 ) -> dict[str, Any]:
     cas = Cas(cas_root)
     cas.load()
@@ -5896,7 +6849,11 @@ def _validate_repository_unlocked(
         raise ProvenanceError("provenance manifest is not canonical JSON")
     if schema_path is not None:
         _validate_manifest_schema(schema_path, manifest)
-        _validate_cas_schemas(schema_path, cas)
+        _validate_cas_schemas(
+            schema_path,
+            cas,
+            allow_legacy_derived_bindings=_allow_migration_derived_bindings,
+        )
     if set(manifest) != {"algorithm", "bundle_hashes", "manifest_id", "schema_version"}:
         raise ProvenanceError("provenance manifest has unknown or missing fields")
     _require_nonempty(manifest["manifest_id"], "manifest_id")
@@ -5929,6 +6886,7 @@ def _validate_repository_unlocked(
             formula_inventory_command=formula_inventory_command,
             formula_audit_command=formula_audit_command,
             allow_migration_formula_inputs=_allow_migration_formula_inputs,
+            allow_migration_derived_bindings=_allow_migration_derived_bindings,
         )
     if not _allow_unwitnessed:
         inventoried = {
@@ -5955,14 +6913,46 @@ def _validate_repository_unlocked(
                 + ",".join(extra)
             )
     effective_workspace_root = workspace_root or manifest_path.parent
-    for repo_path, expected_hash in sorted(bundle_inputs.items()):
-        input_bytes = _read_regular_file(
-            effective_workspace_root / PurePosixPath(repo_path)
+    overrides = {
+        _require_nonempty(path, "workspace input override path"): _require_hash(
+            digest, f"workspace input override {path}"
         )
-        if sha256_bytes(input_bytes) != expected_hash:
+        for path, digest in (_workspace_input_overrides or {}).items()
+    }
+    seen_override_paths: set[str] = set()
+    workspace_snapshots = {
+        _require_repo_path(path, "workspace input snapshot path"): bytes(data)
+        for path, data in (_workspace_input_snapshots or {}).items()
+    }
+    seen_snapshot_paths: set[str] = set()
+    for repo_path, expected_hash in sorted(bundle_inputs.items()):
+        input_bytes = workspace_snapshots.get(repo_path)
+        if input_bytes is None:
+            input_bytes = _read_regular_file(
+                effective_workspace_root / PurePosixPath(repo_path)
+            )
+        else:
+            seen_snapshot_paths.add(repo_path)
+        actual_hash = sha256_bytes(input_bytes)
+        override_hash = overrides.get(repo_path)
+        if override_hash is not None:
+            seen_override_paths.add(repo_path)
+        if actual_hash != expected_hash and actual_hash != override_hash:
             raise ProvenanceError(
                 f"workspace input bytes disagree with bundle for {repo_path}"
             )
+    if seen_override_paths != set(overrides):
+        missing = sorted(set(overrides) - seen_override_paths)
+        raise ProvenanceError(
+            "workspace input overrides do not name baseline bundle inputs: "
+            + ", ".join(missing)
+        )
+    if seen_snapshot_paths != set(workspace_snapshots):
+        missing = sorted(set(workspace_snapshots) - seen_snapshot_paths)
+        raise ProvenanceError(
+            "workspace input snapshots do not name bundle inputs: "
+            + ", ".join(missing)
+        )
     reachable = _reachable(cas, normalized_bundles)
     unreferenced = sorted(set(cas.index) - reachable)
     if unreferenced and not _allow_unreferenced:

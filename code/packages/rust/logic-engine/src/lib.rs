@@ -1116,11 +1116,7 @@ impl KnowledgeBase {
         &self,
         derived: &crate::compute::Derived,
     ) -> Option<crate::compute::ComputationPlanRef<'_>> {
-        let id = derived.computation_id?;
-        let stored = self.derived.get(id.0)?;
-        if !std::ptr::eq(stored, derived) {
-            return None;
-        }
+        let id = self.computation_id_for(derived)?;
         let plan = self.computation_plans.get(id.0)?;
         Some(crate::compute::ComputationPlanRef {
             expr: &plan.expr,
@@ -1128,6 +1124,21 @@ impl KnowledgeBase {
             is_query_answer: plan.is_query_answer,
             scope: plan.scope,
         })
+    }
+
+    /// Return the stable compiler-owned identity for this exact stored result.
+    /// Clones and similarly named bindings are rejected so audit consumers cannot
+    /// attach a trusted plan to an artifact that the KB did not retain.
+    pub fn computation_id_for(
+        &self,
+        derived: &crate::compute::Derived,
+    ) -> Option<crate::compute::ComputationId> {
+        let id = derived.computation_id?;
+        let stored = self.derived.get(id.0)?;
+        if !std::ptr::eq(stored, derived) || self.computation_plans.get(id.0).is_none() {
+            return None;
+        }
+        Some(id)
     }
 
     pub(crate) fn computation_scope(&self) -> crate::compute::ComputationScope {
@@ -1673,6 +1684,10 @@ mod tests {
         kb.add_derived(derived);
 
         let stored = &kb.derived_bindings()[0];
+        assert_eq!(
+            kb.computation_id_for(stored),
+            Some(compute::ComputationId(0))
+        );
         let plan = kb
             .computation_plan_for(stored)
             .expect("stored artifact has a plan");
@@ -1681,6 +1696,7 @@ mod tests {
         assert_eq!(plan.scope.derived_limit, 0);
 
         let clone = stored.clone();
+        assert!(kb.computation_id_for(&clone).is_none());
         assert!(kb.computation_plan_for(&clone).is_none());
     }
 

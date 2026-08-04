@@ -373,10 +373,18 @@
     },
     "formula_guard_v2": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "required": ["derived"] },
+          "then": { "properties": { "inputs": { "minItems": 1 } } },
+          "else": { "properties": { "inputs": { "maxItems": 1, "minItems": 1 } } }
+        }
+      ],
       "properties": {
         "comparison": { "$ref": "#/$defs/formula_comparison_v2" },
+        "derived": { "$ref": "#/$defs/formula_guard_derived_v2" },
         "formula": { "$ref": "#/$defs/formula_reference" },
-        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference_v3" }, "maxItems": 1, "minItems": 1, "type": "array" },
+        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference_v3" }, "minItems": 1, "type": "array" },
         "outcome": { "enum": ["passed", "failed"] },
         "plan": { "$ref": "#/$defs/formula_guard_plan_v2" },
         "precondition": { "$ref": "#/$defs/formula_indexed_precondition" },
@@ -384,6 +392,65 @@
         "verification": { "$ref": "#/$defs/formula_guard_verification_v2" }
       },
       "required": ["comparison", "formula", "inputs", "outcome", "plan", "precondition", "tree", "verification"],
+      "type": "object"
+    },
+    "formula_guard_binding_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "minLength": 1, "type": "string" },
+        "declaration": { "$ref": "#/$defs/formula_span" },
+        "expression": { "$ref": "#/$defs/formula_span" },
+        "name": { "minLength": 1, "type": "string" },
+        "source_dimension": { "minLength": 1, "type": "string" },
+        "source_plan": { "$ref": "#/$defs/formula_plan_expression" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" },
+        "source_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["claim_id", "declaration", "expression", "name", "source_dimension", "source_ir_sha256", "source_plan", "source_sha256"],
+      "type": "object"
+    },
+    "formula_guard_computation_plan_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "expression": { "$ref": "#/$defs/formula_plan_expression" },
+        "is_query_answer": { "const": false },
+        "scope": {
+          "additionalProperties": false,
+          "properties": {
+            "derived_limit": { "minimum": 0, "type": "integer" },
+            "fact_limit": { "maximum": 18446744073709551615, "minimum": 0, "type": "integer" }
+          },
+          "required": ["derived_limit", "fact_limit"],
+          "type": "object"
+        }
+      },
+      "required": ["expression", "is_query_answer", "scope"],
+      "type": "object"
+    },
+    "formula_guard_computation_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "binding": { "$ref": "#/$defs/formula_guard_binding_v2" },
+        "computation_id": { "minimum": 0, "type": "integer" },
+        "name": { "minLength": 1, "type": "string" },
+        "plan": { "$ref": "#/$defs/formula_guard_computation_plan_v2" },
+        "referenced_computation_ids": { "items": { "minimum": 0, "type": "integer" }, "type": "array", "uniqueItems": true },
+        "result": { "$ref": "#/$defs/formula_result" },
+        "tree": { "$ref": "#/$defs/formula_tree" }
+      },
+      "required": ["binding", "computation_id", "name", "plan", "referenced_computation_ids", "result", "tree"],
+      "type": "object"
+    },
+    "formula_guard_derived_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "computations": { "items": { "$ref": "#/$defs/formula_guard_computation_v2" }, "minItems": 1, "type": "array" },
+        "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "type": "array" },
+        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference_v3" }, "minItems": 1, "type": "array" },
+        "root_computation_id": { "minimum": 0, "type": "integer" },
+        "verification": { "$ref": "#/$defs/formula_verification_v2" }
+      },
+      "required": ["computations", "formula_sequence", "inputs", "root_computation_id", "verification"],
       "type": "object"
     },
     "formula_indexed_precondition": {
@@ -1032,6 +1099,41 @@
     },
     "formula_verification_v2": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "is_query_answer": { "const": true } },
+            "required": ["is_query_answer"]
+          },
+          "then": {
+            "properties": {
+              "formula_quotes": { "minItems": 1 },
+              "fully_verified": { "const": true }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "fully_verified": { "const": true } },
+            "required": ["fully_verified"]
+          },
+          "then": {
+            "properties": { "formula_quotes": { "minItems": 1 } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "formula_quotes": { "maxItems": 0 } },
+            "required": ["formula_quotes"]
+          },
+          "then": {
+            "properties": {
+              "fully_verified": { "const": false },
+              "is_query_answer": { "const": false }
+            }
+          }
+        }
+      ],
       "properties": {
         "computation": {
           "additionalProperties": false,
@@ -1055,10 +1157,9 @@
             "required": ["identity", "provenance", "quote"],
             "type": "object"
           },
-          "minItems": 1,
           "type": "array"
         },
-        "fully_verified": { "const": true },
+        "fully_verified": { "type": "boolean" },
         "input_quotes": {
           "items": {
             "additionalProperties": false,

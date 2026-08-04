@@ -332,12 +332,17 @@ option mapping, or judge/evaluation failure.
     parsed from those authored bytes. Declared v1 rejects v2 exact-literal nodes;
     only the explicit one-time migration bridge projects an already authenticated
     unguarded v2 replay to the frozen v1 shape. The checked-in CAS now includes one
-    positive and three independently failed proportion executions. Derived guard
-    inputs continue to fail closed pending 9c.
-9c. Bind predicate contributions over derived slots to their computation IDs,
-    transitive input facts, formula sources, and `verify_derived` results. Direct
-    observed predicate inputs are fact-bound and quote-checked now; derived inputs
-    must not claim equivalent byte completeness until this transitive proof lands.
+    positive and three independently failed proportion executions.
+9c. **Complete.** Predicate contributions over derived slots now retain stable,
+    root-first computation IDs, compiler-owned plans and historical scopes, exact
+    authored `let` declaration/expression spans, transitive observed facts, formula
+    sources, runtime trees/results, and independent `verify_derived` quote checks.
+    CAS normalization reconstructs the computation closure, binds every authored
+    span to a represented source-IR claim, cross-checks plan/tree topology and exact
+    results, and requires set equality among runtime, tree, guard, and verifier
+    inputs. Same-name rebinding resolves within each predecessor scope. The positive
+    proportion query exercises this derived path; its three zero controls remain
+    direct-observation abstention witnesses.
 9d. Replace state-machine failure detail strings with a structured error
     discriminant and typed phase on both guard and yield precision failures.
 10. Use the first-class derivation and execution-witness contract to execute every

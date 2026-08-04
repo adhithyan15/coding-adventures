@@ -194,6 +194,32 @@ fn program_map_uses_parser_spans_for_imports_and_ordinary_queries() {
 }
 
 #[test]
+fn program_map_binds_let_names_and_expressions_to_authored_bytes() {
+    let src = "let total = left + right\n\
+rulebook nested {\n\
+    let scaled = total * factor\n\
+}\n";
+
+    let mapped = adj_lang::program_source_map(src).expect("valid source map");
+
+    assert_eq!(mapped.bindings.len(), 2);
+    assert_eq!(mapped.bindings[0].name, "total");
+    assert_eq!(
+        span_text!(src, mapped.bindings[0].declaration_span),
+        "let total = left + right"
+    );
+    assert_eq!(
+        span_text!(src, mapped.bindings[0].expression_span),
+        "left + right"
+    );
+    assert_eq!(mapped.bindings[1].name, "scaled");
+    assert_eq!(
+        span_text!(src, mapped.bindings[1].expression_span),
+        "total * factor"
+    );
+}
+
+#[test]
 fn rulebook_contained_formulabook_is_mapped_like_the_lowerer_maps_it() {
     let src = "rulebook outer {\n\
     formulabook nested {\n\
