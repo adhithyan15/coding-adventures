@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
+import signal
 import subprocess
 import sys
 import threading
@@ -62,6 +64,31 @@ class _ValidatorOutputLimitExceeded(RuntimeError):
     """Raised when a running validator exceeds its bounded evidence channel."""
 
 
+def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
+    """Terminate the validator and descendants that may still own its pipes."""
+    if os.name == "nt":
+        try:
+            subprocess.run(
+                ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=5,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    if process.poll() is None:
+        try:
+            process.kill()
+        except OSError:
+            pass
+
+
 def _bounded_subprocess_run(
     args: list[str],
     *,
@@ -82,6 +109,10 @@ def _bounded_subprocess_run(
         cwd=cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        creationflags=(
+            subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
+        ),
+        start_new_session=os.name != "nt",
     )
     if process.stdout is None or process.stderr is None:
         process.kill()
@@ -89,9 +120,19 @@ def _bounded_subprocess_run(
         raise OSError("validator output pipes were not created")
 
     overflow = threading.Event()
+    termination_lock = threading.Lock()
+    terminated = False
     read_errors: list[BaseException] = []
     stdout_chunks: list[bytes] = []
     stderr_chunks: list[bytes] = []
+
+    def terminate_tree() -> None:
+        nonlocal terminated
+        with termination_lock:
+            if terminated:
+                return
+            terminated = True
+            _terminate_process_tree(process)
 
     def read_bounded(stream: Any, chunks: list[bytes]) -> None:
         captured = 0
@@ -103,17 +144,11 @@ def _bounded_subprocess_run(
                     captured += len(chunk[:remaining])
                 if captured > MAX_VALIDATOR_OUTPUT_BYTES or len(chunk) > remaining:
                     overflow.set()
-                    try:
-                        process.kill()
-                    except OSError:
-                        pass
+                    terminate_tree()
                     return
         except (OSError, ValueError) as error:  # pragma: no cover - OS boundary
             read_errors.append(error)
-            try:
-                process.kill()
-            except OSError:
-                pass
+            terminate_tree()
 
     readers = [
         threading.Thread(
@@ -128,14 +163,20 @@ def _bounded_subprocess_run(
     try:
         returncode = process.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
-        process.kill()
-        process.wait()
+        terminate_tree()
+        process.wait(timeout=5)
         raise
     finally:
         for reader in readers:
-            reader.join()
+            reader.join(timeout=5)
+        if any(reader.is_alive() for reader in readers):
+            terminate_tree()
+            for reader in readers:
+                reader.join(timeout=1)
         process.stdout.close()
         process.stderr.close()
+        if any(reader.is_alive() for reader in readers):
+            raise OSError("validator descendants kept output pipes open")
 
     if read_errors:
         raise OSError(f"could not read validator output: {read_errors[0]}")

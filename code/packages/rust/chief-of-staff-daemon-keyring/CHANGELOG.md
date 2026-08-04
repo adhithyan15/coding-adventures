@@ -7,3 +7,5 @@
 - Reject non-canonical, identity, low-order, and mixed-order public keys.
 - Map production and developer declarations to their Tier 3 and Tier 1 ceilings.
 - Keep filesystem and key details out of stable operator-facing failures.
+- Keep Windows key files open without writer/delete sharing while validating
+  them, using only stable Rust metadata APIs.

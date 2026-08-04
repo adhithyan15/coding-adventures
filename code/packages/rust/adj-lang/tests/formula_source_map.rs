@@ -1,4 +1,4 @@
-use adj_lang::ast::{ArithOp, ExprAst};
+use adj_lang::ast::{ArithOp, ExprAst, NumLit};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -30,6 +30,34 @@ fn simple_formula_maps_exact_declaration_and_body_bytes() {
             if matches!(lhs.as_ref(), ExprAst::Ref(name) if name == "a")
                 && matches!(rhs.as_ref(), ExprAst::Ref(name) if name == "b")
     ));
+}
+
+#[test]
+fn preconditions_map_exact_declaration_and_argument_bytes() {
+    let src = "formulabook guarded {\n    formula divide(a, b) = a / b\n        requires nonzero(b), nonzero(a + b)\n        source \"division domain\"\n}\n";
+
+    let formulas = adj_lang::formula_source_map(src).expect("valid guarded formula");
+    let mapped = &formulas[0];
+
+    assert_eq!(span_text!(src, mapped.body_span), "a / b");
+    assert_eq!(mapped.preconditions.len(), 2);
+    assert_eq!(mapped.preconditions[0].precondition.predicate, "nonzero");
+    assert_eq!(
+        span_text!(src, mapped.preconditions[0].declaration_span),
+        "nonzero(b)"
+    );
+    assert_eq!(
+        span_text!(src, mapped.preconditions[0].argument_spans[0]),
+        "b"
+    );
+    assert_eq!(
+        span_text!(src, mapped.preconditions[1].declaration_span),
+        "nonzero(a + b)"
+    );
+    assert_eq!(
+        span_text!(src, mapped.preconditions[1].argument_spans[0]),
+        "a + b"
+    );
 }
 
 #[test]
@@ -88,7 +116,7 @@ fn multi_step_formula_body_span_selects_only_the_final_expression() {
         &mapped.formula.body,
         ExprAst::Bin(ArithOp::Div, lhs, rhs)
             if matches!(lhs.as_ref(), ExprAst::Ref(name) if name == "scaled")
-                && matches!(rhs.as_ref(), ExprAst::Lit(value) if *value == 2.0)
+                && matches!(rhs.as_ref(), ExprAst::ExactLit(NumLit::Int(2)))
     ));
 }
 

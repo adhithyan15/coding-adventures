@@ -1,5 +1,45 @@
 # Changelog
 
+## Warning-free complete book (2026-08-03)
+
+- Added explicit static bold and italic faces for Malayalam and every
+  comparison script, plus bookmark-safe Unicode commands, eliminating all
+  font-shape and Hyperref warnings without dropping multilingual examples.
+- Made the five handwritten recap labels unique and shortened only the running
+  titles that exceeded the text block. Small sentence-level copy-flow repairs
+  in the generated family, number, and colour chapters remove the remaining
+  horizontal overflows while preserving the canonical teaching sequence.
+- Added natural page bottoms for deliberately short micro-lessons and made
+  open-right chapter versos truly empty, without a running header or page
+  number.
+- The forced 107-page build now has zero missing glyphs, overfull or underfull
+  boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font
+  warnings. All 107 pages were rendered and visually inspected.
+- The 33 top-level and 97 total outline entries, title and author metadata,
+  generated source hashes, and zero schema or generator leaks remain intact.
+
+## Canonical Chapters 6–31 in the book (2026-08-03)
+
+- Migrated all thirty-three Malayalam lessons after Chapter 5 to the strict
+  schema-v2 curriculum contract: canonical spine nodes, unique
+  prerequisite-safe sequence, explicit sub-five-minute budgets, typed block
+  boundaries, and closed knowledge introductions and assessments.
+- Generated twenty-six LaTeX chapters from those canonical lessons instead of
+  copying app content into a separate book source. The committed source-hash
+  manifest is independently checked against Language Ladder for Chapters 6–31.
+- Added a reusable Malayalam comparison-font set for Malayalam, Tamil, Telugu,
+  Kannada, Devanagari, and Arabic-script examples. The 107-page PDF has zero
+  missing glyphs and preserves the full 33-entry top-level chapter outline.
+- Rendered and inspected all 107 pages, including dense case, calendar,
+  etymology, daypart, and register sections. No teaching content is clipped,
+  colliding, accidentally omitted, or replaced by generator metadata.
+- The expanded artifact's cleanup baseline is 17 overfull boxes, four
+  underfull horizontal boxes, ten underfull vertical boxes, four duplicate
+  practice labels, 108 Hyperref warnings, and seven font warnings. `HL-B27`
+  tracks those warnings and the running headers on intentionally empty versos.
+- The single all-books publication gate still compiles and catalogs all twenty
+  downloadable volumes successfully.
+
 ## Sub-five-minute lesson remediation (2026-08-02)
 
 - All thirty-seven Malayalam duration violations are resolved. Thirty-three

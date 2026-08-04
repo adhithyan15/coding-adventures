@@ -1,5 +1,160 @@
 # Changelog
 
+## 0.36.4 — string interpolation (`"a#{x}b"`)
+
+Filed as its own backlog item ("C backend: support string interpolation").
+The Ruby frontend already lowers `"a#{x}b"` to `Expr::StrConcat { parts }`
+for every backend (Python/TypeScript already had real emit arms; Go/JS/Rust
+reject it with a deferred-node message); the C backend rejected
+`Feature::StringInterpolation` outright — no emitter arm existed at all.
+
+New runtime helper `_sir_display_str(SirValue) -> char*` (plus
+`_sir_display_seq`/`_sir_display_map`/`_sir_display_pair`/
+`_sir_display_float`) renders a value Ruby's `to_s` way into a fresh
+string — a STRING-RETURNING PARALLEL to the existing `puts`/`print`
+`FILE*`-writing `_sir_fmt` family, not a refactor of it, so that
+already-tested path is completely untouched (the two are kept in
+lockstep by inspection: same tag list, same per-tag text, same recursion
+structure and depth cap, so `#{arr}` and `puts arr` always agree).
+
+`Expr::StrConcat`'s emitter arm folds each part through
+`_sir_display_str` and pairwise through `_sir_cat` (which takes exactly
+two operands) into one `_sir_str(...)` — `emit_str_concat` for the
+simple-operand case (inline, mirroring `SeqLit`'s simple path) and
+`emit_str_concat_names` for the compound-operand case (over
+`hoist_operands`-hoisted temps, mirroring `SeqLit`'s hoisted path).
+`Feature::StringInterpolation` added to `ACCEPTED_FEATURES`.
+
+`semantic-ir-to-c` 0.36.3 -> 0.36.4.
+
+## 0.36.3 — fix: `Foo.new` never invoked `initialize`
+
+Filed as a follow-up in 0.36.1 and fixed here. `__new__` used to lower
+straight to `_sir_new_instance(cls)` — a bare allocation — and the
+emitter's own scan REJECTED any `__new__` with more than the class-name
+arg ("`__new__` with constructor arguments or a non-constant class name"),
+so `Foo.new(args)` either compiled to an object whose constructor never
+ran (every `@ivar` an `initialize` would have set stayed nil) or, once
+constructor args were involved, failed to compile at all. This matched
+NONE of the other five backends: Go's `_sir_call_new`, Rust's equivalent,
+and Ruby's `sir_new` have always allocated THEN explicitly invoked the
+registered `initialize` (if any) with the constructor args — a comment on
+`semantic-ir-to-ruby`'s own `__new__` arm already described this as
+mirroring "the Go/C/Rust runtimes", which was aspirational for C until
+now. The `counter_state` program in `sir-conformance`'s corpus (`class
+Counter; def initialize; @n = 0; end; ...`) was previously SKIPPED on the
+C backend for exactly this reason (a declared v0 gap, not a faithfulness
+bug) — it now runs and agrees with every other backend.
+
+Fixed with a new `_sir_call_new(cls, argc, ...)` runtime helper: allocate
+via the existing `_sir_new_instance`, resolve `initialize` up the
+ancestry with the existing `_sir_resolve_method` (the same walk
+`_sir_call_method` uses, so an inherited `initialize` runs correctly),
+bind `self` to the new object and invoke it with the constructor args if
+found, restore `self`, and always return the object — even with no
+`initialize` registered (Ruby's default no-op `Object#initialize`). The
+emitter's scan now only requires `__new__`'s first arg to be a `StrLit`
+class name; any further args are ordinary constructor arguments emitted
+like any other call args, no longer specially rejected.
+
+`semantic-ir-to-c` 0.36.2 -> 0.36.3.
+
+## 0.36.2 — fix: `<<` builtin name collided between C's bitwise shift and Ruby's operator
+
+`variadic_helper`'s `"<<" => "_sir_shift_left"` entry (added when Ruby's
+polymorphic `<<` operator landed in 0.36.0) is checked BEFORE
+`fixed_helper`'s `"<<" => ("_sir_shl", 2)` entry (C's raw bitwise left
+shift, pre-existing from `c-to-semantic-ir`'s own milestone-6 shift
+lowering) — so `fixed_helper`'s entry was silently DEAD CODE for the name
+`"<<"`. Every C program's `<<` was actually getting Ruby's
+saturate-instead-of-grow-a-bignum Integer-shift semantics, not a raw bit
+shift. Caught by `c-to-semantic-ir`'s `three_way_conformance` test: a
+uint64 value needing the bit pattern `0x8000000000000000` (one past
+`INT64_MAX`, unrepresentable without saturating) got silently clamped,
+corrupting a later logical-right-shift read.
+
+Fixed at the source: `c-to-semantic-ir` now lowers its OWN `<<` to a
+distinct `c<<` builtin name (mirroring the pre-existing `>>`/`u>>`
+signed/unsigned split), so `fixed_helper`'s `"<<"` key is renamed to
+`"c<<"` here too — `variadic_helper`'s `"<<"` entry is UNCHANGED and
+still correctly means Ruby's operator. The rarely-reached
+`_sir_builtin_dispatch` closure-lookup table (`Scope::Builtin` VarRef,
+e.g. a hypothetical `arr.reduce(:<<)`) gained the same split: `"<<"` now
+calls `_sir_shift_left_v` (Ruby semantics, matching `variadic_helper`)
+and a new `"c<<"` entry calls `_sir_shl` (C semantics) — previously it
+only had the C mapping under the bare name, which would have been wrong
+for a Ruby-sourced `<<` closure reference.
+
+`semantic-ir-to-c` 0.36.1 -> 0.36.2.
+
+## 0.36.1 — execution proof for dotted/chained bracket-index writes
+
+No runtime code changed: `_sir_builtin_method_v`'s existing `"[]="` arm
+already dispatches on the receiver's ACTUAL runtime tag (Array vs Hash vs
+whatever an arbitrary receiver EXPRESSION evaluates to), so it already
+handled `obj.data[0] = v` and `a[0][1] = v` correctly the moment
+`ruby-to-semantic-ir` 0.9.1 started emitting the right nested `__method__`
+calls for those receiver shapes — no C-side change needed. This release
+just adds the execution proof: `chained_bracket_write_on_a_nested_array`,
+`dotted_receiver_write_through_an_oop_method_call`,
+`dotted_receiver_write_through_a_hash_value_persists`, and a regression
+check (`single_bracket_write_on_a_bare_name_receiver_is_unaffected`) that
+the original v0-scoped shape still runs identically.
+
+Along the way, discovered (and filed as its own follow-up, NOT fixed
+here) that `ClassName.new` never invokes `initialize` in this backend —
+`_sir_new_instance` only allocates a bare instance; already documented
+in-code as a deferred "later slice" (`emit.rs`), just not previously
+tracked as an explicit backlog item. Worked around in this PR's own
+OOP-dot-call test by using a method that returns a literal rather than an
+ivar, so the test proves the RECEIVER-CHAIN dispatch is correct
+independent of that separate gap.
+
+## 0.36.0 — `<<`, Ruby's shift operator
+
+`ruby-to-semantic-ir` 0.9.0 lowers `<<` to a top-level `BuiltinCall("<<",
+[lhs, rhs])` (the same op-name-keyed protocol `+`/`-`/`*`/`/` use, not the
+`__method__` dispatch protocol Collections methods use). This adds the C
+runtime side: a new `"<<" => "_sir_shift_left"` entry in `variadic_helper`,
+and `_sir_shift_left_v`, polymorphic over three receiver types:
+
+- **Array** — pushes each RHS operand in place (`_sir_array_push_one`,
+  the same slice-4 growth helper `Array#push` uses) and returns the
+  (mutated) receiver, so `a << 1 << 2` chains and mutation is visible
+  through a shared binding, exactly like `push`.
+- **Integer** — bitwise shift, matching real Ruby's rules: a NEGATIVE
+  shift amount REVERSES direction (`5 << -1 == 5 >> 1 == 2`); since this
+  runtime has no bignum (unlike real Ruby, which grows arbitrarily — `1 <<
+  63 == 9223372036854775808`, one past this runtime's `INT64_MAX`), an
+  out-of-range left shift SATURATES at `INT64_MAX`/`INT64_MIN` rather than
+  wrapping or reaching C's shift-amount-exceeds-width UB (shifting by
+  `>= 64` on a 64-bit type is UB, so every actual C shift is pre-checked
+  into range first). The exact-boundary case (`-1 << 63 == INT64_MIN`,
+  which fits with no truncation) is verified to NOT spuriously saturate.
+- **String** — concatenates via `_sir_cat`/`_sir_str_of` (the same helper
+  `_sir_plus_v` already uses for `+`'s String-receiver case) and returns a
+  NEW string. Two documented divergences from real Ruby: (1) true
+  `String#<<` mutates in place with shared-reference visibility (like
+  Array's push) — this runtime's `SIR_STR` is a bare `const char *` with
+  no heap box/pointer identity (unlike `SIR_SEQ`/`SIR_MAP`), so in-place
+  mutation isn't representable without a different String representation
+  entirely; (2) real Ruby's `"a" << 98` appends the CHARACTER at codepoint
+  98 (`"ab"`) — `_sir_str_of` only recognizes String/Symbol, so a
+  non-String RHS here is silently dropped instead (matching `_sir_plus_v`'s
+  existing behavior for `"a" + 5` in this same runtime, which also drops a
+  non-string operand rather than stringifying or raising).
+
+Only the C backend has a `<<` runtime implementation so far — Python/JS/
+Go/Rust/Ruby all ACCEPT `<<` at emit time (confirmed via direct probe) but
+their shared runtime packages don't register a `"<<"` builtin entry, so
+running the emitted program raises a clean runtime error naming the gap
+(confirmed for Python: `NameError: SIR builtin '<<' is not implemented in
+sir-runtime-core's dispatch table ... a backend coverage gap`) — the SAME
+shape of gap as `[]`/`[]=` bracket-index dispatch, tracked as its own
+follow-up rather than blocking this PR.
+
+`semantic-ir-to-c` 0.35.0 -> 0.36.0.
+
 ## 0.35.0 — deferred-from-slice-8 String methods: char-set + padding
 
 Widens `_sir_builtin_method_v` with the two String method families slice 8

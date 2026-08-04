@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C08-dayavayi
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 360
 chapter: 8
 type: word
 headword: ദയവായി
@@ -9,18 +12,32 @@ prerequisites: [ML-C01-athe]
 sounds: [malayalam-vowel-sign-aa, malayalam-vowel-sign-i, malayalam-va]
 roots: [daya-compassion]
 etymology_hook: "ദയവായി = 'as a compassion' — Malayalam asks please with daya, like Tamil, Kannada, Telugu, Arabic faḍl and Hindi kṛpā"
-est_minutes: 4
+duration:
+  max_seconds: 283
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04]
+practises:
+  knowledge: [ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: polite
+variety: standard-colloquial
 reviews_of: [ML-C01-athe]
 ---
 
 # ദയവായി (dayavāyi) — please (as a compassion)
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam's "please" turns compassion into an adverb: do this thing
 **as a kindness**.
 
-## The word
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-01]; assesses=[] -->
 
 **ദയവായി** = **please**, literally "**kindly / as a compassion**." Two pieces:
 
@@ -38,7 +55,8 @@ The family resemblance is unmistakable, and it reaches beyond Dravidian:
 **Arabic** *min faḍlik* ("from your **grace**") and **Hindi** *kṛpayā* (from
 *kṛpā*, "**compassion**") ask by the same grace-naming instinct.
 
-## The Dravidian family, side by side
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-02]; assesses=[] -->
 
 **daya** + a light verb, four ways:
 
@@ -47,7 +65,8 @@ The family resemblance is unmistakable, and it reaches beyond Dravidian:
 - Kannada **ದಯವಿಟ್ಟು** *daya**viṭṭu*** — compassion **+ having placed**
 - Telugu **దయచేసి** *daya**cēsi*** — compassion **+ having done**
 
-## Be honest about how it's used
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-03]; assesses=[] -->
 
 Honestly: as elsewhere in the family, the standalone word is a touch **formal /
 emphatic**. Everyday Malayalam politeness leans on the **respectful request**
@@ -55,7 +74,8 @@ form of the verb — endings like **‑ൂ** (*-ū*) or **‑ണം** (*-aṇa�
 (*irikkū*) "please sit," **പറയൂ** (*paṟayū*) "please tell me." Add **ദയവായി** in
 front when you want the courtesy spoken aloud.
 
-## Sound & structure point
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-04]; assesses=[] -->
 
 The heart of the word is **വാ** — *va* stretched by the **long‑ā** sign **ാ**
 (*-ā*) — then **യി**, *ya* + the *i* sign (**ി**). Malayalam's rounded letters
@@ -63,6 +83,7 @@ hang their vowel-signs to the right; the long **ാ** is simply a tall stroke af
 the consonant, the same *ā* you would meet across the Dravidian scripts.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "daya" — compassion — then "-vāyi," as / kindly]
@@ -70,6 +91,7 @@ the consonant, the same *ā* you would meet across the Dravidian scripts.
 - [YOU SAY: the everyday way — the verb ending: "irikkū" = please sit]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 [PAUSE 3s] What is the Malayalam word for please? (**ദയവായി** *dayavāyi*.) What do
 its pieces mean? ("**Compassion**" *daya* + "**as / having become**" *-vāyi* —

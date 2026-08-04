@@ -1,0 +1,98 @@
+{
+  "kind": "text_transform",
+  "operations": [
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 0,
+      "result_start": 0,
+      "source_end": 140202,
+      "source_start": 140181
+    },
+    {
+      "operation": "copy",
+      "result_end": 31,
+      "result_start": 0,
+      "source_end": 140233,
+      "source_start": 140202
+    },
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 31,
+      "result_start": 31,
+      "source_end": 140263,
+      "source_start": 140233
+    },
+    {
+      "operation": "mathml_to_infix",
+      "result_end": 43,
+      "result_start": 31,
+      "source_end": 140594,
+      "source_start": 140263
+    },
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 43,
+      "result_start": 43,
+      "source_end": 140601,
+      "source_start": 140594
+    },
+    {
+      "operation": "copy",
+      "result_end": 50,
+      "result_start": 43,
+      "source_end": 140608,
+      "source_start": 140601
+    },
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 50,
+      "result_start": 50,
+      "source_end": 140638,
+      "source_start": 140608
+    },
+    {
+      "operation": "mathml_to_infix",
+      "result_end": 62,
+      "result_start": 50,
+      "source_end": 140983,
+      "source_start": 140638
+    },
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 62,
+      "result_start": 62,
+      "source_end": 140990,
+      "source_start": 140983
+    },
+    {
+      "operation": "copy",
+      "result_end": 92,
+      "result_start": 62,
+      "source_end": 141020,
+      "source_start": 140990
+    },
+    {
+      "claim_id": "adj.math.arithmetic.proportion",
+      "operation": "discard",
+      "reason": "publisher HTML wrapper markup is structural and contributes no bytes to the rendered proportion statement",
+      "result_end": 92,
+      "result_start": 92,
+      "source_end": 141024,
+      "source_start": 141020
+    }
+  ],
+  "result_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+  "result_size": 92,
+  "source_sha256": "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+  "source_size": 536280
+}

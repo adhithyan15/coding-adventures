@@ -1,0 +1,93 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "disposition": "discarded",
+      "end": 2761,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 0
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.proportion.import.arithmetic",
+          "end": 2785,
+          "quote": "import \"arithmetic.adj\"\n",
+          "quote_sha256": "967650df942445e6134491a1ff88fbdd91b2ebd6e304d52399c84bb290a4f0db",
+          "start": 2761
+        }
+      ],
+      "disposition": "represented",
+      "end": 2785,
+      "start": 2761
+    },
+    {
+      "disposition": "discarded",
+      "end": 3253,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 2785
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.proportion.vocabulary",
+          "end": 3670,
+          "quote": "dictionary proportion_vocab {\n    define first_term          : finding  surface \"first term\", \"antecedent\", \"a\", \"first\"\n    define second_term         : finding  surface \"second term\", \"consequent\", \"b\", \"second\"\n    define third_term          : finding  surface \"third term\", \"c\", \"third\"\n    define fourth_proportional : finding  surface \"fourth proportional\", \"fourth term\", \"missing term\", \"unknown term\", \"x\"\n}\n",
+          "quote_sha256": "5cf3ca7a296f4fbc0508c18331e5de28b3864bb584cdb65da5bd02a62012d1e0",
+          "start": 3253
+        }
+      ],
+      "disposition": "represented",
+      "end": 3670,
+      "start": 3253
+    },
+    {
+      "disposition": "discarded",
+      "end": 4576,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 3670
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.proportion.use.proportion_vocab",
+          "end": 4601,
+          "quote": "    use proportion_vocab\n",
+          "quote_sha256": "9755488faa0d9fd8e31fbaea9035cb9713b39a7da456e51add463cbe4e595391",
+          "start": 4576
+        }
+      ],
+      "disposition": "represented",
+      "end": 4601,
+      "start": 4576
+    },
+    {
+      "disposition": "discarded",
+      "end": 4602,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 4601
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.math.arithmetic.proportion",
+          "end": 5241,
+          "quote": "    formula fourth_proportional(first_term, second_term, third_term) = quotient(product(second_term, third_term), first_term)\n        requires nonzero(first_term), nonzero(second_term), nonzero(third_term)\n        quote \"For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.\" at 0 snapshot \"6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851\"\n        source \"For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.\"\n        locator \"https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications\"\n        trust inferred\n",
+          "quote_sha256": "616227e8f7497746ec5bfbf7d7c0fe98011ed158c29d4005fbb6b6b9d3496e80",
+          "start": 4602
+        }
+      ],
+      "disposition": "represented",
+      "end": 5241,
+      "start": 4602
+    },
+    {
+      "disposition": "discarded",
+      "end": 5243,
+      "reason": "explanatory comments, separators, or closing syntax outside the selected import, vocabulary, use, and formula rules",
+      "start": 5241
+    }
+  ],
+  "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+  "source_size": 5243
+}

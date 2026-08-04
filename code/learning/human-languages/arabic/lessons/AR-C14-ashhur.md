@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C14-ashhur
+spine_node: SPINE-TIME-OF-DAY
+sequence: 580
 chapter: 14
 type: word
 headword: يناير فبراير مارس أبريل مايو يونيو يوليو أغسطس سبتمبر أكتوبر نوفمبر ديسمبر
@@ -9,19 +12,33 @@ prerequisites: [AR-C13-maa-khubz]
 sounds: [arabic-rtl, long-vowels]
 roots: [latin-months-borrowed]
 etymology_hook: "yanaayir, maaris, uktuubar... are simply Latin month-names in Arabic dress, borrowed for everyday/civil use — while the Islamic Hijri calendar keeps its OWN, entirely different 12 lunar months (Muharram, Rabi' al-Awwal...) for religious life, both running side by side"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02]
+practises:
+  knowledge: [AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C13-maa-khubz]
 ---
 
 # يناير to ديسمبر — Latin names, borrowed whole, running beside a second calendar
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Here's a genuinely different kind of honesty this lesson needs:
 Arabic doesn't have **one** answer to "what are the months called" — it has
 **two full calendars**, used for different purposes, side by side.
 
-## The Gregorian months — Latin, barely disguised
+## You'll want to know — Gregorian months
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C14-ASHHUR-01]; assesses=[] -->
 
 For the everyday, civil, solar calendar, Modern Standard Arabic simply
 **borrows** the familiar Latin-derived month names you already know from
@@ -55,7 +72,8 @@ February), **آذار** (*Ādhār*, March), and so on. So depending on the
 country, an Arabic speaker's civil-calendar month name might come from
 Latin *or* from Syriac — a third naming system, not just two.
 
-## Be honest: a second, completely different calendar runs alongside it
+## Why it's said this way — the other calendar
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C14-ASHHUR-02]; assesses=[] -->
 
 For **religious life** — Ramadan, Hajj, and the Islamic calendar generally
 — Arabic uses an entirely **separate** set of month names, from the
@@ -71,6 +89,7 @@ Two calendars, two jobs: the borrowed Latin names for the ordinary business
 week, the older lunar names for religious observance.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "yanāyir, fabrāyir, māris" — January, February, March — hear the
@@ -81,6 +100,7 @@ week, the older lunar names for religious observance.
   everyday use]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C14-ASHHUR-01, AR-CONCEPT-C14-ASHHUR-02] -->
 
 [PAUSE 3s] Where do Arabic's civil month names (*yanāyir, māris...*) come
 from? (**Borrowed Latin/European names**, recent civil-calendar loans.)

@@ -59,10 +59,15 @@ use logic_engine::Differential;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
-pub use ast::{Annotation, Define, DefineKind, OptDir, Program, RelOp, Statement, Term as AstTerm};
+pub use ast::{
+    Annotation, Define, DefineKind, FormulaPrecondition, OptDir, Program, RelOp, Statement,
+    Term as AstTerm,
+};
 pub use lower::{
-    lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredExit, LoweredGuard,
-    LoweredProgram, LoweredRangeLookup, LoweredState, LoweredStateMachine, LoweredTransition,
+    lower, replay_formula_source, ConstraintSystem, FormulaAbstention, FormulaApplicationTrace,
+    FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome, FormulaGuardTrace,
+    FormulaSourceReplay, LowerError, LoweredConstraint, LoweredExit, LoweredGuard, LoweredProgram,
+    LoweredRangeLookup, LoweredState, LoweredStateMachine, LoweredTransition,
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 pub use statemachine::{
@@ -98,6 +103,15 @@ pub struct FormulaSource {
     pub formula: ast::FormulaDef,
     pub declaration_span: SourceSpan,
     pub body_span: SourceSpan,
+    pub preconditions: Vec<FormulaPreconditionSource>,
+}
+
+/// One typed formula precondition paired with its exact authored bytes.
+#[derive(Debug, Clone, PartialEq)]
+pub struct FormulaPreconditionSource {
+    pub precondition: ast::FormulaPrecondition,
+    pub declaration_span: SourceSpan,
+    pub argument_spans: Vec<SourceSpan>,
 }
 
 /// One ordinary `? term` query and the exact bytes that declared it.
@@ -268,11 +282,44 @@ pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMa
                         formula.name
                     ))
                 })?;
+            let precondition_nodes = direct_child(formula_node, "formula_requires")
+                .map(|requires| collect_nodes(requires, "formula_precondition"))
+                .unwrap_or_default();
+            if precondition_nodes.len() != formula.preconditions.len() {
+                return Err(FormulaSourceMapError::Inconsistent(format!(
+                    "formula {} has {} parsed preconditions but {} adapted preconditions",
+                    formula.name,
+                    precondition_nodes.len(),
+                    formula.preconditions.len()
+                )));
+            }
+            let preconditions = precondition_nodes
+                .into_iter()
+                .zip(&formula.preconditions)
+                .map(|(node, precondition)| {
+                    let argument_spans = node
+                        .children
+                        .iter()
+                        .filter_map(|child| match child {
+                            ASTNodeOrToken::Node(expr) if expr.rule_name == "expr" => {
+                                Some(locator.node_span(expr))
+                            }
+                            _ => None,
+                        })
+                        .collect::<Result<Vec<_>, _>>()?;
+                    Ok(FormulaPreconditionSource {
+                        precondition: precondition.clone(),
+                        declaration_span: locator.node_span(node)?,
+                        argument_spans,
+                    })
+                })
+                .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
             inventory.push(FormulaSource {
                 formulabook: book_name.clone(),
                 formula: formula.clone(),
                 declaration_span: locator.node_span(formula_node)?,
                 body_span: locator.node_span(body_node)?,
+                preconditions,
             });
         }
     }

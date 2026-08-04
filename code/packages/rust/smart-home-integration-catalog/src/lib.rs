@@ -45101,19 +45101,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Switch, EntityKind::Sensor, EntityKind::Lock, EntityKind::Input],
             "switchbot",
         ),
-        local_hub_entry(
+        base_entry(
             "unifi",
             "UniFi Network",
-            "Local UniFi controller integration for presence, network, and device telemetry.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Cataloged,
-            2,
-            &["smart_home.read", "smart_home.diagnostics"],
-            &[EntityKind::Sensor, EntityKind::NetworkDiagnostic],
-            &[DiscoveryMechanism::Manual],
-            &[AuthMode::ApiKey, AuthMode::UsernamePassword],
+            "Authenticated local UniFi Network application, site, and adopted-device health inspection.",
+            IntegrationCategory::LocalHub,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
             "unifi",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::NetworkDiagnostic])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::ApiKey])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "unifi_network_integration_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the official local /proxy/network/integration/v1 API over HTTPS; plain HTTP is loopback-test-only.",
+            "The Vault-backed API key is materialized only as X-API-Key inside the bounded transport and never enters normalized state or request-plan debug output.",
+            "Remote Site Manager, connected clients, detailed statistics, events, adoption, guest authorization, port actions, and configuration remain separate policy- or command-specific work.",
+        ]),
         base_entry(
             "sonos",
             "Sonos",
@@ -45320,6 +45337,36 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "OTP/device-token authentication, events, snapshots, recordings, playback, export, PTZ, external recording, and configuration remain separate lifecycle- or capability-specific work.",
         ]),
         base_entry(
+            "zoneminder",
+            "ZoneMinder",
+            "Authenticated local ZoneMinder host, API, and monitor health inspection.",
+            IntegrationCategory::CameraMedia,
+            ConnectivityClass::LocalPolling,
+            ImplementationStatus::FirstPartyRuntime,
+            3,
+            "zoneminder",
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Camera])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::UsernamePassword])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "zoneminder_http_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+        ])
+        .with_notes(&[
+            "Production inspection uses the documented API 2.0 HTTPS login and short-lived JWT access-token flow; plain HTTP is loopback-test-only.",
+            "Credentials, refresh tokens, access tokens, login payloads, and token-bearing request targets remain inside the bounded transport.",
+            "Events, snapshots, streams, recordings, PTZ, monitor configuration, and token renewal remain separate lifecycle- or capability-specific work.",
+        ]),
+        base_entry(
             "reolink",
             "Reolink",
             "Authenticated local Reolink camera and NVR inspection plus verified recording and bounded PTZ control.",
@@ -45421,15 +45468,38 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor],
             "tuya",
         ),
-        energy_entry(
+        base_entry(
             "enphase_envoy",
             "Enphase Envoy",
-            "Local solar and energy telemetry integration.",
+            "Authenticated local Enphase IQ Gateway meter inventory and aggregate energy telemetry.",
+            IntegrationCategory::EnergyClimate,
             ConnectivityClass::LocalPolling,
-            ImplementationStatus::Cataloged,
+            ImplementationStatus::FirstPartyRuntime,
             4,
             "enphase_envoy",
-        ),
+        )
+        .with_capabilities(&["smart_home.read"])
+        .with_entities(&[EntityKind::Sensor])
+        .with_discovery(&[DiscoveryMechanism::Manual])
+        .with_auth(&[AuthMode::LocalToken])
+        .with_protocols(vec![ProtocolFamily::Vendor(
+            "enphase_iq_gateway_local_api".to_string(),
+        )])
+        .with_primitives(&[
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ])
+        .with_notes(&[
+            "Production inspection uses a pre-generated Vault-backed bearer token over HTTPS; plain HTTP is loopback-test-only.",
+            "Caller-supplied trust roots preserve certificate verification for IQ Gateways that use self-signed certificates.",
+            "Cloud token renewal, legacy authentication, inverter serials, live battery or relay topology, and controls remain separate policy-specific work.",
+        ]),
         base_entry(
             "fronius",
             "Fronius",
@@ -49015,37 +49085,6 @@ fn protocol_entry(
     .with_discovery(discovery)
     .with_auth(auth)
     .with_primitives(protocol_primitives(&protocol))
-}
-
-#[allow(clippy::too_many_arguments)]
-fn local_hub_entry(
-    id: &'static str,
-    name: &'static str,
-    summary: &'static str,
-    connectivity: ConnectivityClass,
-    status: ImplementationStatus,
-    priority: u8,
-    capabilities: &[&'static str],
-    entities: &[EntityKind],
-    discovery: &[DiscoveryMechanism],
-    auth: &[AuthMode],
-    ha_domain: &'static str,
-) -> IntegrationCatalogEntry {
-    base_entry(
-        id,
-        name,
-        summary,
-        IntegrationCategory::LocalHub,
-        connectivity,
-        status,
-        priority,
-        ha_domain,
-    )
-    .with_capabilities(capabilities)
-    .with_entities(entities)
-    .with_discovery(discovery)
-    .with_auth(auth)
-    .with_primitives(&local_transport_primitives(connectivity, discovery, auth))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -81048,6 +81087,41 @@ mod tests {
     }
 
     #[test]
+    fn unifi_entry_exposes_local_api_key_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let unifi = find_entry(&catalog, &IntegrationId::trusted("unifi")).unwrap();
+
+        assert_eq!(
+            unifi.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(unifi.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            unifi.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "unifi_network_integration_api".to_string()
+            )]
+        );
+        assert_eq!(unifi.auth_modes, vec![AuthMode::ApiKey]);
+        assert_eq!(
+            unifi.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
+        assert!(unifi
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read")));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!unifi
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
     fn reolink_entry_exposes_authenticated_cgi_runtime_primitives() {
         let catalog = first_party_catalog();
         let reolink = find_entry(&catalog, &IntegrationId::trusted("reolink")).unwrap();
@@ -81209,6 +81283,41 @@ mod tests {
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
         assert!(!synology
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia));
+    }
+
+    #[test]
+    fn zoneminder_entry_exposes_api_v2_health_runtime_primitives() {
+        let catalog = first_party_catalog();
+        let zoneminder = find_entry(&catalog, &IntegrationId::trusted("zoneminder")).unwrap();
+
+        assert_eq!(
+            zoneminder.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(zoneminder.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(
+            zoneminder.supported_protocols,
+            vec![ProtocolFamily::Vendor("zoneminder_http_api".to_string())]
+        );
+        assert_eq!(zoneminder.auth_modes, vec![AuthMode::UsernamePassword]);
+        assert_eq!(zoneminder.target_entity_kinds, vec![EntityKind::Camera]);
+        assert_eq!(
+            zoneminder.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        assert_eq!(
+            zoneminder.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
+        assert!(zoneminder
+            .required_primitives
+            .contains(&PrimitiveFamily::VaultLease));
+        assert!(!zoneminder
             .required_primitives
             .contains(&PrimitiveFamily::CameraMedia));
     }
@@ -81433,6 +81542,43 @@ mod tests {
             PrimitiveFamily::CommandMapping,
         ] {
             assert!(tasmota.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn enphase_entry_exposes_authenticated_local_meter_telemetry_runtime() {
+        let catalog = first_party_catalog();
+        let enphase =
+            find_entry(&catalog, &IntegrationId::trusted("enphase_envoy")).unwrap();
+
+        assert_eq!(
+            enphase.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(enphase.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(enphase.auth_modes, vec![AuthMode::LocalToken]);
+        assert_eq!(
+            enphase.supported_protocols,
+            vec![ProtocolFamily::Vendor(
+                "enphase_iq_gateway_local_api".to_string()
+            )]
+        );
+        assert_eq!(
+            enphase.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(
+            enphase.discovery_mechanisms,
+            vec![DiscoveryMechanism::Manual]
+        );
+        for primitive in [
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::EnergyTelemetry,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(enphase.required_primitives.contains(&primitive));
         }
     }
 

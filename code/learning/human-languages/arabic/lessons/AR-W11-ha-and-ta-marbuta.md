@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-W11-ha-and-ta-marbuta
+spine_node: SPINE-TAKE-LEAVE
+sequence: 370
 chapter: 4
 type: writing
 headword: "ه، ة"
@@ -8,20 +11,34 @@ romanization: "hāʾ, tāʾ marbūṭa"
 prerequisites: [AR-W10-ayn]
 sounds: [arabic-ha-light, arabic-ta-marbuta]
 roots: [phoenician-he]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02]
+practises:
+  knowledge: [AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02]
+skills: [speaking, reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-W10-ayn, AR-W04-dots-family-nun-ta, AR-C02-anta-anti]
 ---
 
 # ه and ة — the loop, and the ending that means "feminine"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two related shapes. **ه** (*hāʾ*) is a plain "h" — and the most
 **shape-shifting** letter you've met, wearing four genuinely different coats. Then
 **ة**, a letter built *out of* it, whose whole job is to say one grammatical
 thing: **this word is feminine**.
 
-## ه (hāʾ) — the loop that never looks the same
+## Script — ه (hāʾ) — the loop that never looks the same
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01]; assesses=[] -->
 
 Break it apart — there is really just *one piece*:
 
@@ -36,7 +53,8 @@ extreme.
 From Phoenician **hē** — the ancestor of Greek *epsilon* and Latin **E**. (Another
 one for the family tree: *ʾālep*→A, *bēt*→B, *hē*→**E**, *mem*→M, *ʿayin*→O.)
 
-## ة (tāʾ marbūṭa) — the "tied tāʾ"
+## Script — ة (tāʾ marbūṭa) — the "tied tāʾ"
+<!-- hl-knowledge: introduces=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02]; assesses=[] -->
 
 Now look carefully at this:
 
@@ -56,6 +74,7 @@ Nothing new to memorise — just two known pieces combined.
 **ة** — *salāma* is feminine. That's the next lesson.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02] -->
 
 [PAUSE 1s]
 - [YOU WRITE: **ه** — the loop; then try it isolated and final, feel it change]
@@ -64,6 +83,7 @@ Nothing new to memorise — just two known pieces combined.
 - [YOU SAY: "*hē* → Greek epsilon → Latin **E**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02] -->
 
 [PAUSE 3s] What makes **ه** unusual among the letters you've learned? (Its **loop
 changes shape** dramatically by position — four very different coats.) What is

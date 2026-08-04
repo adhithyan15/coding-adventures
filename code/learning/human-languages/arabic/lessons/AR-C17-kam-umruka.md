@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C17-kam-umruka
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 610
 chapter: 17
 type: phrase
 headword: كم عمرك؟
@@ -9,20 +12,34 @@ prerequisites: [AR-C16-al-saa]
 sounds: [arabic-ain, possessive-suffix-ka-ki]
 roots: [arabic-umr-life]
 etymology_hook: "كم عمرك؟ (kam ʿumruka?, 'how old are you?') is literally 'how much [is] your ʿumr' — ʿumr (life, lifetime, age) from root ع-م-ر, the same root behind the name ʿUmar; Arabic asks age with a NOUN + possessive suffix, no verb at all — a FOURTH shape, after Romance's 'have', Germanic's 'be', and Latin's 'born + accusative of duration'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02]
+practises:
+  knowledge: [AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C16-al-saa]
 ---
 
 # كم عمرك؟ — asking age with a noun, not a verb
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've seen Romance languages **have** their years, Germanic
 languages **be** their years, and Classical Latin itself use a third
 construction ("born" + accusative of duration). Arabic does something
 structurally different again: it doesn't use a verb for this at all.
 
-## عمر — life, lifetime, age
+## You'll want to know — عمر — life, lifetime, age
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C17-KAM-UMRUKA-01]; assesses=[] -->
 
 **عمر** (*ʿumr*) = "**age, lifetime, life span**" — from the root **ع-م-ر**
 (*ʿ-m-r*), broadly tied to the idea of **living, dwelling, flourishing** (the
@@ -31,6 +48,7 @@ habitation"). Age in Arabic isn't something you *have* or *are* — it's
 expressed as a possessed **noun**: "**your** ʿumr," "**my** ʿumr."
 
 ## Grammar Lens: كم عمرك؟ — no verb needed
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C17-KAM-UMRUKA-02]; assesses=[] -->
 
 > **كم عمرك؟** — "How old are you?" (to a man) — literally "**how much [is]
   your** *ʿumr*." (*kam ʿumruka?*)
@@ -46,6 +64,7 @@ Germanic's "I **am** twenty years [old]," not Latin's "**born** twenty years
 noun-quantity, stated without any verb at all.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ʿumr" — age, lifetime, life span]
@@ -53,6 +72,7 @@ noun-quantity, stated without any verb at all.
 - [YOU SAY: "ʿumrī ʿishrūna sana" — my age is twenty years, no verb at all]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->
 
 [PAUSE 3s] What does **عمر** literally mean, and what root is it from? ("**Age,
 lifetime**" — root **ع-م-ر**, tied to living/flourishing.) Does Arabic use a

@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Validate and lower JFET model-card `GDSNOI` channel-noise coefficient.
+- Validate and lower JFET model-card `NLEV` noise equation level.
+- Validate and lower JFET model-card `EG` energy gap.
+- Validate and lower JFET model-card `XTI` temperature exponent.
+- Validate and lower JFET model-card `IS` gate saturation current.
+- Validate and lower JFET model-card `FC` depletion coefficient.
+- Validate and lower JFET model-card `PB` / `VJ` junction potential.
+- Validate and lower JFET model-card `AF` flicker-noise exponent.
+- Validate and lower JFET model-card `KF` flicker-noise coefficient.
+- Validate and lower diode model-card `AF` flicker-noise exponent.
+- Validate and lower diode model-card `KF` flicker-noise coefficient.
+- Validate and lower diode model-card `EG` energy gap.
+- Validate and lower diode model-card `XTI` temperature exponent.
+- Validate and lower diode model-card `FC` depletion coefficient.
+- Validate and lower diode model-card `M` / `MJ` grading coefficient.
+- Validate and lower diode model-card `VJ` / `PB` junction potential.
+- Validate and lower finite, non-negative diode model-card `RS` series resistance.
+- Validate positive finite diode model-card `IBV` breakdown current.
 - Validate positive finite diode model-card `BV` breakdown voltage.
 - Validate positive finite diode model-card `N` emission coefficient.
 - Validate finite, non-negative diode model-card `TT` transit time.

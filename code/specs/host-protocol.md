@@ -315,6 +315,32 @@ Channel access is checked by the supervisor at wiring time, not at every
 call. If an agent calls `channel.write` on a channel it is not the
 registered originator of, the host returns `CapabilityDenied`.
 
+The v1 JSON parameter and result shapes are normative:
+
+```text
+channel.read({ channel_id: string })
+  -> null
+  |  { message_id: string,
+       sequence: string,
+       timestamp_ns: string,
+       content_type: string,
+       payload_b64: string }
+
+channel.write({ channel_id: string,
+                payload_b64: string,
+                content_type: string })
+  -> { message_id: string }
+
+channel.ack({ channel_id: string, message_id: string })
+  -> null
+```
+
+`sequence` and `timestamp_ns` are canonical unsigned decimal strings. They are
+not JSON numbers because both are 64-bit values and must survive runtimes whose
+native JSON number is IEEE-754 binary64. `payload_b64` is canonical padded
+base64. SDKs decode these fields into the language's lossless integer and byte
+buffer types before returning them to agent code.
+
 ### `proc.*` — corresponds to `proc` capability
 
 | Method        | Manifest check          | Purpose                    |

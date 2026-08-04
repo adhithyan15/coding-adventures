@@ -316,9 +316,30 @@ option mapping, or judge/evaluation failure.
    PDF decomposition, explicit zero/negative-baseline policy review,
    repository-input IR, parser inventory, derivations, witnesses, and CAS
    registration remain part of the Wave 1 migration.
-9. Add executable formula preconditions or domain guards before migrating
-   `proportion.adj`; `a/b=c/x` requires nonzero `a`, `b`, and `c`, while the
-   current formula fails closed only on its final divisor.
+9a. **Complete for the language/runtime guard substrate:** formulas now support generic,
+   parser-backed `requires` predicates with exact byte spans, recursive execution,
+   typed validation, structured abstention, runtime consumed-fact IDs, and v2
+   parser inventory identity with source-byte spans.
+   `proportion.adj` requires nonzero `a`, `b`, and `c`, and E2E coverage proves
+   each zero position withholds the answer before body evaluation. CAS migration
+   remains separate until the worked query's observed inputs receive source IR.
+9b. **Complete.** Formula-audit v2 independently replays parser-owned parameter
+    binding, nested application order, and every declaration-ordered guard through
+    the first failure. The CAS witnesses exact compared values, consumed direct
+    facts, guard spans, truthful quote status, and evaluated versus withheld bodies.
+    Input-reference v3 binds each fact to its stable owner source and source IR,
+    cited snapshot/IR, exact owning ADJ observation span, and the exact numeric value
+    parsed from those authored bytes. Declared v1 rejects v2 exact-literal nodes;
+    only the explicit one-time migration bridge projects an already authenticated
+    unguarded v2 replay to the frozen v1 shape. The checked-in CAS now includes one
+    positive and three independently failed proportion executions. Derived guard
+    inputs continue to fail closed pending 9c.
+9c. Bind predicate contributions over derived slots to their computation IDs,
+    transitive input facts, formula sources, and `verify_derived` results. Direct
+    observed predicate inputs are fact-bound and quote-checked now; derived inputs
+    must not claim equivalent byte completeness until this transitive proof lands.
+9d. Replace state-machine failure detail strings with a structured error
+    discriminant and typed phase on both guard and yield precision failures.
 10. Use the first-class derivation and execution-witness contract to execute every
     exported formula before migrating `average.adj`; prose cannot prove its `N=2`
     and `N=3` specializations.

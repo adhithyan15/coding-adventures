@@ -1,0 +1,8 @@
+{
+  "body_git_sha1": "a77ef7e827504484bc28bf40c290695c26fb5e8a",
+  "body_sha256": "c53ae4e8e2d6084ca4c5c5285bd654a9974e60ffdff900894bfef32e7f973f78",
+  "body_size": 942,
+  "captured_at": "2026-08-03T20:00:00Z",
+  "kind": "input_receipt",
+  "repo_path": "code/specs/data/adj-formula-stdlib/arithmetic/proportion-zero-first.query.adj"
+}

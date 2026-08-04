@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C25-shubha-rathri
+spine_node: SPINE-TIME-OF-DAY
+sequence: 570
 chapter: 25
 type: phrase
 headword: ശുഭ രാത്രി
@@ -9,20 +12,34 @@ prerequisites: [ML-C24-native-night-words]
 sounds: [malayalam-sha, malayalam-bha]
 roots: [sanskrit-shubha-beautiful, sanskrit-ratri]
 etymology_hook: "ശുഭ രാത്രി (śubha rāthri), 'good night,' literally 'auspicious night' — both pieces Sanskrit tatsama: രാത്രി (already met last lesson) plus ശുഭ (śubha, 'auspicious,' from root śubh, 'to be beautiful,' well-sourced PIE *ḱewbʰ- — the same etymology already verified for the Hindi, Kannada, and Telugu siblings of this arc); some sources describe modern Malayalam speakers, especially casually, code-switching to English 'good night' rather than saying śubha rāthri aloud — but hedge this carefully: the SAME claim was already made, and only weakly sourced, for Telugu earlier in this arc, so this looks like a recurring pattern across South Asian languages generally (or a sourcing artifact of which languages happen to get commented on), not a Malayalam-specific discovery"
-est_minutes: 4
+duration:
+  max_seconds: 275
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C25-SHUBHA-RATHRI-01, ML-CONCEPT-C25-SHUBHA-RATHRI-02]
+practises:
+  knowledge: [ML-CONCEPT-C25-SHUBHA-RATHRI-01, ML-CONCEPT-C25-SHUBHA-RATHRI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: formal
+variety: standard-colloquial
 reviews_of: [ML-C24-native-night-words, ML-C24-rathri]
 ---
 
 # ശുഭ രാത്രി (śubha rāthri) — "good night," and a pattern seen before
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already have *rāthri*. One more Sanskrit word, already
 familiar from three earlier languages in this arc, completes Malayalam's
 "good night" — and this lesson's honest twist is one you've technically
 seen before, just in a different language.
 
-## ശുഭ രാത്രി — "auspicious night"
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C25-SHUBHA-RATHRI-01]; assesses=[] -->
 
 **ശുഭ രാത്രി** (**śubha rāthri**) — "**good night**" — literally
 "**auspicious night**." Both pieces are Sanskrit **tatsama**: **രാത്രി**
@@ -31,7 +48,8 @@ seen before, just in a different language.
 ***\*ḱewbʰ-*** — the same word, the same root, already verified for the
 Hindi, Kannada, and Telugu siblings of this exact arc).
 
-## Be careful: a claim you've already seen fail to hold up once
+## The word, taken apart
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C25-SHUBHA-RATHRI-02]; assesses=[] -->
 
 Here's the honest twist, hedged deliberately: some sources describe
 modern Malayalam speakers, especially in casual settings, **code-switching
@@ -49,6 +67,7 @@ worth treating as a genuine discovery each time. Either way, *śubha
 rāthri* itself remains perfectly correct, understood Malayalam.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C25-SHUBHA-RATHRI-01, ML-CONCEPT-C25-SHUBHA-RATHRI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubha rāthri" — "good night," literally "auspicious night"]
@@ -58,6 +77,7 @@ rāthri* itself remains perfectly correct, understood Malayalam.
   Malayalam's; the same weakly-sourced claim already appeared for Telugu]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C25-SHUBHA-RATHRI-01, ML-CONCEPT-C25-SHUBHA-RATHRI-02] -->
 
 [PAUSE 3s] What does **ശുഭ രാത്രി** literally mean? ("**Auspicious
 night**.") Is the "Malayalam speakers code-switch to English instead"

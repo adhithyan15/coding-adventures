@@ -966,6 +966,111 @@ void _sir_fmt(FILE *out, SirValue v) {
     _sir_fmt_depth--;
 }
 
+/* ---- SIR18 string interpolation: value display AS A STRING -- */
+
+/* `"a#{x}b"` needs each part's Ruby `to_s`-style display rendered into a
+ * fresh string to concatenate, not written to a `FILE*` — so this is a
+ * SEPARATE function from `_sir_fmt` above, not a refactor of it: `_sir_fmt`
+ * backs the already-tested `puts`/`print` path, and duplicating its per-tag
+ * rendering here (into `_sir_cat`-built strings instead of `fputs` calls)
+ * keeps that path completely untouched. The two are kept in lockstep by
+ * inspection — same tag list, same per-tag text, same recursion structure —
+ * so `#{arr}` and `puts arr` always agree. */
+char *_sir_display_str(SirValue v);
+
+char *_sir_display_seq(SirValue v) {
+    char *acc = _sir_dup("[");
+    int64_t i;
+    for (i = 0; i < v.as.seq->len; i++) {
+        if (i) acc = _sir_cat(acc, ", ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.seq->items[i]));
+    }
+    return _sir_cat(acc, "]");
+}
+
+char *_sir_display_map(SirValue v) {
+    char *acc = _sir_dup("{");
+    int64_t i;
+    for (i = 0; i < v.as.map->len; i++) {
+        if (i) acc = _sir_cat(acc, ", ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].key));
+        acc = _sir_cat(acc, ": ");
+        acc = _sir_cat(acc, _sir_display_str(v.as.map->entries[i].val));
+    }
+    return _sir_cat(acc, "}");
+}
+
+char *_sir_display_float(double f) {
+    char buf[64];
+    if (f != f)                    return _sir_dup("NaN");
+    if (f == f * 0.5 && f != 0.0)  return _sir_dup(f < 0 ? "-Infinity" : "Infinity");
+    snprintf(buf, sizeof(buf), "%.17g", f);
+    if (!strchr(buf, '.') && !strchr(buf, 'e') && !strchr(buf, 'E') &&
+        !strchr(buf, 'n') && !strchr(buf, 'N')) {
+        size_t L = strlen(buf);
+        if (L + 2 < sizeof(buf)) { buf[L] = '.'; buf[L + 1] = '0'; buf[L + 2] = '\0'; }
+    }
+    return _sir_dup(buf);
+}
+
+char *_sir_display_pair(SirValue v) {
+    SirValue cur = v;
+    char *acc = _sir_dup("(");
+    int first = 1;
+    for (;;) {
+        if (cur.tag == SIR_PAIR) {
+            if (!first) acc = _sir_cat(acc, " ");
+            first = 0;
+            acc = _sir_cat(acc, _sir_display_str(cur.as.pair->car));
+            cur = cur.as.pair->cdr;
+        } else if (cur.tag == SIR_NIL) {
+            break;
+        } else {
+            acc = _sir_cat(acc, " . ");
+            acc = _sir_cat(acc, _sir_display_str(cur));
+            break;
+        }
+    }
+    return _sir_cat(acc, ")");
+}
+
+/* Bounded exactly like `_sir_fmt_depth`/`SIR_MAX_FMT_DEPTH` above — a
+ * self-referential sequence/map (constructible via `SeqSet`/`MapSet`) would
+ * otherwise recurse forever. */
+#define SIR_MAX_DISPLAY_DEPTH 500
+static int _sir_display_depth = 0;
+
+char *_sir_display_str(SirValue v) {
+    char buf[32];
+    char *result;
+    if (_sir_display_depth > SIR_MAX_DISPLAY_DEPTH) return _sir_dup("[...]");
+    _sir_display_depth++;
+    switch (v.tag) {
+        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : "nil"); break;
+        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
+                                                  : (SIR_DISPLAY_RUBY ? "false" : "#f")); break;
+        case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); result = _sir_dup(buf); break;
+        case SIR_FLOAT: result = _sir_display_float(v.as.f); break;
+        case SIR_STR:   result = _sir_dup(v.as.s); break;
+        case SIR_SYM:   result = _sir_dup(v.as.s); break;
+        case SIR_PAIR:  result = _sir_display_pair(v); break;
+        case SIR_SEQ:   result = _sir_display_seq(v); break;
+        case SIR_MAP:   result = _sir_display_map(v); break;
+        case SIR_CLOSURE: result = _sir_dup("#<closure>"); break;
+        case SIR_ERROR:
+            result = (v.as.err->msg.tag == SIR_NIL)
+                ? _sir_dup(v.as.err->sir_class)
+                : _sir_display_str(v.as.err->msg);
+            break;
+        case SIR_INSTANCE:
+            result = _sir_cat(_sir_cat("#<", v.as.inst->sir_class), ">");
+            break;
+        default: result = _sir_dup("");
+    }
+    _sir_display_depth--;
+    return result;
+}
+
 /* ---- SIR17 exceptions (setjmp/longjmp handler stack) -------- */
 
 /* Construct an exception value.  `class` is interned; `msg` is a `SIR_STR` (or
@@ -1309,6 +1414,39 @@ SirValue _sir_call_method(SirValue recv, const char *method, int argc, ...) {
     }
     if (args) free(args);
     return r;
+}
+
+/* `Foo.new(args…)` — allocate a `cls` instance and run its `initialize`.
+ *
+ * Allocates via `_sir_new_instance`, then — if `initialize` resolves on `cls`
+ * or an ancestor (`_sir_resolve_method`, the same ancestry walk `_sir_call_
+ * method` uses) — binds `self` to the new object and invokes it with `args`,
+ * so constructor-body `@ivar` assignments land on the new object (mirroring
+ * the Go/Rust/Ruby backends, which have always run `initialize` here).  Self
+ * is restored afterward, same save/restore as `_sir_call_method`.  The object
+ * is always returned, even with no `initialize` registered — a plain
+ * allocation, matching Ruby's default no-op `Object#initialize`. */
+SirValue _sir_call_new(const char *cls, int argc, ...) {
+    va_list ap;
+    SirValue *args, obj, fn;
+    obj = _sir_new_instance(cls);
+    fn = _sir_resolve_method(cls, "initialize");
+    if (fn.tag == SIR_CLOSURE) {
+        va_start(ap, argc);
+        args = _sir_va_collect(argc, ap);
+        va_end(ap);
+        {
+            SirValue saved_self = _sir_current_self;
+            const char *saved_class = _sir_current_class;
+            _sir_current_self = obj;
+            _sir_current_class = obj.as.inst->sir_class;
+            fn.as.clo->fn(fn.as.clo->caps, args, argc);
+            _sir_current_self = saved_self;
+            _sir_current_class = saved_class;
+        }
+        if (args) free(args);
+    }
+    return obj;
 }
 
 /* OOP slice 4: `super` from within `defining_class`'s method `method`.  Resolve
@@ -2989,6 +3127,128 @@ static SirValue _sir_object_frozen_p(SirValue v) {
     }
 }
 
+/* `<<` -- Ruby's shift operator, polymorphic like `+`:
+ *   Array    -- push each RHS operand in place (`_sir_array_push_one`,
+ *               slice 4's growth helper), returns the (mutated) receiver.
+ *               Chains left-to-right: `a << 1 << 2` pushes both.
+ *   Integer  -- bitwise shift; see `_sir_shift_left_i64` below for the
+ *               overflow/negative-amount handling.
+ *   String   -- concatenates and returns a NEW string (via `_sir_str_of` +
+ *               `_sir_cat`, the SAME helper `_sir_plus_v` already uses for
+ *               `+`'s String-receiver case). This diverges from real Ruby
+ *               in two ways, both DOCUMENTED, not silent: (1) true
+ *               `String#<<` mutates in place with shared-reference
+ *               visibility (like Array's push) -- this runtime's `SIR_STR`
+ *               is a bare `const char *` with no heap box/pointer identity
+ *               (unlike `SIR_SEQ`/`SIR_MAP`), so in-place mutation isn't
+ *               representable without a different String representation
+ *               entirely, a materially larger undertaking; (2) real Ruby's
+ *               `"a" << 98` appends the CHARACTER at codepoint 98 (`"ab"`),
+ *               not the stringified integer -- deferred (needs UTF-8
+ *               encoding of an arbitrary codepoint). `_sir_str_of` only
+ *               recognizes `SIR_STR`/`SIR_SYM` (returns `""` for anything
+ *               else, e.g. an Integer) -- so a non-String/Symbol RHS is
+ *               silently DROPPED (contributes nothing to the result),
+ *               exactly matching `_sir_plus_v`'s existing behavior for
+ *               `"a" + 5` in this same runtime (which also drops the `5`
+ *               rather than stringifying it -- real Ruby raises `TypeError`
+ *               for that expression instead; this runtime never raises
+ *               here, matching its established never-raise-on-`+` floor).
+ */
+
+/* Extracts a shift-amount argument as a plain `int64_t`, the same
+   UB-avoidance discipline `round(ndigits)`/`ljust` use for their own
+   numeric arguments: never a bare `(int64_t)v.as.f` cast (UB for a
+   non-finite/out-of-range Float), routed through the shared saturating
+   helper instead. Real Ruby truncates a Float shift amount toward zero
+   (`5 << 2.5 == 5 << 2`); `_sir_f64_to_i64_saturating` already truncates
+   for any in-range value and saturates for a hostile huge/non-finite one. */
+static int64_t _sir_shift_amount_arg(SirValue v) {
+    if (v.tag == SIR_INT) return v.as.i;
+    if (v.tag == SIR_FLOAT) return _sir_f64_to_i64_saturating(v.as.f);
+    return 0;
+}
+
+/* Bitwise-shifts `n` by `amount`, matching real Ruby's rules:
+ *   - `amount == 0` or `n == 0`: identity (no-op).
+ *   - `amount < 0`: a NEGATIVE shift amount REVERSES direction -- it's a
+ *     RIGHT shift by `|amount|` (Ruby: `5 << -1 == 5 >> 1 == 2`). `n >> k`
+ *     for a negative `n` is implementation-defined (not UB) in C99; every
+ *     platform this project targets (gcc/clang/MSVC on x86/ARM) implements
+ *     it as an arithmetic (sign-extending) shift, matching Ruby's floor
+ *     semantics (`-8 << -1 == -4`) -- accepted as a documented platform
+ *     assumption, the same class of "implementation-defined but
+ *     universally consistent in practice" already relied on elsewhere in
+ *     this runtime.
+ *   - `amount > 0`: LEFT shift, no bignum growth (unlike real Ruby, which
+ *     grows arbitrarily -- `1 << 63 == 9223372036854775808`, one past this
+ *     runtime's `INT64_MAX`), so this SATURATES at `INT64_MAX`/`INT64_MIN`
+ *     once the true mathematical result would not fit, rather than
+ *     silently wrapping -- the same never-raise-by-saturating convention
+ *     `round`/`gcd`/`abs` already use. The overflow check happens BEFORE
+ *     any left-shift is performed on the magnitude (a raw `mag << k` where
+ *     `k` approaches 64 risks shifting bits out of a 64-bit register,
+ *     which is well-defined for `uint64_t` -- shifts wrap-discard rather
+ *     than trap -- but would silently lose the very bits this check needs
+ *     to notice), so the "would this overflow" test is done with a
+ *     right-shift-and-compare rather than by inspecting the (already
+ *     lossy) left-shifted result.
+ *   - A shift amount whose magnitude is `>= 64` (either direction) drains
+ *     every bit: saturates to 0/-1 (right) or `INT64_MAX`/`INT64_MIN`
+ *     (left, `n != 0`) rather than reaching a C shift-amount-exceeds-width
+ *     UB (shifting by `>= 64` on a 64-bit type is UB in C, so this always
+ *     shifts by a checked, in-range amount).
+ */
+static int64_t _sir_shift_left_i64(int64_t n, int64_t amount) {
+    if (amount == 0 || n == 0) return n;
+    if (amount < 0) {
+        uint64_t k = _sir_i64_abs_u(amount);
+        if (k >= 64) return (n < 0) ? -1 : 0;
+        return n >> (int)k;
+    }
+    {
+        uint64_t k = (uint64_t)amount;
+        int neg = n < 0;
+        uint64_t mag;
+        if (k >= 64) return neg ? INT64_MIN : INT64_MAX;
+        mag = _sir_i64_abs_u(n);
+        if ((mag >> (64 - k)) != 0) return neg ? INT64_MIN : INT64_MAX;
+        {
+            uint64_t shifted = mag << k;
+            uint64_t limit = neg ? ((uint64_t)INT64_MAX + 1u) : (uint64_t)INT64_MAX;
+            if (shifted > limit) return neg ? INT64_MIN : INT64_MAX;
+            if (neg) return (shifted == limit) ? INT64_MIN : -(int64_t)shifted;
+            return (int64_t)shifted;
+        }
+    }
+}
+
+SirValue _sir_shift_left_v(SirValue *xs, int n) {
+    int i;
+    if (n <= 0) return _sir_int(0);
+    if (xs[0].tag == SIR_SEQ) {
+        for (i = 1; i < n; i++) _sir_array_push_one(xs[0].as.seq, xs[i]);
+        return xs[0];
+    }
+    if (xs[0].tag == SIR_STR) {
+        const char *acc = xs[0].as.s;
+        for (i = 1; i < n; i++) acc = _sir_cat(acc, _sir_str_of(xs[i]));
+        return _sir_str(acc);
+    }
+    {
+        int64_t acc = (xs[0].tag == SIR_INT) ? xs[0].as.i : 0;
+        for (i = 1; i < n; i++) acc = _sir_shift_left_i64(acc, _sir_shift_amount_arg(xs[i]));
+        return _sir_int(acc);
+    }
+}
+SirValue _sir_shift_left(int n, ...) {
+    va_list ap; SirValue *xs; SirValue r;
+    va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap);
+    r = _sir_shift_left_v(xs, n);
+    if (xs) free(xs);
+    return r;
+}
+
 /* ---- Collections slice 1: built-in String methods --------------------------
  *
  * A `__method__` dispatch whose name is a KNOWN built-in method — and which the
@@ -3574,7 +3834,18 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "|") == 0)        return _sir_bor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "^") == 0)        return _sir_bxor(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "~") == 0)        return _sir_bnot(_sir_arg(args, argc, 0));
-    if (strcmp(name, "<<") == 0)       return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    /* `"<<"` here is Ruby's polymorphic shift operator (Array push/String
+       concat/saturating-Integer-shift) -- matching `variadic_helper`'s
+       `"<<" => "_sir_shift_left"` mapping in emit.rs, for a builtin
+       referenced BY NAME (`Scope::Builtin`, e.g. a hypothetical
+       `arr.reduce(:<<)`) rather than emitted inline. `"c<<"` is the C
+       frontend's OWN raw bitwise left shift -- kept as a DISTINCT name so
+       the two never collide (the bug this split fixes: both frontends
+       used to share the bare `"<<"` name, so the C-emit-time dispatch had
+       to pick ONE meaning and silently applied Ruby's saturating semantics
+       to C-sourced shifts too -- see this crate's CHANGELOG). */
+    if (strcmp(name, "<<") == 0)       return _sir_shift_left_v(args, argc);
+    if (strcmp(name, "c<<") == 0)      return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, ">>") == 0)       return _sir_shr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "tdiv") == 0)     return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));

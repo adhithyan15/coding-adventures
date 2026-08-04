@@ -14,6 +14,15 @@ All notable changes to this package will be documented in this file.
 - Shared Lua resolution fixtures for authoritative dependency tables, genuine
   cycles, selected BUILD dependency metadata, qualified program identities,
   and package/program alias precedence.
+- Shared Cabal resolution coverage for inline and multiline `build-depends`
+  fields plus misleading package names in metadata, options, and comments.
+- Haskell consumption of the shared Python dependency diamond plus a PEP 621
+  field-boundary and distribution-name normalization fixture.
+- Shared Rust field-boundary coverage for top-level Cargo path dependencies,
+  package renames, and representative non-authoritative tables.
+- Shared Ruby field-boundary coverage for runtime dependency synonyms,
+  declared gem aliases, quote forms, optional parentheses, and representative
+  non-authoritative fields and calls.
 
 ### Changed
 
@@ -30,6 +39,15 @@ All notable changes to this package will be documented in this file.
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over
   same-basename program aliases.
+- Resolve Haskell package edges only from Cabal `build-depends` fields across
+  stanzas, ignoring comments and every non-authoritative manifest field.
+- Resolve Python edges only from PEP 621 `[project].dependencies`, with PEP 503
+  case and separator normalization before internal-package lookup.
+- Resolve Rust edges only from inline path dependencies in Cargo's top-level
+  `[dependencies]` table, honoring `package` renames before alias lookup.
+- Resolve Ruby edges only from `add_dependency` and
+  `add_runtime_dependency` calls on the gem specification receiver, ignoring
+  development dependencies, metadata, comments, and unrelated text.
 
 ## [0.1.0] - 2026-04-05
 

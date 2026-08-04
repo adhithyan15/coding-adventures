@@ -9423,15 +9423,17 @@ b = "y"
 
     #[test]
     fn bitwise_operators_are_still_cleanly_unsupported_not_mis_parsed() {
-        // `**`/`<<`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
+        // `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule in
         // this Ruby subset at all (only used elsewhere: `**`/`&` as call-arg
-        // prefixes, `<<` for singleton-class, `|` for block params, `^` for
-        // pin patterns) — so the fix deliberately does NOT guard them: there
-        // is no correct fallback parse to preserve for `x << 2`. This pins
-        // that they remain UNCHANGED (still lower as separate statements,
-        // same as before the fix), so a future contributor doesn't assume
-        // this fix silently added bitwise-operator support.
-        for op in ["**", "<<", ">>", "^", "&", "|"] {
+        // prefixes, `|` for block params, `^` for pin patterns) — so the fix
+        // deliberately does NOT guard them: there is no correct fallback
+        // parse to preserve for `x ^ 2`. This pins that they remain
+        // UNCHANGED (still lower as separate statements, same as before the
+        // fix), so a future contributor doesn't assume this fix silently
+        // added bitwise-operator support. (`<<` USED to be in this list —
+        // it's now a supported binary operator; see
+        // `shift_operator_lowers_to_a_single_builtin_call` below.)
+        for op in ["**", ">>", "^", "&", "|"] {
             let src = format!("x = 3\nx {op} 2\n");
             let m = lower(&src);
             assert_eq!(
@@ -9440,6 +9442,38 @@ b = "y"
                 "`x {op} 2` is not a supported binary expression here; it should \
                  still split into two statements (unchanged), not one: {src:?}"
             );
+        }
+    }
+
+    #[test]
+    fn shift_operator_lowers_to_a_builtin_call() {
+        let m = lower("y = x << 2");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "<<");
+                assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "x"));
+                assert!(matches!(args[1], Expr::IntLit { value: 2, .. }));
+            }
+            other => panic!("expected LetBinding(BuiltinCall(<<, …)), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn shift_binds_tighter_than_comparison_after_lowering() {
+        // `x << 1 == y` should lower as `(x << 1) == y`: the outer
+        // BuiltinCall is `==`, whose LHS is itself a `<<` BuiltinCall.
+        let m = lower("z = (x << 1 == y)");
+        let b = main_body(&m);
+        match &b.stmts[0] {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name: outer, args, .. }, .. } => {
+                assert_eq!(outer, "==");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner, .. } => assert_eq!(inner, "<<"),
+                    other => panic!("expected LHS = <<(x, 1), got {:?}", other),
+                }
+            }
+            other => panic!("expected LetBinding(BuiltinCall(==, …)), got {:?}", other),
         }
     }
 
@@ -9562,5 +9596,81 @@ b = "y"
         );
         let result = semantic_ir::validate(&m);
         assert!(result.is_ok(), "validator rejected bracket-index program: {:?}", result);
+    }
+
+    // -------------------------------------------------------------------
+    // Widened `index_assignment` to a dotted/chained receiver -- see the
+    // grammar's `index_write_receiver_postfix` rule (in `ruby.grammar`)
+    // for the lookahead trick that separates the RECEIVER's postfixes
+    // from the FINAL write-target bracket.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn chained_bracket_index_write_uses_the_inner_bracket_as_receiver() {
+        // `a[0][1] = 3` -- the OUTER `__method__("[]=", ...)`'s receiver
+        // must be a NESTED `__method__("[]", a, 0)` (a READ of `a[0]`),
+        // not the bare `a` VarRef directly -- proving the first bracket
+        // was folded as a receiver postfix, not swallowed into the write.
+        let m = lower("a[0][1] = 3\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                assert!(matches!(&args[2], Expr::IntLit { value: 1, .. }), "write index is 1");
+                assert!(matches!(&args[3], Expr::IntLit { value: 3, .. }), "RHS value is 3");
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "[]"));
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "a"));
+                        assert!(matches!(&inner_args[2], Expr::IntLit { value: 0, .. }), "receiver index is 0");
+                    }
+                    other => panic!("expected a nested __method__(\"[]\", a, 0) receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `a[0][1] = 3`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn dotted_bracket_index_write_folds_the_dot_call_as_receiver() {
+        // `obj.data[0] = 3` -- the write's receiver must be a `__method__`
+        // dispatch to `"data"` (a plain 0-arg method call), NOT the bare
+        // `obj` VarRef -- proving `.data` was folded via the SAME
+        // `fold_one_dot_call` helper `apply_dot_chain` uses for reads.
+        let m = lower("obj.data[0] = 3\n");
+        let main = main_body(&m);
+        let stmt = main.stmts.first().expect("expected one statement");
+        match stmt {
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                assert_eq!(name, "__method__");
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "[]="));
+                match &args[0] {
+                    Expr::BuiltinCall { name: inner_name, args: inner_args, .. } => {
+                        assert_eq!(inner_name, "__method__");
+                        assert!(matches!(&inner_args[0], Expr::VarRef { name, .. } if name == "obj"));
+                        assert!(matches!(&inner_args[1], Expr::StrLit { value, .. } if value == "data"));
+                        assert_eq!(inner_args.len(), 2, "0-arg method call: [recv, \"data\"]");
+                    }
+                    other => panic!("expected a nested __method__(obj, \"data\") receiver, got {:?}", other),
+                }
+            }
+            other => panic!("expected __method__ BuiltinCall statement for `obj.data[0] = 3`, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn chained_and_dotted_bracket_index_write_pass_sir_validator() {
+        let m = lower(
+            "a = [[1, 2], [3, 4]]\na[0][1] = 9\nclass Box\n  def data\n    [1, 2]\n  end\nend\nb = Box.new\nb.data[0] = 3\nputs a[0][1]\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected chained/dotted bracket-index write program: {:?}",
+            result
+        );
     }
 }

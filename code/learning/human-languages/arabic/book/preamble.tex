@@ -25,6 +25,7 @@
 \tcbuselibrary{skins,breakable}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
@@ -33,8 +34,23 @@
 \setmainlanguage{english}
 \setotherlanguage{arabic}
 
-% Vendored Arabic font (static instance; ../../_fonts/ from <lang>/book/).
-\newfontfamily\arabicfont[Path=../../_fonts/, Script=Arabic]{NotoNaskhArabic-Static.ttf}
+% Vendored static script fonts. Explicitly map every requested shape to the
+% same complete glyph file so bold or italic teaching context cannot fall back
+% to a system font or emit a substitution warning.
+\newfontfamily\arabicfont[
+  Path=../../_fonts/,
+  Script=Arabic,
+  BoldFont=NotoNaskhArabic-Static.ttf,
+  ItalicFont=NotoNaskhArabic-Static.ttf,
+  BoldItalicFont=NotoNaskhArabic-Static.ttf
+]{NotoNaskhArabic-Static.ttf}
+\newfontfamily\hebrewfont[
+  Path=../../_fonts/,
+  Script=Hebrew,
+  BoldFont=NotoSansHebrew-Static.ttf,
+  ItalicFont=NotoSansHebrew-Static.ttf,
+  BoldItalicFont=NotoSansHebrew-Static.ttf
+]{NotoSansHebrew-Static.ttf}
 
 \hypersetup{
   pdftitle={Arabic, Step by Step, Root by Root},
@@ -45,6 +61,34 @@
 
 % Convenience: inline Arabic snippet (RTL, Arabic font) within English text.
 \newcommand{\ar}[1]{\textarabic{#1}}
+\newcommand{\he}[1]{{\hebrewfont #1}}
+\pdfstringdefDisableCommands{%
+  \def\ar#1{#1}% Keep script text while dropping font-only presentation.
+  \def\he#1{#1}%
+  \def\arabicfont{}%
+  \def\hebrewfont{}%
+}
+
+% Micro-lessons intentionally end at natural pause points instead of stretching
+% their callout boxes to force every page to the same depth. The small reserve
+% also lets prose choose a cleaner line break before it exceeds the measure.
+\raggedbottom
+\emergencystretch=2em
+
+% Polyglossia's bidi support can leave running heads on the blank verso that
+% book.cls inserts before an open-right chapter. Keep the print-friendly verso,
+% but make it truly empty.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
 
 % Cousin/Root box: the root family + connections.
 \newtcolorbox{cousinweb}{
@@ -57,10 +101,10 @@
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
   fonttitle=\bfseries, title={Why it's said this way}
 }
-\newtcolorbox{grammarlens}{
+\newtcolorbox{grammarlens}[1][]{
   breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
   boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
-  fonttitle=\bfseries, title={Grammar Lens}
+  fonttitle=\bfseries, title={Grammar Lens}, #1
 }
 \newtcolorbox{sounds}{
   breakable, skin=enhanced, colback=green!6, colframe=green!30!black,

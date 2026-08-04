@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ResolutionUtf8Spec (resolutionUtf8Spec) where
+module ResolutionUtf8Spec (resolutionCabalSpec, resolutionPythonSpec, resolutionRubySpec, resolutionRustSpec, resolutionUtf8Spec) where
 
 import Control.Exception (bracket, try)
 import Control.Monad (forM_)
@@ -151,6 +151,91 @@ resolutionUtf8Spec = describe "Lua resolution conformance" $ do
                 ]
                 `shouldReturn` 2
 
+resolutionCabalSpec :: Spec
+resolutionCabalSpec = describe "Cabal resolution conformance" $ do
+    it "reads only every authoritative build-depends field" $
+        withFixture "resolution-haskell-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "haskell" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "haskell/alpha"
+                    , "haskell/beta"
+                    , "haskell/delta"
+                    , "haskell/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["haskell/beta", "haskell/delta", "haskell/gamma"]
+                        , ["haskell/alpha"]
+                        ]
+
+resolutionPythonSpec :: Spec
+resolutionPythonSpec = describe "Python resolution conformance" $ do
+    it "preserves the shared canonical dependency diamond" $
+        withFixture "resolution-python-diamond.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "python" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+
+    it "reads only PEP 621 dependencies and normalizes distribution names" $
+        withFixture "resolution-python-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "python" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "python/alpha"
+                    , "python/beta-helper"
+                    , "python/delta"
+                    , "python/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["python/beta-helper", "python/delta", "python/gamma"]
+                        , ["python/alpha"]
+                        ]
+
+resolutionRustSpec :: Spec
+resolutionRustSpec = describe "Rust resolution conformance" $ do
+    it "reads only inline path dependencies in the top-level dependencies table" $
+        withFixture "resolution-rust-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "rust" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "rust/alpha"
+                    , "rust/beta-helper"
+                    , "rust/delta"
+                    , "rust/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["rust/beta-helper", "rust/delta", "rust/gamma"]
+                        , ["rust/alpha"]
+                        ]
+
+resolutionRubySpec :: Spec
+resolutionRubySpec = describe "Ruby resolution conformance" $ do
+    it "reads only runtime dependency declarations on the gem specification receiver" $
+        withFixture "resolution-ruby-field-aware.json" $ \root fixture -> do
+            graph <- resolveFixtureFor "ruby" root
+            graphEdges graph `shouldBe` fixtureExpectedEdges fixture
+            DG.nodes graph
+                `shouldBe`
+                    [ "ruby/alpha"
+                    , "ruby/beta"
+                    , "ruby/delta"
+                    , "ruby/gamma"
+                    ]
+            DG.independentGroups graph
+                `shouldBe`
+                    Right
+                        [ ["ruby/beta", "ruby/delta", "ruby/gamma"]
+                        , ["ruby/alpha"]
+                        ]
+
 assertMetadataError :: FilePath -> MetadataEncodingError -> Expectation
 assertMetadataError root metadataError = do
     metadataErrorCode metadataError `shouldBe` "METADATA_INVALID_UTF8"
@@ -163,9 +248,12 @@ assertMetadataError root metadataError = do
     renderMetadataEncodingError metadataError `shouldSatisfy` (not . isInfixOf root)
 
 resolveFixture :: FilePath -> IO DG.DirectedGraph
-resolveFixture root = do
+resolveFixture = resolveFixtureFor "lua"
+
+resolveFixtureFor :: String -> FilePath -> IO DG.DirectedGraph
+resolveFixtureFor language root = do
     packages <- discoverPackages (root </> "code")
-    resolveDependencies (filter ((== "lua") . packageLanguage) packages)
+    resolveDependencies (filter ((== language) . packageLanguage) packages)
 
 graphEdges :: DG.DirectedGraph -> [[String]]
 graphEdges graph =

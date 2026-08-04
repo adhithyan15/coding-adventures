@@ -29,6 +29,12 @@ import {
   traceTinyDecoderTraining,
 } from "./decoder-language-model-lab.js";
 import { ConvolutionWorkbench } from "./ConvolutionWorkbench.js";
+import { CrossLanguageConsumerWorkbench } from "./CrossLanguageConsumerWorkbench.js";
+import {
+  consumerCatalog,
+  parseConsumerCatalog,
+  traceLanguageConsumer,
+} from "./cross-language-consumers.js";
 import { DeepTrainingWorkbench } from "./DeepTrainingWorkbench.js";
 import { DynamicAutogradWorkbench } from "./DynamicAutogradWorkbench.js";
 import {
@@ -60,6 +66,12 @@ import { traceHopfieldRecall } from "./hopfield-memory.js";
 import { ImageCnnWorkbench } from "./ImageCnnWorkbench.js";
 import { InitializationWorkbench } from "./InitializationWorkbench.js";
 import { initializerScale, traceInitializationDistributions } from "./initialization-distribution-lab.js";
+import { ImplementationCoverageWorkbench } from "./ImplementationCoverageWorkbench.js";
+import {
+  implementationCoverageCatalog,
+  parseImplementationCoverageCatalog,
+  traceImplementationCoverage,
+} from "./implementation-coverage.js";
 import { MessagePassingWorkbench } from "./MessagePassingWorkbench.js";
 import { traceTinyMessagePassing } from "./message-passing-lab.js";
 import { OptimizationWorkbench } from "./OptimizationWorkbench.js";
@@ -79,9 +91,14 @@ import {
 } from "./precision-residency-lab.js";
 import precisionResidencyDocument from "../../../../specs/fixtures/precision-residency-v1/labs/00-tiny-affine.json";
 import referenceCatalogDocument from "../../../../specs/fixtures/reference-validation-v1/catalog.json";
+import consumerCatalogDocument from "../../../../specs/fixtures/cross-language-consumers-v1/catalog.json";
+import cAbiCatalogDocument from "../../../../specs/fixtures/neural-learning-rust-cabi-v1/catalog.json";
+import implementationCoverageCatalogDocument from "../../../../specs/fixtures/neural-learning-implementation-coverage-v1/catalog.json";
 import { RecurrentWorkbench } from "./RecurrentWorkbench.js";
 import { RepresentationWorkbench } from "./RepresentationWorkbench.js";
 import { ResidualWorkbench } from "./ResidualWorkbench.js";
+import { RustCAbiWorkbench } from "./RustCAbiWorkbench.js";
+import { cAbiCatalog, parseCAbiCatalog, traceCAbi } from "./rust-c-abi.js";
 import { TrainingStepMicroscope } from "./TrainingStepMicroscope.js";
 import { TrainingStabilizersWorkbench } from "./TrainingStabilizersWorkbench.js";
 import { traceTrainingStabilizers } from "./training-stabilizers-lab.js";
@@ -2636,5 +2653,129 @@ describe("reference fixture catalog", () => {
     expect(screen.getByLabelText("Selected fixture-family contract").textContent)
       .toMatch(/NN32.*precision-residency.*precision-residency-v1.*validate_precision_residency_labs\.py/s);
     expect(screen.getByText(/Each family is labeled registered, not executed/)).toBeTruthy();
+  });
+});
+
+describe("cross-language fixture consumers", () => {
+  it("keeps one hand calculation fixed across three native language families", () => {
+    const trace = traceLanguageConsumer("ruby-native");
+
+    expect(consumerCatalog.lanes.map((lane) => lane.id)).toEqual([
+      "go-native",
+      "ruby-native",
+      "rust-native",
+    ]);
+    expect(trace.contributions).toEqual([1, 0.25]);
+    expect(trace.preactivation).toBe(1.35);
+    expect(trace.prediction).toBe(1.35);
+    expect(trace.maximumAbsoluteError).toBe(0);
+    expect(trace.passes).toBe(true);
+  });
+
+  it("fails closed on malformed lanes and dishonest hand arithmetic", () => {
+    expect(() => parseConsumerCatalog({})).toThrow(/unexpected keys/);
+
+    const changedCommand = JSON.parse(JSON.stringify(consumerCatalogDocument));
+    changedCommand.lanes[0].command = ["go", "run", "unsafe.go"];
+    expect(() => parseConsumerCatalog(changedCommand)).toThrow(/wrong values/);
+
+    const dishonest = JSON.parse(JSON.stringify(consumerCatalogDocument));
+    dishonest.hand_check.contributions[1] = -0.25;
+    expect(() => parseConsumerCatalog(dishonest)).toThrow(/dishonest arithmetic/);
+  });
+
+  it("switches runtime details without pretending the browser executed them", () => {
+    render(React.createElement(CrossLanguageConsumerWorkbench));
+    expect(screen.getByRole("heading", { name: "Language consumers" })).toBeTruthy();
+    expect(screen.getByText("3 native lanes")).toBeTruthy();
+    expect(screen.getByLabelText("Weighted-neuron hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*= 1\.0.*-1\.0 \* -0\.25.*= 0\.25.*identity\(1\.35\).*1\.35/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect Rust native consumer" }));
+    expect(screen.getByLabelText("Selected consumer contract").textContent)
+      .toMatch(/Expected receipt from the Rust CLI.*rust-native.*Cargo\.toml.*maximum error.*0/s);
+    expect(screen.getByText(/registered commands, not external runtime execution/)).toBeTruthy();
+  });
+});
+
+describe("neural-learning Rust C ABI", () => {
+  it("recomputes the paper trace and maps every deterministic failure status", () => {
+    const success = traceCAbi();
+
+    expect(cAbiCatalog.versionNumber).toBe(0x0001_0000);
+    expect(success.contributions).toEqual([1, 0.25]);
+    expect(success.prediction).toBe(1.35);
+    expect(success.status.symbol).toBe("NEURAL_LEARNING_OK");
+    expect(cAbiCatalog.probes.map((probe) => probe.expectedStatus)).toEqual([1, 2, 3, 5, 7]);
+    expect(traceCAbi("non-finite").outputsWritten).toBe(false);
+  });
+
+  it("fails closed on changed statuses and dishonest arithmetic", () => {
+    expect(() => parseCAbiCatalog({})).toThrow(/unexpected keys/);
+
+    const changedStatus = JSON.parse(JSON.stringify(cAbiCatalogDocument));
+    changedStatus.statuses[1].code = 8;
+    expect(() => parseCAbiCatalog(changedStatus)).toThrow(/wrong identity/);
+
+    const dishonest = JSON.parse(JSON.stringify(cAbiCatalogDocument));
+    dishonest.hand_check.expected_prediction = 99;
+    expect(() => parseCAbiCatalog(dishonest)).toThrow(/dishonest arithmetic/);
+  });
+
+  it("shows success writes and failure output preservation without claiming native browser execution", () => {
+    render(React.createElement(RustCAbiWorkbench));
+    expect(screen.getByRole("heading", { name: "Rust C ABI" })).toBeTruthy();
+    expect(screen.getByText("ABI 0x00010000")).toBeTruthy();
+    expect(screen.getByLabelText("Rust C ABI hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*= 1\.0.*-1\.0 \* -0\.25.*= 0\.25.*1\.35/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect non finite C ABI probe" }));
+    expect(screen.getByLabelText("Selected C ABI trace").textContent)
+      .toMatch(/NEURAL_LEARNING_NON_FINITE.*status 5.*byte-for-byte unchanged/s);
+    expect(screen.getByText(/Python validator dynamically loads the compiled native library/)).toBeTruthy();
+  });
+});
+
+describe("neural-learning implementation coverage", () => {
+  it("distinguishes three native owners from one Rust-core binding", () => {
+    const binding = traceImplementationCoverage("python-ctypes-rust-core");
+
+    expect(implementationCoverageCatalog.handCheck.contributions).toEqual([1, 0.25]);
+    expect(implementationCoverageCatalog.handCheck.prediction).toBe(1.35);
+    expect(binding.nativeLaneIds).toEqual(["go-native", "ruby-native", "rust-native"]);
+    expect(binding.bindingLaneIds).toEqual(["python-ctypes-rust-core"]);
+    expect(binding.lane.arithmeticOwner).toBe("Rust");
+    expect(binding.nativeFraction).toBe("3 / 4");
+  });
+
+  it("fails closed on reclassified lanes and dishonest counts", () => {
+    expect(() => parseImplementationCoverageCatalog({})).toThrow(/unexpected keys/);
+
+    const reclassified = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    reclassified.lanes[0].implementation = "rust-core-binding";
+    expect(() => parseImplementationCoverageCatalog(reclassified)).toThrow(/wrong values/);
+
+    const dishonest = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    dishonest.hand_check.rust_core_bindings = 2;
+    expect(() => parseImplementationCoverageCatalog(dishonest)).toThrow(/dishonest coverage count/);
+
+    const crossWired = JSON.parse(JSON.stringify(implementationCoverageCatalogDocument));
+    crossWired.hand_check.inputs[0] = 3;
+    crossWired.hand_check.contributions[0] = 1.5;
+    crossWired.hand_check.prediction = 1.85;
+    expect(() => parseImplementationCoverageCatalog(crossWired)).toThrow(/disagrees with NN03/);
+  });
+
+  it("shows the ownership boundary without claiming browser execution", () => {
+    render(React.createElement(ImplementationCoverageWorkbench));
+    expect(screen.getByRole("heading", { name: "Implementation coverage" })).toBeTruthy();
+    expect(screen.getAllByText("3 native + 1 binding")).toHaveLength(2);
+    expect(screen.getByLabelText("Implementation coverage hand calculation").textContent)
+      .toMatch(/2\.0 \* 0\.5.*1\.0.*-1\.0 \* -0\.25.*0\.25.*3 native \+ 1 binding.*4 lanes/s);
+
+    fireEvent.click(screen.getByRole("button", { name: "Inspect Python rust-core-binding coverage lane" }));
+    expect(screen.getByLabelText("Selected implementation coverage contract").textContent)
+      .toMatch(/Python ctypes to versioned C ABI.*rust-core-binding.*Rust.*validate_neural_learning_rust_cabi\.py/s);
+    expect(screen.getByText(/does not execute Go, Ruby, Python, or the native library/)).toBeTruthy();
   });
 });

@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TE-C14-rutuvulu]
 ---
 
-# నీళ్ళు, బియ్యం, అన్నం — water matching its cousins, rice going its own way
+# నీళ్ళు, బియ్యం, అన్నం — water and rice
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C14-RUTUVULU-01, TE-PRAGMATICS-C14-RUTUVULU-02] -->

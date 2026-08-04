@@ -137,7 +137,7 @@
         "f396c3ec4dd5535b9b7db7d12c38913ed5cf1dfbc040afb471e341bf6be78834"
       ],
       "provenance_bundle_hashes": [
-        "b8412fdc74d0725c768276210c018b481058ef07a289e069c4dd4ac51c3793b8",
+        "50aa005f9c47a6a42bb92c20c8dcdda55cfc513ca015b8051335690d47d1e8f8",
         "a548a44417fb48afcd04834675860c432a11fbc96b31ab79521a5db8910a1eeb"
       ],
       "benchmark_paths": [],
@@ -169,9 +169,18 @@
       "prerequisites": ["adj.math.arithmetic.primitives"],
       "libraries": ["code/specs/data/adj-formula-stdlib/arithmetic/proportion.adj"],
       "modalities": ["text"],
-      "source_cas_hashes": [],
+      "source_cas_hashes": [
+        "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76",
+        "a35bcb922594fce55973d557eed3f4ea33160b3be1e6c6c80dca59ac80586f25",
+        "ac8a7cc5df1e226d1f31dc3500bbd6d18a88985bb42b805dd758fac3aed4c433",
+        "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638"
+      ],
+      "provenance_bundle_hashes": [
+        "4a6cb5ea959d19a009ca9ca170c58877c9eb30d5c7b48c930eac066aec87ab47",
+        "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6"
+      ],
       "benchmark_paths": [],
-      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+      "status": {"implementation": "present", "provenance": "fully_verified", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
       "id": "adj.math.arithmetic.ratio",

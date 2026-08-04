@@ -31,6 +31,24 @@ fn run(program: &Path) -> (bool, String) {
     (out.status.success(), String::from_utf8(out.stdout).unwrap())
 }
 
+fn run_explain(program: &Path) -> (bool, String) {
+    let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .arg("--explain")
+        .arg(program)
+        .output()
+        .expect("run adj-lang-cli --explain");
+    (out.status.success(), String::from_utf8(out.stdout).unwrap())
+}
+
+fn run_sensitive(program: &Path) -> (bool, String) {
+    let out = Command::new(env!("CARGO_BIN_EXE_adj-lang-cli"))
+        .arg(program)
+        .env("ADJ_SENSITIVE_INPUT", "1")
+        .output()
+        .expect("run sensitive adj-lang-cli");
+    (out.status.success(), String::from_utf8(out.stdout).unwrap())
+}
+
 /// Copy a shipped `.adj` file (by relative path under the stdlib) into `dir`
 /// under its basename, so a consumer's relative `import` resolves.
 fn place(dir: &Path, rel: &str) {
@@ -71,11 +89,14 @@ fn fourth_proportional_composes_product_and_quotient_and_carries_all_citations()
         "fourth_proportional(2, 3, 4) = 6: {s}"
     );
     // Exact integer 6/1 — no f64 round-trip.
-    assert!(s.contains("\"num\":\"6\"") && s.contains("\"den\":\"1\""), "exact value 6/1: {s}");
-    // The primary cites the cross-multiplication rule of three.
     assert!(
-        s.contains("en.wikipedia.org/wiki/Cross-multiplication"),
-        "primary cites the rule-of-three source: {s}"
+        s.contains("\"num\":\"6\"") && s.contains("\"den\":\"1\""),
+        "exact value 6/1: {s}"
+    );
+    // The primary cites the proportion definition and its nonzero domain.
+    assert!(
+        s.contains("openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions"),
+        "primary cites the proportion-domain source: {s}"
     );
     // BOTH composed primitives appear as corroborations.
     assert!(
@@ -123,13 +144,63 @@ fn the_derivation_tree_names_the_quotient_over_the_product() {
 }
 
 // ---------------------------------------------------------------------------
-// Honest edge case — a degenerate proportion 0/b = c/x has no finite fourth
-// proportional; the engine REFUSES (DivisionByZero), never fabricates a value.
+// Honest edge cases — every supplied term is part of the original equation's
+// domain. A zero in any position must abstain before body evaluation.
 // ---------------------------------------------------------------------------
 
 #[test]
-fn a_zero_first_term_is_refused_not_fabricated() {
-    let dir = scratch("zero");
+fn every_zero_input_abstains_without_evaluating_the_body() {
+    for (tag, first, second, third) in [("first", 0, 3, 4), ("second", 2, 0, 4), ("third", 2, 3, 0)]
+    {
+        let dir = scratch(&format!("zero_{tag}"));
+        with_lib(&dir);
+        std::fs::write(
+            dir.join("case.adj"),
+            format!(
+                "import \"proportion.adj\"\n\
+                 observe first_term({first})\n\
+                 observe second_term({second})\n\
+                 observe third_term({third})\n\
+                 ? fourth_proportional(first_term, second_term, third_term)\n"
+            ),
+        )
+        .unwrap();
+
+        let (ok, s) = run(&dir.join("case.adj"));
+        assert!(ok, "a false precondition is a successful abstention: {s}");
+        let json: serde_json::Value = serde_json::from_str(&s).expect("valid CLI JSON");
+        let abstentions = json["formula_abstentions"]
+            .as_array()
+            .expect("formula abstention array");
+        assert_eq!(abstentions.len(), 1, "one failed guard for {tag}: {s}");
+        assert_eq!(abstentions[0]["reason"], "precondition_failed");
+        assert_eq!(abstentions[0]["precondition"]["predicate"], "nonzero");
+        assert_eq!(
+            abstentions[0]["precondition"]["parameter"],
+            tag.to_string() + "_term"
+        );
+        assert_eq!(abstentions[0]["precondition"]["actual"], 0);
+        let inputs = abstentions[0]["inputs"]
+            .as_array()
+            .expect("guard input facts");
+        assert_eq!(inputs.len(), 1);
+        assert!(inputs[0]["term"].as_str().unwrap().contains(tag));
+        assert!(
+            json.get("derived").is_none(),
+            "no derived value for zero {tag}: {s}"
+        );
+        if tag == "first" {
+            let (explain_ok, explanation) = run_explain(&dir.join("case.adj"));
+            assert!(explain_ok, "abstention explanation exits successfully");
+            assert!(explanation.contains("FORMULA ABSTENTIONS"));
+            assert!(explanation.contains("fourth_proportional.nonzero[0](first_term) = 0"));
+        }
+    }
+}
+
+#[test]
+fn sensitive_formula_abstention_redacts_the_consumed_fact_term() {
+    let dir = scratch("sensitive_zero");
     with_lib(&dir);
     std::fs::write(
         dir.join("case.adj"),
@@ -141,9 +212,16 @@ fn a_zero_first_term_is_refused_not_fabricated() {
     )
     .unwrap();
 
-    let (_ok, s) = run(&dir.join("case.adj"));
-    // Dividing by the zero first term is refused: the engine reports
-    // DivisionByZero rather than inventing a fourth proportional.
-    assert!(s.contains("DivisionByZero"), "a zero first term must be refused, not fabricated: {s}");
-    assert!(!s.contains("\"value\":0"), "no fabricated value for a degenerate proportion: {s}");
+    let (ok, output) = run_sensitive(&dir.join("case.adj"));
+    assert!(ok, "sensitive abstention exits successfully: {output}");
+    assert!(output.contains("\"term\":\"[redacted]\""));
+    assert!(output.contains("\"fact_id\":0"));
+    assert!(
+        !output.contains("first_term(0)"),
+        "fact value leaked: {output}"
+    );
+    assert!(
+        !output.contains("\"actual\":0"),
+        "guard value leaked: {output}"
+    );
 }

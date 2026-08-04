@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C21-kalb-qitt
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 650
 chapter: 21
 type: word
 headword: كلب, قط
@@ -9,20 +12,34 @@ prerequisites: [AR-C20-ahada-ashar-ishrun]
 sounds: [arabic-qaf, arabic-geminate-tt]
 roots: [semitic-kalb-dog, afroasiatic-qitt-cat]
 etymology_hook: "كلب (kalb, 'dog') is Proto-Semitic *kalb-, cousin of Hebrew's own כֶּלֶב (kelev) — a solid, well-attested root, no mystery here; قط (qiṭṭ, 'cat/tomcat') is widely compared to the same ancient Afro-Asiatic root behind Latin's cattus (and so Spanish's gato, French's chat, German's Katze) — some linguists argue for a shared ancestor, though the exact relationship and even the direction of borrowing are still genuinely debated"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C21-KALB-QITT-01, AR-CONCEPT-C21-KALB-QITT-02]
+practises:
+  knowledge: [AR-CONCEPT-C21-KALB-QITT-01, AR-CONCEPT-C21-KALB-QITT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C20-ahada-ashar-ishrun]
 ---
 
 # كلب, قط — a solid root, and the word that closes the loop
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've met a genuine dog-word mystery in Spanish, and another one
 in German by way of English. Arabic's dog-word has no such mystery — and its
 cat-word turns out to be a long-lost cousin of nearly every European cat-word
 you've already learned.
 
-## كلب — a solid Semitic root, no mystery here
+## Why it's said this way — كلب — a solid Semitic root, no mystery here
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C21-KALB-QITT-01]; assesses=[] -->
 
 **كلب** (*kalb*, "**dog**") traces to **Proto-Semitic** ***\*kalb-*** — the
 exact same root behind **Hebrew**'s own word for dog, **כֶּלֶב** (*kelev*)
@@ -33,7 +50,8 @@ the English word that replaced "hound," *kalb* is a solid, well-attested,
 unmysterious Semitic root, shared across the whole Semitic family (Aramaic,
 Akkadian, and more).
 
-## قط — most likely the word that closes the loop
+## Why it's said this way — قط — most likely the word that closes the loop
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C21-KALB-QITT-02]; assesses=[] -->
 
 Here's how this whole arc most likely ties together: **قط** (*qiṭṭ*, "**cat,
 tomcat**") is not just a coincidence-sounding lookalike — it's widely
@@ -51,6 +69,7 @@ wherever cats were first domesticated, even if the exact family tree is still
 being worked out.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C21-KALB-QITT-01, AR-CONCEPT-C21-KALB-QITT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kalb" — dog, a solid Semitic root, cousin of Hebrew's kelev]
@@ -58,6 +77,7 @@ being worked out.
   every European cat-word you've learned]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C21-KALB-QITT-01, AR-CONCEPT-C21-KALB-QITT-02] -->
 
 [PAUSE 3s] What root does **كلب** trace to, and what's its Hebrew cousin?
 (**Proto-Semitic *\*kalb-***; cousin of Hebrew **כֶּלֶב**, *kelev*.) Is

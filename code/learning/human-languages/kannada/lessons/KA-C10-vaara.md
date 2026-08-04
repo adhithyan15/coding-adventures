@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C10-vaara
+spine_node: SPINE-TIME-OF-DAY
+sequence: 380
 chapter: 10
 type: word
 headword: ಸೋಮವಾರ ಮಂಗಳವಾರ ಬುಧವಾರ ಗುರುವಾರ ಶುಕ್ರವಾರ ಶನಿವಾರ ಭಾನುವಾರ
@@ -9,19 +12,33 @@ prerequisites: [KA-C09-kshamisi]
 sounds: [kannada-anusvara, kannada-conjunct-kra]
 roots: [sanskrit-planet-words]
 etymology_hook: "Kannada's week is fully Sanskritic like Hindi's — Somavāra, Maṅgaḷavāra… — but Sunday is Bhānuvāra ('day of light'), a different Sanskrit sun-name than Hindi's Ravivāra"
-est_minutes: 4
 reviews_of: [KA-C09-kshamisi]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03]
+introduces:
+  knowledge: [KA-LEX-C10-VAARA-01]
+practises:
+  knowledge: [KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
-# ಸೋಮವಾರ to ಭಾನುವಾರ — Kannada's fully Sanskritic week
+# ಸೋಮವಾರ to ಭಾನುವಾರ — the Sanskrit week
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03] -->
 
 [PAUSE 2s] Unlike Tamil and Malayalam, Kannada's week is built entirely from
 Sanskrit — the same recipe as Hindi's. But even here, one day picks a
 **different** Sanskrit word than Hindi does.
 
-## The pattern: [deity] + ವಾರ, "day"
+## You'll want to know: The pattern: [deity] + ವಾರ, "day"
+<!-- hl-knowledge: introduces=[KA-LEX-C10-VAARA-01]; assesses=[] -->
 
 | Kannada | deity/planet | day |
 |---|---|---|
@@ -42,6 +59,7 @@ sun, and different languages downstream picked different ones for their
 week.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Somavāra, Maṅgaḷavāra, Budhavāra, Guruvāra, Śukravāra,
@@ -51,6 +69,7 @@ week.
   (Bhānu) — two different Sanskrit sun-names]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01] -->
 
 [PAUSE 3s] What ending does every Kannada weekday share, and where's it
 from? (**‑ವಾರ** *-vāra*, Sanskrit "day.") Which day differs from Hindi's

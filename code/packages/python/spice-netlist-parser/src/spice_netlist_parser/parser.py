@@ -1274,6 +1274,14 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
                 "CJO", model.params.get("CJ", model.params.get("CJ0", 0.0))
             ),
             Tt=model.params.get("TT", 0.0),
+            Vj=model.params.get("VJ", model.params.get("PB", 1.0)),
+            M=model.params.get("M", model.params.get("MJ", 0.5)),
+            Fc=model.params.get("FC", 0.5),
+            Xti=model.params.get("XTI", 3.0),
+            Eg=model.params.get("EG", 1.11),
+            Rs=model.params.get("RS", 0.0),
+            Kf=model.params.get("KF", 0.0),
+            Af=model.params.get("AF", 1.0),
         )
     if prefix == "Q":
         _require_fields(fields, 5, "BJT")
@@ -1327,6 +1335,15 @@ def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
             lambda_=model.params.get("LAMBDA", 0.0),
             Cgs=model.params.get("CGS", model.params.get("CGS0", 0.0)),
             Cgd=model.params.get("CGD", model.params.get("CGD0", 0.0)),
+            Kf=model.params.get("KF", 0.0),
+            Af=model.params.get("AF", 1.0),
+            Pb=model.params.get("PB", model.params.get("VJ", 1.0)),
+            Fc=model.params.get("FC", 0.5),
+            Is=model.params.get("IS", 1.0e-14),
+            Xti=model.params.get("XTI", 3.0),
+            Eg=model.params.get("EG", 1.11),
+            Nlev=model.params.get("NLEV", 1.0),
+            Gdsnoi=model.params.get("GDSNOI", 1.0),
         )
     if prefix == "M":
         _require_min_fields(fields, 6, "MOSFET")
@@ -1939,6 +1956,11 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(breakdown_voltage) or breakdown_voltage <= 0.0
         ):
             raise NetlistParseError("diode BV must be finite and positive")
+        breakdown_current = params.get("IBV")
+        if breakdown_current is not None and (
+            not math.isfinite(breakdown_current) or breakdown_current <= 0.0
+        ):
+            raise NetlistParseError("diode IBV must be finite and positive")
         junction_capacitance = next(
             (params[name] for name in ("CJO", "CJ", "CJ0") if name in params),
             None,
@@ -1952,6 +1974,50 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             not math.isfinite(transit_time) or transit_time < 0.0
         ):
             raise NetlistParseError("diode TT must be finite and non-negative")
+        series_resistance = params.get("RS")
+        if series_resistance is not None and (
+            not math.isfinite(series_resistance) or series_resistance < 0.0
+        ):
+            raise NetlistParseError("diode RS must be finite and non-negative")
+        junction_potential = params.get("VJ", params.get("PB"))
+        if junction_potential is not None and (
+            not math.isfinite(junction_potential) or junction_potential <= 0.0
+        ):
+            raise NetlistParseError("diode VJ must be finite and positive")
+        grading_coefficient = params.get("M", params.get("MJ"))
+        if grading_coefficient is not None and (
+            not math.isfinite(grading_coefficient) or grading_coefficient < 0.0
+        ):
+            raise NetlistParseError("diode M must be finite and non-negative")
+        depletion_coefficient = params.get("FC")
+        if depletion_coefficient is not None and (
+            not math.isfinite(depletion_coefficient)
+            or depletion_coefficient < 0.0
+            or depletion_coefficient >= 1.0
+        ):
+            raise NetlistParseError("diode FC must be finite and in [0, 1)")
+        temperature_exponent = params.get("XTI")
+        if temperature_exponent is not None and not math.isfinite(
+            temperature_exponent
+        ):
+            raise NetlistParseError("diode XTI must be finite")
+        energy_gap = params.get("EG")
+        if energy_gap is not None and (
+            not math.isfinite(energy_gap) or energy_gap <= 0.0
+        ):
+            raise NetlistParseError("diode EG must be finite and positive")
+        flicker_noise_coefficient = params.get("KF")
+        if flicker_noise_coefficient is not None and (
+            not math.isfinite(flicker_noise_coefficient)
+            or flicker_noise_coefficient < 0.0
+        ):
+            raise NetlistParseError("diode KF must be finite and non-negative")
+        flicker_noise_exponent = params.get("AF")
+        if flicker_noise_exponent is not None and (
+            not math.isfinite(flicker_noise_exponent)
+            or flicker_noise_exponent < 0.0
+        ):
+            raise NetlistParseError("diode AF must be finite and non-negative")
     if kind in {"NPN", "PNP"}:
         saturation_current = params.get("IS")
         if saturation_current is not None and (
@@ -2014,6 +2080,60 @@ def _parse_model_card(fields: list[str]) -> ModelCard:
             or gate_drain_capacitance < 0.0
         ):
             raise NetlistParseError("JFET CGD must be finite and non-negative")
+        flicker_noise_coefficient = params.get("KF")
+        if flicker_noise_coefficient is not None and (
+            not math.isfinite(flicker_noise_coefficient)
+            or flicker_noise_coefficient < 0.0
+        ):
+            raise NetlistParseError("JFET KF must be finite and non-negative")
+        flicker_noise_exponent = params.get("AF")
+        if flicker_noise_exponent is not None and (
+            not math.isfinite(flicker_noise_exponent)
+            or flicker_noise_exponent < 0.0
+        ):
+            raise NetlistParseError("JFET AF must be finite and non-negative")
+        junction_potential = params.get("PB", params.get("VJ"))
+        if junction_potential is not None and (
+            not math.isfinite(junction_potential) or junction_potential <= 0.0
+        ):
+            raise NetlistParseError("JFET PB must be finite and positive")
+        depletion_coefficient = params.get("FC")
+        if depletion_coefficient is not None and (
+            not math.isfinite(depletion_coefficient)
+            or depletion_coefficient < 0.0
+            or depletion_coefficient >= 1.0
+        ):
+            raise NetlistParseError("JFET FC must be finite and in [0, 1)")
+        saturation_current = params.get("IS")
+        if saturation_current is not None and (
+            not math.isfinite(saturation_current) or saturation_current <= 0.0
+        ):
+            raise NetlistParseError("JFET IS must be finite and positive")
+        temperature_exponent = params.get("XTI")
+        if temperature_exponent is not None and not math.isfinite(
+            temperature_exponent
+        ):
+            raise NetlistParseError("JFET XTI must be finite")
+        energy_gap = params.get("EG")
+        if energy_gap is not None and (
+            not math.isfinite(energy_gap) or energy_gap <= 0.0
+        ):
+            raise NetlistParseError("JFET EG must be finite and positive")
+        noise_level = params.get("NLEV")
+        if noise_level is not None and (
+            not math.isfinite(noise_level)
+            or noise_level < 1.0
+            or noise_level != math.floor(noise_level)
+        ):
+            raise NetlistParseError(
+                "JFET NLEV must be a finite integer greater than or equal to 1"
+            )
+        channel_noise_coefficient = params.get("GDSNOI")
+        if channel_noise_coefficient is not None and (
+            not math.isfinite(channel_noise_coefficient)
+            or channel_noise_coefficient < 0.0
+        ):
+            raise NetlistParseError("JFET GDSNOI must be finite and non-negative")
     if kind in {"NMOS", "PMOS"}:
         if "LEVEL" in params:
             level = params["LEVEL"]

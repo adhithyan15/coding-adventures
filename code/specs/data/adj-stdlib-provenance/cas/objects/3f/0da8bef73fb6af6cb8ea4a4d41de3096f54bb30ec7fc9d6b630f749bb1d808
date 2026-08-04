@@ -1,0 +1,89 @@
+{
+  "kind": "source_ir",
+  "segments": [
+    {
+      "claims": [
+        {
+          "claim_id": "adj.code.arithmetic.proportion.query.import",
+          "end": 24,
+          "quote": "import \"proportion.adj\"\n",
+          "quote_sha256": "ecaecbe04883e222f9b5fd2bcde8e2847b2c8f68d181e15bcc68a6e0538f8c0a",
+          "start": 0
+        }
+      ],
+      "disposition": "represented",
+      "end": 24,
+      "start": 0
+    },
+    {
+      "disposition": "discarded",
+      "end": 25,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 24
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.first_term.0",
+          "end": 310,
+          "quote": "observe first_term(0)\n    quote \"first term is 0.\" at 52 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "37a1ad325c043b0582913b377c51a213f370b01767fab70e14cb9ea0b1a86ad6",
+          "start": 25
+        }
+      ],
+      "disposition": "represented",
+      "end": 310,
+      "start": 25
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.second_term.3",
+          "end": 597,
+          "quote": "observe second_term(3)\n    quote \"second term is 3.\" at 17 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "a1672c3412783c8c8b43ffc40f3b8dd17523ce341b4c342e4d890594627cfa07",
+          "start": 310
+        }
+      ],
+      "disposition": "represented",
+      "end": 597,
+      "start": 310
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.third_term.4",
+          "end": 882,
+          "quote": "observe third_term(4)\n    quote \"third term is 4.\" at 35 snapshot \"b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638\"\n    source \"proportion input fixture\"\n    locator \"repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt\"\n    trust authoritative\n",
+          "quote_sha256": "eebea0fad60adaec55fa4821780cee63f83f077305851c3b2f5de02c0e9f4a40",
+          "start": 597
+        }
+      ],
+      "disposition": "represented",
+      "end": 882,
+      "start": 597
+    },
+    {
+      "disposition": "discarded",
+      "end": 883,
+      "reason": "comments, spacing, or human-readable explanation outside the selected import, observations, and executable question",
+      "start": 882
+    },
+    {
+      "claims": [
+        {
+          "claim_id": "adj.question.arithmetic.proportion.compute",
+          "end": 942,
+          "quote": "? fourth_proportional(first_term, second_term, third_term)\n",
+          "quote_sha256": "765a2dce7729b63e11581055f960214a1f21b8c3e9bb1e113d7de642f553316b",
+          "start": 883
+        }
+      ],
+      "disposition": "represented",
+      "end": 942,
+      "start": 883
+    }
+  ],
+  "source_sha256": "c53ae4e8e2d6084ca4c5c5285bd654a9974e60ffdff900894bfef32e7f973f78",
+  "source_size": 942
+}

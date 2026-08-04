@@ -3,6 +3,251 @@
   "algorithm": "fnv1a64",
   "chapters": [
     {
+      "language": "arabic",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:1b9813b5b7b86550",
+      "lessonIds": [
+        "AR-W07-hook-family-ha-kha",
+        "AR-W08-kaf-and-ra",
+        "AR-W09-khayr-bikhayr",
+        "AR-C03-kayfa",
+        "AR-C03-hal",
+        "AR-C03-kayfa-haluka",
+        "AR-C03-bi-khayr",
+        "AR-C03-al-hamdu-lillah",
+        "AR-C03-practice"
+      ],
+      "tex": "arabic/book/chapters/ch03-how-are-you.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:927e348dde94c4bb",
+      "lessonIds": [
+        "AR-W10-ayn",
+        "AR-W11-ha-and-ta-marbuta",
+        "AR-W12-maa-salama",
+        "AR-C04-maa-with",
+        "AR-C04-al-salama",
+        "AR-C04-maa-salama",
+        "AR-C04-ila-liqaa",
+        "AR-C04-practice"
+      ],
+      "tex": "arabic/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:ad8cc04c63058934",
+      "lessonIds": [
+        "AR-C05-naam",
+        "AR-C05-la"
+      ],
+      "tex": "arabic/book/chapters/ch05-yes-and-no.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:cc54a0c91344c3bf",
+      "lessonIds": [
+        "AR-C06-min-fadlik"
+      ],
+      "tex": "arabic/book/chapters/ch06-please.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:32ec2ab9f42c3187",
+      "lessonIds": [
+        "AR-C07-asif"
+      ],
+      "tex": "arabic/book/chapters/ch07-sorry.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:6294b259f9b691ec",
+      "lessonIds": [
+        "AR-C08-al-ahad-al-khamis",
+        "AR-C08-al-jumua-as-sabt"
+      ],
+      "tex": "arabic/book/chapters/ch08-days.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:929771dbb8260ffd",
+      "lessonIds": [
+        "AR-C09-aswad-abyad",
+        "AR-C09-ahmar-azraq"
+      ],
+      "tex": "arabic/book/chapters/ch09-colours.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:a9e69996866b996b",
+      "lessonIds": [
+        "AR-C10-ab-umm",
+        "AR-C10-akh-ukht"
+      ],
+      "tex": "arabic/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:6bb129866c740e2c",
+      "lessonIds": [
+        "AR-C11-ras",
+        "AR-C11-yad"
+      ],
+      "tex": "arabic/book/chapters/ch11-head-and-hand.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e9eab09aa7dbde6b",
+      "lessonIds": [
+        "AR-C12-al-fusul"
+      ],
+      "tex": "arabic/book/chapters/ch12-seasons.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:9d335ce2306201ce",
+      "lessonIds": [
+        "AR-C13-maa-khubz"
+      ],
+      "tex": "arabic/book/chapters/ch13-water-and-bread.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:bb46ab609d4a7b53",
+      "lessonIds": [
+        "AR-C14-ashhur"
+      ],
+      "tex": "arabic/book/chapters/ch14-months.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:4c5d4820286e2376",
+      "lessonIds": [
+        "AR-C15-ad-duhr-muntasaf-al-layl"
+      ],
+      "tex": "arabic/book/chapters/ch15-noon-and-midnight.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:413f30a56fea9570",
+      "lessonIds": [
+        "AR-C16-al-saa"
+      ],
+      "tex": "arabic/book/chapters/ch16-telling-time.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:7c69d747e1971e1e",
+      "lessonIds": [
+        "AR-C17-kam-umruka"
+      ],
+      "tex": "arabic/book/chapters/ch17-age.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:501d33703c5ffa29",
+      "lessonIds": [
+        "AR-C18-al-taqs"
+      ],
+      "tex": "arabic/book/chapters/ch18-weather.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:607084f077915a14",
+      "lessonIds": [
+        "AR-C19-wahid-khamsa"
+      ],
+      "tex": "arabic/book/chapters/ch19-numbers-1-5.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:fb193a500bf84fa4",
+      "lessonIds": [
+        "AR-C20-ahada-ashar-ishrun"
+      ],
+      "tex": "arabic/book/chapters/ch20-numbers-11-20.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:d114963100d91b96",
+      "lessonIds": [
+        "AR-C21-kalb-qitt"
+      ],
+      "tex": "arabic/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:ef18ebdf4ff568e8",
+      "lessonIds": [
+        "AR-C22-akhdar-asfar"
+      ],
+      "tex": "arabic/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:e11413130f677c5e",
+      "lessonIds": [
+        "AR-C23-afwan"
+      ],
+      "tex": "arabic/book/chapters/ch23-youre-welcome.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:0556cfdf53851bbf",
+      "lessonIds": [
+        "AR-C24-ila-al-ghad"
+      ],
+      "tex": "arabic/book/chapters/ch24-see-you-tomorrow.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:acb8d0310207cdf6",
+      "lessonIds": [
+        "AR-C25-yawm"
+      ],
+      "tex": "arabic/book/chapters/ch25-day.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:edb1065ae87c9f6b",
+      "lessonIds": [
+        "AR-C26-layl"
+      ],
+      "tex": "arabic/book/chapters/ch26-night.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:978af30d3b1dba60",
+      "lessonIds": [
+        "AR-C27-tusbih-ala-khayr"
+      ],
+      "tex": "arabic/book/chapters/ch27-good-night.tex"
+    },
+    {
       "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:28baeae54e13a2dc",
@@ -330,6 +575,485 @@
       "tex": "italian/book/chapters/ch17-head-and-hand.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:cc167694fde562f4",
+      "lessonIds": [
+        "KA-C06-dative-ge",
+        "KA-C06-dative-stacking",
+        "KA-C06-dative-subject"
+      ],
+      "tex": "kannada/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:d4a6f697bdb7fb98",
+      "lessonIds": [
+        "KA-C07-numbers-1-5",
+        "KA-C07-numbers-6-10"
+      ],
+      "tex": "kannada/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:0dd42921ebc1ff57",
+      "lessonIds": [
+        "KA-C08-dayavittu"
+      ],
+      "tex": "kannada/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:72851113a8be5055",
+      "lessonIds": [
+        "KA-C09-kshamisi"
+      ],
+      "tex": "kannada/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:33566b64ea65a0a8",
+      "lessonIds": [
+        "KA-C10-vaara"
+      ],
+      "tex": "kannada/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:a577aa338975f386",
+      "lessonIds": [
+        "KA-C11-bannagalu"
+      ],
+      "tex": "kannada/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:1cfe2ba34766cd85",
+      "lessonIds": [
+        "KA-C12-kutumba"
+      ],
+      "tex": "kannada/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:0878d10a7187db28",
+      "lessonIds": [
+        "KA-C13-dehada-bhagagalu"
+      ],
+      "tex": "kannada/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:ec354231e214ee71",
+      "lessonIds": [
+        "KA-C14-kaalagalu"
+      ],
+      "tex": "kannada/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d190fb570c076825",
+      "lessonIds": [
+        "KA-C15-niiru-akki"
+      ],
+      "tex": "kannada/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:3f5e4fc9f72d0eb7",
+      "lessonIds": [
+        "KA-C16-tingalugalu"
+      ],
+      "tex": "kannada/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:223e56c5ec67ed1a",
+      "lessonIds": [
+        "KA-C17-madhyaahna-madhyaraatri"
+      ],
+      "tex": "kannada/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:b8039d88f5603008",
+      "lessonIds": [
+        "KA-C18-gante"
+      ],
+      "tex": "kannada/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:f7c28f10b80343b3",
+      "lessonIds": [
+        "KA-C19-vayassu"
+      ],
+      "tex": "kannada/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:ebc489f9095368bd",
+      "lessonIds": [
+        "KA-C20-hannondu-ippattu",
+        "KA-C20-havamana"
+      ],
+      "tex": "kannada/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:03d7d39d4493a575",
+      "lessonIds": [
+        "KA-C21-naayi-bekku"
+      ],
+      "tex": "kannada/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:f63f1cfc23b0cb25",
+      "lessonIds": [
+        "KA-C22-hasiru-haladi"
+      ],
+      "tex": "kannada/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:422a48e530cebe57",
+      "lessonIds": [
+        "KA-C23-dina"
+      ],
+      "tex": "kannada/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:34c5748dc853de1e",
+      "lessonIds": [
+        "KA-C24-ratri"
+      ],
+      "tex": "kannada/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:d84a11ad7e7cac19",
+      "lessonIds": [
+        "KA-C25-shubha-ratri"
+      ],
+      "tex": "kannada/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:6c517d5cdb2f5b6a",
+      "lessonIds": [
+        "KA-C26-belagge"
+      ],
+      "tex": "kannada/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:5b610fd79895225e",
+      "lessonIds": [
+        "KA-C27-sanje"
+      ],
+      "tex": "kannada/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:6133ff939c0603ea",
+      "lessonIds": [
+        "KA-C28-aparahna"
+      ],
+      "tex": "kannada/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:65f0071b2ae9fb22",
+      "lessonIds": [
+        "KA-C29-shubhodaya"
+      ],
+      "tex": "kannada/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:aebe084d534a27d6",
+      "lessonIds": [
+        "KA-C30-shubha-sanje"
+      ],
+      "tex": "kannada/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:f2a6ae56d39f4220",
+      "lessonIds": [
+        "KA-C31-shubha-madhyahna"
+      ],
+      "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a395cc73dc812086",
+      "lessonIds": [
+        "ML-C06-dative-ikku",
+        "ML-C06-dative-subject"
+      ],
+      "tex": "malayalam/book/chapters/ch06-dative-case.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:86b461ccf2e61aa9",
+      "lessonIds": [
+        "ML-C07-numbers-1-5",
+        "ML-C07-numbers-6-10"
+      ],
+      "tex": "malayalam/book/chapters/ch07-numbers-1-10.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:beb32b8b66098647",
+      "lessonIds": [
+        "ML-C08-dayavayi"
+      ],
+      "tex": "malayalam/book/chapters/ch08-please.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:60ba9f3764eeac28",
+      "lessonIds": [
+        "ML-C09-kshamikkanam"
+      ],
+      "tex": "malayalam/book/chapters/ch09-sorry.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:7488bd8c935f62d7",
+      "lessonIds": [
+        "ML-C10-azhcha"
+      ],
+      "tex": "malayalam/book/chapters/ch10-days.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:fbbc1ab28dbc377d",
+      "lessonIds": [
+        "ML-C11-nirangal"
+      ],
+      "tex": "malayalam/book/chapters/ch11-colours.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e42ba8156c6e3d9a",
+      "lessonIds": [
+        "ML-C12-kudumbam"
+      ],
+      "tex": "malayalam/book/chapters/ch12-family.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:8d847e5cf2b99e2d",
+      "lessonIds": [
+        "ML-C13-shareera-bhaagangal"
+      ],
+      "tex": "malayalam/book/chapters/ch13-head-and-hand.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:cab5ece57c64c887",
+      "lessonIds": [
+        "ML-C14-kaalangal"
+      ],
+      "tex": "malayalam/book/chapters/ch14-seasons.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:f87c2d31a9e1bcb9",
+      "lessonIds": [
+        "ML-C15-vellam-ari"
+      ],
+      "tex": "malayalam/book/chapters/ch15-water-and-rice.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:3ae69cba397926e5",
+      "lessonIds": [
+        "ML-C16-kollavarsham-maasangal"
+      ],
+      "tex": "malayalam/book/chapters/ch16-months.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:288f60854351ad94",
+      "lessonIds": [
+        "ML-C17-ucha-paathira",
+        "ML-C17-paathira"
+      ],
+      "tex": "malayalam/book/chapters/ch17-noon-and-midnight.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:39e6627618aef15f",
+      "lessonIds": [
+        "ML-C18-mani"
+      ],
+      "tex": "malayalam/book/chapters/ch18-telling-time.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:e5e120e17bcb588f",
+      "lessonIds": [
+        "ML-C19-vayassu"
+      ],
+      "tex": "malayalam/book/chapters/ch19-age.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:f974ebaac51f7c0e",
+      "lessonIds": [
+        "ML-C20-pathinonnu-irupathu",
+        "ML-C20-kalavastha"
+      ],
+      "tex": "malayalam/book/chapters/ch20-numbers-and-weather.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e2a78a4d8d90f4df",
+      "lessonIds": [
+        "ML-C21-naaya-poocha"
+      ],
+      "tex": "malayalam/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:ec9b97d7e41fedb0",
+      "lessonIds": [
+        "ML-C22-paccha-manja"
+      ],
+      "tex": "malayalam/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:56e12d6bddb8a7f7",
+      "lessonIds": [
+        "ML-C23-divasam",
+        "ML-C23-naal"
+      ],
+      "tex": "malayalam/book/chapters/ch23-day.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:acbff52e5880c78d",
+      "lessonIds": [
+        "ML-C24-rathri",
+        "ML-C24-native-night-words"
+      ],
+      "tex": "malayalam/book/chapters/ch24-night.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:447949184dfe4ff4",
+      "lessonIds": [
+        "ML-C25-shubha-rathri"
+      ],
+      "tex": "malayalam/book/chapters/ch25-good-night.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:2606e98487e2c8e6",
+      "lessonIds": [
+        "ML-C26-raavile"
+      ],
+      "tex": "malayalam/book/chapters/ch26-morning.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:c2a9ff4b74bdfb8e",
+      "lessonIds": [
+        "ML-C27-vaikunneram"
+      ],
+      "tex": "malayalam/book/chapters/ch27-evening.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:585d631c6cb2a93a",
+      "lessonIds": [
+        "ML-C28-uchakazhinju"
+      ],
+      "tex": "malayalam/book/chapters/ch28-afternoon.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:8afc5076ee8c3dff",
+      "lessonIds": [
+        "ML-C29-suprabhaatham"
+      ],
+      "tex": "malayalam/book/chapters/ch29-good-morning.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:043cd698c21af4b8",
+      "lessonIds": [
+        "ML-C30-shubha-sayaahnam"
+      ],
+      "tex": "malayalam/book/chapters/ch30-good-evening.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:5cd8f71d62d40931",
+      "lessonIds": [
+        "ML-C31-shubha-madhyaahnam",
+        "ML-C31-afternoon-convergence"
+      ],
+      "tex": "malayalam/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:d0addd66aaedf900",
@@ -640,7 +1364,7 @@
     {
       "language": "telugu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:6cb5796cbafe9026",
+      "sourceHash": "fnv1a64:a0d2c6d28e4fa358",
       "lessonIds": [
         "TE-C06-dative-ku",
         "TE-C06-dative-subject"
@@ -669,7 +1393,7 @@
     {
       "language": "telugu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:a59621bd41d42067",
+      "sourceHash": "fnv1a64:012d9dd03b6465c1",
       "lessonIds": [
         "TE-C09-kshaminchandi"
       ],
@@ -696,7 +1420,7 @@
     {
       "language": "telugu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:21fe8857abf3df9c",
+      "sourceHash": "fnv1a64:54fc86cc71a291ff",
       "lessonIds": [
         "TE-C12-kutumbam"
       ],
@@ -705,7 +1429,7 @@
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:83368e6f6cac4154",
+      "sourceHash": "fnv1a64:1debf26c0657eade",
       "lessonIds": [
         "TE-C13-sharira-bhagalu"
       ],
@@ -723,7 +1447,7 @@
     {
       "language": "telugu",
       "chapter": 15,
-      "sourceHash": "fnv1a64:a75d12dfcd736972",
+      "sourceHash": "fnv1a64:54bde29911714c6e",
       "lessonIds": [
         "TE-C15-neellu-biyyam"
       ],
@@ -732,7 +1456,7 @@
     {
       "language": "telugu",
       "chapter": 16,
-      "sourceHash": "fnv1a64:8f0932ccb64f8552",
+      "sourceHash": "fnv1a64:a9b000a2c411482d",
       "lessonIds": [
         "TE-C16-nelalu"
       ],

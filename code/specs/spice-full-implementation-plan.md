@@ -4394,17 +4394,115 @@ the Rust, Python, and TypeScript surfaces together.
      them into the shared engine diode emission-coefficient field.
 
 415. Python and TypeScript Berkeley SPICE diode breakdown-voltage validation parity.
-   - Status: completed in this diode breakdown-voltage validation slice.
+   - Status: completed in PR 9805.
    - Both parser facades validate positive finite `BV` values before lowering
      them into the shared engine diode breakdown-voltage field.
+
+416. Python and TypeScript Berkeley SPICE diode breakdown-current validation parity.
+   - Status: completed in PR 9809.
+   - Both parser facades validate positive finite `IBV` values before lowering
+     them into the shared engine diode breakdown-current field.
+
+417. Python and TypeScript Berkeley SPICE diode series-resistance parity.
+   - Status: completed in PR 9813.
+   - Both parser facades validate finite non-negative `RS` values and lower
+     them into the shared engine diode series-resistance field.
+
+418. Python and TypeScript Berkeley SPICE diode junction-potential parity.
+   - Status: completed in PR 9816.
+   - Both parser facades validate positive finite `VJ` / `PB` values and lower
+     them into the shared engine diode junction-potential field with canonical
+     `VJ` precedence.
+
+419. Python and TypeScript Berkeley SPICE diode grading-coefficient parity.
+   - Status: completed in PR 9820.
+   - Both parser facades validate finite non-negative `M` / `MJ` values and
+     lower them into the shared engine diode grading-coefficient field with
+     canonical `M` precedence.
+
+420. Python and TypeScript Berkeley SPICE diode depletion-coefficient parity.
+   - Status: completed in PR 9822.
+   - Both parser facades validate finite `FC` values in `[0, 1)` and lower
+     them into the shared engine diode depletion-coefficient field.
+
+421. Python and TypeScript Berkeley SPICE diode temperature-exponent parity.
+   - Status: completed in PR 9824.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine diode saturation-current temperature-exponent field.
+
+422. Python and TypeScript Berkeley SPICE diode energy-gap parity.
+   - Status: completed in PR 9826.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine diode energy-gap field.
+
+423. Python and TypeScript Berkeley SPICE diode flicker-noise coefficient parity.
+   - Status: completed in PR 9829.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine diode flicker-noise coefficient field.
+
+424. Python and TypeScript Berkeley SPICE diode flicker-noise exponent parity.
+   - Status: completed in PR 9831.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine diode flicker-noise exponent field.
+
+425. Python and TypeScript Berkeley SPICE JFET flicker-noise coefficient parity.
+   - Status: completed in PR 9835.
+   - Both parser facades validate finite non-negative `KF` values and lower
+     them into the shared engine JFET flicker-noise coefficient field.
+
+426. Python and TypeScript Berkeley SPICE JFET flicker-noise exponent parity.
+   - Status: completed in PR 9837.
+   - Both parser facades validate finite non-negative `AF` values and lower
+     them into the shared engine JFET flicker-noise exponent field.
+
+427. Python and TypeScript Berkeley SPICE JFET junction-potential parity.
+   - Status: completed in PR 9839.
+   - Both parser facades validate positive finite `PB` / `VJ` values, prefer
+     canonical `PB`, and lower the result into the shared engine JFET
+     junction-potential field.
+
+428. Python and TypeScript Berkeley SPICE JFET depletion-coefficient parity.
+   - Status: completed in PR 9842.
+   - Both parser facades validate finite `FC` values in `[0, 1)` and lower
+     them into the shared engine JFET forward-bias depletion field.
+
+429. Python and TypeScript Berkeley SPICE JFET gate-current parity.
+   - Status: completed in PR 9843.
+   - Both parser facades validate positive finite `IS` values and lower them
+     into the shared engine JFET gate saturation-current field.
+
+430. Python and TypeScript Berkeley SPICE JFET temperature-exponent parity.
+   - Status: completed in PR 9848.
+   - Both parser facades validate finite `XTI` values and lower them into the
+     shared engine JFET gate-current temperature-exponent field.
+
+431. Python and TypeScript Berkeley SPICE JFET energy-gap parity.
+   - Status: completed in PR 9851.
+   - Both parser facades validate positive finite `EG` values and lower them
+     into the shared engine JFET bandgap-voltage field.
+
+432. Python and TypeScript Berkeley SPICE JFET noise-level parity.
+   - Status: completed in PR 9853.
+   - Both parser facades validate `NLEV` as a finite integer greater than or
+     equal to 1 and lower it into the shared engine noise-equation-level field.
+
+433. Python and TypeScript Berkeley SPICE JFET channel-noise parity.
+   - Status: implemented in this JFET channel-noise parity slice.
+   - Both parser facades validate finite, non-negative `GDSNOI` values and
+     lower them into the shared engine channel-noise-coefficient field.
 
 ## Backlog
 
 1. Python and TypeScript Berkeley SPICE model-card validation parity.
-   - Continue the parser-to-engine validation audit with positive finite diode
-     breakdown current `IBV`.
-   - Audit remaining directly lowerable diode fields before moving to model
-     parameters that require new parser-to-engine lowering surfaces.
+   - Resolve the JFET `B` policy before lowering it: all three parser facades
+     currently use `B` as a legacy beta alias, while the engine model uses `B`
+     for Parker-Skellern doping-tail shaping. Do not assign one card value to
+     both fields silently.
+   - Continue the unambiguous audited JFET gaps with `RD`, `RS`,
+     `TCV`, `VTOTC`, `TNOM` / `T_NOM`, `BEX`, and `BETATCE`.
+   - Continue the audited BJT model-card gaps after the smaller JFET fields;
+     prioritize direct engine fields before adding new model surfaces.
+   - Re-audit MOS lowering after those direct JFET and BJT omissions close.
 
 2. Grammar-backed parser and app facade.
    - Keep Python and TypeScript parser contract parity aligned with the Rust

@@ -169,14 +169,6 @@ fn rejects(stmts: Vec<Stmt>, feats: &[Feature]) -> bool {
 
 #[test]
 fn deferred_oop_shapes_are_rejected_cleanly() {
-    // `__new__` with a constructor argument (needs `initialize`, a later slice).
-    assert!(
-        rejects(
-            vec![puts(bc("__new__", vec![strlit("Foo"), ilit(1)]))],
-            &[Feature::Classes, Feature::Constants, Feature::Strings]
-        ),
-        "__new__ with ctor args must be rejected"
-    );
     // A MALFORMED `__def_method__` (no closure) — a well-formed one is now
     // supported (slice 2), but a missing closure must reject, not mis-emit.
     assert!(

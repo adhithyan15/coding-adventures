@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.55.0] - 2026-08-03 - derived precision markers and transactional staging
+
+- `Derived` retains whether an exact source crossed a value-changing `f64` boundary, and that
+  marker now propagates through computations. Predicate contributions, state-machine guards,
+  and proof verification reject marked operands rather than making a discrete float decision.
+- Aggregations preserve rational sidecars when every observation is exact; mixed reductions are
+  marked when an exact source would otherwise be laundered through `f64`.
+- Recursive evaluation carries the marker through exact intermediates, exact source literals
+  remain rational in `ComputeExpr`, mixed comparisons reject unsafe float fallback, and LR emits
+  a typed warning when a predicate is withheld for precision loss.
+- `KnowledgeBase::with_staged_derived` exposes one candidate and its trusted computation plan to
+  an owned-result callback, then removes both on return. Deferred branches can evaluate a
+  self-dependent RHS without cloning the complete knowledge base or leaking a failed candidate.
+
 ## [0.54.0] - 2026-08-02 - NUM-7c: `adj-verify` recheck of the sqrt Real companion
 
 - `recheck_narrowing` gains two new `DerivationNode::Op` arms: `real: None` is not a narrowing

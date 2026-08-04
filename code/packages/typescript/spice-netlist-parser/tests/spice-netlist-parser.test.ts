@@ -736,7 +736,7 @@ Rload out 0 500
 
   it("parses diode models into operating-point circuits", () => {
     const parsed = parseNetlist(`
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n RS=3)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -754,6 +754,7 @@ Rload out 0 1k
         ["IBV", 1.0e-6],
         ["CJO", 2.0e-12],
         ["TT", 4.0e-9],
+        ["RS", 3.0],
       ]),
     });
     expect(parsed.circuit.elements()[1]).toMatchObject({
@@ -768,6 +769,7 @@ Rload out 0 1k
       breakdownCurrent: 1.0e-6,
       junctionCapacitance: 2.0e-12,
       transitTime: 4.0e-9,
+      seriesResistance: 3.0,
     });
 
     const result = dcOp(parsed.circuit);
@@ -904,6 +906,195 @@ D1 in out clamp
   it.each(["0", "-1", "1e999"])("rejects invalid diode BV %s", (value) => {
     expect(() => parseNetlist(`.model clamp D(BV=${value})`)).toThrow(
       "diode BV must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["1u", 1.0e-6],
+    ["2m", 2.0e-3],
+  ])("accepts valid diode IBV breakdown current %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(IBV=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      breakdownCurrent: expected,
+    });
+  });
+
+  it.each(["0", "-1u", "1e999"])("rejects invalid diode IBV %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(IBV=${value})`)).toThrow(
+      "diode IBV must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["2.5", 2.5],
+  ])("accepts valid diode RS series resistance %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(RS=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      seriesResistance: expected,
+    });
+  });
+
+  it.each(["-1", "1e999"])("rejects invalid diode RS %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(RS=${value})`)).toThrow(
+      "diode RS must be finite and non-negative",
+    );
+  });
+
+  it.each(["VJ", "PB"])("lowers diode %s junction potential alias", (parameter) => {
+    const parsed = parseNetlist(`.model clamp D(${parameter}=0.8)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      junctionPotential: 0.8,
+    });
+  });
+
+  it("prefers canonical diode VJ over PB", () => {
+    const parsed = parseNetlist(`.model clamp D(PB=0.8 VJ=0.7)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      junctionPotential: 0.7,
+    });
+  });
+
+  it.each([
+    ["VJ", "0"],
+    ["VJ", "-0.1"],
+    ["VJ", "1e999"],
+    ["PB", "0"],
+    ["PB", "-0.1"],
+    ["PB", "1e999"],
+  ])("rejects invalid diode %s junction potential %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode VJ must be finite and positive",
+    );
+  });
+
+  it.each(["M", "MJ"])("lowers diode %s grading coefficient alias", (parameter) => {
+    const parsed = parseNetlist(`.model clamp D(${parameter}=0.4)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      gradingCoefficient: 0.4,
+    });
+  });
+
+  it("prefers canonical diode M over MJ", () => {
+    const parsed = parseNetlist(`.model clamp D(MJ=0.4 M=0.3)\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      gradingCoefficient: 0.3,
+    });
+  });
+
+  it.each([
+    ["M", "-0.1"],
+    ["M", "1e999"],
+    ["MJ", "-0.1"],
+    ["MJ", "1e999"],
+  ])("rejects invalid diode %s grading coefficient %s", (parameter, value) => {
+    expect(() => parseNetlist(`.model clamp D(${parameter}=${value})`)).toThrow(
+      "diode M must be finite and non-negative",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["0.6", 0.6],
+  ])("lowers valid diode FC depletion coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(FC=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      forwardBiasDepletionCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid diode FC depletion coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model clamp D(FC=${value})`)).toThrow(
+        "diode FC must be finite and in [0, 1)",
+      );
+    },
+  );
+
+  it.each([
+    ["-1", -1.0],
+    ["4", 4.0],
+  ])("lowers finite diode XTI temperature exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(XTI=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      saturationCurrentTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects non-finite diode XTI temperature exponent", () => {
+    expect(() => parseNetlist(`.model clamp D(XTI=1e999)`)).toThrow(
+      "diode XTI must be finite",
+    );
+  });
+
+  it.each([
+    ["0.5", 0.5],
+    ["1.2", 1.2],
+  ])("lowers positive diode EG energy gap %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(EG=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      energyGapElectronVolts: expected,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])("rejects invalid diode EG %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(EG=${value})`)).toThrow(
+      "diode EG must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["2e-18", 2.0e-18],
+  ])("lowers valid diode KF flicker-noise coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(KF=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      flickerNoiseCoefficient: expected,
+    });
+  });
+
+  it.each(["-1e-18", "1e999"])("rejects invalid diode KF %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(KF=${value})`)).toThrow(
+      "diode KF must be finite and non-negative",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["1.5", 1.5],
+  ])("lowers valid diode AF flicker-noise exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`.model clamp D(AF=${value})\nD1 in out clamp`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "diode",
+      flickerNoiseExponent: expected,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])("rejects invalid diode AF %s", (value) => {
+    expect(() => parseNetlist(`.model clamp D(AF=${value})`)).toThrow(
+      "diode AF must be finite and non-negative",
     );
   });
 
@@ -1213,6 +1404,206 @@ J1 drain gate source fast
     (value) => {
       expect(() => parseNetlist(`.model fast NJF(CGD=${value})`)).toThrow(
         "JFET CGD must be finite and non-negative",
+      );
+    },
+  );
+
+  it("parses the JFET flicker-noise coefficient", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(KF=2e-18)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      flickerNoiseCoefficient: 2.0e-18,
+    });
+  });
+
+  it.each(["-1e-18", "1e999"])(
+    "rejects invalid JFET flicker-noise coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(KF=${value})`)).toThrow(
+        "JFET KF must be finite and non-negative",
+      );
+    },
+  );
+
+  it("parses the JFET flicker-noise exponent", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(AF=1.4)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      flickerNoiseExponent: 1.4,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])(
+    "rejects invalid JFET flicker-noise exponent %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(AF=${value})`)).toThrow(
+        "JFET AF must be finite and non-negative",
+      );
+    },
+  );
+
+  it.each(["PB", "VJ"])("parses the JFET %s junction-potential alias", (parameter) => {
+    const parsed = parseNetlist(`
+.model fast NJF(${parameter}=0.8)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      junctionPotential: 0.8,
+    });
+  });
+
+  it("prefers canonical JFET PB over the VJ alias", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(PB=0.9 VJ=0.8)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      junctionPotential: 0.9,
+    });
+  });
+
+  it.each(["PB", "VJ"])("rejects invalid JFET %s junction potential", (parameter) => {
+    for (const value of ["0", "-0.1", "1e999"]) {
+      expect(() => parseNetlist(`.model fast NJF(${parameter}=${value})`)).toThrow(
+        "JFET PB must be finite and positive",
+      );
+    }
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["0.6", 0.6],
+  ])("parses JFET forward-bias depletion coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(FC=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      forwardBiasDepletionCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1", "1e999"])(
+    "rejects invalid JFET forward-bias depletion coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(FC=${value})`)).toThrow(
+        "JFET FC must be finite and in [0, 1)",
+      );
+    },
+  );
+
+  it("parses the JFET gate saturation current", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(IS=2p)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      gateSaturationCurrent: 2.0e-12,
+    });
+  });
+
+  it.each(["0", "-1p", "1e999"])("rejects invalid JFET gate saturation current %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(IS=${value})`)).toThrow(
+      "JFET IS must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["2.5", 2.5],
+  ])("parses JFET temperature exponent %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(XTI=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      gateSaturationCurrentTemperatureExponent: expected,
+    });
+  });
+
+  it("rejects a non-finite JFET temperature exponent", () => {
+    expect(() => parseNetlist(".model fast NJF(XTI=1e999)")).toThrow(
+      "JFET XTI must be finite",
+    );
+  });
+
+  it("parses the JFET energy gap", () => {
+    const parsed = parseNetlist(`
+.model fast NJF(EG=1.05)
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      bandgapVoltage: 1.05,
+    });
+  });
+
+  it.each(["0", "-0.1", "1e999"])("rejects invalid JFET energy gap %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(EG=${value})`)).toThrow(
+      "JFET EG must be finite and positive",
+    );
+  });
+
+  it.each([
+    ["1", 1.0],
+    ["3", 3.0],
+  ])("parses JFET noise equation level %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(NLEV=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      noiseEquationLevel: expected,
+    });
+  });
+
+  it.each(["0", "1.5", "1e999"])("rejects invalid JFET noise equation level %s", (value) => {
+    expect(() => parseNetlist(`.model fast NJF(NLEV=${value})`)).toThrow(
+      "JFET NLEV must be a finite integer greater than or equal to 1",
+    );
+  });
+
+  it.each([
+    ["0", 0.0],
+    ["1.5", 1.5],
+  ])("parses JFET channel noise coefficient %s", (value, expected) => {
+    const parsed = parseNetlist(`
+.model fast NJF(GDSNOI=${value})
+J1 drain gate source fast
+`);
+
+    expect(parsed.circuit.elements()[0]).toMatchObject({
+      kind: "jfet",
+      channelNoiseCoefficient: expected,
+    });
+  });
+
+  it.each(["-0.1", "1e999"])(
+    "rejects invalid JFET channel noise coefficient %s",
+    (value) => {
+      expect(() => parseNetlist(`.model fast NJF(GDSNOI=${value})`)).toThrow(
+        "JFET GDSNOI must be finite and non-negative",
       );
     },
   );

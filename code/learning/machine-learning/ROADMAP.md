@@ -62,11 +62,11 @@ trace, and tests.
   - [x] Backward and optimizer graph lowering.
   - [x] CPU, Rust core, and accelerated-backend parity.
   - [x] Precision, quantization, and buffer-residency experiments.
-- [ ] Cross-language consumers
+- [x] Cross-language consumers
   - [x] Validate every fixture with the reference implementation.
-  - [ ] Add thin consumers in representative language families.
-  - [ ] Define a stable Rust C ABI for high-performance execution.
-  - [ ] Track native implementation versus Rust-core binding coverage.
+  - [x] Add thin consumers in representative language families.
+  - [x] Define a stable Rust C ABI for high-performance execution.
+  - [x] Track native implementation versus Rust-core binding coverage.
 
 ## Loop Rules
 

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C06-dative-ikku
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 320
 chapter: 6
 type: word
 headword: -ിക്ക്
@@ -10,19 +13,33 @@ prerequisites: [ML-C05-practice, ML-C03-njaan, ML-C02-peru]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian marks case by ADDING a suffix that means one thing and stays visible at the seam — unlike Latin, where a fused ending like -īs carries case AND number AND declension together and doesn't even settle which case; -ikku/-inu is the shared Dravidian dative, cousin of Tamil -ukku, Telugu -ku, Kannada -ge"
-est_minutes: 4
+duration:
+  max_seconds: 293
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02]
+practises:
+  knowledge: [ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C03-njaan, ML-C02-peru, ML-C05-practice]
 ---
 
 # -ിക്ക് (-ikku) — "to, for"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first **case ending**. English puts "to" in **front** as its own
 word. Malayalam sticks it on the **back** — and that is the biggest structural
 fact about the language.
 
-## Adding it on
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-IKKU-01]; assesses=[] -->
 
 | word | + dative | meaning |
 |---|---|---|
@@ -39,7 +56,8 @@ And with "I", which reshapes first:
 Learn *enikku* cold — it opens a great many everyday Malayalam sentences, as the
 next lesson shows.
 
-## Why this matters
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C06-DATIVE-IKKU-02]; assesses=[] -->
 
 | | Malayalam **-ikku** | a Latin ending like **-īs** |
 |---|---|---|
@@ -57,6 +75,7 @@ That's what "**agglutinative**" means, and why Malayalam words grow long without
 growing hard: they are **built**, not memorised.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*pēru* … *pērinu*"]
@@ -65,6 +84,7 @@ growing hard: they are **built**, not memorised.
 - [YOU SAY: the principle — "one suffix, one meaning, visible seam"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02] -->
 
 [PAUSE 3s] What does **-ിക്ക്** mean? ("**To**" or "**for**.") Where does it go?
 (**On the end** of the noun.) What is "to me"? (**എനിക്ക്** *enikku*.) Why does the

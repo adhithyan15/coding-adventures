@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C22-akhdar-asfar
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 660
 chapter: 22
 type: word
 headword: أخضر, أصفر
@@ -9,18 +12,32 @@ prerequisites: [AR-C21-kalb-qitt]
 sounds: [arabic-dad, arabic-sad]
 roots: [semitic-khadara-green, semitic-safara-empty]
 etymology_hook: "أخضر (akhḍar, 'green') is from root خ-ض-ر (kh-ḍ-r, 'to be green') — the same root behind خضار (khuḍār, 'vegetables'), echoing English's own 'greens' for vegetables, and the name of the Quranic figure al-Khiḍr, 'the Green One'; أصفر (aṣfar, 'yellow') shares its root, ص-ف-ر (ṣ-f-r), with صفر (ṣifr, 'zero, empty') — the very word behind English 'zero' and 'cipher'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C22-AKHDAR-ASFAR-01, AR-CONCEPT-C22-AKHDAR-ASFAR-02]
+practises:
+  knowledge: [AR-CONCEPT-C22-AKHDAR-ASFAR-01, AR-CONCEPT-C22-AKHDAR-ASFAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C21-kalb-qitt]
 ---
 
 # أخضر, أصفر — "greens" you'd recognize, and a hidden zero
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Arabic's green word hides an English-style pun. Its yellow word
 hides something even better — the exact root behind the word "zero" itself.
 
-## أخضر — the same root as "vegetables," and a Quranic name
+## Why it's said this way — أخضر — the same root as "vegetables," and a Quranic name
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C22-AKHDAR-ASFAR-01]; assesses=[] -->
 
 **أخضر** (*akhḍar*, "**green**") comes from the root **خ-ض-ر** (*kh-ḍ-r*,
 "**to be green**"). That same root gives **خضار** (*khuḍār*,
@@ -29,7 +46,8 @@ vegetables "**greens**." The same root also names the mysterious Quranic
 figure **الخِضْر** (*al-Khiḍr*), "**the Green One**" — traditionally said to
 be called this because the ground turned green wherever he sat or prayed.
 
-## أصفر — the same root as "zero" itself
+## Why it's said this way — أصفر — the same root as "zero" itself
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C22-AKHDAR-ASFAR-02]; assesses=[] -->
 
 Here's the real surprise: **أصفر** (*aṣfar*, "**yellow**") shares its root,
 **ص-ف-ر** (*ṣ-f-r*), with **صفر** (*ṣifr*, "**zero, empty, void**") — the
@@ -41,6 +59,7 @@ share a root — but the shared root itself, connecting Arabic's yellow-word
 straight back to the origin of "zero," is genuine and well documented.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C22-AKHDAR-ASFAR-01, AR-CONCEPT-C22-AKHDAR-ASFAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "akhḍar" — green, same root as "khuḍār," vegetables]
@@ -49,6 +68,7 @@ straight back to the origin of "zero," is genuine and well documented.
   reaching all the way into English math vocabulary]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C22-AKHDAR-ASFAR-01, AR-CONCEPT-C22-AKHDAR-ASFAR-02] -->
 
 [PAUSE 3s] What root does **أخضر** share with "vegetables," and what English
 phrase does this echo? (**خ-ض-ر**, *kh-ḍ-r* — echoes English calling

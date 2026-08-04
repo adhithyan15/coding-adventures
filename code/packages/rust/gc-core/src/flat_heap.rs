@@ -2985,6 +2985,61 @@ mod tests {
         assert!(heap.find_header(b).is_null(), "B freed after its only ref (the slot) was cleared");
     }
 
+    /// **The bug this fixes, reproduced directly.** Twig's `alloc_array` (LANG-FULL
+    /// E5) used to register every array's block under `register_kind(&[])` — the
+    /// SAME no-ref, empty-field-map kind `__twig_alloc_bytes` uses for opaque string
+    /// blobs — regardless of the array's element type. This test builds the exact
+    /// same 4-slot array as `ref_array_traces_elements_precisely` (A, B, C, and a
+    /// "phantom" fourth element reachable ONLY through the array), but registers the
+    /// ARRAY itself under the OLD no-ref kind instead of `register_ref_array_kind`.
+    /// Using explicit roots (`collect(&[arr])`, not a conservative stack scan) makes
+    /// this fully deterministic — no reliance on incidental machine-stack contents,
+    /// which is why an end-to-end compiled-and-run reproduction of this exact bug
+    /// (attempted first, before this test) could not be made to fail reliably: a
+    /// conservative scan of the *real* stack can accidentally keep an object alive
+    /// through a stray look-alike value completely unrelated to whether the array
+    /// itself traces its elements, masking the very defect under test.
+    #[test]
+    fn array_registered_under_no_ref_kind_loses_elements_only_reachable_through_it() {
+        let mut heap = FlatHeap::new();
+        // The pre-fix `alloc_array` registration: an empty field map, no tail — the
+        // same shape `__twig_alloc_bytes`'s `blob_kind` uses for opaque string bytes.
+        let no_ref_kind = heap.register_kind(&[]);
+        let a = heap.alloc(16, 0) as usize;
+        let b = heap.alloc(16, 0) as usize;
+        let c = heap.alloc(16, 0) as usize;
+        let phantom = heap.alloc(16, 0) as usize;
+        // The identical 4-slot layout as the precise-array test, but the array's OWN
+        // block now carries `no_ref_kind` instead of a `register_ref_array_kind` id.
+        let arr = heap.alloc(32, no_ref_kind) as usize;
+        unsafe {
+            *(arr as *mut usize) = a;
+            *((arr + 8) as *mut usize) = b;
+            *((arr + 16) as *mut usize) = c;
+            *((arr + 24) as *mut usize) = phantom;
+        }
+        // Root only the array (exactly as a Twig program that dropped every other
+        // reference to A/B/C/phantom, keeping only the array, would leave reachable).
+        let stats = heap.collect(&[arr]);
+        // The no-ref kind traces NONE of the array's payload, so every element is
+        // invisible to the collector despite being referenced from the array's own
+        // memory — all four get reclaimed even though the array itself survives.
+        assert_eq!(
+            stats.freed, 4,
+            "with the pre-fix no-ref kind, every element reachable ONLY through the \
+             array's untraced payload is (wrongly) collected"
+        );
+        assert!(!heap.find_header(arr).is_null(), "the array's own block is still live");
+        for (p, name) in [(a, "A"), (b, "B"), (c, "C"), (phantom, "phantom")] {
+            assert!(
+                heap.find_header(p).is_null(),
+                "{name} was reachable only via the array's untraced payload, so it must \
+                 have been reclaimed — this is the confirmed bug `__twig_alloc_ref_array_bytes` \
+                 (using `register_ref_array_kind` instead) fixes"
+            );
+        }
+    }
+
     /// **A ref array is movable; its conservative twin is pinned.** Under `collect_compacting` a
     /// precise array and every element it references relocate into the arena; the identical heap
     /// built with `kind 0` (conservative) pins them in place. This is the array-shaped analogue

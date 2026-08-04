@@ -959,3 +959,20 @@ fn a_computed_answer_with_unavailable_source_bytes_is_not_fully_verified() {
     );
     assert!(!report.fully_verified());
 }
+
+#[test]
+fn precision_lost_computation_is_never_fully_verified() {
+    let mut kb = logic_engine::KnowledgeBase::new();
+    let derived = compute("narrowed", &ComputeExpr::Lit(0.0), &kb)
+        .unwrap()
+        .with_precision_loss(true);
+    kb.add_derived(derived);
+    let derived = kb.derived_for("narrowed").unwrap();
+
+    let report = verify_derived(derived, &kb, &NoSnapshots);
+    assert_eq!(
+        report.computation,
+        ComputationStatus::Unverifiable("precision-lost exact source")
+    );
+    assert!(!report.fully_verified());
+}

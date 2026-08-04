@@ -469,7 +469,12 @@ mod tests {
         // expression narrows only where C says: at the u8 assignment.
         let m = lower("int main(void) { uint8_t x = 1 << 3; return 0; }");
         let text = semantic_ir::print_module(&m);
-        assert!(text.contains("(builtin-call <<"), "no shift:\n{text}");
+        // `c<<`, not `<<` -- the C frontend's own bitwise left shift lowers
+        // to a DISTINCT builtin name from Ruby's polymorphic `<<` operator
+        // (Array push/String concat/saturating-Integer-shift), which shares
+        // the bare `"<<"` name at the SIR level. See the shift-lowering
+        // code's own comment for the collision this rename fixes.
+        assert!(text.contains("(builtin-call c<<"), "no shift:\n{text}");
         // shift performed at i32, then the declaration narrows to u8.
         assert!(
             text.contains("(convert (int i32 ub)"),

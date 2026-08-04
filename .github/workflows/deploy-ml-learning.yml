@@ -36,8 +36,18 @@ on:
       - "code/specs/fixtures/backend-parity-v1/**"
       - "code/specs/fixtures/precision-residency-v1/**"
       - "code/specs/fixtures/reference-validation-v1/**"
+      - "code/specs/fixtures/cross-language-consumers-v1/**"
+      - "code/specs/fixtures/neural-learning-rust-cabi-v1/**"
+      - "code/specs/fixtures/neural-learning-implementation-coverage-v1/**"
       - "code/scripts/validate_*_labs.py"
       - "code/scripts/validate_reference_fixture_catalog.py"
+      - "code/scripts/validate_cross_language_fixture_consumers.py"
+      - "code/scripts/validate_neural_learning_rust_cabi.py"
+      - "code/scripts/validate_neural_learning_implementation_coverage.py"
+      - "code/programs/go/neural-fixture-consumer/**"
+      - "code/programs/ruby/neural-fixture-consumer/**"
+      - "code/programs/rust/neural-fixture-consumer/**"
+      - "code/packages/rust/neural-learning-capi/**"
       - "code/packages/typescript/cli-builder/**"
       - "code/packages/typescript/directed-graph/**"
       - "code/packages/typescript/state-machine/**"
@@ -62,11 +72,45 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-and-deploy:
+  validate-language-consumers:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.23"
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: false
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+
+      - name: Validate cross-language neural fixture consumers
+        run: python3 code/scripts/validate_cross_language_fixture_consumers.py
+
+      - name: Validate neural-learning Rust C ABI
+        run: python3 code/scripts/validate_neural_learning_rust_cabi.py
+
+      - name: Validate native and Rust-core implementation coverage
+        run: python3 code/scripts/validate_neural_learning_implementation_coverage.py
+
+  build-and-deploy:
+    needs: validate-language-consumers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4

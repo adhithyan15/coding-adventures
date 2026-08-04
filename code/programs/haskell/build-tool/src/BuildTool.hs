@@ -19,11 +19,11 @@ import Control.Exception (Exception, IOException, catch, evaluate, throwIO, try)
 import Control.Monad (filterM, foldM, forM, when)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BS8
-import Data.Char (isAlphaNum, ord, toLower)
+import Data.Char (isAlpha, isAlphaNum, ord, toLower)
 import Data.List (intercalate, isPrefixOf, nub, sort, sortOn)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
-import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
+import Data.Maybe (fromMaybe, listToMaybe, mapMaybe, maybeToList)
 import qualified Data.Set as Set
 import Data.Set (Set)
 import qualified Data.Text as Text
@@ -777,7 +777,322 @@ parseBuildToolDependencyLine line =
 readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
+    | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
+    | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
+    | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readCabalDependencyTokens :: Package -> IO [String]
+readCabalDependencyTokens pkg = do
+    entries <- listDirectory (packagePath pkg)
+    let cabalPaths =
+            sort
+                [ packagePath pkg </> entry
+                | entry <- entries
+                , map toLower (takeExtension entry) == ".cabal"
+                ]
+    fmap (nub . concat) $
+        forM cabalPaths $ \path -> do
+            contents <- readFileStrict path
+            pure (cabalDependencyTokens contents)
+
+cabalDependencyTokens :: String -> [String]
+cabalDependencyTokens = collect False . lines
+  where
+    collect _ [] = []
+    collect inside (rawLine : rest) =
+        let stripped = trim (stripCabalComment rawLine)
+            (field, assignment) = break (== ':') stripped
+            fieldName = map toLower (trim field)
+            startsField = not (null assignment) && isCabalFieldName fieldName
+            indented =
+                case rawLine of
+                    first : _ -> first `elem` [' ', '\t']
+                    [] -> False
+         in if startsField && fieldName == "build-depends"
+                then tokenize (drop 1 assignment) ++ collect True rest
+                else
+                    if inside
+                        then
+                            if null stripped || startsField || not indented
+                                then collect False rest
+                                else tokenize stripped ++ collect True rest
+                        else collect False rest
+
+isCabalFieldName :: String -> Bool
+isCabalFieldName fieldName =
+    not (null fieldName)
+        && isAlpha (head fieldName)
+        && all (\character -> isAlphaNum character || character == '-') fieldName
+
+stripCabalComment :: String -> String
+stripCabalComment [] = []
+stripCabalComment ('-' : '-' : _) = []
+stripCabalComment (character : rest) = character : stripCabalComment rest
+
+readPythonDependencyTokens :: Package -> IO [String]
+readPythonDependencyTokens pkg = do
+    let pyprojectPath = packagePath pkg </> "pyproject.toml"
+    exists <- doesFileExist pyprojectPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict pyprojectPath
+            pure (pythonDependencyTokens contents)
+
+pythonDependencyTokens :: String -> [String]
+pythonDependencyTokens = nub . mapMaybe pythonDistributionToken . pythonDependencyValues
+
+pythonDependencyValues :: String -> [String]
+pythonDependencyValues = collect False False . lines
+  where
+    collect _ _ [] = []
+    collect inProject inDependencies (rawLine : rest) =
+        let uncommented = stripTomlComment rawLine
+            stripped = trim uncommented
+         in case tomlSectionName stripped of
+                Just sectionName -> collect (sectionName == "project") False rest
+                Nothing
+                    | inDependencies ->
+                        extractQuotedValues uncommented
+                            ++ collect inProject (not (hasUnquotedCharacter ']' uncommented)) rest
+                    | inProject ->
+                        case pythonDependencyArrayRemainder stripped of
+                            Nothing -> collect True False rest
+                            Just remainder ->
+                                extractQuotedValues remainder
+                                    ++ collect True (not (hasUnquotedCharacter ']' remainder)) rest
+                    | otherwise -> collect False False rest
+
+tomlSectionName :: String -> Maybe String
+tomlSectionName stripped
+    | length stripped >= 3
+        && head stripped == '['
+        && last stripped == ']'
+        && take 2 stripped /= "[[" =
+        Just (map toLower (trim (init (tail stripped))))
+    | otherwise = Nothing
+
+pythonDependencyArrayRemainder :: String -> Maybe String
+pythonDependencyArrayRemainder stripped =
+    let (field, assignment) = break (== '=') stripped
+        afterAssignment = drop 1 assignment
+        arrayRemainder = dropWhile (/= '[') afterAssignment
+     in if map toLower (trim field) == "dependencies"
+            && not (null assignment)
+            && not (null arrayRemainder)
+            then Just arrayRemainder
+            else Nothing
+
+pythonDistributionToken :: String -> Maybe String
+pythonDistributionToken value =
+    let name = takeWhile isPythonDistributionCharacter (dropWhile (`elem` [' ', '\t']) value)
+     in if null name then Nothing else Just (normalizePythonDistributionName name)
+
+isPythonDistributionCharacter :: Char -> Bool
+isPythonDistributionCharacter character =
+    isAlphaNum character || character `elem` ['-', '_', '.']
+
+normalizePythonDistributionName :: String -> String
+normalizePythonDistributionName = collapseSeparators False
+  where
+    collapseSeparators _ [] = []
+    collapseSeparators previousWasSeparator (character : rest)
+        | character `elem` ['-', '_', '.'] =
+            if previousWasSeparator
+                then collapseSeparators True rest
+                else '-' : collapseSeparators True rest
+        | otherwise = toLower character : collapseSeparators False rest
+
+stripTomlComment :: String -> String
+stripTomlComment = go Nothing
+  where
+    go _ [] = []
+    go Nothing ('#' : _) = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = character : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : escaped : rest)
+        | quote == '"' = '\\' : escaped : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = character : go Nothing rest
+        | otherwise = character : go (Just quote) rest
+
+hasUnquotedCharacter :: Char -> String -> Bool
+hasUnquotedCharacter target = go Nothing
+  where
+    go _ [] = False
+    go Nothing (character : rest)
+        | character == target = True
+        | character `elem` ['"', '\''] = go (Just character) rest
+        | otherwise = go Nothing rest
+    go (Just quote) ('\\' : _escaped : rest)
+        | quote == '"' = go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = go Nothing rest
+        | otherwise = go (Just quote) rest
+
+readRustDependencyTokens :: Package -> IO [String]
+readRustDependencyTokens pkg = do
+    let cargoPath = packagePath pkg </> "Cargo.toml"
+    exists <- doesFileExist cargoPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict cargoPath
+            pure (rustDependencyTokens contents)
+
+rustDependencyTokens :: String -> [String]
+rustDependencyTokens = nub . collect False . lines
+  where
+    collect _ [] = []
+    collect inDependencies (rawLine : rest) =
+        let stripped = trim (stripTomlComment rawLine)
+         in case tomlSectionName stripped of
+                Just sectionName -> collect (sectionName == "dependencies") rest
+                Nothing ->
+                    if inDependencies
+                        then maybeToList (rustDependencyToken stripped) ++ collect True rest
+                        else collect False rest
+
+rustDependencyToken :: String -> Maybe String
+rustDependencyToken stripped =
+    let (dependencyKey, assignment) = break (== '=') stripped
+        dependencyValue = drop 1 assignment
+        normalizedKey = map toLower (trim dependencyKey)
+        resolvedKey =
+            map toLower
+                (fromMaybe normalizedKey (cargoInlineStringValue "package" dependencyValue))
+     in if null assignment
+            || null normalizedKey
+            || not (hasCargoPathAssignment dependencyValue)
+            then Nothing
+            else Just resolvedKey
+
+cargoInlineStringValue :: String -> String -> Maybe String
+cargoInlineStringValue fieldName value =
+    listToMaybe
+        [ quotedValue
+        | field <- splitCargoInlineFields value
+        , let withoutOpeningBrace = dropWhile (`elem` [' ', '\t', '{']) field
+        , let (key, assignment) = break (== '=') withoutOpeningBrace
+        , map toLower (trim key) == fieldName
+        , not (null assignment)
+        , quotedValue <- take 1 (extractQuotedValues (drop 1 assignment))
+        ]
+
+splitCargoInlineFields :: String -> [String]
+splitCargoInlineFields = go Nothing []
+  where
+    go _ current [] = [reverse current]
+    go Nothing current (',' : rest) = reverse current : go Nothing [] rest
+    go Nothing current (character : rest)
+        | character `elem` ['"', '\''] = go (Just character) (character : current) rest
+        | otherwise = go Nothing (character : current) rest
+    go (Just quote) current ('\\' : escaped : rest)
+        | quote == '"' = go (Just quote) (escaped : '\\' : current) rest
+    go (Just quote) current (character : rest)
+        | character == quote = go Nothing (character : current) rest
+        | otherwise = go (Just quote) (character : current) rest
+
+hasCargoPathAssignment :: String -> Bool
+hasCargoPathAssignment = scan Nothing . map toLower . hideTomlStringContents
+  where
+    scan _ [] = False
+    scan previous remaining@(character : rest)
+        | isCargoPathFieldStart previous remaining = True
+        | otherwise = scan (Just character) rest
+
+    isCargoPathFieldStart previous remaining =
+        "path" `isPrefixOf` remaining
+            && maybe True (not . isCargoKeyCharacter) previous
+            && case dropWhile (`elem` [' ', '\t']) (drop 4 remaining) of
+                '=' : _ -> True
+                _ -> False
+
+isCargoKeyCharacter :: Char -> Bool
+isCargoKeyCharacter character = isAlphaNum character || character `elem` ['_', '-']
+
+hideTomlStringContents :: String -> String
+hideTomlStringContents = go Nothing
+  where
+    go _ [] = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = ' ' : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : _escaped : rest)
+        | quote == '"' = ' ' : ' ' : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = ' ' : go Nothing rest
+        | otherwise = ' ' : go (Just quote) rest
+
+readRubyDependencyTokens :: Package -> IO [String]
+readRubyDependencyTokens pkg = do
+    entries <- listDirectory (packagePath pkg)
+    let gemspecPaths =
+            sort
+                [ packagePath pkg </> entry
+                | entry <- entries
+                , map toLower (takeExtension entry) == ".gemspec"
+                ]
+    case listToMaybe gemspecPaths of
+        Nothing -> pure []
+        Just gemspecPath -> do
+            contents <- readFileStrict gemspecPath
+            pure (rubyDependencyTokens contents)
+
+rubyDependencyTokens :: String -> [String]
+rubyDependencyTokens contents =
+    case rubySpecificationReceiver contents of
+        Nothing -> []
+        Just receiver ->
+            nub (mapMaybe (rubyDependencyToken receiver) (lines contents))
+
+rubySpecificationReceiver :: String -> Maybe String
+rubySpecificationReceiver = listToMaybe . mapMaybe receiverFromLine . lines
+  where
+    receiverFromLine rawLine =
+        let stripped = trim rawLine
+            declaration = "Gem::Specification.new"
+            afterDeclaration = drop (length declaration) stripped
+            afterOpeningBar = dropWhile (/= '|') afterDeclaration
+            receiver = takeWhile (/= '|') (drop 1 afterOpeningBar)
+         in if declaration `isPrefixOf` stripped
+                && "do" `isPrefixOf` trim afterDeclaration
+                && not (null afterOpeningBar)
+                && isRubyIdentifier receiver
+                then Just receiver
+                else Nothing
+
+isRubyIdentifier :: String -> Bool
+isRubyIdentifier [] = False
+isRubyIdentifier (first : rest) =
+    (isAlpha first || first == '_')
+        && all (\character -> isAlphaNum character || character == '_') rest
+
+rubyDependencyToken :: String -> String -> Maybe String
+rubyDependencyToken receiver rawLine =
+    listToMaybe
+        [ map toLower gemName
+        | methodName <- ["add_dependency", "add_runtime_dependency"]
+        , let prefix = receiver ++ "." ++ methodName
+        , let stripped = trim rawLine
+        , prefix `isPrefixOf` stripped
+        , let remainder = drop (length prefix) stripped
+        , rubyCallBoundary remainder
+        , gemName <- take 1 (extractQuotedValues (dropRubyCallOpening remainder))
+        ]
+
+rubyCallBoundary :: String -> Bool
+rubyCallBoundary [] = False
+rubyCallBoundary (character : _) = character `elem` [' ', '\t', '(']
+
+dropRubyCallOpening :: String -> String
+dropRubyCallOpening value =
+    case trim value of
+        '(' : rest -> trim rest
+        rest -> rest
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do
@@ -851,7 +1166,10 @@ dependencyTableRemainder line =
             else Nothing
 
 quotedValues :: String -> [String]
-quotedValues = go . stripLuaComment
+quotedValues = extractQuotedValues . stripLuaComment
+
+extractQuotedValues :: String -> [String]
+extractQuotedValues = go
   where
     go [] = []
     go (character : rest)

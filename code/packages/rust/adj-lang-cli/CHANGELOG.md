@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased - formula audit v2 guard witnesses
+
+- `adj-formula-audit` emits `adj-lang/formula_audit/v2` for executed guards or plans containing
+  exact literals. V2 records ordered query executions, parser-backed guard byte identities, exact
+  comparisons, stable consumed-fact identities, independent direct-observation rechecks, and a
+  tagged evaluated or withheld body.
+- Guarded v2 audits fail closed on unresolved, derived, lossy, ambiguous, or structurally
+  inconsistent operands until transitive derived-predicate verification lands. Truly legacy plans
+  retain the existing v1 shape and serialization path.
+- V2 independently replays parameter binding and nested application order from parser-owned source,
+  follows runtime guard short-circuiting and built-in precedence, requires a complete
+  declaration-ordered guard prefix, reports quote mismatches truthfully, and serializes recursively
+  sorted ASCII-only canonical JSON bytes.
+
+## [0.36.0] - 2026-08-03 - formula-domain abstentions and inventory v2
+
+- `adj-lang-cli` emits `formula_abstentions` for failed or unresolved formula preconditions,
+  including the withheld binding, nested formula identity, predicate result, and provenance.
+- Sensitive runs redact consumed fact terms as well as guard values and details while retaining
+  non-sensitive fact identity and provenance metadata.
+- `adj-formula-inventory` emits `adj-lang/formula_source_map/v2` only when a source contains
+  preconditions, with exact declaration and argument byte spans and hashes. Unguarded sources
+  retain byte-identical v1 output.
+- Formula audit identity includes preconditions when present, preventing guard bytes from being
+  dropped between parser inventory and execution evidence.
+- Derived JSON exposes `"precision_loss":true` and suppresses a misleading exact sidecar when an
+  authored exact value narrowed before reaching the output boundary.
+- Human explanations label precision loss, and formula audit results expose the marker while
+  withholding a misleading exact rational and retaining exact literals in the trusted plan IR.
+
 ## [0.35.0] - 2026-08-02 - NUM-7c: adj-verify rechecks the sqrt Real companion
 
 - No CLI code changes — `adj-verify` already walks every `DerivationNode` generically via

@@ -157,6 +157,19 @@ impl ExactRational {
         self.0.to_f64()
     }
 
+    /// Whether narrowing to `f64` and widening back reproduces this rational
+    /// exactly. This distinguishes an ordinary transcendental result from an
+    /// input whose identity was already lost at the floating-point boundary.
+    pub fn is_representable_as_f64(&self) -> bool {
+        let narrowed = self.to_f64();
+        if !narrowed.is_finite() {
+            return false;
+        }
+        BigDouble::from_f64(narrowed)
+            .to_decimal()
+            .is_some_and(|round_trip| round_trip.to_rational() == self.0)
+    }
+
     /// The **exact** base-10 expansion as a string, when the value terminates — the rendering
     /// side of ADJ-EXACT-NUMBERS NX-4. `1/4 → "0.25"`; a stored 39-digit π doubled → all 39
     /// fractional digits; `1/3 → None` (a repeating expansion no finite decimal can hold).
@@ -448,6 +461,9 @@ pub enum ComputeExpr {
     /// A numeric literal in the formula. The **no-magic-numbers** gate (step
     /// 3d) will require each of these to be a declared structural constant.
     Lit(f64),
+    /// An authored decimal/scientific literal whose rational identity survived
+    /// lowering. Its public magnitude is still the labeled-lossy `f64` view.
+    ExactLit(ExactRational),
     /// A binary operation: `Add`/`Sub`/`Mul`/`Div`/`Pow` only.
     Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
     /// A unary operation: the rounding family (`Abs`/`Floor`/`Ceil`/`Round`) and
@@ -703,6 +719,10 @@ pub struct Derived {
     pub value: f64,
     /// Exact value when the expression stayed inside integer/rational arithmetic.
     pub exact: Option<ExactRational>,
+    /// True when an exact source crossed a value-changing `f64` boundary while
+    /// producing this binding. Consumers that make a discrete decision from the
+    /// value must reject or explicitly narrow that uncertainty.
+    pub precision_loss: bool,
     pub dim: Dimension,
     pub tree: DerivationNode,
     /// The compiler-produced expression that the verifier independently
@@ -728,6 +748,12 @@ pub struct Derived {
 }
 
 impl Derived {
+    /// Preserve a source-literal narrowing marker across later references.
+    pub fn with_precision_loss(mut self, precision_loss: bool) -> Self {
+        self.precision_loss |= precision_loss;
+        self
+    }
+
     /// Attach the applied formula's provenance (its cited `source`/`locator`/
     /// `trust`). Consumes and returns `self` so it composes with [`compute`]:
     /// `compute(name, expr, kb)?.with_provenance(prov)`.
@@ -783,6 +809,9 @@ pub enum ComputeError {
     /// silently make a predicate not fire (a quiet wrong answer). The whole
     /// point of provenance-through-math is that no number is silently wrong.
     NonFinite { op: ComputeOp },
+    /// An operation would require discarding a retained exact identity before
+    /// producing its result.
+    PrecisionLoss { op: ComputeOp },
     /// A binary operation mixed incompatible dimensions — `usd + days`,
     /// `usd + eur` without a conversion. The faithfulness gate (track A4): the
     /// engine, not the model, decides this is a category error. Carries the two
@@ -816,13 +845,14 @@ pub fn compute(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
 ) -> Result<Derived, ComputeError> {
-    let (tree, dim, exact) = eval(expr, kb, 0)?;
+    let (tree, dim, exact, precision_loss) = eval(expr, kb, 0)?;
     let value = tree.value();
     Ok(Derived {
         computation_id: None,
         name: name.into(),
         value,
         exact,
+        precision_loss,
         dim,
         tree,
         expr: expr.clone(),
@@ -915,7 +945,7 @@ fn eval(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
     if depth >= MAX_EVAL_DEPTH {
         return Err(ComputeError::TooDeep {
             limit: MAX_EVAL_DEPTH,
@@ -928,6 +958,16 @@ fn eval(
             DerivationNode::Lit { value: *x },
             Dimension::Scalar,
             ExactRational::from_integer_f64(*x),
+            false,
+        )),
+
+        ComputeExpr::ExactLit(exact) => Ok((
+            DerivationNode::Lit {
+                value: exact.to_f64(),
+            },
+            Dimension::Scalar,
+            Some(exact.clone()),
+            false,
         )),
 
         ComputeExpr::Ref(slot) => {
@@ -949,6 +989,7 @@ fn eval(
                     },
                     d.dim,
                     exact,
+                    false,
                 ))
             } else if let Some(derived) = kb.derived_for(slot) {
                 Ok((
@@ -958,6 +999,7 @@ fn eval(
                     },
                     derived.dim.clone(),
                     derived.exact.clone(),
+                    derived.precision_loss,
                 ))
             } else {
                 Err(ComputeError::UnknownSlot { slot: slot.clone() })
@@ -965,8 +1007,8 @@ fn eval(
         }
 
         ComputeExpr::Bin(op, a, b) => {
-            let (lhs, dim_l, exact_l) = eval(a, kb, depth + 1)?;
-            let (rhs, dim_r, exact_r) = eval(b, kb, depth + 1)?;
+            let (lhs, dim_l, exact_l, loss_l) = eval(a, kb, depth + 1)?;
+            let (rhs, dim_r, exact_r, loss_r) = eval(b, kb, depth + 1)?;
             // Power is special: not a symmetric combine. The exponent must be
             // dimensionless and the result dimension is `base ^ exponent`
             // (`x^0 = scalar`, `x^2 = x·x`), so it bypasses the `dim_op` +
@@ -996,10 +1038,7 @@ fn eval(
                         ComputeError::DimensionMismatch { op: *op, lhs, rhs }
                     }
                 })?;
-                let result = base.powf(exponent);
-                if !result.is_finite() {
-                    return Err(ComputeError::NonFinite { op: *op });
-                }
+                let approximate_result = base.powf(exponent);
                 // A square root gets a correctly-rounded `BigDouble` "Real" audit companion
                 // (NUM-7). Detected on the *evaluated* exponent, bit-exactly `0.5` — not the
                 // exponent's exact sidecar, which is always `None` here: `ExactRational::
@@ -1038,19 +1077,51 @@ fn eval(
                 // `prec = 53` reproduces `f64::sqrt` bit-for-bit (bignum-core's own module doc),
                 // so this keeps the two audit-visible values from ever disagreeing in the last
                 // bit.
-                let result = if exponent == 0.5 { base.sqrt() } else { result };
+                let approximate_result = if exponent == 0.5 {
+                    base.sqrt()
+                } else {
+                    approximate_result
+                };
                 // Exact sidecar only for a non-negative integer exponent of an
                 // exact base — `(3/2)^2 = 9/4` stays exact; anything else keeps
                 // just the `f64` result.
+                let exact_source_would_narrow = exact_l
+                    .as_ref()
+                    .is_some_and(|value| !value.is_representable_as_f64())
+                    || exact_r
+                        .as_ref()
+                        .is_some_and(|value| !value.is_representable_as_f64());
+                let exact_integer_power = exact_l.is_some()
+                    && exact_r
+                        .as_ref()
+                        .is_some_and(|value| value.denominator() == &BigInteger::one());
                 let exact = match (exact_l, exact_r) {
                     (Some(a), Some(b)) if b.denominator() == &BigInteger::one() => b
                         .numerator()
                         .to_string()
                         .parse::<i128>()
                         .ok()
-                        .and_then(|e| a.powi(e)),
+                        .and_then(|e| {
+                            if e >= 0 {
+                                a.powi(e)
+                            } else {
+                                e.checked_neg().and_then(|positive| {
+                                    a.powi(positive)
+                                        .and_then(|power| ExactRational::from_i128(1).div(&power))
+                                })
+                            }
+                        }),
                     _ => None,
                 };
+                let result = exact
+                    .as_ref()
+                    .map_or(approximate_result, ExactRational::to_f64);
+                if !result.is_finite() {
+                    return Err(ComputeError::NonFinite { op: *op });
+                }
+                let precision_loss = loss_l
+                    || loss_r
+                    || (exact.is_none() && (exact_source_would_narrow || exact_integer_power));
                 return Ok((
                     DerivationNode::Op {
                         op: *op,
@@ -1060,6 +1131,7 @@ fn eval(
                     },
                     result_dim,
                     exact,
+                    precision_loss,
                 ));
             }
             // Dimensional check FIRST: usd + days is a category error regardless
@@ -1082,12 +1154,15 @@ fn eval(
             // (no arithmetic); a `NaN` operand would let `f64::min`/`max` silently
             // drop the NaN and return the finite side, so we produce `NaN`
             // explicitly and let the shared `is_finite` guard below reject it.
-            let result = match op {
+            let approximate_result = match op {
                 ComputeOp::Add => x + y,
                 ComputeOp::Sub => x - y,
                 ComputeOp::Mul => x * y,
                 ComputeOp::Div => {
-                    if y == 0.0 {
+                    let divisor_is_zero = exact_r
+                        .as_ref()
+                        .map_or(y == 0.0, |value| value.numerator().is_zero());
+                    if divisor_is_zero {
                         return Err(ComputeError::DivisionByZero);
                     }
                     x / y
@@ -1097,8 +1172,14 @@ fn eval(
                 // extra `eval` locals on the deeply-recursive path); a zero divisor is
                 // a clean error, never a `NaN`.
                 ComputeOp::Mod => {
-                    if y == 0.0 {
+                    let divisor_is_zero = exact_r
+                        .as_ref()
+                        .map_or(y == 0.0, |value| value.numerator().is_zero());
+                    if divisor_is_zero {
                         return Err(ComputeError::DivisionByZero);
+                    }
+                    if y == 0.0 {
+                        return Err(ComputeError::PrecisionLoss { op: *op });
                     }
                     x % y
                 }
@@ -1127,9 +1208,12 @@ fn eval(
                 ComputeOp::Gcd | ComputeOp::Lcm => int_gcd_lcm(*op, x, y)?,
                 _ => unreachable!("dim_op already rejected non-binary ops"),
             };
-            if !result.is_finite() {
-                return Err(ComputeError::NonFinite { op: *op });
-            }
+            let exact_source_would_narrow = exact_l
+                .as_ref()
+                .is_some_and(|value| !value.is_representable_as_f64())
+                || exact_r
+                    .as_ref()
+                    .is_some_and(|value| !value.is_representable_as_f64());
             let exact = match (exact_l, exact_r) {
                 (Some(a), Some(b)) => match op {
                     ComputeOp::Add => a.add(&b),
@@ -1138,12 +1222,23 @@ fn eval(
                     ComputeOp::Div => a.div(&b),
                     // min/max select an operand UNCHANGED, so the winner's exact
                     // rational carries through verbatim (ties pick the left).
-                    ComputeOp::Min2 => Some(if x <= y { a } else { b }),
-                    ComputeOp::Max2 => Some(if x >= y { a } else { b }),
+                    ComputeOp::Min2 => Some(if a.as_ratio() <= b.as_ratio() { a } else { b }),
+                    ComputeOp::Max2 => Some(if a.as_ratio() >= b.as_ratio() { a } else { b }),
                     _ => None,
                 },
                 _ => None,
             };
+            // Keep the public magnitude coherent with the exact identity. Computing
+            // these channels independently can otherwise turn `(2^53 + 1) - 2^53`
+            // into `value = 0, exact = 1`, after which every parent consumes the
+            // wrong magnitude despite the retained exact bytes.
+            let result = exact
+                .as_ref()
+                .map_or(approximate_result, ExactRational::to_f64);
+            if !result.is_finite() {
+                return Err(ComputeError::NonFinite { op: *op });
+            }
+            let precision_loss = loss_l || loss_r || (exact.is_none() && exact_source_would_narrow);
             Ok((
                 DerivationNode::Op {
                     op: *op,
@@ -1153,6 +1248,7 @@ fn eval(
                 },
                 result_dim,
                 exact,
+                precision_loss,
             ))
         }
 
@@ -1184,7 +1280,7 @@ fn eval(
         } => eval_to_currency(code, *places, *mode, expr, kb, depth),
 
         ComputeExpr::Agg(op, slot) => {
-            let observations = kb.observed_values_all(slot);
+            let observations = kb.observed_numerics_all(slot);
             // `count` is defined even when there are no observations (it's 0);
             // every other aggregation over an empty set is an error, not 0/NaN.
             if observations.is_empty() && *op != ComputeOp::Count {
@@ -1192,14 +1288,14 @@ fn eval(
             }
             let operands: Vec<DerivationNode> = observations
                 .iter()
-                .map(|(value, fact_id)| DerivationNode::Leaf {
+                .map(|(numeric, fact_id)| DerivationNode::Leaf {
                     slot: slot.clone(),
-                    value: *value,
+                    value: numeric.value,
                     fact_id: *fact_id,
                 })
                 .collect();
             let values: Vec<f64> = operands.iter().map(|n| n.value()).collect();
-            let result = match op {
+            let approximate_result = match op {
                 ComputeOp::Sum => values.iter().sum(),
                 ComputeOp::Count => values.len() as f64,
                 ComputeOp::Min => values.iter().cloned().fold(f64::INFINITY, f64::min),
@@ -1211,9 +1307,6 @@ fn eval(
                     })
                 }
             };
-            if !result.is_finite() {
-                return Err(ComputeError::NonFinite { op: *op });
-            }
             // `count` is a dimensionless tally; sum/min/max/avg keep the slot's
             // dimension (the magnitudes share it). Read it from the slot, or
             // Scalar if the slot has no dimensioned observation.
@@ -1224,6 +1317,21 @@ fn eval(
                     .map(|(d, _)| d.dim)
                     .unwrap_or(Dimension::Scalar)
             };
+            let exact = exact_aggregation(*op, &observations);
+            let result = exact
+                .as_ref()
+                .map_or(approximate_result, ExactRational::to_f64);
+            if !result.is_finite() {
+                return Err(ComputeError::NonFinite { op: *op });
+            }
+            let precision_loss = exact.is_none()
+                && observations.iter().any(|(numeric, _)| {
+                    numeric.precision_loss
+                        || numeric
+                            .exact
+                            .as_ref()
+                            .is_some_and(|value| !value.is_representable_as_f64())
+                });
             Ok((
                 DerivationNode::Op {
                     op: *op,
@@ -1232,9 +1340,46 @@ fn eval(
                     real: None,
                 },
                 result_dim,
-                None,
+                exact,
+                precision_loss,
             ))
         }
+    }
+}
+
+/// Reduce an all-exact observation set without routing its identity through
+/// `f64`. Mixed exact/inexact sets deliberately return no sidecar; `compute`
+/// then marks the result as precision-lost when any exact source participated.
+fn exact_aggregation(
+    op: ComputeOp,
+    observations: &[(crate::ResolvedNumeric, FactId)],
+) -> Option<ExactRational> {
+    if op == ComputeOp::Count {
+        return Some(ExactRational::from_i128(observations.len() as i128));
+    }
+    let exact: Option<Vec<ExactRational>> = observations
+        .iter()
+        .map(|(numeric, _)| numeric.exact.clone())
+        .collect();
+    let exact = exact?;
+    let first = exact.first()?.clone();
+    match op {
+        ComputeOp::Sum => exact
+            .iter()
+            .skip(1)
+            .try_fold(first, |total, value| total.add(value)),
+        ComputeOp::Min => exact
+            .into_iter()
+            .min_by(|left, right| left.as_ratio().cmp(right.as_ratio())),
+        ComputeOp::Max => exact
+            .into_iter()
+            .max_by(|left, right| left.as_ratio().cmp(right.as_ratio())),
+        ComputeOp::Avg => exact
+            .iter()
+            .skip(1)
+            .try_fold(first, |total, value| total.add(value))
+            .and_then(|total| total.div(&ExactRational::from_i128(exact.len() as i128))),
+        _ => None,
     }
 }
 
@@ -1253,8 +1398,11 @@ fn eval_unary(
     a: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
-    let (operand, dim, exact) = eval(a, kb, depth + 1)?;
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
+    let (operand, dim, exact, inherited_precision_loss) = eval(a, kb, depth + 1)?;
+    let exact_source_would_narrow = exact
+        .as_ref()
+        .is_some_and(|value| !value.is_representable_as_f64());
     // The **transcendental** functions are only defined on a pure number, so — like
     // `Pow`'s exponent — the operand must be dimensionless. `sin(3 dollars)` is a
     // category error, rejected here with the same `DimensionMismatch` the binary
@@ -1289,7 +1437,7 @@ fn eval_unary(
     // unit does not (`|−3 dollars| = 3 dollars`, `⌊3.7 mmol⌋ = 3 mmol`). The
     // transcendentals map a pure number to a pure number (`Scalar → Scalar`).
     let value = operand.value();
-    let result = match op {
+    let approximate_result = match op {
         ComputeOp::Abs => value.abs(),
         ComputeOp::Floor => value.floor(),
         ComputeOp::Ceil => value.ceil(),
@@ -1338,9 +1486,6 @@ fn eval_unary(
     // a `NaN` would otherwise compare `false` against every threshold and silently
     // suppress a predicate, exactly the quiet wrong answer provenance-through-math
     // forbids.
-    if !result.is_finite() {
-        return Err(ComputeError::NonFinite { op });
-    }
     // The exact result stays exact — now over unbounded `BigInteger`s. `BigRational` keeps
     // `den > 0`, and `BigInteger::div_rem` truncates toward zero with a remainder that takes
     // the numerator's sign (`num = q·den + rem`, `|rem| < den`), so from that one primitive:
@@ -1399,11 +1544,18 @@ fn eval_unary(
     // Rounding preserves the operand's dimension; a transcendental collapses to a
     // pure number (`Scalar`); `sgn` also collapses to `Scalar` (a sign is
     // dimensionless) but — unlike the transcendentals — accepts a dimensioned operand.
+    let result = exact
+        .as_ref()
+        .map_or(approximate_result, ExactRational::to_f64);
+    if !result.is_finite() {
+        return Err(ComputeError::NonFinite { op });
+    }
     let result_dim = if transcendental || op == ComputeOp::Sign {
         Dimension::Scalar
     } else {
         dim
     };
+    let precision_loss = inherited_precision_loss || (exact.is_none() && exact_source_would_narrow);
     Ok((
         DerivationNode::Op {
             op,
@@ -1413,6 +1565,7 @@ fn eval_unary(
         },
         result_dim,
         exact,
+        precision_loss,
     ))
 }
 
@@ -1437,8 +1590,8 @@ fn eval_round(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
-    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
+    let (operand, dim, exact, precision_loss) = eval(expr, kb, depth + 1)?;
     // `round_to` is **dimension-preserving**, exactly like the unary round family:
     // narrowing `3.14159 mmol` to 2 places is `3.14 mmol`, still an amount.
     let exact_out = exact.as_ref().map(|r| round_rational(r, spec, mode));
@@ -1471,6 +1624,7 @@ fn eval_round(
         },
         dim,
         exact_out,
+        precision_loss,
     ))
 }
 
@@ -1540,8 +1694,8 @@ fn eval_to_scientific(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
-    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
+    let (operand, dim, exact, precision_loss) = eval(expr, kb, depth + 1)?;
     // With an exact sidecar (every rational formula), the rendering and the narrowed
     // exact value are derived TOGETHER from one rounding, so the string and the audit
     // number can never disagree. A genuinely-inexact operand (a transcendental with no
@@ -1581,6 +1735,7 @@ fn eval_to_scientific(
         },
         dim,
         exact_out,
+        precision_loss,
     ))
 }
 
@@ -1673,8 +1828,8 @@ fn eval_to_percent(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
-    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
+    let (operand, dim, exact, precision_loss) = eval(expr, kb, depth + 1)?;
     let (rendered, exact_out, result) = match &exact {
         Some(r) => {
             let (s, narrowed) = percent(r, places, mode);
@@ -1709,6 +1864,7 @@ fn eval_to_percent(
         },
         dim,
         exact_out,
+        precision_loss,
     ))
 }
 
@@ -1771,8 +1927,8 @@ fn eval_to_currency(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
     depth: usize,
-) -> Result<(DerivationNode, Dimension, Option<ExactRational>), ComputeError> {
-    let (operand, dim, exact) = eval(expr, kb, depth + 1)?;
+) -> Result<(DerivationNode, Dimension, Option<ExactRational>, bool), ComputeError> {
+    let (operand, dim, exact, precision_loss) = eval(expr, kb, depth + 1)?;
     let (rendered, exact_out, result) = match &exact {
         Some(r) => {
             let (amount, narrowed) = currency(r, places, mode);
@@ -1806,6 +1962,7 @@ fn eval_to_currency(
         },
         dim,
         exact_out,
+        precision_loss,
     ))
 }
 
@@ -1974,7 +2131,12 @@ pub fn recheck_narrowing(node: &DerivationNode) -> NarrowingCheck {
                 let (amount, narrowed) = currency(src, *places, *mode);
                 // The node's `rendered` is the code-prefixed form; reconstruct it the
                 // same way the emit path did (`"{code} {amount}"`).
-                check_rendered(&format!("{code} {amount}"), narrowed.to_f64(), rendered, *result)
+                check_rendered(
+                    &format!("{code} {amount}"),
+                    narrowed.to_f64(),
+                    rendered,
+                    *result,
+                )
             }
         },
         // NUM-7c: a sqrt's Real/BigDouble companion is technically a *widening* (exact →
@@ -1982,11 +2144,10 @@ pub fn recheck_narrowing(node: &DerivationNode) -> NarrowingCheck {
         // source + recorded spec/mode, re-derived and compared) for the identical reason: turn
         // the engine's own claim about its precision into independently-checked evidence.
         DerivationNode::Op { real: None, .. } => NarrowingCheck::NotANarrowing,
-        DerivationNode::Op {
-            real: Some(rc), ..
-        } => {
+        DerivationNode::Op { real: Some(rc), .. } => {
             let prec = rc.value.precision_bits();
-            let recomputed = BigDouble::from_rational(rc.source.as_ratio(), prec, rc.mode).sqrt(prec, rc.mode);
+            let recomputed =
+                BigDouble::from_rational(rc.source.as_ratio(), prec, rc.mode).sqrt(prec, rc.mode);
             if recomputed == *rc.value.as_big_double() {
                 NarrowingCheck::ReChecked
             } else {
@@ -2337,7 +2498,8 @@ mod tests {
             &kb_with(vec![]),
         )
         .unwrap();
-        let real = real_companion_of(&d).expect("sqrt of an exact base should get a real companion");
+        let real =
+            real_companion_of(&d).expect("sqrt of an exact base should get a real companion");
         assert_eq!(real.value.precision_bits(), 256);
         assert_eq!(real.value.to_decimal_string().unwrap(), "2");
     }
@@ -2352,7 +2514,10 @@ mod tests {
         .unwrap();
         let real = real_companion_of(&d).expect("sqrt of 2 should get a real companion");
         let rendered = real.value.to_decimal_string().unwrap();
-        assert!(rendered.starts_with("1.41421356237309504880168"), "got {rendered}");
+        assert!(
+            rendered.starts_with("1.41421356237309504880168"),
+            "got {rendered}"
+        );
     }
 
     #[test]
@@ -2375,11 +2540,18 @@ mod tests {
         // as a clean Err, never as a panic deep inside bignum-core.
         let err = compute(
             "root",
-            &bin(ComputeOp::Pow, ComputeExpr::Lit(-4.0), ComputeExpr::Lit(0.5)),
+            &bin(
+                ComputeOp::Pow,
+                ComputeExpr::Lit(-4.0),
+                ComputeExpr::Lit(0.5),
+            ),
             &kb_with(vec![]),
         )
         .unwrap_err();
-        assert!(matches!(err, ComputeError::NonFinite { op: ComputeOp::Pow }));
+        assert!(matches!(
+            err,
+            ComputeError::NonFinite { op: ComputeOp::Pow }
+        ));
     }
 
     #[test]
@@ -2396,10 +2568,17 @@ mod tests {
         // nesting levels, well under MAX_EVAL_DEPTH — then flip its sign with one more Mul.
         let mut magnitude = frac(1, 2);
         for _ in 0..11 {
-            magnitude = ComputeExpr::Bin(ComputeOp::Mul, Box::new(magnitude.clone()), Box::new(magnitude));
+            magnitude = ComputeExpr::Bin(
+                ComputeOp::Mul,
+                Box::new(magnitude.clone()),
+                Box::new(magnitude),
+            );
         }
-        let negative_underflowed =
-            ComputeExpr::Bin(ComputeOp::Mul, Box::new(magnitude), Box::new(ComputeExpr::Lit(-1.0)));
+        let negative_underflowed = ComputeExpr::Bin(
+            ComputeOp::Mul,
+            Box::new(magnitude),
+            Box::new(ComputeExpr::Lit(-1.0)),
+        );
         let expr = ComputeExpr::Bin(
             ComputeOp::Pow,
             Box::new(negative_underflowed),
@@ -2428,7 +2607,11 @@ mod tests {
         // and BigDouble has no cbrt: this must not be mistaken for a sqrt.
         let d = compute(
             "root",
-            &bin(ComputeOp::Pow, ComputeExpr::Lit(27.0), ComputeExpr::Lit(1.0 / 3.0)),
+            &bin(
+                ComputeOp::Pow,
+                ComputeExpr::Lit(27.0),
+                ComputeExpr::Lit(1.0 / 3.0),
+            ),
             &kb_with(vec![]),
         )
         .unwrap();
@@ -3227,6 +3410,158 @@ mod tests {
             }
             other => panic!("expected Op, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn aggregation_preserves_an_underflowing_exact_observation() {
+        use logic_core::{Number, Term};
+        use std::str::FromStr;
+
+        let tiny_text = format!("0.{}1", "0".repeat(399));
+        let tiny = BigDecimal::from_str(&tiny_text).unwrap();
+        let kb = kb_with(vec![Fact::certain(compound(
+            "tiny",
+            vec![Term::Num(Number::Exact(tiny.clone()))],
+        ))]);
+
+        let total = compute(
+            "total",
+            &ComputeExpr::Agg(ComputeOp::Sum, "tiny".into()),
+            &kb,
+        )
+        .unwrap();
+
+        assert_eq!(total.value, 0.0, "the public f64 magnitude underflows");
+        assert_eq!(
+            total.exact,
+            Some(ExactRational::from_ratio(tiny.to_rational())),
+            "the aggregate must retain the nonzero exact identity"
+        );
+        assert!(!total.precision_loss);
+    }
+
+    #[test]
+    fn compute_propagates_precision_loss_from_a_derived_reference() {
+        let mut kb = KnowledgeBase::new();
+        let narrowed = compute("narrowed", &ComputeExpr::Lit(0.0), &kb)
+            .unwrap()
+            .with_precision_loss(true);
+        kb.add_derived(narrowed);
+
+        let copied = compute("copied", &ComputeExpr::Ref("narrowed".into()), &kb).unwrap();
+        assert!(copied.precision_loss);
+    }
+
+    #[test]
+    fn nested_exact_intermediate_marks_loss_when_a_parent_discards_it() {
+        let kb = KnowledgeBase::new();
+        let tenth = bin(
+            ComputeOp::Div,
+            ComputeExpr::Lit(1.0),
+            ComputeExpr::Lit(10.0),
+        );
+        let tiny = bin(ComputeOp::Pow, tenth, ComputeExpr::Lit(400.0));
+        let result = compute(
+            "result",
+            &ComputeExpr::Unary(ComputeOp::Sin, Box::new(tiny)),
+            &kb,
+        )
+        .unwrap();
+
+        assert_eq!(result.value, 0.0);
+        assert!(result.precision_loss);
+    }
+
+    #[test]
+    fn exact_cancellation_keeps_public_magnitude_coherent_for_parent_ops() {
+        let kb = KnowledgeBase::new();
+        let one = bin(
+            ComputeOp::Sub,
+            ComputeExpr::ExactLit(ExactRational::from_i128(9_007_199_254_740_993)),
+            ComputeExpr::ExactLit(ExactRational::from_i128(9_007_199_254_740_992)),
+        );
+        let difference = compute("difference", &one, &kb).unwrap();
+        assert_eq!(difference.value, 1.0);
+        assert_eq!(difference.exact, Some(ExactRational::from_i128(1)));
+
+        let sine = compute(
+            "sine",
+            &ComputeExpr::Unary(ComputeOp::Sin, Box::new(one)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(sine.value, 1.0_f64.sin());
+        assert!(!sine.precision_loss);
+    }
+
+    #[test]
+    fn negative_integer_power_preserves_the_exact_reciprocal() {
+        let result = compute(
+            "reciprocal",
+            &bin(
+                ComputeOp::Pow,
+                ComputeExpr::ExactLit(ExactRational::from_i128(10)),
+                ComputeExpr::ExactLit(ExactRational::from_i128(-1)),
+            ),
+            &KnowledgeBase::new(),
+        )
+        .unwrap();
+        assert_eq!(result.exact, ExactRational::new(1, 10));
+        assert!(!result.precision_loss);
+    }
+
+    #[test]
+    fn modulo_with_underflowing_exact_divisor_fails_as_precision_loss() {
+        let ten_to_400 = BigInteger::from_i128(10).pow(400);
+        let tiny = ExactRational::from_ratio(
+            BigRational::checked_new(BigInteger::one(), ten_to_400).unwrap(),
+        );
+        let error = compute(
+            "remainder",
+            &bin(
+                ComputeOp::Mod,
+                ComputeExpr::Lit(1.0),
+                ComputeExpr::ExactLit(tiny),
+            ),
+            &KnowledgeBase::new(),
+        )
+        .unwrap_err();
+        assert_eq!(error, ComputeError::PrecisionLoss { op: ComputeOp::Mod });
+    }
+
+    #[test]
+    fn exact_binary_min_max_order_underflowing_operands_by_rational_value() {
+        let kb = KnowledgeBase::new();
+        let ten_to_400 = BigInteger::from_i128(10).pow(400);
+        let tiny = ExactRational::from_ratio(
+            BigRational::checked_new(BigInteger::one(), ten_to_400.clone()).unwrap(),
+        );
+        let twice_tiny = ExactRational::from_ratio(
+            BigRational::checked_new(BigInteger::from_i128(2), ten_to_400).unwrap(),
+        );
+        let maximum = compute(
+            "maximum",
+            &bin(
+                ComputeOp::Max2,
+                ComputeExpr::ExactLit(tiny.clone()),
+                ComputeExpr::ExactLit(twice_tiny.clone()),
+            ),
+            &kb,
+        )
+        .unwrap();
+        let minimum = compute(
+            "minimum",
+            &bin(
+                ComputeOp::Min2,
+                ComputeExpr::ExactLit(tiny.clone()),
+                ComputeExpr::ExactLit(twice_tiny.clone()),
+            ),
+            &kb,
+        )
+        .unwrap();
+
+        assert_eq!(maximum.exact, Some(twice_tiny));
+        assert_eq!(minimum.exact, Some(tiny));
     }
 
     #[test]
@@ -4035,7 +4370,11 @@ mod tests {
         let expr = round_places(2, inner);
         let d = compute("r", &expr, &kb).unwrap();
         let checks = recheck_narrowings(&d.tree);
-        assert_eq!(checks.len(), 2, "expected the outer round and inner to_percent");
+        assert_eq!(
+            checks.len(),
+            2,
+            "expected the outer round and inner to_percent"
+        );
         assert_eq!(checks[0].0, 0); // outer round at the root
         assert_eq!(checks[1].0, 1); // inner to_percent one level down
         assert!(checks.iter().all(|(_, c)| c.is_rechecked()));

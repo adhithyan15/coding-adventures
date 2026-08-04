@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C25-shubha-ratri
+spine_node: SPINE-TIME-OF-DAY
+sequence: 540
 chapter: 25
 type: phrase
 headword: ಶುಭ ರಾತ್ರಿ
@@ -9,26 +12,41 @@ prerequisites: [KA-C24-ratri]
 sounds: [kannada-sha, kannada-bha]
 roots: [sanskrit-shubha-beautiful, sanskrit-ratri]
 etymology_hook: "ಶುಭ ರಾತ್ರಿ (śubha rātri), 'good night,' literally 'auspicious night' — both pieces are Sanskrit tatsama: ರಾತ್ರಿ (rātri, already met last lesson) plus ಶುಭ (śubha, 'auspicious, good'), from Sanskrit root śubh, 'to be beautiful, splendid,' from a well-sourced PIE root *ḱewbʰ-; the exact same phrase, शुभ रात्रि, is also common in Hindi — most likely shared Sanskrit vocabulary rather than one language directly borrowing the whole phrase from the other, though 'good night' as a farewell is itself a modern convention across Indian languages, so some cross-language reinforcement can't be ruled out"
-est_minutes: 4
 reviews_of: [KA-C24-ratri]
+duration:
+  max_seconds: 285
+requires:
+  knowledge: [KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02]
+introduces:
+  knowledge: [KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03]
+practises:
+  knowledge: [KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral-parting
+variety: standard-colloquial
 ---
 
 # ಶುಭ ರಾತ್ರಿ (śubha rātri) — "good night," auspicious to the end
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02] -->
 
 [PAUSE 2s] You already have *rātri*. Pair it with one more Sanskrit word,
 and you have Kannada's everyday "good night" — the same phrase, word for
 word, as Hindi's.
 
-## ಶುಭ ರಾತ್ರಿ — "auspicious night"
+## The word, taken apart: ಶುಭ ರಾತ್ರಿ — "auspicious night"
+<!-- hl-knowledge: introduces=[KA-ETYMON-C25-SHUBHA-RATRI-01]; assesses=[] -->
 
 **ಶುಭ ರಾತ್ರಿ** (**śubha rātri**) — "**good night**" — literally
 "**auspicious night**." Both pieces are Sanskrit **tatsama**: **ರಾತ್ರಿ**
 (*rātri*, "night," already met last lesson) plus **ಶುಭ** (*śubha*,
 "**auspicious, good**").
 
-## ಶುಭ — from a root meaning "to be beautiful"
+## The word, taken apart: ಶುಭ — from a root meaning "to be beautiful"
+<!-- hl-knowledge: introduces=[KA-ETYMON-C25-SHUBHA-RATRI-02]; assesses=[] -->
 
 **ಶುಭ** (**śubha**) comes from the Sanskrit verbal root **śubh**, whose
 core sense is "**to be beautiful, splendid**" — traceable to a
@@ -37,7 +55,8 @@ beautiful"). A further, more speculative connection to a root meaning "to
 shine" has also been proposed — but either way, the underlying idea is a
 familiar one: **auspiciousness imagined as a kind of radiance or beauty**.
 
-## A phrase shared across two different language families
+## The word, taken apart: A phrase shared across two different language families
+<!-- hl-knowledge: introduces=[KA-ETYMON-C25-SHUBHA-RATRI-03]; assesses=[] -->
 
 Here's the honest cross-language note: **ಶುಭ ರಾತ್ರಿ** and Hindi's own
 **शुभ रात्रि** are, word for word, the **exact same phrase** — a Dravidian
@@ -54,6 +73,7 @@ this phrase draws on shared **Sanskrit vocabulary**, not a shared
 "formal-versus-everyday" register split the way it does in Hindi.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śubha rātri" — "good night," literally "auspicious night"]
@@ -63,6 +83,7 @@ this phrase draws on shared **Sanskrit vocabulary**, not a shared
   reinforcement can't be fully ruled out]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C24-RATRI-01, KA-ETYMON-C24-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-01, KA-ETYMON-C25-SHUBHA-RATRI-02, KA-ETYMON-C25-SHUBHA-RATRI-03] -->
 
 [PAUSE 3s] What does **ಶುಭ ರಾತ್ರಿ** literally mean? ("**Auspicious
 night**.") What does **ಶುಭ** literally trace back to? (A root meaning "**to

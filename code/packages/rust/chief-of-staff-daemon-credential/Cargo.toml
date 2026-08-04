@@ -1,0 +1,22 @@
+[package]
+name = "chief-of-staff-daemon-credential"
+version = "0.1.0"
+edition = "2021"
+description = "Race-resistant owner-only local credential persistence for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-daemon-policy = { path = "../chief-of-staff-daemon-policy" }
+coding_adventures_zeroize = { path = "../zeroize" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Storage_FileSystem",
+    "Win32_System_SystemServices",
+    "Win32_System_Threading",
+] }

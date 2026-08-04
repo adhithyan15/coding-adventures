@@ -34,7 +34,7 @@ reviews_of: [TE-C06-dative-ku, TE-C05-nenu-telugu-maatlaadataanu, TE-C04-vellu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C06-DATIVE-KU-01, TE-GRAMMAR-C06-DATIVE-KU-02] -->
 
-[PAUSE 2s] Chapter 5 gave you **నేను తెలుగు మాట్లాడతాను** — "**I** speak Telugu."
+[PAUSE 2s] Chapter 5 taught you how to say "**I** speak Telugu."
 Now say "I **know** Telugu." Telugu won't let you use *nēnu* — and the verb it
 uses instead will surprise you.
 

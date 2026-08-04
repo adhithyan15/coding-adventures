@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C28-uchakazhinju
+spine_node: SPINE-TIME-OF-DAY
+sequence: 600
 chapter: 28
 type: phrase
 headword: ഉച്ചകഴിഞ്ഞ്
@@ -9,19 +12,33 @@ prerequisites: [ML-C17-paathira, ML-C27-vaikunneram]
 sounds: [malayalam-geminate-cha, malayalam-zha]
 roots: [sanskrit-ucca-high, proto-dravidian-kazi-spent]
 etymology_hook: "ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ, 'afternoon') is a transparent two-word phrase, not a single lexicalized dictionary entry (no Wiktionary page exists for the compound itself) — ഉച്ച (already met, ML-C17, 'noon,' likely from Sanskrit ucca 'high') plus കഴിഞ്ഞ്, the past converb form ('having passed') of കഴിയുക (kaḻiyuka), itself Wiktionary-confirmed as inherited from Proto-Dravidian *kaẓi ('to be over, spent, finished') — note that Wiktionary's own conjugation line shows only the finite past tense കഴിഞ്ഞു (kaḻiññu), not this converb form directly; the converb is the grammatically correct choice for chaining into a compound like this one, but treat the specific written form as the author's own grammatical inference, not a directly Wiktionary-sourced citation; so this phrase literally means 'noon having passed/elapsed' — a transparent, compositional way of naming the afternoon, genuinely different in STRATEGY from Telugu's TE-C28, where the exact same noon-word (మధ్యాహ్నం) simply widened its own meaning to also cover 'afternoon' rather than reaching for a second word; Malayalam instead keeps 'noon' unwidened and builds a new phrase on top of it"
-est_minutes: 4
+duration:
+  max_seconds: 260
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C28-UCHAKAZHINJU-01, ML-CONCEPT-C28-UCHAKAZHINJU-02]
+practises:
+  knowledge: [ML-CONCEPT-C28-UCHAKAZHINJU-01, ML-CONCEPT-C28-UCHAKAZHINJU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [ML-C17-paathira, ML-C17-ucha-paathira, ML-C27-vaikunneram]
 ---
 
 # ഉച്ചകഴിഞ്ഞ് (uchakaḻiññ) — "noon, having passed"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Telugu let its noon-word quietly widen to also mean
 "afternoon." Malayalam solves the same problem with a completely
 different strategy: it builds a new phrase instead.
 
-## ഉച്ചകഴിഞ്ഞ് — literally, "noon having passed"
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C28-UCHAKAZHINJU-01]; assesses=[] -->
 
 **ഉച്ചകഴിഞ്ഞ്** (**uchakaḻiññ**) — "**afternoon**" — is a
 transparent **two-word phrase**, not a single dictionary headword (no
@@ -39,7 +56,8 @@ citation. Put together: "**noon having
 passed**" — afternoon is, quite literally, the time after noon is
 done.
 
-## A genuinely different strategy than Telugu's
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C28-UCHAKAZHINJU-02]; assesses=[] -->
 
 Here's the honest structural contrast: Telugu's own afternoon word
 (TE-C28, **మధ్యాహ్నం**) is the exact **same word** as its
@@ -52,6 +70,7 @@ two genuinely different solutions: semantic widening in Telugu,
 compositional phrase-building in Malayalam.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C28-UCHAKAZHINJU-01, ML-CONCEPT-C28-UCHAKAZHINJU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "uchakaḻiññ" — "afternoon," literally "noon having passed"]
@@ -61,6 +80,7 @@ compositional phrase-building in Malayalam.
   Malayalam builds a new phrase on top of it]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C28-UCHAKAZHINJU-01, ML-CONCEPT-C28-UCHAKAZHINJU-02] -->
 
 [PAUSE 3s] What does ഉച്ചകഴിഞ്ഞ് literally mean? (**"Noon having
 passed"** — ഉച്ച, "noon," plus the past tense of **കഴിയുക**,

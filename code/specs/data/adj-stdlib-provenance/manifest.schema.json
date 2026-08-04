@@ -65,6 +65,12 @@
       "type": "object"
     },
     "execution_witness": {
+      "oneOf": [
+        { "$ref": "#/$defs/execution_witness_v1" },
+        { "$ref": "#/$defs/execution_witness_v2" }
+      ]
+    },
+    "execution_witness_v1": {
       "additionalProperties": false,
       "properties": {
         "contract": { "const": "adj-lang/formula_execution/v1" },
@@ -80,6 +86,22 @@
         "verification": { "$ref": "#/$defs/formula_verification" }
       },
       "required": ["contract", "export", "formula_derivation_sha256", "formula_sequence", "inputs", "kind", "question", "result", "schema_version", "tree", "verification"],
+      "type": "object"
+    },
+    "execution_witness_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "body": { "$ref": "#/$defs/formula_body_v2" },
+        "contract": { "const": "adj-lang/formula_execution/v2" },
+        "export": { "$ref": "#/$defs/formula_reference" },
+        "formula_derivation_sha256": { "$ref": "#/$defs/hash" },
+        "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
+        "guards": { "items": { "$ref": "#/$defs/formula_guard_v2" }, "type": "array" },
+        "kind": { "const": "execution_witness" },
+        "question": { "$ref": "#/$defs/formula_question_reference" },
+        "schema_version": { "const": 2 }
+      },
+      "required": ["body", "contract", "export", "formula_derivation_sha256", "formula_sequence", "guards", "kind", "question", "schema_version"],
       "type": "object"
     },
     "fetch_receipt": {
@@ -99,6 +121,12 @@
       "type": "object"
     },
     "formula_derivation": {
+      "oneOf": [
+        { "$ref": "#/$defs/formula_derivation_v1" },
+        { "$ref": "#/$defs/formula_derivation_v2" }
+      ]
+    },
+    "formula_derivation_v1": {
       "additionalProperties": false,
       "properties": {
         "contract": { "const": "adj-lang/formula_derivation/v1" },
@@ -106,11 +134,26 @@
         "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
         "imports": { "items": { "$ref": "#/$defs/formula_import" }, "type": "array" },
         "kind": { "const": "formula_derivation" },
-        "plan": { "$ref": "#/$defs/formula_plan" },
+        "plan": { "$ref": "#/$defs/formula_plan_v1" },
         "question": { "$ref": "#/$defs/formula_question_reference" },
         "schema_version": { "const": 1 }
       },
       "required": ["contract", "export", "formula_sequence", "imports", "kind", "plan", "question", "schema_version"],
+      "type": "object"
+    },
+    "formula_derivation_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "contract": { "const": "adj-lang/formula_derivation/v2" },
+        "export": { "$ref": "#/$defs/formula_reference" },
+        "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
+        "guards": { "items": { "$ref": "#/$defs/formula_guard_plan" }, "type": "array" },
+        "imports": { "items": { "$ref": "#/$defs/formula_import" }, "type": "array" },
+        "kind": { "const": "formula_derivation" },
+        "question": { "$ref": "#/$defs/formula_question_reference" },
+        "schema_version": { "const": 2 }
+      },
+      "required": ["contract", "export", "formula_sequence", "guards", "imports", "kind", "question", "schema_version"],
       "type": "object"
     },
     "formula_fact_identity": {
@@ -185,6 +228,22 @@
           },
           "required": ["claim_id", "identity", "owner", "owner_source_ir_sha256", "owner_source_sha256", "schema_version", "snapshot_sha256", "source_ir_sha256"],
           "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claim_id": { "minLength": 1, "type": "string" },
+            "identity": { "$ref": "#/$defs/formula_fact_identity" },
+            "observation": { "$ref": "#/$defs/formula_observation" },
+            "owner": { "$ref": "#/$defs/formula_input_owner" },
+            "owner_source_ir_sha256": { "$ref": "#/$defs/hash" },
+            "owner_source_sha256": { "$ref": "#/$defs/hash" },
+            "schema_version": { "const": 3 },
+            "snapshot_sha256": { "$ref": "#/$defs/hash" },
+            "source_ir_sha256": { "$ref": "#/$defs/hash" }
+          },
+          "required": ["claim_id", "identity", "observation", "owner", "owner_source_ir_sha256", "owner_source_sha256", "schema_version", "snapshot_sha256", "source_ir_sha256"],
+          "type": "object"
         }
       ]
     },
@@ -207,6 +266,266 @@
             "kind": { "const": "dependency" }
           },
           "required": ["bundle_id", "bundle_sha256", "kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "formula_observation": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "minLength": 1, "type": "string" },
+        "span": { "$ref": "#/$defs/formula_span" }
+      },
+      "required": ["claim_id", "span"],
+      "type": "object"
+    },
+    "formula_body_v2": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "derivation": { "$ref": "#/$defs/formula_body_derivation_v2" },
+            "status": { "const": "evaluated" }
+          },
+          "required": ["derivation", "status"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reason": { "const": "precondition_failed" },
+            "status": { "const": "withheld" }
+          },
+          "required": ["reason", "status"],
+          "type": "object"
+        }
+      ]
+    },
+    "formula_body_derivation_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "export": { "$ref": "#/$defs/formula_reference" },
+        "formula_sequence": { "items": { "$ref": "#/$defs/formula_reference" }, "minItems": 1, "type": "array" },
+        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference_v3" }, "type": "array" },
+        "plan": { "$ref": "#/$defs/formula_plan" },
+        "question": { "$ref": "#/$defs/formula_question_reference" },
+        "result": { "$ref": "#/$defs/formula_result" },
+        "tree": { "$ref": "#/$defs/formula_tree" },
+        "verification": { "$ref": "#/$defs/formula_verification_v2" }
+      },
+      "required": ["export", "formula_sequence", "inputs", "plan", "question", "result", "tree", "verification"],
+      "type": "object"
+    },
+    "formula_comparison_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "observed": { "$ref": "#/$defs/formula_exact_value" },
+        "operator": { "const": "not_equal" },
+        "threshold": { "$ref": "#/$defs/formula_exact_value" }
+      },
+      "required": ["observed", "operator", "threshold"],
+      "type": "object"
+    },
+    "formula_exact_value": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_rational": { "$ref": "#/$defs/formula_rational" },
+        "f64_bits": { "$ref": "#/$defs/f64_bits" }
+      },
+      "required": ["exact_rational", "f64_bits"],
+      "type": "object"
+    },
+    "formula_guard_plan": {
+      "additionalProperties": false,
+      "properties": {
+        "formula": { "$ref": "#/$defs/formula_reference" },
+        "precondition": { "$ref": "#/$defs/formula_indexed_precondition" }
+      },
+      "required": ["formula", "precondition"],
+      "type": "object"
+    },
+    "formula_guard_plan_expression": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "const": "reference" },
+        "name": { "minLength": 1, "type": "string" }
+      },
+      "required": ["kind", "name"],
+      "type": "object"
+    },
+    "formula_guard_plan_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "expression": { "$ref": "#/$defs/formula_guard_plan_expression" },
+        "is_query_answer": { "const": false },
+        "scope": {
+          "additionalProperties": false,
+          "properties": {
+            "derived_limit": { "minimum": 0, "type": "integer" },
+            "fact_limit": { "maximum": 18446744073709551615, "minimum": 0, "type": "integer" }
+          },
+          "required": ["derived_limit", "fact_limit"],
+          "type": "object"
+        }
+      },
+      "required": ["expression", "is_query_answer", "scope"],
+      "type": "object"
+    },
+    "formula_guard_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison": { "$ref": "#/$defs/formula_comparison_v2" },
+        "formula": { "$ref": "#/$defs/formula_reference" },
+        "inputs": { "items": { "$ref": "#/$defs/formula_input_reference_v3" }, "maxItems": 1, "minItems": 1, "type": "array" },
+        "outcome": { "enum": ["passed", "failed"] },
+        "plan": { "$ref": "#/$defs/formula_guard_plan_v2" },
+        "precondition": { "$ref": "#/$defs/formula_indexed_precondition" },
+        "tree": { "$ref": "#/$defs/formula_tree" },
+        "verification": { "$ref": "#/$defs/formula_guard_verification_v2" }
+      },
+      "required": ["comparison", "formula", "inputs", "outcome", "plan", "precondition", "tree", "verification"],
+      "type": "object"
+    },
+    "formula_indexed_precondition": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": { "items": { "$ref": "#/$defs/formula_span" }, "type": "array" },
+        "declaration": { "$ref": "#/$defs/formula_span" },
+        "index": { "minimum": 0, "type": "integer" },
+        "parameter": { "type": ["string", "null"] },
+        "predicate": { "minLength": 1, "type": "string" }
+      },
+      "required": ["arguments", "declaration", "index", "parameter", "predicate"],
+      "type": "object"
+    },
+    "formula_input_reference_v3": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "minLength": 1, "type": "string" },
+        "identity": { "$ref": "#/$defs/formula_fact_identity" },
+        "observation": { "$ref": "#/$defs/formula_observation" },
+        "owner": { "$ref": "#/$defs/formula_input_owner" },
+        "owner_source_ir_sha256": { "$ref": "#/$defs/hash" },
+        "owner_source_sha256": { "$ref": "#/$defs/hash" },
+        "schema_version": { "const": 3 },
+        "snapshot_sha256": { "$ref": "#/$defs/hash" },
+        "source_ir_sha256": { "$ref": "#/$defs/hash" }
+      },
+      "required": ["claim_id", "identity", "observation", "owner", "owner_source_ir_sha256", "owner_source_sha256", "schema_version", "snapshot_sha256", "source_ir_sha256"],
+      "type": "object"
+    },
+    "formula_plan_v1": {
+      "additionalProperties": false,
+      "properties": {
+        "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+        "is_query_answer": { "const": true },
+        "scope": {
+          "additionalProperties": false,
+          "properties": {
+            "derived_limit": { "minimum": 0, "type": "integer" },
+            "fact_limit": { "maximum": 18446744073709551615, "minimum": 0, "type": "integer" }
+          },
+          "required": ["derived_limit", "fact_limit"],
+          "type": "object"
+        }
+      },
+      "required": ["expression", "is_query_answer", "scope"],
+      "type": "object"
+    },
+    "formula_plan_expression_v1": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "aggregate" },
+            "operator": { "enum": ["sum", "count", "min", "max", "avg"] },
+            "slot": { "minLength": 1, "type": "string" }
+          },
+          "required": ["kind", "operator", "slot"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "binary" },
+            "left": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "operator": { "enum": ["+", "-", "*", "/", "^", "min", "max", "gcd", "lcm", "mod"] },
+            "right": { "$ref": "#/$defs/formula_plan_expression_v1" }
+          },
+          "required": ["kind", "left", "operator", "right"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "f64_bits": { "$ref": "#/$defs/f64_bits" },
+            "kind": { "const": "literal" }
+          },
+          "required": ["f64_bits", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "reference" },
+            "name": { "minLength": 1, "type": "string" }
+          },
+          "required": ["kind", "name"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "kind": { "const": "round" },
+            "mode": { "$ref": "#/$defs/formula_rounding_mode" },
+            "precision": { "$ref": "#/$defs/formula_precision" }
+          },
+          "required": ["expression", "kind", "mode", "precision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "code": { "minLength": 1, "type": "string" },
+            "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "kind": { "const": "to_currency" },
+            "mode": { "$ref": "#/$defs/formula_rounding_mode" },
+            "places": { "maximum": 4294967295, "minimum": 0, "type": "integer" }
+          },
+          "required": ["code", "expression", "kind", "mode", "places"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "kind": { "const": "to_percent" },
+            "mode": { "$ref": "#/$defs/formula_rounding_mode" },
+            "places": { "maximum": 4294967295, "minimum": 0, "type": "integer" }
+          },
+          "required": ["expression", "kind", "mode", "places"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "figures": { "maximum": 4294967295, "minimum": 0, "type": "integer" },
+            "kind": { "const": "to_scientific" },
+            "mode": { "$ref": "#/$defs/formula_rounding_mode" }
+          },
+          "required": ["expression", "figures", "kind", "mode"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expression": { "$ref": "#/$defs/formula_plan_expression_v1" },
+            "kind": { "const": "unary" },
+            "operator": { "enum": ["abs", "floor", "ceil", "round", "trunc", "sin", "cos", "tan", "ln", "log", "exp", "asin", "acos", "atan", "sinh", "cosh", "tanh", "cot", "sec", "csc", "sgn"] }
+          },
+          "required": ["expression", "kind", "operator"],
           "type": "object"
         }
       ]
@@ -259,6 +578,16 @@
             "kind": { "const": "literal" }
           },
           "required": ["f64_bits", "kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "exact_rational": { "$ref": "#/$defs/formula_rational" },
+            "f64_bits": { "$ref": "#/$defs/f64_bits" },
+            "kind": { "const": "exact_literal" }
+          },
+          "required": ["exact_rational", "f64_bits", "kind"],
           "type": "object"
         },
         {
@@ -379,6 +708,7 @@
         "formulabook": { "minLength": 1, "type": "string" },
         "inventory_sha256": { "$ref": "#/$defs/hash" },
         "parameters": { "items": { "minLength": 1, "type": "string" }, "type": "array" },
+        "preconditions": { "items": { "$ref": "#/$defs/formula_precondition" }, "minItems": 1, "type": "array" },
         "snapshot_sha256": { "$ref": "#/$defs/hash" },
         "source_ir_sha256": { "$ref": "#/$defs/hash" },
         "source_sha256": { "$ref": "#/$defs/hash" }
@@ -404,6 +734,26 @@
     "formula_rounding_mode": { "enum": ["down", "up", "floor", "ceiling", "half_up", "half_down", "half_even"] },
     "formula_parser_inventory": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "parser_contract": { "const": "adj-lang/formula_source_map/v1" } }, "required": ["parser_contract"] },
+          "then": {
+            "properties": {
+              "formulas": { "items": { "not": { "required": ["preconditions"] } } },
+              "schema_version": { "const": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "parser_contract": { "const": "adj-lang/formula_source_map/v2" } }, "required": ["parser_contract"] },
+          "then": {
+            "properties": {
+              "formulas": { "contains": { "required": ["preconditions"] } },
+              "schema_version": { "const": 2 }
+            }
+          }
+        }
+      ],
       "properties": {
         "formulas": {
           "items": {
@@ -414,6 +764,7 @@
               "formula": { "minLength": 1, "type": "string" },
               "formulabook": { "minLength": 1, "type": "string" },
               "parameters": { "items": { "minLength": 1, "type": "string" }, "type": "array" },
+              "preconditions": { "items": { "$ref": "#/$defs/formula_precondition" }, "minItems": 1, "type": "array" },
               "step_count": { "minimum": 0, "type": "integer" }
             },
             "required": ["body", "declaration", "formula", "formulabook", "parameters", "step_count"],
@@ -422,13 +773,23 @@
           "type": "array"
         },
         "kind": { "const": "formula_parser_inventory" },
-        "parser_contract": { "const": "adj-lang/formula_source_map/v1" },
-        "schema_version": { "const": 1 },
+        "parser_contract": { "enum": ["adj-lang/formula_source_map/v1", "adj-lang/formula_source_map/v2"] },
+        "schema_version": { "enum": [1, 2] },
         "scope": { "const": "source_file" },
         "source_sha256": { "$ref": "#/$defs/hash" },
         "source_size": { "maximum": 67108864, "minimum": 0, "type": "integer" }
       },
       "required": ["formulas", "kind", "parser_contract", "schema_version", "scope", "source_sha256", "source_size"],
+      "type": "object"
+    },
+    "formula_precondition": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": { "items": { "$ref": "#/$defs/formula_span" }, "type": "array" },
+        "declaration": { "$ref": "#/$defs/formula_span" },
+        "predicate": { "minLength": 1, "type": "string" }
+      },
+      "required": ["arguments", "declaration", "predicate"],
       "type": "object"
     },
     "formula_span": {
@@ -622,6 +983,95 @@
           "type": "array"
         },
         "is_query_answer": { "const": true },
+        "passed": { "const": true }
+      },
+      "required": ["computation", "formula_quotes", "fully_verified", "input_quotes", "is_query_answer", "passed"],
+      "type": "object"
+    },
+    "formula_guard_verification_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "computation": {
+          "additionalProperties": false,
+          "properties": {
+            "reason": { "type": "null" },
+            "recomputed_f64_bits": { "type": "null" },
+            "recorded_f64_bits": { "type": "null" },
+            "status": { "const": "rechecked" }
+          },
+          "required": ["reason", "recomputed_f64_bits", "recorded_f64_bits", "status"],
+          "type": "object"
+        },
+        "formula_quote": {
+          "additionalProperties": false,
+          "properties": {
+            "identity": { "$ref": "#/$defs/formula_reference" },
+            "provenance": { "$ref": "#/$defs/formula_fact_provenance" },
+            "quote": { "$ref": "#/$defs/formula_verified_quote" }
+          },
+          "required": ["identity", "provenance", "quote"],
+          "type": "object"
+        },
+        "fully_verified": { "const": true },
+        "input_quotes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "identity": { "$ref": "#/$defs/formula_input_reference_v3" },
+              "quote": { "$ref": "#/$defs/formula_verified_quote" }
+            },
+            "required": ["identity", "quote"],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "passed": { "const": true }
+      },
+      "required": ["computation", "formula_quote", "fully_verified", "input_quotes", "passed"],
+      "type": "object"
+    },
+    "formula_verification_v2": {
+      "additionalProperties": false,
+      "properties": {
+        "computation": {
+          "additionalProperties": false,
+          "properties": {
+            "reason": { "type": "null" },
+            "recomputed_f64_bits": { "type": "null" },
+            "recorded_f64_bits": { "type": "null" },
+            "status": { "const": "rechecked" }
+          },
+          "required": ["reason", "recomputed_f64_bits", "recorded_f64_bits", "status"],
+          "type": "object"
+        },
+        "formula_quotes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "identity": { "$ref": "#/$defs/formula_reference" },
+              "provenance": { "$ref": "#/$defs/formula_fact_provenance" },
+              "quote": { "$ref": "#/$defs/formula_verified_quote" }
+            },
+            "required": ["identity", "provenance", "quote"],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "fully_verified": { "const": true },
+        "input_quotes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "identity": { "$ref": "#/$defs/formula_input_reference_v3" },
+              "quote": { "$ref": "#/$defs/formula_verified_quote" }
+            },
+            "required": ["identity", "quote"],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "is_query_answer": { "type": "boolean" },
         "passed": { "const": true }
       },
       "required": ["computation", "formula_quotes", "fully_verified", "input_quotes", "is_query_answer", "passed"],

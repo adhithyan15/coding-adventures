@@ -1,5 +1,42 @@
 # Changelog
 
+## Unreleased - replayable formula guard traces
+
+- Direct formula queries retain an ordered execution trace for every passed, failed, or unresolved
+  precondition, including its exact rational and `f64` value, substituted computation plan,
+  derivation tree, original scope, consumed `FactId`s, predicate identity, and provenance.
+- Guard traces flow through nested formula expansion, so an earlier successful outer guard remains
+  available when a later guard or nested callee fails. Withheld query bodies are recorded separately
+  from evaluated bodies and never publish a derived value.
+- Parser-derived source replay can bind formula parameters to query arguments independently of the
+  runtime trace, including nested formula calls and multi-step formula bodies.
+
+## [0.71.0] - 2026-08-03 - executable formula preconditions
+
+- Formulas can declare ordered, generic `requires` predicates; the first closed execution
+  predicate is `nonzero(expr)`, validated for name, arity, and parameter scope.
+- Preconditions execute before formula bodies at direct queries, `let` bindings, nested formula
+  calls, and deferred predicate branches. A failed or unresolved guard publishes no value and
+  produces a structured formula abstention instead of a compile error.
+- Native expression literals retain exact decimal identity through guard validation. A literal
+  consumed by a guard rejects any value-changing `f64` conversion, while unrelated arguments and
+  unguarded formulas retain their existing behavior. A persistent precision-loss marker follows
+  narrowed literals through later derived references, while observed or exact derived rationals
+  keep using the engine's rational sidecar for composed requirements.
+- Successful observations and rebinding clear stale abstentions; consumed-fact traversal follows
+  each derivation's predecessor scope, and deferred branches publish their LHS only after both
+  sides succeed through a one-binding transactional overlay rather than cloning the full KB.
+- Nested formula or built-in applications inside requirement expressions are rejected explicitly
+  in this first slice instead of being misreported as unresolved inputs.
+- Authored decimal literals lower into exact engine IR, and state machines terminate with a typed
+  precision-loss outcome when a comparison guard cannot be decided without narrowing exact input.
+- Formula source maps retain exact UTF-8 declaration and argument spans for every precondition.
+  Duplicate formula exports and top-level arity mismatches now fail closed instead of depending
+  on import order or falling through as ordinary queries.
+- The expression-walker depth cap is 96; boxing the structured abstention control-flow payload
+  keeps Windows debug frames small enough for that bound. Validation walks are iterative, and
+  adversarial deep-spine, deep-guard, and exponential-expansion tests cover both limits.
+
 ## [0.70.0] - 2026-08-02 - parser-backed formula source maps
 
 - `formula_source_map` inventories every parsed formulabook entry in source order and returns

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: KA-C20-hannondu-ippattu
+spine_node: SPINE-COUNT-ONE-TO-FIVE
+sequence: 480
 chapter: 20
 type: word
 headword: ಹನ್ನೊಂದು — ಇಪ್ಪತ್ತು
@@ -9,13 +12,26 @@ prerequisites: [KA-C19-vayassu]
 sounds: [kannada-anusvara-o, kannada-geminate-pp]
 roots: [dravidian-hattu-ten, dravidian-ir-two-bound]
 etymology_hook: "ಹನ್ನೊಂದು-ಹತ್ತೊಂಬತ್ತು (11-19) are compounds echoing ಹತ್ತು (hattu, 'ten') + a digit — ಇಪ್ಪತ್ತು (ippattu, 'twenty') traces to Proto-Dravidian *ir- ('two') + *paHtu ('ten'), a real compositional origin, but Kannada's own sound changes (gemination, and a p→h shift that only fires word-initially) mean neither modern eraḍu nor modern hattu is directly visible inside it today — unlike Sanskrit/Latin/Arabic, which have no compositional origin for 'twenty' AT ALL"
-est_minutes: 4
 reviews_of: [KA-C19-vayassu]
+duration:
+  max_seconds: 295
+requires:
+  knowledge: [KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02]
+introduces:
+  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02]
+practises:
+  knowledge: [KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 ---
 
-# ಹನ್ನೊಂದು, ಇಪ್ಪತ್ತು — a real "two-tens" compound, just not one you can see today
+# ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02] -->
 
 [PAUSE 2s] You've now seen four different language families each build
 "twenty" as its own special, opaque word — Sanskrit's *vimshati*, Latin's
@@ -23,7 +39,8 @@ reviews_of: [KA-C19-vayassu]
 "two tens" too — but be careful: the modern surface no longer shows it
 plainly.
 
-## ಹನ್ನೊಂದು–ಹತ್ತೊಂಬತ್ತು — "ten" + digit
+## The word, taken apart: ಹನ್ನೊಂದು–ಹತ್ತೊಂಬತ್ತು — "ten" + digit
+<!-- hl-knowledge: introduces=[KA-ETYMON-C20-HANNONDU-IPPATTU-01]; assesses=[] -->
 
 Kannada's teens are built on **ಹತ್ತು** (*hattu*, "**ten**") plus each digit —
 **ಹನ್ನೊಂದು** (*hannondu*, 11), **ಹನ್ನೆರಡು** (*hanneraḍu*, 12), and onward
@@ -31,7 +48,8 @@ through **ಹತ್ತೊಂಬತ್ತು** (*hattombattu*, 19). Each teen is 
 built the same way English builds "four-**teen**" — just placed the same
 digit-plus-ten pattern in front instead of behind.
 
-## ಇಪ್ಪತ್ತು — "two-tens" underneath, but not on the surface anymore
+## The word, taken apart: ಇಪ್ಪತ್ತು — "two-tens" underneath, but not on the surface anymore
+<!-- hl-knowledge: introduces=[KA-ETYMON-C20-HANNONDU-IPPATTU-02]; assesses=[] -->
 
 **ಇಪ್ಪತ್ತು** (*ippattu*, "**twenty**") traces back to Proto-Dravidian
 **\*ir-** ("**two**") + **\*paHtu** ("**ten**") — a genuine compositional
@@ -50,6 +68,7 @@ all, not even a buried one — a genuinely different kind of history from
 Kannada's.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hannondu, hanneraḍu" — 11, 12]
@@ -58,6 +77,7 @@ Kannada's.
   *paHtu roots, not directly from hattu/eraḍu]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C19-VAYASSU-01, KA-GRAMMAR-C19-VAYASSU-02, KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02] -->
 
 [PAUSE 3s] How are Kannada's teens built? (**ಹತ್ತು** (ten) + a digit,
 compounded.) Does **ಇಪ್ಪತ್ತು** (twenty) have a compositional "two-tens"

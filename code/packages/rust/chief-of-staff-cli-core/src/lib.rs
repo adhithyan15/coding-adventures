@@ -14,7 +14,7 @@ use core::fmt::{self, Display, Formatter};
 
 const CLI_SPEC: &str = r#"{
   "cli_builder_spec_version": "1.0",
-  "name": "chief",
+  "name": "chief-of-staff",
   "description": "Operate the local D18 Chief daemon.",
   "version": "0.1.0",
   "commands": [
@@ -22,6 +22,11 @@ const CLI_SPEC: &str = r#"{
       "id": "agents",
       "name": "agents",
       "description": "List registered host agents."
+    },
+    {
+      "id": "install_daemon",
+      "name": "install-daemon",
+      "description": "Install and start the current-user Chief daemon."
     },
     {
       "id": "doctor",
@@ -84,6 +89,8 @@ pub enum CliAction {
     Help(String),
     /// Generated version text; no daemon connection is needed.
     Version(String),
+    /// Install and start the current-user daemon through the native supervisor.
+    InstallDaemon,
     /// One validated operation for an already-authenticated daemon client.
     Command(CliCommand),
 }
@@ -189,6 +196,11 @@ pub fn parse_argv(argv: &[String]) -> Result<CliAction, CliError> {
     match parser.parse(argv).map_err(CliError::Parse)? {
         ParserOutput::Help(help) => Ok(CliAction::Help(help.text)),
         ParserOutput::Version(version) => Ok(CliAction::Version(version.version)),
+        ParserOutput::Parse(result)
+            if result.command_path.last().map(String::as_str) == Some("install-daemon") =>
+        {
+            Ok(CliAction::InstallDaemon)
+        }
         ParserOutput::Parse(result) => parse_command(&result).map(CliAction::Command),
     }
 }
@@ -383,6 +395,7 @@ mod tests {
         };
         assert!(help.contains("agents"));
         assert!(help.contains("doctor"));
+        assert!(help.contains("install-daemon"));
         for forbidden in ["credential", "password", "passphrase", "token", "endpoint"] {
             assert!(!help.to_ascii_lowercase().contains(forbidden));
         }
@@ -400,6 +413,10 @@ mod tests {
 
     #[test]
     fn parses_every_host_lifecycle_command() {
+        assert!(matches!(
+            parse_argv(&argv(&["chief", "install-daemon"])).unwrap(),
+            CliAction::InstallDaemon
+        ));
         assert_eq!(command(&["chief", "agents"]), CliCommand::Agents);
         assert!(matches!(
             command(&["chief", "doctor", "alpha-host"]),

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C04-maa-with
+spine_node: SPINE-TAKE-LEAVE
+sequence: 390
 chapter: 4
 type: word
 headword: مع
@@ -10,18 +13,32 @@ prerequisites: [AR-C03-practice, AR-W10-ayn]
 sounds: [rtl-known-letters, ayn-throat]
 roots: [semitic-imma]
 etymology_hook: "maʿa ← Semitic *ʿimma, cousin of Hebrew ʿim 'with' — the same family pairing as salām/shalom; and 'with' is the hinge of farewells in more languages than Arabic: English goodbye is worn down from 'God be WITH ye'"
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02]
+practises:
+  knowledge: [AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C03-practice, AR-W10-ayn, AR-C01-salam]
 ---
 
 # مع (maʿa) — "with"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two letters, both already yours, and a word that will carry the whole
 chapter.
 
-## The letters
+## You'll want to know — The letters
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-MAA-WITH-01]; assesses=[] -->
 
 *(Skim if you read Arabic.)* **م** (*mīm*) from Lesson 3 of the writing set, and
 **ع** (*ʿayn*) from Lesson 10 — the throat sound whose Phoenician ancestor meant
@@ -30,7 +47,8 @@ chapter.
 Right to left: **م · ع** → *maʿa*. The *ʿayn* is not a vowel; it is a
 constriction deep in the throat. Take your time with it.
 
-## The word
+## You'll want to know — The word
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C04-MAA-WITH-02]; assesses=[] -->
 
 **مع** (*maʿa*) = "**with**, together with."
 
@@ -50,7 +68,8 @@ So Arabic has *two* words touching on "with": the one-letter **بـ** (*bi-*,
 "accompanied by"). *Bi-khayr* is "**in** goodness"; *maʿa* is standing **next
 to** something.
 
-## The Semitic cousin
+## Why it's said this way — The Semitic cousin
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *maʿa* ← Semitic *\*ʿimma*, and its Hebrew cousin is **עִם** (*ʿim*), "with." The
 same pairing you met with **salām / shalom** in Chapter 1 and **ism / shem** in
@@ -58,6 +77,7 @@ Chapter 2. Three chapters, three cousins — the family resemblance is systemati
 not a coincidence.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*maʿa*" — the *ʿayn* from the throat]
@@ -66,6 +86,7 @@ not a coincidence.
 - [YOU WRITE: **مع** — mīm joining into ʿayn]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02] -->
 
 [PAUSE 3s] What does **مع** mean? ("**With**.") Does it attach to the next word,
 like *al-* and *bi-*? (**No** — it stands alone.) What is the difference between

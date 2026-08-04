@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: AR-C24-ila-al-ghad
+spine_node: SPINE-TAKE-LEAVE
+sequence: 680
 chapter: 24
 type: phrase
 headword: إلى الغد
@@ -10,18 +13,32 @@ prerequisites: [AR-C04-ila-liqaa]
 sounds: [ghayn, sun-letter-assimilation]
 roots: [gh-d-w]
 etymology_hook: "إلى الغد (ilā l-ghad), 'until tomorrow,' reuses إلى (ilā, 'until') from ilā l-liqāʾ; الغد (al-ghad, 'tomorrow') is root gh-d-w, whose core sense is 'to go out at dawn, early morning' — the same 'morning becomes tomorrow' shift already seen in Latin's māne→mañana/demain, an honest cross-language echo, not a coincidence unique to Romance"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-CONCEPT-C24-ILA-AL-GHAD-01, AR-CONCEPT-C24-ILA-AL-GHAD-02]
+practises:
+  knowledge: [AR-CONCEPT-C24-ILA-AL-GHAD-01, AR-CONCEPT-C24-ILA-AL-GHAD-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: [AR-C04-ila-liqaa]
 ---
 
 # إلى الغد (ilā l-ghad) — "see you tomorrow," the same ilā again
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already have the pattern: **ilā** + a future point = "see
 you [then]." Here it is again, with "tomorrow" filling the slot.
 
-## The two pieces, one already familiar
+## You'll want to know — The two pieces, one already familiar
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C24-ILA-AL-GHAD-01]; assesses=[] -->
 
 **إلى الغد** (*ilā l-ghad*) = "**until tomorrow**":
 
@@ -32,7 +49,8 @@ you [then]." Here it is again, with "tomorrow" filling the slot.
   (*ghayn*) is a **moon letter**, so here the *l* stays put: *al-ghad*, not
   doubled the way *al-liqāʾ* and *as-salāma* were.
 
-## The root: another "morning becomes tomorrow" story
+## Why it's said this way — The root: another "morning becomes tomorrow" story
+<!-- hl-knowledge: introduces=[AR-CONCEPT-C24-ILA-AL-GHAD-02]; assesses=[] -->
 
 **Gh-d-w**'s core sense is "**to go out at dawn, early morning**" — and
 **"tomorrow"** grows directly out of that "early morning" sense. This is
@@ -43,6 +61,7 @@ families — Semitic and Indo-European — independently building "tomorrow"
 out of "morning."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C24-ILA-AL-GHAD-01, AR-CONCEPT-C24-ILA-AL-GHAD-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ilā l-ghad" — "until tomorrow"]
@@ -51,6 +70,7 @@ out of "morning."
   shift as Latin māne → mañana/demain]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C24-ILA-AL-GHAD-01, AR-CONCEPT-C24-ILA-AL-GHAD-02] -->
 
 [PAUSE 3s] What word does **ilā l-ghad** share with **ilā l-liqāʾ**?
 (**Ilā**, "until.") What does the root **gh-d-w** literally mean, before it

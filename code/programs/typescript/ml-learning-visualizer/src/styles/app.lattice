@@ -634,6 +634,298 @@ button.distribution-card[aria-pressed="true"] {
   }
 }
 
+.workspace--language-consumers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  align-items: start;
+  gap: 16px;
+}
+
+.consumer-stage {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+}
+
+.consumer-intro,
+.consumer-paper,
+.consumer-lanes,
+.consumer-selected,
+.consumer-protocol,
+.consumer-controls {
+  min-width: 0;
+  border: 1px solid $line;
+  border-radius: 12px;
+  background: $paper;
+}
+
+.consumer-intro,
+.consumer-paper,
+.consumer-lanes,
+.consumer-selected,
+.consumer-protocol {
+  padding: 16px;
+}
+
+.consumer-intro {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.consumer-intro p:last-child,
+.consumer-controls p,
+.consumer-protocol p {
+  color: $muted;
+  line-height: 1.55;
+}
+
+.consumer-chip,
+.consumer-result {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: rgba(20, 116, 104, 0.09);
+  color: #12695f;
+  padding: 7px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.consumer-result--pass {
+  background: rgba(35, 122, 87, 0.1);
+  color: #1d6849;
+}
+
+.consumer-result--fail {
+  background: rgba(187, 61, 61, 0.1);
+  color: #9c3030;
+}
+
+.consumer-products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 11px;
+}
+
+.consumer-products > div {
+  display: grid;
+  gap: 7px;
+  border-radius: 9px;
+  background: rgba(20, 116, 104, 0.055);
+  padding: 12px;
+}
+
+.consumer-products small,
+.consumer-lane-grid small,
+.consumer-lane-grid span {
+  color: $muted;
+  font-size: 0.68rem;
+}
+
+.consumer-products strong {
+  color: #12695f;
+}
+
+.consumer-lane-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.consumer-lane-grid button {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid $line;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.82);
+  color: $ink;
+  padding: 11px;
+  text-align: left;
+}
+
+.consumer-lane-grid button[aria-pressed="true"] {
+  border-color: rgba(20, 116, 104, 0.52);
+  background: rgba(20, 116, 104, 0.09);
+}
+
+.consumer-selected dl {
+  display: grid;
+  gap: 8px;
+  margin: 11px 0 0;
+}
+
+.consumer-selected dl > div {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px;
+  border-top: 1px solid $line;
+  padding-top: 8px;
+}
+
+.consumer-selected dt {
+  color: $muted;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.consumer-selected dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.consumer-selected code,
+.consumer-command {
+  overflow-wrap: anywhere;
+}
+
+.workspace--rust-c-abi .consumer-selected > .consumer-command {
+  display: block;
+  margin-top: 11px;
+}
+
+.rust-c-abi-probes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.implementation-coverage-lanes {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.consumer-receipt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.055);
+  padding: 11px;
+}
+
+.consumer-receipt span {
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.consumer-protocol ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.consumer-protocol li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  border-radius: 9px;
+  background: rgba(20, 116, 104, 0.055);
+  padding: 10px;
+}
+
+.consumer-protocol li > span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(20, 116, 104, 0.15);
+  color: #12695f;
+  font-weight: 700;
+}
+
+.consumer-protocol li p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.consumer-controls {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.consumer-command {
+  display: block;
+  border-radius: 9px;
+  background: rgba(37, 99, 235, 0.055);
+  padding: 11px;
+}
+
+.consumer-controls section {
+  border-top: 1px solid $line;
+  padding-top: 12px;
+}
+
+@media (max-width: 1180px) {
+  .workspace--language-consumers {
+    grid-template-columns: 1fr;
+  }
+
+  .consumer-controls {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .consumer-controls > p,
+  .consumer-controls > h2,
+  .consumer-command {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 820px) {
+  .consumer-intro,
+  .consumer-paper .panel-heading,
+  .consumer-lanes .panel-heading,
+  .consumer-selected .panel-heading,
+  .consumer-protocol .panel-heading {
+    display: grid;
+  }
+
+  .consumer-chip,
+  .consumer-result {
+    justify-self: start;
+  }
+
+  .consumer-products,
+  .consumer-protocol ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .implementation-coverage-lanes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .consumer-products,
+  .consumer-lane-grid,
+  .consumer-protocol ol,
+  .consumer-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .consumer-controls > p,
+  .consumer-controls > h2,
+  .consumer-command {
+    grid-column: auto;
+  }
+
+  .consumer-selected dl > div {
+    grid-template-columns: 1fr;
+  }
+}
+
 .workspace--forward-lowering {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;

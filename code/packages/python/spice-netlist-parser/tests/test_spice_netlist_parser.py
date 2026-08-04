@@ -756,7 +756,7 @@ Rload out 0 500
 def test_parse_diode_model_into_operating_point_circuit() -> None:
     parsed = parse_netlist(
         """
-.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n)
+.model fast D(IS=1e-12 VT=25m N=2 BV=5 IBV=1u CJO=2p TT=4n RS=3)
 V1 in 0 DC 0.7
 D1 in out fast
 Rload out 0 1k
@@ -776,6 +776,7 @@ Rload out 0 1k
                 "IBV": 1.0e-6,
                 "CJO": 2.0e-12,
                 "TT": 4.0e-9,
+                "RS": 3.0,
             },
         )
     }
@@ -790,6 +791,7 @@ Rload out 0 1k
     assert diode.IBV == 1.0e-6
     assert diode.Cjo == 2.0e-12
     assert diode.Tt == 4.0e-9
+    assert diode.Rs == 3.0
 
     result = dc_op(parsed.circuit)
     assert result.converged
@@ -872,6 +874,184 @@ def test_accepts_valid_diode_breakdown_voltage(value: str, expected: float) -> N
 def test_rejects_invalid_diode_breakdown_voltage(value: str) -> None:
     with pytest.raises(NetlistParseError, match="diode BV must be finite and positive"):
         parse_netlist(f".model clamp D(BV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1u", 1.0e-6), ("2m", 2.0e-3)])
+def test_accepts_valid_diode_breakdown_current(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(IBV={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.IBV
+
+
+@pytest.mark.parametrize("value", ["0", "-1u", "1e999"])
+def test_rejects_invalid_diode_breakdown_current(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode IBV must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(IBV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_accepts_valid_diode_series_resistance(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(RS={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert expected == diode.Rs
+
+
+@pytest.mark.parametrize("value", ["-1", "1e999"])
+def test_rejects_invalid_diode_series_resistance(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode RS must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(RS={value})")
+
+
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+def test_lowers_diode_junction_potential_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.8)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.8
+
+
+def test_diode_junction_potential_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(PB=0.8 VJ=0.7)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Vj == 0.7
+
+
+@pytest.mark.parametrize("parameter", ["VJ", "PB"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_junction_potential(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="diode VJ must be finite and positive"):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+def test_lowers_diode_grading_coefficient_alias(parameter: str) -> None:
+    parsed = parse_netlist(f".model clamp D({parameter}=0.4)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.4
+
+
+def test_diode_grading_coefficient_prefers_canonical_name() -> None:
+    parsed = parse_netlist(".model clamp D(MJ=0.4 M=0.3)\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.M == 0.3
+
+
+@pytest.mark.parametrize("parameter", ["M", "MJ"])
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_diode_grading_coefficient(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode M must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D({parameter}={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.6", 0.6)])
+def test_lowers_valid_diode_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(FC={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Fc == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_diode_depletion_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match=r"diode FC must be finite and in \[0, 1\)"
+    ):
+        parse_netlist(f".model clamp D(FC={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("-1", -1.0), ("4", 4.0)])
+def test_lowers_finite_diode_temperature_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(XTI={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Xti == expected
+
+
+def test_rejects_non_finite_diode_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="diode XTI must be finite"):
+        parse_netlist(".model clamp D(XTI=1e999)")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0.5", 0.5), ("1.2", 1.2)])
+def test_lowers_positive_diode_energy_gap(value: str, expected: float) -> None:
+    parsed = parse_netlist(f".model clamp D(EG={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Eg == expected
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_diode_energy_gap(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode EG must be finite and positive"
+    ):
+        parse_netlist(f".model clamp D(EG={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2e-18", 2e-18)])
+def test_lowers_valid_diode_flicker_noise_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(KF={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Kf == expected
+
+
+@pytest.mark.parametrize("value", ["-1e-18", "1e999"])
+def test_rejects_invalid_diode_flicker_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode KF must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(KF={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_lowers_valid_diode_flicker_noise_exponent(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(f".model clamp D(AF={value})\nD1 in out clamp")
+
+    diode = parsed.circuit.elements[0]
+    assert isinstance(diode, Diode)
+    assert diode.Af == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_diode_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="diode AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model clamp D(AF={value})")
 
 
 def test_parse_diode_junction_capacitance_alias() -> None:
@@ -1185,6 +1365,208 @@ def test_rejects_invalid_jfet_gate_drain_capacitance(value: str) -> None:
         NetlistParseError, match="JFET CGD must be finite and non-negative"
     ):
         parse_netlist(f".model fast NJF(CGD={value})")
+
+
+def test_parse_jfet_flicker_noise_coefficient() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(KF=2e-18)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Kf, 2.0e-18)
+
+
+@pytest.mark.parametrize("value", ["-1e-18", "1e999"])
+def test_rejects_invalid_jfet_flicker_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET KF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(KF={value})")
+
+
+def test_parse_jfet_flicker_noise_exponent() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(AF=1.4)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Af, 1.4)
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_flicker_noise_exponent(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET AF must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(AF={value})")
+
+
+@pytest.mark.parametrize("parameter", ["PB", "VJ"])
+def test_parse_jfet_junction_potential_aliases(parameter: str) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF({parameter}=0.8)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Pb, 0.8)
+
+
+def test_jfet_junction_potential_prefers_canonical_name() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(PB=0.9 VJ=0.8)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Pb, 0.9)
+
+
+@pytest.mark.parametrize("parameter", ["PB", "VJ"])
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_jfet_junction_potential(
+    parameter: str, value: str
+) -> None:
+    with pytest.raises(NetlistParseError, match="JFET PB must be finite and positive"):
+        parse_netlist(f".model fast NJF({parameter}={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("0.6", 0.6)])
+def test_parse_jfet_forward_bias_depletion_coefficient(
+    value: str, expected: float
+) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(FC={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Fc, expected)
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1", "1e999"])
+def test_rejects_invalid_jfet_forward_bias_depletion_coefficient(value: str) -> None:
+    with pytest.raises(NetlistParseError, match=r"JFET FC must be finite and in \[0, 1\)"):
+        parse_netlist(f".model fast NJF(FC={value})")
+
+
+def test_parse_jfet_gate_saturation_current() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(IS=2p)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Is, 2.0e-12)
+
+
+@pytest.mark.parametrize("value", ["0", "-1p", "1e999"])
+def test_rejects_invalid_jfet_gate_saturation_current(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET IS must be finite and positive"):
+        parse_netlist(f".model fast NJF(IS={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("2.5", 2.5)])
+def test_parse_jfet_temperature_exponent(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(XTI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Xti, expected)
+
+
+def test_rejects_non_finite_jfet_temperature_exponent() -> None:
+    with pytest.raises(NetlistParseError, match="JFET XTI must be finite"):
+        parse_netlist(".model fast NJF(XTI=1e999)")
+
+
+def test_parse_jfet_energy_gap() -> None:
+    parsed = parse_netlist(
+        """
+.model fast NJF(EG=1.05)
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert isclose(jfet.Eg, 1.05)
+
+
+@pytest.mark.parametrize("value", ["0", "-0.1", "1e999"])
+def test_rejects_invalid_jfet_energy_gap(value: str) -> None:
+    with pytest.raises(NetlistParseError, match="JFET EG must be finite and positive"):
+        parse_netlist(f".model fast NJF(EG={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("1", 1.0), ("3", 3.0)])
+def test_parse_jfet_noise_equation_level(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(NLEV={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Nlev == expected
+
+
+@pytest.mark.parametrize("value", ["0", "1.5", "1e999"])
+def test_rejects_invalid_jfet_noise_equation_level(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError,
+        match="JFET NLEV must be a finite integer greater than or equal to 1",
+    ):
+        parse_netlist(f".model fast NJF(NLEV={value})")
+
+
+@pytest.mark.parametrize(("value", "expected"), [("0", 0.0), ("1.5", 1.5)])
+def test_parse_jfet_channel_noise_coefficient(value: str, expected: float) -> None:
+    parsed = parse_netlist(
+        f"""
+.model fast NJF(GDSNOI={value})
+J1 drain gate source fast
+"""
+    )
+
+    jfet = parsed.circuit.elements[0]
+    assert isinstance(jfet, JFET)
+    assert jfet.Gdsnoi == expected
+
+
+@pytest.mark.parametrize("value", ["-0.1", "1e999"])
+def test_rejects_invalid_jfet_channel_noise_coefficient(value: str) -> None:
+    with pytest.raises(
+        NetlistParseError, match="JFET GDSNOI must be finite and non-negative"
+    ):
+        parse_netlist(f".model fast NJF(GDSNOI={value})")
 
 
 def test_parse_pjf_model_aliases_beta() -> None:

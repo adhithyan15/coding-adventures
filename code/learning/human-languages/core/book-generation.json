@@ -8,6 +8,26 @@
       { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
       { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
       { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "kannada-comparisons": [
+      { "unicodeScript": "Kannada", "scriptCommand": "kn" },
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "malayalam-comparisons": [
+      { "unicodeScript": "Malayalam", "scriptCommand": "ml" },
+      { "unicodeScript": "Tamil", "scriptCommand": "ta" },
+      { "unicodeScript": "Telugu", "scriptCommand": "te" },
+      { "unicodeScript": "Kannada", "scriptCommand": "ka" },
+      { "unicodeScript": "Devanagari", "scriptCommand": "dv" },
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" }
+    ],
+    "arabic-main": [
+      { "unicodeScript": "Arabic", "scriptCommand": "ar" },
+      { "unicodeScript": "Hebrew", "scriptCommand": "he" }
     ]
   },
   "targets": [
@@ -492,7 +512,7 @@
     {
       "language": "telugu",
       "chapter": 20,
-      "title": "Numbers Eleven to Twenty and Weather",
+      "title": "Numbers 11–20 and Weather",
       "label": "ch:te-numbers-and-weather",
       "output": "telugu/book/chapters/ch20-numbers-and-weather.tex",
       "scriptSet": "telugu-comparisons"
@@ -584,6 +604,622 @@
       "label": "ch:te-good-afternoon",
       "output": "telugu/book/chapters/ch31-good-afternoon.tex",
       "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ka-dative-case",
+      "output": "kannada/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ka-numbers-one-to-ten",
+      "output": "kannada/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ka-please",
+      "output": "kannada/book/chapters/ch08-please.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ka-sorry",
+      "output": "kannada/book/chapters/ch09-sorry.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ka-days-of-the-week",
+      "output": "kannada/book/chapters/ch10-days.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:ka-core-colours",
+      "output": "kannada/book/chapters/ch11-colours.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ka-family",
+      "output": "kannada/book/chapters/ch12-family.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:ka-head-and-hand",
+      "output": "kannada/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ka-seasons",
+      "output": "kannada/book/chapters/ch14-seasons.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ka-water-and-rice",
+      "output": "kannada/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:ka-traditional-months",
+      "output": "kannada/book/chapters/ch16-months.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ka-noon-and-midnight",
+      "output": "kannada/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ka-telling-time",
+      "output": "kannada/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ka-asking-age",
+      "output": "kannada/book/chapters/ch19-age.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ka-numbers-and-weather",
+      "output": "kannada/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ka-dog-and-cat",
+      "output": "kannada/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ka-green-and-yellow",
+      "output": "kannada/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ka-day",
+      "output": "kannada/book/chapters/ch23-day.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ka-night",
+      "output": "kannada/book/chapters/ch24-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ka-good-night",
+      "output": "kannada/book/chapters/ch25-good-night.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ka-morning",
+      "output": "kannada/book/chapters/ch26-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ka-evening",
+      "output": "kannada/book/chapters/ch27-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ka-afternoon",
+      "output": "kannada/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ka-good-morning",
+      "output": "kannada/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ka-good-evening",
+      "output": "kannada/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ka-good-afternoon",
+      "output": "kannada/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 6,
+      "title": "Case Endings and Dative Subjects",
+      "label": "ch:ml-dative-case",
+      "output": "malayalam/book/chapters/ch06-dative-case.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 7,
+      "title": "Numbers One to Ten",
+      "label": "ch:ml-numbers-one-to-ten",
+      "output": "malayalam/book/chapters/ch07-numbers-1-10.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 8,
+      "title": "Please",
+      "label": "ch:ml-please",
+      "output": "malayalam/book/chapters/ch08-please.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 9,
+      "title": "Sorry",
+      "label": "ch:ml-sorry",
+      "output": "malayalam/book/chapters/ch09-sorry.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 10,
+      "title": "Days of the Week",
+      "label": "ch:ml-days-of-the-week",
+      "output": "malayalam/book/chapters/ch10-days.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 11,
+      "title": "Four Core Colours",
+      "label": "ch:ml-core-colours",
+      "output": "malayalam/book/chapters/ch11-colours.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 12,
+      "title": "Family",
+      "label": "ch:ml-family",
+      "output": "malayalam/book/chapters/ch12-family.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 13,
+      "title": "Head and Hand",
+      "label": "ch:ml-head-and-hand",
+      "output": "malayalam/book/chapters/ch13-head-and-hand.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 14,
+      "title": "Seasons",
+      "label": "ch:ml-seasons",
+      "output": "malayalam/book/chapters/ch14-seasons.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 15,
+      "title": "Water and Rice",
+      "label": "ch:ml-water-and-rice",
+      "output": "malayalam/book/chapters/ch15-water-and-rice.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 16,
+      "title": "The Traditional Months",
+      "label": "ch:ml-traditional-months",
+      "output": "malayalam/book/chapters/ch16-months.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 17,
+      "title": "Noon and Midnight",
+      "label": "ch:ml-noon-and-midnight",
+      "output": "malayalam/book/chapters/ch17-noon-and-midnight.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 18,
+      "title": "Telling Time",
+      "label": "ch:ml-telling-time",
+      "output": "malayalam/book/chapters/ch18-telling-time.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 19,
+      "title": "Asking Someone's Age",
+      "label": "ch:ml-asking-age",
+      "output": "malayalam/book/chapters/ch19-age.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 20,
+      "title": "Numbers 11–20 and Weather",
+      "label": "ch:ml-numbers-and-weather",
+      "output": "malayalam/book/chapters/ch20-numbers-and-weather.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ml-dog-and-cat",
+      "output": "malayalam/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ml-green-and-yellow",
+      "output": "malayalam/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 23,
+      "title": "Day",
+      "label": "ch:ml-day",
+      "output": "malayalam/book/chapters/ch23-day.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 24,
+      "title": "Night",
+      "label": "ch:ml-night",
+      "output": "malayalam/book/chapters/ch24-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 25,
+      "title": "Good Night",
+      "label": "ch:ml-good-night",
+      "output": "malayalam/book/chapters/ch25-good-night.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 26,
+      "title": "Morning",
+      "label": "ch:ml-morning",
+      "output": "malayalam/book/chapters/ch26-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 27,
+      "title": "Evening",
+      "label": "ch:ml-evening",
+      "output": "malayalam/book/chapters/ch27-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 28,
+      "title": "Afternoon",
+      "label": "ch:ml-afternoon",
+      "output": "malayalam/book/chapters/ch28-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 29,
+      "title": "Good Morning",
+      "label": "ch:ml-good-morning",
+      "output": "malayalam/book/chapters/ch29-good-morning.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 30,
+      "title": "Good Evening",
+      "label": "ch:ml-good-evening",
+      "output": "malayalam/book/chapters/ch30-good-evening.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 31,
+      "title": "Good Afternoon",
+      "label": "ch:ml-good-afternoon",
+      "output": "malayalam/book/chapters/ch31-good-afternoon.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "arabic",
+      "chapter": 3,
+      "title": "How Are You?",
+      "label": "ch:ar-how-are-you",
+      "output": "arabic/book/chapters/ch03-how-are-you.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "title": "Farewells",
+      "label": "ch:ar-farewells",
+      "output": "arabic/book/chapters/ch04-farewells.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "title": "Yes and No",
+      "label": "ch:ar-yes-and-no",
+      "output": "arabic/book/chapters/ch05-yes-and-no.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "title": "Please",
+      "label": "ch:ar-please",
+      "output": "arabic/book/chapters/ch06-please.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "title": "Sorry",
+      "label": "ch:ar-sorry",
+      "output": "arabic/book/chapters/ch07-sorry.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "title": "Days of the Week",
+      "label": "ch:ar-days-of-the-week",
+      "output": "arabic/book/chapters/ch08-days.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "title": "Four Core Colours",
+      "label": "ch:ar-core-colours",
+      "output": "arabic/book/chapters/ch09-colours.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "title": "Family",
+      "label": "ch:ar-family",
+      "output": "arabic/book/chapters/ch10-family.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "title": "Head and Hand",
+      "label": "ch:ar-head-and-hand",
+      "output": "arabic/book/chapters/ch11-head-and-hand.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "title": "Seasons",
+      "label": "ch:ar-seasons",
+      "output": "arabic/book/chapters/ch12-seasons.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "title": "Water and Bread",
+      "label": "ch:ar-water-and-bread",
+      "output": "arabic/book/chapters/ch13-water-and-bread.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "title": "Months",
+      "label": "ch:ar-months",
+      "output": "arabic/book/chapters/ch14-months.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "title": "Noon and Midnight",
+      "label": "ch:ar-noon-and-midnight",
+      "output": "arabic/book/chapters/ch15-noon-and-midnight.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "title": "Telling Time",
+      "label": "ch:ar-telling-time",
+      "output": "arabic/book/chapters/ch16-telling-time.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "title": "Asking Someone's Age",
+      "label": "ch:ar-asking-age",
+      "output": "arabic/book/chapters/ch17-age.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "title": "Weather",
+      "label": "ch:ar-weather",
+      "output": "arabic/book/chapters/ch18-weather.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "title": "Numbers One to Five",
+      "label": "ch:ar-numbers-one-to-five",
+      "output": "arabic/book/chapters/ch19-numbers-1-5.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:ar-numbers-eleven-to-twenty",
+      "output": "arabic/book/chapters/ch20-numbers-11-20.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "title": "Dog and Cat",
+      "label": "ch:ar-dog-and-cat",
+      "output": "arabic/book/chapters/ch21-dog-and-cat.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "title": "Green and Yellow",
+      "label": "ch:ar-green-and-yellow",
+      "output": "arabic/book/chapters/ch22-green-and-yellow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "title": "You're Welcome",
+      "label": "ch:ar-youre-welcome",
+      "output": "arabic/book/chapters/ch23-youre-welcome.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "title": "See You Tomorrow",
+      "label": "ch:ar-see-you-tomorrow",
+      "output": "arabic/book/chapters/ch24-see-you-tomorrow.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "title": "Day",
+      "label": "ch:ar-day",
+      "output": "arabic/book/chapters/ch25-day.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "title": "Night",
+      "label": "ch:ar-night",
+      "output": "arabic/book/chapters/ch26-night.tex",
+      "scriptSet": "arabic-main"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "title": "Good Night",
+      "label": "ch:ar-good-night",
+      "output": "arabic/book/chapters/ch27-good-night.tex",
+      "scriptSet": "arabic-main"
     },
     {
       "language": "bengali",

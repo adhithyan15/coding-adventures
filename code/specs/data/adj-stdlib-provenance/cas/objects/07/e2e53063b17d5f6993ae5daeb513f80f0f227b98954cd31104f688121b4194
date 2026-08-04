@@ -1,0 +1,817 @@
+{
+  "body": {
+    "reason": "precondition_failed",
+    "status": "withheld"
+  },
+  "contract": "adj-lang/formula_execution/v2",
+  "export": {
+    "body": {
+      "end": 4727,
+      "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+      "start": 4673
+    },
+    "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+    "claim_id": "adj.math.arithmetic.proportion",
+    "declaration": {
+      "end": 5240,
+      "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+      "start": 4606
+    },
+    "formula": "fourth_proportional",
+    "formulabook": "proportions",
+    "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+    "parameters": [
+      "first_term",
+      "second_term",
+      "third_term"
+    ],
+    "preconditions": [
+      {
+        "arguments": [
+          {
+            "end": 4763,
+            "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+            "start": 4753
+          }
+        ],
+        "declaration": {
+          "end": 4764,
+          "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+          "start": 4745
+        },
+        "predicate": "nonzero"
+      },
+      {
+        "arguments": [
+          {
+            "end": 4785,
+            "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+            "start": 4774
+          }
+        ],
+        "declaration": {
+          "end": 4786,
+          "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+          "start": 4766
+        },
+        "predicate": "nonzero"
+      },
+      {
+        "arguments": [
+          {
+            "end": 4806,
+            "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+            "start": 4796
+          }
+        ],
+        "declaration": {
+          "end": 4807,
+          "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+          "start": 4788
+        },
+        "predicate": "nonzero"
+      }
+    ],
+    "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+    "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+    "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+  },
+  "formula_derivation_sha256": "7ef9696ab19c66e3cd8c758ecf455ba6226a268b7c186c208eff5f6cd8e15294",
+  "formula_sequence": [
+    {
+      "body": {
+        "end": 4727,
+        "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+        "start": 4673
+      },
+      "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+      "claim_id": "adj.math.arithmetic.proportion",
+      "declaration": {
+        "end": 5240,
+        "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+        "start": 4606
+      },
+      "formula": "fourth_proportional",
+      "formulabook": "proportions",
+      "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+      "parameters": [
+        "first_term",
+        "second_term",
+        "third_term"
+      ],
+      "preconditions": [
+        {
+          "arguments": [
+            {
+              "end": 4763,
+              "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+              "start": 4753
+            }
+          ],
+          "declaration": {
+            "end": 4764,
+            "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+            "start": 4745
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4785,
+              "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+              "start": 4774
+            }
+          ],
+          "declaration": {
+            "end": 4786,
+            "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+            "start": 4766
+          },
+          "predicate": "nonzero"
+        },
+        {
+          "arguments": [
+            {
+              "end": 4806,
+              "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+              "start": 4796
+            }
+          ],
+          "declaration": {
+            "end": 4807,
+            "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+            "start": 4788
+          },
+          "predicate": "nonzero"
+        }
+      ],
+      "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+      "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+      "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+    }
+  ],
+  "guards": [
+    {
+      "comparison": {
+        "observed": {
+          "exact_rational": {
+            "denominator": "1",
+            "numerator": "2"
+          },
+          "f64_bits": "4000000000000000"
+        },
+        "operator": "not_equal",
+        "threshold": {
+          "exact_rational": {
+            "denominator": "1",
+            "numerator": "0"
+          },
+          "f64_bits": "0000000000000000"
+        }
+      },
+      "formula": {
+        "body": {
+          "end": 4727,
+          "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+          "start": 4673
+        },
+        "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+        "claim_id": "adj.math.arithmetic.proportion",
+        "declaration": {
+          "end": 5240,
+          "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+          "start": 4606
+        },
+        "formula": "fourth_proportional",
+        "formulabook": "proportions",
+        "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+        "parameters": [
+          "first_term",
+          "second_term",
+          "third_term"
+        ],
+        "preconditions": [
+          {
+            "arguments": [
+              {
+                "end": 4763,
+                "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                "start": 4753
+              }
+            ],
+            "declaration": {
+              "end": 4764,
+              "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+              "start": 4745
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4785,
+                "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                "start": 4774
+              }
+            ],
+            "declaration": {
+              "end": 4786,
+              "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+              "start": 4766
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4806,
+                "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                "start": 4796
+              }
+            ],
+            "declaration": {
+              "end": 4807,
+              "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+              "start": 4788
+            },
+            "predicate": "nonzero"
+          }
+        ],
+        "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+        "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+        "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+      },
+      "inputs": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+              "quote": {
+                "byte_len": 16,
+                "byte_offset": 0,
+                "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+                "text_sha256": "1e9023fc7049f1f3baf70ace6b2466cf2cdb3a60e064ab22aa77c10f62a0f245"
+              },
+              "source": "proportion input fixture",
+              "trust": "authoritative"
+            },
+            "term": "first_term(2)"
+          },
+          "observation": {
+            "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+            "span": {
+              "end": 309,
+              "sha256": "c73783e99072cb0ac85e515a0e7d7b0c95b371f47a47592fc913399051bcaeb3",
+              "start": 25
+            }
+          },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.proportion.zero_second.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09",
+          "owner_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+          "schema_version": 3,
+          "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+          "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7"
+        }
+      ],
+      "outcome": "passed",
+      "plan": {
+        "expression": {
+          "kind": "reference",
+          "name": "first_term"
+        },
+        "is_query_answer": false,
+        "scope": {
+          "derived_limit": 0,
+          "fact_limit": 3
+        }
+      },
+      "precondition": {
+        "arguments": [
+          {
+            "end": 4763,
+            "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+            "start": 4753
+          }
+        ],
+        "declaration": {
+          "end": 4764,
+          "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+          "start": 4745
+        },
+        "index": 0,
+        "parameter": "first_term",
+        "predicate": "nonzero"
+      },
+      "tree": {
+        "f64_bits": "4000000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+            "quote": {
+              "byte_len": 16,
+              "byte_offset": 0,
+              "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+              "text_sha256": "1e9023fc7049f1f3baf70ace6b2466cf2cdb3a60e064ab22aa77c10f62a0f245"
+            },
+            "source": "proportion input fixture",
+            "trust": "authoritative"
+          },
+          "term": "first_term(2)"
+        },
+        "kind": "leaf",
+        "slot": "first_term"
+      },
+      "verification": {
+        "computation": {
+          "reason": null,
+          "recomputed_f64_bits": null,
+          "recorded_f64_bits": null,
+          "status": "rechecked"
+        },
+        "formula_quote": {
+          "identity": {
+            "body": {
+              "end": 4727,
+              "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+              "start": 4673
+            },
+            "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+            "claim_id": "adj.math.arithmetic.proportion",
+            "declaration": {
+              "end": 5240,
+              "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+              "start": 4606
+            },
+            "formula": "fourth_proportional",
+            "formulabook": "proportions",
+            "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+            "parameters": [
+              "first_term",
+              "second_term",
+              "third_term"
+            ],
+            "preconditions": [
+              {
+                "arguments": [
+                  {
+                    "end": 4763,
+                    "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                    "start": 4753
+                  }
+                ],
+                "declaration": {
+                  "end": 4764,
+                  "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+                  "start": 4745
+                },
+                "predicate": "nonzero"
+              },
+              {
+                "arguments": [
+                  {
+                    "end": 4785,
+                    "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                    "start": 4774
+                  }
+                ],
+                "declaration": {
+                  "end": 4786,
+                  "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+                  "start": 4766
+                },
+                "predicate": "nonzero"
+              },
+              {
+                "arguments": [
+                  {
+                    "end": 4806,
+                    "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                    "start": 4796
+                  }
+                ],
+                "declaration": {
+                  "end": 4807,
+                  "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+                  "start": 4788
+                },
+                "predicate": "nonzero"
+              }
+            ],
+            "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+            "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+            "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+          },
+          "provenance": {
+            "corroborations": [],
+            "locator": "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications",
+            "quote": {
+              "byte_len": 92,
+              "byte_offset": 0,
+              "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+              "text_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851"
+            },
+            "source": "For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.",
+            "trust": "inferred"
+          },
+          "quote": {
+            "byte_len": 92,
+            "byte_offset": 0,
+            "reason": null,
+            "status": "verified"
+          }
+        },
+        "fully_verified": true,
+        "input_quotes": [
+          {
+            "identity": {
+              "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+              "identity": {
+                "provenance": {
+                  "corroborations": [],
+                  "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+                  "quote": {
+                    "byte_len": 16,
+                    "byte_offset": 0,
+                    "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+                    "text_sha256": "1e9023fc7049f1f3baf70ace6b2466cf2cdb3a60e064ab22aa77c10f62a0f245"
+                  },
+                  "source": "proportion input fixture",
+                  "trust": "authoritative"
+                },
+                "term": "first_term(2)"
+              },
+              "observation": {
+                "claim_id": "adj.input.arithmetic.proportion.first_term.2",
+                "span": {
+                  "end": 309,
+                  "sha256": "c73783e99072cb0ac85e515a0e7d7b0c95b371f47a47592fc913399051bcaeb3",
+                  "start": 25
+                }
+              },
+              "owner": {
+                "bundle_id": "adj.math.arithmetic.proportion.zero_second.query.v1",
+                "kind": "query"
+              },
+              "owner_source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09",
+              "owner_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+              "schema_version": 3,
+              "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+              "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7"
+            },
+            "quote": {
+              "byte_len": 16,
+              "byte_offset": 0,
+              "reason": null,
+              "status": "verified"
+            }
+          }
+        ],
+        "passed": true
+      }
+    },
+    {
+      "comparison": {
+        "observed": {
+          "exact_rational": {
+            "denominator": "1",
+            "numerator": "0"
+          },
+          "f64_bits": "0000000000000000"
+        },
+        "operator": "not_equal",
+        "threshold": {
+          "exact_rational": {
+            "denominator": "1",
+            "numerator": "0"
+          },
+          "f64_bits": "0000000000000000"
+        }
+      },
+      "formula": {
+        "body": {
+          "end": 4727,
+          "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+          "start": 4673
+        },
+        "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+        "claim_id": "adj.math.arithmetic.proportion",
+        "declaration": {
+          "end": 5240,
+          "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+          "start": 4606
+        },
+        "formula": "fourth_proportional",
+        "formulabook": "proportions",
+        "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+        "parameters": [
+          "first_term",
+          "second_term",
+          "third_term"
+        ],
+        "preconditions": [
+          {
+            "arguments": [
+              {
+                "end": 4763,
+                "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                "start": 4753
+              }
+            ],
+            "declaration": {
+              "end": 4764,
+              "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+              "start": 4745
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4785,
+                "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                "start": 4774
+              }
+            ],
+            "declaration": {
+              "end": 4786,
+              "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+              "start": 4766
+            },
+            "predicate": "nonzero"
+          },
+          {
+            "arguments": [
+              {
+                "end": 4806,
+                "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                "start": 4796
+              }
+            ],
+            "declaration": {
+              "end": 4807,
+              "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+              "start": 4788
+            },
+            "predicate": "nonzero"
+          }
+        ],
+        "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+        "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+        "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+      },
+      "inputs": [
+        {
+          "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+          "identity": {
+            "provenance": {
+              "corroborations": [],
+              "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+              "quote": {
+                "byte_len": 17,
+                "byte_offset": 69,
+                "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+                "text_sha256": "368d2632ca2b9faaf432f8c1362ab0856b7fc28337939f3b8d050738f5812ad9"
+              },
+              "source": "proportion input fixture",
+              "trust": "authoritative"
+            },
+            "term": "second_term(0)"
+          },
+          "observation": {
+            "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+            "span": {
+              "end": 596,
+              "sha256": "301dd912470b24228b64e39d32d21b920a2cdd1cec5d06e2d4b63b7a6cdcc073",
+              "start": 309
+            }
+          },
+          "owner": {
+            "bundle_id": "adj.math.arithmetic.proportion.zero_second.query.v1",
+            "kind": "query"
+          },
+          "owner_source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09",
+          "owner_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+          "schema_version": 3,
+          "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+          "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7"
+        }
+      ],
+      "outcome": "failed",
+      "plan": {
+        "expression": {
+          "kind": "reference",
+          "name": "second_term"
+        },
+        "is_query_answer": false,
+        "scope": {
+          "derived_limit": 0,
+          "fact_limit": 3
+        }
+      },
+      "precondition": {
+        "arguments": [
+          {
+            "end": 4785,
+            "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+            "start": 4774
+          }
+        ],
+        "declaration": {
+          "end": 4786,
+          "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+          "start": 4766
+        },
+        "index": 1,
+        "parameter": "second_term",
+        "predicate": "nonzero"
+      },
+      "tree": {
+        "f64_bits": "0000000000000000",
+        "fact": {
+          "provenance": {
+            "corroborations": [],
+            "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+            "quote": {
+              "byte_len": 17,
+              "byte_offset": 69,
+              "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+              "text_sha256": "368d2632ca2b9faaf432f8c1362ab0856b7fc28337939f3b8d050738f5812ad9"
+            },
+            "source": "proportion input fixture",
+            "trust": "authoritative"
+          },
+          "term": "second_term(0)"
+        },
+        "kind": "leaf",
+        "slot": "second_term"
+      },
+      "verification": {
+        "computation": {
+          "reason": null,
+          "recomputed_f64_bits": null,
+          "recorded_f64_bits": null,
+          "status": "rechecked"
+        },
+        "formula_quote": {
+          "identity": {
+            "body": {
+              "end": 4727,
+              "sha256": "d229d6fe3354e29cbf9a0ce8184408bee88eb4e15d6cba0b125f63a6e6fd5eb1",
+              "start": 4673
+            },
+            "bundle_sha256": "7c65b970a4544e023e0d21ae4c968d72f2f388f95a1d80706105b9a81bd58fa6",
+            "claim_id": "adj.math.arithmetic.proportion",
+            "declaration": {
+              "end": 5240,
+              "sha256": "c0322863513ab52bc7de68f2e179f971724c0eedd7f4bb4bdb3b6c93728a33db",
+              "start": 4606
+            },
+            "formula": "fourth_proportional",
+            "formulabook": "proportions",
+            "inventory_sha256": "ffb93a4776827bd1e98c18e62270054e40633f63372722c6ae85e7059ebc9b75",
+            "parameters": [
+              "first_term",
+              "second_term",
+              "third_term"
+            ],
+            "preconditions": [
+              {
+                "arguments": [
+                  {
+                    "end": 4763,
+                    "sha256": "2f534c234941be1bb48d6b4979893adbefafa735f1d77b007bf7dac895ae145c",
+                    "start": 4753
+                  }
+                ],
+                "declaration": {
+                  "end": 4764,
+                  "sha256": "63a0092cdf0657b8a81a8ef1c6bf0c78c525a41a0b5864484c0985fbec9c1f9d",
+                  "start": 4745
+                },
+                "predicate": "nonzero"
+              },
+              {
+                "arguments": [
+                  {
+                    "end": 4785,
+                    "sha256": "8d9afa4c918528344f55cbc6b9ecbe9afb88caf8e3856037217fb37dd3b72b42",
+                    "start": 4774
+                  }
+                ],
+                "declaration": {
+                  "end": 4786,
+                  "sha256": "9ffa7cb956c742eab800ebc4cedf905779726fc6d4b3c0ebb664495419229913",
+                  "start": 4766
+                },
+                "predicate": "nonzero"
+              },
+              {
+                "arguments": [
+                  {
+                    "end": 4806,
+                    "sha256": "082747aa89a60456eb7275cb34a64f666f9415e681fe65bed8d4e11338786864",
+                    "start": 4796
+                  }
+                ],
+                "declaration": {
+                  "end": 4807,
+                  "sha256": "2746bbe416388bf50f7155d18f1727bdda528de1799687810ae6ba9d9d931962",
+                  "start": 4788
+                },
+                "predicate": "nonzero"
+              }
+            ],
+            "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+            "source_ir_sha256": "d0598b00c4de70125c2fa1ac0ad7c23755e998a94549901bf62d026ebb3b85b6",
+            "source_sha256": "240a6770f12f43035b9ba1f9118df50cb66d10b9d10a157524a4f03d65c64a76"
+          },
+          "provenance": {
+            "corroborations": [],
+            "locator": "https://openstax.org/books/prealgebra-2e/pages/6-5-solve-proportions-and-their-applications",
+            "quote": {
+              "byte_len": 92,
+              "byte_offset": 0,
+              "snapshot_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851",
+              "text_sha256": "6460a9d15d0fdf0c4b8022a55924257838aede6fbb470adb38af8e4ab836a851"
+            },
+            "source": "For any proportion of the form (a/b)=(c/d), where b\u22600,d\u22600, its cross products are equal.",
+            "trust": "inferred"
+          },
+          "quote": {
+            "byte_len": 92,
+            "byte_offset": 0,
+            "reason": null,
+            "status": "verified"
+          }
+        },
+        "fully_verified": true,
+        "input_quotes": [
+          {
+            "identity": {
+              "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+              "identity": {
+                "provenance": {
+                  "corroborations": [],
+                  "locator": "repo://code/specs/data/adj-stdlib-provenance/fixtures/proportion-inputs.txt",
+                  "quote": {
+                    "byte_len": 17,
+                    "byte_offset": 69,
+                    "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+                    "text_sha256": "368d2632ca2b9faaf432f8c1362ab0856b7fc28337939f3b8d050738f5812ad9"
+                  },
+                  "source": "proportion input fixture",
+                  "trust": "authoritative"
+                },
+                "term": "second_term(0)"
+              },
+              "observation": {
+                "claim_id": "adj.input.arithmetic.proportion.second_term.0",
+                "span": {
+                  "end": 596,
+                  "sha256": "301dd912470b24228b64e39d32d21b920a2cdd1cec5d06e2d4b63b7a6cdcc073",
+                  "start": 309
+                }
+              },
+              "owner": {
+                "bundle_id": "adj.math.arithmetic.proportion.zero_second.query.v1",
+                "kind": "query"
+              },
+              "owner_source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09",
+              "owner_source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc",
+              "schema_version": 3,
+              "snapshot_sha256": "b68d08d0f11dc65522ec6f32c02a535a82bb8ce548596b839e259979208d0638",
+              "source_ir_sha256": "08e712863dac692b2f4a8a913ad0b6973cdbe54321d9634dd7605474620620f7"
+            },
+            "quote": {
+              "byte_len": 17,
+              "byte_offset": 69,
+              "reason": null,
+              "status": "verified"
+            }
+          }
+        ],
+        "passed": true
+      }
+    }
+  ],
+  "kind": "execution_witness",
+  "question": {
+    "claim_id": "adj.question.arithmetic.proportion.compute",
+    "declaration": {
+      "end": 940,
+      "sha256": "3c1d96048228e8d1816a748ad1f2d7f836ca8120f2ab1714967f5f1a6366de54",
+      "start": 882
+    },
+    "name": "fourth_proportional",
+    "source_ir_sha256": "9a4ab2fa3a884bef6e69373427c95f6e1a3dad6c0ef08f2ea90402a85db9ae09",
+    "source_sha256": "a9608d7eec075f841d0c82e3e010c38db724c0d9149f8ef20ea1bc8e2d1913fc"
+  },
+  "schema_version": 2
+}

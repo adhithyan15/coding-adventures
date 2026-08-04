@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import base64
 import binascii
+import copy
 import ctypes
 import hashlib
 import html
@@ -21,6 +22,7 @@ import re
 import selectors
 import signal
 import stat
+import struct
 import subprocess
 import sys
 import tempfile
@@ -30,6 +32,7 @@ import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, replace
 from datetime import datetime
+from fractions import Fraction
 from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlparse
@@ -894,11 +897,15 @@ def _validate_formula_inventory_value(
         "source_size",
     }:
         raise ProvenanceError("formula parser inventory has unknown or missing fields")
+    contract = (value.get("parser_contract"), value.get("schema_version"))
     if (
         value["kind"] != "formula_parser_inventory"
-        or value["parser_contract"] != "adj-lang/formula_source_map/v1"
+        or contract
+        not in {
+            ("adj-lang/formula_source_map/v1", 1),
+            ("adj-lang/formula_source_map/v2", 2),
+        }
         or not _is_integer(value["schema_version"])
-        or value["schema_version"] != 1
         or value["scope"] != "source_file"
         or _require_hash(
             value["source_sha256"], "formula parser inventory source_sha256"
@@ -915,15 +922,23 @@ def _validate_formula_inventory_value(
         raise ProvenanceError("formula parser inventory formulas must be an array")
     previous_end = 0
     seen_names: set[str] = set()
+    guarded = False
     for index, formula in enumerate(formulas):
         prefix = f"formula parser inventory formulas[{index}]"
-        if not isinstance(formula, dict) or set(formula) != {
+        base_fields = {
             "body",
             "declaration",
             "formula",
             "formulabook",
             "parameters",
             "step_count",
+        }
+        allowed_fields = base_fields | (
+            {"preconditions"} if contract[1] == 2 else set()
+        )
+        if not isinstance(formula, dict) or frozenset(formula) not in {
+            frozenset(base_fields),
+            frozenset(allowed_fields),
         }:
             raise ProvenanceError(f"{prefix} has unknown or missing fields")
         formula_name = _require_nonempty(formula["formula"], f"{prefix}.formula")
@@ -971,6 +986,86 @@ def _validate_formula_inventory_value(
                 f"{prefix} body/declaration containment or parser order disagrees"
             )
         previous_end = declaration_end
+        preconditions = formula.get("preconditions", [])
+        if not isinstance(preconditions, list):
+            raise ProvenanceError(f"{prefix}.preconditions must be an array")
+        if "preconditions" in formula and not preconditions:
+            raise ProvenanceError(
+                f"{prefix}.preconditions must not be empty when present"
+            )
+        guarded = guarded or bool(preconditions)
+        previous_precondition_end = body_end
+        for precondition_index, precondition in enumerate(preconditions):
+            condition_prefix = (
+                f"{prefix}.preconditions[{precondition_index}]"
+            )
+            if not isinstance(precondition, dict) or set(precondition) != {
+                "arguments",
+                "declaration",
+                "predicate",
+            }:
+                raise ProvenanceError(
+                    f"{condition_prefix} has unknown or missing fields"
+                )
+            _require_nonempty(
+                precondition["predicate"], f"{condition_prefix}.predicate"
+            )
+            declaration = precondition["declaration"]
+            if not isinstance(declaration, dict) or set(declaration) != {
+                "end",
+                "sha256",
+                "start",
+            }:
+                raise ProvenanceError(
+                    f"{condition_prefix}.declaration has the wrong schema"
+                )
+            condition_start = declaration["start"]
+            condition_end = declaration["end"]
+            if (
+                not _is_integer(condition_start)
+                or not _is_integer(condition_end)
+                or condition_start < previous_precondition_end
+                or condition_end <= condition_start
+                or condition_end > declaration_end
+                or _require_hash(
+                    declaration["sha256"],
+                    f"{condition_prefix}.declaration.sha256",
+                )
+                != sha256_bytes(source[condition_start:condition_end])
+            ):
+                raise ProvenanceError(
+                    f"{condition_prefix}.declaration byte span disagrees"
+                )
+            arguments = precondition["arguments"]
+            if not isinstance(arguments, list):
+                raise ProvenanceError(f"{condition_prefix}.arguments must be an array")
+            for argument_index, argument in enumerate(arguments):
+                argument_prefix = (
+                    f"{condition_prefix}.arguments[{argument_index}]"
+                )
+                if not isinstance(argument, dict) or set(argument) != {
+                    "end",
+                    "sha256",
+                    "start",
+                }:
+                    raise ProvenanceError(f"{argument_prefix} has the wrong schema")
+                argument_start = argument["start"]
+                argument_end = argument["end"]
+                if (
+                    not _is_integer(argument_start)
+                    or not _is_integer(argument_end)
+                    or argument_start < condition_start
+                    or argument_end <= argument_start
+                    or argument_end > condition_end
+                    or _require_hash(
+                        argument["sha256"], f"{argument_prefix}.sha256"
+                    )
+                    != sha256_bytes(source[argument_start:argument_end])
+                ):
+                    raise ProvenanceError(f"{argument_prefix} byte span disagrees")
+            previous_precondition_end = condition_end
+    if contract[1] == 2 and not guarded:
+        raise ProvenanceError("formula parser inventory v2 must contain a precondition")
 
 
 def put_formula_parser_inventory(
@@ -2807,20 +2902,28 @@ def _materialize_formula_audit(
             ["--snapshots", os.fspath(snapshots), os.fspath(query_path)],
             label="formula audit",
         )
-    if set(audit) != {
+    if not isinstance(audit, dict):
+        raise ProvenanceError("formula audit contract or query binding disagrees")
+    contract = (audit.get("contract"), audit.get("schema_version"))
+    collection = {
+        ("adj-lang/formula_audit/v1", 1): "derivations",
+        ("adj-lang/formula_audit/v2", 2): "executions",
+    }.get(contract)
+    expected_fields = {
         "contract",
-        "derivations",
+        collection,
         "imports",
         "kind",
         "root_source_sha256",
         "schema_version",
-    } or (
-        audit["contract"] != "adj-lang/formula_audit/v1"
+    }
+    if (
+        collection is None
+        or set(audit) != expected_fields
         or audit["kind"] != "formula_execution_audit"
-        or audit["schema_version"] != 1
         or audit["root_source_sha256"]
         != query_bundle["input"]["raw_source_sha256"]
-        or not isinstance(audit["derivations"], list)
+        or not isinstance(audit[collection], list)
         or not isinstance(audit["imports"], list)
     ):
         raise ProvenanceError("formula audit contract or query binding disagrees")
@@ -2864,13 +2967,17 @@ def _formula_reference(
     identity: Any,
     formula_bundles: list[tuple[str, dict[str, Any]]],
 ) -> tuple[dict[str, Any], set[str]]:
-    if not isinstance(identity, dict) or set(identity) != {
+    base_fields = {
         "body",
         "declaration",
         "formulabook",
         "name",
         "parameters",
         "source_sha256",
+    }
+    if not isinstance(identity, dict) or frozenset(identity) not in {
+        frozenset(base_fields),
+        frozenset(base_fields | {"preconditions"}),
     }:
         raise ProvenanceError("formula audit export identity has the wrong schema")
     source_hash = _require_hash(identity["source_sha256"], "formula identity source")
@@ -2887,6 +2994,8 @@ def _formula_reference(
                 and formula["formulabook"] == identity["formulabook"]
                 and formula["formula"] == identity["name"]
                 and formula["parameters"] == identity["parameters"]
+                and formula.get("preconditions", [])
+                == identity.get("preconditions", [])
             ):
                 matches.append((bundle_hash, bundle, inventory_hash, formula))
     if len(matches) != 1:
@@ -2913,6 +3022,8 @@ def _formula_reference(
         "source_ir_sha256": source_ir_hash,
         "source_sha256": source_hash,
     }
+    if identity.get("preconditions"):
+        reference["preconditions"] = identity["preconditions"]
     return reference, {
         bundle_hash,
         inventory_hash,
@@ -2996,8 +3107,14 @@ def _input_reference(
     execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
     identity: Any,
     *,
+    cas: Cas | None = None,
     legacy: bool = False,
+    schema_version: int = 2,
 ) -> tuple[dict[str, Any], set[str]]:
+    if legacy and schema_version != 2:
+        raise ProvenanceError("legacy formula input reference version is ambiguous")
+    if schema_version not in {2, 3}:
+        raise ProvenanceError("formula input reference version is unsupported")
     if not isinstance(identity, dict) or set(identity) != {"provenance", "term"}:
         raise ProvenanceError("formula audit input identity has the wrong schema")
     provenance = identity["provenance"]
@@ -3059,14 +3176,89 @@ def _input_reference(
         "owner": owner,
         "owner_source_ir_sha256": source_ir_hash,
         "owner_source_sha256": source_hash,
-        "schema_version": 2,
+        "schema_version": schema_version,
         "snapshot_sha256": snapshot_hash,
         "source_ir_sha256": snapshot_ir_hash,
     }
+    if schema_version == 3:
+        if cas is None:
+            raise ProvenanceError("formula input reference v3 requires CAS validation")
+        input_claim = clause.get("input_claim")
+        if not isinstance(input_claim, dict) or set(input_claim) != {
+            "end",
+            "quote",
+            "quote_sha256",
+            "start",
+        }:
+            raise ProvenanceError("formula input observation has the wrong schema")
+        owner_ir = _validate_source_ir(cas, source_ir_hash, source_hash)
+        expected_claim = _claims_by_id(owner_ir).get(clause["claim_id"])
+        if expected_claim != {
+            "claim_id": clause["claim_id"],
+            **input_claim,
+        }:
+            raise ProvenanceError(
+                "formula input observation disagrees with its owner source IR"
+            )
+        observed_slot, _observed_value = _observed_numeric_term(identity["term"])
+        source_term = _observed_numeric_term(
+            _observation_claim_term(expected_claim["quote"])
+        )
+        if source_term[0] != observed_slot:
+            raise ProvenanceError(
+                "formula audit input slot disagrees with observation bytes"
+            )
+        reference["observation"] = {
+            "claim_id": clause["claim_id"],
+            "span": {
+                "end": input_claim["end"],
+                "sha256": input_claim["quote_sha256"],
+                "start": input_claim["start"],
+            },
+        }
     return reference, links
 
 
-def _normalized_formula_evidence(
+def _migration_project_formula_plan_v1(plan: Any) -> Any:
+    """Freeze the formula-audit/v1 literal shape for byte-compatible replay."""
+
+    projected = copy.deepcopy(plan)
+
+    def visit(expression: Any) -> None:
+        if not isinstance(expression, dict):
+            return
+        if expression.get("kind") == "exact_literal":
+            expression.pop("exact_rational", None)
+            expression["kind"] = "literal"
+        for key in ("left", "right", "expression"):
+            visit(expression.get(key))
+
+    if isinstance(projected, dict):
+        visit(projected.get("expression"))
+    return projected
+
+
+def _validate_formula_plan_v1(plan: Any) -> dict[str, Any]:
+    projected = copy.deepcopy(plan)
+
+    def visit(expression: Any) -> None:
+        if not isinstance(expression, dict):
+            raise ProvenanceError("formula audit v1 plan expression is malformed")
+        if expression.get("kind") == "exact_literal":
+            raise ProvenanceError("formula audit v1 forbids exact_literal plan nodes")
+        for key in ("left", "right", "expression"):
+            if key in expression:
+                visit(expression[key])
+
+    if not isinstance(projected, dict) or not isinstance(
+        projected.get("expression"), dict
+    ):
+        raise ProvenanceError("formula audit v1 plan is malformed")
+    visit(projected["expression"])
+    return projected
+
+
+def _normalized_formula_evidence_v1(
     cas: Cas,
     query_bundle: dict[str, Any],
     audit: dict[str, Any],
@@ -3074,6 +3266,15 @@ def _normalized_formula_evidence(
     legacy_input_references: bool = False,
 ) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
     by_source, formula_bundles = _execution_graph(cas, query_bundle)
+    for _bundle_hash, bundle in formula_bundles:
+        inventory = _json_object(
+            cas, bundle["formula_inventory_sha256"], "formula_parser_inventory"
+        )
+        if any(formula.get("preconditions") for formula in inventory["formulas"]):
+            raise ProvenanceError(
+                "guarded formula execution evidence requires a versioned "
+                "precondition witness contract"
+            )
     imports: list[dict[str, Any]] = []
     import_links: set[str] = set()
     for item in audit["imports"]:
@@ -3218,7 +3419,7 @@ def _normalized_formula_evidence(
             "formula_sequence": sequence,
             "imports": imports,
             "kind": "formula_derivation",
-            "plan": item["plan"],
+            "plan": _validate_formula_plan_v1(item["plan"]),
             "question": question,
             "schema_version": 1,
         }
@@ -3252,6 +3453,8 @@ def _normalized_formula_evidence(
             "parameters": formula["parameters"],
             "source_sha256": inventory["source_sha256"],
         }
+        if formula.get("preconditions"):
+            identity["preconditions"] = formula["preconditions"]
         reference, _links = _formula_reference(cas, identity, formula_bundles)
         if reference["bundle_sha256"] != direct_bundle_hash or reference["inventory_sha256"] != inventory_hash:
             raise ProvenanceError("direct parser export resolves outside its formula bundle")
@@ -3259,6 +3462,734 @@ def _normalized_formula_evidence(
     if sorted(direct_refs) != sorted(seen_exports):
         raise ProvenanceError("parsed exports and replayed derivations disagree")
     return normalized
+
+
+def _normalized_formula_imports(
+    cas: Cas,
+    by_source: dict[str, tuple[str | None, dict[str, Any]]],
+    audit: dict[str, Any],
+) -> tuple[list[dict[str, Any]], set[str]]:
+    imports: list[dict[str, Any]] = []
+    links: set[str] = set()
+    for item in audit["imports"]:
+        if not isinstance(item, dict) or set(item) != {
+            "declaration",
+            "imported_source_sha256",
+            "importer_source_sha256",
+            "literal",
+        }:
+            raise ProvenanceError("formula audit import has the wrong schema")
+        importer = by_source.get(item["importer_source_sha256"])
+        imported = by_source.get(item["imported_source_sha256"])
+        if importer is None or imported is None or imported[0] is None:
+            raise ProvenanceError("formula audit import escapes the CAS bundle graph")
+        if imported[0] not in importer[1]["dependencies"]:
+            raise ProvenanceError("formula audit import is not a direct CAS dependency")
+        importer_ir = importer[1]["input"]["source_ir_sha256"]
+        claim_id, _claim = _enclosing_claim(
+            cas,
+            item["importer_source_sha256"],
+            importer_ir,
+            item["declaration"],
+            "formula import",
+        )
+        imports.append(
+            {
+                **item,
+                "claim_id": claim_id,
+                "imported_bundle_sha256": imported[0],
+                "importer_source_ir_sha256": importer_ir,
+            }
+        )
+        links.update(
+            {
+                item["importer_source_sha256"],
+                importer_ir,
+                item["imported_source_sha256"],
+                imported[1]["input"]["source_ir_sha256"],
+                imported[0],
+            }
+        )
+    imports.sort(
+        key=lambda item: (
+            item["importer_source_sha256"],
+            item["declaration"]["start"],
+        )
+    )
+    return imports, links
+
+
+def _canonical_rational(value: Any, label: str) -> Fraction:
+    if not isinstance(value, dict) or set(value) != {"denominator", "numerator"}:
+        raise ProvenanceError(f"{label} exact rational has the wrong schema")
+    numerator = value["numerator"]
+    denominator = value["denominator"]
+    if (
+        not isinstance(numerator, str)
+        or re.fullmatch(r"-?(0|[1-9][0-9]*)", numerator) is None
+        or not isinstance(denominator, str)
+        or re.fullmatch(r"[1-9][0-9]*", denominator) is None
+    ):
+        raise ProvenanceError(f"{label} exact rational is malformed")
+    fraction = Fraction(int(numerator), int(denominator))
+    if (
+        str(fraction.numerator) != numerator
+        or str(fraction.denominator) != denominator
+    ):
+        raise ProvenanceError(f"{label} exact rational is not canonical")
+    return fraction
+
+
+_NUMERIC_LITERAL_PATTERN = (
+    r"-?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][+-]?[0-9]+)?"
+)
+
+
+def _observed_numeric_term(term: Any) -> tuple[str, Fraction]:
+    if not isinstance(term, str):
+        raise ProvenanceError("formula audit input term is not a string")
+    match = re.fullmatch(
+        rf"[ \t\r\n]*([A-Za-z_][A-Za-z0-9_]*)[ \t\r\n]*"
+        rf"\([ \t\r\n]*({_NUMERIC_LITERAL_PATTERN})[ \t\r\n]*\)[ \t\r\n]*",
+        term,
+    )
+    if match is None:
+        raise ProvenanceError("formula audit input is not one direct numeric observation")
+    try:
+        return match.group(1), Fraction(match.group(2))
+    except (ValueError, ZeroDivisionError) as error:
+        raise ProvenanceError("formula audit input numeric term is malformed") from error
+
+
+def _observation_claim_term(quote: Any) -> str:
+    if not isinstance(quote, str):
+        raise ProvenanceError("formula input observation quote is not text")
+    match = re.match(
+        rf"[ \t\r\n]*observe[ \t\r\n]+"
+        rf"([A-Za-z_][A-Za-z0-9_]*[ \t\r\n]*"
+        rf"\([ \t\r\n]*{_NUMERIC_LITERAL_PATTERN}[ \t\r\n]*\))"
+        rf"(?=[ \t\r\n]|$)",
+        quote,
+    )
+    if match is None:
+        raise ProvenanceError(
+            "formula input observation claim does not begin with one observed term"
+        )
+    return match.group(1)
+
+
+def _input_reference_numeric_term(
+    cas: Cas, reference: dict[str, Any]
+) -> tuple[str, Fraction]:
+    """Read the authoritative numeric term from a v3 input's owner bytes."""
+
+    owner_ir = _validate_source_ir(
+        cas,
+        reference["owner_source_ir_sha256"],
+        reference["owner_source_sha256"],
+    )
+    claim = _claims_by_id(owner_ir).get(reference["observation"]["claim_id"])
+    if claim is None:
+        raise ProvenanceError("formula input observation is absent from its owner IR")
+    return _observed_numeric_term(_observation_claim_term(claim["quote"]))
+
+
+def _exact_value(value: Any, label: str) -> tuple[Fraction, str]:
+    if not isinstance(value, dict) or set(value) != {"exact_rational", "f64_bits"}:
+        raise ProvenanceError(f"{label} exact value has the wrong schema")
+    fraction = _canonical_rational(value["exact_rational"], label)
+    bits = value["f64_bits"]
+    if not isinstance(bits, str) or re.fullmatch(r"[0-9a-f]{16}", bits) is None:
+        raise ProvenanceError(f"{label} f64 bits are malformed")
+    try:
+        expected_bits = struct.pack(">d", float(fraction)).hex()
+    except OverflowError as error:
+        raise ProvenanceError(f"{label} exact rational exceeds f64") from error
+    if bits != expected_bits:
+        raise ProvenanceError(f"{label} exact rational and f64 bits disagree")
+    return fraction, bits
+
+
+def _tree_fact_identities(tree: Any, label: str) -> list[dict[str, Any]]:
+    if not isinstance(tree, dict):
+        raise ProvenanceError(f"{label} tree is malformed")
+    if tree.get("kind") == "leaf":
+        fact = tree.get("fact")
+        if not isinstance(fact, dict):
+            raise ProvenanceError(f"{label} leaf has no fact identity")
+        return [fact]
+    identities: list[dict[str, Any]] = []
+    for key in ("operands",):
+        children = tree.get(key)
+        if isinstance(children, list):
+            for child in children:
+                identities.extend(_tree_fact_identities(child, label))
+    for key in ("operand",):
+        child = tree.get(key)
+        if isinstance(child, dict):
+            identities.extend(_tree_fact_identities(child, label))
+    return identities
+
+
+def _normalized_formula_verification_v2(
+    cas: Cas,
+    verification: Any,
+    formula_bundles: list[tuple[str, dict[str, Any]]],
+    execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
+    expected_formulas: list[dict[str, Any]],
+    expected_inputs: list[dict[str, Any]],
+    *,
+    is_query_answer: bool,
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(verification, dict) or set(verification) != {
+        "computation",
+        "formula_quotes",
+        "fully_verified",
+        "input_quotes",
+        "is_query_answer",
+        "passed",
+    }:
+        raise ProvenanceError("formula audit verification has the wrong schema")
+    if (
+        verification["fully_verified"] is not True
+        or verification["passed"] is not True
+        or verification["is_query_answer"] is not is_query_answer
+        or verification["computation"]
+        != {
+            "reason": None,
+            "recomputed_f64_bits": None,
+            "recorded_f64_bits": None,
+            "status": "rechecked",
+        }
+    ):
+        raise ProvenanceError("formula audit computation is not fully verified")
+    formula_checks = verification["formula_quotes"]
+    input_checks = verification["input_quotes"]
+    if not isinstance(formula_checks, list) or not isinstance(input_checks, list):
+        raise ProvenanceError("formula audit verification lists are malformed")
+    normalized_formula_checks = []
+    normalized_input_checks = []
+    links: set[str] = set()
+    for check in formula_checks:
+        if not isinstance(check, dict) or set(check) != {
+            "identity",
+            "provenance",
+            "quote",
+        }:
+            raise ProvenanceError("formula audit formula quote has the wrong schema")
+        reference, reference_links = _formula_reference(
+            cas, check["identity"], formula_bundles
+        )
+        _validate_formula_check_binding(
+            cas, reference, check["provenance"], check["quote"]
+        )
+        normalized_formula_checks.append(
+            {
+                "identity": reference,
+                "provenance": check["provenance"],
+                "quote": check["quote"],
+            }
+        )
+        links.update(reference_links)
+    for check in input_checks:
+        if not isinstance(check, dict) or set(check) != {"identity", "quote"}:
+            raise ProvenanceError("formula audit input quote has the wrong schema")
+        reference, reference_links = _input_reference(
+            execution_bundles, check["identity"], cas=cas, schema_version=3
+        )
+        quote = reference["identity"]["provenance"]["quote"]
+        if check["quote"] != {
+            "byte_len": quote["byte_len"],
+            "byte_offset": quote["byte_offset"],
+            "reason": None,
+            "status": "verified",
+        }:
+            raise ProvenanceError(
+                "formula audit input quote status disagrees with its identity"
+            )
+        normalized_input_checks.append(
+            {"identity": reference, "quote": check["quote"]}
+        )
+        links.update(reference_links)
+    if [check["identity"] for check in normalized_formula_checks] != expected_formulas:
+        raise ProvenanceError("formula audit formula statuses disagree with execution")
+    if [check["identity"] for check in normalized_input_checks] != expected_inputs:
+        raise ProvenanceError("formula audit input statuses disagree with consumed inputs")
+    return {
+        **verification,
+        "formula_quotes": normalized_formula_checks,
+        "input_quotes": normalized_input_checks,
+    }, links
+
+
+def _normalized_guard_verification_v2(
+    cas: Cas,
+    verification: Any,
+    formula_bundles: list[tuple[str, dict[str, Any]]],
+    execution_bundles: Iterable[tuple[str | None, dict[str, Any]]],
+    expected_formula: dict[str, Any],
+    expected_inputs: list[dict[str, Any]],
+) -> tuple[dict[str, Any], set[str]]:
+    if not isinstance(verification, dict) or set(verification) != {
+        "computation",
+        "formula_quote",
+        "fully_verified",
+        "input_quotes",
+        "passed",
+    }:
+        raise ProvenanceError("formula audit guard verification has the wrong schema")
+    if (
+        verification["fully_verified"] is not True
+        or verification["passed"] is not True
+        or verification["computation"]
+        != {
+            "reason": None,
+            "recomputed_f64_bits": None,
+            "recorded_f64_bits": None,
+            "status": "rechecked",
+        }
+    ):
+        raise ProvenanceError("formula audit guard is not fully verified")
+    formula_check = verification["formula_quote"]
+    if not isinstance(formula_check, dict) or set(formula_check) != {
+        "identity",
+        "provenance",
+        "quote",
+    }:
+        raise ProvenanceError("formula audit guard formula quote has the wrong schema")
+    formula_reference, links = _formula_reference(
+        cas, formula_check["identity"], formula_bundles
+    )
+    _validate_formula_check_binding(
+        cas,
+        formula_reference,
+        formula_check["provenance"],
+        formula_check["quote"],
+    )
+    if formula_reference != expected_formula:
+        raise ProvenanceError("formula audit guard formula quote disagrees with its guard")
+    input_checks = verification["input_quotes"]
+    if not isinstance(input_checks, list):
+        raise ProvenanceError("formula audit guard input quotes are malformed")
+    normalized_input_checks = []
+    for check in input_checks:
+        if not isinstance(check, dict) or set(check) != {"identity", "quote"}:
+            raise ProvenanceError("formula audit guard input quote has the wrong schema")
+        reference, input_links = _input_reference(
+            execution_bundles,
+            check["identity"],
+            cas=cas,
+            schema_version=3,
+        )
+        quote = reference["identity"]["provenance"]["quote"]
+        if check["quote"] != {
+            "byte_len": quote["byte_len"],
+            "byte_offset": quote["byte_offset"],
+            "reason": None,
+            "status": "verified",
+        }:
+            raise ProvenanceError(
+                "formula audit guard input quote status disagrees with its identity"
+            )
+        normalized_input_checks.append(
+            {"identity": reference, "quote": check["quote"]}
+        )
+        links.update(input_links)
+    if [check["identity"] for check in normalized_input_checks] != expected_inputs:
+        raise ProvenanceError("formula audit guard input statuses disagree with consumed inputs")
+    return {
+        **verification,
+        "formula_quote": {
+            "identity": formula_reference,
+            "provenance": formula_check["provenance"],
+            "quote": formula_check["quote"],
+        },
+        "input_quotes": normalized_input_checks,
+    }, links
+
+
+def _normalized_formula_evidence_v2(
+    cas: Cas, query_bundle: dict[str, Any], audit: dict[str, Any]
+) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
+    by_source, formula_bundles = _execution_graph(cas, query_bundle)
+    imports, import_links = _normalized_formula_imports(cas, by_source, audit)
+    execution_bundles = list(by_source.values())
+    normalized = []
+    seen_exports: set[bytes] = set()
+    for item in audit["executions"]:
+        if not isinstance(item, dict) or set(item) != {
+            "body",
+            "export",
+            "formula_sequence",
+            "guards",
+            "question",
+        }:
+            raise ProvenanceError("formula audit v2 execution has the wrong schema")
+        export, export_links = _formula_reference(cas, item["export"], formula_bundles)
+        export_key = canonical_json_bytes(export)
+        if export_key in seen_exports:
+            raise ProvenanceError("formula audit repeats one export execution")
+        seen_exports.add(export_key)
+        sequence = []
+        sequence_links: set[str] = set()
+        for identity in item["formula_sequence"]:
+            reference, links = _formula_reference(cas, identity, formula_bundles)
+            sequence.append(reference)
+            sequence_links.update(links)
+        if not sequence or sequence[0] != export:
+            raise ProvenanceError("formula audit sequence does not begin with its export")
+        question, question_links = _question_reference(
+            cas, query_bundle, item["question"]
+        )
+        expected_guards = [
+            (formula, index, precondition)
+            for formula in sequence
+            for index, precondition in enumerate(formula.get("preconditions", []))
+        ]
+        guards = item["guards"]
+        if not isinstance(guards, list) or len(guards) > len(expected_guards):
+            raise ProvenanceError("formula audit guards disagree with parser order")
+        normalized_guards = []
+        guard_plan = []
+        guard_links: set[str] = set()
+        consumed_guard_inputs: set[bytes] = set()
+        failed = False
+        for position, guard in enumerate(guards):
+            expected_formula, expected_index, expected_precondition = expected_guards[
+                position
+            ]
+            if not isinstance(guard, dict):
+                raise ProvenanceError(f"formula audit guard {position} is malformed")
+            outcome = guard.get("outcome")
+            evaluated_fields = {
+                "comparison",
+                "formula",
+                "inputs",
+                "outcome",
+                "plan",
+                "precondition",
+                "tree",
+                "verification",
+            }
+            if outcome not in {"passed", "failed"} or set(guard) != evaluated_fields:
+                raise ProvenanceError(f"formula audit guard {position} has the wrong schema")
+            if failed:
+                raise ProvenanceError("formula audit guard ran after a failed guard")
+            formula, links = _formula_reference(cas, guard["formula"], formula_bundles)
+            guard_links.update(links)
+            precondition = guard["precondition"]
+            if (
+                not isinstance(precondition, dict)
+                or set(precondition)
+                != {"arguments", "declaration", "index", "parameter", "predicate"}
+                or formula != expected_formula
+                or {
+                    key: precondition[key]
+                    for key in ("arguments", "declaration", "index", "predicate")
+                }
+                != {**expected_precondition, "index": expected_index}
+            ):
+                raise ProvenanceError("formula audit guards disagree with parser order or spans")
+            if precondition["predicate"] != "nonzero" or len(
+                precondition["arguments"]
+            ) != 1:
+                raise ProvenanceError("formula audit v2 supports only direct unary nonzero guards")
+            raw_inputs = guard["inputs"]
+            if not isinstance(raw_inputs, list) or len(raw_inputs) != 1:
+                raise ProvenanceError("formula audit guard must consume one direct input")
+            input_reference, input_links = _input_reference(
+                execution_bundles, raw_inputs[0], cas=cas, schema_version=3
+            )
+            guard_links.update(input_links)
+            comparison = guard["comparison"]
+            if not isinstance(comparison, dict) or set(comparison) != {
+                "observed",
+                "operator",
+                "threshold",
+            } or comparison["operator"] != "not_equal":
+                raise ProvenanceError("formula audit guard comparison has the wrong schema")
+            observed, observed_bits = _exact_value(
+                comparison["observed"], "formula guard observed"
+            )
+            slot, _runtime_value = _observed_numeric_term(raw_inputs[0]["term"])
+            source_slot, input_value = _input_reference_numeric_term(
+                cas, input_reference
+            )
+            if source_slot != slot:
+                raise ProvenanceError(
+                    "formula audit guard slot disagrees with observation bytes"
+                )
+            if observed != input_value:
+                raise ProvenanceError(
+                    "formula audit guard value disagrees with its consumed fact"
+                )
+            threshold, threshold_bits = _exact_value(
+                comparison["threshold"], "formula guard threshold"
+            )
+            if threshold != 0 or threshold_bits != "0000000000000000":
+                raise ProvenanceError("formula audit nonzero guard threshold is not exact zero")
+            expected_outcome = "passed" if observed != 0 else "failed"
+            if outcome != expected_outcome:
+                raise ProvenanceError("formula audit guard outcome disagrees with exact comparison")
+            argument_span = precondition["arguments"][0]
+            source_bytes = _read_regular_file(cas.object_path(formula["source_sha256"]))
+            parameter = source_bytes[
+                argument_span["start"] : argument_span["end"]
+            ].decode("utf-8")
+            if precondition["parameter"] != parameter:
+                raise ProvenanceError(
+                    "formula audit guard parameter is not its direct observed argument"
+                )
+            guard_plan.append({"formula": formula, "precondition": precondition})
+            plan = guard["plan"]
+            if (
+                not isinstance(plan, dict)
+                or set(plan) != {"expression", "is_query_answer", "scope"}
+                or plan["expression"] != {"kind": "reference", "name": slot}
+                or plan["is_query_answer"] is not False
+            ):
+                raise ProvenanceError("formula audit guard is not a direct observed plan")
+            tree = guard["tree"]
+            if (
+                not isinstance(tree, dict)
+                or set(tree) != {"f64_bits", "fact", "kind", "slot"}
+                or tree["kind"] != "leaf"
+                or tree["slot"] != slot
+                or tree["fact"] != raw_inputs[0]
+                or tree["f64_bits"] != observed_bits
+            ):
+                raise ProvenanceError("formula audit guard tree is not its direct observed input")
+            verification, verification_links = _normalized_guard_verification_v2(
+                cas,
+                guard["verification"],
+                formula_bundles,
+                execution_bundles,
+                formula,
+                [input_reference],
+            )
+            guard_links.update(verification_links)
+            consumed_guard_inputs.add(canonical_json_bytes(input_reference))
+            normalized_guards.append(
+                {
+                    "comparison": comparison,
+                    "formula": formula,
+                    "inputs": [input_reference],
+                    "outcome": outcome,
+                    "plan": plan,
+                    "precondition": precondition,
+                    "tree": tree,
+                    "verification": verification,
+                }
+            )
+            failed = outcome == "failed"
+        if not failed and len(guards) != len(expected_guards):
+            raise ProvenanceError("formula audit guard prefix ended before all guards passed")
+        body = item["body"]
+        if not isinstance(body, dict) or body.get("status") not in {
+            "evaluated",
+            "withheld",
+        }:
+            raise ProvenanceError("formula audit body has the wrong schema")
+        body_links: set[str] = set()
+        if body["status"] == "evaluated":
+            if (
+                set(body) != {"derivation", "status"}
+                or failed
+                or len(guards) != len(expected_guards)
+            ):
+                raise ProvenanceError("formula audit evaluated body disagrees with guard outcomes")
+            body_derivation = body["derivation"]
+            if not isinstance(body_derivation, dict) or set(body_derivation) != {
+                "export",
+                "formula_sequence",
+                "inputs",
+                "plan",
+                "question",
+                "result",
+                "tree",
+                "verification",
+            }:
+                raise ProvenanceError("formula audit evaluated derivation has the wrong schema")
+            if (
+                body_derivation["export"] != item["export"]
+                or body_derivation["formula_sequence"] != item["formula_sequence"]
+                or body_derivation["question"] != item["question"]
+            ):
+                raise ProvenanceError("formula audit body identity disagrees with its execution")
+            raw_body_inputs = body_derivation["inputs"]
+            if not isinstance(raw_body_inputs, list):
+                raise ProvenanceError("formula audit body inputs must be an array")
+            body_inputs = []
+            for identity in raw_body_inputs:
+                reference, links = _input_reference(
+                    execution_bundles, identity, cas=cas, schema_version=3
+                )
+                body_inputs.append(reference)
+                body_links.update(links)
+            tree_inputs = {
+                canonical_json_bytes(identity)
+                for identity in _tree_fact_identities(
+                    body_derivation["tree"], "formula body"
+                )
+            }
+            if tree_inputs != {
+                canonical_json_bytes(identity) for identity in raw_body_inputs
+            }:
+                raise ProvenanceError("formula audit body tree and input set disagree")
+            if not consumed_guard_inputs.issubset(
+                {canonical_json_bytes(reference) for reference in body_inputs}
+            ):
+                raise ProvenanceError("formula audit body omits a guard-consumed input")
+            verification, links = _normalized_formula_verification_v2(
+                cas,
+                body_derivation["verification"],
+                formula_bundles,
+                execution_bundles,
+                sequence,
+                body_inputs,
+                is_query_answer=True,
+            )
+            body_links.update(links)
+            normalized_body = {
+                "derivation": {
+                    **body_derivation,
+                    "export": export,
+                    "formula_sequence": sequence,
+                    "inputs": body_inputs,
+                    "question": question,
+                    "verification": verification,
+                },
+                "status": "evaluated",
+            }
+        else:
+            if set(body) != {"reason", "status"} or body["reason"] != "precondition_failed":
+                raise ProvenanceError("formula audit abstention body has the wrong schema")
+            if not failed:
+                raise ProvenanceError("formula audit body abstained without a failed guard")
+            normalized_body = body
+        derivation = {
+            "contract": "adj-lang/formula_derivation/v2",
+            "export": export,
+            "formula_sequence": sequence,
+            "guards": guard_plan,
+            "imports": imports,
+            "kind": "formula_derivation",
+            "question": question,
+            "schema_version": 2,
+        }
+        derivation_links = export_links | sequence_links | import_links | question_links
+        witness = {
+            "body": normalized_body,
+            "contract": "adj-lang/formula_execution/v2",
+            "export": export,
+            "formula_sequence": sequence,
+            "guards": normalized_guards,
+            "kind": "execution_witness",
+            "question": question,
+            "schema_version": 2,
+        }
+        witness_links = sequence_links | question_links | guard_links | body_links
+        normalized.append((derivation, derivation_links, witness, witness_links))
+    direct_bundle_hash, inventory_hash, inventory = _direct_formula_inventory(
+        cas, query_bundle
+    )
+    direct_refs = []
+    for formula in inventory["formulas"]:
+        identity = {
+            "body": formula["body"],
+            "declaration": formula["declaration"],
+            "formulabook": formula["formulabook"],
+            "name": formula["formula"],
+            "parameters": formula["parameters"],
+            "source_sha256": inventory["source_sha256"],
+        }
+        if formula.get("preconditions"):
+            identity["preconditions"] = formula["preconditions"]
+        reference, _links = _formula_reference(cas, identity, formula_bundles)
+        if (
+            reference["bundle_sha256"] != direct_bundle_hash
+            or reference["inventory_sha256"] != inventory_hash
+        ):
+            raise ProvenanceError("direct parser export resolves outside its formula bundle")
+        direct_refs.append(canonical_json_bytes(reference))
+    if sorted(direct_refs) != sorted(seen_exports):
+        raise ProvenanceError("parsed exports and replayed executions disagree")
+    return normalized
+
+
+def _normalized_formula_evidence(
+    cas: Cas,
+    query_bundle: dict[str, Any],
+    audit: dict[str, Any],
+    *,
+    legacy_input_references: bool = False,
+) -> list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]]:
+    contract = (audit.get("contract"), audit.get("schema_version"))
+    if contract == ("adj-lang/formula_audit/v1", 1):
+        return _normalized_formula_evidence_v1(
+            cas,
+            query_bundle,
+            audit,
+            legacy_input_references=legacy_input_references,
+        )
+    if contract == ("adj-lang/formula_audit/v2", 2):
+        if legacy_input_references:
+            raise ProvenanceError("formula audit v2 forbids legacy input references")
+        return _normalized_formula_evidence_v2(cas, query_bundle, audit)
+    raise ProvenanceError("formula audit contract is unsupported")
+
+
+def _declared_v1_baseline_audit(audit: dict[str, Any]) -> dict[str, Any]:
+    """Adapt an unguarded v2 replay for an explicitly declared v1 baseline."""
+
+    if (audit.get("contract"), audit.get("schema_version")) != (
+        "adj-lang/formula_audit/v2",
+        2,
+    ):
+        raise ProvenanceError("formula audit cannot be adapted to a v1 baseline")
+    derivations = []
+    for position, execution in enumerate(audit.get("executions", [])):
+        if not isinstance(execution, dict) or set(execution) != {
+            "body",
+            "export",
+            "formula_sequence",
+            "guards",
+            "question",
+        }:
+            raise ProvenanceError(
+                f"formula audit execution {position} cannot be adapted to v1"
+            )
+        if execution["guards"] != []:
+            raise ProvenanceError("guarded formula audit cannot be adapted to v1")
+        body = execution["body"]
+        if not isinstance(body, dict) or set(body) != {"derivation", "status"}:
+            raise ProvenanceError("withheld formula body cannot be adapted to v1")
+        if body["status"] != "evaluated" or not isinstance(
+            body["derivation"], dict
+        ):
+            raise ProvenanceError("withheld formula body cannot be adapted to v1")
+        derivation = body["derivation"]
+        if (
+            derivation.get("export") != execution["export"]
+            or derivation.get("formula_sequence") != execution["formula_sequence"]
+            or derivation.get("question") != execution["question"]
+        ):
+            raise ProvenanceError(
+                "formula audit body identity cannot be adapted to v1"
+            )
+        legacy_derivation = copy.deepcopy(derivation)
+        legacy_derivation["plan"] = _migration_project_formula_plan_v1(
+            legacy_derivation["plan"]
+        )
+        derivations.append(legacy_derivation)
+    return {
+        "contract": "adj-lang/formula_audit/v1",
+        "derivations": derivations,
+        "imports": copy.deepcopy(audit["imports"]),
+        "kind": "formula_execution_audit",
+        "root_source_sha256": audit["root_source_sha256"],
+        "schema_version": 1,
+    }
 
 
 def put_formula_execution_evidence(
@@ -3313,7 +4244,6 @@ def _validate_formula_execution_evidence(
     ):
         raise ProvenanceError("formula evidence hashes must be non-empty sorted unique arrays")
     audit = _materialize_formula_audit(cas, query_bundle, audit_command)
-    expected = _normalized_formula_evidence(cas, query_bundle, audit)
 
     def expected_hashes(
         items: list[tuple[dict[str, Any], set[str], dict[str, Any], set[str]]],
@@ -3330,11 +4260,52 @@ def _validate_formula_execution_evidence(
             witnesses.append(sha256_bytes(canonical_json_bytes(normalized_witness)))
         return derivations, witnesses
 
+    stored_derivation_values = [
+        _json_object(cas, digest, "formula_derivation")
+        for digest in stored_derivations
+    ]
+    stored_witness_values = [
+        _json_object(cas, digest, "execution_witness")
+        for digest in stored_witnesses
+    ]
+    stored_versions = {
+        (value.get("contract"), value.get("schema_version"))
+        for value in stored_derivation_values + stored_witness_values
+    }
+    declared_v1 = stored_versions == {
+        ("adj-lang/formula_derivation/v1", 1),
+        ("adj-lang/formula_execution/v1", 1),
+    }
+    audit_version = audit["schema_version"]
+    if (
+        allow_migration_input_references
+        and audit_version == 2
+        and declared_v1
+    ):
+        audit = _declared_v1_baseline_audit(audit)
+        audit_version = 1
+    expected = _normalized_formula_evidence(cas, query_bundle, audit)
+    expected_contracts = (
+        f"adj-lang/formula_derivation/v{audit_version}",
+        f"adj-lang/formula_execution/v{audit_version}",
+    )
+    for value in stored_derivation_values:
+        if (value.get("contract"), value.get("schema_version")) != (
+            expected_contracts[0],
+            audit_version,
+        ):
+            raise ProvenanceError("stored formula derivation contract disagrees with audit")
+    for value in stored_witness_values:
+        if (value.get("contract"), value.get("schema_version")) != (
+            expected_contracts[1],
+            audit_version,
+        ):
+            raise ProvenanceError("stored execution witness contract disagrees with audit")
     expected_derivations, expected_witnesses = expected_hashes(expected)
     if (
         sorted(expected_derivations) != stored_derivations
         or sorted(expected_witnesses) != stored_witnesses
-    ) and allow_migration_input_references:
+    ) and allow_migration_input_references and audit_version == 1:
         expected = _normalized_formula_evidence(
             cas, query_bundle, audit, legacy_input_references=True
         )
@@ -3373,6 +4344,7 @@ def _registered_manifest(
     allow_replacements: bool = False,
     require_existing: bool = False,
     expected_current: dict[str, str] | None = None,
+    expected_absent: set[str] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     if not isinstance(registrations, dict) or not registrations:
         raise ProvenanceError("bundle registrations must be a non-empty object")
@@ -3431,6 +4403,14 @@ def _registered_manifest(
             raise ProvenanceError(
                 f"stale root replacement for {normalized_id}: expected "
                 f"{normalized_digest}, found {actual_digest or 'unregistered'}"
+            )
+
+    for bundle_id in expected_absent or set():
+        normalized_id = _require_nonempty(bundle_id, "expected absent bundle_id")
+        if normalized_id in by_id:
+            raise ProvenanceError(
+                f"stale root addition for {normalized_id}: expected unregistered, "
+                f"found {by_id[normalized_id]}"
             )
 
     for expected_id, digest_value in registrations.items():
@@ -4104,12 +5084,13 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
             "root replacement transactions require replace_roots with expected hashes"
         )
 
-    def replace_roots(self, replacements: dict[str, dict[str, str]]) -> dict[str, Any]:
+    def replace_roots(self, replacements: dict[str, dict[str, Any]]) -> dict[str, Any]:
         if not self._entered or self._committed:
             raise ProvenanceError("root replacement transaction is not open")
         if not isinstance(replacements, dict) or not replacements:
             raise ProvenanceError("root replacements must be a non-empty object")
         expected_current: dict[str, str] = {}
+        expected_absent: set[str] = set()
         new_roots: dict[str, str] = {}
         for bundle_id, replacement in replacements.items():
             normalized_id = _require_nonempty(bundle_id, "replacement bundle_id")
@@ -4121,10 +5102,14 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
                     f"replacement {normalized_id} must name expected_old_sha256 "
                     "and new_sha256"
                 )
-            expected_current[normalized_id] = _require_hash(
-                replacement["expected_old_sha256"],
-                f"replacement {normalized_id}.expected_old_sha256",
-            )
+            expected_old = replacement["expected_old_sha256"]
+            if expected_old is None:
+                expected_absent.add(normalized_id)
+            else:
+                expected_current[normalized_id] = _require_hash(
+                    expected_old,
+                    f"replacement {normalized_id}.expected_old_sha256",
+                )
             new_roots[normalized_id] = _require_hash(
                 replacement["new_sha256"],
                 f"replacement {normalized_id}.new_sha256",
@@ -4135,8 +5120,9 @@ class BundleRootReplacementTransaction(BundleRegistrationTransaction):
             new_roots,
             self.expected_manifest_id,
             allow_replacements=True,
-            require_existing=True,
+            require_existing=False,
             expected_current=expected_current,
+            expected_absent=expected_absent,
         )
         try:
             self._publish_index()

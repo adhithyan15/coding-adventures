@@ -11,6 +11,7 @@ from pathlib import Path
 import adj_stdlib_provenance as provenance
 import build_adj_arithmetic_provenance as arithmetic_builder
 import build_adj_percent_of_provenance as percent_of_builder
+import build_adj_proportion_provenance as proportion_builder
 import build_adj_ratio_provenance as ratio_builder
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -19,8 +20,20 @@ ROOT_IDS = {
     "adj.math.arithmetic.percent_of.v1",
     "adj.math.arithmetic.primitives.query.v1",
     "adj.math.arithmetic.primitives.v1",
+    "adj.math.arithmetic.proportion.query.v1",
+    "adj.math.arithmetic.proportion.v1",
+    "adj.math.arithmetic.proportion.zero_first.query.v1",
+    "adj.math.arithmetic.proportion.zero_second.query.v1",
+    "adj.math.arithmetic.proportion.zero_third.query.v1",
     "adj.math.arithmetic.ratio.query.v1",
     "adj.math.arithmetic.ratio.v1",
+}
+PROPORTION_ROOT_IDS = {
+    "adj.math.arithmetic.proportion.query.v1",
+    "adj.math.arithmetic.proportion.v1",
+    "adj.math.arithmetic.proportion.zero_first.query.v1",
+    "adj.math.arithmetic.proportion.zero_second.query.v1",
+    "adj.math.arithmetic.proportion.zero_third.query.v1",
 }
 
 
@@ -46,6 +59,7 @@ def migrate(
     *,
     formula_inventory_command: Sequence[str],
     formula_audit_command: Sequence[str],
+    captured_proportion_source: Path | None = None,
 ) -> dict[str, object]:
     with provenance.BundleRootReplacementTransaction(
         cas_root,
@@ -60,9 +74,11 @@ def migrate(
     ) as transaction:
         old_roots = _registered_roots(transaction.cas, manifest_path)
         missing = sorted(ROOT_IDS - set(old_roots))
-        if missing:
+        unexpected_missing = sorted(set(missing) - PROPORTION_ROOT_IDS)
+        if unexpected_missing:
             raise provenance.ProvenanceError(
-                "formula inventory migration is missing roots: " + ", ".join(missing)
+                "formula inventory migration is missing legacy roots: "
+                + ", ".join(unexpected_missing)
             )
 
         new_roots = arithmetic_builder.build(
@@ -89,6 +105,15 @@ def migrate(
                 formula_audit_command=formula_audit_command,
             )
         )
+        new_roots.update(
+            proportion_builder.build(
+                transaction.cas,
+                captured_proportion_source,
+                arithmetic_bundle_sha256=arithmetic_hash,
+                formula_inventory_command=formula_inventory_command,
+                formula_audit_command=formula_audit_command,
+            )
+        )
         if set(new_roots) != ROOT_IDS:
             raise provenance.ProvenanceError(
                 "formula inventory migration rebuilt an unexpected root set"
@@ -96,7 +121,7 @@ def migrate(
 
         replacements = {
             bundle_id: {
-                "expected_old_sha256": old_roots[bundle_id],
+                "expected_old_sha256": old_roots.get(bundle_id),
                 "new_sha256": new_roots[bundle_id],
             }
             for bundle_id in sorted(ROOT_IDS)
@@ -112,6 +137,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--formula-inventory-binary", type=Path, required=True)
     parser.add_argument("--formula-audit-binary", type=Path, required=True)
+    parser.add_argument(
+        "--captured-proportion-source",
+        type=Path,
+        help="reviewed OpenStax HTML bytes for the one-time proportion bootstrap",
+    )
     args = parser.parse_args()
     result = migrate(
         REPO_ROOT / provenance.DEFAULT_ROOT,
@@ -120,6 +150,7 @@ def main() -> None:
         REPO_ROOT,
         formula_inventory_command=[str(args.formula_inventory_binary.resolve())],
         formula_audit_command=[str(args.formula_audit_binary.resolve())],
+        captured_proportion_source=args.captured_proportion_source,
     )
     print(provenance.canonical_json_bytes(result).decode("utf-8"), end="")
 

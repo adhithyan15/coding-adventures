@@ -39,8 +39,12 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   function exists.  In v0 there are no `def`s, so all named calls
   are effectively builtins or unresolved.
 - **Expressions** — integer / string literals, name references,
-  binary `+`, `-`, `*`, `/` (lowered to `BuiltinCall("+", ...)` etc.,
-  matching the convention `twig-to-semantic-ir` established).
+  binary `+`, `-`, `*`, `/`, `<<` (lowered to `BuiltinCall("+", ...)` etc.,
+  matching the convention `twig-to-semantic-ir` established). `<<` folds
+  left-associatively over the grammar's `shift` chain the same way `+`/`-`
+  fold over `sum` — it's a binary-operator EXPRESSION (`BuiltinCall("<<",
+  [lhs, rhs])`), not the `__method__` dispatch protocol Collections
+  methods use.
 - **Programs** — wrapped in a synthesised `main` function whose body
   is the sequence of lowered statements.  If the final source-level
   statement is a bare expression, it becomes the block's *value*;

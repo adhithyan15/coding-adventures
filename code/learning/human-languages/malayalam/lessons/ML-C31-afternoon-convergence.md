@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ML-C31-afternoon-convergence
+spine_node: SPINE-TIME-OF-DAY
+sequence: 640
 chapter: 31
 type: etymology
 headword: ശുഭ മധ്യാഹ്നം — three-way convergence
@@ -9,19 +12,33 @@ prerequisites: [ML-C31-shubha-madhyaahnam]
 sounds: []
 roots: [sanskrit-shubha-beautiful, sanskrit-madhya-middle]
 etymology_hook: "three Dravidian languages share śubha plus madhyāhna at the greeting layer even though their everyday afternoon terms diverge"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01]
+practises:
+  knowledge: [ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: analytical
+variety: standard-colloquial
 reviews_of: [ML-C31-shubha-madhyaahnam, ML-C28-uchakazhinju]
 ---
 
 # One greeting, three afternoon strategies
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Malayalam’s formal greeting uses **ശുഭ + മധ്യാഹ്നം**. Kannada and
 Telugu land on the same phrase—but their ordinary afternoon words took three
 different routes.
 
-## The greeting converges
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01]; assesses=[] -->
 
 | language | formal afternoon greeting |
 |---|---|
@@ -44,6 +61,7 @@ two-versus-one split. At the formal greeting layer, all three converge on the
 same borrowed building blocks.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the shared greeting structure — *śubha + madhyāhna*]
@@ -52,6 +70,7 @@ same borrowed building blocks.
 - [YOU SAY: Malayalam — “noon having passed”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01] -->
 
 [PAUSE 3s] Do the three languages share one ordinary afternoon-word strategy?
 (**No.**) Where do they converge? (**In the formal greeting, all using
