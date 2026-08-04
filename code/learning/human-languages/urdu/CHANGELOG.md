@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-08-03
+
+- Added the authoritative five-lesson session map with exact N+1, N+3, N+7,
+  and N+15 review placements.
+- Added an on-demand Urdu pronunciation and script reference that labels the
+  current Naskh presentation fallback without weakening the Nastaliq goal.
+
 ## 0.2.0 — 2026-08-02
 
 - Added the first downloadable LaTeX edition.
