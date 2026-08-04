@@ -91,6 +91,69 @@ function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
   });
 }
 
+type StraightQuoteRole = "opening" | "closing";
+
+/**
+ * Pair authored ASCII double quotes that belong to prose. Code spans, escaped
+ * literals, and link destinations are intentionally outside this typography
+ * pass so the generated PDF never changes their contents.
+ */
+function pairedStraightQuoteRoles(markdown: string): Map<number, StraightQuoteRole> {
+  const positions: number[] = [];
+  let cursor = 0;
+  while (cursor < markdown.length) {
+    const character = markdown[cursor] ?? "";
+    if (character === "\\" && cursor + 1 < markdown.length) {
+      const escaped = markdown[cursor + 1] ?? "";
+      if (`!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`.includes(escaped)) {
+        cursor += 2;
+        continue;
+      }
+    }
+    if (character === "`") {
+      const end = markdown.indexOf("`", cursor + 1);
+      if (end !== -1) {
+        cursor = end + 1;
+        continue;
+      }
+    }
+    if (character === "[") {
+      const labelEnd = markdown.indexOf("](", cursor + 1);
+      const destinationEnd = labelEnd === -1 ? -1 : markdown.indexOf(")", labelEnd + 2);
+      if (labelEnd !== -1 && destinationEnd !== -1) {
+        cursor = destinationEnd + 1;
+        continue;
+      }
+    }
+    if (character === '"') positions.push(cursor);
+    cursor += 1;
+  }
+
+  const roles = new Map<number, StraightQuoteRole>();
+  const openings: number[] = [];
+  for (const position of positions) {
+    let previousIndex = position - 1;
+    while (markdown[previousIndex] === "*") {
+      previousIndex -= 1;
+    }
+    const previous = markdown[previousIndex];
+    const next = markdown[position + 1];
+    const hasOpeningContext =
+      (previous === undefined || /\s/.test(previous) || "([{<—–-/:;=".includes(previous)) &&
+      next !== undefined &&
+      !/\s/.test(next);
+    if (hasOpeningContext) {
+      openings.push(position);
+      continue;
+    }
+    const opening = openings.pop();
+    if (opening === undefined) continue;
+    roles.set(opening, "opening");
+    roles.set(position, "closing");
+  }
+  return roles;
+}
+
 /** Render the deliberately small inline subset used by schema-v2 lessons. */
 export function renderInlineMarkdown(
   markdown: string,
@@ -100,6 +163,7 @@ export function renderInlineMarkdown(
   const output: string[] = [];
   const emphasis: Array<"italic" | "bold"> = [];
   const scripts = scriptMatchers(options);
+  const straightQuotes = pairedStraightQuoteRoles(markdown);
   let cursor = 0;
   const open = (kind: "italic" | "bold"): void => {
     output.push(kind === "italic" ? "\\emph{" : "\\textbf{");
@@ -164,6 +228,14 @@ export function renderInlineMarkdown(
         cursor = destinationEnd + 1;
         continue;
       }
+    }
+    const straightQuote = straightQuotes.get(cursor);
+    if (straightQuote) {
+      output.push(
+        straightQuote === "opening" ? "\\textquotedblleft{}" : "\\textquotedblright{}",
+      );
+      cursor += 1;
+      continue;
     }
     if (markdown.startsWith("***", cursor)) {
       const top = emphasis.at(-1);
@@ -300,6 +372,10 @@ function renderMarkdown(markdown: string, options?: InlineRenderOptionsInput): s
       flushParagraph();
       closeList();
       quote.push(line.slice(2));
+      continue;
+    }
+    if (quote.length > 0 && /^\s+/.test(line)) {
+      quote.push(line.trim());
       continue;
     }
     if (line.startsWith("- ")) {

@@ -74,8 +74,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-D01 | Complete (#9624) | Split or rewrite every lesson whose computed duration is at least 300 seconds. | The deterministic report now reaches zero effective-duration violations across all twenty tracks. |
 | HL-S02 | Complete (#9634) | Migrate Spanish Chapters 4–6 to schema v2 before generating their book chapters. | All 27 lessons have typed blocks, unique sequence, transitive knowledge closure, and sub-five-minute duration guarantees. |
 | HL-G03 | Complete (#9646) | Generate Spanish Chapters 4–6 from their canonical schema-v2 lesson ASTs after HL-S02. | All six generated chapters now share lesson hashes with Language Ladder; Markdown tables retain their structure in print. |
-| HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
+| HL-G04 | Complete in this PR | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose uses true opening and closing marks under every book's language rules without changing the canonical app text, code spans, escaped literals, or link destinations. |
 | HL-G05 | Queued | Preserve canonical Markdown hyperlinks in generated LaTeX chapters. | Source notes and learner-facing links render as live `\href` targets in PDFs instead of retaining only their labels. |
+| HL-G06 | Complete in this PR | Preserve indented continuation lines inside generated Markdown blockquotes. | Multiline learner examples remain inside one LaTeX quote/callout, so typography and layout do not split halfway through a canonical example. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
 | HL-A01 | In progress (#9901 + Russian and Persian/Urdu slices) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; later slices cover Russian's naming chain and Persian/Urdu Chapters 3–5 practice. Coverage is 25 of 119 across 18 tracks; 94 lessons remain, including 16 that first need schema-v2 migration. |
@@ -139,7 +140,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 |---|---|---|---|
 | HL-E01 | Complete (#9906) | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
 | HL-E02 | Complete (#9913) | Author Persian and Urdu Chapter 4 through `SPINE-CHECK-WELLBEING` and reconcile the older identity-first roadmap. | Both tracks gain a gentle wellbeing exchange before identity grammar, with language-specific register/script extensions, exact review ledgers, objective practice, and generated book chapters from the canonical AST. |
-| HL-E03 | Complete in this PR | Author Persian and Urdu Chapter 5 through `SPINE-TAKE-LEAVE`. | Both tracks gain prerequisite-safe micro-lessons for ending a short respectful interaction, local script/register/grammar/etymology extensions, objective practice, exact review ledgers, and generated book chapters from the canonical AST. |
+| HL-E03 | Complete (#9914) | Author Persian and Urdu Chapter 5 through `SPINE-TAKE-LEAVE`. | Both tracks gain prerequisite-safe micro-lessons for ending a short respectful interaction, local script/register/grammar/etymology extensions, objective practice, exact review ledgers, and generated book chapters from the canonical AST. |
 
 - Expand every track toward B1 using the gap report to choose the next missing
   can-do, skill, mode, register, or realization.
@@ -1760,6 +1761,25 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The corpus report reaches 1,096 lessons, 20 books, zero duration violations,
   zero unknown prerequisites, and zero lesson-to-book chapter gaps. Both new
   Chapter 5 files and hashes are generated from the same AST loaded by the app.
+
+## Findings from HL-G04
+
+- All 270 generated chapter targets now render paired authored ASCII double
+  quotes with explicit opening and closing LaTeX text commands. A corpus audit
+  finds 5,631 balanced pairs, zero imbalanced generated files, and zero raw
+  ASCII double quotes left in generated chapter prose.
+- The pairing pass understands emphasis boundaries and nested quotations while
+  deliberately preserving code spans, escaped literal quotes, link
+  destinations, existing curly quotes, and genuinely unmatched marks. The
+  canonical Markdown consumed by Language Ladder remains unchanged.
+- The audit exposed indented continuation lines escaping Markdown blockquotes.
+  HL-G06 records and completes the supporting fix: continued learner examples
+  now remain in one generated quote/callout and one typography pass.
+- A single local pass rebuilt all 20 books with zero LaTeX, package, box,
+  missing-glyph, or font-warning matches. Visual checks cover Spanish emphasis,
+  nested Arabic/RTL glosses, and a continued Telugu example without clipping.
+- HL-G05 remains the next queued one-source book gap: generated link labels are
+  readable, but their canonical destinations are not yet live PDF links.
 
 ## Completed foundations
 
