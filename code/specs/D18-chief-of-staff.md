@@ -167,6 +167,9 @@ identity defaults. Optional `---` frontmatter may override `agent`, `description
 keys fail closed. The parser emits the schema-v1 `agent_manifest.json` shape and
 sorted, deduplicated Deno permission arguments. Time and standard-stream
 capabilities remain manifest declarations but do not widen Deno OS permissions.
+The shared manifest codec accepts version 1 only and rejects malformed JSON,
+duplicate or unknown fields, and invalid nested capability declarations before
+a package can participate in discovery or registration.
 
 The Level 1 runtime injects a provider-neutral LLM client plus authorized input
 and output channel endpoints. For each verified UTF-8 message it sends the full
