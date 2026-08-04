@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9898,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9898",
+    "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
+    "implementation_head": "78b9ced142f838bcd30c2d0fd1999ca2c2e7e9d4",
+    "last_ci_repair": null
+  },
   "last_inventory": {
     "revision": "28df5db2b85deeaa564cb02fc80f6f81b086937c",
     "schema_version": 3,
@@ -496,11 +502,11 @@
     {
       "id": "build-tool-post-gradle-dotnet-field-aware-manifest-resolution",
       "title": "Make C# and F# project-reference resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-post-dart-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
-      "pr_number": null,
-      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. TypeScript and standalone BUILD debt remain independently pending."
+      "pr_number": 9898,
+      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. Ready-for-review PR #9898 opened at exact implementation head 78b9ced142f838bcd30c2d0fd1999ca2c2e7e9d4. TypeScript and standalone BUILD debt remain independently pending."
     },
     {
       "id": "build-tool-post-dotnet-typescript-field-aware-manifest-resolution",
