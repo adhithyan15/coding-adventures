@@ -77,6 +77,24 @@
         "UR-EXT-012-WELLBEING-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "UR-PATH-006",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "UR-C05-khuda",
+        "UR-C05-hafiz",
+        "UR-C05-khuda-hafiz",
+        "UR-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "UR-EXT-013-KHUDA-PERSIAN-HISTORY",
+        "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+        "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+        "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -143,9 +161,10 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "UR-PATH-006"
+      ],
       "omits": [
-        "FAREWELL",
         "FAREWELL-CASUAL",
         "FAREWELL-LATER",
         "FAREWELL-SOON",
@@ -345,6 +364,58 @@
       ],
       "lessons": [
         "UR-C04-practice"
+      ]
+    },
+    {
+      "id": "UR-EXT-013-KHUDA-PERSIAN-HISTORY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read Urdu khudā before using Persian history as a memory bridge rather than a substitute for the local form.",
+      "prerequisites": [
+        "UR-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "lessons": [
+        "UR-C05-khuda"
+      ]
+    },
+    {
+      "id": "UR-EXT-014-HAFIZ-ARABIC-ROOT",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read hāfiz and use the Arabic guard-and-preserve root as a memory hook for protector.",
+      "prerequisites": [
+        "UR-EXT-013-KHUDA-PERSIAN-HISTORY"
+      ],
+      "lessons": [
+        "UR-C05-hafiz"
+      ]
+    },
+    {
+      "id": "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read spaced خدا حافظ, distinguish its Urdu spelling from Persian's joined form, and use it as a broadly polite close.",
+      "prerequisites": [
+        "UR-EXT-014-HAFIZ-ARABIC-ROOT"
+      ],
+      "lessons": [
+        "UR-C05-khuda-hafiz"
+      ]
+    },
+    {
+      "id": "UR-EXT-016-TAKE-LEAVE-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can open and close a short respectful Urdu interaction using only independently learned lines.",
+      "prerequisites": [
+        "UR-EXT-015-FAREWELL-SPACING-REGISTER"
+      ],
+      "lessons": [
+        "UR-C05-practice"
       ]
     }
   ]

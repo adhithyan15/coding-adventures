@@ -37,7 +37,16 @@ layers, and introduces only the first-person copula **-am** needed for the
 answer. Colloquial contraction is labelled for recognition but not required for
 production yet.
 
-## Chapter 5 — People and simple identity *(planned)*
+## Chapter 5 — Take leave *(authored)*
+
+**خدا** *khodâ* → **حافظ** *hâfez* → **خداحافظ** *khodâ hâfez* → one
+start-versus-end interaction. The sequence keeps inherited Persian *xwadây*
+history separate from the Arabic **ḥ-f-ẓ** “guard, preserve” root until each
+word is readable, then teaches Persian's joined spelling as one reliable,
+broadly polite close. Casual, time-of-day, and “see you” farewells stay later
+rather than hiding untaught time language in the first parting lesson.
+
+## Chapter 6 — People and simple identity *(planned)*
 
 - **man hastam** and the next present-copula forms one at a time;
 - careful written forms versus colloquial Iranian Persian;

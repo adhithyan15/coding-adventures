@@ -55,6 +55,9 @@ romanization once the Urdu form is familiar.
   broad final **ے** with long-*ī* final **ی**.
 - **ٹھیک** introduces the Indic retroflex-plus-aspiration sequence **ٹھ** only
   when the wellbeing reply needs it.
+- **خدا حافظ** reuses **خ** and long **ا**, adds a clear initial *h* in **حافظ**,
+  and reads final **ظ** as *z*. Urdu keeps the two words visibly spaced in this
+  course even though Persian normally joins its local spelling.
 
 ## The Persian-Arabic and Indo-Aryan layers
 

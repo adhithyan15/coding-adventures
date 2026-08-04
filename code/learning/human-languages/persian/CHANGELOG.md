@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 — 2026-08-04
+
+- Added four schema-v2 Chapter 5 micro-lessons for **خدا**, **حافظ**, joined
+  **خداحافظ**, and a start-versus-end interaction.
+- Kept Middle Persian and Arabic root histories behind independently readable
+  words, then introduced one broadly polite farewell without a hidden verb.
+- Extended the exact N+1/N+3/N+7/N+15 ledger through S35, with objective
+  activities and a generated five-chapter book.
+
 ## 0.5.0 — 2026-08-04
 
 - Added six schema-v2 Chapter 4 micro-lessons for *hâl*, *chetor*, the careful

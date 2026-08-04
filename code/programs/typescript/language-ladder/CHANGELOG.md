@@ -2,6 +2,18 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Persian and Urdu Chapter 5 frontiers
+
+- Load eight new prerequisite-safe take-leave steps across Persian and Urdu,
+  including each track's local etymology, script, register, and consolidation
+  extensions.
+- Keep the shared historical phrase locally readable before mixed comparison:
+  Persian joined **خداحافظ** and Urdu spaced **خدا حافظ** remain distinct
+  focused answers.
+- Use authored checks on every new step, raising objective non-lexical coverage
+  to 25 of 119 mapped lessons across 18 tracks while retaining independent
+  focused-before-mixed progression.
+
 ### Changed — Persian and Urdu Chapter 3 frontiers
 
 - Load ten new prerequisite-safe name-exchange steps across Persian and Urdu,

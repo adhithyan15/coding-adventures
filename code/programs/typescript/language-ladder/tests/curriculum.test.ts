@@ -60,6 +60,10 @@ describe("per-language shared-spine maps", () => {
       "FA-C04-khub",
       "FA-C04-khubam",
       "FA-C04-practice",
+      "FA-C05-khoda",
+      "FA-C05-hafez",
+      "FA-C05-khodahafez",
+      "FA-C05-practice",
       "UR-C01-salam",
       "UR-C01-shukriya",
       "UR-C01-ji-han",
@@ -76,6 +80,10 @@ describe("per-language shared-spine maps", () => {
       "UR-C04-thik",
       "UR-C04-main-thik-hun",
       "UR-C04-practice",
+      "UR-C05-khuda",
+      "UR-C05-hafiz",
+      "UR-C05-khuda-hafiz",
+      "UR-C05-practice",
     ]));
   });
 
