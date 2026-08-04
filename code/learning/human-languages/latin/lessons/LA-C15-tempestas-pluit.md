@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C15-tempestas-pluit
+spine_node: SPINE-TIME-OF-DAY
+sequence: 350
 chapter: 15
 type: phrase
 headword: tempestās
@@ -9,19 +12,33 @@ prerequisites: [LA-C14-annos-natus]
 sounds: [macron-long-vowel]
 roots: [tempus-latin, tempestas-latin]
 etymology_hook: "tempestās ('weather, storm') is a derivative noun built on tempus ('time') that specialized in Classical Latin; later tempus itself widened to also mean weather, while tempestās narrowed to storm and survives as Spanish tempestad"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02]
+introduces:
+  knowledge: [LA-LEX-TEMPESTAS-PLUIT-01]
+practises:
+  knowledge: [LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02, LA-LEX-TEMPESTAS-PLUIT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C14-annos-natus]
 ---
 
 # tempestās — one Latin word widened, its own derivative narrowed
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02] -->
 
 [PAUSE 2s] You've seen Spanish's *tiempo* mean both "time" and "weather" at
 once. Here's the honest history: Classical Latin actually kept these apart —
 but it wasn't Spanish that changed that. It happened inside Latin itself.
 
-## tempestās — a derivative of tempus, specialized for weather, then narrowed further
+## You'll want to know: tempestās — a derivative of tempus, specialized for weather, then narrowed further
+<!-- hl-knowledge: introduces=[LA-LEX-TEMPESTAS-PLUIT-01]; assesses=[] -->
 
 **tempestās** = "**weather, storm**" — grammatically a **derivative noun**
 built on **tempus** ("time"), and by Classical Latin it had already
@@ -42,6 +59,7 @@ Meanwhile *tempestās* kept going too, narrowing further to mean specifically
 one word (*tempus*) widening back out, not two words fusing into one.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02, LA-LEX-TEMPESTAS-PLUIT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tempestās" — weather/storm, a derivative of tempus, "time,"
@@ -49,6 +67,7 @@ one word (*tempus*) widening back out, not two words fusing into one.
 - [YOU SAY: "tempus" — time, later widened inside Latin to weather too]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-ANNOS-NATUS-01, LA-PRAGMATICS-ANNOS-NATUS-02, LA-LEX-TEMPESTAS-PLUIT-01] -->
 
 [PAUSE 3s] Were *tempus* and *tempestās* the same word in Classical Latin?
 (**No** — *tempestās* is a derivative that specialized for weather/storm,

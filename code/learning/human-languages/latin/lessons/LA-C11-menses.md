@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C11-menses
+spine_node: SPINE-TIME-OF-DAY
+sequence: 310
 chapter: 11
 type: word
 headword: Iānuārius, Februārius, Mārtius, Aprīlis, Māius, Iūnius, Quīntīlis, Sextīlis, September, Octōber, November, December
@@ -9,19 +12,33 @@ prerequisites: [LA-C10-panis, LA-C10-aqua-vinum]
 sounds: [macron-long-vowel, qu-as-kw]
 roots: [ianus-latin, mars-latin, numbering-months]
 etymology_hook: "Quintilis and Sextilis, 'the 5th and 6th months,' were later RENAMED Iulius and Augustus in honor of Caesar and the emperor — Rome didn't add two new months, it just relabeled two old ones"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02]
+introduces:
+  knowledge: [LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
+practises:
+  knowledge: [LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02, LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C10-panis, LA-C10-aqua-vinum]
 ---
 
 # Iānuārius to December — the twelve months, before and after the rename
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02] -->
 
 [PAUSE 2s] You'll meet these twelve names again, worn down, in Spanish and
 French. Latin lets you see something they can't show you directly: **two
 of these months used to have completely different names.**
 
 ## The twelve, taken apart
+<!-- hl-knowledge: introduces=[LA-ETYMON-MENSES-01]; assesses=[] -->
 
 | Latin | who / what |
 |---|---|
@@ -38,7 +55,8 @@ of these months used to have completely different names.**
 | **November** | "**the ninth**" (*novem*) |
 | **December** | "**the tenth**" (*decem*) |
 
-## Be honest about the renaming — a popular myth, corrected
+## Why it's said this way: Be honest about the renaming — a popular myth, corrected
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-MENSES-02]; assesses=[] -->
 
 You'll often hear that **Julius Caesar and Augustus "added" two months** to
 the calendar, which is why September through December no longer match
@@ -57,6 +75,7 @@ sixth months quietly disappeared from view, hiding inside *julio/juillet*
 and *agosto/août* in every daughter language.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02, LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: the twelve — "Iānuārius, Februārius, Mārtius, Aprīlis, Māius,
@@ -65,6 +84,7 @@ and *agosto/août* in every daughter language.
 - [YOU SAY: the correction — "renamed, not inserted"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-PANIS-01, LA-LEX-PANIS-02, LA-PRAGMATICS-PANIS-03, LA-ETYMON-AQUA-VINUM-01, LA-LEX-AQUA-VINUM-02, LA-ETYMON-MENSES-01, LA-PRAGMATICS-MENSES-02] -->
 
 [PAUSE 3s] What were *Iūlius* and *Augustus* called **before** they were
 renamed, and what did those names mean? (**Quīntīlis** "the fifth" and

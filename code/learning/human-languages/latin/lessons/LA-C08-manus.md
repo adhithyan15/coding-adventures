@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C08-manus
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 270
 chapter: 8
 type: word
 headword: manus
@@ -9,19 +12,33 @@ prerequisites: [LA-C08-caput]
 sounds: [macron-long-vowel]
 roots: [pie-man]
 etymology_hook: "manus is feminine despite belonging to the 4th declension, a group of -us nouns that runs mostly MASCULINE (fructus, exercitus, senatus) — manus is one of only a handful of exceptions, and Spanish's mano inherited that oddity intact"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02]
+introduces:
+  knowledge: [LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02]
+practises:
+  knowledge: [LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C08-caput]
 ---
 
 # manus — the hand, and a famous grammatical exception
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02] -->
 
 [PAUSE 2s] Here's a word that's productive in English *and* grammatically
 odd in Latin itself — an oddity that then rode straight through into
 Spanish.
 
-## The word
+## The word, taken apart: The word
+<!-- hl-knowledge: introduces=[LA-ETYMON-MANUS-01]; assesses=[] -->
 
 **manus, manūs** — "**hand**." It belongs to Latin's **4th declension** — a
 group of nouns ending in *-us* that runs **overwhelmingly masculine**:
@@ -39,7 +56,8 @@ ending that signals *masculine* in nearly every other Spanish noun. One
 small Latin exception, carried whole into a completely different pattern in
 a daughter language, centuries later.
 
-## manus — one of the most productive roots in English
+## The word, taken apart: manus — one of the most productive roots in English
+<!-- hl-knowledge: introduces=[LA-ETYMON-MANUS-02]; assesses=[] -->
 
 | English | literally |
 |---|---|
@@ -50,6 +68,7 @@ a daughter language, centuries later.
 | **manage** | to handle |
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "manus, manūs" — hand]
@@ -57,6 +76,7 @@ a daughter language, centuries later.
 - [YOU SAY: the English family — "manual, manufacture, maintain, manage"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-ETYMON-CAPUT-01, LA-PRAGMATICS-CAPUT-02, LA-ETYMON-MANUS-01, LA-ETYMON-MANUS-02] -->
 
 [PAUSE 3s] What gender is **manus**, and is that typical for its
 declension? (**Feminine** — unusual, since the 4th declension runs mostly

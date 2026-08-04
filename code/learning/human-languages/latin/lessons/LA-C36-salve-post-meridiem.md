@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C36-salve-post-meridiem
+spine_node: SPINE-TIME-OF-DAY
+sequence: 610
 chapter: 36
 type: phrase
 headword: salvē (post merīdiem)
@@ -9,19 +12,33 @@ prerequisites: [LA-C35-meridies, LA-C01-salve]
 sounds: [macron-long-vowel, v-as-w]
 roots: [medius-latin, dies-latin]
 etymology_hook: "bonum post merīdiem cannot work like bonam noctem because post merīdiem is a prepositional phrase, not a noun; bonum tempus pōmerīdiānum is grammatical but is not attested as a greeting"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
+introduces:
+  knowledge: [LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
+practises:
+  knowledge: [LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C35-meridies, LA-C01-salve]
 ---
 
 # salvē (post merīdiem) — the one that isn't there
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
 
 [PAUSE 2s] Three lessons in a row, you've met a modern phrase built on
 real (if sometimes invisible) Latin grammar for "good ___." This lesson
 is different: there's honestly nothing to build.
 
-## Be honest: no two-word phrase exists here
+## Why it's said this way: Be honest: no two-word phrase exists here
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-SALVE-POST-MERIDIEM-01]; assesses=[] -->
 
 **Bonam noctem**, **bonum māne**, and **bonum vesperum** are all modern,
 pedagogical phrases — not classically attested — but each pairs *bonus*
@@ -40,6 +57,7 @@ phrases — and it isn't itself attested anywhere as something Romans
 actually said as a greeting.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: why "bonum post merīdiem" doesn't work — no noun for bonus
@@ -48,6 +66,7 @@ actually said as a greeting.
 - [YOU SAY: the grammatical adjective — pōmerīdiānum, "of the afternoon"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-MERIDIES-01, LA-PRAGMATICS-MERIDIES-02, LA-ETYMON-MERIDIES-03, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-SALVE-POST-MERIDIEM-01] -->
 
 [PAUSE 3s] Does Latin have a two-word phrase for "good afternoon" the
 way it has *bonum vesperum* for evening? (**No** — Latin has no simplex

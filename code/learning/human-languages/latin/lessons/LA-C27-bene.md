@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C27-bene
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 510
 chapter: 27
 type: word
 headword: bene
@@ -9,19 +12,33 @@ prerequisites: [LA-C19-valeo-family]
 sounds: [macron-none-short-e]
 roots: [bene-latin, bonus-latin]
 etymology_hook: "bene ('well') is a genuinely classical adverb, related to bonus ('good') — both from the same Old Latin ancestor duenos/duonus (found in the famous Duenos inscription, one of the oldest surviving Latin texts), ultimately from a Proto-Indo-European root with several competing proposals; French bien and Spanish bien both continue bene through one single, regular sound change (short stressed e diphthongizing to 'ie,' the same shift behind mel→miel, terra→tierra) and nothing more — no extra suffix grafted on, unlike quōmodo's more roundabout Romance history; bene is genuinely attested used alone, repeated, as a toast in Plautus's Stichus 709: 'bene vōs, bene nōs, bene tē, bene mē, bene nostram etiam Stephanium'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-VALEO-FAMILY-01]
+introduces:
+  knowledge: [LA-LEX-BENE-01, LA-ETYMON-BENE-02, LA-PRAGMATICS-BENE-03]
+practises:
+  knowledge: [LA-LEX-VALEO-FAMILY-01, LA-LEX-BENE-01, LA-ETYMON-BENE-02, LA-PRAGMATICS-BENE-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C19-valeo-family, LA-C19-quid-agis]
 ---
 
 # bene — a morphologically simple inheritance
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01] -->
 
 [PAUSE 2s] Last lesson's "how" took a roundabout path into Romance,
 picking up an extra piece along the way. This one is refreshingly simple:
 one Latin word, one regular sound change, nothing grafted on.
 
-## bene — "well," related to bonus
+## You'll want to know: bene — "well," related to bonus
+<!-- hl-knowledge: introduces=[LA-LEX-BENE-01]; assesses=[] -->
 
 **Bene** ("**well**") is a genuine Classical Latin adverb, closely related
 to **bonus** ("**good**") — both descend from the same **Old Latin**
@@ -30,7 +47,8 @@ one of the oldest surviving Latin texts). Past that point, the ultimate
 Proto-Indo-European root is debated, with more than one proposal on the
 table.
 
-## A morphologically simple inheritance into Romance
+## The word, taken apart: A morphologically simple inheritance into Romance
+<!-- hl-knowledge: introduces=[LA-ETYMON-BENE-02]; assesses=[] -->
 
 Here's the refreshing part: French's **bien** and Spanish's **bien** both
 continue **bene** through **one single, regular sound change** — short
@@ -41,7 +59,8 @@ journey into *come*/*cómo*/*comment*. When two Romance languages agree this
 closely, picking up only one shared, ordinary sound change between them,
 you're looking almost straight at the Latin parent itself.
 
-## Genuinely attested, alone — as a toast
+## Why it's said this way: Genuinely attested, alone — as a toast
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-BENE-03]; assesses=[] -->
 
 **Bene** is attested being used **alone**, repeated, in Plautus's
 **Stichus**, line 709 — though be honest about the context: it's a
@@ -54,6 +73,7 @@ slot "well" fills, the way *volup est convēnisse* was for "nice to meet
 you."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01, LA-LEX-BENE-01, LA-ETYMON-BENE-02, LA-PRAGMATICS-BENE-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bene" — "well," related to bonus]
@@ -63,6 +83,7 @@ you."
   in Plautus, not literally "how are you"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-VALEO-FAMILY-01, LA-LEX-BENE-01, LA-ETYMON-BENE-02, LA-PRAGMATICS-BENE-03] -->
 
 [PAUSE 3s] What Latin word is French and Spanish's **bien**, continued
 through one regular sound change? (**Bene**, "well.") Is *quōmodo*'s path

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C22-tu-vos
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 460
 chapter: 22
 type: word
 headword: tū / vōs
@@ -9,30 +12,46 @@ prerequisites: [LA-C20-name-case-variation]
 sounds: [long-vowel-u, macron-long-vowel]
 roots: [tu-pie, vos-pie]
 etymology_hook: "tū ('you,' singular) and vōs ('you,' plural) are a PURELY grammatical number distinction in Classical Latin — genuinely NO politeness dimension existed yet; the later habit of using plural vōs to address one person politely only developed in LATE Latin, after the classical period, and is the direct ancestor of French's polite vous — a genuinely separate solution from German's Sie, which independently repurposes an entirely different pronoun (3rd-person plural 'they'), not a descendant of vōs at all"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02]
+introduces:
+  knowledge: [LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03]
+practises:
+  knowledge: [LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C20-name-case-variation, LA-C20-quid-tibi-nomen]
 ---
 
 # tū, vōs — "you," before politeness got involved
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02] -->
 
 [PAUSE 2s] German's lesson on "you" was about **formality** — *du* versus
 *Sie*. Latin's version of this same lesson is about something completely
 different: plain **number**. Formality hadn't been invented yet.
 
-## tū — you, one person
+## You'll want to know: tū — you, one person
+<!-- hl-knowledge: introduces=[LA-LEX-TU-VOS-01]; assesses=[] -->
 
 **Tū** = "**you**," addressing **one** person. That's the whole rule — no
 formal/informal split, just singular number. You've already used its dative
 form, *tibi*, in *quid tibi nōmen est?*
 
-## vōs — you, more than one person
+## You'll want to know: vōs — you, more than one person
+<!-- hl-knowledge: introduces=[LA-LEX-TU-VOS-02]; assesses=[] -->
 
 **Vōs** = "**you**," addressing **more than one** person — plain plural,
 nothing more.
 
-## The honest historical twist: no politeness distinction yet
+## Why it's said this way: The honest historical twist: no politeness distinction yet
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-TU-VOS-03]; assesses=[] -->
 
 Here's the real teaching point: in **Classical Latin**, this is a **purely
 grammatical number** distinction. There is **no** formal/informal
@@ -50,6 +69,7 @@ deference, like respectful titles (*domine*, "sir/lord"), just not through
 the pronoun itself.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tū" — you, singular, one person]
@@ -58,6 +78,7 @@ the pronoun itself.
   politeness at all, unlike German's du/Sie]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02, LA-LEX-TU-VOS-01, LA-LEX-TU-VOS-02, LA-PRAGMATICS-TU-VOS-03] -->
 
 [PAUSE 3s] What's the difference between **tū** and **vōs** in Classical
 Latin — number, or politeness? (**Pure number** — *tū* is singular, *vōs*

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C32-bonum-mane
+spine_node: SPINE-TIME-OF-DAY
+sequence: 560
 chapter: 32
 type: phrase
 headword: bonum māne
@@ -9,19 +12,33 @@ prerequisites: [LA-C31-mane, LA-C01-salve]
 sounds: [macron-long-vowel]
 roots: [bonus-latin, mane-latin, salus-latin]
 etymology_hook: "bonum māne, 'good morning,' is a modern, pedagogical phrase — like bonam noctem, not classically attested as a fixed Roman farewell/greeting formula; but unlike bonam noctem, its grammar is genuinely INVISIBLE rather than just uncertain: māne is neuter, and Latin neuter nouns never distinguish nominative from accusative (bonum works either way), so the Accusative-of-Exclamation rule that bonam noctem demonstrated so clearly simply can't be shown here; what Romans DID have, richly documented, was the salūtātiō (mātūtīna salūtātiō) — clients visiting their patron's house at dawn to pay respects — from salūtāre ('to greet'), itself derived from salūs ('health, safety, wholeness'), a genuine DOUBLET of salvus (the root of salvē, Chapter 1's first word) — both descend from the same PIE root, *solh₂- ('whole'); a morning greeting Romans actually had, just as an ACTION, not a phrase"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
+introduces:
+  knowledge: [LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02]
+practises:
+  knowledge: [LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C31-mane, LA-C01-salve]
 ---
 
 # bonum māne — a phrase Romans didn't say, and a ritual they actually did
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
 
 [PAUSE 2s] You have *bonus* (good) and *māne* (morning, last lesson). Put
 them together for "good morning" — but this time, watch for what's
 **missing**, not just what's uncertain.
 
-## bonum māne — grammatically invisible, not just unattested
+## Why it's said this way: bonum māne — grammatically invisible, not just unattested
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-BONUM-MANE-01]; assesses=[] -->
 
 **Bonum māne** = "**good morning**." Like *bonam noctem* two lessons ago,
 this specific phrase is **not** classically attested as a fixed Roman
@@ -35,7 +52,8 @@ accusative. The grammar point that made *bonam noctem* interesting simply
 **isn't visible** here — not because it's missing, but because neuter
 words never show it, for anyone, anywhere in Latin.
 
-## The salūtātiō — a morning greeting Romans really had, as an action
+## Why it's said this way: The salūtātiō — a morning greeting Romans really had, as an action
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-BONUM-MANE-02]; assesses=[] -->
 
 Here's what Romans **did** have, richly documented: the **salūtātiō**
 (*mātūtīna salūtātiō*, "morning greeting") — clients arriving at their
@@ -56,6 +74,7 @@ for someone's wholeness, whether spoken as *salvē* or enacted at dawn as
 the *salūtātiō*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bonum māne" — "good morning," a modern phrase, not classical]
@@ -65,6 +84,7 @@ the *salūtātiō*.
   not a phrase — from the same root as salvē]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-MANE-01, LA-ETYMON-MANE-02, LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03, LA-PRAGMATICS-BONUM-MANE-01, LA-PRAGMATICS-BONUM-MANE-02] -->
 
 [PAUSE 3s] Does *bonum māne* show the same accusative-of-wishing grammar
 that *bonam noctem* did? (**No** — māne is neuter, and Latin neuters never

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: LA-C06-niger-albus
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 220
 chapter: 6
 type: word
 headword: niger, albus
@@ -9,20 +12,34 @@ prerequisites: [LA-C05-saturni-solis]
 sounds: [macron-long-vowel]
 roots: [niger-latin, albus-latin, ater-latin, candidus-latin]
 etymology_hook: "niger and albus each had a brightness-twin — ater 'dull black' vs niger 'gleaming black', albus 'dull white' vs candidus 'shining white' — a distinction Romance mostly dropped"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02]
+introduces:
+  knowledge: [LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
+practises:
+  knowledge: [LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02, LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
 reviews_of: [LA-C05-saturni-solis, LA-C05-dies-lunae-veneris]
 ---
 
 # niger, albus — Latin's black and white, each with a shine-twin
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02] -->
 
 [PAUSE 2s] You've seen **niger** already, hiding inside French *noir* and
 Spanish *negro*. Here's what those daughter languages left behind: Latin
 didn't have just one word for black, or just one for white — it had **two of
 each**, split by **brightness**, not just hue.
 
-## Two blacks, two whites
+## You'll want to know: Two blacks, two whites
+<!-- hl-knowledge: introduces=[LA-LEX-NIGER-ALBUS-01]; assesses=[] -->
 
 - **niger** = "black" with a **gleam** — a shiny, lustrous black. This is the
   one that survives into Romance (*noir, negro, nero*).
@@ -38,7 +55,8 @@ each**, split by **brightness**, not just hue.
   office wore a bleached, gleaming-white toga, the *toga candida*), and
   **candle**.
 
-## Be honest about what happened to the distinction
+## Why it's said this way: Be honest about what happened to the distinction
+<!-- hl-knowledge: introduces=[LA-PRAGMATICS-NIGER-ALBUS-02]; assesses=[] -->
 
 Romance languages mostly **dropped** this shine-vs-matte split and kept only
 one word per color (*niger* survived for black; *albus* and *candidus* both
@@ -49,6 +67,7 @@ four color-words shrank to cover just two basic ideas — brightness stopped
 being how Latin-descended languages sort black and white.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02, LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "niger" — gleaming black — then "āter," dull black]
@@ -57,6 +76,7 @@ being how Latin-descended languages sort black and white.
   (candidus)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SATURNI-SOLIS-01, LA-PRAGMATICS-SATURNI-SOLIS-02, LA-LEX-NIGER-ALBUS-01, LA-PRAGMATICS-NIGER-ALBUS-02] -->
 
 [PAUSE 3s] What distinguished Latin's two black words, and its two white
 words? (**Brightness** — *niger* "gleaming black" vs. *āter* "dull black";
