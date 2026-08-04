@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.37.1 — `<<` (Ruby's shift operator) as a top-level builtin
+
+Part of "Python/JS/Go/Rust/Ruby backends: implement `<<` runtime
+dispatch". `ruby-to-semantic-ir` lowers `<<` to a top-level
+`BuiltinCall("<<", [lhs, rhs, ...])` — a SEPARATE protocol from the
+`__method__("<<", recv, arg)` Collections dispatch Array#push already
+used on this backend (the pre-existing `_sir_array_responds`/`case
+"<<":` entries in the method catalog). The operator form reached
+`_sir_call_builtin_by_name`'s floor and panicked `unknown builtin: <<`
+— every Ruby program using `<<` as an operator failed at runtime on Go.
+
+New `_sir_shift_left(args []Value) Value`, polymorphic like `_sir_plus`:
+Array pushes each RHS operand in place (chains left-to-right, since the
+frontend lowers a `<<` chain to one variadic call); Integer bitwise-shifts
+via `_sir_shift_left_i64`, PORTED from the C backend's helper of the same
+name for identical overflow/negative-amount semantics (negative amount
+reverses direction; left shift saturates at MaxInt64/MinInt64 rather than
+wrapping, since this runtime has no bignum growth); String concatenates
+to a new string via the existing `_sir_as_string` (matching this
+backend's own `+` String-receiver convention, not C's looser
+silently-drop-a-non-string one).
+
+New supporting helpers `_sir_shift_amount_arg`, `_sir_f64_to_i64_saturating`
+(a non-finite/out-of-range float64->int64 conversion is
+implementation-specific in Go, same UB-avoidance discipline as C), and
+`_sir_i64_abs_u` (MinInt64-safe magnitude via uint64 wraparound).
+
+`semantic-ir-to-go` 0.37.0 -> 0.37.1.
+
 ## 0.37.0 — operator-spelling comparisons: `==`, `!=`, `<=`, `>=`
 
 The Ruby frontend lowers a comparison chain to `==`/`!=`/`<=`/`>=` builtins,
