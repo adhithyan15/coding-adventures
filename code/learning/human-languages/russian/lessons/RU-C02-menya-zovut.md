@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C02-menya-zovut
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 100
 chapter: 2
 type: phrase
 headword: меня зовут…
@@ -10,19 +13,33 @@ prerequisites: [RU-C02-vy-formality]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [slavic-zvati]
 etymology_hook: "меня зовут is literally '[they] CALL me' — an unnamed 'they' doing the naming, so the sentence contains no word for 'my' and none for 'name'; and меня is not я plus an ending but a SUPPLETIVE form from a different PIE stem, the first case FORM in the course"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-YA]
+introduces:
+  knowledge: [RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE]
+practises:
+  knowledge: [RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C02-ty-vy, RU-C01-privet]
 ---
 
 # меня зовут… — "my name is…"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Every other track in this course says "my name is" with a word for
 *my* and a word for *name*. Russian says something quite different, and it is
 worth taking apart slowly.
 
-## The phrase
+## The exchange
+<!-- hl-knowledge: introduces=[RU-LEX-MENYA-ZOVUT]; assesses=[] -->
 
 > **Меня зовут Анна.** — *Menyá zovút Anna.* — "My name is Anna."
 
@@ -38,7 +55,8 @@ So: **"[they] call me Anna."**
 There is **no word for "my"** and **no word for "name"** in the sentence. Russian
 reports what people call you, not what you possess.
 
-## The invisible "they"
+## Grammar Lens: the invisible "they"
+<!-- hl-knowledge: introduces=[RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL]; assesses=[] -->
 
 *Зовут* is the **they** form of *звать*, "to call." But there is no *они* ("they")
 anywhere — and there isn't meant to be. Russian uses a bare plural verb to mean
@@ -49,7 +67,8 @@ English has the same trick and doesn't notice it:
 
 > *They call me Anna.* — Who are *they*? Nobody. Everybody.
 
-## меня is not я
+## Grammar Lens: меня is not я
+<!-- hl-knowledge: introduces=[RU-GRAMMAR-MENYA-OBJECT-CASE]; assesses=[] -->
 
 This is the important part, and the course's first look at **case**.
 
@@ -71,6 +90,7 @@ You do not need to learn it yet. You need to notice that *меня* is a **diffe
 shape of я**, and that the shape carries the meaning.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Меня зовут…" and your own name]
@@ -79,6 +99,7 @@ shape of я**, and that the shape carries the meaning.
 - [YOU SAY: the English echo — "*they say it'll rain*"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-LEX-MENYA-ZOVUT, RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL, RU-GRAMMAR-MENYA-OBJECT-CASE] -->
 
 [PAUSE 3s] Say "my name is Anna." (*Меня зовут Анна*.) What does it literally
 mean? ("**They call me** Anna.") Which two words is it missing? (Any word for

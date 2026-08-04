@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — objective Russian naming progression
+
+- Replace temporary confirmation on both mapped Russian non-lexical frontiers
+  with typed checks for polite *вы* and the cross-language naming frame.
+- Load their six-lesson schema-v2 prerequisite chain without coupling Russian
+  progress to any other selected language; objective coverage is now 19 of 113
+  mapped non-lexical lessons across 16 tracks, with 94 remaining.
+
 ### Changed — cross-language objective focused checks
 
 - Replace temporary confirmation with authored retrieval in one ready lesson
@@ -21,7 +29,7 @@
   frontier.
 - Keep both knowledge and activity metadata out of the readable lesson view;
   Spanish grammatical gender and punctuation-span lessons establish the
-  objective non-lexical contract now reused across 15 tracks.
+  objective non-lexical contract now reused across 16 tracks.
 
 ### Changed — independent local frontiers and focused-before-mixed review
 

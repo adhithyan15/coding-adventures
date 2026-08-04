@@ -1,5 +1,16 @@
 # Changelog — Russian track
 
+## 0.5.0 — 2026-08-03
+
+- Migrated the closed Chapter 2 chain from *я* through the cross-language
+  naming comparison to schema v2 with stable sequence, typed body blocks,
+  transitive knowledge ownership, and explicit skill/mode/strand metadata.
+- Added objective final-recall checks for polite *вы* and the *how/what* naming
+  contrast, including accepted variants, feedback, and eight-second response
+  budgets consumed directly by Language Ladder.
+- Preserved the existing lesson prose and prerequisite order while reducing the
+  mapped Russian non-lexical self-check backlog from two lessons to zero.
+
 ## 0.4.0 — 2026-08-02
 
 - Corrected four honest four-minute estimates that had been rounded up to five
