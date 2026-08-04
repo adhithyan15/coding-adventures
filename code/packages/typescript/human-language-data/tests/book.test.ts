@@ -132,7 +132,9 @@ describe("canonical LaTeX chapter rendering", () => {
         'Keep `"code"`, ["label"](https://example.test/"raw"), and \\"literal\\".',
       ),
     ).toBe(
-      "Keep \\texttt{\"code\"}, \\textquotedblleft{}label\\textquotedblright{}, and " +
+      "Keep \\texttt{\"code\"}, " +
+        "\\href{https://example.test/\\%22raw\\%22}" +
+        "{\\textquotedblleft{}label\\textquotedblright{}}, and " +
         '\"literal\".',
     );
     expect(renderInlineMarkdown('Keep a 5" mark before "paired" prose.')).toBe(
@@ -153,6 +155,31 @@ describe("canonical LaTeX chapter rendering", () => {
     );
     expect(renderInlineMarkdown('Existing “curly quotes” stay unchanged.')).toBe(
       'Existing “curly quotes” stay unchanged.',
+    );
+  });
+
+  it("preserves absolute links and resolves relative curriculum links", () => {
+    expect(renderInlineMarkdown("[source](https://example.test/a_b?q=x&y=z#frag)")).toBe(
+      "\\href{https://example.test/a\\_b?q=x\\&y=z\\#frag}{source}",
+    );
+    expect(renderInlineMarkdown("[draft](https://example.test/$value~draft)")).toBe(
+      "\\href{https://example.test/\\%24value\\%7Edraft}{draft}",
+    );
+    expect(
+      renderInlineMarkdown("Read [the next lesson](./TEST-C01-next.md).", undefined, {
+        linkBaseUrl:
+          "https://github.com/example/repo/blob/main/curriculum/test/lessons/TEST-C01-now.md",
+      }),
+    ).toBe(
+      "Read \\href{https://github.com/example/repo/blob/main/curriculum/test/lessons/" +
+        "TEST-C01-next.md}{the next lesson}.",
+    );
+  });
+
+  it("fails closed for relative links without a source base and unsupported protocols", () => {
+    expect(() => renderInlineMarkdown("[next](./next.md)")).toThrow(/requires a source base URL/);
+    expect(() => renderInlineMarkdown("[mail](mailto:hello@example.test)")).toThrow(
+      /unsupported Markdown link protocol 'mailto:'/,
     );
   });
 
