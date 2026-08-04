@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TA-C26-kaalai, TA-C01-vanakkam-family-register, TA-C01-vanakkam]
 ---
 
-# காலை வணக்கம் (kālai vaṇakkam) — "morning greetings," built from two words you already know
+# காலை வணக்கம் — "morning greetings"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01] -->
@@ -79,11 +79,11 @@ deliberately **not** asserted here.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01, TA-LEX-KAALAI-VANAKKAM-01, TA-PRAGMATICS-KAALAI-VANAKKAM-02] -->
 
-[PAUSE 3s] What two already-known words does காலை வணக்கம் build
-from? (காலை, "morning" + வணக்கம், "reverence/hello.") Does
-Tamil's morning greeting follow the śubha-equivalent + time-word
-pattern used by Hindi/Kannada/Telugu/Malayalam? (**No** — it's simply
-வணக்கம், Tamil's own general greeting, specified with காலை in
-front.) Is the "suprabhatham as a casual alternative" claim confirmed?
-(**No** — it appears on neither of the two sources actually fetched;
-deliberately not asserted here.)
+[PAUSE 3s]
+- What two known words build காலை வணக்கம்? (**காலை**, "morning" +
+  **வணக்கம்**, "reverence/hello.")
+- Does it follow the śubha-equivalent + time-word pattern used by Hindi,
+  Kannada, Telugu, and Malayalam? (**No** — காலை simply specifies Tamil's
+  own general greeting, வணக்கம்.)
+- Is "suprabhatham" confirmed as a casual alternative? (**No** — neither
+  fetched source supports that claim, so this lesson does not assert it.)

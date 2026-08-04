@@ -1672,7 +1672,7 @@
     {
       "language": "tamil",
       "chapter": 10,
-      "sourceHash": "fnv1a64:1e54c48f58723696",
+      "sourceHash": "fnv1a64:2538dae6127ff3d7",
       "lessonIds": [
         "TA-C10-vaara-kizhamai"
       ],
@@ -1690,7 +1690,7 @@
     {
       "language": "tamil",
       "chapter": 12,
-      "sourceHash": "fnv1a64:c60c5953173c6f66",
+      "sourceHash": "fnv1a64:37498296b121ed1e",
       "lessonIds": [
         "TA-C12-kudumbam"
       ],
@@ -1765,7 +1765,7 @@
     {
       "language": "tamil",
       "chapter": 20,
-      "sourceHash": "fnv1a64:974d434fad0acba2",
+      "sourceHash": "fnv1a64:fa1b550899c021f3",
       "lessonIds": [
         "TA-C20-pathinondru-irupathu",
         "TA-C20-vaanilai"
@@ -1851,7 +1851,7 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:98b7381596bab2bd",
+      "sourceHash": "fnv1a64:6c788bc0104707ff",
       "lessonIds": [
         "TA-C29-kaalai-vanakkam"
       ],
@@ -1860,7 +1860,7 @@
     {
       "language": "tamil",
       "chapter": 30,
-      "sourceHash": "fnv1a64:f4dbb1b65e6b99db",
+      "sourceHash": "fnv1a64:f5c2a578b5b6df4d",
       "lessonIds": [
         "TA-C30-maalai-vanakkam"
       ],

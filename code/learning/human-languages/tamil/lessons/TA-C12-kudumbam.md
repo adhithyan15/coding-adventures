@@ -28,13 +28,13 @@ variety: standard-colloquial
 reviews_of: [TA-C11-nirangal]
 ---
 
-# அப்பா, அம்மா, and four ways to say "brother/sister"
+# அப்பா, அம்மா, and four sibling words
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NIRANGAL-01] -->
 
-[PAUSE 2s] You've learned Spanish's *hermano/hermana* and French's
-*frère/sœur* — one word each for "brother" and "sister." Tamil asks a
+[PAUSE 2s] You've learned Spanish *hermano* and *hermana*, plus French
+*frère* and *sœur* — one word each for "brother" and "sister." Tamil asks a
 question those languages never do: **is this sibling older or younger than
 you?**
 

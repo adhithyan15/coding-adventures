@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TA-C19-age-register-grammar, TA-C19-vayathu]
 ---
 
-# பதினொன்று, இருபது — Dravidian's shared, transparent twenty
+# பதினொன்று–இருபது — shared Dravidian patterns
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01] -->
