@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-W02-abugida-ka-ta
+spine_node: SPINE-MEET-GREET
+sequence: 120
 chapter: 1
 type: writing
 headword: "अ"
@@ -9,20 +12,34 @@ prerequisites: [HI-W01-na-ma]
 sounds: [devanagari-inherent-vowel, devanagari-spine]
 roots: [ethiopic-abugida]
 etymology_hook: "a script whose consonants carry a built-in vowel is called an ABUGIDA — a name coined from Ge'ez, and cleverly built: ʾä-bu-gi-da names the first four consonants of the old SEMITIC letter order AND the first four VOWEL series at once, so the word demonstrates the very consonant-plus-vowel system it names"
-est_minutes: 4
+duration:
+  max_seconds: 293
+requires:
+  knowledge: [HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03]
+introduces:
+  knowledge: [HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02]
+practises:
+  knowledge: [HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02]
+skills: [writing, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-W01-na-ma, HI-W01-shirorekha-na-ma, HI-C01-namaste]
 ---
 
 # The vowel that is already there — the abugida
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Here is the thing that trips up every English speaker, and it is
 better to meet it now than to be confused for a month.
 
 **क is not "k". क is "ka".**
 
-## Consonants come with a vowel attached
+## You'll want to know — Consonants come with a vowel attached
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W02-ABUGIDA-KA-TA-01]; assesses=[] -->
 
 In the Latin alphabet, *k* is a bare consonant and you must add a vowel to say
 anything. In Devanagari, every consonant **already contains** the vowel **"a"**:
@@ -42,7 +59,8 @@ So the two letters you learned last lesson were never "n" and "m." They were
 **na** and **ma** — and if you write them together you have already written a
 real syllable pair: **नम**, *nama*, the first half of *namaste*.
 
-## What this kind of script is called
+## You'll want to know — What this kind of script is called
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W02-ABUGIDA-KA-TA-02]; assesses=[] -->
 
 A script that works this way — consonants carrying a default vowel — is an
 **abugida**.
@@ -65,6 +83,7 @@ consonant plus vowel, four times over. A term that performs its own definition.
 Ethiopian schoolroom one.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "क is **ka**, not k"]
@@ -72,6 +91,7 @@ Ethiopian schoolroom one.)
 - [YOU SAY: "abugida — a consonant plus its built-in vowel"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02] -->
 
 [PAUSE 3s] What does क say on its own? (**"ka"** — the vowel is built in.) What
 is that vowel called? (The **inherent vowel**.) What kind of script is this, and

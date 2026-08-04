@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-W03-preposed-i
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 150
 chapter: 2
 type: writing
 headword: "ि"
@@ -8,18 +11,32 @@ romanization: "i"
 prerequisites: [HI-W03-matras-naam]
 sounds: [devanagari-matra, devanagari-preposed-i]
 roots: [brahmi-vowel-signs]
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03]
+introduces:
+  knowledge: [HI-CONCEPT-W03-PREPOSED-I-01]
+practises:
+  knowledge: [HI-CONCEPT-W03-PREPOSED-I-01]
+skills: [writing, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-W03-matras-naam, HI-W02-abugida-ka-ta]
 ---
 
 # ि — left on the page, right in the mouth
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] **ा** sits to the right and **े** above. One Hindi vowel sign goes
 somewhere that will feel wrong for a while.
 
-## The famous mātrā
+## You'll want to know — The famous mātrā
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W03-PREPOSED-I-01]; assesses=[] -->
 
 **ि** — the vowel **i** — is written **before** the consonant, to its **left**,
 but pronounced **after** it:
@@ -39,6 +56,7 @@ The rule to carry away:
 > this — is written before the consonant it follows.**
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W03-PREPOSED-I-01] -->
 
 [PAUSE 1s]
 - [YOU TRACE: ि + श as the visual order in **शि**]
@@ -46,6 +64,7 @@ The rule to carry away:
 - [YOU CONTRAST: **ना** *nā* · **मे** *me* · **शि** *śi*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W03-PREPOSED-I-01] -->
 
 [PAUSE 3s] **शि** — *śi* or *iś*? (***Śi***.) Where is ि written, and where is
 it pronounced? (**Before** the consonant on the page, **after** it in speech.)

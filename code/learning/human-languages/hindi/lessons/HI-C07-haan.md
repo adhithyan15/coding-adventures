@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C07-haan
+spine_node: SPINE-RESPOND-BASIC
+sequence: 240
 chapter: 7
 type: word
 headword: हाँ
@@ -9,17 +12,31 @@ prerequisites: [HI-C01-namaste]
 sounds: [chandrabindu-nasal, vowel-aa]
 roots: [haan]
 etymology_hook: "हाँ hāṃ 'yes' is a nasalised aa — the chandrabindu ँ (moon-dot) sends the vowel through the nose; jī hāṃ is polite"
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: []
+introduces:
+  knowledge: [HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02]
+practises:
+  knowledge: [HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C01-namaste]
 ---
 
 # हाँ (hāṃ) — yes
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] A single open vowel, said through the nose — that's Hindi's yes.
 
-## The word
+## You'll want to know — The word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C07-HAAN-01]; assesses=[] -->
 
 **हाँ** = **yes**, said **hāṃ**. It's the letter **ह** (h) with the **ा** sign
 for long *ā*, and — the key mark — the **ँ** on top: the **chandrabindu**, the
@@ -31,7 +48,8 @@ but a humming *hããⁿ*, the sound sent up through the nose, the way French doe
 in the next word — both nasalise, but the moon-dot rides a vowel that has nothing
 above it, like *ा*.)
 
-## Saying it politely
+## You'll want to know — Saying it politely
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C07-HAAN-02]; assesses=[] -->
 
 A bare *hāṃ* is a normal, friendly yes. To an elder, a stranger, or anyone you'd
 show respect, Hindi adds the honorific **जी** (*jī*):
@@ -42,6 +60,7 @@ show respect, Hindi adds the honorific **जी** (*jī*):
 warms up a plain yes into a courteous one.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hāṃ" — let the *ā* hum through your nose]
@@ -49,6 +68,7 @@ warms up a plain yes into a courteous one.
 - [YOU SAY: spot the mark — the moon-dot **ँ** is what nasalises it]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02] -->
 
 [PAUSE 3s] How do you say yes in Hindi? (**hāṃ**, हाँ.) What does the
 **chandrabindu** ँ do to the vowel? (**Nasalises** it — sends it through the

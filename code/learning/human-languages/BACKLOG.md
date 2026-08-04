@@ -100,9 +100,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B26 | Complete (#9838) | Publish Malayalam Chapters 6–31 from their canonical lessons rather than hand-copying twenty-six book chapters. | Thirty-three schema-v2 lessons now generate twenty-six chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B27 | Complete (#9844) | Remove Malayalam's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 107-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally empty versos are truly empty. |
 | HL-B28 | Complete (#9854) | Publish Arabic Chapters 3–27 and their writing companions from canonical lessons rather than hand-copying another twenty-five book chapters. | Forty-five schema-v2 lessons now generate twenty-five chapters whose source hashes are independently verified against the Language Ladder corpus. |
-| HL-B29 | Complete in this PR | Remove Arabic's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally empty versos are truly empty. |
-| HL-B30 | Next | Publish Hindi Chapters 6–33 and its writing companions from canonical lessons rather than hand-copying another twenty-eight book chapters. | The Hindi PDF stops after Chapter 5 while canonical app content continues through Chapter 33 and eleven dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
-| HL-B31 | Queued | Remove Hindi's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports two overfull boxes, five underfull boxes, three duplicate practice labels, 29 Hyperref warnings, undefined bold/italic Devanagari font shapes, and a visibly colliding final-page running header; the clean-build signal is zero of each. |
+| HL-B29 | Complete (#9861) | Remove Arabic's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally empty versos are truly empty. |
+| HL-B30 | Complete in this PR | Publish Hindi Chapters 6–33 and its writing companions from canonical lessons rather than hand-copying another twenty-eight book chapters. | Fifty-one lessons now use schema v2; forty later lessons generate twenty-eight chapters whose source hashes are independently verified against Language Ladder, while eleven prerequisite-ordered writing companions remain inside the gentle hand-authored opening chapters. |
+| HL-B31 | Next | Remove Hindi's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The expanded forced 114-page build has zero missing glyphs but reports nine overfull boxes, one underfull line, five underfull pages, three duplicate practice labels, 108 Hyperref warnings, and seven font-shape warnings; twelve open-right versos contain only running headers/page numbers. |
 | HL-B32 | Queued | Publish Tamil Chapters 6–31 and its writing companions from canonical lessons rather than hand-copying another twenty-six book chapters. | The Tamil PDF stops after Chapter 5 while canonical app content continues through Chapter 31 and eight dependency-ordered writing lessons; schema-v2 migration plus generation should close that drift safely. |
 | HL-B33 | Queued | Remove Tamil's LaTeX layout, duplicate-label, bookmark, and font warnings. | A forced build succeeds with no missing glyphs but reports six overfull boxes, six underfull boxes, four duplicate practice labels, 27 Hyperref warnings, and undefined bold/italic Tamil font shapes; the clean-build signal is zero of each. |
 | HL-B34 | Queued | Publish Latin Chapters 2–36 from canonical lessons rather than hand-copying another thirty-five book chapters. | The Latin PDF contains only Chapter 1 while canonical app content continues through Chapter 36; schema-v2 migration plus generation should close that drift safely. |
@@ -912,6 +912,36 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   intact.
 - HL-B30 is next: publish Hindi Chapters 6–33 and the dependency-ordered
   writing companions from the canonical app corpus.
+
+## Findings from HL-B30
+
+- Fifty-one Hindi lessons now use schema v2 with explicit shared-spine nodes,
+  unique topological sequence numbers, honest sub-five-minute budgets, typed
+  teaching blocks, and prerequisite knowledge boundaries. The set comprises
+  forty lessons across Chapters 6–33 plus eleven dependency-ordered writing
+  companions already placed inside Chapters 1–2.
+- Twenty-eight generated chapters now carry canonical source hashes into the
+  book. Language Ladder independently rebuilds and verifies every Chapter
+  6–33 hash, so the browser and downloadable book consume the same lesson AST
+  instead of parallel copies.
+- The existing hand-authored opening remains intact: its writing companions
+  gently introduce the headline, inherent vowel, mātrās, preposed short *i*,
+  spineless letters, virama, conjuncts, and whole-word assembly
+  exactly where the learner first needs them.
+- Reusable Devanagari, Arabic, and Cyrillic font mappings preserve Hindi's
+  Sanskrit, Perso-Arabic, and cross-language etymology comparisons. The shared
+  renderer now emits stable LaTeX for stacked accents, PIE subscripts and
+  superscripts, and comparison symbols; the forced PDF build has zero missing
+  glyphs.
+- The corpus remains at 1,066 lessons with zero duration violations and zero
+  unknown prerequisites. Missing lesson chapters in books fall from 104 to 76.
+- The expanded PDF builds successfully at 114 pages. Its remaining measured
+  warning baseline is nine overfull boxes, one underfull line, five underfull
+  pages, three duplicate practice labels, 108 Hyperref warnings, and seven
+  font-shape warnings. Physical PDF pages 20, 40, 48, 52, 60, 74, 78, 82, 86,
+  90, 94, and 112 are open-right versos containing only running headers and
+  page numbers; pages 2 and 4 are the same front-matter pattern. HL-B31 is next
+  and owns that cleanup plus the complete rendered-page audit.
 
 ## Findings from HL-D01C
 

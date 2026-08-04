@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C07-nahin
+spine_node: SPINE-RESPOND-BASIC
+sequence: 250
 chapter: 7
 type: word
 headword: नहीं
@@ -9,25 +12,40 @@ prerequisites: [HI-C07-haan]
 sounds: [anusvara-nasal, vowel-ii]
 roots: [na-sanskrit, pie-ne]
 etymology_hook: "नहीं nahīṃ holds Sanskrit na — the same PIE *ne that negates Latin nōn, German nein and English no"
-est_minutes: 4
+duration:
+  max_seconds: 232
+requires:
+  knowledge: [HI-CONCEPT-C07-HAAN-01, HI-CONCEPT-C07-HAAN-02]
+introduces:
+  knowledge: [HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03]
+practises:
+  knowledge: [HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C07-haan, HI-C01-namaste]
 ---
 
 # नहीं (nahīṃ) — no / not
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Hindi's "no" carries a sound so old it also sits inside German and
 Latin.
 
-## The word
+## You'll want to know — The word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C07-NAHIN-01]; assesses=[] -->
 
 **नहीं** = **no**, said **nahīṃ** — **न** (na) + **ह** (h) + **ी** (long *ī*) +
 the **ं** *anusvara* that nasalises the end. The heart of it is that first
 syllable **na**, which is Hindi's ancient negator, straight from **Sanskrit
 na**.
 
-## The oldest "no" you'll meet
+## You'll want to know — The oldest "no" you'll meet
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C07-NAHIN-02]; assesses=[] -->
 
 That **na** is not just Sanskrit's — it is the same negative root that runs
 across nearly every language in this course, all descended from one ancient
@@ -43,7 +61,8 @@ You met this exact idea in the German *nein* lesson ("not one"); here it is agai
 at the other end of the family, in Hindi. The word for *no* is one of the most
 stubbornly unchanged things human languages have.
 
-## One word, two jobs
+## You'll want to know — One word, two jobs
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C07-NAHIN-03]; assesses=[] -->
 
 Like Spanish *no*, **nahīṃ** is both the **answer** and the **sentence-negator**:
 
@@ -53,6 +72,7 @@ Like Spanish *no*, **nahīṃ** is both the **answer** and the **sentence-negato
 So this single word gives you both "no" and how to make a sentence negative.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nahīṃ" — nasal at the end, from the *anusvara*]
@@ -60,6 +80,7 @@ So this single word gives you both "no" and how to make a sentence negative.
 - [YOU SAY: as a negator — "maĩ nahīṃ jāntā", "I don't know"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C07-NAHIN-01, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03] -->
 
 [PAUSE 3s] How do you say no in Hindi? (**nahīṃ**, नहीं.) What Sanskrit word is
 its core, and what ancient sound is that from? (**na**, from **PIE \*ne**.) Which

@@ -51,9 +51,17 @@ function escapeLatexCharacter(character: string): string {
     "→": "$\\to$",
     "↔": "$\\leftrightarrow$",
     "≈": "$\\approx$",
+    "≠": "$\\neq$",
     "ṓ": "\\'{\\={o}}",
+    "ḗ": "\\'{\\={e}}",
+    "ḯ": "\\'{\\={\\i}}",
+    "ḱ": "\\'{k}",
     "₁": "\\textsubscript{1}",
+    "₂": "\\textsubscript{2}",
+    "₃": "\\textsubscript{3}",
     "ʰ": "\\textsuperscript{h}",
+    "ʷ": "\\textsuperscript{w}",
+    "ⁿ": "\\textsuperscript{n}",
   };
   return escaped[character] ?? character;
 }
@@ -88,6 +96,7 @@ export function renderInlineMarkdown(
   markdown: string,
   options?: InlineRenderOptionsInput,
 ): string {
+  markdown = markdown.normalize("NFC");
   const output: string[] = [];
   const emphasis: Array<"italic" | "bold"> = [];
   const scripts = scriptMatchers(options);
@@ -103,6 +112,16 @@ export function renderInlineMarkdown(
   while (cursor < markdown.length) {
     const codePoint = markdown.codePointAt(cursor);
     const character = codePoint === undefined ? "" : String.fromCodePoint(codePoint);
+    if (markdown.startsWith("ī\u0301", cursor)) {
+      output.push("\\'{\\={\\i}}");
+      cursor += 2;
+      continue;
+    }
+    if (markdown.startsWith("ā\u0301", cursor)) {
+      output.push("\\'{\\={a}}");
+      cursor += 2;
+      continue;
+    }
     if (character === "\\" && cursor + 1 < markdown.length) {
       const escaped = markdown[cursor + 1] ?? "";
       if (`!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`.includes(escaped)) {

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C11-laal-niila
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 310
 chapter: 11
 type: word
 headword: लाल नीला
@@ -9,18 +12,32 @@ prerequisites: [HI-C11-kaalaa-safed]
 sounds: [devanagari-long-aa, retroflex-la-vs-dental]
 roots: [laal-persian, nila-sanskrit]
 etymology_hook: "लाल laal 'red' comes from a Persian word for a RUBY; नीला niilaa 'blue' is Sanskrit for the indigo plant — and India's indigo trade is why English says 'indigo' at all"
-est_minutes: 4
+duration:
+  max_seconds: 205
+requires:
+  knowledge: [HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02]
+introduces:
+  knowledge: [HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
+practises:
+  knowledge: [HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C11-kaalaa-safed]
 ---
 
 # लाल, नीला (lāl, nīlā) — a gemstone's name, and India's dye
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] One more color pair, and one more Persian loan — plus a Sanskrit
 word connected to why English itself says "**indigo**."
 
-## लाल — named for a gem, not a color
+## You'll want to know — लाल — named for a gem, not a color
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C11-LAAL-NIILA-01]; assesses=[] -->
 
 **लाल** (*lāl*) = "**red**" — borrowed from Persian **لعل** (properly *laʿl*,
 with a middle *ʿayn* the Hindi/Persian pronunciation *lāl* smooths over), which
@@ -28,7 +45,8 @@ originally named a specific **deep-red gemstone** (a ruby or spinel), and
 only later widened to mean the color itself. Hindi's everyday word for "red"
 started life as a jeweler's word.
 
-## नीला — Sanskrit's dark blue, and the world's word for indigo
+## You'll want to know — नीला — Sanskrit's dark blue, and the world's word for indigo
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C11-LAAL-NIILA-02]; assesses=[] -->
 
 **नीला** (*nīlā*) = "**blue**," from Sanskrit **नील** (*nīla*), "dark blue" —
 also the name of the **indigo plant** and its dye. Here's the honest,
@@ -42,6 +60,7 @@ dye's *origin*). The connection is real, but it's a connection of **history
 and trade**, not of sound.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lāl" — red, originally a gemstone's name]
@@ -50,6 +69,7 @@ and trade**, not of sound.
   words linked by trade, not by sound]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02] -->
 
 [PAUSE 3s] What did **लाल** originally name, before it meant "red"? (**A deep
 red gemstone**, borrowed from Persian.) Does English "**indigo**" come

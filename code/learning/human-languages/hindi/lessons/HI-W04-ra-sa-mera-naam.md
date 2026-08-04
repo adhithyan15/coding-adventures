@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-W04-ra-sa-mera-naam
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 160
 chapter: 2
 type: writing
 headword: "र, स"
@@ -9,17 +12,31 @@ prerequisites: [HI-W03-preposed-i, HI-W01-na-ma]
 sounds: [devanagari-spine, devanagari-matra]
 roots: [sanskrit-sa, greek-sigma]
 etymology_hook: "Greek SIGMA and Latin S descend from the Phoenician letter šin — and on the leading (though not universally accepted) account, Brahmi, Devanagari's ancestor, came from the same Semitic family by way of Aramaic; if that is right, स and S are very distant cousins that stopped looking alike thousands of years ago"
-est_minutes: 4
+duration:
+  max_seconds: 278
+requires:
+  knowledge: [HI-CONCEPT-W03-PREPOSED-I-01, HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03]
+introduces:
+  knowledge: [HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02]
+practises:
+  knowledge: [HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02]
+skills: [writing, reading]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-W03-preposed-i, HI-W03-matras-naam, HI-C02-meraa, HI-C02-mera-naam-hai]
 ---
 
 # र and स — a spineless letter and a possible cousin
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Two more letters put every consonant in "my name" within reach.
 
-## र — "ra", your first spineless letter
+## You'll want to know — र — "ra", your first spineless letter
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W04-RA-SA-MERA-NAAM-01]; assesses=[] -->
 
 Every letter you have *written* so far has had a **vertical spine on the right**.
 र doesn't:
@@ -34,7 +51,8 @@ That's all. A shoulder and a stroke.
 spineless too, and you have already *read* it in *dhanyavād* (Chapter 1). Think
 of "no right-hand post" as a small family to learn, not as र's private signature.
 
-## स — "sa"
+## You'll want to know — स — "sa"
+<!-- hl-knowledge: introduces=[HI-CONCEPT-W04-RA-SA-MERA-NAAM-02]; assesses=[] -->
 
 Back to the normal frame, with a curl and a body:
 
@@ -62,6 +80,7 @@ three thousand years back, with no family resemblance left at all. Say "probably
 cousins," not "cousins."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02] -->
 
 [PAUSE 1s]
 - [YOU WRITE: र — "shoulder, downstroke, bar" — **no spine**]
@@ -69,6 +88,7 @@ cousins," not "cousins."
 - [YOU SAY: the probable cousins — "Σ · S from *šin* … and **probably** स too"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02] -->
 
 [PAUSE 3s] What makes **र** unlike the letters you've written so far? (**No
 right-hand spine** — just a shoulder and a downstroke.) Is it the only spineless

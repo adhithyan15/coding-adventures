@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C33-shubh-dopahar
+spine_node: SPINE-TIME-OF-DAY
+sequence: 600
 chapter: 33
 type: phrase
 headword: शुभ दोपहर
@@ -9,19 +12,33 @@ prerequisites: [HI-C30-dopahar-widened, HI-C32-evening-register]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
 roots: [su-good, do-two, pahar-traditional-watch]
 etymology_hook: "शुभ दोपहर (shubh dopahar, 'good afternoon') pairs शुभ with दोपहर IN ITS WIDENED MODERN SENSE (HI-C30's 'the whole afternoon,' not the narrow etymological 'exactly noon') — but of this arc's three शुभ+timeword greetings, this is the one described as most clearly rare/uncommon in actual spoken use, more so than सुप्रभात or शुभ संध्या; sources describe it as formal/written only, with casual alternatives like आपका दोपहर शुभ हो ('may your afternoon be good') existing but still uncommon, and नमस्ते/नमस्कार doing the real everyday work, all day including afternoon"
-est_minutes: 4
+duration:
+  max_seconds: 262
+requires:
+  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02, HI-CONCEPT-C32-EVENING-REGISTER-01]
+introduces:
+  knowledge: [HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02]
+practises:
+  knowledge: [HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C30-dopahar-widened, HI-C32-evening-register, HI-C32-shubh-sandhya]
 ---
 
 # शुभ दोपहर (shubh dopahar) — "good afternoon," this arc's rarest greeting
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already know दोपहर's meaning widened from "precisely
 noon" to "the afternoon." This greeting rides that widened sense — but
 it's the least commonly heard of the three you've now met.
 
-## शुभ दोपहर — "good afternoon," using the widened सense
+## You'll want to know — शुभ दोपहर — "good afternoon," using the widened सense
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C33-SHUBH-DOPAHAR-01]; assesses=[] -->
 
 **शुभ दोपहर** (**shubh dopahar**) — "**good afternoon**" — pairs
 **शुभ** ("good") with **दोपहर** used in the **widened, modern sense**
@@ -30,7 +47,8 @@ from last lesson: "the afternoon" generally, not the narrow etymological
 दोपहर's widened meaning is the one people actually reach for here —
 nobody uses शुभ दोपहर to mean "good [precise instant of] noon."
 
-## Be honest: the rarest of the three, not just another formal phrase
+## You'll want to know — Be honest: the rarest of the three, not just another formal phrase
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C33-SHUBH-DOPAHAR-02]; assesses=[] -->
 
 Here's the twist this lesson adds, verified independently rather than
 assumed from सुप्रभात or शुभ संध्या's pattern: of this arc's three
@@ -45,6 +63,7 @@ it's the weakest-attested of the three, a genuine difference in
 **degree**, not just the same story repeated a third time.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "shubh dopahar" — "good afternoon," using दोपहर's widened
@@ -55,6 +74,7 @@ it's the weakest-attested of the three, a genuine difference in
   afternoons too]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02] -->
 
 [PAUSE 3s] Does शुभ दोपहर use दोपहर's narrow "noon" sense or its
 widened "afternoon" sense? (**The widened sense** — "good afternoon,"

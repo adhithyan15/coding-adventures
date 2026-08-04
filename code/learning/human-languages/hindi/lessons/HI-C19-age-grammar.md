@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C19-age-grammar
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 420
 chapter: 19
 type: grammar
 headword: कितने साल के हो?
@@ -8,18 +11,32 @@ romanization: "kitne sāl ke ho?"
 prerequisites: [HI-C19-umr]
 sounds: [hindi-genitive-ke-ka]
 roots: [hindi-genitive-possession, hindi-hona]
-est_minutes: 4
+duration:
+  max_seconds: 196
+requires:
+  knowledge: [HI-CONCEPT-C19-UMR-01]
+introduces:
+  knowledge: [HI-CONCEPT-C19-AGE-GRAMMAR-01]
+practises:
+  knowledge: [HI-CONCEPT-C19-AGE-GRAMMAR-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C19-umr, HI-C02-aap-tum, HI-C03-hun]
 ---
 
 # कितने साल के हो? — belonging to so many years
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Languages do not agree on whether age is something you have, are,
 were born with, or state without a verb. Hindi gives the idea a fifth shape.
 
-## The two sentences
+## You'll want to know — The two sentences
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C19-AGE-GRAMMAR-01]; assesses=[] -->
 
 > **तुम कितने साल के हो?** — "How old are you?" (informal), literally "you,
 > **of how many years, are**?" (*tum kitne sāl ke ho?*)
@@ -36,6 +53,7 @@ So Hindi does not copy Romance's "I **have** years," Germanic's simple "I
 plus **होना** (*honā*, "to be").
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-AGE-GRAMMAR-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tum kitne sāl ke ho?" — how old are you?]
@@ -43,6 +61,7 @@ plus **होना** (*honā*, "to be").
 - [YOU POINT: **ke/kā** — the genitive, "of/belonging to"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C19-AGE-GRAMMAR-01] -->
 
 [PAUSE 3s] What does **के/का** mark? (A **genitive/possessive** relationship.)
 Does Hindi use Romance "have," simple Germanic "be," Latin "born," or Arabic's

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C30-dopahar-widened
+spine_node: SPINE-TIME-OF-DAY
+sequence: 560
 chapter: 30
 type: word
 headword: दोपहर
@@ -9,19 +12,33 @@ prerequisites: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
 roots: [do-two, pahar-traditional-watch]
 etymology_hook: "दोपहर (dopahar) is the SAME word already met in HI-C17 meaning precisely 'noon' ('two pahars,' a traditional ~3-hour Indian time-unit, counted from sunrise) — but in modern everyday Hindi, its meaning has genuinely WIDENED: दोपहर now covers the whole afternoon stretch, roughly noon through late afternoon (a meeting 'दोपहर में,' 'in the dopahar,' could mean anywhere from 1pm to 4pm), not just the precise midday instant its etymology points to"
-est_minutes: 4
+duration:
+  max_seconds: 258
+requires:
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02, HI-CONCEPT-C29-SHAAM-01, HI-CONCEPT-C29-SHAAM-02]
+introduces:
+  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02]
+practises:
+  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 ---
 
 # दोपहर — the same word, a wider job than its etymology promised
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You already know दोपहर means "noon" — two pahars after
 sunrise, precisely. This lesson's honest twist is that the word doesn't
 stay that precise in everyday use.
 
-## दोपहर — same word, a broader modern meaning
+## You'll want to know — दोपहर — same word, a broader modern meaning
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C30-DOPAHAR-WIDENED-01]; assesses=[] -->
 
 **दोपहर** (**dopahar**) is the exact word you met in Chapter 17, still
 literally "**two pahars**" (traditional ~3-hour watches, counted from
@@ -34,7 +51,8 @@ of the second daytime *pahar*); everyday usage has since widened that
 target into the general block of time most languages call "the
 afternoon."
 
-## Be honest: etymology and modern meaning have drifted apart
+## You'll want to know — Be honest: etymology and modern meaning have drifted apart
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C30-DOPAHAR-WIDENED-02]; assesses=[] -->
 
 This is worth sitting with: दोपहर's **literal** story still holds up
 the way Chapter 17 described it — "two pahars," with noon falling
@@ -47,6 +65,7 @@ Hindi, but here it's especially visible because Chapter 17 showed you
 exactly how tight the original math was.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "dopahar" — the same word from Chapter 17, "two pahars"]
@@ -55,6 +74,7 @@ exactly how tight the original math was.
   actual job widened past it]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02] -->
 
 [PAUSE 3s] Is दोपहर a new word, or the same one from Chapter 17? (**The
 same word** — "two pahars.") Does modern Hindi use दोपहर to mean only

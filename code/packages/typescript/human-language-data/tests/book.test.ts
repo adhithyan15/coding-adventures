@@ -96,6 +96,9 @@ describe("canonical LaTeX chapter rendering", () => {
     expect(renderInlineMarkdown("hṓrā ↔ h₁rewdʰ")).toBe(
       "h\\'{\\={o}}rā $\\leftrightarrow$ h\\textsubscript{1}rewd\\textsuperscript{h}",
     );
+    expect(renderInlineMarkdown("trī́ṇi · catvā́ri · ph₂tḗr · nókʷts ≠ ḱwon- · hããⁿ")).toBe(
+      "tr\\'{\\={\\i}}ṇi · catv\\'{\\={a}}ri · ph\\textsubscript{2}t\\'{\\={e}}r · nók\\textsuperscript{w}ts $\\neq$ \\'{k}won- · hãã\\textsuperscript{n}",
+    );
     expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
       "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
     );

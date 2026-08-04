@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: HI-C10-shanivaar-ravivaar
+spine_node: SPINE-TIME-OF-DAY
+sequence: 290
 chapter: 10
 type: word
 headword: शनिवार रविवार
@@ -9,25 +12,40 @@ prerequisites: [HI-C10-somavaar-shukravaar]
 sounds: [devanagari-long-aa, sha-vs-sa]
 roots: [vara-sanskrit, navagraha]
 etymology_hook: "शनिवार śanivār (Saturn) and रविवार ravivār (Sun) complete Hindi's planet-week — UNLIKE Spanish/French, no religion ever swapped these two out"
-est_minutes: 4
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01, HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02]
+introduces:
+  knowledge: [HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]
+practises:
+  knowledge: [HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C10-somavaar-shukravaar]
 ---
 
 # शनिवार and रविवार — Saturday and Sunday, no rewrite needed
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You've met five Hindi weekdays, each a deity's name plus **वार**
 (*vār*), "day." The last two complete the set — and here, unlike Spanish or
 French, **nothing ever got renamed**.
 
-## The last two days
+## You'll want to know — The last two days
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01]; assesses=[] -->
 
 - **शनिवार** (*śanivār*) = "**Śani's day**" — **Saturn**.
 - **रविवार** (*ravivār*) = "**Ravi's day**" — the **Sun** (*Ravi*, one of the
   Sun's many Sanskrit names).
 
-## Be honest about the contrast with Spanish and French
+## You'll want to know — Be honest about the contrast with Spanish and French
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02]; assesses=[] -->
 
 Remember: Spanish's **sábado**/**domingo** and French's **samedi**/**dimanche**
 are **not** simple planet-names — Christianity renamed both (Saturn's day
@@ -37,6 +55,7 @@ today, plainly "Saturn's day" and "Sun's day" — the full planet-week, all
 seven days, standing untouched by any later religious relabeling.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "śanivār" — Saturn's day — then "ravivār," Sun's day]
@@ -46,6 +65,7 @@ seven days, standing untouched by any later religious relabeling.
   did]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01, HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02] -->
 
 [PAUSE 3s] What do **शनिवार** and **रविवार** literally mean? (**"Saturn's
 day"** and **"Sun's day."**) How is Hindi's weekend different from Spanish's
