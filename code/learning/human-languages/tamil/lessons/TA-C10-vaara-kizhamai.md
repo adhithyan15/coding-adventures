@@ -5,7 +5,7 @@ spine_node: SPINE-TIME-OF-DAY
 sequence: 300
 chapter: 10
 type: word
-headword: திங்கள் செவ்வாய் புதன் வியாழன் வெள்ளி சனி ஞாயிறு
+headword: திங்கள்–ஞாயிறு
 gloss: the seven weekdays — a mix of Tamil's OWN planet-words and Sanskrit borrowings
 concept_tag: TA-DAYS-WEEK
 prerequisites: [TA-C09-sorry-register]
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TA-C09-sorry-register, TA-C09-mannikkavum]
 ---
 
-# திங்கள் to ஞாயிறு — the week, home-grown and borrowed together
+# திங்கள்–ஞாயிறு — a home-grown and borrowed week
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-SORRY-REGISTER-01] -->
@@ -46,15 +46,15 @@ Dravidian word, not the Sanskrit **வாரம்** (*vāram*) that Hindi, Kann
 Telugu build on (though Tamil also keeps a more formal, Sanskritic
 *-vāram* set alongside this everyday one):
 
-| Tamil | planet-word | meaning of the planet-word | source |
-|---|---|---|---|
-| **திங்கள்கிழமை** | *thiṅgaḷ* | "**Moon**" | Tamil's **own** word for moon |
-| **செவ்வாய்க்கிழமை** | *cevvāy* | traditionally read as "**the red one**" | likely Tamil's **own** descriptive name for Mars |
-| **புதன்கிழமை** | *pudhaṉ* | **Mercury** | borrowed from Sanskrit **Budha** |
-| **வியாழக்கிழமை** | *viyāzhaṉ* | **Jupiter** | likely from Sanskrit, via a name for **Bṛhaspati** |
-| **வெள்ளிக்கிழமை** | *veḷḷi* | traditionally read as "**silver**" | likely Tamil's **own** descriptive name for Venus |
-| **சனிக்கிழமை** | *saṉi* | **Saturn** | borrowed from Sanskrit **Śani** |
-| **ஞாயிற்றுக்கிழமை** | *ñāyiṟu* | "**Sun**" | Tamil's **own** word for sun |
+| Tamil weekday | planet-word, meaning, and source |
+|---|---|
+| **திங்கள்கிழமை** | *thiṅgaḷ*, "**Moon**" — Tamil's **own** word |
+| **செவ்வாய்க்கிழமை** | *cevvāy*, traditionally "**the red one**" — likely Tamil's **own** descriptive name |
+| **புதன்கிழமை** | *pudhaṉ*, **Mercury** — borrowed from Sanskrit **Budha** |
+| **வியாழக்கிழமை** | *viyāzhaṉ*, **Jupiter** — likely from Sanskrit, via a name for **Bṛhaspati** |
+| **வெள்ளிக்கிழமை** | *veḷḷi*, traditionally "**silver**" — likely Tamil's **own** descriptive name |
+| **சனிக்கிழமை** | *saṉi*, **Saturn** — borrowed from Sanskrit **Śani** |
+| **ஞாயிற்றுக்கிழமை** | *ñāyiṟu*, "**Sun**" — Tamil's **own** word |
 
 ## Why it's said this way: Be honest about the mix
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-VAARA-KIZHAMAI-02]; assesses=[] -->

@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [TA-C27-maalai, TA-C29-kaalai-vanakkam]
 ---
 
-# மாலை வணக்கம் (mālai vaṇakkam) — "evening greetings," the same pattern, re-verified
+# மாலை வணக்கம் — "evening greetings"
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MAALAI-01, TA-LEX-KAALAI-VANAKKAM-01] -->
