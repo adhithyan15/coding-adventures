@@ -680,6 +680,25 @@ unchanged at 1,264 implementation identities, 4,419 established-lane slots,
 with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown
 buckets. No new package identity displaces the implemented resolver repair.
 
+The first exact-head CI run exposed one consequence of the corrected graph:
+`typescript/rom-bios` became affected, but its Unix and Windows BUILD front
+doors did not materialize the five-package standalone closure. The focused
+repair adds `transistors -> logic-gates -> arithmetic -> cpu-simulator ->
+riscv-simulator` before the package install. Its scoped 7-test coverage suite
+and every rerun check pass. Guarded squash auto-completion merged PR #9902 at
+repaired head `a7defbbdb5` as `df0692fa76` after all checks were terminal
+acceptable and two consecutive mergeability readings were `MERGEABLE/CLEAN`.
+
+The post-merge collision-checked inventory remains unchanged at 1,264
+implementation identities, 4,419 established-lane slots, 173 high-consensus
+packages with 270 missing slots, 814 singleton packages with 11,396 missing
+slots, 618 Rust singletons, and zero collisions or unknown buckets. The quick
+dependency/leverage pass selects the shared TypeScript compiler-path boundary
+next: it is unblocked and one root configuration affects 129 package/program
+configs, so it has broader immediate package-build leverage than a
+single-engine follow-up without mixing resolver semantics or the separately
+owned 58-package BUILD_windows debt.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -731,9 +750,18 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   field-aware resolver tranche. `npm run build` for `typescript/transistors`
   reproduces TS6059 on unchanged `origin/main` because the shared
   `tsconfig.base.json` makes `rootDir: "src"` relative to the shared config.
-  Of 458 TypeScript package/program configs with build scripts, 293 override
-  `rootDir` and 165 retain this risk. This is a pending dependency-shaped
-  portability wave, separate from the 58-package `BUILD_windows` debt;
+  Of 458 TypeScript package/program configs with build scripts, the refined
+  audit finds 129 direct shared-base consumers that inherit both faulty paths,
+  155 that override both paths, three that override `rootDir` only, and 36
+  rootDir-less standalone configs outside the shared contract. This is a
+  dependency-shaped portability wave, separate from the 58-package
+  `BUILD_windows` debt;
+- isolate outputs for the two standalone TypeScript configs that have neither
+  `noEmit` nor `outDir`. The other 34 standalone rootDir-less configs are
+  already explicit: 26 are `noEmit` and eight declare an output directory.
+  `window-core` and `window-canvas` currently let `tsc` emit JavaScript and
+  declaration artifacts beside tracked sources, so they are a separate
+  two-package output-isolation item rather than part of the shared-base repair;
 - keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
