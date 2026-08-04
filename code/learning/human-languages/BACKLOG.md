@@ -6,13 +6,13 @@ discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
 Last prioritized: 2026-08-03. Current baseline after the first cross-language
-activity-coverage tranche:
+and Russian legacy activity-coverage tranches:
 20 registered tracks, 1,066 Markdown lessons, 20 downloadable LaTeX books, zero
 duration violations, and 20 validated realization maps containing 346 ordered
 path segments, 247 typed extension nodes, and 896 prerequisite-closed mapped
-lessons. Seventeen mapped non-lexical lessons across 15 tracks now carry
-compiled objective activities; 96 mapped non-lexical lessons remain explicit
-activity-coverage debt, including 18 legacy lessons that first need schema-v2
+lessons. Nineteen mapped non-lexical lessons across 16 tracks now carry
+compiled objective activities; 94 mapped non-lexical lessons remain explicit
+activity-coverage debt, including 16 legacy lessons that first need schema-v2
 body contracts. HL-V01 keeps the remaining migration debt reproducible in both
 JSON and human-readable reports; the canonical schema-v2 tranches prove one
 typed source across Language Ladder and generated book chapters without
@@ -77,7 +77,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-G04 | Queued | Normalize paired straight quotation marks when canonical prose is rendered into LaTeX. | Generated prose should use true opening and closing marks under every book's language rules without changing the canonical app text or code spans. |
 | HL-V02 | Complete (#9653) | Validate learner-facing target-language prompts against block-level knowledge declarations and prerequisite closure. | Schema-v2 production and recall blocks cannot ask for an undeclared form or a form absent from the lesson's transitive knowledge frontier. |
 | HL-V03 | Complete (#9900) | Compile individual prompt, answer, accepted-variant, feedback, and response-time contracts from typed activity blocks. | Compact JSON directives compile into validated runtime answer sets; each activity names a non-empty assessed-atom subset, carries feedback/time, and never scrapes prose. |
-| HL-A01 | In progress (15-track tranche) | Author objective activity coverage for every mapped non-lexical frontier. | This tranche replaces temporary confirmation in one prerequisite-closed schema-v2 lesson for every ready track with debt; 96 lessons remain, including 18 that first need schema-v2 migration. |
+| HL-A01 | In progress (#9901 + Russian slice) | Author objective activity coverage for every mapped non-lexical frontier. | The first tranche covers every ready schema-v2 track; the Russian slice migrates the minimal six-lesson naming chain and covers its two non-lexical frontiers. 94 lessons remain, including 16 that first need schema-v2 migration. |
 | HL-Q01 | Queued | Restore a clean standalone TypeScript typecheck for Language Ladder. | `npx tsc --noEmit` should pass after fixing the pre-existing DOM element type, review-log cast, missing Node test types, and unused/implicit test symbols; HL-V03 introduces no additional type errors. |
 | HL-B04 | Complete (#9661) | Publish Marathi Chapter 6 from its two canonical lessons rather than hand-copying another book chapter. | Both schema-v2 lessons now generate the PDF chapter from the same source hashes independently verified by Language Ladder. |
 | HL-B05 | Complete (#9663) | Remove Marathi's duplicate practice labels and Unicode bookmark warnings. | Stable recap labels, bookmark-safe Devanagari, natural page bottoms, and explicit static-font shapes make the forced six-chapter build warning-free. |
@@ -1192,6 +1192,24 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - HL-V03 is next because objective prompt/answer contracts are the remaining
   prerequisite for replacing non-lexical self-confirmation without scraping
   lesson prose or inventing accepted answers.
+
+## Findings from the Russian HL-A01 slice
+
+- Russian was the only track with non-lexical debt that the first 15-track
+  tranche could not cover. Its two frontiers depended on legacy pronoun and
+  naming lessons, so attaching activity comments directly would have left their
+  knowledge prerequisites unowned.
+- The minimal honest migration is six lessons in one closed chain: *я* →
+  *ты/вы* → polite *вы* → *меня зовут* → *как вас зовут* → the
+  cross-language *how/what* comparison. Stable sequence values, typed block boundaries,
+  explicit skill/mode/strand metadata, and transitive knowledge atoms preserve
+  the existing prerequisite order and learner prose.
+- Objective final-recall contracts now ask for the safest adult form (*вы*) and
+  the comparison language that asks *what* (English). Both add eight seconds;
+  all six lessons remain below five minutes.
+- Measured activity coverage rises from 17 to 19 of 113 mapped non-lexical
+  lessons across 16 tracks. The remaining debt falls from 96 to 94, and legacy
+  non-lexical debt falls from 18 to 16.
 
 ## Findings from the first HL-A01 tranche
 

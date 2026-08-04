@@ -111,6 +111,8 @@ describe("real curriculum", () => {
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PT-C02-practice-neutral-question",
+      "RU-C02-kak-cross-language-what-language",
+      "RU-C02-vy-formality-safe-default",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
       "TE-C31-subha-madhyahnam-register-source-scope",
