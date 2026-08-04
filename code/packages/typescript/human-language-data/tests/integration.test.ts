@@ -67,12 +67,12 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2]);
+    ).toEqual([1, 2, 3]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2]);
+    ).toEqual([1, 2, 3]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -101,6 +101,12 @@ describe("real curriculum", () => {
       "ES-C01-genero-gramatical-class-count",
       "ES-C01-practice-buenos-agreement",
       "ES-W03-question-span-roberto-outside",
+      "FA-C02-esm-e-man-sara",
+      "FA-C03-chist-fusion",
+      "FA-C03-esm-e-shoma-chist-question",
+      "FA-C03-khoshvaghtam-close",
+      "FA-C03-practice-next-line",
+      "FA-C03-shoma-to-first-meeting",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
       "HI-W01-shirorekha-na-ma-drawing-order",
@@ -116,6 +122,12 @@ describe("real curriculum", () => {
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
       "TE-C31-subha-madhyahnam-register-source-scope",
+      "UR-C02-mera-naam-sara",
+      "UR-C03-aap-ka-naam-kya-hai-question",
+      "UR-C03-aap-tum-tu-first-meeting",
+      "UR-C03-khushi-hui-close",
+      "UR-C03-kya-what",
+      "UR-C03-practice-next-line",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
@@ -141,6 +153,28 @@ describe("real curriculum", () => {
         (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
       ),
     ).toEqual([]);
+  });
+
+  it("keeps the Persian and Urdu Chapter 3 chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 3,
+      );
+      expect(chapter).toHaveLength(5);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 3,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 3,
+        ),
+      ).toEqual([]);
+    }
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

@@ -39,10 +39,21 @@
       "id": "UR-PATH-004",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
-        "UR-C02-mera-naam"
+        "UR-C02-mera-naam",
+        "UR-C03-aap-tum-tu",
+        "UR-C03-kya",
+        "UR-C03-aap-ka-naam-kya-hai",
+        "UR-C03-khushi-hui",
+        "UR-C03-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "UR-EXT-002-REGISTER",
+        "UR-EXT-003-SCRIPT",
+        "UR-EXT-004-GRAMMAR",
+        "UR-EXT-005-CULTURE",
+        "UR-EXT-006-CONSOLIDATION"
+      ],
       "after": []
     }
   ],
@@ -83,15 +94,11 @@
         "UR-PATH-004"
       ],
       "omits": [
-        "QUESTION-WHAT",
         "PRONOUN-I",
         "PRONOUN-ME",
-        "PRONOUN-YOU",
         "PRONOUN-MY",
         "WORD-NAME",
-        "WORD-IS",
-        "INTRO-WHATS-YOUR-NAME",
-        "INTRO-NICE-TO-MEET-YOU"
+        "WORD-IS"
       ],
       "relocates": {}
     },
@@ -173,6 +180,72 @@
       "prerequisites": [],
       "lessons": [
         "UR-C01-salam"
+      ]
+    },
+    {
+      "id": "UR-EXT-002-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose āp for a respectful first meeting and distinguish it from tum and tū.",
+      "prerequisites": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-aap-tum-tu"
+      ]
+    },
+    {
+      "id": "UR-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read Urdu kyā and select ye's consonantal value from the learned word.",
+      "prerequisites": [
+        "UR-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-kya"
+      ]
+    },
+    {
+      "id": "UR-EXT-004-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can keep hai final and use the fixed āp kā nām frame to ask a name respectfully.",
+      "prerequisites": [
+        "UR-EXT-002-REGISTER",
+        "UR-EXT-003-SCRIPT"
+      ],
+      "lessons": [
+        "UR-C03-aap-ka-naam-kya-hai"
+      ]
+    },
+    {
+      "id": "UR-EXT-005-CULTURE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "culture-pragmatics",
+      "canDo": "I can close a first introduction with the conventional respectful pleased-to-meet-you response.",
+      "prerequisites": [
+        "UR-EXT-004-GRAMMAR"
+      ],
+      "lessons": [
+        "UR-C03-khushi-hui"
+      ]
+    },
+    {
+      "id": "UR-EXT-006-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Urdu name exchange using only independently learned lines.",
+      "prerequisites": [
+        "UR-EXT-005-CULTURE"
+      ],
+      "lessons": [
+        "UR-C03-practice"
       ]
     }
   ]

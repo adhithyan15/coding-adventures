@@ -18,13 +18,14 @@ Iranian **na** from the Arabic loans **salâm** and **mamnun**.
 the spoken ezafe linker **-e**. The lesson keeps the careful written copula
 **ast** visible before later introducing its conversational reductions.
 
-## Chapter 3 — Ask and answer names *(planned)*
+## Chapter 3 — Ask and answer names *(authored)*
 
-- **اسم شما چیست؟** *esm-e shomâ chist?* — What is your name?
-- **خوشوقتم** *khoshvaghtam* — Pleased to meet you.
-- polite **shomâ** versus familiar **to**;
-- the joined forms needed by these expressions;
-- focused retrieval before the expressions enter mixed Persian/Urdu practice.
+**شما / تو** *shomâ / to* → **چیست** *chist* → **اسم شما چیست؟**
+*esm-e shomâ chist?* → **خوشوقتم** *khoshvaghtam* → one cumulative exchange.
+The schema-v2 chain adds respectful/familiar register, Persian **چ**, the
+*chi + ast* fusion, the right-to-left question mark, and a layered
+*khosh + vaqt + -am* etymology only when each expression needs it. Objective
+focused retrieval comes before the exchange enters mixed-language review.
 
 ## Chapter 4 — People and simple identity *(planned)*
 

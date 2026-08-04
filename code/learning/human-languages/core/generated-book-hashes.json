@@ -1655,6 +1655,19 @@
       "tex": "marathi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
+      "language": "persian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:6079d14592306807",
+      "lessonIds": [
+        "FA-C03-shoma-to",
+        "FA-C03-chist",
+        "FA-C03-esm-e-shoma-chist",
+        "FA-C03-khoshvaghtam",
+        "FA-C03-practice"
+      ],
+      "tex": "persian/book/chapters/ch03-ask-and-answer-names.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b696688c2654a2d3",
@@ -2581,6 +2594,19 @@
         "TE-C31-subha-madhyahnam-register"
       ],
       "tex": "telugu/book/chapters/ch31-good-afternoon.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:f1d09ed02a13ed81",
+      "lessonIds": [
+        "UR-C03-aap-tum-tu",
+        "UR-C03-kya",
+        "UR-C03-aap-ka-naam-kya-hai",
+        "UR-C03-khushi-hui",
+        "UR-C03-practice"
+      ],
+      "tex": "urdu/book/chapters/ch03-ask-and-answer-names.tex"
     }
   ]
 }
