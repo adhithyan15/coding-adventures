@@ -722,6 +722,9 @@ pass decomposes the 58-package TypeScript `BUILD_windows` debt into two exact
 children before reprioritization: a 55-package `cli-builder` closure (54 missing
 only that prerequisite plus `grammar-tools`, which also lacks `directed-graph`
 and `state-machine`) and a separate three-package SIR runtime closure.
+The quick dependency/leverage pass selects the 55-package child first because
+one common prerequisite layer closes almost the entire TypeScript validator
+wave without mixing the SIR dependency family.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

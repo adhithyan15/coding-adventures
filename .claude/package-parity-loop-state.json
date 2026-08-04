@@ -316,11 +316,11 @@
     {
       "id": "typescript-build-windows-cli-builder-closure",
       "title": "Repair the TypeScript BUILD_windows cli-builder prerequisite closure",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/typescript-build-windows-cli-builder-closure",
       "pr_number": null,
-      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate."
+      "notes": "Materialized from the exact 58-package TypeScript BUILD_windows validator debt after PR #9907 merged. Fifty-four packages are missing only typescript/cli-builder, while grammar-tools is missing cli-builder plus directed-graph and state-machine. Reconcile these 55 Windows front doors with their authoritative generic BUILD prerequisite order as one common dependency-shaped closure; keep the three SIR runtime packages separate. Selected by the post-merge dependency/leverage pass because one shared prerequisite repair closes 55 of 58 TypeScript validator failures in a single coherent layer, leaving the unrelated three-package SIR closure explicit and pending. The collision-checked da895587f3 inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets."
     },
     {
       "id": "typescript-build-windows-sir-runtime-closure",
