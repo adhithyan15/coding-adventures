@@ -26,6 +26,7 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         *,
         extends_shared: bool = True,
         compiler_options: dict[str, object] | None = None,
+        config_fields: dict[str, object] | None = None,
         typescript_version: str = "5.7.3",
     ) -> Path:
         project = root / "code" / "packages" / "typescript" / name
@@ -41,6 +42,8 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
             config["extends"] = "../tsconfig.base.json"
         if compiler_options is not None:
             config["compilerOptions"] = compiler_options
+        if config_fields is not None:
+            config.update(config_fields)
         write_json(project / "tsconfig.json", config)
         write_json(
             project / "package-lock.json",
@@ -173,6 +176,57 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
             self.assertEqual(summary.standalone_emit_projects, 1)
             self.assertEqual(summary.isolated_standalone_projects, 1)
 
+    def test_rejects_default_inputs_outside_effective_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(root, "unbounded-inputs")
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text("export {};\n", encoding="utf-8")
+            (project / "tests").mkdir()
+            (project / "tests" / "index.test.ts").write_text(
+                "export {};\n", encoding="utf-8"
+            )
+
+            summary = portability.audit_repository(root)
+
+            self.assertEqual(
+                [(issue.code, issue.path) for issue in summary.issues],
+                [
+                    (
+                        "INPUT_BOUNDARY_MISSING",
+                        "code/packages/typescript/unbounded-inputs/tsconfig.json",
+                    )
+                ],
+            )
+            self.assertEqual(summary.rooted_projects, 1)
+            self.assertEqual(summary.bounded_root_projects, 0)
+            self.assertEqual(summary.unbounded_root_projects, 1)
+            self.assertEqual(summary.outside_root_inputs, 1)
+
+    def test_accepts_source_include_with_tests_outside_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            project = self.make_project(
+                root,
+                "bounded-inputs",
+                config_fields={"include": ["src"]},
+            )
+            (project / "src").mkdir()
+            (project / "src" / "index.ts").write_text("export {};\n", encoding="utf-8")
+            (project / "tests").mkdir()
+            (project / "tests" / "index.test.ts").write_text(
+                "export {};\n", encoding="utf-8"
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.rooted_projects, 1)
+            self.assertEqual(summary.bounded_root_projects, 1)
+            self.assertEqual(summary.unbounded_root_projects, 0)
+            self.assertEqual(summary.outside_root_inputs, 0)
+
     def test_repository_contract_is_portable(self) -> None:
         summary = portability.validate_repository(REPO_ROOT)
 
@@ -182,6 +236,8 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         self.assertEqual(summary.inherited_out_dir, 132)
         self.assertEqual(summary.standalone_emit_projects, 143)
         self.assertEqual(summary.isolated_standalone_projects, 143)
+        self.assertEqual(summary.unbounded_root_projects, 0)
+        self.assertEqual(summary.outside_root_inputs, 0)
         self.assertEqual(summary.locked_compilers, 444)
 
 

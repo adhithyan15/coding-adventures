@@ -783,6 +783,15 @@ TypeScript files outside that root. The quick dependency/leverage pass selects
 this one compiler-input contract ahead of the separately pending 10-file Lua
 prerequisite wave.
 
+Real validation of the selected input-boundary tranche exposed a distinct
+declaration-ownership gap after its TS6059 failure was removed: algol-lexer,
+the algol-parser dependency chain, and browser-extension-toolkit reach Node
+built-ins or `process`, but do not own a Node type provider. Their coverage
+remains green at 79, 33, and 60 tests respectively. The new
+`typescript-node-builtin-type-declarations` backlog item owns a corpus audit
+and dependency-shaped manifest repair; the 96-config input-boundary tranche
+does not absorb package manifests or lockfiles.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
