@@ -1,3 +1,6 @@
+cd ../sir-runtime-core && npm ci --quiet
+cd ../sir-runtime-exceptions && npm ci --quiet
+cd ../sir-runtime-pairs && npm ci --quiet
 npm ci --quiet
 npx tsc --noEmit
 npx vitest run --coverage

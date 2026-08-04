@@ -2,6 +2,17 @@
 
 All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
+## Unreleased
+
+### Fixed
+
+- The Windows standalone build now installs `sir-runtime-core` and its
+  exceptions and pairs prerequisites before the package install, matching the
+  generic build's complete local prerequisite closure.
+- Clean strict type-checks now install the Node declarations required while
+  compiling the core runtime; extremal block-key comparisons narrow nullable
+  SIR values without changing their runtime behavior.
+
 ## [0.1.25] - 2026-07-12
 
 ### Added

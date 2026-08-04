@@ -1172,7 +1172,7 @@ function arrayBlockMethod(
       let bestKey = apply(block, [recv[0]]);
       for (let i = 1; i < recv.length; i++) {
         const key = apply(block, [recv[i]]);
-        if (wantMin ? key < bestKey : key > bestKey) {
+        if (wantMin ? key! < bestKey! : key! > bestKey!) {
           bestItem = recv[i];
           bestKey = key;
         }
@@ -1423,7 +1423,7 @@ function hashBlockMethod(
       for (let i = 1; i < entries.length; i++) {
         const [k, v] = entries[i];
         const key = apply(block, [k, v]);
-        if (wantMin ? key < bestKey : key > bestKey) {
+        if (wantMin ? key! < bestKey! : key! > bestKey!) {
           bestPair = [k, v];
           bestKey = key;
         }

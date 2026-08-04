@@ -94,3 +94,7 @@ npm install
 npx tsc --noEmit
 npx vitest run
 ```
+
+The repository's `BUILD_windows` front door first materializes the CAS pattern
+matcher and symbolic IR so this package also works from a clean standalone
+checkout.
