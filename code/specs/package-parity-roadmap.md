@@ -536,6 +536,37 @@ review. This new downstream pair does not displace the already implemented and
 fully validated Elixir resolver repair. The adjacent Latin fixes are
 package-identity neutral.
 
+Guarded squash auto-completion merged the Elixir resolver PR #9888 at exact
+head `a610d247f1` as `9106e9ce78` after all 17 exact-head checks were terminal
+and two consecutive mergeability readings were `MERGEABLE/CLEAN`. The later
+Spanish-book commit `6800d09448` is package-identity and resolver neutral. The
+refreshed schema-3 inventory therefore remains collision-free at 1,264
+implementation identities and 4,419 established-lane slots, with 173
+high-consensus packages and 270 missing slots, 814 singleton packages and
+11,396 missing slots, 618 Rust singletons, and zero unknown buckets.
+
+The complete post-Elixir resolver audit confirms exact Go/Haskell agreement for
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, and Swift. The remaining
+two-sided deltas are C# 178/47, F# 178/39, TypeScript 948/148, Java 24/4, and
+Kotlin 13/9 (Go-only/Haskell-only). Dart is one smaller root cause: Go
+discovers 82 packages and 67 edges while Haskell discovers none. The loop
+selects first-class Haskell Dart discovery plus one field-aware `pubspec.yaml`
+reader because that coherent change closes both the 82-package discovery gap
+and all 67 resolver edges without mixing .NET, JVM, TypeScript, standalone
+BUILD, or strict rockspec UTF-8 debt. A post-Dart audit remains queued to
+reprioritize those independent grammars.
+
+The implemented contract admits only direct package keys under root
+`dependencies:` and `dev_dependencies:` maps. Its fixture first exposes a Go
+false edge from a nested Git source option and zero Haskell discovery, then the
+paired bounded readers converge the complete real lane at 82 packages and 67
+edges with zero drift. Both real front doors validate all 82 packages. Full Go
+test, coverage, vet, build, and module verification; Haskell package suites,
+warning-clean compilation, Cabal checks, Haddock, and HPC coverage; the 50-case
+153-file shared corpus; schema/runner suites; diff, dependency, and direct
+security checks all pass. The parser reads only `pubspec.yaml` text and never
+follows source paths or adds execution, network, credential, or host authority.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are

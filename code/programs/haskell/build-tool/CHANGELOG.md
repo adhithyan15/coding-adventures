@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
 - Shared Elixir field-boundary coverage for direct, block, and shorthand
   dependency lists, multiline local path tuples, comments, project metadata,
   lockfiles, and non-path dependencies.
+- First-class Dart discovery plus shared `pubspec.yaml` field-boundary coverage
+  for root dependency maps, declared package aliases, nested source options,
+  overrides, comments, and unrelated metadata.
 
 ### Changed
 
@@ -48,6 +51,9 @@ All notable changes to this package will be documented in this file.
   available instead of unconditionally skipping the package.
 - Resolve Elixir dependencies only from local `path:` tuples in authoritative
   `deps:` lists instead of tokenizing the complete `mix.exs` and `mix.lock`.
+- Discover Dart packages and programs, hash `pubspec.yaml` and `.dart` inputs,
+  register exact root `name:` aliases, and resolve only direct keys under root
+  `dependencies:` and `dev_dependencies:` maps.
 - Resolve Lua edges only from quoted values in the rockspec `dependencies`
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over

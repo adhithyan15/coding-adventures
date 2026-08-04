@@ -420,6 +420,22 @@ func TestElixirResolutionConformanceFixture(t *testing.T) {
 	}
 }
 
+func TestDartResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-dart-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Tests for Swift dependency parsing
 // ---------------------------------------------------------------------------

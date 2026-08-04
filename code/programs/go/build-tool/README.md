@@ -108,6 +108,15 @@ field-boundary fixture covers direct, block, shorthand, multiline, comment,
 metadata, and external-dependency cases; the complete 282-package lane resolves
 exactly 472 edges.
 
+Dart dependency resolution reads only direct package keys under the root
+`dependencies:` and `dev_dependencies:` maps. Scalar constraints and nested
+source maps are both valid direct entries, while nested `path:`, `git:`,
+`url:`, `ref:`, and `sdk:` options, dependency overrides, comments, and
+unrelated YAML fields cannot invent graph edges. Root `name:` values and
+directory-derived snake-case aliases identify packages. The shared
+field-boundary fixture covers these boundaries, and the complete 82-package
+lane resolves exactly 67 edges.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

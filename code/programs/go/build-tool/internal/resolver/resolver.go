@@ -448,7 +448,8 @@ func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string
 	}
 
 	var internalDeps []string
-	currentBlock := ""
+	inDependencyBlock := false
+	directEntryIndent := -1
 
 	for _, line := range strings.Split(string(data), "\n") {
 		trimmed := strings.TrimSpace(line)
@@ -456,40 +457,48 @@ func parseDartDeps(pkg discovery.Package, knownNames map[string]string) []string
 			continue
 		}
 
-		if !strings.HasPrefix(line, " ") && strings.HasSuffix(trimmed, ":") {
-			switch strings.TrimSuffix(trimmed, ":") {
-			case "dependencies", "dev_dependencies":
-				currentBlock = strings.TrimSuffix(trimmed, ":")
-			default:
-				currentBlock = ""
-			}
+		indent := len(line) - len(strings.TrimLeft(line, " "))
+		if indent == 0 {
+			inDependencyBlock = trimmed == "dependencies:" || trimmed == "dev_dependencies:"
+			directEntryIndent = -1
 			continue
 		}
 
-		if currentBlock == "" {
+		if !inDependencyBlock {
 			continue
 		}
 
-		if len(line)-len(strings.TrimLeft(line, " ")) < 2 {
+		if directEntryIndent < 0 {
+			directEntryIndent = indent
+		}
+		if indent != directEntryIndent {
 			continue
 		}
 
-		if strings.HasPrefix(trimmed, "#") || strings.HasPrefix(trimmed, "sdk:") || strings.HasPrefix(trimmed, "path:") {
+		depName, _, found := strings.Cut(trimmed, ":")
+		depName = strings.ToLower(strings.TrimSpace(depName))
+		if !found || !isDartPackageIdentifier(depName) {
 			continue
 		}
 
-		if !strings.Contains(trimmed, ":") {
-			continue
-		}
-
-		depName := strings.TrimSpace(strings.SplitN(trimmed, ":", 2)[0])
-		depName = strings.ToLower(depName)
 		if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
 			internalDeps = append(internalDeps, pkgName)
 		}
 	}
 
 	return internalDeps
+}
+
+func isDartPackageIdentifier(value string) bool {
+	if value == "" || value[0] < 'a' || value[0] > 'z' {
+		return false
+	}
+	for _, char := range value[1:] {
+		if (char < 'a' || char > 'z') && (char < '0' || char > '9') && char != '_' {
+			return false
+		}
+	}
+	return true
 }
 
 // parseRustDeps extracts internal dependencies from a Rust Cargo.toml file.

@@ -438,6 +438,7 @@ supportedLanguages =
     , "ruby"
     , "go"
     , "rust"
+    , "dart"
     , "typescript"
     , "elixir"
     , "lua"
@@ -602,10 +603,11 @@ exactManifestNames pkg = do
     let cargoNames = if packageLanguage pkg == "rust" then readCargoNames root else pure []
     let pythonNames = if packageLanguage pkg == "python" then readPyprojectNames root else pure []
     let goNames = if packageLanguage pkg == "go" then readGoModuleNames root else pure []
+    let dartNames = if packageLanguage pkg == "dart" then readPubspecNames root else pure []
     let packageJsonNames = if packageLanguage pkg == "typescript" then readPackageJsonNames root else pure []
     let gemNames = if packageLanguage pkg == "ruby" then readGemspecNames root else pure []
     let perlNames = if packageLanguage pkg == "perl" then readPerlPackageNames root else pure []
-    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, packageJsonNames, gemNames, perlNames]
+    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, dartNames, packageJsonNames, gemNames, perlNames]
 
 sequenceToList :: [IO [String]] -> IO [String]
 sequenceToList actions = fmap concat (sequence actions)
@@ -651,6 +653,27 @@ readGoModuleNames root = do
                 , let stripped = trim line
                 , "module " `isPrefixOf` stripped
                 ]
+
+readPubspecNames :: FilePath -> IO [String]
+readPubspecNames root = do
+    let pubspecPath = root </> "pubspec.yaml"
+    exists <- doesFileExist pubspecPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict pubspecPath
+            pure (mapMaybe dartRootName (lines contents))
+
+dartRootName :: String -> Maybe String
+dartRootName rawLine
+    | length rawLine /= length (dropWhile (== ' ') rawLine) = Nothing
+    | otherwise =
+        case break (== ':') rawLine of
+            (field, ':' : value)
+                | map toLower (trim field) == "name"
+                , let candidate = map toLower (trim (takeWhile (/= '#') value))
+                , isDartPackageIdentifier candidate -> Just candidate
+            _ -> Nothing
 
 readPackageJsonNames :: FilePath -> IO [String]
 readPackageJsonNames root = do
@@ -811,6 +834,7 @@ readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
     | packageLanguage pkg == "elixir" = readElixirDependencyTokens pkg
+    | packageLanguage pkg == "dart" = readDartDependencyTokens pkg
     | packageLanguage pkg == "go" = readGoDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "perl" = readPerlDependencyTokens pkg
@@ -819,6 +843,57 @@ readManifestTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readDartDependencyTokens :: Package -> IO [String]
+readDartDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "pubspec.yaml"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (dartDependencyTokens contents)
+
+dartDependencyTokens :: String -> [String]
+dartDependencyTokens = nub . collect False Nothing . lines
+  where
+    collect _ _ [] = []
+    collect inBlock directIndent (rawLine : rest)
+        | null stripped || "#" `isPrefixOf` stripped = collect inBlock directIndent rest
+        | indentation == 0 =
+            collect
+                (stripped `elem` ["dependencies:", "dev_dependencies:"])
+                Nothing
+                rest
+        | not inBlock = collect False Nothing rest
+        | otherwise =
+            let expectedIndent = fromMaybe indentation directIndent
+                candidate = if indentation == expectedIndent then dartDependencyKey stripped else Nothing
+             in maybeToList candidate ++ collect True (Just expectedIndent) rest
+      where
+        stripped = trim rawLine
+        indentation = length (takeWhile (== ' ') rawLine)
+
+dartDependencyKey :: String -> Maybe String
+dartDependencyKey line =
+    case break (== ':') line of
+        (field, ':' : _)
+            | let candidate = map toLower (trim field)
+            , isDartPackageIdentifier candidate -> Just candidate
+        _ -> Nothing
+
+isDartPackageIdentifier :: String -> Bool
+isDartPackageIdentifier [] = False
+isDartPackageIdentifier (first : rest) =
+    first >= 'a'
+        && first <= 'z'
+        && all
+            (\character ->
+                (character >= 'a' && character <= 'z')
+                    || (character >= '0' && character <= '9')
+                    || character == '_'
+            )
+            rest
 
 readElixirDependencyTokens :: Package -> IO [String]
 readElixirDependencyTokens pkg = do
@@ -1682,6 +1757,7 @@ shouldHashFile pkg path =
             , "go.sum"
             , "mix.exs"
             , "mix.lock"
+            , "pubspec.yaml"
             , "package.swift"
             , "makefile.pl"
             , "cpanfile"
@@ -1695,6 +1771,7 @@ shouldHashFile pkg path =
                 "ruby" -> [".rb"]
                 "go" -> [".go"]
                 "rust" -> [".rs"]
+                "dart" -> [".dart"]
                 "typescript" -> [".ts", ".tsx", ".js", ".jsx"]
                 "elixir" -> [".ex", ".exs"]
                 "lua" -> [".lua"]

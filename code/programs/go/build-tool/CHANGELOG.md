@@ -32,6 +32,9 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Dart dependency resolution now accepts only direct package keys under root
+  `dependencies:` and `dev_dependencies:` maps, excluding nested source
+  options, dependency overrides, comments, and unrelated YAML fields.
 - Elixir dependency resolution now reads local `path:` tuples from both direct
   project `deps:` lists and block or shorthand `defp deps` lists, including
   multiline tuples, while excluding comments, application metadata, prose,
