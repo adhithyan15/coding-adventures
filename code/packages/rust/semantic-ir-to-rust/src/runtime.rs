@@ -315,6 +315,125 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    // ── polymorphic `<<` (Ruby's shift operator) ────────────────────
+    //
+    // `<<` -- Ruby's shift operator, polymorphic like `plus`:
+    //   Array   -- push each RHS operand IN PLACE, returns the (mutated)
+    //              receiver. Chains left-to-right: `a << 1 << 2` pushes
+    //              both (the frontend lowers a `<<` chain to ONE variadic
+    //              call, the same convention `plus` already folds over).
+    //   Integer -- bitwise shift; see `shift_left_i64` below, PORTED from
+    //              the C/Go backends' helper of the same name for
+    //              identical overflow/negative-amount semantics (no
+    //              bignum growth -- saturates at i64::MAX/i64::MIN rather
+    //              than wrapping).
+    //   String  -- concatenates and returns a NEW string, raising the
+    //              SAME rescuable `TypeError` `plus` raises for a
+    //              non-string operand (Ruby raises `TypeError` for `<<`
+    //              on an incompatible operand too, so this is not a new
+    //              divergence from `plus`).
+    pub fn shift_left(args: Vec<Value>) -> Value {
+        match args.first() {
+            Some(Value::Seq(items)) => {
+                for a in &args[1..] {
+                    items.borrow_mut().push(a.clone());
+                }
+                Value::Seq(Rc::clone(items))
+            }
+            Some(Value::Str(_)) => {
+                let mut out = String::new();
+                for a in &args {
+                    match a {
+                        Value::Str(s) => out.push_str(s),
+                        other => raise(
+                            "TypeError",
+                            Value::Str(Rc::from(
+                                format!(
+                                    "no implicit conversion of {} into String",
+                                    ruby_class_name(other)
+                                )
+                                .as_str(),
+                            )),
+                        ),
+                    }
+                }
+                Value::Str(Rc::from(out.as_str()))
+            }
+            _ => {
+                let mut acc = args.first().map(as_i64).unwrap_or(0);
+                for a in &args[1..] {
+                    acc = shift_left_i64(acc, shift_amount_arg(a));
+                }
+                Value::Int(acc)
+            }
+        }
+    }
+
+    // Extracts a shift-amount argument as a plain i64 -- an Integer passes
+    // through, a Float truncates toward zero via Rust's `as i64` cast
+    // (SATURATING and NaN-safe by language guarantee since Rust 1.45 --
+    // "if the source value is `NaN`... the result is 0; otherwise the
+    // result is clamped to the range of the target type", so no manual
+    // overflow guard is needed here unlike the C/Go backends' equivalent
+    // helper); anything else contributes a 0 shift.
+    fn shift_amount_arg(v: &Value) -> i64 {
+        match v {
+            Value::Int(n) => *n,
+            Value::Float(f) => *f as i64,
+            _ => 0,
+        }
+    }
+
+    // Bitwise-shifts `n` by `amount`, matching real Ruby's rules (ported
+    // from the C/Go backends' `shift_left_i64` -- see those for the full
+    // rationale):
+    //   - `amount == 0` or `n == 0`: identity.
+    //   - `amount < 0`: REVERSES direction -- a right shift by
+    //     `amount.unsigned_abs()` (`5 << -1 == 5 >> 1 == 2`).
+    //   - `amount > 0`: LEFT shift, SATURATES at i64::MAX/i64::MIN rather
+    //     than wrapping once the true mathematical result would not fit.
+    //   - A shift amount whose magnitude is >= 64 drains every bit:
+    //     saturates to 0/-1 (right) or i64::MAX/i64::MIN (left, `n != 0`).
+    // Rust's native `<<`/`>>` panic (in a debug build) or silently mask
+    // the shift amount mod 64 (in a release build) for a count >= the bit
+    // width, so every shift below is manually guarded to a checked,
+    // in-range amount before it ever reaches a native `<<`/`>>`.
+    fn shift_left_i64(n: i64, amount: i64) -> i64 {
+        if amount == 0 || n == 0 {
+            return n;
+        }
+        if amount < 0 {
+            let k = amount.unsigned_abs();
+            if k >= 64 {
+                return if n < 0 { -1 } else { 0 };
+            }
+            return n >> k;
+        }
+        let k = amount as u64;
+        let neg = n < 0;
+        if k >= 64 {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        let mag = n.unsigned_abs();
+        if (mag >> (64 - k)) != 0 {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        let shifted = mag << k;
+        let limit = if neg { i64::MAX as u64 + 1 } else { i64::MAX as u64 };
+        if shifted > limit {
+            return if neg { i64::MIN } else { i64::MAX };
+        }
+        if neg {
+            if shifted == limit {
+                i64::MIN
+            } else {
+                -(shifted as i64)
+            }
+        } else {
+            shifted as i64
+        }
+    }
+
     pub fn minus(args: Vec<Value>) -> Value {
         if args.is_empty() {
             return Value::Int(0);
@@ -1189,6 +1308,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn call_builtin_by_name(name: &str, args: Vec<Value>) -> Value {
         match name {
             "+" => plus(args),
+            "<<" => shift_left(args),
             "-" => minus(args),
             "*" => times(args),
             "/" => divide(args),
