@@ -173,6 +173,11 @@ a package can participate in discovery or registration.
 Discovery supports explicit inspection and stable immediate-child `.agent`
 scans. It parses only authenticated manifest bytes, enforces signing-key tier
 ceilings, and returns inert candidates for explicit control-plane registration.
+Each complete snapshot is bounded to 4,096 packages. Reload planning compares
+two fully verified snapshots and reports added, removed, and replaced identities
+in stable order without mutating durable registration or live process state.
+Package activation remains an explicit lifecycle operation: discovery never
+silently replaces a running agent.
 
 The Level 1 runtime injects a provider-neutral LLM client plus authorized input
 and output channel endpoints. For each verified UTF-8 message it sends the full
