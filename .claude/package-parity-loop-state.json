@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 9905,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9905",
+    "branch": "codex/typescript-shared-tsconfig-rootdir-portability",
+    "implementation_head": "cb12f5675a5319cfa8967befed87ad1f367d5525",
+    "last_ci_repair": null
+  },
   "last_inventory": {
     "revision": "df0692fa76250371f44b607ae42823425b30125a",
     "schema_version": 3,
@@ -514,11 +520,11 @@
     {
       "id": "typescript-shared-tsconfig-rootdir-portability",
       "title": "Make shared TypeScript compiler paths package-relative",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/typescript-shared-tsconfig-rootdir-portability",
-      "pr_number": null,
-      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. The refined corpus audit finds 458 TypeScript package/program configs with build scripts: 129 directly inherit both faulty shared paths, three override rootDir but still inherit the faulty outDir, 155 directly override both, and 36 rootDir-less configs do not consume the shared base. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Selected after guarded PR #9902 merged and the collision-checked df0692fa76 inventory remained unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. This one shared compiler boundary directly affects 132 configs, giving it greater immediate package-build leverage than a single-engine follow-up while remaining independent of resolver semantics and the separately owned 58-package BUILD_windows debt."
+      "pr_number": 9905,
+      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. The refined corpus audit finds 458 TypeScript package/program configs with build scripts: 129 directly inherit both faulty shared paths, three override rootDir but still inherit the faulty outDir, 155 directly override both, and 36 rootDir-less configs do not consume the shared base. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Selected after guarded PR #9902 merged and the collision-checked df0692fa76 inventory remained unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. This one shared compiler boundary directly affects 132 configs, giving it greater immediate package-build leverage than a single-engine follow-up while remaining independent of resolver semantics and the separately owned 58-package BUILD_windows debt. The implemented contract uses TypeScript 5.5's ${configDir} template, audits all 458 buildable configs and 444 compiler locks, and resolves all 129 rootDir and 132 outDir inheritors package-locally under real tsc --showConfig. Representative package and program builds, coverage, build-tool, inventory, diff, and production dependency security checks pass after a clean rebase onto origin/main 0378e91750. Ready-for-review PR #9905 opened at exact implementation head cb12f5675a5319cfa8967befed87ad1f367d5525."
     },
     {
       "id": "typescript-standalone-tsconfig-output-isolation",
