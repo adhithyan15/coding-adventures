@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 1088,
+    "totalLessons": 1096,
     "authoredBooks": 20,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -1420,13 +1420,15 @@
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "bookChapters": [
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1439,13 +1441,15 @@
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "bookChapters": [
           1,
           2,
           3,
-          4
+          4,
+          5
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1619,19 +1623,19 @@
       {
         "language": "persian",
         "status": "mixed",
-        "lessonCount": 16,
+        "lessonCount": 20,
         "versions": {
           "1": 4,
-          "2": 12
+          "2": 16
         }
       },
       {
         "language": "urdu",
         "status": "mixed",
-        "lessonCount": 16,
+        "lessonCount": 20,
         "versions": {
           "1": 4,
-          "2": 12
+          "2": 16
         }
       }
     ]
