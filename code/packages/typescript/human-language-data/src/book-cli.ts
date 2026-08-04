@@ -15,6 +15,7 @@ interface ConfiguredBookGenerationTarget extends BookGenerationTarget {
 
 interface BookGenerationConfig {
   version: 1;
+  sourceBaseUrl: string;
   scriptSets?: Record<string, InlineRenderOptions[]>;
   targets: ConfiguredBookGenerationTarget[];
 }
@@ -58,12 +59,23 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
   if (config.version !== 1 || config.targets.length === 0) {
     throw new Error("book-generation.json must declare version 1 and at least one target");
   }
+  let sourceBaseUrl: string;
+  try {
+    const parsed = new URL(config.sourceBaseUrl);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error();
+    parsed.search = "";
+    parsed.hash = "";
+    if (!parsed.pathname.endsWith("/")) parsed.pathname += "/";
+    sourceBaseUrl = parsed.href;
+  } catch {
+    throw new Error("book-generation.json must declare an HTTP(S) sourceBaseUrl");
+  }
   const lessons = loadLessons(root);
   const outputs = new Map<string, string>();
   const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
   for (const configuredTarget of config.targets) {
     const { scriptSet, ...plainTarget } = configuredTarget;
-    let target: BookGenerationTarget = plainTarget;
+    let target: BookGenerationTarget = { ...plainTarget, sourceBaseUrl };
     if (scriptSet !== undefined) {
       if (
         target.inlineScripts !== undefined ||

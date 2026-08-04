@@ -70,14 +70,14 @@ experience.
 | One atomic lesson | Strong: most content lessons teach one word or phrase. | Some lessons are long enough to contain several independent teaching steps. |
 | Strictly less than five minutes | The deterministic duration report now measures zero lessons at or above 300 effective seconds; schema-v2 lessons fail validation outside 1–299 seconds. | Keep the gate green as the corpus grows and finish migrating legacy lesson contracts. |
 | Etymology and morphology | Strong prose tradition and root metadata. | Normalize etymons, record sources/confidence, and deliver the full explanation to the app. |
-| Inline grammar | Typed local extension nodes place grammar lessons in prerequisite-safe paths; the app advances through those lessons inline. | Compile objective prompt/answer contracts so non-lexical focused checks do not rely on learner confirmation. |
-| Inline script | Typed local script extensions, writing lessons, and script JSON now participate in each language's visible frontier. | Complete grapheme-level knowledge closure, progressive transliteration fading, and a true Nastaliq presentation font. |
+| Inline grammar | Typed local extension nodes place grammar lessons in prerequisite-safe paths; compiled activity contracts now supply the first objective grammar check. | Author contracts across the remaining non-lexical frontiers instead of relying on temporary learner confirmation. |
+| Inline script | Typed local script extensions, writing lessons, and script JSON now participate in each language's visible frontier; the punctuation-span pilot uses an objective script activity. | Complete activity coverage, grapheme-level knowledge closure, progressive transliteration fading, and a true Nastaliq presentation font. |
 | Shared cross-language concepts | 42 concepts are shared by two or more languages. | The shared layer is mostly greetings and A0 vocabulary; 385 concepts remain language-namespaced. |
 | Safe progression | All 20 maps cover mapped prerequisites in earlier local positions; Learn stores only completed prefixes and cannot jump ahead. | Finish knowledge-atom and activity-contract migration for legacy lessons so every assessed token, construction, sound, and glyph is closure-checked. |
 | Single content source | The parser preserves typed Markdown bodies; the app renders them and generated book chapters carry the same source hashes. | Continue replacing the remaining handwritten chapter copies and legacy lesson contracts. |
 | Four skills and communicative use | Audio-script cues and guided prompts exist. | There is no structured listening, interaction, writing, or can-do coverage model, and no audio asset contract. |
 | Graded input and sustained reading | Isolated example sentences occur. | There is no controlled micro-story/dialogue corpus or known-token validation. |
-| Mixed-language practice | Learn advances independent local frontiers, persists safe lesson-id prefixes, blocks advancement after a wrong focused check, and admits only independently passed, visually distinguishable lessons to mixed SRS review. | Compile objective focused activities for non-lexical lessons and expand prompt directions beyond meaning recognition. |
+| Mixed-language practice | Learn advances independent local frontiers, prefers compiled objective activities, blocks advancement after a wrong focused check, and admits only independently passed, visually distinguishable lessons to mixed SRS review. The first cross-language and Russian legacy tranches reach 19 of 113 mapped non-lexical lessons across 16 tracks. | Extend objective activity coverage across the measured 94 remaining non-lexical frontiers and expand prompt directions beyond text entry. |
 | Register, dialect, and culture | Often explained in lesson prose. | These distinctions are not typed, so the app can silently compare non-equivalent registers or varieties. |
 | Proficiency target | Roadmaps generally point toward B1. | No CEFR/ACTFL-aligned outcome matrix shows which reception, production, interaction, or mediation abilities are covered. |
 
@@ -258,15 +258,19 @@ copy:
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-GRACIAS-PRODUCTIVE] -->
+<!-- hl-activity: {"id":"ES-C01-gracias-production","kind":"text","assesses":["ES-LEX-GRACIAS-PRODUCTIVE"],"prompt":"Type the Spanish for 'thank you'.","answer":"gracias","accepted":[],"feedback":{"correct":"Right: gracias.","incorrect":"The everyday form is gracias."},"response_seconds":8} -->
 
 - [YOU SAY: "gracias"]
 ```
 
 The body is parsed into stable, named blocks: `warmup`, `input`, `notice`,
 `pronunciation`, `script`, `etymology`, `grammar`, `culture-pragmatics`,
-`guided-production`, `comprehension`, `fluency`, and `recall`. A block may declare
-prompts, accepted answers, feedback, and response time. The app and book render the
-same block; medium-specific presentation belongs in renderers, not a second copy.
+`guided-production`, `comprehension`, `fluency`, and `recall`. After its knowledge
+boundary, a block may declare zero or more compact JSON `hl-activity` comments.
+Each names a stable id, response kind, non-empty assessed-atom subset, prompt,
+canonical answer, explicit accepted variants, correct/incorrect feedback, and
+response time. The app and book consume the same block; medium-specific
+presentation belongs in renderers, not a second copy.
 Every schema-v2 block authors both lists, including explicit empty lists. The
 union of block introductions must equal `introduces.knowledge`; every assessed
 atom must be declared in `practises.knowledge`; and guided-production and recall
@@ -283,7 +287,9 @@ The validator computes this set at every block boundary. It checks assessments
 before adding that block's introductions, so a form must be established by a
 prerequisite or by an earlier block rather than introduced and tested in one
 opaque step. Unknown atoms, cycles, forward references, missing or malformed
-directives, undeclared assessments, and assessed unavailable forms are errors.
+directives, undeclared assessments, assessed unavailable forms, activities whose
+atoms are outside their containing block, and ambiguous normalized answer variants
+are errors.
 Runtime scheduling fails closed and reports a curriculum defect; it never unlocks
 everything as a fallback.
 
@@ -291,7 +297,8 @@ everything as a fallback.
 
 `max_seconds` must be `1..299`. CI independently estimates delivery time from
 spoken word count, explicit pauses, repeat count and audio duration, a learner-
-response budget for every prompt, and a safety margin. The greater of the declared
+response budget for every prose prompt, each activity's authored response budget,
+and a safety margin. The greater of the declared
 and computed values is used. A lesson at 300 seconds or more fails validation.
 
 One session may chain several lessons, but each lesson is independently resumable.
@@ -478,12 +485,15 @@ measurable.
 3. **Mixed-practice correction** — implemented: learner-selected languages,
    persistent per-language completed prefixes, visible local frontiers, wrong-
    answer blocking, and independently gated mixed eligibility.
-4. **Persian and Urdu pilots** — build script composition and the first three spine
+4. **Objective activity compiler** — implemented: block-bound JSON contracts,
+   normalized variants, assessed-atom subset validation, authored feedback/time,
+   and Language Ladder consumption; expand coverage from the two pilots next.
+5. **Persian and Urdu pilots** — build script composition and the first three spine
    clusters in each language with appropriate typography and variety metadata.
-5. **Existing-track migration** — all tracks now have explicit paths and extension
+6. **Existing-track migration** — all tracks now have explicit paths and extension
    ledgers; continue schema migration, etymon normalization, roadmap alignment,
    and removal of handwritten book copies.
-6. **Corpus expansion** — grow through B1 while coverage reports select the next
+7. **Corpus expansion** — grow through B1 while coverage reports select the next
    missing can-do, skill, mode, register, or language realization.
 
 ## First milestone acceptance criteria

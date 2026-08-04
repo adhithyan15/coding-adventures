@@ -25,6 +25,9 @@ grammar introduced only when a word needs it.
   for a favour and doubles as "you're welcome."
 - **Grammar inline**: the formal/informal split and *politeness = plural* rule
   arrive at *здравствуйте* (its polite *-те*).
+- **Objective Chapter 2 progression**: the closed chain from *я* through
+  *как вас зовут* uses typed knowledge boundaries, and Language Ladder checks
+  polite *вы* plus the cross-language *how/what* contrast before advancing.
 
 ## Progress
 
@@ -53,3 +56,5 @@ sessions.
 
 Chapters 1 and 2 are authored as lessons and as a downloadable LaTeX starter
 book typeset with the vendored `NotoSansCyrillic-Static.ttf`.
+The six-lesson naming chain is also schema-v2 canonical content shared by the
+app, with both mapped non-lexical Russian frontiers using objective activities.

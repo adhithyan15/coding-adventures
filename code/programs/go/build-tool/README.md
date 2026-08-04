@@ -117,6 +117,15 @@ directory-derived snake-case aliases identify packages. The shared
 field-boundary fixture covers these boundaries, and the complete 82-package
 lane resolves exactly 67 edges.
 
+TypeScript dependency resolution parses the root `package.json` and reads only
+direct property names from `dependencies` and `devDependencies`. Exact
+top-level `name` strings and directory-derived scoped or unscoped names supply
+aliases. Dependency values are not followed, and peer or optional dependency
+tables, scripts, nested tool configuration, nested names, and malformed JSON
+cannot invent partial graph edges. The shared field-boundary fixture covers
+single-line objects and adversarial decoys; the complete 470-package lane
+resolves exactly 1,076 edges.
+
 Java and Kotlin dependency resolution reads only `includeBuild("...")` calls
 from root `settings.gradle.kts` files. Calls may span lines; their quoted
 relative paths are normalized lexically and must exactly match a discovered
@@ -127,6 +136,17 @@ opened. Java/Kotlin source and Gradle settings/build files participate in the
 package hash. The two shared field-boundary fixtures cover direct and nested
 paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
 exactly 186 and 166 edges respectively.
+
+C#, F#, and shared .NET dependency resolution reads only literal `Include`
+attributes on unqualified `ProjectReference` start elements in root `.csproj`
+and `.fsproj` files. Relative paths use portable separators, normalize
+lexically, and must exactly match another discovered root project file in the
+shared .NET scope. Comments, CDATA, processing instructions, escaped examples,
+namespaced elements, package references, MSBuild properties, globs, absolute
+paths, nested test projects, and unknown targets cannot invent graph edges;
+referenced files are never opened. Three shared fixtures cover both language
+lanes and cross-language references. The complete 198-package C# and
+197-package F# lanes resolve exactly 238 and 239 edges respectively.
 
 ## Canonical discovery identities
 

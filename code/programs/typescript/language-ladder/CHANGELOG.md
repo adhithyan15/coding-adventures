@@ -2,6 +2,56 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Persian and Urdu Chapter 5 frontiers
+
+- Load eight new prerequisite-safe take-leave steps across Persian and Urdu,
+  including each track's local etymology, script, register, and consolidation
+  extensions.
+- Keep the shared historical phrase locally readable before mixed comparison:
+  Persian joined **خداحافظ** and Urdu spaced **خدا حافظ** remain distinct
+  focused answers.
+- Use authored checks on every new step, raising objective non-lexical coverage
+  to 25 of 119 mapped lessons across 18 tracks while retaining independent
+  focused-before-mixed progression.
+
+### Changed — Persian and Urdu Chapter 3 frontiers
+
+- Load ten new prerequisite-safe name-exchange steps across Persian and Urdu,
+  including each track's inline register, script, grammar, culture, and
+  consolidation extensions.
+- Use the authored cumulative-practice checks for both tracks, raising objective
+  coverage to 21 of 115 mapped non-lexical lessons across 18 tracks while
+  retaining independent focused-before-mixed progression.
+
+### Changed — objective Russian naming progression
+
+- Replace temporary confirmation on both mapped Russian non-lexical frontiers
+  with typed checks for polite *вы* and the cross-language naming frame.
+- Load their six-lesson schema-v2 prerequisite chain without coupling Russian
+  progress to any other selected language; objective coverage is now 19 of 113
+  mapped non-lexical lessons across 16 tracks, with 94 remaining.
+
+### Changed — cross-language objective focused checks
+
+- Replace temporary confirmation with authored retrieval in one ready lesson
+  for each of 15 tracks that has schema-v2 non-lexical activity debt, covering
+  script, grammar, etymology, culture, and cumulative practice.
+- Expand objective non-lexical coverage from 2 to 17 of 113 mapped lessons;
+  96 remain, including 18 legacy lessons that require schema-v2 migration first.
+
+### Changed — typed objective focused activities
+
+- Load compiled `hl-activity` contracts from the shared lesson AST and prefer
+  their authored prompt, canonical answer, accepted variants, feedback, and
+  response budget over lexical inference or self-confirmation.
+- Hide answer-bearing lesson summaries while an authored activity is active,
+  show corrective feedback without advancing after a wrong answer, and require
+  an explicit continue after correct feedback before completing that language's
+  frontier.
+- Keep both knowledge and activity metadata out of the readable lesson view;
+  Spanish grammatical gender and punctuation-span lessons establish the
+  objective non-lexical contract now reused across 16 tracks.
+
 ### Changed — independent local frontiers and focused-before-mixed review
 
 - Replace the global concept cursor and unrestricted jump controls with one
@@ -10,9 +60,10 @@
 - Persist completed prefixes by stable lesson id independently per language;
   corrupt, unknown, out-of-order, and stale saved ids fail closed at the first
   missing local prerequisite.
-- Require a focused check before advancing: objective English-meaning retrieval
-  for lexical lessons and authored final-recall confirmation for script,
-  grammar, and other support lessons. Wrong answers do not advance.
+- Require a focused check before advancing: compiled activities when authored,
+  objective English-meaning retrieval for other lexical lessons, and temporary
+  final-recall confirmation for remaining support lessons. Wrong answers do not
+  advance.
 - Build mixed SRS review only from independently passed shared lessons and wait
   for two visually distinct eligible answers, preventing unseen lessons and
   identical one-option quizzes from entering the pool.

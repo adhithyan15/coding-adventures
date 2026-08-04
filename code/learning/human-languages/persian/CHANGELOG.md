@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.6.0 — 2026-08-04
+
+- Added four schema-v2 Chapter 5 micro-lessons for **خدا**, **حافظ**, joined
+  **خداحافظ**, and a start-versus-end interaction.
+- Kept Middle Persian and Arabic root histories behind independently readable
+  words, then introduced one broadly polite farewell without a hidden verb.
+- Extended the exact N+1/N+3/N+7/N+15 ledger through S35, with objective
+  activities and a generated five-chapter book.
+
+## 0.5.0 — 2026-08-04
+
+- Added six schema-v2 Chapter 4 micro-lessons for *hâl*, *chetor*, the careful
+  respectful wellbeing question, *khub*, compact *khubam*, and cumulative
+  practice.
+- Reused ezafe before introducing only the first-person **-am** copula needed
+  for the reply; colloquial contraction stays a labelled recognition preview.
+- Extended the sound-id reference and exact N+1/N+3/N+7/N+15 ledger through
+  S31, with objective activities and a generated four-chapter book.
+
+## 0.4.0 — 2026-08-03
+
+- Added five schema-v2 Chapter 3 micro-lessons for respectful/familiar “you,”
+  *chist*, the full name question, *khoshvaghtam*, and cumulative practice.
+- Added objective activity contracts and prerequisite-closed knowledge atoms for
+  the migrated Chapter 2 name frame and every new lesson.
+- Generated Chapter 3 for the downloadable book from the same canonical lesson
+  AST used by Language Ladder and extended the review ledger through S25.
+
+## 0.3.0 — 2026-08-03
+
+- Added the authoritative five-lesson session map with exact N+1, N+3, N+7,
+  and N+15 review placements.
+- Added an on-demand Persian pronunciation and script reference keyed to the
+  sound ids used by the starter lessons.
+
 ## 0.2.0 — 2026-08-02
 
 - Added the first downloadable LaTeX edition.

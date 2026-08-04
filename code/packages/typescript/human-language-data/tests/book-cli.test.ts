@@ -22,6 +22,7 @@ function fixture(output = "test/book/chapters/ch01-first.tex"): string {
     join(root, "core", "book-generation.json"),
     `${JSON.stringify({
       version: 1,
+      sourceBaseUrl: "https://example.test/curriculum",
       targets: [{ language: "test", chapter: 1, title: "Hello", label: "ch:hello", output }],
     })}\n`,
   );
@@ -49,7 +50,7 @@ Say hello.
 
 ## Wrap-up Recall
 
-Say hello again.
+Read the [curriculum guide](../guide.md), then say hello again.
 `,
   );
   return root;
@@ -71,6 +72,9 @@ describe("canonical book generator filesystem shell", () => {
     const manifest = join(root, "core", "generated-book-hashes.json");
     expect(existsSync(chapter)).toBe(true);
     expect(readFileSync(manifest, "utf8")).toContain('"algorithm": "fnv1a64"');
+    expect(readFileSync(chapter, "utf8")).toContain(
+      "\\href{https://example.test/curriculum/test/guide.md}{curriculum guide}",
+    );
     expect(runBookGeneration(["--check"], root)).toBe(0);
 
     writeFileSync(chapter, "stale\n");
@@ -93,6 +97,7 @@ describe("canonical book generator filesystem shell", () => {
       join(root, "core", "book-generation.json"),
       `${JSON.stringify({
         version: 1,
+        sourceBaseUrl: "https://example.test/curriculum/",
         scriptSets: {
           comparisons: [
             { unicodeScript: "Telugu", scriptCommand: "te" },
@@ -135,5 +140,18 @@ describe("canonical book generator filesystem shell", () => {
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runBookGeneration([], root)).toBe(2);
     expect(process.stderr.write).toHaveBeenCalledWith("usage: book-cli (--check | --write)\n");
+  });
+
+  it("requires a canonical HTTP(S) source base URL", () => {
+    const root = fixture();
+    const config = join(root, "core", "book-generation.json");
+    writeFileSync(
+      config,
+      readFileSync(config, "utf8").replace(
+        '"sourceBaseUrl":"https://example.test/curriculum"',
+        '"sourceBaseUrl":"../curriculum"',
+      ),
+    );
+    expect(() => generatedBookOutputs(root)).toThrow(/must declare an HTTP\(S\) sourceBaseUrl/);
   });
 });

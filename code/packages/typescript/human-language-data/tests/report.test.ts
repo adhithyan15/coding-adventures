@@ -64,6 +64,24 @@ describe("curriculum gap report", () => {
     expect(audio.computedSeconds).toBeGreaterThan(300);
   });
 
+  it("adds authored activity response budgets without counting metadata as prose prompts", () => {
+    const estimate = estimateLessonDuration(lesson({
+      id: "AL-ACTIVITY",
+      language: "alpha",
+      chapter: 1,
+      minutes: 1,
+      body: [
+        "## Wrap-up Recall",
+        "<!-- hl-knowledge: introduces=[]; assesses=[TEST-LEX-HELLO] -->",
+        '<!-- hl-activity: {"id":"AL-ACTIVITY-recall","kind":"text","assesses":["TEST-LEX-HELLO"],"prompt":"What?","answer":"hello","accepted":[],"feedback":{"correct":"Yes.","incorrect":"Try again."},"response_seconds":17} -->',
+        "Type the greeting.",
+      ].join("\n"),
+    }));
+
+    expect(estimate.activityResponseSeconds).toBe(17);
+    expect(estimate.promptCount).toBe(0);
+  });
+
   it("strips closed and adversarial unclosed HTML comments without a regex backtrack", () => {
     const closed = estimateLessonDuration(
       lesson({

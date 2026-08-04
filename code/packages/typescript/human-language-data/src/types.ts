@@ -233,6 +233,44 @@ export interface LessonBlockKnowledge {
   assesses: string[];
 }
 
+/** The first executable activity contract supported by HL-V03. */
+export type LessonActivityKind = "text";
+
+export interface LessonActivityFeedback {
+  correct: string;
+  incorrect: string;
+}
+
+/**
+ * One authored retrieval activity attached to a typed lesson-body block.
+ *
+ * Authors store this as compact JSON in an `hl-activity` comment immediately
+ * after the block's `hl-knowledge` directive. The parser removes the comment
+ * from learner copy while keeping this typed value in the canonical AST.
+ */
+export interface LessonActivity {
+  id: string;
+  kind: LessonActivityKind;
+  /** Non-empty subset of the containing block's assessed knowledge atoms. */
+  assesses: string[];
+  prompt: string;
+  /** Canonical display answer. */
+  answer: string;
+  /** Additional authored responses accepted after deterministic normalization. */
+  accepted: string[];
+  feedback: LessonActivityFeedback;
+  responseSeconds: number;
+}
+
+/** A runtime-ready activity with every accepted response resolved up front. */
+export interface CompiledLessonActivity extends LessonActivity {
+  blockIndex: number;
+  blockType: LessonBlockType;
+  blockTitle: string;
+  /** Canonical answer followed by authored variants, all normalized and unique. */
+  acceptedResponses: string[];
+}
+
 export interface LessonBodyBlock {
   type: LessonBlockType;
   /** Original level-two heading, kept for book/app presentation. */
@@ -243,6 +281,10 @@ export interface LessonBodyBlock {
   knowledge?: LessonBlockKnowledge;
   /** Present when an author attempted a directive whose shape is invalid. */
   knowledgeDirectiveError?: string;
+  /** Ordered executable retrieval contracts authored at this block boundary. */
+  activities?: LessonActivity[];
+  /** Present when one or more `hl-activity` directives are invalid or misplaced. */
+  activityDirectiveErrors?: string[];
 }
 
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- The Windows standalone build now installs `cas-pattern-matching` and
+  `symbolic-ir` before the package install, matching the generic build's
+  complete local prerequisite closure.
+
 ## [0.2.0] - 2026-07-13
 
 ### Added

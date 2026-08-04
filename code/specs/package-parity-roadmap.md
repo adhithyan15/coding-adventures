@@ -611,6 +611,269 @@ A conflict-free rebase onto `d9f3ed173d` incorporates the package-neutral
 human-languages unified-books CI gate. The collision-checked inventory remains
 unchanged, so the resolver result and next-item priority do not move.
 
+Guarded squash auto-completion merged the Gradle resolver PR #9895 at exact
+head `68ccd82413` as `4b8e56938b` after all 20 exact-head checks were terminal
+and two consecutive mergeability readings were `MERGEABLE/CLEAN`. The refreshed
+schema-3 inventory is unchanged at 1,264 identities and 4,419 established-lane
+slots, with zero collisions and zero unknown buckets; intervening
+human-languages work is package-neutral.
+
+The quick dependency/leverage pass therefore selects the already materialized
+C#/F# project-reference grammar next. It is one shared XML boundary across 198
+C# and 197 F# packages, with 178 Go-only edges in each lane and 47 C# or 39 F#
+Haskell-only edges. That coherent two-lane repair remains narrower and better
+specified than TypeScript's separate 948-missing/148-false-edge metadata
+grammar, so TypeScript stays pending behind it.
+
+The implemented .NET contract accepts only literal quoted `Include`
+attributes on unqualified `ProjectReference` start elements in `.csproj` and
+`.fsproj` files directly inside the declaring package root. Portable relative
+paths normalize lexically and must match an exact discovered root project file
+in the shared C#/F#/.NET scope; referenced targets are never opened. Three
+shared fixtures cover both language lanes and cross-language references while
+rejecting comments, CDATA, processing instructions, escaped examples,
+namespaced elements, package references, property expansion, globs, absolute
+paths, nested test projects, and unknown targets. The repaired repository
+graphs now match edge-for-edge between Go and Haskell at 198 C# packages and
+238 edges and 197 F# packages and 239 edges, with zero one-sided drift.
+
+A conflict-free rebase onto `28df5db2b8` incorporates the package-neutral
+language-ladder frontier update. The refreshed collision-checked schema-3
+inventory is unchanged at 1,264 implementation identities, 4,419 established-
+lane slots, 173 high-consensus packages with 270 missing slots, 814 singleton
+packages with 11,396 missing slots, 618 Rust singletons, and zero collisions or
+unknown buckets, so no new package work is added and the active priority does
+not move.
+
+Guarded squash auto-completion merged the .NET resolver PR #9898 at exact head
+`c5b0722912` as `e78c9986c2` after all 20 exact-head checks were terminal
+acceptable and two consecutive mergeability readings were `MERGEABLE/CLEAN`.
+The refreshed collision-checked schema-3 inventory is unchanged at 1,264
+implementation identities, 4,419 established-lane slots, 173 high-consensus
+packages with 270 missing slots, 814 singleton packages with 11,396 missing
+slots, 618 Rust singletons, and zero collisions or unknown buckets.
+
+The post-.NET dependency/leverage pass therefore selects the separately owned
+TypeScript package-metadata grammar. A direct resolver-API audit reconfirms
+both engines discover 470 packages, while Go emits 1,075 edges and Haskell 275,
+leaving 948 Go-only and 148 Haskell-only edges. This is now the largest bounded
+remaining established-lane resolver repair. Its package.json name and runtime
+dependency tables stay one coherent metadata contract; the 58-package
+TypeScript `BUILD_windows` standalone-prerequisite debt reproduced by the real
+front door remains independently owned and must not widen this tranche.
+
+The implemented TypeScript contract parses valid root `package.json` objects,
+registers only exact top-level `name` aliases, and admits direct keys from root
+`dependencies` and `devDependencies` objects. It ignores dependency values,
+peer and optional tables, scripts, nested tool objects, nested names, and
+malformed JSON rather than inventing a partial graph. The shared adversarial
+fixture proves single-line runtime tables, development dependencies, declared
+aliases, and every excluded decoy. The repaired real repository graphs now
+match edge-for-edge between Go and Haskell at 470 TypeScript packages and
+1,076 edges, with zero one-sided drift; the Go field parser also recovers one
+real dependency that its previous line scanner missed.
+
+A conflict-free rebase onto package-neutral human-languages main
+`658184b112` leaves the refreshed collision-checked schema-3 inventory
+unchanged at 1,264 implementation identities, 4,419 established-lane slots,
+173 high-consensus packages with 270 missing slots, 814 singleton packages
+with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown
+buckets. No new package identity displaces the implemented resolver repair.
+
+The first exact-head CI run exposed one consequence of the corrected graph:
+`typescript/rom-bios` became affected, but its Unix and Windows BUILD front
+doors did not materialize the five-package standalone closure. The focused
+repair adds `transistors -> logic-gates -> arithmetic -> cpu-simulator ->
+riscv-simulator` before the package install. Its scoped 7-test coverage suite
+and every rerun check pass. Guarded squash auto-completion merged PR #9902 at
+repaired head `a7defbbdb5` as `df0692fa76` after all checks were terminal
+acceptable and two consecutive mergeability readings were `MERGEABLE/CLEAN`.
+
+The post-merge collision-checked inventory remains unchanged at 1,264
+implementation identities, 4,419 established-lane slots, 173 high-consensus
+packages with 270 missing slots, 814 singleton packages with 11,396 missing
+slots, 618 Rust singletons, and zero collisions or unknown buckets. The quick
+dependency/leverage pass selects the shared TypeScript compiler-path boundary
+next: it is unblocked and one root configuration affects 132 package/program
+configs, so it has broader immediate package-build leverage than a
+single-engine follow-up without mixing resolver semantics or the separately
+owned 58-package BUILD_windows debt.
+
+PR #9905 made that shared boundary executable with a strict repository audit,
+TypeScript 5.5 `${configDir}` paths, and real effective-config validation for
+all 129 `rootDir` and 132 `outDir` inheritors. Guarded squash auto-completion
+merged exact final head `23302beda2` as `1198eda2eb` after all 19 checks were
+terminal acceptable and two independent mergeability readings were
+`MERGEABLE/CLEAN`. The refreshed collision-checked inventory remains unchanged
+at 1,264 identities and 4,419 slots with zero collisions or unknown buckets.
+The next quick dependency/leverage pass selects the separately logged
+two-package standalone output-isolation closure: it finishes the TypeScript
+compiler-output integrity boundary and stops `window-core` and `window-canvas`
+builds from emitting into tracked source trees without widening the 58-package
+`BUILD_windows` wave.
+
+PR #9907 closed that two-package gap and merged exact final head `0dfefc77a8`
+as `da895587f3` after all 20 checks were terminal acceptable and two independent
+mergeability readings were `MERGEABLE/CLEAN`. The refreshed collision-checked
+inventory remains unchanged at 1,264 identities, 4,419 slots, 173
+high-consensus packages with 270 gaps, 814 singleton packages with 11,396 gaps,
+618 Rust singletons, and zero collisions or unknown buckets. A fresh validator
+pass decomposes the 58-package TypeScript `BUILD_windows` debt into two exact
+children before reprioritization: a 55-package `cli-builder` closure (54 missing
+only that prerequisite plus `grammar-tools`, which also lacks `directed-graph`
+and `state-machine`) and a separate three-package SIR runtime closure.
+The quick dependency/leverage pass selects the 55-package child first because
+one common prerequisite layer closes almost the entire TypeScript validator
+wave without mixing the SIR dependency family.
+
+Representative validation of that child also exposed a separate compiler-input
+gap: algol-lexer inherits the shared src root while TypeScript's default
+include admits tests/tokenizer.test.ts, so its optional npm run build fails
+with TS6059 even though the authoritative coverage-oriented BUILD_windows
+front door passes. The new
+typescript-standalone-tsconfig-input-boundaries backlog item owns a repository
+audit and dependency-shaped repair; the BUILD prerequisite tranche does not
+absorb compiler configuration.
+
+The implemented BUILD closure changes only those 55 Windows overrides. A
+minimality audit reconstructs every original file after removing the owned
+bootstrap insertion, and the canonical validator falls from the exact
+58-package baseline to only the three separately owned SIR diagnostics.
+Representative Windows front doors pass 169 grammar-tools tests at 85.85%
+statement coverage and 79 algol-lexer tests at 87.5%, with zero production
+vulnerabilities. The Go build tool passes test, vet, build, and module
+verification; its committed diff plan reports 55 changed and 185 affected
+TypeScript packages. The collision-checked parity inventory is unchanged and
+still has zero collisions or unknown buckets.
+
+Guarded squash auto-completion merged PR #9909 at exact final head
+`8d91b61752` as `4c9d1a6f6b` after all 20 checks were terminal acceptable and
+two independent mergeability readings were `MERGEABLE/CLEAN`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419
+slots, 173 high-consensus packages with 270 gaps, 814 singleton packages with
+11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The
+quick dependency/leverage pass selects the remaining three-package SIR runtime
+prerequisite closure because its exact red baseline is the complete outstanding
+TypeScript `BUILD_windows` validator debt. The repository-wide TS6059 input
+boundary audit remains explicit and pending until its affected corpus is
+classified.
+
+The implemented SIR closure materializes those exact prerequisite orders and
+adds a focused repository regression. Clean front-door execution then exposed
+same-family strict compiler gaps hidden behind the missing prerequisites: core
+and oop now declare the Node typings needed while compiling local core sources,
+core's builtin callbacks explicitly accept SIR values, and oop narrows nullable
+extremal block keys without changing runtime behavior. The canonical validator
+passes all 470 TypeScript packages. Real Windows front doors pass 60 core tests
+at 93.2% statement coverage, 120 oop tests at 96.31%, and 23 symbolic tests at
+100%; package builds, production audits, and the full Go build-tool gates pass.
+The committed diff plan selects exactly the three runtimes and their four
+prerequisites, with 463 TypeScript packages skipped. The collision inventory is
+unchanged with zero collisions or unknown buckets.
+
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9911;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `fdbbe633e0` as `fa9c70094e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. The input
+boundary corpus is now exact: 96 build-script projects have an effective `src`
+root, no explicit `include`/`files`/`exclude` boundary, and 202 tracked
+TypeScript files outside that root. The quick dependency/leverage pass selects
+this one compiler-input contract ahead of the separately pending 10-file Lua
+prerequisite wave.
+
+Real validation of the selected input-boundary tranche exposed a distinct
+declaration-ownership gap after its TS6059 failure was removed: algol-lexer,
+the algol-parser dependency chain, and browser-extension-toolkit reach Node
+built-ins or `process`, but do not own a Node type provider. Their coverage
+remains green at 79, 33, and 60 tests respectively. The new
+`typescript-node-builtin-type-declarations` backlog item owns a corpus audit
+and dependency-shaped manifest repair; the 96-config input-boundary tranche
+does not absorb package manifests or lockfiles.
+
+The implemented input-boundary contract audits all 458 build-script projects
+and reports 422 rooted configs, 420 explicitly bounded rooted configs, zero
+unbounded rooted projects, and zero tracked inputs outside their effective
+roots. All 96 repairs are semantically minimal `include: ["src"]` additions.
+Ten focused Python tests and Ruff pass. Real coverage remains green for the
+Algol lexer/parser, arithmetic, browser-extension toolkit, CSV parser, and
+canvas measurement packages; arithmetic, CSV, and canvas builds pass from
+declared dependencies, and all six production audits report zero
+vulnerabilities. The canonical TypeScript validator accepts all 470 packages.
+The Go build tool passes test, vet, build, and module verification; its
+committed diff plan reports exactly 96 changed and 248 affected TypeScript
+packages. The collision-checked inventory remains unchanged at 1,264
+identities and 4,419 slots with zero collisions or unknown buckets.
+
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9912;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `787e73baab` as `355348901e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. A quick
+direct-ownership scan finds up to 74 build-script TypeScript projects with Node
+builtin/global references but no manifest-owned `@types/node` provider. The
+dependency/leverage pass selects an executable syntax-aware audit of that
+corpus ahead of the separately pending 10-file Lua `BUILD_windows` wave; the
+audit must refine the exact set before any manifest or lockfile repair.
+
+The executable syntax-aware audit refines that prioritization ceiling to
+exactly 93 Node API build projects: 31 already own direct providers, 62 are
+missing them, one of the 31 lacks synchronized lock metadata, and
+matrix-rust-napi retains its reviewed native-workspace lock exception. The
+optimized scan excludes comments, string and template prose, member properties,
+and sources outside effective roots while inspecting nested template
+expressions. This exact 62-manifest plus one-stale-lock corpus is the selected
+metadata closure.
+
+Real new-lock validation then exposes a separate strict-build owner in
+`typescript/starlark-interpreter`: its 119-test Windows front door remains green
+at 92.05% statement coverage, while `npm run build` reaches three TS2367
+comparisons, one TS2352 cast, one TS2345 return mismatch, and two missing
+`VMValue` names. The pending `typescript-starlark-interpreter-strict-build`
+item owns those source/type repairs; this metadata-only tranche does not absorb
+them.
+
+The dependency-first generic `lattice-docs` BUILD front door also passes all
+six tests after its stale lock is materialized. Its optional `tsc -b` reaches
+three separate strict diagnostics in compiler-owned dependencies: unused
+`LatticeList`, a readonly-child cast in `lattice-ast-to-css`, and unused lexer
+`peek`; its Vite production build separately cannot resolve the repository
+`lattice.tokens?raw` asset at the current relative path. The pending
+`typescript-lattice-docs-strict-build` item owns that exact typecheck and asset
+closure without widening the selected lock repair.
+
+The selected tranche's full Go BUILD validator reproduces the exact same 17
+diagnostics on clean detached `355348901e`: two Perl, 12 Python, and three Swift,
+with no TypeScript diagnostics. The backlog now materializes the remaining
+families rather than retaining only umbrella counts: the refreshed two-package
+Perl wave; Python CAS/Macsyma, Prolog, SIR runtime, ALGOL WASM, and IRC daemon
+closures; and separate Swift Conduit-CAPI and IRC-CAPI closures. This is a
+zero-delta baseline discovery and does not widen Node declaration ownership.
+
+The implemented metadata closure adds the direct Node 22 provider to exactly
+62 manifests, synchronizes 63 locks including five newly tracked locks, and
+preserves every non-provider manifest and lock field. The executable audit now
+reports 93/93 providers, zero missing, zero stale, one reviewed exception, and
+449 compiler locks. Sixteen focused tests pass with 91% branch-aware audit
+coverage; Ruff, Bandit, compileall, JSON, diff, and added-line secret gates are
+clean. Real front doors cover lexer/parser, CLI/tooling, server/runtime,
+browser-scaffold, new-lock library, LSP, Starlark, and Lattice families; the
+seven selected representative builds pass and all nine production audits are
+clean. Go test, vet, build, and module verification pass, and the full Go
+validator has zero TypeScript diagnostics while matching the clean baseline's
+17 unrelated Perl/Python/Swift diagnostics exactly.
+
+After one unrelated curriculum merge, the branch rebases cleanly onto
+`00e47db9a4`; the refreshed collision inventory and all contract/Go gates remain
+unchanged. The committed TypeScript plan reports exactly 63 changed packages,
+236 affected packages, 470 total packages, and 1,076 dependency edges.
+
+Ready-for-review PR #9916 opened at exact validated implementation head
+`2cc08914712409f83ed56048829a142072fc541b`; the loop now monitors that one
+active parity PR and will not select another item until it merges.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -658,6 +921,25 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   related packages in dependency-shaped waves. The Python validator now also
   materializes a 10-file Lua wave covering the compiler, serializer, language
   server, QR, and compression dependency chains;
+- repair the shared TypeScript compiler-path boundary discovered by the
+  field-aware resolver tranche. `npm run build` for `typescript/transistors`
+  reproduces TS6059 on unchanged `origin/main` because the shared
+  `tsconfig.base.json` makes `rootDir: "src"` relative to the shared config.
+  Of 458 TypeScript package/program configs with build scripts, the refined
+  audit finds 129 direct shared-base consumers that inherit both faulty paths,
+  three that override `rootDir` but still inherit the faulty `outDir`, 155 that
+  override both paths, and 36 rootDir-less standalone configs outside the
+  shared contract. The repair affects 132 configs in total. This is a
+  dependency-shaped portability wave, separate from the 58-package
+  `BUILD_windows` debt;
+- isolate outputs for the two standalone TypeScript configs that had neither
+  `noEmit` nor `outDir`. The executable audit now classifies all 171 standalone
+  configs: 28 are type-check-only, and all 143 emit-capable projects declare
+  isolated output. `window-core` and `window-canvas` emit only below `dist` and
+  exclude compiled test copies while retaining Vitest's defaults. Their fresh
+  builds, coverage suites, effective-config checks, and clean-tree assertions
+  pass as a separate two-package item rather than part of the shared-base
+  repair;
 - keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan

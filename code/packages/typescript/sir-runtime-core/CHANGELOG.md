@@ -2,6 +2,17 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## Unreleased
+
+### Fixed
+
+- The Windows standalone build now installs `sir-runtime-exceptions` and
+  `sir-runtime-pairs` before the package install, matching the generic build's
+  complete local prerequisite closure.
+- Clean strict type-checks now install the Node declarations used by
+  `process.stdout`; builtin dispatch callbacks carry explicit `Val` parameter
+  types without changing runtime behavior.
+
 ## [0.2.0] - 2026-08-03
 
 ### Fixed — `builtins` dispatch table was not null-prototype

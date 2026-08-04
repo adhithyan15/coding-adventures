@@ -142,3 +142,16 @@ Ruby → semantic-ir → semantic-ir-to-typescript → emitted .ts
 
 The package implements **SIR** semantics, not Ruby's, so a future
 JavaScript → SIR → TypeScript path reuses it unchanged.
+
+## Development
+
+```sh
+npm install
+npx tsc --noEmit
+npx vitest run
+```
+
+The repository's `BUILD_windows` front door first materializes core,
+exceptions, and pairs so this package also works from a clean standalone
+checkout. Its development dependencies include the Node declarations needed
+when strict TypeScript checking follows the local core runtime sources.

@@ -50,6 +50,33 @@ def test_analyze_ci_workflow_patch_allows_shared_jvm_toolchain_changes():
     assert change.toolchains == frozenset({"java", "kotlin"})
 
 
+def test_analyze_ci_workflow_patch_allows_verified_lua_cache_and_fallback():
+    change = analyze_ci_workflow_patch(
+        """
+@@ -409,0 +410,14 @@
++      - name: Restore pinned Lua 5.4.7 cache
++        id: lua-cache
++        uses: actions/cache@v4
++        with:
+-          luaVersion: "5.4"
++          path: .lua
++          key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}
++      - name: Install pinned Lua 5.4.7 from verified mirrors
++        shell: bash
++        run: |
++          if [ "$RUNNER_OS" = "macOS" ]; then
++            brew install readline ncurses
++          else
++            sudo apt-get install -q libreadline-dev libncurses-dev
++          fi
++          python3 code/scripts/setup_lua.py --prefix .lua
+"""
+    )
+
+    assert not change.requires_full_rebuild
+    assert change.toolchains == frozenset({"lua"})
+
+
 def test_analyze_ci_workflow_patch_ignores_comment_only_changes():
     change = analyze_ci_workflow_patch(
         """

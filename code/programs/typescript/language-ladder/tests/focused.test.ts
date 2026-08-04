@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   acceptedMeanings,
+  activityAnswerIsCorrect,
+  focusedActivity,
   focusedCheckKind,
   meaningAnswerIsCorrect,
   normalizeFocusedAnswer,
@@ -26,5 +28,26 @@ describe("focused retrieval checks", () => {
     expect(focusedCheckKind({ type: "phrase", gloss: "my name is" })).toBe("meaning");
     expect(focusedCheckKind({ type: "writing", gloss: "the first joined shape" }))
       .toBe("self-check");
+  });
+
+  it("prefers an authored recall activity over lexical inference or self-confirmation", () => {
+    const activity = {
+      id: "ES-G01-count",
+      kind: "text" as const,
+      assesses: ["ES-GRAMMAR-NOUN-GENDER"],
+      prompt: "How many classes?",
+      answer: "two",
+      accepted: ["2"],
+      feedback: { correct: "Right.", incorrect: "Try again." },
+      responseSeconds: 8,
+      blockIndex: 3,
+      blockType: "recall" as const,
+      blockTitle: "Wrap-up Recall",
+      acceptedResponses: ["two", "2"],
+    };
+    const lesson = { type: "grammar", gloss: "noun gender", activities: [activity] };
+    expect(focusedCheckKind(lesson)).toBe("activity");
+    expect(focusedActivity(lesson)).toBe(activity);
+    expect(activityAnswerIsCorrect(" 2 ", activity)).toBe(true);
   });
 });

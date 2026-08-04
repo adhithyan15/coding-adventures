@@ -15,6 +15,8 @@ export interface DurationEstimate {
   repeatCueCount: number;
   explicitPauseSeconds: number;
   authoredAudioSeconds: number;
+  /** Sum of explicit `response_seconds` budgets on compiled activities. */
+  activityResponseSeconds: number;
   reasons: Array<"declared" | "computed">;
 }
 
@@ -52,7 +54,7 @@ export interface TrackSchemaCoverage {
 export interface CurriculumGapReport {
   schemaVersion: 1;
   durationModel: {
-    version: 1;
+    version: 2;
     thresholdSeconds: number;
     spokenWordsPerMinute: number;
     learnerResponseSecondsPerPrompt: number;
@@ -250,7 +252,7 @@ function explicitPauseSeconds(markdown: string): number {
 export function estimateLessonDuration(lesson: ParsedLesson): DurationEstimate {
   const text = instructionalText(lesson.body);
   const wordCount = countWords(text);
-  const promptCount = countPromptLines(lesson.body);
+  const promptCount = countPromptLines(stripHtmlComments(lesson.body));
   const repeatCueCount = text.match(/\b(?:repeat|again|twice|three\s+times)\b/giu)?.length ?? 0;
   const pauseSeconds = explicitPauseSeconds(lesson.body);
   const authoredAudioSeconds = Math.ceil(
@@ -259,7 +261,12 @@ export function estimateLessonDuration(lesson: ParsedLesson): DurationEstimate {
       0,
   );
   const spokenSeconds = Math.ceil((wordCount / SPOKEN_WORDS_PER_MINUTE) * 60);
-  const responseSeconds = promptCount * RESPONSE_SECONDS_PER_PROMPT;
+  const activityResponseSeconds = lesson.blocks.reduce(
+    (total, block) =>
+      total + (block.activities ?? []).reduce((sum, activity) => sum + activity.responseSeconds, 0),
+    0,
+  );
+  const responseSeconds = promptCount * RESPONSE_SECONDS_PER_PROMPT + activityResponseSeconds;
   const repeatSeconds = repeatCueCount * REPEAT_CUE_SECONDS;
   const subtotal = Math.max(spokenSeconds, authoredAudioSeconds) + responseSeconds + repeatSeconds + pauseSeconds;
   const computedSeconds = Math.ceil(subtotal * (1 + SAFETY_MARGIN));
@@ -281,6 +288,7 @@ export function estimateLessonDuration(lesson: ParsedLesson): DurationEstimate {
     repeatCueCount,
     explicitPauseSeconds: pauseSeconds,
     authoredAudioSeconds,
+    activityResponseSeconds,
     reasons,
   };
 }
@@ -368,7 +376,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   return {
     schemaVersion: 1,
     durationModel: {
-      version: 1,
+      version: 2,
       thresholdSeconds: DURATION_THRESHOLD_SECONDS,
       spokenWordsPerMinute: SPOKEN_WORDS_PER_MINUTE,
       learnerResponseSecondsPerPrompt: RESPONSE_SECONDS_PER_PROMPT,

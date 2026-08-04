@@ -4,6 +4,83 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed — live generated curriculum links
+
+- Preserve canonical Markdown links as live LaTeX `\href` targets instead of
+  dropping every destination during book generation.
+- Resolve relative lesson and pronunciation-reference links against stable
+  GitHub source URLs while preserving absolute source citations and rich link
+  labels from the same canonical blocks consumed by Language Ladder.
+- Reject missing relative-link bases and non-HTTP(S) destinations, escape URL
+  metacharacters for LaTeX, and regenerate the nine affected chapters with 55
+  working links.
+
+### Fixed — generated quotation typography
+
+- Render paired straight double quotes in canonical lesson prose with explicit
+  LaTeX opening and closing quote commands across every generated chapter.
+- Preserve code spans, escaped literals, link destinations, existing curly
+  quotes, and unmatched marks while handling emphasis and nested quotations.
+- Keep indented Markdown blockquote continuations inside the same generated
+  quote/callout so multiline learner examples are not split during rendering.
+- Regenerate all 270 configured chapter targets without changing the canonical
+  Markdown consumed by Language Ladder.
+
+### Added — Persian and Urdu take-leave frontiers
+
+- Extend both RTL tracks through `SPINE-TAKE-LEAVE` with four schema-v2
+  Chapter 5 micro-lessons apiece: the two historical word layers, the complete
+  local-script farewell, and cumulative start-versus-end practice.
+- Compile one objective contract for every new lesson, raising mapped
+  non-lexical coverage from the Chapter 4 baseline to 25 of 119 lessons while
+  leaving the 94-item debt unchanged.
+- Generate both Chapter 5 LaTeX files from the same prerequisite-closed lesson
+  AST consumed by Language Ladder, preserving Persian joined **خداحافظ** and
+  Urdu spaced **خدا حافظ**.
+
+### Added — Persian and Urdu shared name exchange
+
+- Extend both RTL tracks through `SPINE-EXCHANGE-NAMES` with five schema-v2
+  Chapter 3 micro-lessons apiece: address/register, question word, complete
+  name question, meeting response, and cumulative practice.
+- Compile one objective practice contract per track, raising coverage to 21 of
+  115 mapped non-lexical lessons across 18 tracks while leaving the 94-item debt
+  unchanged.
+- Generate both Chapter 3 LaTeX files from the same prerequisite-closed lesson
+  AST consumed by Language Ladder and verify their combined source hashes.
+
+### Added — Russian activity prerequisite closure
+
+- Migrate the six-lesson Russian pronoun and naming chain to schema v2 so its
+  two mapped non-lexical frontiers have transitive, block-bound knowledge rather
+  than activities attached to unowned legacy prerequisites.
+- Compile objective checks for polite *вы* and the cross-language *how/what*
+  naming contrast, raising coverage to 19 of 113 mapped non-lexical lessons
+  across 16 tracks and leaving 94 explicit gaps, 16 of them legacy.
+
+### Added — cross-language objective activity coverage
+
+- Add one prerequisite-closed final-recall contract to a ready non-lexical
+  lesson in each of 15 tracks with schema-v2 coverage debt: Arabic, German,
+  Gujarati, Hindi, Italian, Kannada, Latin, Malayalam, Marathi, Portuguese,
+  Punjabi, Sanskrit, Spanish, Tamil, and Telugu.
+- Keep every new response budget at eight seconds and select a safe Italian
+  Chapter 3 frontier rather than pushing its 297-second Chapter 2 practice lesson
+  past the strict five-minute ceiling.
+- Raise measured objective coverage from 2 to 17 of 113 mapped non-lexical
+  lessons while leaving the 18 legacy migration prerequisites explicit.
+
+### Added — compiled activity contracts
+
+- Parse compact JSON `hl-activity` directives beside typed block knowledge and
+  keep prompts, canonical answers, accepted variants, corrective feedback, and
+  response budgets in the canonical AST while omitting metadata from learner copy.
+- Compile normalized answer sets once for browser consumers and validate stable
+  activity ids, non-empty assessed-atom subsets, block-bound assessment closure,
+  unique variants, complete feedback, and 1–299 second response budgets.
+- Count authored activity response time in duration model v2 and add objective
+  grammar and script pilots to two Spanish lessons without changing book prose.
+
 ### Added — per-track shared-spine realization maps
 
 - Load and validate one ordered `curriculum.json` for every registered track,

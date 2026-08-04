@@ -90,8 +90,10 @@ jobs:
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-inventory
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-audit
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_setup_lua.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_capability_taxonomy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
@@ -405,11 +407,42 @@ jobs:
         if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Set up Lua
+      - name: Restore pinned Lua 5.4.7 cache
+        id: lua-cache
         if: needs.detect.outputs.needs_lua == 'true'
-        uses: leafo/gh-actions-lua@v11
+        uses: actions/cache@v4
         with:
-          luaVersion: "5.4"
+          path: .lua
+          key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('code/scripts/setup_lua.py') }}
+
+      - name: Install pinned Lua 5.4.7 from verified mirrors
+        if: needs.detect.outputs.needs_lua == 'true' && steps.lua-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python code/scripts/setup_lua.py --prefix .lua
+          else
+            if [ "$RUNNER_OS" = "macOS" ]; then
+              brew install readline ncurses
+            else
+              sudo apt-get install -q libreadline-dev libncurses-dev
+            fi
+            python3 code/scripts/setup_lua.py --prefix .lua
+          fi
+
+      - name: Activate and verify pinned Lua 5.4.7
+        if: needs.detect.outputs.needs_lua == 'true'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            lua_bin="$(cygpath -u "$GITHUB_WORKSPACE")/.lua/bin"
+            cygpath -w "$lua_bin" >> "$GITHUB_PATH"
+            "$lua_bin/lua.exe" -v
+          else
+            lua_bin="$GITHUB_WORKSPACE/.lua/bin"
+            echo "$lua_bin" >> "$GITHUB_PATH"
+            "$lua_bin/lua" -v
+          fi
 
       - name: Set up LuaRocks (Unix)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'

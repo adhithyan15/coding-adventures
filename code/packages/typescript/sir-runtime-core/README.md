@@ -53,3 +53,8 @@ npm install
 npx tsc --noEmit
 npx vitest run
 ```
+
+The repository's `BUILD_windows` front door first materializes the exceptions
+and pairs runtimes so this package also works from a clean standalone checkout.
+The development dependencies include Node declarations for the runtime's
+`process.stdout` writes, so the documented strict type-check is self-contained.

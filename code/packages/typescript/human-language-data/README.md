@@ -35,11 +35,15 @@ import {
   languagesForConcept,
   loadEverything,
   mixedCurriculumFrontier,
+  compileLessonActivities,
   validate,
   validateCurriculum,
 } from "@coding-adventures/human-language-data";
 
 const { curricula, dataset, lessons, registry, scripts, spine, taxonomy } = loadEverything();
+
+// Typed activities compile directly from block metadata, never from prose.
+const activities = compileLessonActivities(lessons[0].blocks);
 
 // The cross-language join:
 languagesForConcept(dataset, "GREETING-HELLO");
@@ -83,12 +87,15 @@ npm run check:books
 orders schema-v2 lessons by `sequence`, writes the LaTeX chapter, and records a
 stable FNV-1a fingerprint in `core/generated-book-hashes.json`. The fingerprint
 detects drift between book and app inputs; it is not a security hash.
+The config's `sourceBaseUrl` gives every lesson a stable canonical URL, so
+absolute citations and relative prerequisite/reference links remain live after
+the generated PDF is downloaded.
 Non-Latin targets also declare `unicodeScript` and `scriptCommand`; the renderer
 wraps matching Unicode runs in the book's existing font macro and uses each
 lesson's `romanization` for a PDF-bookmark-safe short title.
 
 The duration estimator uses instructional word count, explicit pauses, repeat
-cues, learner-response prompts, and a safety margin. Its effective duration is
+cues, prose prompts, authored activity response budgets, and a safety margin. Its effective duration is
 the greater of that estimate and the lesson's declared budget. A value of 300
 seconds or more is reported as migration debt; the report remains non-blocking
 until the existing corpus has been split.
@@ -99,6 +106,7 @@ until the existing corpus has been split.
 |---|---|---|
 | `frontmatter.ts` | tiny zero-dep frontmatter reader with one nested-map level | ✅ |
 | `parse.ts` | frontmatter + Markdown → typed lesson AST; realizations → `Dataset` | ✅ |
+| `activity.ts` | typed block activities → normalized runtime answer contracts | ✅ |
 | `hash.ts` | stable canonical lesson serialization and deterministic fingerprints | ✅ |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
 | `curriculum.ts` | spine, realization-map, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
@@ -134,6 +142,12 @@ transitive knowledge closure. Each typed block must also author an
 `hl-knowledge` directive. Block introductions must exactly account for the
 lesson's introduced atoms; production and recall assessments must be declared by
 the lesson and available from transitive prerequisites or an earlier block.
+Blocks may also author compact JSON `hl-activity` directives immediately after
+their knowledge boundary. Each compiled activity must use a stable lesson-prefixed
+id, assess a non-empty subset of that block's atoms, provide an unambiguous
+canonical answer plus explicit variants, include correct and incorrect feedback,
+and declare a 1–299 second response budget. The compiler resolves those variants
+without reading learner-facing Markdown.
 Schema-v1 tracks remain readable during migration.
 
 When `curricula` are supplied, the same validator also requires exactly one

@@ -24,6 +24,7 @@
     "@coding-adventures/sir-runtime-pairs": "file:../sir-runtime-pairs"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.0.0",
     "vitest": "^4.1.0",
     "@vitest/coverage-v8": "^4.1.0"

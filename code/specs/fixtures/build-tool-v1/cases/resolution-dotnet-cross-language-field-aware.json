@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "id": "resolution/dotnet-cross-language-field-aware",
+  "domain": "resolution",
+  "summary": "The shared .NET dependency scope resolves exact root project files across C#, F#, and dotnet program packages.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/fsharp/helpers/BUILD",
+        "content_utf8": "echo build helpers\n"
+      },
+      {
+        "path": "code/packages/fsharp/helpers/CodingAdventures.Helpers.fsproj",
+        "content_utf8": "<Project Sdk=\"Microsoft.NET.Sdk\" />\n"
+      },
+      {
+        "path": "code/packages/csharp/graph/BUILD",
+        "content_utf8": "echo build graph\n"
+      },
+      {
+        "path": "code/packages/csharp/graph/CodingAdventures.Graph.csproj",
+        "content_utf8": "<Project Sdk=\"Microsoft.NET.Sdk\"><ItemGroup><ProjectReference Include=\"../../fsharp/helpers/CodingAdventures.Helpers.fsproj\" /></ItemGroup></Project>\n"
+      },
+      {
+        "path": "code/programs/dotnet/bridge-app/BUILD",
+        "content_utf8": "echo build bridge-app\n"
+      },
+      {
+        "path": "code/programs/dotnet/bridge-app/BridgeApp.csproj",
+        "content_utf8": "<Project Sdk=\"Microsoft.NET.Sdk\"><ItemGroup><ProjectReference Include=\"../../../packages/csharp/graph/CodingAdventures.Graph.csproj\" /></ItemGroup></Project>\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "all"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/dotnet-cross-language-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "csharp/graph",
+          "dotnet/programs/bridge-app"
+        ],
+        [
+          "fsharp/helpers",
+          "csharp/graph"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

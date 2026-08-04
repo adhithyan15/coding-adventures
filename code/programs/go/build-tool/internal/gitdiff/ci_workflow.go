@@ -46,7 +46,8 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	},
 	"lua": {
 		"needs_lua", "gh-actions-lua", "gh-actions-luarocks", "luarocks",
-		"lua -v", "msvc", "set up lua", "set up luarocks",
+		"lua -v", "luaversion", "msvc", "set up lua", "set up luarocks", "setup_lua.py",
+		"pinned lua", "lua_bin", "lua-5.4.7", "path: .lua",
 	},
 	"perl": {
 		"needs_perl", "cpanm", "perl --version", "install cpanm",
@@ -236,11 +237,16 @@ func isToolchainScopedStructuralLine(content string) bool {
 	normalized := strings.ToLower(strings.TrimSpace(content))
 	switch {
 	case strings.HasPrefix(normalized, "if:"),
+		strings.HasPrefix(normalized, "if "),
 		strings.HasPrefix(normalized, "if ("),
 		strings.HasPrefix(normalized, "if("),
 		strings.HasPrefix(normalized, "run:"),
+		strings.HasPrefix(normalized, "id:"),
+		strings.HasPrefix(normalized, "uses:"),
 		strings.HasPrefix(normalized, "shell:"),
 		strings.HasPrefix(normalized, "with:"),
+		strings.HasPrefix(normalized, "key:"),
+		strings.HasPrefix(normalized, "path:"),
 		strings.HasPrefix(normalized, "env:"),
 		strings.HasPrefix(normalized, "$"),
 		strings.HasPrefix(normalized, "tmpdir=\"$(mktemp "),
@@ -255,6 +261,8 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(normalized, "printf "),
 		strings.HasPrefix(normalized, "echo "),
 		strings.HasPrefix(normalized, "curl "),
+		strings.HasPrefix(normalized, "brew "),
+		strings.HasPrefix(normalized, "sudo apt-get "),
 		strings.HasPrefix(normalized, "sed -i.bak "),
 		normalized == "rm -rf \"$tmpdir\"",
 		strings.HasPrefix(normalized, "powershell "),

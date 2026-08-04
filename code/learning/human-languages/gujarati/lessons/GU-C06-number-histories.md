@@ -88,6 +88,7 @@ put the *r* back.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION] -->
+<!-- hl-activity: {"id":"GU-C06-number-histories-be-source","kind":"text","assesses":["GU-ETYMON-BE-DVE-SELECTION"],"prompt":"Does Gujarati be descend from the same Sanskrit form as Hindi do?","answer":"no","accepted":["no it does not","different Sanskrit forms"],"feedback":{"correct":"Right: Gujarati and Hindi selected different Sanskrit forms for two.","incorrect":"No. Gujarati be and Hindi do descend from different Sanskrit forms."},"response_seconds":8} -->
 
 [PAUSE 3s] Why *be*, not Hindi *do*? (Different Sanskrit forms.) What changed in
 *dv → b*? (*D* became labial beside *v*; the double simplified.) Did *traṇ* keep

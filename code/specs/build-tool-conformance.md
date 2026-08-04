@@ -331,6 +331,19 @@ dependencies. Resolvers ignore package descriptions, environment constraints,
 lockfiles, and every other root field. A local `path:` value identifies source
 metadata only; resolvers do not follow or read the referenced path.
 
+For TypeScript `package.json` manifests, dependency candidates come only from
+the direct property names of the root `dependencies` and `devDependencies`
+objects. Each property name is matched case-insensitively against known
+directory aliases and the exact string value of another package's root
+top-level `name` property. Dependency values, including registry constraints,
+`workspace:` ranges, and `file:` paths, do not form part of the identity and
+are not followed. Resolvers ignore `peerDependencies`,
+`optionalDependencies`, scripts, tool configuration, nested objects whose
+property names resemble dependency tables, nested `name` properties, lock
+files, descriptions, and every other root field. A dependency field whose
+value is not an object contributes no candidates, and malformed JSON must not
+produce a partial graph.
+
 For Java and Kotlin Gradle composite builds, dependency candidates come only
 from `includeBuild("...")` call expressions in the package root's
 `settings.gradle.kts`. The call may span lines, and its sole argument is a
@@ -344,6 +357,25 @@ absolute paths, paths outside the current language scope, undiscovered targets,
 and every other settings field or call. `settings.gradle.kts`, Gradle build
 files, and Java or Kotlin sources participate in the package hash so a
 dependency declaration change invalidates the cache.
+
+For C#, F#, and shared .NET packages, dependency candidates come only from
+unqualified `ProjectReference` start elements with a quoted literal `Include`
+attribute in `.csproj` or `.fsproj` files directly inside the declaring package
+root; project-file extensions are compared ASCII-case-insensitively. A static
+include remains a conservative dependency even when the element
+has a `Condition`; resolvers do not evaluate MSBuild properties or conditions.
+The include must be a relative project-file path with no property expansion,
+glob, query, fragment, or XML entity reference. Both `/` and `\` are portable
+separators. Resolvers normalize the path lexically against the directory of the
+declaring root project and create an edge only when it exactly matches a root
+project file belonging to another discovered C#, F#, or shared .NET package in
+the current `dotnet` dependency scope. They do not follow or read the referenced
+path. Resolvers ignore XML comments, CDATA, processing instructions, escaped
+text examples, namespaced elements, `PackageReference`, `ProjectReference`
+elements without `Include` (including `Update` and `Remove`), project files in
+nested test or tool directories, absolute paths, unknown targets, and every
+other XML element or attribute. Duplicate and self references do not create
+additional edges.
 
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.

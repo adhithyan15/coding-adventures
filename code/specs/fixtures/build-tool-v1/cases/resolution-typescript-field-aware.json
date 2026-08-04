@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "resolution/typescript-field-aware",
+  "domain": "resolution",
+  "summary": "TypeScript resolution reads only direct root dependencies and devDependencies keys and honors exact root package names.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/typescript/alpha/BUILD",
+        "content_utf8": "echo build alpha\n"
+      },
+      {
+        "path": "code/packages/typescript/alpha/package.json",
+        "content_utf8": "{\n  \"name\": \"@coding-adventures/alpha\",\n  \"dependencies\": {\"@coding-adventures/custom-beta\": \"workspace:*\"},\n  \"devDependencies\": {\n    \"delta_name\": \"file:../delta_name\"\n  },\n  \"peerDependencies\": {\n    \"@coding-adventures/gamma\": \"^1.0.0\"\n  },\n  \"optionalDependencies\": {\n    \"@coding-adventures/gamma\": \"^1.0.0\"\n  },\n  \"scripts\": {\n    \"@coding-adventures/gamma\": \"ignored\"\n  },\n  \"tool\": {\n    \"dependencies\": {\n      \"@coding-adventures/gamma\": \"ignored\"\n    },\n    \"name\": \"@coding-adventures/not-alpha\"\n  }\n}\n"
+      },
+      {
+        "path": "code/packages/typescript/beta-helper/BUILD",
+        "content_utf8": "echo build beta-helper\n"
+      },
+      {
+        "path": "code/packages/typescript/beta-helper/package.json",
+        "content_utf8": "{\n  \"name\": \"@coding-adventures/custom-beta\"\n}\n"
+      },
+      {
+        "path": "code/packages/typescript/delta_name/BUILD",
+        "content_utf8": "echo build delta_name\n"
+      },
+      {
+        "path": "code/packages/typescript/delta_name/package.json",
+        "content_utf8": "{\n  \"name\": \"delta_name\"\n}\n"
+      },
+      {
+        "path": "code/packages/typescript/gamma/BUILD",
+        "content_utf8": "echo build gamma\n"
+      },
+      {
+        "path": "code/packages/typescript/gamma/package.json",
+        "content_utf8": "{\n  \"name\": \"@coding-adventures/gamma\"\n}\n"
+      },
+      {
+        "path": "code/packages/typescript/malformed/BUILD",
+        "content_utf8": "echo build malformed\n"
+      },
+      {
+        "path": "code/packages/typescript/malformed/package.json",
+        "content_utf8": "{\n  \"name\": \"@coding-adventures/malformed\",\n  \"dependencies\": {\n    \"@coding-adventures/gamma\": \"workspace:*\"\n  }\n"
+      },
+      {
+        "path": "code/packages/typescript/wrong-shape/BUILD",
+        "content_utf8": "echo build wrong-shape\n"
+      },
+      {
+        "path": "code/packages/typescript/wrong-shape/package.json",
+        "content_utf8": "{\n  \"name\": \"@coding-adventures/wrong-shape\",\n  \"dependencies\": [\"@coding-adventures/gamma\"],\n  \"devDependencies\": \"@coding-adventures/gamma\"\n}\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "typescript"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/typescript-field-aware",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "typescript/beta-helper",
+          "typescript/alpha"
+        ],
+        [
+          "typescript/delta_name",
+          "typescript/alpha"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

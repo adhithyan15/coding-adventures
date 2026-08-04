@@ -82,6 +82,7 @@ Both write **चार**, but Marathi pronounces **च** before *ā* nearer **ts
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
+<!-- hl-activity: {"id":"MR-C06-number-differences-don-ending","kind":"text","assesses":["MR-ETYMON-DON-ANALOGY"],"prompt":"Did Marathi don preserve an ancient final n?","answer":"no","accepted":["no it copied three","it copied the pattern of three"],"feedback":{"correct":"Correct: don's final n arose by analogy with the word for three.","incorrect":"No. Marathi two copied the pattern of three; the final n is not an ancient ending."},"response_seconds":8} -->
 
 [PAUSE 3s] Did Marathi *don* preserve an ancient ending? (No: *two* copied
 *three*.) Which language retains Sanskrit *pañca*'s nasal in writing? (Hindi.)

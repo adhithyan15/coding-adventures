@@ -39,10 +39,61 @@
       "id": "FA-PATH-004",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
-        "FA-C02-esm-e-man"
+        "FA-C02-esm-e-man",
+        "FA-C03-shoma-to",
+        "FA-C03-chist",
+        "FA-C03-esm-e-shoma-chist",
+        "FA-C03-khoshvaghtam",
+        "FA-C03-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "FA-EXT-002-REGISTER",
+        "FA-EXT-003-SCRIPT",
+        "FA-EXT-004-GRAMMAR",
+        "FA-EXT-005-ETYMOLOGY",
+        "FA-EXT-006-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-005",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FA-C04-hal",
+        "FA-C04-chetor",
+        "FA-C04-hal-e-shoma-chetor-ast",
+        "FA-C04-khub",
+        "FA-C04-khubam",
+        "FA-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-007-STATE-ETYMOLOGY",
+        "FA-EXT-008-QUESTION-SCRIPT",
+        "FA-EXT-009-EZAFE-REGISTER",
+        "FA-EXT-010-INHERITED-LEXICON",
+        "FA-EXT-011-PERSONAL-COPULA",
+        "FA-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-006",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "FA-C05-khoda",
+        "FA-C05-hafez",
+        "FA-C05-khodahafez",
+        "FA-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-013-KHODA-HISTORY",
+        "FA-EXT-014-HAFEZ-ROOT",
+        "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+        "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION"
+      ],
       "after": []
     }
   ],
@@ -83,24 +134,19 @@
         "FA-PATH-004"
       ],
       "omits": [
-        "QUESTION-WHAT",
         "PRONOUN-I",
         "PRONOUN-ME",
-        "PRONOUN-YOU",
         "PRONOUN-MY",
         "WORD-NAME",
-        "WORD-IS",
-        "INTRO-WHATS-YOUR-NAME",
-        "INTRO-NICE-TO-MEET-YOU"
+        "WORD-IS"
       ],
       "relocates": {}
     },
     "SPINE-CHECK-WELLBEING": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-005"
+      ],
       "omits": [
-        "QUESTION-HOW",
-        "STATE-HOW-ARE-YOU",
-        "WORD-GOOD",
         "WORD-WELL",
         "WORD-SOSO"
       ],
@@ -115,9 +161,10 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-006"
+      ],
       "omits": [
-        "FAREWELL",
         "FAREWELL-CASUAL",
         "FAREWELL-LATER",
         "FAREWELL-SOON",
@@ -173,6 +220,202 @@
       "prerequisites": [],
       "lessons": [
         "FA-C01-salam"
+      ]
+    },
+    {
+      "id": "FA-EXT-002-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can choose shomâ for a respectful first meeting and distinguish it from familiar to.",
+      "prerequisites": [
+        "FA-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-shoma-to"
+      ]
+    },
+    {
+      "id": "FA-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read Persian che and ye inside chist without completing an alphabet gate.",
+      "prerequisites": [
+        "FA-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-chist"
+      ]
+    },
+    {
+      "id": "FA-EXT-004-GRAMMAR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can reuse ezafe and the chi-plus-ast fusion in a respectful name question.",
+      "prerequisites": [
+        "FA-EXT-002-REGISTER",
+        "FA-EXT-003-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C03-esm-e-shoma-chist"
+      ]
+    },
+    {
+      "id": "FA-EXT-005-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use khoshvaghtam and recognize its Persian, Arabic-loan, and personal-ending layers.",
+      "prerequisites": [
+        "FA-EXT-004-GRAMMAR"
+      ],
+      "lessons": [
+        "FA-C03-khoshvaghtam"
+      ]
+    },
+    {
+      "id": "FA-EXT-006-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a respectful Persian name exchange using only independently learned lines.",
+      "prerequisites": [
+        "FA-EXT-005-ETYMOLOGY"
+      ],
+      "lessons": [
+        "FA-C03-practice"
+      ]
+    },
+    {
+      "id": "FA-EXT-007-STATE-ETYMOLOGY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can recognize hâl as the state in a Persian wellbeing question and place its Arabic history inside Persian ezafe grammar.",
+      "prerequisites": [
+        "FA-EXT-006-CONSOLIDATION"
+      ],
+      "lessons": [
+        "FA-C04-hal"
+      ]
+    },
+    {
+      "id": "FA-EXT-008-QUESTION-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read chetor as the Persian how-question and remember its Persian che plus Arabic-loan tor layers.",
+      "prerequisites": [
+        "FA-EXT-007-STATE-ETYMOLOGY"
+      ],
+      "lessons": [
+        "FA-C04-chetor"
+      ]
+    },
+    {
+      "id": "FA-EXT-009-EZAFE-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "register",
+      "canDo": "I can reuse ezafe and careful ast to ask a respectful wellbeing question before learning colloquial contractions.",
+      "prerequisites": [
+        "FA-EXT-008-QUESTION-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C04-hal-e-shoma-chetor-ast"
+      ]
+    },
+    {
+      "id": "FA-EXT-010-INHERITED-LEXICON",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can use khub for good or well and distinguish its inherited Persian layer from the borrowed words around it.",
+      "prerequisites": [
+        "FA-EXT-009-EZAFE-REGISTER"
+      ],
+      "lessons": [
+        "FA-C04-khub"
+      ]
+    },
+    {
+      "id": "FA-EXT-011-PERSONAL-COPULA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can attach the single first-person copula -am to khub and answer without learning a full paradigm.",
+      "prerequisites": [
+        "FA-EXT-010-INHERITED-LEXICON"
+      ],
+      "lessons": [
+        "FA-C04-khubam"
+      ]
+    },
+    {
+      "id": "FA-EXT-012-WELLBEING-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can complete a careful respectful Persian wellbeing exchange using only independently learned pieces.",
+      "prerequisites": [
+        "FA-EXT-011-PERSONAL-COPULA"
+      ],
+      "lessons": [
+        "FA-C04-practice"
+      ]
+    },
+    {
+      "id": "FA-EXT-013-KHODA-HISTORY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read khodâ and connect its modern meaning to Middle Persian xwadây without treating etymology as a production burden.",
+      "prerequisites": [
+        "FA-EXT-012-WELLBEING-CONSOLIDATION"
+      ],
+      "lessons": [
+        "FA-C05-khoda"
+      ]
+    },
+    {
+      "id": "FA-EXT-014-HAFEZ-ROOT",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "etymology",
+      "canDo": "I can read hâfez and use the Arabic guard-and-preserve root as a memory hook for protector.",
+      "prerequisites": [
+        "FA-EXT-013-KHODA-HISTORY"
+      ],
+      "lessons": [
+        "FA-C05-hafez"
+      ]
+    },
+    {
+      "id": "FA-EXT-015-FAREWELL-SCRIPT-REGISTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read joined خداحافظ and use it as a broadly polite close without supplying an unlearned verb.",
+      "prerequisites": [
+        "FA-EXT-014-HAFEZ-ROOT"
+      ],
+      "lessons": [
+        "FA-C05-khodahafez"
+      ]
+    },
+    {
+      "id": "FA-EXT-016-TAKE-LEAVE-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can open and close a short respectful Persian interaction using only independently learned lines.",
+      "prerequisites": [
+        "FA-EXT-015-FAREWELL-SCRIPT-REGISTER"
+      ],
+      "lessons": [
+        "FA-C05-practice"
       ]
     }
   ]

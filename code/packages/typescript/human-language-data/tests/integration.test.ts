@@ -8,6 +8,7 @@ import { validate, hasErrors } from "../src/validate.js";
 import { validateCurriculum } from "../src/curriculum.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
+import { compileLessonActivities } from "../src/activity.js";
 
 const { taxonomy, registry, spine, curricula, books, lessons, scripts, dataset } = loadEverything();
 
@@ -66,12 +67,12 @@ describe("real curriculum", () => {
       books.books
         .find((book) => book.language === "persian")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2]);
+    ).toEqual([1, 2, 3, 4, 5]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
         ?.chapters.map((chapter) => chapter.chapter),
-    ).toEqual([1, 2]);
+    ).toEqual([1, 2, 3, 4, 5]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -83,6 +84,7 @@ describe("real curriculum", () => {
   it("produces a machine-readable migration gap baseline", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
+    expect(report.durationModel.version).toBe(2);
     expect(report.summary.registeredTracks).toBe(20);
     expect(report.summary.totalLessons).toBe(lessons.length);
     expect(report.summary.authoredBooks).toBe(20);
@@ -90,6 +92,65 @@ describe("real curriculum", () => {
     expect(report.summary.unknownPrerequisites).toBe(0);
     expect(report.schemas.tracks).toHaveLength(20);
     expect(report.books.tracks).toHaveLength(20);
+  });
+
+  it("compiles the cross-language objective activities from canonical blocks", () => {
+    const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
+    expect(activities.map((activity) => activity.id).sort()).toEqual([
+      "AR-W07-hook-family-ha-kha-dot-position",
+      "ES-C01-genero-gramatical-class-count",
+      "ES-C01-practice-buenos-agreement",
+      "ES-W03-question-span-roberto-outside",
+      "FA-C02-esm-e-man-sara",
+      "FA-C03-chist-fusion",
+      "FA-C03-esm-e-shoma-chist-question",
+      "FA-C03-khoshvaghtam-close",
+      "FA-C03-practice-next-line",
+      "FA-C03-shoma-to-first-meeting",
+      "FA-C04-chetor-how",
+      "FA-C04-hal-e-shoma-chetor-ast-question",
+      "FA-C04-hal-meaning",
+      "FA-C04-khub-good",
+      "FA-C04-khubam-reply",
+      "FA-C04-practice-next-line",
+      "FA-C05-hafez-meaning",
+      "FA-C05-khoda-meaning",
+      "FA-C05-khodahafez-goodbye",
+      "FA-C05-practice-final-line",
+      "GE-C17-kopf-haupt-compound-word",
+      "GU-C06-number-histories-be-source",
+      "HI-W01-shirorekha-na-ma-drawing-order",
+      "IT-C03-practice-drop-io",
+      "KA-C06-dative-stacking-agglutinative",
+      "LA-C01-practice-vale-root",
+      "ML-C23-naal-survival",
+      "MR-C06-number-differences-don-ending",
+      "PA-C06-panj-convergence-borrowing",
+      "PT-C02-practice-neutral-question",
+      "RU-C02-kak-cross-language-what-language",
+      "RU-C02-vy-formality-safe-default",
+      "SA-C06-number-cognates-inheritance",
+      "TA-W01-curves-va-ka-writing-surface",
+      "TE-C31-subha-madhyahnam-register-source-scope",
+      "UR-C02-mera-naam-sara",
+      "UR-C03-aap-ka-naam-kya-hai-question",
+      "UR-C03-aap-tum-tu-first-meeting",
+      "UR-C03-khushi-hui-close",
+      "UR-C03-kya-what",
+      "UR-C03-practice-next-line",
+      "UR-C04-aap-kaise-hain-man",
+      "UR-C04-kaise-kaisi-woman",
+      "UR-C04-main-hun-frame",
+      "UR-C04-main-thik-hun-reply",
+      "UR-C04-practice-next-line",
+      "UR-C04-thik-well",
+      "UR-C05-hafiz-meaning",
+      "UR-C05-khuda-hafiz-goodbye",
+      "UR-C05-khuda-meaning",
+      "UR-C05-practice-final-line",
+    ]);
+    expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
+    expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);
   });
 
   it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {
@@ -112,6 +173,81 @@ describe("real curriculum", () => {
         (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
       ),
     ).toEqual([]);
+  });
+
+  it("keeps the Persian and Urdu Chapter 3 chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 3,
+      );
+      expect(chapter).toHaveLength(5);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 3,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 3,
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("keeps the Persian and Urdu Chapter 4 wellbeing chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 4,
+      );
+      expect(chapter).toHaveLength(6);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 4,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 4,
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("keeps the Persian and Urdu Chapter 5 farewell chains closed, objective, and under five minutes", () => {
+    const report = buildCurriculumGapReport({ registry, lessons, books });
+    for (const language of ["persian", "urdu"]) {
+      const chapter = lessons.filter(
+        (lesson) => lesson.language === language && lesson.realization.chapter === 5,
+      );
+      expect(chapter).toHaveLength(4);
+      expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+      expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+      expect(
+        report.duration.violations.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 5,
+        ),
+      ).toEqual([]);
+      expect(
+        report.prerequisites.laterChapterWithoutPrerequisites.filter(
+          (lesson) => lesson.language === language && lesson.chapter === 5,
+        ),
+      ).toEqual([]);
+    }
+
+    const persianFarewell = lessons.find(
+      (lesson) => lesson.realization.lessonId === "FA-C05-khodahafez",
+    )!;
+    const urduFarewell = lessons.find(
+      (lesson) => lesson.realization.lessonId === "UR-C05-khuda-hafiz",
+    )!;
+    expect(persianFarewell.frontmatter.headword).toBe("خداحافظ");
+    expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

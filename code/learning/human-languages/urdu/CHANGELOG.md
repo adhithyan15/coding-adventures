@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.6.0 — 2026-08-04
+
+- Added four schema-v2 Chapter 5 micro-lessons for **خدا**, **حافظ**, spaced
+  **خدا حافظ**, and a start-versus-end interaction.
+- Secured the Urdu form before using its Persian and Arabic history as a bridge;
+  mixed comparison preserves Urdu spacing and Persian joining.
+- Extended the exact N+1/N+3/N+7/N+15 ledger through S35, with objective
+  activities and a generated five-chapter book.
+
+## 0.5.0 — 2026-08-04
+
+- Added six schema-v2 Chapter 4 micro-lessons for *kaise/kaisī*, respectful
+  **āp ... haiṅ**, the first-person **maiṅ ... hūṅ** frame, *ṭhīk*, the polite
+  reply, and cumulative practice.
+- Kept addressee agreement separate from honorific register, introduced the
+  retroflex-aspiration sequence only inside **ٹھیک**, and made the Hindi bridge
+  follow independent Urdu-script retrieval.
+- Extended the sound-id reference and exact N+1/N+3/N+7/N+15 ledger through
+  S31, with objective activities and a generated four-chapter book.
+
+## 0.4.0 — 2026-08-03
+
+- Added five schema-v2 Chapter 3 micro-lessons for **āp/tum/tū**, *kyā*, the
+  full name question, the meeting response, and cumulative practice.
+- Added objective activity contracts and prerequisite-closed knowledge atoms for
+  the migrated Chapter 2 name frame and every new lesson.
+- Generated Chapter 3 for the downloadable book from the same canonical lesson
+  AST used by Language Ladder and extended the review ledger through S25.
+
+## 0.3.0 — 2026-08-03
+
+- Added the authoritative five-lesson session map with exact N+1, N+3, N+7,
+  and N+15 review placements.
+- Added an on-demand Urdu pronunciation and script reference that labels the
+  current Naskh presentation fallback without weakening the Nastaliq goal.
+
 ## 0.2.0 — 2026-08-02
 
 - Added the first downloadable LaTeX edition.

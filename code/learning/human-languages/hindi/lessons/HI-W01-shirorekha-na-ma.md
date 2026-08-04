@@ -80,6 +80,7 @@ shows up.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01] -->
+<!-- hl-activity: {"id":"HI-W01-shirorekha-na-ma-drawing-order","kind":"text","assesses":["HI-CONCEPT-W01-SHIROREKHA-NA-MA-01"],"prompt":"When is the shirorekha usually drawn?","answer":"last","accepted":["at the end","after the letter bodies"],"feedback":{"correct":"Correct: write the letter bodies first, then draw the headline across them.","incorrect":"The usual order is letter bodies first and the shirorekha last."},"response_seconds":8} -->
 
 [PAUSE 3s] What is the line across the top called, and what does the word
 literally mean? (**Shirorekhā** — "**head-line**".) When is it usually drawn?

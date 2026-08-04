@@ -1,8 +1,11 @@
 # Build every Human Languages LaTeX book in one job. Relevant pull requests
 # retain one complete publication bundle as a build artifact; main-branch
-# builds publish that same bundle as a stable download catalog on GitHub Pages.
-# Every pull request receives one stable gate result, while unrelated changes
-# skip the expensive all-books build after a small change-detection job.
+# builds publish that same bundle as a stable download catalog on GitHub Pages
+# AND cut a dated GitHub Release with every book's PDF attached, so a reader
+# can grab a stable, versioned snapshot instead of only the always-current
+# Pages catalog. Every pull request receives one stable gate result, while
+# unrelated changes skip the expensive all-books build after a small
+# change-detection job.
 #
 # Each language track under code/learning/human-languages/<lang>/book/
 # contains a self-contained XeLaTeX book (see HL00 spec). This workflow
@@ -209,6 +212,50 @@ jobs:
           publish_dir: dist/human-languages/books
           destination_dir: human-languages/books
           keep_files: true
+
+      # Every main-branch build that reaches this point already built and
+      # verified every book PDF, so cut a dated GitHub Release from it. The
+      # tag combines a UTC date with the run number so same-day pushes still
+      # get distinct, monotonically increasing releases without any manual
+      # version bump.
+      - name: Determine release version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: version
+        run: |
+          set -euo pipefail
+          version="v$(date -u +%Y.%m.%d).${{ github.run_number }}"
+          echo "tag=human-languages-$version" >> "$GITHUB_OUTPUT"
+          echo "name=Human Languages Books $version" >> "$GITHUB_OUTPUT"
+
+      - name: Build release notes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          {
+            echo "Snapshot of every Human Languages curriculum book, built from"
+            echo "commit $(git rev-parse --short HEAD) on main."
+            echo
+            echo "## Books in this release"
+            for pdf in dist/human-languages/books/*.pdf; do
+              echo "- $(basename "$pdf" .pdf)"
+            done
+            echo
+            echo "Always-current catalog: https://${{ github.repository_owner }}.github.io/$(basename "${{ github.repository }}")/human-languages/books/"
+          } > release-notes.md
+          cat release-notes.md
+
+      - name: Publish GitHub Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          body_path: release-notes.md
+          make_latest: true
+          files: dist/human-languages/books/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   books-gate:
     # Keep the required pull-request context distinct from the push context.

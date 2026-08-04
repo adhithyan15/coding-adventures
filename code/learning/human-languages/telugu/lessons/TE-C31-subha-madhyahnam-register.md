@@ -72,6 +72,7 @@ everyday greeting, **నమస్కారం** remains the safer choice.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C31-SUBHA-MADHYAHNAM-01, TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-01, TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02] -->
+<!-- hl-activity: {"id":"TE-C31-subha-madhyahnam-register-source-scope","kind":"text","assesses":["TE-PRAGMATICS-C31-SUBHA-MADHYAHNAM-REGISTER-02"],"prompt":"Do both sources claim subha madhyahnam is less common?","answer":"no","accepted":["no they do not","only one source does"],"feedback":{"correct":"Right: both support formal use, but only one source makes the frequency comparison.","incorrect":"No. Both sources support formal use; only Talkpal calls it less common."},"response_seconds":8} -->
 
 [PAUSE 3s] Do both sources rank శుభ మధ్యాహ్నం as less common? (**No.** Both
 support its formal use; only Talkpal makes the frequency comparison.) What is
