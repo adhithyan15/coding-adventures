@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-W04-i-sign-write-nandri
+spine_node: SPINE-MEET-GREET
+sequence: 170
 chapter: 1
 type: writing
 headword: "ி, நன்றி"
@@ -8,18 +11,32 @@ romanization: "i, naṉṟi / nandri"
 prerequisites: [TA-W04-vowel-signs-nandri, TA-W03-pulli-vanakkam]
 sounds: [matra-i, nasal-stop-voicing]
 roots: [tamil-nandri]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01]
+introduces:
+  knowledge: [TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03]
+practises:
+  knowledge: [TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-W04-vowel-signs-nandri, TA-C01-nandri]
 ---
 
 # ி and நன்றி — replace the vowel, then hear *ndr*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01] -->
 
 [PAUSE 2s] A consonant can keep *a* or lose it under a puḷḷi. The third option
 is to replace it with a vowel sign.
 
-## The first vowel sign
+## Script you'll notice: The first vowel sign
+<!-- hl-knowledge: introduces=[TA-SCRIPT-I-SIGN-WRITE-NANDRI-01]; assesses=[] -->
 
 > **ற** = *ṟa* → **றி** = *ṟi*
 
@@ -27,7 +44,8 @@ is to replace it with a vowel sign.
 hangs from it. Later, **ை** (*ai*) will appear before its consonant on the page
 but after it in speech, the same eye/ear trap as Devanagari ि.
 
-## Assemble நன்றி
+## Script you'll notice: Assemble நன்றி
+<!-- hl-knowledge: introduces=[TA-SCRIPT-I-SIGN-WRITE-NANDRI-02]; assesses=[] -->
 
 > **ந · ன் · றி → நன்றி**
 
@@ -37,7 +55,8 @@ but after it in speech, the same eye/ear trap as Devanagari ि.
 | **ன்** | *ṉ* — alveolar, with puḷḷi | Lessons 3–4 |
 | **றி** | *ṟi* — ற plus the i-sign | this lesson |
 
-## Why *nandri* has a d-sound
+## Sounds you'll need: Why *nandri* has a d-sound
+<!-- hl-knowledge: introduces=[TA-SOUND-I-SIGN-WRITE-NANDRI-03]; assesses=[] -->
 
 **ன் + ற** is pronounced close to **ndr**. This follows a broader Tamil rule: a
 **nasal voices the stop after it**.
@@ -53,6 +72,7 @@ spellings and the common English romanization **nandri**, whose *d* is heard but
 not separately written.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03] -->
 
 [PAUSE 1s]
 - [YOU WRITE: றி — ற plus the hook above right]
@@ -60,6 +80,7 @@ not separately written.
 - [YOU SAY: "ன் + ற = **ndr**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-VOWEL-SIGNS-NANDRI-01, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-01, TA-SCRIPT-I-SIGN-WRITE-NANDRI-02, TA-SOUND-I-SIGN-WRITE-NANDRI-03] -->
 
 [PAUSE 3s] What are a consonant's three vowel choices? (Keep inherent **a**,
 **remove** it with puḷḷi, or **replace** it with a vowel sign.) Where does **ி**

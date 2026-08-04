@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C31-afternoon-greeting-root
+spine_node: SPINE-TIME-OF-DAY
+sequence: 600
 chapter: 31
 type: etymology
 headword: மதிய
@@ -9,18 +12,32 @@ prerequisites: [TA-C31-matiya-vanakkam]
 sounds: [tamil-vowel-sign-i]
 roots: [sanskrit-madhya-middle]
 etymology_hook: "மதிய is the adjectival form of மதியம் ('noon,' from Sanskrit madhya, 'middle') and can pertain to afternoon; மதிய வணக்கம் therefore does not reuse பிற்பகல், the native compound learned for 'afternoon'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-ETYMON-MATIYA-VANAKKAM-01]
+introduces:
+  knowledge: [TA-ETYMON-AFTERNOON-GREETING-ROOT-01]
+practises:
+  knowledge: [TA-ETYMON-MATIYA-VANAKKAM-01, TA-ETYMON-AFTERNOON-GREETING-ROOT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C31-matiya-vanakkam, TA-C28-afternoon-boundary, TA-C28-pirpakal]
 ---
 
 # மதிய — the greeting takes a different root
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MATIYA-VANAKKAM-01] -->
 
 [PAUSE 2s] You can now say **மதிய வணக்கம்**. This final step explains
 why its first word is not the ordinary afternoon word **பிற்பகல்**.
 
-## From "middle" to noon, then afternoon
+## The word, taken apart - From "middle" to noon, then afternoon
+<!-- hl-knowledge: introduces=[TA-ETYMON-AFTERNOON-GREETING-ROOT-01]; assesses=[] -->
 
 The greeting begins with **மதிய** (**matiya**). It is the adjectival
 form of **மதியம்** (**matiyam**), "noon." That noun entered Tamil from
@@ -41,6 +58,7 @@ more reason not to manufacture a greeting by translating its pieces
 from another language.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MATIYA-VANAKKAM-01, TA-ETYMON-AFTERNOON-GREETING-ROOT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: matiyam — "noon," ultimately from Sanskrit madhya, "middle"]
@@ -48,6 +66,7 @@ from another language.
 - [YOU SAY: matiya vaṇakkam — the afternoon greeting, built on matiya]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MATIYA-VANAKKAM-01, TA-ETYMON-AFTERNOON-GREETING-ROOT-01] -->
 
 [PAUSE 3s] Does **மதிய வணக்கம்** begin with **பிற்பகல்**? (**No.**)
 What noun is **மதிய** related to? (**மதியம், "noon."**) What older root

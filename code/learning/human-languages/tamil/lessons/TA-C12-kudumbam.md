@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C12-kudumbam
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 320
 chapter: 12
 type: word
 headword: அப்பா அம்மா அண்ணன் தம்பி அக்கா தங்கை
@@ -9,20 +12,34 @@ prerequisites: [TA-C11-nirangal]
 sounds: [tamil-double-nna-retroflex, pulli-virama]
 roots: [dravidian-appa-amma, dravidian-age-graded-siblings]
 etymology_hook: "அப்பா appā/அம்மா ammā (native, baby-talk-type words found worldwide) are just the start — Tamil has FOUR sibling words, split by the sibling's AGE relative to you, not just their gender"
-est_minutes: 4
+duration:
+  max_seconds: 252
+requires:
+  knowledge: [TA-ETYMON-NIRANGAL-01]
+introduces:
+  knowledge: [TA-ETYMON-KUDUMBAM-01, TA-LEX-KUDUMBAM-02]
+practises:
+  knowledge: [TA-ETYMON-NIRANGAL-01, TA-ETYMON-KUDUMBAM-01, TA-LEX-KUDUMBAM-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C11-nirangal]
 ---
 
 # அப்பா, அம்மா, and four ways to say "brother/sister"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NIRANGAL-01] -->
 
 [PAUSE 2s] You've learned Spanish's *hermano/hermana* and French's
 *frère/sœur* — one word each for "brother" and "sister." Tamil asks a
 question those languages never do: **is this sibling older or younger than
 you?**
 
-## Parents — simple and native
+## The word, taken apart - Parents — simple and native
+<!-- hl-knowledge: introduces=[TA-ETYMON-KUDUMBAM-01]; assesses=[] -->
 
 - **அப்பா** (*appā*) = "**father**"
 - **அம்மா** (*ammā*) = "**mother**"
@@ -33,7 +50,8 @@ families everywhere — not borrowed from Sanskrit, not a coincidence with any
 one language in particular, just how small children's mouths tend to form
 their first words for parents.
 
-## Siblings — split by age, not just gender
+## You'll want to know: Siblings — split by age, not just gender
+<!-- hl-knowledge: introduces=[TA-LEX-KUDUMBAM-02]; assesses=[] -->
 
 Here's the real lesson: Tamil doesn't have one word for "brother" and one
 for "sister." It has **four**:
@@ -54,6 +72,7 @@ sibling" versus "younger sibling" a live, spoken distinction, not just
 something you *could* mention if you wanted to.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NIRANGAL-01, TA-ETYMON-KUDUMBAM-01, TA-LEX-KUDUMBAM-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "appā, ammā" — father, mother]
@@ -63,6 +82,7 @@ something you *could* mention if you wanted to.
   say "brother" or "sister" in Tamil]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-NIRANGAL-01, TA-ETYMON-KUDUMBAM-01, TA-LEX-KUDUMBAM-02] -->
 
 [PAUSE 3s] How many Tamil words mean "brother" or "sister," and why?
 (**Four** — அண்ணன்/தம்பி for older/younger brother, அக்கா/தங்கை for

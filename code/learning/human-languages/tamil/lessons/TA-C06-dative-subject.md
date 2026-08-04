@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C06-dative-subject
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 200
 chapter: 6
 type: phrase
 headword: எனக்குத் தமிழ் தெரியும்
@@ -10,19 +13,33 @@ prerequisites: [TA-C06-dative-stacking, TA-C05-naan-tamizh-pesugiren]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian puts the EXPERIENCER in the dative: knowing, liking, wanting and being cold all happen TO you rather than being done BY you — so 'I know Tamil' has no nominative 'I' at all, the person sitting in the dative instead (a 'dative subject'), and the same construction runs through Telugu, Kannada and Malayalam"
-est_minutes: 4
+duration:
+  max_seconds: 297
+requires:
+  knowledge: [TA-GRAMMAR-DATIVE-STACKING-01]
+introduces:
+  knowledge: [TA-LEX-DATIVE-SUBJECT-01, TA-GRAMMAR-DATIVE-SUBJECT-02]
+practises:
+  knowledge: [TA-GRAMMAR-DATIVE-STACKING-01, TA-LEX-DATIVE-SUBJECT-01, TA-GRAMMAR-DATIVE-SUBJECT-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C06-dative-stacking, TA-C06-dative-ukku, TA-C05-naan-tamizh-pesugiren, TA-C03-naan]
 ---
 
 # எனக்குத் தமிழ் தெரியும் — "I know Tamil"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-STACKING-01] -->
 
 [PAUSE 2s] In Chapter 5 you said **நான் தமிழ் பேசுகிறேன்** — "**I** speak Tamil,"
 with *nāṉ* as the subject. Now say "I **know** Tamil." Tamil will not let you use
 *nāṉ*.
 
-## The sentence
+## You'll want to know: The sentence
+<!-- hl-knowledge: introduces=[TA-LEX-DATIVE-SUBJECT-01]; assesses=[] -->
 
 > **எனக்குத் தமிழ் தெரியும்.**
 > *enakku tamiḻ teriyum.*
@@ -49,7 +66,8 @@ about **the language**, and you are merely the one it is known **to**.
 subject even though it isn't in the subject case. The odd feeling of the sentence
 is exactly that split.)
 
-## Why: things that happen *to* you
+## Grammar Lens: Why: things that happen *to* you
+<!-- hl-knowledge: introduces=[TA-GRAMMAR-DATIVE-SUBJECT-02]; assesses=[] -->
 
 Tamil sorts verbs by whether you **do** something or something **happens to** you.
 Speaking is something you do — so Ch. 5 used *nāṉ*. But knowing, liking, wanting,
@@ -66,6 +84,7 @@ English does this occasionally and archaically — "**methinks**" is exactly it
 (*me* is dative: "it seems **to me**"). Tamil made it a rule.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-STACKING-01, TA-LEX-DATIVE-SUBJECT-01, TA-GRAMMAR-DATIVE-SUBJECT-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*enakku tamiḻ teriyum*"]
@@ -73,6 +92,7 @@ English does this occasionally and archaically — "**methinks**" is exactly it
 - [YOU SAY: the literal — "to-me Tamil is-known"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-STACKING-01, TA-LEX-DATIVE-SUBJECT-01, TA-GRAMMAR-DATIVE-SUBJECT-02] -->
 
 [PAUSE 3s] What does **எனக்குத் தமிழ் தெரியும்** literally say? ("**To-me** Tamil
 **is-known**.") Which word has English got that Tamil hasn't? (A nominative

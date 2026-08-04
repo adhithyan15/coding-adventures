@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C20-vaanilai
+spine_node: SPINE-TIME-OF-DAY
+sequence: 440
 chapter: 20
 type: word
 headword: வானிலை
@@ -9,20 +12,34 @@ prerequisites: [TA-C18-mani-homophone-time]
 sounds: [tamil-vowel-sign-ai, tamil-compound-word]
 roots: [dravidian-vaanam-sky, dravidian-nilai-state]
 etymology_hook: "வானிலை (vāṉilai, 'weather') most likely breaks from Kannada/Telugu/Malayalam's Sanskrit compounds entirely — வானம் (vāṉam, 'sky,' likely native Dravidian, with confirmed cognates in Kannada ಬಾನು/bānu and Telugu వాన/vāna, distinct from the Sanskrit sky word ākāśa) + நிலை (nilai, 'state, standing,' from நில் nil, 'to stand,' a core native Dravidian verb) — literally 'the state/standing of the sky'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-ETYMON-MANI-HOMOPHONE-TIME-01]
+introduces:
+  knowledge: [TA-LEX-VAANILAI-01, TA-LEX-VAANILAI-02]
+practises:
+  knowledge: [TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-LEX-VAANILAI-01, TA-LEX-VAANILAI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C18-mani-homophone-time, TA-C18-mani]
 ---
 
 # வானிலை — "the standing of the sky," most likely all native
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01] -->
 
 [PAUSE 2s] You've now seen a Persian+Sanskrit hybrid (Kannada), a pure
 Sanskrit compound (Telugu), and a Sanskrit compound echoing "time" (Malayalam).
 Tamil most likely breaks the pattern one more time — with a word built
 entirely from native pieces.
 
-## வானிலை — vaanam + nilai
+## You'll want to know: வானிலை — vaanam + nilai
+<!-- hl-knowledge: introduces=[TA-LEX-VAANILAI-01]; assesses=[] -->
 
 **வானிலை** (*vāṉilai*) = "**weather**" — built from:
 
@@ -41,13 +58,15 @@ rather than a fully settled fact, the same hedge you've seen elsewhere in this
 course — but both pieces are independently well-attested as old, native
 Dravidian vocabulary.)
 
-## மழை பெய்கிறது — "rain is falling"
+## You'll want to know: மழை பெய்கிறது — "rain is falling"
+<!-- hl-knowledge: introduces=[TA-LEX-VAANILAI-02]; assesses=[] -->
 
 > **மழை பெய்கிறது.** — "It's raining." — literally "**rain is falling**."
   (*mazhai peykiRathu* — from **பெய்** *pey*, "to fall/pour," specifically used
   for rain.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-LEX-VAANILAI-01, TA-LEX-VAANILAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "vāṉilai" — weather, "the standing of the sky"]
@@ -55,6 +74,7 @@ Dravidian vocabulary.)
 - [YOU SAY: "mazhai peykiRathu" — it's raining, "rain is falling"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-MANI-HOMOPHONE-TIME-01, TA-LEX-VAANILAI-01, TA-LEX-VAANILAI-02] -->
 
 [PAUSE 3s] What are the two pieces of **வானிலை**, and what does the whole word
 literally mean? (**வானம்**, "sky," + **நிலை**, "state/standing" — "**the

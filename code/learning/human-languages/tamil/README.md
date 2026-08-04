@@ -44,12 +44,24 @@ shown, LaTeX book.
 - **Chapter 5 — First Verbs** ([`lessons/TA-C05-*`](./lessons/)): pēsu, **nāṉ
   tamiḻ pēsugiṟēṉ**, vāḻ, vēlai sey, practice. Stem + tense + person; no gender
   in the 1st person. In the book.
+- **Chapters 6–31 — Cases, numbers, courtesy, calendar, family, body, food,
+  time, weather, animals, colours, and greetings**
+  ([`lessons/TA-C{06..31}-*`](./lessons/)): forty-three prerequisite-ordered
+  micro-lessons continue the same inline script, grammar, and etymology method.
+  All are schema v2, stay below five minutes, and generate twenty-six book
+  chapters from the exact canonical sources consumed by Language Ladder.
+- **Writing W01–W04** ([`lessons/TA-W*`](./lessons/)): eight gentle steps teach
+  curves, the abugida, retroflexion, the three Tamil n letters, the puḷḷi, vowel
+  signs, and whole-word writing for **வணக்கம்** and **நன்றி**. They are
+  dependency-ordered schema-v2 companions embedded inside Chapter 1 rather than
+  a gated alphabet course.
 
 ## Book / fonts
 
-The book compiles with XeLaTeX using the **vendored** Noto Sans Tamil font
-(`../../_fonts/`), loaded by relative path — so it builds identically locally
-and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
+The 31-chapter book compiles with XeLaTeX using **vendored** Noto fonts
+(`../../_fonts/`) for Tamil and every comparison script, with no system-font
+dependency. Chapters 6–31 are generated from canonical lesson ASTs and checked
+against Language Ladder source hashes. `latexmk -xelatex book.tex`.
 
 ## Files
 
@@ -57,5 +69,7 @@ and in CI, no system-font dependency. `latexmk -xelatex book.tex`.
   · [`roadmap.md`](./roadmap.md) · [`session-map.md`](./session-map.md)
   · [`book/`](./book/)
 
-Lessons are slug-named (e.g. `TA-C01-vanakkam`); order lives in the book and
-`session-map.md`.
+Lessons are slug-named (e.g. `TA-C01-vanakkam`); canonical prerequisite and
+sequence metadata governs app/book order. The older roadmap and session map do
+not yet enumerate the complete Chapter 31 sequence; that explicit debt is
+tracked as `HL-M07` in the shared backlog.

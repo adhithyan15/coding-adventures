@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C15-thanneer-arisi
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 350
 chapter: 15
 type: word
 headword: தண்ணீர் அரிசி சாதம்
@@ -9,26 +12,41 @@ prerequisites: [TA-C14-kaalangal]
 sounds: [tamil-retroflex-nna-double, tamil-vowel-sign-ii]
 roots: [thann-cool-nir-water, arisi-rice-dravidian]
 etymology_hook: "அரிசி arisi (uncooked rice) may be the ULTIMATE source of the English word 'rice' itself, via Greek oryza — a widely cited hypothesis, though etymologists don't all agree on the exact chain"
-est_minutes: 4
+duration:
+  max_seconds: 254
+requires:
+  knowledge: [TA-LEX-KAALANGAL-01]
+introduces:
+  knowledge: [TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-PRAGMATICS-THANNEER-ARISI-03]
+practises:
+  knowledge: [TA-LEX-KAALANGAL-01, TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-PRAGMATICS-THANNEER-ARISI-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C14-kaalangal]
 ---
 
 # தண்ணீர், அரிசி, சாதம் — water, and rice, the real staple
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-KAALANGAL-01] -->
 
 [PAUSE 2s] Every language so far in this arc taught "bread" as the staple
 food. Here, that would be **dishonest** — bread isn't the everyday
 staple in Tamil food culture. **Rice** is, and it comes with one of the
 most famous (if contested) etymological journeys of any food-word.
 
-## தண்ணீர் — water, literally "cool water"
+## You'll want to know: தண்ணீர் — water, literally "cool water"
+<!-- hl-knowledge: introduces=[TA-LEX-THANNEER-ARISI-01]; assesses=[] -->
 
 **தண்ணீர்** (*taṇṇīr*) = "**water**" — built from **தண்** (*taṇ*, "**cool**")
 + **நீர்** (*nīr*, "**water**"). Everyday Tamil doesn't just say "water" —
 it says, quite literally, "**cool water**."
 
-## அரிசி and சாதம் — rice, raw and cooked
+## You'll want to know: அரிசி and சாதம் — rice, raw and cooked
+<!-- hl-knowledge: introduces=[TA-LEX-THANNEER-ARISI-02]; assesses=[] -->
 
 Tamil, like most of South India, distinguishes the **uncooked grain** from
 the **cooked dish** with two separate words, not one:
@@ -40,7 +58,8 @@ the **cooked dish** with two separate words, not one:
   the same idea, **சோறு** (*cōṟu*) — the two sit side by side as everyday
   near-synonyms.
 
-## Be honest about a famous (contested) word-journey
+## Why it's said this way: Be honest about a famous (contested) word-journey
+<!-- hl-knowledge: introduces=[TA-PRAGMATICS-THANNEER-ARISI-03]; assesses=[] -->
 
 Here's the exciting part, held with appropriate care: many etymologists
 connect **அரிசி** (*arisi*) to the **English word "rice" itself** — the
@@ -53,6 +72,7 @@ among others (an Indo-Aryan *vrīhi*-related source is also proposed), not a
 settled, universally agreed fact.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-KAALANGAL-01, TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-PRAGMATICS-THANNEER-ARISI-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "taṇ" — cool — then "nīr," water — then "taṇṇīr," cool water]
@@ -60,6 +80,7 @@ settled, universally agreed fact.
 - [YOU SAY: the famous (contested) link — "arisi" → possibly English "rice"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-KAALANGAL-01, TA-LEX-THANNEER-ARISI-01, TA-LEX-THANNEER-ARISI-02, TA-PRAGMATICS-THANNEER-ARISI-03] -->
 
 [PAUSE 3s] What does **தண்ணீர்** literally mean? (**"Cool water"** — *taṇ*
 "cool" + *nīr* "water.") What two words does Tamil use for rice, and why

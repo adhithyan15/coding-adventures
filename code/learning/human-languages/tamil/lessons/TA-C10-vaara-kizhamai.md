@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C10-vaara-kizhamai
+spine_node: SPINE-TIME-OF-DAY
+sequence: 300
 chapter: 10
 type: word
 headword: திங்கள் செவ்வாய் புதன் வியாழன் வெள்ளி சனி ஞாயிறு
@@ -9,20 +12,34 @@ prerequisites: [TA-C09-sorry-register]
 sounds: [tamil-alveolar-rra, pulli-virama, tamil-nya]
 roots: [dravidian-native-planet-words, sanskrit-planet-words]
 etymology_hook: "Tamil names its week with கிழமை kizhamai 'day' — a native Dravidian word, not Sanskrit vāra — and four of its seven planet-names (moon, Mars, Venus, sun) are Tamil's own, not borrowed"
-est_minutes: 4
+duration:
+  max_seconds: 277
+requires:
+  knowledge: [TA-PRAGMATICS-SORRY-REGISTER-01]
+introduces:
+  knowledge: [TA-GRAMMAR-VAARA-KIZHAMAI-01, TA-PRAGMATICS-VAARA-KIZHAMAI-02]
+practises:
+  knowledge: [TA-PRAGMATICS-SORRY-REGISTER-01, TA-GRAMMAR-VAARA-KIZHAMAI-01, TA-PRAGMATICS-VAARA-KIZHAMAI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C09-sorry-register, TA-C09-mannikkavum]
 ---
 
 # திங்கள் to ஞாயிறு — the week, home-grown and borrowed together
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-SORRY-REGISTER-01] -->
 
 [PAUSE 2s] You've seen Hindi's week built entirely from Sanskrit deity-names
 plus **वार** (*vār*). Tamil's week tells a richer story: it uses its **own**
 word for "day," and **some** of its planet-names are Tamil's own too — while
 others are borrowed, just like Hindi's.
 
-## The pattern: [planet] + கிழமை, "day"
+## Grammar Lens: The pattern: [planet] + கிழமை, "day"
+<!-- hl-knowledge: introduces=[TA-GRAMMAR-VAARA-KIZHAMAI-01]; assesses=[] -->
 
 Every Tamil weekday ends in **கிழமை** (*kizhamai*), "**day**" — a native
 Dravidian word, not the Sanskrit **வாரம்** (*vāram*) that Hindi, Kannada, and
@@ -39,7 +56,8 @@ Telugu build on (though Tamil also keeps a more formal, Sanskritic
 | **சனிக்கிழமை** | *saṉi* | **Saturn** | borrowed from Sanskrit **Śani** |
 | **ஞாயிற்றுக்கிழமை** | *ñāyiṟu* | "**Sun**" | Tamil's **own** word for sun |
 
-## Be honest about the mix
+## Why it's said this way: Be honest about the mix
+<!-- hl-knowledge: introduces=[TA-PRAGMATICS-VAARA-KIZHAMAI-02]; assesses=[] -->
 
 Notice the pattern: **Moon, Mars, Venus, and Sun** all carry Tamil's own
 descriptive or native words, while **Mercury, Jupiter, and Saturn** carry
@@ -54,6 +72,7 @@ commonly-given account rather than settled certainty — exact planet-name
 histories this old are not always fully nailed down.)
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-SORRY-REGISTER-01, TA-GRAMMAR-VAARA-KIZHAMAI-01, TA-PRAGMATICS-VAARA-KIZHAMAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "thiṅgaḷ" — moon, Tamil's own word — then "kizhamai," day]
@@ -63,6 +82,7 @@ histories this old are not always fully nailed down.)
   Venus, sun]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-SORRY-REGISTER-01, TA-GRAMMAR-VAARA-KIZHAMAI-01, TA-PRAGMATICS-VAARA-KIZHAMAI-02] -->
 
 [PAUSE 3s] What does every Tamil weekday end in, and where does that word
 come from? (**கிழமை** *kizhamai*, "day" — Tamil's **own** word, not Sanskrit

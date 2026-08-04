@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C21-naay-poonai
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 450
 chapter: 21
 type: word
 headword: நாய், பூனை
@@ -9,20 +12,34 @@ prerequisites: [TA-C20-pathinondru-irupathu]
 sounds: [tamil-vowel-sign-ai, tamil-final-y]
 roots: [dravidian-naay-dog, dravidian-punai-cat]
 etymology_hook: "நாய் (nāy, 'dog') is a solid, undisputed native Proto-Dravidian root — the SAME root behind Kannada's naayi and Malayalam's naaya — closing this whole arc's dog-word theme on solid ground, the honest opposite of Spanish's perro, English's dog, and Hindi's kuttā, all genuine unsolved mysteries; பூனை (pūnai, 'cat') is Tamil's everyday word, matching Malayalam closely but genuinely different from Kannada's bekku and Telugu's pilli — Tamil itself even keeps rarer alternate cat-words (பில்லி, வெருகு) echoing those other roots"
-est_minutes: 4
+duration:
+  max_seconds: 263
+requires:
+  knowledge: [TA-LEX-PATHINONDRU-IRUPATHU-01]
+introduces:
+  knowledge: [TA-LEX-NAAY-POONAI-01, TA-ETYMON-NAAY-POONAI-02]
+practises:
+  knowledge: [TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-NAAY-POONAI-01, TA-ETYMON-NAAY-POONAI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C20-pathinondru-irupathu]
 ---
 
 # நாய், பூனை — solid ground to close the arc, and an honest three-way split
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-PATHINONDRU-IRUPATHU-01] -->
 
 [PAUSE 2s] This whole ANIMALS arc kept finding mystery dog-words — Spanish's
 *perro*, English's *dog*, Hindi's *kuttā*, each one an unsolved puzzle
 displacing an older, expected word. Tamil's dog-word closes the arc on the
 complete opposite footing: total, undisputed solid ground.
 
-## நாய் — no mystery, anywhere
+## You'll want to know: நாய் — no mystery, anywhere
+<!-- hl-knowledge: introduces=[TA-LEX-NAAY-POONAI-01]; assesses=[] -->
 
 **நாய்** (*nāy*, "**dog**") is a solid, native **Proto-Dravidian** root —
 the exact same one behind Kannada's **ನಾಯಿ** (*nāyi*) and Malayalam's
@@ -33,7 +50,8 @@ expected word for "dog" to an unexplained newcomer — and right here, in the
 Dravidian family, the expected word simply **survived**, plainly and
 solidly, across (at least) three of its languages.
 
-## பூனை — Tamil's word, and an honest three-way Dravidian split
+## The word, taken apart - பூனை — Tamil's word, and an honest three-way Dravidian split
+<!-- hl-knowledge: introduces=[TA-ETYMON-NAAY-POONAI-02]; assesses=[] -->
 
 **பூனை** (*pūnai*, "**cat**") is Tamil's own everyday word, matching
 Malayalam's **പൂച്ച** (*pūcha*) closely — but be honest that "cat"
@@ -48,6 +66,7 @@ three roots were once available across the family; each language just
 settled on a different one as its everyday word.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-NAAY-POONAI-01, TA-ETYMON-NAAY-POONAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nāy" — dog, solid native Dravidian, no mystery anywhere]
@@ -56,6 +75,7 @@ settled on a different one as its everyday word.
   two other, separate ancient roots]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-PATHINONDRU-IRUPATHU-01, TA-LEX-NAAY-POONAI-01, TA-ETYMON-NAAY-POONAI-02] -->
 
 [PAUSE 3s] Is **நாய்** a mystery word, like Spanish's *perro*, English's
 *dog*, or Hindi's *kuttā*? (**No** — a solid, undisputed native Dravidian

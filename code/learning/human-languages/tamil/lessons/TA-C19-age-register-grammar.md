@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C19-age-register-grammar
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 420
 chapter: 19
 type: grammar
 headword: உன் வயசு என்ன? / உனக்கு எத்தனை வயது ஆகிறது?
@@ -7,25 +10,40 @@ gloss: casual Tamil uses a possessive age question while formal Tamil uses dativ
 prerequisites: [TA-C19-vayathu]
 sounds: [tamil-dative-ukku, tamil-verb-aakiradhu]
 roots: [tamil-aaku-become]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-VAYATHU-01]
+introduces:
+  knowledge: [TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02]
+practises:
+  knowledge: [TA-LEX-VAYATHU-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C19-vayathu, TA-C06-dative-subject-family]
 ---
 
 # Your age what? / To you how many years becomes?
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAYATHU-01] -->
 
 [PAUSE 2s] Tamil did not choose one age construction. Register selects between
 two shapes already visible elsewhere in the family.
 
-## Casual possessive
+## Grammar Lens: Casual possessive
+<!-- hl-knowledge: introduces=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01]; assesses=[] -->
 
 > **உன் வயசு என்ன?** — "your age what?"
 
 Casual speech uses a plain possessive with no dative and no verb, like Kannada
 and Telugu.
 
-## Formal dative plus "become"
+## Grammar Lens: Formal dative plus "become"
+<!-- hl-knowledge: introduces=[TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02]; assesses=[] -->
 
 > **உனக்கு எத்தனை வயது ஆகிறது?** — "to you how many years is becoming?"
 >
@@ -39,6 +57,7 @@ Do not compress these into "Tamil's one grammar." Both live in the language;
 setting and register choose between them.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAYATHU-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "un vayasu enna?" — casual]
@@ -46,6 +65,7 @@ setting and register choose between them.
 - [YOU ANSWER: "enakku irupathu vayathu aakirathu"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-VAYATHU-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-01, TA-GRAMMAR-AGE-REGISTER-GRAMMAR-02] -->
 
 [PAUSE 3s] Which shape is casual? (**Possessive**: "your age what?") Which is
 formal? (**Dative + aakirathu**, "become.") Does Malayalam use the same verb?

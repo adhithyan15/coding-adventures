@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C27-maalai
+spine_node: SPINE-TIME-OF-DAY
+sequence: 540
 chapter: 27
 type: word
 headword: மாலை
@@ -9,20 +12,34 @@ prerequisites: [TA-C26-kaalai]
 sounds: [tamil-vowel-sign-aa, tamil-vowel-sign-ai]
 roots: [proto-dravidian-maal, proto-dravidian-maal-darkness-possible]
 etymology_hook: "மாலை (mālai, 'evening') is a genuine HOMONYM, not one word with two meanings: Wiktionary lists it under TWO entirely separate etymologies. Etymology 1 is 'மாலை' meaning 'garland, wreath, necklace' — traced to Old Tamil, and compared to Sanskrit माला (mālā) with the note 'probably borrowed FROM Dravidian languages' (a reverse-direction loan, Dravidian-into-Sanskrit, a genuine contrast with this project's usual Sanskrit-into-Dravidian pattern). Etymology 2 is the completely separate 'மாலை' meaning 'evening' — also from Old Tamil, but compared instead to மால் (māl), which Wiktionary traces to Proto-Dravidian *mā/*māl and glosses with several senses including 'கருமை' ('blackness, darkness'), plus 'illusion/confusion' and, as a proper noun, the Hindu deity Vishnu; be honest that Wiktionary's etymology for the 'evening' sense only says 'compare māl,' not an explicit 'evening derives specifically from the darkness sense' claim — a natural, plausible connection (evening = growing dark), but not spelled out with full certainty by the source itself; still, this is confidently NATIVE Dravidian vocabulary, a genuine contrast with TA-C26's uncertain காலை"
-est_minutes: 4
+duration:
+  max_seconds: 273
+requires:
+  knowledge: [TA-ETYMON-KAALAI-01]
+introduces:
+  knowledge: [TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02]
+practises:
+  knowledge: [TA-ETYMON-KAALAI-01, TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C26-kaalai]
 ---
 
 # மாலை (mālai) — "evening," and a garland that only looks like the same word
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01] -->
 
 [PAUSE 2s] Last lesson's morning word had an uncertain origin. This
 evening word is different — confidently native — but it comes with
 its own honest twist: it looks exactly like a completely unrelated
 word.
 
-## மாலை — a genuine homonym, not one word wearing two meanings
+## The word, taken apart - மாலை — a genuine homonym, not one word wearing two meanings
+<!-- hl-knowledge: introduces=[TA-ETYMON-MAALAI-01]; assesses=[] -->
 
 **மாலை** (**mālai**) — "**evening**" — happens to be spelled
 identically to another, completely **unrelated** Tamil word: **மாலை**
@@ -34,7 +51,8 @@ borrowed FROM Dravidian languages**" **into** Sanskrit, not the other
 way around. A rare reverse-direction loan, worth noticing against this
 whole project's usual Sanskrit-into-Dravidian pattern.
 
-## The evening sense — confidently native, plausibly "the dark one"
+## The word, taken apart - The evening sense — confidently native, plausibly "the dark one"
+<!-- hl-knowledge: introduces=[TA-ETYMON-MAALAI-02]; assesses=[] -->
 
 The **evening** sense of **மாலை** is a **separate** Old Tamil
 word entirely, compared instead to **மால்** (*māl*) — which
@@ -51,6 +69,7 @@ itself. What IS certain: this is confidently **native** Dravidian
 vocabulary, a genuine contrast with TA-C26's uncertain காலை.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01, TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "mālai" — "evening," confidently native Dravidian
@@ -61,6 +80,7 @@ vocabulary, a genuine contrast with TA-C26's uncertain காலை.
   "darkness" sense, but Wiktionary doesn't spell out that exact link]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-KAALAI-01, TA-ETYMON-MAALAI-01, TA-ETYMON-MAALAI-02] -->
 
 [PAUSE 3s] Are evening-mālai and garland-mālai the same word with two
 meanings? (**No** — Wiktionary treats them as two entirely separate

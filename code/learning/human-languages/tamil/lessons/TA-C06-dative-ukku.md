@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C06-dative-ukku
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 180
 chapter: 6
 type: word
 headword: -உக்கு
@@ -10,19 +13,33 @@ prerequisites: [TA-C05-practice, TA-C03-naan, TA-C02-peyar]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
 etymology_hook: "Dravidian marks case by ADDING a suffix that means one thing and stays visible at the seam — the opposite of Latin, where a fused ending like -īs carries case AND number AND declension at once, and doesn't even settle which case (dative or ablative); -ukku is the shared Dravidian dative, cousin of Telugu -ku, Kannada -ge, Malayalam -ikku"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [TA-GRAMMAR-DATIVE-UKKU-01]
+practises:
+  knowledge: [TA-GRAMMAR-DATIVE-UKKU-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C03-naan, TA-C02-peyar, TA-C05-practice]
 ---
 
 # -உக்கு (-ukku) — "to, for"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] Your first **case ending**. English says "**to** me" with a separate
 word in front. Tamil says it with a piece **stuck on the back** — and that small
 difference is the biggest structural fact about the language.
 
-## Adding it on
+## Grammar Lens: Adding it on
+<!-- hl-knowledge: introduces=[TA-GRAMMAR-DATIVE-UKKU-01]; assesses=[] -->
 
 Take a noun you know and add **-உக்கு**:
 
@@ -43,6 +60,7 @@ The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns
 — they just take the ending.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-UKKU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "*peyar* … *peyarukku*"]
@@ -50,6 +68,7 @@ The pronoun changes its body (*nāṉ* → *en-*) before the suffix lands. Nouns
 - [YOU SAY: "*vēlaikku*" — "for work," from Ch. 5's வேலை]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-DATIVE-UKKU-01] -->
 
 [PAUSE 3s] What does **-உக்கு** mean? ("**To**" or "**for**.") Where does it go?
 (**On the end** of the noun — Tamil adds, it doesn't put a word in front.) What is

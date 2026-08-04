@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C31-matiya-vanakkam
+spine_node: SPINE-TIME-OF-DAY
+sequence: 590
 chapter: 31
 type: phrase
 headword: மதிய வணக்கம்
@@ -9,19 +12,33 @@ prerequisites: [TA-C28-afternoon-boundary, TA-C29-kaalai-vanakkam]
 sounds: [tamil-vowel-sign-i, tamil-geminate-kka]
 roots: [vaṇaṅku]
 etymology_hook: "மதிய வணக்கம் (matiya vaṇakkam, 'good afternoon') is confirmed by two independently fetched sources for roughly noon to 4 PM; a third source does not list a distinct afternoon greeting, so learn the phrase while keeping the source disagreement visible"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01]
+introduces:
+  knowledge: [TA-ETYMON-MATIYA-VANAKKAM-01]
+practises:
+  knowledge: [TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01, TA-ETYMON-MATIYA-VANAKKAM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C28-afternoon-boundary, TA-C28-pirpakal, TA-C29-kaalai-vanakkam]
 ---
 
 # மதிய வணக்கம் (matiya vaṇakkam) — a sourced afternoon greeting
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01] -->
 
 [PAUSE 2s] You already know that Tamil's noon and afternoon boundaries
 can blur. Now learn one afternoon greeting without pretending that all
 speakers or teaching sources divide the day in exactly the same way.
 
-## மதிய வணக்கம் — confirmed, with a flexible boundary
+## The word, taken apart - மதிய வணக்கம் — confirmed, with a flexible boundary
+<!-- hl-knowledge: introduces=[TA-ETYMON-MATIYA-VANAKKAM-01]; assesses=[] -->
 
 **மதிய வணக்கம்** (**matiya vaṇakkam**) — "**good afternoon**" —
 is confirmed, by two independently-fetched sources, as Tamil's
@@ -38,6 +55,7 @@ setting around you. Treat "noon to 4" as a useful learning window, not
 as a universal clock rule.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01, TA-ETYMON-MATIYA-VANAKKAM-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "matiya vaṇakkam" — "good afternoon," confirmed real, used
@@ -46,6 +64,7 @@ as a universal clock rule.
   separate afternoon greeting at all]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01, TA-ETYMON-MATIYA-VANAKKAM-01] -->
 
 [PAUSE 3s] What is one sourced Tamil greeting for "good afternoon"?
 (**மதிய வணக்கம், matiya vaṇakkam**.) Do all three fetched sources

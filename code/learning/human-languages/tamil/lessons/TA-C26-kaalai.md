@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: TA-C26-kaalai
+spine_node: SPINE-TIME-OF-DAY
+sequence: 530
 chapter: 26
 type: word
 headword: காலை
@@ -9,20 +12,34 @@ prerequisites: [TA-C17-transparent-middle-synonyms, TA-C24-night-register-darkne
 sounds: [tamil-vowel-sign-ai, tamil-long-aa]
 roots: [uncertain-etymology, sanskrit-kalya-time-possible]
 etymology_hook: "காலை (kālai, 'morning') has a genuinely UNCERTAIN etymology — Wiktionary itself hedges with 'possibly from Sanskrit काल्य (kālya),' not a confident claim, and separately notes கால் (kāl) has SIX distinct etymologies, one of which ('time,' from Sanskrit काल/kāla) may or may not be what காலை derives from as an accusative-type form; be honest that this is genuinely less settled than Kannada's ಬೆಳಗ್ಗೆ (confidently native) or Telugu's ఉదయం (confidently Sanskrit tatsama) — don't manufacture false confidence where the primary source itself hedges; Wiktionary lists பகல் (already met, TA-C17, 'daytime') as a coordinate term; அதிகாலை ('early dawn') is a transparent compound of ati- ('excessive, very') + kālai, per the Tamil Lexicon (DDSA, University of Madras)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01]
+introduces:
+  knowledge: [TA-ETYMON-KAALAI-01, TA-ETYMON-KAALAI-02]
+practises:
+  knowledge: [TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-ETYMON-KAALAI-01, TA-ETYMON-KAALAI-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
 reviews_of: [TA-C17-transparent-middle-synonyms, TA-C24-night-register-darkness, TA-C17-nanpakal-nalliravu, TA-C24-iravu]
 ---
 
 # காலை (kālai) — "morning," an honestly uncertain etymology
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01] -->
 
 [PAUSE 2s] Every other language in this arc had a confidently-sourced
 story for its "morning" word — Sanskrit, or clearly native. Tamil's
 own word for morning is different: even Wiktionary itself isn't sure
 where it comes from.
 
-## காலை — genuinely uncertain, and worth saying so plainly
+## The word, taken apart - காலை — genuinely uncertain, and worth saying so plainly
+<!-- hl-knowledge: introduces=[TA-ETYMON-KAALAI-01]; assesses=[] -->
 
 **காலை** (**kālai**) — "**morning**" — has an etymology that
 Wiktionary itself only hedges at: "**possibly** from Sanskrit
@@ -37,7 +54,8 @@ is genuinely **less settled** than Kannada's confidently-native
 morning word or Telugu's confidently-Sanskrit one. Don't manufacture
 certainty the primary source itself doesn't have.
 
-## What IS confirmed: a coordinate term and a transparent compound
+## The word, taken apart - What IS confirmed: a coordinate term and a transparent compound
+<!-- hl-knowledge: introduces=[TA-ETYMON-KAALAI-02]; assesses=[] -->
 
 Wiktionary does confirm one solid fact: **பகல்** (already met,
 Chapter 17, "**daytime**") is listed as காலை's **coordinate term**
@@ -48,6 +66,7 @@ compound: **ati-** ("excessive, very") + **காலை**, glossed simply
 as "early dawn" by the Tamil Lexicon.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-ETYMON-KAALAI-01, TA-ETYMON-KAALAI-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kālai" — "morning," an honestly uncertain etymology]
@@ -57,6 +76,7 @@ as "early dawn" by the Tamil Lexicon.
   compound]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-TRANSPARENT-MIDDLE-SYNONYMS-01, TA-PRAGMATICS-NIGHT-REGISTER-DARKNESS-01, TA-ETYMON-KAALAI-01, TA-ETYMON-KAALAI-02] -->
 
 [PAUSE 3s] Is காலை's etymology as confidently sourced as Kannada's
 or Telugu's morning words? (**No** — Wiktionary itself only says
