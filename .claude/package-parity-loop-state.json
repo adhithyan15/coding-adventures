@@ -14,7 +14,9 @@
   "active_pr": {
     "number": 9863,
     "url": "https://github.com/adhithyan15/coding-adventures/pull/9863",
-    "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution"
+    "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution",
+    "implementation_head": "400e5eaa56848d41f0dd3dc973afe3c55bc3a458",
+    "last_ci_repair": "Exact-head platform logs showed perl/hmac asking cpanm to resolve repository-local hash packages with an unsupported --with-test option. The scoped repair installs only external Test2::V0 and supplies the four internal packages through the standalone PERL5LIB paths."
   },
   "last_inventory": {
     "revision": "6d206c3c8b8716bb9750da68ca6947ae41a1d68c",
