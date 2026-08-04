@@ -333,6 +333,20 @@ summary and description text, file and require-path lists, metadata, comments,
 quote forms and optional call parentheses are accepted; the gem name is matched
 case-insensitively against known Ruby package aliases.
 
+For Perl manifests, dependency candidates come only from top-level `requires`
+statements in the root `cpanfile`. A statement is top-level only when it begins
+outside every Perl block; `requires` calls inside `on ... => sub { ... }` phase
+blocks are not runtime graph edges. Resolvers ignore root `Makefile.PL`
+dependency tables, package identity, abstracts and other metadata, comments,
+test/develop/configure/build phase requirements, and every other statement.
+Both Perl quote forms are accepted and an optional version argument is ignored.
+The dependency name is matched case-insensitively against the package
+directory's exact, kebab-case, and snake-case aliases; the corresponding
+`coding-adventures-` and `coding_adventures_` distribution aliases; and the
+exact module name declared by the root `Makefile.PL` `NAME` field. The
+`Makefile.PL` `NAME` field contributes an alias only and never contributes an
+edge.
+
 ### 3. Graph and scheduling
 
 Required cases cover isolated nodes, chains, diamonds, multiple components,
@@ -498,6 +512,12 @@ complete package classification, and dependency-graph propagation. No adapter
 or execution case may enter the corpus with a contradictory record.
 
 ### 10. Validation
+
+Perl BUILD validation MAY admit local source references declared only inside a
+root `cpanfile` test block, plus their authoritative runtime prerequisites,
+without promoting those test-only references into the runtime dependency
+graph. This allowlist is validation-only: undeclared references and references
+from any other ignored metadata block still fail closed.
 
 Validation fixtures report stable diagnostic codes for:
 

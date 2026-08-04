@@ -575,6 +575,7 @@ packageAliases pkg = do
     let dirName = map toLower (takeFileName (packagePath pkg))
     let kebab = map (\char -> if char == '_' then '-' else char) dirName
     let snake = map (\char -> if char == '-' then '_' else char) dirName
+    let perlDistributionAliases = if packageLanguage pkg == "perl" then ["coding-adventures-" ++ dirName] else []
     manifestNames <- exactManifestNames pkg
     pure
         (nub
@@ -587,6 +588,7 @@ packageAliases pkg = do
                       , "coding-adventures-" ++ kebab
                       , "coding_adventures_" ++ snake
                       ]
+                        ++ perlDistributionAliases
                         ++ manifestNames
                     )
                 )
@@ -602,7 +604,8 @@ exactManifestNames pkg = do
     let goNames = if packageLanguage pkg == "go" then readGoModuleNames root else pure []
     let packageJsonNames = if packageLanguage pkg == "typescript" then readPackageJsonNames root else pure []
     let gemNames = if packageLanguage pkg == "ruby" then readGemspecNames root else pure []
-    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, packageJsonNames, gemNames]
+    let perlNames = if packageLanguage pkg == "perl" then readPerlPackageNames root else pure []
+    sequenceToList [cabalNames, cargoNames, pythonNames, goNames, packageJsonNames, gemNames, perlNames]
 
 sequenceToList :: [IO [String]] -> IO [String]
 sequenceToList actions = fmap concat (sequence actions)
@@ -676,6 +679,36 @@ readGemspecNames root = do
                 , not (null suffix)
                 , let after = drop 1 suffix
                 ]
+
+readPerlPackageNames :: FilePath -> IO [String]
+readPerlPackageNames root = do
+    let makefilePath = root </> "Makefile.PL"
+    exists <- doesFileExist makefilePath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict makefilePath
+            pure (perlPackageNames contents)
+
+perlPackageNames :: String -> [String]
+perlPackageNames = nub . mapMaybe (perlNamedFieldValue "NAME" . stripPerlComment) . lines
+
+perlNamedFieldValue :: String -> String -> Maybe String
+perlNamedFieldValue fieldName = search Nothing
+  where
+    search _ [] = Nothing
+    search previous remaining@(character : rest)
+        | fieldName `isPrefixOf` remaining
+        , maybe True (not . isPerlIdentifierCharacter) previous
+        , let afterField = drop (length fieldName) remaining
+        , null afterField || not (isPerlIdentifierCharacter (head afterField)) =
+            case trim afterField of
+                '=' : '>' : rhs -> map toLower <$> listToMaybe (extractQuotedValues rhs)
+                _ -> search (Just character) rest
+        | otherwise = search (Just character) rest
+
+isPerlIdentifierCharacter :: Char -> Bool
+isPerlIdentifierCharacter character = isAlphaNum character || character == '_'
 
 readSimpleFieldName :: FilePath -> IO (Maybe String)
 readSimpleFieldName path = do
@@ -778,6 +811,7 @@ readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
+    | packageLanguage pkg == "perl" = readPerlDependencyTokens pkg
     | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
     | packageLanguage pkg == "ruby" = readRubyDependencyTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
@@ -1093,6 +1127,69 @@ dropRubyCallOpening value =
     case trim value of
         '(' : rest -> trim rest
         rest -> rest
+
+readPerlDependencyTokens :: Package -> IO [String]
+readPerlDependencyTokens pkg = do
+    let cpanfilePath = packagePath pkg </> "cpanfile"
+    exists <- doesFileExist cpanfilePath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict cpanfilePath
+            pure (perlDependencyTokens contents)
+
+perlDependencyTokens :: String -> [String]
+perlDependencyTokens = nub . collect 0 . lines
+  where
+    collect _ [] = []
+    collect blockDepth (rawLine : rest) =
+        let uncommented = stripPerlComment rawLine
+            token = if blockDepth == 0 then maybeToList (perlRequiresToken uncommented) else []
+            structure = hidePerlStringContents uncommented
+            nextDepth = max 0 (blockDepth + countCharacter '{' structure - countCharacter '}' structure)
+         in token ++ collect nextDepth rest
+
+perlRequiresToken :: String -> Maybe String
+perlRequiresToken rawLine =
+    let stripped = trim rawLine
+        keyword = "requires"
+        remainder = drop (length keyword) stripped
+        argument = trim remainder
+     in if keyword `isPrefixOf` stripped
+            && not (null remainder)
+            && head remainder `elem` [' ', '\t']
+            && not (null argument)
+            && head argument `elem` ['"', '\'']
+            then map toLower <$> listToMaybe (extractQuotedValues argument)
+            else Nothing
+
+stripPerlComment :: String -> String
+stripPerlComment = go Nothing
+  where
+    go _ [] = []
+    go Nothing ('#' : _) = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = character : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : escaped : rest) = '\\' : escaped : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = character : go Nothing rest
+        | otherwise = character : go (Just quote) rest
+
+hidePerlStringContents :: String -> String
+hidePerlStringContents = go Nothing
+  where
+    go _ [] = []
+    go Nothing (character : rest)
+        | character `elem` ['"', '\''] = ' ' : go (Just character) rest
+        | otherwise = character : go Nothing rest
+    go (Just quote) ('\\' : _escaped : rest) = ' ' : ' ' : go (Just quote) rest
+    go (Just quote) (character : rest)
+        | character == quote = ' ' : go Nothing rest
+        | otherwise = ' ' : go (Just quote) rest
+
+countCharacter :: Char -> String -> Int
+countCharacter target = length . filter (== target)
 
 readGenericManifestTokens :: Package -> IO [String]
 readGenericManifestTokens pkg = do

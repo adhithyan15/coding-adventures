@@ -23,6 +23,9 @@ All notable changes to this package will be documented in this file.
 - Shared Ruby field-boundary coverage for runtime dependency synonyms,
   declared gem aliases, quote forms, optional parentheses, and representative
   non-authoritative fields and calls.
+- Shared Perl field-boundary coverage for top-level runtime requirements,
+  module and distribution aliases, phase-block exclusions, quote forms,
+  optional versions, and non-authoritative `Makefile.PL` fields.
 
 ### Changed
 
@@ -48,6 +51,12 @@ All notable changes to this package will be documented in this file.
 - Resolve Ruby edges only from `add_dependency` and
   `add_runtime_dependency` calls on the gem specification receiver, ignoring
   development dependencies, metadata, comments, and unrelated text.
+- Resolve Perl edges only from top-level root `cpanfile` `requires`
+  declarations, ignoring test and other phase blocks plus `Makefile.PL`
+  dependency tables, while registering exact declared module names and
+  current and legacy distribution aliases.
+- Declare aes-modes' now-authoritative local AES prerequisite in its portable
+  BUILD recipe so standalone build validation remains correct.
 
 ## [0.1.0] - 2026-04-05
 

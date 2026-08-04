@@ -177,6 +177,66 @@ func TestValidateBuildFilesFailsHiddenReference(t *testing.T) {
 	}
 }
 
+func TestValidateBuildFilesAllowsPerlTestDependencyClosure(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:     "perl/b",
+			relPath:  "code/packages/perl/b",
+			lang:     "perl",
+			commands: []string{`cd ../a`},
+		},
+		{
+			name:     "perl/c",
+			relPath:  "code/packages/perl/c",
+			lang:     "perl",
+			commands: []string{`cd ../a`, `cd ../b`},
+		},
+	})
+	writeBuildFile(t, pkgs[2].Path, "cpanfile", `
+on 'test' => sub {
+    requires 'coding-adventures-b';
+};
+`)
+
+	graph := graphWithEdges([2]string{"perl/a", "perl/b"})
+	graph.AddNode("perl/c")
+	if err := ValidateBuildFiles(pkgs, graph); err != nil {
+		t.Fatalf("expected Perl test dependency closure to be allowed, got %v", err)
+	}
+}
+
+func TestValidateBuildFilesRejectsPerlReferenceOutsideTestPhase(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "perl/a", relPath: "code/packages/perl/a", lang: "perl"},
+		{
+			name:     "perl/b",
+			relPath:  "code/packages/perl/b",
+			lang:     "perl",
+			commands: []string{`cd ../a`},
+		},
+	})
+	writeBuildFile(t, pkgs[1].Path, "cpanfile", `requires 'coding-adventures-a';`)
+
+	graph := directedgraph.New()
+	graph.AddNode("perl/a")
+	graph.AddNode("perl/b")
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil || !strings.Contains(err.Error(), "undeclared local package refs: perl/a") {
+		t.Fatalf("expected top-level reference to require a runtime graph edge, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesSkipsUnknownLanguagePackages(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string

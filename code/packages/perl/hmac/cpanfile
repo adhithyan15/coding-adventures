@@ -1,3 +1,8 @@
+requires 'CodingAdventures::Md5';
+requires 'CodingAdventures::Sha1';
+requires 'CodingAdventures::SHA256';
+requires 'CodingAdventures::Sha512';
+
 # Test dependencies
 on 'test' => sub {
     requires 'Test2::V0';

@@ -1,1 +1,1 @@
-PERL5LIB=../hash-map/lib:../hash-functions/lib prove -l -v t/
+PERL5LIB=$(cd ../hash-map && pwd)/lib:$(cd ../hash-functions && pwd)/lib:${PERL5LIB:-} prove -l -v t/

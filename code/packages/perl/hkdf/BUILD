@@ -1,1 +1,1 @@
-PERL5LIB=../md5/lib:../sha1/lib:../sha256/lib:../sha512/lib:../hmac/lib prove -l -v t/
+PERL5LIB=$(cd ../md5 && pwd)/lib:$(cd ../sha1 && pwd)/lib:$(cd ../sha256 && pwd)/lib:$(cd ../sha512 && pwd)/lib:$(cd ../hmac && pwd)/lib:${PERL5LIB:-} prove -l -v t/
