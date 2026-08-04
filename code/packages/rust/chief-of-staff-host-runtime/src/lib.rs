@@ -5,8 +5,8 @@
 mod package;
 
 pub use package::{
-    verify_agent_package, DenoLaunchPlan, PackageKeyType, PackageKeyring, PackageVerificationError,
-    TrustedPackageKey, VerifiedAgentPackage,
+    hash_package_contents, verify_agent_package, DenoLaunchPlan, PackageKeyType, PackageKeyring,
+    PackageVerificationError, TrustedPackageKey, VerifiedAgentPackage,
 };
 
 use chief_of_staff_tool_api::{
@@ -1663,6 +1663,7 @@ for line in sys.stdin:
         let package = VerifiedAgentPackage {
             path: std::env::temp_dir(),
             digest: [0; 32],
+            manifest_bytes: Vec::new(),
             key_id: "dev-1".to_string(),
             key_type: PackageKeyType::Developer,
             maximum_tier: PrivilegeTier::Tier1,
@@ -1733,6 +1734,7 @@ for line in sys.stdin:
         let package = VerifiedAgentPackage {
             path: std::env::temp_dir(),
             digest: [0; 32],
+            manifest_bytes: Vec::new(),
             key_id: "dev-1".to_string(),
             key_type: PackageKeyType::Developer,
             maximum_tier: PrivilegeTier::Tier1,

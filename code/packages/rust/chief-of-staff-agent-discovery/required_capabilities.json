@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-agent-discovery",
+  "capabilities": [
+    {"category": "fs", "action": "list", "target": "configured-agent-packages-directory", "justification": "Lists immediate candidates in the configured agents directory."},
+    {"category": "fs", "action": "read", "target": "configured-agent-package-files", "justification": "Reads sealed files for signature and manifest verification."}
+  ],
+  "justification": "Discovers configured sealed packages and returns inert registration candidates without process, network, clock, random, or registry access."
+}

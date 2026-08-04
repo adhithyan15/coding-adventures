@@ -170,6 +170,9 @@ capabilities remain manifest declarations but do not widen Deno OS permissions.
 The shared manifest codec accepts version 1 only and rejects malformed JSON,
 duplicate or unknown fields, and invalid nested capability declarations before
 a package can participate in discovery or registration.
+Discovery supports explicit inspection and stable immediate-child `.agent`
+scans. It parses only authenticated manifest bytes, enforces signing-key tier
+ceilings, and returns inert candidates for explicit control-plane registration.
 
 The Level 1 runtime injects a provider-neutral LLM client plus authorized input
 and output channel endpoints. For each verified UTF-8 message it sends the full

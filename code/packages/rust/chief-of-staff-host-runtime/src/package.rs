@@ -122,6 +122,7 @@ impl PackageKeyring {
 pub struct VerifiedAgentPackage {
     pub(crate) path: PathBuf,
     pub(crate) digest: [u8; 32],
+    pub(crate) manifest_bytes: Vec<u8>,
     pub(crate) key_id: String,
     pub(crate) key_type: PackageKeyType,
     pub(crate) maximum_tier: PrivilegeTier,
@@ -134,6 +135,11 @@ impl VerifiedAgentPackage {
 
     pub fn digest(&self) -> [u8; 32] {
         self.digest
+    }
+
+    /// Borrow the exact `manifest.json` bytes covered by the verified digest.
+    pub fn manifest_bytes(&self) -> &[u8] {
+        &self.manifest_bytes
     }
 
     pub fn key_id(&self) -> &str {
@@ -170,7 +176,8 @@ pub fn verify_agent_package(
     let signature: [u8; 64] = signature_bytes
         .try_into()
         .map_err(|_| PackageVerificationError::InvalidSignatureLength)?;
-    let (digest, files) = hash_package_contents(package_path)?;
+    let entries = package_contents(package_path)?;
+    let (digest, files) = hash_contents(&entries);
     for required in ["manifest.json", "launch.sh"] {
         if !files.contains(required) {
             return Err(PackageVerificationError::MissingRequiredFile(required));
@@ -182,9 +189,9 @@ pub fn verify_agent_package(
     if !files.contains(DENO_ENTRYPOINT) {
         return Err(PackageVerificationError::MissingDenoEntrypoint);
     }
-    let launch_script =
-        fs::read_to_string(package_path.join("launch.sh")).map_err(PackageVerificationError::Io)?;
-    if launch_script != DenoLaunchPlan::launch_script() {
+    let launch_script = file_bytes(&entries, "launch.sh")
+        .expect("required launch script must be present in collected package files");
+    if launch_script != DenoLaunchPlan::launch_script().as_bytes() {
         return Err(PackageVerificationError::UntrustedLaunchScript);
     }
     if !coding_adventures_ed25519::verify(&digest, &signature, &key.public_key) {
@@ -193,6 +200,9 @@ pub fn verify_agent_package(
     Ok(VerifiedAgentPackage {
         path: package_path.to_path_buf(),
         digest,
+        manifest_bytes: file_bytes(&entries, "manifest.json")
+            .expect("required manifest must be present in collected package files")
+            .to_vec(),
         key_id,
         key_type: key.key_type,
         maximum_tier: key.maximum_tier,
@@ -202,9 +212,20 @@ pub fn verify_agent_package(
 pub fn hash_package_contents(
     package_path: &Path,
 ) -> Result<([u8; 32], BTreeSet<String>), PackageVerificationError> {
+    let entries = package_contents(package_path)?;
+    Ok(hash_contents(&entries))
+}
+
+fn package_contents(
+    package_path: &Path,
+) -> Result<Vec<(String, Vec<u8>)>, PackageVerificationError> {
     let mut entries = Vec::new();
     collect_files(package_path, package_path, &mut entries)?;
     entries.sort_by(|left, right| left.0.cmp(&right.0));
+    Ok(entries)
+}
+
+fn hash_contents(entries: &[(String, Vec<u8>)]) -> ([u8; 32], BTreeSet<String>) {
     let mut hasher = Sha256Hasher::new();
     hasher.update(HASH_DOMAIN);
     let mut paths = BTreeSet::new();
@@ -213,9 +234,16 @@ pub fn hash_package_contents(
         hasher.update(&(path.len() as u64).to_be_bytes());
         hasher.update(path.as_bytes());
         hasher.update(&(bytes.len() as u64).to_be_bytes());
-        hasher.update(&bytes);
+        hasher.update(bytes);
     }
-    Ok((hasher.digest(), paths))
+    (hasher.digest(), paths)
+}
+
+fn file_bytes<'a>(entries: &'a [(String, Vec<u8>)], path: &str) -> Option<&'a [u8]> {
+    entries
+        .iter()
+        .find(|(candidate, _)| candidate == path)
+        .map(|(_, bytes)| bytes.as_slice())
 }
 
 fn collect_files(
@@ -367,6 +395,7 @@ mod tests {
         let verified = verify_agent_package(&path, &keyring).unwrap();
         assert_eq!(verified.key_id(), "prod-1");
         assert_eq!(verified.key_type(), PackageKeyType::Production);
+        assert_eq!(verified.manifest_bytes(), b"{\"runtime\":\"typescript\"}");
         fs::write(path.join("code/agent.ts"), b"console.log('tampered');\n").unwrap();
         assert!(matches!(
             verify_agent_package(&path, &keyring),

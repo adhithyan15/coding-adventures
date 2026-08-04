@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Retain authenticated manifest bytes for race-free package discovery.
 - Expose read-only trusted public-key lookup for daemon composition and audits.
 - Add a canonical deny-all Deno launch plan shared by package generation,
   verification, and process activation.
