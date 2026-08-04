@@ -75,7 +75,9 @@ one sentence has stopped using the dative of possession.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-QUID-TIBI-NOMEN-01, LA-LEX-QUID-TIBI-NOMEN-02, LA-GRAMMAR-NAME-CASE-VARIATION-01, LA-GRAMMAR-NAME-CASE-VARIATION-02] -->
 
-[PAUSE 3s] Which case remains constant for the possessor? (**Dative.**)
-Which author tends toward nominative **Mārcus**? (**Cicero.**) Which
-authors more often use matching dative **Mārcō**? (**Livy and Sallust.**)
-Do the two forms represent different possession constructions? (**No.**)
+[PAUSE 3s]
+- Which case remains constant for the possessor? (**Dative.**)
+- Which author tends toward nominative **Mārcus**? (**Cicero.**)
+- Which authors more often use matching dative **Mārcō**? (**Livy and
+  Sallust.**)
+- Do the two forms represent different possession constructions? (**No.**)

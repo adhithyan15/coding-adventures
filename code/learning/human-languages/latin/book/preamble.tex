@@ -8,7 +8,9 @@
 \setdefaultlanguage{english}
 \setotherlanguage{latin}
 
-\setmainfont{Latin Modern Roman}
+\setmainfont{Latin Modern Roman}[
+  SmallCapsFont=lmromancaps10-regular.otf
+]
 \setsansfont{Latin Modern Sans}
 \setmonofont{Latin Modern Mono}
 
@@ -21,6 +23,31 @@
 \usepackage{tabularx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{titlesec}
+
+% Micro-lessons end at natural pause points instead of stretching their
+% callout boxes to force every page to the same depth. The small reserve gives
+% prose a cleaner line break before it exceeds the measure.
+\raggedbottom
+\emergencystretch=2em
+
+% A few canonical headwords deliberately enumerate a whole lexical set (for
+% example, all twelve months). Keep the running head useful without trying to
+% force that entire set into one unbreakable line.
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}
+
+% book.cls inserts a verso before each open-right chapter. Preserve that print
+% layout while suppressing running heads and page numbers on the blank page.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi
+}
+\makeatother
 
 \hypersetup{
   pdftitle={Latin, Step by Step, Root by Root},

@@ -1212,7 +1212,7 @@
     {
       "language": "latin",
       "chapter": 16,
-      "sourceHash": "fnv1a64:e837b83ec32bb5ad",
+      "sourceHash": "fnv1a64:b99e5996a77b8d8d",
       "lessonIds": [
         "LA-C16-undecim-viginti"
       ],
@@ -1221,7 +1221,7 @@
     {
       "language": "latin",
       "chapter": 17,
-      "sourceHash": "fnv1a64:46fa833e7f3a6f21",
+      "sourceHash": "fnv1a64:ae99ab2bc2171e5f",
       "lessonIds": [
         "LA-C17-canis-feles-cattus"
       ],
@@ -1249,7 +1249,7 @@
     {
       "language": "latin",
       "chapter": 20,
-      "sourceHash": "fnv1a64:a2461bf89cfc590f",
+      "sourceHash": "fnv1a64:b25c55ef1e914d27",
       "lessonIds": [
         "LA-C20-quid-tibi-nomen",
         "LA-C20-name-case-variation"

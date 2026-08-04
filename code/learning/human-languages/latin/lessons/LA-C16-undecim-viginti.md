@@ -93,9 +93,11 @@ something genuinely odd in Latin's own counting.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
 
-[PAUSE 3s] What pattern do *ūndecim* through *quīndecim* follow? (**Additive**
-— number + *decim*, "ten.") What's genuinely odd about Latin's 18 and 19?
-(They're **subtractive** — *duodēvīgintī*/*ūndēvīgintī*, literally "two/one
-FROM twenty," not "eight/nine-ten.") Did Spanish keep this subtractive
-pattern? (**No** — *dieciocho*/*diecinueve* are built fresh on plain
-addition, regularizing away Latin's own quirk.)
+[PAUSE 3s]
+- What pattern do *ūndecim* through *quīndecim* follow? (**Additive** — number
+  + *decim*, "ten.")
+- What's genuinely odd about Latin's 18 and 19? (They're **subtractive** —
+  *duodēvīgintī*/*ūndēvīgintī*, literally "two/one FROM twenty," not
+  "eight/nine-ten.")
+- Did Spanish keep this pattern? (**No** — *dieciocho*/*diecinueve* use plain
+  addition, regularizing away Latin's quirk.)

@@ -105,9 +105,9 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-B31 | Complete (#9871) | Remove Hindi's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 114-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally blank chapter versos are truly empty. |
 | HL-B32 | Complete (#9875) | Publish Tamil Chapters 6–31 and its writing companions from canonical lessons rather than hand-copying another twenty-six book chapters. | Fifty-one lessons now use schema v2; forty-three later lessons generate twenty-six chapters whose source hashes are independently verified against Language Ladder, while eight prerequisite-ordered writing companions remain inside the gentle hand-authored opening chapter. |
 | HL-B33 | Complete (#9880) | Remove Tamil's LaTeX layout, duplicate-label, bookmark, font, and header-only-verso warnings. | The forced 117-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally blank chapter versos are truly empty. |
-| HL-B34 | Complete in this PR | Publish Latin Chapters 2–36 from canonical lessons rather than hand-copying another thirty-five book chapters. | All 53 Latin lessons now use schema v2; Chapters 2–36 are generated with source hashes independently verified against Language Ladder. |
-| HL-B35 | Next | Remove Latin's remaining LaTeX layout, font, and header-only-verso warnings. | The expanded 113-page book has six overfull lines, six underfull lines, eight underfull header-only pages, and one undefined small-caps shape (two font-warning blocks), with no missing glyphs, duplicate labels, or Hyperref warnings; the clean-build signal is zero of each. |
-| HL-B36 | Queued | Publish Spanish Chapters 19–33 from canonical lessons rather than hand-copying another fifteen book chapters. | The Spanish PDF stops after Chapter 18 while canonical app content continues through Chapter 33; schema-v2 migration plus generation should raise book coverage from 55% to 100%. |
+| HL-B34 | Complete (#9883) | Publish Latin Chapters 2–36 from canonical lessons rather than hand-copying another thirty-five book chapters. | All 53 Latin lessons now use schema v2; Chapters 2–36 are generated with source hashes independently verified against Language Ladder. |
+| HL-B35 | Complete in this PR | Remove Latin's remaining LaTeX layout, font, and header-only-verso warnings. | The forced 115-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, LaTeX warnings, or font warnings; intentionally blank chapter versos are truly empty. |
+| HL-B36 | Next | Publish Spanish Chapters 19–33 from canonical lessons rather than hand-copying another fifteen book chapters. | The Spanish PDF stops after Chapter 18 while canonical app content continues through Chapter 33; schema-v2 migration plus generation should raise book coverage from 55% to 100%. |
 | HL-B37 | Queued | Remove Spanish's remaining legacy LaTeX layout, bookmark, and font warnings. | After Chapters 4–6 generation, a forced build has no missing glyphs or duplicate labels but reports 50 overfull boxes, 14 underfull boxes, 14 Hyperref warnings, and one undefined small-caps shape; the clean-build signal is zero of each. |
 | HL-M01 | Queued | Add per-track spine realization maps and language-specific extension nodes. | Enables safe cross-language scheduling beyond the current concept join. |
 | HL-M02 | Queued | Extend Telugu's roadmap and authoritative session map through canonical Chapter 31. | The roadmap narrative stops at Chapter 6 and the session map at Chapter 5 even though prerequisite-ordered lessons continue through Chapter 31; every canonical lesson needs a scheduled place, and the map must explicitly split or justify Chapter 20's numbers-and-weather topic collision. |
@@ -1039,6 +1039,26 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 - The roadmap and authoritative session map still stop at Chapter 1. HL-M08
   continues to own the progression-metadata reconciliation through Chapter 36.
 - HL-B35 is next: remove Latin's remaining layout and font warnings.
+
+## Findings from HL-B35
+
+- Selecting Latin Modern Caps explicitly supplies the book's small-caps shape
+  without adding a system-font or vendored-font dependency.
+- Natural page bottoms, a two-em emergency stretch, and compact numeric section
+  marks remove every overfull and underfull line while keeping generated prose
+  readable.
+- A true-empty `\cleardoublepage` preserves open-right chapter starts while
+  leaving intentionally blank versos free of running heads and page numbers.
+- Three dense canonical recall paragraphs now use scannable bullet lists. Their
+  generated Chapters 16, 17, and 20 retain independently checked lesson ids and
+  source hashes, so the readability improvement reaches both app and book from
+  the same source.
+- The forced 115-page XeLaTeX build has correct title and author metadata, 38
+  top-level and 91 total outline entries, zero schema leaks, and zero missing
+  glyphs, overfull or underfull boxes, duplicate destinations, Hyperref
+  warnings, LaTeX warnings, or font warnings. Every rendered page was visually
+  inspected for clipping, collisions, broken tables, and malformed callouts.
+- HL-B36 is next: publish Spanish Chapters 19–33 from the canonical app corpus.
 
 ## Findings from HL-D01C
 
