@@ -117,18 +117,61 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
                 [issue.code for issue in summary.issues], ["TYPESCRIPT_TOO_OLD"]
             )
 
-    def test_standalone_config_is_counted_but_outside_shared_contract(self) -> None:
+    def test_rejects_emit_capable_standalone_config_without_out_dir(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
             self.make_project(root, "standalone", extends_shared=False)
 
-            summary = portability.validate_repository(root)
+            summary = portability.audit_repository(root)
 
             self.assertEqual(summary.total_projects, 1)
             self.assertEqual(summary.shared_projects, 0)
             self.assertEqual(summary.inherited_root_dir, 0)
             self.assertEqual(summary.inherited_out_dir, 0)
+            self.assertEqual(summary.standalone_emit_projects, 1)
+            self.assertEqual(summary.isolated_standalone_projects, 0)
+            self.assertEqual(
+                [(issue.code, issue.path) for issue in summary.issues],
+                [
+                    (
+                        "STANDALONE_OUTPUT_NOT_ISOLATED",
+                        "code/packages/typescript/standalone/tsconfig.json",
+                    )
+                ],
+            )
+
+    def test_accepts_type_check_only_standalone_config(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            self.make_project(
+                root,
+                "type-check-only",
+                extends_shared=False,
+                compiler_options={"noEmit": True},
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.standalone_emit_projects, 0)
+            self.assertEqual(summary.isolated_standalone_projects, 0)
+
+    def test_accepts_isolated_standalone_output(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
+            self.make_project(
+                root,
+                "isolated-output",
+                extends_shared=False,
+                compiler_options={"outDir": "dist"},
+            )
+
+            summary = portability.validate_repository(root)
+
+            self.assertEqual(summary.standalone_emit_projects, 1)
+            self.assertEqual(summary.isolated_standalone_projects, 1)
 
     def test_repository_contract_is_portable(self) -> None:
         summary = portability.validate_repository(REPO_ROOT)
@@ -137,6 +180,8 @@ class TypeScriptTsconfigPortabilityTests(unittest.TestCase):
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
+        self.assertEqual(summary.standalone_emit_projects, 143)
+        self.assertEqual(summary.isolated_standalone_projects, 143)
         self.assertEqual(summary.locked_compilers, 444)
 
 
