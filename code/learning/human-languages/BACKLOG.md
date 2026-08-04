@@ -127,12 +127,15 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-M07 | Queued | Reconcile Tamil's roadmap and authoritative session map with canonical Chapters 1–31 and the eight-step writing sequence. | The roadmap details only Chapters 1–6 and still calls Chapter 7+ planned; the session map stops at Chapter 5 even though prerequisite-ordered canonical lessons continue through Chapter 31. |
 | HL-M08 | Queued | Reconcile Latin's roadmap and authoritative session map with canonical Chapters 1–36. | Both files stop at Chapter 1 and describe Chapter 2+ as planned even though prerequisite-ordered canonical lessons continue through Chapter 36. |
 | HL-M09 | Queued | Reconcile Spanish's roadmap and authoritative session map with canonical Chapters 1–33 and the new support steps. | The roadmap stops at Chapter 18 and calls Chapter 19 next, while the session map stops at Chapter 3; both lag the prerequisite-ordered canonical curriculum. |
-| HL-T01 | Queued | Complete session maps and pronunciation references for Persian and Urdu. | The starter-book work supplies both roadmaps and changelogs; these remaining pieces complete the standard track shape. |
+| HL-T01 | Complete in this PR | Complete session maps and pronunciation references for Persian and Urdu. | Both five-lesson prefixes now have authoritative N+1/N+3/N+7/N+15 ledgers and sound-id-keyed references; the Urdu guide explicitly preserves the Naskh fallback debt. |
 | HL-U01 | Queued | Vendor and verify an appropriately licensed static Nastaliq font for normal Urdu presentation. | Naskh remains an explicit accessibility fallback, not the intended printed style. |
 
 ## P2 — corpus growth
 
-- Extend Persian and Urdu through the first three shared-spine clusters.
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-E01 | Next | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
+
 - Expand every track toward B1 using the gap report to choose the next missing
   can-do, skill, mode, register, or realization.
 - Add controlled dialogues and micro-stories whose tokens are validated against
@@ -1665,6 +1668,22 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   through canonical Chapter 33 and the new micro-lesson chains.
 - With duration debt closed, HL-S02 is next: migrate Spanish Chapters 4–6 to the
   strict one-source schema, then generate the same content for the book and app.
+
+## Findings from HL-T01
+
+- Persian and Urdu each had a valid five-lesson dependency chain and a roadmap,
+  but neither had the standard session map or on-demand pronunciation reference.
+- Both new maps preserve the exact authored prefix and place every N+1, N+3,
+  N+7, and N+15 retrieval through session 20 without inventing future lessons.
+- Both references are keyed to the sound ids already declared in lesson
+  frontmatter, teach script inside known words, and keep transliteration as
+  temporary scaffolding rather than a reading prerequisite.
+- The Urdu reference distinguishes Nastaliq as the intended presentation from
+  the current vendored Noto Naskh Arabic fallback. HL-U01 remains open; this
+  documentation does not silently claim that type-style work is complete.
+- The next smallest corpus-growth slice is now explicit as HL-E01: complete the
+  shared name exchange in both tracks from one canonical schema-v2 source before
+  advancing either language to the wellbeing cluster.
 
 ## Completed foundations
 

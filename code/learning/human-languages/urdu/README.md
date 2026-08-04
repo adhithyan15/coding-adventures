@@ -17,6 +17,10 @@ Script conventions are grounded in Northwestern University's *Zero Zabar*.
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) orders the authored and planned chapters toward B1.
+- [`session-map.md`](./session-map.md) composes the five micro-lessons with an
+  exact session-count review ledger and reserves the next open intake.
+- [`pronunciation-reference.md`](./pronunciation-reference.md) gathers Urdu
+  script and sound facts on demand and labels the current Naskh fallback.
 - [`lessons/`](./lessons/) contains the five canonical short practice lessons.
 - [`book/book.tex`](./book/book.tex) builds the free two-chapter starter edition
   with XeLaTeX; merged editions appear in the public human-languages book catalog.

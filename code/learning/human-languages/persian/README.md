@@ -16,6 +16,10 @@ materials. Romanization is a learning aid, not a substitute for reading Persian.
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) orders the authored and planned chapters toward B1.
+- [`session-map.md`](./session-map.md) composes the five micro-lessons with an
+  exact session-count review ledger and reserves the next open intake.
+- [`pronunciation-reference.md`](./pronunciation-reference.md) collects the
+  script and sound facts for lookup; it is never a prerequisite chapter.
 - [`lessons/`](./lessons/) contains the five canonical short practice lessons.
 - [`book/book.tex`](./book/book.tex) builds the free two-chapter starter edition
   with XeLaTeX; merged editions appear in the public human-languages book catalog.
