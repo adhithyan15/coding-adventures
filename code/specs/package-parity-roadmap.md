@@ -712,6 +712,40 @@ compiler-output integrity boundary and stops `window-core` and `window-canvas`
 builds from emitting into tracked source trees without widening the 58-package
 `BUILD_windows` wave.
 
+PR #9907 closed that two-package gap and merged exact final head `0dfefc77a8`
+as `da895587f3` after all 20 checks were terminal acceptable and two independent
+mergeability readings were `MERGEABLE/CLEAN`. The refreshed collision-checked
+inventory remains unchanged at 1,264 identities, 4,419 slots, 173
+high-consensus packages with 270 gaps, 814 singleton packages with 11,396 gaps,
+618 Rust singletons, and zero collisions or unknown buckets. A fresh validator
+pass decomposes the 58-package TypeScript `BUILD_windows` debt into two exact
+children before reprioritization: a 55-package `cli-builder` closure (54 missing
+only that prerequisite plus `grammar-tools`, which also lacks `directed-graph`
+and `state-machine`) and a separate three-package SIR runtime closure.
+The quick dependency/leverage pass selects the 55-package child first because
+one common prerequisite layer closes almost the entire TypeScript validator
+wave without mixing the SIR dependency family.
+
+Representative validation of that child also exposed a separate compiler-input
+gap: algol-lexer inherits the shared src root while TypeScript's default
+include admits tests/tokenizer.test.ts, so its optional npm run build fails
+with TS6059 even though the authoritative coverage-oriented BUILD_windows
+front door passes. The new
+typescript-standalone-tsconfig-input-boundaries backlog item owns a repository
+audit and dependency-shaped repair; the BUILD prerequisite tranche does not
+absorb compiler configuration.
+
+The implemented BUILD closure changes only those 55 Windows overrides. A
+minimality audit reconstructs every original file after removing the owned
+bootstrap insertion, and the canonical validator falls from the exact
+58-package baseline to only the three separately owned SIR diagnostics.
+Representative Windows front doors pass 169 grammar-tools tests at 85.85%
+statement coverage and 79 algol-lexer tests at 87.5%, with zero production
+vulnerabilities. The Go build tool passes test, vet, build, and module
+verification; its committed diff plan reports 55 changed and 185 affected
+TypeScript packages. The collision-checked parity inventory is unchanged and
+still has zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
