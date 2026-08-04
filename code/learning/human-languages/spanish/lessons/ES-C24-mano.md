@@ -1,27 +1,44 @@
 ---
+schema_version: 2
 id: ES-C24-mano
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 740
 chapter: 24
 type: word
 headword: la mano
 gloss: the hand — feminine despite ending in -o, Spanish's most famous gender exception
 concept_tag: ES-BODY-HAND
-prerequisites: [ES-C24-cabeza, ES-C23-hermano-hermana]
+prerequisites: [ES-C24-cabeza, ES-C23-hermano-hermana, ES-C01-genero-gramatical]
 sounds: [feminine-o-exception]
 roots: [latin-manus]
 etymology_hook: "mano is feminine despite ending in -o (manus was 4th-declension feminine in Latin) — Spanish's most famous exception to the -o=masculine/-a=feminine rule; the same manus behind manual, manufacture, maintain"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ES-GRAMMAR-NOUN-GENDER]
+introduces:
+  knowledge: [ES-LEX-MANO-01, ES-GRAMMAR-MANO-GENDER-02, ES-ETYMON-MANUS-03]
+practises:
+  knowledge: [ES-GRAMMAR-NOUN-GENDER, ES-LEX-MANO-01, ES-GRAMMAR-MANO-GENDER-02, ES-ETYMON-MANUS-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C24-cabeza]
 ---
 
 # la mano — "the hand"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 2s] You've been trusting "-o words are masculine, -a words are
 feminine" since Chapter 1. Here's the word that breaks it — and everyone
 learning Spanish has to memorize this one by name.
 
-## The word — and the exception
+## Grammar Lens: la mano and its gender
+<!-- hl-knowledge: introduces=[ES-LEX-MANO-01, ES-GRAMMAR-MANO-GENDER-02]; assesses=[] -->
 
 > **la mano** — the hand. **Feminine**, despite ending in **-o**.
 
@@ -35,7 +52,8 @@ of a small handful of exceptions that were **feminine** instead (alongside
 over**: an exception within Latin's own mostly-masculine 4th declension, and
 then an exception again against Spanish's usual *-o* = masculine pattern.
 
-## manus — one of the most productive roots in English
+## The word, taken apart: manus
+<!-- hl-knowledge: introduces=[ES-ETYMON-MANUS-03]; assesses=[] -->
 
 **Mano** comes from Latin **manus**, "hand" — and that root is buried inside
 an enormous number of English words:
@@ -52,6 +70,7 @@ an enormous number of English words:
 today it names precisely the opposite.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-GENDER, ES-LEX-MANO-01, ES-GRAMMAR-MANO-GENDER-02, ES-ETYMON-MANUS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "la mano" — feminine, despite the -o]
@@ -60,6 +79,7 @@ today it names precisely the opposite.
 - [YOU SAY: the irony — "manufacture = made by hand"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-GENDER, ES-LEX-MANO-01, ES-GRAMMAR-MANO-GENDER-02, ES-ETYMON-MANUS-03] -->
 
 [PAUSE 3s] Say "the hand," and name its gender. (*La mano* — **feminine**,
 despite ending in *-o*.) Why is *mano* feminine when most *-o* words aren't?

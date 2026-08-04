@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: ES-C21-lunes-viernes
+spine_node: SPINE-TIME-OF-DAY
+sequence: 670
 chapter: 21
 type: word
 headword: lunes, martes, miércoles, jueves, viernes
@@ -9,20 +12,34 @@ prerequisites: [ES-C08-numeros-6-10]
 sounds: [r-tap, diphthong-ie]
 roots: [dies-latin, planet-gods]
 etymology_hook: "Spanish weekdays mostly just DROPPED diēs 'day' — martes 'Mars's [day]' keeps its trailing -s from Martis itself, not from diēs — where French still spells 'day' out loud as -di"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02]
+practises:
+  knowledge: [ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational, mediation]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: general
 reviews_of: [ES-C08-numeros-6-10]
 ---
 
 # lunes to viernes — the planets of the week, worn down
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] The Romans mapped the seven-day week onto the seven visible
 "wandering stars" — the planet-gods. Spanish kept that map, but handled the
 word "day" differently from its Romance cousins: where French still spells
 out "**-di**" (day) on every weekday, Spanish mostly just **dropped it**.
 
-## The pattern: [planet's name], with "day" mostly gone
+## The words, taken apart: the planet weekdays
+<!-- hl-knowledge: introduces=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02]; assesses=[] -->
 
 Each weekday began life as **"[planet-god]'s **diēs** (day)."** In Vulgar
 Latin, *diēs* was simply **dropped as a separate word** in most of these —
@@ -49,6 +66,7 @@ itself (fused in and reshaped) — though the exact sound changes are debated,
 unlike the plainer, better-understood story for its four siblings.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02] -->
 
 [PAUSE 1s]
 - [YOU SAY: "lunes, martes, miércoles, jueves, viernes" — the work week]
@@ -58,6 +76,7 @@ unlike the plainer, better-understood story for its four siblings.
   Tiw)"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-WEEKDAYS-01, ES-ETYMON-WEEKDAYS-02] -->
 
 [PAUSE 3s] What did every Spanish weekday begin life as? (**"[Planet-god]'s
 diēs (day)"** — the same Latin phrase French keeps more visibly with *-di*.)

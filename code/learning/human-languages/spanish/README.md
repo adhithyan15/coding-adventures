@@ -33,10 +33,10 @@ README is "how to actually use this."
 6. **Grammar from zero, contrasted with English.** Grammar concepts are
    introduced in context on the first word that needs them, explained with no
    assumed terminology.
-7. **An executable five-minute progression.** Chapters 1–3 use HL04 schema v2:
-   each lesson has a stable local sequence, a shared-spine node, declared
-   knowledge inputs and outputs, typed body blocks, and an independently checked
-   duration below 300 seconds.
+7. **An executable five-minute progression.** Chapters 1–6 and 19–33 use HL04
+   schema v2: each lesson has a stable local sequence, a shared-spine node,
+   declared knowledge inputs and outputs, typed body blocks, and an
+   independently checked duration below 300 seconds.
 
 ## How to use this in the car
 
@@ -71,10 +71,10 @@ Requires a LaTeX distribution with `xelatex`/`latexmk` on PATH (MiKTeX or
 TeX Live). The compiled PDF isn't committed — it's regenerated from source,
 same as build artifacts elsewhere in this repo.
 
-Chapters 1–3 are generated from the same 24 canonical lesson ASTs consumed by
-Language Ladder. Run `npm run build && npm run generate:books` from
+Chapters 1–6 and 19–33 are generated from the same 72 canonical lesson ASTs
+consumed by Language Ladder. Run `npm run build && npm run generate:books` from
 `code/packages/typescript/human-language-data` after editing those lessons; CI
-rejects stale generated TeX or source-hash metadata. Chapters 4–18 are still
+rejects stale generated TeX or source-hash metadata. Chapters 7–18 are still
 handwritten LaTeX during the staged one-source migration. `units/` is legacy
 source material, not a second canonical copy.
 
@@ -119,16 +119,24 @@ exactly where a word needs it:
   weld, twice).
 - **Chapter 18 — The Subjunctive**: subjuntivo → quiero que (the mood of the
   not-yet-real).
+- **Chapters 19–23 — Everyday building blocks**: yes/no → apology and empathy →
+  weekdays → colors → parents and siblings.
+- **Chapters 24–28 — Body, seasons, food, and time**: head and hand → seasons →
+  water, wine, and bread → months → noon and midnight.
+- **Chapters 29–33 — Daily description**: telling time → weather → numbers
+  eleven through twenty → dog and cat → green and yellow.
 
 Every noun carries its gender (*el*/*la*) and plural; every pronoun is traced
-to its root. **All 18 chapters are authored and in the book (138 pages); Chapters
-1–3 are generated from canonical lessons.**
+to its root. **All 33 chapters are authored and in the book (210 pages);
+Chapters 1–6 and 19–33 are generated from canonical lessons.**
 Lessons are named by **slug** (e.g. `ES-C01-dia`), not numbered — order lives
 in the book (which LaTeX auto-numbers) and in `session-map.md`, so inserting a
 lesson never renumbers anything.
 - **Pronunciation**: [`pronunciation-reference.md`](./pronunciation-reference.md)
   (look-up reference, not a chapter).
-- **Later chapters**: skeleton in [`roadmap.md`](./roadmap.md).
+- **Progression metadata**: [`roadmap.md`](./roadmap.md) and
+  [`session-map.md`](./session-map.md) still need reconciliation through
+  Chapter 33; this is tracked as HL-M09 in the shared backlog.
 - **`units/` (legacy)**: the pre-redesign coarse-grained content (old Part 0
   + Part I). Kept as source material to be re-excavated into deep lessons;
   **superseded**, not the current model. Being migrated `units/` → `lessons/`.

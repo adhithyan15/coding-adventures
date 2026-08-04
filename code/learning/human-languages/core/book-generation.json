@@ -87,6 +87,113 @@
       "output": "spanish/book/chapters/ch06-first-verbs.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 19,
+      "title": "Yes and No",
+      "label": "ch:spanish-basic-responses",
+      "output": "spanish/book/chapters/ch19-yes-and-no.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 20,
+      "title": "Lo Siento",
+      "label": "ch:spanish-sorry",
+      "output": "spanish/book/chapters/ch20-lo-siento.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 21,
+      "title": "Days of the Week",
+      "label": "ch:spanish-days-of-the-week",
+      "output": "spanish/book/chapters/ch21-days-of-the-week.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 22,
+      "title": "Black, White, Red, and Blue",
+      "label": "ch:spanish-black-white-red-blue",
+      "output": "spanish/book/chapters/ch22-black-white-red-blue.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "esar"
+    },
+    {
+      "language": "spanish",
+      "chapter": 23,
+      "title": "Parents and Siblings",
+      "label": "ch:spanish-family",
+      "output": "spanish/book/chapters/ch23-family.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 24,
+      "title": "Head and Hand",
+      "label": "ch:spanish-head-and-hand",
+      "output": "spanish/book/chapters/ch24-head-and-hand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 25,
+      "title": "The Seasons",
+      "label": "ch:spanish-seasons",
+      "output": "spanish/book/chapters/ch25-seasons.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 26,
+      "title": "Water, Wine, and Bread",
+      "label": "ch:spanish-water-wine-bread",
+      "output": "spanish/book/chapters/ch26-water-wine-bread.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 27,
+      "title": "The Months",
+      "label": "ch:spanish-months",
+      "output": "spanish/book/chapters/ch27-months.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 28,
+      "title": "Noon and Midnight",
+      "label": "ch:spanish-noon-midnight",
+      "output": "spanish/book/chapters/ch28-noon-midnight.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 29,
+      "title": "Telling Time",
+      "label": "ch:spanish-telling-time",
+      "output": "spanish/book/chapters/ch29-telling-time.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 30,
+      "title": "The Weather",
+      "label": "ch:spanish-weather",
+      "output": "spanish/book/chapters/ch30-weather.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 31,
+      "title": "Numbers Eleven to Twenty",
+      "label": "ch:spanish-numbers-eleven-to-twenty",
+      "output": "spanish/book/chapters/ch31-numbers-11-20.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 32,
+      "title": "Dog and Cat",
+      "label": "ch:spanish-dog-and-cat",
+      "output": "spanish/book/chapters/ch32-dog-and-cat.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 33,
+      "title": "Green and Yellow",
+      "label": "ch:spanish-green-and-yellow",
+      "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "title": "How Are You?",
