@@ -771,6 +771,18 @@ The committed diff plan selects exactly the three runtimes and their four
 prerequisites, with 463 TypeScript packages skipped. The collision inventory is
 unchanged with zero collisions or unknown buckets.
 
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9911;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `fdbbe633e0` as `fa9c70094e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. The input
+boundary corpus is now exact: 96 build-script projects have an effective `src`
+root, no explicit `include`/`files`/`exclude` boundary, and 202 tracked
+TypeScript files outside that root. The quick dependency/leverage pass selects
+this one compiler-input contract ahead of the separately pending 10-file Lua
+prerequisite wave.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
