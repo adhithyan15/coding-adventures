@@ -108,8 +108,32 @@ const SIR_ARITH_STUB: &str = r##"const __Sir = (() => {
     for (const a of args) acc *= num(a);
     return acc;
   };
+  const shiftAmountArg = (v) => typeof v === "number" ? Math.trunc(v) : 0;
+  const shiftLeft = (...args) => {
+    if (args.length === 0) return 0;
+    const first = args[0];
+    if (Array.isArray(first)) {
+      for (let i = 1; i < args.length; i++) first.push(args[i]);
+      return first;
+    }
+    if (typeof first === "string") {
+      let s = first;
+      for (let i = 1; i < args.length; i++) {
+        const a = args[i];
+        s += typeof a === "string" ? a : toDisplay(a);
+      }
+      return s;
+    }
+    let acc = num(first);
+    for (let i = 1; i < args.length; i++) {
+      if (acc === 0) continue;
+      const amount = shiftAmountArg(args[i]);
+      acc = amount < 0 ? Math.floor(acc / Math.pow(2, -amount)) : acc * Math.pow(2, amount);
+    }
+    return acc;
+  };
   const print = (v) => { console.log(toDisplay(v)); return null; };
-  return { add, mul, toDisplay, print };
+  return { add, mul, shiftLeft, toDisplay, print };
 })();
 "##;
 
@@ -294,5 +318,70 @@ fn numeric_plus_and_times_unchanged_ts() {
     ]);
     if let Some(out) = run(&module, "numeric") {
         assert_eq!(out, "3\n6", "1 + 2 must be 3 and 2 * 3 must be 6");
+    }
+}
+
+// ── `<<` (Ruby's shift operator) ──────────────────────────────────────
+//
+// `<<` had no entry anywhere in the runtime dispatch table, so it fell to
+// `callBuiltin`'s floor and threw `TypeError: unknown builtin: <<` — every
+// Ruby program using `<<` as an operator failed at runtime on TypeScript.
+// `shiftLeft` is added to the `SIR_ARITH_STUB` above as a faithful
+// transcription of `arithmetic.ts`'s real implementation.
+
+#[test]
+fn shift_left_integer_lowers_to_shift_left_ts() {
+    // `5 << 2` → 20 (Integer left shift).
+    let module = print_module(vec![binop("<<", vec![int_lit(5), int_lit(2)])]);
+    let artifact = compile(&module).expect("compile");
+    assert!(
+        artifact.source.contains("__Sir.shiftLeft(5, 2)"),
+        "<< must lower to __Sir.shiftLeft; got:\n{}",
+        artifact.source
+    );
+    if let Some(out) = run(&module, "shift_int") {
+        assert_eq!(out, "20", "5 << 2 must be 20");
+    }
+}
+
+#[test]
+fn shift_left_negative_amount_reverses_direction_ts() {
+    // `5 << -1` → 2 (negative amount reverses direction, a right shift).
+    let module = print_module(vec![binop("<<", vec![int_lit(5), int_lit(-1)])]);
+    if let Some(out) = run(&module, "shift_neg") {
+        assert_eq!(out, "2", "5 << -1 must be 2");
+    }
+}
+
+#[test]
+fn shift_left_does_not_use_native_bitwise_op_ts() {
+    // `1 << 40` — under JS's native `<<` this would silently give the
+    // WRONG answer (Int32-coerced, shift count masked to 5 bits). The
+    // runtime helper must use the plain-number multiplicative path.
+    let module = print_module(vec![binop("<<", vec![int_lit(1), int_lit(40)])]);
+    if let Some(out) = run(&module, "shift_wide") {
+        assert_eq!(out, "1099511627776", "1 << 40 must not be truncated to 32 bits");
+    }
+}
+
+#[test]
+fn shift_left_array_pushes_in_place_ts() {
+    // `[1, 2] << 3` → the SAME array, mutated to [1, 2, 3] (Ruby's
+    // Array#<< mutates, unlike Array#+ which is non-destructive).
+    let module = print_module(vec![binop(
+        "<<",
+        vec![seq_lit(vec![int_lit(1), int_lit(2)]), int_lit(3)],
+    )]);
+    if let Some(out) = run(&module, "shift_arr") {
+        assert_eq!(out, "1,2,3", "[1, 2] << 3 must push 3 onto the array");
+    }
+}
+
+#[test]
+fn shift_left_string_concatenates_ts() {
+    // `"ab" << "cd"` → "abcd" (new string).
+    let module = print_module(vec![binop("<<", vec![str_lit("ab"), str_lit("cd")])]);
+    if let Some(out) = run(&module, "shift_str") {
+        assert_eq!(out, "abcd", "\"ab\" << \"cd\" must concatenate to \"abcd\"");
     }
 }

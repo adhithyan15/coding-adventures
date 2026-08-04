@@ -267,6 +267,60 @@ describe("polymorphic + (string/array concat)", () => {
   });
 });
 
+describe("polymorphic << (Ruby's shift operator)", () => {
+  it("integer left shift", () => {
+    expect(sir.shiftLeft(5, 2)).toBe(20);
+    expect(sir.shiftLeft(1, 0)).toBe(1);
+  });
+
+  it("zero receiver stays zero regardless of shift amount", () => {
+    expect(sir.shiftLeft(0, 40)).toBe(0);
+  });
+
+  it("negative amount reverses direction (a right shift)", () => {
+    expect(sir.shiftLeft(5, -1)).toBe(2);
+    expect(sir.shiftLeft(-8, -1)).toBe(-4); // arithmetic (sign-extending) right shift
+  });
+
+  it("does not use native << (which would mask to a 32-bit int)", () => {
+    // 1 << 40 under JS's native `<<` would silently give the WRONG answer
+    // (Int32-coerced, shift count masked to 5 bits). The runtime helper
+    // must use the plain-`number` multiplicative path instead.
+    expect(sir.shiftLeft(1, 40)).toBe(1099511627776);
+  });
+
+  it("float amount truncates toward zero", () => {
+    expect(sir.shiftLeft(5, 2.9)).toBe(20);
+  });
+
+  it("array receiver pushes each operand in place, never flattened", () => {
+    const a = [1, 2];
+    const r = sir.shiftLeft(a, 3);
+    expect(r).toBe(a); // SAME receiver -- mutates, unlike `add`'s fresh array
+    expect(a).toEqual([1, 2, 3]);
+    // A nested array operand is pushed as ONE element (unlike `add`, which
+    // would concatenate/flatten it).
+    const b = [1];
+    sir.shiftLeft(b, [2, 3]);
+    expect(b).toEqual([1, [2, 3]]);
+  });
+
+  it("string receiver concatenates to a new string via the tolerant display convention", () => {
+    const a = "ab";
+    const r = sir.shiftLeft(a, "cd");
+    expect(r).toBe("abcd");
+    expect(sir.shiftLeft("n=", 1)).toBe("n=1"); // non-string operand rendered via display, never throws
+  });
+
+  it("no args returns 0", () => {
+    expect(sir.shiftLeft()).toBe(0);
+  });
+
+  it("is registered in the builtin dispatch table", () => {
+    expect(sir.callBuiltin("<<", [5, 2])).toBe(20);
+  });
+});
+
 describe("polymorphic * (string/array repeat and join)", () => {
   it("string repeat", () => {
     expect(sir.mul("ab", 3)).toBe("ababab");

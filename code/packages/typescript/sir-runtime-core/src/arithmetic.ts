@@ -79,6 +79,82 @@ function repeatCount(rawCount: Val, baseLen: number): number {
 }
 
 /**
+ * Extracts a shift-amount operand as a plain number, truncated toward zero
+ * (matching real Ruby's own Float-shift-amount truncation). A non-number
+ * operand contributes a `0` shift rather than throwing.
+ */
+function shiftAmountArg(v: Val): number {
+  return typeof v === "number" ? Math.trunc(v) : 0;
+}
+
+/**
+ * Ruby's `<<` (shift operator) — polymorphic like `add`, but dispatched
+ * explicitly on the runtime tag since native `<<`/`>>` don't line up for
+ * every receiver:
+ *
+ * | Receiver | Behaviour                                                    |
+ * |----------|---------------------------------------------------------------|
+ * | array    | push each RHS operand IN PLACE (never flattened — unlike      |
+ * |          | `add`'s array arm, which concatenates), returns the mutated   |
+ * |          | receiver. Chains left-to-right: the frontend lowers a `<<`    |
+ * |          | chain (`a << 1 << 2`) to NESTED binary calls, not one flat    |
+ * |          | variadic one — but since `<<` mutates and returns the SAME    |
+ * |          | receiver, nesting composes exactly like a fold, so this stays |
+ * |          | variadic-capable (`...args`) for a hand-built module that     |
+ * |          | constructs a flat call directly.                              |
+ * | string   | concatenates via the display helper (the SAME tolerant        |
+ * |          | convention `add`'s string arm already uses — never throws for |
+ * |          | a non-string operand).                                        |
+ * | number   | bitwise shift, implemented via MULTIPLICATION/DIVISION by a   |
+ * |          | power of two rather than native `<<`/`>>`: JS's native        |
+ * |          | bitwise operators coerce both operands to a 32-bit integer and|
+ * |          | mask the shift count to 5 bits, so `1 << 40` would silently   |
+ * |          | give the wrong answer (not even close) rather than the        |
+ * |          | correct `1099511627776`. This runtime's numeric model is a    |
+ * |          | plain `number` everywhere (see the module doc comment), so    |
+ * |          | precision degrades past `Number.MAX_SAFE_INTEGER` like `+`/`*`|
+ * |          | already do, rather than saturating like the fixed-width       |
+ * |          | C/Go/Rust backends. A negative amount REVERSES direction (a   |
+ * |          | right shift by the absolute value, matching Ruby's `5 << -1 ==|
+ * |          | 5 >> 1 == 2`); `Math.floor` on the division correctly         |
+ * |          | replicates ARITHMETIC (sign-extending) right shift for a      |
+ * |          | negative receiver too (floor division by a power of two IS    |
+ * |          | arithmetic right shift). The zero-receiver short-circuit both |
+ * |          | matches "0 shifted by anything is 0" and avoids               |
+ * |          | `0 * Infinity === NaN` once `Math.pow(2, amount)` overflows to|
+ * |          | `Infinity` for an extreme shift amount.                       |
+ */
+export function shiftLeft(...args: Val[]): Val {
+  if (args.length === 0) {
+    return 0;
+  }
+  const first = args[0]!;
+  if (Array.isArray(first)) {
+    for (let i = 1; i < args.length; i++) {
+      first.push(args[i]!);
+    }
+    return first;
+  }
+  if (typeof first === "string") {
+    let s = first;
+    for (let i = 1; i < args.length; i++) {
+      const a = args[i]!;
+      s += typeof a === "string" ? a : toDisplay(a);
+    }
+    return s;
+  }
+  let acc = num(first);
+  for (let i = 1; i < args.length; i++) {
+    if (acc === 0) {
+      continue;
+    }
+    const amount = shiftAmountArg(args[i]!);
+    acc = amount < 0 ? Math.floor(acc / Math.pow(2, -amount)) : acc * Math.pow(2, amount);
+  }
+  return acc;
+}
+
+/**
  * Variadic sum; `add()` is `0`.
  *
  * When the **first** operand is a string or array, `+` is Ruby's polymorphic

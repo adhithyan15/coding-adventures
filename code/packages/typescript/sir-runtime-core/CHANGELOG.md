@@ -2,6 +2,40 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.2.0] - 2026-08-03
+
+### Added — `shiftLeft` (Ruby's `<<` operator)
+
+Part of "TypeScript backend: implement shift-operator runtime dispatch".
+`ruby-to-semantic-ir` lowers `<<` to a top-level `BuiltinCall("<<", [lhs,
+rhs])`, distinct from the `__method__("<<", recv, arg)` Collections
+dispatch. `<<` had no entry in `runtime.ts`'s `builtins` table at all, so
+it fell to `callBuiltin`'s floor and threw a `NameError`-shaped error —
+every Ruby program using `<<` as an operator failed at runtime.
+
+`shiftLeft(...args)`, polymorphic like the existing `add`, but
+dispatched explicitly on the runtime tag:
+
+- `array` — pushes each RHS operand IN PLACE (never flattened, unlike
+  `add`'s array arm), returns the mutated receiver.
+- `string` — concatenates via the display helper (the same tolerant
+  convention `add`'s string arm already uses — never throws for a
+  non-string operand).
+- `number` — bitwise shift, implemented via multiplication/division by
+  a power of two rather than native `<<`/`>>`: JS's native bitwise
+  operators coerce both operands to a 32-bit integer and mask the shift
+  count to 5 bits, so `1 << 40` would silently give the wrong answer.
+  This runtime's numeric model is a plain `number` everywhere (no
+  boxed/tagged Integer-vs-Float split), so precision degrades past
+  `Number.MAX_SAFE_INTEGER` like `+`/`*` already do, rather than
+  saturating like the fixed-width C/Go/Rust backends. A negative amount
+  reverses direction (a right shift); `Math.floor` on the division
+  correctly replicates arithmetic (sign-extending) right shift for a
+  negative receiver too.
+
+Exported from the package root and registered in the `callBuiltin`
+dispatch table.
+
 ## [0.1.10] - 2026-07-07
 
 ### Added — source-language display convention (SIR display-convention spec)

@@ -10,7 +10,7 @@
  *   value; `callBuiltin` looks one up by SIR name.
  */
 
-import { add, div, gt, lt, mul, sub } from "./arithmetic.js";
+import { add, div, gt, lt, mul, shiftLeft, sub } from "./arithmetic.js";
 import { car, cdr, cons, isPair } from "./pairs.js";
 import { Sym } from "./symbols.js";
 import { eq, isNull, isNumber, isSymbol, toDisplay } from "./values.js";
@@ -192,6 +192,7 @@ export function puts(...args: Val[]): null {
 
 const builtins: Record<string, (...args: Val[]) => Val> = {
   "+": add,
+  "<<": shiftLeft,
   "-": sub,
   "*": mul,
   "/": div,
