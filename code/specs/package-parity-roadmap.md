@@ -770,12 +770,14 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   shared contract. The repair affects 132 configs in total. This is a
   dependency-shaped portability wave, separate from the 58-package
   `BUILD_windows` debt;
-- isolate outputs for the two standalone TypeScript configs that have neither
-  `noEmit` nor `outDir`. The other 34 standalone rootDir-less configs are
-  already explicit: 26 are `noEmit` and eight declare an output directory.
-  `window-core` and `window-canvas` currently let `tsc` emit JavaScript and
-  declaration artifacts beside tracked sources, so they are a separate
-  two-package output-isolation item rather than part of the shared-base repair;
+- isolate outputs for the two standalone TypeScript configs that had neither
+  `noEmit` nor `outDir`. The executable audit now classifies all 171 standalone
+  configs: 28 are type-check-only, and all 143 emit-capable projects declare
+  isolated output. `window-core` and `window-canvas` emit only below `dist` and
+  exclude compiled test copies while retaining Vitest's defaults. Their fresh
+  builds, coverage suites, effective-config checks, and clean-tree assertions
+  pass as a separate two-package item rather than part of the shared-base
+  repair;
 - keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan
