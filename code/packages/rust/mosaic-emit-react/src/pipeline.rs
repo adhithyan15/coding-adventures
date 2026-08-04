@@ -554,23 +554,23 @@ pub fn from_pipeline(
         writeln!(out, "import React from \"react\";").unwrap();
     }
     if needs_hook_imports {
-        // Always include both `useRef` and `useEffect`: every HostDialog
-        // needs the ref (for the imperative `showModal()` call) AND an
-        // effect (to react to `open` flipping). Splitting the import based
-        // on which hook a particular dialog *might* not need would only
-        // matter for dead-code elimination, and modern bundlers already
-        // tree-shake unused named imports.
-        // UI35 adds `useState`: the drag controller keeps the hovered drop target in
-        // state (it drives rendering) while the in-flight drag itself lives in a ref.
-        if has_drag {
-            writeln!(
-                out,
-                "import {{ useRef, useEffect, useState, useId }} from \"react\";"
-            )
-            .unwrap();
-        } else {
-            writeln!(out, "import {{ useRef, useEffect }} from \"react\";").unwrap();
+        // Import exactly the hooks this component uses. Importing a hook it doesn't
+        // trips `noUnusedLocals` (TS6133) under a strict host tsconfig and breaks
+        // `tsc -b` — the same trap documented on `emit_function` for unread slots.
+        //
+        //   useRef            dialogs, indeterminate checkboxes, and the drag controller
+        //   useEffect         dialogs and checkboxes only — the drag controller has none
+        //   useState / useId  the drag controller only
+        let needs_effect = !dialog_nodes.is_empty() || !indeterminate_checkbox_nodes.is_empty();
+        let mut hooks: Vec<&str> = vec!["useRef"];
+        if needs_effect {
+            hooks.push("useEffect");
         }
+        if has_drag {
+            hooks.push("useState");
+            hooks.push("useId");
+        }
+        writeln!(out, "import {{ {} }} from \"react\";", hooks.join(", ")).unwrap();
     }
     writeln!(out).unwrap();
 
@@ -2521,14 +2521,23 @@ fn drag_value_expr(
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
         return Ok(Some(camel));
     }
-    // Present but in a shape we do not lower — fail loudly rather than silently
-    // degrading to an empty key. A silent `""` produces a drop target that still
-    // registers and can be matched against any *other* keyless target, so a
-    // mis-typed key would surface as cards landing in the wrong column rather
-    // than as an error. Same stance as `emit_for_jsx`'s `each:` handling.
-    if node.props.iter().any(|p| p.name == prop) {
+    // An expression — which is how a key comes from a loop binding, and therefore the
+    // shape a real board needs: `drop-key: ( col[1] )` per column, `drag-key:
+    // ( card[2] )` per card. This was originally rejected, on the reasoning that an
+    // unhandled shape should fail loudly rather than degrade to an empty key. That
+    // half was right; refusing the expression outright was not, and it made the drag
+    // family unusable from inside a `For` — i.e. unusable for the one layout it was
+    // designed for. Same trust model as every other Expr in this emitter.
+    if let Some(prop_ref) = node.props.iter().find(|p| p.name == prop) {
+        if let LayoutPropValue::Expr(text) = &prop_ref.value {
+            return Ok(Some(text.clone()));
+        }
+        // Still loud for a genuinely unusable shape (an emit ref, say): a silent `""`
+        // produces a drop target that registers and can be matched against any OTHER
+        // keyless target, so a mis-typed key would surface as cards landing in the
+        // wrong column rather than as an error.
         return Err(PipelineEmitError::UnsafeSlotName(format!(
-            "drag prop `{prop}:` must be a string literal or a slot ref"
+            "drag prop `{prop}:` must be a string literal, a slot ref, or an expression"
         )));
     }
     Ok(None)
@@ -7570,9 +7579,15 @@ mod tests {
             out.contains("ref={mosaic$live}") && out.contains("aria-live=\"polite\""),
             "no live region bound, so announcements would go nowhere:\n{out}"
         );
+        // Exactly the hooks the drag controller uses — and NOT useEffect, which it
+        // has none of and which would trip noUnusedLocals under a strict tsconfig.
         assert!(
-            out.contains("import { useRef, useEffect, useState, useId }"),
+            out.contains("import { useRef, useState, useId }"),
             "drag needs useState for hover and useId for instance scoping:\n{out}"
+        );
+        assert!(
+            !out.contains("useEffect"),
+            "an unused useEffect import breaks `tsc -b`:\n{out}"
         );
     }
 

@@ -3044,8 +3044,38 @@ fn append_drag_value(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &s
         Some(LayoutPropValue::SlotRef(slot)) => {
             write!(attrs, " {attr}=\"{{{{{}}}}}\"", camel(slot)).unwrap();
         }
+        // An expression — how a key comes from a loop binding, which is what a board
+        // needs (`drop-key: ( col[1] )` per column). The React backend accepts this;
+        // silently dropping it here would emit a board with no drag attributes at all,
+        // so the runtime would find no targets and nothing would be draggable — an
+        // inert board with no diagnostic.
+        //
+        // This backend's template engine substitutes `{{path}}`, so an expression is
+        // rendered as a mustache over the same binding. Index access (`col[1]`) becomes
+        // the dotted path (`col.1`) the runtime's `readPath` understands.
+        Some(LayoutPropValue::Expr(text)) => {
+            let path = expr_to_mustache_path(text);
+            write!(attrs, " {attr}=\"{{{{{path}}}}}\"").unwrap();
+        }
         _ => {}
     }
+}
+
+/// Turn a simple index/field expression into the dotted path this backend's template
+/// engine resolves: `col[1]` → `col.1`, `card[2]` → `card.2`, `a.b` → `a.b`.
+///
+/// Deliberately narrow. Anything with an operator in it is not a path and is passed
+/// through unchanged, which the template engine will fail to resolve — visibly empty
+/// rather than silently wrong.
+fn expr_to_mustache_path(text: &str) -> String {
+    let cleaned: String = text
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        .collect::<String>()
+        .trim_start_matches('(')
+        .trim_end_matches(')')
+        .to_string();
+    cleaned.replace("][", ".").replace('[', ".").replace(']', "")
 }
 
 /// Write a boolean drag prop. `false` is omitted rather than written out, so the
@@ -4904,6 +4934,29 @@ mod tests {
     // ===================================================================
     // UI35 — the drag-and-drop family
     // ===================================================================
+
+    /// An expression key — how a board's per-column key arrives, from a loop binding.
+    /// Silently dropping it (the previous behaviour) emitted a board with no drag
+    /// attributes at all: the runtime would find no targets and nothing would drag,
+    /// with no diagnostic.
+    #[test]
+    fn ui35_expression_drag_keys_become_mustache_paths() {
+        let l = layout(
+            "B",
+            node_with_props(
+                "HostDropTarget",
+                vec![prop_expr("drop-key", "( col[1] )")],
+            ),
+        );
+        let out = from_pipeline(&component("B", vec![]), &l, &empty_style("B"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("data-mosaic-drop-key=\"{{col.1}}\""),
+            "expression key not lowered to a template path:
+{out}"
+        );
+    }
 
     /// A board-shaped layout: a drop target (the column) wrapping a draggable
     /// (the card). This is the exact structure a kanban lowering produces.
