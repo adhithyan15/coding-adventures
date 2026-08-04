@@ -96,7 +96,7 @@ declarations from each root `cpanfile`. Requirements inside test or other
 phase blocks, `Makefile.PL` dependency tables, metadata, and comments remain
 outside the graph. Exact `Makefile.PL` `NAME` values and current and legacy
 distribution spellings are aliases only. The shared field-boundary fixture and
-complete 256-package lane resolve exactly 213 total edges: 212 from
+complete 256-package lane resolve exactly 217 total edges: 216 from
 authoritative manifests and one qualified BUILD dependency.
 
 ## Canonical discovery identities

@@ -513,6 +513,12 @@ or execution case may enter the corpus with a contradictory record.
 
 ### 10. Validation
 
+Perl BUILD validation MAY admit local source references declared only inside a
+root `cpanfile` test block, plus their authoritative runtime prerequisites,
+without promoting those test-only references into the runtime dependency
+graph. This allowlist is validation-only: undeclared references and references
+from any other ignored metadata block still fail closed.
+
 Validation fixtures report stable diagnostic codes for:
 
 - missing or empty BUILD files;

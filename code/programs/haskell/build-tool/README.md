@@ -69,8 +69,8 @@ declarations from each root `cpanfile`. Requirements inside test or other
 phase blocks, `Makefile.PL` dependency tables, metadata, and comments cannot
 invent graph edges. Exact `Makefile.PL` `NAME` values and current and legacy
 distribution spellings are aliases only. The shared field-boundary fixture and
-complete 256-package lane match the canonical Go resolver exactly at 213 total
-edges: 212 from authoritative manifests and one qualified BUILD dependency.
+complete 256-package lane match the canonical Go resolver exactly at 217 total
+edges: 216 from authoritative manifests and one qualified BUILD dependency.
 
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those

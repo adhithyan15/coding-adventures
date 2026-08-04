@@ -367,15 +367,18 @@ cpanfiles and 247 root `Makefile.PL` files expose one coherent boundary: runtime
 must drive graph edges, while test phases and package metadata must not. The
 shared repair removes nine internal test-phase declarations, registers exact
 module names plus current and legacy distribution aliases, and leaves Haskell
-and Go identical across all 256 packages and 213 total edges: 212 authoritative
+and Go identical across all 256 packages and 217 total edges: 216 authoritative
 manifest edges plus one qualified BUILD dependency, with zero one-sided edges.
 The rebased `24f64fed` collision-checked inventory has 1,258
 identities and 4,412 implementation slots across 15 established lanes, with
 173 high-consensus packages and 271 missing slots, 808 singleton packages and
 11,312 missing slots, 612 Rust singletons, and zero collisions or unknown
 buckets. The resolver slice adds the newly authoritative AES prerequisite to
-aes-modes so Linux detect validation remains standalone-correct. The Windows
-validator also makes five existing Perl standalone gaps concrete in
+aes-modes, restores HMAC's four authoritative hash prerequisites, and teaches
+Linux BUILD validation to admit test-only cpanfile references and their runtime
+closure without promoting them into the graph. Generic BUILD paths now match
+that Linux validation contract. The Windows validator also makes five existing
+Perl standalone gaps concrete in
 WASM/compiler packages; the new `build-file-standalone-integrity-perl` child
 owns that dependency-shaped wave, so resolver semantics do not absorb broader
 build-recipe remediation. The two

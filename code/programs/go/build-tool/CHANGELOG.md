@@ -36,7 +36,9 @@ All notable changes to the Go build tool will be documented in this file.
   declarations from root `cpanfile`s, excludes test and other phase blocks and
   `Makefile.PL` dependency tables, and registers exact declared module names
   plus current and legacy distribution aliases. The aes-modes BUILD recipe now
-  declares the newly authoritative local AES prerequisite.
+  declares the newly authoritative local AES prerequisite. Standalone BUILD
+  validation separately recognizes test-block source references and their
+  runtime closure without promoting test-only dependencies into the graph.
 - Ruby dependency resolution now reads only runtime dependency calls on the
   gem specification receiver, treats `add_dependency` and
   `add_runtime_dependency` as synonyms, ignores development dependencies and

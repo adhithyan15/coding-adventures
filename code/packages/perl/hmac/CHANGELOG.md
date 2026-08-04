@@ -1,5 +1,12 @@
 # Changelog — CodingAdventures::HMAC (Perl)
 
+## Unreleased
+
+### Fixed
+
+- Declare the four internal hash packages used by the HMAC implementation and
+  materialize their library paths in standalone BUILD runs.
+
 ## [0.1.0] — 2026-04-06
 
 ### Added

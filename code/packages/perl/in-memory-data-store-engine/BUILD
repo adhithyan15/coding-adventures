@@ -1,1 +1,1 @@
-PERL5LIB=lib:../hyperloglog/lib:../in-memory-data-store-protocol/lib prove -l -v t/
+PERL5LIB=lib:$(cd ../hyperloglog && pwd)/lib:$(cd ../in-memory-data-store-protocol && pwd)/lib:${PERL5LIB:-} prove -l -v t/
