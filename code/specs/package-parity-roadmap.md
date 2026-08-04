@@ -645,6 +645,41 @@ packages with 11,396 missing slots, 618 Rust singletons, and zero collisions or
 unknown buckets, so no new package work is added and the active priority does
 not move.
 
+Guarded squash auto-completion merged the .NET resolver PR #9898 at exact head
+`c5b0722912` as `e78c9986c2` after all 20 exact-head checks were terminal
+acceptable and two consecutive mergeability readings were `MERGEABLE/CLEAN`.
+The refreshed collision-checked schema-3 inventory is unchanged at 1,264
+implementation identities, 4,419 established-lane slots, 173 high-consensus
+packages with 270 missing slots, 814 singleton packages with 11,396 missing
+slots, 618 Rust singletons, and zero collisions or unknown buckets.
+
+The post-.NET dependency/leverage pass therefore selects the separately owned
+TypeScript package-metadata grammar. A direct resolver-API audit reconfirms
+both engines discover 470 packages, while Go emits 1,075 edges and Haskell 275,
+leaving 948 Go-only and 148 Haskell-only edges. This is now the largest bounded
+remaining established-lane resolver repair. Its package.json name and runtime
+dependency tables stay one coherent metadata contract; the 58-package
+TypeScript `BUILD_windows` standalone-prerequisite debt reproduced by the real
+front door remains independently owned and must not widen this tranche.
+
+The implemented TypeScript contract parses valid root `package.json` objects,
+registers only exact top-level `name` aliases, and admits direct keys from root
+`dependencies` and `devDependencies` objects. It ignores dependency values,
+peer and optional tables, scripts, nested tool objects, nested names, and
+malformed JSON rather than inventing a partial graph. The shared adversarial
+fixture proves single-line runtime tables, development dependencies, declared
+aliases, and every excluded decoy. The repaired real repository graphs now
+match edge-for-edge between Go and Haskell at 470 TypeScript packages and
+1,076 edges, with zero one-sided drift; the Go field parser also recovers one
+real dependency that its previous line scanner missed.
+
+A conflict-free rebase onto package-neutral human-languages main
+`658184b112` leaves the refreshed collision-checked schema-3 inventory
+unchanged at 1,264 implementation identities, 4,419 established-lane slots,
+173 high-consensus packages with 270 missing slots, 814 singleton packages
+with 11,396 missing slots, 618 Rust singletons, and zero collisions or unknown
+buckets. No new package identity displaces the implemented resolver repair.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -692,6 +727,13 @@ Remaining inventory/build-integrity work discovered in the July 29 audit:
   related packages in dependency-shaped waves. The Python validator now also
   materializes a 10-file Lua wave covering the compiler, serializer, language
   server, QR, and compression dependency chains;
+- repair the shared TypeScript compiler-path boundary discovered by the
+  field-aware resolver tranche. `npm run build` for `typescript/transistors`
+  reproduces TS6059 on unchanged `origin/main` because the shared
+  `tsconfig.base.json` makes `rootDir: "src"` relative to the shared config.
+  Of 458 TypeScript package/program configs with build scripts, 293 override
+  `rootDir` and 165 retain this risk. This is a pending dependency-shaped
+  portability wave, separate from the 58-package `BUILD_windows` debt;
 - keep the Python build tool's Lua rockspec decoding deterministic. Merged PR
   #9495 normalized the three CP1252 metadata bytes, added positive and invalid-
   UTF-8 fixtures, and returns `METADATA_INVALID_UTF8`; its refreshed full scan

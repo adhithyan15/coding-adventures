@@ -13,7 +13,8 @@ extra-doc-files: README.md
 
 library
     exposed-modules:  BuildTool
-    build-depends:    base >=4.14 && <5
+    build-depends:    aeson >=2.0 && <3
+                    , base >=4.14 && <5
                     , bytestring >=0.10 && <0.13
                     , containers >=0.6 && <0.8
                     , directed-graph ==0.1.*

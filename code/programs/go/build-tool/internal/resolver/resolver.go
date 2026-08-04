@@ -40,6 +40,7 @@
 package resolver
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -379,46 +380,19 @@ func parseGoDeps(pkg discovery.Package, knownNames map[string]string) []string {
 //	    "@coding-adventures/logic-gates": "file:../logic-gates"
 //	}
 //
-// We scan for lines matching the @coding-adventures/ prefix and map them
-// to our internal package names. Version specifiers and file: references
-// are ignored — we only care about the package name.
+// Only direct keys of the root dependencies and devDependencies objects are
+// authoritative. Version specifiers and file:/workspace: references are
+// ignored -- we only care about the package name.
 func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	packageJSON := filepath.Join(pkg.Path, "package.json")
-	data, err := os.ReadFile(packageJSON)
-	if err != nil {
+	manifest, ok := readPackageJSON(packageJSON)
+	if !ok {
 		return nil
 	}
 
-	text := string(data)
 	var internalDeps []string
-
-	// We look inside both "dependencies" and "devDependencies" blocks so the
-	// graph reflects local build/test prerequisites too.
-	inDeps := false
-	re := regexp.MustCompile(`"([^"]+)"\s*:`)
-	for _, line := range strings.Split(text, "\n") {
-		trimmed := strings.TrimSpace(line)
-
-		if !inDeps {
-			if (strings.Contains(trimmed, `"dependencies"`) ||
-				strings.Contains(trimmed, `"devDependencies"`)) &&
-				strings.Contains(trimmed, "{") {
-				inDeps = true
-			}
-			continue
-		}
-
-		// Inside dependencies block.
-		if strings.Contains(trimmed, "}") {
-			inDeps = false
-			continue
-		}
-
-		for _, match := range re.FindAllStringSubmatch(trimmed, -1) {
-			if len(match) < 2 {
-				continue
-			}
-			depName := strings.ToLower(strings.TrimSpace(match[1]))
+	for _, field := range []string{"dependencies", "devDependencies"} {
+		for _, depName := range packageJSONDependencyNames(manifest[field]) {
 			if pkgName, ok := knownNames[depName]; ok {
 				internalDeps = append(internalDeps, pkgName)
 			}
@@ -426,6 +400,41 @@ func parseTypescriptDeps(pkg discovery.Package, knownNames map[string]string) []
 	}
 
 	return internalDeps
+}
+
+func readPackageJSON(path string) (map[string]json.RawMessage, bool) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, false
+	}
+
+	var manifest map[string]json.RawMessage
+	if err := json.Unmarshal(data, &manifest); err != nil || manifest == nil {
+		return nil, false
+	}
+	return manifest, true
+}
+
+func packageJSONName(manifest map[string]json.RawMessage) string {
+	var name string
+	if err := json.Unmarshal(manifest["name"], &name); err != nil {
+		return ""
+	}
+	return strings.ToLower(strings.TrimSpace(name))
+}
+
+func packageJSONDependencyNames(raw json.RawMessage) []string {
+	var dependencies map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &dependencies); err != nil || dependencies == nil {
+		return nil
+	}
+
+	names := make([]string, 0, len(dependencies))
+	for name := range dependencies {
+		names = append(names, strings.ToLower(strings.TrimSpace(name)))
+	}
+	sort.Strings(names)
+	return names
 }
 
 // parseDartDeps extracts internal dependencies from a Dart pubspec.yaml file.
@@ -1786,11 +1795,9 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			setKnown(strings.ToLower(filepath.Base(pkg.Path)), pkg.Name, pkg.Path, pkg.Language)
 
 			packageJSON := filepath.Join(pkg.Path, "package.json")
-			data, err := os.ReadFile(packageJSON)
-			if err == nil {
-				re := regexp.MustCompile(`"name"\s*:\s*"([^"]+)"`)
-				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
-					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
+			if manifest, ok := readPackageJSON(packageJSON); ok {
+				if declaredName := packageJSONName(manifest); declaredName != "" {
+					setKnown(declaredName, pkg.Name, pkg.Path, pkg.Language)
 				}
 			}
 

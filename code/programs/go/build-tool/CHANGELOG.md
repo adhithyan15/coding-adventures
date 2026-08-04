@@ -32,6 +32,11 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- TypeScript dependency resolution now parses root `package.json` objects,
+  registers only the exact top-level `name` alias, and accepts only direct
+  keys from `dependencies` and `devDependencies`. Single-line tables resolve
+  correctly while peer, optional, nested tool, script, and malformed-JSON
+  decoys cannot invent partial graph edges.
 - C#, F#, and shared .NET resolution now reads only literal `Include`
   attributes on unqualified `ProjectReference` elements in root project files,
   matches lexically normalized paths to exact project files across the shared

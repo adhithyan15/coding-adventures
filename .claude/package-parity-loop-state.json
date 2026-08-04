@@ -11,15 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9898,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9898",
-    "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
-    "implementation_head": "78b9ced142f838bcd30c2d0fd1999ca2c2e7e9d4",
-    "last_ci_repair": null
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "28df5db2b85deeaa564cb02fc80f6f81b086937c",
+    "revision": "658184b11299b3b5b87cb30cb5896a5f7a45a573",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -502,20 +496,29 @@
     {
       "id": "build-tool-post-gradle-dotnet-field-aware-manifest-resolution",
       "title": "Make C# and F# project-reference resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-post-dart-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-dotnet-field-aware-resolution",
       "pr_number": 9898,
-      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. Ready-for-review PR #9898 opened at exact implementation head 78b9ced142f838bcd30c2d0fd1999ca2c2e7e9d4. TypeScript and standalone BUILD debt remain independently pending."
+      "notes": "Materialized by the exact post-Dart audit as the next independent shared grammar after Gradle. The implemented contract reads only literal Include attributes on unqualified ProjectReference elements in root project files, matches lexically normalized exact root-project paths across the shared .NET scope, and never opens referenced files. Three shared fixtures cover C#, F#, and cross-language references plus XML, MSBuild, nested-project, absolute-path, and unknown-target decoys. The repaired real graphs match edge-for-edge at 198 C# packages/238 edges and 197 F# packages/239 edges with zero one-sided drift. Representative C# and F# MiniSqlite plus F# GFM, Deflate, and Parser downstream tests pass; both front doors validate and dry-run every package in both lanes. Full implementation, coverage, warning, conformance, inventory, diff, and security gates pass. Guarded squash auto-completion merged PR #9898 at exact head c5b07229126a8b096a980df8eddb7cac0d0f4dbb as e78c9986c2fef1823ffe32b1a018a70b6fe9e8ca after all 20 exact-head checks were terminal acceptable and two consecutive mergeability readings were MERGEABLE/CLEAN. TypeScript and standalone BUILD debt remain independently pending."
     },
     {
       "id": "build-tool-post-dotnet-typescript-field-aware-manifest-resolution",
       "title": "Make TypeScript package metadata resolution field-aware",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-post-gradle-dotnet-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-typescript-field-aware-resolution",
+      "pr_number": null,
+      "notes": "Materialized by the exact post-Dart audit as a separate broad grammar and selected after guarded PR #9898 merged as e78c9986c2fef1823ffe32b1a018a70b6fe9e8ca. The red direct resolver-API baseline found both engines at 470 TypeScript packages, with Go at 1,075 edges and Haskell at 275, leaving 948 Go-only and 148 Haskell-only edges. The implemented shared contract parses root package.json objects, registers exact top-level name aliases, accepts direct root dependencies and devDependencies keys, and rejects peer, optional, script, nested-tool, nested-name, non-object-table, and malformed-JSON decoys. The repaired real graph is exact between Go and Haskell at 470 packages and 1,076 edges with zero one-sided drift; Go recovered one dependency missed by its prior line scanner. A conflict-free rebase onto package-neutral human-languages main 658184b11299b3b5b87cb30cb5896a5f7a45a573 leaves the collision-checked inventory unchanged at 1,264 identities and 4,419 slots with zero collisions or unknown buckets. The separately owned 58-package TypeScript BUILD_windows prerequisite debt remains outside this tranche."
+    },
+    {
+      "id": "typescript-shared-tsconfig-rootdir-portability",
+      "title": "Make shared TypeScript compiler paths package-relative",
+      "status": "pending",
+      "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized by the exact post-Dart audit as a separate broad grammar. Both engines discover 470 TypeScript packages, but Go emits 1,075 edges versus Haskell's 275, with 948 Go-only and 148 Haskell-only edges. Audit package.json workspace and dependency semantics separately after the smaller JVM and .NET shared grammars, preserving the separately owned TypeScript BUILD_windows debt boundary."
+      "notes": "Discovered during representative downstream validation for the TypeScript field-aware resolver tranche. On unchanged origin/main metadata, code/packages/typescript/tsconfig.base.json declares rootDir and outDir relative to the shared config rather than each extending package. A clean npm run build in typescript/transistors fails with TS6059 because its src/index.ts is outside code/packages/typescript/src. Corpus audit finds 458 TypeScript package/program tsconfig files with build scripts: 293 override rootDir locally and 165 retain this shared-root risk. The real BUILD_windows recipes remain test-oriented and pass for the transistors, logic-gates, and arithmetic dependency chain. Audit the 165-package compiler boundary and repair it in dependency-shaped waves without mixing the separately owned 58-package BUILD_windows prerequisite debt or resolver semantics."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
