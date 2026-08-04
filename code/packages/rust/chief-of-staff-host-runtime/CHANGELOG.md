@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Support a distinct signed, code-free `SKILL.md` package layout alongside the
+  canonical deny-all Deno layout.
+- Add no-overwrite package signing and retain authenticated Level 1 source bytes
+  for race-free trusted loading.
 - Retain authenticated manifest bytes for race-free package discovery.
 - Expose read-only trusted public-key lookup for daemon composition and audits.
 - Add a canonical deny-all Deno launch plan shared by package generation,

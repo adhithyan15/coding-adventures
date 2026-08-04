@@ -383,8 +383,10 @@ fn restart_policy(value: &str) -> RestartPolicy {
 mod tests {
     use super::*;
     use chief_of_staff_host_runtime::{
-        hash_package_contents, DenoLaunchPlan, PackageKeyType, TrustedPackageKey,
+        hash_package_contents, AgentPackageRuntime, DenoLaunchPlan, PackageKeyType,
+        TrustedPackageKey,
     };
+    use chief_of_staff_skill_package::build_signed_skill_package;
     use coding_adventures_ed25519::{generate_keypair, sign};
     use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -454,6 +456,17 @@ mod tests {
             &found.package().digest()
         );
         assert!(Path::new(found.registration().package_path().as_str()).is_absolute());
+    }
+
+    #[test]
+    fn explicit_candidate_discovers_a_sealed_skill_only_package() {
+        let f = Fixture::new(PrivilegeTier::Tier1);
+        let path = f.root.join("weather-skill.agent");
+        let source = "---\nagent: weather-skill\ndescription: Reports friendly forecasts for requested cities.\nprivilege_tier: 0\nreads: [weather-requests]\nwrites: [weather-reports]\nmessage_schema_versions: [weather-requests=1, weather-reports=1]\n---\n# Weather Skill\n\nReport a concise forecast for the requested city.\n\n## Capabilities needed\n- none\n";
+        build_signed_skill_package(&path, source, "test", &f.secret).unwrap();
+        let found = inspect_agent_package(&path, &f.keyring).unwrap();
+        assert_eq!(found.manifest().agent, "weather-skill");
+        assert_eq!(found.package().runtime(), AgentPackageRuntime::Skill);
     }
     #[test]
     fn scan_is_sorted_and_ignores_siblings() {
