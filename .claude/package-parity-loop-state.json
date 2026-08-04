@@ -12,14 +12,14 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 9911,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9911",
-    "branch": "codex/typescript-build-windows-sir-runtime-closure",
-    "implementation_head": "111b711765623d4a8ca2a812e4fd8c386a91d2ae",
+    "number": 9912,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/9912",
+    "branch": "codex/typescript-tsconfig-input-boundaries",
+    "implementation_head": "6179d4d9c49e1bb89f0cc693fa83111dfeb3fb09",
     "last_ci_repair": null
   },
   "last_inventory": {
-    "revision": "4c9d1a6f6b4a35556426bebbe0ed385fd312628d",
+    "revision": "a044e3570f98f769646a04c63a9c7797846ca62d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1264,
@@ -331,7 +331,7 @@
     {
       "id": "typescript-build-windows-sir-runtime-closure",
       "title": "Repair the TypeScript BUILD_windows SIR runtime prerequisite closure",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/typescript-build-windows-sir-runtime-closure",
       "pr_number": 9911,
@@ -340,11 +340,20 @@
     {
       "id": "typescript-standalone-tsconfig-input-boundaries",
       "title": "Audit standalone TypeScript build input boundaries",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/typescript-tsconfig-input-boundaries",
+      "pr_number": 9912,
+      "notes": "Discovered during representative downstream validation of the TypeScript BUILD_windows cli-builder closure. algol-lexer inherits the shared src rootDir but has no include boundary, so its optional npm run build admits tests/tokenizer.test.ts through TypeScript's default include and fails with TS6059. The package's authoritative BUILD_windows coverage front door remains green. Audit build-script packages for the same rootDir/include mismatch and repair the resulting compiler-input boundary as a separate dependency-shaped tranche; do not widen BUILD prerequisite work. Selected after guarded PR #9911 merged because the exact static corpus contains 96 build-script projects with an effective src root, no explicit include/files/exclude boundary, and 202 tracked TypeScript files outside that root. One shared compiler-input contract therefore has greater immediate build leverage than the separately pending 10-file Lua prerequisite wave. The collision-checked fa9c70094e inventory remains unchanged at 1,264 identities, 4,419 slots, 173 high-consensus packages with 270 gaps, 814 singletons with 11,396 gaps, 618 Rust singletons, and zero collisions or unknown buckets. The executable audit now covers all 458 build-script projects and reports 422 rooted configs, 420 explicitly bounded rooted configs, zero unbounded rooted projects, zero tracked inputs leaking outside effective roots, 143 isolated standalone emitters, and 444 compiler locks. All 96 owned tsconfig repairs are semantically minimal include-src additions. Ten focused Python tests and Ruff pass. Real Windows front doors keep 79 algol-lexer tests at 87.5%, 33 algol-parser tests at 83.33%, 62 arithmetic tests at 83.01%, and 20 canvas-measurement tests at 97.72%; browser-extension-toolkit keeps 60 tests at 98.75%, and csv-parser keeps 56 tests at 100%. Arithmetic, csv-parser, and canvas-measurement builds pass from declared dependencies; the separately logged Node declaration item owns the manifest gaps exposed in the other builds. All six production audits are clean. The canonical TypeScript validator accepts all 470 packages; the Go build tool passes test, vet, build, and module verification, and its committed diff plan reports exactly 96 changed and 248 affected TypeScript packages. The collision inventory remains unchanged with zero collisions or unknown buckets. Ready-for-review PR #9912 opened at exact implementation head 6179d4d9c49e1bb89f0cc693fa83111dfeb3fb09."
+    },
+    {
+      "id": "typescript-node-builtin-type-declarations",
+      "title": "Audit TypeScript Node builtin declaration ownership",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during representative downstream validation of the TypeScript BUILD_windows cli-builder closure. algol-lexer inherits the shared src rootDir but has no include boundary, so its optional npm run build admits tests/tokenizer.test.ts through TypeScript's default include and fails with TS6059. The package's authoritative BUILD_windows coverage front door remains green. Audit build-script packages for the same rootDir/include mismatch and repair the resulting compiler-input boundary as a separate dependency-shaped tranche; do not widen BUILD prerequisite work."
+      "notes": "Discovered during real build validation of the standalone TypeScript input-boundary tranche. After the owned TS6059 input leaks are removed, algol-lexer, the algol-parser dependency chain, and browser-extension-toolkit reach Node builtin/process references but have no owned Node type provider; their coverage remains green at 79, 33, and 60 tests respectively. Audit the build-script TypeScript corpus for Node builtin imports without an owned @types/node declaration, classify the exact dependency-shaped gap, and repair it separately; do not widen the 96-config input-boundary tranche into package manifests or lockfiles."
     },
     {
       "id": "build-file-standalone-integrity-lua",

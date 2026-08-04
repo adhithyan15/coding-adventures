@@ -54,6 +54,10 @@ class AuditSummary:
     inherited_out_dir: int
     standalone_emit_projects: int
     isolated_standalone_projects: int
+    rooted_projects: int
+    bounded_root_projects: int
+    unbounded_root_projects: int
+    outside_root_inputs: int
     locked_compilers: int
     issues: tuple[Issue, ...]
 
@@ -109,6 +113,31 @@ def _area_files(root: Path, filename: str) -> list[Path]:
     return sorted(found)
 
 
+def _typescript_files(root: Path) -> list[Path]:
+    patterns = [
+        f"{area.as_posix()}/**/*{suffix}"
+        for area in TYPESCRIPT_AREAS
+        for suffix in (".ts", ".tsx", ".mts", ".cts")
+    ]
+    tracked = _git_visible_files(root, patterns)
+    if tracked is not None:
+        return sorted(tracked)
+
+    found: list[Path] = []
+    for relative_area in TYPESCRIPT_AREAS:
+        area = root / relative_area
+        if not area.exists():
+            continue
+        found.extend(
+            path
+            for path in area.rglob("*")
+            if path.is_file()
+            and path.suffix in {".ts", ".tsx", ".mts", ".cts"}
+            and "node_modules" not in path.parts
+        )
+    return sorted(found)
+
+
 def _read_json(root: Path, path: Path, issues: list[Issue]) -> object | None:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -138,6 +167,41 @@ def _extends_shared_base(root: Path, config_path: Path, document: object) -> boo
         return False
     candidate = (config_path.parent / extends).resolve()
     return candidate == (root / SHARED_BASE).resolve()
+
+
+def _effective_root_dir(
+    root: Path,
+    config_path: Path,
+    document: object,
+    options: dict[str, object],
+) -> Path | None:
+    raw_root = options.get("rootDir")
+    if not isinstance(raw_root, str) and _extends_shared_base(
+        root, config_path, document
+    ):
+        raw_root = PORTABLE_PATHS["rootDir"]
+    if not isinstance(raw_root, str) or not raw_root.strip():
+        return None
+
+    expanded = raw_root.replace("${configDir}", str(config_path.parent))
+    candidate = Path(expanded)
+    if not candidate.is_absolute():
+        candidate = config_path.parent / candidate
+    return candidate.resolve()
+
+
+def _has_input_boundary(document: object) -> bool:
+    return isinstance(document, dict) and any(
+        field in document for field in ("include", "files", "exclude")
+    )
+
+
+def _is_within(path: Path, directory: Path) -> bool:
+    try:
+        path.relative_to(directory)
+    except ValueError:
+        return False
+    return True
 
 
 def _parse_version(version: object) -> tuple[int, int, int] | None:
@@ -174,6 +238,11 @@ def audit_repository(root: Path) -> AuditSummary:
     inherited_out_dir = 0
     standalone_emit_projects = 0
     isolated_standalone_projects = 0
+    rooted_projects = 0
+    bounded_root_projects = 0
+    unbounded_root_projects = 0
+    outside_root_inputs = 0
+    typescript_files = _typescript_files(root)
     for manifest_path in _area_files(root, "package.json"):
         manifest = _read_json(root, manifest_path, issues)
         if not isinstance(manifest, dict):
@@ -190,27 +259,59 @@ def audit_repository(root: Path) -> AuditSummary:
         total_projects += 1
         options = _compiler_options(config)
         if not _extends_shared_base(root, config_path, config):
-            if options.get("noEmit") is True:
-                continue
-            standalone_emit_projects += 1
-            out_dir = options.get("outDir")
-            if isinstance(out_dir, str) and out_dir.strip():
-                isolated_standalone_projects += 1
-            else:
-                issues.append(
-                    Issue(
-                        "STANDALONE_OUTPUT_NOT_ISOLATED",
-                        _display_path(root, config_path),
-                        "emit-capable standalone config requires noEmit: true "
-                        "or a non-empty compilerOptions.outDir",
+            if options.get("noEmit") is not True:
+                standalone_emit_projects += 1
+                out_dir = options.get("outDir")
+                if isinstance(out_dir, str) and out_dir.strip():
+                    isolated_standalone_projects += 1
+                else:
+                    issues.append(
+                        Issue(
+                            "STANDALONE_OUTPUT_NOT_ISOLATED",
+                            _display_path(root, config_path),
+                            "emit-capable standalone config requires noEmit: true "
+                            "or a non-empty compilerOptions.outDir",
+                        )
                     )
-                )
+        else:
+            shared_projects += 1
+            if "rootDir" not in options:
+                inherited_root_dir += 1
+            if "outDir" not in options:
+                inherited_out_dir += 1
+
+        effective_root = _effective_root_dir(root, config_path, config, options)
+        if effective_root is None:
             continue
-        shared_projects += 1
-        if "rootDir" not in options:
-            inherited_root_dir += 1
-        if "outDir" not in options:
-            inherited_out_dir += 1
+        rooted_projects += 1
+        if _has_input_boundary(config):
+            bounded_root_projects += 1
+            continue
+
+        project_files = [
+            path
+            for path in typescript_files
+            if _is_within(path, manifest_path.parent)
+        ]
+        outside_files = [
+            path for path in project_files if not _is_within(path, effective_root)
+        ]
+        if not outside_files:
+            continue
+        unbounded_root_projects += 1
+        outside_root_inputs += len(outside_files)
+        examples = ", ".join(
+            _display_path(root, path) for path in outside_files[:3]
+        )
+        issues.append(
+            Issue(
+                "INPUT_BOUNDARY_MISSING",
+                _display_path(root, config_path),
+                f"effective rootDir excludes {len(outside_files)} tracked "
+                f"TypeScript file(s), including {examples}; declare a top-level "
+                "include, files, or exclude boundary",
+            )
+        )
 
     locked_compilers = 0
     for lock_path in _area_files(root, "package-lock.json"):
@@ -251,6 +352,10 @@ def audit_repository(root: Path) -> AuditSummary:
         inherited_out_dir=inherited_out_dir,
         standalone_emit_projects=standalone_emit_projects,
         isolated_standalone_projects=isolated_standalone_projects,
+        rooted_projects=rooted_projects,
+        bounded_root_projects=bounded_root_projects,
+        unbounded_root_projects=unbounded_root_projects,
+        outside_root_inputs=outside_root_inputs,
         locked_compilers=locked_compilers,
         issues=tuple(issues),
     )
@@ -289,6 +394,10 @@ def main() -> int:
         f"inherited_outDir={summary.inherited_out_dir} "
         f"standalone_emit={summary.standalone_emit_projects} "
         f"standalone_isolated={summary.isolated_standalone_projects} "
+        f"rooted={summary.rooted_projects} "
+        f"bounded_root={summary.bounded_root_projects} "
+        f"unbounded_root={summary.unbounded_root_projects} "
+        f"outside_root_inputs={summary.outside_root_inputs} "
         f"compiler_locks={summary.locked_compilers}"
     )
     return 0

@@ -771,6 +771,41 @@ The committed diff plan selects exactly the three runtimes and their four
 prerequisites, with 463 TypeScript packages skipped. The collision inventory is
 unchanged with zero collisions or unknown buckets.
 
+All 20 exact-head checks reached terminal acceptable conclusions for PR #9911;
+two independent readings returned `MERGEABLE/CLEAN`; guarded squash
+auto-completion merged final head `fdbbe633e0` as `fa9c70094e`. The refreshed
+collision-checked inventory remains unchanged at 1,264 identities, 4,419 slots,
+173 high-consensus packages with 270 gaps, 814 singleton packages with 11,396
+gaps, 618 Rust singletons, and zero collisions or unknown buckets. The input
+boundary corpus is now exact: 96 build-script projects have an effective `src`
+root, no explicit `include`/`files`/`exclude` boundary, and 202 tracked
+TypeScript files outside that root. The quick dependency/leverage pass selects
+this one compiler-input contract ahead of the separately pending 10-file Lua
+prerequisite wave.
+
+Real validation of the selected input-boundary tranche exposed a distinct
+declaration-ownership gap after its TS6059 failure was removed: algol-lexer,
+the algol-parser dependency chain, and browser-extension-toolkit reach Node
+built-ins or `process`, but do not own a Node type provider. Their coverage
+remains green at 79, 33, and 60 tests respectively. The new
+`typescript-node-builtin-type-declarations` backlog item owns a corpus audit
+and dependency-shaped manifest repair; the 96-config input-boundary tranche
+does not absorb package manifests or lockfiles.
+
+The implemented input-boundary contract audits all 458 build-script projects
+and reports 422 rooted configs, 420 explicitly bounded rooted configs, zero
+unbounded rooted projects, and zero tracked inputs outside their effective
+roots. All 96 repairs are semantically minimal `include: ["src"]` additions.
+Ten focused Python tests and Ruff pass. Real coverage remains green for the
+Algol lexer/parser, arithmetic, browser-extension toolkit, CSV parser, and
+canvas measurement packages; arithmetic, CSV, and canvas builds pass from
+declared dependencies, and all six production audits report zero
+vulnerabilities. The canonical TypeScript validator accepts all 470 packages.
+The Go build tool passes test, vet, build, and module verification; its
+committed diff plan reports exactly 96 changed and 248 affected TypeScript
+packages. The collision-checked inventory remains unchanged at 1,264
+identities and 4,419 slots with zero collisions or unknown buckets.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
