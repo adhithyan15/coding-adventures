@@ -2,6 +2,7 @@
 
 import { CONTENT_TYPES, hasOwn } from "./constants.js";
 import { DURATION_THRESHOLD_SECONDS, estimateLessonDuration } from "./report.js";
+import { activityContractErrors } from "./activity.js";
 import type {
   BookCorpus,
   CurriculumSpine,
@@ -504,9 +505,21 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
   const schema2Lessons = lessons.filter(
     (lesson) => stringValue(lesson.frontmatter.schema_version) === "2",
   );
+  for (const lesson of lessons) {
+    if (stringValue(lesson.frontmatter.schema_version) === "2") continue;
+    if (lesson.blocks.some((block) =>
+      (block.activities?.length ?? 0) > 0 || (block.activityDirectiveErrors?.length ?? 0) > 0
+    )) {
+      error(
+        "activity-requires-schema-v2",
+        `${lesson.realization.lessonId}: hl-activity directives require schema_version 2`,
+      );
+    }
+  }
   const sequences = new Map<string, Map<number, string>>();
   const introducedByLesson = new Map<string, string[]>();
   const atomOwner = new Map<string, Map<string, string>>();
+  const activityOwner = new Map<string, string>();
   for (const lesson of schema2Lessons) {
     const id = lesson.realization.lessonId;
     const fm = lesson.frontmatter;
@@ -598,6 +611,35 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
       if (block.markdown.trim() === "") {
         error("schema-v2-empty-block", `${id}: block '${block.title}' is empty`);
+      }
+      for (const directiveError of block.activityDirectiveErrors ?? []) {
+        error(
+          "schema-v2-invalid-activity-directive",
+          `${id}: block '${block.title}' ${directiveError}`,
+        );
+      }
+      for (const activity of block.activities ?? []) {
+        if (!activity.id.startsWith(`${id}-`)) {
+          error(
+            "schema-v2-activity-id-prefix",
+            `${id}: activity '${activity.id}' must begin with '${id}-'`,
+          );
+        }
+        const previousOwner = activityOwner.get(activity.id);
+        if (previousOwner) {
+          error(
+            "schema-v2-duplicate-activity-id",
+            `${id}: activity '${activity.id}' is already authored by ${previousOwner}`,
+          );
+        } else {
+          activityOwner.set(activity.id, id);
+        }
+        for (const contractError of activityContractErrors(activity)) {
+          error(
+            "schema-v2-invalid-activity-contract",
+            `${id}: activity '${activity.id}' ${contractError}`,
+          );
+        }
       }
     }
 
@@ -730,6 +772,23 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
             "schema-v2-block-knowledge-not-closed",
             `${id}: block '${block.title}' assesses '${atom}' before it is available`,
           );
+        }
+      }
+      const blockAssessments = new Set(block.knowledge.assesses);
+      for (const activity of block.activities ?? []) {
+        for (const atom of activity.assesses) {
+          if (!KNOWLEDGE_ATOM.test(atom)) {
+            error(
+              "schema-v2-invalid-activity-knowledge-atom",
+              `${id}: activity '${activity.id}' contains invalid knowledge atom '${atom}'`,
+            );
+          }
+          if (!blockAssessments.has(atom)) {
+            error(
+              "schema-v2-activity-assessment-outside-block",
+              `${id}: activity '${activity.id}' assesses '${atom}' outside block '${block.title}'`,
+            );
+          }
         }
       }
       if (

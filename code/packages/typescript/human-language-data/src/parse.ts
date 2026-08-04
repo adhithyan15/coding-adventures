@@ -6,6 +6,7 @@
 import { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 import { LANGUAGE_SCRIPT, CONTENT_TYPES, hasOwn } from "./constants.js";
 import { canonicalLessonHash } from "./hash.js";
+import { parseLessonActivityValue } from "./activity.js";
 import type {
   Concept,
   Dataset,
@@ -68,6 +69,7 @@ function classifyBlock(title: string): LessonBlockType {
 
 const KNOWLEDGE_DIRECTIVE =
   /^<!--\s*hl-knowledge:\s*introduces=\[([^\]]*)\];\s*assesses=\[([^\]]*)\]\s*-->$/;
+const ACTIVITY_DIRECTIVE = /^<!--\s*hl-activity:\s*(\{.*\})\s*-->$/;
 
 function directiveList(value: string): string[] {
   return value
@@ -76,37 +78,100 @@ function directiveList(value: string): string[] {
     .filter((item) => item !== "");
 }
 
-function parseBlockKnowledge(markdown: string): {
+function parseBlockMetadata(markdown: string): {
   markdown: string;
   knowledge?: LessonBlockKnowledge;
   knowledgeDirectiveError?: string;
+  activities?: LessonBodyBlock["activities"];
+  activityDirectiveErrors?: string[];
 } {
   const lines = markdown.split("\n");
-  const directiveIndexes = lines
+  const knowledgeIndexes = lines
     .map((line, index) => (line.includes("hl-knowledge") ? index : -1))
     .filter((index) => index >= 0);
-  if (directiveIndexes.length === 0) return { markdown };
+  const activityIndexes = lines
+    .map((line, index) => (line.includes("hl-activity") ? index : -1))
+    .filter((index) => index >= 0);
+  if (knowledgeIndexes.length === 0 && activityIndexes.length === 0) return { markdown };
 
   const firstContent = lines.findIndex((line) => line.trim() !== "");
-  const directiveIndex = directiveIndexes[0] ?? -1;
-  const directive = lines[directiveIndex]?.trim() ?? "";
-  const match = KNOWLEDGE_DIRECTIVE.exec(directive);
-  if (directiveIndexes.length !== 1 || directiveIndex !== firstContent || !match) {
-    return {
-      markdown,
-      knowledgeDirectiveError:
-        "expected one first-line '<!-- hl-knowledge: introduces=[...]; assesses=[...] -->' directive",
-    };
+  const knowledgeIndex = knowledgeIndexes[0] ?? -1;
+  const knowledgeDirective = lines[knowledgeIndex]?.trim() ?? "";
+  const knowledgeMatch = KNOWLEDGE_DIRECTIVE.exec(knowledgeDirective);
+  const validKnowledge =
+    knowledgeIndexes.length === 1 && knowledgeIndex === firstContent && knowledgeMatch !== null;
+  const removeIndexes = new Set<number>();
+  let knowledge: LessonBlockKnowledge | undefined;
+  let knowledgeDirectiveError: string | undefined;
+  if (knowledgeIndexes.length > 0) {
+    if (!validKnowledge || !knowledgeMatch) {
+      knowledgeDirectiveError =
+        "expected one first-line '<!-- hl-knowledge: introduces=[...]; assesses=[...] -->' directive";
+    } else {
+      knowledge = {
+        introduces: directiveList(knowledgeMatch[1] ?? ""),
+        assesses: directiveList(knowledgeMatch[2] ?? ""),
+      };
+      removeIndexes.add(knowledgeIndex);
+    }
   }
 
-  lines.splice(directiveIndex, 1);
-  return {
-    markdown: lines.join("\n").replace(/^\n|\n$/g, ""),
-    knowledge: {
-      introduces: directiveList(match[1] ?? ""),
-      assesses: directiveList(match[2] ?? ""),
-    },
+  const activities: NonNullable<LessonBodyBlock["activities"]> = [];
+  const activityDirectiveErrors: string[] = [];
+  if (activityIndexes.length > 0) {
+    const firstDisplayIndex = lines.findIndex((line, index) =>
+      line.trim() !== "" && index !== knowledgeIndex && !activityIndexes.includes(index),
+    );
+    for (const index of activityIndexes) {
+      const positionIsValid =
+        validKnowledge &&
+        index > knowledgeIndex &&
+        (firstDisplayIndex === -1 || index < firstDisplayIndex);
+      if (!positionIsValid) {
+        activityDirectiveErrors.push(
+          "activity directives must follow the first-line hl-knowledge directive before learner copy",
+        );
+        continue;
+      }
+      const directive = lines[index]?.trim() ?? "";
+      const match = ACTIVITY_DIRECTIVE.exec(directive);
+      if (!match) {
+        activityDirectiveErrors.push("expected '<!-- hl-activity: {...} -->'");
+        continue;
+      }
+      let value: unknown;
+      try {
+        value = JSON.parse(match[1] ?? "");
+      } catch {
+        activityDirectiveErrors.push("contains invalid JSON");
+        continue;
+      }
+      const parsed = parseLessonActivityValue(value);
+      if (!parsed.activity) {
+        activityDirectiveErrors.push(parsed.error ?? "contains an invalid activity object");
+        continue;
+      }
+      activities.push(parsed.activity);
+      removeIndexes.add(index);
+    }
+  }
+
+  const result = {
+    markdown: lines
+      .filter((_line, index) => !removeIndexes.has(index))
+      .join("\n")
+      .replace(/^\n|\n$/g, ""),
+    knowledge,
+    knowledgeDirectiveError,
+    activities: activities.length > 0 ? activities : undefined,
+    activityDirectiveErrors:
+      activityDirectiveErrors.length > 0 ? activityDirectiveErrors : undefined,
   };
+  if (result.knowledge === undefined) delete result.knowledge;
+  if (result.knowledgeDirectiveError === undefined) delete result.knowledgeDirectiveError;
+  if (result.activities === undefined) delete result.activities;
+  if (result.activityDirectiveErrors === undefined) delete result.activityDirectiveErrors;
+  return result;
 }
 
 /** Parse level-two lesson sections into the stable HL04 body-block vocabulary. */
@@ -121,14 +186,18 @@ export function parseBodyBlocks(body: string): {
   const blockLines: string[] = [];
   const finish = (): void => {
     if (!current) return;
-    const parsedKnowledge = parseBlockKnowledge(
+    const parsedMetadata = parseBlockMetadata(
       blockLines.join("\n").replace(/^\n|\n$/g, ""),
     );
-    current.markdown = parsedKnowledge.markdown;
-    current.knowledge = parsedKnowledge.knowledge;
-    current.knowledgeDirectiveError = parsedKnowledge.knowledgeDirectiveError;
+    current.markdown = parsedMetadata.markdown;
+    current.knowledge = parsedMetadata.knowledge;
+    current.knowledgeDirectiveError = parsedMetadata.knowledgeDirectiveError;
+    current.activities = parsedMetadata.activities;
+    current.activityDirectiveErrors = parsedMetadata.activityDirectiveErrors;
     if (current.knowledge === undefined) delete current.knowledge;
     if (current.knowledgeDirectiveError === undefined) delete current.knowledgeDirectiveError;
+    if (current.activities === undefined) delete current.activities;
+    if (current.activityDirectiveErrors === undefined) delete current.activityDirectiveErrors;
     blocks.push(current);
     blockLines.length = 0;
   };

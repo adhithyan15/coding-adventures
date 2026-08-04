@@ -30,11 +30,16 @@ at the same shared ability. Script notes come from explicit local script
 extensions and the canonical script data, so Persian and Urdu keep distinct
 identities and no global concept cursor guesses where a script belongs.
 
-Before advancing, the learner starts a **focused check**. Lexical lessons ask
-for one English meaning without showing another language's card; a wrong answer
-reveals feedback and leaves the local frontier unchanged. Grammar, script, and
-other support lessons require the learner to complete the authored final recall
-from memory. One successful check completes exactly the current frontier lesson.
+Before advancing, the learner starts a **focused check**. When a canonical block
+has an `hl-activity` contract, the app uses its authored prompt, normalized answer
+variants, corrective feedback, and response budget without scraping prose or
+showing an answer-bearing summary. Other lexical lessons ask for one English
+meaning. A wrong answer leaves the local frontier unchanged; a correct answer
+shows feedback before the learner continues. The first objective non-lexical
+pilots cover Spanish grammatical gender and punctuation spans. Remaining support
+lessons retain their temporary final-recall confirmation while HL-A01 fills the
+measured contract backlog.
+One successful check completes exactly the current frontier lesson.
 `learnprogress.ts` persists stable lesson IDs independently per language and,
 on load, keeps only the longest valid local prefix. A newly inserted prerequisite
 therefore becomes the frontier instead of being skipped by stale saved state.

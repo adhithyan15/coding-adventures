@@ -88,6 +88,21 @@ describe("toLesson", () => {
     expect(lesson!.headword).toBe("-உக்கு");
     expect(lesson!.id).toBe("TA-C06-dative-ukku");
   });
+
+  it("carries compiled block activities without scraping lesson prose", () => {
+    const source = SPANISH.replace("# body", `## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-FUTURE] -->
+<!-- hl-activity: {"id":"ES-C17-futuro-recall","kind":"text","assesses":["ES-GRAMMAR-FUTURE"],"prompt":"Type the answer.","answer":"future","accepted":[],"feedback":{"correct":"Right.","incorrect":"Try again."},"response_seconds":8} -->
+
+Recall it.`);
+    const lesson = toLesson(parseLesson(source, "spanish"));
+    expect(lesson!.activities).toHaveLength(1);
+    expect(lesson!.activities![0]).toMatchObject({
+      id: "ES-C17-futuro-recall",
+      acceptedResponses: ["future"],
+      blockType: "recall",
+    });
+  });
 });
 
 describe("loadLessons", () => {
@@ -143,6 +158,7 @@ export function lesson(over: Partial<Lesson> & { id: string }): Lesson {
     body: "",
     estMinutes: 5,
     ...over,
+    activities: over.activities ?? [],
   };
 }
 

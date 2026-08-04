@@ -472,6 +472,13 @@ body {
 .focused-check__input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .focused-check__feedback { margin: 10px 0; font-weight: 650; line-height: 1.5; }
 .focused-check__feedback.no { color: #c53030; }
+.focused-check__feedback.yes { color: #247a43; }
+.focused-check__budget {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin: -2px 0 8px;
+}
 .focused-check__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .focused-check__secondary {
   margin-top: 12px;

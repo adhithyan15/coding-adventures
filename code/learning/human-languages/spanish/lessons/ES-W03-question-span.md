@@ -60,6 +60,7 @@ exactly where to begin and end a change in spoken melody.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-SCRIPT-INVERTED-QUESTION, ES-SCRIPT-INVERTED-EXCLAMATION] -->
+<!-- hl-activity: {"id":"ES-W03-question-span-roberto-outside","kind":"text","assesses":["ES-ORTHOGRAPHY-PUNCTUATION-SPAN"],"prompt":"In 'Roberto, ¿cómo estás?', is Roberto inside the question?","answer":"no","accepted":["no it is not","it is not"],"feedback":{"correct":"Correct: Roberto is outside the question; ¿ begins where the questioning voice begins.","incorrect":"No. Roberto is outside the question because the inverted mark comes after the name."},"response_seconds":8} -->
 
 [PAUSE 3s] In **Roberto, ¿cómo estás?**, is **Roberto** inside the
 question? (**No.**) Where does the inverted mark go? (**At the start of the

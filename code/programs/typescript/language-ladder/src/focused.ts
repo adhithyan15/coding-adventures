@@ -1,15 +1,33 @@
 // Pure focused-retrieval checks used before a lesson joins mixed review.
 
 import type { Lesson } from "./lessons.ts";
+import {
+  activityAnswerIsCorrect,
+} from "@coding-adventures/human-language-data/src/activity.ts";
+import type { CompiledLessonActivity } from "@coding-adventures/human-language-data/src/types.ts";
+
+export { activityAnswerIsCorrect };
 
 const MEANING_CHECK_TYPES = new Set(["word", "phrase", "new"]);
 
-export type FocusedCheckKind = "meaning" | "self-check";
+export type FocusedCheckKind = "activity" | "meaning" | "self-check";
 
-export function focusedCheckKind(lesson: Pick<Lesson, "type" | "gloss">): FocusedCheckKind {
+export function focusedCheckKind(
+  lesson: Pick<Lesson, "type" | "gloss"> & Partial<Pick<Lesson, "activities">>,
+): FocusedCheckKind {
+  if ((lesson.activities?.length ?? 0) > 0) return "activity";
   return MEANING_CHECK_TYPES.has(lesson.type) && lesson.gloss.trim() !== ""
     ? "meaning"
     : "self-check";
+}
+
+/** Prefer the authored final recall; fall back to the last typed activity. */
+export function focusedActivity(
+  lesson: Partial<Pick<Lesson, "activities">>,
+): CompiledLessonActivity | undefined {
+  const activities = lesson.activities ?? [];
+  const recalls = activities.filter((activity) => activity.blockType === "recall");
+  return recalls[recalls.length - 1] ?? activities[activities.length - 1];
 }
 
 export function normalizeFocusedAnswer(value: string): string {

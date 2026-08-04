@@ -2,6 +2,19 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — typed objective focused activities
+
+- Load compiled `hl-activity` contracts from the shared lesson AST and prefer
+  their authored prompt, canonical answer, accepted variants, feedback, and
+  response budget over lexical inference or self-confirmation.
+- Hide answer-bearing lesson summaries while an authored activity is active,
+  show corrective feedback without advancing after a wrong answer, and require
+  an explicit continue after correct feedback before completing that language's
+  frontier.
+- Keep both knowledge and activity metadata out of the readable lesson view;
+  Spanish grammatical gender and punctuation-span lessons are the first
+  objective non-lexical pilots.
+
 ### Changed — independent local frontiers and focused-before-mixed review
 
 - Replace the global concept cursor and unrestricted jump controls with one
@@ -10,9 +23,10 @@
 - Persist completed prefixes by stable lesson id independently per language;
   corrupt, unknown, out-of-order, and stale saved ids fail closed at the first
   missing local prerequisite.
-- Require a focused check before advancing: objective English-meaning retrieval
-  for lexical lessons and authored final-recall confirmation for script,
-  grammar, and other support lessons. Wrong answers do not advance.
+- Require a focused check before advancing: compiled activities when authored,
+  objective English-meaning retrieval for other lexical lessons, and temporary
+  final-recall confirmation for remaining support lessons. Wrong answers do not
+  advance.
 - Build mixed SRS review only from independently passed shared lessons and wait
   for two visually distinct eligible answers, preventing unseen lessons and
   identical one-option quizzes from entering the pool.

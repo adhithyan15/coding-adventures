@@ -9,6 +9,15 @@ export * from "./constants.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export { parseBodyBlocks, parseLesson, buildDataset, type ParsedLesson } from "./parse.js";
 export {
+  parseLessonActivityValue,
+  normalizeActivityResponse,
+  activityContractErrors,
+  compileLessonActivity,
+  compileLessonActivities,
+  activityAnswerIsCorrect,
+  type ParsedActivityValue,
+} from "./activity.js";
+export {
   fnv1a64,
   canonicalLessonSource,
   canonicalLessonHash,

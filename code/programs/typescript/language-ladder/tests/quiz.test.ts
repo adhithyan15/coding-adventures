@@ -19,6 +19,7 @@ function L(language: string, concept: string, id: string, chapter = 1): Lesson {
     script: language,
     etymologyHook: "",
     body: "",
+    activities: [],
     estMinutes: 5,
   };
 }
