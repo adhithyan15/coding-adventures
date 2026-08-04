@@ -12,15 +12,15 @@
   },
   "summary": {
     "registeredTracks": 20,
-    "totalLessons": 1066,
+    "totalLessons": 1076,
     "authoredBooks": 20,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
-    "legacySchemaTracks": 2,
-    "mixedSchemaTracks": 17,
+    "legacySchemaTracks": 0,
+    "mixedSchemaTracks": 19,
     "version2SchemaTracks": 1
   },
   "duration": {
@@ -1418,11 +1418,13 @@
         "hasBook": true,
         "lessonChapters": [
           1,
-          2
+          2,
+          3
         ],
         "bookChapters": [
           1,
-          2
+          2,
+          3
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1433,11 +1435,13 @@
         "hasBook": true,
         "lessonChapters": [
           1,
-          2
+          2,
+          3
         ],
         "bookChapters": [
           1,
-          2
+          2,
+          3
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -1610,18 +1614,20 @@
       },
       {
         "language": "persian",
-        "status": "legacy",
-        "lessonCount": 5,
+        "status": "mixed",
+        "lessonCount": 10,
         "versions": {
-          "1": 5
+          "1": 4,
+          "2": 6
         }
       },
       {
         "language": "urdu",
-        "status": "legacy",
-        "lessonCount": 5,
+        "status": "mixed",
+        "lessonCount": 10,
         "versions": {
-          "1": 5
+          "1": 4,
+          "2": 6
         }
       }
     ]
