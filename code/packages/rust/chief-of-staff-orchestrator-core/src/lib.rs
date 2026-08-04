@@ -239,6 +239,52 @@ where
             .map_err(OrchestratorCoreError::Registry)
     }
 
+    /// Atomically activate new package identity for a stopped, inactive host.
+    ///
+    /// The stable host name is retained, cached observation is reset, and the
+    /// requested post-reload desired state is written in the same revision-CAS
+    /// transaction. A running replacement is started by the next reconciliation
+    /// tick; this operation never overlaps old and new host processes.
+    pub fn reload_host(
+        &mut self,
+        registration: HostRegistration,
+        desired_state: DesiredState,
+    ) -> Result<LoadedHost, OrchestratorCoreError<S::Error, A::Error>> {
+        let host_name = registration.host_name().clone();
+        let registry = ServiceRegistry::new(self.backend.as_ref());
+        let loaded = registry
+            .load(&host_name)
+            .map_err(OrchestratorCoreError::Registry)?
+            .ok_or_else(|| {
+                OrchestratorCoreError::Registry(RegistryError::HostNotFound(host_name.clone()))
+            })?;
+        if loaded.entry().registration() == &registration
+            && loaded.entry().desired_state() == desired_state
+        {
+            return Ok(loaded);
+        }
+        if loaded.entry().desired_state() != DesiredState::Stopped {
+            return Err(OrchestratorCoreError::HostDesiredRunning(host_name));
+        }
+        let authority = self
+            .supervisor
+            .inspect(loaded.entry().registration())
+            .map_err(|source| OrchestratorCoreError::Supervisor {
+                host_name: host_name.clone(),
+                source,
+            })?;
+        if matches!(
+            authority,
+            SupervisorObservation::Instance(ref instance)
+                if !matches!(instance.phase(), SupervisorPhase::Exited { .. })
+        ) {
+            return Err(OrchestratorCoreError::HostStillActive(host_name));
+        }
+        registry
+            .replace_stopped_registration(&loaded, registration, desired_state)
+            .map_err(OrchestratorCoreError::Registry)
+    }
+
     /// Sample time once and perform one stable-order bounded reconciliation tick.
     pub fn reconcile_once(
         &mut self,
@@ -666,6 +712,106 @@ mod tests {
             missing,
             OrchestratorCoreError::Registry(RegistryError::HostNotFound(_))
         ));
+    }
+
+    #[test]
+    fn reload_atomically_replaces_inactive_package_and_resumes_on_next_tick() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let supervisor = FakeSupervisor::default();
+        let state = Arc::clone(&supervisor.0);
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let mut core = core(
+            Arc::clone(&backend),
+            supervisor,
+            FakeAuthorizer::allowing(events),
+            Arc::new(TestClock::new([100])),
+        );
+        core.register_host(registration("agent-host", 1), DesiredState::Stopped)
+            .expect("register stopped host");
+        let replacement = registration("agent-host", 2);
+        let reloaded = core
+            .reload_host(replacement.clone(), DesiredState::Running)
+            .expect("reload inactive host");
+        assert_eq!(reloaded.entry().registration(), &replacement);
+        assert_eq!(reloaded.entry().desired_state(), DesiredState::Running);
+        assert_eq!(
+            reloaded.entry().observation().status(),
+            &chief_of_staff_service_registry::HostStatus::Stopped
+        );
+        state
+            .lock()
+            .expect("supervisor mutex poisoned")
+            .fail_inspect = true;
+        assert_eq!(
+            core.reload_host(replacement, DesiredState::Running)
+                .expect("idempotent replay"),
+            reloaded
+        );
+        state
+            .lock()
+            .expect("supervisor mutex poisoned")
+            .fail_inspect = false;
+        assert_eq!(
+            core.reconcile_once().expect("start replacement").outcomes()[0].action(),
+            ReconcileAction::Started
+        );
+        assert_eq!(
+            state.lock().expect("supervisor mutex poisoned").starts,
+            ["agent-host"]
+        );
+    }
+
+    #[test]
+    fn reload_refuses_running_intent_or_live_supervisor_authority() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let supervisor = FakeSupervisor::default();
+        let state = Arc::clone(&supervisor.0);
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let mut core = core(
+            Arc::clone(&backend),
+            supervisor,
+            FakeAuthorizer::allowing(events),
+            Arc::new(TestClock::new([])),
+        );
+        let old = registration("agent-host", 1);
+        core.register_host(old.clone(), DesiredState::Running)
+            .expect("register running host");
+        assert!(matches!(
+            core.reload_host(registration("agent-host", 2), DesiredState::Running),
+            Err(OrchestratorCoreError::HostDesiredRunning(_))
+        ));
+        core.set_desired_state(old.host_name(), DesiredState::Stopped)
+            .expect("request stop");
+        state
+            .lock()
+            .expect("supervisor mutex poisoned")
+            .observations
+            .insert(
+                "agent-host".to_string(),
+                SupervisorObservation::running([1; 32], 17, 100, 101, channel_id(4))
+                    .expect("valid running observation"),
+            );
+        assert!(matches!(
+            core.reload_host(registration("agent-host", 2), DesiredState::Running),
+            Err(OrchestratorCoreError::HostStillActive(_))
+        ));
+        state
+            .lock()
+            .expect("supervisor mutex poisoned")
+            .observations
+            .insert(
+                "agent-host".to_string(),
+                SupervisorObservation::exited([1; 32], Some(0), Some(100), Some(101))
+                    .expect("valid exited observation"),
+            );
+        assert_eq!(
+            core.reload_host(registration("agent-host", 2), DesiredState::Stopped)
+                .expect("reload exited host")
+                .entry()
+                .registration()
+                .package_hash(),
+            &[2; 32]
+        );
     }
 
     #[test]

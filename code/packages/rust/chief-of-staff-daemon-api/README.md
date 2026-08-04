@@ -15,6 +15,10 @@ constructs typed host-lifecycle requests, checks response versions and IDs, and
 retains stable remote error codes without exposing remote details through its
 diagnostic display.
 
+`reload_host` is separately authorized from registration. It can atomically
+replace package identity only after stopped durable intent and fresh inactive
+supervisor evidence; a running replacement is launched by later reconciliation.
+
 `DaemonApi::reconcile_once` is the local scheduler boundary. It runs convergence
 through the same serialized control plane as authenticated requests without
 pretending that the daemon process is a remote session.
