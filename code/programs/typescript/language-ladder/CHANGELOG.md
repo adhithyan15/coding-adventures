@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — cross-language objective focused checks
+
+- Replace temporary confirmation with authored retrieval in one ready lesson
+  for each of 15 tracks that has schema-v2 non-lexical activity debt, covering
+  script, grammar, etymology, culture, and cumulative practice.
+- Expand objective non-lexical coverage from 2 to 17 of 113 mapped lessons;
+  96 remain, including 18 legacy lessons that require schema-v2 migration first.
+
 ### Changed — typed objective focused activities
 
 - Load compiled `hl-activity` contracts from the shared lesson AST and prefer
@@ -12,8 +20,8 @@
   an explicit continue after correct feedback before completing that language's
   frontier.
 - Keep both knowledge and activity metadata out of the readable lesson view;
-  Spanish grammatical gender and punctuation-span lessons are the first
-  objective non-lexical pilots.
+  Spanish grammatical gender and punctuation-span lessons establish the
+  objective non-lexical contract now reused across 15 tracks.
 
 ### Changed — independent local frontiers and focused-before-mixed review
 
