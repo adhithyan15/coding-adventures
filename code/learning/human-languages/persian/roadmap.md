@@ -27,9 +27,19 @@ The schema-v2 chain adds respectful/familiar register, Persian **چ**, the
 *khosh + vaqt + -am* etymology only when each expression needs it. Objective
 focused retrieval comes before the exchange enters mixed-language review.
 
-## Chapter 4 — People and simple identity *(planned)*
+## Chapter 4 — Ask about wellbeing *(authored)*
 
-- **man hastam** and the present copula endings;
+**حال** *hâl* → **چطور** *chetor* → **حال شما چطور است؟**
+*hâl-e shomâ chetor ast?* → **خوب** *khub* → **خوبم، ممنون**
+*khubam, mamnun* → one cumulative exchange. The sequence reuses ezafe before
+adding a careful respectful question, contrasts inherited and borrowed lexical
+layers, and introduces only the first-person copula **-am** needed for the
+answer. Colloquial contraction is labelled for recognition but not required for
+production yet.
+
+## Chapter 5 — People and simple identity *(planned)*
+
+- **man hastam** and the next present-copula forms one at a time;
 - careful written forms versus colloquial Iranian Persian;
 - one noun at a time with ezafe reuse;
 - Persian additions **پ چ ژ گ** introduced only when a word needs them.

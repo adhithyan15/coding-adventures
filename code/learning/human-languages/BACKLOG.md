@@ -94,7 +94,7 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 | HL-I02 | Queued | Update the human-language data package beyond the vulnerable PostCSS 8.5.19 transitive development dependency. | A clean install reports GHSA-fxqj-rqcc-2cmp through Vitest/Vite; PostCSS 8.5.25 is available, but this development-only moderate finding remains behind reader-facing book and app gaps. |
 | HL-I03 | Queued | Derive the top-level track progress table from canonical curriculum and book-generation data. | The hand-maintained table can lag shipped chapters after a generated-book migration; a checked or generated summary should keep every prior language visible without repeating stale progress claims. |
 | HL-I04 | Complete (#9908) | Restore exact-main full CI after `perl/wasm-module-encoder` exposed undeclared local test dependencies. | Its `cpanfile` and `Makefile.PL` declare every local package injected by `BUILD`; clean full-build metadata validation and focused Perl tests pass. |
-| HL-I05 | Complete in this PR | Make the repository's Lua bootstrap resilient to a temporary lua.org connection outage. | All CI platforms install pinned Lua 5.4.7 through an OS-specific cache or checksum-verified byte-identical Debian/Ubuntu source fallback without weakening the Windows MSVC ordering or silently skipping Lua tests. |
+| HL-I05 | Complete (#9910) | Make the repository's Lua bootstrap resilient to a temporary lua.org connection outage. | All CI platforms install pinned Lua 5.4.7 through an OS-specific cache or checksum-verified byte-identical Debian/Ubuntu source fallback without weakening the Windows MSVC ordering or silently skipping Lua tests. |
 | HL-B14 | Complete (#9728) | Publish Italian Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Forty-nine schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
 | HL-B15 | Complete (#9735) | Remove Italian's LaTeX layout and Unicode bookmark warnings. | The forced 104-page build now has zero missing glyphs, overfull or underfull boxes, duplicate destinations, Hyperref warnings, or LaTeX warnings. |
 | HL-B16 | Complete (#9744) | Publish Portuguese Chapters 2–17 from their canonical lessons rather than hand-copying sixteen book chapters. | Fifty schema-v2 lessons now generate sixteen chapters whose source hashes are independently verified against the Language Ladder corpus. |
@@ -137,8 +137,8 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
 
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
-| HL-E01 | Complete in this PR | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
-| HL-E02 | Next | Author Persian and Urdu Chapter 4 through `SPINE-CHECK-WELLBEING` and reconcile the older identity-first roadmap. | Both tracks gain a gentle wellbeing exchange before identity grammar, with language-specific register/script extensions, exact review ledgers, objective practice, and generated book chapters from the canonical AST. |
+| HL-E01 | Complete (#9906) | Author Persian and Urdu Chapter 3 through the rest of `SPINE-EXCHANGE-NAMES`. | Each track gains prerequisite-safe, schema-v2 micro-lessons for the name question, its formality distinction, and a meeting response; realization maps, objective activities, generated book chapters, and Language Ladder consume the same AST. |
+| HL-E02 | Complete in this PR | Author Persian and Urdu Chapter 4 through `SPINE-CHECK-WELLBEING` and reconcile the older identity-first roadmap. | Both tracks gain a gentle wellbeing exchange before identity grammar, with language-specific register/script extensions, exact review ledgers, objective practice, and generated book chapters from the canonical AST. |
 
 - Expand every track toward B1 using the gap report to choose the next missing
   can-do, skill, mode, register, or realization.
@@ -1714,6 +1714,28 @@ the next migrations; it deliberately does not fail CI on already-recorded debt.
   roadmaps currently plan identity grammar for Chapter 4. HL-E02 therefore
   reconciles that order explicitly rather than silently letting the two tracks
   drift from the shared spine.
+
+## Findings from HL-E02
+
+- Persian and Urdu each add six prerequisite-safe Chapter 4 micro-lessons and
+  now reach the same shared wellbeing can-do through sixteen canonical lessons.
+  The spine stays shared while the local teaching order differs where grammar
+  requires it.
+- Persian reuses ezafe in **hâl-e shomâ**, teaches one reliable careful question,
+  and introduces only attached first-person **-am** in **khubam**. Colloquial
+  contraction is visible for recognition but remains outside assessed production.
+- Urdu gives **kaise/kaisī** agreement its own step before honorific
+  **āp ... haiṅ**, then separates **maiṅ ... hūṅ** from **ṭhīk**. The Hindi
+  bridge appears only after the Urdu form is independently readable and
+  retrievable.
+- Every new lesson carries an objective activity, a declared sub-five-minute
+  budget, and closed knowledge prerequisites. Exact review ledgers extend from
+  S25 through S31 at N+1, N+3, N+7, and N+15.
+- The exact-main verification after HL-I04 found a repeated external Lua setup
+  outage: every matrix shard received `ECONNREFUSED` from the Lua download host
+  on both the initial attempt and the failed-job rerun. HL-I05 records a
+  cache/fallback hardening item; the consolidated 20-book workflow itself was
+  green at the same revision.
 
 ## Completed foundations
 

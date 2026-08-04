@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 — 2026-08-04
+
+- Added six schema-v2 Chapter 4 micro-lessons for *hâl*, *chetor*, the careful
+  respectful wellbeing question, *khub*, compact *khubam*, and cumulative
+  practice.
+- Reused ezafe before introducing only the first-person **-am** copula needed
+  for the reply; colloquial contraction stays a labelled recognition preview.
+- Extended the sound-id reference and exact N+1/N+3/N+7/N+15 ledger through
+  S31, with objective activities and a generated four-chapter book.
+
 ## 0.4.0 — 2026-08-03
 
 - Added five schema-v2 Chapter 3 micro-lessons for respectful/familiar “you,”

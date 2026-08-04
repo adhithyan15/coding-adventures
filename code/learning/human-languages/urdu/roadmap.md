@@ -27,12 +27,21 @@ job of **ی**, fixed **āp kā nām**, the Urdu question mark, and a gently chun
 meeting response. Every objective retrieval happens in Urdu script before the
 lesson can enter mixed Urdu/Hindi or Urdu/Persian review.
 
-## Chapter 4 — People and simple identity *(planned)*
+## Chapter 4 — Ask about wellbeing *(authored)*
 
-- **میں ... ہوں** *maĩ ... hū̃* — I am ...;
-- masculine and feminine agreement one contrast at a time;
-- **ہے** *hai* versus **ہوں** *hū̃* without a full paradigm dump;
-- retroflex and aspirated letters only when the next useful word needs them.
+**کیسے / کیسی** *kaise / kaisī* → **آپ کیسے ہیں؟ / آپ کیسی ہیں؟**
+*āp kaise / kaisī haiṅ?* → **میں ... ہوں** *maiṅ ... hūṅ* → **ٹھیک** *ṭhīk* →
+**میں ٹھیک ہوں، شکریہ** *maiṅ ṭhīk hūṅ, shukriyā* → one cumulative exchange.
+The shared wellbeing can-do gets an Urdu-specific extra step for addressee
+agreement, an explicit **āp ... haiṅ** honorific frame, and an Urdu/Hindi script
+bridge only after **ٹھیک** is independently readable.
+
+## Chapter 5 — People and simple identity *(planned)*
+
+- extend **میں ... ہوں** *maiṅ ... hūṅ* from state to identity;
+- add further masculine and feminine agreement one contrast at a time;
+- contrast **ہے** *hai*, **ہیں** *haiṅ*, and **ہوں** *hūṅ* without a paradigm dump;
+- introduce more retroflex and aspirated letters only when useful words need them.
 
 ## Part II onward *(sketch)*
 
