@@ -298,6 +298,16 @@ MUST:
 - report malformed metadata with stable diagnostics instead of silently
   inventing a partial graph.
 
+For Go `go.mod` manifests, dependency candidates come only from module paths in
+single-line `require` directives and entries inside `require ( ... )` blocks.
+The module path is matched case-insensitively against known Go module aliases;
+the version and an optional `// indirect` annotation do not form part of the
+identity. Resolvers ignore the current module declaration, Go/toolchain
+versions, comments, `replace`, `exclude`, and `retract` directives, and every
+other field or block. In particular, a local `replace` target without a
+corresponding `require` entry changes module lookup but does not create a build
+graph edge.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

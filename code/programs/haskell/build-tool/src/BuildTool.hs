@@ -810,6 +810,7 @@ parseBuildToolDependencyLine line =
 readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | packageLanguage pkg == "go" = readGoDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "perl" = readPerlDependencyTokens pkg
     | packageLanguage pkg == "python" = readPythonDependencyTokens pkg
@@ -817,6 +818,39 @@ readManifestTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readGoDependencyTokens :: Package -> IO [String]
+readGoDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "go.mod"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (goDependencyTokens contents)
+
+goDependencyTokens :: String -> [String]
+goDependencyTokens = nub . collect False . lines
+  where
+    collect _ [] = []
+    collect inside (rawLine : rest) =
+        let fields = words (trim (stripGoComment rawLine))
+         in if inside
+                then
+                    case fields of
+                        [")"] -> collect False rest
+                        modulePath : _ -> map toLower modulePath : collect True rest
+                        [] -> collect True rest
+                else
+                    case fields of
+                        "require" : "(" : _ -> collect True rest
+                        "require" : modulePath : _ -> map toLower modulePath : collect False rest
+                        _ -> collect False rest
+
+stripGoComment :: String -> String
+stripGoComment [] = []
+stripGoComment ('/' : '/' : _) = []
+stripGoComment (character : rest) = character : stripGoComment rest
 
 readCabalDependencyTokens :: Package -> IO [String]
 readCabalDependencyTokens pkg = do

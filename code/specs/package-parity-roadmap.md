@@ -106,8 +106,8 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated from `6042102f` after the Swift resolver
-branch rebased onto the latest main. The inventory contains 1,263 normalized
+working inventory was regenerated from `21b96a50` after the Go resolver branch
+rebased onto the latest main. The inventory contains 1,263 normalized
 implementation identities across 4,418 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
@@ -485,6 +485,27 @@ native-authority review for directory enumeration, canonicalization, sealed
 file reads, keyring verification, and host-path policy. The quick leverage pass
 keeps the already implemented Swift resolver repair first; neither dependent
 discovery item is eligible to displace it.
+
+Guarded squash auto-completion merged the Swift resolver PR #9878 at exact head
+`eb36800f9b` as `4ad79aa054` after all 17 exact-head checks were terminal and
+two consecutive mergeability readings were clean. The full post-merge resolver
+audit confirms Swift at 164 packages and 179 edges on both engines with zero
+drift, then selects Go as the largest remaining clean false-only slice: 302
+packages, 962 Haskell edges versus 936 canonical Go edges, 26 Haskell-only
+edges, and zero Go-only edges. Elixir retains 8/0; C# and F# retain 47/178 and
+39/178; TypeScript retains 148/948; Java and Kotlin retain 4/24 and 9/13; and
+Dart retains 0/67. Go therefore removes the highest coherent false-cycle risk
+without mixing alias discovery, missing-edge repair, .NET/JVM manifest
+semantics, or separately owned BUILD debt. The intervening catalog-reload,
+JavaScript shift, and Tamil commits add no package identity, collision, or
+priority change.
+
+The later `02626bd6` refresh is also identity-neutral and collision-clean. Its
+Chief changes expand the existing agent-manifest and skill-parser portable
+owners with schema-v2 channel-version maps, deterministic serialization,
+complete positive version validation, and fail-closed writer/reader
+compatibility. They require no new backlog identity and do not displace the
+already implemented Go resolver repair.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
