@@ -22,15 +22,18 @@ JSON-lines stdio channel. Neither direction introduces a second tool-routing
 policy.
 
 Supervised activation is now verified-only. `verify_agent_package` walks the
-sealed package without following symlinks, requires `manifest.json`, `launch.sh`,
-and at least one `code/` file, and hashes every signed file in sorted path order.
+sealed package without following symlinks and hashes every signed file in sorted
+path order. Deno packages require `manifest.json`, canonical `launch.sh`, and
+`code/agent_runtime.ts`. Zero-code Level 1 packages instead contain exactly
+`manifest.json` and `SKILL.md`; executable or auxiliary files are rejected.
 Each path and payload is length-framed under the `chief-agent-package-v1` domain
 before SHA-256, preventing concatenation ambiguity. `SIGNATURE` is 64 raw
 Ed25519 bytes over that digest, while `PUBKEY_ID` selects a reviewed key from the
 orchestrator keyring. Production, developer, and third-party keys carry explicit
 privilege ceilings; developer keys are structurally capped at Tier 1.
 The verified result retains the exact authenticated manifest bytes so discovery
-does not re-read policy through a verify/read race.
+does not re-read policy through a verify/read race. For Level 1 it also retains
+the authenticated skill bytes for the same reason.
 
 `spawn_deno_verified` closes the next launch boundary. It re-verifies the sealed
 package immediately before creating processes, requires the signed

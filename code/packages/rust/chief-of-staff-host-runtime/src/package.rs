@@ -4,12 +4,14 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 use std::fs;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 
 const SIGNATURE_FILE: &str = "SIGNATURE";
 const KEY_ID_FILE: &str = "PUBKEY_ID";
 const HASH_DOMAIN: &[u8] = b"chief-agent-package-v1\0";
 const DENO_ENTRYPOINT: &str = "code/agent_runtime.ts";
+const SKILL_ENTRYPOINT: &str = "SKILL.md";
 const DENO_FLAGS: &[&str] = &[
     "run",
     "--quiet",
@@ -57,6 +59,15 @@ impl DenoLaunchPlan {
         fs::write(package_path.join("launch.sh"), Self::launch_script())
             .map_err(PackageVerificationError::Io)
     }
+}
+
+/// Authenticated runtime kind selected by a sealed agent package.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AgentPackageRuntime {
+    /// A deny-all Deno subprocess using the canonical trusted launch plan.
+    Deno,
+    /// A zero-code Level 1 skill executed by the trusted in-process runtime.
+    Skill,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -126,6 +137,8 @@ pub struct VerifiedAgentPackage {
     pub(crate) key_id: String,
     pub(crate) key_type: PackageKeyType,
     pub(crate) maximum_tier: PrivilegeTier,
+    pub(crate) runtime: AgentPackageRuntime,
+    pub(crate) skill_source_bytes: Option<Vec<u8>>,
 }
 
 impl VerifiedAgentPackage {
@@ -153,6 +166,16 @@ impl VerifiedAgentPackage {
     pub fn maximum_tier(&self) -> PrivilegeTier {
         self.maximum_tier
     }
+
+    /// Return the authenticated runtime kind selected by the package layout.
+    pub fn runtime(&self) -> AgentPackageRuntime {
+        self.runtime
+    }
+
+    /// Borrow the exact authenticated `SKILL.md` bytes for a Level 1 package.
+    pub fn skill_source_bytes(&self) -> Option<&[u8]> {
+        self.skill_source_bytes.as_deref()
+    }
 }
 
 pub fn verify_agent_package(
@@ -177,23 +200,8 @@ pub fn verify_agent_package(
         .try_into()
         .map_err(|_| PackageVerificationError::InvalidSignatureLength)?;
     let entries = package_contents(package_path)?;
-    let (digest, files) = hash_contents(&entries);
-    for required in ["manifest.json", "launch.sh"] {
-        if !files.contains(required) {
-            return Err(PackageVerificationError::MissingRequiredFile(required));
-        }
-    }
-    if !files.iter().any(|path| path.starts_with("code/")) {
-        return Err(PackageVerificationError::MissingCode);
-    }
-    if !files.contains(DENO_ENTRYPOINT) {
-        return Err(PackageVerificationError::MissingDenoEntrypoint);
-    }
-    let launch_script = file_bytes(&entries, "launch.sh")
-        .expect("required launch script must be present in collected package files");
-    if launch_script != DenoLaunchPlan::launch_script().as_bytes() {
-        return Err(PackageVerificationError::UntrustedLaunchScript);
-    }
+    let (digest, _) = hash_contents(&entries);
+    let (runtime, skill_source_bytes) = validate_package_layout(&entries)?;
     if !coding_adventures_ed25519::verify(&digest, &signature, &key.public_key) {
         return Err(PackageVerificationError::SignatureMismatch);
     }
@@ -206,7 +214,68 @@ pub fn verify_agent_package(
         key_id,
         key_type: key.key_type,
         maximum_tier: key.maximum_tier,
+        runtime,
+        skill_source_bytes,
     })
+}
+
+/// Validate and sign one already-populated package directory.
+///
+/// Authentication metadata is written only after the unsigned contents match
+/// one supported runtime layout. Existing authentication files are never
+/// overwritten.
+pub fn sign_agent_package(
+    package_path: &Path,
+    key_id: &str,
+    secret_key: &[u8; 64],
+) -> Result<[u8; 32], PackageVerificationError> {
+    validate_key_id(key_id)?;
+    let metadata = fs::symlink_metadata(package_path).map_err(PackageVerificationError::Io)?;
+    if !metadata.is_dir() || metadata.file_type().is_symlink() {
+        return Err(PackageVerificationError::InvalidPackageRoot);
+    }
+    for authentication_file in [KEY_ID_FILE, SIGNATURE_FILE] {
+        match fs::symlink_metadata(package_path.join(authentication_file)) {
+            Ok(_) => return Err(PackageVerificationError::AlreadySigned),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => return Err(PackageVerificationError::Io(error)),
+        }
+    }
+    let entries = package_contents(package_path)?;
+    validate_package_layout(&entries)?;
+    let (digest, _) = hash_contents(&entries);
+    let signature = coding_adventures_ed25519::sign(&digest, secret_key);
+    write_new_authentication_file(package_path.join(SIGNATURE_FILE), &signature)?;
+    if let Err(error) =
+        write_new_authentication_file(package_path.join(KEY_ID_FILE), key_id.as_bytes())
+    {
+        let _ = fs::remove_file(package_path.join(SIGNATURE_FILE));
+        return Err(error);
+    }
+    Ok(digest)
+}
+
+fn write_new_authentication_file(
+    path: PathBuf,
+    bytes: &[u8],
+) -> Result<(), PackageVerificationError> {
+    let mut file = match fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&path)
+    {
+        Ok(file) => file,
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {
+            return Err(PackageVerificationError::AlreadySigned);
+        }
+        Err(error) => return Err(PackageVerificationError::Io(error)),
+    };
+    if let Err(error) = file.write_all(bytes) {
+        drop(file);
+        let _ = fs::remove_file(path);
+        return Err(PackageVerificationError::Io(error));
+    }
+    Ok(())
 }
 
 pub fn hash_package_contents(
@@ -237,6 +306,46 @@ fn hash_contents(entries: &[(String, Vec<u8>)]) -> ([u8; 32], BTreeSet<String>) 
         hasher.update(bytes);
     }
     (hasher.digest(), paths)
+}
+
+fn validate_package_layout(
+    entries: &[(String, Vec<u8>)],
+) -> Result<(AgentPackageRuntime, Option<Vec<u8>>), PackageVerificationError> {
+    let files = entries
+        .iter()
+        .map(|(path, _)| path.as_str())
+        .collect::<BTreeSet<_>>();
+    if !files.contains("manifest.json") {
+        return Err(PackageVerificationError::MissingRequiredFile(
+            "manifest.json",
+        ));
+    }
+    if let Some(skill_source) = file_bytes(entries, SKILL_ENTRYPOINT) {
+        if let Some(unexpected) = files
+            .iter()
+            .find(|path| !matches!(**path, "manifest.json" | SKILL_ENTRYPOINT))
+        {
+            return Err(PackageVerificationError::UnexpectedSkillPackageFile(
+                (*unexpected).to_string(),
+            ));
+        }
+        return Ok((AgentPackageRuntime::Skill, Some(skill_source.to_vec())));
+    }
+    if !files.contains("launch.sh") {
+        return Err(PackageVerificationError::MissingRequiredFile("launch.sh"));
+    }
+    if !files.iter().any(|path| path.starts_with("code/")) {
+        return Err(PackageVerificationError::MissingCode);
+    }
+    if !files.contains(DENO_ENTRYPOINT) {
+        return Err(PackageVerificationError::MissingDenoEntrypoint);
+    }
+    let launch_script = file_bytes(entries, "launch.sh")
+        .expect("required launch script must be present in collected package files");
+    if launch_script != DenoLaunchPlan::launch_script().as_bytes() {
+        return Err(PackageVerificationError::UntrustedLaunchScript);
+    }
+    Ok((AgentPackageRuntime::Deno, None))
 }
 
 fn file_bytes<'a>(entries: &'a [(String, Vec<u8>)], path: &str) -> Option<&'a [u8]> {
@@ -299,10 +408,12 @@ pub enum PackageVerificationError {
     DeveloperTierTooHigh(PrivilegeTier),
     UntrustedKey(String),
     InvalidSignatureLength,
+    AlreadySigned,
     MissingRequiredFile(&'static str),
     MissingCode,
     MissingDenoEntrypoint,
     UntrustedLaunchScript,
+    UnexpectedSkillPackageFile(String),
     Symlink(PathBuf),
     NonUtf8Path(PathBuf),
     SignatureMismatch,
@@ -320,6 +431,7 @@ impl Display for PackageVerificationError {
             }
             Self::UntrustedKey(key_id) => write!(f, "package key '{key_id}' is not trusted"),
             Self::InvalidSignatureLength => f.write_str("package signature must be 64 raw bytes"),
+            Self::AlreadySigned => f.write_str("agent package authentication files already exist"),
             Self::MissingRequiredFile(path) => write!(f, "agent package is missing '{path}'"),
             Self::MissingCode => f.write_str("agent package must contain at least one code file"),
             Self::MissingDenoEntrypoint => {
@@ -327,6 +439,12 @@ impl Display for PackageVerificationError {
             }
             Self::UntrustedLaunchScript => {
                 f.write_str("agent package launch.sh does not match the trusted deny-all plan")
+            }
+            Self::UnexpectedSkillPackageFile(path) => {
+                write!(
+                    f,
+                    "SKILL.md package contains unexpected signed file '{path}'"
+                )
             }
             Self::Symlink(path) => write!(
                 f,
@@ -374,6 +492,17 @@ mod tests {
         fs::write(path.join(SIGNATURE_FILE), sign(&digest, secret_key)).unwrap();
     }
 
+    fn write_signed_skill_package(path: &Path, key_id: &str, secret_key: &[u8; 64]) {
+        fs::create_dir_all(path).unwrap();
+        fs::write(path.join("manifest.json"), b"{\"runtime\":\"skill\"}").unwrap();
+        fs::write(
+            path.join(SKILL_ENTRYPOINT),
+            b"# Weather\n\nReport friendly forecasts.\n\n## Capabilities needed\n- none\n",
+        )
+        .unwrap();
+        sign_agent_package(path, key_id, secret_key).unwrap();
+    }
+
     #[test]
     fn verifies_signed_package_and_rejects_byte_tampering() {
         let path = package_dir("tamper");
@@ -395,11 +524,60 @@ mod tests {
         let verified = verify_agent_package(&path, &keyring).unwrap();
         assert_eq!(verified.key_id(), "prod-1");
         assert_eq!(verified.key_type(), PackageKeyType::Production);
+        assert_eq!(verified.runtime(), AgentPackageRuntime::Deno);
+        assert_eq!(verified.skill_source_bytes(), None);
         assert_eq!(verified.manifest_bytes(), b"{\"runtime\":\"typescript\"}");
         fs::write(path.join("code/agent.ts"), b"console.log('tampered');\n").unwrap();
         assert!(matches!(
             verify_agent_package(&path, &keyring),
             Err(PackageVerificationError::SignatureMismatch)
+        ));
+        fs::remove_dir_all(path).unwrap();
+    }
+
+    #[test]
+    fn verifies_signed_skill_package_without_a_deno_entrypoint() {
+        let path = package_dir("skill");
+        let (public_key, secret_key) = generate_keypair(&[41; 32]);
+        write_signed_skill_package(&path, "dev-skill", &secret_key);
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "dev-skill",
+                    PackageKeyType::Developer,
+                    public_key,
+                    PrivilegeTier::Tier1,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+
+        let verified = verify_agent_package(&path, &keyring).unwrap();
+        assert_eq!(verified.runtime(), AgentPackageRuntime::Skill);
+        assert!(verified
+            .skill_source_bytes()
+            .unwrap()
+            .starts_with(b"# Weather\n"));
+        assert!(matches!(
+            sign_agent_package(&path, "dev-skill", &secret_key),
+            Err(PackageVerificationError::AlreadySigned)
+        ));
+        fs::remove_dir_all(path).unwrap();
+    }
+
+    #[test]
+    fn skill_package_rejects_any_executable_file() {
+        let path = package_dir("skill-extra-code");
+        fs::create_dir_all(path.join("code")).unwrap();
+        fs::write(path.join("manifest.json"), b"{}").unwrap();
+        fs::write(path.join(SKILL_ENTRYPOINT), b"# Skill\n").unwrap();
+        fs::write(path.join(DENO_ENTRYPOINT), b"console.log('no');\n").unwrap();
+        let (_, secret_key) = generate_keypair(&[43; 32]);
+        assert!(matches!(
+            sign_agent_package(&path, "dev-skill", &secret_key),
+            Err(PackageVerificationError::UnexpectedSkillPackageFile(path))
+                if path == DENO_ENTRYPOINT
         ));
         fs::remove_dir_all(path).unwrap();
     }

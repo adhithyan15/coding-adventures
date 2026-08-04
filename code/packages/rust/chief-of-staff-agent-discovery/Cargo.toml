@@ -12,4 +12,5 @@ chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" 
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 
 [dev-dependencies]
+chief-of-staff-skill-package = { path = "../chief-of-staff-skill-package" }
 coding_adventures_ed25519 = { path = "../ed25519" }

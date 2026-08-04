@@ -5,8 +5,9 @@
 mod package;
 
 pub use package::{
-    hash_package_contents, verify_agent_package, DenoLaunchPlan, PackageKeyType, PackageKeyring,
-    PackageVerificationError, TrustedPackageKey, VerifiedAgentPackage,
+    hash_package_contents, sign_agent_package, verify_agent_package, AgentPackageRuntime,
+    DenoLaunchPlan, PackageKeyType, PackageKeyring, PackageVerificationError, TrustedPackageKey,
+    VerifiedAgentPackage,
 };
 
 use chief_of_staff_tool_api::{
@@ -446,6 +447,12 @@ impl HostProcessSpec {
         package: &VerifiedAgentPackage,
         restart_policy: StdioWorkerRestartPolicy,
     ) -> Result<Self, HostRuntimeError> {
+        if package.runtime() != AgentPackageRuntime::Deno {
+            return Err(HostRuntimeError::PackageRuntimeMismatch {
+                expected: AgentPackageRuntime::Deno,
+                actual: package.runtime(),
+            });
+        }
         let entrypoint = package.path().join(DenoLaunchPlan::entrypoint_relative());
         if !entrypoint.is_file() {
             return Err(HostRuntimeError::MissingDenoEntrypoint(entrypoint));
@@ -959,6 +966,10 @@ pub enum HostRuntimeError {
         maximum: PrivilegeTier,
     },
     PackageVerification(String),
+    PackageRuntimeMismatch {
+        expected: AgentPackageRuntime,
+        actual: AgentPackageRuntime,
+    },
     MissingDenoEntrypoint(std::path::PathBuf),
     InvalidDenoEntrypoint(std::path::PathBuf),
     ToolApi(ToolApiError),
@@ -1051,6 +1062,10 @@ impl Display for HostRuntimeError {
             Self::PackageVerification(message) => {
                 write!(f, "agent package failed launch-time verification: {message}")
             }
+            Self::PackageRuntimeMismatch { expected, actual } => write!(
+                f,
+                "agent package runtime mismatch: expected {expected:?}, found {actual:?}"
+            ),
             Self::MissingDenoEntrypoint(path) => {
                 write!(f, "signed package is missing Deno entrypoint '{}'", path.display())
             }
@@ -1326,6 +1341,40 @@ while (true) {
         (path, keyring)
     }
 
+    fn signed_skill_package() -> (std::path::PathBuf, PackageKeyring) {
+        let path = std::env::temp_dir().join(format!(
+            "chief-skill-package-{}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos(),
+            NEXT_PACKAGE_ID.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir_all(&path).unwrap();
+        std::fs::write(path.join("manifest.json"), b"{}").unwrap();
+        std::fs::write(
+            path.join("SKILL.md"),
+            b"# Weather\n\nReport forecasts.\n\n## Capabilities needed\n- none\n",
+        )
+        .unwrap();
+        let (public_key, secret_key) = generate_keypair(&[29; 32]);
+        sign_agent_package(&path, "dev-skill", &secret_key).unwrap();
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "dev-skill",
+                    PackageKeyType::Developer,
+                    public_key,
+                    PrivilegeTier::Tier1,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        (path, keyring)
+    }
+
     fn signed_deno_agent_package(code: &str) -> (std::path::PathBuf, PackageKeyring) {
         let path = std::env::temp_dir().join(format!(
             "chief-deno-agent-package-{}-{}-{}",
@@ -1468,6 +1517,25 @@ while (true) {
             .last()
             .unwrap()
             .ends_with(expected.last().unwrap()));
+        std::fs::remove_dir_all(package_path).unwrap();
+    }
+
+    #[test]
+    fn deno_launch_rejects_a_verified_skill_runtime() {
+        let (package_path, keyring) = signed_skill_package();
+        let package = verify_agent_package(&package_path, &keyring).unwrap();
+        assert!(matches!(
+            HostProcessSpec::deny_all_deno(
+                "skill_host",
+                "deno",
+                &package,
+                StdioWorkerRestartPolicy::Never,
+            ),
+            Err(HostRuntimeError::PackageRuntimeMismatch {
+                expected: AgentPackageRuntime::Deno,
+                actual: AgentPackageRuntime::Skill,
+            })
+        ));
         std::fs::remove_dir_all(package_path).unwrap();
     }
 
@@ -1667,6 +1735,8 @@ for line in sys.stdin:
             key_id: "dev-1".to_string(),
             key_type: PackageKeyType::Developer,
             maximum_tier: PrivilegeTier::Tier1,
+            runtime: AgentPackageRuntime::Deno,
+            skill_source_bytes: None,
         };
         let runtime = SupervisedOrchestratorRuntime::spawn_verified(
             profile,
@@ -1738,6 +1808,8 @@ for line in sys.stdin:
             key_id: "dev-1".to_string(),
             key_type: PackageKeyType::Developer,
             maximum_tier: PrivilegeTier::Tier1,
+            runtime: AgentPackageRuntime::Deno,
+            skill_source_bytes: None,
         };
         assert!(matches!(
             SupervisedOrchestratorRuntime::spawn_verified(profile, vec![], &package),

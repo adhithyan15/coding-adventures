@@ -10,6 +10,8 @@ use chief_of_staff_channel_crypto::Sequence;
 use chief_of_staff_channel_endpoints::{
     ChannelEndpointError, MessageId, Originator, PublishedMessage, Receiver,
 };
+use chief_of_staff_host_runtime::VerifiedAgentPackage;
+use chief_of_staff_skill_package::{load_verified_skill, SkillPackageError};
 use chief_of_staff_skill_parser::ParsedSkill;
 use llm_gateway::{
     CompletionRequest, CompletionResponse, FinishReason, LlmClient, LlmError, Message,
@@ -108,6 +110,8 @@ pub enum LevelOneRuntimeError {
     Llm(Box<LlmError>),
     /// An injected channel endpoint rejected receive, publish, or acknowledge.
     Channel(ChannelEndpointError),
+    /// A verified package did not contain matching Level 1 instructions and policy.
+    Package(Box<SkillPackageError>),
 }
 
 impl Display for LevelOneRuntimeError {
@@ -118,6 +122,7 @@ impl Display for LevelOneRuntimeError {
             Self::EmptyResponse => formatter.write_str("Level 1 model response is empty"),
             Self::Llm(error) => write!(formatter, "Level 1 model call failed: {error}"),
             Self::Channel(error) => write!(formatter, "Level 1 channel operation failed: {error}"),
+            Self::Package(error) => write!(formatter, "Level 1 package rejected: {error}"),
         }
     }
 }
@@ -133,6 +138,12 @@ impl From<LlmError> for LevelOneRuntimeError {
 impl From<ChannelEndpointError> for LevelOneRuntimeError {
     fn from(error: ChannelEndpointError) -> Self {
         Self::Channel(error)
+    }
+}
+
+impl From<SkillPackageError> for LevelOneRuntimeError {
+    fn from(error: SkillPackageError) -> Self {
+        Self::Package(Box::new(error))
     }
 }
 
@@ -156,6 +167,15 @@ impl<'a> LevelOneSkillRuntime<'a> {
             client,
             config,
         })
+    }
+
+    /// Bind the exact instructions retained by sealed-package verification.
+    pub fn from_verified_package(
+        package: &VerifiedAgentPackage,
+        client: &'a dyn LlmClient,
+        config: LevelOneRuntimeConfig,
+    ) -> Result<Self, LevelOneRuntimeError> {
+        Self::new(load_verified_skill(package)?, client, config)
     }
 
     /// Borrow the parsed skill that supplies instructions and manifest identity.
@@ -238,9 +258,17 @@ mod tests {
     use super::*;
     use chief_of_staff_channel_crypto::{ChannelId, Sequence};
     use chief_of_staff_channel_endpoints::{AgentId, ReceivedMessage};
+    use chief_of_staff_host_runtime::{
+        verify_agent_package, PackageKeyType, PackageKeyring, TrustedPackageKey,
+    };
+    use chief_of_staff_skill_package::build_signed_skill_package;
     use chief_of_staff_skill_parser::parse_skill;
+    use chief_of_staff_tool_api::PrivilegeTier;
+    use coding_adventures_ed25519::generate_keypair;
     use llm_gateway::{MockLlmClient, MockResponse, RequestFingerprint};
     use std::cell::{Cell, RefCell};
+    use std::path::PathBuf;
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     const SKILL: &str = "# Weather Reporter\n\nYou are a friendly weather reporting agent.\n\n## Capabilities needed\n- none\n\n## Output format\nKeep the forecast brief.\n";
     const MODEL: &str = "test-model";
@@ -275,6 +303,17 @@ mod tests {
         ));
         LevelOneSkillRuntime::new(skill, client, LevelOneRuntimeConfig::deterministic(MODEL))
             .unwrap()
+    }
+
+    fn package_dir(label: &str) -> PathBuf {
+        std::env::temp_dir().join(format!(
+            "chief-skill-runtime-{label}-{}-{}",
+            std::process::id(),
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
     }
 
     struct FakeReceiver {
@@ -389,6 +428,45 @@ mod tests {
         assert_eq!(response.text, "Rain is likely; bring an umbrella.");
         assert_eq!(response.model, MODEL);
         assert_eq!(runtime.skill().manifest.agent, "weather-reporter");
+    }
+
+    #[test]
+    fn verified_skill_package_executes_through_the_level_one_runtime() {
+        let path = package_dir("verified");
+        let (public_key, secret_key) = generate_keypair(&[61; 32]);
+        let built = build_signed_skill_package(&path, SKILL, "dev-level-one", &secret_key).unwrap();
+        let mut keyring = PackageKeyring::new();
+        keyring
+            .trust(
+                TrustedPackageKey::new(
+                    "dev-level-one",
+                    PackageKeyType::Developer,
+                    public_key,
+                    PrivilegeTier::Tier1,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let package = verify_agent_package(&path, &keyring).unwrap();
+        let fingerprint = RequestFingerprint::new(
+            MODEL,
+            Some(&built.instructions),
+            &[Message::user("Seattle")],
+        );
+        let client = MockLlmClient::new()
+            .with_response(fingerprint, MockResponse::Text("Clear skies.".to_string()))
+            .with_strict_default();
+        let runtime = LevelOneSkillRuntime::from_verified_package(
+            &package,
+            &client,
+            LevelOneRuntimeConfig::deterministic(MODEL),
+        )
+        .unwrap();
+        assert_eq!(
+            runtime.respond("Seattle", "text/plain").unwrap().text,
+            "Clear skies."
+        );
+        std::fs::remove_dir_all(path).unwrap();
     }
 
     #[test]

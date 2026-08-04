@@ -1031,6 +1031,7 @@ members = [
   "chief-of-staff-agent-manifest",
   "chief-of-staff-agent-discovery",
   "chief-of-staff-skill-parser",
+  "chief-of-staff-skill-package",
   "chief-of-staff-skill-runtime",
   "chief-of-staff-agent-stdio-protocol",
   "chief-of-staff-agent-stdio-host",
