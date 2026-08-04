@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated on August 3, 2026 from `6d206c3c` after the
-Perl resolver branch rebased onto current main. The inventory contains 1,260
-normalized implementation identities across 4,415 established-lane package slots and
+working inventory was regenerated from `6042102f` after the Swift resolver
+branch rebased onto the latest main. The inventory contains 1,263 normalized
+implementation identities across 4,418 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -116,11 +116,11 @@ found zero canonical collisions or unknown language buckets:
 | Present in 10-15 languages | 173 | 270 |
 | Present in 5-9 languages | 120 | 905 |
 | Present in 2-4 languages | 157 | 1,970 |
-| Present in one language | 810 | 11,340 |
+| Present in one language | 813 | 11,382 |
 
-The loop must not start by attempting 11,340 singleton ports. It should finish
+The loop must not start by attempting 11,368 singleton ports. It should finish
 the broadly established portable core, then classify the sparse majority.
-The seventeen newest mixed Rust identities are `smart-home-camera-media`,
+Recently classified mixed Rust identities include `smart-home-camera-media`,
 `smart-home-onvif-integration`, `smart-home-shelly-integration`,
 `smart-home-wled-integration`, `smart-home-govee-lan-integration`,
 `smart-home-lifx-lan-integration`, `smart-home-kasa-lan-integration`,
@@ -450,6 +450,41 @@ MD5/SHA-256 families, qop handling, escaping, rejection, and secret-lifetime
 behavior. Network I/O, credentials, counters, retries, and client-nonce entropy
 remain injected or native. These dependency-shaped owners do not displace the
 active field-aware Perl resolver repair.
+
+Guarded squash auto-completion merged the Perl resolver PR #9863 at exact head
+`aeff21f74a` as `3d2234a287` after all exact-head checks were terminal and two
+consecutive mergeability readings were clean. The post-merge resolver audit
+selects Swift next as the largest remaining clean false-only slice: both engines
+discover 164 packages, but generic Haskell tokenization initially emits 244
+edges against Go's 179, with 65 Haskell-only edges and zero Go-only edges.
+Every extra edge comes from comments or unrelated manifest strings. The shared
+Swift contract now admits only relative `.package(path: "...")` declarations;
+the new language-neutral fixture also exposes and repairs a Go oracle defect
+where a block-commented declaration was previously accepted. C# and F# retain
+47/178 and 39/178 false/missing drift, TypeScript retains 148/948, Java and
+Kotlin retain 4/24 and 9/13, Dart is missing 67, and Go and Elixir have smaller
+clean false-only deltas. Swift therefore removes the highest coherent
+false-cycle risk without mixing manifest grammars or separately owned BUILD
+debt.
+
+The same collision-clean refresh adds two classified Rust singleton identities.
+`chief-of-staff-agent-manifest` is an authority-free strict parser, validator,
+and deterministic serializer over caller-provided JSON, so it has a new
+portable-conformance owner. `chief-of-staff-agent-stdio-host` owns concrete
+subprocess launch, piped I/O, signaling, and channel coordination; it has an
+excluded native-authority review ordered after the existing stdio protocol,
+channel crypto, and endpoint contracts. Neither discovery displaces the
+selected Swift resolver slice.
+
+The post-rebase collision-clean refresh adds one further classified Rust
+singleton. `chief-of-staff-agent-discovery` mixes an authority-free reducer
+with concrete filesystem and signature-verification authority. The backlog
+therefore splits it into a portable snapshot/projection conformance owner,
+ordered after the manifest and service-registry contracts, and an excluded
+native-authority review for directory enumeration, canonicalization, sealed
+file reads, keyring verification, and host-path policy. The quick leverage pass
+keeps the already implemented Swift resolver repair first; neither dependent
+discovery item is eligible to displace it.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

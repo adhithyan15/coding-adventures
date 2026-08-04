@@ -890,10 +890,6 @@ func perlPackageNames(packagePath string) []string {
 	return nil
 }
 
-// swiftDepRe matches .package(path: "...") in Package.swift.
-// Compiled once at package level to avoid repeated regex compilation.
-var swiftDepRe = regexp.MustCompile(`\.package\s*\(\s*path\s*:\s*"([^"]+)"`)
-
 // parseSwiftDeps extracts internal dependencies from a Swift Package.swift file.
 //
 // Swift Package Manager uses path references for local (monorepo)
@@ -915,28 +911,184 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 	}
 
 	var internalDeps []string
-	for _, line := range strings.Split(string(data), "\n") {
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || strings.HasPrefix(trimmed, "//") {
+	for _, path := range swiftLocalPackagePaths(string(data)) {
+		if strings.HasSuffix(path, "/") || strings.HasSuffix(path, "\\") {
 			continue
 		}
-		matches := swiftDepRe.FindStringSubmatch(trimmed)
-		if len(matches) >= 2 {
-			cleaned := filepath.Clean(filepath.FromSlash(matches[1]))
-			if filepath.IsAbs(cleaned) {
-				continue
-			}
-			depDir := strings.ToLower(filepath.Base(cleaned))
-			if depDir == "." || depDir == ".." {
-				continue
-			}
-			if pkgName, ok := knownNames[depDir]; ok {
-				internalDeps = append(internalDeps, pkgName)
-			}
+		cleaned := filepath.Clean(filepath.FromSlash(path))
+		if swiftPathIsAbsolute(path) || filepath.IsAbs(cleaned) {
+			continue
+		}
+		depDir := strings.ToLower(filepath.Base(cleaned))
+		if depDir == "" || depDir == "." || depDir == ".." {
+			continue
+		}
+		if pkgName, ok := knownNames[depDir]; ok {
+			internalDeps = append(internalDeps, pkgName)
 		}
 	}
 
 	return internalDeps
+}
+
+// swiftLocalPackagePaths returns only path values from actual
+// .package(path: "...") calls. Comments and unrelated string literals are
+// ignored before the field-aware scan.
+func swiftLocalPackagePaths(source string) []string {
+	visible := stripSwiftComments(source)
+	var paths []string
+	for index := 0; index < len(visible); {
+		if visible[index] == '"' {
+			index = skipSwiftString(visible, index)
+			continue
+		}
+		if strings.HasPrefix(visible[index:], ".package") {
+			if path, next, ok := parseSwiftPackagePath(visible, index+len(".package")); ok {
+				paths = append(paths, path)
+				index = next
+				continue
+			}
+		}
+		index++
+	}
+	return paths
+}
+
+func parseSwiftPackagePath(source string, index int) (string, int, bool) {
+	index = skipSwiftWhitespace(source, index)
+	if index >= len(source) || source[index] != '(' {
+		return "", index, false
+	}
+	index = skipSwiftWhitespace(source, index+1)
+	if !strings.HasPrefix(source[index:], "path") {
+		return "", index, false
+	}
+	index += len("path")
+	if index < len(source) && (source[index] == '_' || source[index] == '-' ||
+		(source[index] >= '0' && source[index] <= '9') ||
+		(source[index] >= 'A' && source[index] <= 'Z') ||
+		(source[index] >= 'a' && source[index] <= 'z')) {
+		return "", index, false
+	}
+	index = skipSwiftWhitespace(source, index)
+	if index >= len(source) || source[index] != ':' {
+		return "", index, false
+	}
+	index = skipSwiftWhitespace(source, index+1)
+	if index >= len(source) || source[index] != '"' {
+		return "", index, false
+	}
+
+	start := index + 1
+	for index = start; index < len(source); index++ {
+		if source[index] == '\\' {
+			index++
+			continue
+		}
+		if source[index] == '"' {
+			return source[start:index], index + 1, true
+		}
+	}
+	return "", index, false
+}
+
+func skipSwiftWhitespace(source string, index int) int {
+	for index < len(source) {
+		switch source[index] {
+		case ' ', '\t', '\r', '\n':
+			index++
+		default:
+			return index
+		}
+	}
+	return index
+}
+
+func skipSwiftString(source string, index int) int {
+	index++
+	for index < len(source) {
+		if source[index] == '\\' {
+			index += 2
+			continue
+		}
+		index++
+		if source[index-1] == '"' {
+			break
+		}
+	}
+	return index
+}
+
+func stripSwiftComments(source string) string {
+	visible := []byte(source)
+	blockDepth := 0
+	for index := 0; index < len(visible); {
+		if blockDepth > 0 {
+			if index+1 < len(visible) && visible[index] == '/' && visible[index+1] == '*' {
+				visible[index], visible[index+1] = ' ', ' '
+				blockDepth++
+				index += 2
+				continue
+			}
+			if index+1 < len(visible) && visible[index] == '*' && visible[index+1] == '/' {
+				visible[index], visible[index+1] = ' ', ' '
+				blockDepth--
+				index += 2
+				continue
+			}
+			if visible[index] != '\n' && visible[index] != '\r' {
+				visible[index] = ' '
+			}
+			index++
+			continue
+		}
+
+		if visible[index] == '"' {
+			index = skipSwiftStringBytes(visible, index)
+			continue
+		}
+		if index+1 < len(visible) && visible[index] == '/' && visible[index+1] == '/' {
+			for index < len(visible) && visible[index] != '\n' && visible[index] != '\r' {
+				visible[index] = ' '
+				index++
+			}
+			continue
+		}
+		if index+1 < len(visible) && visible[index] == '/' && visible[index+1] == '*' {
+			visible[index], visible[index+1] = ' ', ' '
+			blockDepth = 1
+			index += 2
+			continue
+		}
+		index++
+	}
+	return string(visible)
+}
+
+func skipSwiftStringBytes(source []byte, index int) int {
+	index++
+	for index < len(source) {
+		if source[index] == '\\' {
+			index += 2
+			continue
+		}
+		index++
+		if source[index-1] == '"' {
+			break
+		}
+	}
+	return index
+}
+
+func swiftPathIsAbsolute(path string) bool {
+	if path == "" {
+		return false
+	}
+	if path[0] == '/' || path[0] == '\\' {
+		return true
+	}
+	return len(path) >= 2 && path[1] == ':' &&
+		((path[0] >= 'A' && path[0] <= 'Z') || (path[0] >= 'a' && path[0] <= 'z'))
 }
 
 // parseGradleDeps extracts internal dependencies from a Gradle build.gradle.kts

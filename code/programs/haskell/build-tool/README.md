@@ -72,6 +72,14 @@ distribution spellings are aliases only. The shared field-boundary fixture and
 complete 256-package lane match the canonical Go resolver exactly at 217 total
 edges: 216 from authoritative manifests and one qualified BUILD dependency.
 
+Swift dependency resolution reads only relative paths from local
+`.package(path: "...")` declarations. Package and product names, target
+dependency strings, external URLs, source text, and line or nested block
+comments cannot invent graph edges. The final path component is matched
+case-insensitively against Swift directory aliases. The shared field-boundary
+fixture covers those exclusions, and the complete 164-package lane matches the
+Go resolver exactly at 179 edges.
+
 Package hashing reads included files as raw bytes. Repository-relative paths
 are normalized to `/`, encoded explicitly as UTF-8, and combined with those
 bytes using the existing boundary framing before `git hash-object` receives

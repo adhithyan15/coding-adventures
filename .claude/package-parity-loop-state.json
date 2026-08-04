@@ -11,24 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 9863,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/9863",
-    "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution",
-    "implementation_head": "400e5eaa56848d41f0dd3dc973afe3c55bc3a458",
-    "last_ci_repair": "Exact-head platform logs showed perl/hmac asking cpanm to resolve repository-local hash packages with an unsupported --with-test option. The scoped repair installs only external Test2::V0 and supplies the four internal packages through the standalone PERL5LIB paths."
-  },
+  "active_pr": null,
   "last_inventory": {
-    "revision": "6d206c3c8b8716bb9750da68ca6947ae41a1d68c",
+    "revision": "6042102fbda8150ff4d1ae51a7f5ad7ee67d1c94",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1260,
-    "implementation_package_slots": 4415,
+    "implementation_identities": 1263,
+    "implementation_package_slots": 4418,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 270,
-    "singleton_packages": 810,
-    "singleton_missing_slots": 11340,
-    "rust_singletons": 614,
+    "singleton_packages": 813,
+    "singleton_missing_slots": 11382,
+    "rust_singletons": 617,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -448,20 +442,29 @@
     {
       "id": "build-tool-haskell-post-ruby-field-aware-manifest-resolution",
       "title": "Make Haskell Perl manifest resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-haskell-post-rust-field-aware-manifest-resolution"],
       "branch": "codex/build-tool-haskell-perl-field-aware-manifest-resolution",
       "pr_number": 9863,
-      "notes": "Materialized after the post-Rust leverage audit selected Ruby's clean 123-false-edge repair. Guarded PR #9846 then merged exact head 38c449d322 as 45c40fb750. The quick post-Ruby resolver leverage pass selected Perl: its exact initial graph delta was 95 Haskell-only and 2 Go-only edges across 256 packages, larger and more nearly field-local than Swift's 65 false-only edges; TypeScript's 147 false and 948 missing edges remain entangled with much broader manifest semantics and separately owned BUILD_windows debt. Corpus inspection found 245 root cpanfiles and 247 root Makefile.PL files. The shared contract now treats only top-level cpanfile requires declarations as runtime edges, excludes nine internal test-phase declarations and all Makefile dependency/metadata fields, and registers declared module names plus current and legacy distribution aliases. Haskell and Go now match exactly across all 256 packages and 217 total edges, comprising 216 authoritative manifest edges and one qualified BUILD dependency, with zero one-sided edges. The first exact-head CI run exposed a deterministic Linux BUILD-validation mismatch: test-only references were correctly absent from the runtime graph but still treated as undeclared source references, and several generic BUILD paths were not standalone-canonical. Actual detect logs identified the exact nine affected packages. The scoped repair admits root cpanfile test dependencies and their authoritative runtime closure only during validation, restores HMAC's four real hash prerequisites, canonicalizes generic sibling paths, and prunes unrelated generic source paths without promoting test dependencies into the graph. A Linux-equivalent full 256-package validator audit and the 217-edge cross-engine comparison both pass. The aes-modes BUILD still carries the newly authoritative AES prerequisite; five inert Windows-only REM inventories remain untouched and separately owned by build-file-standalone-integrity-perl. After three clean rebases, most recently onto 6d206c3c8b, the refreshed collision-checked inventory has 1,260 identities and 4,415 slots, 173 high-consensus packages with 270 missing slots, 810 singletons with 11,340 missing slots, 614 Rust singletons, and zero collisions or unknown buckets. The new C# ZIP lane fills an established high-consensus gap. The two new Rust identities, chief-of-staff-agent-stdio-protocol and http-digest-auth, are pure bounded codecs and now have separately dependency-shaped portable-conformance owners. Earlier authority-free chief-of-staff-skill-runtime and chief-of-staff-sdk discoveries likewise have portable owners, while the credentialed HTTPS smart-home-zoneminder-integration has an excluded native-authority review. None displaces this already implemented and validated resolver repair. Ready-for-review PR #9863 opened at exact implementation head e0325c7b6b; its CI repair remains within the same resolver/validation contract and active PR."
+      "notes": "Materialized after the post-Rust leverage audit selected Ruby's clean 123-false-edge repair. Guarded PR #9846 then merged exact head 38c449d322 as 45c40fb750. The quick post-Ruby resolver leverage pass selected Perl: its exact initial graph delta was 95 Haskell-only and 2 Go-only edges across 256 packages, larger and more nearly field-local than Swift's 65 false-only edges; TypeScript's 147 false and 948 missing edges remain entangled with much broader manifest semantics and separately owned BUILD_windows debt. Corpus inspection found 245 root cpanfiles and 247 root Makefile.PL files. The shared contract now treats only top-level cpanfile requires declarations as runtime edges, excludes nine internal test-phase declarations and all Makefile dependency/metadata fields, and registers declared module names plus current and legacy distribution aliases. Haskell and Go now match exactly across all 256 packages and 217 total edges, comprising 216 authoritative manifest edges and one qualified BUILD dependency, with zero one-sided edges. The first exact-head CI run exposed a deterministic Linux BUILD-validation mismatch: test-only references were correctly absent from the runtime graph but still treated as undeclared source references, and several generic BUILD paths were not standalone-canonical. Actual detect logs identified the exact nine affected packages. The scoped repair admits root cpanfile test dependencies and their authoritative runtime closure only during validation, restores HMAC's four real hash prerequisites, canonicalizes generic sibling paths, and prunes unrelated generic source paths without promoting test dependencies into the graph. A Linux-equivalent full 256-package validator audit and the 217-edge cross-engine comparison both pass. The aes-modes BUILD still carries the newly authoritative AES prerequisite; five inert Windows-only REM inventories remain untouched and separately owned by build-file-standalone-integrity-perl. After three clean rebases, most recently onto 6d206c3c8b, the refreshed collision-checked inventory has 1,260 identities and 4,415 slots, 173 high-consensus packages with 270 missing slots, 810 singletons with 11,340 missing slots, 614 Rust singletons, and zero collisions or unknown buckets. The new C# ZIP lane fills an established high-consensus gap. The two new Rust identities, chief-of-staff-agent-stdio-protocol and http-digest-auth, are pure bounded codecs and now have separately dependency-shaped portable-conformance owners. Earlier authority-free chief-of-staff-skill-runtime and chief-of-staff-sdk discoveries likewise have portable owners, while the credentialed HTTPS smart-home-zoneminder-integration has an excluded native-authority review. None displaces this already implemented and validated resolver repair. Ready-for-review PR #9863 opened at exact implementation head e0325c7b6b; its CI repair remained within the same resolver/validation contract. Guarded squash auto-completion merged exact head aeff21f74a376ef5eb7d6fbb63cb238aec7496af as 3d2234a28785ad03748686018fdd2ecde1586c53 on 2026-08-04 after all exact-head checks were terminal and two consecutive mergeability readings were MERGEABLE/CLEAN."
     },
     {
       "id": "build-tool-haskell-post-perl-field-aware-manifest-resolution",
-      "title": "Make the remaining post-Perl Haskell build-tool manifest readers field-aware",
-      "status": "pending",
+      "title": "Make Haskell Swift manifest resolution field-aware",
+      "status": "in-progress",
       "depends_on": ["build-tool-haskell-post-ruby-field-aware-manifest-resolution"],
+      "branch": "codex/build-tool-haskell-swift-field-aware-manifest-resolution",
+      "pr_number": null,
+      "notes": "Materialized after the post-Ruby leverage audit selected Perl's coherent 95-false/2-missing-edge repair. Guarded PR #9863 merged as 3d2234a28785ad03748686018fdd2ecde1586c53. The refreshed collision-checked inventory has 1,262 implementation identities and 4,417 established-lane slots, 173 high-consensus packages with 270 missing slots, 812 singleton packages with 11,368 missing slots, 616 Rust singletons, and zero collisions or unknown buckets. A complete resolver leverage audit selected Swift as the largest remaining clean false-only slice: 164 packages, 244 Haskell edges versus 179 Go edges, 65 Haskell-only edges, and zero Go-only edges. Every false edge comes from generic whole-manifest tokenization of comments or unrelated strings; actual local dependencies are relative .package(path:) declarations. C# and F# have 47/178 and 39/178 two-sided drift, TypeScript has 148/948, Java/Kotlin have 4/24 and 9/13, Dart is missing 67, and Go/Elixir have smaller clean false-only deltas, so Swift removes the highest remaining coherent false-cycle risk without mixing grammars or build-file debt. The shared contract and four-package fixture now restrict Swift edges to quoted relative .package(path:) declarations and reject comments, unrelated strings, external URLs, absolute paths, and empty or dot components. The fixture first failed both engines and exposed a real Go block-comment false edge; the paired field-aware scanners now pass. Full Go test/vet/build and 75.0% statement coverage pass; full Haskell tests, GHC -Wall -Werror, cabal check, Haddock, and HPC coverage pass. Both real front doors resolve all 164 Swift packages, and an exact independent differential reports 179 edges on each engine with zero one-sided edges. The shared corpus validates schema 1 with 47 cases and 128 files; the runner's 40 tests, build-file validation, collision report, module verification, JSON, diff, and direct security review pass. No process, network, credential, or host-authority surface was added. After the conflict-free rebase onto 6042102f, the collision-checked inventory has 1,263 identities and 4,418 slots, 173 high-consensus packages with 270 missing slots, 813 singletons with 11,382 missing slots, 617 Rust singletons, and zero collisions or unknown buckets. The sole new identity, chief-of-staff-agent-discovery, is split into an eligible authority-free snapshot/projection conformance owner and an excluded filesystem/package-verification authority review; neither displaces this completed resolver repair."
+    },
+    {
+      "id": "build-tool-haskell-post-swift-field-aware-manifest-resolution",
+      "title": "Select the next field-aware Haskell manifest reader after Swift",
+      "status": "pending",
+      "depends_on": ["build-tool-haskell-post-perl-field-aware-manifest-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Materialized after the post-Ruby leverage audit selected Perl's coherent 95-false/2-missing-edge repair. Re-run the complete oracle audit after Perl lands, then split the next coherent ecosystem without combining unrelated manifest grammars or separately owned BUILD_windows debt."
+      "notes": "Materialized when the post-Perl audit selected Swift's coherent 65-false/0-missing-edge repair. Re-run the complete cross-engine resolver audit after Swift lands, then select exactly one dependency-shaped ecosystem without combining the broader TypeScript, C#/F#, JVM, Dart, or standalone BUILD debt."
     },
     {
       "id": "build-tool-elixir-engine-rockspec-utf8-conformance",
@@ -1934,6 +1937,42 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 6d206c3c inventory after chief-of-staff-agent-stdio-protocol landed as a Rust-only zero-capability codec. Define language-neutral fixtures for versioned message/response records, canonical decimal 64-bit fields, strict base64, bounded LF/CRLF JSON-lines framing, duplicate-key and unknown-field rejection, exact in-flight response correlation, stable redacted errors, and fail-closed malformed or oversized records. Port the pure caller-provided-byte codec across supported lanes; stdin/stdout handles, subprocess hosting, channel transport, acknowledgement, clocks, and runtime authority remain outside the contract."
+    },
+    {
+      "id": "chief-agent-manifest-portable-conformance",
+      "title": "Fixture and port the Chief agent manifest contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 3d2234a2 inventory after chief-of-staff-agent-manifest landed as a Rust-only authority-free codec over the established JSON stack. Define language-neutral fixtures for schema version 1, exact required and optional fields, nested capability and channel records, duplicate and unknown-field rejection, bounded identifiers and collections, read/write channel separation, stable redacted diagnostics, and deterministic schema-shaped serialization. Port the pure caller-provided-text parser, validator, and serializer across supported lanes; directory scanning, signatures, registration, host policy, and operating-system access remain outside the contract."
+    },
+    {
+      "id": "chief-agent-stdio-host-native-authority-review",
+      "title": "Review the Chief agent stdio subprocess-host exception",
+      "status": "pending",
+      "depends_on": ["chief-agent-stdio-protocol-portable-conformance", "chief-channel-crypto-portable-conformance", "chief-channel-endpoints-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 3d2234a2 inventory after chief-of-staff-agent-stdio-host landed as a Rust-only concrete subprocess adapter. It launches and signals an authorized executable, owns piped stdin/stdout, performs ordered protocol I/O, and coordinates channel publication and acknowledgement, so its concrete proc:exec and proc:signal authority is not an all-language portable target. Review the minimum truthful process and platform evidence after the protocol, crypto, and endpoint contracts; keep one-message ordering, publish-before-acknowledge, correlation, stable errors, and injected session semantics in portable seams. This native-runtime review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "chief-agent-discovery-core-portable-conformance",
+      "title": "Fixture and port the Chief verified-discovery projection core",
+      "status": "pending",
+      "depends_on": ["chief-agent-manifest-portable-conformance", "chief-service-registry-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 6042102f inventory after chief-of-staff-agent-discovery landed as a mixed Rust singleton. Extract and fixture the authority-free core over caller-provided verified package records and authenticated manifest bytes: strict manifest parsing, signing-key tier ceilings, canonical registration projection, restart-policy mapping, deterministic identity sorting, duplicate rejection, all-or-nothing snapshot semantics, and stable redacted failures. Port that pure reducer across suitable lanes after the manifest and service-registry contracts; directory enumeration, canonicalization, file reads, signature verification, key custody, and registration submission remain injected or native."
+    },
+    {
+      "id": "chief-agent-discovery-native-authority-review",
+      "title": "Review the Chief agent discovery filesystem-authority exception",
+      "status": "pending",
+      "depends_on": ["chief-agent-discovery-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 6042102f inventory for the concrete chief-of-staff-agent-discovery adapter. It lists a configured directory, reads sealed package files, canonicalizes host paths, verifies signatures against a trusted keyring, and therefore owns fs:list/fs:read plus platform filesystem semantics rather than an all-language portable contract. Review no-follow and symlink policy, bounded non-recursive enumeration, fail-closed package verification, path disclosure, keyring authority, and platform evidence after the pure projection core lands. This native-runtime review is excluded from autonomous delivery selection by parity policy."
     },
     {
       "id": "http-digest-auth-portable-conformance",
