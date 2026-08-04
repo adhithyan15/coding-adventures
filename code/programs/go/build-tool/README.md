@@ -128,6 +128,17 @@ package hash. The two shared field-boundary fixtures cover direct and nested
 paths plus adversarial decoys; the complete Java and Kotlin lanes resolve
 exactly 186 and 166 edges respectively.
 
+C#, F#, and shared .NET dependency resolution reads only literal `Include`
+attributes on unqualified `ProjectReference` start elements in root `.csproj`
+and `.fsproj` files. Relative paths use portable separators, normalize
+lexically, and must exactly match another discovered root project file in the
+shared .NET scope. Comments, CDATA, processing instructions, escaped examples,
+namespaced elements, package references, MSBuild properties, globs, absolute
+paths, nested test projects, and unknown targets cannot invent graph edges;
+referenced files are never opened. Three shared fixtures cover both language
+lanes and cross-language references. The complete 198-package C# and
+197-package F# lanes resolve exactly 238 and 239 edges respectively.
+
 ## Canonical discovery identities
 
 Discovery uses only the exact bucket immediately below a `packages` or

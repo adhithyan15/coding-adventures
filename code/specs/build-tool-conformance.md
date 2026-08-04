@@ -345,6 +345,25 @@ and every other settings field or call. `settings.gradle.kts`, Gradle build
 files, and Java or Kotlin sources participate in the package hash so a
 dependency declaration change invalidates the cache.
 
+For C#, F#, and shared .NET packages, dependency candidates come only from
+unqualified `ProjectReference` start elements with a quoted literal `Include`
+attribute in `.csproj` or `.fsproj` files directly inside the declaring package
+root; project-file extensions are compared ASCII-case-insensitively. A static
+include remains a conservative dependency even when the element
+has a `Condition`; resolvers do not evaluate MSBuild properties or conditions.
+The include must be a relative project-file path with no property expansion,
+glob, query, fragment, or XML entity reference. Both `/` and `\` are portable
+separators. Resolvers normalize the path lexically against the directory of the
+declaring root project and create an edge only when it exactly matches a root
+project file belonging to another discovered C#, F#, or shared .NET package in
+the current `dotnet` dependency scope. They do not follow or read the referenced
+path. Resolvers ignore XML comments, CDATA, processing instructions, escaped
+text examples, namespaced elements, `PackageReference`, `ProjectReference`
+elements without `Include` (including `Update` and `Remove`), project files in
+nested test or tool directories, absolute paths, unknown targets, and every
+other XML element or attribute. Duplicate and self references do not create
+additional edges.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

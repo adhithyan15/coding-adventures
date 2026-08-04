@@ -32,6 +32,11 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- C#, F#, and shared .NET resolution now reads only literal `Include`
+  attributes on unqualified `ProjectReference` elements in root project files,
+  matches lexically normalized paths to exact project files across the shared
+  .NET scope, and ignores XML decoys, dynamic MSBuild paths, nested projects,
+  absolute paths, and unknown targets without opening referenced files.
 - Java and Kotlin Gradle resolution now reads only comment-aware
   `includeBuild("...")` calls from root `settings.gradle.kts`, supports
   multiline and nested relative paths through exact same-lane package-root
