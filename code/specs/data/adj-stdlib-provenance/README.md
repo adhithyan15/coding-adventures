@@ -36,10 +36,17 @@ It starts empty and grows only through reviewed source migrations.
   exact rational and IEEE-754 result, the nested computation tree, and successful
   formula, input, and recomputation checks. Verification recreates programs from
   CAS bytes and requires the replayed canonical objects to hash identically. Input
-  v2 references resolve uniquely across the complete dependency closure and pin their
+  v3 references resolve uniquely across the complete dependency closure and pin their
   exact ADJ source/IR and cited snapshot/IR. Dependency inputs name their owning
   bundle hash; query inputs use the parent bundle relationship because embedding
   that bundle's own hash in its witness would create a content-addressing cycle.
+  A guard over a derived binding additionally retains the root-first computation-ID
+  closure, compiler-owned exact authored `let` spans, compiler plans and predecessor
+  scopes, transitive input facts, formula sources, trees, results, and `verify_derived`
+  statuses. Replay independently evaluates supported plans and rejects coordinated false
+  values even when reported views agree with one another. Source-plan and dimension
+  attestations bind those computations back to the lowered authored expression; exact replay
+  includes decimal, significant-figure, scientific, percent, and currency narrowing.
 - `manifest.json` pins bundle hashes. Only snapshots reachable from verified
   bundle clauses may be projected for `adj-verify`.
 
@@ -79,7 +86,8 @@ and the formula audit against each query reconstructed from CAS bytes, then
 compare-and-swaps all eleven formula and query roots as one dependency closure.
 The current witnesses cover four primitive operations, one ratio, one percent-of,
 and four proportion executions. The proportion set contains one successful query
-and three abstentions that independently exercise each nonzero precondition; these
+whose third guard consumes a derived binding, and three direct-observation abstentions
+that independently exercise each nonzero precondition; these
 witnesses establish replayable provenance for those executions, not universal
 correctness for every possible input.
 The ratio generator's reviewed one-time bootstrap accepts captured bytes without

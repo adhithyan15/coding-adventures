@@ -64,10 +64,11 @@ pub use ast::{
     Term as AstTerm,
 };
 pub use lower::{
-    lower, replay_formula_source, ConstraintSystem, FormulaAbstention, FormulaApplicationTrace,
-    FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome, FormulaGuardTrace,
-    FormulaSourceReplay, LowerError, LoweredConstraint, LoweredExit, LoweredGuard, LoweredProgram,
-    LoweredRangeLookup, LoweredState, LoweredStateMachine, LoweredTransition,
+    lower, replay_formula_source, ComputationBinding, ConstraintSystem, FormulaAbstention,
+    FormulaApplicationTrace, FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome,
+    FormulaGuardTrace, FormulaSourceReplay, LowerError, LoweredConstraint, LoweredExit,
+    LoweredGuard, LoweredProgram, LoweredRangeLookup, LoweredState, LoweredStateMachine,
+    LoweredTransition,
 };
 pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 pub use statemachine::{
@@ -128,9 +129,26 @@ pub struct ImportSource {
     pub declaration_span: SourceSpan,
 }
 
+/// One top-level or rulebook `let` binding and its exact authored bytes.
+#[derive(Debug, Clone, PartialEq)]
+pub struct BindingSource {
+    pub name: String,
+    pub expression: ast::ExprAst,
+    pub declaration_span: SourceSpan,
+    pub expression_span: SourceSpan,
+}
+
+/// Parser-owned source identity for one binding in an import-expanded program.
+#[derive(Debug, Clone, PartialEq)]
+pub struct BindingOrigin {
+    pub source_id: String,
+    pub binding: BindingSource,
+}
+
 /// Parser-backed source locations for the program elements used by formula audit.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ProgramSourceMap {
+    pub bindings: Vec<BindingSource>,
     pub formulas: Vec<FormulaSource>,
     pub imports: Vec<ImportSource>,
     pub queries: Vec<QuerySource>,
@@ -229,7 +247,7 @@ pub fn formula_source_map(src: &str) -> Result<Vec<FormulaSource>, FormulaSource
     Ok(program_source_map(src)?.formulas)
 }
 
-/// Parse one source and locate formulas, ordinary queries, and imports in exact bytes.
+/// Parse one source and locate bindings, formulas, ordinary queries, and imports in exact bytes.
 pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMapError> {
     let tree = parse_grammar_ast(src)?;
     let program = adapt_program(&tree).map_err(CompileError::Adapt)?;
@@ -344,6 +362,40 @@ pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMa
         })
         .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
 
+    let parsed_bindings = collect_nodes(&tree, "let_decl");
+    let mut typed_bindings = Vec::new();
+    collect_typed_bindings(&program.statements, &mut typed_bindings);
+    if parsed_bindings.len() != typed_bindings.len() {
+        return Err(FormulaSourceMapError::Inconsistent(format!(
+            "parser found {} let bindings but adapter produced {}",
+            parsed_bindings.len(),
+            typed_bindings.len()
+        )));
+    }
+    let bindings = parsed_bindings
+        .into_iter()
+        .zip(typed_bindings)
+        .map(|(node, (name, expression))| {
+            let parsed_name = direct_identifier_after(node, "let").ok_or_else(|| {
+                FormulaSourceMapError::Inconsistent("let binding name is absent".into())
+            })?;
+            if parsed_name != name {
+                return Err(FormulaSourceMapError::Inconsistent(format!(
+                    "let parse tree names {parsed_name} but adapter produced {name}"
+                )));
+            }
+            let expression_node = direct_child(node, "expr").ok_or_else(|| {
+                FormulaSourceMapError::Inconsistent(format!("let binding {name} has no expression"))
+            })?;
+            Ok(BindingSource {
+                name: name.clone(),
+                expression: expression.clone(),
+                declaration_span: locator.node_span(node)?,
+                expression_span: locator.node_span(expression_node)?,
+            })
+        })
+        .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
+
     let parsed_queries: Vec<_> = collect_nodes(&tree, "query_decl")
         .into_iter()
         .filter(|node| direct_child(node, "term").is_some())
@@ -369,6 +421,7 @@ pub fn program_source_map(src: &str) -> Result<ProgramSourceMap, FormulaSourceMa
         .collect::<Result<Vec<_>, FormulaSourceMapError>>()?;
 
     Ok(ProgramSourceMap {
+        bindings,
         formulas: inventory,
         imports,
         queries,
@@ -410,6 +463,21 @@ fn collect_typed_imports<'a>(statements: &'a [ast::Statement], found: &mut Vec<&
             ast::Statement::Import(literal) => found.push(literal),
             ast::Statement::Rulebook { statements, .. } => {
                 collect_typed_imports(statements, found);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn collect_typed_bindings<'a>(
+    statements: &'a [ast::Statement],
+    found: &mut Vec<(&'a String, &'a ast::ExprAst)>,
+) {
+    for statement in statements {
+        match statement {
+            ast::Statement::Let { name, expr } => found.push((name, expr)),
+            ast::Statement::Rulebook { statements, .. } => {
+                collect_typed_bindings(statements, found);
             }
             _ => {}
         }
@@ -608,9 +676,10 @@ pub fn compile_with_imports(
     provider: &dyn ImportProvider,
     limits: ImportLimits,
 ) -> Result<LoweredProgram, CompileWithImportsError> {
-    let program =
-        resolve_imports(root_id, provider, limits).map_err(CompileWithImportsError::Import)?;
-    lower(&program).map_err(CompileWithImportsError::Lower)
+    let resolved = resolve::resolve_imports_with_binding_origins(root_id, provider, limits)
+        .map_err(CompileWithImportsError::Import)?;
+    lower::lower_with_binding_origins(&resolved.program, Some(&resolved.binding_origins))
+        .map_err(CompileWithImportsError::Lower)
 }
 
 /// Run a **differential** over a lowered program's `? h` query lines:

@@ -10,6 +10,13 @@
   from evaluated bodies and never publish a derived value.
 - Parser-derived source replay can bind formula parameters to query arguments independently of the
   runtime trace, including nested formula calls and multi-step formula bodies.
+- Formula guard traces retain root-first stable computation IDs for derived operands. Source maps
+  also inventory exact top-level `let` declaration and expression byte spans, allowing downstream
+  witnesses to bind a computation plan to the authored binding without guessing from text. Import
+  resolution carries those parser-owned origins in merged statement order, including withheld and
+  same-named cross-file bindings, so lowering cannot shift a later computation onto earlier bytes.
+  Retained bindings also carry their source-lowered plan and result dimension for independent CAS
+  comparison against the emitted computation.
 
 ## [0.71.0] - 2026-08-03 - executable formula preconditions
 

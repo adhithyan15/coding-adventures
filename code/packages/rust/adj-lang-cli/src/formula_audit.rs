@@ -11,8 +11,9 @@ use std::process::ExitCode;
 use adj_lang::ast::{ExprAst, FormulaDef, Term as AstTerm};
 use adj_lang::{
     compile_with_imports, formula_provenance, program_source_map, replay_formula_source,
-    CompileWithImportsError, FormulaBodyTrace, FormulaExecutionTrace, FormulaGuardOutcome,
-    FormulaGuardTrace, ImportLimits, ImportProvider, LowerError, ProgramSourceMap, SourceSpan,
+    CompileWithImportsError, ComputationBinding, FormulaBodyTrace, FormulaExecutionTrace,
+    FormulaGuardOutcome, FormulaGuardTrace, ImportLimits, ImportProvider, LowerError,
+    ProgramSourceMap, SourceSpan,
 };
 use coding_adventures_sha256::sha256_hex;
 use logic_engine::compute::ExactRational;
@@ -276,33 +277,33 @@ struct QuestionDto {
     source_sha256: String,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct RationalDto {
     denominator: String,
     numerator: String,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct ResultDto {
     dimension: String,
     exact_rational: Option<RationalDto>,
     f64_bits: String,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct ScopeDto {
     derived_limit: usize,
     fact_limit: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct PlanDto {
     expression: PlanExprDto,
     is_query_answer: bool,
     scope: ScopeDto,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum PlanExprDto {
     Aggregate {
@@ -351,13 +352,13 @@ enum PlanExprDto {
     },
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct PrecisionDto {
     kind: &'static str,
     value: u32,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 enum TreeDto {
     DerivedReference {
@@ -411,20 +412,20 @@ enum TreeDto {
     },
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct InputDto {
     identity: FactIdentityDto,
     quote: QuoteStatusDto,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct FormulaCheckDto {
     identity: FormulaIdentityDto,
     provenance: ProvenanceDto,
     quote: QuoteStatusDto,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct QuoteStatusDto {
     byte_len: Option<usize>,
     byte_offset: Option<usize>,
@@ -432,7 +433,7 @@ struct QuoteStatusDto {
     status: &'static str,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct ComputationStatusDto {
     reason: Option<&'static str>,
     recomputed_f64_bits: Option<String>,
@@ -440,7 +441,7 @@ struct ComputationStatusDto {
     status: &'static str,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct VerificationDto {
     computation: ComputationStatusDto,
     formula_quotes: Vec<FormulaCheckDto>,
@@ -504,8 +505,40 @@ struct GuardVerificationDto {
 }
 
 #[derive(Serialize)]
+struct BindingIdentityDto {
+    declaration: SpanDto,
+    expression: SpanDto,
+    name: String,
+    source_dimension: String,
+    source_plan: PlanExprDto,
+    source_sha256: String,
+}
+
+#[derive(Serialize)]
+struct GuardComputationDto {
+    binding: BindingIdentityDto,
+    computation_id: usize,
+    name: String,
+    plan: PlanDto,
+    referenced_computation_ids: Vec<usize>,
+    result: ResultDto,
+    tree: TreeDto,
+}
+
+#[derive(Serialize)]
+struct GuardDerivedDto {
+    computations: Vec<GuardComputationDto>,
+    formula_sequence: Vec<FormulaIdentityDto>,
+    inputs: Vec<FactIdentityDto>,
+    root_computation_id: usize,
+    verification: VerificationDto,
+}
+
+#[derive(Serialize)]
 struct GuardDto {
     comparison: ComparisonDto,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    derived: Option<Box<GuardDerivedDto>>,
     formula: FormulaIdentityDto,
     inputs: Vec<FactIdentityDto>,
     outcome: &'static str,
@@ -1031,6 +1064,138 @@ fn collect_fact_ids(
     Ok(())
 }
 
+fn collect_computation_ids(
+    index: usize,
+    kb: &KnowledgeBase,
+    visiting: &mut BTreeSet<usize>,
+    completed: &mut BTreeSet<usize>,
+    output: &mut Vec<usize>,
+) -> Result<(), Failure> {
+    if completed.contains(&index) {
+        return Ok(());
+    }
+    if !visiting.insert(index) {
+        return Err(Failure::Audit(
+            "cycle in derived computation identities".to_string(),
+        ));
+    }
+    let derived = kb
+        .derived_bindings()
+        .get(index)
+        .ok_or_else(|| Failure::Audit(format!("derived computation {index} is absent")))?;
+    let id = kb.computation_id_for(derived).ok_or_else(|| {
+        Failure::Audit(format!(
+            "derived computation {} has no stable identity",
+            derived.name
+        ))
+    })?;
+    if id.0 != index {
+        return Err(Failure::Audit(format!(
+            "derived computation {} identity {} disagrees with index {index}",
+            derived.name, id.0
+        )));
+    }
+    let plan = kb
+        .computation_plan_for(derived)
+        .ok_or_else(|| Failure::Audit(format!("{} has no trusted plan", derived.name)))?;
+    output.push(index);
+
+    fn walk(
+        node: &DerivationNode,
+        before: usize,
+        kb: &KnowledgeBase,
+        visiting: &mut BTreeSet<usize>,
+        completed: &mut BTreeSet<usize>,
+        output: &mut Vec<usize>,
+    ) -> Result<(), Failure> {
+        match node {
+            DerivationNode::DerivedRef { name, .. } => {
+                let dependency = kb.derived_bindings()[..before]
+                    .iter()
+                    .rposition(|candidate| candidate.name == *name)
+                    .ok_or_else(|| {
+                        Failure::Audit(format!(
+                            "derived reference {name} has no unique predecessor"
+                        ))
+                    })?;
+                collect_computation_ids(dependency, kb, visiting, completed, output)?;
+            }
+            DerivationNode::Op { operands, .. } => {
+                for operand in operands {
+                    walk(operand, before, kb, visiting, completed, output)?;
+                }
+            }
+            DerivationNode::Round { operand, .. }
+            | DerivationNode::ToScientific { operand, .. }
+            | DerivationNode::ToPercent { operand, .. }
+            | DerivationNode::ToCurrency { operand, .. } => {
+                walk(operand, before, kb, visiting, completed, output)?;
+            }
+            DerivationNode::Leaf { .. } | DerivationNode::Lit { .. } => {}
+        }
+        Ok(())
+    }
+    walk(
+        &derived.tree,
+        plan.scope.derived_limit,
+        kb,
+        visiting,
+        completed,
+        output,
+    )?;
+    visiting.remove(&index);
+    completed.insert(index);
+    Ok(())
+}
+
+fn referenced_computation_ids(index: usize, kb: &KnowledgeBase) -> Result<Vec<usize>, Failure> {
+    let derived = kb
+        .derived_bindings()
+        .get(index)
+        .ok_or_else(|| Failure::Audit(format!("derived computation {index} is absent")))?;
+    let plan = kb
+        .computation_plan_for(derived)
+        .ok_or_else(|| Failure::Audit(format!("{} has no trusted plan", derived.name)))?;
+    fn walk(
+        node: &DerivationNode,
+        before: usize,
+        kb: &KnowledgeBase,
+        output: &mut Vec<usize>,
+    ) -> Result<(), Failure> {
+        match node {
+            DerivationNode::DerivedRef { name, .. } => {
+                let dependency = kb.derived_bindings()[..before]
+                    .iter()
+                    .rposition(|candidate| candidate.name == *name)
+                    .ok_or_else(|| {
+                        Failure::Audit(format!(
+                            "derived reference {name} has no unique predecessor"
+                        ))
+                    })?;
+                if !output.contains(&dependency) {
+                    output.push(dependency);
+                }
+            }
+            DerivationNode::Op { operands, .. } => {
+                for operand in operands {
+                    walk(operand, before, kb, output)?;
+                }
+            }
+            DerivationNode::Round { operand, .. }
+            | DerivationNode::ToScientific { operand, .. }
+            | DerivationNode::ToPercent { operand, .. }
+            | DerivationNode::ToCurrency { operand, .. } => {
+                walk(operand, before, kb, output)?;
+            }
+            DerivationNode::Leaf { .. } | DerivationNode::Lit { .. } => {}
+        }
+        Ok(())
+    }
+    let mut output = Vec::new();
+    walk(&derived.tree, plan.scope.derived_limit, kb, &mut output)?;
+    Ok(output)
+}
+
 fn build_sources(raw: BTreeMap<String, String>) -> Result<BTreeMap<String, LoadedSource>, Failure> {
     raw.into_iter()
         .map(|(canonical, source)| {
@@ -1448,12 +1613,301 @@ fn replay_source_execution(
     Ok(replay)
 }
 
+struct GuardOperandEvidence {
+    computation: ComputationStatusDto,
+    derived: Option<Box<GuardDerivedDto>>,
+    fully_verified: bool,
+    input_quotes: Vec<InputDto>,
+    inputs: Vec<FactIdentityDto>,
+    passed: bool,
+}
+
+struct DerivedGuardContext<'a> {
+    exports: &'a [ExportRecord],
+    kb: &'a KnowledgeBase,
+    snapshots: &'a dyn SnapshotStore,
+    sources: &'a BTreeMap<String, LoadedSource>,
+    computation_bindings: &'a [Option<ComputationBinding>],
+}
+
+fn derived_binding_identity(
+    index: usize,
+    name: &str,
+    computation_bindings: &[Option<ComputationBinding>],
+    sources: &BTreeMap<String, LoadedSource>,
+) -> Result<BindingIdentityDto, Failure> {
+    let computation_binding = computation_bindings
+        .get(index)
+        .and_then(Option::as_ref)
+        .ok_or_else(|| Failure::Audit(format!("derived binding {name} has no source identity")))?;
+    let origin = &computation_binding.origin;
+    if origin.binding.name != name {
+        return Err(Failure::Audit(format!(
+            "derived binding {name} disagrees with compiler-owned source identity"
+        )));
+    }
+    let source = sources.get(&origin.source_id).ok_or_else(|| {
+        Failure::Audit(format!(
+            "derived binding {name} source {} was not loaded",
+            origin.source_id
+        ))
+    })?;
+    let matches: Vec<_> = source
+        .map
+        .bindings
+        .iter()
+        .filter(|binding| *binding == &origin.binding)
+        .collect();
+    let [binding] = matches.as_slice() else {
+        return Err(Failure::Audit(format!(
+            "derived binding {name} maps to {} exact parser identities",
+            matches.len()
+        )));
+    };
+    Ok(BindingIdentityDto {
+        declaration: span(source.source.as_bytes(), binding.declaration_span),
+        expression: span(source.source.as_bytes(), binding.expression_span),
+        name: name.to_string(),
+        source_dimension: computation_binding.source_dimension.clone(),
+        source_plan: plan_expr(&computation_binding.source_plan),
+        source_sha256: source.hash.clone(),
+    })
+}
+
+fn derived_guard_evidence(
+    name: &str,
+    value: f64,
+    exact: &ExactRational,
+    scope: logic_engine::ComputationScope,
+    runtime_fact_ids: &[FactId],
+    runtime_computation_ids: &[logic_engine::ComputationId],
+    context: DerivedGuardContext<'_>,
+) -> Result<GuardOperandEvidence, Failure> {
+    let DerivedGuardContext {
+        exports,
+        kb,
+        snapshots,
+        sources,
+        computation_bindings,
+    } = context;
+    let visible = kb
+        .derived_bindings()
+        .get(..scope.derived_limit)
+        .ok_or_else(|| Failure::Audit("guard derived scope exceeds the KB".to_string()))?;
+    let index = visible
+        .iter()
+        .rposition(|candidate| candidate.name == name)
+        .ok_or_else(|| {
+            Failure::Audit(format!(
+                "guard derived reference {name} has no predecessor in scope"
+            ))
+        })?;
+    let derived = &kb.derived_bindings()[index];
+    let computation_id = kb.computation_id_for(derived).ok_or_else(|| {
+        Failure::Audit(format!(
+            "guard derived reference {name} has no stable computation identity"
+        ))
+    })?;
+    if computation_id.0 != index
+        || derived.value.to_bits() != value.to_bits()
+        || derived.exact.as_ref() != Some(exact)
+        || derived.precision_loss
+    {
+        return Err(Failure::Audit(format!(
+            "guard derived reference {name} disagrees with computation {index}"
+        )));
+    }
+    let mut reconstructed_ids = Vec::new();
+    collect_computation_ids(
+        index,
+        kb,
+        &mut BTreeSet::new(),
+        &mut BTreeSet::new(),
+        &mut reconstructed_ids,
+    )?;
+    let recorded_ids: Vec<_> = runtime_computation_ids.iter().map(|id| id.0).collect();
+    if reconstructed_ids != recorded_ids {
+        return Err(Failure::Audit(format!(
+            "guard derived runtime and reconstructed computations differ for {name}"
+        )));
+    }
+    let plan = kb.computation_plan_for(derived).ok_or_else(|| {
+        Failure::Audit(format!(
+            "guard derived reference {name} has no trusted plan"
+        ))
+    })?;
+    if plan.is_query_answer {
+        return Err(Failure::Audit(format!(
+            "guard derived reference {name} unexpectedly names a query answer"
+        )));
+    }
+
+    let checked = verify_derived(derived, kb, snapshots);
+    if checked.name != derived.name || checked.is_query_answer {
+        return Err(Failure::Audit(format!(
+            "guard derived verification identity differs for {name}"
+        )));
+    }
+    if !matches!(checked.computation, ComputationStatus::ReChecked) {
+        return Err(Failure::Audit(format!(
+            "guard derived computation {name} did not independently recheck"
+        )));
+    }
+    if checked.formula_sources.len() != checked.formula_quotes.len()
+        || checked
+            .formula_sources
+            .iter()
+            .zip(&checked.formula_quotes)
+            .any(|(provenance, status)| !status_matches_quote_identity(provenance, status))
+    {
+        return Err(Failure::Audit(format!(
+            "guard derived formula verification identity differs for {name}"
+        )));
+    }
+    let formula_sequence: Vec<_> = checked
+        .formula_sources
+        .iter()
+        .map(|provenance| unique_export(provenance, exports).map(|item| item.identity.clone()))
+        .collect::<Result<_, _>>()?;
+
+    let verified_ids: BTreeSet<_> = checked
+        .input_quotes
+        .iter()
+        .map(|item| item.fact_id)
+        .collect();
+    if verified_ids.len() != checked.input_quotes.len() {
+        return Err(Failure::Audit(format!(
+            "guard derived verification repeats an input for {name}"
+        )));
+    }
+    let runtime_ids: BTreeSet<_> = runtime_fact_ids.iter().copied().collect();
+    if runtime_ids.len() != runtime_fact_ids.len() || runtime_ids != verified_ids {
+        return Err(Failure::Audit(format!(
+            "guard derived runtime and verified inputs differ for {name}"
+        )));
+    }
+    let mut tree_ids = BTreeSet::new();
+    collect_fact_ids(index, kb, &mut BTreeSet::new(), &mut tree_ids)?;
+    if tree_ids != verified_ids {
+        return Err(Failure::Audit(format!(
+            "guard derived tree and verified inputs differ for {name}"
+        )));
+    }
+
+    let inputs: Vec<_> = checked
+        .input_quotes
+        .iter()
+        .map(|item| fact_identity(kb, item.fact_id))
+        .collect::<Result<_, _>>()?;
+    if checked.input_quotes.iter().any(|item| {
+        kb.fact(item.fact_id)
+            .is_none_or(|fact| !status_matches_quote_identity(&fact.provenance, &item.quote))
+    }) {
+        return Err(Failure::Audit(format!(
+            "guard derived input verification identity differs for {name}"
+        )));
+    }
+    let unique_inputs: BTreeSet<_> = inputs.iter().cloned().collect();
+    if unique_inputs.len() != inputs.len() {
+        return Err(Failure::Audit(format!(
+            "guard derived inputs have ambiguous stable identities for {name}"
+        )));
+    }
+
+    let formula_quotes: Vec<_> = checked
+        .formula_sources
+        .iter()
+        .zip(formula_sequence.iter().cloned())
+        .zip(checked.formula_quotes.iter().map(quote_status))
+        .map(|((provenance, identity), quote)| FormulaCheckDto {
+            identity,
+            provenance: provenance_dto(provenance),
+            quote,
+        })
+        .collect();
+    let input_quotes: Vec<_> = inputs
+        .iter()
+        .cloned()
+        .zip(
+            checked
+                .input_quotes
+                .iter()
+                .map(|item| quote_status(&item.quote)),
+        )
+        .map(|(identity, quote)| InputDto { identity, quote })
+        .collect();
+    let fully_verified = checked.formula_quotes.iter().all(quote_is_verified)
+        && checked
+            .input_quotes
+            .iter()
+            .all(|input| quote_is_verified(&input.quote));
+    let passed = checked.passed();
+    let verification = VerificationDto {
+        computation: computation_status(&checked.computation),
+        formula_quotes,
+        fully_verified: checked.fully_verified(),
+        input_quotes: input_quotes.clone(),
+        is_query_answer: false,
+        passed,
+    };
+    let computations = reconstructed_ids
+        .iter()
+        .map(|dependency_id| {
+            let dependency = &kb.derived_bindings()[*dependency_id];
+            let dependency_plan = kb.computation_plan_for(dependency).ok_or_else(|| {
+                Failure::Audit(format!("{} has no trusted plan", dependency.name))
+            })?;
+            Ok(GuardComputationDto {
+                binding: derived_binding_identity(
+                    *dependency_id,
+                    &dependency.name,
+                    computation_bindings,
+                    sources,
+                )?,
+                computation_id: *dependency_id,
+                name: dependency.name.clone(),
+                plan: PlanDto {
+                    expression: plan_expr(dependency_plan.expr),
+                    is_query_answer: dependency_plan.is_query_answer,
+                    scope: ScopeDto {
+                        derived_limit: dependency_plan.scope.derived_limit,
+                        fact_limit: dependency_plan.scope.fact_limit,
+                    },
+                },
+                referenced_computation_ids: referenced_computation_ids(*dependency_id, kb)?,
+                result: ResultDto {
+                    dimension: dependency.dim.tag(),
+                    exact_rational: dependency.exact.as_ref().map(rational),
+                    f64_bits: bits(dependency.value),
+                },
+                tree: tree(&dependency.tree, kb)?,
+            })
+        })
+        .collect::<Result<Vec<_>, Failure>>()?;
+    Ok(GuardOperandEvidence {
+        computation: computation_status(&checked.computation),
+        derived: Some(Box::new(GuardDerivedDto {
+            computations,
+            formula_sequence,
+            inputs: inputs.clone(),
+            root_computation_id: computation_id.0,
+            verification,
+        })),
+        fully_verified,
+        input_quotes,
+        inputs,
+        passed,
+    })
+}
+
 fn guard_dto(
     guard: &FormulaGuardTrace,
     expected: &ExpectedGuard,
     exports: &[ExportRecord],
     kb: &KnowledgeBase,
     snapshots: &dyn SnapshotStore,
+    sources: &BTreeMap<String, LoadedSource>,
+    computation_bindings: &[Option<ComputationBinding>],
 ) -> Result<GuardDto, Failure> {
     let outcome = match guard.outcome {
         FormulaGuardOutcome::Passed => "passed",
@@ -1521,48 +1975,105 @@ fn guard_dto(
             guard.formula, guard.precondition_index, expected.slot
         )));
     }
-    let DerivationNode::Leaf {
-        slot: tree_slot,
-        value: tree_value,
-        fact_id,
-    } = recorded_tree
-    else {
-        return Err(Failure::Audit(format!(
-            "guard trace {}[{}] is derived; backlog 9c is required",
-            guard.formula, guard.precondition_index
-        )));
-    };
-    if tree_slot != slot
-        || tree_value.to_bits() != value.to_bits()
-        || guard.fact_ids.as_slice() != [*fact_id]
-        || fact_id.0 >= scope.fact_limit
-        || scope.derived_limit > kb.derived_bindings().len()
-    {
+    if slot != &expected.slot || scope.derived_limit > kb.derived_bindings().len() {
         return Err(Failure::Audit(format!(
             "guard trace {}[{}] plan/tree/scope identities disagree",
             guard.formula, guard.precondition_index
         )));
     }
-    let observed = kb
-        .observed_numerics_all(slot)
-        .into_iter()
-        .rfind(|(_, id)| id.0 < scope.fact_limit)
-        .ok_or_else(|| {
-            Failure::Audit(format!(
-                "guard trace {}[{}] has no direct observation in scope",
+    let operand = match recorded_tree {
+        DerivationNode::Leaf {
+            slot: tree_slot,
+            value: tree_value,
+            fact_id,
+        } => {
+            if tree_slot != slot
+                || tree_value.to_bits() != value.to_bits()
+                || guard.fact_ids.as_slice() != [*fact_id]
+                || !guard.computation_ids.is_empty()
+                || fact_id.0 >= scope.fact_limit
+            {
+                return Err(Failure::Audit(format!(
+                    "guard trace {}[{}] direct plan/tree/scope identities disagree",
+                    guard.formula, guard.precondition_index
+                )));
+            }
+            let observed = kb
+                .observed_numerics_all(slot)
+                .into_iter()
+                .rfind(|(_, id)| id.0 < scope.fact_limit)
+                .ok_or_else(|| {
+                    Failure::Audit(format!(
+                        "guard trace {}[{}] has no direct observation in scope",
+                        guard.formula, guard.precondition_index
+                    ))
+                })?;
+            if observed.1 != *fact_id
+                || observed.0.value.to_bits() != value.to_bits()
+                || observed.0.exact.as_ref() != Some(exact)
+                || observed.0.precision_loss
+            {
+                return Err(Failure::Audit(format!(
+                    "guard trace {}[{}] disagrees with its direct observation",
+                    guard.formula, guard.precondition_index
+                )));
+            }
+            let input_identity = fact_identity(kb, *fact_id)?;
+            let fact = kb.fact(*fact_id).ok_or_else(|| {
+                Failure::Audit(format!("guard trace references absent fact {}", fact_id.0))
+            })?;
+            let input_quote = verify_quote(&fact.provenance, snapshots);
+            if !status_matches_quote_identity(&fact.provenance, &input_quote) {
+                return Err(Failure::Audit(format!(
+                    "guard input quote identity differs for {}[{}]",
+                    guard.formula, guard.precondition_index
+                )));
+            }
+            GuardOperandEvidence {
+                computation: computation_status(&ComputationStatus::ReChecked),
+                derived: None,
+                fully_verified: quote_is_verified(&input_quote),
+                input_quotes: vec![InputDto {
+                    identity: input_identity.clone(),
+                    quote: quote_status(&input_quote),
+                }],
+                inputs: vec![input_identity],
+                passed: !matches!(input_quote, QuoteStatus::QuoteMissing(_)),
+            }
+        }
+        DerivationNode::DerivedRef {
+            name,
+            value: tree_value,
+        } => {
+            if tree_value.to_bits() != value.to_bits() {
+                return Err(Failure::Audit(format!(
+                    "guard trace {}[{}] derived value disagrees with its tree",
+                    guard.formula, guard.precondition_index
+                )));
+            }
+            derived_guard_evidence(
+                name,
+                value,
+                exact,
+                scope,
+                &guard.fact_ids,
+                &guard.computation_ids,
+                DerivedGuardContext {
+                    exports,
+                    kb,
+                    snapshots,
+                    sources,
+                    computation_bindings,
+                },
+            )?
+        }
+        _ => {
+            return Err(Failure::Audit(format!(
+                "guard trace {}[{}] is not a single bound operand",
                 guard.formula, guard.precondition_index
-            ))
-        })?;
-    if observed.1 != *fact_id
-        || observed.0.value.to_bits() != value.to_bits()
-        || observed.0.exact.as_ref() != Some(exact)
-        || observed.0.precision_loss
-    {
-        return Err(Failure::Audit(format!(
-            "guard trace {}[{}] disagrees with its direct observation",
-            guard.formula, guard.precondition_index
-        )));
-    }
+            )))
+        }
+    };
     let is_zero = exact.numerator().is_zero();
     if (guard.outcome == FormulaGuardOutcome::Passed) == is_zero {
         return Err(Failure::Audit(format!(
@@ -1571,17 +2082,6 @@ fn guard_dto(
         )));
     }
 
-    let input_identity = fact_identity(kb, *fact_id)?;
-    let fact = kb.fact(*fact_id).ok_or_else(|| {
-        Failure::Audit(format!("guard trace references absent fact {}", fact_id.0))
-    })?;
-    let input_quote = verify_quote(&fact.provenance, snapshots);
-    if !status_matches_quote_identity(&fact.provenance, &input_quote) {
-        return Err(Failure::Audit(format!(
-            "guard input quote identity differs for {}[{}]",
-            guard.formula, guard.precondition_index
-        )));
-    }
     let formula_quote = verify_quote(&guard.provenance, snapshots);
     if !status_matches_quote_identity(&guard.provenance, &formula_quote) {
         return Err(Failure::Audit(format!(
@@ -1589,7 +2089,16 @@ fn guard_dto(
             guard.formula, guard.precondition_index
         )));
     }
-    let fully_verified = quote_is_verified(&input_quote) && quote_is_verified(&formula_quote);
+    let GuardOperandEvidence {
+        computation,
+        derived,
+        fully_verified: operand_fully_verified,
+        input_quotes,
+        inputs,
+        passed: operand_passed,
+    } = operand;
+    let fully_verified = operand_fully_verified && quote_is_verified(&formula_quote);
+    let passed = operand_passed && !matches!(formula_quote, QuoteStatus::QuoteMissing(_));
     Ok(GuardDto {
         comparison: ComparisonDto {
             observed: ComparedValueDto {
@@ -1605,8 +2114,9 @@ fn guard_dto(
                 f64_bits: bits(0.0),
             },
         },
+        derived,
         formula: export.identity.clone(),
-        inputs: vec![input_identity.clone()],
+        inputs,
         outcome,
         plan: PlanDto {
             expression: plan_expr(plan),
@@ -1625,32 +2135,43 @@ fn guard_dto(
         },
         tree: tree(recorded_tree, kb)?,
         verification: GuardVerificationDto {
-            computation: computation_status(&ComputationStatus::ReChecked),
+            computation,
             formula_quote: FormulaCheckDto {
                 identity: export.identity.clone(),
                 provenance: provenance_dto(&guard.provenance),
                 quote: quote_status(&formula_quote),
             },
             fully_verified,
-            input_quotes: vec![InputDto {
-                identity: input_identity,
-                quote: quote_status(&input_quote),
-            }],
-            passed: !matches!(input_quote, QuoteStatus::QuoteMissing(_))
-                && !matches!(formula_quote, QuoteStatus::QuoteMissing(_)),
+            input_quotes,
+            passed,
         },
     })
 }
 
+struct V2AuditContext<'a> {
+    root: &'a LoadedSource,
+    exports: &'a [ExportRecord],
+    traces: &'a [FormulaExecutionTrace],
+    kb: &'a KnowledgeBase,
+    snapshots: &'a dyn SnapshotStore,
+    sources: &'a BTreeMap<String, LoadedSource>,
+    computation_bindings: &'a [Option<ComputationBinding>],
+}
+
 fn build_v2_audit(
-    root: &LoadedSource,
-    exports: &[ExportRecord],
+    context: V2AuditContext<'_>,
     imports: Vec<ImportDto>,
     derivations: Vec<DerivationDto>,
-    traces: &[FormulaExecutionTrace],
-    kb: &KnowledgeBase,
-    snapshots: &dyn SnapshotStore,
 ) -> Result<AuditOutput, Failure> {
+    let V2AuditContext {
+        root,
+        exports,
+        traces,
+        kb,
+        snapshots,
+        sources,
+        computation_bindings,
+    } = context;
     let mut bodies = BTreeMap::new();
     for derivation in derivations {
         let name = derivation.export.name.clone();
@@ -1736,7 +2257,17 @@ fn build_v2_audit(
             .guards
             .iter()
             .zip(&source_replay.guards)
-            .map(|(guard, expected)| guard_dto(guard, expected, exports, kb, snapshots))
+            .map(|(guard, expected)| {
+                guard_dto(
+                    guard,
+                    expected,
+                    exports,
+                    kb,
+                    snapshots,
+                    sources,
+                    computation_bindings,
+                )
+            })
             .collect::<Result<Vec<_>, _>>()?;
         if formula_sequence != source_replay.formula_sequence[..expected_sequence_end] {
             return Err(Failure::Audit(format!(
@@ -1770,7 +2301,7 @@ fn build_v2_audit(
                     ))
                 })?;
                 if derivation.export != export.identity
-                    || derivation.formula_sequence != formula_sequence
+                    || !derivation.formula_sequence.starts_with(&formula_sequence)
                 {
                     return Err(Failure::Audit(format!(
                         "v2 execution {} body identity disagrees with its trace",
@@ -2116,13 +2647,17 @@ fn build_audit(
         ));
     }
     build_v2_audit(
-        root,
-        &exports,
+        V2AuditContext {
+            root,
+            exports: &exports,
+            traces: &lowered.formula_executions,
+            kb: &lowered.kb,
+            snapshots,
+            sources: &sources,
+            computation_bindings: &lowered.computation_bindings,
+        },
         imports,
         derivations,
-        &lowered.formula_executions,
-        &lowered.kb,
-        snapshots,
     )
 }
 

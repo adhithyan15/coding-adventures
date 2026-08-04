@@ -507,7 +507,7 @@ fn formula_audit_v2_fails_closed_on_unresolved_guard() {
 }
 
 #[test]
-fn formula_audit_v2_fails_closed_on_derived_guard_operand_until_9c() {
+fn formula_audit_v2_witnesses_a_derived_guard_operand() {
     let directory = std::env::temp_dir().join(format!(
         "adj_formula_audit_derived_guard_{}",
         std::process::id()
@@ -532,8 +532,297 @@ fn formula_audit_v2_fails_closed_on_derived_guard_operand_until_9c() {
         .arg(&program)
         .output()
         .expect("run formula audit");
-    assert_eq!(output.status.code(), Some(1));
-    assert!(String::from_utf8_lossy(&output.stderr).contains("is derived; backlog 9c is required"));
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let guard = &audit["executions"][0]["guards"][0];
+    assert_eq!(guard["outcome"], "passed");
+    assert_eq!(guard["inputs"].as_array().unwrap().len(), 2);
+    assert_eq!(guard["tree"]["kind"], "derived_reference");
+    assert_eq!(guard["tree"]["name"], "total");
+    let derived = &guard["derived"];
+    assert_eq!(derived["root_computation_id"], 0);
+    assert_eq!(derived["computations"].as_array().unwrap().len(), 1);
+    assert_eq!(derived["computations"][0]["computation_id"], 0);
+    assert_eq!(derived["computations"][0]["name"], "total");
+    assert_eq!(derived["computations"][0]["binding"]["name"], "total");
+    assert_eq!(
+        derived["computations"][0]["referenced_computation_ids"],
+        serde_json::json!([])
+    );
+    assert_eq!(
+        derived["verification"]["computation"]["status"],
+        "rechecked"
+    );
+    assert_eq!(audit["executions"][0]["body"]["status"], "evaluated");
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_v2_keeps_historical_computation_ids_through_rebinding() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_derived_rebinding_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("derived_rebinding.adj");
+    let source = "formulabook guarded {\n\
+             formula identity(x) = x requires nonzero(x)\n\
+               source \"identity domain\" trust authoritative\n\
+         }\n\
+         observe left(1)\n\
+         observe right(2)\n\
+         let total = left + right\n\
+         let answer = total + left\n\
+         let total = right + right\n\
+         ? identity(answer)\n";
+    fs::write(&program, source)
+    .expect("write derived rebinding program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let derived = &audit["executions"][0]["guards"][0]["derived"];
+    assert_eq!(derived["root_computation_id"], 1);
+    assert_eq!(derived["computations"][0]["computation_id"], 1);
+    assert_eq!(derived["computations"][0]["name"], "answer");
+    assert_eq!(
+        derived["computations"][0]["referenced_computation_ids"],
+        serde_json::json!([0])
+    );
+    assert_eq!(derived["computations"][1]["computation_id"], 0);
+    assert_eq!(derived["computations"][1]["name"], "total");
+    assert_ne!(derived["computations"][1]["computation_id"], 2);
+    let historical = "let total = left + right";
+    let start = source.find(historical).expect("historical binding");
+    let expression_start = start + historical.find("left + right").unwrap();
+    assert_eq!(
+        derived["computations"][1]["binding"]["declaration"],
+        serde_json::json!({
+            "end": start + historical.len(),
+            "sha256": coding_adventures_sha256::sha256_hex(historical.as_bytes()),
+            "start": start,
+        })
+    );
+    assert_eq!(
+        derived["computations"][1]["binding"]["expression"],
+        serde_json::json!({
+            "end": expression_start + "left + right".len(),
+            "sha256": coding_adventures_sha256::sha256_hex(b"left + right"),
+            "start": expression_start,
+        })
+    );
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_v2_skips_withheld_binding_when_assigning_source_identity() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_withheld_binding_origin_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("withheld_binding_origin.adj");
+    let source = "formulabook guarded {\n\
+             formula quotient(a, b) = a / b requires nonzero(b)\n\
+               source \"division domain\" trust authoritative\n\
+             formula identity(x) = x requires nonzero(x)\n\
+               source \"identity domain\" trust authoritative\n\
+         }\n\
+         observe left(1)\n\
+         observe right(2)\n\
+         observe zero(0)\n\
+         let total = quotient(left, zero)\n\
+         let total = left + right\n\
+         ? identity(total)\n";
+    fs::write(&program, source).expect("write withheld binding source");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let binding = &audit["executions"][0]["guards"][0]["derived"]["computations"][0]
+        ["binding"];
+    let expected = "let total = left + right";
+    let start = source.find(expected).expect("successful binding");
+    assert_eq!(binding["declaration"]["start"], start);
+    assert_eq!(binding["declaration"]["end"], start + expected.len());
+    assert_eq!(
+        binding["declaration"]["sha256"],
+        coding_adventures_sha256::sha256_hex(expected.as_bytes())
+    );
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_v2_binds_same_name_computations_across_files() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_cross_file_binding_origin_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let dependency = directory.join("dependency.adj");
+    let program = directory.join("root.adj");
+    let dependency_source = "observe left(1)\nlet total = left + 1\n";
+    let root_source = "import \"dependency.adj\"\n\
+         formulabook guarded {\n\
+             formula identity(x) = x requires nonzero(x)\n\
+               source \"identity domain\" trust authoritative\n\
+         }\n\
+         let answer = total + left\n\
+         let total = left + 3\n\
+         ? identity(answer)\n";
+    fs::write(&dependency, dependency_source).expect("write dependency source");
+    fs::write(&program, root_source).expect("write root source");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let computations = audit["executions"][0]["guards"][0]["derived"]["computations"]
+        .as_array()
+        .expect("computation closure");
+    assert_eq!(computations[0]["name"], "answer");
+    assert_eq!(
+        computations[0]["binding"]["source_sha256"],
+        coding_adventures_sha256::sha256_hex(root_source.as_bytes())
+    );
+    assert_eq!(computations[1]["name"], "total");
+    assert_eq!(
+        computations[1]["binding"]["source_sha256"],
+        coding_adventures_sha256::sha256_hex(dependency_source.as_bytes())
+    );
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_v2_separates_derived_and_guard_formula_sources() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_derived_formula_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("derived_formula.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula add(a, b) = a + b\n\
+               source \"addition definition\" trust authoritative\n\
+             formula identity(x) = x requires nonzero(x)\n\
+               source \"identity domain\" trust authoritative\n\
+         }\n\
+         observe left(1)\n\
+         observe right(2)\n\
+         let total = add(left, right)\n\
+         ? identity(total)\n",
+    )
+    .expect("write formula-derived guard program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let guard = &audit["executions"][0]["guards"][0];
+    assert_eq!(guard["formula"]["name"], "identity");
+    assert_eq!(
+        guard["verification"]["formula_quote"]["identity"]["name"],
+        "identity"
+    );
+    assert_eq!(
+        guard["derived"]["formula_sequence"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+    assert_eq!(guard["derived"]["formula_sequence"][0]["name"], "add");
+    assert_eq!(
+        guard["derived"]["verification"]["formula_quotes"][0]["identity"]["name"],
+        "add"
+    );
+    assert_eq!(
+        guard["derived"]["verification"]["formula_quotes"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+
+    fs::remove_dir_all(directory).expect("remove temporary source directory");
+}
+
+#[test]
+fn formula_audit_v2_witnesses_a_failed_derived_guard_before_withholding() {
+    let directory = std::env::temp_dir().join(format!(
+        "adj_formula_audit_derived_zero_{}",
+        std::process::id()
+    ));
+    let _ = fs::remove_dir_all(&directory);
+    fs::create_dir_all(&directory).expect("create temporary source directory");
+    let program = directory.join("derived_zero.adj");
+    fs::write(
+        &program,
+        "formulabook guarded {\n\
+             formula identity(x) = x requires nonzero(x)\n\
+               source \"identity domain\" trust authoritative\n\
+         }\n\
+         observe left(1)\n\
+         observe right(1)\n\
+         let total = left - right\n\
+         ? identity(total)\n",
+    )
+    .expect("write zero derived guard program");
+
+    let output = Command::new(env!("CARGO_BIN_EXE_adj-formula-audit"))
+        .arg(&program)
+        .output()
+        .expect("run formula audit");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let audit: serde_json::Value = serde_json::from_slice(&output.stdout).expect("v2 audit JSON");
+    let execution = &audit["executions"][0];
+    assert_eq!(execution["guards"][0]["outcome"], "failed");
+    assert_eq!(execution["guards"][0]["derived"]["root_computation_id"], 0);
+    assert_eq!(execution["body"]["status"], "withheld");
 
     fs::remove_dir_all(directory).expect("remove temporary source directory");
 }
