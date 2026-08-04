@@ -19,8 +19,8 @@
     "laterChapterLessonsWithoutPrerequisites": 35,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
-    "legacySchemaTracks": 3,
-    "mixedSchemaTracks": 16,
+    "legacySchemaTracks": 2,
+    "mixedSchemaTracks": 17,
     "version2SchemaTracks": 1
   },
   "duration": {
@@ -1592,10 +1592,11 @@
       },
       {
         "language": "russian",
-        "status": "legacy",
+        "status": "mixed",
         "lessonCount": 22,
         "versions": {
-          "1": 22
+          "1": 16,
+          "2": 6
         }
       },
       {
