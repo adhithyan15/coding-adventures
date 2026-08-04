@@ -5104,6 +5104,32 @@ mod tests {
         }
     }
 
+    // -------------------------------------------------------------------
+    // Bug fix (shared `parser` crate 0.4.3): `GrammarElement::Literal`
+    // matched a `String`-typed token by its CONTENT, not just an operator
+    // lexeme. `call_arg`'s `[ "*" | "**" | "&" ] expression` splat-marker
+    // alternative has a bare `"*"` `Literal` -- a Ruby STRING ARGUMENT
+    // whose content happened to be `"*"` (e.g. `foo(1, "*")`, or a padding
+    // character like `"hello".ljust(8, "*")`) had that STRING TOKEN
+    // silently swallowed as the splat marker, leaving `expression` with
+    // nothing to consume and crashing the parser (an internal panic, not
+    // even a graceful parse error). Fixed at the shared-engine level, not
+    // in this grammar: `Literal` now excludes `TokenType::String`.
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn test_string_argument_matching_an_operator_lexeme_parses_correctly() {
+        for src in [
+            "foo(1, \"*\")\ndef foo(a, b)\n  puts b\nend\n",
+            "foo(1, \"**\")\ndef foo(a, b)\n  puts b\nend\n",
+            "foo(1, \"&\")\ndef foo(a, b)\n  puts b\nend\n",
+            "puts \"hello\".ljust(8, \"*\")\n",
+        ] {
+            let ast = parse_ruby(src);
+            assert_program_root(&ast);
+        }
+    }
+
     /// `**`/`>>`/`^`/`&`/`|` have NO binary-operator grammar rule at
     /// all in this Ruby subset (only used elsewhere: `**`/`&` as call-arg
     /// prefixes, `|` for block params, `^` for pin patterns) — so the fix
