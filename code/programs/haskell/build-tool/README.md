@@ -40,6 +40,15 @@ ignored after the authoritative module path. The shared field-boundary fixture
 covers those exclusions, and the complete 302-package lane matches the Go
 resolver exactly at 936 edges.
 
+Elixir dependency resolution reads local dependency tuples only from direct
+project `deps:` lists and lists returned by block or shorthand `defp deps`
+functions. Multiline tuples are accepted when they contain a quoted `path:`
+option. Project and application metadata, source prose, comments, `mix.lock`,
+and non-path Hex or Git dependencies cannot invent graph edges. The shared
+field-boundary fixture covers direct, block, shorthand, multiline, comment,
+metadata, and external-dependency cases; the complete 282-package lane matches
+the Go resolver exactly at 472 edges.
+
 Haskell dependency resolution reads package requirements only from Cabal
 `build-depends` fields, including indented comma continuations and repeated
 fields across stanzas. Synopsis and description text, source directories,

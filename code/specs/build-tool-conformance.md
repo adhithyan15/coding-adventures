@@ -308,6 +308,18 @@ other field or block. In particular, a local `replace` target without a
 corresponding `require` entry changes module lookup but does not create a build
 graph edge.
 
+For Elixir `mix.exs` manifests, dependency candidates come only from tuples in
+the list returned by the root `defp deps` function, in either block or
+single-expression shorthand form, when the tuple begins with a dependency atom
+and contains a quoted `path:` option. The tuple may span multiple lines, and
+options after `path:` do not form part of the identity. The
+dependency atom is matched case-insensitively against known Elixir application
+and package aliases. Resolvers ignore the project `app:` field, application
+configuration, module and function names, source text, strings outside the
+dependency list, line comments, `mix.lock`, non-path Hex/Git dependencies, and
+every other function or field. The quoted path identifies the declaration as
+local metadata; resolvers do not follow or read the referenced path.
+
 For Cabal manifests, dependency candidates come only from each
 `build-depends:` field and its indented comma-separated continuation lines.
 Resolvers ignore Cabal comments, package identity and descriptive metadata,

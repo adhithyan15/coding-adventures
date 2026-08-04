@@ -106,9 +106,9 @@ CHANGELOG, metadata, BUILD/BUILD_windows where applicable, and CI coverage.
 ## Work Inventory
 
 The missing matrix is heavily concentrated in singleton packages. The current
-working inventory was regenerated from `21b96a50` after the Go resolver branch
-rebased onto the latest main. The inventory contains 1,263 normalized
-implementation identities across 4,418 established-lane package slots and
+working inventory was regenerated from `de58c11e` after the Elixir resolver
+branch rebased onto the latest main. The inventory contains 1,264 normalized
+implementation identities across 4,419 established-lane package slots and
 found zero canonical collisions or unknown language buckets:
 
 | Current breadth | Packages | Missing slots to all 15 |
@@ -506,6 +506,35 @@ owners with schema-v2 channel-version maps, deterministic serialization,
 complete positive version validation, and fail-closed writer/reader
 compatibility. They require no new backlog identity and do not displace the
 already implemented Go resolver repair.
+
+Guarded squash auto-completion merged the Go resolver PR #9884 at exact head
+`102936be9e` as `582b15bc38` after all 17 checks were terminal and two clean
+mergeability readings. The post-merge schema-3 inventory remains unchanged and
+collision-free. Exact comparison confirms the Go lane at 302 packages and 936
+edges on both engines with zero drift, then selects Elixir as the smallest
+coherent remaining resolver slice: 282 packages, 470 Go edges, 478 Haskell
+edges, eight Haskell-only differences, and zero Go-only differences. Two valid
+multiline local path declarations are missed by Go, while six comment/prose
+references are falsely promoted by Haskell's generic whole-manifest scanner.
+A shared field-boundary fixture and paired Elixir readers can repair the whole
+slice without mixing TypeScript, .NET, JVM, Dart, standalone BUILD debt,
+rockspec UTF-8, or native NIF authority.
+
+The implemented field readers preserve direct project dependency lists and
+block or shorthand dependency functions, exclude comments and unrelated
+metadata, and converge at 472 edges on both engines across all 282 Elixir
+packages. Both real front doors also complete BUILD validation for the full
+lane with zero failures.
+
+While the Elixir repair was validating, `de58c11e` added the Rust-only
+`chief-of-staff-skill-package` identity. The backlog splits its mixed boundary:
+the authority-free loader over caller-provided authenticated bytes has a
+portable verification-projection owner after the skill-parser and discovery
+contracts, while create-new directory mutation, package signing, secret-key
+custody, cleanup, and host path policy have an excluded native-authority
+review. This new downstream pair does not displace the already implemented and
+fully validated Elixir resolver repair. The adjacent Latin fixes are
+package-identity neutral.
 
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,

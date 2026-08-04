@@ -31,6 +31,9 @@ All notable changes to this package will be documented in this file.
   and target metadata.
 - Shared Go field-boundary coverage for single and block `require` directives,
   indirect requirements, comments, and replace-only local module aliases.
+- Shared Elixir field-boundary coverage for direct, block, and shorthand
+  dependency lists, multiline local path tuples, comments, project metadata,
+  lockfiles, and non-path dependencies.
 
 ### Changed
 
@@ -43,6 +46,8 @@ All notable changes to this package will be documented in this file.
   locale-sensitive text handles.
 - Exercise the Haskell build tool from `BUILD_windows` whenever Cabal is
   available instead of unconditionally skipping the package.
+- Resolve Elixir dependencies only from local `path:` tuples in authoritative
+  `deps:` lists instead of tokenizing the complete `mix.exs` and `mix.lock`.
 - Resolve Lua edges only from quoted values in the rockspec `dependencies`
   table, merge qualified `# build-tool: deps=` entries from the selected BUILD
   file, preserve program identity segments, and prefer package aliases over

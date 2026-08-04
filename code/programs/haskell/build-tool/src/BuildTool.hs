@@ -810,6 +810,7 @@ parseBuildToolDependencyLine line =
 readManifestTokens :: Package -> IO [String]
 readManifestTokens pkg
     | packageLanguage pkg == "lua" = readLuaDependencyTokens pkg
+    | packageLanguage pkg == "elixir" = readElixirDependencyTokens pkg
     | packageLanguage pkg == "go" = readGoDependencyTokens pkg
     | packageLanguage pkg == "haskell" = readCabalDependencyTokens pkg
     | packageLanguage pkg == "perl" = readPerlDependencyTokens pkg
@@ -818,6 +819,136 @@ readManifestTokens pkg
     | packageLanguage pkg == "rust" = readRustDependencyTokens pkg
     | packageLanguage pkg == "swift" = readSwiftDependencyTokens pkg
     | otherwise = readGenericManifestTokens pkg
+
+readElixirDependencyTokens :: Package -> IO [String]
+readElixirDependencyTokens pkg = do
+    let manifestPath = packagePath pkg </> "mix.exs"
+    exists <- doesFileExist manifestPath
+    if not exists
+        then pure []
+        else do
+            contents <- readFileStrict manifestPath
+            pure (elixirDependencyTokens contents)
+
+elixirDependencyTokens :: String -> [String]
+elixirDependencyTokens contents =
+    let uncommented = unlines (map stripElixirComment (lines contents))
+     in nub
+            ( mapMaybe elixirPathDependencyAtom
+                (concatMap elixirTupleBodies (elixirDependencyBodies uncommented))
+            )
+
+elixirDependencyBodies :: String -> [String]
+elixirDependencyBodies contents =
+    elixirDirectDepsBodies contents
+        ++ [functionBody | let functionBody = elixirDepsBody contents, not (null (trim functionBody))]
+
+elixirDirectDepsBodies :: String -> [String]
+elixirDirectDepsBodies = collect . lines
+  where
+    collect [] = []
+    collect (line : rest) =
+        case elixirFieldRemainder "deps:" line of
+            Just remainder
+                | "[" `isPrefixOf` trim remainder ->
+                    let value = trim remainder
+                        (bodyLines, remainingLines) = collectBracketed (elixirBracketDelta value) [value] rest
+                     in unlines (reverse bodyLines) : collect remainingLines
+            _ -> collect rest
+
+    collectBracketed depth body remaining
+        | depth <= 0 = (body, remaining)
+    collectBracketed _ body [] = (body, [])
+    collectBracketed depth body (line : rest) =
+        collectBracketed (depth + elixirBracketDelta line) (line : body) rest
+
+elixirFieldRemainder :: String -> String -> Maybe String
+elixirFieldRemainder target = go False False
+  where
+    go _ _ [] = Nothing
+    go insideString escaped remaining@(character : rest)
+        | escaped = go insideString False rest
+        | insideString && character == '\\' = go True True rest
+        | character == '"' = go (not insideString) False rest
+        | not insideString && target `isPrefixOf` remaining = Just (drop (length target) remaining)
+        | otherwise = go insideString False rest
+
+elixirBracketDelta :: String -> Int
+elixirBracketDelta = go False False 0
+  where
+    go _ _ total [] = total
+    go insideString escaped total (character : rest)
+        | escaped = go insideString False total rest
+        | insideString && character == '\\' = go True True total rest
+        | character == '"' = go (not insideString) False total rest
+        | not insideString && character == '[' = go False False (total + 1) rest
+        | not insideString && character == ']' = go False False (total - 1) rest
+        | otherwise = go insideString False total rest
+
+elixirDepsBody :: String -> String
+elixirDepsBody = unlines . collect False . lines
+  where
+    collect _ [] = []
+    collect False (line : rest) =
+        case elixirDepsShorthand line of
+            Just body -> [body]
+            Nothing ->
+                if trim line `elem` ["defp deps do", "def deps do"]
+                    then collect True rest
+                    else collect False rest
+    collect True (line : rest)
+        | trim line == "end" = []
+        | otherwise = line : collect True rest
+
+elixirDepsShorthand :: String -> Maybe String
+elixirDepsShorthand line =
+    let stripped = trim line
+        (_function, afterComma) = break (== ',') stripped
+        shorthand = trim (drop 1 afterComma)
+     in if ("defp deps," `isPrefixOf` stripped || "def deps," `isPrefixOf` stripped)
+            && "do:" `isPrefixOf` shorthand
+            then Just (drop 3 shorthand)
+            else Nothing
+
+stripElixirComment :: String -> String
+stripElixirComment = go False False
+  where
+    go _ _ [] = []
+    go insideString escaped (character : rest)
+        | escaped = character : go insideString False rest
+        | insideString && character == '\\' = character : go True True rest
+        | character == '"' = character : go (not insideString) False rest
+        | character == '#' && not insideString = []
+        | otherwise = character : go insideString False rest
+
+elixirTupleBodies :: String -> [String]
+elixirTupleBodies text =
+    case dropWhile (/= '{') text of
+        [] -> []
+        _openingBrace : afterOpening ->
+            let (tupleBody, remainder) = break (== '}') afterOpening
+             in tupleBody : elixirTupleBodies (drop 1 remainder)
+
+elixirPathDependencyAtom :: String -> Maybe String
+elixirPathDependencyAtom tupleBody =
+    let (atomField, options) = break (== ',') tupleBody
+        strippedAtom = trim atomField
+        atom = takeWhile (\character -> isAlphaNum character || character == '_') (dropWhile (== ':') strippedAtom)
+     in if null options
+            || null atom
+            || take 1 strippedAtom /= ":"
+            || not (any isElixirPathField (splitCargoInlineFields (drop 1 options)))
+            then Nothing
+            else Just (map toLower atom)
+
+isElixirPathField :: String -> Bool
+isElixirPathField field =
+    let (key, assignment) = break (== ':') field
+        value = dropWhile (`elem` [' ', '\t']) (drop 1 assignment)
+     in map toLower (trim key) == "path"
+            && not (null assignment)
+            && take 1 value == "\""
+            && not (null (takeWhile (/= '"') (drop 1 value)))
 
 readGoDependencyTokens :: Package -> IO [String]
 readGoDependencyTokens pkg = do
